@@ -1,0 +1,13 @@
+{
+  "watch" : [
+    "src",
+    ".env"
+  ],
+  "ext":"js,ts,json",
+  "ignore": [
+    "src/logs/*",
+    "src/**/*.{spec,test}.ts"
+  ],
+  "exec": "ts-node --transpile-only src/index.ts"
+
+}
