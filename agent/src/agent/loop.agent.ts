@@ -1,6 +1,5 @@
 import sendDeviceInfoToApi from "../api/device.info";
 import retry from 'retry';
-import hardwareUtils from '../utils/hardware-utils'
 
 const operation = retry.operation({
   forever: true,
@@ -17,7 +16,6 @@ const agentLoop = async (hostId: string) => {
       operation.attempt(async function (currentAttempt) {
         console.log(`Sending info to master node...`);
         console.log('Attempt #:', numAttempt)
-        console.log(await hardwareUtils.hardware.CPUModel);
         try {
           await sendDeviceInfoToApi(hostId);
           numAttempt = 0;

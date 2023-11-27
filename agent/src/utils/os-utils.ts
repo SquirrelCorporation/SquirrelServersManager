@@ -1,4 +1,5 @@
 import osu from 'node-os-utils'
+import si from 'systeminformation';
 
 type OSInfo = {
   type?: string;
@@ -26,6 +27,8 @@ type DeviceInfo = {
 
 export default async function getDeviceInfo(hostId : string) {
   let deviceInfo: DeviceInfo = {id : hostId};
+
+
 
   deviceInfo.os = {};
 
