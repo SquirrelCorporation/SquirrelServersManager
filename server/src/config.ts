@@ -1,5 +1,3 @@
-import 'dotenv/config';
-
 export const db = {
   name: process.env.DB_NAME || '',
   host: process.env.DB_HOST || '',
@@ -9,3 +7,5 @@ export const db = {
   minPoolSize: parseInt(process.env.DB_MIN_POOL_SIZE || '5'),
   maxPoolSize: parseInt(process.env.DB_MAX_POOL_SIZE || '10'),
 };
+
+export const CONSIDER_DEVICE_OFFLINE = 5;

@@ -8,14 +8,12 @@ async function create(deviceStat: DeviceStat): Promise<DeviceStat> {
 
 async function findLatestStat(device: Device): Promise<DeviceStat | null> {
   return DeviceStatModel.findOne({ device: device })
-    .limit(1)
-    .sort({ created_at: -1 })
+    .sort({ createdAt: -1 })
     .lean()
     .exec();
 }
 
-
 export default {
   create,
-  findLatestStat
+  findLatestStat,
 };

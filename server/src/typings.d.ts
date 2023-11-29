@@ -1,4 +1,9 @@
 declare namespace API {
+  type Cron = {
+    name?: string;
+    eventsCount?: number;
+  }
+
   type CurrentUser = {
     name?: string;
     avatar?: string;

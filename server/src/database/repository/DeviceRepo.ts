@@ -1,5 +1,5 @@
-import Device, { DeviceModel } from '../model/Device';
-import { Types } from 'mongoose';
+import Device, {DeviceModel, DeviceStatus} from '../model/Device';
+import { DateTime } from "luxon";
 
 async function create(device: Device): Promise<Device> {
   const createdDevice = await DeviceModel.create(device);
@@ -21,7 +21,19 @@ async function findOneById(uuid: string): Promise<Device | null> {
 
 async function findAll() : Promise<Device[] | null> {
   return DeviceModel.find()
-    .sort({ created_at: -1 })
+    .sort({ createdAt: -1 })
+    .lean()
+    .exec();
+}
+
+async function setDeviceOfflineAfter(inactivityInMinutes : number) : Promise<void> {
+  await DeviceModel.updateMany(
+    {
+      updatedAt: { $lt: DateTime.now().minus({minute: inactivityInMinutes}).toJSDate() }
+    },
+    {
+      $set: {status: DeviceStatus.OFFLINE}
+    })
     .lean()
     .exec();
 }
@@ -30,5 +42,6 @@ export default {
   create,
   update,
   findOneById,
-  findAll
+  findAll,
+  setDeviceOfflineAfter
 };

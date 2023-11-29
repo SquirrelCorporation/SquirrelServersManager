@@ -6,17 +6,17 @@ export const COLLECTION_NAME = 'devicestats';
 
 export default interface DeviceStat {
   device: Device;
-  storage_total_gb?: string;
-  storage_used_gb?: string;
-  storage_free_gb?: string;
-  storage_used_percentage?: string;
-  storage_free_percentage?: string;
-  cpu_usage?: number;
-  mem_total_mb?: number;
-  mem_total_used_mb?: number;
-  mem_total_free_mb?: number;
-  mem_used_percentage?: number;
-  mem_free_percentage?: number;
+  storageTotalGb?: string;
+  storageUsedGb?: string;
+  storageFreeGb?: string;
+  storageUsedPercentage?: string;
+  storageFreePercentage?: string;
+  cpuUsage?: number;
+  memTotalMb?: number;
+  memTotalUsedMb?: number;
+  memTotalFreeMb?: number;
+  memUsedPercentage?: number;
+  memFreePercentage?: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -30,47 +30,47 @@ const schema = new Schema<DeviceStat>(
       select: false,
       index: true,
     },
-    storage_total_gb: {
+    storageTotalGb: {
       type: Schema.Types.String,
       required: false,
     },
-    storage_used_gb: {
+    storageUsedGb: {
       type: Schema.Types.String,
       required: false,
     },
-    storage_free_gb: {
+    storageFreeGb: {
       type: Schema.Types.String,
       required: false,
     },
-    storage_used_percentage: {
+    storageUsedPercentage: {
       type: Schema.Types.String,
       required: false,
     },
-    storage_free_percentage: {
+    storageFreePercentage: {
       type: Schema.Types.String,
       required: false,
     },
-    cpu_usage: {
+    cpuUsage: {
       type: Schema.Types.Number,
       required: false,
     },
-    mem_total_mb: {
+    memTotalMb: {
       type: Schema.Types.Number,
       required: false,
     },
-    mem_total_used_mb: {
+    memTotalUsedMb: {
       type: Schema.Types.Number,
       required: false,
     },
-    mem_total_free_mb: {
+    memTotalFreeMb: {
       type: Schema.Types.Number,
       required: false,
     },
-    mem_used_percentage: {
+    memUsedPercentage: {
       type: Schema.Types.Number,
       required: false,
     },
-    mem_free_percentage: {
+    memFreePercentage: {
       type: Schema.Types.Number,
       required: false,
     },

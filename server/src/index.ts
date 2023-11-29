@@ -1,10 +1,14 @@
 import express, {Request, Response} from 'express'
-import './database';
+import {connection} from './database';
 import routes from './controlers';
+import scheduledFunctions from './crons';
+import logger from "./logger";
 
 const app = express()
 
-app.use(express.json())
+
+app.use(express.json());
+
 
 const getAccess = () => {
     return true;
@@ -80,9 +84,11 @@ app.get(`/api/currentUser`, async (req, res) => {
     });
 });
 
-
-const server = app.listen(3000, () =>
-    console.log(`
-🚀 Server ready at: http://localhost:3000
-⭐️ See sample requests: http://pris.ly/e/ts/rest-express#3-using-the-rest-api`),
-)
+connection().then(() => {
+    scheduledFunctions();
+    const server = app.listen(3000, () =>
+      logger.info(`
+    🚀 Server ready at: http://localhost:3000
+    ⭐️ See sample requests: http://pris.ly/e/ts/rest-express#3-using-the-rest-api`),
+    )
+})

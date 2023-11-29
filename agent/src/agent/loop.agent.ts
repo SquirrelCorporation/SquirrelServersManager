@@ -1,5 +1,6 @@
 import sendDeviceInfoToApi from "../api/device.info";
 import retry from 'retry';
+import logger from "../logger";
 
 const operation = retry.operation({
   forever: true,
@@ -14,13 +15,13 @@ const agentLoop = async (hostId: string) => {
   async function attempt(hostId: string) {
     return new Promise((resolve, reject) => {
       operation.attempt(async function (currentAttempt) {
-        console.log(`Sending info to master node...`);
-        console.log('Attempt #:', numAttempt)
+        logger.info(`[AGENT] Loop - Sending info to master node...`);
+        logger.info('[AGENT] Loop - Attempt #:' + numAttempt)
         try {
           await sendDeviceInfoToApi(hostId);
           numAttempt = 0;
         } catch (error: any) {
-          console.log("error!s")
+          logger.error(error)
           if (operation.retry(error)) {
             numAttempt++
             return

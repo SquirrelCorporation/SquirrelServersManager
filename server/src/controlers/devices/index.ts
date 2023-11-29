@@ -1,9 +1,10 @@
 import express from 'express';
 import {parse} from "url";
 import DeviceRepo from "../../database/repository/DeviceRepo";
-import Device, {Status} from "../../database/model/Device";
-import DeviceStatRepo from "../../database/repository/DeviceStatRepo";
+import Device from "../../database/model/Device";
 import API from '../../typings';
+import DeviceStatsUseCases from "../../use_cases/DeviceStatsUseCases";
+import DeviceUseCases from "../../use_cases/DeviceUseCases";
 const router = express.Router();
 
 router.post(`/`, async (req, res) => {
@@ -19,42 +20,15 @@ router.post(`/`, async (req, res) => {
 });
 
 router.post(`/:id`, async (req, res) => {
-  const device = await DeviceRepo.findOneById(req.params.id);
+  let device = await DeviceRepo.findOneById(req.params.id);
   if (device == null) {
     res.status(404).send({
       success: false
     })
     return;
   }
-  if (req.body.ip) device.ip = req.body.ip;
-  if (req.body.hostname) device.hostname = req.body.hostname;
-  if (req.body.uptime) device.uptime = req.body.uptime;
-  if (req.body.os.type) device.os_type = req.body.os.type;
-  if (req.body.os.arch) device.os_arch = req.body.os.arch;
-  if (req.body.os.platform) device.os_platform = req.body.os.platform;
-  if (req.body.os.originalOsName) device.os_original_name = req.body.os.originalOsName;
-  device.status = Status.ONLINE;
-  await DeviceRepo.update(device);
-  const deviceStat = await DeviceStatRepo.findLatestStat(device);
-  if (!deviceStat || !deviceStat.createdAt || ((new Date().getDate() - deviceStat.createdAt.getDate()) > 60 * 60 * 1000)) {
-    console.log("Creating new device stat record...");
-    await DeviceStatRepo.create({
-      device: device,
-      storage_total_gb: req.body.storage.totalGb,
-      storage_used_gb: req.body.storage.usedGb,
-      storage_free_gb: req.body.storage.freeGb,
-      storage_used_percentage: req.body.storage.usedPercentage,
-      storage_free_percentage: req.body.storage.freePercentage,
-      cpu_usage: req.body.cpu.usage,
-      mem_total_mb: req.body.mem.totalMemMb,
-      mem_total_used_mb: req.body.mem.usedMemMb,
-      mem_total_free_mb: req.body.mem.freeMemMb,
-      mem_used_percentage: req.body.mem.usedMemPercentage,
-      mem_free_percentage: req.body.mem.freeMemPercentage,
-    })
-  } else {
-    console.log("DeviceStat already exist, not creating")
-  }
+  await DeviceUseCases.updateDeviceFromJson(req.body, device);
+  await DeviceStatsUseCases.createStatIfMinInterval(req.body, device);
   res.send({
     success: true
   })
