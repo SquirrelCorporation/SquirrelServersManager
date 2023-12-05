@@ -5,7 +5,7 @@ services:
     image: mongo
     restart: always
     volumes:
-      - ./data:/data/db
+      - ./.data:/data/db
     ports:
       - "27017:27017"
     command: --quiet

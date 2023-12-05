@@ -3,13 +3,21 @@ import {CONSIDER_DEVICE_OFFLINE} from "../config";
 import DeviceRepo from "../database/repository/DeviceRepo";
 import logger from "../logger";
 import CronRepo from "../database/repository/CronRepo";
+import AnsibleLogsRepo from "../database/repository/AnsibleLogsRepo";
+import AnsibleTaskStatusRepo from "../database/repository/AnsibleTaskStatusRepo";
+import AnsibleTaskRepo from "../database/repository/AnsibleTaskRepo";
 
 const CRONS = [
   {
     name: '_isDeviceOffline',
     schedule: '*/1 * * * *',
     fun: DeviceRepo.setDeviceOfflineAfter(CONSIDER_DEVICE_OFFLINE)
-  }
+  },
+  {
+    name: '_CleanAnsibleTasksLogsAndStatuses',
+    schedule: '*/5 * * * *',
+    fun: AnsibleTaskRepo.deleteAllOldLogsAndStatuses(60)
+  },
 ]
 
 const initScheduledJobs = () => {

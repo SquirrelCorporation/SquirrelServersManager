@@ -6,7 +6,8 @@
   "ext":"js,ts,json",
   "ignore": [
     "src/logs/*",
-    "src/**/*.{spec,test}.ts"
+    "src/**/*.{spec,test}.ts",
+    "src/**/ansible/artifacts/*"
   ],
   "exec": "ts-node --transpile-only src/index.ts"
 

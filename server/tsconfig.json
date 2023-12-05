@@ -5,7 +5,7 @@
     "strict": true,
     "lib": ["esnext"],
     "esModuleInterop": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
   },
   "include": ["src//*.ts", "src//*.json", ".env"]
 }
