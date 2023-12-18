@@ -9,8 +9,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon",
-    "start": "npm run build && cross-env-shell NODE_ENV=production node dist/index.js ",
-    "build": "tsc"
+    "start": "npm run build && cross-env-shell NODE_ENV=production node build/index.js ",
+    "build": "ncc build  -o build/lib ./src/index.ts && pkg ./build/lib/index.js -t 'node18-macos-arm64' -o ./build/agent",
+    "build-bun": "bun build ./src/index.ts --compile --outfile agentcli"
   },
   "author": "",
   "license": "ISC",
@@ -22,7 +23,13 @@
     "ts-node": "10.9.1",
     "typescript": "5.3.2",
     "axios": "^1.6.2",
-    "pino": "^8.16.2"
+    "pino": "^8.16.2",
+    "pino-pretty": "^10.2.3"
+  },
+  "pkg": {
+    "scripts": "dist/**/*.js",
+    "targets": [ "node18-macos-arm64" ],
+    "outputPath": "dist"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",

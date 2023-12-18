@@ -1,5 +1,6 @@
 import Device, {DeviceModel, DeviceStatus} from '../model/Device';
 import { DateTime } from "luxon";
+import logger from "../../logger";
 
 async function create(device: Device): Promise<Device> {
   const createdDevice = await DeviceModel.create(device);
@@ -14,19 +15,25 @@ async function update(device: Device): Promise<Device | null> {
 }
 
 async function findOneById(uuid: string): Promise<Device | null> {
-  return DeviceModel.findOne({ uuid: uuid })
+  return await DeviceModel.findOne({ uuid: uuid })
     .lean()
     .exec();
 }
 
+async function findOneByIp(ip: string): Promise<Device | null> {
+  return await DeviceModel.findOne({ ip: ip })
+      .lean()
+      .exec();
+}
+
 async function findAll() : Promise<Device[] | null> {
-  return DeviceModel.find()
+  return await DeviceModel.find()
     .sort({ createdAt: -1 })
     .lean()
     .exec();
 }
 
-async function setDeviceOfflineAfter(inactivityInMinutes : number) : Promise<void> {
+async function setDeviceOfflineAfter(inactivityInMinutes : number) {
   await DeviceModel.updateMany(
     {
       updatedAt: { $lt: DateTime.now().minus({minute: inactivityInMinutes}).toJSDate() }
@@ -43,5 +50,6 @@ export default {
   update,
   findOneById,
   findAll,
-  setDeviceOfflineAfter
+  setDeviceOfflineAfter,
+  findOneByIp
 };

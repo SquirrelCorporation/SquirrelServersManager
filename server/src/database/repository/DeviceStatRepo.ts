@@ -7,7 +7,7 @@ async function create(deviceStat: DeviceStat): Promise<DeviceStat> {
 }
 
 async function findLatestStat(device: Device): Promise<DeviceStat | null> {
-  return DeviceStatModel.findOne({ device: device })
+  return await DeviceStatModel.findOne({ device: device })
     .sort({ createdAt: -1 })
     .lean()
     .exec();

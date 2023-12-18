@@ -1,13 +1,22 @@
 import pino from 'pino';
 
-const logger = pino({
-  transport: {
-    target: 'pino-pretty',
-    options: {
-      colorize: true
+const transport = pino.transport({
+  targets: [
+    {
+      target: 'pino/file',
+      options: { destination: `${__dirname}/agent.log` , mkdir: true }
     },
-  }
+      {
+          target: 'pino-pretty',
+      }
+  ]
 })
 
-logger.level = "debug";
+const logger = pino({
+      level: process.env.NODE_ENV === "development" ? "debug" : "info",
+      timestamp: pino.stdTimeFunctions.isoTime,
+    },
+  transport
+)
+
 export default logger;

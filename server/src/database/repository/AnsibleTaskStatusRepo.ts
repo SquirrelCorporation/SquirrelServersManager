@@ -8,13 +8,13 @@ async function create(ansibleTaskStatus: AnsibleTaskStatus): Promise<AnsibleTask
 }
 
 async function findAllByIdent(ident: string): Promise<AnsibleTaskStatus[] | null> {
-    return AnsibleTaskStatusModel.find({ident: ident})
+    return await AnsibleTaskStatusModel.find({ident: ident})
         .sort({ createdAt: -1 })
         .lean()
         .exec();
 }
 async function deleteAll(ident : string) {
-    return AnsibleTaskStatusModel.deleteMany({ident:  ident})
+    return await AnsibleTaskStatusModel.deleteMany({ident:  ident})
         .lean()
         .exec();
 }

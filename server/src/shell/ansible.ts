@@ -1,6 +1,5 @@
 import shell from 'shelljs';
 import logger from "../logger";
-import AnsibleLogsRepo from "../database/repository/AnsibleLogsRepo";
 import AnsibleTaskRepo from "../database/repository/AnsibleTaskRepo";
 
 async function executePlaybook(playbook: string) {
@@ -18,10 +17,10 @@ async function executePlaybook(playbook: string) {
     logger.info('[SHELL]-[ANSIBLE] - ended');
     if (result) {
         await AnsibleTaskRepo.create({ident: result, status: 'created', cmd: `playbook ${playbook}`})
-        return true;
+        return result;
     } else {
         logger.error("[SHELL]-[ANSIBLE] - Result was not properly setted")
-        return false;
+        throw new Error("Exec failed");
     }
 }
 

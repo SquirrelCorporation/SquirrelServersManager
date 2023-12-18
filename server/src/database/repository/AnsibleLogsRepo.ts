@@ -1,5 +1,4 @@
-import AnsibleLog , {AnsibleLogModel} from "../model/AnsibleLogs";
-import {DateTime} from "luxon";
+import AnsibleLog, {AnsibleLogModel} from "../model/AnsibleLogs";
 
 async function create(ansibleLog: AnsibleLog): Promise<AnsibleLog> {
     const created = await AnsibleLogModel.create(ansibleLog);
@@ -7,14 +6,14 @@ async function create(ansibleLog: AnsibleLog): Promise<AnsibleLog> {
 }
 
 async function findAllByIdent(ident: string): Promise<AnsibleLog[] | null> {
-    return AnsibleLogModel.find({ident: ident})
-        .sort({ createdAt: -1 })
+    return await AnsibleLogModel.find({ident: ident})
+        .sort({createdAt: -1})
         .lean()
         .exec();
 }
 
 async function deleteAll(ident: string) {
-    return AnsibleLogModel.deleteMany({ident: ident})
+    return await AnsibleLogModel.deleteMany({ident: ident})
         .lean()
         .exec();
 }

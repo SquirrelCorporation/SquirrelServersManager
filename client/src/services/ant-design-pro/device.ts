@@ -2,9 +2,7 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
-/** 获取规则列表 GET /api/rule */
 export async function getDevice(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.DeviceListParams,
   options?: { [key: string]: any },
 ) {
@@ -17,7 +15,6 @@ export async function getDevice(
   });
 }
 
-/** 新建规则 PUT /api/rule */
 export async function updateRule(options?: { [key: string]: any }) {
   return request<API.DeviceItem>('/api/rule', {
     method: 'PUT',
@@ -25,7 +22,6 @@ export async function updateRule(options?: { [key: string]: any }) {
   });
 }
 
-/** 新建规则 POST /api/rule */
 export async function addRule(options?: { [key: string]: any }) {
   return request<API.DeviceItem>('/api/rule', {
     method: 'POST',
@@ -33,7 +29,6 @@ export async function addRule(options?: { [key: string]: any }) {
   });
 }
 
-/** 删除规则 DELETE /api/rule */
 export async function removeRule(options?: { [key: string]: any }) {
   return request<Record<string, any>>('/api/rule', {
     method: 'DELETE',

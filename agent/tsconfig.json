@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
+    "module": "NodeNext",
     "sourceMap": true,
-    "outDir": "dist",
+    "outDir": "build",
     "strict": true,
     "lib": ["esnext"],
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "NodeNext"
   },
   "include": ["src//*.ts", "src//*.json", ".env"]
 }

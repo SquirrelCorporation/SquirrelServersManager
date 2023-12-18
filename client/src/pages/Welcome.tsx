@@ -1,8 +1,9 @@
-import { PageContainer } from '@ant-design/pro-components';
+import DemoLine from '@/components/Charts/Lines';
+import { ClusterOutlined, UpCircleOutlined } from '@ant-design/icons';
+import { PageContainer, StatisticCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { Card, theme } from 'antd';
+import { Card, Col, Row, theme } from 'antd';
 import React from 'react';
-
 /**
  * 每个单独的卡片，为了复用样式抽成了组件
  * @param param0
@@ -86,6 +87,11 @@ const InfoCard: React.FC<{
 const Welcome: React.FC = () => {
   const { token } = theme.useToken();
   const { initialState } = useModel('@@initialState');
+  const imgStyle = {
+    display: 'block',
+    width: 42,
+    height: 42,
+  };
   return (
     <PageContainer>
       <Card
@@ -104,57 +110,68 @@ const Welcome: React.FC = () => {
             backgroundPosition: '100% -30%',
             backgroundRepeat: 'no-repeat',
             backgroundSize: '274px auto',
-            backgroundImage:
-              "url('https://gw.alipayobjects.com/mdn/rms_a9745b/afts/img/A*BuFmQqsB2iAAAAAAAAAAAAAAARQnAQ')",
           }}
         >
-          <div
-            style={{
-              fontSize: '20px',
-              color: token.colorTextHeading,
-            }}
-          >
-             Ant Design Pro
-          </div>
-          <p
-            style={{
-              fontSize: '14px',
-              color: token.colorTextSecondary,
-              lineHeight: '22px',
-              marginTop: 16,
-              marginBottom: 32,
-              width: '65%',
-            }}
-          >
-            Ant Design Pro  umi，Ant Design  ProComponents
-          </p>
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: 16,
-            }}
-          >
-            <InfoCard
-              index={1}
-              href="https://umijs.org/docs/introduce/introduce"
-              title="了解 umi"
-              desc="umi 是一个可扩展的企业级前端应用框架,umi 以路由为基础的，同时支持配置式路由和约定式路由，保证路由的功能完备，并以此进行功能扩展。"
+          <StatisticCard.Group direction={'row'}>
+            <StatisticCard
+              statistic={{
+                title: 'Devices',
+                value: 2,
+                icon: <ClusterOutlined style={{ fontSize: '40px', color: '#08c' }} />,
+              }}
             />
-            <InfoCard
-              index={2}
-              title="了解 ant design"
-              href="https://ant.design"
-              desc="antd 是基于 Ant Design 设计体系的 React UI 组件库，主要用于研发企业级中后台产品。"
+            <StatisticCard
+              statistic={{
+                title: 'Online',
+                value: 475,
+                icon: <UpCircleOutlined style={{ fontSize: '40px', color: 'green' }} />,
+              }}
             />
-            <InfoCard
-              index={3}
-              title="了解 Pro Components"
-              href="https://procomponents.ant.design"
-              desc="ProComponents 是一个基于 Ant Design 做了更高抽象的模板组件，以 一个组件就是一个页面为开发理念，为中后台开发带来更好的体验。"
+            <StatisticCard
+              statistic={{
+                title: '成功订单数',
+                value: 87,
+                icon: (
+                  <img
+                    style={imgStyle}
+                    src="https://gw.alipayobjects.com/mdn/rms_7bc6d8/afts/img/A*FPlYQoTNlBEAAAAAAAAAAABkARQnAQ"
+                    alt="icon"
+                  />
+                ),
+              }}
             />
-          </div>
+            <StatisticCard
+              statistic={{
+                title: '浏览量',
+                value: 1754,
+                icon: (
+                  <img
+                    style={imgStyle}
+                    src="https://gw.alipayobjects.com/mdn/rms_7bc6d8/afts/img/A*pUkAQpefcx8AAAAAAAAAAABkARQnAQ"
+                    alt="icon"
+                  />
+                ),
+              }}
+            />
+          </StatisticCard.Group>
         </div>
+      </Card>
+      <Card
+        style={{
+          borderRadius: 8,
+        }}
+        bodyStyle={{
+          backgroundImage:
+            initialState?.settings?.navTheme === 'realDark'
+              ? 'background-image: linear-gradient(75deg, #1A1B1F 0%, #191C1F 100%)'
+              : 'background-image: linear-gradient(75deg, #FBFDFF 0%, #F5F7FF 100%)',
+        }}
+      >
+        <Row>
+          <Col span={6}>
+            <DemoLine />
+          </Col>
+        </Row>
       </Card>
     </PageContainer>
   );

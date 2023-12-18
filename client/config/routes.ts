@@ -35,19 +35,35 @@ export default [
     component: './Devices',
   },
   {
+    name: 'Playbook',
+    icon: 'table',
+    path: '/playbooks',
+    component: './Devices',
+  },
+  {
     path: '/admin',
     name: 'admin',
     icon: 'crown',
     access: 'canAdmin',
     routes: [
+      { path: '/admin', redirect: '/404' },
       {
-        path: '/admin',
-        redirect: '/admin/crons',
+        name: 'Inventory',
+        icon: 'database',
+        path: '/admin/inventory',
+        component: './Admin/Inventory',
       },
       {
         path: '/admin/crons',
         name: 'Crons',
+        icon: 'interaction',
         component: './Admin/Crons',
+      },
+      {
+        path: '/admin/tasks',
+        name: 'Tasks',
+        icon: 'UnorderedList',
+        component: './Admin/Tasks',
       },
     ],
   },

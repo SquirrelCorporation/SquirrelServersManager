@@ -6,9 +6,11 @@ import * as api from './api';
 import * as login from './login';
 import * as device from './device';
 import * as cron from './cron';
+import * as ansible from './ansible'
 export default {
   api,
   login,
   device,
-  cron
+  cron,
+  ansible
 };

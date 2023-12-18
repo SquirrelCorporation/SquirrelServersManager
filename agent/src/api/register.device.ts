@@ -2,11 +2,12 @@ import fs from "fs";
 import axios from "axios";
 import URL_MASTER from "../config";
 import logger from "../logger";
+import osu from "node-os-utils";
 
 const retrieveOrRegisterDevice = async () => {
   let hostId;
   if (!fs.existsSync("hostid.txt")) {
-  await axios.post(`${URL_MASTER}/api/devices`)
+  await axios.post(`${URL_MASTER}/api/devices`, { ip:osu.os.ip() })
     .then(async response => {
       logger.info(response.data);
       logger.info(`[AGENT] retrieveOrRegisterDevice - Registering id ${response.data.data.id}`);
@@ -18,7 +19,7 @@ const retrieveOrRegisterDevice = async () => {
     })
     .catch(error => {
         logger.error(error);
-        throw new Error("[AGENT] retrieveOrRegisterDevice - Registering to Master node failed")
+        throw new Error(`[AGENT] retrieveOrRegisterDevice - Registering to Master node failed\n- Message: ${error.message}\n- Response: ${JSON.stringify(error.response.data)}`)
     });
 } else {
       logger.info('[AGENT] retrieveOrRegisterDevice - Reading host id from file');

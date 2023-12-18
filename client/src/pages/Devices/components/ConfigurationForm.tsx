@@ -6,11 +6,9 @@ import {
   ProFormTextArea,
   StepsForm,
 } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
 import {message, Modal, Tabs, TabsProps} from 'antd';
-import React, {useState} from 'react';
+import React from 'react';
 import {ProForm} from "@ant-design/pro-form/lib";
-import type { FormLayout } from 'antd/lib/form/Form';
 
 export type FormValueType = {
   target?: string;
@@ -20,12 +18,13 @@ export type FormValueType = {
   frequency?: string;
 } & Partial<API.DeviceItem>;
 
-export type UpdateFormProps = {
+export type ConfigurationFormProps = {
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;
   onSubmit: (values: FormValueType) => Promise<void>;
   updateModalOpen: boolean;
   values: Partial<API.DeviceItem>;
 };
+
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -34,7 +33,6 @@ const waitTime = (time: number = 100) => {
   });
 };
 const Configuration : React.FC = () => {
-
 
   return (
     <ProForm<{
@@ -124,13 +122,13 @@ const Configuration : React.FC = () => {
 const items: TabsProps['items'] = [
   {
     key: '1',
-    label: 'Update Configuration',
-    children: <Configuration/>,
+    label: 'SSH',
+    children: 'Content of Tab Pane 2',
   },
   {
     key: '2',
-    label: 'SSH',
-    children: 'Content of Tab Pane 2',
+    label: 'Update Configuration',
+    children: <Configuration/>,
   },
   {
     key: '3',
@@ -139,13 +137,13 @@ const items: TabsProps['items'] = [
   },
 ];
 
-const UpdateForm: React.FC<UpdateFormProps> = (props) => {
+const ConfigurationForm: React.FC<ConfigurationFormProps> = (props) => {
         return (
           <Modal
             width={640}
             bodyStyle={{ padding: '32px 40px 48px' }}
             destroyOnClose
-            title="Conf"
+            title={`${props.values.hostname} (${props.values.ip})`}
             open={props.updateModalOpen}
             //footer={submitter}
             onCancel={() => {
@@ -164,4 +162,4 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
   ;
 };
 
-export default UpdateForm;
+export default ConfigurationForm;

@@ -11,12 +11,12 @@ const CRONS = [
   {
     name: '_isDeviceOffline',
     schedule: '*/1 * * * *',
-    fun: DeviceRepo.setDeviceOfflineAfter(CONSIDER_DEVICE_OFFLINE)
+    fun: async () => { await DeviceRepo.setDeviceOfflineAfter(CONSIDER_DEVICE_OFFLINE) }
   },
   {
     name: '_CleanAnsibleTasksLogsAndStatuses',
     schedule: '*/5 * * * *',
-    fun: AnsibleTaskRepo.deleteAllOldLogsAndStatuses(60)
+    fun: async () => { await AnsibleTaskRepo.deleteAllOldLogsAndStatuses(600) }
   },
 ]
 
@@ -25,7 +25,7 @@ const initScheduledJobs = () => {
     await CronRepo.createIfNotExist({name: cron.name, expression: cron.schedule})
     const scheduledTask = CronJob.schedule(cron.schedule, () => {
       logger.info(`[CRON] - ${cron.name} is starting...`);
-      cron.fun.then(() => {
+      cron.fun().then(() => {
         logger.info(`[CRON] - ${cron.name} has ended...`);
         CronRepo.updateCron({name: cron.name, lastExecution: new Date()});
       });

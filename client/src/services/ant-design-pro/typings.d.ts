@@ -48,7 +48,6 @@ declare namespace API {
 
   type LoginResult = {
     status?: string;
-    type?: string;
     currentAuthority?: string;
   };
 
@@ -125,5 +124,51 @@ declare namespace API {
     disabled?: boolean;
     lastExecution?: Date;
     expression?: string;
+  }
+
+  type Exec = {
+    data: {execId: string};
+    success?: boolean;
+  }
+  type ExecLog = {
+    content: string;
+    createdAt: string;
+    stdout?: string;
+    ident: string;
+    logRunnerId: string;
+  }
+  type ExecLogs = {
+    data: {
+      execId: string;
+      execLogs?: ExecLog[];
+    }
+    success?: boolean;
+  }
+
+  type ExecStatus = {
+    ident: string;
+    status: string;
+    createdAt: string;
+  }
+
+  type ExecStatuses = {
+    data: {
+      execId: string;
+      execStatuses?: ExecStatus[];
+    }
+    success?: boolean;
+  }
+
+  type Tasks = {
+    data?: Task[];
+    success?: boolean;
+  }
+
+  type Task = {
+    ident: string;
+    status: string;
+    cmd: string;
+    createdAt: string;
+    updatedAt: string;
   }
 }

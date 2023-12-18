@@ -6,6 +6,8 @@ export const COLLECTION_NAME = 'ansiblelogs';
 export default interface AnsibleLog {
     ident: string;
     content?: string;
+    stdout?: string;
+    logRunnerId?: string;
     createdAt?: Date;
 }
 
@@ -19,6 +21,14 @@ const schema = new Schema<AnsibleLog>(
             type: Schema.Types.String,
             required: false,
         },
+        stdout: {
+            type: Schema.Types.String,
+            required: false,
+        },
+        logRunnerId: {
+            type: Schema.Types.String,
+            required: false,
+        }
     },
     {
         versionKey: false,

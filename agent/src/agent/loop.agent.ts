@@ -15,8 +15,8 @@ const agentLoop = async (hostId: string) => {
   async function attempt(hostId: string) {
     return new Promise((resolve, reject) => {
       operation.attempt(async function (currentAttempt) {
-        logger.info(`[AGENT] Loop - Sending info to master node...`);
-        logger.info('[AGENT] Loop - Attempt #:' + numAttempt)
+        logger.info(`[AGENT] [LOOP] - Sending info to master node...`);
+        if (numAttempt !== 0) logger.info('[AGENT] Loop - Attempt #:' + numAttempt)
         try {
           await sendDeviceInfoToApi(hostId);
           numAttempt = 0;

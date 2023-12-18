@@ -1,4 +1,4 @@
-import {DownOutlined, LoginOutlined, PlusOutlined, ReloadOutlined} from '@ant-design/icons';
+import {DownOutlined, LoginOutlined, PlusOutlined, ReloadOutlined, ShakeOutlined} from '@ant-design/icons';
 import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import {
   FooterToolbar,
@@ -12,16 +12,15 @@ import {
 import { FormattedMessage, useIntl } from '@umijs/max';
 import {Avatar, Button, Drawer, Dropdown, Input, MenuProps, message, Space} from 'antd';
 import React, { useRef, useState } from 'react';
-import type { FormValueType } from './components/UpdateForm';
-import UpdateForm from './components/UpdateForm';
+import type { FormValueType } from './components/ConfigurationForm';
+import ConfigurationForm from './components/ConfigurationForm';
 import {addRule, getDevice, removeRule, updateRule} from "@/services/ant-design-pro/device";
 import {OsLogo} from "@/components/misc/OsLogo";
+import DeviceQuickDropDown from "@/pages/Devices/components/DeviceQuickDropDown";
+import TerminalModal from "@/components/TerminalModal";
+import { TerminalContextProvider } from 'react-terminal';
 
-/**
- * @en-US Add node
- * @zh-CN 添加节点
- * @param fields
- */
+
 const handleAdd = async (fields: API.DeviceItem) => {
   const hide = message.loading('正在添加');
   try {
@@ -84,33 +83,11 @@ const handleRemove = async (selectedRows: API.DeviceItem[]) => {
   }
 };
 
-const items: MenuProps['items'] = [
-  {
-    label: <><ReloadOutlined /> <a href="https://www.antgroup.com">Reboot</a></>,
-    key: '0',
-  },
-  {
-    label:<><LoginOutlined /> <a href="https://www.aliyun.com">Connect</a></> ,
-    key: '1',
-  },
-  {
-    type: 'divider',
-  },
-  {
-    label: '3rd menu item',
-    key: '3',
-  },
-];
+
 
 const Devices: React.FC = () => {
   /**
-   * @en-US Pop-up window of new window
-   * @zh-CN 新建窗口的弹窗
-   *  */
-  const [createModalOpen, handleModalOpen] = useState<boolean>(false);
-  /**
    * @en-US The pop-up window of the distribution update window
-   * @zh-CN 分布更新窗口的弹窗
    * */
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
 
@@ -118,13 +95,11 @@ const Devices: React.FC = () => {
 
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API.DeviceItem>();
-  const [selectedRowsState, setSelectedRows] = useState<API.DeviceItem[]>([]);
+  const [terminalModalOpen, setTerminalModalOpen] = useState(false);
+  const onDropDownClicked = (key: string) => {
+    setTerminalModalOpen(true);
+  }
 
-  /**
-   * @en-US International configuration
-   * @zh-CN 国际化配置
-   * */
-  const intl = useIntl();
 
   const columns: ProColumns<API.DeviceItem>[] = [
     {
@@ -249,19 +224,20 @@ const Devices: React.FC = () => {
         >
           <FormattedMessage id="pages.searchTable.config" defaultMessage="Configuration" />
         </a>,
-        <Dropdown menu={{ items }} trigger={['click']}>
-          <a onClick={(e) => e.preventDefault()}>
-            <Space>
-              Quick Action
-              <DownOutlined />
-            </Space>
-          </a>
-        </Dropdown>,
+        <a
+            key="quickAction"
+            onClick={() => {
+              setCurrentRow(record);
+            }}
+        >
+          <DeviceQuickDropDown onDropDownClicked={onDropDownClicked}/>
+        </a>
       ],
     },
   ];
 
   return (
+      <TerminalContextProvider>
     <PageContainer>
       <ProTable<API.DeviceItem, API.PageParams>
         headerTitle="List of Devices"
@@ -270,56 +246,11 @@ const Devices: React.FC = () => {
         search={{
           labelWidth: 120,
         }}
-        toolBarRender={() => [
-          <Button
-            type="primary"
-            key="primary"
-            onClick={() => {
-              handleModalOpen(true);
-            }}
-          >
-            <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="New" />
-          </Button>,
-        ]}
         request={getDevice}
         columns={columns}
       />
-      <ModalForm
-        title={intl.formatMessage({
-          id: 'pages.searchTable.createForm.newRule',
-          defaultMessage: 'New rule',
-        })}
-        width="400px"
-        open={createModalOpen}
-        onOpenChange={handleModalOpen}
-        onFinish={async (value) => {
-          const success = await handleAdd(value as API.DeviceItem);
-          if (success) {
-            handleModalOpen(false);
-            if (actionRef.current) {
-              actionRef.current.reload();
-            }
-          }
-        }}
-      >
-        <ProFormText
-          rules={[
-            {
-              required: true,
-              message: (
-                <FormattedMessage
-                  id="pages.searchTable.ruleName"
-                  defaultMessage="Rule name is required"
-                />
-              ),
-            },
-          ]}
-          width="md"
-          name="name"
-        />
-        <ProFormTextArea width="md" name="desc" />
-      </ModalForm>
-      <UpdateForm
+        <TerminalModal open={terminalModalOpen} setOpen={setTerminalModalOpen}/>
+      <ConfigurationForm
         onSubmit={async (value) => {
           const success = await handleUpdate(value);
           if (success) {
@@ -351,7 +282,7 @@ const Devices: React.FC = () => {
       >
         {currentRow?.ip && (
           <ProDescriptions<API.DeviceItem>
-            column={2}
+            column={1}
             title={currentRow?.ip}
             request={async () => ({
               data: currentRow || {},
@@ -364,6 +295,7 @@ const Devices: React.FC = () => {
         )}
       </Drawer>
     </PageContainer>
+      </TerminalContextProvider>
   );
 };
 

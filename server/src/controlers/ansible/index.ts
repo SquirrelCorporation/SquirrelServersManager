@@ -4,8 +4,12 @@ import AnsibleLogsRepo from "../../database/repository/AnsibleLogsRepo";
 import AnsibleLog, {AnsibleLogModel} from "../../database/model/AnsibleLogs";
 import AnsibleTaskStatus, {AnsibleTaskStatusModel} from "../../database/model/AnsibleTaskStatus";
 import AnsibleTaskRepo from "../../database/repository/AnsibleTaskRepo";
-const router = express.Router();
+import ansible from "../../shell/ansible"
+import AnsibleTaskStatusRepo from "../../database/repository/AnsibleTaskStatusRepo";
 
+
+
+const router = express.Router();
 router.post(`/hook/task/status`, async (req, res) => {
     logger.info("[CONTROLLER] ansible/hook/task/status");
     if (!req.body.runner_ident || !req.body.status) {
@@ -22,7 +26,7 @@ router.post(`/hook/task/status`, async (req, res) => {
         ident, status
     );
     if (ansibleTask) {
-        await AnsibleTaskStatusModel.create({
+        await AnsibleTaskStatusRepo.create({
             ident: ident,
             status: status,
         });
@@ -48,8 +52,12 @@ router.post(`/hook/task/event`, async (req, res) => {
         })
         return;
     }
+    const removeEmptyLines = (str : string) => str.split(/\r?\n/).filter(line => line.trim() !== '').join('\n');
+    // @ts-ignore
     const ansibleLog: AnsibleLog = {
-        ident : req.body.runner_ident,
+        ident: req.body.runner_ident,
+        logRunnerId: req.body.uuid,
+        stdout: req.body.stdout ? removeEmptyLines(req.body.stdout) : null,
         content : JSON.stringify(req.body),
     }
     await AnsibleLogsRepo.create(ansibleLog);
@@ -114,6 +122,59 @@ router.get(`/inventory`, async (req, res) => {
             }
         }
     })
+});
+
+router.post(`/exec/playbook`, async (req, res) => {
+    try {
+        const execId = await ansible.executePlaybook("ping.yml");
+        res.send({
+            success: true,
+            data: {execId: execId}
+        })
+    } catch (err) {
+        res.status(500).send({
+            success: false,
+        })
+        return;
+    }
+});
+
+router.get(`/exec/:id/logs`, async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).send({
+            success: false,
+        });
+        return;
+    }
+    logger.info(`[CONTROLLER][ANSIBLE] ExecLogs ${req.params.id}`);
+    const execLogs = await AnsibleLogsRepo.findAllByIdent(req.params.id);
+    logger.info(execLogs);
+    res.send({
+        success: true,
+        data: {
+            execId: req.params.id,
+            execLogs: execLogs
+        }
+    });
+});
+
+router.get(`/exec/:id/status`, async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).send({
+            success: false,
+        });
+        return;
+    }
+    logger.info(`[CONTROLLER][ANSIBLE] ExecLogs ${req.params.id}`);
+    const taskStatuses = await AnsibleTaskStatusRepo.findAllByIdent(req.params.id);
+    logger.info(taskStatuses);
+    res.send({
+        success: true,
+        data: {
+            execId: req.params.id,
+            execStatuses: taskStatuses
+        }
+    });
 });
 
 export  default router;

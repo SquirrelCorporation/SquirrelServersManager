@@ -5,12 +5,32 @@ import Device from "../../database/model/Device";
 import API from '../../typings';
 import DeviceStatsUseCases from "../../use_cases/DeviceStatsUseCases";
 import DeviceUseCases from "../../use_cases/DeviceUseCases";
+import logger from "../../logger";
 const router = express.Router();
 
 router.post(`/`, async (req, res) => {
-  const createdDevice = await DeviceRepo.create({
-  } as Device);
+  if (!req.body.ip) {
+    logger.error("[CONTROLLER] Device - Is called with no IP is specified");
+    res.status(401).send({
+      success: false,
+      message: "Ip is not specified"
+    })
+    return;
+  }
 
+  const device = await DeviceRepo.findOneByIp(req.body.ip);
+  if (device) {
+    logger.error("[CONTROLLER] Device - Is called ip already existing");
+    res.status(403).send({
+      success: false,
+      message: "The ip already exists, please delete or change your devices before registering this device"
+    })
+    return;
+  }
+  const createdDevice = await DeviceRepo.create({
+    ip: req.body.ip
+  } as Device);
+  logger.info(`[CONTROLLER] Device - Created device with uuid: ${createdDevice.uuid}`)
   res.send({
     success: true,
     data: {

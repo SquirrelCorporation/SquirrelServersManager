@@ -10,6 +10,7 @@ import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
 import React from 'react';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
+import Logo from '../public/logo.svg'
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -50,6 +51,7 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
+    logo: Logo,
     actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
@@ -58,6 +60,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
     },
+    menu: { type: 'group' },
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
@@ -68,19 +71,19 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
     bgLayoutImgList: [
       {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/D2LWSqNny4sAAAAAAAAAAAAAFl94AQBr',
+        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/',
         left: 85,
         bottom: 100,
         height: '303px',
       },
       {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/C2TWRpJpiC0AAAAAAAAAAAAAFl94AQBr',
+        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/',
         bottom: -68,
         right: -45,
         height: '303px',
       },
       {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/F6vSTbj8KpYAAAAAAAAAAAAAFl94AQBr',
+        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/',
         bottom: 0,
         left: 0,
         width: '331px',
