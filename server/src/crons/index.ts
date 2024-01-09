@@ -1,5 +1,5 @@
 import CronJob from "node-cron";
-import {CONSIDER_DEVICE_OFFLINE} from "../config";
+import {CLEANUP_LOGS_AND_STATUSES, CONSIDER_DEVICE_OFFLINE} from "../config";
 import DeviceRepo from "../database/repository/DeviceRepo";
 import logger from "../logger";
 import CronRepo from "../database/repository/CronRepo";
@@ -16,7 +16,7 @@ const CRONS = [
   {
     name: '_CleanAnsibleTasksLogsAndStatuses',
     schedule: '*/5 * * * *',
-    fun: async () => { await AnsibleTaskRepo.deleteAllOldLogsAndStatuses(600) }
+    fun: async () => { await AnsibleTaskRepo.deleteAllOldLogsAndStatuses(CLEANUP_LOGS_AND_STATUSES) }
   },
 ]
 

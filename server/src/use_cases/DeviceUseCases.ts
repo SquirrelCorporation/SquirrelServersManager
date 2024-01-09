@@ -9,7 +9,7 @@ async function updateDeviceFromJson(body: any, device: Device) {
   if (body.hostname) device.hostname = body.hostname;
   if (body.uptime) device.uptime = body.uptime;
   if (body.fqdn) device.fqdn = body.fqdn;
-
+  if (body.agentVersion) device.agentVersion = body.agentVersion;
 
   if (body.os.arch) device.osArch = body.os.arch;
   if (body.os.platform) device.osPlatform = body.os.platform;

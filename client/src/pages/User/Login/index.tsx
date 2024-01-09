@@ -1,36 +1,16 @@
-import { Footer } from '@/components';
 import { login } from '@/services/ant-design-pro/login';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
-import { useEmotionCss } from '@ant-design/use-emotion-css';
-import { FormattedMessage, Helmet, SelectLang, history, useIntl, useModel } from '@umijs/max';
-import { Alert, message } from 'antd';
+import {
+  LoginFormPage,
+  ProConfigProvider,
+  ProFormCheckbox,
+  ProFormText,
+} from '@ant-design/pro-components';
+import { history, useModel } from '@umijs/max';
+import { Alert, Divider, message, theme } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
-import Settings from '../../../../config/defaultSettings';
-
-const Lang = () => {
-  const langClassName = useEmotionCss(({ token }) => {
-    return {
-      width: 42,
-      height: 42,
-      lineHeight: '42px',
-      position: 'fixed',
-      right: 16,
-      borderRadius: token.borderRadius,
-      ':hover': {
-        backgroundColor: token.colorBgTextHover,
-      },
-    };
-  });
-
-  return (
-    <div className={langClassName} data-lang>
-      {SelectLang && <SelectLang />}
-    </div>
-  );
-};
-
+import loginBackground from './assets/login-background.mp4';
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => {
@@ -49,21 +29,7 @@ const LoginMessage: React.FC<{
 const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const { initialState, setInitialState } = useModel('@@initialState');
-
-  const containerClassName = useEmotionCss(() => {
-    return {
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100vh',
-      overflow: 'auto',
-      backgroundImage:
-        "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
-      backgroundSize: '100% 100%',
-    };
-  });
-
-  const intl = useIntl();
-
+  const { token } = theme.useToken();
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {
@@ -78,13 +44,9 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (values: API.LoginParams) => {
     try {
-      // 登录
       const msg = await login({ ...values });
       if (msg.status === 'ok') {
-        const defaultLoginSuccessMessage = intl.formatMessage({
-          id: 'pages.login.success',
-          defaultMessage: 'Success！',
-        });
+        const defaultLoginSuccessMessage = 'Success！';
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
@@ -92,13 +54,9 @@ const Login: React.FC = () => {
         return;
       }
       console.log(msg);
-      // 如果失败去设置用户错误信息
       setUserLoginState(msg);
     } catch (error) {
-      const defaultLoginFailureMessage = intl.formatMessage({
-        id: 'pages.login.failure',
-        defaultMessage: 'Login failed！',
-      });
+      const defaultLoginFailureMessage = 'Login failed！';
       console.log(error);
       message.error(defaultLoginFailureMessage);
     }
@@ -106,66 +64,81 @@ const Login: React.FC = () => {
   const { status } = userLoginState;
 
   return (
-    <div className={containerClassName}>
-      <Helmet>
-        <title>
-          {intl.formatMessage({
-            id: 'menu.login',
-            defaultMessage: '登录页',
-          })}
-          - {Settings.title}
-        </title>
-      </Helmet>
-      <Lang />
+    <ProConfigProvider dark>
       <div
         style={{
-          flex: '1',
-          padding: '32px 0',
+          backgroundColor: 'white',
+          height: '100vh',
         }}
       >
-        <LoginForm
-          contentStyle={{
-            minWidth: 280,
-            maxWidth: '75vw',
-          }}
+        <LoginFormPage
+          backgroundImageUrl="https://mdn.alipayobjects.com/huamei_gcee1x/afts/img/A*y0ZTS6WLwvgAAAAAAAAAAAAADml6AQ/fmt.webp"
+          backgroundVideoUrl={loginBackground}
           logo={<img alt="logo" src="/logo.svg" />}
+          containerStyle={{
+            backgroundColor: 'rgba(0, 0, 0,0.65)',
+            backdropFilter: 'blur(4px)',
+          }}
           title="Squirrel Servers Manager"
           subTitle="All in one place"
           initialValues={{
             autoLogin: true,
           }}
+          submitter={{
+            searchConfig: {
+              submitText: 'Login', //直接配就好啦
+            },
+          }}
           onFinish={async (values) => {
             await handleSubmit(values as API.LoginParams);
           }}
+          actions={
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+              }}
+            >
+              <Divider plain>
+                <span
+                  style={{
+                    // color: token.colorTextPlaceholder,
+                    fontWeight: 'normal',
+                    fontSize: 14,
+                  }}
+                >
+                  Squirrel Corp
+                </span>
+              </Divider>
+            </div>
+          }
         >
           {status === 'error' && (
-            <LoginMessage
-              content={intl.formatMessage({
-                id: 'pages.login.accountLogin.errorMessage',
-                defaultMessage: '账户或密码错误(admin/ant.design)',
-              })}
-            />
+            <LoginMessage content={'Incorrect username/password(admin/ant.design)'} />
           )}
           <>
             <ProFormText
               name="username"
               fieldProps={{
                 size: 'large',
-                prefix: <UserOutlined />,
+                prefix: (
+                  <UserOutlined
+                    style={
+                      {
+                        //  color: token.colorText,
+                      }
+                    }
+                    className={'prefixIcon'}
+                  />
+                ),
               }}
-              placeholder={intl.formatMessage({
-                id: 'pages.login.username.placeholder',
-                defaultMessage: '用户名: admin or user',
-              })}
+              placeholder={'admin or user'}
               rules={[
                 {
                   required: true,
-                  message: (
-                    <FormattedMessage
-                      id="pages.login.username.required"
-                      defaultMessage="请输入用户名!"
-                    />
-                  ),
+                  message: 'Please input your username!',
                 },
               ]}
             />
@@ -173,21 +146,22 @@ const Login: React.FC = () => {
               name="password"
               fieldProps={{
                 size: 'large',
-                prefix: <LockOutlined />,
+                prefix: (
+                  <LockOutlined
+                    style={
+                      {
+                        //  color: token.colorText,
+                      }
+                    }
+                    className={'prefixIcon'}
+                  />
+                ),
               }}
-              placeholder={intl.formatMessage({
-                id: 'pages.login.password.placeholder',
-                defaultMessage: '密码: ant.design',
-              })}
+              placeholder={'password'}
               rules={[
                 {
                   required: true,
-                  message: (
-                    <FormattedMessage
-                      id="pages.login.password.required"
-                      defaultMessage="请输入密码！"
-                    />
-                  ),
+                  message: 'Password required',
                 },
               ]}
             />
@@ -199,20 +173,19 @@ const Login: React.FC = () => {
             }}
           >
             <ProFormCheckbox noStyle name="autoLogin">
-              <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
+              Remember me
             </ProFormCheckbox>
             <a
               style={{
                 float: 'right',
               }}
             >
-              <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
+              Forgot Password ?
             </a>
           </div>
-        </LoginForm>
+        </LoginFormPage>
       </div>
-      <Footer />
-    </div>
+    </ProConfigProvider>
   );
 };
 

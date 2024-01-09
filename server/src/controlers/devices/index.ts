@@ -125,4 +125,28 @@ router.get(`/`, async (req, res) => {
   return res.json(result);
 });
 
+router.get(`/:id/stats/:type/`, async (req, res) => {
+  let device = await DeviceRepo.findOneById(req.params.id);
+  const { from = 24 } = req.query;
+
+  if (device == null) {
+    res.status(404).send({
+      success: false
+    })
+    return;
+  }
+  try {
+    const stats = await DeviceStatsUseCases.getStatsByDeviceAndType(device, from as number, req.params.type);
+    res.send({
+      success: true,
+      data: stats
+    })
+  } catch (error: any) {
+    res.status(401).send({
+      success: false,
+      message: error.message
+    })
+  }
+});
+
 export default router;

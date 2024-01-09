@@ -24,25 +24,32 @@ export default [
   },
   {
     path: '/welcome',
-    name: 'welcome',
+    name: 'Dashboard',
     icon: 'smile',
     component: './Welcome',
   },
   {
-    name: 'Devices',
-    icon: 'table',
-    path: '/devices',
-    component: './Devices',
-  },
-  {
-    name: 'Playbook',
-    icon: 'table',
-    path: '/playbooks',
-    component: './Devices',
+    path: '/',
+    name: 'Manage',
+    icon: 'crown',
+    routes: [
+      {
+        name: 'Devices',
+        icon: 'table',
+        path: '/devices',
+        component: './Devices',
+      },
+      {
+        name: 'Playbooks',
+        icon: 'table',
+        path: '/playbooks',
+        component: './Playbooks',
+      },
+    ],
   },
   {
     path: '/admin',
-    name: 'admin',
+    name: 'Configuration',
     icon: 'crown',
     access: 'canAdmin',
     routes: [
@@ -64,6 +71,12 @@ export default [
         name: 'Tasks',
         icon: 'UnorderedList',
         component: './Admin/Tasks',
+      },
+      {
+        path: '/admin/settings',
+        name: 'Settings',
+        icon: 'SettingOutlined',
+        component: './Admin/Settings/GeneralSettings',
       },
     ],
   },

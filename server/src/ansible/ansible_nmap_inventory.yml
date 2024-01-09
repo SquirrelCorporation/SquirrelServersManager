@@ -1,6 +1,0 @@
-plugin: community.general.nmap
-address: 192.168.0.0/24
-strict: False
-ipv4: yes
-ports: no
-sudo: true

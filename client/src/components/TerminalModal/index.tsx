@@ -24,6 +24,10 @@ const TerminalModal = (props: TerminalModalProps) => {
       height: '600px',
     },
   };
+  const terminalContentStyle = {
+    fontSize: '12px',
+    fontFamily: 'Menlo',
+  };
   const taskInit: TaskStatusTimelineType = {
     _status: 'created',
     status: 'finish',
@@ -64,7 +68,7 @@ const TerminalModal = (props: TerminalModalProps) => {
     resetTerminal();
     setBufferedContent((previous) => (
       <>
-        <span style={{ fontSize: '14px' }}>Starting...</span>
+        <span style={terminalContentStyle}>Starting...</span>
         <br />
       </>
     ));
@@ -135,7 +139,7 @@ const TerminalModal = (props: TerminalModalProps) => {
                   setBufferedContent((previous) => (
                     <>
                       {previous}
-                      <span style={{ fontSize: '14px' }}>{execLog.stdout}</span>
+                      <span style={terminalContentStyle}>{execLog.stdout}</span>
                       <br />
                     </>
                   ));
@@ -175,7 +179,7 @@ const TerminalModal = (props: TerminalModalProps) => {
     <>
       <Modal
         open={props.open}
-        title="Terminal"
+        title="Executing playbook..."
         onOk={handleOk}
         onCancel={handleCancel}
         styles={modalStyles}
@@ -192,10 +196,11 @@ const TerminalModal = (props: TerminalModalProps) => {
           <Col span={24}>
             <div style={{ height: '500px' }}>
               <ReactTerminal
-                theme="dark"
+                theme="material-dark"
                 showControlBar={false}
                 showControlButtons={false}
                 enableInput={false}
+                prompt={''}
               />
             </div>
           </Col>

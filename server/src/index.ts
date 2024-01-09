@@ -3,6 +3,8 @@ import {connection} from './database';
 import routes from './controlers';
 import scheduledFunctions from './crons';
 import logger from "./logger";
+import {CONSIDER_DEVICE_OFFLINE} from "./config";
+import {version, dependencies} from '../package.json';
 
 const app = express()
 
@@ -11,7 +13,7 @@ app.use(express.json());
 
 
 const getAccess = () => {
-    return true;
+    return 'admin';
 };
 
 app.use('/api', routes);
@@ -80,6 +82,17 @@ app.get(`/api/currentUser`, async (req, res) => {
             },
             address: '西湖区工专路 77 号',
             phone: '0752-268888888',
+            settings: {
+                apiKey:'XXX-XXX-XXX-XXX-XXX-XXX',
+                device: {
+                    considerOffLineAfter: CONSIDER_DEVICE_OFFLINE
+                },
+                server: {
+                    version: version,
+                    deps: dependencies,
+                    processes: process.versions
+                }
+            }
         },
     });
 });

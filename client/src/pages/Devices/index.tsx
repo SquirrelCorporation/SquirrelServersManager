@@ -1,302 +1,154 @@
-import {DownOutlined, LoginOutlined, PlusOutlined, ReloadOutlined, ShakeOutlined} from '@ant-design/icons';
-import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
-import {
-  FooterToolbar,
-  ModalForm,
-  PageContainer,
-  ProDescriptions,
-  ProFormText,
-  ProFormTextArea,
-  ProTable,
-} from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
-import {Avatar, Button, Drawer, Dropdown, Input, MenuProps, message, Space} from 'antd';
-import React, { useRef, useState } from 'react';
-import type { FormValueType } from './components/ConfigurationForm';
-import ConfigurationForm from './components/ConfigurationForm';
-import {addRule, getDevice, removeRule, updateRule} from "@/services/ant-design-pro/device";
-import {OsLogo} from "@/components/misc/OsLogo";
-import DeviceQuickDropDown from "@/pages/Devices/components/DeviceQuickDropDown";
-import TerminalModal from "@/components/TerminalModal";
-import { TerminalContextProvider } from 'react-terminal';
+import { DeviceStatType } from '@/components/Charts/DeviceStatType';
+import TinyLine from '@/components/Charts/TinyLine';
+import DeviceStatusTag from '@/components/DeviceStatus/DeviceStatusTag';
+import PlaybookSelectionModal from '@/components/PlaybookSelectionModal/PlaybookSelectionModal';
+import QuickActionDropDown from '@/components/QuickAction/QuickActionDropDown';
+import { OsLogo } from '@/components/misc/OsLogo';
+import { getDevices } from '@/services/ant-design-pro/device';
+import { AppstoreOutlined, ControlOutlined } from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-components';
+import { Avatar, Card, List, Tooltip, message } from 'antd';
+import moment from 'moment';
+import React, { memo, useEffect, useState } from 'react';
+import styles from '../Admin/Inventory.less';
 
-
-const handleAdd = async (fields: API.DeviceItem) => {
-  const hide = message.loading('正在添加');
-  try {
-    await addRule({ ...fields });
-    hide();
-    message.success('Added successfully');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('Adding failed, please try again!');
-    return false;
-  }
+export type StateType = {
+  visible?: boolean;
+  done?: boolean;
+  current?: API.DeviceItem;
 };
 
-/**
- * @en-US Update node
- * @zh-CN 更新节点
- *
- * @param fields
- */
-const handleUpdate = async (fields: FormValueType) => {
-  const hide = message.loading('Configuring');
-  try {
-    await updateRule({
-      name: fields.ip,
-      desc: fields.hostname,
-      key: fields.uuid,
-    });
-    hide();
-
-    message.success('Configuration is successful');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('Configuration failed, please try again!');
-    return false;
-  }
-};
-
-/**
- *  Delete node
- * @zh-CN 删除节点
- *
- * @param selectedRows
- */
-const handleRemove = async (selectedRows: API.DeviceItem[]) => {
-  const hide = message.loading('正在删除');
-  if (!selectedRows) return true;
-  try {
-    await removeRule({
-      key: selectedRows.map((row) => row.uuid),
-    });
-    hide();
-    message.success('Deleted successfully and will refresh soon');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('Delete failed, please try again');
-    return false;
-  }
-};
-
-
-
-const Devices: React.FC = () => {
-  /**
-   * @en-US The pop-up window of the distribution update window
-   * */
-  const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
-
-  const [showDetail, setShowDetail] = useState<boolean>(false);
-
-  const actionRef = useRef<ActionType>();
+const Index = memo(() => {
+  const stateT: StateType = { visible: false, done: false };
+  const [state, setState] = React.useState(stateT);
+  const [deviceList, setDeviceList] = React.useState<API.DeviceList>({});
   const [currentRow, setCurrentRow] = useState<API.DeviceItem>();
-  const [terminalModalOpen, setTerminalModalOpen] = useState(false);
+  const [showPlaybookModal, setShowPlaybookModal] = React.useState(false);
+  const asyncFetch = async () => {
+    await getDevices()
+      .then((list) => {
+        setDeviceList(list);
+      })
+      .catch((error) => {
+        message.error(error);
+      });
+  };
+  useEffect(() => {
+    asyncFetch();
+  }, []);
+  const showModal = () => {
+    setState({
+      visible: true,
+      current: undefined,
+    });
+  };
+
+  const showEditModal = (item: API.DeviceItem) => {
+    setState({
+      visible: true,
+      current: item,
+    });
+  };
+
+  const paginationProps = {
+    showSizeChanger: true,
+    showQuickJumper: true,
+    pageSize: 5,
+    total: 50,
+  };
   const onDropDownClicked = (key: string) => {
-    setTerminalModalOpen(true);
-  }
-
-
-  const columns: ProColumns<API.DeviceItem>[] = [
-    {
-      title: 'Type',
-      dataIndex: 'osLogoFile',
-      render: (dom, entity) => {
-        return <OsLogo logoFile={entity.osLogoFile}/>
-      }
-    },
-    {
-      title: 'IP',
-      dataIndex: 'ip',
-      //tip: 'The rule name is the unique key',
-      render: (dom, entity) => {
-        return (
-          <a
-            onClick={() => {
-              setCurrentRow(entity);
-              setShowDetail(true);
-            }}
-          >
-            {dom}
-          </a>
-        );
-      },
-    },
-    {
-      title: 'Hostname',
-      dataIndex: 'hostname',
-      valueType: 'textarea',
-    },
-    {
-      title: <FormattedMessage id="pages.searchTable.titleStatus" defaultMessage="Status" />,
-      dataIndex: 'status',
-      hideInForm: true,
-      valueEnum: {
-        0: {
-          text: "Registering",
-          status: 'Warning',
-        },
-        1: {
-          text: (
-              <FormattedMessage id="pages.searchTable.nameStatus.online" defaultMessage="Online" />
-
-          ),
-          status: 'Success',
-        },
-        2: {
-          text: (
-            <FormattedMessage id="pages.searchTable.nameStatus.abnormal" defaultMessage="Down" />
-          ),
-          status: 'Error',
-        },
-      },
-    },
-    {
-      title: 'Os Distro',
-      dataIndex: 'osDistro',
-      valueType: 'textarea',
-      hideInTable: true
-    },
-    {
-      title: 'Os Arch',
-      dataIndex: 'osArch',
-      valueType: 'textarea',
-      hideInTable: true
-    },
-    {
-      title: 'Os Code Name',
-      dataIndex: 'osCodeName',
-      valueType: 'textarea',
-      hideInTable: true
-    },
-    {
-      title: 'Os Platform',
-      dataIndex: 'osPlatform',
-      valueType: 'textarea',
-      hideInTable: true
-    },
-    {
-      title: 'Os Kernel',
-      dataIndex: 'osKernel',
-      valueType: 'textarea',
-      hideInTable: true
-    },
-
-    {
-      title: 'CPU Brand',
-      dataIndex: 'cpuBrand',
-      valueType: 'textarea',
-      hideInTable: true
-    },
-    {
-      title: 'System Manufacturer ',
-      dataIndex: 'systemManufacturer',
-      valueType: 'textarea',
-      hideInTable: true
-    },
-    {
-      title: 'System Model',
-      dataIndex: 'systemModel',
-      valueType: 'textarea',
-      hideInTable: true
-    },
-    {
-      title: 'Updated at',
-      sorter: true,
-      dataIndex: 'updatedAt',
-      valueType: 'dateTime',
-    },
-    {
-      title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="Operating" />,
-      dataIndex: 'option',
-      valueType: 'option',
-      render: (_, record) => [
-        <a
-          key="config"
-          onClick={() => {
-            handleUpdateModalOpen(true);
-            setCurrentRow(record);
-          }}
-        >
-          <FormattedMessage id="pages.searchTable.config" defaultMessage="Configuration" />
-        </a>,
-        <a
-            key="quickAction"
-            onClick={() => {
-              setCurrentRow(record);
-            }}
-        >
-          <DeviceQuickDropDown onDropDownClicked={onDropDownClicked}/>
-        </a>
-      ],
-    },
-  ];
+    switch (key) {
+      case '-1':
+        setShowPlaybookModal(true);
+        return;
+    }
+  };
+  const ListContent: React.FC<API.DeviceItem> = (props: API.DeviceItem) => (
+    <div className={styles.listContent}>
+      <div className={styles.listContentItem}>
+        <span>
+          <DeviceStatusTag status={props.status} />
+        </span>
+        <p>{props.hostname}</p>
+      </div>
+      <div className={styles.listContentItem}>
+        <span>Updated At</span>
+        <p>{moment(props.updatedAt).format('YYYY-MM-DD, HH:mm')}</p>
+      </div>
+      <div className={styles.listContentItem}>
+        <TinyLine type={DeviceStatType.CPU} deviceUuid={props.uuid} from={24} />
+      </div>
+    </div>
+  );
 
   return (
-      <TerminalContextProvider>
     <PageContainer>
-      <ProTable<API.DeviceItem, API.PageParams>
-        headerTitle="List of Devices"
-        actionRef={actionRef}
-        rowKey="key"
-        search={{
-          labelWidth: 120,
-        }}
-        request={getDevice}
-        columns={columns}
+      <PlaybookSelectionModal
+        isModalOpen={showPlaybookModal}
+        setIsModalOpen={setShowPlaybookModal}
+        itemSelected={currentRow}
       />
-        <TerminalModal open={terminalModalOpen} setOpen={setTerminalModalOpen}/>
-      <ConfigurationForm
-        onSubmit={async (value) => {
-          const success = await handleUpdate(value);
-          if (success) {
-            handleUpdateModalOpen(false);
-            setCurrentRow(undefined);
-            if (actionRef.current) {
-              actionRef.current.reload();
-            }
-          }
-        }}
-        onCancel={() => {
-          handleUpdateModalOpen(false);
-          if (!showDetail) {
-            setCurrentRow(undefined);
-          }
-        }}
-        updateModalOpen={updateModalOpen}
-        values={currentRow || {}}
-      />
-
-      <Drawer
-        width={600}
-        open={showDetail}
-        onClose={() => {
-          setCurrentRow(undefined);
-          setShowDetail(false);
-        }}
-        closable={false}
-      >
-        {currentRow?.ip && (
-          <ProDescriptions<API.DeviceItem>
-            column={1}
-            title={currentRow?.ip}
-            request={async () => ({
-              data: currentRow || {},
-            })}
-            params={{
-              id: currentRow?.ip,
-            }}
-            columns={columns as ProDescriptionsItemProps<API.DeviceItem>[]}
+      <div className={styles.standardList}>
+        <Card
+          className={styles.listCard}
+          bordered={false}
+          style={{ marginTop: 24 }}
+          bodyStyle={{ padding: '0 32px 40px 32px' }}
+        >
+          <List
+            size="large"
+            rowKey="uuid"
+            loading={false}
+            pagination={paginationProps}
+            dataSource={deviceList?.data}
+            renderItem={(item) => (
+              <List.Item
+                actions={[
+                  <a
+                    key={item.uuid}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      showEditModal(item);
+                    }}
+                  >
+                    <Tooltip title="Services">
+                      <AppstoreOutlined />
+                    </Tooltip>
+                  </a>,
+                  <a
+                    key={item.uuid}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      showEditModal(item);
+                    }}
+                  >
+                    <Tooltip title="Device Settings">
+                      <ControlOutlined />
+                    </Tooltip>
+                  </a>,
+                  <a
+                    key="quickAction"
+                    onClick={() => {
+                      setCurrentRow(item);
+                    }}
+                  >
+                    <QuickActionDropDown onDropDownClicked={onDropDownClicked} />
+                  </a>,
+                ]}
+              >
+                <List.Item.Meta
+                  avatar={<Avatar src={OsLogo(item.osLogoFile)} size="large" />}
+                  title={<a href={item.hostname}>{item.hostname}</a>}
+                  description={item.ip}
+                />
+                <ListContent uuid={item.uuid} createdAt={item.createdAt} status={item.status} />
+              </List.Item>
+            )}
           />
-        )}
-      </Drawer>
+        </Card>
+      </div>
     </PageContainer>
-      </TerminalContextProvider>
   );
-};
+});
 
-export default Devices;
+export default Index;

@@ -4,6 +4,7 @@ import {v4 as uuidv4} from "uuid";
 export const DOCUMENT_NAME = 'Device';
 export const COLLECTION_NAME = 'devices';
 export default interface Device {
+    _id: string;
     uuid: string;
     disabled?: boolean;
     hostname?: string;
@@ -26,6 +27,7 @@ export default interface Device {
     cpuBrand?: string;
     cpuManufacturer?: string;
     cpuFamily?: string;
+    agentVersion?: string;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -138,6 +140,10 @@ const schema = new Schema<Device>(
             required: true,
             default: new Date()
         },
+        agentVersion: {
+            type: Schema.Types.String,
+            required: false
+        }
     },
     {
         versionKey: false,

@@ -27,3 +27,10 @@ export async function getTasks() {
     ...{},
   });
 }
+
+export async function getPlaybooks() {
+  return request<API.Playbooks>('/api/ansible/playbooks', {
+    method: 'GET',
+    ...{},
+  });
+}

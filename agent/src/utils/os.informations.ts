@@ -1,6 +1,7 @@
 import si from 'systeminformation';
 import osu from 'node-os-utils';
 import logger from "../logger";
+import {version} from '../../package.json';
 
 type OSInfo = {
   distro?: string;
@@ -63,10 +64,11 @@ type DeviceInfo = {
   storage?: DriveInfo;
   system?: SystemInfo;
   cpu?: CPUInfo;
+  agentVersion?: string;
 }
 
 export default async function getDeviceInfo(hostId : string) {
-  let deviceInfo: DeviceInfo = {id : hostId};
+  let deviceInfo: DeviceInfo = {id : hostId, agentVersion: version};
 
   const valueObject = {
     cpu: '*',

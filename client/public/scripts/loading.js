@@ -17,10 +17,12 @@
         #root {
           background-repeat: no-repeat;
           background-size: 100% auto;
+          background-color: black;
         }
 
         .loading-title {
           font-size: 1.1rem;
+          color: #888;
         }
 
         .loading-sub-title {
@@ -191,10 +193,10 @@
           </div>
         </div>
         <div class="loading-title">
-          正在加载资源
+          Squirrel Servers Manager
         </div>
         <div class="loading-sub-title">
-          初次加载资源可能需要较多时间 请耐心等待
+          Loading
         </div>
       </div>
     `;

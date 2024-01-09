@@ -18,6 +18,19 @@ declare namespace API {
     };
     address?: string;
     phone?: string;
+    settings?: Settings;
+  };
+
+  type Settings = {
+    apiKey: string;
+    device: {
+      considerOffLineAfter: number;
+    };
+    server: {
+      version: string;
+      deps: any;
+      processes: any;
+    };
   };
 
   type ErrorResponse = {
@@ -113,9 +126,7 @@ declare namespace API {
   };
 
   type DeviceListParams = {
-    /** 当前的页码 */
     current?: number;
-    /** 页面的容量 */
     pageSize?: number;
   };
 
@@ -124,45 +135,45 @@ declare namespace API {
     disabled?: boolean;
     lastExecution?: Date;
     expression?: string;
-  }
+  };
 
   type Exec = {
-    data: {execId: string};
+    data: { execId: string };
     success?: boolean;
-  }
+  };
   type ExecLog = {
     content: string;
     createdAt: string;
     stdout?: string;
     ident: string;
     logRunnerId: string;
-  }
+  };
   type ExecLogs = {
     data: {
       execId: string;
       execLogs?: ExecLog[];
-    }
+    };
     success?: boolean;
-  }
+  };
 
   type ExecStatus = {
     ident: string;
     status: string;
     createdAt: string;
-  }
+  };
 
   type ExecStatuses = {
     data: {
       execId: string;
       execStatuses?: ExecStatus[];
-    }
+    };
     success?: boolean;
-  }
+  };
 
   type Tasks = {
     data?: Task[];
     success?: boolean;
-  }
+  };
 
   type Task = {
     ident: string;
@@ -170,5 +181,28 @@ declare namespace API {
     cmd: string;
     createdAt: string;
     updatedAt: string;
-  }
+  };
+
+  type DeviceStatParams = {
+    from?: number;
+  };
+
+  type DeviceStats = {
+    data?: DeviceStat[];
+    success?: boolean;
+  };
+  type DeviceStat = {
+    date: string;
+    value: number;
+  };
+
+  type PlaybookFileList = {
+    label: string;
+    value: string;
+  };
+
+  type Playbooks = {
+    success?: boolean;
+    data?: PlaybookFileList[];
+  };
 }

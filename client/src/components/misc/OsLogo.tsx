@@ -1,80 +1,74 @@
 import debian from './img/128_debian.png';
 import darwin from './img/apple.png';
 
-import {Avatar} from "antd";
-import React from "react";
-
-export type OsLogoAttributes = {
-  logoFile?: string;
-};
-export const OsLogo : React.FC<OsLogoAttributes> = (logoAttributes) => {
-  switch (logoAttributes.logoFile) {
+export const OsLogo = (logoFile: string | undefined): string => {
+  switch (logoFile) {
     case 'apple':
     case 'darwin':
-      return <Avatar src={<img src={darwin} alt={logoAttributes.logoFile}/>}/>;
+      return darwin;
     case 'windows':
-      return <></>;
+      return '';
     case 'arch':
-      return <></>;
+      return '';
     case 'centos':
-      return <></>;
+      return '';
     case 'coreos':
-      return <></>;
+      return '';
     case 'debian':
-      return <></>;
+      return debian;
     case 'deepin':
-      return <></>;
+      return '';
     case 'elementary':
-      return <></>;
+      return '';
     case 'fedora':
-      return <></>;
+      return '';
     case 'gentoo':
-      return <></>;
+      return '';
     case 'mageia':
-      return <></>;
+      return '';
     case 'mandriva':
-      return <></>;
+      return '';
     case 'manjaro':
-      return <></>;
+      return '';
     case 'mint':
-      return <></>;
+      return '';
     case 'mx':
-      return <></>;
+      return '';
     case 'openbsd':
-      return <></>;
+      return '';
     case 'freebsd':
-      return <></>;
+      return '';
     case 'pclinuxos':
-      return <></>;
+      return '';
     case 'puppy':
-      return <></>;
+      return '';
     case 'raspbian':
-      return <></>;
+      return '';
     case 'reactos':
-      return <></>;
+      return '';
     case 'slackware':
-      return <></>;
+      return '';
     case 'sugar':
-      return <></>;
+      return '';
     case 'redhat':
-      return <></>;
+      return '';
     case 'steam':
-      return <></>;
+      return '';
     case 'suse':
-      return <></>;
+      return '';
     case 'mate':
-      return <></>;
+      return '';
     case 'xubuntu':
-      return <></>;
+      return '';
     case 'lubuntu':
-      return <></>;
+      return '';
     case 'ubuntu':
-      return <></>;
+      return '';
     case 'solaris':
-      return <></>;
+      return '';
     case 'tails':
-      return <></>;
-   default:
-    return <></>
+      return '';
+    default:
+      return '';
   }
-}
+};

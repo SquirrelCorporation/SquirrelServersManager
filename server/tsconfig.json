@@ -6,6 +6,7 @@
     "lib": ["esnext"],
     "esModuleInterop": true,
     "downlevelIteration": true,
+    "resolveJsonModule": true,
   },
   "include": ["src//*.ts", "src//*.json", ".env"]
 }

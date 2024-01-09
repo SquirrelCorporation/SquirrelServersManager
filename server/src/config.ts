@@ -9,3 +9,4 @@ export const db = {
 };
 
 export const CONSIDER_DEVICE_OFFLINE = 5;
+export const CLEANUP_LOGS_AND_STATUSES = 600;

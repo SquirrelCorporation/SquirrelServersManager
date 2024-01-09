@@ -15,9 +15,14 @@ async function updateStatus(ident: string, status: string) {
         .exec();
 }
 
+async function findAll(): Promise<AnsibleTask[]> {
+    return await AnsibleTaskModel.find()
+        .lean()
+        .exec();
+}
 async function findAllOld(ageInMinutes: number): Promise<AnsibleTask[]> {
     return await AnsibleTaskModel.find(
-        {createdAt: { $lt: DateTime.now().minus({minute: ageInMinutes})}})
+        {createdAt: { $lt: DateTime.now().minus({minute: ageInMinutes}).toJSDate()}})
         .lean()
         .exec();
 }
@@ -38,5 +43,6 @@ export default {
     create,
     updateStatus,
     findAllOld,
+    findAll,
     deleteAllOldLogsAndStatuses
 }
