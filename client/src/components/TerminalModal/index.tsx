@@ -8,6 +8,7 @@ import { ReactTerminal, TerminalContext } from 'react-terminal';
 export type TerminalModalProps = {
   setOpen: any;
   open: boolean;
+  command?: string;
 };
 
 export type TaskStatusTimelineType = StepsProps & {
@@ -127,7 +128,6 @@ const TerminalModal = (props: TerminalModalProps) => {
 
       await getExecLogs(execId)
         .then((logs) => {
-          console.log('getExecLogs');
           if (logs && logs.data.execLogs) {
             logs.data.execLogs.sort((a: API.ExecLog, b: API.ExecLog) => {
               return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
@@ -179,7 +179,7 @@ const TerminalModal = (props: TerminalModalProps) => {
     <>
       <Modal
         open={props.open}
-        title="Executing playbook..."
+        title={`Executing playbook ${props.command}...`}
         onOk={handleOk}
         onCancel={handleCancel}
         styles={modalStyles}

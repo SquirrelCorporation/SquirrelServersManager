@@ -1,9 +1,9 @@
-import {PageContainer, ProColumns, ProTable} from '@ant-design/pro-components';
+import { getCrons } from '@/services/ant-design-pro/cron';
+import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
 import React from 'react';
-import {getCrons} from "@/services/ant-design-pro/cron";
 
-const columns : ProColumns<API.Cron>[] = [
+const columns: ProColumns<API.Cron>[] = [
   {
     title: 'Name',
     dataIndex: 'name',
@@ -19,7 +19,6 @@ const columns : ProColumns<API.Cron>[] = [
     dataIndex: 'lastExecution',
     key: 'lastExecution',
     valueType: 'dateTime',
-
   },
 ];
 

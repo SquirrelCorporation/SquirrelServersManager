@@ -12,8 +12,7 @@ const GeneralSettings: React.FC = () => {
       key: '1',
       label: (
         <div>
-          <SettingOutlined />
-          General settings
+          <SettingOutlined /> General settings
         </div>
       ),
       children: <CommonSettings />,
@@ -22,8 +21,7 @@ const GeneralSettings: React.FC = () => {
       key: '2',
       label: (
         <div>
-          <SettingOutlined />
-          Device settings
+          <SettingOutlined /> Device settings
         </div>
       ),
       children: <DeviceSettings />,
@@ -32,8 +30,7 @@ const GeneralSettings: React.FC = () => {
       key: '3',
       label: (
         <div>
-          <SettingOutlined />
-          Clean up
+          <SettingOutlined /> Clean up
         </div>
       ),
     },
@@ -41,8 +38,7 @@ const GeneralSettings: React.FC = () => {
       key: '4',
       label: (
         <div>
-          <InfoCircleOutlined />
-          Information
+          <InfoCircleOutlined /> System Information
         </div>
       ),
       children: <Information />,

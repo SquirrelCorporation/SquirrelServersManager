@@ -205,4 +205,13 @@ declare namespace API {
     success?: boolean;
     data?: PlaybookFileList[];
   };
+
+  type PlaybookContent = {
+    success?: boolean;
+    data?: string;
+  };
+
+  type PlaybookOpResponse = {
+    success?: boolean;
+  };
 }

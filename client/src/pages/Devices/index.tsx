@@ -10,7 +10,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import { Avatar, Card, List, Tooltip, message } from 'antd';
 import moment from 'moment';
 import React, { memo, useEffect, useState } from 'react';
-import styles from '../Admin/Inventory.less';
+import styles from './Devices.less';
 
 export type StateType = {
   visible?: boolean;

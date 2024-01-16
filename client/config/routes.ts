@@ -53,7 +53,7 @@ export default [
     icon: 'crown',
     access: 'canAdmin',
     routes: [
-      { path: '/admin', redirect: '/404' },
+      { path: '/admin', component: './Admin/Inventory' },
       {
         name: 'Inventory',
         icon: 'database',
@@ -68,7 +68,7 @@ export default [
       },
       {
         path: '/admin/tasks',
-        name: 'Tasks',
+        name: 'Logs',
         icon: 'UnorderedList',
         component: './Admin/Tasks',
       },

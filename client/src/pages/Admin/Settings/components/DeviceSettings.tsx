@@ -10,6 +10,7 @@ const DeviceSettings: React.FC = () => {
           <BorderOutlined /> Consider device offline after
         </Typography>{' '}
         <InputNumber min={1} max={60} defaultValue={3} />
+        <Typography>minute(s)</Typography>
         <Space.Compact style={{ width: '100%' }}></Space.Compact>
       </Space>
       <Space direction="horizontal" size="middle">
@@ -17,6 +18,7 @@ const DeviceSettings: React.FC = () => {
           <BorderOutlined /> Consider device offline after
         </Typography>{' '}
         <InputNumber min={1} max={60} defaultValue={3} />
+        <Typography>minute(s)</Typography>
         <Space.Compact style={{ width: '100%' }}></Space.Compact>
       </Space>
     </Flex>

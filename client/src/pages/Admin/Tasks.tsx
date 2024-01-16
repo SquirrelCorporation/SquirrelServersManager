@@ -1,9 +1,9 @@
-import {PageContainer, ProColumns, ProTable} from '@ant-design/pro-components';
+import { getTasks } from '@/services/ant-design-pro/ansible';
+import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
 import React from 'react';
-import {getTasks} from "@/services/ant-design-pro/ansible";
 
-const columns : ProColumns<API.Task>[] = [
+const columns: ProColumns<API.Task>[] = [
   {
     title: 'Identifier',
     dataIndex: 'ident',

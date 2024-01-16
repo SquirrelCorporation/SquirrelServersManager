@@ -39,8 +39,57 @@ async function listPlaybooks() {
         throw new Error("Exec failed");
     }
 }
+
+async function readPlaybook(playbook: string) {
+    try {
+        logger.info('[SHELL]-[ANSIBLE] - readPlaybook - Starting...');
+        shell.cd('/src/src/ansible/');
+        return shell.cat(playbook).toString();
+    } catch (error) {
+        logger.error("[SHELL]-[ANSIBLE] - readPlaybook")
+        throw new Error("Exec failed");
+    }
+}
+
+async function editPlaybook(playbook: string, content: string) {
+    try {
+        logger.info('[SHELL]-[ANSIBLE] - editPlaybook - Starting...');
+        shell.cd('/src/src/ansible/');
+        shell.ShellString(content).to(playbook);
+    } catch (error) {
+        logger.error("[SHELL]-[ANSIBLE] - editPlaybook")
+        throw new Error("Exec failed");
+    }
+}
+
+async function newPlaybook(playbook: string) {
+    try {
+        logger.info('[SHELL]-[ANSIBLE] - newPlaybook - Starting...');
+        shell.cd('/src/src/ansible/');
+        shell.touch(playbook + ".yml");
+    } catch (error) {
+        logger.error("[SHELL]-[ANSIBLE] - newPlaybook")
+        throw new Error("Exec failed");
+    }
+}
+
+async function deletePlaybook(playbook: string) {
+    try {
+        logger.info('[SHELL]-[ANSIBLE] - newPlaybook - Starting...');
+        shell.cd('/src/src/ansible/');
+        shell.rm(playbook);
+    } catch (error) {
+        logger.error("[SHELL]-[ANSIBLE] - newPlaybook")
+        throw new Error("Exec failed");
+    }
+}
+
 export default {
     executePlaybook,
-    listPlaybooks
+    listPlaybooks,
+    readPlaybook,
+    editPlaybook,
+    newPlaybook,
+    deletePlaybook
 };
 

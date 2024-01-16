@@ -10,12 +10,12 @@ import {
   ProDescriptions,
   ProTable,
 } from '@ant-design/pro-components';
-import { FormattedMessage } from '@umijs/max';
 import { Avatar, Button, Drawer, message } from 'antd';
 import React, { useRef, useState } from 'react';
 import { TerminalContextProvider } from 'react-terminal';
 import type { FormValueType } from './components/ConfigurationForm';
 import ConfigurationForm from './components/ConfigurationForm';
+import { AddCircleOutline } from 'antd-mobile-icons';
 
 const handleAdd = async (fields: API.DeviceItem) => {
   const hide = message.loading('正在添加');
@@ -66,10 +66,11 @@ const Inventory: React.FC = () => {
   const [currentRow, setCurrentRow] = useState<API.DeviceItem>();
   const [terminalModalOpen, setTerminalModalOpen] = useState(false);
   const [addNewDeviceModalIsOpen, setAddNewDeviceModalIsOpen] = useState(false);
+  const [command, setCommand] = useState();
+
   const onDropDownClicked = (key: string) => {
     setTerminalModalOpen(true);
   };
-
   const columns: ProColumns<API.DeviceItem>[] = [
     {
       title: 'Type',
@@ -101,7 +102,7 @@ const Inventory: React.FC = () => {
       valueType: 'textarea',
     },
     {
-      title: <FormattedMessage id="pages.searchTable.titleStatus" defaultMessage="Status" />,
+      title: 'Status',
       dataIndex: 'status',
       hideInForm: true,
       valueEnum: {
@@ -110,15 +111,11 @@ const Inventory: React.FC = () => {
           status: 'Warning',
         },
         1: {
-          text: (
-            <FormattedMessage id="pages.searchTable.nameStatus.online" defaultMessage="Online" />
-          ),
+          text: 'Online',
           status: 'Success',
         },
         2: {
-          text: (
-            <FormattedMessage id="pages.searchTable.nameStatus.abnormal" defaultMessage="Down" />
-          ),
+          text: 'Down',
           status: 'Error',
         },
       },
@@ -185,7 +182,7 @@ const Inventory: React.FC = () => {
       valueType: 'textarea',
     },
     {
-      title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="Operating" />,
+      title: 'Operating',
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => [
@@ -196,7 +193,7 @@ const Inventory: React.FC = () => {
             setCurrentRow(record);
           }}
         >
-          <FormattedMessage id="pages.searchTable.config" defaultMessage="Configuration" />
+          Configuration
         </a>,
         <a
           key="quickAction"
@@ -239,8 +236,9 @@ const Inventory: React.FC = () => {
                 onClick={() => {
                   setAddNewDeviceModalIsOpen(true);
                 }}
+                icon={<AddCircleOutline />}
               >
-                + New device
+                Install agent on new device
               </Button>,
             ];
           }}
@@ -256,7 +254,7 @@ const Inventory: React.FC = () => {
             <Button type="primary">Apply Batch Playbook</Button>
           </FooterToolbar>
         )}
-        <TerminalModal open={terminalModalOpen} setOpen={setTerminalModalOpen} />
+        <TerminalModal open={terminalModalOpen} setOpen={setTerminalModalOpen} command={command} />
         <ConfigurationForm
           onSubmit={async (value) => {
             const success = await handleUpdate(value);

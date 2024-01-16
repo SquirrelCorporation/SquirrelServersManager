@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post(`/exec/playbook`, async (req, res) => {
     try {
-        const execId = await ansible.executePlaybook("ping.yml");
+        const execId = await ansible.executePlaybook("_reboot.yml");
         res.send({
             success: true,
             data: {execId: execId}

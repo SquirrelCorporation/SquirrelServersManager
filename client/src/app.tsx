@@ -1,16 +1,18 @@
-import { Footer, Question, SelectLang, AvatarDropdown, AvatarName } from '@/components';
-import { LinkOutlined } from '@ant-design/icons';
+import { AvatarDropdown, AvatarName, Footer, SelectLang } from '@/components';
+import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
+import { LinkOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
-import { history, Link } from '@umijs/max';
+import { Link, history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
+import Logo from '../public/logo.svg';
 import { errorConfig } from './requestErrorConfig';
-import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
-import React from 'react';
+import HeaderRender from '@/components/HeaderRender';
+import Question from '@/components/HeaderComponents/Question';
+import { ActionsDropdown } from '@/components/HeaderComponents/ActionsDropdown';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
-import Logo from '../public/logo.svg'
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -52,7 +54,7 @@ export async function getInitialState(): Promise<{
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
     logo: Logo,
-    actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
+    actionsRender: () => [<ActionsDropdown key="doc" />],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
@@ -60,6 +62,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
     },
+    //headerRender: () => <HeaderRender />,
     menu: { type: 'group' },
     footerRender: () => <Footer />,
     onPageChange: () => {

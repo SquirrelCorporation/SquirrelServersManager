@@ -17,6 +17,7 @@ async function updateStatus(ident: string, status: string) {
 
 async function findAll(): Promise<AnsibleTask[]> {
     return await AnsibleTaskModel.find()
+        .sort({createdAt: -1})
         .lean()
         .exec();
 }
