@@ -130,22 +130,13 @@ const schema = new Schema<Device>(
             type: Schema.Types.String,
             required: false
         },
-        createdAt: {
-            type: Date,
-            required: true,
-            default: new Date()
-        },
-        updatedAt: {
-            type: Date,
-            required: true,
-            default: new Date()
-        },
         agentVersion: {
             type: Schema.Types.String,
             required: false
         }
     },
     {
+        timestamps: true,
         versionKey: false,
     },
 );

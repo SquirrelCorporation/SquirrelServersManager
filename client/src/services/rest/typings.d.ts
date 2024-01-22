@@ -195,6 +195,9 @@ declare namespace API {
     date: string;
     value: number;
   };
+  type SimpleDeviceStat = {
+    value: number;
+  };
 
   type PlaybookFileList = {
     label: string;
@@ -213,5 +216,17 @@ declare namespace API {
 
   type PlaybookOpResponse = {
     success?: boolean;
+  };
+
+  type ServerLogs = {
+    data?: ServerLog[];
+    success?: boolean;
+  };
+
+  type ServerLog = {
+    time: string;
+    pid: number;
+    level: number;
+    msg: string;
   };
 }

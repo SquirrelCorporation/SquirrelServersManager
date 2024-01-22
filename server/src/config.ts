@@ -9,4 +9,5 @@ export const db = {
 };
 
 export const CONSIDER_DEVICE_OFFLINE = 5;
-export const CLEANUP_LOGS_AND_STATUSES = 600;
+export const CLEANUP_ANSIBLE_LOGS_AND_STATUSES = 600;
+export const CLEANUP_SERVER_LOGS = 600;

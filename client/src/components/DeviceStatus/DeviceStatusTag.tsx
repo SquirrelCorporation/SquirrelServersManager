@@ -1,23 +1,5 @@
 import { Tag } from 'antd';
 
-/*
- 0: {
-          text: 'Registering',
-          status: 'Warning',
-        },
-        1: {
-          text: (
-            <FormattedMessage id="pages.searchTable.nameStatus.online" defaultMessage="Online" />
-          ),
-          status: 'Success',
-        },
-        2: {
-          text: (
-            <FormattedMessage id="pages.searchTable.nameStatus.abnormal" defaultMessage="Down" />
-          ),
-          status: 'Error',
-        },
- */
 export type DeviceStatusTagType = {
   status: number;
 };

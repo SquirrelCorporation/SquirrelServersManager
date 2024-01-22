@@ -1,6 +1,6 @@
-import { AvatarDropdown, AvatarName, Footer, SelectLang } from '@/components';
-import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
-import { LinkOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { AvatarDropdown, AvatarName, Footer } from '@/components';
+import { currentUser as queryCurrentUser } from '@/services/rest/api';
+import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
@@ -8,9 +8,7 @@ import { Link, history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import Logo from '../public/logo.svg';
 import { errorConfig } from './requestErrorConfig';
-import HeaderRender from '@/components/HeaderRender';
-import Question from '@/components/HeaderComponents/Question';
-import { ActionsDropdown } from '@/components/HeaderComponents/ActionsDropdown';
+import { AvatarActionsDropdown } from '@/components/HeaderComponents/AvatarActionsDropdown';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -34,7 +32,7 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
-  // 如果不是登录页面，执行
+
   const { location } = history;
   if (location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
@@ -50,11 +48,11 @@ export async function getInitialState(): Promise<{
   };
 }
 
-// ProLayout 支持的api https://procomponents.ant.design/components/layout
+// ProLayout  https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
     logo: Logo,
-    actionsRender: () => [<ActionsDropdown key="doc" />],
+    actionsRender: () => [<AvatarActionsDropdown key="doc" />],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
@@ -62,7 +60,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
     },
-    //headerRender: () => <HeaderRender />,
     menu: { type: 'group' },
     footerRender: () => <Footer />,
     onPageChange: () => {
@@ -72,38 +69,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         history.push(loginPath);
       }
     },
-    bgLayoutImgList: [
-      {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/',
-        left: 85,
-        bottom: 100,
-        height: '303px',
-      },
-      {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/',
-        bottom: -68,
-        right: -45,
-        height: '303px',
-      },
-      {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/',
-        bottom: 0,
-        left: 0,
-        width: '331px',
-      },
-    ],
-    links: isDev
-      ? [
-          <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-            <LinkOutlined />
-            <span>OpenAPI 文档</span>
-          </Link>,
-        ]
-      : [],
+    bgLayoutImgList: [],
+    links: [],
     menuHeaderRender: undefined,
-    // 自定义 403 页面
+    //  403
     // unAccessible: <div>unAccessible</div>,
-    // 增加一个 loading 的状态
+    //  loading
     childrenRender: (children) => {
       // if (initialState?.loading) return <PageLoading />;
       return (

@@ -1,8 +1,8 @@
 import NewDeviceModal from '@/components/NewDeviceModal/NewDeviceModal';
 import QuickActionDropDown from '@/components/QuickAction/QuickActionDropDown';
-import TerminalModal from '@/components/TerminalModal';
+import TerminalModal, { TerminalStateProps } from '@/components/TerminalModal';
 import { OsLogo } from '@/components/misc/OsLogo';
-import { addRule, getDevices, updateRule } from '@/services/ant-design-pro/device';
+import { getDevices, updateRule } from '@/services/rest/device';
 import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import {
   FooterToolbar,
@@ -17,26 +17,6 @@ import type { FormValueType } from './components/ConfigurationForm';
 import ConfigurationForm from './components/ConfigurationForm';
 import { AddCircleOutline } from 'antd-mobile-icons';
 
-const handleAdd = async (fields: API.DeviceItem) => {
-  const hide = message.loading('正在添加');
-  try {
-    await addRule({ ...fields });
-    hide();
-    message.success('Added successfully');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('Adding failed, please try again!');
-    return false;
-  }
-};
-
-/**
- * @en-US Update node
- * @zh-CN 更新节点
- *
- * @param fields
- */
 const handleUpdate = async (fields: FormValueType) => {
   const hide = message.loading('Configuring');
   try {
@@ -46,7 +26,6 @@ const handleUpdate = async (fields: FormValueType) => {
       key: fields.uuid,
     });
     hide();
-
     message.success('Configuration is successful');
     return true;
   } catch (error) {
@@ -57,20 +36,21 @@ const handleUpdate = async (fields: FormValueType) => {
 };
 
 const Inventory: React.FC = () => {
-  /**
-   * @en-US The pop-up window of the distribution update window
-   * */
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API.DeviceItem>();
-  const [terminalModalOpen, setTerminalModalOpen] = useState(false);
+  const [terminal, setTerminal] = useState<TerminalStateProps>({ isOpen: false, command: undefined});
   const [addNewDeviceModalIsOpen, setAddNewDeviceModalIsOpen] = useState(false);
-  const [command, setCommand] = useState();
+
+  const openOrCloseTerminalModal = (open: boolean) => {
+    setTerminal({...terminal, isOpen: open});
+  };
 
   const onDropDownClicked = (key: string) => {
-    setTerminalModalOpen(true);
+
   };
+
   const columns: ProColumns<API.DeviceItem>[] = [
     {
       title: 'Type',
@@ -201,7 +181,7 @@ const Inventory: React.FC = () => {
             setCurrentRow(record);
           }}
         >
-          <QuickActionDropDown advancedMenu={true} onDropDownClicked={onDropDownClicked} />
+          <QuickActionDropDown advancedMenu={true} onDropDownClicked={onDropDownClicked} setTerminal={setTerminal}/>
         </a>,
       ],
     },
@@ -254,7 +234,7 @@ const Inventory: React.FC = () => {
             <Button type="primary">Apply Batch Playbook</Button>
           </FooterToolbar>
         )}
-        <TerminalModal open={terminalModalOpen} setOpen={setTerminalModalOpen} command={command} />
+        <TerminalModal terminalProps={{...terminal, setIsOpen: openOrCloseTerminalModal}} />
         <ConfigurationForm
           onSubmit={async (value) => {
             const success = await handleUpdate(value);

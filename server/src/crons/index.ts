@@ -1,11 +1,10 @@
 import CronJob from "node-cron";
-import {CLEANUP_LOGS_AND_STATUSES, CONSIDER_DEVICE_OFFLINE} from "../config";
+import { CLEANUP_ANSIBLE_LOGS_AND_STATUSES, CLEANUP_SERVER_LOGS, CONSIDER_DEVICE_OFFLINE } from '../config';
 import DeviceRepo from "../database/repository/DeviceRepo";
 import logger from "../logger";
 import CronRepo from "../database/repository/CronRepo";
-import AnsibleLogsRepo from "../database/repository/AnsibleLogsRepo";
-import AnsibleTaskStatusRepo from "../database/repository/AnsibleTaskStatusRepo";
 import AnsibleTaskRepo from "../database/repository/AnsibleTaskRepo";
+import LogsRepo from '../database/repository/LogsRepo';
 
 const CRONS = [
   {
@@ -16,7 +15,12 @@ const CRONS = [
   {
     name: '_CleanAnsibleTasksLogsAndStatuses',
     schedule: '*/5 * * * *',
-    fun: async () => { await AnsibleTaskRepo.deleteAllOldLogsAndStatuses(CLEANUP_LOGS_AND_STATUSES) }
+    fun: async () => { await AnsibleTaskRepo.deleteAllOldLogsAndStatuses(CLEANUP_ANSIBLE_LOGS_AND_STATUSES) }
+  },
+  {
+    name: '_CleanServerLogs',
+    schedule: '*/5 * * * *',
+    fun: async () => { await LogsRepo.deleteAllOld(CLEANUP_SERVER_LOGS) }
   },
 ]
 

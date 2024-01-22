@@ -1,8 +1,7 @@
+import mongoose from "mongoose";
+import {DateTime} from "luxon";
 import DeviceStat, {DeviceStatModel} from "../model/DeviceStat";
 import Device from "../model/Device";
-import logger from "../../logger";
-import mongoose, {Schema} from "mongoose";
-import {DateTime} from "luxon";
 
 async function create(deviceStat: DeviceStat): Promise<DeviceStat> {
   const createdDeviceStat = await DeviceStatModel.create(deviceStat);
@@ -33,9 +32,30 @@ async function findStatsByDeviceAndType(device: Device, type: string, from: numb
       .exec();
 }
 
+async function findStatByDeviceAndType(device: Device, type: string): Promise<[{ _id: string ; value: number ; createdAt: string }] | null> {
+  const ObjectId = mongoose.Types.ObjectId;
+  return await DeviceStatModel.aggregate([
+    {
+      $match: { 'device': new ObjectId(device._id)}
+    },
+    {
+      $sort: {createdAt: 1}
+    },
+    {
+      $group:
+        {
+          _id: "$device",
+          value: { $last: `${type}` },
+          date: { $last: '$createdAt' }
+        }
+    },
+  ])
+    .exec();
+}
 
 export default {
   create,
   findLatestStat,
-  findStatsByDeviceAndType
+  findStatsByDeviceAndType,
+  findStatByDeviceAndType
 };

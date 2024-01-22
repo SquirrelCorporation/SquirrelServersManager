@@ -7,6 +7,7 @@ router.get(`/playbooks`, async (req, res) => {
     try {
         const listOfPlaybooks = await ansible.listPlaybooks();
         const listOfPlaybooksToSelect = listOfPlaybooks.map(e => {
+            //TODO: logic to be moved elsewhere
             return {value: e, label: e.replaceAll('.yml', '')};
         })
         res.send({

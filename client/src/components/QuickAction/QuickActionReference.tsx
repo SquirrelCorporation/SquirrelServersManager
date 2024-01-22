@@ -11,87 +11,106 @@ import {
 } from '@ant-design/icons';
 import React from 'react';
 
-export const simpleMenuItems: MenuProps['items'] = [
+export type QuickActionReferenceType = {
+  type: string;
+  playbookFile?: string;
+  label: React.JSX.Element;
+  onAdvancedMenu: boolean;
+};
+
+const QuickActionReference : QuickActionReferenceType[] = [
   {
+    type: 'action',
     label: (
       <>
         <PlayCircleOutlined /> Execute a playbook
       </>
     ),
-    key: '-1',
+    onAdvancedMenu: false
   },
   {
-    type: 'divider',
-  },
-  {
+    // 0 Reboot
+    type: 'playbook',
+    playbookFile: '_reboot',
     label: (
       <>
         <ReloadOutlined /> Reboot
       </>
     ),
-    key: '0',
+    onAdvancedMenu: false
   },
   {
+    // 1 Connect
+    type: 'action',
     label: (
       <>
         <LoginOutlined /> Connect
       </>
     ),
-    key: '1',
+    onAdvancedMenu: false
   },
   {
+    onAdvancedMenu: false,
     type: 'divider',
   },
   {
+    // 3 ping
+    type: 'playbook',
+    playbookFile: '_ping',
     label: (
       <>
         <ShakeOutlined /> Ping
       </>
     ),
-    key: '3',
+    onAdvancedMenu: false
   },
-];
-
-export const advancedMenuItems: MenuProps['items'] = [
-  ...simpleMenuItems,
   {
+    onAdvancedMenu: true,
     type: 'divider',
   },
   {
+    // 5 Update Agent
+    type: 'playbook',
+    playbookFile: '_updateAgent',
+    onAdvancedMenu: true,
     label: (
       <>
         <ToTopOutlined /> Update Agent
       </>
     ),
-    key: '5',
   },
   {
+    // 6 Reinstall Agent
+    type: 'playbook',
+    playbookFile: '_reinstallAgent',
+    onAdvancedMenu: true,
     label: (
       <>
         <DownloadOutlined /> Reinstall Agent
       </>
     ),
-    key: '6',
   },
   {
+    // 7 Restart Agent
+    type: 'playbook',
+    playbookFile: '_restartAgent',
+    onAdvancedMenu: true,
     label: (
       <>
         <ThunderboltOutlined /> Restart Agent
       </>
     ),
-    key: '7',
   },
   {
+    // 8  Agent Log
+    type: 'action',
+    onAdvancedMenu: true,
     label: (
       <>
         <BugOutlined /> Retrieve Agent Logs
       </>
     ),
-    key: '8',
   },
-];
+]
 
-export default {
-  advancedMenuItems,
-  simpleMenuItems,
-};
+export default QuickActionReference;

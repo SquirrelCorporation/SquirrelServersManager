@@ -1,14 +1,20 @@
 import taskStatusTimeline from '@/components/TerminalModal/TaskStatusTimeline';
-import { executePlaybook, getExecLogs, getTaskStatuses } from '@/services/ant-design-pro/ansible';
-import { ClockCircleOutlined, VerticalAlignBottomOutlined } from '@ant-design/icons';
+import { executePlaybook, getExecLogs, getTaskStatuses } from '@/services/rest/ansible';
+import { ClockCircleOutlined, ThunderboltOutlined, VerticalAlignBottomOutlined } from '@ant-design/icons';
 import { Button, Col, Modal, Row, Steps, StepsProps, message } from 'antd';
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { ReactTerminal, TerminalContext } from 'react-terminal';
 
+export type TerminalStateProps = {
+  isOpen: boolean;
+  command: string | undefined;
+  target: string | undefined;
+};
+
 export type TerminalModalProps = {
-  setOpen: any;
-  open: boolean;
-  command?: string;
+  terminalProps : TerminalStateProps & {
+    setIsOpen: (open : boolean) => void;
+  }
 };
 
 export type TaskStatusTimelineType = StepsProps & {
@@ -40,12 +46,9 @@ const TerminalModal = (props: TerminalModalProps) => {
   const timerIdRef = useRef();
   const [isPollingEnabled, setIsPollingEnabled] = useState(false);
   const [savedStatuses, setSavedStatuses] = useState(statusesType);
+  const [hasReachedFinalStatus, setHasReachedFinalStatus] = useState(false);
   let statusesSet = new Set<string>();
   let logsSet = new Set<string>();
-
-  const showModal = () => {
-    props.setOpen(true);
-  };
 
   const resetTerminal = () => {
     setBufferedContent('');
@@ -56,16 +59,16 @@ const TerminalModal = (props: TerminalModalProps) => {
   };
 
   const handleOk = () => {
-    props.setOpen(false);
+    props.terminalProps.setIsOpen(false);
     resetTerminal();
   };
 
   const handleCancel = () => {
-    props.setOpen(false);
+    props.terminalProps.setIsOpen(false);
     resetTerminal();
   };
 
-  const handleClick = async () => {
+  const startTerminal = async () => {
     resetTerminal();
     setBufferedContent((previous) => (
       <>
@@ -93,7 +96,7 @@ const TerminalModal = (props: TerminalModalProps) => {
   useEffect(() => {
     const hasRunning = savedStatuses.findIndex((e) => e._status === 'running');
     if (hasRunning !== -1 && hasRunning < savedStatuses.length - 1) {
-      savedStatuses[hasRunning].icon = <VerticalAlignBottomOutlined />;
+      savedStatuses[hasRunning].icon = <ThunderboltOutlined />;
       savedStatuses[hasRunning].status = 'finish';
     }
   }, [savedStatuses]);
@@ -114,6 +117,7 @@ const TerminalModal = (props: TerminalModalProps) => {
                   taskStatusTimeline.transformToTaskStatusTimeline(status),
                 ]);
                 if (taskStatusTimeline.isFinalStatus(status.status)) {
+                  setHasReachedFinalStatus(true);
                   setTimeout(() => {
                     setIsPollingEnabled(false);
                   }, 5000);
@@ -175,20 +179,25 @@ const TerminalModal = (props: TerminalModalProps) => {
     };
   }, [isPollingEnabled]);
 
+  useEffect(() => {
+    if (props.terminalProps.isOpen && !isPollingEnabled) {
+      startTerminal()
+    }
+  }, [props.terminalProps.isOpen]);
+
   return (
     <>
       <Modal
-        open={props.open}
-        title={`Executing playbook ${props.command}...`}
+        open={props.terminalProps.isOpen}
+        title={`Executing playbook ${props.terminalProps.command}...`}
         onOk={handleOk}
         onCancel={handleCancel}
         styles={modalStyles}
         width={1000}
         footer={(_, { OkBtn, CancelBtn }) => (
           <>
-            <Button onClick={handleClick}>Restart</Button>
-            <CancelBtn />
-            <OkBtn />
+            <Button disabled={!hasReachedFinalStatus} onClick={startTerminal}>Restart</Button>
+            <Button disabled={!hasReachedFinalStatus} type="primary" loading={!hasReachedFinalStatus} onClick={handleOk}>OK</Button>
           </>
         )}
       >

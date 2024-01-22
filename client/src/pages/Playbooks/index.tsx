@@ -4,7 +4,7 @@ import {
   newPlaybook,
   patchPlaybook,
   readPlaybookContent,
-} from '@/services/ant-design-pro/ansible';
+} from '@/services/rest/ansible';
 import { FileOutlined, FileSearchOutlined, RedoOutlined, SaveOutlined } from '@ant-design/icons';
 import { ModalForm, PageContainer, ProFormText } from '@ant-design/pro-components';
 import Editor, { Monaco } from '@monaco-editor/react';
@@ -90,6 +90,7 @@ const Index: React.FC = () => {
   const onExpand: DirectoryTreeProps['onExpand'] = (keys, info) => {
     console.log('Trigger Expand', keys, info);
   };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const editorDidMount = (editor: IStandaloneCodeEditor, monaco: Monaco) => {
     editorRef.current = editor;
     editor.focus();

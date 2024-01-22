@@ -1,5 +1,21 @@
 @import '@/utils/utils.less';
 
+.carouselCustom {
+  color: red;
+    ~ .slick-dots li button {
+      width: 6px;
+      height: 6px;
+      border-radius: 100%;
+    }
+
+    ~ .slick-dots li.slick-active button {
+      width: 7px;
+      height: 7px;
+      border-radius: 100%;
+      background: red;
+    }
+}
+
 .standardList {
   :global {
     .ant-card-head {
@@ -52,7 +68,6 @@
     .listContentItem {
       display: inline-block;
       margin-left: 40px;
-      color: white;
       font-size: @font-size-base;
       vertical-align: middle;
       > span {

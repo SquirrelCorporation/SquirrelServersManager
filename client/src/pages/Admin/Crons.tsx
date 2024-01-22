@@ -1,4 +1,4 @@
-import { getCrons } from '@/services/ant-design-pro/cron';
+import { getCrons } from '@/services/rest/cron';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
 import React from 'react';

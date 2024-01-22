@@ -74,18 +74,9 @@ const schema = new Schema<DeviceStat>(
       type: Schema.Types.Number,
       required: false,
     },
-    createdAt: {
-      type: Date,
-      required: true,
-      default: new Date()
-    },
-    updatedAt: {
-      type: Date,
-      required: true,
-      default: new Date()
-    }
   },
   {
+    timestamps: true,
     versionKey: false,
   },
 );

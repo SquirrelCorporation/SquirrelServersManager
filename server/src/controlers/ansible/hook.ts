@@ -6,6 +6,7 @@ import AnsibleLog from "../../database/model/AnsibleLogs";
 import AnsibleLogsRepo from "../../database/repository/AnsibleLogsRepo";
 
 const router = express.Router();
+
 router.post(`/hook/task/status`, async (req, res) => {
     logger.info("[CONTROLLER] ansible/hook/task/status");
     if (!req.body.runner_ident || !req.body.status) {
@@ -49,12 +50,12 @@ router.post(`/hook/task/event`, async (req, res) => {
         return;
     }
     const removeEmptyLines = (str : string) => str.split(/\r?\n/).filter(line => line.trim() !== '').join('\n');
-    // @ts-ignore
-    const ansibleLog: AnsibleLog = {
+    // @ts-expect-error
+  const ansibleLog: AnsibleLog = {
         ident: req.body.runner_ident,
         logRunnerId: req.body.uuid,
         stdout: req.body.stdout ? removeEmptyLines(req.body.stdout) : null,
-        content : JSON.stringify(req.body),
+        content: JSON.stringify(req.body),
     }
     await AnsibleLogsRepo.create(ansibleLog);
     res.send({

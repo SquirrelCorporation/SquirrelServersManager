@@ -1,22 +1,12 @@
-import {
-  GlobalOutlined,
-  LogoutOutlined,
-  QuestionCircleOutlined,
-  SettingOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import { useEmotionCss } from '@ant-design/use-emotion-css';
-import { history, useModel } from '@umijs/max';
-import { Badge, Spin } from 'antd';
-import { stringify } from 'querystring';
-import type { MenuInfo } from 'rc-menu/lib/interface';
-import React, { useCallback } from 'react';
-import { flushSync } from 'react-dom';
+import {LogoutOutlined, SettingOutlined, UserOutlined,} from '@ant-design/icons';
+import {useEmotionCss} from '@ant-design/use-emotion-css';
+import {useModel} from '@umijs/max';
+import {Badge, Spin} from 'antd';
+import type {MenuInfo} from 'rc-menu/lib/interface';
+import React, {useCallback} from 'react';
 import HeaderDropdown from '../HeaderDropdown';
-import { outLogin } from '@/services/ant-design-pro/login';
-import Question from '@/components/HeaderComponents/Question';
 
-export const ActionsDropdown: React.FC = () => {
+export const AvatarActionsDropdown: React.FC = () => {
   const actionClassName = useEmotionCss(({ token }) => {
     return {
       display: 'flex',
@@ -68,11 +58,6 @@ export const ActionsDropdown: React.FC = () => {
   }
 
   const menuItems = [
-    {
-      key: 'center',
-      icon: <UserOutlined />,
-      label: '个人中心',
-    },
     {
       key: 'settings',
       icon: <SettingOutlined />,

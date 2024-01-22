@@ -16,19 +16,27 @@ const CommonSettings: React.FC = () => {
           <Button
             type={'primary'}
             onClick={async () => {
-              try {
-                await navigator.clipboard.writeText(currentUser?.settings.apiKey);
-                message.success({
-                  content: 'Successfully copied',
-                  duration: 8,
-                });
-              } catch (err) {
-                message.error({
-                  content: 'Cannot copy',
-                  duration: 8,
-                });
-              }
-            }}
+              if (currentUser?.settings.apiKey) {
+                try {
+                  await navigator.clipboard.writeText(currentUser?.settings.apiKey);
+                  message.success({
+                    content: 'Successfully copied',
+                    duration: 8,
+                  });
+                } catch (err) {
+                  message.error({
+                    content: 'Cannot copy',
+                    duration: 8,
+                  });
+                }
+            } else {
+              message.error({
+                content: 'Internal error',
+                duration: 8,
+              });
+            }
+          }
+          }
           >
             Copy
           </Button>

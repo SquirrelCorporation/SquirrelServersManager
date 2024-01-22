@@ -2,6 +2,7 @@ import { useModel } from '@umijs/max';
 import { Flex } from 'antd';
 import React from 'react';
 import { version } from '../../../../../package.json';
+
 const Information: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};

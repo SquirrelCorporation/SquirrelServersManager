@@ -45,6 +45,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
         });
       });
   };
+
   const handleCancel = () => {
     props.setIsModalOpen(false);
   };

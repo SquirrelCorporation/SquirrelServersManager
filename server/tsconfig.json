@@ -8,5 +8,5 @@
     "downlevelIteration": true,
     "resolveJsonModule": true,
   },
-  "include": ["src//*.ts", "src//*.json", ".env"]
+  "include": ["src//*.ts", "src//*.json", ".env", ".eslintrc.json"]
 }

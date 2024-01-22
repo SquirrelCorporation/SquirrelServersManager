@@ -23,7 +23,7 @@ export default [
     ],
   },
   {
-    path: '/welcome',
+    path: '/',
     name: 'Dashboard',
     icon: 'smile',
     component: './Welcome',
@@ -67,10 +67,10 @@ export default [
         component: './Admin/Crons',
       },
       {
-        path: '/admin/tasks',
+        path: '/admin/logs',
         name: 'Logs',
         icon: 'UnorderedList',
-        component: './Admin/Tasks',
+        component: './Admin/Logs',
       },
       {
         path: '/admin/settings',

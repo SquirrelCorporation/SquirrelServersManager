@@ -1,4 +1,4 @@
-import { login } from '@/services/ant-design-pro/login';
+import { login } from '@/services/rest/login';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import {
   LoginFormPage,
@@ -11,6 +11,7 @@ import { Alert, Divider, message, theme } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import loginBackground from './assets/login-background.mp4';
+
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => {

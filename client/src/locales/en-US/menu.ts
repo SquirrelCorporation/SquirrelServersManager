@@ -49,4 +49,14 @@ export default {
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
+  'menu.Configuration.Settings': 'Settings',
+  'menu.Configuration.Logs': 'Logs',
+  'menu.Configuration.Crons': 'Crons',
+  'menu.Configuration.Inventory': 'Inventory',
+  'menu.Configuration': 'Configuration',
+  'menu.Manage.Playbooks': 'Playbooks',
+  'menu.Manage.Devices': 'Devices',
+  'menu.Manage': 'Manage',
+  'menu.Dashboard': 'Dashboard',
+
 };

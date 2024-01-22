@@ -1,5 +1,5 @@
 import { DeviceStatType } from '@/components/Charts/DeviceStatType';
-import { getDeviceStats } from '@/services/ant-design-pro/devicestat';
+import { getDeviceStats } from '@/services/rest/devicestat';
 import { Tiny } from '@ant-design/plots';
 import { message } from 'antd';
 import moment from 'moment';
@@ -11,16 +11,15 @@ export type TinyLineProps = {
   from: number;
 };
 
-const TinyLine = (props: TinyLineProps) => {
+const TinyLineDeviceGraph = (props: TinyLineProps) => {
   const [data, setData] = useState<API.DeviceStat[]>([{}]);
 
   const cleanData = (list: API.DeviceStats) => {
     return list?.data
       ? list.data
           .map((e) => {
-            console.log(parseFloat((e.value / 100).toFixed(2)));
             return {
-              date: moment(e.date).format('YYYY-MM-DD, HH:mm:ss'),
+              date: moment(e.date).format('YYYY-MM-DD, HH:mm'),
               value: parseFloat((e.value / 100).toFixed(2)),
             };
           })
@@ -46,10 +45,11 @@ const TinyLine = (props: TinyLineProps) => {
   }, []);
 
   const config = {
-    data,
+    title: 'CPU',
+    data: data,
     autoFit: false,
     width: 280,
-    height: 60,
+    height: 55,
     shapeField: 'smooth',
     xField: 'date',
     yField: 'value',
@@ -61,4 +61,4 @@ const TinyLine = (props: TinyLineProps) => {
   return <Tiny.Line {...config} />;
 };
 
-export default TinyLine;
+export default TinyLineDeviceGraph;

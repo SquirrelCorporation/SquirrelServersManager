@@ -1,4 +1,4 @@
-import { getPlaybooks } from '@/services/ant-design-pro/ansible';
+import { getPlaybooks } from '@/services/rest/ansible';
 import { RightSquareOutlined } from '@ant-design/icons';
 import { ModalForm, ProForm, ProFormDependency, ProFormSelect } from '@ant-design/pro-components';
 import { Form, message } from 'antd';

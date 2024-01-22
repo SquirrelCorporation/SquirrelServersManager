@@ -21,13 +21,6 @@ export async function getTaskStatuses(execId: string) {
   });
 }
 
-export async function getTasks() {
-  return request<API.Tasks>(`/api/ansible/tasks`, {
-    method: 'GET',
-    ...{},
-  });
-}
-
 export async function getPlaybooks() {
   return request<API.Playbooks>('/api/ansible/playbooks', {
     method: 'GET',

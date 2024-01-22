@@ -58,6 +58,7 @@ async function connectMongoDb () {
 
 // If the Node process ends, close the Mongoose connection
   process.on('SIGINT', () => {
+    // @ts-ignore
     mongoose.connection.close(() => {
       logger.info(
           '[DATABASE] Mongoose default connection disconnected through app termination',

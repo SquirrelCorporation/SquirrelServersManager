@@ -1,14 +1,7 @@
-import {
-  ProFormDateTimePicker,
-  ProFormRadio,
-  ProFormSelect,
-  ProFormText,
-  ProFormTextArea,
-  StepsForm,
-} from '@ant-design/pro-components';
-import {message, Modal, Tabs, TabsProps} from 'antd';
+import { ProFormSelect, ProFormText, ProFormTextArea } from '@ant-design/pro-components';
+import { message, Modal, Tabs, TabsProps } from 'antd';
 import React from 'react';
-import {ProForm} from "@ant-design/pro-form/lib";
+import { ProForm } from '@ant-design/pro-form/lib';
 
 export type FormValueType = {
   target?: string;
@@ -27,7 +20,7 @@ export type ConfigurationFormProps = {
 
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
-    setTimeout(() => {
+    setTimeout(() => { 
       resolve(true);
     }, time);
   });
