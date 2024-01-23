@@ -2,12 +2,11 @@ import { DeviceStatType } from '@/components/Charts/DeviceStatType';
 import TinyLineDeviceGraph from '@/components/Charts/TinyLineDeviceGraph';
 import TinyRingProgressDeviceIndicator from '@/components/Charts/TinyRingProgressDeviceIndicator';
 import DeviceStatusTag from '@/components/DeviceStatus/DeviceStatusTag';
-import PlaybookSelectionModal from '@/components/PlaybookSelectionModal/PlaybookSelectionModal';
 import QuickActionDropDown from '@/components/QuickAction/QuickActionDropDown';
 import { OsLogo } from '@/components/misc/OsLogo';
 import TerminalModal from '@/components/TerminalModal';
 import { getDevices } from '@/services/rest/device';
-import { AppstoreOutlined, CaretLeftOutlined, CaretRightOutlined, ControlOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, ControlOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Avatar, Card, List, Tooltip, message, Col, Row, Carousel, Typography } from 'antd';
 import moment from 'moment';
@@ -16,7 +15,7 @@ import { TerminalContextProvider } from 'react-terminal';
 import styles from './Devices.less';
 import TinyRingProgressDeviceGraph from '@/components/Charts/TinyRingProgressDeviceGraph';
 
-const { Text, Link } = Typography;
+const { Text } = Typography;
 
 export type StateType = {
   visible?: boolean;
@@ -25,12 +24,14 @@ export type StateType = {
 };
 
 const Index = memo(() => {
-  const stateT: StateType = { visible: false, done: false };
-  const [state, setState] = React.useState(stateT);
   const [deviceList, setDeviceList] = React.useState<API.DeviceList>({});
-  const [currentRow, setCurrentRow] = useState<API.DeviceItem>();
-  const [showPlaybookModal, setShowPlaybookModal] = React.useState(false);
-  const [terminal, setTerminal] = useState<{isOpen: boolean; command: string | undefined}>({ isOpen: false, command: undefined});
+  const [terminal, setTerminal] = useState<{ isOpen: boolean; command: string | undefined }>({
+    isOpen: false,
+    command: undefined,
+  });
+  const openOrCloseTerminalModal = (open: boolean) => {
+    setTerminal({ ...terminal, isOpen: open });
+  };
 
   const asyncFetch = async () => {
     await getDevices()
@@ -45,34 +46,22 @@ const Index = memo(() => {
     asyncFetch();
   }, []);
 
+  /*
   const showModal = () => {
     setState({
       visible: true,
-      current: undefined
+      current: undefined,
     });
   };
-
-  const showEditModal = (item: API.DeviceItem) => {
-    setState({
-      visible: true,
-      current: item
-    });
-  };
+*/
 
   const onDropDownClicked = (key: string) => {
-    switch (key) {
-      case '-1':
-        setShowPlaybookModal(true);
-        return;
-      case '3':
-        openOrCloseTerminalModal(true);
-        return;
+    switch (
+      key
+      //TODO
+    ) {
     }
   };
-
-  const openOrCloseTerminalModal = (open: boolean) => {
-    setTerminal({...terminal, isOpen: open});
-  }
 
   const ListContent: React.FC<API.DeviceItem> = (props: API.DeviceItem) => (
     <div className={styles.listContent} key={props.uuid}>
@@ -90,54 +79,71 @@ const Index = memo(() => {
         <Carousel style={{ width: 300, height: 70, zIndex: 1000 }} dotPosition={'right'}>
           <div style={{ width: 300, height: 70, zIndex: 1000 }}>
             <div style={{ width: 300, height: 70, zIndex: 1000, paddingTop: '15px' }}>
-              <Row type="flex"
-                   style={{ alignItems: 'center' }}
-                   justify="center">
+              <Row type="flex" style={{ alignItems: 'center' }} justify="center">
                 <Col span={6}>
-                  <TinyRingProgressDeviceGraph type={DeviceStatType.CPU} deviceUuid={props.uuid}
-                                               from={24} />
+                  <TinyRingProgressDeviceGraph
+                    type={DeviceStatType.CPU}
+                    deviceUuid={props.uuid}
+                    from={24}
+                  />
                 </Col>
-                <Col span={6}><TinyRingProgressDeviceGraph type={DeviceStatType.MEM_USED} deviceUuid={props.uuid}
-                                                           from={24} />
+                <Col span={6}>
+                  <TinyRingProgressDeviceGraph
+                    type={DeviceStatType.MEM_USED}
+                    deviceUuid={props.uuid}
+                    from={24}
+                  />
                 </Col>
-                <Col span={6}><TinyRingProgressDeviceIndicator type={DeviceStatType.CPU} deviceUuid={props.uuid}
-                                                           from={24} />
-                </Col>
-              </Row>
-            </div>
-          </div>
-          <div style={{ width: 300, height: 70, zIndex: 1000 }}>
-            <div style={{ width: 300, height: 70, zIndex: 1000 }}>
-              <Row type="flex"
-                   style={{ alignItems: 'center' }}
-                   justify="center">
-                <Col span={24}>
-                  <TinyLineDeviceGraph type={DeviceStatType.CPU} deviceUuid={props.uuid} from={24} />
-                </Col>
-              </Row>
-              <Row>
-                <Col span={24} style={{ marginTop: '-5px', textAlign: 'center' }}>
-                  <Text type="secondary" style={{ fontSize: '8px' }}>CPU</Text>
+                <Col span={6}>
+                  <TinyRingProgressDeviceIndicator
+                    type={DeviceStatType.CPU}
+                    deviceUuid={props.uuid}
+                    from={24}
+                  />
                 </Col>
               </Row>
             </div>
           </div>
           <div style={{ width: 300, height: 70, zIndex: 1000 }}>
             <div style={{ width: 300, height: 70, zIndex: 1000 }}>
-              <Row type="flex"
-                   style={{ alignItems: 'center' }}
-                   justify="center">
+              <Row type="flex" style={{ alignItems: 'center' }} justify="center">
                 <Col span={24}>
-                  <TinyLineDeviceGraph type={DeviceStatType.MEM_USED} deviceUuid={props.uuid} from={24} />
+                  <TinyLineDeviceGraph
+                    type={DeviceStatType.CPU}
+                    deviceUuid={props.uuid}
+                    from={24}
+                  />
                 </Col>
               </Row>
               <Row>
                 <Col span={24} style={{ marginTop: '-5px', textAlign: 'center' }}>
-                  <Text type="secondary" style={{ fontSize: '8px' }}>MEM USED</Text>
+                  <Text type="secondary" style={{ fontSize: '8px' }}>
+                    CPU
+                  </Text>
                 </Col>
-              </Row>   </div>
+              </Row>
+            </div>
           </div>
-
+          <div style={{ width: 300, height: 70, zIndex: 1000 }}>
+            <div style={{ width: 300, height: 70, zIndex: 1000 }}>
+              <Row type="flex" style={{ alignItems: 'center' }} justify="center">
+                <Col span={24}>
+                  <TinyLineDeviceGraph
+                    type={DeviceStatType.MEM_USED}
+                    deviceUuid={props.uuid}
+                    from={24}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={24} style={{ marginTop: '-5px', textAlign: 'center' }}>
+                  <Text type="secondary" style={{ fontSize: '8px' }}>
+                    MEM USED
+                  </Text>
+                </Col>
+              </Row>{' '}
+            </div>
+          </div>
         </Carousel>
       </div>
     </div>
@@ -146,11 +152,6 @@ const Index = memo(() => {
   return (
     <TerminalContextProvider>
       <PageContainer>
-        <PlaybookSelectionModal
-          isModalOpen={showPlaybookModal}
-          setIsModalOpen={setShowPlaybookModal}
-          itemSelected={currentRow}
-        />
         <div className={styles.standardList}>
           <Card
             title={'List of your devices'}
@@ -165,7 +166,7 @@ const Index = memo(() => {
               loading={false}
               pagination={{
                 pageSize: 10,
-                showQuickJumper: true
+                showQuickJumper: true,
               }}
               dataSource={deviceList?.data}
               renderItem={(item) => (
@@ -175,7 +176,6 @@ const Index = memo(() => {
                       key={`showEditModal-${item.uuid}`}
                       onClick={(e) => {
                         e.preventDefault();
-                        showEditModal(item);
                       }}
                     >
                       <Tooltip title="Services">
@@ -186,21 +186,19 @@ const Index = memo(() => {
                       key={`devicesettings-${item.uuid}`}
                       onClick={(e) => {
                         e.preventDefault();
-                        showEditModal(item);
                       }}
                     >
                       <Tooltip title="Device Settings">
                         <ControlOutlined />
                       </Tooltip>
                     </a>,
-                    <a
-                      key={`quickAction-${item.uuid}`}
-                      onClick={() => {
-                        setCurrentRow(item);
-                      }}
-                    >
-                      <QuickActionDropDown onDropDownClicked={onDropDownClicked} setTerminal={setTerminal} />
-                    </a>
+                    <a key={`quickAction-${item.uuid}`} onClick={() => {}}>
+                      <QuickActionDropDown
+                        onDropDownClicked={onDropDownClicked}
+                        setTerminal={setTerminal}
+                        target={item}
+                      />
+                    </a>,
                   ]}
                 >
                   <List.Item.Meta
@@ -214,7 +212,7 @@ const Index = memo(() => {
             />
           </Card>
         </div>
-        <TerminalModal terminalProps={{...terminal, setIsOpen: openOrCloseTerminalModal}} />
+        <TerminalModal terminalProps={{ ...terminal, setIsOpen: openOrCloseTerminalModal }} />
       </PageContainer>
     </TerminalContextProvider>
   );

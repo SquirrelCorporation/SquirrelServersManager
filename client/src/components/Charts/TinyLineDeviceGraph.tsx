@@ -56,6 +56,7 @@ const TinyLineDeviceGraph = (props: TinyLineProps) => {
     padding: 10,
     tooltip: { channel: 'y', valueFormatter: '.2%' },
     theme: 'classicDark',
+    interaction: { tooltip: { mount: 'body' } },
   };
   // @ts-ignore
   return <Tiny.Line {...config} />;

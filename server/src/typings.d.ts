@@ -1,8 +1,12 @@
 declare namespace API {
+  type SimpleResponse = {
+    success?: boolean;
+  };
+
   type Cron = {
     name?: string;
     eventsCount?: number;
-  }
+  };
 
   type CurrentUser = {
     name?: string;
@@ -108,6 +112,14 @@ declare namespace API {
     current?: number;
     /** 页面的容量 */
     pageSize?: number;
+  };
+
+  type DeviceAuthParams = {
+    type: string;
+    sshPort: number;
+    sshKey?: string;
+    sshPwd?: string;
+    sshUser?: string;
   };
 }
 

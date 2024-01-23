@@ -1,9 +1,9 @@
-import {LogoutOutlined, SettingOutlined, UserOutlined,} from '@ant-design/icons';
-import {useEmotionCss} from '@ant-design/use-emotion-css';
-import {useModel} from '@umijs/max';
-import {Badge, Spin} from 'antd';
-import type {MenuInfo} from 'rc-menu/lib/interface';
-import React, {useCallback} from 'react';
+import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { useEmotionCss } from '@ant-design/use-emotion-css';
+import { useModel } from '@umijs/max';
+import { Badge, Spin } from 'antd';
+import type { MenuInfo } from 'rc-menu/lib/interface';
+import React, { useCallback } from 'react';
 import HeaderDropdown from '../HeaderDropdown';
 
 export const AvatarActionsDropdown: React.FC = () => {
@@ -22,6 +22,7 @@ export const AvatarActionsDropdown: React.FC = () => {
       },
     };
   });
+
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const onMenuClick = useCallback(

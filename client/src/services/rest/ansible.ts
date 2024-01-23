@@ -1,8 +1,13 @@
 import { request } from '@umijs/max';
 
-export async function executePlaybook(options?: { [key: string]: any }) {
+export async function executePlaybook(
+  playbook: string,
+  target: string,
+  options?: Record<string, any>,
+) {
   return request<API.Exec>('/api/ansible/exec/playbook', {
     method: 'POST',
+    data: { playbook: playbook, target: target },
     ...(options || {}),
   });
 }

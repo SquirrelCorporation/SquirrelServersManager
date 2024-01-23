@@ -1,5 +1,5 @@
-import { Schema, model, Types } from 'mongoose';
-import Device from "./Device";
+import { Schema, model } from 'mongoose';
+import Device from './Device';
 
 export const DOCUMENT_NAME = 'DeviceStat';
 export const COLLECTION_NAME = 'devicestats';

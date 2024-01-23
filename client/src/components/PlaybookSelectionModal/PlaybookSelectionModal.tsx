@@ -8,6 +8,7 @@ export type PlaybookSelectionModalProps = {
   isModalOpen: boolean;
   setIsModalOpen: any;
   itemSelected: any;
+  callback: (playbook: string) => void;
 };
 const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (props) => {
   const [form] = Form.useForm<{ playbook: string }>();
@@ -26,9 +27,9 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (props) =>
         gutter: [16, 0],
       }}
       submitTimeout={2000}
-      onFinish={async (values) => {
-        //await waitTime(2000);
-        message.success('提交成功');
+      onFinish={(values) => {
+        props.callback(values.playbook.value);
+        props.setIsModalOpen(false);
         return true;
       }}
     >
@@ -54,6 +55,10 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (props) =>
                 });
               })
               .catch((error) => {
+                message.error({
+                  content: `Error retrieving playbooks list (${error.message})`,
+                  duration: 6,
+                });
                 return [];
               });
           }}

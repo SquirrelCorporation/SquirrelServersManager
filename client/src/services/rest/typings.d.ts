@@ -229,4 +229,20 @@ declare namespace API {
     level: number;
     msg: string;
   };
+
+  type DeviceAuthResponse = {
+    type: string;
+    sshPort: number;
+    sshUser?: string;
+    sshPwd?: string;
+    sshKey?: string;
+  };
+
+  type DeviceAuthParams = {
+    type: string;
+    sshPort: number;
+    sshKey?: string;
+    sshPwd?: string;
+    sshUser?: string;
+  };
 }

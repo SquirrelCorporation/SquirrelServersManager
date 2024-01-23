@@ -7,7 +7,7 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { history, useModel } from '@umijs/max';
-import { Alert, Divider, message, theme } from 'antd';
+import { Alert, Divider, message } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import loginBackground from './assets/login-background.mp4';
@@ -30,7 +30,6 @@ const LoginMessage: React.FC<{
 const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const { initialState, setInitialState } = useModel('@@initialState');
-  const { token } = theme.useToken();
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {

@@ -28,7 +28,9 @@ import { AddCircleOutline, DeleteOutline } from 'antd-mobile-icons';
 import IStandaloneCodeEditor = editor.IStandaloneCodeEditor;
 
 const { DirectoryTree } = Tree;
+
 const { Paragraph, Text } = Typography;
+
 const Index: React.FC = () => {
   const [playbookFilesList, setPlaybookFilesList] = React.useState<DataNode[]>([]);
   const [selectedFile, setSelectedFile] = React.useState<string | undefined>();
@@ -90,7 +92,7 @@ const Index: React.FC = () => {
   const onExpand: DirectoryTreeProps['onExpand'] = (keys, info) => {
     console.log('Trigger Expand', keys, info);
   };
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-shadow
   const editorDidMount = (editor: IStandaloneCodeEditor, monaco: Monaco) => {
     editorRef.current = editor;
     editor.focus();

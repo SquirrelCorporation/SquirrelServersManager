@@ -4,11 +4,7 @@ import { PageContainer, StatisticCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Card, Col, Row, theme } from 'antd';
 import React from 'react';
-/**
- * 每个单独的卡片，为了复用样式抽成了组件
- * @param param0
- * @returns
- */
+
 const InfoCard: React.FC<{
   title: string;
   index: number;
@@ -85,7 +81,6 @@ const InfoCard: React.FC<{
 };
 
 const Welcome: React.FC = () => {
-  const { token } = theme.useToken();
   const { initialState } = useModel('@@initialState');
   const imgStyle = {
     display: 'block',

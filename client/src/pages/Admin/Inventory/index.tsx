@@ -2,7 +2,7 @@ import NewDeviceModal from '@/components/NewDeviceModal/NewDeviceModal';
 import QuickActionDropDown from '@/components/QuickAction/QuickActionDropDown';
 import TerminalModal, { TerminalStateProps } from '@/components/TerminalModal';
 import { OsLogo } from '@/components/misc/OsLogo';
-import { getDevices, updateRule } from '@/services/rest/device';
+import { getDevices } from '@/services/rest/device';
 import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import {
   FooterToolbar,
@@ -10,46 +10,28 @@ import {
   ProDescriptions,
   ProTable,
 } from '@ant-design/pro-components';
-import { Avatar, Button, Drawer, message } from 'antd';
+import { Avatar, Button, Drawer } from 'antd';
 import React, { useRef, useState } from 'react';
 import { TerminalContextProvider } from 'react-terminal';
-import type { FormValueType } from './components/ConfigurationForm';
-import ConfigurationForm from './components/ConfigurationForm';
+import ConfigurationModal from './components/ConfigurationModal';
 import { AddCircleOutline } from 'antd-mobile-icons';
-
-const handleUpdate = async (fields: FormValueType) => {
-  const hide = message.loading('Configuring');
-  try {
-    await updateRule({
-      name: fields.ip,
-      desc: fields.hostname,
-      key: fields.uuid,
-    });
-    hide();
-    message.success('Configuration is successful');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('Configuration failed, please try again!');
-    return false;
-  }
-};
 
 const Inventory: React.FC = () => {
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API.DeviceItem>();
-  const [terminal, setTerminal] = useState<TerminalStateProps>({ isOpen: false, command: undefined});
+  const [terminal, setTerminal] = useState<TerminalStateProps>({
+    isOpen: false,
+    command: undefined,
+  });
   const [addNewDeviceModalIsOpen, setAddNewDeviceModalIsOpen] = useState(false);
 
   const openOrCloseTerminalModal = (open: boolean) => {
-    setTerminal({...terminal, isOpen: open});
+    setTerminal({ ...terminal, isOpen: open });
   };
 
-  const onDropDownClicked = (key: string) => {
-
-  };
+  const onDropDownClicked = (key: string) => {};
 
   const columns: ProColumns<API.DeviceItem>[] = [
     {
@@ -181,7 +163,12 @@ const Inventory: React.FC = () => {
             setCurrentRow(record);
           }}
         >
-          <QuickActionDropDown advancedMenu={true} onDropDownClicked={onDropDownClicked} setTerminal={setTerminal}/>
+          <QuickActionDropDown
+            advancedMenu={true}
+            onDropDownClicked={onDropDownClicked}
+            setTerminal={setTerminal}
+            target={record}
+          />
         </a>,
       ],
     },
@@ -234,24 +221,9 @@ const Inventory: React.FC = () => {
             <Button type="primary">Apply Batch Playbook</Button>
           </FooterToolbar>
         )}
-        <TerminalModal terminalProps={{...terminal, setIsOpen: openOrCloseTerminalModal}} />
-        <ConfigurationForm
-          onSubmit={async (value) => {
-            const success = await handleUpdate(value);
-            if (success) {
-              handleUpdateModalOpen(false);
-              setCurrentRow(undefined);
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
-            }
-          }}
-          onCancel={() => {
-            handleUpdateModalOpen(false);
-            if (!showDetail) {
-              setCurrentRow(undefined);
-            }
-          }}
+        <TerminalModal terminalProps={{ ...terminal, setIsOpen: openOrCloseTerminalModal }} />
+        <ConfigurationModal
+          handleUpdateModalOpen={handleUpdateModalOpen}
           updateModalOpen={updateModalOpen}
           values={currentRow || {}}
         />

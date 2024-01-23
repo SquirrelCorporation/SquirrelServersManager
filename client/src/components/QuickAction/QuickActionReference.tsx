@@ -1,4 +1,3 @@
-import { MenuProps } from 'antd';
 import {
   BugOutlined,
   DownloadOutlined,
@@ -18,18 +17,17 @@ export type QuickActionReferenceType = {
   onAdvancedMenu: boolean;
 };
 
-const QuickActionReference : QuickActionReferenceType[] = [
+const QuickActionReference: QuickActionReferenceType[] = [
   {
-    type: 'action',
+    type: 'playbook-selection',
     label: (
       <>
         <PlayCircleOutlined /> Execute a playbook
       </>
     ),
-    onAdvancedMenu: false
+    onAdvancedMenu: false,
   },
   {
-    // 0 Reboot
     type: 'playbook',
     playbookFile: '_reboot',
     label: (
@@ -37,24 +35,22 @@ const QuickActionReference : QuickActionReferenceType[] = [
         <ReloadOutlined /> Reboot
       </>
     ),
-    onAdvancedMenu: false
+    onAdvancedMenu: false,
   },
   {
-    // 1 Connect
     type: 'action',
     label: (
       <>
         <LoginOutlined /> Connect
       </>
     ),
-    onAdvancedMenu: false
+    onAdvancedMenu: false,
   },
   {
     onAdvancedMenu: false,
     type: 'divider',
   },
   {
-    // 3 ping
     type: 'playbook',
     playbookFile: '_ping',
     label: (
@@ -62,14 +58,13 @@ const QuickActionReference : QuickActionReferenceType[] = [
         <ShakeOutlined /> Ping
       </>
     ),
-    onAdvancedMenu: false
+    onAdvancedMenu: false,
   },
   {
     onAdvancedMenu: true,
     type: 'divider',
   },
   {
-    // 5 Update Agent
     type: 'playbook',
     playbookFile: '_updateAgent',
     onAdvancedMenu: true,
@@ -80,7 +75,6 @@ const QuickActionReference : QuickActionReferenceType[] = [
     ),
   },
   {
-    // 6 Reinstall Agent
     type: 'playbook',
     playbookFile: '_reinstallAgent',
     onAdvancedMenu: true,
@@ -91,7 +85,6 @@ const QuickActionReference : QuickActionReferenceType[] = [
     ),
   },
   {
-    // 7 Restart Agent
     type: 'playbook',
     playbookFile: '_restartAgent',
     onAdvancedMenu: true,
@@ -102,7 +95,6 @@ const QuickActionReference : QuickActionReferenceType[] = [
     ),
   },
   {
-    // 8  Agent Log
     type: 'action',
     onAdvancedMenu: true,
     label: (
@@ -111,6 +103,6 @@ const QuickActionReference : QuickActionReferenceType[] = [
       </>
     ),
   },
-]
+];
 
 export default QuickActionReference;

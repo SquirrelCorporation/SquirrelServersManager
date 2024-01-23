@@ -17,7 +17,8 @@
     "node-cron": "^3.0.3",
     "pino": "^8.17.2",
     "shelljs": "^0.8.5",
-    "pino-mongodb": "^4.3.0"
+    "pino-mongodb": "^4.3.0",
+    "mongoose-field-encryption": "^7.0.1"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",

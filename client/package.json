@@ -63,7 +63,8 @@
     "react-helmet-async": "^2.0.4",
     "react-terminal": "^1.4.4",
     "@monaco-editor/react": "^4.6.0",
-    "dayjs": "^1.11.10"
+    "dayjs": "^1.11.10",
+    "@dotlottie/react-player": "^1.6.15"
   },
   "devDependencies": {
     "antd-pro-merge-less": "^3.0.11",

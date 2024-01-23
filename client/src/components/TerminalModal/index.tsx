@@ -1,20 +1,21 @@
 import taskStatusTimeline from '@/components/TerminalModal/TaskStatusTimeline';
 import { executePlaybook, getExecLogs, getTaskStatuses } from '@/services/rest/ansible';
-import { ClockCircleOutlined, ThunderboltOutlined, VerticalAlignBottomOutlined } from '@ant-design/icons';
+import { ClockCircleOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { Button, Col, Modal, Row, Steps, StepsProps, message } from 'antd';
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { ReactTerminal, TerminalContext } from 'react-terminal';
+import { DotLottiePlayer } from '@dotlottie/react-player';
 
 export type TerminalStateProps = {
   isOpen: boolean;
   command: string | undefined;
-  target: string | undefined;
+  target: API.DeviceItem | undefined;
 };
 
 export type TerminalModalProps = {
-  terminalProps : TerminalStateProps & {
-    setIsOpen: (open : boolean) => void;
-  }
+  terminalProps: TerminalStateProps & {
+    setIsOpen: (open: boolean) => void;
+  };
 };
 
 export type TaskStatusTimelineType = StepsProps & {
@@ -70,14 +71,14 @@ const TerminalModal = (props: TerminalModalProps) => {
 
   const startTerminal = async () => {
     resetTerminal();
-    setBufferedContent((previous) => (
+    setBufferedContent(() => (
       <>
         <span style={terminalContentStyle}>Starting...</span>
         <br />
       </>
     ));
     try {
-      const res = await executePlaybook();
+      const res = await executePlaybook(props.terminalProps.command, props.terminalProps.target);
       setExecId(res.data.execId);
       message.loading({
         content: `Playbook is running with id "${res.data.execId}"`,
@@ -112,8 +113,8 @@ const TerminalModal = (props: TerminalModalProps) => {
             statuses.data.execStatuses.forEach((status) => {
               if (!statusesSet.has(status.status)) {
                 statusesSet.add(status.status);
-                setSavedStatuses((savedStatuses) => [
-                  ...savedStatuses,
+                setSavedStatuses((oldStatuses) => [
+                  ...oldStatuses,
                   taskStatusTimeline.transformToTaskStatusTimeline(status),
                 ]);
                 if (taskStatusTimeline.isFinalStatus(status.status)) {
@@ -181,7 +182,7 @@ const TerminalModal = (props: TerminalModalProps) => {
 
   useEffect(() => {
     if (props.terminalProps.isOpen && !isPollingEnabled) {
-      startTerminal()
+      startTerminal();
     }
   }, [props.terminalProps.isOpen]);
 
@@ -189,15 +190,41 @@ const TerminalModal = (props: TerminalModalProps) => {
     <>
       <Modal
         open={props.terminalProps.isOpen}
-        title={`Executing playbook ${props.terminalProps.command}...`}
+        title={
+          <div style={{ verticalAlign: 'center' }}>
+            <DotLottiePlayer
+              src="/Animation-1705922266332.lottie"
+              autoplay
+              loop
+              style={{ height: '5%', width: '5%', display: 'inline-block' }}
+            />
+            <div
+              style={{
+                display: 'inline-block',
+                transform: 'translate(0, -50%)',
+              }}
+            >
+              Executing playbook {props.terminalProps.command}...{' '}
+            </div>
+          </div>
+        }
         onOk={handleOk}
         onCancel={handleCancel}
         styles={modalStyles}
         width={1000}
-        footer={(_, { OkBtn, CancelBtn }) => (
+        footer={() => (
           <>
-            <Button disabled={!hasReachedFinalStatus} onClick={startTerminal}>Restart</Button>
-            <Button disabled={!hasReachedFinalStatus} type="primary" loading={!hasReachedFinalStatus} onClick={handleOk}>OK</Button>
+            <Button disabled={!hasReachedFinalStatus} onClick={startTerminal}>
+              Restart
+            </Button>
+            <Button
+              disabled={!hasReachedFinalStatus}
+              type="primary"
+              loading={!hasReachedFinalStatus}
+              onClick={handleOk}
+            >
+              OK
+            </Button>
           </>
         )}
       >

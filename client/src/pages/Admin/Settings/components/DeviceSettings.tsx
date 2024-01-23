@@ -11,7 +11,7 @@ const DeviceSettings: React.FC = () => {
         </Typography>{' '}
         <InputNumber min={1} max={60} defaultValue={3} />
         <Typography>minute(s)</Typography>
-        <Space.Compact style={{ width: '100%' }}></Space.Compact>
+        <Space.Compact style={{ width: '100%' }} />
       </Space>
       <Space direction="horizontal" size="middle">
         <Typography>
@@ -19,7 +19,7 @@ const DeviceSettings: React.FC = () => {
         </Typography>{' '}
         <InputNumber min={1} max={60} defaultValue={3} />
         <Typography>minute(s)</Typography>
-        <Space.Compact style={{ width: '100%' }}></Space.Compact>
+        <Space.Compact style={{ width: '100%' }} />
       </Space>
     </Flex>
   );

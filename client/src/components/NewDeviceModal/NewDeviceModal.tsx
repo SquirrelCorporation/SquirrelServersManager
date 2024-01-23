@@ -10,14 +10,7 @@ import {
 } from '@ant-design/pro-components';
 import { Button, Flex, Input, Modal, Typography, message } from 'antd';
 import React, { useState } from 'react';
-
-const connectionTypes = [
-  {
-    value: '1',
-    label: 'User/Password',
-  },
-  { value: '2', label: 'Keys' },
-];
+import SSHConnectionForm from '@/components/SSHConnectionForm/SSHConnectionForm';
 
 export type NewDeviceModalProps = {
   isModalOpen: boolean;
@@ -35,7 +28,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
         accept: 'application/json',
       },
     })
-      .then((response) => {
+      .then(() => {
         message.success({ content: `Found API at ${url}`, duration: 8 });
       })
       .catch(function (err) {
@@ -114,68 +107,14 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                 placeholder="192.168.0.1"
                 rules={[{ required: true }]}
               />
-              <ProFormText
-                name="sshPort"
-                label="SSH Port"
-                width="md"
-                placeholder="22"
-                rules={[{ required: true }]}
-                initialValue={22}
-              />
-              <ProFormSelect
-                label="SSH Connection Type"
-                name="sshConnectionType"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-                initialValue="1"
-                width="md"
-                options={connectionTypes}
-              />
-              <ProFormDependency name={['sshConnectionType']}>
-                {({ sshConnectionType }) => {
-                  if (sshConnectionType === '1')
-                    return (
-                      <>
-                        <ProFormText
-                          name="sshUserName"
-                          label="SSH User Name"
-                          width="sm"
-                          placeholder="root"
-                          rules={[{ required: true }]}
-                        />
-                        <ProFormText.Password
-                          name="sshPassword"
-                          label="SSH Password"
-                          width="sm"
-                          placeholder="password"
-                          rules={[{ required: true }]}
-                        />
-                      </>
-                    );
-                  if (sshConnectionType === '2')
-                    return (
-                      <>
-                        <ProFormTextArea
-                          name="sshPrivateKey"
-                          label="SSH Private Key"
-                          width="xl"
-                          placeholder="root"
-                          rules={[{ required: true }]}
-                        />
-                      </>
-                    );
-                }}
-              </ProFormDependency>
+              <SSHConnectionForm />
             </StepsForm.StepForm>
             <StepsForm.StepForm
               name="checkbox"
               title="Control Node"
               onFinish={async (formData) => {
                 setLoading(true);
-                await checkHostAPI(formData['controlNodeURL']);
+                await checkHostAPI(formData.controlNodeURL);
                 setLoading(false);
                 return true;
               }}

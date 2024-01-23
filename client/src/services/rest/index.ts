@@ -4,8 +4,9 @@ import * as api from './api';
 import * as login from './login';
 import * as device from './device';
 import * as cron from './cron';
-import * as ansible from './ansible'
-import * as logs from './logs'
+import * as ansible from './ansible';
+import * as logs from './logs';
+import * as deviceauth from './deviceauth';
 
 export default {
   api,
@@ -13,5 +14,6 @@ export default {
   device,
   cron,
   ansible,
-  logs
+  logs,
+  deviceauth,
 };
