@@ -9,5 +9,5 @@
     "moduleResolution": "NodeNext",
     "resolveJsonModule": true
   },
-  "include": ["src//*.ts", "src//*.json", ".env"]
+  "include": ["src//*.ts", "src//*.json", ".env", "typings.d.ts"]
 }

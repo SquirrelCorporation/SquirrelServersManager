@@ -2,7 +2,10 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
-export async function getDevices(params: API.DeviceListParams, options?: { [key: string]: any }) {
+export async function getDevices(
+  params?: API.DeviceListParams,
+  options?: { [key: string]: any },
+) {
   return request<API.DeviceList>('/api/devices', {
     method: 'GET',
     params: {

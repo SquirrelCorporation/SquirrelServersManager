@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
+import API from '../../typings';
 
 export const DOCUMENT_NAME = 'Device';
 export const COLLECTION_NAME = 'devices';
@@ -28,6 +29,7 @@ export default interface Device {
   cpuManufacturer?: string;
   cpuFamily?: string;
   agentVersion?: string;
+  versions?: API.VersionData;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -131,6 +133,10 @@ const schema = new Schema<Device>(
     },
     agentVersion: {
       type: Schema.Types.String,
+      required: false,
+    },
+    versions: {
+      type: Object,
       required: false,
     },
   },

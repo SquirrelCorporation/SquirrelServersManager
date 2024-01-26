@@ -8,40 +8,39 @@ import ColumnsTaskLogs from '@/pages/Admin/Logs/ColumnsTaskLogs';
 const logsTabItem = [
   {
     key: '1',
-    label: (
-      <div>
-        Server Logs
-      </div>
+    label: <div>Server Logs</div>,
+    children: (
+      <ProTable<API.ServerLog>
+        rowKey="_id"
+        request={getServerLogs}
+        columns={ColumnsServerLogs}
+        search={{
+          labelWidth: 120,
+        }}
+        dateFormatter="string"
+      />
     ),
-    children: <ProTable<API.ServerLog>
-      rowKey="_id"
-      request={getServerLogs}
-      columns={ColumnsServerLogs}
-      search={true}
-      dateFormatter="string"
-    />,
   },
   {
     key: '2',
-    label: (
-      <div>
-        Task Logs
-      </div>
+    label: <div>Task Logs</div>,
+    children: (
+      <ProTable<API.Task>
+        rowKey="ident"
+        request={getTasksLogs}
+        columns={ColumnsTaskLogs}
+        search={{
+          labelWidth: 120,
+        }}
+        dateFormatter="string"
+      />
     ),
-    children: <ProTable<API.Task>
-      rowKey="ident"
-      request={getTasksLogs}
-      columns={ColumnsTaskLogs}
-      search={true}
-      dateFormatter="string"
-    />,
   },
 ];
 
-
 const Index: React.FC = () => {
   return (
-    <PageContainer >
+    <PageContainer>
       <Tabs items={logsTabItem} />
     </PageContainer>
   );

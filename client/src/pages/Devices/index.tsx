@@ -8,7 +8,17 @@ import TerminalModal from '@/components/TerminalModal';
 import { getDevices } from '@/services/rest/device';
 import { AppstoreOutlined, ControlOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { Avatar, Card, List, Tooltip, message, Col, Row, Carousel, Typography } from 'antd';
+import {
+  Avatar,
+  Card,
+  List,
+  Tooltip,
+  message,
+  Col,
+  Row,
+  Carousel,
+  Typography,
+} from 'antd';
 import moment from 'moment';
 import React, { memo, useEffect, useState } from 'react';
 import { TerminalContextProvider } from 'react-terminal';
@@ -25,9 +35,14 @@ export type StateType = {
 
 const Index = memo(() => {
   const [deviceList, setDeviceList] = React.useState<API.DeviceList>({});
-  const [terminal, setTerminal] = useState<{ isOpen: boolean; command: string | undefined }>({
+  const [terminal, setTerminal] = useState<{
+    isOpen: boolean;
+    command: string | undefined;
+    target: API.DeviceItem | undefined;
+  }>({
     isOpen: false,
     command: undefined,
+    target: undefined,
   });
   const openOrCloseTerminalModal = (open: boolean) => {
     setTerminal({ ...terminal, isOpen: open });
@@ -76,37 +91,41 @@ const Index = memo(() => {
         <p>{moment(props.updatedAt).format('YYYY-MM-DD, HH:mm')}</p>
       </div>
       <div className={styles.listContentItem}>
-        <Carousel style={{ width: 300, height: 70, zIndex: 1000 }} dotPosition={'right'}>
+        <Carousel
+          style={{ width: 300, height: 70, zIndex: 1000 }}
+          dotPosition={'right'}
+        >
           <div style={{ width: 300, height: 70, zIndex: 1000 }}>
-            <div style={{ width: 300, height: 70, zIndex: 1000, paddingTop: '15px' }}>
-              <Row type="flex" style={{ alignItems: 'center' }} justify="center">
+            <div
+              style={{
+                width: 300,
+                height: 70,
+                zIndex: 1000,
+                paddingTop: '15px',
+              }}
+            >
+              <Row style={{ alignItems: 'center' }} justify="center">
                 <Col span={6}>
                   <TinyRingProgressDeviceGraph
                     type={DeviceStatType.CPU}
                     deviceUuid={props.uuid}
-                    from={24}
                   />
                 </Col>
                 <Col span={6}>
                   <TinyRingProgressDeviceGraph
                     type={DeviceStatType.MEM_USED}
                     deviceUuid={props.uuid}
-                    from={24}
                   />
                 </Col>
                 <Col span={6}>
-                  <TinyRingProgressDeviceIndicator
-                    type={DeviceStatType.CPU}
-                    deviceUuid={props.uuid}
-                    from={24}
-                  />
+                  <TinyRingProgressDeviceIndicator deviceUuid={props.uuid} />
                 </Col>
               </Row>
             </div>
           </div>
           <div style={{ width: 300, height: 70, zIndex: 1000 }}>
             <div style={{ width: 300, height: 70, zIndex: 1000 }}>
-              <Row type="flex" style={{ alignItems: 'center' }} justify="center">
+              <Row style={{ alignItems: 'center' }} justify="center">
                 <Col span={24}>
                   <TinyLineDeviceGraph
                     type={DeviceStatType.CPU}
@@ -116,7 +135,10 @@ const Index = memo(() => {
                 </Col>
               </Row>
               <Row>
-                <Col span={24} style={{ marginTop: '-5px', textAlign: 'center' }}>
+                <Col
+                  span={24}
+                  style={{ marginTop: '-5px', textAlign: 'center' }}
+                >
                   <Text type="secondary" style={{ fontSize: '8px' }}>
                     CPU
                   </Text>
@@ -126,7 +148,7 @@ const Index = memo(() => {
           </div>
           <div style={{ width: 300, height: 70, zIndex: 1000 }}>
             <div style={{ width: 300, height: 70, zIndex: 1000 }}>
-              <Row type="flex" style={{ alignItems: 'center' }} justify="center">
+              <Row style={{ alignItems: 'center' }} justify="center">
                 <Col span={24}>
                   <TinyLineDeviceGraph
                     type={DeviceStatType.MEM_USED}
@@ -136,7 +158,10 @@ const Index = memo(() => {
                 </Col>
               </Row>
               <Row>
-                <Col span={24} style={{ marginTop: '-5px', textAlign: 'center' }}>
+                <Col
+                  span={24}
+                  style={{ marginTop: '-5px', textAlign: 'center' }}
+                >
                   <Text type="secondary" style={{ fontSize: '8px' }}>
                     MEM USED
                   </Text>
@@ -202,17 +227,25 @@ const Index = memo(() => {
                   ]}
                 >
                   <List.Item.Meta
-                    avatar={<Avatar src={OsLogo(item.osLogoFile)} size="large" />}
+                    avatar={
+                      <Avatar src={OsLogo(item.osLogoFile)} size="large" />
+                    }
                     title={<a href={item.hostname}>{item.hostname}</a>}
                     description={item.ip}
                   />
-                  <ListContent uuid={item.uuid} createdAt={item.createdAt} status={item.status} />
+                  <ListContent
+                    uuid={item.uuid}
+                    createdAt={item.createdAt}
+                    status={item.status}
+                  />
                 </List.Item>
               )}
             />
           </Card>
         </div>
-        <TerminalModal terminalProps={{ ...terminal, setIsOpen: openOrCloseTerminalModal }} />
+        <TerminalModal
+          terminalProps={{ ...terminal, setIsOpen: openOrCloseTerminalModal }}
+        />
       </PageContainer>
     </TerminalContextProvider>
   );

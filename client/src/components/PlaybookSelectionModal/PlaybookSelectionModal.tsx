@@ -1,6 +1,12 @@
 import { getPlaybooks } from '@/services/rest/ansible';
 import { RightSquareOutlined } from '@ant-design/icons';
-import { ModalForm, ProForm, ProFormDependency, ProFormSelect } from '@ant-design/pro-components';
+import {
+  ModalForm,
+  ProForm,
+  ProFormDependency,
+  ProFormSelect,
+  RequestOptionsType,
+} from '@ant-design/pro-components';
 import { Form, message } from 'antd';
 import React from 'react';
 
@@ -10,8 +16,10 @@ export type PlaybookSelectionModalProps = {
   itemSelected: any;
   callback: (playbook: string) => void;
 };
-const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (props) => {
-  const [form] = Form.useForm<{ playbook: string }>();
+const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
+  props,
+) => {
+  const [form] = Form.useForm<{ playbook: { value: string } }>();
   return (
     <ModalForm
       title="Playbook"
@@ -27,7 +35,7 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (props) =>
         gutter: [16, 0],
       }}
       submitTimeout={2000}
-      onFinish={(values) => {
+      onFinish={async (values: { playbook: { value: string } }) => {
         props.callback(values.playbook.value);
         props.setIsModalOpen(false);
         return true;
@@ -48,7 +56,7 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (props) =>
           rules={[{ required: true, message: 'Please select a playbook!' }]}
           debounceTime={300}
           request={async ({ keyWords = '' }) => {
-            return await getPlaybooks()
+            return (await getPlaybooks()
               .then((e) => {
                 return e.data?.filter(({ value, label }) => {
                   return value.includes(keyWords) || label.includes(keyWords);
@@ -60,7 +68,7 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (props) =>
                   duration: 6,
                 });
                 return [];
-              });
+              })) as RequestOptionsType[];
           }}
         />
       </ProForm.Group>
@@ -69,7 +77,8 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (props) =>
           {({ playbook }) => {
             return (
               <span>
-                <RightSquareOutlined /> SSM will apply &quot;{playbook ? playbook.value : '?'}
+                <RightSquareOutlined /> SSM will apply &quot;
+                {playbook ? playbook.value : '?'}
                 &quot; on {props.itemSelected?.ip}
               </span>
             );

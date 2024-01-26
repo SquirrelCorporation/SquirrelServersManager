@@ -1,10 +1,16 @@
 import taskStatusTimeline from '@/components/TerminalModal/TaskStatusTimeline';
-import { executePlaybook, getExecLogs, getTaskStatuses } from '@/services/rest/ansible';
+import {
+  executePlaybook,
+  getExecLogs,
+  getTaskStatuses,
+} from '@/services/rest/ansible';
 import { ClockCircleOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { Button, Col, Modal, Row, Steps, StepsProps, message } from 'antd';
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { ReactTerminal, TerminalContext } from 'react-terminal';
 import { DotLottiePlayer } from '@dotlottie/react-player';
+import ExecStatus = API.ExecStatus;
+import ExecLog = API.ExecLog;
 
 export type TerminalStateProps = {
   isOpen: boolean;
@@ -25,7 +31,7 @@ export type TaskStatusTimelineType = StepsProps & {
 };
 
 const TerminalModal = (props: TerminalModalProps) => {
-  const { setBufferedContent, setTemporaryContent } = React.useContext(TerminalContext);
+  const { setBufferedContent } = React.useContext(TerminalContext);
   const [execId, setExecId] = React.useState('');
   const modalStyles = {
     body: {
@@ -77,8 +83,19 @@ const TerminalModal = (props: TerminalModalProps) => {
         <br />
       </>
     ));
+    if (!props.terminalProps.command || !props.terminalProps.target) {
+      message.error({
+        type: 'error',
+        content: 'Error running playbook (internal)',
+        duration: 8,
+      });
+      return;
+    }
     try {
-      const res = await executePlaybook(props.terminalProps.command, props.terminalProps.target);
+      const res = await executePlaybook(
+        props.terminalProps.command,
+        props.terminalProps.target,
+      );
       setExecId(res.data.execId);
       message.loading({
         content: `Playbook is running with id "${res.data.execId}"`,
@@ -107,10 +124,15 @@ const TerminalModal = (props: TerminalModalProps) => {
       await getTaskStatuses(execId)
         .then((statuses) => {
           if (statuses && statuses.data.execStatuses) {
-            statuses.data.execStatuses.sort((a: API.ExecStatus, b: API.ExecStatus) => {
-              return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-            });
-            statuses.data.execStatuses.forEach((status) => {
+            statuses.data.execStatuses.sort(
+              (a: API.ExecStatus, b: API.ExecStatus) => {
+                return (
+                  new Date(a.createdAt).getTime() -
+                  new Date(b.createdAt).getTime()
+                );
+              },
+            );
+            statuses.data.execStatuses.forEach((status: ExecStatus) => {
               if (!statusesSet.has(status.status)) {
                 statusesSet.add(status.status);
                 setSavedStatuses((oldStatuses) => [
@@ -135,9 +157,12 @@ const TerminalModal = (props: TerminalModalProps) => {
         .then((logs) => {
           if (logs && logs.data.execLogs) {
             logs.data.execLogs.sort((a: API.ExecLog, b: API.ExecLog) => {
-              return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+              return (
+                new Date(a.createdAt).getTime() -
+                new Date(b.createdAt).getTime()
+              );
             });
-            logs.data.execLogs.forEach((execLog) => {
+            logs.data.execLogs.forEach((execLog: ExecLog) => {
               if (!logsSet.has(execLog.logRunnerId)) {
                 logsSet.add(execLog.logRunnerId);
                 if (execLog.stdout) {

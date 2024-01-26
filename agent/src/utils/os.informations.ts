@@ -3,77 +3,14 @@ import osu from 'node-os-utils';
 import logger from "../logger";
 import {version} from '../../package.json';
 
-type OSInfo = {
-  distro?: string;
-  release?: string;
-  codename?: string;
-  platform?: string;
-  arch?: string;
-  kernel?: string;
-  logofile?: string;
-}
-
-type SystemInfo = {
-  manufacturer?: string;
-  model?: string;
-  version?: string;
-  platform?: string;
-  uuid?: string;
-  sku?: string;
-  virtual?: boolean;
-}
-
-type CPUInfo = {
-  usage?: number;
-  free?: number;
-  count?: number;
-  brand?: string;
-  manufacturer?: string;
-  vendor?: string;
-  family?: string;
-  speed?: number;
-  cores?: number;
-  physicalCores?: number;
-  processors?: number;
-}
-
-type MemInfo = {
-  memTotalMb?: number;
-  memTotalUsedMb?: number;
-  memTotalFreeMb?: number;
-  memUsedPercentage?: number;
-  memFreePercentage?: number;
-}
-
-type DriveInfo = {
-  storageTotalGb?: string;
-  storageUsedGb?: string;
-  storageFreeGb?: string;
-  storageUsedPercentage?: string;
-  storageFreePercentage?: string;
-}
-
-type DeviceInfo = {
-  id: string;
-  os?: OSInfo;
-  ip?: string;
-  uptime?: number;
-  hostname?: string;
-  fqdn?: string;
-  mem?: MemInfo;
-  storage?: DriveInfo;
-  system?: SystemInfo;
-  cpu?: CPUInfo;
-  agentVersion?: string;
-}
-
 export default async function getDeviceInfo(hostId : string) {
-  let deviceInfo: DeviceInfo = {id : hostId, agentVersion: version};
+  let deviceInfo: API.DeviceInfo = {id : hostId, agentVersion: version};
 
   const valueObject = {
     cpu: '*',
     osInfo: '*',
-    system: '*'
+    system: '*',
+    versions: '*'
   }
   const systemInfo = await si.get(valueObject);
   try {
@@ -82,11 +19,11 @@ export default async function getDeviceInfo(hostId : string) {
     deviceInfo.fqdn = systemInfo.osInfo.fqdn;
     deviceInfo.hostname = systemInfo.osInfo.hostname;
   } catch (e) {
-    console.error(e);
+    logger.error(e);
   }
 
   /*
-    platform: 'darwin',
+  platform: 'darwin',
   distro: 'Mac OS X',
   release: '10.15.3',
   codename: 'macOS Catalina',
@@ -109,9 +46,10 @@ export default async function getDeviceInfo(hostId : string) {
     deviceInfo.os.kernel = systemInfo.osInfo.kernel;
     deviceInfo.os.arch = systemInfo.osInfo.arch;
     deviceInfo.os.logofile = systemInfo.osInfo.logofile;
+    deviceInfo.os.versionData = systemInfo.versions;
 
   } catch (e) {
-    console.error(e);
+    logger.error(e);
   }
 
   /*
@@ -131,8 +69,9 @@ export default async function getDeviceInfo(hostId : string) {
     deviceInfo.system.uuid = systemInfo.system.uuid;
     deviceInfo.system.sku = systemInfo.system.sku;
     deviceInfo.system.virtual = systemInfo.system.virtual;
+    deviceInfo.system.raspberry = systemInfo.system.raspberry;
   } catch (e) {
-    console.error(e);
+    logger.error(e);
   }
 
   /*
@@ -169,7 +108,7 @@ export default async function getDeviceInfo(hostId : string) {
     deviceInfo.cpu.physicalCores = systemInfo.cpu.physicalCores;
     deviceInfo.cpu.processors = systemInfo.cpu.processors;
   } catch (e) {
-    console.error(e);
+    logger.error(e);
   }
 
   deviceInfo.storage = {};
@@ -181,7 +120,7 @@ export default async function getDeviceInfo(hostId : string) {
     deviceInfo.storage.storageFreeGb = osuDriveInfo.freeGb;
     deviceInfo.storage.storageUsedGb = osuDriveInfo.usedGb;
   } catch (e) {
-    console.error(e);
+    logger.error(e);
   }
 
   deviceInfo.mem = {};
@@ -193,8 +132,9 @@ export default async function getDeviceInfo(hostId : string) {
     deviceInfo.mem.memTotalFreeMb = osuMemInfo.freeMemMb;
     deviceInfo.mem.memTotalUsedMb = osuMemInfo.usedMemMb;
   } catch (e) {
-    console.error(e);
+    logger.error(e);
   }
+
   logger.debug(deviceInfo);
   return deviceInfo;
 }

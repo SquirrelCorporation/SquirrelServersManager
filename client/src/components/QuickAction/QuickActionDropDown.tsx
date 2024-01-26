@@ -4,6 +4,7 @@ import { Dropdown, MenuProps, Space } from 'antd';
 import React, { Dispatch, SetStateAction } from 'react';
 import QuickActionReference from '@/components/QuickAction/QuickActionReference';
 import PlaybookSelectionModal from '@/components/PlaybookSelectionModal/PlaybookSelectionModal';
+import { ItemType } from 'rc-menu/es/interface';
 
 export type QuickActionProps = {
   onDropDownClicked: any;
@@ -13,7 +14,8 @@ export type QuickActionProps = {
 };
 
 const QuickActionDropDown: React.FC<QuickActionProps> = (props) => {
-  const [playbookSelectionModalIsOpened, setPlaybookSelectionModalIsOpened] = React.useState(false);
+  const [playbookSelectionModalIsOpened, setPlaybookSelectionModalIsOpened] =
+    React.useState(false);
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
     const idx = parseInt(key);
@@ -50,7 +52,7 @@ const QuickActionDropDown: React.FC<QuickActionProps> = (props) => {
         key: `${index}`,
       };
     }
-  });
+  }) as ItemType[];
 
   const onSelectPlaybook = (playbook: string) => {
     props.setTerminal({

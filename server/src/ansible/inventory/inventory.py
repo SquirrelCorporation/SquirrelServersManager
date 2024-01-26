@@ -29,7 +29,7 @@ def main():
              except KeyError as e:
                  print('\033[91mHost "%s" not Found!\033[0m' % e)
                  print(e)
-    except Error as e:
+    except requests.exceptions.RequestException as e:
         print("error")
         print(e)
         exit(1)
@@ -49,7 +49,7 @@ def parse_args():
 
 def load_inventory():
     headers = {'Accept': 'application/json'}
-    r = requests.get('http://localhost:3000/api/ansible/inventory', headers=headers)
+    r = requests.get('http://localhost:3000/ansible/inventory', headers=headers)
     return r.json()['data']
 
 

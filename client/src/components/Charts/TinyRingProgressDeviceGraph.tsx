@@ -10,8 +10,13 @@ export type TinyRingProps = {
   type: DeviceStatType;
 };
 
-const TinyRingProgressDeviceGraph: React.FC = (props: TinyRingProps) => {
-  const [value, setValue] = useState<{percent: number; date: string}>({percent: 0, date: 'never'});
+const TinyRingProgressDeviceGraph: React.FC<TinyRingProps> = (
+  props: TinyRingProps,
+) => {
+  const [value, setValue] = useState<{ percent: number; date: string }>({
+    percent: 0,
+    date: 'never',
+  });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const asyncFetch = async () => {
@@ -20,9 +25,10 @@ const TinyRingProgressDeviceGraph: React.FC = (props: TinyRingProps) => {
         if (res.data && res.data.value) {
           setValue({
             percent: parseFloat((res.data.value / 100).toFixed(2)),
-            date: moment(res.data.date).format('YYYY-MM-DD, HH:mm')
+            date: moment(res.data.date).format('YYYY-MM-DD, HH:mm'),
           });
-        }})
+        }
+      })
       .catch((error) => {
         message.error({ content: error.message, duration: 8 });
       });
@@ -34,10 +40,13 @@ const TinyRingProgressDeviceGraph: React.FC = (props: TinyRingProps) => {
   }, []);
 
   const config = {
-    percent: parseFloat(value.percent).toFixed(2),
+    percent: value.percent.toFixed(2),
     width: 50,
     height: 50,
-    color: ['rgba(232,237,243,0.4)', parseFloat(value.percent) < 0.8 ? '#1668dc' : '#dc4446'],
+    color: [
+      'rgba(232,237,243,0.4)',
+      value.percent < 0.8 ? '#1668dc' : '#dc4446',
+    ],
     innerRadius: 0.85,
     radius: 0.98,
     theme: 'classicDark',
@@ -45,14 +54,14 @@ const TinyRingProgressDeviceGraph: React.FC = (props: TinyRingProps) => {
       {
         type: 'text',
         style: {
-          text: `${parseFloat(value.percent * 100).toFixed(0)}%`,
+          text: `${(value.percent * 100).toFixed(0)}%`,
           x: '50%',
           y: '45%',
           textAlign: 'center',
           fontSize: 12,
-          fill: `${parseFloat(value.percent) < 0.8 ? 'rgba(232,237,243,0.9)' : '#dc4446'}`,
-          fontStyle: 'bold'
-        }
+          fill: `${value.percent < 0.8 ? 'rgba(232,237,243,0.9)' : '#dc4446'}`,
+          fontStyle: 'bold',
+        },
       },
       {
         type: 'text',
@@ -64,13 +73,19 @@ const TinyRingProgressDeviceGraph: React.FC = (props: TinyRingProps) => {
           fontSize: 8,
           fill: 'rgba(232,237,243,0.9)',
           fillOpacity: 0.95,
-          fontStyle: 'normal'
-        }
-      }
-    ]
+          fontStyle: 'normal',
+        },
+      },
+    ],
   };
 
-  return isLoading || !value ? (<Skeleton.Avatar active size={'large'} shape={"circle"} />) : (<Tooltip title={`Updated at ${value.date}`}><Tiny.Ring {...config} /> </Tooltip>);
+  return isLoading || !value ? (
+    <Skeleton.Avatar active size={'large'} shape={'circle'} />
+  ) : (
+    <Tooltip title={`Updated at ${value.date}`}>
+      <Tiny.Ring {...config} />{' '}
+    </Tooltip>
+  );
 };
 
 export default TinyRingProgressDeviceGraph;

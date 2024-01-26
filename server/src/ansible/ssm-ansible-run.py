@@ -32,7 +32,7 @@ def get_configuration(url):
 
 
 def status_handler(data, runner_config):
-    plugin_config = get_configuration('http://localhost:3000/api/ansible/hook/task/status')
+    plugin_config = get_configuration('http://localhost:3000/ansible/hook/task/status')
     if plugin_config['runner_url'] is not None:
         status = send_request(plugin_config['runner_url'],
                               data=data,
@@ -43,7 +43,7 @@ def status_handler(data, runner_config):
         logger.info("HTTP Plugin Skipped")
 
 def event_handler(data):
-    plugin_config = get_configuration('http://localhost:3000/api/ansible/hook/task/event')
+    plugin_config = get_configuration('http://localhost:3000/ansible/hook/task/event')
     if plugin_config['runner_url'] is not None:
         status = send_request(plugin_config['runner_url'],
                               data=data,
