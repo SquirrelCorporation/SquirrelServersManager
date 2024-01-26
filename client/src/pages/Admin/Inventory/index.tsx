@@ -3,7 +3,11 @@ import QuickActionDropDown from '@/components/QuickAction/QuickActionDropDown';
 import TerminalModal, { TerminalStateProps } from '@/components/TerminalModal';
 import { OsLogo } from '@/components/misc/OsLogo';
 import { getDevices } from '@/services/rest/device';
-import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
+import type {
+  ActionType,
+  ProColumns,
+  ProDescriptionsItemProps,
+} from '@ant-design/pro-components';
 import {
   FooterToolbar,
   PageContainer,
@@ -22,6 +26,7 @@ const Inventory: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API.DeviceItem>();
   const [terminal, setTerminal] = useState<TerminalStateProps>({
+    target: undefined,
     isOpen: false,
     command: undefined,
   });
@@ -38,7 +43,13 @@ const Inventory: React.FC = () => {
       title: 'Type',
       dataIndex: 'osLogoFile',
       render: (dom, entity) => {
-        return <Avatar src={<img src={OsLogo(entity.osLogoFile)} alt={entity.osLogoFile} />} />;
+        return (
+          <Avatar
+            src={
+              <img src={OsLogo(entity.osLogoFile)} alt={entity.osLogoFile} />
+            }
+          />
+        );
       },
     },
     {
@@ -214,14 +225,18 @@ const Inventory: React.FC = () => {
           <FooterToolbar
             extra={
               <div>
-                Chosen <a style={{ fontWeight: 600 }}>{selectedRowsState.length}</a> item(s)
+                Chosen{' '}
+                <a style={{ fontWeight: 600 }}>{selectedRowsState.length}</a>{' '}
+                item(s)
               </div>
             }
           >
             <Button type="primary">Apply Batch Playbook</Button>
           </FooterToolbar>
         )}
-        <TerminalModal terminalProps={{ ...terminal, setIsOpen: openOrCloseTerminalModal }} />
+        <TerminalModal
+          terminalProps={{ ...terminal, setIsOpen: openOrCloseTerminalModal }}
+        />
         <ConfigurationModal
           handleUpdateModalOpen={handleUpdateModalOpen}
           updateModalOpen={updateModalOpen}

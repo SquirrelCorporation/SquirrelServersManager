@@ -24,33 +24,50 @@ const ConfigurationFormSSH: React.FC<ConfigurationFormSSHProps> = (props) => {
           },
         }}
         onFinish={async (values) => {
-          await putDeviceAuth(props.values.uuid, {
-            sshPort: values.sshPort,
-            type: values.type,
-            sshUser: values.sshUser,
-            sshPwd: values.sshPwd,
-            sshKey: values.sshKey,
-          })
-            .then(() => {
-              message.success({ content: 'Configuration updated', duration: 6 });
+          if (props?.values?.uuid && values) {
+            await putDeviceAuth(props.values.uuid, {
+              sshPort: values.sshPort,
+              type: values.type,
+              sshUser: values.sshUser,
+              sshPwd: values.sshPwd,
+              sshKey: values.sshKey,
             })
-            .catch((error) => {
-              message.error({
-                content: `Configuration update failed (${error.message})`,
-                duration: 6,
+              .then(() => {
+                message.success({
+                  content: 'Configuration updated',
+                  duration: 6,
+                });
+              })
+              .catch((error) => {
+                message.error({
+                  content: `Configuration update failed (${error.message})`,
+                  duration: 6,
+                });
               });
+          } else {
+            message.error({
+              content: `Internal - Calling Configuration modal without uuid or values form undefined`,
+              duration: 6,
             });
+          }
         }}
         request={async () => {
-          return await getDeviceAuth(props.values.uuid).then((res) => {
-            return {
-              sshPort: res.data.sshPort,
-              type: res.data.type,
-              sshUser: res.data.sshUser,
-              sshPwd: res.data.sshPwd,
-              sshKey: res.data.sshKey,
-            };
-          });
+          if (props?.values?.uuid) {
+            return await getDeviceAuth(props.values.uuid).then((res) => {
+              return {
+                sshPort: res.data.sshPort,
+                type: res.data.type,
+                sshUser: res.data.sshUser,
+                sshPwd: res.data.sshPwd,
+                sshKey: res.data.sshKey,
+              };
+            });
+          } else {
+            message.error({
+              content: `Internal - Calling Configuration modal without uuid`,
+              duration: 6,
+            });
+          }
         }}
       >
         <SSHConnectionForm />

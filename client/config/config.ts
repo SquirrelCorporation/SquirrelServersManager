@@ -1,6 +1,5 @@
 // https://umijs.org/config/
 import { defineConfig } from '@umijs/max';
-import { join } from 'path';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
@@ -90,13 +89,6 @@ export default defineConfig({
   /**
    * @doc https://pro.ant.design/zh-cn/docs/openapi/
    */
-  openAPI: [
-    {
-      requestLibPath: "import { request } from '@umijs/max'",
-      schemaPath: join(__dirname, 'oneapi.json'),
-      mock: false,
-    },
-  ],
   mfsu: {
     strategy: 'normal',
   },

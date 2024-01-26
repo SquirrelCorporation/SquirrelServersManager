@@ -7,7 +7,7 @@ async function executePlaybook(playbook: string, target?: string) {
   if (!playbook.endsWith('.yml')) {
     playbook += '.yml';
   }
-  shell.cd('/src/src/ansible/');
+  shell.cd('/server/src/ansible/');
   const result = await new Promise<string | null>((resolve, reject) => {
     const child = shell.exec(`sudo python3 ssm-ansible-run.py --playbook ${playbook}`, {
       async: true,
@@ -32,7 +32,7 @@ async function executePlaybook(playbook: string, target?: string) {
 async function listPlaybooks() {
   try {
     logger.info('[SHELL]-[ANSIBLE] - listPlaybook - Starting...');
-    shell.cd('/src/src/ansible/');
+    shell.cd('/server/src/ansible/');
     const listOfPlaybooks: string[] = [];
     shell.ls('*.yml').forEach(function (file) {
       listOfPlaybooks.push(file);
@@ -48,7 +48,7 @@ async function listPlaybooks() {
 async function readPlaybook(playbook: string) {
   try {
     logger.info('[SHELL]-[ANSIBLE] - readPlaybook - Starting...');
-    shell.cd('/src/src/ansible/');
+    shell.cd('/server/src/ansible/');
     return shell.cat(playbook).toString();
   } catch (error) {
     logger.error('[SHELL]-[ANSIBLE] - readPlaybook');
@@ -59,7 +59,7 @@ async function readPlaybook(playbook: string) {
 async function editPlaybook(playbook: string, content: string) {
   try {
     logger.info('[SHELL]-[ANSIBLE] - editPlaybook - Starting...');
-    shell.cd('/src/src/ansible/');
+    shell.cd('/server/src/ansible/');
     shell.ShellString(content).to(playbook);
   } catch (error) {
     logger.error('[SHELL]-[ANSIBLE] - editPlaybook');
@@ -70,7 +70,7 @@ async function editPlaybook(playbook: string, content: string) {
 async function newPlaybook(playbook: string) {
   try {
     logger.info('[SHELL]-[ANSIBLE] - newPlaybook - Starting...');
-    shell.cd('/src/src/ansible/');
+    shell.cd('/server/src/ansible/');
     shell.touch(playbook + '.yml');
   } catch (error) {
     logger.error('[SHELL]-[ANSIBLE] - newPlaybook');
@@ -81,7 +81,7 @@ async function newPlaybook(playbook: string) {
 async function deletePlaybook(playbook: string) {
   try {
     logger.info('[SHELL]-[ANSIBLE] - newPlaybook - Starting...');
-    shell.cd('/src/src/ansible/');
+    shell.cd('/server/src/ansible/');
     shell.rm(playbook);
   } catch (error) {
     logger.error('[SHELL]-[ANSIBLE] - newPlaybook');

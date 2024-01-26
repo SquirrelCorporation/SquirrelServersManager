@@ -21,11 +21,8 @@ export default {
   //     changeOrigin: true,
   //   },
   // },
-
-  /**
-   * @doc https://github.com/chimurai/http-proxy-middleware
-   */
-  test: {
+  /*
+   test: {
     // localhost:8000/api/** -> https://preview.pro.ant.design/api/**
     '/api/': {
       target: 'https://proapi.azurewebsites.net',
@@ -33,11 +30,16 @@ export default {
       pathRewrite: { '^': '' },
     },
   },
-  pre: {
+   */
+  /**
+   * @doc https://github.com/chimurai/http-proxy-middleware
+   */
+  /* pre: {
     '/api/': {
-      target: 'http://localhost:3000',
+      target: 'server:3000',
       changeOrigin: true,
       pathRewrite: { '^': '' },
+      logger: console,
     },
-  },
+  },*/
 };

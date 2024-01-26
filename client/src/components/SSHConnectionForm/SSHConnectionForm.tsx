@@ -14,6 +14,7 @@ const connectionTypes = [
   },
   { value: 'keyBased', label: 'Keys' },
 ];
+
 export type SSHConnectionFormProps = {
   deviceUuid?: string;
 };
@@ -33,7 +34,6 @@ const SSHConnectionForm = () => {
             message: 'Please enter a number',
           },
         ]}
-        initialValue={22}
         fieldProps={{ precision: 0 }}
       />
       <ProFormSelect
@@ -44,7 +44,6 @@ const SSHConnectionForm = () => {
             required: true,
           },
         ]}
-        initialValue="userPwd"
         width="md"
         options={connectionTypes}
       />

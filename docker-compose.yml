@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+  proxy:
+    restart: unless-stopped
+    build:
+      context: ./proxy
+    ports:
+      - "8000:8000"
+    depends_on:
+      - client
+      - mongo
+      - server
+  mongo:
+    container_name: mongo-ssm
+    image: mongo
+    restart: unless-stopped
+    volumes:
+      - ./.data.prod:/data/db
+    command: --quiet
+  server:
+    restart: unless-stopped
+    external_links:
+      - mongo
+    depends_on:
+      - mongo
+    build:
+      context: ./server
+      target: production
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      DB_NAME: ${DB_NAME}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_USER_PWD: ${DB_USER_PWD}
+  client:
+    restart: unless-stopped
+    depends_on:
+      - server
+    build:
+      context: ./client
+      target: production

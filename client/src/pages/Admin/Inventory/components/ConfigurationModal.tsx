@@ -22,10 +22,13 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
   return (
     <Modal
       width={640}
-      bodyStyle={{ padding: '32px 40px 48px' }}
+      style={{ padding: '32px 40px 48px' }}
       destroyOnClose
       title={`${props.values.hostname} (${props.values.ip})`}
       open={props.updateModalOpen}
+      onCancel={() => {
+        props.handleUpdateModalOpen(false);
+      }}
       footer={() => (
         <>
           <Button

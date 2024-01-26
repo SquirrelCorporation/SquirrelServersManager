@@ -5,8 +5,17 @@ import {
   patchPlaybook,
   readPlaybookContent,
 } from '@/services/rest/ansible';
-import { FileOutlined, FileSearchOutlined, RedoOutlined, SaveOutlined } from '@ant-design/icons';
-import { ModalForm, PageContainer, ProFormText } from '@ant-design/pro-components';
+import {
+  FileOutlined,
+  FileSearchOutlined,
+  RedoOutlined,
+  SaveOutlined,
+} from '@ant-design/icons';
+import {
+  ModalForm,
+  PageContainer,
+  ProFormText,
+} from '@ant-design/pro-components';
 import Editor, { Monaco } from '@monaco-editor/react';
 import {
   Button,
@@ -32,9 +41,13 @@ const { DirectoryTree } = Tree;
 const { Paragraph, Text } = Typography;
 
 const Index: React.FC = () => {
-  const [playbookFilesList, setPlaybookFilesList] = React.useState<DataNode[]>([]);
+  const [playbookFilesList, setPlaybookFilesList] = React.useState<DataNode[]>(
+    [],
+  );
   const [selectedFile, setSelectedFile] = React.useState<string | undefined>();
-  const [downloadedContent, setDownloadedContent] = React.useState<string | undefined>();
+  const [downloadedContent, setDownloadedContent] = React.useState<
+    string | undefined
+  >();
   const [isLoading, setIsLoading] = React.useState(false);
   const editorRef = React.useRef(null);
 
@@ -59,7 +72,8 @@ const Index: React.FC = () => {
               return {
                 title: e.label,
                 key: e.value,
-                icon: ({ selected }) => (selected ? <FileSearchOutlined /> : <FileOutlined />),
+                icon: ({ selected }) =>
+                  selected ? <FileSearchOutlined /> : <FileOutlined />,
               };
             }),
           );
@@ -84,7 +98,7 @@ const Index: React.FC = () => {
   const onSelect: DirectoryTreeProps['onSelect'] = (keys, info) => {
     if (keys[0] !== selectedFile) {
       setIsLoading(true);
-      setSelectedFile(keys[0]);
+      setSelectedFile(keys[0] as string);
     }
     console.log('Trigger Select', keys, info);
   };
@@ -94,12 +108,12 @@ const Index: React.FC = () => {
   };
   // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-shadow
   const editorDidMount = (editor: IStandaloneCodeEditor, monaco: Monaco) => {
+    // @ts-ignore
     editorRef.current = editor;
     editor.focus();
   };
 
   const onClickDeletePlaybook = async () => {
-    console.log('onClickDeletePlaybook', selectedFile);
     if (selectedFile) {
       setIsLoading(true);
       await deletePlaybook(selectedFile)
@@ -110,32 +124,44 @@ const Index: React.FC = () => {
           setIsLoading(false);
         })
         .catch((error) => {
-          message.error(`Playbook '${selectedFile}' deletion error (${error.message})`);
+          message.error(
+            `Playbook '${selectedFile}' deletion error (${error.message})`,
+          );
           setIsLoading(false);
         });
     } else {
       message.error(`Internal Error`);
-      console.log('onClickDeletePlaybook - selectedFile is empty');
     }
   };
 
   const onClickSavePlaybook = async () => {
-    console.log('onClickSavePlaybook', selectedFile);
-    setIsLoading(true);
-    await patchPlaybook(selectedFile, editorRef.current.getValue())
-      .then(() => {
-        message.success(`Playbook '${selectedFile}' saved`);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        message.error(`Playbook '${selectedFile}' saving error (${error.message})`);
-        setIsLoading(false);
-      });
+    // @ts-ignore
+    if (selectedFile && editorRef.current?.getValue()) {
+      setIsLoading(true);
+      // @ts-ignore
+      await patchPlaybook(selectedFile, editorRef.current.getValue())
+        .then(() => {
+          message.success(`Playbook '${selectedFile}' saved`);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          message.error(
+            `Playbook '${selectedFile}' saving error (${error.message})`,
+          );
+          setIsLoading(false);
+        });
+    } else {
+      message.error(`Internal - onClickSavePlaybook`);
+    }
   };
 
   const onClickUndoPlaybook = async () => {
-    console.log('onClickUndoPlaybook', selectedFile);
-    editorRef?.current.setValue(downloadedContent);
+    if (editorRef?.current) {
+      // @ts-ignore
+      editorRef?.current.setValue(downloadedContent);
+    } else {
+      message.error(`Internal - Error editorRef`);
+    }
   };
 
   const submitNewPlaybook = async (name: string) => {
@@ -172,7 +198,7 @@ const Index: React.FC = () => {
               onSelect={onSelect}
               onExpand={onExpand}
               treeData={playbookFilesList}
-              selectedKeys={[selectedFile]}
+              selectedKeys={[selectedFile as React.Key]}
             />
             <ModalForm<{ name: string }>
               title={'Create a new playbook'}
@@ -199,10 +225,15 @@ const Index: React.FC = () => {
                 required={true}
                 name={'name'}
                 label={'Playbook name'}
-                tooltip={"Enter a playbook name, character '_' is not authorized"}
+                tooltip={
+                  "Enter a playbook name, character '_' is not authorized"
+                }
                 placeholder="playbook name"
                 rules={[
-                  { required: true, message: 'Please input your playbook name!' },
+                  {
+                    required: true,
+                    message: 'Please input your playbook name!',
+                  },
                   {
                     pattern: /^[0-9a-z\\-]{0-100}$/,
                     message:
@@ -210,7 +241,11 @@ const Index: React.FC = () => {
                   },
                   {
                     validator(_, value) {
-                      if (playbookFilesList.findIndex((e) => e.title === value) === -1) {
+                      if (
+                        playbookFilesList.findIndex(
+                          (e) => e.title === value,
+                        ) === -1
+                      ) {
                         return Promise.resolve();
                       }
                       return Promise.reject('Playbook name already exists');
@@ -227,8 +262,8 @@ const Index: React.FC = () => {
               <div className="desc">
                 <Paragraph>
                   <Text strong>
-                    To edit a playbook, select a playbook in the left menu &apos;List of
-                    Playbooks&apos;
+                    To edit a playbook, select a playbook in the left menu
+                    &apos;List of Playbooks&apos;
                   </Text>
                 </Paragraph>
               </div>
@@ -241,7 +276,10 @@ const Index: React.FC = () => {
                   tooltip={'Save file'}
                   icon={<SaveOutlined style={{ color: 'blueviolet' }} />}
                 />
-                <FloatButton.BackTop tooltip={'Scroll to top'} visibilityHeight={0} />
+                <FloatButton.BackTop
+                  tooltip={'Scroll to top'}
+                  visibilityHeight={0}
+                />
                 <FloatButton
                   tooltip={'Reset changes'}
                   icon={<RedoOutlined />}

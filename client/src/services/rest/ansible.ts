@@ -26,7 +26,7 @@ export async function getTaskStatuses(execId: string) {
   });
 }
 
-export async function getPlaybooks() {
+export async function getPlaybooks(): Promise<API.Playbooks> {
   return request<API.Playbooks>('/api/ansible/playbooks', {
     method: 'GET',
     ...{},
@@ -34,30 +34,42 @@ export async function getPlaybooks() {
 }
 
 export async function readPlaybookContent(playbook: string) {
-  return request<API.PlaybookContent>(`/api/ansible/playbooks/${playbook}/content`, {
-    method: 'GET',
-    ...{},
-  });
+  return request<API.PlaybookContent>(
+    `/api/ansible/playbooks/${playbook}/content`,
+    {
+      method: 'GET',
+      ...{},
+    },
+  );
 }
 
 export async function patchPlaybook(playbook: string, content: string) {
-  return request<API.PlaybookOpResponse>(`/api/ansible/playbooks/${playbook}/`, {
-    method: 'PATCH',
-    data: { content: content },
-    ...{},
-  });
+  return request<API.PlaybookOpResponse>(
+    `/api/ansible/playbooks/${playbook}/`,
+    {
+      method: 'PATCH',
+      data: { content: content },
+      ...{},
+    },
+  );
 }
 
 export async function newPlaybook(playbook: string) {
-  return request<API.PlaybookOpResponse>(`/api/ansible/playbooks/${playbook}/`, {
-    method: 'PUT',
-    ...{},
-  });
+  return request<API.PlaybookOpResponse>(
+    `/api/ansible/playbooks/${playbook}/`,
+    {
+      method: 'PUT',
+      ...{},
+    },
+  );
 }
 
 export async function deletePlaybook(playbook: string) {
-  return request<API.PlaybookOpResponse>(`/api/ansible/playbooks/${playbook}/`, {
-    method: 'DELETE',
-    ...{},
-  });
+  return request<API.PlaybookOpResponse>(
+    `/api/ansible/playbooks/${playbook}/`,
+    {
+      method: 'DELETE',
+      ...{},
+    },
+  );
 }

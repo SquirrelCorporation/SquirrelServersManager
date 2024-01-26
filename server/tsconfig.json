@@ -7,6 +7,12 @@
     "esModuleInterop": true,
     "downlevelIteration": true,
     "resolveJsonModule": true,
+    "noImplicitAny": false,
+    "typeRoots": [
+      "./typings",
+      "./node_modules/@types/"
+    ]
   },
-  "include": ["src//*.ts", "src//*.json", ".env", ".eslintrc.json"]
+  "include": ["./**/*.d.ts","src//*.ts", "src//*.json",
+    "../.env", ".eslintrc.json"]
 }

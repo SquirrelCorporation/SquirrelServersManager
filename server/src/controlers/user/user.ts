@@ -1,6 +1,6 @@
-import express from "express";
+import express from 'express';
 import { CONSIDER_DEVICE_OFFLINE } from '../../config';
-import {dependencies, version} from '../../../package.json';
+import { dependencies, version } from '../../../package.json';
 
 const router = express.Router();
 
@@ -73,18 +73,42 @@ router.get(`/currentUser`, async (req, res) => {
       address: '西湖区工专路 77 号',
       phone: '0752-268888888',
       settings: {
-        apiKey:'XXX-XXX-XXX-XXX-XXX-XXX',
+        apiKey: 'XXX-XXX-XXX-XXX-XXX-XXX',
         device: {
-          considerOffLineAfter: CONSIDER_DEVICE_OFFLINE
+          considerOffLineAfter: CONSIDER_DEVICE_OFFLINE,
         },
         server: {
           version: version,
           deps: dependencies,
-          processes: process.versions
-        }
-      }
+          processes: process.versions,
+        },
+      },
     },
   });
+});
+
+router.post('/login/account', async (req, res) => {
+  const { password, username, type } = req.body;
+  if (password === 'admin' && username === 'admin') {
+    res.send({
+      status: 'ok',
+      type,
+      currentAuthority: 'admin',
+    });
+    return;
+  }
+  if (password === 'ant.design' && username === 'user') {
+    res.send({
+      status: 'ok',
+      type,
+      currentAuthority: 'user',
+    });
+    return;
+  }
+});
+
+router.post('/api/login/outLogin', (req, res) => {
+  res.send({ data: {}, success: true });
 });
 
 export default router;

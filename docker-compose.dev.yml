@@ -1,0 +1,54 @@
+version: '3.8'
+services:
+  proxy:
+    restart: unless-stopped
+    build:
+      context: ./proxy
+    ports:
+      - "8000:8000"
+    depends_on:
+      - client
+      - mongo
+      - server
+  mongo:
+    container_name: mongo
+    image: mongo
+    restart: unless-stopped
+    volumes:
+      - ./.data:/data/db
+    command: --quiet
+    ports:
+      - "27017:27017"
+  server:
+    restart: unless-stopped
+    external_links:
+      - mongo
+    depends_on:
+      - mongo
+    build:
+      context: ./server
+      target: dev
+    env_file:
+      - ./.env.dev
+    volumes:
+      - ./server/src:/server/src
+    environment:
+      NODE_ENV: development
+      DEBUG: nodejs-docker-express:*
+      DB_NAME: ${DB_NAME}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_USER_PWD: ${DB_USER_PWD}
+  client:
+    restart: unless-stopped
+    environment:
+      DEBUG: http-proxy-middleware*
+    depends_on:
+      - server
+    build:
+      context: ./client
+      target: dev
+    volumes:
+      - ./client/src:/client/src
+      - ./client/config:/client/config
+      - ./client/public:/client/public
