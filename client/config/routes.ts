@@ -32,7 +32,7 @@ export default [
       },
       {
         name: 'Playbooks',
-        icon: 'table',
+        icon: 'PlaySquareOutlined',
         path: '/manage/playbooks',
         component: './Playbooks',
       },

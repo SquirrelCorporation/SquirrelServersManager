@@ -19,6 +19,7 @@ import React, { useRef, useState } from 'react';
 import { TerminalContextProvider } from 'react-terminal';
 import ConfigurationModal from './components/ConfigurationModal';
 import { AddCircleOutline } from 'antd-mobile-icons';
+import OsSoftwareVersions from '@/components/OSSoftwaresVersions/OsSoftwareVersions';
 
 const Inventory: React.FC = () => {
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
@@ -178,7 +179,7 @@ const Inventory: React.FC = () => {
             advancedMenu={true}
             onDropDownClicked={onDropDownClicked}
             setTerminal={setTerminal}
-            target={record}
+            target={[record.uuid]}
           />
         </a>,
       ],
@@ -264,6 +265,11 @@ const Inventory: React.FC = () => {
               }}
               columns={columns as ProDescriptionsItemProps<API.DeviceItem>[]}
             />
+          )}
+          {currentRow?.versions && (
+            <div style={{ marginTop: '20px' }}>
+              <OsSoftwareVersions versions={currentRow.versions} />
+            </div>
           )}
         </Drawer>
       </PageContainer>

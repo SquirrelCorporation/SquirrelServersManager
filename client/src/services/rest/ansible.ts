@@ -1,14 +1,13 @@
 import { request } from '@umijs/max';
-import DeviceItem = API.DeviceItem;
 
 export async function executePlaybook(
   playbook: string,
-  target: DeviceItem,
+  target: string[] | undefined,
   options?: Record<string, any>,
 ) {
   return request<API.Exec>('/api/ansible/exec/playbook', {
     method: 'POST',
-    data: { playbook: playbook, target: target.uuid },
+    data: { playbook: playbook, target: target },
     ...(options || {}),
   });
 }

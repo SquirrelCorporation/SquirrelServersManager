@@ -18,6 +18,7 @@ import {
   Row,
   Carousel,
   Typography,
+  Button,
 } from 'antd';
 import moment from 'moment';
 import React, { memo, useEffect, useState } from 'react';
@@ -38,7 +39,7 @@ const Index = memo(() => {
   const [terminal, setTerminal] = useState<{
     isOpen: boolean;
     command: string | undefined;
-    target: API.DeviceItem | undefined;
+    target: string[] | undefined;
   }>({
     isOpen: false,
     command: undefined,
@@ -184,6 +185,16 @@ const Index = memo(() => {
             bordered={false}
             style={{ marginTop: 24 }}
             bodyStyle={{ padding: '0 32px 40px 32px' }}
+            extra={
+              <a href="#">
+                <QuickActionDropDown
+                  onDropDownClicked={onDropDownClicked}
+                  setTerminal={setTerminal}
+                >
+                  <Button> Apply</Button>
+                </QuickActionDropDown>
+              </a>
+            }
           >
             <List
               size="large"
@@ -221,7 +232,7 @@ const Index = memo(() => {
                       <QuickActionDropDown
                         onDropDownClicked={onDropDownClicked}
                         setTerminal={setTerminal}
-                        target={item}
+                        target={[item.uuid]}
                       />
                     </a>,
                   ]}

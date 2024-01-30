@@ -9,13 +9,11 @@ import { Button, Col, Modal, Row, Steps, StepsProps, message } from 'antd';
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { ReactTerminal, TerminalContext } from 'react-terminal';
 import { DotLottiePlayer } from '@dotlottie/react-player';
-import ExecStatus = API.ExecStatus;
-import ExecLog = API.ExecLog;
 
 export type TerminalStateProps = {
   isOpen: boolean;
   command: string | undefined;
-  target: API.DeviceItem | undefined;
+  target: string[] | undefined;
 };
 
 export type TerminalModalProps = {
@@ -132,7 +130,7 @@ const TerminalModal = (props: TerminalModalProps) => {
                 );
               },
             );
-            statuses.data.execStatuses.forEach((status: ExecStatus) => {
+            statuses.data.execStatuses.forEach((status: API.ExecStatus) => {
               if (!statusesSet.has(status.status)) {
                 statusesSet.add(status.status);
                 setSavedStatuses((oldStatuses) => [
@@ -162,7 +160,7 @@ const TerminalModal = (props: TerminalModalProps) => {
                 new Date(b.createdAt).getTime()
               );
             });
-            logs.data.execLogs.forEach((execLog: ExecLog) => {
+            logs.data.execLogs.forEach((execLog: API.ExecLog) => {
               if (!logsSet.has(execLog.logRunnerId)) {
                 logsSet.add(execLog.logRunnerId);
                 if (execLog.stdout) {

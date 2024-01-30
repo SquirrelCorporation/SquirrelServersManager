@@ -1,7 +1,7 @@
 import { TerminalStateProps } from '@/components/TerminalModal';
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, MenuProps, Space } from 'antd';
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, ReactNode, SetStateAction } from 'react';
 import QuickActionReference from '@/components/QuickAction/QuickActionReference';
 import PlaybookSelectionModal from '@/components/PlaybookSelectionModal/PlaybookSelectionModal';
 import { ItemType } from 'rc-menu/es/interface';
@@ -10,7 +10,8 @@ export type QuickActionProps = {
   onDropDownClicked: any;
   advancedMenu?: boolean;
   setTerminal: Dispatch<SetStateAction<TerminalStateProps>>;
-  target: API.DeviceItem;
+  target?: string[];
+  children?: ReactNode;
 };
 
 const QuickActionDropDown: React.FC<QuickActionProps> = (props) => {
@@ -72,9 +73,7 @@ const QuickActionDropDown: React.FC<QuickActionProps> = (props) => {
       />
       <Dropdown menu={{ items, onClick }}>
         <a onClick={(e) => e.preventDefault()}>
-          <Space>
-            <DownOutlined />
-          </Space>
+          <Space>{props.children ? props.children : <DownOutlined />}</Space>
         </a>
       </Dropdown>
     </>
