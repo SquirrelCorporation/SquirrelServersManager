@@ -14,5 +14,5 @@
     ]
   },
   "include": ["./**/*.d.ts","src//*.ts", "src//*.json",
-    "../.env", ".eslintrc.json"]
+    "../.env", ".eslintrc.json", "typings.d.ts"]
 }

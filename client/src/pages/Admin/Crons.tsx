@@ -1,8 +1,7 @@
 import { getCrons } from '@/services/rest/cron';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
+import '@umijs/max';
 import React from 'react';
-
 const columns: ProColumns<API.Cron>[] = [
   {
     title: 'Name',
@@ -21,16 +20,9 @@ const columns: ProColumns<API.Cron>[] = [
     valueType: 'dateTime',
   },
 ];
-
 const Crons: React.FC = () => {
-  const intl = useIntl();
   return (
-    <PageContainer
-      content={intl.formatMessage({
-        id: 'pages.admin.subPage.title',
-        defaultMessage: 'This page can only be viewed by admin',
-      })}
-    >
+    <PageContainer content={'This page can only be viewed by Admin'}>
       <ProTable<API.Cron>
         rowKey="name"
         request={getCrons}
@@ -41,5 +33,4 @@ const Crons: React.FC = () => {
     </PageContainer>
   );
 };
-
 export default Crons;

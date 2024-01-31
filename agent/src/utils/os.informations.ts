@@ -4,7 +4,7 @@ import logger from "../logger";
 import {version} from '../../package.json';
 
 export default async function getDeviceInfo(hostId : string) {
-  let deviceInfo: API.DeviceInfo = {id : hostId, agentVersion: version};
+  let deviceInfo: ServerAPI.DeviceInfo = {id : hostId, agentVersion: version};
 
   const valueObject = {
     cpu: '*',

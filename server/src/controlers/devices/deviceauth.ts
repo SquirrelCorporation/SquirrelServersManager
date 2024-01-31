@@ -76,7 +76,7 @@ router.get(`/:id/auth`, async (req, res) => {
     return;
   }
 
-  const deviceAuth = await DeviceAuthRepo.findOneByDeviceId(device);
+  const deviceAuth = await DeviceAuthRepo.findOneByDevice(device);
   if (!deviceAuth) {
     logger.error('[CONTROLLER] - POST - Device Auth - DeviceAuth not found');
     res.status(404).send({

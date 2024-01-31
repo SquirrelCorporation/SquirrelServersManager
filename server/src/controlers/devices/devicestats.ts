@@ -1,7 +1,7 @@
 import express from 'express';
 import DeviceRepo from '../../database/repository/DeviceRepo';
-import DeviceStatsUseCases from '../../use_cases/DeviceStatsUseCases';
-import DeviceUseCases from '../../use_cases/DeviceUseCases';
+import DeviceStatsUseCases from '../../use-cases/DeviceStatsUseCases';
+import DeviceUseCases from '../../use-cases/DeviceUseCases';
 
 const router = express.Router();
 

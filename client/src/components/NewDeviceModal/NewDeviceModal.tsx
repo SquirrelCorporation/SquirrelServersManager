@@ -2,10 +2,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import {
   ProCard,
   ProForm,
-  ProFormDependency,
-  ProFormSelect,
   ProFormText,
-  ProFormTextArea,
   StepsForm,
 } from '@ant-design/pro-components';
 import { Button, Flex, Input, Modal, Typography, message } from 'antd';
@@ -19,7 +16,8 @@ export type NewDeviceModalProps = {
 const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
   const [loading, setLoading] = useState(false);
   const [sshConnection, setSshConnection] = useState({});
-  const [controlNodeConnectionString, setControlNodeConnectionString] = useState({});
+  const [controlNodeConnectionString, setControlNodeConnectionString] =
+    useState({});
 
   const checkHostAPI = async (url: string) => {
     await fetch(`${url}/api/ping`, {
@@ -49,6 +47,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
         title="Install agent on device"
         open={props.isModalOpen}
         onCancel={handleCancel}
+        /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
         footer={(_, { OkBtn, CancelBtn }) => (
           <>
             <CancelBtn />
@@ -59,7 +58,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
           <StepsForm
             onFinish={async () => {
               setLoading(true);
-              message.success('提交成功');
+              message.success('Success');
               setLoading(false);
             }}
             submitter={{
@@ -83,7 +82,8 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                     type="primary"
                     onClick={() => {
                       if (step === 0) setSshConnection(form?.getFieldsValue());
-                      if (step === 1) setControlNodeConnectionString(form?.getFieldsValue());
+                      if (step === 1)
+                        setControlNodeConnectionString(form?.getFieldsValue());
                       onSubmit?.();
                     }}
                     icon={step < 2 ? undefined : <DownloadOutlined />}
@@ -135,11 +135,15 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                 <Flex vertical gap={16}>
                   {Object.keys(sshConnection).map((e) => (
                     <div key={e}>
-                      <Typography style={{ textAlign: 'center' }}>{e} :</Typography>{' '}
+                      <Typography style={{ textAlign: 'center' }}>
+                        {e} :
+                      </Typography>{' '}
                       <Input
                         style={{ textAlign: 'center' }}
                         value={
-                          e.toLowerCase().indexOf('password') !== -1 ? '••••••' : sshConnection[e]
+                          e.toLowerCase().indexOf('password') !== -1
+                            ? '••••••'
+                            : sshConnection[e as keyof typeof sshConnection]
                         }
                         disabled
                       />
@@ -151,10 +155,16 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                 <Flex vertical gap={16}>
                   {Object.keys(controlNodeConnectionString).map((e) => (
                     <div key={e}>
-                      <Typography style={{ textAlign: 'center' }}>{e} :</Typography>{' '}
+                      <Typography style={{ textAlign: 'center' }}>
+                        {e} :
+                      </Typography>{' '}
                       <Input
                         style={{ textAlign: 'center' }}
-                        value={controlNodeConnectionString[e]}
+                        value={
+                          controlNodeConnectionString[
+                            e as keyof typeof sshConnection
+                          ]
+                        }
                         disabled
                       />
                     </div>

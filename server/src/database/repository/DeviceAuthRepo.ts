@@ -1,5 +1,5 @@
 import DeviceAuth, { DeviceAuthModel } from '../model/DeviceAuth';
-import Device, { DeviceModel } from '../model/Device';
+import Device from '../model/Device';
 
 async function updateOrCreateIfNotExist(deviceAuth: DeviceAuth): Promise<DeviceAuth> {
   const _deviceAuth = await DeviceAuthModel.findOneAndUpdate(
@@ -10,11 +10,26 @@ async function updateOrCreateIfNotExist(deviceAuth: DeviceAuth): Promise<DeviceA
   return _deviceAuth.toObject();
 }
 
-async function findOneByDeviceId(device: Device): Promise<DeviceAuth | null> {
+async function findOneByDevice(device: Device): Promise<DeviceAuth | null> {
   return await DeviceAuthModel.findOne({ device: device }).lean().exec();
+}
+
+async function findOneByDeviceUuid(uuid: string): Promise<DeviceAuth[] | null> {
+  return await DeviceAuthModel.find()
+    .populate({ path: 'device', match: { uuid: { $eq: uuid } } })
+    .exec()
+    .then((devicesAuth) => {
+      return devicesAuth.filter((deviceAuth) => deviceAuth.device != null);
+    });
+}
+
+async function findAllPop(): Promise<DeviceAuth[] | null> {
+  return await DeviceAuthModel.find().populate({ path: 'device' }).exec();
 }
 
 export default {
   updateOrCreateIfNotExist,
-  findOneByDeviceId,
+  findOneByDevice,
+  findOneByDeviceUuid,
+  findAllPop,
 };

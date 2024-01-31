@@ -1,63 +1,32 @@
-import express from "express";
+import express from 'express';
+import DeviceAuth, { DeviceAuthModel } from '../../database/model/DeviceAuth';
+import DeviceAuthRepo from '../../database/repository/DeviceAuthRepo';
+import DeviceRepo from '../../database/repository/DeviceRepo';
+import logger from '../../logger';
+import Inventory from '../../transformers/Inventory';
 
 const router = express.Router();
 
 router.get(`/inventory`, async (req, res) => {
+  logger.info(`[CONTROLLER][ANSIBLE][Inventory] Get`);
+  let devicesAuth: DeviceAuth[] | null = [];
+  if (req.body.target) {
+    logger.info(`[CONTROLLER][ANSIBLE[Inventory] - Target is ${req.body.target}`);
+    devicesAuth = await DeviceAuthRepo.findOneByDeviceUuid(req.body.target);
+  } else {
+    logger.info(`[CONTROLLER][ANSIBLE][Inventory] - No target, get all`);
+    devicesAuth = await DeviceAuthRepo.findAllPop();
+  }
+  if (devicesAuth) {
     res.send({
-        success: true,
-        data: { "_meta": {
-                "hostvars": {
-                    "Rasp1": {
-                        "ip": [
-                            "192.168.0.61"
-                        ]
-                    },
-                    "Rasp2": {
-                        "ip": [
-                            "192.168.0.254"
-                        ]
-                    },
-                    "Rasp3": {
-                        "ip": [
-                            "192.168.0.137"
-                        ]
-                    },
-                    "Server1": {
-                        "ip": [
-                            "192.168.0.111"
-                        ]
-                    }
-                }
-            },
-            "all": {
-                "children": ["raspian", "ubuntu"],
-                "vars": {
-                    "ansible_connection": "ssh",
-                    "ansible_become": "yes",
-                    "ansible_become_method": "sudo",
-                    "ansible_ssh_extra_args": "'-o StrictHostKeyChecking=no'"
-
-                },
-            },
-            "raspian": {
-                "hosts": [
-                    "192.168.0.61",
-                    "192.168.0.254",
-                    "192.168.0.137"
-                ],
-                "vars": {
-                    "ansible_user":"pi",
-                    "ansible_ssh_pass":"pi"
-                }
-            },
-            "ubuntu": {
-                "hosts": [
-                    "192.168.0.111"
-                ],
-                "vars": {}
-            }
-        }
-    })
+      success: true,
+      data: Inventory.inventoryBuilder(devicesAuth),
+    });
+  } else {
+    res.send({
+      success: false,
+    });
+  }
 });
 
 export default router;

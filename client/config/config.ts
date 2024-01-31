@@ -3,15 +3,12 @@ import { defineConfig } from '@umijs/max';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
-
 const { REACT_APP_ENV = 'dev' } = process.env;
-
 export default defineConfig({
   /**
    * @doc https://umijs.org/docs/api/config#hash
    */
   hash: true,
-
   /**
    * @doc https://umijs.org/docs/guides/routes
    */
@@ -33,7 +30,6 @@ export default defineConfig({
    * @doc https://umijs.org/docs/api/config#proxy
    */
   proxy: proxy[REACT_APP_ENV as keyof typeof proxy],
-
   fastRefresh: true,
   //============== 以下都是max的插件配置 ===============
   /**
@@ -63,14 +59,7 @@ export default defineConfig({
   },
   /**
    * @doc https://umijs.org/docs/max/i18n
-   */
-  locale: {
-    default: 'en-US',
-    antd: true,
-    // default true, when it is true, will use `navigator.language` overwrite default
-    baseNavigator: false,
-  },
-  /**
+   */ /**
    * @doc https://umijs.org/docs/max/antd#antd
    */
   antd: {},
@@ -82,8 +71,12 @@ export default defineConfig({
    * @doc https://umijs.org/docs/max/access
    */
   access: {},
-
-  headScripts: [{ src: '/scripts/loading.js', async: true }],
+  headScripts: [
+    {
+      src: '/scripts/loading.js',
+      async: true,
+    },
+  ],
   //================ pro =================
   presets: ['umi-presets-pro'],
   /**

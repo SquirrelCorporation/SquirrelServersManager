@@ -1,35 +1,16 @@
-﻿/**
- * @doc https://umijs.org/docs/guides/routes
- */
 export default [
   {
     path: '/user',
     layout: false,
-    routes: [
-      {
-        name: 'login',
-        path: '/user/login',
-        component: './User/Login',
-      },
-    ],
+    routes: [{ name: 'Login', path: '/user/login', component: './User/Login' }],
   },
-  {
-    path: '/',
-    name: 'Dashboard',
-    icon: 'smile',
-    component: './Welcome',
-  },
+  { path: '/', name: 'Dashboard', icon: 'smile', component: './Welcome' },
   {
     path: '/manage',
     name: 'Manage',
     icon: 'crown',
     routes: [
-      {
-        name: 'Devices',
-        icon: 'table',
-        path: '/manage/devices',
-        component: './Devices',
-      },
+      { name: 'Devices', icon: 'table', path: '/manage/devices', component: './Devices' },
       {
         name: 'Playbooks',
         icon: 'PlaySquareOutlined',
@@ -51,18 +32,8 @@ export default [
         path: '/admin/inventory',
         component: './Admin/Inventory',
       },
-      {
-        path: '/admin/crons',
-        name: 'Crons',
-        icon: 'interaction',
-        component: './Admin/Crons',
-      },
-      {
-        path: '/admin/logs',
-        name: 'Logs',
-        icon: 'UnorderedList',
-        component: './Admin/Logs',
-      },
+      { path: '/admin/crons', name: 'Crons', icon: 'interaction', component: './Admin/Crons' },
+      { path: '/admin/logs', name: 'Logs', icon: 'UnorderedList', component: './Admin/Logs' },
       {
         path: '/admin/settings',
         name: 'Settings',
@@ -71,13 +42,6 @@ export default [
       },
     ],
   },
-  {
-    path: '/',
-    redirect: '/welcome',
-  },
-  {
-    path: '*',
-    layout: false,
-    component: './404',
-  },
+  { path: '/', redirect: '/welcome' },
+  { path: '*', layout: false, component: './404' },
 ];

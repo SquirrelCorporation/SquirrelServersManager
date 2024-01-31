@@ -1,4 +1,4 @@
-declare namespace API {
+declare namespace ServerAPI {
 
   type OSInfo = {
     distro?: string;

@@ -1,4 +1,4 @@
-declare namespace API {
+export declare namespace API {
   type SimpleResponse = {
     success?: boolean;
   };
@@ -30,11 +30,8 @@ declare namespace API {
   };
 
   type ErrorResponse = {
-    /** 业务约定的错误码 */
     errorCode: string;
-    /** 业务上的错误信息 */
     errorMessage?: string;
-    /** 业务上的请求是否成功 */
     success?: boolean;
   };
 
@@ -44,7 +41,6 @@ declare namespace API {
   };
 
   type getFakeCaptchaParams = {
-    /** 手机号 */
     phone?: string;
   };
 
@@ -61,6 +57,8 @@ declare namespace API {
     currentAuthority?: string;
   };
 
+  type NoticeIconItemType = 'notification' | 'message' | 'event';
+
   type NoticeIconItem = {
     id?: string;
     extra?: string;
@@ -73,8 +71,6 @@ declare namespace API {
     description?: string;
     type?: NoticeIconItemType;
   };
-
-  type NoticeIconItemType = 'notification' | 'message' | 'event';
 
   type NoticeIconList = {
     data?: NoticeIconItem[];
