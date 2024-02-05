@@ -13,7 +13,7 @@ import { DotLottiePlayer } from '@dotlottie/react-player';
 export type TerminalStateProps = {
   isOpen: boolean;
   command: string | undefined;
-  target: string[] | undefined;
+  target?: API.DeviceItem[];
 };
 
 export type TerminalModalProps = {
@@ -81,7 +81,7 @@ const TerminalModal = (props: TerminalModalProps) => {
         <br />
       </>
     ));
-    if (!props.terminalProps.command || !props.terminalProps.target) {
+    if (!props.terminalProps.command) {
       message.error({
         type: 'error',
         content: 'Error running playbook (internal)',
@@ -92,7 +92,7 @@ const TerminalModal = (props: TerminalModalProps) => {
     try {
       const res = await executePlaybook(
         props.terminalProps.command,
-        props.terminalProps.target,
+        props.terminalProps.target?.map((e) => e.uuid),
       );
       setExecId(res.data.execId);
       message.loading({

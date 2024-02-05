@@ -14,13 +14,14 @@ router.post(`/exec/playbook`, async (req, res) => {
     return;
   }
   try {
-    logger.info(`[CONTROLLER][ANSIBLE] exec playbook ${req.body.playbook}`);
+    logger.info(`[CONTROLLER][ANSIBLE] exec playbook '${req.body.playbook}'`);
     const execId = await ansible.executePlaybook(req.body.playbook, req.body.target);
     res.send({
       success: true,
       data: { execId: execId },
     });
   } catch (err) {
+    logger.error(err);
     res.status(500).send({
       success: false,
     });

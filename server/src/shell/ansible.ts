@@ -1,15 +1,31 @@
 import shell from 'shelljs';
+import DeviceAuthRepo from '../database/repository/DeviceAuthRepo';
 import logger from '../logger';
 import AnsibleTaskRepo from '../database/repository/AnsibleTaskRepo';
+import Inventory from '../transformers/Inventory';
+import { Ansible } from '../transformers/typings';
 
-async function executePlaybook(playbook: string, target?: string) {
+async function executePlaybook(playbook: string, target?: string[]) {
   logger.info('[SHELL]-[ANSIBLE] - executePlaybook - Starting...');
   if (!playbook.endsWith('.yml')) {
     playbook += '.yml';
   }
+  let inventoryTargets: Ansible.All & Ansible.HostGroups;
+  if (target) {
+    logger.info(`[SHELL]-[ANSIBLE] - executePlaybook - called with target: ${target}`);
+    const devicesAuth = await DeviceAuthRepo.findManyByDevicesUuid(target);
+    if (!devicesAuth) {
+      logger.error(`[SHELL]-[ANSIBLE] - executePlaybook - Target not found`);
+      throw new Error('Exec failed, no matching target');
+    }
+    inventoryTargets = Inventory.inventoryBuilderForTarget(devicesAuth);
+  }
   shell.cd('/server/src/ansible/');
+  shell.rm('/server/src/ansible/inventory/hosts');
   const result = await new Promise<string | null>((resolve, reject) => {
-    const child = shell.exec(`sudo python3 ssm-ansible-run.py --playbook ${playbook}`, {
+    const cmd = `sudo python3 ssm-ansible-run.py --playbook ${playbook} ${inventoryTargets ? "--specific-host '" + JSON.stringify(inventoryTargets).replaceAll('\\\\', '\\') + "'" : ''}`;
+    logger.info(`[SHELL]-[ANSIBLE] - executePlaybook - Executing ${cmd}`);
+    const child = shell.exec(cmd, {
       async: true,
     });
     child.stdout?.on('data', function (data) {
@@ -21,10 +37,11 @@ async function executePlaybook(playbook: string, target?: string) {
   });
   logger.info('[SHELL]-[ANSIBLE] - executePlaybook - ended');
   if (result) {
+    logger.info(`[SHELL]-[ANSIBLE] - executePlaybook - ExecId is ${result}`);
     await AnsibleTaskRepo.create({ ident: result, status: 'created', cmd: `playbook ${playbook}` });
     return result;
   } else {
-    logger.error('[SHELL]-[ANSIBLE] - executePlaybook - Result was not properly setted');
+    logger.error('[SHELL]-[ANSIBLE] - executePlaybook - Result was not properly set');
     throw new Error('Exec failed');
   }
 }

@@ -1,5 +1,10 @@
 import NewDeviceModal from '@/components/NewDeviceModal/NewDeviceModal';
+import PlaybookSelectionModal from '@/components/PlaybookSelectionModal/PlaybookSelectionModal';
 import QuickActionDropDown from '@/components/QuickAction/QuickActionDropDown';
+import QuickActionReference, {
+  Actions,
+  Types,
+} from '@/components/QuickAction/QuickActionReference';
 import TerminalModal, { TerminalStateProps } from '@/components/TerminalModal';
 import { OsLogo } from '@/components/misc/OsLogo';
 import { getDevices } from '@/services/rest/device';
@@ -32,12 +37,28 @@ const Inventory: React.FC = () => {
     command: undefined,
   });
   const [addNewDeviceModalIsOpen, setAddNewDeviceModalIsOpen] = useState(false);
+  const [playbookSelectionModalIsOpened, setPlaybookSelectionModalIsOpened] =
+    React.useState(false);
+  const [selectedRowsState, setSelectedRows] = useState<API.DeviceItem[]>([]);
 
   const openOrCloseTerminalModal = (open: boolean) => {
     setTerminal({ ...terminal, isOpen: open });
   };
-
-  const onDropDownClicked = (key: string) => {};
+  const onSelectPlaybook = (playbook: string, target?: API.DeviceItem[]) => {
+    setTerminal({
+      isOpen: true,
+      command: playbook,
+      target: target,
+    });
+  };
+  const onDropDownClicked = (key: string) => {
+    const idx = parseInt(key);
+    if (QuickActionReference[idx].type === Types.ACTION) {
+      if (QuickActionReference[idx].action === Actions.CONNECT) {
+        window.location.href = 'ssh://' + currentRow?.ip;
+      }
+    }
+  };
 
   const columns: ProColumns<API.DeviceItem>[] = [
     {
@@ -179,13 +200,12 @@ const Inventory: React.FC = () => {
             advancedMenu={true}
             onDropDownClicked={onDropDownClicked}
             setTerminal={setTerminal}
-            target={[record.uuid]}
+            target={[record]}
           />
         </a>,
       ],
     },
   ];
-  const [selectedRowsState, setSelectedRows] = useState<API.DeviceItem[]>([]);
   return (
     <TerminalContextProvider>
       <PageContainer>
@@ -223,17 +243,32 @@ const Inventory: React.FC = () => {
           }}
         />
         {selectedRowsState?.length > 0 && (
-          <FooterToolbar
-            extra={
-              <div>
-                Chosen{' '}
-                <a style={{ fontWeight: 600 }}>{selectedRowsState.length}</a>{' '}
-                item(s)
-              </div>
-            }
-          >
-            <Button type="primary">Apply Batch Playbook</Button>
-          </FooterToolbar>
+          <>
+            <PlaybookSelectionModal
+              isModalOpen={playbookSelectionModalIsOpened}
+              setIsModalOpen={setPlaybookSelectionModalIsOpened}
+              itemSelected={selectedRowsState}
+              callback={onSelectPlaybook}
+            />
+            <FooterToolbar
+              extra={
+                <div>
+                  Chosen{' '}
+                  <a style={{ fontWeight: 600 }}>{selectedRowsState.length}</a>{' '}
+                  item(s)
+                </div>
+              }
+            >
+              <Button
+                onClick={() => {
+                  setPlaybookSelectionModalIsOpened(true);
+                }}
+                type="primary"
+              >
+                Apply Batch Playbook
+              </Button>
+            </FooterToolbar>
+          </>
         )}
         <TerminalModal
           terminalProps={{ ...terminal, setIsOpen: openOrCloseTerminalModal }}

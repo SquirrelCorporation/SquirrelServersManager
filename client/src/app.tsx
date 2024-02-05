@@ -66,7 +66,7 @@ export const layout: RunTimeLayoutConfig = ({
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
-      // 如果没有登录，重定向到 login
+      // login
       if (!initialState?.currentUser && location.pathname !== loginPath) {
         history.push(loginPath);
       }

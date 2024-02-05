@@ -57,6 +57,13 @@ export default defineConfig({
     preset: 'antd',
     plugins: ['duration'],
   },
+
+  locale: {
+    default: 'en-US',
+    antd: true,
+    // default true, when it is true, will use `navigator.language` overwrite default
+    baseNavigator: false,
+  },
   /**
    * @doc https://umijs.org/docs/max/i18n
    */ /**

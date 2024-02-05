@@ -23,6 +23,15 @@ async function findOneByDeviceUuid(uuid: string): Promise<DeviceAuth[] | null> {
     });
 }
 
+async function findManyByDevicesUuid(uuids: string[]): Promise<DeviceAuth[] | null> {
+  return await DeviceAuthModel.find()
+    .populate({ path: 'device', match: { uuid: { $in: uuids } } })
+    .exec()
+    .then((devicesAuth) => {
+      return devicesAuth.filter((deviceAuth) => deviceAuth.device != null);
+    });
+}
+
 async function findAllPop(): Promise<DeviceAuth[] | null> {
   return await DeviceAuthModel.find().populate({ path: 'device' }).exec();
 }
@@ -32,4 +41,5 @@ export default {
   findOneByDevice,
   findOneByDeviceUuid,
   findAllPop,
+  findManyByDevicesUuid,
 };

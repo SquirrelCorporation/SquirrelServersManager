@@ -39,7 +39,7 @@ const Index = memo(() => {
   const [terminal, setTerminal] = useState<{
     isOpen: boolean;
     command: string | undefined;
-    target: string[] | undefined;
+    target?: API.DeviceItem[];
   }>({
     isOpen: false,
     command: undefined,
@@ -232,7 +232,7 @@ const Index = memo(() => {
                       <QuickActionDropDown
                         onDropDownClicked={onDropDownClicked}
                         setTerminal={setTerminal}
-                        target={[item.uuid]}
+                        target={[item]}
                       />
                     </a>,
                   ]}

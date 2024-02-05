@@ -13,8 +13,8 @@ import React from 'react';
 export type PlaybookSelectionModalProps = {
   isModalOpen: boolean;
   setIsModalOpen: any;
-  itemSelected: any;
-  callback: (playbook: string) => void;
+  itemSelected?: API.DeviceItem[];
+  callback: (playbook: string, target: API.DeviceItem[] | undefined) => void;
 };
 const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
   props,
@@ -36,7 +36,7 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
       }}
       submitTimeout={2000}
       onFinish={async (values: { playbook: { value: string } }) => {
-        props.callback(values.playbook.value);
+        props.callback(values.playbook.value, props.itemSelected);
         props.setIsModalOpen(false);
         return true;
       }}
@@ -79,7 +79,10 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
               <span>
                 <RightSquareOutlined /> SSM will apply &quot;
                 {playbook ? playbook.value : '?'}
-                &quot; on {props.itemSelected?.ip}
+                &quot; on{' '}
+                {props.itemSelected?.map((e) => {
+                  return '[' + e.ip + '] ';
+                }) || '"All"'}
               </span>
             );
           }}

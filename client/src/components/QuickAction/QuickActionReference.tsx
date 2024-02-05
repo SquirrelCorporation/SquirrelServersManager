@@ -12,10 +12,21 @@ import React from 'react';
 
 export type QuickActionReferenceType = {
   type: string;
+  action?: string;
   playbookFile?: string;
-  label: React.JSX.Element;
+  label?: React.JSX.Element;
   onAdvancedMenu: boolean;
 };
+
+export enum Actions {
+  CONNECT = 'connect',
+}
+
+export enum Types {
+  PLAYBOOK = 'playbook',
+  PLAYBOOK_SELECTION = 'playbook-selection',
+  ACTION = 'action',
+}
 
 const QuickActionReference: QuickActionReferenceType[] = [
   {
@@ -39,6 +50,7 @@ const QuickActionReference: QuickActionReferenceType[] = [
   },
   {
     type: 'action',
+    action: Actions.CONNECT,
     label: (
       <>
         <LoginOutlined /> Connect

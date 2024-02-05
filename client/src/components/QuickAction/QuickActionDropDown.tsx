@@ -10,7 +10,7 @@ export type QuickActionProps = {
   onDropDownClicked: any;
   advancedMenu?: boolean;
   setTerminal: Dispatch<SetStateAction<TerminalStateProps>>;
-  target?: string[];
+  target?: API.DeviceItem[];
   children?: ReactNode;
 };
 
