@@ -2,7 +2,14 @@ export default [
   {
     path: '/user',
     layout: false,
-    routes: [{ name: 'Login', path: '/user/login', component: './User/Login' }],
+    routes: [
+      { name: 'Login', path: '/user/login', component: './User/Login' },
+      {
+        name: 'FirstTime',
+        path: '/user/onboarding',
+        component: './User/FirstTime',
+      },
+    ],
   },
   { path: '/', name: 'Dashboard', icon: 'smile', component: './Welcome' },
   {
@@ -10,7 +17,12 @@ export default [
     name: 'Manage',
     icon: 'crown',
     routes: [
-      { name: 'Devices', icon: 'table', path: '/manage/devices', component: './Devices' },
+      {
+        name: 'Devices',
+        icon: 'table',
+        path: '/manage/devices',
+        component: './Devices',
+      },
       {
         name: 'Playbooks',
         icon: 'PlaySquareOutlined',
@@ -32,8 +44,18 @@ export default [
         path: '/admin/inventory',
         component: './Admin/Inventory',
       },
-      { path: '/admin/crons', name: 'Crons', icon: 'interaction', component: './Admin/Crons' },
-      { path: '/admin/logs', name: 'Logs', icon: 'UnorderedList', component: './Admin/Logs' },
+      {
+        path: '/admin/crons',
+        name: 'Crons',
+        icon: 'interaction',
+        component: './Admin/Crons',
+      },
+      {
+        path: '/admin/logs',
+        name: 'Logs',
+        icon: 'UnorderedList',
+        component: './Admin/Logs',
+      },
       {
         path: '/admin/settings',
         name: 'Settings',

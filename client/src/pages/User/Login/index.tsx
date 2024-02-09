@@ -10,7 +10,7 @@ import { history, useModel } from '@umijs/max';
 import { Alert, Divider, message } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
-import loginBackground from './assets/login-background.mp4';
+import loginBackground from '@/pages/User/Login/assets/login-background.mp4';
 
 const LoginMessage: React.FC<{
   content: string;
@@ -116,7 +116,9 @@ const Login: React.FC = () => {
           }
         >
           {status === 'error' && (
-            <LoginMessage content={'Incorrect username/password(admin/ant.design)'} />
+            <LoginMessage
+              content={'Incorrect username/password(admin/ant.design)'}
+            />
           )}
           <>
             <ProFormText

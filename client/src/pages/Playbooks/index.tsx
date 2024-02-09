@@ -260,7 +260,7 @@ const Index: React.FC = () => {
           {(!selectedFile && (
             <Result title="Select a playbook to edit">
               <div className="desc">
-                <Paragraph>
+                <Paragraph style={{ textAlign: 'center' }}>
                   <Text strong>
                     To edit a playbook, select a playbook in the left menu
                     &apos;List of Playbooks&apos;

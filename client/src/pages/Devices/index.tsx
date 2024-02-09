@@ -174,7 +174,22 @@ const Index = memo(() => {
       </div>
     </div>
   );
-
+  const CarbonBatchJob = (props) => (
+    <svg
+      width="1em"
+      height="1em"
+      viewBox="0 0 32 32"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        fill="currentColor"
+        d="M32 26v-2h-2.101a4.968 4.968 0 0 0-.732-1.753l1.49-1.49l-1.414-1.414l-1.49 1.49A4.964 4.964 0 0 0 26 20.101V18h-2v2.101a4.968 4.968 0 0 0-1.753.732l-1.49-1.49l-1.414 1.414l1.49 1.49A4.964 4.964 0 0 0 20.101 24H18v2h2.101c.13.637.384 1.229.732 1.753l-1.49 1.49l1.414 1.414l1.49-1.49a4.964 4.964 0 0 0 1.753.732V32h2v-2.101a4.968 4.968 0 0 0 1.753-.732l1.49 1.49l1.414-1.414l-1.49-1.49A4.964 4.964 0 0 0 29.899 26zm-7 2c-1.654 0-3-1.346-3-3s1.346-3 3-3s3 1.346 3 3s-1.346 3-3 3m-5-11h-8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2m-8-2h8V4h-8z"
+      />
+      <path fill="currentColor" d="M17 21H8a2 2 0 0 1-2-2V7h2v12h9z" />
+      <path fill="currentColor" d="M13 25H4c-1.103 0-2-.897-2-2V11h2v12h9z" />
+    </svg>
+  );
   return (
     <TerminalContextProvider>
       <PageContainer>
@@ -191,7 +206,7 @@ const Index = memo(() => {
                   onDropDownClicked={onDropDownClicked}
                   setTerminal={setTerminal}
                 >
-                  <Button> Apply</Button>
+                  <Button icon={<CarbonBatchJob />}>Apply to all</Button>
                 </QuickActionDropDown>
               </a>
             }

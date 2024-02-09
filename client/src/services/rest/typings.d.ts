@@ -1,4 +1,7 @@
 declare namespace API {
+  type SimpleResult = {
+    success?: boolean;
+  };
   type CurrentUser = {
     name?: string;
     avatar?: string;
@@ -15,6 +18,11 @@ declare namespace API {
     geographic?: {
       province?: { label?: string; key?: string };
       city?: { label?: string; key?: string };
+    };
+    devices?: {
+      online?: number;
+      offline?: number;
+      statuses?: [{ name?: string; status?: string }];
     };
     address?: string;
     phone?: string;

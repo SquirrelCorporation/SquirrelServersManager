@@ -12,9 +12,9 @@ export type TinyLineProps = {
 };
 
 const TinyLineDeviceGraph = (props: TinyLineProps) => {
-  const [data, setData] = useState<API.DeviceStat[]>([{}]);
+  const [data, setData] = useState<API.DeviceStat[]>([]);
 
-  const cleanData = (list: API.DeviceStats) => {
+  const formatData = (list: API.DeviceStats) => {
     return list?.data
       ? list.data
           .map((e) => {
@@ -34,7 +34,7 @@ const TinyLineDeviceGraph = (props: TinyLineProps) => {
   const asyncFetch = async () => {
     await getDeviceStats(props.deviceUuid, props.type, { from: props.from })
       .then((list) => {
-        setData(cleanData(list));
+        setData(formatData(list));
       })
       .catch((error) => {
         message.error(error);

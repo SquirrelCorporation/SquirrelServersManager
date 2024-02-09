@@ -68,7 +68,11 @@
     "@umijs/max": "^4.1.1",
     "umi-presets-pro": "^2.0.3",
     "@umijs/plugin-antd-dayjs": "^0.3.0",
-    "umi-serve": "^1.9.11"
+    "umi-serve": "^1.9.11",
+    "rc-banner-anim": "^2.4.5",
+    "rc-queue-anim": "^2.0.0",
+    "rc-tween-one": "^3.0.6",
+    "react-confetti": "^6.1.0"
   },
   "devDependencies": {
     "antd-pro-merge-less": "^3.0.11",

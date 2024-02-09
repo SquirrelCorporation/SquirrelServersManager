@@ -1,12 +1,51 @@
 import express from 'express';
 import { CONSIDER_DEVICE_OFFLINE } from '../../config';
 import { dependencies, version } from '../../../package.json';
+import { DeviceStatus } from '../../database/model/Device';
+import { Role } from '../../database/model/User';
+import DeviceRepo from '../../database/repository/DeviceRepo';
+import UserRepo from '../../database/repository/UserRepo';
 
 const router = express.Router();
 
 const getAccess = () => {
   return 'admin';
 };
+
+router.get(`/hasUsers`, async (req, res) => {
+  const hasUser = (await UserRepo.count()) > 0;
+  res.send({
+    data: {
+      hasUser: hasUser,
+    },
+    success: true,
+  });
+  return;
+});
+
+router.post(`/createFirstUser`, async (req, res) => {
+  const { email, password, name, avatar } = req.body;
+  const hasUser = (await UserRepo.count()) > 0;
+  if (hasUser) {
+    res.status(401).send({
+      errorCode: '401',
+      errorMessage: 'Your instance already has a user, you must first connect',
+      success: true,
+    });
+    return;
+  }
+  await UserRepo.create({
+    email: email,
+    password: password,
+    name: name,
+    role: Role.ADMIN,
+    avatar: avatar,
+  });
+  res.send({
+    success: true,
+  });
+  return;
+});
 
 router.get(`/currentUser`, async (req, res) => {
   if (!getAccess()) {
@@ -15,63 +54,34 @@ router.get(`/currentUser`, async (req, res) => {
         isLogin: false,
       },
       errorCode: '401',
-      errorMessage: '请先登录！',
+      errorMessage: 'Identification is incorrect！',
       success: true,
     });
     return;
   }
+  const devices = await DeviceRepo.findAll();
+  const offline = devices?.filter((e) => e.status === DeviceStatus.OFFLINE).length;
+  const online = devices?.filter((e) => e.status === DeviceStatus.ONLINE).length;
+  const simpleStatuses = devices?.map((e) => {
+    return {
+      name: e.fqdn,
+      status: e.status === DeviceStatus.ONLINE ? 'online' : 'offline',
+    };
+  });
   res.send({
     success: true,
     data: {
       name: 'Serati Ma',
       avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
-      userid: '00000001',
       email: 'antdesign@alipay.com',
-      signature: '海纳百川，有容乃大',
-      title: '交互专家',
-      group: '蚂蚁金服－某某某事业群－某某平台部－某某技术部－UED',
-      tags: [
-        {
-          key: '0',
-          label: '很有想法的',
-        },
-        {
-          key: '1',
-          label: '专注设计',
-        },
-        {
-          key: '2',
-          label: '辣~',
-        },
-        {
-          key: '3',
-          label: '大长腿',
-        },
-        {
-          key: '4',
-          label: '川妹子',
-        },
-        {
-          key: '5',
-          label: '海纳百川',
-        },
-      ],
       notifyCount: 12,
       unreadCount: 11,
-      country: 'China',
       access: getAccess(),
-      geographic: {
-        province: {
-          label: '浙江省',
-          key: '330000',
-        },
-        city: {
-          label: '杭州市',
-          key: '330100',
-        },
+      devices: {
+        online: online,
+        offline: offline,
+        statuses: simpleStatuses,
       },
-      address: '西湖区工专路 77 号',
-      phone: '0752-268888888',
       settings: {
         apiKey: 'XXX-XXX-XXX-XXX-XXX-XXX',
         device: {

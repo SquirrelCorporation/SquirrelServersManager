@@ -1,5 +1,6 @@
 import { AvatarDropdown, AvatarName, Footer } from '@/components';
-import { currentUser as queryCurrentUser } from '@/services/rest/api';
+import { DevicesHeaderWidget } from '@/components/HeaderComponents/DevicesHeaderWidget';
+import { currentUser as queryCurrentUser, hasUser } from '@/services/rest/api';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
@@ -7,9 +8,10 @@ import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import Logo from '../public/logo.svg';
 import { errorConfig } from './requestErrorConfig';
-import { AvatarActionsDropdown } from '@/components/HeaderComponents/AvatarActionsDropdown';
+
 const isDev = process.env.NODE_ENV === 'development';
-const loginPath = '/user/login';
+export const loginPath = '/user/login';
+export const onboardingPath = '/user/onboarding';
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -27,7 +29,17 @@ export async function getInitialState(): Promise<{
       });
       return msg.data;
     } catch (error) {
-      history.push(loginPath);
+      await hasUser()
+        .then((e) => {
+          if (e.success) {
+            history.push(loginPath);
+          } else {
+            history.push(onboardingPath);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     }
     return undefined;
   };
@@ -54,7 +66,7 @@ export const layout: RunTimeLayoutConfig = ({
 }) => {
   return {
     logo: Logo,
-    actionsRender: () => [<AvatarActionsDropdown key="doc" />],
+    actionsRender: () => [<DevicesHeaderWidget key="online" />],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,

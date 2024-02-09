@@ -74,7 +74,7 @@ const SSHConnectionForm = () => {
                 <ProFormTextArea
                   name="sshKey"
                   label="SSH Private Key"
-                  width="xl"
+                  width="md"
                   placeholder="root"
                   rules={[{ required: true }]}
                 />
