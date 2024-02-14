@@ -11,6 +11,8 @@ services:
       - mongo
       - server
   mongo:
+    env_file:
+      - ./.env.dev
     container_name: mongo
     image: mongo
     restart: unless-stopped
@@ -18,7 +20,7 @@ services:
       - ./.data:/data/db
     command: --quiet
     ports:
-      - "27017:27017"
+      - "${DB_PORT}:27017"
   server:
     restart: unless-stopped
     external_links:

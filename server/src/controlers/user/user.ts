@@ -5,8 +5,11 @@ import { DeviceStatus } from '../../database/model/Device';
 import { Role } from '../../database/model/User';
 import DeviceRepo from '../../database/repository/DeviceRepo';
 import UserRepo from '../../database/repository/UserRepo';
+import logger from '../../logger';
 
 const router = express.Router();
+
+let connectedUser;
 
 const getAccess = () => {
   return 'admin';
@@ -34,12 +37,13 @@ router.post(`/createFirstUser`, async (req, res) => {
     });
     return;
   }
+
   await UserRepo.create({
     email: email,
     password: password,
     name: name,
     role: Role.ADMIN,
-    avatar: avatar,
+    avatar: avatar || '/avatars/squirrel.png',
   });
   res.send({
     success: true,
@@ -72,7 +76,7 @@ router.get(`/currentUser`, async (req, res) => {
     success: true,
     data: {
       name: 'Serati Ma',
-      avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
+      avatar: '/avatars/squirrel.png',
       email: 'antdesign@alipay.com',
       notifyCount: 12,
       unreadCount: 11,
@@ -99,21 +103,35 @@ router.get(`/currentUser`, async (req, res) => {
 
 router.post('/login/account', async (req, res) => {
   const { password, username, type } = req.body;
-  if (password === 'admin' && username === 'admin') {
-    res.send({
-      status: 'ok',
-      type,
-      currentAuthority: 'admin',
+  if (!password || !username) {
+    res.status(401).send({
+      data: {
+        isLogin: false,
+      },
+      errorCode: '401',
+      errorMessage: 'Identification is incorrect！',
+      success: true,
     });
-    return;
   }
-  if (password === 'ant.design' && username === 'user') {
+  const user = await UserRepo.findByEmailAndPassword(username, password);
+  logger.info(user);
+  if (user) {
+    connectedUser = user.email;
     res.send({
       status: 'ok',
       type,
-      currentAuthority: 'user',
+      currentAuthority: user.role,
     });
     return;
+  } else {
+    res.status(401).send({
+      data: {
+        isLogin: false,
+      },
+      errorCode: '401',
+      errorMessage: 'Identification is incorrect！',
+      success: true,
+    });
   }
 });
 

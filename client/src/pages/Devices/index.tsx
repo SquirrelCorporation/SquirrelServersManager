@@ -174,7 +174,7 @@ const Index = memo(() => {
       </div>
     </div>
   );
-  const CarbonBatchJob = (props) => (
+  const CarbonBatchJob = (props: any) => (
     <svg
       width="1em"
       height="1em"

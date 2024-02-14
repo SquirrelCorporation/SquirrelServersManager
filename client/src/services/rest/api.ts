@@ -8,7 +8,7 @@ export async function currentUser(options?: Record<string, any>) {
 }
 
 export async function hasUser(options?: Record<string, any>) {
-  return request<API.SimpleResult>('/api/hasUsers', {
+  return request<API.HasUsers>('/api/hasUsers', {
     method: 'GET',
     ...(options || {}),
   });

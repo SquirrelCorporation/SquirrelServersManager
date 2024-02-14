@@ -1,3 +1,4 @@
+import { hasUser } from '@/services/rest/api';
 import { login } from '@/services/rest/login';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import {
@@ -10,6 +11,7 @@ import { history, useModel } from '@umijs/max';
 import { Alert, Divider, message } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
+// @ts-ignore
 import loginBackground from '@/pages/User/Login/assets/login-background.mp4';
 
 const LoginMessage: React.FC<{
@@ -34,13 +36,22 @@ const Login: React.FC = () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {
       flushSync(() => {
-        setInitialState((s) => ({
+        setInitialState((s: any) => ({
           ...s,
           currentUser: userInfo,
         }));
       });
     }
   };
+
+  const checkIfFirstTime = async () => {
+    await hasUser().then((e) => {
+      if (!e.data.hasUser) {
+        history.push('/user/onboarding');
+      }
+    });
+  };
+  checkIfFirstTime();
 
   const handleSubmit = async (values: API.LoginParams) => {
     try {

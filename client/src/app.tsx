@@ -10,8 +10,8 @@ import Logo from '../public/logo.svg';
 import { errorConfig } from './requestErrorConfig';
 
 const isDev = process.env.NODE_ENV === 'development';
-export const loginPath = '/user/login';
-export const onboardingPath = '/user/onboarding';
+const loginPath = '/user/login';
+const onboardingPath = '/user/onboarding';
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -31,7 +31,7 @@ export async function getInitialState(): Promise<{
     } catch (error) {
       await hasUser()
         .then((e) => {
-          if (e.success) {
+          if (e.data.hasUser) {
             history.push(loginPath);
           } else {
             history.push(onboardingPath);
