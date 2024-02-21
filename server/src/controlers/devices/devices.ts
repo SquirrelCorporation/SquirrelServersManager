@@ -1,30 +1,32 @@
-import express from 'express';
 import { parse } from 'url';
+import express from 'express';
 import Device from '../../database/model/Device';
 import DeviceRepo from '../../database/repository/DeviceRepo';
 import logger from '../../logger';
+import Authentication from '../../middlewares/Authentication';
 import API from '../../typings';
 
 const router = express.Router();
 
 router.post(`/`, async (req, res) => {
   if (!req.body.ip) {
-    logger.error("[CONTROLLER] Device - Is called with no IP is specified");
+    logger.error('[CONTROLLER] Device - Is called with no IP is specified');
     res.status(401).send({
       success: false,
-      message: "Ip is not specified"
-    })
+      message: 'Ip is not specified',
+    });
     return;
   }
 
   const device = await DeviceRepo.findOneByIp(req.body.ip);
 
   if (device) {
-    logger.error("[CONTROLLER] Device - Is called ip already existing");
+    logger.error('[CONTROLLER] Device - Is called ip already existing');
     res.status(403).send({
       success: false,
-      message: "The ip already exists, please delete or change your devices before registering this device"
-    })
+      message:
+        'The ip already exists, please delete or change your devices before registering this device',
+    });
     return;
   }
 
@@ -32,24 +34,24 @@ router.post(`/`, async (req, res) => {
     ip: req.body.ip,
   } as Device);
 
-  logger.info(`[CONTROLLER] Device - Created device with uuid: ${createdDevice.uuid}`)
+  logger.info(`[CONTROLLER] Device - Created device with uuid: ${createdDevice.uuid}`);
 
   res.send({
     success: true,
     data: {
       id: createdDevice.uuid,
-    }
-  })
+    },
+  });
 });
 
-router.get(`/`, async (req, res) => {
+router.get(`/`, Authentication.isAuthenticated, async (req, res) => {
   const realUrl = req.url;
   const { current = 1, pageSize = 10 } = req.query;
   const params = parse(realUrl, true).query as unknown as API.PageParams &
     API.Device & {
-    sorter: any;
-    filter: any;
-  };
+      sorter: any;
+      filter: any;
+    };
   const devices = await DeviceRepo.findAll();
   if (!devices) {
     return res.json([]);
@@ -93,7 +95,6 @@ router.get(`/`, async (req, res) => {
             return true;
           }
           return filter[uuid].includes(`${item.uuid}`);
-
         });
       });
     }
@@ -112,7 +113,5 @@ router.get(`/`, async (req, res) => {
 
   return res.json(result);
 });
-
-
 
 export default router;

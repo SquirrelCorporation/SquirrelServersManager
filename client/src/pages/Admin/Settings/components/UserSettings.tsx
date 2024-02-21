@@ -1,5 +1,6 @@
+import { postResetApiKey } from '@/services/rest/usersettings';
 import { useModel } from '@@/exports';
-import { BorderOutlined, KeyOutlined } from '@ant-design/icons';
+import { KeyOutlined, WarningOutlined } from '@ant-design/icons';
 import {
   Button,
   Card,
@@ -8,6 +9,7 @@ import {
   Input,
   InputNumber,
   message,
+  Popconfirm,
   Row,
   Slider,
   Space,
@@ -15,14 +17,23 @@ import {
 } from 'antd';
 import React, { useState } from 'react';
 
-const CommonSettings: React.FC = () => {
+const UserSettings: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
   const [inputValue, setInputValue] = useState<number | null>(1);
+  const [apiKey, setApiKey] = useState(currentUser?.settings.apiKey);
 
   const onChange = (newValue: number | null) => {
     setInputValue(newValue);
   };
+
+  const onClickResetApiKey = async () => {
+    await postResetApiKey().then((res) => {
+      message.success({ content: 'API Key successfully reset', duration: 6 });
+      setApiKey(res.data.uuid);
+    });
+  };
+
   return (
     <Card>
       <Card type="inner" title="Logs">
@@ -50,12 +61,6 @@ const CommonSettings: React.FC = () => {
             </Row>
             <Space.Compact style={{ width: '100%' }} />
           </Space>
-          <Space direction="horizontal" size="middle">
-            <Typography>Server logs retention days</Typography>{' '}
-            <InputNumber min={1} max={60} defaultValue={3} />
-            <Typography>day(s)</Typography>
-            <Space.Compact style={{ width: '100%' }} />
-          </Space>
         </Flex>
       </Card>
       <Card type="inner" title="API" style={{ marginTop: 16 }}>
@@ -68,11 +73,9 @@ const CommonSettings: React.FC = () => {
               <Button
                 type={'primary'}
                 onClick={async () => {
-                  if (currentUser?.settings.apiKey) {
+                  if (apiKey) {
                     try {
-                      await navigator.clipboard.writeText(
-                        currentUser?.settings.apiKey,
-                      );
+                      await navigator.clipboard.writeText(apiKey);
                       message.success({
                         content: 'Successfully copied',
                         duration: 8,
@@ -93,8 +96,23 @@ const CommonSettings: React.FC = () => {
               >
                 Copy
               </Button>
-              <Input defaultValue={currentUser?.settings.apiKey} disabled />
-              <Button danger>Reset</Button>
+              <Input value={apiKey} disabled />
+              <Popconfirm
+                title="Reset your API key"
+                description={
+                  <>
+                    Are you sure to delete your API key? <br />
+                    This will potentially disable all your agents running on
+                    others devices
+                  </>
+                }
+                icon={<WarningOutlined style={{ color: 'red' }} />}
+                onConfirm={onClickResetApiKey}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button danger>Reset</Button>
+              </Popconfirm>
             </Space.Compact>
           </Space>
         </Flex>
@@ -103,4 +121,4 @@ const CommonSettings: React.FC = () => {
   );
 };
 
-export default CommonSettings;
+export default UserSettings;

@@ -19,7 +19,10 @@
     "shelljs": "^0.8.5",
     "pino-mongodb": "^4.3.0",
     "mongoose-field-encryption": "^7.0.1",
-    "pino-pretty": "^10.3.1"
+    "pino-pretty": "^10.3.1",
+    "pino-http": "^9.0.0",
+    "express-session": "^1.18.0",
+    "connect-mongo": "^5.1.0"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
@@ -31,6 +34,7 @@
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^7.0.1",
     "@typescript-eslint/parser": "^7.0.1",
+    "@types/express-session": "^1.17.10",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prettier": "^5.1.3",

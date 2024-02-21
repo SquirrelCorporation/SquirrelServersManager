@@ -1,5 +1,6 @@
 import express from 'express';
 import DeviceRepo from '../../database/repository/DeviceRepo';
+import Authentication from '../../middlewares/Authentication';
 import DeviceStatsUseCases from '../../use-cases/DeviceStatsUseCases';
 import DeviceUseCases from '../../use-cases/DeviceUseCases';
 
@@ -20,7 +21,7 @@ router.post(`/:id`, async (req, res) => {
   });
 });
 
-router.get(`/:id/stats/:type/`, async (req, res) => {
+router.get(`/:id/stats/:type/`, Authentication.isAuthenticated, async (req, res) => {
   const device = await DeviceRepo.findOneById(req.params.id);
   const { from = 24 } = req.query;
 
@@ -48,7 +49,7 @@ router.get(`/:id/stats/:type/`, async (req, res) => {
   }
 });
 
-router.get(`/:id/stat/:type/`, async (req, res) => {
+router.get(`/:id/stat/:type/`, Authentication.isAuthenticated, async (req, res) => {
   const device = await DeviceRepo.findOneById(req.params.id);
 
   if (device == null) {

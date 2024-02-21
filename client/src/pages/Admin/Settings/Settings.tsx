@@ -1,12 +1,12 @@
-import CommonSettings from '@/pages/Admin/Settings/components/CommonSettings';
-import DeviceSettings from '@/pages/Admin/Settings/components/DeviceSettings';
+import UserSettings from '@/pages/Admin/Settings/components/UserSettings';
+import GeneralSettings from '@/pages/Admin/Settings/components/GeneralSettings';
 import Information from '@/pages/Admin/Settings/components/Information';
 import { InfoCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Tabs } from 'antd';
 import React from 'react';
 
-const GeneralSettings: React.FC = () => {
+const Settings: React.FC = () => {
   const settingsTabItems = [
     {
       key: '1',
@@ -15,16 +15,16 @@ const GeneralSettings: React.FC = () => {
           <SettingOutlined /> General settings
         </div>
       ),
-      children: <CommonSettings />,
+      children: <GeneralSettings />,
     },
     {
       key: '2',
       label: (
         <div>
-          <SettingOutlined /> Device settings
+          <SettingOutlined /> User settings
         </div>
       ),
-      children: <DeviceSettings />,
+      children: <UserSettings />,
     },
     {
       key: '3',
@@ -51,4 +51,4 @@ const GeneralSettings: React.FC = () => {
   );
 };
 
-export default GeneralSettings;
+export default Settings;

@@ -46,7 +46,7 @@ const Login: React.FC = () => {
 
   const checkIfFirstTime = async () => {
     await hasUser().then((e) => {
-      if (!e.data.hasUser) {
+      if (!e.data.hasUsers) {
         history.push('/user/onboarding');
       }
     });

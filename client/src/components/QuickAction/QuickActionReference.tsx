@@ -10,8 +10,15 @@ import {
 } from '@ant-design/icons';
 import React from 'react';
 
+export enum Types {
+  PLAYBOOK = 'playbook',
+  PLAYBOOK_SELECTION = 'playbook-selection',
+  ACTION = 'action',
+  DIVIDER = 'divider',
+}
+
 export type QuickActionReferenceType = {
-  type: string;
+  type: Types;
   action?: string;
   playbookFile?: string;
   label?: React.JSX.Element;
@@ -22,15 +29,9 @@ export enum Actions {
   CONNECT = 'connect',
 }
 
-export enum Types {
-  PLAYBOOK = 'playbook',
-  PLAYBOOK_SELECTION = 'playbook-selection',
-  ACTION = 'action',
-}
-
 const QuickActionReference: QuickActionReferenceType[] = [
   {
-    type: 'playbook-selection',
+    type: Types.PLAYBOOK_SELECTION,
     label: (
       <>
         <PlayCircleOutlined /> Execute a playbook
@@ -39,7 +40,7 @@ const QuickActionReference: QuickActionReferenceType[] = [
     onAdvancedMenu: false,
   },
   {
-    type: 'playbook',
+    type: Types.PLAYBOOK,
     playbookFile: '_reboot',
     label: (
       <>
@@ -49,7 +50,7 @@ const QuickActionReference: QuickActionReferenceType[] = [
     onAdvancedMenu: false,
   },
   {
-    type: 'action',
+    type: Types.ACTION,
     action: Actions.CONNECT,
     label: (
       <>
@@ -60,10 +61,10 @@ const QuickActionReference: QuickActionReferenceType[] = [
   },
   {
     onAdvancedMenu: false,
-    type: 'divider',
+    type: Types.DIVIDER,
   },
   {
-    type: 'playbook',
+    type: Types.PLAYBOOK,
     playbookFile: '_ping',
     label: (
       <>
@@ -74,10 +75,10 @@ const QuickActionReference: QuickActionReferenceType[] = [
   },
   {
     onAdvancedMenu: true,
-    type: 'divider',
+    type: Types.DIVIDER,
   },
   {
-    type: 'playbook',
+    type: Types.PLAYBOOK,
     playbookFile: '_updateAgent',
     onAdvancedMenu: true,
     label: (
@@ -87,7 +88,7 @@ const QuickActionReference: QuickActionReferenceType[] = [
     ),
   },
   {
-    type: 'playbook',
+    type: Types.PLAYBOOK,
     playbookFile: '_reinstallAgent',
     onAdvancedMenu: true,
     label: (
@@ -97,7 +98,7 @@ const QuickActionReference: QuickActionReferenceType[] = [
     ),
   },
   {
-    type: 'playbook',
+    type: Types.PLAYBOOK,
     playbookFile: '_restartAgent',
     onAdvancedMenu: true,
     label: (
@@ -107,7 +108,7 @@ const QuickActionReference: QuickActionReferenceType[] = [
     ),
   },
   {
-    type: 'action',
+    type: Types.ACTION,
     onAdvancedMenu: true,
     label: (
       <>

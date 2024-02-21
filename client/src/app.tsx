@@ -31,7 +31,7 @@ export async function getInitialState(): Promise<{
     } catch (error) {
       await hasUser()
         .then((e) => {
-          if (e.data.hasUser) {
+          if (e.data?.hasUsers) {
             history.push(loginPath);
           } else {
             history.push(onboardingPath);

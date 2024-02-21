@@ -3,6 +3,7 @@ import logger from '../../logger';
 import DeviceRepo from '../../database/repository/DeviceRepo';
 import DeviceAuthRepo from '../../database/repository/DeviceAuthRepo';
 import DeviceAuth from '../../database/model/DeviceAuth';
+import Authentication from '../../middlewares/Authentication';
 
 const router = express.Router();
 
@@ -56,7 +57,7 @@ router.post(`/:id/auth`, async (req, res) => {
   });
 });
 
-router.get(`/:id/auth`, async (req, res) => {
+router.get(`/:id/auth`, Authentication.isAuthenticated, async (req, res) => {
   if (!req.params.id) {
     logger.error('[CONTROLLER] - GET - Device Auth - Is called with no id');
     res.status(401).send({

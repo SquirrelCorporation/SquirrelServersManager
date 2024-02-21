@@ -2,7 +2,9 @@ import { TerminalStateProps } from '@/components/TerminalModal';
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, MenuProps, Space } from 'antd';
 import React, { Dispatch, ReactNode, SetStateAction } from 'react';
-import QuickActionReference from '@/components/QuickAction/QuickActionReference';
+import QuickActionReference, {
+  Types,
+} from '@/components/QuickAction/QuickActionReference';
 import PlaybookSelectionModal from '@/components/PlaybookSelectionModal/PlaybookSelectionModal';
 import { ItemType } from 'rc-menu/es/interface';
 
@@ -25,13 +27,13 @@ const QuickActionDropDown: React.FC<QuickActionProps> = (props) => {
         alert('Internal Error');
         return;
       }
-      if (QuickActionReference[idx].type === 'playbook') {
+      if (QuickActionReference[idx].type === Types.PLAYBOOK) {
         props.setTerminal({
           isOpen: true,
           command: QuickActionReference[idx].playbookFile,
           target: props.target,
         });
-      } else if (QuickActionReference[idx].type === 'playbook-selection') {
+      } else if (QuickActionReference[idx].type === Types.PLAYBOOK_SELECTION) {
         setPlaybookSelectionModalIsOpened(true);
       } else {
         props.onDropDownClicked(key);
@@ -41,13 +43,13 @@ const QuickActionDropDown: React.FC<QuickActionProps> = (props) => {
 
   const items = QuickActionReference.map((e, index) => {
     if (e.onAdvancedMenu && props.advancedMenu === true) {
-      if (e.type === 'divider') return { type: e.type };
+      if (e.type === Types.DIVIDER) return { type: 'divider' };
       return {
         label: e.label,
         key: `${index}`,
       };
     } else if (!e.onAdvancedMenu) {
-      if (e.type === 'divider') return { type: e.type };
+      if (e.type === Types.DIVIDER) return { type: 'divider' };
       return {
         label: e.label,
         key: `${index}`,

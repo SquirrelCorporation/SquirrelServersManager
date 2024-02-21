@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { fieldEncryption } from 'mongoose-field-encryption';
+import { v4 as uuidv4 } from 'uuid';
+import { SALT, SECRET } from '../../config';
 
 export const DOCUMENT_NAME = 'User';
 export const COLLECTION_NAME = 'users';
@@ -15,6 +17,7 @@ export default interface User {
   email: string;
   password: string;
   role: string;
+  apiKey?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -43,6 +46,12 @@ export const schema = new Schema<User>(
       enum: Role,
       required: true,
     },
+    apiKey: {
+      type: Schema.Types.String,
+      required: true,
+      unique: true,
+      default: uuidv4(),
+    },
   },
   {
     versionKey: false,
@@ -51,12 +60,9 @@ export const schema = new Schema<User>(
 
 schema.plugin(fieldEncryption, {
   fields: ['password'],
-  secret: 'some secret key',
-  saltGenerator: function (secret) {
-    return '1234567890123456';
-    // should ideally use the secret to return a string of length 16,
-    // default = `const defaultSaltGenerator = secret => crypto.randomBytes(16);`,
-    // see options for more details
+  secret: SECRET,
+  saltGenerator: function () {
+    return SALT;
   },
 });
 

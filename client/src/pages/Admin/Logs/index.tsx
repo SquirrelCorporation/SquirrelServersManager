@@ -1,9 +1,9 @@
+import ServerLogsColumns from '@/pages/Admin/Logs/ServerLogsColums';
 import { getServerLogs, getTasksLogs } from '@/services/rest/logs';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import React from 'react';
 import { Tabs } from 'antd';
-import ColumnsServerLogs from '@/pages/Admin/Logs/ColumsServerLogs';
-import ColumnsTaskLogs from '@/pages/Admin/Logs/ColumnsTaskLogs';
+import TaskLogsColumns from '@/pages/Admin/Logs/TaskLogsColumns';
 
 const logsTabItem = [
   {
@@ -13,7 +13,7 @@ const logsTabItem = [
       <ProTable<API.ServerLog>
         rowKey="_id"
         request={getServerLogs}
-        columns={ColumnsServerLogs}
+        columns={ServerLogsColumns}
         search={{
           labelWidth: 120,
         }}
@@ -28,7 +28,7 @@ const logsTabItem = [
       <ProTable<API.Task>
         rowKey="ident"
         request={getTasksLogs}
-        columns={ColumnsTaskLogs}
+        columns={TaskLogsColumns}
         search={{
           labelWidth: 120,
         }}

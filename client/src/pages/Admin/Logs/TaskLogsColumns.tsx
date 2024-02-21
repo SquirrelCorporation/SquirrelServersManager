@@ -1,6 +1,6 @@
 import { ProColumns } from '@ant-design/pro-components';
 
-const ColumnsTaskLogs: ProColumns<API.Task>[] = [
+const TaskLogsColumns: ProColumns<API.Task>[] = [
   {
     title: 'Created At',
     dataIndex: 'createdAt',
@@ -24,4 +24,4 @@ const ColumnsTaskLogs: ProColumns<API.Task>[] = [
   },
 ];
 
-export default ColumnsTaskLogs;
+export default TaskLogsColumns;

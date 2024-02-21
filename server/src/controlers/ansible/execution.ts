@@ -1,4 +1,5 @@
 import express from 'express';
+import Authentication from '../../middlewares/Authentication';
 import ansible from '../../shell/ansible';
 import logger from '../../logger';
 import AnsibleLogsRepo from '../../database/repository/AnsibleLogsRepo';
@@ -6,7 +7,7 @@ import AnsibleTaskStatusRepo from '../../database/repository/AnsibleTaskStatusRe
 
 const router = express.Router();
 
-router.post(`/exec/playbook`, async (req, res) => {
+router.post(`/exec/playbook`, Authentication.isAuthenticated, async (req, res) => {
   if (!req.body.playbook) {
     res.status(400).send({
       success: false,
@@ -29,7 +30,7 @@ router.post(`/exec/playbook`, async (req, res) => {
   }
 });
 
-router.get(`/exec/:id/logs`, async (req, res) => {
+router.get(`/exec/:id/logs`, Authentication.isAuthenticated, async (req, res) => {
   if (!req.params.id) {
     res.status(400).send({
       success: false,
@@ -48,7 +49,7 @@ router.get(`/exec/:id/logs`, async (req, res) => {
   });
 });
 
-router.get(`/exec/:id/status`, async (req, res) => {
+router.get(`/exec/:id/status`, Authentication.isAuthenticated, async (req, res) => {
   if (!req.params.id) {
     res.status(400).send({
       success: false,

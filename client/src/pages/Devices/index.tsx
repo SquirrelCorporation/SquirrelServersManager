@@ -1,30 +1,31 @@
 import { DeviceStatType } from '@/components/Charts/DeviceStatType';
 import TinyLineDeviceGraph from '@/components/Charts/TinyLineDeviceGraph';
+import TinyRingProgressDeviceGraph from '@/components/Charts/TinyRingProgressDeviceGraph';
 import TinyRingProgressDeviceIndicator from '@/components/Charts/TinyRingProgressDeviceIndicator';
 import DeviceStatusTag from '@/components/DeviceStatus/DeviceStatusTag';
+import { OsLogo } from '@/components/OsLogo/OsLogo';
 import QuickActionDropDown from '@/components/QuickAction/QuickActionDropDown';
-import { OsLogo } from '@/components/misc/OsLogo';
 import TerminalModal from '@/components/TerminalModal';
 import { getDevices } from '@/services/rest/device';
+import { useClientLoaderData } from '@@/exports';
 import { AppstoreOutlined, ControlOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import {
   Avatar,
-  Card,
-  List,
-  Tooltip,
-  message,
-  Col,
-  Row,
-  Carousel,
-  Typography,
   Button,
+  Card,
+  Carousel,
+  Col,
+  List,
+  message,
+  Row,
+  Tooltip,
+  Typography,
 } from 'antd';
 import moment from 'moment';
 import React, { memo, useEffect, useState } from 'react';
 import { TerminalContextProvider } from 'react-terminal';
 import styles from './Devices.less';
-import TinyRingProgressDeviceGraph from '@/components/Charts/TinyRingProgressDeviceGraph';
 
 const { Text } = Typography;
 
@@ -34,8 +35,14 @@ export type StateType = {
   current?: API.DeviceItem;
 };
 
+export async function clientLoader() {
+  return await getDevices();
+}
+
 const Index = memo(() => {
   const [deviceList, setDeviceList] = React.useState<API.DeviceList>({});
+  const [loading, setLoading] = React.useState(false);
+  const { data } = useClientLoaderData();
   const [terminal, setTerminal] = useState<{
     isOpen: boolean;
     command: string | undefined;
@@ -49,19 +56,9 @@ const Index = memo(() => {
     setTerminal({ ...terminal, isOpen: open });
   };
 
-  const asyncFetch = async () => {
-    await getDevices()
-      .then((list) => {
-        setDeviceList(list);
-      })
-      .catch((error) => {
-        message.error(error);
-      });
-  };
   useEffect(() => {
-    asyncFetch();
+    setDeviceList(data);
   }, []);
-
   /*
   const showModal = () => {
     setState({
@@ -214,7 +211,7 @@ const Index = memo(() => {
             <List
               size="large"
               rowKey="uuid"
-              loading={false}
+              loading={loading}
               pagination={{
                 pageSize: 10,
                 showQuickJumper: true,

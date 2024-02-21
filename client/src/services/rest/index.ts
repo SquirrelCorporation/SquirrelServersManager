@@ -7,6 +7,7 @@ import * as cron from './cron';
 import * as ansible from './ansible';
 import * as logs from './logs';
 import * as deviceauth from './deviceauth';
+import * as usersettings from './usersettings';
 
 export default {
   api,
@@ -16,4 +17,5 @@ export default {
   ansible,
   logs,
   deviceauth,
+  usersettings,
 };

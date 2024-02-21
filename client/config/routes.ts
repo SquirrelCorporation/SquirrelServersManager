@@ -48,7 +48,7 @@ export default [
         path: '/admin/crons',
         name: 'Crons',
         icon: 'interaction',
-        component: './Admin/Crons',
+        component: './Admin/Crons/Crons',
       },
       {
         path: '/admin/logs',
@@ -60,7 +60,7 @@ export default [
         path: '/admin/settings',
         name: 'Settings',
         icon: 'SettingOutlined',
-        component: './Admin/Settings/GeneralSettings',
+        component: './Admin/Settings/Settings',
       },
     ],
   },

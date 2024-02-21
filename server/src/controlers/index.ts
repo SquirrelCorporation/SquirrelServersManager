@@ -21,5 +21,6 @@ router.use('/logs/', logs.task);
 router.use('/logs/', logs.server);
 router.use('/ansible/', ansible.playbook);
 router.use('/', user.user);
+router.use('/', user.settings);
 
 export default router;

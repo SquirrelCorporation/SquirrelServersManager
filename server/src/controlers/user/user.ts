@@ -1,25 +1,21 @@
 import express from 'express';
-import { CONSIDER_DEVICE_OFFLINE } from '../../config';
 import { dependencies, version } from '../../../package.json';
+import { CONSIDER_DEVICE_OFFLINE } from '../../config';
 import { DeviceStatus } from '../../database/model/Device';
-import { Role } from '../../database/model/User';
+import User, { Role } from '../../database/model/User';
 import DeviceRepo from '../../database/repository/DeviceRepo';
 import UserRepo from '../../database/repository/UserRepo';
 import logger from '../../logger';
+import Authentication from '../../middlewares/Authentication';
 
 const router = express.Router();
 
-let connectedUser;
-
-const getAccess = () => {
-  return 'admin';
-};
-
 router.get(`/hasUsers`, async (req, res) => {
+  logger.info('[CONTROLLER][USER] - /hasUsers');
   const hasUser = (await UserRepo.count()) > 0;
   res.send({
     data: {
-      hasUser: hasUser,
+      hasUsers: hasUser,
     },
     success: true,
   });
@@ -27,6 +23,7 @@ router.get(`/hasUsers`, async (req, res) => {
 });
 
 router.post(`/createFirstUser`, async (req, res) => {
+  logger.info('[CONTROLLER][USER] - /createFirstUser');
   const { email, password, name, avatar } = req.body;
   const hasUser = (await UserRepo.count()) > 0;
   if (hasUser) {
@@ -51,18 +48,8 @@ router.post(`/createFirstUser`, async (req, res) => {
   return;
 });
 
-router.get(`/currentUser`, async (req, res) => {
-  if (!getAccess()) {
-    res.status(401).send({
-      data: {
-        isLogin: false,
-      },
-      errorCode: '401',
-      errorMessage: 'Identification is incorrect！',
-      success: true,
-    });
-    return;
-  }
+router.get(`/currentUser`, Authentication.isAuthenticated, async (req, res) => {
+  logger.info(`[CONTROLLER][USER] - /currentUser ${req.user?.email}`);
   const devices = await DeviceRepo.findAll();
   const offline = devices?.filter((e) => e.status === DeviceStatus.OFFLINE).length;
   const online = devices?.filter((e) => e.status === DeviceStatus.ONLINE).length;
@@ -75,19 +62,19 @@ router.get(`/currentUser`, async (req, res) => {
   res.send({
     success: true,
     data: {
-      name: 'Serati Ma',
-      avatar: '/avatars/squirrel.png',
-      email: 'antdesign@alipay.com',
+      name: req.user?.name,
+      avatar: req.user?.avatar,
+      email: req.user?.email,
       notifyCount: 12,
       unreadCount: 11,
-      access: getAccess(),
+      access: req.user?.role,
       devices: {
         online: online,
         offline: offline,
         statuses: simpleStatuses,
       },
       settings: {
-        apiKey: 'XXX-XXX-XXX-XXX-XXX-XXX',
+        apiKey: req.user?.apiKey,
         device: {
           considerOffLineAfter: CONSIDER_DEVICE_OFFLINE,
         },
@@ -101,7 +88,8 @@ router.get(`/currentUser`, async (req, res) => {
   });
 });
 
-router.post('/login/account', async (req, res) => {
+router.post('/login/account', async (req, res, next) => {
+  logger.info('[CONTROLLER][USER] - /login/account');
   const { password, username, type } = req.body;
   if (!password || !username) {
     res.status(401).send({
@@ -114,15 +102,28 @@ router.post('/login/account', async (req, res) => {
     });
   }
   const user = await UserRepo.findByEmailAndPassword(username, password);
-  logger.info(user);
   if (user) {
-    connectedUser = user.email;
-    res.send({
-      status: 'ok',
-      type,
-      currentAuthority: user.role,
+    req.session.regenerate(function (err) {
+      if (err) {
+        next(err);
+      }
+      req.session.user = user.email;
+
+      // save the session before redirection to ensure page
+      // load does not happen before session is saved
+      req.session.save(function (err) {
+        if (err) {
+          return next(err);
+        }
+        logger.info('[CONTROLLER][USER] - /login/account - Logged in successfull');
+        res.send({
+          status: 'ok',
+          type,
+          currentAuthority: user.role,
+        });
+        return;
+      });
     });
-    return;
   } else {
     res.status(401).send({
       data: {
@@ -135,8 +136,20 @@ router.post('/login/account', async (req, res) => {
   }
 });
 
-router.post('/api/login/outLogin', (req, res) => {
-  res.send({ data: {}, success: true });
+router.post('/login/outLogin', (req, res, next) => {
+  logger.info('[CONTROLLER][USER] - /login/outLogin');
+  req.session.user = null;
+  req.session.save(function (err) {
+    if (err) {
+      next(err);
+    }
+    req.session.regenerate(function (err) {
+      if (err) {
+        next(err);
+      }
+      res.send({ data: {}, success: true });
+    });
+  });
 });
 
 export default router;

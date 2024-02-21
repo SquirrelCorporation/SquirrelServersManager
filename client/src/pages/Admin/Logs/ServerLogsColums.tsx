@@ -1,6 +1,6 @@
 import { ProColumns } from '@ant-design/pro-components';
 
-const ColumnsServerLogs: ProColumns<API.ServerLog>[] = [
+const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
   {
     title: 'Time',
     dataIndex: 'time',
@@ -24,4 +24,4 @@ const ColumnsServerLogs: ProColumns<API.ServerLog>[] = [
   },
 ];
 
-export default ColumnsServerLogs;
+export default ServerLogsColumns;
