@@ -1,4 +1,4 @@
-import { postResetApiKey } from '@/services/rest/usersettings';
+import { postResetApiKey, postUserLogs } from '@/services/rest/usersettings';
 import { useModel } from '@@/exports';
 import { KeyOutlined, WarningOutlined } from '@ant-design/icons';
 import {
@@ -20,11 +20,17 @@ import React, { useState } from 'react';
 const UserSettings: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
-  const [inputValue, setInputValue] = useState<number | null>(1);
+  const [inputValue, setInputValue] = useState<number | null>(
+    currentUser?.settings.logsLevel.terminal,
+  );
   const [apiKey, setApiKey] = useState(currentUser?.settings.apiKey);
 
-  const onChange = (newValue: number | null) => {
-    setInputValue(newValue);
+  const onChange = async (newValue: number | null) => {
+    if (newValue) {
+      await postUserLogs({ terminal: newValue }).then((res) => {
+        setInputValue(newValue);
+      });
+    }
   };
 
   const onClickResetApiKey = async () => {
@@ -33,7 +39,6 @@ const UserSettings: React.FC = () => {
       setApiKey(res.data.uuid);
     });
   };
-
   return (
     <Card>
       <Card type="inner" title="Logs">

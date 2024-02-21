@@ -1,11 +1,13 @@
 import shell from 'shelljs';
+import User from '../database/model/User';
 import DeviceAuthRepo from '../database/repository/DeviceAuthRepo';
 import logger from '../logger';
 import AnsibleTaskRepo from '../database/repository/AnsibleTaskRepo';
 import Inventory from '../transformers/Inventory';
 import { Ansible } from '../transformers/typings';
+import ansibleCmd from './ansibleCmd';
 
-async function executePlaybook(playbook: string, target?: string[]) {
+async function executePlaybook(playbook: string, target?: string[], user: User) {
   logger.info('[SHELL]-[ANSIBLE] - executePlaybook - Starting...');
   if (!playbook.endsWith('.yml')) {
     playbook += '.yml';
@@ -23,7 +25,7 @@ async function executePlaybook(playbook: string, target?: string[]) {
   shell.cd('/server/src/ansible/');
   shell.rm('/server/src/ansible/inventory/hosts');
   const result = await new Promise<string | null>((resolve, reject) => {
-    const cmd = `sudo python3 ssm-ansible-run.py --playbook ${playbook} ${inventoryTargets ? "--specific-host '" + JSON.stringify(inventoryTargets).replaceAll('\\\\', '\\') + "'" : ''}`;
+    const cmd = ansibleCmd.buildAnsibleCmd(playbook, inventoryTargets, user);
     logger.info(`[SHELL]-[ANSIBLE] - executePlaybook - Executing ${cmd}`);
     const child = shell.exec(cmd, {
       async: true,

@@ -58,6 +58,7 @@ def parse_args():
         description="SSM Ansible Run"
     )
     arg_parser.add_argument("--playbook",  help="Playbook path", required=True)
+    arg_parser.add_argument("--log-level",  help="Verbosity", type=int, required=False, default=None)
     group = arg_parser.add_mutually_exclusive_group(required=False)
     group.add_argument("--specific-host", help="Specify a host manually in json", default=None)
     group.add_argument("--host-pattern", help="Specify a host pattern in inventory", default="all")
@@ -72,10 +73,10 @@ def execute():
         event_handler=event_handler,
         status_handler=status_handler,
         rotate_artifacts=10,
-        inventory=args.specific_host
+        inventory=args.specific_host,
         #debug=False,
         #ignore_logging=False
-        #verbosity=4
+        verbosity=args.log_level
        )
     sys.stdout.write(runner_obj.config.ident)
 execute()

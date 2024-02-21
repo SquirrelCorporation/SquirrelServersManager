@@ -74,6 +74,7 @@ router.get(`/currentUser`, Authentication.isAuthenticated, async (req, res) => {
         statuses: simpleStatuses,
       },
       settings: {
+        logsLevel: req.user.logsLevel,
         apiKey: req.user?.apiKey,
         device: {
           considerOffLineAfter: CONSIDER_DEVICE_OFFLINE,

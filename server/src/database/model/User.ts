@@ -11,6 +11,14 @@ export enum Role {
   USER = 'user',
 }
 
+export interface UserLogsLevel {
+  terminal: number;
+}
+
+const UserLogsDefaults: UserLogsLevel = {
+  terminal: 1,
+};
+
 export default interface User {
   name: string;
   avatar: string;
@@ -18,6 +26,7 @@ export default interface User {
   password: string;
   role: string;
   apiKey?: string;
+  logsLevel?: UserLogsLevel;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -51,6 +60,11 @@ export const schema = new Schema<User>(
       required: true,
       unique: true,
       default: uuidv4(),
+    },
+    logsLevel: {
+      type: Object,
+      required: false,
+      default: UserLogsDefaults,
     },
   },
   {

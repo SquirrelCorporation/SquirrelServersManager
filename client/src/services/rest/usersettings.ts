@@ -9,3 +9,11 @@ export async function postResetApiKey() {
     },
   );
 }
+
+export async function postUserLogs(body: API.UserLogsLevel) {
+  return request<API.SimpleResult>(`/api/user/settings/logs`, {
+    method: 'POST',
+    data: body,
+    ...{},
+  });
+}

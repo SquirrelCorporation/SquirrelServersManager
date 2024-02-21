@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import logger from '../../logger';
-import User, { UsersModel, schema } from '../model/User';
+import User, { UserLogsLevel, UsersModel, schema } from '../model/User';
 
 async function create(user: User): Promise<User> {
   const created = await UsersModel.create(user);
@@ -36,10 +36,15 @@ async function resetApiKey(email: string): Promise<string | null> {
   return uuid;
 }
 
+async function updateLogsLevel(email: string, userLogsLevel: UserLogsLevel): Promise<void> {
+  await UsersModel.updateOne({ email: email }, { logsLevel: userLogsLevel }).exec();
+}
+
 export default {
   create,
   findByEmailAndPassword,
   count,
   findByEmail,
   resetApiKey,
+  updateLogsLevel,
 };

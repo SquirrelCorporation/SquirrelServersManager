@@ -33,6 +33,11 @@ declare namespace API {
       deps: any;
       processes: any;
     };
+    logsLevel: UserLogsLevel;
+  };
+
+  type UserLogsLevel = {
+    terminal: number;
   };
 
   type ErrorResponse = {
