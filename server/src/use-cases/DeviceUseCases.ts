@@ -27,6 +27,8 @@ async function updateDeviceFromJson(body: any, device: Device) {
   device.cpuBrand = deviceInfo.cpu?.manufacturer;
   device.cpuFamily = deviceInfo.cpu?.family;
   device.versions = deviceInfo.os?.versionData;
+  device.cpuSpeed = deviceInfo.cpu?.speed;
+  device.mem = deviceInfo.mem?.memTotalMb;
   device.status = DeviceStatus.ONLINE;
   await DeviceRepo.update(device);
   return device;

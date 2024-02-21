@@ -151,6 +151,8 @@ declare namespace API {
     cpuBrand?: string;
     cpuManufacturer?: string;
     cpuFamily?: string;
+    cpuSpeed?: number;
+    mem?: number;
     versions?: VersionData;
     updatedAt?: string;
     createdAt?: string;

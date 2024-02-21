@@ -28,6 +28,8 @@ export default interface Device {
   cpuBrand?: string;
   cpuManufacturer?: string;
   cpuFamily?: string;
+  cpuSpeed?: number;
+  mem?: number;
   agentVersion?: string;
   versions?: API.VersionData;
   createdAt?: Date;
@@ -129,6 +131,14 @@ const schema = new Schema<Device>(
     },
     cpuFamily: {
       type: Schema.Types.String,
+      required: false,
+    },
+    cpuSpeed: {
+      type: Schema.Types.Number,
+      required: false,
+    },
+    mem: {
+      type: Schema.Types.Number,
       required: false,
     },
     agentVersion: {
