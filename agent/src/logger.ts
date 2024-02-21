@@ -1,22 +1,23 @@
-import pino from 'pino';
+import winston from 'winston';
+import 'winston-daily-rotate-file';
 
-const transport = pino.transport({
-  targets: [
-    {
-      target: 'pino/file',
-      options: { destination: `${__dirname}/agent.log` , mkdir: true }
-    },
-      {
-          target: 'pino-pretty',
-      }
-  ]
-})
+const transport = new winston.transports.DailyRotateFile({
+  level: 'info',
+  filename: 'agent-%DATE%.log',
+  datePattern: 'YYYY-MM-DD-HH',
+  zippedArchive: true,
+  maxSize: '20m',
+  maxFiles: '14d'
+});
 
-const logger = pino({
+const logger = winston.createLogger({
       level: process.env.NODE_ENV === "development" ? "debug" : "info",
-      timestamp: pino.stdTimeFunctions.isoTime,
-    },
-  transport
+    format: winston.format.combine(
+      winston.format.timestamp(), // adds a timestamp property
+      winston.format.json()
+    ),
+    transports: [new winston.transports.Console(), transport],
+  },
 )
 
 export default logger;

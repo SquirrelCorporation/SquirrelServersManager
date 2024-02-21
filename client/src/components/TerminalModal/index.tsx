@@ -259,7 +259,7 @@ const TerminalModal = (props: TerminalModalProps) => {
                 showControlBar={false}
                 showControlButtons={false}
                 enableInput={false}
-                prompt={''}
+                prompt={'$'}
               />
             </div>
           </Col>
