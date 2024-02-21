@@ -16,7 +16,7 @@ router.post(`/exec/playbook`, Authentication.isAuthenticated, async (req, res) =
   }
   try {
     logger.info(`[CONTROLLER][ANSIBLE] exec playbook '${req.body.playbook}'`);
-    const execId = await ansible.executePlaybook(req.body.playbook, req.body.target, req.user);
+    const execId = await ansible.executePlaybook(req.body.playbook, req.user, req.body.target);
     res.send({
       success: true,
       data: { execId: execId },

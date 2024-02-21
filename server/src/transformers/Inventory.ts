@@ -1,5 +1,4 @@
 import DeviceAuth, { SSHType } from '../database/model/DeviceAuth';
-import DeviceAuthRepo from '../database/repository/DeviceAuthRepo';
 import logger from '../logger';
 import { Ansible } from './typings';
 
@@ -32,6 +31,7 @@ function inventoryBuilder(devicesAuth: DeviceAuth[]) {
 function inventoryBuilderForTarget(devicesAuth: DeviceAuth[]) {
   logger.info(`[TRANSFORMERS][INVENTORY] - Inventory for ${devicesAuth.length} device(s)`);
   const ansibleInventory: Ansible.All & Ansible.HostGroups = {
+    // @ts-expect-error I cannot comprehend generic typescript type
     all: {},
   };
   devicesAuth.forEach((e) => {
@@ -42,6 +42,7 @@ function inventoryBuilderForTarget(devicesAuth: DeviceAuth[]) {
     ansibleInventory[
       `device${e.device.uuid.replaceAll('-', '')}` as keyof typeof ansibleInventory
     ] = {
+      // @ts-expect-error I cannot comprehend generic typescript type
       hosts: e.device.ip as string,
       vars: getInventoryConnectionVars(e, true),
     };

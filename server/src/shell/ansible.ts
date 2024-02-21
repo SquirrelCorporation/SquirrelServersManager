@@ -7,7 +7,7 @@ import Inventory from '../transformers/Inventory';
 import { Ansible } from '../transformers/typings';
 import ansibleCmd from './ansibleCmd';
 
-async function executePlaybook(playbook: string, target?: string[], user: User) {
+async function executePlaybook(playbook: string, user: User, target?: string[]) {
   logger.info('[SHELL]-[ANSIBLE] - executePlaybook - Starting...');
   if (!playbook.endsWith('.yml')) {
     playbook += '.yml';
