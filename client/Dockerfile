@@ -10,7 +10,6 @@ EXPOSE 8000
 FROM base as production
 ENV NODE_ENV=production
 COPY . .
-RUN npm install -g umi-serve
 RUN npm install
 RUN npm run build
 CMD ["npm", "run", "serve"]
