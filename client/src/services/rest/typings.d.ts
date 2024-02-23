@@ -128,6 +128,13 @@ declare namespace API {
     dotnet?: string;
   };
 
+  type RaspberryRevisionData = {
+    manufacturer?: string;
+    processor?: string;
+    type?: string;
+    revision?: string;
+  }
+
   type DeviceItem = {
     uuid: string;
     disabled?: boolean;
@@ -154,6 +161,7 @@ declare namespace API {
     cpuSpeed?: number;
     mem?: number;
     versions?: VersionData;
+    raspberry?: RaspberryRevisionData;
     updatedAt?: string;
     createdAt?: string;
   };

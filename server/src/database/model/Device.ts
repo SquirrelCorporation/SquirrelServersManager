@@ -4,6 +4,14 @@ import API from '../../typings';
 
 export const DOCUMENT_NAME = 'Device';
 export const COLLECTION_NAME = 'devices';
+
+export type RaspberryRevisionData = {
+  manufacturer: string;
+  processor: string;
+  type: string;
+  revision: string;
+}
+
 export default interface Device {
   _id: string;
   uuid: string;
@@ -32,6 +40,7 @@ export default interface Device {
   mem?: number;
   agentVersion?: string;
   versions?: API.VersionData;
+  raspberry?:RaspberryRevisionData;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -146,6 +155,10 @@ const schema = new Schema<Device>(
       required: false,
     },
     versions: {
+      type: Object,
+      required: false,
+    },
+    raspberry: {
       type: Object,
       required: false,
     },

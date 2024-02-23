@@ -30,6 +30,7 @@ async function updateDeviceFromJson(body: any, device: Device) {
   device.cpuSpeed = deviceInfo.cpu?.speed;
   device.mem = deviceInfo.mem?.memTotalMb;
   device.status = DeviceStatus.ONLINE;
+  device.raspberry = deviceInfo.system?.raspberry;
   await DeviceRepo.update(device);
   return device;
 }
