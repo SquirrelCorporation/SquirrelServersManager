@@ -79,7 +79,7 @@ export const OsLogo = (logoFile: string | undefined): string => {
     case 'redhat':
       return redhat;
     case 'steam':
-      return '';
+      return generic;
     case 'suse':
       return suse;
     case 'mate':

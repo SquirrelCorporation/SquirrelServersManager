@@ -16,7 +16,7 @@ async function updateDeviceFromJson(body: any, device: Device) {
   device.osDistro = deviceInfo.os?.distro;
   device.osCodeName = deviceInfo.os?.codename;
   device.osKernel = deviceInfo.os?.kernel;
-  device.osLogoFile = deviceInfo.os?.logofile;
+  device.osLogoFile = deviceInfo.system?.raspberry?.type ? 'raspbian' : deviceInfo.os?.logofile;
   device.systemManufacturer = deviceInfo.system?.manufacturer;
   device.systemModel = deviceInfo.system?.model;
   device.systemVersion = deviceInfo.system?.version;
