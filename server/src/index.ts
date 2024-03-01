@@ -24,6 +24,7 @@ app.use(
     saveUninitialized: false,
     cookie: { maxAge: 86400000 },
     store: MongoStore.create({
+      // @ts-ignore
       clientPromise: connection().then((con) => con.getClient()),
       dbName: db.name,
       stringify: false,
