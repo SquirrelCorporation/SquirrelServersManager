@@ -58,7 +58,7 @@ const AvailabilityCard: React.FC = () => {
             <Typography.Text>Last Month</Typography.Text>
             <span className={styles.trendText}>
               <Typography.Text>
-                {availabilityStat?.lastMonth.toFixed(5) || 'None'}%
+                {availabilityStat?.lastMonth?.toFixed(5) || 'None'}%
               </Typography.Text>
             </span>
           </Trend>
