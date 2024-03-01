@@ -4,171 +4,101 @@ import { PageContainer, StatisticCard } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
 import { Card, Col, Row, theme } from 'antd';
 import React from 'react';
+import TotalDeviceCard from "@/pages/Dashboard/TotalDeviceCard";
+import MainChartCard from "@/pages/Dashboard/Components/MainChartCard";
+import moment from "moment";
+import styles from './Dashboard/Analysis.less';
 
-const InfoCard: React.FC<{
-  title: string;
-  index: number;
-  desc: string;
-  href: string;
-}> = ({ title, href, index, desc }) => {
-  const { useToken } = theme;
+export function fixedZero(val: number) {
+  return val * 1 < 10 ? `0${val}` : val;
+}
 
-  const { token } = useToken();
+export function getTimeDistance(type: string) {
+  const now = new Date();
+  const oneDay = 1000 * 60 * 60 * 24;
 
-  return (
-    <div
-      style={{
-        backgroundColor: token.colorBgContainer,
-        boxShadow: token.boxShadow,
-        borderRadius: '8px',
-        fontSize: '14px',
-        color: token.colorTextSecondary,
-        lineHeight: '22px',
-        padding: '16px 19px',
-        minWidth: '220px',
-        flex: 1,
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          gap: '4px',
-          alignItems: 'center',
-        }}
-      >
-        <div
-          style={{
-            width: 48,
-            height: 48,
-            lineHeight: '22px',
-            backgroundSize: '100%',
-            textAlign: 'center',
-            padding: '8px 16px 16px 12px',
-            color: '#FFF',
-            fontWeight: 'bold',
-            backgroundImage:
-              "url('https://gw.alipayobjects.com/zos/bmw-prod/daaf8d50-8e6d-4251-905d-676a24ddfa12.svg')",
-          }}
-        >
-          {index}
-        </div>
-        <div
-          style={{
-            fontSize: '16px',
-            color: token.colorText,
-            paddingBottom: 8,
-          }}
-        >
-          {title}
-        </div>
-      </div>
-      <div
-        style={{
-          fontSize: '14px',
-          color: token.colorTextSecondary,
-          textAlign: 'justify',
-          lineHeight: '22px',
-          marginBottom: 8,
-        }}
-      >
-        {desc}
-      </div>
-      <a href={href} target="_blank" rel="noreferrer">
-        了解更多 {'>'}
-      </a>
-    </div>
-  );
-};
+  if (type === 'today') {
+    now.setHours(0);
+    now.setMinutes(0);
+    now.setSeconds(0);
+    return [moment(now), moment(now.getTime() + (oneDay - 1000))];
+  }
+
+  if (type === 'week') {
+    let day = now.getDay();
+    now.setHours(0);
+    now.setMinutes(0);
+    now.setSeconds(0);
+
+    if (day === 0) {
+      day = 6;
+    } else {
+      day -= 1;
+    }
+
+    const beginTime = now.getTime() - day * oneDay;
+
+    return [moment(beginTime), moment(beginTime + (7 * oneDay - 1000))];
+  }
+
+  if (type === 'month') {
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const nextDate = moment(now).add(1, 'months');
+    const nextYear = nextDate.year();
+    const nextMonth = nextDate.month();
+
+    return [
+      moment(`${year}-${fixedZero(month + 1)}-01 00:00:00`),
+      moment(moment(`${nextYear}-${fixedZero(nextMonth + 1)}-01 00:00:00`).valueOf() - 1000),
+    ];
+  }
+
+  const year = now.getFullYear();
+  return [moment(`${year}-01-01 00:00:00`), moment(`${year}-12-31 23:59:59`)];
+}
 
 const Welcome: React.FC = () => {
   const { initialState } = useModel('@@initialState');
+  const [rangePickerValue, setRangePickerValue ] = React.useState(getTimeDistance('year'));
+  const [loading, setLoading] = React.useState(false);
   const imgStyle = {
     display: 'block',
     width: 42,
     height: 42,
   };
+
+  const isActive = (type: string) => {
+    const value = getTimeDistance(type);
+    if (!rangePickerValue[0] || !rangePickerValue[1]) {
+      return '';
+    }
+    if (
+      rangePickerValue[0].isSame(value[0], 'day') &&
+      rangePickerValue[1].isSame(value[1], 'day')
+    ) {
+      return styles.currentDate;
+    }
+    return '';
+  };
+
+  const handleRangePickerChange = (newRangePickerValue) => {
+    setRangePickerValue(newRangePickerValue);
+  };
+
+  const selectDate = (type: string) => {
+    setRangePickerValue(getTimeDistance(type))
+  };
   return (
     <PageContainer>
-      <Card
-        style={{
-          borderRadius: 8,
-        }}
-        bodyStyle={{
-          backgroundImage:
-            initialState?.settings?.navTheme === 'realDark'
-              ? 'background-image: linear-gradient(75deg, #1A1B1F 0%, #191C1F 100%)'
-              : 'background-image: linear-gradient(75deg, #FBFDFF 0%, #F5F7FF 100%)',
-        }}
-      >
-        <div
-          style={{
-            backgroundPosition: '100% -30%',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: '274px auto',
-          }}
-        >
-          <StatisticCard.Group direction={'row'}>
-            <StatisticCard
-              statistic={{
-                title: 'Devices',
-                value: 2,
-                icon: <ClusterOutlined style={{ fontSize: '40px', color: '#08c' }} />,
-              }}
-            />
-            <StatisticCard
-              statistic={{
-                title: 'Online',
-                value: 475,
-                icon: <UpCircleOutlined style={{ fontSize: '40px', color: 'green' }} />,
-              }}
-            />
-            <StatisticCard
-              statistic={{
-                title: '成功订单数',
-                value: 87,
-                icon: (
-                  <img
-                    style={imgStyle}
-                    src="https://gw.alipayobjects.com/mdn/rms_7bc6d8/afts/img/A*FPlYQoTNlBEAAAAAAAAAAABkARQnAQ"
-                    alt="icon"
-                  />
-                ),
-              }}
-            />
-            <StatisticCard
-              statistic={{
-                title: '浏览量',
-                value: 1754,
-                icon: (
-                  <img
-                    style={imgStyle}
-                    src="https://gw.alipayobjects.com/mdn/rms_7bc6d8/afts/img/A*pUkAQpefcx8AAAAAAAAAAABkARQnAQ"
-                    alt="icon"
-                  />
-                ),
-              }}
-            />
-          </StatisticCard.Group>
-        </div>
-      </Card>
-      <Card
-        style={{
-          borderRadius: 8,
-          marginTop: '10px',
-        }}
-        bodyStyle={{
-          backgroundImage:
-            initialState?.settings?.navTheme === 'realDark'
-              ? 'background-image: linear-gradient(75deg, #1A1B1F 0%, #191C1F 100%)'
-              : 'background-image: linear-gradient(75deg, #FBFDFF 0%, #F5F7FF 100%)',
-        }}
-      >
-        <Row>
-          <Col span={6}>
-            <DemoLine />
-          </Col>
-        </Row>
-      </Card>
+      <TotalDeviceCard/>
+      <MainChartCard
+        rangePickerValue={rangePickerValue}
+        isActive={isActive}
+        handleRangePickerChange={handleRangePickerChange}
+        loading={loading}
+        selectDate={selectDate}
+      />
     </PageContainer>
   );
 };

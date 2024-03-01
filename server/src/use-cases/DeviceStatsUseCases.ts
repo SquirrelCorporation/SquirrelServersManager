@@ -57,6 +57,73 @@ async function getStatsByDeviceAndType(
   }
 }
 
+async function getStatsByDevicesAndType(
+  devices: Device[],
+  from: number,
+  to: number,
+  type?: string,
+): Promise<[{ date: string; value: string; name: string }] | null> {
+  logger.info(
+    `[USECASE] - findStatsByDevicesAndType - type: ${type}, from: ${from}, nb devices: ${devices.length}`,
+  );
+  switch (type) {
+    case 'cpu':
+      return await DeviceStatRepo.findStatsByDevicesAndType(devices, '$cpuUsage', from, to);
+    case 'memUsed':
+      return await DeviceStatRepo.findStatsByDevicesAndType(
+        devices,
+        '$memUsedPercentage',
+        from,
+        to,
+      );
+    case 'memFree':
+      return await DeviceStatRepo.findStatsByDevicesAndType(
+        devices,
+        '$memFreePercentage',
+        from,
+        to,
+      );
+    default:
+      throw new Error('Unknown Type');
+  }
+}
+
+async function getSingleAveragedStatsByDevicesAndType(
+  devices: Device[],
+  from: number,
+  to: number,
+  type?: string,
+): Promise<[{ value: string; name: string }] | null> {
+  logger.info(
+    `[USECASE] - findSingleAveragedStatByDevicesAndType - type: ${type}, from: ${from}, nb devices: ${devices.length}`,
+  );
+  switch (type) {
+    case 'cpu':
+      return await DeviceStatRepo.findSingleAveragedStatByDevicesAndType(
+        devices,
+        '$cpuUsage',
+        from,
+        to,
+      );
+    case 'memUsed':
+      return await DeviceStatRepo.findSingleAveragedStatByDevicesAndType(
+        devices,
+        '$memUsedPercentage',
+        from,
+        to,
+      );
+    case 'memFree':
+      return await DeviceStatRepo.findSingleAveragedStatByDevicesAndType(
+        devices,
+        '$memFreePercentage',
+        from,
+        to,
+      );
+    default:
+      throw new Error('Unknown Type');
+  }
+}
+
 async function getStatByDeviceAndType(
   device: Device,
   type?: string,
@@ -74,8 +141,29 @@ async function getStatByDeviceAndType(
   }
 }
 
+async function getSingleAveragedStatByType(
+  from: number,
+  to: number,
+  type?: string,
+): Promise<[{ value: number }] | null> {
+  logger.info(`[USECASE] - getStatByType - type: ${type}`);
+  switch (type) {
+    case 'cpu':
+      return await DeviceStatRepo.findSingleAveragedStatAndType('$cpuUsage', from, to);
+    case 'memUsed':
+      return await DeviceStatRepo.findSingleAveragedStatAndType('$memUsedPercentage', from, to);
+    case 'memFree':
+      return await DeviceStatRepo.findSingleAveragedStatAndType('$memFreePercentage', from, to);
+    default:
+      throw new Error('Unknown Type');
+  }
+}
+
 export default {
   createStatIfMinInterval,
   getStatsByDeviceAndType,
   getStatByDeviceAndType,
+  getStatsByDevicesAndType,
+  getSingleAveragedStatsByDevicesAndType,
+  getSingleAveragedStatByType,
 };

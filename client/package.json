@@ -72,7 +72,8 @@
     "rc-banner-anim": "^2.4.5",
     "rc-queue-anim": "^2.0.0",
     "rc-tween-one": "^3.0.6",
-    "react-confetti": "^6.1.0"
+    "react-confetti": "^6.1.0",
+    "@antv/g2plot": "^2.4.31"
   },
   "devDependencies": {
     "antd-pro-merge-less": "^3.0.11",
@@ -105,6 +106,6 @@
     "@typescript-eslint/eslint-plugin": "^7.0.2"
   },
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=20.0.0"
   }
 }

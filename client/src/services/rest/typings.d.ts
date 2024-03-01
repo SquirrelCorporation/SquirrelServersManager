@@ -18,7 +18,17 @@ declare namespace API {
     devices?: {
       online?: number;
       offline?: number;
-      statuses?: [{ name?: string; status?: string }];
+      totalCpu?: number;
+      totalMem?: number;
+      overview?: [
+        {
+          name?: string;
+          status?: string;
+          uuid?: string;
+          mem?: number;
+          cpu?: number;
+        },
+      ];
     };
     settings?: Settings;
   };
@@ -133,7 +143,7 @@ declare namespace API {
     processor?: string;
     type?: string;
     revision?: string;
-  }
+  };
 
   type DeviceItem = {
     uuid: string;
@@ -228,18 +238,28 @@ declare namespace API {
     from?: number;
   };
 
+  type DashboardDevicesStatParams = {
+    from?: number;
+  };
+
   type DeviceStats = {
     data?: DeviceStat[];
     success?: boolean;
   };
+
   type DeviceStat = {
     date: string;
     value: number;
   };
+
   type SimpleDeviceStat = {
     value: number;
   };
 
+  type AveragedDeviceStat = {
+    data?: [{ value: number; name: string }];
+    success?: boolean;
+  };
   type PlaybookFileList = {
     label: string;
     value: string;
@@ -289,5 +309,30 @@ declare namespace API {
 
   type UserSettingsResetApiKey = {
     uuid: string;
+  };
+
+  type PerformanceStatResponse = {
+    data?: PerformanceStat;
+    success?: boolean;
+  };
+
+  type PerformanceStat = {
+    currentMem: number;
+    previousMem: number;
+    currentCpu: number;
+    previousCpu: number;
+  };
+
+  type DeviceStatAvailability = {
+    data?: AvailabilityStat;
+    success?: boolean;
+  };
+
+  type AvailabilityStat = {
+    availability: number;
+    lastMonth: number;
+    byDevice: [
+      { uuid: string; uptime: number; downtime: number; availability: number },
+    ];
   };
 }

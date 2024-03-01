@@ -3,6 +3,7 @@ import DeviceRepo from '../../database/repository/DeviceRepo';
 import Authentication from '../../middlewares/Authentication';
 import DeviceStatsUseCases from '../../use-cases/DeviceStatsUseCases';
 import DeviceUseCases from '../../use-cases/DeviceUseCases';
+import logger from '../../logger';
 
 const router = express.Router();
 

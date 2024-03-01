@@ -49,33 +49,46 @@ router.post(`/createFirstUser`, async (req, res) => {
 });
 
 router.get(`/currentUser`, Authentication.isAuthenticated, async (req, res) => {
-  logger.info(`[CONTROLLER][USER] - /currentUser ${req.user?.email}`);
+  // @ts-expect-error TODO extends default express type
+  const user = req.user as User;
+  logger.info(`[CONTROLLER][USER] - /currentUser ${user?.email}`);
   const devices = await DeviceRepo.findAll();
   const offline = devices?.filter((e) => e.status === DeviceStatus.OFFLINE).length;
   const online = devices?.filter((e) => e.status === DeviceStatus.ONLINE).length;
-  const simpleStatuses = devices?.map((e) => {
+  const overview = devices?.map((e) => {
     return {
       name: e.fqdn,
       status: e.status === DeviceStatus.ONLINE ? 'online' : 'offline',
+      uuid: e.uuid,
+      cpu: e.cpuSpeed,
+      mem: e.mem,
     };
   });
+  const totalCpu = devices?.reduce((accumulator, currentValue) => {
+    return accumulator + (currentValue?.cpuSpeed || 0);
+  }, 0);
+  const totalMem = devices?.reduce((accumulator, currentValue) => {
+    return accumulator + (currentValue?.mem || 0);
+  }, 0);
   res.send({
     success: true,
     data: {
-      name: req.user?.name,
-      avatar: req.user?.avatar,
-      email: req.user?.email,
+      name: user?.name,
+      avatar: user?.avatar,
+      email: user?.email,
       notifyCount: 12,
       unreadCount: 11,
-      access: req.user?.role,
+      access: user?.role,
       devices: {
         online: online,
         offline: offline,
-        statuses: simpleStatuses,
+        totalCpu: totalCpu,
+        totalMem: totalMem ? totalMem / 1024 : NaN,
+        overview: overview,
       },
       settings: {
-        logsLevel: req.user.logsLevel,
-        apiKey: req.user?.apiKey,
+        logsLevel: user.logsLevel,
+        apiKey: user?.apiKey,
         device: {
           considerOffLineAfter: CONSIDER_DEVICE_OFFLINE,
         },

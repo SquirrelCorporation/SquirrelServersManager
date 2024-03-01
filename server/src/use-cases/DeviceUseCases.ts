@@ -2,6 +2,7 @@ import Device, { DeviceStatus } from '../database/model/Device';
 import DeviceRepo from '../database/repository/DeviceRepo';
 import logger from '../logger';
 import API from '../typings';
+import DeviceDownTimeEventRepo from '../database/repository/DeviceDownTimeEventRepo';
 
 async function updateDeviceFromJson(body: any, device: Device) {
   logger.debug(body);
@@ -29,7 +30,10 @@ async function updateDeviceFromJson(body: any, device: Device) {
   device.versions = deviceInfo.os?.versionData;
   device.cpuSpeed = deviceInfo.cpu?.speed;
   device.mem = deviceInfo.mem?.memTotalMb;
-  device.status = DeviceStatus.ONLINE;
+  if (device.status !== DeviceStatus.ONLINE) {
+    await DeviceDownTimeEventRepo.closeDownTimeEvent(device);
+    device.status = DeviceStatus.ONLINE;
+  }
   device.raspberry = deviceInfo.system?.raspberry;
   await DeviceRepo.update(device);
   return device;

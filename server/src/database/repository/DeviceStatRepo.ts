@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { DateTime } from 'luxon';
 import DeviceStat, { DeviceStatModel } from '../model/DeviceStat';
 import Device from '../model/Device';
+import logger from '../../logger';
 
 async function create(deviceStat: DeviceStat): Promise<DeviceStat> {
   const createdDeviceStat = await DeviceStatModel.create(deviceStat);
@@ -37,10 +38,96 @@ async function findStatsByDeviceAndType(
     .exec();
 }
 
+async function findStatsByDevicesAndType(
+  devices: Device[],
+  type: string,
+  from: number,
+  to: number,
+): Promise<[{ date: string; value: string; name: string }] | null> {
+  const ObjectId = mongoose.Types.ObjectId;
+  return (await DeviceStatModel.aggregate([
+    {
+      $match: {
+        device: { $in: devices.map((e) => new ObjectId(e._id)) },
+        createdAt: { $gt: DateTime.now().minus({ hour: from }).toJSDate() },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          device: '$device',
+          byHour: { $dateToString: { format: '%Y-%m-%d-%H:00:00', date: '$createdAt' } },
+        },
+        averageValue: { $avg: `${type}` },
+      },
+    },
+    {
+      $lookup: {
+        from: 'devices',
+        localField: '_id.device',
+        foreignField: '_id',
+        as: 'fulldevice',
+      },
+    },
+    { $unwind: '$fulldevice' },
+    {
+      $project: {
+        _id: '',
+        date: '$_id.byHour',
+        value: '$averageValue',
+        name: { $concat: ['$fulldevice.fqdn', ' - ', '$fulldevice.ip'] },
+      },
+    },
+  ])
+    .sort({ date: 1 })
+    .exec()) as [{ date: string; value: string; name: string }] | null;
+}
+
+async function findSingleAveragedStatByDevicesAndType(
+  devices: Device[],
+  type: string,
+  from: number,
+  to: number,
+): Promise<[{ value: string; name: string }] | null> {
+  const ObjectId = mongoose.Types.ObjectId;
+  return (await DeviceStatModel.aggregate([
+    {
+      $match: {
+        device: { $in: devices.map((e) => new ObjectId(e._id)) },
+        createdAt: { $gt: DateTime.now().minus({ hour: from }).toJSDate() },
+      },
+    },
+    {
+      $group: {
+        _id: { device: '$device' },
+        averageValue: { $avg: `${type}` },
+      },
+    },
+    {
+      $lookup: {
+        from: 'devices',
+        localField: '_id.device',
+        foreignField: '_id',
+        as: 'fulldevice',
+      },
+    },
+    { $unwind: '$fulldevice' },
+    {
+      $project: {
+        _id: '',
+        value: '$averageValue',
+        name: { $concat: ['$fulldevice.fqdn', ' - ', '$fulldevice.ip'] },
+      },
+    },
+  ])
+    .sort({ value: -1 })
+    .exec()) as [{ date: string; value: string; name: string }] | null;
+}
+
 async function findStatByDeviceAndType(
   device: Device,
   type: string,
-): Promise<[{ _id: string; value: number; createdAt: string }] | null> {
+): Promise<[{ _id: string; value: number; createdAt: string; name: string }] | null> {
   const ObjectId = mongoose.Types.ObjectId;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
@@ -61,9 +148,40 @@ async function findStatByDeviceAndType(
   ]).exec();
 }
 
+async function findSingleAveragedStatAndType(
+  type: string,
+  from: number,
+  to: number,
+): Promise<[{ value: number }] | null> {
+  return (await DeviceStatModel.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $gt: DateTime.now().minus({ day: from }).toJSDate(),
+          $lt: DateTime.now().minus({ day: to }).toJSDate(),
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        averageValue: { $avg: `${type}` },
+      },
+    },
+    {
+      $project: {
+        value: '$averageValue',
+      },
+    },
+  ]).exec()) as [{ value: number }] | null;
+}
+
 export default {
   create,
   findLatestStat,
   findStatsByDeviceAndType,
   findStatByDeviceAndType,
+  findStatsByDevicesAndType,
+  findSingleAveragedStatByDevicesAndType,
+  findSingleAveragedStatAndType,
 };

@@ -9,6 +9,7 @@ import * as user from './user';
 const router = express.Router();
 
 /*---------------------------------------------------------*/
+router.use('/devices', devices.devicestatsdashboard);
 router.use('/devices', devices.devices);
 router.use('/devices', devices.devicestats);
 router.use('/devices', devices.deviceauth);

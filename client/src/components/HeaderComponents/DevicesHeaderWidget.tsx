@@ -74,7 +74,7 @@ export const DevicesHeaderWidget: React.FC = () => {
   };
 
   const items: MenuProps['items'] =
-    currentUser?.devices?.statuses?.map(
+    currentUser?.devices?.overview?.map(
       (e: { name?: string; status?: string }, index: number) => {
         return {
           key: `${index}`,
