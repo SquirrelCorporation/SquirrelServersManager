@@ -38,7 +38,9 @@ const SystemPerformanceCard: React.FC = () => {
       bordered={false}
       title={<Typography.Title level={5}>System Performance</Typography.Title>}
       action={
-        <Tooltip title={'Introduce'}>
+        <Tooltip
+          title={'System performance settings can be defined in settings'}
+        >
           <InfoCircleFilled style={{ color: 'white' }} />
         </Tooltip>
       }

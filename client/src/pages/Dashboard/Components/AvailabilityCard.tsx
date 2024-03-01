@@ -5,10 +5,7 @@ import styles from '@/pages/Dashboard/Analysis.less';
 import MiniProgress from '@/pages/Dashboard/ChartComponents/MiniProgress';
 import ChartCard from '@/pages/Dashboard/ChartComponents/ChartCard';
 import React, { useEffect } from 'react';
-import {
-  getDashboardAvailabilityStat,
-  getDashboardSystemPerformance,
-} from '@/services/rest/devicestat';
+import { getDashboardAvailabilityStat } from '@/services/rest/devicestat';
 
 const AvailabilityCard: React.FC = () => {
   const [loading, setLoading] = React.useState(false);
@@ -36,11 +33,11 @@ const AvailabilityCard: React.FC = () => {
       bordered={false}
       title={<Typography.Title level={5}>System Availability</Typography.Title>}
       action={
-        <Tooltip title={'This week'}>
+        <Tooltip title={'This month'}>
           <InfoCircleFilled style={{ color: 'white' }} />
         </Tooltip>
       }
-      total={`${availabilityStat ? (availabilityStat.availability * 100).toFixed(5) : 'NaN'}%`}
+      total={`${availabilityStat ? (availabilityStat.availability < 1 ? (availabilityStat.availability * 100).toFixed(5) : 100) : 'NaN'}%`}
       footer={
         <div style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
           <Trend
@@ -49,7 +46,9 @@ const AvailabilityCard: React.FC = () => {
               availabilityStat.availability &&
               availabilityStat.lastMonth
                 ? availabilityStat.availability >= availabilityStat.lastMonth
-                  ? 'up'
+                  ? availabilityStat.availability === availabilityStat.lastMonth
+                    ? 'eq'
+                    : 'up'
                   : 'down'
                 : ''
             }
@@ -58,7 +57,12 @@ const AvailabilityCard: React.FC = () => {
             <Typography.Text>Last Month</Typography.Text>
             <span className={styles.trendText}>
               <Typography.Text>
-                {availabilityStat?.lastMonth?.toFixed(5) || 'None'}%
+                {availabilityStat
+                  ? availabilityStat.lastMonth < 1
+                    ? (availabilityStat.lastMonth * 100).toFixed(5)
+                    : 100
+                  : 'None'}
+                %
               </Typography.Text>
             </span>
           </Trend>
@@ -69,13 +73,9 @@ const AvailabilityCard: React.FC = () => {
       <MiniProgress
         percent={
           availabilityStat
-            ? (availabilityStat.availability * 100).toFixed(2)
+            ? (availabilityStat.availability * 100).toFixed(0)
             : 0
         }
-        strokeWidth={8}
-        target={80}
-        targetLabel={`${'test'.concat(': ')}80%`}
-        color="#13C2C2"
       />
     </ChartCard>
   );

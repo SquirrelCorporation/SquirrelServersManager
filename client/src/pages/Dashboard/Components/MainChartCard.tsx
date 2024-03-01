@@ -10,44 +10,68 @@ import {
 } from 'antd';
 import styles from '../Analysis.less';
 import { Line } from '@ant-design/plots';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   getDashboardAveragedDevicesStats,
   getDashboardDevicesStats,
 } from '@/services/rest/devicestat';
 import { useModel } from '@umijs/max';
+import { getTimeDistance } from '@/utils/time';
 
 const { RangePicker } = DatePicker;
 
-const MainChartCard: React.FC<any> = ({
-  rangePickerValue,
-  isActive,
-  handleRangePickerChange,
-  selectDate,
-}) => {
+const MainChartCard: React.FC<any> = ({}) => {
   const { initialState } = useModel('@@initialState');
   const { currentUser }: { currentUser: API.CurrentUser } = initialState || {};
-
   const [graphData, setGraphData] = useState([]);
   const [topTenData, setTopTenData] = useState<
     [{ value: number; name: string }] | []
   >([]);
-
   const [devices, setDevices] = useState(
     currentUser?.devices?.overview?.map((e) => e.uuid) || [],
   );
   const [type, setType] = useState('cpu');
+  const [rangePickerValue, setRangePickerValue] = React.useState(
+    getTimeDistance('year'),
+  );
 
+  const isActive = (dateType: string) => {
+    const value = getTimeDistance(dateType);
+    if (!rangePickerValue[0] || !rangePickerValue[1]) {
+      return '';
+    }
+    if (
+      rangePickerValue[0].isSame(value[0], 'day') &&
+      rangePickerValue[1].isSame(value[1], 'day')
+    ) {
+      return styles.currentDate;
+    }
+    return '';
+  };
+
+  const handleRangePickerChange = (newRangePickerValue: any) => {
+    setRangePickerValue(newRangePickerValue);
+  };
+
+  const selectDate = (dateType: string) => {
+    setRangePickerValue(getTimeDistance(dateType));
+  };
   const asyncFetch = async () => {
-    if (devices) {
-      await getDashboardDevicesStats(devices, type, { from: 24 })
+    if (devices && devices.length > 0) {
+      await getDashboardDevicesStats(devices, type, {
+        from: rangePickerValue[0],
+        to: rangePickerValue[1],
+      })
         .then((response) => {
           setGraphData(response.data);
         })
         .catch((error) => {
           console.log('fetch data failed', error);
         });
-      await getDashboardAveragedDevicesStats(devices, type, { from: 24 })
+      await getDashboardAveragedDevicesStats(devices, type, {
+        from: rangePickerValue[0],
+        to: rangePickerValue[1],
+      })
         .then((response) => setTopTenData(response.data))
         .catch((error) => {
           console.log('fetch data failed', error);
@@ -57,7 +81,7 @@ const MainChartCard: React.FC<any> = ({
 
   useEffect(() => {
     asyncFetch();
-  }, [devices, type]);
+  }, [devices, type, rangePickerValue]);
 
   const config = {
     data: graphData,

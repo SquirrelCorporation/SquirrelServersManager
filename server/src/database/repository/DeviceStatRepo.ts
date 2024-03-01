@@ -41,15 +41,15 @@ async function findStatsByDeviceAndType(
 async function findStatsByDevicesAndType(
   devices: Device[],
   type: string,
-  from: number,
-  to: number,
+  from: Date,
+  to: Date,
 ): Promise<[{ date: string; value: string; name: string }] | null> {
   const ObjectId = mongoose.Types.ObjectId;
   return (await DeviceStatModel.aggregate([
     {
       $match: {
         device: { $in: devices.map((e) => new ObjectId(e._id)) },
-        createdAt: { $gt: DateTime.now().minus({ hour: from }).toJSDate() },
+        createdAt: { $gte: from, $lte: to },
       },
     },
     {
@@ -86,15 +86,18 @@ async function findStatsByDevicesAndType(
 async function findSingleAveragedStatByDevicesAndType(
   devices: Device[],
   type: string,
-  from: number,
-  to: number,
+  from: Date,
+  to: Date,
 ): Promise<[{ value: string; name: string }] | null> {
   const ObjectId = mongoose.Types.ObjectId;
+  logger.info(
+    `[DEVICESTATREPO] - findSingleAveragedStatByDevicesAndType - from: ${from} - to: ${to}`,
+  );
   return (await DeviceStatModel.aggregate([
     {
       $match: {
         device: { $in: devices.map((e) => new ObjectId(e._id)) },
-        createdAt: { $gt: DateTime.now().minus({ hour: from }).toJSDate() },
+        createdAt: { $gte: from, $lte: to },
       },
     },
     {

@@ -38,10 +38,10 @@ router.post(
   `/dashboard/stats/averaged/:type/`,
   Authentication.isAuthenticated,
   async (req, res) => {
-    const { from = 24, to = 0 } = req.query;
+    const { from, to } = req.query;
     const devices = req.body.devices;
     logger.info(`[CONTROLLER] /dashboard/stats/averaged/${req.params.type}`);
-    if (!devices) {
+    if (!devices || !from || !to) {
       res.status(401).send({
         success: false,
       });
@@ -49,16 +49,23 @@ router.post(
     }
     try {
       const devicesToQuery = await DeviceRepo.findByIds(devices);
-      if (!devicesToQuery || devicesToQuery.length != devices.length) {
+      if (!devicesToQuery || devicesToQuery.length !== devices.length) {
         res.status(401).send({
           success: false,
         });
         return;
       }
+      // 1982-05-25T09:45
+      const fromDate = DateTime.fromJSDate(new Date((from as string).split('T')[0]))
+        .endOf('day')
+        .toJSDate();
+      const toDate = DateTime.fromJSDate(new Date((to as string).split('T')[0]))
+        .endOf('day')
+        .toJSDate();
       const stats = await DeviceStatsUseCases.getSingleAveragedStatsByDevicesAndType(
         devicesToQuery,
-        from as number,
-        to as number,
+        fromDate,
+        toDate,
         req.params.type,
       );
       res.send({
@@ -97,14 +104,17 @@ router.get(`/dashboard/stats/availability`, Authentication.isAuthenticated, asyn
   const LastMonthTotalDownTime = lastMonthAvailabilities?.reduce((accumulator, currentValue) => {
     return accumulator + currentValue.downtime;
   }, 0);
+
   try {
     res.send({
       success: true,
       data: {
         availability:
-          totalUptime && totalDownTime ? totalUptime / (totalUptime + totalDownTime) : undefined,
+          totalUptime !== undefined && totalDownTime !== undefined
+            ? totalUptime / (totalUptime + totalDownTime)
+            : undefined,
         lastMonth:
-          lastMonthTotalUptime && LastMonthTotalDownTime
+          lastMonthTotalUptime !== undefined && LastMonthTotalDownTime !== undefined
             ? lastMonthTotalUptime / (lastMonthTotalUptime + LastMonthTotalDownTime)
             : undefined,
         byDevice: availabilities,
@@ -120,11 +130,9 @@ router.get(`/dashboard/stats/availability`, Authentication.isAuthenticated, asyn
 });
 
 router.post(`/dashboard/stats/:type/`, Authentication.isAuthenticated, async (req, res) => {
-  const { from = 24, to = 0 } = req.query;
+  const { from, to } = req.query;
   const devices = req.body.devices;
   logger.info(`[CONTROLLER] /dashboard/stats/${req.params.type}`);
-  logger.info(`[CONTROLLER] ${JSON.stringify(req.body)}`);
-  logger.info(`[CONTROLLER] --- ${devices}`);
   if (!devices) {
     res.status(401).send({
       success: false,
@@ -133,16 +141,22 @@ router.post(`/dashboard/stats/:type/`, Authentication.isAuthenticated, async (re
   }
   try {
     const devicesToQuery = await DeviceRepo.findByIds(devices);
-    if (!devicesToQuery || devicesToQuery.length != devices.length) {
+    if (!devicesToQuery || devicesToQuery.length !== devices.length) {
       res.status(401).send({
         success: false,
       });
       return;
     }
+    const fromDate = DateTime.fromJSDate(new Date((from as string).split('T')[0]))
+      .endOf('day')
+      .toJSDate();
+    const toDate = DateTime.fromJSDate(new Date((to as string).split('T')[0]))
+      .endOf('day')
+      .toJSDate();
     const stats = await DeviceStatsUseCases.getStatsByDevicesAndType(
       devicesToQuery,
-      from as number,
-      to as number,
+      fromDate,
+      toDate,
       req.params.type,
     );
     res.send({

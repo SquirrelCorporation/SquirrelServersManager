@@ -14,7 +14,7 @@ const CombinedPowerCard: React.FC = () => {
     currentUser?.devices?.overview?.map((device, index) => {
       return {
         type: 'cpu',
-        uuid: device.uuid,
+        uuid: `${index}-${device.name}`,
         value: (device.cpu || 0) / (currentUser?.devices?.totalCpu || 1),
       };
     }) || [];
@@ -22,7 +22,7 @@ const CombinedPowerCard: React.FC = () => {
     currentUser?.devices?.overview?.map((device, index) => {
       return {
         type: 'mem',
-        uuid: device.uuid,
+        uuid: `${index}-${device.name}`,
         value: (device.mem || 0) / 1024 / (currentUser?.devices?.totalMem || 1),
       };
     }) || [];
@@ -37,8 +37,7 @@ const CombinedPowerCard: React.FC = () => {
     paddingTop: 20,
     stack: true,
     height: 100,
-    width: 280,
-    autoFit: false,
+    autoFit: true,
     legend: false,
     axis: { y: false, x: false },
     tooltip: { channel: 'y0', valueFormatter: '.00%' },
@@ -50,14 +49,14 @@ const CombinedPowerCard: React.FC = () => {
       loading={loading}
       title={<Typography.Title level={5}>Combined Power</Typography.Title>}
       action={
-        <Tooltip title={'Introduce'}>
+        <Tooltip title={'Sum of all your devices'}>
           <InfoCircleFilled style={{ color: 'white' }} />
         </Tooltip>
       }
       total={
         <Typography.Title level={3}>
-          {currentUser?.devices?.totalCpu} GhZ /{' '}
-          {currentUser?.devices?.totalMem} Gb{' '}
+          {currentUser?.devices?.totalCpu?.toFixed(2)} GhZ /{' '}
+          {currentUser?.devices?.totalMem?.toFixed(2)} Gb{' '}
         </Typography.Title>
       }
       footer={

@@ -1,22 +1,41 @@
 import styles from './ChartCard.less';
 import classNames from 'classnames';
-import {Typography} from "antd";
+import { Typography } from 'antd';
+import React from 'react';
 
-const ChartCard: React.FC<any> = ({ contentHeight, title, avatar, action, total, footer, children, loading }) => {
-  const renderTotal = total => {
-    let totalDom;
-    switch (typeof total) {
-      case 'undefined':
-        totalDom = null;
-        break;
-      case 'function':
-        totalDom = <div className={styles.total}><Typography.Title level={3}>{total()}</Typography.Title></div>;
-        break;
-      default:
-        totalDom = <div className={styles.total}><Typography.Title level={3}>{total}</Typography.Title></div>;
-    }
-    return totalDom;
-  };
+const renderTotal = (total: any) => {
+  let totalDom;
+  switch (typeof total) {
+    case 'undefined':
+      totalDom = null;
+      break;
+    case 'function':
+      totalDom = (
+        <div className={styles.total}>
+          <Typography.Title level={3}>{total()}</Typography.Title>
+        </div>
+      );
+      break;
+    default:
+      totalDom = (
+        <div className={styles.total}>
+          <Typography.Title level={3}>{total}</Typography.Title>
+        </div>
+      );
+  }
+  return totalDom;
+};
+
+const ChartCard: React.FC<any> = ({
+  contentHeight,
+  title,
+  avatar,
+  action,
+  total,
+  footer,
+  children,
+  loading,
+}) => {
   if (loading) {
     return false;
   }
@@ -37,7 +56,10 @@ const ChartCard: React.FC<any> = ({ contentHeight, title, avatar, action, total,
         </div>
       </div>
       {children && (
-        <div className={styles.content} style={{ height: contentHeight || 'auto' }}>
+        <div
+          className={styles.content}
+          style={{ height: contentHeight || 'auto' }}
+        >
           <div className={contentHeight && styles.contentFixed}>{children}</div>
         </div>
       )}
@@ -52,5 +74,5 @@ const ChartCard: React.FC<any> = ({ contentHeight, title, avatar, action, total,
       )}
     </div>
   );
-}
+};
 export default ChartCard;

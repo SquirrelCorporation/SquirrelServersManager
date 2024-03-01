@@ -1,5 +1,10 @@
 import styles from './Trend.less';
-import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
+import {
+  CaretDownFilled,
+  CaretRightOutlined,
+  CaretUpFilled,
+  LineOutlined,
+} from '@ant-design/icons';
 import classNames from 'classnames';
 import React from 'react';
 
@@ -30,6 +35,7 @@ const Trend: React.FC<any> = ({
         <span className={styles[flag]}>
           {flag === 'up' && <CaretUpFilled />}
           {flag === 'down' && <CaretDownFilled />}
+          {flag === 'eq' && <CaretRightOutlined />}
         </span>
       )}
     </div>

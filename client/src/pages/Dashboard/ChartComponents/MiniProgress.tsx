@@ -1,14 +1,7 @@
 import React from 'react';
 import { Progress, Tooltip } from 'antd';
-import styles from './MiniProgress.less';
 
-const MiniProgress: React.FC<any> = ({
-  targetLabel,
-  target,
-  color = 'rgb(19, 194, 194)',
-  strokeWidth,
-  percent,
-}) => {
+const MiniProgress: React.FC<any> = ({ percent }) => {
   return (
     <Progress
       percent={percent}

@@ -59,8 +59,8 @@ async function getStatsByDeviceAndType(
 
 async function getStatsByDevicesAndType(
   devices: Device[],
-  from: number,
-  to: number,
+  from: Date,
+  to: Date,
   type?: string,
 ): Promise<[{ date: string; value: string; name: string }] | null> {
   logger.info(
@@ -90,12 +90,12 @@ async function getStatsByDevicesAndType(
 
 async function getSingleAveragedStatsByDevicesAndType(
   devices: Device[],
-  from: number,
-  to: number,
+  from: Date,
+  to: Date,
   type?: string,
 ): Promise<[{ value: string; name: string }] | null> {
   logger.info(
-    `[USECASE] - findSingleAveragedStatByDevicesAndType - type: ${type}, from: ${from}, nb devices: ${devices.length}`,
+    `[USECASE] - findSingleAveragedStatByDevicesAndType - type: ${type}, from: ${from}, to: ${to}, nb devices: ${devices.length}`,
   );
   switch (type) {
     case 'cpu':
