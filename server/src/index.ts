@@ -7,7 +7,7 @@ import routes from './controlers';
 import scheduledFunctions from './crons';
 import logger from './logger';
 
-const pino = require('pino-http')();
+//const pino = require('pino-http')();
 
 const app = express();
 
@@ -32,10 +32,10 @@ app.use(
     }),
   }),
 );
-connection().then((con) => {
+connection().then(() => {
   scheduledFunctions();
   app.use('/', routes);
-  const server = app.listen(3000, () =>
+  app.listen(3000, () =>
     logger.info(`
     🐿 Squirrel Servers Manager
     🚀 Server ready at: http://localhost:3000`),

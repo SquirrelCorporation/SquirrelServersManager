@@ -49,7 +49,7 @@ router.post(`/createFirstUser`, async (req, res) => {
 });
 
 router.get(`/currentUser`, Authentication.isAuthenticated, async (req, res) => {
-  // @ts-expect-error TODO extends default express type
+  // @ts-ignore
   const user = req.user as User;
   logger.info(`[CONTROLLER][USER] - /currentUser ${user?.email}`);
   const devices = await DeviceRepo.findAll();
