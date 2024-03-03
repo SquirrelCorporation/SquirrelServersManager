@@ -10,6 +10,7 @@ services:
       - client
       - mongo
       - server
+      - redis
   mongo:
     env_file:
       - ./.env.dev
@@ -17,16 +18,25 @@ services:
     image: mongo
     restart: unless-stopped
     volumes:
-      - ./.data:/data/db
+      - ./.data.dev:/data/db
     command: --quiet
     ports:
       - "${DB_PORT}:27017"
+  redis:
+    container_name: redis-ssm
+    image: redis
+    restart: unless-stopped
+    volumes:
+      - ./.data.redis.dev:/data
+    command: --save 60 1
   server:
     restart: unless-stopped
     external_links:
       - mongo
+      - redis
     depends_on:
       - mongo
+      - redis
     build:
       context: ./server
       target: dev
@@ -37,6 +47,7 @@ services:
     environment:
       NODE_ENV: development
       DEBUG: nodejs-docker-express:*
+      DB_HOST: ${DB_HOST}
       DB_NAME: ${DB_NAME}
       DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}

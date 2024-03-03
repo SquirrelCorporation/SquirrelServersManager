@@ -16,5 +16,5 @@ CMD ["npm", "run", "serve"]
 
 FROM base as dev
 COPY . .
-RUN npm install
+RUN npm install --verbose
 CMD ["npm", "run", "start:pre"]

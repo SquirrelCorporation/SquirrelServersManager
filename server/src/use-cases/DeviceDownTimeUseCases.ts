@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import DeviceDownTimeEventRepo from '../database/repository/DeviceDownTimeEventRepo';
 import DeviceRepo from '../database/repository/DeviceRepo';
 import logger from '../logger';
@@ -29,6 +30,44 @@ async function getDevicesAvailability(from: Date, to: Date) {
   });
 }
 
+async function getDevicesAvailabilitySumUpCurrentMonthLastMonth() {
+  try {
+    const to = new Date();
+    const from = DateTime.now().startOf('month').toJSDate();
+    const availabilities = await getDevicesAvailability(from, to);
+    const totalUptime = availabilities?.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue.uptime;
+    }, 0);
+    const totalDownTime = availabilities?.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue.downtime;
+    }, 0);
+    const fromLastMonth = DateTime.now().minus({ month: 1 }).startOf('month').toJSDate();
+    const toLastMonth = DateTime.now().minus({ month: 1 }).endOf('month').toJSDate();
+    const lastMonthAvailabilities = await getDevicesAvailability(fromLastMonth, toLastMonth);
+    const lastMonthTotalUptime = lastMonthAvailabilities?.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue.uptime;
+    }, 0);
+    const LastMonthTotalDownTime = lastMonthAvailabilities?.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue.downtime;
+    }, 0);
+    return {
+      availability:
+        totalUptime !== undefined && totalDownTime !== undefined
+          ? totalUptime / (totalUptime + totalDownTime)
+          : undefined,
+      lastMonth:
+        lastMonthTotalUptime !== undefined && LastMonthTotalDownTime !== undefined
+          ? lastMonthTotalUptime / (lastMonthTotalUptime + LastMonthTotalDownTime)
+          : undefined,
+      byDevice: availabilities,
+    };
+  } catch (error: any) {
+    logger.error(error);
+    return {};
+  }
+}
+
 export default {
   getDevicesAvailability,
+  getDevicesAvailabilitySumUpCurrentMonthLastMonth,
 };

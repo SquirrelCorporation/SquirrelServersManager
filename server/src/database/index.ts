@@ -3,7 +3,7 @@ import { AuthMechanism } from 'mongodb';
 import { db } from '../config';
 import logger from '../logger';
 
-export const dbURI = `mongodb://mongo:${db.port}/${db.name}`;
+export const dbURI = `mongodb://${db.host}:${db.port}/${db.name}`;
 
 async function connectMongoDb() {
   // Build the connection string

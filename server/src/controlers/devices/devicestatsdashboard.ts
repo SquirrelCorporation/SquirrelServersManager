@@ -55,7 +55,6 @@ router.post(
         });
         return;
       }
-      // 1982-05-25T09:45
       const fromDate = DateTime.fromJSDate(new Date((from as string).split('T')[0]))
         .endOf('day')
         .toJSDate();
@@ -83,41 +82,15 @@ router.post(
 
 router.get(`/dashboard/stats/availability`, Authentication.isAuthenticated, async (req, res) => {
   logger.info(`[CONTROLLER] /dashboard/stats/availability`);
-  const to = new Date();
-  const from = DateTime.now().startOf('month').toJSDate();
-  const availabilities = await DeviceDownTimeUseCases.getDevicesAvailability(from, to);
-  const totalUptime = availabilities?.reduce((accumulator, currentValue) => {
-    return accumulator + currentValue.uptime;
-  }, 0);
-  const totalDownTime = availabilities?.reduce((accumulator, currentValue) => {
-    return accumulator + currentValue.downtime;
-  }, 0);
-  const fromLastMonth = DateTime.now().minus({ month: 1 }).startOf('month').toJSDate();
-  const toLastMonth = DateTime.now().minus({ month: 1 }).endOf('month').toJSDate();
-  const lastMonthAvailabilities = await DeviceDownTimeUseCases.getDevicesAvailability(
-    fromLastMonth,
-    toLastMonth,
-  );
-  const lastMonthTotalUptime = lastMonthAvailabilities?.reduce((accumulator, currentValue) => {
-    return accumulator + currentValue.uptime;
-  }, 0);
-  const LastMonthTotalDownTime = lastMonthAvailabilities?.reduce((accumulator, currentValue) => {
-    return accumulator + currentValue.downtime;
-  }, 0);
-
+  const { availability, lastMonth, byDevice } =
+    await DeviceDownTimeUseCases.getDevicesAvailabilitySumUpCurrentMonthLastMonth();
   try {
     res.send({
       success: true,
       data: {
-        availability:
-          totalUptime !== undefined && totalDownTime !== undefined
-            ? totalUptime / (totalUptime + totalDownTime)
-            : undefined,
-        lastMonth:
-          lastMonthTotalUptime !== undefined && LastMonthTotalDownTime !== undefined
-            ? lastMonthTotalUptime / (lastMonthTotalUptime + LastMonthTotalDownTime)
-            : undefined,
-        byDevice: availabilities,
+        availability: availability,
+        lastMonth: lastMonth,
+        byDevice: byDevice,
       },
     });
   } catch (error: any) {
@@ -133,7 +106,7 @@ router.post(`/dashboard/stats/:type/`, Authentication.isAuthenticated, async (re
   const { from, to } = req.query;
   const devices = req.body.devices;
   logger.info(`[CONTROLLER] /dashboard/stats/${req.params.type}`);
-  if (!devices) {
+  if (!devices || !from || !to) {
     res.status(401).send({
       success: false,
     });

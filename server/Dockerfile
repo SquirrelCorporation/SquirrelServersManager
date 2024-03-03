@@ -15,7 +15,7 @@ ENV NODE_ENV=production
 WORKDIR /server
 COPY . .
 RUN npm install -g typescript
-RUN npm install
+RUN npm install  --verbose
 RUN npm run build
 CMD ["node", "./dist/src/index.js"]
 

@@ -1,11 +1,13 @@
 import MongoStore from 'connect-mongo';
 import express from 'express';
 import session from 'express-session';
-import { SECRET, db } from './config';
+import { createClient } from 'redis';
+import { SECRET, db, redisConf } from './config';
 import { connection, dbURI } from './database';
 import routes from './controlers';
 import scheduledFunctions from './crons';
 import logger from './logger';
+import connectRedis from './redis';
 
 //const pino = require('pino-http')();
 
@@ -34,11 +36,13 @@ app.use(
   }),
 );
 connection().then(() => {
-  scheduledFunctions();
-  app.use('/', routes);
-  app.listen(3000, () =>
-    logger.info(`
+  connectRedis().then(() => {
+    scheduledFunctions();
+    app.use('/', routes);
+    app.listen(3000, () =>
+      logger.info(`
     🐿 Squirrel Servers Manager
     🚀 Server ready at: http://localhost:3000`),
-  );
+    );
+  });
 });

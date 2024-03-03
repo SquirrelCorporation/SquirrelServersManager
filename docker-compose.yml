@@ -10,6 +10,7 @@ services:
       - client
       - mongo
       - server
+      - redis
   mongo:
     container_name: mongo-ssm
     image: mongo
@@ -17,18 +18,28 @@ services:
     volumes:
       - ./.data.prod:/data/db
     command: --quiet
+  redis:
+    container_name: redis-ssm
+    image: redis
+    restart: unless-stopped
+    volumes:
+      - ./.data.redis.prod:/data
+    command: --save 60 1
   server:
     restart: unless-stopped
     external_links:
       - mongo
+      - redis
     depends_on:
       - mongo
+      - redis
     build:
       context: ./server
       target: production
     env_file: .env
     environment:
       NODE_ENV: production
+      DB_HOST: ${DB_HOST}
       DB_NAME: ${DB_NAME}
       DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}
