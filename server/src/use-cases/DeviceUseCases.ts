@@ -4,6 +4,34 @@ import logger from '../logger';
 import API from '../typings';
 import DeviceDownTimeEventRepo from '../database/repository/DeviceDownTimeEventRepo';
 
+async function getDevicesOverview() {
+  const devices = await DeviceRepo.findAll();
+  const offline = devices?.filter((e) => e.status === DeviceStatus.OFFLINE).length;
+  const online = devices?.filter((e) => e.status === DeviceStatus.ONLINE).length;
+  const overview = devices?.map((e) => {
+    return {
+      name: e.fqdn,
+      status: e.status === DeviceStatus.ONLINE ? 'online' : 'offline',
+      uuid: e.uuid,
+      cpu: e.cpuSpeed,
+      mem: e.mem,
+    };
+  });
+  const totalCpu = devices?.reduce((accumulator, currentValue) => {
+    return accumulator + (currentValue?.cpuSpeed || 0);
+  }, 0);
+  const totalMem = devices?.reduce((accumulator, currentValue) => {
+    return accumulator + (currentValue?.mem || 0);
+  }, 0);
+  return {
+    offline: offline,
+    online: online,
+    overview: overview,
+    totalCpu: totalCpu ? totalMem : NaN,
+    totalMem: totalMem ? totalMem / 1024 : NaN,
+  };
+}
+
 async function updateDeviceFromJson(body: any, device: Device) {
   logger.debug(body);
   const deviceInfo: API.DeviceInfo = body;
@@ -41,4 +69,5 @@ async function updateDeviceFromJson(body: any, device: Device) {
 
 export default {
   updateDeviceFromJson,
+  getDevicesOverview,
 };

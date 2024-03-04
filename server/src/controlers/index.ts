@@ -5,6 +5,7 @@ import cron from './admin/cron';
 import * as ansible from './ansible';
 import * as logs from './logs';
 import * as user from './user';
+import * as settings from './settings';
 
 const router = express.Router();
 
@@ -21,6 +22,10 @@ router.use('/ansible/', ansible.execution);
 router.use('/logs/', logs.task);
 router.use('/logs/', logs.server);
 router.use('/ansible/', ansible.playbook);
+router.use('/settings', settings.default);
+router.use('/settings', settings.logs);
+router.use('/settings', settings.dashboard);
+router.use('/settings', settings.devices);
 router.use('/', user.user);
 router.use('/', user.settings);
 

@@ -15,6 +15,8 @@ const SystemPerformanceCard: React.FC = () => {
       currentMem: 0,
       previousCpu: 0,
       previousMem: 0,
+      danger: false,
+      message: '',
     });
 
   const asyncFetch = async () => {
@@ -45,14 +47,21 @@ const SystemPerformanceCard: React.FC = () => {
         </Tooltip>
       }
       loading={loading}
-      total={() => <Typography.Title level={2}>GOOD</Typography.Title>}
+      total={() => (
+        <Typography.Title
+          level={2}
+          type={performancesStat?.danger ? 'danger' : undefined}
+        >
+          {performancesStat?.message}
+        </Typography.Title>
+      )}
       footer={
         <Field
           label={<Typography.Text>Current Avg. CPU/Mem:</Typography.Text>}
           value={
             <Typography.Text>
-              {performancesStat.currentCpu.toFixed(2)}%/
-              {performancesStat.currentMem.toFixed(2)}%
+              {performancesStat?.currentCpu?.toFixed(2)}%/
+              {performancesStat?.currentMem?.toFixed(2)}%
             </Typography.Text>
           }
         />
@@ -62,7 +71,7 @@ const SystemPerformanceCard: React.FC = () => {
       <Trend
         reverseColor={false}
         flag={
-          performancesStat.previousCpu - performancesStat.currentCpu > 0
+          performancesStat?.previousCpu - performancesStat?.currentCpu > 0
             ? 'up'
             : 'down'
         }

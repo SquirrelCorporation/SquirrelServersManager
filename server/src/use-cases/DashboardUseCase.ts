@@ -1,0 +1,34 @@
+import { getConfFromCache } from '../redis';
+import keys from '../redis/defaults/keys';
+import DeviceStatsUseCases from './DeviceStatsUseCases';
+
+async function getSystemPerformance() {
+  const currentMem = await DeviceStatsUseCases.getSingleAveragedStatByType(7, 0, 'memFree');
+  const previousMem = await DeviceStatsUseCases.getSingleAveragedStatByType(14, 7, 'memFree');
+  const currentCpu = await DeviceStatsUseCases.getSingleAveragedStatByType(7, 0, 'cpu');
+  const previousCpu = await DeviceStatsUseCases.getSingleAveragedStatByType(14, 7, 'cpu');
+  const minMem = await getConfFromCache(
+    keys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
+  );
+  const maxCpu = await getConfFromCache(
+    keys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
+  );
+  const values = {
+    currentMem: currentMem && currentMem.length > 0 ? currentMem[0].value : NaN,
+    previousMem: previousMem && previousMem.length > 0 ? previousMem[0].value : NaN,
+    currentCpu: currentCpu && currentCpu.length > 0 ? currentCpu[0].value : NaN,
+    previousCpu: previousCpu && previousCpu.length > 0 ? previousCpu[0].value : NaN,
+  };
+  const status = {
+    message:
+      values.currentMem < parseInt(minMem) && values.currentCpu < parseInt(maxCpu)
+        ? 'HEALTHY'
+        : 'POOR',
+    danger: !(values.currentMem < parseInt(minMem) && values.currentCpu < parseInt(maxCpu)),
+  };
+  return { ...values, ...status };
+}
+
+export default {
+  getSystemPerformance,
+};

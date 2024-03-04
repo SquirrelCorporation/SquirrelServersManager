@@ -163,3 +163,54 @@ ol {
     transform: scale(.46) translateX(12px);
   }
 }
+
+.svg-small-anim-rotate {
+  animation-name: spin;
+  animation-duration: 3000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  transform-origin: 50% 50%;
+  animation-play-state: paused;
+  animation-fill-mode: none;
+}
+
+.svg-small-anim-rotate:hover {
+  animation-play-state: running;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.svg-small-anim-pulse {
+  animation-name: pulse;
+  animation-duration: 1000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  transform-origin: 50% 50%;
+  animation-play-state: paused;
+  animation-fill-mode: none;
+}
+
+.svg-small-anim-pulse:hover {
+  animation-play-state: running;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1.20);
+  }
+
+  70% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.20);
+  }
+}

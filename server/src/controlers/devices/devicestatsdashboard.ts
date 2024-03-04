@@ -5,25 +5,19 @@ import Authentication from '../../middlewares/Authentication';
 import DeviceStatsUseCases from '../../use-cases/DeviceStatsUseCases';
 import logger from '../../logger';
 import DeviceDownTimeUseCases from '../../use-cases/DeviceDownTimeUseCases';
+import { getConfFromCache } from '../../redis';
+import keys from '../../redis/defaults/keys';
+import DashboardUseCase from '../../use-cases/DashboardUseCase';
 
 const router = express.Router();
 
 router.get(`/dashboard/stats/performances`, Authentication.isAuthenticated, async (req, res) => {
   logger.info(`[CONTROLLER] /dashboard/stats/performances`);
   try {
-    const currentMem = await DeviceStatsUseCases.getSingleAveragedStatByType(7, 0, 'memFree');
-    const previousMem = await DeviceStatsUseCases.getSingleAveragedStatByType(14, 7, 'memFree');
-    const currentCpu = await DeviceStatsUseCases.getSingleAveragedStatByType(7, 0, 'cpu');
-    const previousCpu = await DeviceStatsUseCases.getSingleAveragedStatByType(14, 7, 'cpu');
-    logger.info('' + JSON.stringify(previousMem));
+    const result = await DashboardUseCase.getSystemPerformance();
     res.send({
       success: true,
-      data: {
-        currentMem: currentMem && currentMem.length > 0 ? currentMem[0].value : NaN,
-        previousMem: previousMem && previousMem.length > 0 ? previousMem[0].value : NaN,
-        currentCpu: currentCpu && currentCpu.length > 0 ? currentCpu[0].value : NaN,
-        previousCpu: previousCpu && previousCpu.length > 0 ? previousCpu[0].value : NaN,
-      },
+      data: result,
     });
   } catch (error: any) {
     logger.error(error);

@@ -112,11 +112,11 @@ const Index = memo(() => {
         </span>
         <p>{props.hostname}</p>
       </div>
-      <div className={styles.listContentItem} style={{maxWidth: '40px'}}>
-        <p>
+      <div className={styles.listContentItem} style={{ maxWidth: '80px' }}>
+        <p style={{ minWidth: '80px' }}>
           <WhhCpu /> {props.cpuSpeed?.toFixed(1)} Ghz
         </p>
-        <p>
+        <p style={{ minWidth: '80px' }}>
           <WhhRam /> {props.mem ? (props.mem / 1024).toFixed(0) : 'NaN'} Gb
         </p>
       </div>

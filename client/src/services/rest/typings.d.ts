@@ -8,6 +8,11 @@ declare namespace API {
     success?: boolean;
   };
 
+  type UserSystemPerformance = {
+    danger?: boolean;
+    message?: string;
+  };
+
   type CurrentUser = {
     name?: string;
     avatar?: string;
@@ -15,6 +20,7 @@ declare namespace API {
     notifyCount?: number;
     unreadCount?: number;
     access?: string;
+    systemPerformance: UserSystemPerformance;
     devices?: {
       online?: number;
       offline?: number;
@@ -33,6 +39,18 @@ declare namespace API {
     settings?: Settings;
   };
 
+  type LogsSettings = {
+    serverRetention: number;
+    ansibleRetention: number;
+  };
+
+  type DashboardSettings = {
+    performance: {
+      minMem: number;
+      maxCpu: number;
+    };
+  };
+
   type Settings = {
     apiKey: string;
     device: {
@@ -43,7 +61,11 @@ declare namespace API {
       deps: any;
       processes: any;
     };
-    logsLevel: UserLogsLevel;
+    logs: LogsSettings;
+    userSpecific: {
+      userLogsLevel: UserLogsLevel;
+    };
+    dashboard: DashboardSettings;
   };
 
   type UserLogsLevel = {
@@ -321,6 +343,8 @@ declare namespace API {
     previousMem: number;
     currentCpu: number;
     previousCpu: number;
+    danger: boolean;
+    message: string;
   };
 
   type DeviceStatAvailability = {

@@ -52,6 +52,7 @@ export const DevicesHeaderWidget: React.FC = () => {
   if (!currentUser || !currentUser.devices) {
     return loading;
   }
+
   const ElNetwork = (props: any) => (
     <svg
       width="1.5em"
@@ -104,17 +105,20 @@ export const DevicesHeaderWidget: React.FC = () => {
         onOpenChange={handleOpenChange}
         open={open}
       >
-        <a onClick={(e) => e.preventDefault()}>
-          <Badge
-            count={currentUser.devices.offline}
-            className="site-badge-count-109"
-            offset={[0, 10]}
-          >
-            <Avatar
-              src={<ElNetwork style={{ color: 'rgba(255, 255, 255, 0.65)' }} />}
-            />
-          </Badge>
-        </a>
+        <Badge
+          count={currentUser.devices.offline}
+          className="site-badge-count-109"
+          offset={[0, 10]}
+        >
+          <Avatar
+            src={
+              <ElNetwork
+                className={'svg-small-anim-rotate'}
+                style={{ color: 'rgba(255, 255, 255, 0.65)' }}
+              />
+            }
+          />
+        </Badge>
       </HeaderDropdown>
     </>
   );

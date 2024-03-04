@@ -1,35 +1,39 @@
 import CronJob from 'node-cron';
-import {
-  CLEANUP_ANSIBLE_LOGS_AND_STATUSES,
-  CLEANUP_SERVER_LOGS,
-  CONSIDER_DEVICE_OFFLINE,
-} from '../config';
 import DeviceRepo from '../database/repository/DeviceRepo';
 import logger from '../logger';
 import CronRepo from '../database/repository/CronRepo';
 import AnsibleTaskRepo from '../database/repository/AnsibleTaskRepo';
 import LogsRepo from '../database/repository/LogsRepo';
+import { getConfFromCache, getFromCache } from '../redis';
+import Keys from '../redis/defaults/keys';
 
 const CRONS = [
   {
     name: '_isDeviceOffline',
     schedule: '*/1 * * * *',
     fun: async () => {
-      await DeviceRepo.setDeviceOfflineAfter(CONSIDER_DEVICE_OFFLINE);
+      const delay = await getConfFromCache(
+        Keys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
+      );
+      await DeviceRepo.setDeviceOfflineAfter(parseInt(delay));
     },
   },
   {
     name: '_CleanAnsibleTasksLogsAndStatuses',
     schedule: '*/5 * * * *',
     fun: async () => {
-      await AnsibleTaskRepo.deleteAllOldLogsAndStatuses(CLEANUP_ANSIBLE_LOGS_AND_STATUSES);
+      const delay = await getConfFromCache(
+        Keys.GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
+      );
+      await AnsibleTaskRepo.deleteAllOldLogsAndStatuses(parseInt(delay));
     },
   },
   {
     name: '_CleanServerLogs',
     schedule: '*/5 * * * *',
     fun: async () => {
-      await LogsRepo.deleteAllOld(CLEANUP_SERVER_LOGS);
+      const delay = await getConfFromCache(Keys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS);
+      await LogsRepo.deleteAllOld(parseInt(delay));
     },
   },
 ];

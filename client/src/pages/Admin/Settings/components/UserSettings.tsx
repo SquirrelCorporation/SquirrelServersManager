@@ -21,7 +21,7 @@ const UserSettings: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
   const [inputValue, setInputValue] = useState<number | null>(
-    currentUser?.settings.logsLevel.terminal,
+    currentUser?.settings.userSpecific.userLogsLevel.terminal,
   );
   const [apiKey, setApiKey] = useState(currentUser?.settings.apiKey);
 

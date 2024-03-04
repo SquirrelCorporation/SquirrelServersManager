@@ -8,6 +8,7 @@ import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import Logo from '../public/logo.svg';
 import { errorConfig } from './requestErrorConfig';
+import { HealthWidget } from '@/components/HeaderComponents/HealthWidget';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -66,7 +67,10 @@ export const layout: RunTimeLayoutConfig = ({
 }) => {
   return {
     logo: Logo,
-    actionsRender: () => [<DevicesHeaderWidget key="online" />],
+    actionsRender: () => [
+      <DevicesHeaderWidget key="online" />,
+      <HealthWidget key="health" />,
+    ],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,

@@ -1,12 +1,17 @@
 import express from 'express';
 import { dependencies, version } from '../../../package.json';
-import { CONSIDER_DEVICE_OFFLINE } from '../../config';
 import { DeviceStatus } from '../../database/model/Device';
 import User, { Role } from '../../database/model/User';
 import DeviceRepo from '../../database/repository/DeviceRepo';
 import UserRepo from '../../database/repository/UserRepo';
 import logger from '../../logger';
 import Authentication from '../../middlewares/Authentication';
+import DeviceUseCases from '../../use-cases/DeviceUseCases';
+import { getConfFromCache, getFromCache } from '../../redis';
+import Keys from '../../redis/defaults/keys';
+import DeviceStatsUseCases from '../../use-cases/DeviceStatsUseCases';
+import keys from '../../redis/defaults/keys';
+import DashboardUseCase from '../../use-cases/DashboardUseCase';
 
 const router = express.Router();
 
@@ -52,24 +57,25 @@ router.get(`/currentUser`, Authentication.isAuthenticated, async (req, res) => {
   // @ts-ignore
   const user = req.user as User;
   logger.info(`[CONTROLLER][USER] - /currentUser ${user?.email}`);
-  const devices = await DeviceRepo.findAll();
-  const offline = devices?.filter((e) => e.status === DeviceStatus.OFFLINE).length;
-  const online = devices?.filter((e) => e.status === DeviceStatus.ONLINE).length;
-  const overview = devices?.map((e) => {
-    return {
-      name: e.fqdn,
-      status: e.status === DeviceStatus.ONLINE ? 'online' : 'offline',
-      uuid: e.uuid,
-      cpu: e.cpuSpeed,
-      mem: e.mem,
-    };
-  });
-  const totalCpu = devices?.reduce((accumulator, currentValue) => {
-    return accumulator + (currentValue?.cpuSpeed || 0);
-  }, 0);
-  const totalMem = devices?.reduce((accumulator, currentValue) => {
-    return accumulator + (currentValue?.mem || 0);
-  }, 0);
+  const { online, offline, totalCpu, totalMem, overview } =
+    await DeviceUseCases.getDevicesOverview();
+  const considerDeviceOffline = await getConfFromCache(
+    Keys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
+  );
+  const serverLogRetention = await getConfFromCache(
+    Keys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS,
+  );
+  const ansibleLogRetention = await getConfFromCache(
+    Keys.GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
+  );
+  const performanceMinMem = await getConfFromCache(
+    Keys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
+  );
+  const performanceMaxCpu = await getConfFromCache(
+    Keys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
+  );
+  const systemPerformance = await DashboardUseCase.getSystemPerformance();
+
   res.send({
     success: true,
     data: {
@@ -83,14 +89,30 @@ router.get(`/currentUser`, Authentication.isAuthenticated, async (req, res) => {
         online: online,
         offline: offline,
         totalCpu: totalCpu,
-        totalMem: totalMem ? totalMem / 1024 : NaN,
+        totalMem: totalMem,
         overview: overview,
       },
+      systemPerformance: {
+        danger: systemPerformance.danger,
+        message: systemPerformance.message,
+      },
       settings: {
-        logsLevel: user.logsLevel,
+        userSpecific: {
+          userLogsLevel: user.logsLevel,
+        },
+        logs: {
+          serverRetention: parseInt(serverLogRetention),
+          ansibleRetention: parseInt(ansibleLogRetention),
+        },
+        dashboard: {
+          performance: {
+            minMem: parseInt(performanceMinMem),
+            maxCpu: parseInt(performanceMaxCpu),
+          },
+        },
         apiKey: user?.apiKey,
         device: {
-          considerOffLineAfter: CONSIDER_DEVICE_OFFLINE,
+          considerOffLineAfter: parseInt(considerDeviceOffline),
         },
         server: {
           version: version,
