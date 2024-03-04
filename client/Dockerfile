@@ -1,10 +1,10 @@
 FROM node:21-alpine as base
 
 WORKDIR /client
-COPY ./package*.json .
-COPY ./tsconfig.json .
 RUN npm install -g npm@latest
 RUN npm install -g @umijs/max
+COPY ./package*.json .
+COPY ./tsconfig.json .
 EXPOSE 8000
 
 FROM base as production

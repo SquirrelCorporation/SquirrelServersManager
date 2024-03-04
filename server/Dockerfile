@@ -1,13 +1,13 @@
 FROM node:21-alpine as base
 
 WORKDIR /server
-COPY ./package*.json .
-COPY ./tsconfig.json .
 RUN apk update && apk add ansible nmap sudo openssh sshpass py3-pip
 RUN npm install -g npm@latest
 RUN rm /usr/lib/python3.11/EXTERNALLY-MANAGED
 RUN pip install ansible-runner \
     ansible-runner-http
+COPY ./package*.json .
+COPY ./tsconfig.json .
 EXPOSE 3000
 
 FROM base as production
