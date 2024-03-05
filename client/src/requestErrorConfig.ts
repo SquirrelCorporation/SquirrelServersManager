@@ -33,7 +33,6 @@ export const errorConfig: RequestConfig = {
         throw error;
       }
     },
-    // 错误接收及处理
     errorHandler: (error: any, opts: any) => {
       if (opts?.skipErrorHandler) throw error;
       //  errorThrower 。
@@ -61,18 +60,21 @@ export const errorConfig: RequestConfig = {
               // TODO: redirect
               break;
             default:
-              message.error(errorMessage);
+              message.error({ content: errorMessage, duration: 6 });
           }
         }
       } else if (error.response) {
         // Axios
-        message.error(`Response status:${error.response.status}`);
+        message.error({
+          content: `Response status:${error.response.status}`,
+          duration: 6,
+        });
       } else if (error.request) {
         // \`error.request\` XMLHttpRequest ，
         // node.js http.ClientRequest
-        message.error('None response! Please retry.');
+        message.error({ content: 'None response! Please retry.', duration: 6 });
       } else {
-        message.error('Request error, please retry.');
+        message.error({ content: 'Request error, please retry.', duration: 6 });
       }
     },
   },

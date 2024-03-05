@@ -4,7 +4,7 @@ import DeviceRepo from '../database/repository/DeviceRepo';
 import logger from '../logger';
 
 async function getDevicesAvailability(from: Date, to: Date) {
-  logger.info(`[USERCASES] - getDevicesAvailability From:${from} - To:${to}`);
+  logger.info(`[USECASES][DEVICEDOWNTIME] - getDevicesAvailability From:${from} - To:${to}`);
   const devices = await DeviceRepo.findAll();
   if (!devices) {
     return;
@@ -32,6 +32,7 @@ async function getDevicesAvailability(from: Date, to: Date) {
 
 async function getDevicesAvailabilitySumUpCurrentMonthLastMonth() {
   try {
+    logger.info(`[USECASES][DEVICEDOWNTIME] - getDevicesAvailabilitySumUpCurrentMonthLastMonth`);
     const to = new Date();
     const from = DateTime.now().startOf('month').toJSDate();
     const availabilities = await getDevicesAvailability(from, to);

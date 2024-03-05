@@ -1,1 +1,24 @@
-#
+- name: Run Shell Script
+  hosts: all
+  become: true
+  gather_facts: false
+  vars:
+    shell_script: undef
+
+  tasks:
+    - name: Check out agent
+      ansible.builtin.git:
+        repo: https://github.com/SquirrelCorporation/SquirrelServersManager-Agent.git
+        dest: /opt/squirrelserversmanager
+        single_branch: yes
+        version: master
+
+    - name: Run Shell Script
+      ansible.builtin.shell: "/opt/squirrelserversmanager/install.sh -u {{ url }} -s {{ deviceId }}"
+      register: shell_output
+      tags:
+        - skip_ansible_lint  # provided variable could require shell modele
+
+    - name: Print script output
+      ansible.builtin.debug:
+        var: shell_output.stdout_lines

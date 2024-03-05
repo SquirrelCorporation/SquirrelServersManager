@@ -57,6 +57,11 @@ export async function getConfFromCache(key: string): Promise<string> {
   return value;
 }
 
+export async function getIntConfFromCache(key: string): Promise<number> {
+  const value = await getConfFromCache(key);
+  return parseInt(value);
+}
+
 export async function setToCache(
   key: string,
   value: string,

@@ -17,15 +17,14 @@ import {
   Carousel,
   Col,
   List,
-  message,
   Row,
   Tooltip,
   Typography,
 } from 'antd';
-import moment from 'moment';
 import React, { memo, useEffect, useState } from 'react';
 import { TerminalContextProvider } from 'react-terminal';
 import styles from './Devices.less';
+import DeviceStatus from '@/utils/devicestatus';
 
 const { Text } = Typography;
 
@@ -112,94 +111,100 @@ const Index = memo(() => {
         </span>
         <p>{props.hostname}</p>
       </div>
-      <div className={styles.listContentItem} style={{ maxWidth: '80px' }}>
-        <p style={{ minWidth: '80px' }}>
-          <WhhCpu /> {props.cpuSpeed?.toFixed(1)} Ghz
-        </p>
-        <p style={{ minWidth: '80px' }}>
-          <WhhRam /> {props.mem ? (props.mem / 1024).toFixed(0) : 'NaN'} Gb
-        </p>
+      <div className={styles.listContentItem} style={{ width: '80px' }}>
+        {props.status !== DeviceStatus.UNMANAGED && (
+          <>
+            <p style={{ minWidth: '80px' }}>
+              <WhhCpu /> {props.cpuSpeed?.toFixed(1)} Ghz
+            </p>
+            <p style={{ minWidth: '80px' }}>
+              <WhhRam /> {props.mem ? (props.mem / 1024).toFixed(0) : 'NaN'} Gb
+            </p>
+          </>
+        )}
       </div>
       <div className={styles.listContentItem}>
-        <Carousel
-          style={{ width: 300, height: 70, zIndex: 1000 }}
-          dotPosition={'right'}
-        >
-          <div style={{ width: 300, height: 70, zIndex: 1000 }}>
-            <div
-              style={{
-                width: 300,
-                height: 70,
-                zIndex: 1000,
-                paddingTop: '15px',
-              }}
-            >
-              <Row style={{ alignItems: 'center' }} justify="center">
-                <Col span={6}>
-                  <TinyRingProgressDeviceGraph
-                    type={DeviceStatType.CPU}
-                    deviceUuid={props.uuid}
-                  />
-                </Col>
-                <Col span={6}>
-                  <TinyRingProgressDeviceGraph
-                    type={DeviceStatType.MEM_USED}
-                    deviceUuid={props.uuid}
-                  />
-                </Col>
-                <Col span={6}>
-                  <TinyRingProgressDeviceIndicator deviceUuid={props.uuid} />
-                </Col>
-              </Row>
-            </div>
-          </div>
-          <div style={{ width: 300, height: 70, zIndex: 1000 }}>
+        {(props.status !== DeviceStatus.UNMANAGED && (
+          <Carousel
+            style={{ width: 300, height: 70, zIndex: 1000 }}
+            dotPosition={'right'}
+          >
             <div style={{ width: 300, height: 70, zIndex: 1000 }}>
-              <Row style={{ alignItems: 'center' }} justify="center">
-                <Col span={24}>
-                  <TinyLineDeviceGraph
-                    type={DeviceStatType.CPU}
-                    deviceUuid={props.uuid}
-                    from={24}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col
-                  span={24}
-                  style={{ marginTop: '-5px', textAlign: 'center' }}
-                >
-                  <Text type="secondary" style={{ fontSize: '8px' }}>
-                    CPU
-                  </Text>
-                </Col>
-              </Row>
+              <div
+                style={{
+                  width: 300,
+                  height: 70,
+                  zIndex: 1000,
+                  paddingTop: '15px',
+                }}
+              >
+                <Row style={{ alignItems: 'center' }} justify="center">
+                  <Col span={6}>
+                    <TinyRingProgressDeviceGraph
+                      type={DeviceStatType.CPU}
+                      deviceUuid={props.uuid}
+                    />
+                  </Col>
+                  <Col span={6}>
+                    <TinyRingProgressDeviceGraph
+                      type={DeviceStatType.MEM_USED}
+                      deviceUuid={props.uuid}
+                    />
+                  </Col>
+                  <Col span={6}>
+                    <TinyRingProgressDeviceIndicator deviceUuid={props.uuid} />
+                  </Col>
+                </Row>
+              </div>
             </div>
-          </div>
-          <div style={{ width: 300, height: 70, zIndex: 1000 }}>
             <div style={{ width: 300, height: 70, zIndex: 1000 }}>
-              <Row style={{ alignItems: 'center' }} justify="center">
-                <Col span={24}>
-                  <TinyLineDeviceGraph
-                    type={DeviceStatType.MEM_USED}
-                    deviceUuid={props.uuid}
-                    from={24}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col
-                  span={24}
-                  style={{ marginTop: '-5px', textAlign: 'center' }}
-                >
-                  <Text type="secondary" style={{ fontSize: '8px' }}>
-                    MEM USED
-                  </Text>
-                </Col>
-              </Row>{' '}
+              <div style={{ width: 300, height: 70, zIndex: 1000 }}>
+                <Row style={{ alignItems: 'center' }} justify="center">
+                  <Col span={24}>
+                    <TinyLineDeviceGraph
+                      type={DeviceStatType.CPU}
+                      deviceUuid={props.uuid}
+                      from={24}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col
+                    span={24}
+                    style={{ marginTop: '-5px', textAlign: 'center' }}
+                  >
+                    <Text type="secondary" style={{ fontSize: '8px' }}>
+                      CPU
+                    </Text>
+                  </Col>
+                </Row>
+              </div>
             </div>
-          </div>
-        </Carousel>
+            <div style={{ width: 300, height: 70, zIndex: 1000 }}>
+              <div style={{ width: 300, height: 70, zIndex: 1000 }}>
+                <Row style={{ alignItems: 'center' }} justify="center">
+                  <Col span={24}>
+                    <TinyLineDeviceGraph
+                      type={DeviceStatType.MEM_USED}
+                      deviceUuid={props.uuid}
+                      from={24}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col
+                    span={24}
+                    style={{ marginTop: '-5px', textAlign: 'center' }}
+                  >
+                    <Text type="secondary" style={{ fontSize: '8px' }}>
+                      MEM USED
+                    </Text>
+                  </Col>
+                </Row>{' '}
+              </div>
+            </div>
+          </Carousel>
+        )) || <div style={{ width: 300, height: 70, zIndex: 1000 }} />}
       </div>
     </div>
   );

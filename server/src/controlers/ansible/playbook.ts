@@ -6,6 +6,7 @@ import logger from '../../logger';
 const router = express.Router();
 
 router.get(`/playbooks`, Authentication.isAuthenticated, async (req, res) => {
+  logger.info(`[CONTROLLER] - GET - /ansible/playbooks`);
   try {
     const listOfPlaybooks = await ansible.listPlaybooks();
     const listOfPlaybooksToSelect = listOfPlaybooks.map((e) => {
@@ -24,6 +25,7 @@ router.get(`/playbooks`, Authentication.isAuthenticated, async (req, res) => {
 });
 
 router.get(`/playbooks/:playbook/content`, Authentication.isAuthenticated, async (req, res) => {
+  logger.info(`[CONTROLLER] - GET - /ansible/playbooks/${req.params.playbook}/content`);
   if (!req.params.playbook) {
     res.status(400).send({
       success: false,
@@ -45,6 +47,7 @@ router.get(`/playbooks/:playbook/content`, Authentication.isAuthenticated, async
 });
 
 router.patch(`/playbooks/:playbook/`, Authentication.isAuthenticated, async (req, res) => {
+  logger.info(`[CONTROLLER] - PATCH - /ansible/playbooks/${req.params.playbook}`);
   if (!req.params.playbook) {
     res.status(400).send({
       success: false,
@@ -73,6 +76,7 @@ router.patch(`/playbooks/:playbook/`, Authentication.isAuthenticated, async (req
 });
 
 router.put(`/playbooks/:playbook/`, Authentication.isAuthenticated, async (req, res) => {
+  logger.info(`[CONTROLLER] - PUT - /ansible/playbooks/${req.params.playbook}`);
   if (!req.params.playbook) {
     res.status(400).send({
       success: false,
@@ -100,6 +104,7 @@ router.put(`/playbooks/:playbook/`, Authentication.isAuthenticated, async (req, 
 });
 
 router.delete(`/playbooks/:playbook/`, Authentication.isAuthenticated, async (req, res) => {
+  logger.info(`[CONTROLLER] - DELETE - /ansible/playbooks/${req.params.playbook}`);
   if (!req.params.playbook) {
     res.status(400).send({
       success: false,

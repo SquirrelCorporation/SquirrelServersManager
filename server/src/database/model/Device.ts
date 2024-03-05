@@ -10,7 +10,7 @@ export type RaspberryRevisionData = {
   processor: string;
   type: string;
   revision: string;
-}
+};
 
 export default interface Device {
   _id: string;
@@ -40,7 +40,7 @@ export default interface Device {
   mem?: number;
   agentVersion?: string;
   versions?: API.VersionData;
-  raspberry?:RaspberryRevisionData;
+  raspberry?: RaspberryRevisionData;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -49,6 +49,7 @@ export enum DeviceStatus {
   REGISTERING = 0,
   ONLINE = 1,
   OFFLINE = 2,
+  UNMANAGED = 3,
 }
 
 const schema = new Schema<Device>(

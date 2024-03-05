@@ -1,8 +1,10 @@
 import { getConfFromCache } from '../redis';
 import keys from '../redis/defaults/keys';
+import logger from '../logger';
 import DeviceStatsUseCases from './DeviceStatsUseCases';
 
 async function getSystemPerformance() {
+  logger.info(`[USECASES][DASHBOARD] - getSystemPerformance`);
   const currentMem = await DeviceStatsUseCases.getSingleAveragedStatByType(7, 0, 'memFree');
   const previousMem = await DeviceStatsUseCases.getSingleAveragedStatByType(14, 7, 'memFree');
   const currentCpu = await DeviceStatsUseCases.getSingleAveragedStatByType(7, 0, 'cpu');

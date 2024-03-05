@@ -5,13 +5,14 @@ import API from '../typings';
 import DeviceDownTimeEventRepo from '../database/repository/DeviceDownTimeEventRepo';
 
 async function getDevicesOverview() {
+  logger.info(`[USECASES][DEVICE] - getDevicesOverview`);
   const devices = await DeviceRepo.findAll();
   const offline = devices?.filter((e) => e.status === DeviceStatus.OFFLINE).length;
   const online = devices?.filter((e) => e.status === DeviceStatus.ONLINE).length;
   const overview = devices?.map((e) => {
     return {
-      name: e.fqdn,
-      status: e.status === DeviceStatus.ONLINE ? 'online' : 'offline',
+      name: e.status !== DeviceStatus.UNMANAGED ? e.fqdn : e.ip,
+      status: e.status,
       uuid: e.uuid,
       cpu: e.cpuSpeed,
       mem: e.mem,
@@ -33,6 +34,7 @@ async function getDevicesOverview() {
 }
 
 async function updateDeviceFromJson(body: any, device: Device) {
+  logger.info(`[USECASES][DEVICE] - updateDeviceFromJson - DeviceUuid: ${device?.uuid}`);
   logger.debug(body);
   const deviceInfo: API.DeviceInfo = body;
   device.ip = deviceInfo.ip;

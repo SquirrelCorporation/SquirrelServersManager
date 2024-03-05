@@ -7,6 +7,7 @@ import { setToCache } from '../../redis';
 const router = express.Router();
 
 router.post(`/logs/:key`, Authentication.isAuthenticated, async (req, res) => {
+  logger.info(`[CONTROLLER] - POST - /settings/logs/${req.params.key}`);
   if (!req.params.key) {
     res.status(404).send({
       success: false,

@@ -8,7 +8,7 @@ import Inventory from '../../transformers/Inventory';
 const router = express.Router();
 
 router.get(`/inventory`, async (req, res) => {
-  logger.info(`[CONTROLLER][ANSIBLE][Inventory] Get`);
+  logger.info(`[CONTROLLER] - GET - /ansible/inventory`);
   let devicesAuth: DeviceAuth[] | null = [];
   if (req.body.target) {
     logger.info(`[CONTROLLER][ANSIBLE[Inventory] - Target is ${req.body.target}`);

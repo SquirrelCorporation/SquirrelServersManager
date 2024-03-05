@@ -29,14 +29,18 @@ const UserSettings: React.FC = () => {
     if (newValue) {
       await postUserLogs({ terminal: newValue }).then((res) => {
         setInputValue(newValue);
+        message.success({
+          content: 'Setting successfully updated',
+          duration: 6,
+        });
       });
     }
   };
 
   const onClickResetApiKey = async () => {
     await postResetApiKey().then((res) => {
-      message.success({ content: 'API Key successfully reset', duration: 6 });
       setApiKey(res.data.uuid);
+      message.success({ content: 'API Key successfully reset', duration: 6 });
     });
   };
   return (
@@ -50,7 +54,8 @@ const UserSettings: React.FC = () => {
                 <Slider
                   min={1}
                   max={5}
-                  onChange={onChange}
+                  onChange={(newValue) => setInputValue(newValue)}
+                  onChangeComplete={onChange}
                   value={typeof inputValue === 'number' ? inputValue : 0}
                 />
               </Col>

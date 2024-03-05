@@ -7,6 +7,7 @@ import { setToCache } from '../../redis';
 const router = express.Router();
 
 router.post(`/devices/:key`, Authentication.isAuthenticated, async (req, res) => {
+  logger.info(`[CONTROLLER] - POST - /settings/devices/${req.params.key}`);
   if (!req.params.key) {
     res.status(404).send({
       success: false,
@@ -24,6 +25,12 @@ router.post(`/devices/:key`, Authentication.isAuthenticated, async (req, res) =>
       case keys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES:
         await setToCache(
           keys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
+          req.body.value,
+        );
+        return res.send({ success: true });
+      case keys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS:
+        await setToCache(
+          keys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
           req.body.value,
         );
         return res.send({ success: true });

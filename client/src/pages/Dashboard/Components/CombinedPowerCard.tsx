@@ -5,27 +5,33 @@ import { Bar } from '@ant-design/plots';
 import ChartCard from '@/pages/Dashboard/ChartComponents/ChartCard';
 import React from 'react';
 import { useModel } from '@umijs/max';
+import Devicestatus from '@/utils/devicestatus';
 
 const CombinedPowerCard: React.FC = () => {
   const [loading, setLoading] = React.useState(false);
   const { initialState } = useModel('@@initialState');
   const { currentUser }: { currentUser: API.CurrentUser } = initialState || {};
   const dataCpu =
-    currentUser?.devices?.overview?.map((device, index) => {
-      return {
-        type: 'cpu',
-        uuid: `${index}-${device.name}`,
-        value: (device.cpu || 0) / (currentUser?.devices?.totalCpu || 1),
-      };
-    }) || [];
+    currentUser?.devices?.overview
+      ?.filter((e) => e.status !== Devicestatus.UNMANAGED)
+      .map((device, index) => {
+        return {
+          type: 'cpu',
+          uuid: `${index}-${device.name}`,
+          value: (device.cpu || 0) / (currentUser?.devices?.totalCpu || 1),
+        };
+      }) || [];
   const dataMem =
-    currentUser?.devices?.overview?.map((device, index) => {
-      return {
-        type: 'mem',
-        uuid: `${index}-${device.name}`,
-        value: (device.mem || 0) / 1024 / (currentUser?.devices?.totalMem || 1),
-      };
-    }) || [];
+    currentUser?.devices?.overview
+      ?.filter((e) => e.status !== Devicestatus.UNMANAGED)
+      .map((device, index) => {
+        return {
+          type: 'mem',
+          uuid: `${index}-${device.name}`,
+          value:
+            (device.mem || 0) / 1024 / (currentUser?.devices?.totalMem || 1),
+        };
+      }) || [];
   const data = dataCpu?.concat(dataMem);
 
   const config = {

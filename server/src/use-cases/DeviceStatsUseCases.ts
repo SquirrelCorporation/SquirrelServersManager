@@ -4,9 +4,11 @@ import Device from '../database/model/Device';
 import logger from '../logger';
 import DeviceStat from '../database/model/DeviceStat';
 import API from '../typings';
+import { getConfFromCache, getIntConfFromCache } from '../redis';
+import Keys from '../redis/defaults/keys';
 
-async function createDeviceStatFromJson(body: any, device: Device) {
-  const deviceInfo: API.DeviceInfo = body;
+async function createDeviceStatFromJson(deviceInfo: API.DeviceInfo, device: Device) {
+  logger.info(`[USECASE][DEVICESTATS] - createDeviceStatFromJson - DeviceUuid: ${device?.uuid}`);
   await DeviceStatRepo.create({
     device: device,
     storageTotalGb: deviceInfo.storage?.storageTotalGb,
@@ -23,17 +25,25 @@ async function createDeviceStatFromJson(body: any, device: Device) {
   });
 }
 
-async function createStatIfMinInterval(body: any, device: Device): Promise<void> {
+async function createStatIfMinInterval(deviceInfo: API.DeviceInfo, device: Device): Promise<void> {
+  logger.info(`[USECASE][DEVICESTATS] - createStatIfMinInterval - DeviceUuid: ${device?.uuid}`);
   const deviceStat = await DeviceStatRepo.findLatestStat(device);
+  const minInternal = await getIntConfFromCache(
+    Keys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
+  );
   if (
     !deviceStat ||
     !deviceStat.createdAt ||
-    deviceStat.createdAt < DateTime.now().minus({ minute: 1 }).toJSDate()
+    deviceStat.createdAt < DateTime.now().minus({ second: minInternal }).toJSDate()
   ) {
-    logger.info(`[USECASE] - Creating new device stat record... (latest: ${deviceStat?.createdAt}`);
-    await createDeviceStatFromJson(body, device);
+    logger.info(
+      `[USECASE][DEVICESTATS] - createStatIfMinInterval- Creating new device stat record... (latest: ${deviceStat?.createdAt}`,
+    );
+    await createDeviceStatFromJson(deviceInfo, device);
   } else {
-    logger.info('[USECASE] - DeviceStat already exist, not creating');
+    logger.info(
+      '[USECASE][DEVICESTATS] - createStatIfMinInterval - DeviceStat already exist, not creating',
+    );
   }
 }
 
@@ -43,7 +53,7 @@ async function getStatsByDeviceAndType(
   type?: string,
 ): Promise<DeviceStat[] | null> {
   logger.info(
-    `[USECASE] - getStatsByDeviceAndType - type: ${type}, from: ${from}, device: ${device.uuid}`,
+    `[USECASE][DEVICESTATS] - getStatsByDeviceAndType - type: ${type}, from: ${from}, device: ${device.uuid}`,
   );
   switch (type) {
     case 'cpu':
@@ -64,7 +74,7 @@ async function getStatsByDevicesAndType(
   type?: string,
 ): Promise<[{ date: string; value: string; name: string }] | null> {
   logger.info(
-    `[USECASE] - findStatsByDevicesAndType - type: ${type}, from: ${from}, nb devices: ${devices.length}`,
+    `[USECASE][DEVICESTATS] - findStatsByDevicesAndType - type: ${type}, from: ${from}, nb devices: ${devices.length}`,
   );
   switch (type) {
     case 'cpu':
@@ -95,7 +105,7 @@ async function getSingleAveragedStatsByDevicesAndType(
   type?: string,
 ): Promise<[{ value: string; name: string }] | null> {
   logger.info(
-    `[USECASE] - findSingleAveragedStatByDevicesAndType - type: ${type}, from: ${from}, to: ${to}, nb devices: ${devices.length}`,
+    `[USECASE][DEVICESTATS] - findSingleAveragedStatByDevicesAndType - type: ${type}, from: ${from}, to: ${to}, nb devices: ${devices.length}`,
   );
   switch (type) {
     case 'cpu':
@@ -128,7 +138,9 @@ async function getStatByDeviceAndType(
   device: Device,
   type?: string,
 ): Promise<[{ _id: string; value: number; createdAt: string }] | null> {
-  logger.info(`[USECASE] - getStatByDeviceAndType - type: ${type}, device: ${device.uuid}`);
+  logger.info(
+    `[USECASE][DEVICESTATS] - getStatByDeviceAndType - type: ${type}, device: ${device.uuid}`,
+  );
   switch (type) {
     case 'cpu':
       return await DeviceStatRepo.findStatByDeviceAndType(device, '$cpuUsage');
@@ -146,7 +158,7 @@ async function getSingleAveragedStatByType(
   to: number,
   type?: string,
 ): Promise<[{ value: number }] | null> {
-  logger.info(`[USECASE] - getStatByType - type: ${type}`);
+  logger.info(`[USECASE][DEVICESTATS] - getStatByType - type: ${type}`);
   switch (type) {
     case 'cpu':
       return await DeviceStatRepo.findSingleAveragedStatAndType('$cpuUsage', from, to);

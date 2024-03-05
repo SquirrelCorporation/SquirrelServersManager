@@ -17,6 +17,7 @@ import {
 } from '@/services/rest/devicestat';
 import { useModel } from '@umijs/max';
 import { getTimeDistance } from '@/utils/time';
+import Devicestatus from '@/utils/devicestatus';
 
 const { RangePicker } = DatePicker;
 
@@ -28,7 +29,9 @@ const MainChartCard: React.FC<any> = ({}) => {
     [{ value: number; name: string }] | []
   >([]);
   const [devices, setDevices] = useState(
-    currentUser?.devices?.overview?.map((e) => e.uuid) || [],
+    currentUser?.devices?.overview
+      ?.filter((e) => e.status !== Devicestatus.UNMANAGED)
+      .map((e) => e.uuid) || [],
   );
   const [type, setType] = useState('cpu');
   const [rangePickerValue, setRangePickerValue] = React.useState(
@@ -232,9 +235,11 @@ const MainChartCard: React.FC<any> = ({}) => {
                 showSearch
                 maxTagCount={'responsive'}
                 style={{ flex: 1, width: 120, marginLeft: 5 }}
-                options={currentUser?.devices?.overview?.map((e) => {
-                  return { value: e.uuid, label: e.name };
-                })}
+                options={currentUser?.devices?.overview
+                  ?.filter((e) => e.status !== Devicestatus.UNMANAGED)
+                  .map((e) => {
+                    return { value: e.uuid, label: e.name };
+                  })}
                 onChange={(e) => {
                   setDevices(e);
                 }}

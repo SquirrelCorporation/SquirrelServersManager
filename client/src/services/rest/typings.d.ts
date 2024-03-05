@@ -29,7 +29,7 @@ declare namespace API {
       overview?: [
         {
           name?: string;
-          status?: string;
+          status?: number;
           uuid?: string;
           mem?: number;
           cpu?: number;
@@ -54,6 +54,7 @@ declare namespace API {
   type Settings = {
     apiKey: string;
     device: {
+      registerDeviceStatEvery: number;
       considerOffLineAfter: number;
     };
     server: {

@@ -33,6 +33,11 @@ const REDIS_DEFAULT_VALUES: { key: string; value: string; nx: boolean }[] = [
     value: Keys.GeneralSettingsDefaultValue.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
     nx: true,
   },
+  {
+    key: Keys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
+    value: Keys.GeneralSettingsDefaultValue.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
+    nx: true,
+  },
 ];
 
 async function initRedisValues(force?: boolean) {

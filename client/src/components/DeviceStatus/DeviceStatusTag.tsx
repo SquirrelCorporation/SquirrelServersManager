@@ -1,26 +1,33 @@
 import { Tag } from 'antd';
+import DeviceStatus from '@/utils/devicestatus';
 
 export type DeviceStatusTagType = {
   status: number;
 };
 const DeviceStatusTag = (deviceStatus: DeviceStatusTagType) => {
   switch (deviceStatus.status) {
-    case 0:
+    case DeviceStatus.REGISTERING:
       return (
         <Tag bordered={false} color="processing">
           Registering
         </Tag>
       );
-    case 1:
+    case DeviceStatus.ONLINE:
       return (
         <Tag bordered={false} color="success">
           Online
         </Tag>
       );
-    case 2:
+    case DeviceStatus.OFFLINE:
       return (
         <Tag bordered={false} color="error">
           Down
+        </Tag>
+      );
+    case DeviceStatus.UNMANAGED:
+      return (
+        <Tag bordered={false} color="warning">
+          Unmanaged
         </Tag>
       );
   }

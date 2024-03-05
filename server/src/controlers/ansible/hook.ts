@@ -8,7 +8,7 @@ import AnsibleLogsRepo from '../../database/repository/AnsibleLogsRepo';
 const router = express.Router();
 
 router.post(`/hook/task/status`, async (req, res) => {
-  logger.info('[CONTROLLER] ansible/hook/task/status');
+  logger.info('[CONTROLLER] - POST - /ansible/hook/task/status');
   if (!req.body.runner_ident || !req.body.status) {
     logger.error('[CONTROLLER] ansible/hook/task/status - malformed request');
     logger.error(req.body);
@@ -38,7 +38,7 @@ router.post(`/hook/task/status`, async (req, res) => {
 });
 
 router.post(`/hook/task/event`, async (req, res) => {
-  logger.info('[CONTROLLER] ansible/hook/task/event');
+  logger.info('[CONTROLLER] - POST - ansible/hook/task/event');
   if (!req.body.runner_ident) {
     logger.error('[CONTROLLER] ansible/hook/tasks/events - malformed request');
     logger.error(req.body);

@@ -1,5 +1,4 @@
 import {
-  BorderOutlined,
   InfoCircleFilled,
   TableOutlined,
   WarningOutlined,
@@ -20,7 +19,6 @@ import {
 } from 'antd';
 import React, { useState } from 'react';
 import { useModel } from '@@/exports';
-import { postUserLogs } from '@/services/rest/usersettings';
 import {
   postDashboardSetting,
   postDeviceSetting,
@@ -29,7 +27,7 @@ import {
 } from '@/services/rest/settings';
 import SystemPerformanceCard from '@/pages/Dashboard/Components/SystemPerformanceCard';
 
-export const PajamasLog = (props) => (
+export const PajamasLog = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="20"
@@ -45,7 +43,7 @@ export const PajamasLog = (props) => (
     />
   </svg>
 );
-export const MaterialSymbolsDashboard = (props) => (
+export const MaterialSymbolsDashboard = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="20"
@@ -59,7 +57,7 @@ export const MaterialSymbolsDashboard = (props) => (
     />
   </svg>
 );
-export const MynauiDangerTriangle = (props) => (
+export const MynauiDangerTriangle = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="20"
@@ -95,12 +93,16 @@ const GeneralSettings: React.FC = () => {
   const [serverLogsRetentionInDays, setServerLogsRetentionInDays] = useState<
     number | null
   >(currentUser?.settings.logs.serverRetention);
+  const [registerDeviceStatEveryXSeconds, setRegisterDeviceStatEveryXSeconds] =
+    useState<number | null>(
+      currentUser?.settings.device.registerDeviceStatEvery,
+    );
   const onChangeMaxCpu = async (newValue: number | null) => {
     if (newValue) {
       await postDashboardSetting(
         'consider-performance-good-cpu-if-greater',
         newValue,
-      ).then((res) => {
+      ).then(() => {
         setDashboardMaxCpuInPercent(newValue);
       });
       message.success({ content: 'Setting successfully updated', duration: 6 });
@@ -112,7 +114,7 @@ const GeneralSettings: React.FC = () => {
       await postDashboardSetting(
         'consider-performance-good-mem-if-greater',
         newValue,
-      ).then((res) => {
+      ).then(() => {
         setDashboardMinMemInPercent(newValue);
       });
       message.success({ content: 'Setting successfully updated', duration: 6 });
@@ -124,7 +126,7 @@ const GeneralSettings: React.FC = () => {
       await postDeviceSetting(
         'consider-device-offline-after-in-minutes',
         newValue,
-      ).then((res) => {
+      ).then(() => {
         setConsiderDeviceOnlineInMinutes(newValue);
       });
       message.success({ content: 'Setting successfully updated', duration: 6 });
@@ -133,7 +135,7 @@ const GeneralSettings: React.FC = () => {
 
   const onChangeAnsibleCleanUp = async (newValue: number | null) => {
     if (newValue) {
-      await postLogsSetting('clean-up-ansible', newValue).then((res) => {
+      await postLogsSetting('clean-up-ansible', newValue).then(() => {
         setAnsibleCleanUpInSeconds(newValue);
       });
       message.success({ content: 'Setting successfully updated', duration: 6 });
@@ -142,7 +144,7 @@ const GeneralSettings: React.FC = () => {
   const onChangeServerLogsRetention = async (newValue: number | null) => {
     if (newValue) {
       await postLogsSetting('server-log-retention-in-days', newValue).then(
-        (res) => {
+        () => {
           setServerLogsRetentionInDays(newValue);
         },
       );
@@ -150,7 +152,19 @@ const GeneralSettings: React.FC = () => {
     }
   };
 
-  const confirmReset = async (e: React.MouseEvent<HTMLElement>) => {
+  const onChangeRegisterDeviceStatEvery = async (newValue: number | null) => {
+    if (newValue) {
+      await postDeviceSetting(
+        'device-stat-frequency-in-seconds',
+        newValue,
+      ).then(() => {
+        setRegisterDeviceStatEveryXSeconds(newValue);
+      });
+      message.success({ content: 'Setting successfully updated', duration: 6 });
+    }
+  };
+
+  const confirmReset = async () => {
     await postResetSettings().then(() => {
       message.warning({ content: 'Settings have been reset', duration: 6 });
     });
@@ -258,6 +272,32 @@ const GeneralSettings: React.FC = () => {
             />
             <Space.Compact style={{ width: 'auto' }} />
           </Space>
+          <Space direction="horizontal" size="middle">
+            <Typography>
+              {' '}
+              <Popover
+                content={
+                  'Allow a device stat to be saved only when the latest is older than the settings, regardless of the frequency of the agent'
+                }
+              >
+                <InfoCircleFilled />
+              </Popover>{' '}
+              Register device stats every
+            </Typography>{' '}
+            <InputNumber
+              min={1}
+              max={600}
+              defaultValue={
+                typeof registerDeviceStatEveryXSeconds === 'number'
+                  ? registerDeviceStatEveryXSeconds
+                  : 0
+              }
+              suffix="second(s)"
+              style={{ width: 'auto' }}
+              onChange={onChangeRegisterDeviceStatEvery}
+            />
+            <Space.Compact style={{ width: 'auto' }} />
+          </Space>
         </Flex>
       </Card>
       <Card
@@ -285,7 +325,8 @@ const GeneralSettings: React.FC = () => {
                 <Slider
                   min={1}
                   max={100}
-                  onChange={onChangeMaxCpu}
+                  onChange={(newValue) => setDashboardMaxCpuInPercent(newValue)}
+                  onChangeComplete={onChangeMaxCpu}
                   value={
                     typeof dashboardMaxCpuInPercent === 'number'
                       ? dashboardMaxCpuInPercent
@@ -318,7 +359,8 @@ const GeneralSettings: React.FC = () => {
                 <Slider
                   min={1}
                   max={100}
-                  onChange={onChangeMinMem}
+                  onChange={(newValue) => setDashboardMinMemInPercent(newValue)}
+                  onChangeComplete={onChangeMinMem}
                   value={
                     typeof dashboardMinMemInPercent === 'number'
                       ? dashboardMinMemInPercent

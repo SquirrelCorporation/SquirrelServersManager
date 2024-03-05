@@ -15,23 +15,14 @@ export async function getDevices(
   });
 }
 
-export async function updateRule(options?: { [key: string]: any }) {
-  return request<API.DeviceItem>('/api/rule', {
+export async function putDevice(
+  ip: string,
+  deviceAuth: API.DeviceAuthParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.DeviceItem>('/api/devices', {
+    data: { ip: ip, ...deviceAuth },
     method: 'PUT',
-    ...(options || {}),
-  });
-}
-
-export async function addRule(options?: { [key: string]: any }) {
-  return request<API.DeviceItem>('/api/rule', {
-    method: 'POST',
-    ...(options || {}),
-  });
-}
-
-export async function removeRule(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/api/rule', {
-    method: 'DELETE',
     ...(options || {}),
   });
 }

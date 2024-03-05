@@ -1,0 +1,10 @@
+- name: Scan host for facts
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Get packages
+      ansible.builtin.package_facts:
+
+    - name: Get services
+      ansible.builtin.service_facts:

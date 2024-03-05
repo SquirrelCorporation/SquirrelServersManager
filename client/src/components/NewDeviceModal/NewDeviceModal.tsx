@@ -103,6 +103,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
   const handleCancel = () => {
     props.setIsModalOpen(false);
   };
+
   const GrommetIconsInstall = (iconProps: any) => (
     <svg
       width="0.8em"
@@ -141,7 +142,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
         <Row style={{ alignItems: 'center' }} justify="center">
           <Col span={12}>
             <DotLottiePlayer
-              src="/Animation-1707227617481.json"
+              src="/Animation-1709649662243.json"
               autoplay
               loop
               intermission={5000}

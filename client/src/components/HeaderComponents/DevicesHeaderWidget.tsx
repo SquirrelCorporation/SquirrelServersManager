@@ -10,6 +10,7 @@ import {
   Typography,
 } from 'antd';
 import React from 'react';
+import Devicestatus from '@/utils/devicestatus';
 
 export const DevicesHeaderWidget: React.FC = () => {
   const [open, setOpen] = React.useState(false);
@@ -76,12 +77,18 @@ export const DevicesHeaderWidget: React.FC = () => {
 
   const items: MenuProps['items'] =
     currentUser?.devices?.overview?.map(
-      (e: { name?: string; status?: string }, index: number) => {
+      (e: { name?: string; status?: number }, index: number) => {
         return {
           key: `${index}`,
           label: (
             <Badge
-              status={e.status === 'online' ? 'success' : 'error'}
+              status={
+                e.status === Devicestatus.ONLINE
+                  ? 'success'
+                  : e.status === Devicestatus.UNMANAGED
+                    ? 'warning'
+                    : 'error'
+              }
               text={
                 <Typography.Text
                   style={{ width: 200 }}

@@ -1,17 +1,14 @@
 import NewDeviceModal from '@/components/NewDeviceModal/NewDeviceModal';
 import PlaybookSelectionModal from '@/components/PlaybookSelectionModal/PlaybookSelectionModal';
-import QuickActionDropDown from '@/components/QuickAction/QuickActionDropDown';
 import QuickActionReference, {
   Actions,
   Types,
 } from '@/components/QuickAction/QuickActionReference';
 import TerminalModal, { TerminalStateProps } from '@/components/TerminalModal';
-import { OsLogo } from '@/components/OsLogo/OsLogo';
 import InventoryColumns from '@/pages/Admin/Inventory/InventoryColumns';
 import { getDevices } from '@/services/rest/device';
 import type {
   ActionType,
-  ProColumns,
   ProDescriptionsItemProps,
 } from '@ant-design/pro-components';
 import {
@@ -20,11 +17,12 @@ import {
   ProDescriptions,
   ProTable,
 } from '@ant-design/pro-components';
-import { Avatar, Button, Drawer } from 'antd';
+import { Button, Col, Drawer, Dropdown, MenuProps, Row } from 'antd';
 import React, { useRef, useState } from 'react';
 import { TerminalContextProvider } from 'react-terminal';
 import ConfigurationModal from './components/ConfigurationModal';
 import OsSoftwareVersions from '@/components/OSSoftwaresVersions/OsSoftwareVersions';
+import NewUnManagedDeviceModal from '@/components/NewDeviceModal/NewUnManagedDeviceModal';
 
 const Inventory: React.FC = () => {
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
@@ -37,6 +35,11 @@ const Inventory: React.FC = () => {
     command: undefined,
   });
   const [addNewDeviceModalIsOpen, setAddNewDeviceModalIsOpen] = useState(false);
+  const [
+    addNewUnManagedDeviceModalIsOpen,
+    setAddNewUnManagedDeviceModalIsOpen,
+  ] = useState(false);
+
   const [playbookSelectionModalIsOpened, setPlaybookSelectionModalIsOpened] =
     React.useState(false);
   const [selectedRowsState, setSelectedRows] = useState<API.DeviceItem[]>([]);
@@ -76,6 +79,7 @@ const Inventory: React.FC = () => {
       }
     }
   };
+
   const columns = InventoryColumns(
     setCurrentRow,
     setShowDetail,
@@ -83,12 +87,25 @@ const Inventory: React.FC = () => {
     onDropDownClicked,
     setTerminal,
   );
+  const onMenuClick: MenuProps['onClick'] = (e) => {
+    setAddNewUnManagedDeviceModalIsOpen(true);
+  };
+  const items = [
+    {
+      key: '1',
+      label: 'Register an unmanaged device (without agent)',
+    },
+  ];
   return (
     <TerminalContextProvider>
       <PageContainer>
         <NewDeviceModal
           isModalOpen={addNewDeviceModalIsOpen}
           setIsModalOpen={setAddNewDeviceModalIsOpen}
+        />
+        <NewUnManagedDeviceModal
+          isModalOpen={addNewUnManagedDeviceModalIsOpen}
+          setIsModalOpen={setAddNewUnManagedDeviceModalIsOpen}
         />
         <ProTable<API.DeviceItem, API.PageParams>
           headerTitle="List of Devices"
@@ -106,16 +123,21 @@ const Inventory: React.FC = () => {
           }}
           toolBarRender={() => {
             return [
-              <Button
+              <Dropdown.Button
+                menu={{ items, onClick: onMenuClick }}
                 key="3"
                 type="primary"
                 onClick={() => {
                   setAddNewDeviceModalIsOpen(true);
                 }}
-                icon={<GrommetIconsInstall />}
               >
-                Install agent on new device
-              </Button>,
+                <Row>
+                  <Col>
+                    <GrommetIconsInstall />
+                  </Col>
+                  <Col>&nbsp;Install agent on new device</Col>
+                </Row>
+              </Dropdown.Button>,
             ];
           }}
         />

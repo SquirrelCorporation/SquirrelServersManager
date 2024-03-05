@@ -1,14 +1,62 @@
 import { parse } from 'url';
 import express from 'express';
-import Device from '../../database/model/Device';
+import Device, { DeviceStatus } from '../../database/model/Device';
 import DeviceRepo from '../../database/repository/DeviceRepo';
 import logger from '../../logger';
 import Authentication from '../../middlewares/Authentication';
 import API from '../../typings';
+import DeviceAuthRepo from '../../database/repository/DeviceAuthRepo';
+import DeviceAuth from '../../database/model/DeviceAuth';
 
 const router = express.Router();
 
+router.put('/', async (req, res) => {
+  logger.info(`[CONTROLLER] - PUT - /devices/`);
+  if (!req.body.ip) {
+    logger.error('[CONTROLLER] Device - Is called with no IP is specified');
+    res.status(401).send({
+      success: false,
+      message: 'Ip is not specified',
+    });
+    return;
+  }
+  try {
+    const isUnManagedDevice = req.body.unManaged === true;
+    const createdDevice = await DeviceRepo.create({
+      ip: req.body.ip,
+      status: isUnManagedDevice ? DeviceStatus.UNMANAGED : DeviceStatus.REGISTERING,
+    } as Device);
+    if (req.body.type) {
+      await DeviceAuthRepo.updateOrCreateIfNotExist({
+        device: createdDevice,
+        type: req.body.type,
+        sshKey: req.body.sshKey,
+        sshUser: req.body.sshUser,
+        sshPwd: req.body.sshPwd,
+        sshPort: req.body.sshPort,
+        __enc_sshPwd: true,
+        __enc_sshUser: true,
+        __enc_sshKey: true,
+      } as DeviceAuth);
+    }
+    logger.info(`[CONTROLLER] Device - Created device with uuid: ${createdDevice.uuid}`);
+    res.send({
+      success: true,
+      data: {
+        id: createdDevice.uuid,
+      },
+    });
+  } catch (error) {
+    res.status(200).send({
+      success: false,
+      errorMessage: 'The ip already exists',
+    });
+    return;
+  }
+});
+
 router.post(`/`, async (req, res) => {
+  logger.info(`[CONTROLLER] - POST - /devices/`);
   if (!req.body.ip) {
     logger.error('[CONTROLLER] Device - Is called with no IP is specified');
     res.status(401).send({
@@ -33,9 +81,7 @@ router.post(`/`, async (req, res) => {
   const createdDevice = await DeviceRepo.create({
     ip: req.body.ip,
   } as Device);
-
   logger.info(`[CONTROLLER] Device - Created device with uuid: ${createdDevice.uuid}`);
-
   res.send({
     success: true,
     data: {
@@ -45,6 +91,7 @@ router.post(`/`, async (req, res) => {
 });
 
 router.get(`/`, Authentication.isAuthenticated, async (req, res) => {
+  logger.info(`[CONTROLLER] - GET - /devices/`);
   const realUrl = req.url;
   const { current = 1, pageSize = 10 } = req.query;
   const params = parse(realUrl, true).query as unknown as API.PageParams &

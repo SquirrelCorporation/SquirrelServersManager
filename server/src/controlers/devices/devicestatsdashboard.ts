@@ -12,7 +12,7 @@ import DashboardUseCase from '../../use-cases/DashboardUseCase';
 const router = express.Router();
 
 router.get(`/dashboard/stats/performances`, Authentication.isAuthenticated, async (req, res) => {
-  logger.info(`[CONTROLLER] /dashboard/stats/performances`);
+  logger.info(`[CONTROLLER] - GET - /dashboard/stats/performances`);
   try {
     const result = await DashboardUseCase.getSystemPerformance();
     res.send({
@@ -34,7 +34,7 @@ router.post(
   async (req, res) => {
     const { from, to } = req.query;
     const devices = req.body.devices;
-    logger.info(`[CONTROLLER] /dashboard/stats/averaged/${req.params.type}`);
+    logger.info(`[CONTROLLER] - POST - /dashboard/stats/averaged/${req.params.type}`);
     if (!devices || !from || !to) {
       res.status(401).send({
         success: false,
@@ -75,7 +75,7 @@ router.post(
 );
 
 router.get(`/dashboard/stats/availability`, Authentication.isAuthenticated, async (req, res) => {
-  logger.info(`[CONTROLLER] /dashboard/stats/availability`);
+  logger.info(`[CONTROLLER] - GET - /dashboard/stats/availability`);
   const { availability, lastMonth, byDevice } =
     await DeviceDownTimeUseCases.getDevicesAvailabilitySumUpCurrentMonthLastMonth();
   try {
@@ -99,7 +99,7 @@ router.get(`/dashboard/stats/availability`, Authentication.isAuthenticated, asyn
 router.post(`/dashboard/stats/:type/`, Authentication.isAuthenticated, async (req, res) => {
   const { from, to } = req.query;
   const devices = req.body.devices;
-  logger.info(`[CONTROLLER] /dashboard/stats/${req.params.type}`);
+  logger.info(`[CONTROLLER] - POST - /dashboard/stats/${req.params.type}`);
   if (!devices || !from || !to) {
     res.status(401).send({
       success: false,
