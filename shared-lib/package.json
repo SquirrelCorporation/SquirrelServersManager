@@ -2,7 +2,7 @@
   "name": "ssm-shared-lib",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/index.ts",
+  "main": "./distribution/index.js",
   "scripts": {
     "build": "npm run clean && tsc -p ./tsconfig.json",
     "build:check": "tsc -p ./tsconfig.json --noEmit",
