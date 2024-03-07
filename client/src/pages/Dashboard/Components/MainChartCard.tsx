@@ -18,6 +18,7 @@ import {
 import { useModel } from '@umijs/max';
 import { getTimeDistance } from '@/utils/time';
 import Devicestatus from '@/utils/devicestatus';
+import { API } from 'ssm-shared-lib';
 
 const { RangePicker } = DatePicker;
 

@@ -6,15 +6,20 @@ RUN npm install -g npm@latest
 RUN rm /usr/lib/python3.11/EXTERNALLY-MANAGED
 RUN pip install ansible-runner \
     ansible-runner-http
+RUN npm install -g typescript
 COPY ./package*.json .
 COPY ./tsconfig.json .
+RUN mkdir /shared-lib
+WORKDIR /shared-lib
+COPY --from=shared-lib ./ ./
+RUN npm run build
+WORKDIR /client
 EXPOSE 3000
 
 FROM base as production
 ENV NODE_ENV=production
 WORKDIR /server
 COPY . .
-RUN npm install -g typescript
 RUN npm install  --verbose
 RUN npm run build
 CMD ["node", "./dist/src/index.js"]

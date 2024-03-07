@@ -13,6 +13,7 @@ import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 // @ts-ignore
 import loginBackground from '@/pages/User/Login/assets/login-background.mp4';
+import { API } from 'ssm-shared-lib';
 
 const LoginMessage: React.FC<{
   content: string;

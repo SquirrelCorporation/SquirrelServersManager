@@ -6,6 +6,7 @@ import MiniProgress from '@/pages/Dashboard/ChartComponents/MiniProgress';
 import ChartCard from '@/pages/Dashboard/ChartComponents/ChartCard';
 import React, { useEffect } from 'react';
 import { getDashboardAvailabilityStat } from '@/services/rest/devicestat';
+import { API } from 'ssm-shared-lib';
 
 const AvailabilityCard: React.FC = () => {
   const [loading, setLoading] = React.useState(false);

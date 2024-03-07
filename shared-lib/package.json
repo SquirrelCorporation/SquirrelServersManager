@@ -1,0 +1,16 @@
+{
+  "name": "ssm-shared-lib",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.ts",
+  "scripts": {
+    "build": "npm run clean && tsc -p ./tsconfig.json",
+    "build:check": "tsc -p ./tsconfig.json --noEmit",
+    "build:watch": "tsc -p ./tsconfig.json --watch",
+    "clean": "rm -rf distribution"
+  },
+  "types": "distribution/index.d.ts",
+  "devDependencies": {
+
+  }
+}

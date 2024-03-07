@@ -4,6 +4,7 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import React from 'react';
 import { Tabs } from 'antd';
 import TaskLogsColumns from '@/pages/Admin/Logs/TaskLogsColumns';
+import { API } from 'ssm-shared-lib';
 
 const logsTabItem = [
   {

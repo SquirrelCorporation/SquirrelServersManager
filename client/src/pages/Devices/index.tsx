@@ -25,6 +25,7 @@ import React, { memo, useEffect, useState } from 'react';
 import { TerminalContextProvider } from 'react-terminal';
 import styles from './Devices.less';
 import DeviceStatus from '@/utils/devicestatus';
+import { API } from 'ssm-shared-lib';
 
 const { Text } = Typography;
 

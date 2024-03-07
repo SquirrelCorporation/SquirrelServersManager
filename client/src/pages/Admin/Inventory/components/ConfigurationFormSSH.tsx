@@ -3,6 +3,7 @@ import { message } from 'antd';
 import { ProForm } from '@ant-design/pro-form/lib';
 import SSHConnectionForm from '@/components/SSHConnectionForm/SSHConnectionForm';
 import { getDeviceAuth, putDeviceAuth } from '@/services/rest/deviceauth';
+import { API } from 'ssm-shared-lib';
 
 export type ConfigurationFormSSHProps = {
   values: Partial<API.DeviceItem>;

@@ -1,11 +1,10 @@
 import { DateTime } from 'luxon';
+import { API, SettingsKeys } from 'ssm-shared-lib';
 import DeviceStatRepo from '../database/repository/DeviceStatRepo';
 import Device from '../database/model/Device';
 import logger from '../logger';
 import DeviceStat from '../database/model/DeviceStat';
-import API from '../typings';
-import { getConfFromCache, getIntConfFromCache } from '../redis';
-import Keys from '../redis/defaults/keys';
+import { getIntConfFromCache } from '../redis';
 
 async function createDeviceStatFromJson(deviceInfo: API.DeviceInfo, device: Device) {
   logger.info(`[USECASE][DEVICESTATS] - createDeviceStatFromJson - DeviceUuid: ${device?.uuid}`);
@@ -29,7 +28,7 @@ async function createStatIfMinInterval(deviceInfo: API.DeviceInfo, device: Devic
   logger.info(`[USECASE][DEVICESTATS] - createStatIfMinInterval - DeviceUuid: ${device?.uuid}`);
   const deviceStat = await DeviceStatRepo.findLatestStat(device);
   const minInternal = await getIntConfFromCache(
-    Keys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
+    SettingsKeys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
   );
   if (
     !deviceStat ||

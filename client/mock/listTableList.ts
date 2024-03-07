@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import moment from 'moment';
 import { parse } from 'url';
+import { API } from 'ssm-shared-lib';
 
 // mock tableListDataSource
 const genList = (current: number, pageSize: number) => {
@@ -33,7 +34,10 @@ let tableListDataSource = genList(1, 10);
 
 function getRule(req: Request, res: Response, u: string) {
   let realUrl = u;
-  if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
+  if (
+    !realUrl ||
+    Object.prototype.toString.call(realUrl) !== '[object String]'
+  ) {
     realUrl = req.url;
   }
   const { current = 1, pageSize = 10 } = req.query;
@@ -77,21 +81,25 @@ function getRule(req: Request, res: Response, u: string) {
     };
     if (Object.keys(filter).length > 0) {
       dataSource = dataSource.filter((item) => {
-        return (Object.keys(filter) as Array<keyof API.DeviceItem>).some((key) => {
-          if (!filter[key]) {
-            return true;
-          }
-          if (filter[key].includes(`${item[key]}`)) {
-            return true;
-          }
-          return false;
-        });
+        return (Object.keys(filter) as Array<keyof API.DeviceItem>).some(
+          (key) => {
+            if (!filter[key]) {
+              return true;
+            }
+            if (filter[key].includes(`${item[key]}`)) {
+              return true;
+            }
+            return false;
+          },
+        );
       });
     }
   }
 
   if (params.ip) {
-    dataSource = dataSource.filter((data) => data?.ip?.includes(params.ip || ''));
+    dataSource = dataSource.filter((data) =>
+      data?.ip?.includes(params.ip || ''),
+    );
   }
   const result = {
     data: dataSource,
@@ -106,7 +114,10 @@ function getRule(req: Request, res: Response, u: string) {
 
 function postRule(req: Request, res: Response, u: string, b: Request) {
   let realUrl = u;
-  if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
+  if (
+    !realUrl ||
+    Object.prototype.toString.call(realUrl) !== '[object String]'
+  ) {
     realUrl = req.url;
   }
 
@@ -116,7 +127,9 @@ function postRule(req: Request, res: Response, u: string, b: Request) {
   switch (method) {
     /* eslint no-case-declarations:0 */
     case 'delete':
-      tableListDataSource = tableListDataSource.filter((item) => key.indexOf(item.key) === -1);
+      tableListDataSource = tableListDataSource.filter(
+        (item) => key.indexOf(item.key) === -1,
+      );
       break;
     case 'post':
       (() => {
@@ -128,9 +141,9 @@ function postRule(req: Request, res: Response, u: string, b: Request) {
             'https://gw.alipayobjects.com/zos/rmsportal/eeHMaZBwmTvLdIwMfBpg.png',
             'https://gw.alipayobjects.com/zos/rmsportal/udxAbMEhpwthVVcjLXik.png',
           ][i % 2],
-          ip : '192.168.0.1',
+          ip: '192.168.0.1',
           owner: '曲丽丽',
-          hostname : 'test 1',
+          hostname: 'test 1',
           status: Math.floor(Math.random() * 10) % 2,
           updatedAt: moment().format('YYYY-MM-DD'),
           createdAt: moment().format('YYYY-MM-DD'),

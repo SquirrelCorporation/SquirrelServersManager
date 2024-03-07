@@ -1,4 +1,5 @@
 import express from 'express';
+import { GeneralSettingsKeys } from 'ssm-shared-lib/distribution/enums/settings';
 import { dependencies, version } from '../../../package.json';
 import User, { Role } from '../../database/model/User';
 import UserRepo from '../../database/repository/UserRepo';
@@ -6,7 +7,6 @@ import logger from '../../logger';
 import Authentication from '../../middlewares/Authentication';
 import DeviceUseCases from '../../use-cases/DeviceUseCases';
 import { getConfFromCache, getIntConfFromCache } from '../../redis';
-import Keys from '../../redis/defaults/keys';
 import DashboardUseCase from '../../use-cases/DashboardUseCase';
 
 const router = express.Router();
@@ -56,22 +56,22 @@ router.get(`/currentUser`, Authentication.isAuthenticated, async (req, res) => {
   const { online, offline, totalCpu, totalMem, overview } =
     await DeviceUseCases.getDevicesOverview();
   const considerDeviceOffline = await getIntConfFromCache(
-    Keys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
+    GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
   );
   const serverLogRetention = await getIntConfFromCache(
-    Keys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS,
+    GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS,
   );
   const ansibleLogRetention = await getIntConfFromCache(
-    Keys.GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
+    GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
   );
   const performanceMinMem = await getIntConfFromCache(
-    Keys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
+    GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
   );
   const performanceMaxCpu = await getIntConfFromCache(
-    Keys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
+    GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
   );
   const registerDeviceStatEvery = await getIntConfFromCache(
-    Keys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
+    GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
   );
   const systemPerformance = await DashboardUseCase.getSystemPerformance();
 

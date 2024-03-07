@@ -35,6 +35,8 @@ services:
       - redis
     build:
       context: ./server
+      additional_contexts:
+        - shared-lib=./shared-lib
       target: production
     env_file: .env
     environment:
@@ -50,4 +52,6 @@ services:
       - server
     build:
       context: ./client
+      additional_contexts:
+        - shared-lib=./shared-lib
       target: production

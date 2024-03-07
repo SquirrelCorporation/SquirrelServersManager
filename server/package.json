@@ -5,11 +5,12 @@
   "main": "index",
   "scripts": {
     "dev": "pwd && nodemon",
-    "start": "npm run build && cross-env NODE_ENV=production node dist/index.js",
+    "start": "npm run build-shared && npm run build && cross-env NODE_ENV=production node dist/index.js",
     "build": "tsc"
   },
   "author": "",
   "dependencies": {
+    "ssm-shared-lib": "file:../shared-lib/",
     "dotenv": "^16.4.5",
     "express": "^4.18.3",
     "luxon": "^3.4.4",

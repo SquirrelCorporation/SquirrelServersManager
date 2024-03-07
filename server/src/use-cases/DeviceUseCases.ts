@@ -1,7 +1,8 @@
-import Device, { DeviceStatus } from '../database/model/Device';
+import { DeviceStatus } from 'ssm-shared-lib/distribution/enums/status';
+import { API } from 'ssm-shared-lib';
+import Device from '../database/model/Device';
 import DeviceRepo from '../database/repository/DeviceRepo';
 import logger from '../logger';
-import API from '../typings';
 import DeviceDownTimeEventRepo from '../database/repository/DeviceDownTimeEventRepo';
 
 async function getDevicesOverview() {

@@ -39,6 +39,8 @@ services:
       - redis
     build:
       context: ./server
+      additional_contexts:
+        - shared-lib=./shared-lib
       target: dev
     env_file:
       - ./.env.dev
@@ -60,6 +62,8 @@ services:
       - server
     build:
       context: ./client
+      additional_contexts:
+        - shared-lib=./shared-lib
       target: dev
     volumes:
       - ./client/src:/client/src

@@ -1,10 +1,11 @@
 import { parse } from 'url';
 import express from 'express';
-import Device, { DeviceStatus } from '../../database/model/Device';
+import { SsmStatus } from 'ssm-shared-lib';
+import { API } from 'ssm-shared-lib';
+import Device from '../../database/model/Device';
 import DeviceRepo from '../../database/repository/DeviceRepo';
 import logger from '../../logger';
 import Authentication from '../../middlewares/Authentication';
-import API from '../../typings';
 import DeviceAuthRepo from '../../database/repository/DeviceAuthRepo';
 import DeviceAuth from '../../database/model/DeviceAuth';
 
@@ -24,7 +25,9 @@ router.put('/', async (req, res) => {
     const isUnManagedDevice = req.body.unManaged === true;
     const createdDevice = await DeviceRepo.create({
       ip: req.body.ip,
-      status: isUnManagedDevice ? DeviceStatus.UNMANAGED : DeviceStatus.REGISTERING,
+      status: isUnManagedDevice
+        ? SsmStatus.DeviceStatus.UNMANAGED
+        : SsmStatus.DeviceStatus.REGISTERING,
     } as Device);
     if (req.body.type) {
       await DeviceAuthRepo.updateOrCreateIfNotExist({
@@ -95,7 +98,7 @@ router.get(`/`, Authentication.isAuthenticated, async (req, res) => {
   const realUrl = req.url;
   const { current = 1, pageSize = 10 } = req.query;
   const params = parse(realUrl, true).query as unknown as API.PageParams &
-    API.Device & {
+    API.DeviceItem & {
       sorter: any;
       filter: any;
     };
@@ -111,7 +114,7 @@ router.get(`/`, Authentication.isAuthenticated, async (req, res) => {
     const sorter = JSON.parse(params.sorter);
     dataSource = dataSource.sort((prev, next) => {
       let sortNumber = 0;
-      (Object.keys(sorter) as Array<keyof API.Device>).forEach((uuid) => {
+      (Object.keys(sorter) as Array<keyof API.DeviceItem>).forEach((uuid) => {
         const nextSort = next?.uuid as string;
         const preSort = prev?.uuid as string;
         if (sorter[uuid] === 'descend') {
@@ -137,7 +140,7 @@ router.get(`/`, Authentication.isAuthenticated, async (req, res) => {
     };
     if (Object.keys(filter).length > 0) {
       dataSource = dataSource.filter((item) => {
-        return (Object.keys(filter) as Array<keyof API.Device>).some((uuid) => {
+        return (Object.keys(filter) as Array<keyof API.DeviceItem>).some((uuid) => {
           if (!filter[uuid]) {
             return true;
           }

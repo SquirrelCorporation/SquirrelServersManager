@@ -23,6 +23,7 @@ import { TerminalContextProvider } from 'react-terminal';
 import ConfigurationModal from './components/ConfigurationModal';
 import OsSoftwareVersions from '@/components/OSSoftwaresVersions/OsSoftwareVersions';
 import NewUnManagedDeviceModal from '@/components/NewDeviceModal/NewUnManagedDeviceModal';
+import { API } from 'ssm-shared-lib';
 
 const Inventory: React.FC = () => {
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);

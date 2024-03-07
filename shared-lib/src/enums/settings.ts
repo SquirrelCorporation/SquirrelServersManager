@@ -1,4 +1,4 @@
-enum GeneralSettingsKeys {
+export enum GeneralSettingsKeys {
   SCHEME_VERSION = 'scheme-version',
   SERVER_LOG_RETENTION_IN_DAYS = 'server-log-retention-in-days',
   CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES = 'consider-device-offline-after-in-minutes',
@@ -8,7 +8,7 @@ enum GeneralSettingsKeys {
   REGISTER_DEVICE_STAT_EVERY_IN_SECONDS = 'device-stat-frequency-in-seconds',
 }
 
-enum GeneralSettingsDefaultValue {
+export enum DefaultValue {
   SCHEME_VERSION = '2',
   SERVER_LOG_RETENTION_IN_DAYS = '30',
   CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES = '3',
@@ -17,8 +17,3 @@ enum GeneralSettingsDefaultValue {
   CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS = '600',
   REGISTER_DEVICE_STAT_EVERY_IN_SECONDS = '60',
 }
-
-export default {
-  GeneralSettingsKeys,
-  GeneralSettingsDefaultValue,
-};

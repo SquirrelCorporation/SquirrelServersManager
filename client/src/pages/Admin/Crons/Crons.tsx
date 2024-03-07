@@ -7,6 +7,7 @@ import {
 } from '@ant-design/pro-components';
 import '@umijs/max';
 import React from 'react';
+import { API } from 'ssm-shared-lib';
 
 const Crons: React.FC = () => {
   return (

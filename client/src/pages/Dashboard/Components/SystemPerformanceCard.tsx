@@ -6,6 +6,7 @@ import Trend from '@/pages/Dashboard/ChartComponents/Trend';
 import styles from '@/pages/Dashboard/Analysis.less';
 import React, { useEffect } from 'react';
 import { getDashboardSystemPerformance } from '@/services/rest/devicestat';
+import { API } from 'ssm-shared-lib';
 
 const SystemPerformanceCard: React.FC = () => {
   const [loading, setLoading] = React.useState(false);

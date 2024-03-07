@@ -1,6 +1,6 @@
 import express from 'express';
+import { GeneralSettingsKeys } from 'ssm-shared-lib/distribution/enums/settings';
 import Authentication from '../../middlewares/Authentication';
-import keys from '../../redis/defaults/keys';
 import logger from '../../logger';
 import { setToCache } from '../../redis';
 
@@ -22,17 +22,14 @@ router.post(`/devices/:key`, Authentication.isAuthenticated, async (req, res) =>
   }
   try {
     switch (req.params.key) {
-      case keys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES:
+      case GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES:
         await setToCache(
-          keys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
+          GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
           req.body.value,
         );
         return res.send({ success: true });
-      case keys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS:
-        await setToCache(
-          keys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
-          req.body.value,
-        );
+      case GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS:
+        await setToCache(GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS, req.body.value);
         return res.send({ success: true });
       default:
         return res.status(404).send({

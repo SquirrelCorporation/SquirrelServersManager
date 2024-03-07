@@ -6,6 +6,7 @@ import ChartCard from '@/pages/Dashboard/ChartComponents/ChartCard';
 import React from 'react';
 import { useModel } from '@umijs/max';
 import Devicestatus from '@/utils/devicestatus';
+import { API } from 'ssm-shared-lib';
 
 const CombinedPowerCard: React.FC = () => {
   const [loading, setLoading] = React.useState(false);

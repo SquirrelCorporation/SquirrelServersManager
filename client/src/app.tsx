@@ -9,6 +9,7 @@ import defaultSettings from '../config/defaultSettings';
 import Logo from '../public/logo.svg';
 import { errorConfig } from './requestErrorConfig';
 import { HealthWidget } from '@/components/HeaderComponents/HealthWidget';
+import { API } from 'ssm-shared-lib';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';

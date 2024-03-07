@@ -4,6 +4,7 @@ import { Tiny } from '@ant-design/plots';
 import { message } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
+import { API } from 'ssm-shared-lib';
 
 export type TinyLineProps = {
   deviceUuid: string;

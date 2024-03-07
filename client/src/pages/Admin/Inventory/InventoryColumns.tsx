@@ -3,7 +3,7 @@ import QuickActionDropDown from '@/components/QuickAction/QuickActionDropDown';
 import type { ProColumns } from '@ant-design/pro-components';
 import { Avatar } from 'antd';
 import React from 'react';
-import DeviceStatus from '@/utils/devicestatus';
+import { API } from 'ssm-shared-lib';
 
 const InventoryColumns = (
   setCurrentRow: any,

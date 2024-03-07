@@ -1,8 +1,12 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from '@umijs/max';
+import { API } from 'ssm-shared-lib';
 
-export async function getDeviceAuth(deviceId: string, options?: { [key: string]: any }) {
+export async function getDeviceAuth(
+  deviceId: string,
+  options?: { [key: string]: any },
+) {
   return request<API.DeviceAuthResponse>(`/api/devices/${deviceId}/auth`, {
     method: 'GET',
     ...(options || {}),

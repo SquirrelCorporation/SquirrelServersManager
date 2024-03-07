@@ -1,5 +1,5 @@
+import {SettingsKeys} from 'ssm-shared-lib';
 import { getConfFromCache } from '../redis';
-import keys from '../redis/defaults/keys';
 import logger from '../logger';
 import DeviceStatsUseCases from './DeviceStatsUseCases';
 
@@ -10,10 +10,10 @@ async function getSystemPerformance() {
   const currentCpu = await DeviceStatsUseCases.getSingleAveragedStatByType(7, 0, 'cpu');
   const previousCpu = await DeviceStatsUseCases.getSingleAveragedStatByType(14, 7, 'cpu');
   const minMem = await getConfFromCache(
-    keys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
+    SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
   );
   const maxCpu = await getConfFromCache(
-    keys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
+    SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
   );
   const values = {
     currentMem: currentMem && currentMem.length > 0 ? currentMem[0].value : NaN,

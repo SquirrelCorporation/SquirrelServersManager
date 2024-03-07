@@ -1,4 +1,5 @@
 import { request } from '@umijs/max';
+import { API } from 'ssm-shared-lib';
 
 export async function currentUser(options?: Record<string, any>) {
   return request<API.CurrentUser>('/api/currentUser', {

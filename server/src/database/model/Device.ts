@@ -1,16 +1,10 @@
 import { Schema, model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
-import API from '../../typings';
+import { DeviceStatus } from 'ssm-shared-lib/distribution/enums/status';
+import { API } from 'ssm-shared-lib';
 
 export const DOCUMENT_NAME = 'Device';
 export const COLLECTION_NAME = 'devices';
-
-export type RaspberryRevisionData = {
-  manufacturer: string;
-  processor: string;
-  type: string;
-  revision: string;
-};
 
 export default interface Device {
   _id: string;
@@ -40,16 +34,9 @@ export default interface Device {
   mem?: number;
   agentVersion?: string;
   versions?: API.VersionData;
-  raspberry?: RaspberryRevisionData;
+  raspberry?: API.RaspberryRevisionData;
   createdAt?: Date;
   updatedAt?: Date;
-}
-
-export enum DeviceStatus {
-  REGISTERING = 0,
-  ONLINE = 1,
-  OFFLINE = 2,
-  UNMANAGED = 3,
 }
 
 const schema = new Schema<Device>(

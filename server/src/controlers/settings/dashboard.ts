@@ -1,6 +1,6 @@
 import express from 'express';
+import { GeneralSettingsKeys } from 'ssm-shared-lib/distribution/enums/settings';
 import Authentication from '../../middlewares/Authentication';
-import keys from '../../redis/defaults/keys';
 import logger from '../../logger';
 import { setToCache } from '../../redis';
 
@@ -22,15 +22,15 @@ router.post(`/dashboard/:key`, Authentication.isAuthenticated, async (req, res) 
   }
   try {
     switch (req.params.key) {
-      case keys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER:
+      case GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER:
         await setToCache(
-          keys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
+          GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
           req.body.value,
         );
         return res.send({ success: true });
-      case keys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER:
+      case GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER:
         await setToCache(
-          keys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
+          GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
           req.body.value,
         );
         return res.send({ success: true });

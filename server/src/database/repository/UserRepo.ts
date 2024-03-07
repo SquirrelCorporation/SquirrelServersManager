@@ -13,7 +13,6 @@ async function findByEmailAndPassword(email: string, password: string): Promise<
   const messageToSearchWith = new User({ password: password });
   // @ts-expect-error - Not recognizing the field
   messageToSearchWith.encryptFieldsSync();
-  logger.info(messageToSearchWith.password);
   return await UsersModel.findOne({
     email: email,
     password: messageToSearchWith.password,

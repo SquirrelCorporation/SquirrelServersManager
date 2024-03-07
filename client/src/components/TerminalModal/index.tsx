@@ -9,6 +9,7 @@ import { Button, Col, Modal, Row, Steps, StepsProps, message } from 'antd';
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { ReactTerminal, TerminalContext } from 'react-terminal';
 import { DotLottiePlayer } from '@dotlottie/react-player';
+import { API } from 'ssm-shared-lib';
 
 export type TerminalStateProps = {
   isOpen: boolean;

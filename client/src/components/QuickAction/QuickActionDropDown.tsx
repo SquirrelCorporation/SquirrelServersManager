@@ -7,6 +7,7 @@ import QuickActionReference, {
 } from '@/components/QuickAction/QuickActionReference';
 import PlaybookSelectionModal from '@/components/PlaybookSelectionModal/PlaybookSelectionModal';
 import { ItemType } from 'rc-menu/es/interface';
+import { API } from 'ssm-shared-lib';
 
 export type QuickActionProps = {
   onDropDownClicked: any;

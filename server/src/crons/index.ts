@@ -1,11 +1,11 @@
 import CronJob from 'node-cron';
+import { SettingsKeys } from 'ssm-shared-lib';
 import DeviceRepo from '../database/repository/DeviceRepo';
 import logger from '../logger';
 import CronRepo from '../database/repository/CronRepo';
 import AnsibleTaskRepo from '../database/repository/AnsibleTaskRepo';
 import LogsRepo from '../database/repository/LogsRepo';
 import { getConfFromCache, getFromCache } from '../redis';
-import Keys from '../redis/defaults/keys';
 
 const CRONS = [
   {
@@ -13,7 +13,7 @@ const CRONS = [
     schedule: '*/1 * * * *',
     fun: async () => {
       const delay = await getConfFromCache(
-        Keys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
+        SettingsKeys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
       );
       await DeviceRepo.setDeviceOfflineAfter(parseInt(delay));
     },
@@ -23,7 +23,7 @@ const CRONS = [
     schedule: '*/5 * * * *',
     fun: async () => {
       const delay = await getConfFromCache(
-        Keys.GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
+        SettingsKeys.GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
       );
       await AnsibleTaskRepo.deleteAllOldLogsAndStatuses(parseInt(delay));
     },
@@ -32,7 +32,7 @@ const CRONS = [
     name: '_CleanServerLogs',
     schedule: '*/5 * * * *',
     fun: async () => {
-      const delay = await getConfFromCache(Keys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS);
+      const delay = await getConfFromCache(SettingsKeys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS);
       await LogsRepo.deleteAllOld(parseInt(delay));
     },
   },

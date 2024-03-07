@@ -1,4 +1,5 @@
 import { ProColumns } from '@ant-design/pro-components';
+import { API } from 'ssm-shared-lib';
 
 const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
   {

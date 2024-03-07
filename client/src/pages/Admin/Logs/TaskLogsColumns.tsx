@@ -1,4 +1,5 @@
 import { ProColumns } from '@ant-design/pro-components';
+import { API } from 'ssm-shared-lib';
 
 const TaskLogsColumns: ProColumns<API.Task>[] = [
   {

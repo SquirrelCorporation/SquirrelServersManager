@@ -5,8 +5,6 @@ import Authentication from '../../middlewares/Authentication';
 import DeviceStatsUseCases from '../../use-cases/DeviceStatsUseCases';
 import logger from '../../logger';
 import DeviceDownTimeUseCases from '../../use-cases/DeviceDownTimeUseCases';
-import { getConfFromCache } from '../../redis';
-import keys from '../../redis/defaults/keys';
 import DashboardUseCase from '../../use-cases/DashboardUseCase';
 
 const router = express.Router();
