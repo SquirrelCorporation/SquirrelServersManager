@@ -1,14 +1,12 @@
 import MongoStore from 'connect-mongo';
 import express from 'express';
 import session from 'express-session';
-import { SECRET, db, redisConf } from './config';
-import { connection, dbURI } from './database';
+import { SECRET, db } from './config';
+import { connection } from './database';
 import routes from './controlers';
 import scheduledFunctions from './crons';
 import logger from './logger';
-import { getFromCache, redisInit } from './redis';
-import keys from './redis/defaults/keys';
-import initRedisValues from './redis/defaults';
+import { redisInit } from './redis';
 
 //const pino = require('pino-http')();
 
