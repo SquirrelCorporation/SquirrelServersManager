@@ -5,7 +5,7 @@ import logger from '../logger';
 import CronRepo from '../database/repository/CronRepo';
 import AnsibleTaskRepo from '../database/repository/AnsibleTaskRepo';
 import LogsRepo from '../database/repository/LogsRepo';
-import { getConfFromCache, getFromCache } from '../redis';
+import { getConfFromCache } from '../redis';
 
 const CRONS = [
   {
@@ -32,7 +32,9 @@ const CRONS = [
     name: '_CleanServerLogs',
     schedule: '*/5 * * * *',
     fun: async () => {
-      const delay = await getConfFromCache(SettingsKeys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS);
+      const delay = await getConfFromCache(
+        SettingsKeys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS,
+      );
       await LogsRepo.deleteAllOld(parseInt(delay));
     },
   },
