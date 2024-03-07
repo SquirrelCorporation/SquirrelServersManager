@@ -3,10 +3,10 @@
 
 ## Production
 ```console
-docker-compose up
+docker compose up
 ```
 
 ## Developement
 ```console
-docker-compose up -f docker-compose.dev.yml up 
+docker compose up -f docker-compose.dev.yml up 
 ```
