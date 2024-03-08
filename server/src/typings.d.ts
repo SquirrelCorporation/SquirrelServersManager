@@ -35,6 +35,18 @@ export declare namespace Ansible {
   type HostGroups = Record<string, HostGroup>;
 
   type Hosts = Meta & All & HostGroups;
+
+  type ExtraVar = {
+    extravar: string;
+    value: string;
+  };
+
+  type ExtraVars = ExtraVar[];
+
+  type PlaybookConfigurationFile = {
+    playableInBatch: boolean;
+    extraVars?: [{ value: string; required: boolean }];
+  };
 }
 
 /*

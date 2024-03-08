@@ -19,6 +19,7 @@ export async function getDevices(
 export async function putDevice(
   ip: string,
   deviceAuth: API.DeviceAuthParams,
+  serverUrl?: string,
   options?: { [key: string]: any },
 ) {
   return request<API.DeviceItem>('/api/devices', {

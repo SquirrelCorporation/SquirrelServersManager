@@ -1,9 +1,8 @@
 import express from 'express';
-import DeviceAuth, { DeviceAuthModel } from '../../database/model/DeviceAuth';
+import DeviceAuth from '../../database/model/DeviceAuth';
 import DeviceAuthRepo from '../../database/repository/DeviceAuthRepo';
-import DeviceRepo from '../../database/repository/DeviceRepo';
 import logger from '../../logger';
-import Inventory from '../../transformers/Inventory';
+import InventoryTransformer from '../../integrations/ansible/transformers/InventoryTransformer';
 
 const router = express.Router();
 
@@ -20,7 +19,7 @@ router.get(`/inventory`, async (req, res) => {
   if (devicesAuth) {
     res.send({
       success: true,
-      data: Inventory.inventoryBuilder(devicesAuth),
+      data: InventoryTransformer.inventoryBuilder(devicesAuth),
     });
   } else {
     res.send({

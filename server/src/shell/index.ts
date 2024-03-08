@@ -3,11 +3,18 @@ import User from '../database/model/User';
 import DeviceAuthRepo from '../database/repository/DeviceAuthRepo';
 import logger from '../logger';
 import AnsibleTaskRepo from '../database/repository/AnsibleTaskRepo';
-import Inventory from '../transformers/Inventory';
-import { Ansible } from '../transformers/typings';
-import ansibleCmd from './ansibleCmd';
+import Inventory from '../integrations/ansible/transformers/InventoryTransformer';
+import { Ansible } from '../typings';
+import ansibleCmd from '../integrations/ansible/AnsibleCmd';
 
-async function executePlaybook(playbook: string, user: User, target?: string[]) {
+const ANSIBLE_PATH = '/server/src/ansible/';
+
+async function executePlaybook(
+  playbook: string,
+  user: User,
+  target?: string[],
+  extraVars?: Ansible.ExtraVars,
+) {
   logger.info('[SHELL]-[ANSIBLE] - executePlaybook - Starting...');
   if (!playbook.endsWith('.yml')) {
     playbook += '.yml';
@@ -22,10 +29,11 @@ async function executePlaybook(playbook: string, user: User, target?: string[]) 
     }
     inventoryTargets = Inventory.inventoryBuilderForTarget(devicesAuth);
   }
-  shell.cd('/server/src/ansible/');
+  shell.cd(ANSIBLE_PATH);
   shell.rm('/server/src/ansible/inventory/hosts');
+  shell.rm('/server/src/ansible/env/extravars');
   const result = await new Promise<string | null>((resolve, reject) => {
-    const cmd = ansibleCmd.buildAnsibleCmd(playbook, inventoryTargets, user);
+    const cmd = ansibleCmd.buildAnsibleCmd(playbook, inventoryTargets, user, extraVars);
     logger.info(`[SHELL]-[ANSIBLE] - executePlaybook - Executing ${cmd}`);
     const child = shell.exec(cmd, {
       async: true,
@@ -51,7 +59,7 @@ async function executePlaybook(playbook: string, user: User, target?: string[]) 
 async function listPlaybooks() {
   try {
     logger.info('[SHELL]-[ANSIBLE] - listPlaybook - Starting...');
-    shell.cd('/server/src/ansible/');
+    shell.cd(ANSIBLE_PATH);
     const listOfPlaybooks: string[] = [];
     shell.ls('*.yml').forEach(function (file) {
       listOfPlaybooks.push(file);
@@ -60,51 +68,66 @@ async function listPlaybooks() {
     return listOfPlaybooks;
   } catch (error) {
     logger.error('[SHELL]-[ANSIBLE] - listPlaybook');
-    throw new Error('Exec failed');
+    throw new Error('listPlaybooks failed');
   }
 }
 
 async function readPlaybook(playbook: string) {
   try {
-    logger.info('[SHELL]-[ANSIBLE] - readPlaybook - Starting...');
-    shell.cd('/server/src/ansible/');
+    logger.info(`[SHELL]-[ANSIBLE] - readPlaybook - ${playbook}  - Starting...`);
+    shell.cd(ANSIBLE_PATH);
     return shell.cat(playbook).toString();
   } catch (error) {
     logger.error('[SHELL]-[ANSIBLE] - readPlaybook');
-    throw new Error('Exec failed');
+    throw new Error('readPlaybook failed');
+  }
+}
+
+async function readPlaybookConfiguration(playbook: string) {
+  try {
+    logger.info(`[SHELL]-[ANSIBLE] - readPlaybookConfiguration - ${playbook} - Starting...`);
+    shell.cd(ANSIBLE_PATH);
+    if (!shell.test('-f', ANSIBLE_PATH + playbook)) {
+      logger.info(`[SHELL]-[ANSIBLE] - readPlaybookConfiguration - not found`);
+      return undefined;
+    }
+    return shell.cat(playbook).toString();
+  } catch (error) {
+    logger.error('[SHELL]-[ANSIBLE] - readPlaybookConfiguration');
+    throw new Error('readPlaybookConfiguration failed');
   }
 }
 
 async function editPlaybook(playbook: string, content: string) {
   try {
     logger.info('[SHELL]-[ANSIBLE] - editPlaybook - Starting...');
-    shell.cd('/server/src/ansible/');
+    shell.cd(ANSIBLE_PATH);
     shell.ShellString(content).to(playbook);
   } catch (error) {
     logger.error('[SHELL]-[ANSIBLE] - editPlaybook');
-    throw new Error('Exec failed');
+    throw new Error('editPlaybook failed');
   }
 }
 
 async function newPlaybook(playbook: string) {
   try {
     logger.info('[SHELL]-[ANSIBLE] - newPlaybook - Starting...');
-    shell.cd('/server/src/ansible/');
+    shell.cd(ANSIBLE_PATH);
     shell.touch(playbook + '.yml');
   } catch (error) {
     logger.error('[SHELL]-[ANSIBLE] - newPlaybook');
-    throw new Error('Exec failed');
+    throw new Error('newPlaybook failed');
   }
 }
 
 async function deletePlaybook(playbook: string) {
   try {
     logger.info('[SHELL]-[ANSIBLE] - newPlaybook - Starting...');
-    shell.cd('/server/src/ansible/');
+    shell.cd(ANSIBLE_PATH);
     shell.rm(playbook);
   } catch (error) {
     logger.error('[SHELL]-[ANSIBLE] - newPlaybook');
-    throw new Error('Exec failed');
+    throw new Error('deletePlaybook failed');
   }
 }
 
@@ -115,4 +138,5 @@ export default {
   editPlaybook,
   newPlaybook,
   deletePlaybook,
+  readPlaybookConfiguration,
 };

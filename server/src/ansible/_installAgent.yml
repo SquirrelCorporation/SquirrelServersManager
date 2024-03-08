@@ -8,13 +8,11 @@
   tasks:
     - name: Check out agent
       ansible.builtin.git:
-        repo: https://github.com/SquirrelCorporation/SquirrelServersManager-Agent.git
+        repo: 'https://github.com/SquirrelCorporation/SquirrelServersManager-Agent.git'
         dest: /opt/squirrelserversmanager
-        single_branch: yes
-        version: master
 
     - name: Run Shell Script
-      ansible.builtin.shell: "/opt/squirrelserversmanager/install.sh -u {{ url }} -s {{ deviceId }}"
+      ansible.builtin.shell: "sudo /opt/squirrelserversmanager/install.sh -u {{ _ssm_masterNodeUrl }} -s {{ _ssm_deviceId }}"
       register: shell_output
       tags:
         - skip_ansible_lint  # provided variable could require shell modele

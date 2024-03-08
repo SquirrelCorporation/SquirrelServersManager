@@ -1,0 +1,12 @@
+{
+  "playableInBatch": false,
+  "extraVars": [
+    {
+      "value": "_ssm_masterNodeUrl",
+      "required": true },
+    {
+      "value": "_ssm_deviceId",
+      "required": true
+    }
+  ]
+}

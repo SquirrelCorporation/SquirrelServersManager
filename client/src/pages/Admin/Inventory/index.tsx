@@ -97,12 +97,20 @@ const Inventory: React.FC = () => {
       label: 'Register an unmanaged device (without agent)',
     },
   ];
+  const onAddNewDevice = (target: API.DeviceItem) => {
+    setTerminal({
+      target: [target],
+      isOpen: true,
+      command: '_installAgent',
+    });
+  };
   return (
     <TerminalContextProvider>
       <PageContainer>
         <NewDeviceModal
           isModalOpen={addNewDeviceModalIsOpen}
           setIsModalOpen={setAddNewDeviceModalIsOpen}
+          onAddNewDevice={onAddNewDevice}
         />
         <NewUnManagedDeviceModal
           isModalOpen={addNewUnManagedDeviceModalIsOpen}

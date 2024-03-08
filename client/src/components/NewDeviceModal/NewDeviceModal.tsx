@@ -18,29 +18,13 @@ import {
 } from 'antd';
 import React, { useState } from 'react';
 import SSHConnectionForm from '@/components/SSHConnectionForm/SSHConnectionForm';
+import { putDevice } from '@/services/rest/device';
 
 export type NewDeviceModalProps = {
   isModalOpen: boolean;
   setIsModalOpen: any;
+  onAddNewDevice: any;
 };
-/*
-<DotLottiePlayer
-              src="/Animation-1707227652919.json"
-              autoplay
-              style={{ height: '100%', width: '100%' }}
-            />
-            <DotLottiePlayer
-              src="/Animation-1705922266332.lottie"
-              autoplay
-              loop
-              style={{
-                height: '100%',
-                width: '100%',
-                position: 'absolute',
-                top: 100,
-              }}
-            />
- */
 
 export const EpConnection = (iconProps: any) => (
   <svg
@@ -153,10 +137,22 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
           <Col span={12}>
             <ProCard>
               <StepsForm
-                onFinish={async () => {
+                onFinish={async (values) => {
                   setLoading(true);
-                  message.success('Success');
-                  setLoading(false);
+                  await putDevice(
+                    values.deviceIp,
+                    {
+                      type: values.type,
+                      sshPort: values.sshPort,
+                      sshUser: values.sshUser,
+                      sshPwd: values.sshPwd,
+                      sshKey: values.sshKey,
+                    },
+                    values.controlNodeURL,
+                  ).then((res) => {
+                    setLoading(false);
+                    props.onAddNewDevice(res.data);
+                  });
                 }}
                 submitter={{
                   render: ({ form, onSubmit, step, onPre }) => {

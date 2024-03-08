@@ -1,6 +1,6 @@
-import DeviceAuth, { SSHType } from '../database/model/DeviceAuth';
-import logger from '../logger';
-import { Ansible } from './typings';
+import DeviceAuth, { SSHType } from '../../../database/model/DeviceAuth';
+import logger from '../../../logger';
+import { Ansible } from '../../../typings';
 
 function inventoryBuilder(devicesAuth: DeviceAuth[]) {
   logger.info(`[TRANSFORMERS][INVENTORY] - Inventory for ${devicesAuth.length} device(s)`);
@@ -56,6 +56,7 @@ function getInventoryConnectionVars(deviceAuth: DeviceAuth, escape: boolean) {
     ansible_connection: 'ssh',
     ansible_become: 'yes',
     ansible_become_method: 'sudo',
+    ansible_become_pass: 'server',
     /* prettier-ignore */
     ansible_ssh_extra_args: "'" + (escape ? "\\" + "''" : '') + "-o StrictHostKeyChecking=no" + "'" + (escape ? "\\" + "''" : ''),
     ansible_user: deviceAuth.type === SSHType.UserPassword ? deviceAuth.sshUser : undefined,

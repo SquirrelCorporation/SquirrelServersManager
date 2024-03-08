@@ -8,13 +8,14 @@ import logger from '../../logger';
 import Authentication from '../../middlewares/Authentication';
 import DeviceAuthRepo from '../../database/repository/DeviceAuthRepo';
 import DeviceAuth from '../../database/model/DeviceAuth';
+import ansible from '../../shell/ansible';
 
 const router = express.Router();
 
 router.put('/', async (req, res) => {
   logger.info(`[CONTROLLER] - PUT - /devices/`);
   if (!req.body.ip) {
-    logger.error('[CONTROLLER] Device - Is called with no IP is specified');
+    logger.error('[CONTROLLER] - PUT - Device - Is called with no IP is specified');
     res.status(401).send({
       success: false,
       message: 'Ip is not specified',
@@ -41,14 +42,23 @@ router.put('/', async (req, res) => {
         __enc_sshUser: true,
         __enc_sshKey: true,
       } as DeviceAuth);
+    } else {
+      logger.error('[CONTROLLER] - PUT - Device - Authentication not specified');
+      res.status(401).send({
+        success: false,
+        message: 'No SSH auth specified',
+      });
+      return;
     }
+
     logger.info(`[CONTROLLER] Device - Created device with uuid: ${createdDevice.uuid}`);
     res.send({
       success: true,
       data: {
-        id: createdDevice.uuid,
+        device: createdDevice,
       },
     });
+    return;
   } catch (error) {
     res.status(200).send({
       success: false,

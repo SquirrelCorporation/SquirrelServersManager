@@ -1,9 +1,10 @@
 import express from 'express';
 import Authentication from '../../middlewares/Authentication';
-import ansible from '../../shell/ansible';
 import logger from '../../logger';
 import AnsibleLogsRepo from '../../database/repository/AnsibleLogsRepo';
 import AnsibleTaskStatusRepo from '../../database/repository/AnsibleTaskStatusRepo';
+import PlaybookRepo from '../../database/repository/PlaybookRepo';
+import PlaybookUseCases from '../../use-cases/PlaybookUseCases';
 
 const router = express.Router();
 
@@ -17,7 +18,19 @@ router.post(`/exec/playbook`, Authentication.isAuthenticated, async (req, res) =
   }
   try {
     logger.info(`[CONTROLLER]- POST - /ansible/exec/playbook - '${req.body.playbook}'`);
-    const execId = await ansible.executePlaybook(req.body.playbook, req.user, req.body.target);
+    const playbook = await PlaybookRepo.findOne(req.body.playbook);
+    if (!playbook) {
+      res.status(404).send({
+        success: false,
+      });
+      return;
+    }
+    const execId = await PlaybookUseCases.executePlaybook(
+      playbook,
+      req.user,
+      req.body.target,
+      req.body.extraVars,
+    );
     res.send({
       success: true,
       data: { execId: execId },

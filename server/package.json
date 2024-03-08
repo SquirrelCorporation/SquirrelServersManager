@@ -43,7 +43,7 @@
     "eslint": "^8.57.0",
     "ts-node": "^10.9.2",
     "prettier": "^3.2.5",
-    "typescript": "^5.3.3",
-    "@types/node": "^20.11.24"
+    "typescript": "^5.4.2",
+    "@types/node": "^20.11.25"
   }
 }

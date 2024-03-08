@@ -1,8 +1,6 @@
 import { RedisClientType, createClient } from 'redis';
-import {SettingsKeys} from 'ssm-shared-lib';
 import { redisConf } from '../config';
 import logger from '../logger';
-import initRedisValues from './defaults';
 
 let redisClient: RedisClientType;
 let isReady: boolean = false;
@@ -32,16 +30,6 @@ async function getRedisClient(): Promise<RedisClientType> {
   }
 
   return redisClient;
-}
-
-export async function redisInit() {
-  logger.info(`[REDIS] - redisInit`);
-  return await getFromCache(SettingsKeys.GeneralSettingsKeys.SCHEME_VERSION).then(async (version) => {
-    logger.info(`[REDIS] - redisInit - Scheme Version: ${version}`);
-    if (version !== SettingsKeys.DefaultValue.SCHEME_VERSION) {
-      await initRedisValues();
-    }
-  });
 }
 
 export async function getFromCache(key: string): Promise<string | null> {

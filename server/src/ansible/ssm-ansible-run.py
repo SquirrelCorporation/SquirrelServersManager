@@ -5,6 +5,7 @@ import requests_unixsocket
 import logging
 import argparse
 import sys
+import json
 
 logger = logging.getLogger('ansible-runner')
 
@@ -59,6 +60,7 @@ def parse_args():
     )
     arg_parser.add_argument("--playbook",  help="Playbook path", required=True)
     arg_parser.add_argument("--log-level",  help="Verbosity", type=int, required=False, default=None)
+    arg_parser.add_argument("--extra-vars",  help="Extra vars", required=False, default=None)
     group = arg_parser.add_mutually_exclusive_group(required=False)
     group.add_argument("--specific-host", help="Specify a host manually in json", default=None)
     group.add_argument("--host-pattern", help="Specify a host pattern in inventory", default="all")
@@ -74,6 +76,7 @@ def execute():
         status_handler=status_handler,
         rotate_artifacts=10,
         inventory=args.specific_host,
+        extravars=json.loads(args.extra_vars),
         #debug=False,
         #ignore_logging=False
         verbosity=args.log_level

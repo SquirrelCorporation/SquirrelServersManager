@@ -1,18 +1,15 @@
 import express from 'express';
 import Authentication from '../../middlewares/Authentication';
-import ansible from '../../shell/ansible';
+import shell from '../../shell';
 import logger from '../../logger';
+import PlaybookUseCases from '../../use-cases/PlaybookUseCases';
 
 const router = express.Router();
 
 router.get(`/playbooks`, Authentication.isAuthenticated, async (req, res) => {
   logger.info(`[CONTROLLER] - GET - /ansible/playbooks`);
   try {
-    const listOfPlaybooks = await ansible.listPlaybooks();
-    const listOfPlaybooksToSelect = listOfPlaybooks.map((e) => {
-      //TODO: logic to be moved elsewhere
-      return { value: e, label: e.replaceAll('.yml', '') };
-    });
+    const listOfPlaybooksToSelect = await PlaybookUseCases.getAllPlaybooks();
     res.send({
       success: true,
       data: listOfPlaybooksToSelect,
@@ -34,7 +31,7 @@ router.get(`/playbooks/:playbook/content`, Authentication.isAuthenticated, async
   }
   logger.info(`[CONTROLLER][ANSIBLE] playbook content ${req.params.playbook}`);
   try {
-    const content = await ansible.readPlaybook(req.params.playbook);
+    const content = await shell.readPlaybook(req.params.playbook);
     res.send({
       success: true,
       data: content,
@@ -64,7 +61,7 @@ router.patch(`/playbooks/:playbook/`, Authentication.isAuthenticated, async (req
   }
   logger.info(`[CONTROLLER][ANSIBLE] patch playbook content ${req.params.playbook}`);
   try {
-    await ansible.editPlaybook(req.params.playbook, req.body.content);
+    await shell.editPlaybook(req.params.playbook, req.body.content);
     res.send({
       success: true,
     });
@@ -92,7 +89,7 @@ router.put(`/playbooks/:playbook/`, Authentication.isAuthenticated, async (req, 
   }
   logger.info(`[CONTROLLER][ANSIBLE] new playbook  ${req.params.playbook}`);
   try {
-    await ansible.newPlaybook(req.params.playbook);
+    await PlaybookUseCases.createCustomPlaybook(req.params.playbook);
     res.send({
       success: true,
     });
@@ -118,9 +115,9 @@ router.delete(`/playbooks/:playbook/`, Authentication.isAuthenticated, async (re
     });
     return;
   }
-  logger.info(`[CONTROLLER][ANSIBLE] delete playbook  ${req.params.playbook}`);
+  logger.info(`[CONTROLLER][ANSIBLE] - DELETE - delete playbook  ${req.params.playbook}`);
   try {
-    await ansible.deletePlaybook(req.params.playbook);
+    await PlaybookUseCases.deleteCustomPlaybook(req.params.playbook);
     res.send({
       success: true,
     });

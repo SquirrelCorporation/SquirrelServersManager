@@ -35,7 +35,11 @@ async function findAll(): Promise<Device[] | null> {
 async function setDeviceOfflineAfter(inactivityInMinutes: number) {
   const devices = await DeviceModel.find({
     updatedAt: { $lt: DateTime.now().minus({ minute: inactivityInMinutes }).toJSDate() },
-    $and: [{ status: { $ne: DeviceStatus.OFFLINE } }, { status: { $ne: DeviceStatus.UNMANAGED } }],
+    $and: [
+      { status: { $ne: DeviceStatus.OFFLINE } },
+      { status: { $ne: DeviceStatus.UNMANAGED } },
+      { status: { $ne: DeviceStatus.REGISTERING } },
+    ],
   })
     .lean()
     .exec();

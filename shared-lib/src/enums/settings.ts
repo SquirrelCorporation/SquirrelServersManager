@@ -8,6 +8,10 @@ export enum GeneralSettingsKeys {
   REGISTER_DEVICE_STAT_EVERY_IN_SECONDS = 'device-stat-frequency-in-seconds',
 }
 
+export enum AnsibleReservedExtraVarsKeys {
+  MASTER_NODE_URL = 'ansible-master-node-url',
+}
+
 export enum DefaultValue {
   SCHEME_VERSION = '2',
   SERVER_LOG_RETENTION_IN_DAYS = '30',

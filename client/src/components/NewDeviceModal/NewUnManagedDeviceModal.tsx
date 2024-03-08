@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Col, message, Modal, Result, Row, Typography } from 'antd';
 import { DotLottiePlayer, PlayMode } from '@dotlottie/react-player';
 import { ProCard, ProFormText } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
 import SSHConnectionForm from '@/components/SSHConnectionForm/SSHConnectionForm';
-import { putDeviceAuth } from '@/services/rest/deviceauth';
 import { putDevice } from '@/services/rest/device';
 
 export type NewUnManagedDeviceModalProps = {
@@ -79,7 +78,7 @@ const NewUnManagedDeviceModal: React.FC<NewUnManagedDeviceModalProps> = (
                         sshPwd: values.sshPwd,
                         sshKey: values.sshKey,
                       }).then((res) => {
-                        setDeviceUuid(res.data.id);
+                        setDeviceUuid(res.data.device.uuid);
                       });
                     } else {
                       message.error({

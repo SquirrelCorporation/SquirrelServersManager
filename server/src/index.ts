@@ -6,7 +6,7 @@ import { connection } from './database';
 import routes from './controlers';
 import scheduledFunctions from './crons';
 import logger from './logger';
-import { redisInit } from './redis';
+import Configuration from './configuration';
 
 //const pino = require('pino-http')();
 
@@ -35,7 +35,7 @@ app.use(
   }),
 );
 connection().then(async () => {
-  await redisInit();
+  await Configuration.needConfigurationInit();
   scheduledFunctions();
   app.use('/', routes);
   app.listen(3000, () =>
