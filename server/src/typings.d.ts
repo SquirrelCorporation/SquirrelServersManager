@@ -36,16 +36,9 @@ export declare namespace Ansible {
 
   type Hosts = Meta & All & HostGroups;
 
-  type ExtraVar = {
-    extravar: string;
-    value: string;
-  };
-
-  type ExtraVars = ExtraVar[];
-
   type PlaybookConfigurationFile = {
     playableInBatch: boolean;
-    extraVars?: [{ value: string; required: boolean }];
+    extraVars?: [{ extraVar: string; required: boolean }];
   };
 }
 

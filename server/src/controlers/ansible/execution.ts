@@ -1,4 +1,5 @@
 import express from 'express';
+import { API } from 'ssm-shared-lib';
 import Authentication from '../../middlewares/Authentication';
 import logger from '../../logger';
 import AnsibleLogsRepo from '../../database/repository/AnsibleLogsRepo';
@@ -29,7 +30,7 @@ router.post(`/exec/playbook`, Authentication.isAuthenticated, async (req, res) =
       playbook,
       req.user,
       req.body.target,
-      req.body.extraVars,
+      req.body.extraVars as API.ExtraVars,
     );
     res.send({
       success: true,

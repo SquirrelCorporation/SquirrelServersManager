@@ -51,7 +51,7 @@
     "@ant-design/use-emotion-css": "1.0.4",
     "@umijs/route-utils": "^4.0.1",
     "@ant-design/charts": "^2.0.3",
-    "antd": "^5.15.1",
+    "antd": "^5.15.2",
     "classnames": "^2.5.1",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",

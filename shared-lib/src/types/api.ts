@@ -87,7 +87,7 @@ export type LoginParams = {
   username?: string;
   password?: string;
   autoLogin?: boolean;
- type?: string;
+  type?: string;
 };
 
 export type LoginResult = {
@@ -105,7 +105,7 @@ export type NoticeIconItem = {
   status?: string;
   datetime?: string;
   description?: string;
- type?: NoticeIconItemType;
+  type?: NoticeIconItemType;
 };
 
 export type NoticeIconItemType = 'notification' | 'message' | 'event';
@@ -285,6 +285,8 @@ export type AveragedDeviceStat = {
 export type PlaybookFileList = {
   label: string;
   value: string;
+  custom?: boolean;
+  extraVars?: ExtraVars;
 };
 
 export type Playbooks = {
@@ -322,7 +324,7 @@ export type DeviceAuthResponse = {
 };
 
 export type DeviceAuthParams = {
- type: string;
+  type: string;
   sshPort: number;
   sshKey?: string;
   sshPwd?: string;
@@ -425,3 +427,12 @@ export type DeviceInfo = {
   cpu?: CPUInfo;
   agentVersion?: string;
 };
+
+export type ExtraVar = {
+  extraVar: string;
+  value?: string;
+  required?: boolean;
+  canBeOverride?: boolean;
+};
+
+export type ExtraVars = ExtraVar[];

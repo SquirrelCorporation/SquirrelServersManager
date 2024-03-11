@@ -6,7 +6,7 @@ export const COLLECTION_NAME = 'playbooks';
 export default interface Playbook {
   custom: boolean;
   name: string;
-  extraVars: [{ value: string; required: boolean }];
+  extraVars: [{ extraVar: string; required: boolean }];
   playableInBatch?: boolean;
 }
 

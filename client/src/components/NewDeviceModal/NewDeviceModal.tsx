@@ -139,6 +139,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
               <StepsForm
                 onFinish={async (values) => {
                   setLoading(true);
+                  alert(values.controlNodeURL);
                   await putDevice(
                     values.deviceIp,
                     {
@@ -257,7 +258,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                     label={
                       <>
                         <CilControl style={{ marginRight: '5px' }} />
-                        Control Node configuration (.env)
+                        Control Node configuration (URL_MASTER .env)
                       </>
                     }
                   >

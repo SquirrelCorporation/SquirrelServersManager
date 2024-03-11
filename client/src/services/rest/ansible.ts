@@ -4,11 +4,12 @@ import { API } from 'ssm-shared-lib';
 export async function executePlaybook(
   playbook: string,
   target: string[] | undefined,
+  extraVars?: API.ExtraVars,
   options?: Record<string, any>,
 ) {
   return request<API.Exec>('/api/ansible/exec/playbook', {
     method: 'POST',
-    data: { playbook: playbook, target: target },
+    data: { playbook: playbook, target: target, extraVars: extraVars },
     ...(options || {}),
   });
 }

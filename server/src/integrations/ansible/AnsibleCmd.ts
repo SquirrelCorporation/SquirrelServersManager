@@ -1,3 +1,4 @@
+import { API } from 'ssm-shared-lib';
 import User from '../../database/model/User';
 import { Ansible } from '../../typings';
 import ExtraVarsTransformer from './transformers/ExtraVarsTransformer';
@@ -18,7 +19,7 @@ function getLogLevel(user: User) {
   return `--log-level ${user.logsLevel?.terminal || 1}`;
 }
 
-function getExtraVars(extraVars?: Ansible.ExtraVars) {
+function getExtraVars(extraVars?: API.ExtraVars) {
   return `${extraVars ? "--extra-vars '" + JSON.stringify(ExtraVarsTransformer.transformExtraVars(extraVars)) + "'" : ''}`;
 }
 
@@ -26,7 +27,7 @@ function buildAnsibleCmd(
   playbook: string,
   inventoryTargets: Ansible.All & Ansible.HostGroups,
   user: User,
-  extraVars?: Ansible.ExtraVars,
+  extraVars?: API.ExtraVars,
 ) {
   const inventoryTargetsCmd = getInventoryTargets(inventoryTargets);
   const logLevel = getLogLevel(user);

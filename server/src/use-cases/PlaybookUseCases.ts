@@ -1,29 +1,25 @@
+import { API } from 'ssm-shared-lib';
 import shell from '../shell';
 import PlaybookRepo from '../database/repository/PlaybookRepo';
 import Playbook, { PlaybookModel } from '../database/model/Playbook';
 import { Ansible } from '../typings';
 import logger from '../logger';
 import User from '../database/model/User';
-import ExtraVars, { ForcedValues } from '../integrations/ansible/ExtraVars';
+import ExtraVars from '../integrations/ansible/ExtraVars';
 
 async function executePlaybook(
   playbook: Playbook,
   user: User,
   target: string[] | undefined,
-  extraVarsForcedValues?: ForcedValues,
+  extraVarsForcedValues?: API.ExtraVars,
 ) {
-  let substitutedExtraVars: Ansible.ExtraVars | undefined = undefined;
+  let substitutedExtraVars: API.ExtraVars | undefined = undefined;
   if (playbook.extraVars?.length > 0) {
-    const defaultExtraVars = target
-      ? (JSON.parse(
-          `[{"extraVarName": "${ExtraVars.ReservedExtraVars.DEVICE_ID}", "extraVarValue": "${target}"}]`,
-        ) as ForcedValues)
-      : [];
-    logger.info(JSON.stringify(playbook.extraVars));
-    substitutedExtraVars = await ExtraVars.findValueOfExtraVars(
-      playbook.extraVars?.map((e) => e.value),
-      [...(extraVarsForcedValues || []), ...defaultExtraVars],
-    );
+    const defaultExtraVars = ExtraVars.getDefaultExtraVars(playbook, target);
+    substitutedExtraVars = await ExtraVars.findValueOfExtraVars(playbook.extraVars, [
+      ...(extraVarsForcedValues || []),
+      ...(defaultExtraVars || []),
+    ]);
   }
   const execId = await shell.executePlaybook(playbook.name, user, target, substitutedExtraVars);
 
@@ -58,12 +54,17 @@ async function initPlaybook() {
 }
 
 async function getAllPlaybooks() {
-  const listOfPlaybooks = await PlaybookRepo.findAll();
-  return listOfPlaybooks
-    ?.sort((a, b) => (a.name.startsWith('_') ? -1 : 1))
-    .map((e) => {
-      return { value: e.name, label: e.name.replaceAll('.yml', '') };
+  const listOfPlaybooks = (await PlaybookRepo.findAll()) || [];
+  const substitutedListOfPlaybooks: any = [];
+  for (const playbook of listOfPlaybooks) {
+    substitutedListOfPlaybooks.push({
+      value: playbook.name,
+      label: playbook.name.replaceAll('.yml', ''),
+      extraVars: await ExtraVars.findValueOfExtraVars(playbook.extraVars, undefined, true),
+      custom: playbook.custom,
     });
+  }
+  return substitutedListOfPlaybooks?.sort((a, b) => (a.value.startsWith('_') ? -1 : 1));
 }
 
 async function createCustomPlaybook(name: string) {

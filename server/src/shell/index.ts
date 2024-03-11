@@ -1,4 +1,5 @@
 import shell from 'shelljs';
+import { API } from 'ssm-shared-lib';
 import User from '../database/model/User';
 import DeviceAuthRepo from '../database/repository/DeviceAuthRepo';
 import logger from '../logger';
@@ -13,7 +14,7 @@ async function executePlaybook(
   playbook: string,
   user: User,
   target?: string[],
-  extraVars?: Ansible.ExtraVars,
+  extraVars?: API.ExtraVars,
 ) {
   logger.info('[SHELL]-[ANSIBLE] - executePlaybook - Starting...');
   if (!playbook.endsWith('.yml')) {
@@ -83,15 +84,17 @@ async function readPlaybook(playbook: string) {
   }
 }
 
-async function readPlaybookConfiguration(playbook: string) {
+async function readPlaybookConfiguration(playbookConfigurationFile: string) {
   try {
-    logger.info(`[SHELL]-[ANSIBLE] - readPlaybookConfiguration - ${playbook} - Starting...`);
+    logger.info(
+      `[SHELL]-[ANSIBLE] - readPlaybookConfiguration - ${playbookConfigurationFile} - Starting...`,
+    );
     shell.cd(ANSIBLE_PATH);
-    if (!shell.test('-f', ANSIBLE_PATH + playbook)) {
+    if (!shell.test('-f', ANSIBLE_PATH + playbookConfigurationFile)) {
       logger.info(`[SHELL]-[ANSIBLE] - readPlaybookConfiguration - not found`);
       return undefined;
     }
-    return shell.cat(playbook).toString();
+    return shell.cat(playbookConfigurationFile).toString();
   } catch (error) {
     logger.error('[SHELL]-[ANSIBLE] - readPlaybookConfiguration');
     throw new Error('readPlaybookConfiguration failed');

@@ -58,11 +58,16 @@ const QuickActionDropDown: React.FC<QuickActionProps> = (props) => {
     }
   }) as ItemType[];
 
-  const onSelectPlaybook = (playbook: string) => {
+  const onSelectPlaybook = (
+    playbook: string,
+    target: API.DeviceItem[] | undefined,
+    extraVars?: API.ExtraVars,
+  ) => {
     props.setTerminal({
       isOpen: true,
       command: playbook,
       target: props.target,
+      extraVars: extraVars,
     });
   };
 

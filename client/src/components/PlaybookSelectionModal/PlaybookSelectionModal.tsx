@@ -7,20 +7,94 @@ import {
   ProFormSelect,
   RequestOptionsType,
 } from '@ant-design/pro-components';
-import { Form, message } from 'antd';
+import { Collapse, Form, message } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
+import ExtraVarView from '@/components/PlaybookSelectionModal/ExtraVarView';
 
 export type PlaybookSelectionModalProps = {
   isModalOpen: boolean;
   setIsModalOpen: any;
   itemSelected?: API.DeviceItem[];
-  callback: (playbook: string, target: API.DeviceItem[] | undefined) => void;
+  callback: (
+    playbook: string,
+    target: API.DeviceItem[] | undefined,
+    extraVars?: API.ExtraVars,
+  ) => void;
 };
+
 const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
   props,
 ) => {
   const [form] = Form.useForm<{ playbook: { value: string } }>();
+  const [listOfPlaybooks, setListOfPlaybooks] = React.useState<
+    API.PlaybookFileList[] | undefined
+  >();
+  const [selectedPlaybookExtraVars, setSelectedPlaybookExtraVars] =
+    React.useState<any>();
+  const [overrideExtraVars, setOverrideExtraVars] = React.useState<any>([]);
+
+  const handleSelectedPlaybook = (newValue: API.PlaybookFileList) => {
+    const selectedPlaybook = listOfPlaybooks?.find(
+      (e) => e.value === newValue?.value,
+    );
+    if (selectedPlaybook) {
+      setOverrideExtraVars(
+        selectedPlaybook.extraVars?.map((e) => {
+          return { overrideVar: e.extraVar };
+        }),
+      );
+      const reservedVars =
+        (selectedPlaybook.extraVars &&
+          selectedPlaybook.extraVars.length > 0 &&
+          selectedPlaybook.extraVars.filter((e) => e.extraVar.startsWith('_'))
+            .length > 0 &&
+          selectedPlaybook.extraVars.filter((e) =>
+            e.extraVar.startsWith('_'),
+          )) ||
+        undefined;
+      const customVars =
+        (selectedPlaybook.extraVars &&
+          selectedPlaybook.extraVars.length > 0 &&
+          selectedPlaybook.extraVars.filter((e) => !e.extraVar.startsWith('_'))
+            .length > 0 &&
+          selectedPlaybook.extraVars.filter((e) =>
+            e.extraVar.startsWith('_'),
+          )) ||
+        undefined;
+      setSelectedPlaybookExtraVars([
+        {
+          key: 'reserved-vars',
+          label: 'Reserved ExtraVars',
+          children:
+            reservedVars?.map((e) => (
+              <ExtraVarView
+                key={e.extraVar}
+                extraVar={e}
+                setOverrideExtraVars={setOverrideExtraVars}
+                overrideExtraVars={overrideExtraVars}
+              />
+            )) || 'NONE',
+        },
+        {
+          key: 'custom-vars',
+          label: 'ExtraVars',
+          children:
+            customVars?.map((e) => (
+              <ExtraVarView
+                key={e.extraVar}
+                extraVar={e}
+                setOverrideExtraVars={setOverrideExtraVars}
+                overrideExtraVars={overrideExtraVars}
+              />
+            )) || 'NONE',
+        },
+      ]);
+    } else {
+      setSelectedPlaybookExtraVars(undefined);
+    }
+  };
+
   return (
     <ModalForm
       title="Playbook"
@@ -29,7 +103,11 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
       autoFocusFirstInput
       modalProps={{
         destroyOnClose: true,
-        onCancel: () => props.setIsModalOpen(false),
+        onCancel: () => {
+          setSelectedPlaybookExtraVars(undefined);
+          setOverrideExtraVars(undefined);
+          props.setIsModalOpen(false);
+        },
       }}
       grid={true}
       rowProps={{
@@ -37,7 +115,18 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
       }}
       submitTimeout={2000}
       onFinish={async (values: { playbook: { value: string } }) => {
-        props.callback(values.playbook.value, props.itemSelected);
+        props.callback(
+          values.playbook.value,
+          props.itemSelected,
+          overrideExtraVars
+            ?.filter((e: { value?: string; overrideVar: string }) => e.value)
+            .map((e: { overrideVar: string; value: string }) => {
+              return {
+                extraVar: e.overrideVar,
+                value: e.value,
+              };
+            }),
+        );
         props.setIsModalOpen(false);
         return true;
       }}
@@ -54,11 +143,13 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
             },
             mode: undefined,
           }}
+          onChange={handleSelectedPlaybook}
           rules={[{ required: true, message: 'Please select a playbook!' }]}
           debounceTime={300}
           request={async ({ keyWords = '' }) => {
             return (await getPlaybooks()
               .then((e) => {
+                setListOfPlaybooks(e.data);
                 return e.data?.filter(({ value, label }) => {
                   return value.includes(keyWords) || label.includes(keyWords);
                 });
@@ -74,10 +165,19 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
         />
       </ProForm.Group>
       <ProForm.Group style={{ textAlign: 'center' }}>
+        {selectedPlaybookExtraVars && (
+          <Collapse
+            items={selectedPlaybookExtraVars}
+            bordered={false}
+            style={{ width: '100%' }}
+          />
+        )}
+      </ProForm.Group>
+      <ProForm.Group style={{ textAlign: 'center' }}>
         <ProFormDependency name={['playbook']}>
           {({ playbook }) => {
             return (
-              <span>
+              <span style={{ marginTop: 10 }}>
                 <RightSquareOutlined /> SSM will apply &quot;
                 {playbook ? playbook.value : '?'}
                 &quot; on{' '}

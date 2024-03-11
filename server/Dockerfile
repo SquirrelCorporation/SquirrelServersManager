@@ -28,5 +28,5 @@ FROM base as dev
 ENV NODE_ENV=development
 WORKDIR /server
 COPY ./nodemon.json .
-RUN npm install -g nodemon && npm install
+RUN npm install -g nodemon && npm install --verbose
 CMD ["npm", "run", "dev"]

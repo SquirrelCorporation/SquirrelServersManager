@@ -1,47 +1,58 @@
 import { AnsibleReservedExtraVarsKeys } from 'ssm-shared-lib/distribution/enums/settings';
-import { getConfFromCache, getFromCache } from '../../redis';
-import { Ansible } from '../../typings';
+import { API } from 'ssm-shared-lib';
+import { SSMReservedExtraVars } from 'ssm-shared-lib/distribution/enums/ansible';
+import { getFromCache } from '../../redis';
+import logger from '../../logger';
+import Playbook from '../../database/model/Playbook';
 
-enum ExtraVars {
-  MASTER_NODE_URL = '_ssm_masterNodeUrl',
-  DEVICE_ID = '_ssm_deviceId',
+function getDefaultExtraVars(playbook: Playbook, target: string[] | undefined) {
+  const defaultExtraVars = target
+    ? (JSON.parse(`[{"extraVar": "${SSMReservedExtraVars.DEVICE_ID}", "value": "${target}"}]`) as [
+        API.ExtraVar,
+      ])
+    : [];
+  logger.info(JSON.stringify(playbook.extraVars));
+  return defaultExtraVars;
 }
 
-export type ForcedValues = {
-  extraVarName?: string;
-  extraVarValue?: string;
-}[];
-
-async function substitutedExtraVar(extraVar: string, forcedValues?: ForcedValues) {
-  const forcedValue = forcedValues?.find((e) => e.extraVarName)?.extraVarValue;
+async function substitutedExtraVar(extraVar: string, forcedValues?: API.ExtraVars) {
+  const forcedValue = forcedValues?.find((e) => e.extraVar === extraVar)?.value;
   switch (extraVar) {
-    case ExtraVars.DEVICE_ID:
+    case SSMReservedExtraVars.DEVICE_ID:
       return forcedValue;
-    case ExtraVars.MASTER_NODE_URL:
+    case SSMReservedExtraVars.MASTER_NODE_URL:
       return forcedValue
         ? forcedValue
-        : await getConfFromCache(AnsibleReservedExtraVarsKeys.MASTER_NODE_URL);
+        : await getFromCache(AnsibleReservedExtraVarsKeys.MASTER_NODE_URL);
     default:
       return await getFromCache(extraVar);
   }
 }
 
 async function findValueOfExtraVars(
-  extraVars: string[],
-  forcedValues?: ForcedValues,
-): Promise<Ansible.ExtraVars> {
-  const substitutedExtraVars: Ansible.ExtraVars = [];
+  extraVars: API.ExtraVars,
+  forcedValues?: API.ExtraVars,
+  emptySubstitute?: boolean,
+): Promise<API.ExtraVars> {
+  const substitutedExtraVars: API.ExtraVars = [];
   for (const e of extraVars) {
-    const value = await substitutedExtraVar(e, forcedValues);
-    if (!value) {
+    logger.info(`[INTEGRATION][ANSIBLE] - findValueOfExtraVars - ${e.extraVar}`);
+    const value = await substitutedExtraVar(e.extraVar, forcedValues);
+    if (!value && !emptySubstitute) {
+      logger.error(
+        `[INTEGRATION][ANSIBLE] - findValueOfExtraVars - ExtraVar not found : ${e.extraVar}`,
+      );
       throw new Error('ExtraVars value not found !');
     }
     substitutedExtraVars.push({
-      extravar: e,
-      value: value,
+      extraVar: e.extraVar,
+      value: value || undefined,
+      required: e.required,
+      canBeOverride: e.canBeOverride,
     });
   }
+  logger.debug(substitutedExtraVars);
   return substitutedExtraVars;
 }
 
-export default { ReservedExtraVars: ExtraVars, findValueOfExtraVars };
+export default { findValueOfExtraVars, getDefaultExtraVars };

@@ -2,13 +2,14 @@ import { parse } from 'url';
 import express from 'express';
 import { SsmStatus } from 'ssm-shared-lib';
 import { API } from 'ssm-shared-lib';
+import { AnsibleReservedExtraVarsKeys } from 'ssm-shared-lib/distribution/enums/settings';
 import Device from '../../database/model/Device';
 import DeviceRepo from '../../database/repository/DeviceRepo';
 import logger from '../../logger';
 import Authentication from '../../middlewares/Authentication';
 import DeviceAuthRepo from '../../database/repository/DeviceAuthRepo';
 import DeviceAuth from '../../database/model/DeviceAuth';
-import ansible from '../../shell/ansible';
+import { setToCache } from '../../redis';
 
 const router = express.Router();
 
@@ -21,6 +22,9 @@ router.put('/', async (req, res) => {
       message: 'Ip is not specified',
     });
     return;
+  }
+  if (req.body.masterNodeUrl) {
+    await setToCache(AnsibleReservedExtraVarsKeys.MASTER_NODE_URL, req.body.masterNodeUrl);
   }
   try {
     const isUnManagedDevice = req.body.unManaged === true;

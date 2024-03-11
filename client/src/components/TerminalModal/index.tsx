@@ -15,6 +15,7 @@ export type TerminalStateProps = {
   isOpen: boolean;
   command: string | undefined;
   target?: API.DeviceItem[];
+  extraVars?: API.ExtraVars;
 };
 
 export type TerminalModalProps = {
@@ -94,6 +95,7 @@ const TerminalModal = (props: TerminalModalProps) => {
       const res = await executePlaybook(
         props.terminalProps.command,
         props.terminalProps.target?.map((e) => e.uuid),
+        props.terminalProps.extraVars
       );
       setExecId(res.data.execId);
       message.loading({

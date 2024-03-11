@@ -19,11 +19,11 @@ export async function getDevices(
 export async function putDevice(
   ip: string,
   deviceAuth: API.DeviceAuthParams,
-  serverUrl?: string,
+  masterNodeUrl?: string,
   options?: { [key: string]: any },
 ) {
   return request<API.DeviceItem>('/api/devices', {
-    data: { ip: ip, ...deviceAuth },
+    data: { ip: ip, masterNodeUrl: masterNodeUrl, ...deviceAuth },
     method: 'PUT',
     ...(options || {}),
   });
