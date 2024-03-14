@@ -75,3 +75,17 @@ export async function deletePlaybook(playbook: string) {
     },
   );
 }
+
+export async function postPlaybookExtraVars(
+  playbook: string,
+  extraVars: API.ExtraVars,
+) {
+  return request<API.PlaybookOpResponse>(
+    `/api/ansible/playbooks/${playbook}/extravars`,
+    {
+      data: { extraVars: extraVars },
+      method: 'POST',
+      ...{},
+    },
+  );
+}

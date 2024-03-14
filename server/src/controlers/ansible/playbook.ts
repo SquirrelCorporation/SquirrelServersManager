@@ -128,4 +128,31 @@ router.delete(`/playbooks/:playbook/`, Authentication.isAuthenticated, async (re
   }
 });
 
+router.post(`/playbooks/:playbook/extravars`, Authentication.isAuthenticated, async (req, res) => {
+  logger.info(`[CONTROLLER] - POST - /ansible/playbooks/${req.params.playbook}/extravars`);
+  if (!req.params.playbook) {
+    res.status(400).send({
+      success: false,
+    });
+    return;
+  }
+  if (!req.body.extraVars) {
+    res.status(401).send({
+      success: false,
+      message: 'ExtraVars required',
+    });
+    return;
+  }
+  logger.info(`[CONTROLLER] - POST - /ansible/playbooks/${req.params.playbook}/extravars`);
+  try {
+    res.send({
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+    });
+  }
+});
+
 export default router;

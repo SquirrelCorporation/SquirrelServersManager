@@ -16,14 +16,14 @@ services:
     image: mongo
     restart: unless-stopped
     volumes:
-      - ./.data.prod:/data/db
+      - ./.data.prod/db:/data/db
     command: --quiet
   redis:
     container_name: redis-ssm
     image: redis
     restart: unless-stopped
     volumes:
-      - ./.data.redis.prod:/data
+      - ./.data.prod/redis:/data
     command: --save 60 1
   server:
     restart: unless-stopped

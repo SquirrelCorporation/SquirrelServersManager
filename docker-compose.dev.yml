@@ -18,7 +18,7 @@ services:
     image: mongo
     restart: unless-stopped
     volumes:
-      - ./.data.dev:/data/db
+      - ./.data.dev/db:/data/db
     command: --quiet
     ports:
       - "${DB_PORT}:27017"
@@ -27,7 +27,7 @@ services:
     image: redis
     restart: unless-stopped
     volumes:
-      - ./.data.redis.dev:/data
+      - ./.data.dev/redis:/data
     command: --save 60 1
   server:
     restart: unless-stopped

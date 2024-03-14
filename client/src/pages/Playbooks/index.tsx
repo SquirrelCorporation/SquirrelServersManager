@@ -21,6 +21,7 @@ import {
   Button,
   Card,
   Col,
+  Collapse,
   FloatButton,
   message,
   Popconfirm,
@@ -30,21 +31,25 @@ import {
   Tree,
   Typography,
 } from 'antd';
-import type { DataNode, DirectoryTreeProps } from 'antd/es/tree';
+import type { DirectoryTreeProps } from 'antd/es/tree';
 import React, { useEffect } from 'react';
 import { editor } from 'monaco-editor';
 import { AddCircleOutline, DeleteOutline } from 'antd-mobile-icons';
 import IStandaloneCodeEditor = editor.IStandaloneCodeEditor;
+import { PlaybookFileList } from 'ssm-shared-lib/distribution/types/api';
+import ExtraVarsViewEdition from '@/pages/Playbooks/ExtraVarsViewEdition';
 
 const { DirectoryTree } = Tree;
 
 const { Paragraph, Text } = Typography;
 
 const Index: React.FC = () => {
-  const [playbookFilesList, setPlaybookFilesList] = React.useState<DataNode[]>(
-    [],
-  );
-  const [selectedFile, setSelectedFile] = React.useState<string | undefined>();
+  const [playbookFilesList, setPlaybookFilesList] = React.useState<
+    PlaybookFileList[]
+  >([]);
+  const [selectedFile, setSelectedFile] = React.useState<
+    PlaybookFileList | undefined
+  >();
   const [downloadedContent, setDownloadedContent] = React.useState<
     string | undefined
   >();
@@ -53,7 +58,7 @@ const Index: React.FC = () => {
 
   const asyncFetchPlaybookContent = async () => {
     if (selectedFile) {
-      await readPlaybookContent(selectedFile)
+      await readPlaybookContent(selectedFile.value)
         .then((content) => {
           setDownloadedContent(content.data);
         })
@@ -63,20 +68,14 @@ const Index: React.FC = () => {
     }
     setIsLoading(false);
   };
-  const asyncFetch = async () => {
+  const asyncFetch = async (createdPlaybook?: string) => {
     await getPlaybooks()
       .then((list) => {
         if (list?.data) {
-          setPlaybookFilesList(
-            list.data.map((e) => {
-              return {
-                title: e.label,
-                key: e.value,
-                icon: ({ selected }) =>
-                  selected ? <FileSearchOutlined /> : <FileOutlined />,
-              };
-            }),
-          );
+          setPlaybookFilesList(list.data);
+          if (createdPlaybook) {
+            setSelectedFile(list.data.find((e) => e.label === createdPlaybook));
+          }
         } else {
           message.error({
             content: 'Playbooks list is empty, please check your configuration',
@@ -96,9 +95,11 @@ const Index: React.FC = () => {
   }, [selectedFile]);
 
   const onSelect: DirectoryTreeProps['onSelect'] = (keys, info) => {
-    if (keys[0] !== selectedFile) {
+    if (keys[0] !== selectedFile?.label) {
       setIsLoading(true);
-      setSelectedFile(keys[0] as string);
+      setSelectedFile(
+        playbookFilesList.find((e) => e.value === (keys[0] as string)),
+      );
     }
     console.log('Trigger Select', keys, info);
   };
@@ -116,16 +117,16 @@ const Index: React.FC = () => {
   const onClickDeletePlaybook = async () => {
     if (selectedFile) {
       setIsLoading(true);
-      await deletePlaybook(selectedFile)
+      await deletePlaybook(selectedFile.value)
         .then(async () => {
-          message.warning(`Playbook '${selectedFile}' deleted`);
+          message.warning(`Playbook '${selectedFile.value}' deleted`);
           setSelectedFile(undefined);
           await asyncFetch();
           setIsLoading(false);
         })
         .catch((error) => {
           message.error(
-            `Playbook '${selectedFile}' deletion error (${error.message})`,
+            `Playbook '${selectedFile.value}' deletion error (${error.message})`,
           );
           setIsLoading(false);
         });
@@ -146,7 +147,7 @@ const Index: React.FC = () => {
         })
         .catch((error) => {
           message.error(
-            `Playbook '${selectedFile}' saving error (${error.message})`,
+            `Playbook '${selectedFile.value}' saving error (${error.message})`,
           );
           setIsLoading(false);
         });
@@ -166,11 +167,10 @@ const Index: React.FC = () => {
 
   const submitNewPlaybook = async (name: string) => {
     setIsLoading(true);
-    return await newPlaybook(name)
+    return await newPlaybook(name + '.yml')
       .then(async () => {
         message.success(`Playbook '${name}' successfully created`);
-        await asyncFetch();
-        setSelectedFile(name + '.yml');
+        await asyncFetch(name);
         setIsLoading(false);
         return true;
       })
@@ -197,8 +197,15 @@ const Index: React.FC = () => {
               defaultExpandAll
               onSelect={onSelect}
               onExpand={onExpand}
-              treeData={playbookFilesList}
-              selectedKeys={[selectedFile as React.Key]}
+              treeData={playbookFilesList?.map((e) => {
+                return {
+                  title: e.label,
+                  key: e.value,
+                  icon: ({ selected }) =>
+                    selected ? <FileSearchOutlined /> : <FileOutlined />,
+                };
+              })}
+              selectedKeys={[selectedFile?.value as React.Key]}
             />
             <ModalForm<{ name: string }>
               title={'Create a new playbook'}
@@ -235,7 +242,7 @@ const Index: React.FC = () => {
                     message: 'Please input your playbook name!',
                   },
                   {
-                    pattern: /^[0-9a-z\\-]{0-100}$/,
+                    pattern: new RegExp('^[0-9a-zA-Z\\-]{0,100}$'),
                     message:
                       'Please enter a valid file name (only alphanumerical and "-" authorized), max 100 chars',
                   },
@@ -243,7 +250,7 @@ const Index: React.FC = () => {
                     validator(_, value) {
                       if (
                         playbookFilesList.findIndex(
-                          (e) => e.title === value,
+                          (e) => e.label === value,
                         ) === -1
                       ) {
                         return Promise.resolve();
@@ -285,7 +292,7 @@ const Index: React.FC = () => {
                   icon={<RedoOutlined />}
                   onClick={onClickUndoPlaybook}
                 />
-                {!selectedFile?.startsWith('_') && (
+                {!selectedFile?.value.startsWith('_') && (
                   <Popconfirm
                     title="Delete the playbook"
                     description="Are you sure to delete this playbook?"
@@ -300,11 +307,12 @@ const Index: React.FC = () => {
                   </Popconfirm>
                 )}
               </FloatButton.Group>
+              <ExtraVarsViewEdition playbook={selectedFile} />
               <Editor
                 theme="vs-dark"
                 height="90vh"
                 defaultLanguage="yaml"
-                path={selectedFile}
+                path={selectedFile?.value}
                 value={downloadedContent}
                 onMount={editorDidMount}
               />
