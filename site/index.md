@@ -44,10 +44,10 @@ SSM is currently in active development and not usable for production yet. We enc
 </style>
 
 ### Dashboard
-![dashboard](./dashboard.png)
+![dashboard](/dashboard.png)
 ### Devices
-![devices](./devices.png)
+![devices](/devices.png)
 ### Playbook editor
-![playbook](./playbook.png)
+![playbook](/playbook.png)
 ### Device Info
-![deviceinfo](./device-info.png)
+![deviceinfo](/device-info.png)
