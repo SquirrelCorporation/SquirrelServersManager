@@ -1,5 +1,6 @@
 import { StepsProps } from 'antd';
 import {
+  CheckCircleOutlined,
   CloseCircleOutlined,
   LoadingOutlined,
   QuestionOutlined,
@@ -10,7 +11,7 @@ import { TaskStatusTimelineType } from '@/components/TerminalModal/index';
 import { API } from 'ssm-shared-lib';
 
 const isFinalStatus = (status: string): boolean => {
-  return status === 'failed' || status === 'success';
+  return status === 'failed' || status === 'successful';
 };
 const transformToTaskStatusTimeline = (
   execStatus: API.ExecStatus,
@@ -29,6 +30,10 @@ const transformToTaskStatusTimeline = (
   if (execStatus.status === 'failed') {
     status = 'error';
     icon = <CloseCircleOutlined />;
+  }
+  if (execStatus.status === 'successful') {
+    status = 'finish';
+    icon = <CheckCircleOutlined />;
   }
 
   return {
