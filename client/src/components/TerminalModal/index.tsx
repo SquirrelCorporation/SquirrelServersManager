@@ -171,7 +171,13 @@ const TerminalModal = (props: TerminalModalProps) => {
                     <>
                       {previous}
                       <span style={terminalContentStyle}>
-                        {execLog.stdout?.replaceAll('\n', '<br/>')}
+                        {execLog.stdout?.split('\n').map((e) => {
+                          return (
+                            <>
+                              {e} {e !== '' ? <br /> : ''}
+                            </>
+                          );
+                        })}
                       </span>
                       <br />
                     </>

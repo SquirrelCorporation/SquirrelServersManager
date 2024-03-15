@@ -8,6 +8,7 @@
   tasks:
     - name: Check out agent
       ansible.builtin.git:
+        force: true
         repo: 'https://github.com/SquirrelCorporation/SquirrelServersManager-Agent.git'
         dest: /opt/squirrelserversmanager
 

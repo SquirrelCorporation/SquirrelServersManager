@@ -140,9 +140,9 @@ const Index: React.FC = () => {
     if (selectedFile && editorRef.current?.getValue()) {
       setIsLoading(true);
       // @ts-ignore
-      await patchPlaybook(selectedFile, editorRef.current.getValue())
+      await patchPlaybook(selectedFile.value, editorRef.current.getValue())
         .then(() => {
-          message.success(`Playbook '${selectedFile}' saved`);
+          message.success(`Playbook '${selectedFile.value}' saved`);
           setIsLoading(false);
         })
         .catch((error) => {
