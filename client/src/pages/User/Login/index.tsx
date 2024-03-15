@@ -121,7 +121,7 @@ const Login: React.FC = () => {
                     fontSize: 14,
                   }}
                 >
-                  Squirrel Corp
+                  Squirrel Team
                 </span>
               </Divider>
             </div>

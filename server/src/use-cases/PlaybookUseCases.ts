@@ -6,6 +6,7 @@ import { Ansible } from '../typings';
 import logger from '../logger';
 import User from '../database/model/User';
 import ExtraVars from '../integrations/ansible/ExtraVars';
+import { setToCache } from '../redis';
 
 async function executePlaybook(
   playbook: Playbook,
@@ -79,10 +80,37 @@ async function deleteCustomPlaybook(name: string) {
   });
 }
 
+async function addExtraVarToPlaybook(playbook: Playbook, extraVar: API.ExtraVar) {
+  playbook.extraVars?.forEach((e) => {
+    if (e.extraVar === extraVar.extraVar) {
+      throw new Error('ExtraVar already exists');
+    }
+  });
+  const concatExtra = [
+    ...(playbook.extraVars || []),
+    {
+      extraVar: extraVar.extraVar,
+      required: extraVar.required || false,
+      canBeOverride: extraVar.canBeOverride || true,
+    },
+  ];
+  await PlaybookModel.updateOne({ name: playbook.name }, { extraVars: concatExtra }).lean().exec();
+  await setToCache(extraVar.extraVar, extraVar.value || '');
+}
+
+async function deleteExtraVarFromPlaybook(playbook: Playbook, extraVarName: string) {
+  const removedVar = playbook.extraVars.filter((e) => {
+    return e.extraVar !== extraVarName;
+  });
+  await PlaybookModel.updateOne({ name: playbook.name }, { extraVars: removedVar }).lean().exec();
+}
+
 export default {
   initPlaybook,
   getAllPlaybooks,
   createCustomPlaybook,
   deleteCustomPlaybook,
   executePlaybook,
+  addExtraVarToPlaybook,
+  deleteExtraVarFromPlaybook,
 };

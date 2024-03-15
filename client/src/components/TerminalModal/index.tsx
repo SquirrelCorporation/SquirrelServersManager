@@ -95,7 +95,7 @@ const TerminalModal = (props: TerminalModalProps) => {
       const res = await executePlaybook(
         props.terminalProps.command,
         props.terminalProps.target?.map((e) => e.uuid),
-        props.terminalProps.extraVars
+        props.terminalProps.extraVars,
       );
       setExecId(res.data.execId);
       message.loading({
@@ -170,7 +170,9 @@ const TerminalModal = (props: TerminalModalProps) => {
                   setBufferedContent((previous) => (
                     <>
                       {previous}
-                      <span style={terminalContentStyle}>{execLog.stdout}</span>
+                      <span style={terminalContentStyle}>
+                        {execLog.stdout?.replaceAll('\n', '<br/>')}
+                      </span>
                       <br />
                     </>
                   ));

@@ -9,6 +9,8 @@ hero:
   image:
     src: /logo.svg
     alt: SSM
+    width: 360px
+    height: 360px
   actions:
     - theme: brand
       text: Why SSM

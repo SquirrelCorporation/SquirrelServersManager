@@ -76,16 +76,37 @@ export async function deletePlaybook(playbook: string) {
   );
 }
 
-export async function postPlaybookExtraVars(
+export async function postPlaybookExtraVar(
   playbook: string,
-  extraVars: API.ExtraVars,
+  extraVar: API.ExtraVar,
 ) {
   return request<API.PlaybookOpResponse>(
     `/api/ansible/playbooks/${playbook}/extravars`,
     {
-      data: { extraVars: extraVars },
+      data: { extraVar: extraVar },
       method: 'POST',
       ...{},
     },
   );
+}
+
+export async function deletePlaybookExtraVar(
+  playbook: string,
+  extraVar: string,
+) {
+  return request<API.PlaybookOpResponse>(
+    `/api/ansible/playbooks/${playbook}/extravars/${extraVar}`,
+    {
+      method: 'DELETE',
+      ...{},
+    },
+  );
+}
+
+export async function postExtraVarValue(extraVar: string, value: string) {
+  return request<API.PlaybookOpResponse>(`/api/ansible/extravars/${extraVar}`, {
+    data: { value: value },
+    method: 'POST',
+    ...{},
+  });
 }

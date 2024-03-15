@@ -264,18 +264,7 @@ const Index: React.FC = () => {
           </Card>
         </Col>
         <Col span={18}>
-          {(!selectedFile && (
-            <Result title="Select a playbook to edit">
-              <div className="desc">
-                <Paragraph style={{ textAlign: 'center' }}>
-                  <Text strong>
-                    To edit a playbook, select a playbook in the left menu
-                    &apos;List of Playbooks&apos;
-                  </Text>
-                </Paragraph>
-              </div>
-            </Result>
-          )) || (
+          {(selectedFile && (
             <>
               <FloatButton.Group shape="square" style={{ right: 94 }}>
                 <FloatButton
@@ -317,6 +306,17 @@ const Index: React.FC = () => {
                 onMount={editorDidMount}
               />
             </>
+          )) || (
+            <Result title="Select a playbook to edit">
+              <div className="desc">
+                <Paragraph style={{ textAlign: 'center' }}>
+                  <Text strong>
+                    To edit a playbook, select a playbook in the left menu
+                    &apos;List of Playbooks&apos;
+                  </Text>
+                </Paragraph>
+              </div>
+            </Result>
           )}
         </Col>
       </Row>

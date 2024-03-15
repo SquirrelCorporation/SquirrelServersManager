@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
       style={{
         background: 'none',
       }}
-      copyright={`${currentYear} Squirrel Corp.`}
+      copyright={`${currentYear} Squirrel Team.`}
       links={[
         {
           key: 'ssm',

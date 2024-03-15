@@ -58,8 +58,8 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
           selectedPlaybook.extraVars.length > 0 &&
           selectedPlaybook.extraVars.filter((e) => !e.extraVar.startsWith('_'))
             .length > 0 &&
-          selectedPlaybook.extraVars.filter((e) =>
-            e.extraVar.startsWith('_'),
+          selectedPlaybook.extraVars.filter(
+            (e) => !e.extraVar.startsWith('_'),
           )) ||
         undefined;
       setSelectedPlaybookExtraVars([

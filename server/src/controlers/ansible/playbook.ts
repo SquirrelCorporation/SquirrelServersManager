@@ -3,6 +3,7 @@ import Authentication from '../../middlewares/Authentication';
 import shell from '../../shell';
 import logger from '../../logger';
 import PlaybookUseCases from '../../use-cases/PlaybookUseCases';
+import PlaybookRepo from '../../database/repository/PlaybookRepo';
 
 const router = express.Router();
 
@@ -136,15 +137,22 @@ router.post(`/playbooks/:playbook/extravars`, Authentication.isAuthenticated, as
     });
     return;
   }
-  if (!req.body.extraVars) {
+  if (!req.body.extraVar) {
     res.status(401).send({
       success: false,
-      message: 'ExtraVars required',
+      message: 'ExtraVar required',
     });
     return;
   }
-  logger.info(`[CONTROLLER] - POST - /ansible/playbooks/${req.params.playbook}/extravars`);
+  const playbook = await PlaybookRepo.findOne(req.params.playbook);
+  if (!playbook) {
+    res.status(404).send({
+      success: false,
+    });
+    return;
+  }
   try {
+    await PlaybookUseCases.addExtraVarToPlaybook(playbook, req.body.extraVar);
     res.send({
       success: true,
     });
@@ -154,5 +162,38 @@ router.post(`/playbooks/:playbook/extravars`, Authentication.isAuthenticated, as
     });
   }
 });
+
+router.delete(
+  `/playbooks/:playbook/extravars/:varname`,
+  Authentication.isAuthenticated,
+  async (req, res) => {
+    logger.info(
+      `[CONTROLLER] - DELETE - /ansible/playbooks/${req.params.playbook}/extravars/${req.params.varname}`,
+    );
+    if (!req.params.playbook || !req.params.varname) {
+      res.status(400).send({
+        success: false,
+      });
+      return;
+    }
+    const playbook = await PlaybookRepo.findOne(req.params.playbook + '.yml');
+    if (!playbook) {
+      res.status(404).send({
+        success: false,
+      });
+      return;
+    }
+    try {
+      await PlaybookUseCases.deleteExtraVarFromPlaybook(playbook, req.params.varname);
+      res.send({
+        success: true,
+      });
+    } catch (error) {
+      res.status(500).send({
+        success: false,
+      });
+    }
+  },
+);
 
 export default router;
