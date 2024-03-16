@@ -45,6 +45,16 @@ SSM is currently in active development and not usable for production yet. We enc
 }
 </style>
 
+### Stay informed
+<form name="contact" netlify>
+  <p>
+    <label>Email <input type="email" name="email" /></label>
+  </p>
+  <p>
+    <button type="submit">Send</button>
+  </p>
+</form>
+
 ### Dashboard
 ![dashboard](/dashboard.png)
 ### Devices
