@@ -20,10 +20,13 @@ router.post(`/exec/playbook/:playbook`, Authentication.isAuthenticated, async (r
   }
   try {
     logger.info(`[CONTROLLER]- POST - /ansible/exec/playbook - '${req.params.playbook}'`);
-    const playbook = await PlaybookRepo.findOne(req.params.playbook);
+    const playbook = await PlaybookRepo.findOne(
+      req.params.playbook + (req.params.playbook.endsWith('.yml') ? '' : '.yml'),
+    );
     if (!playbook) {
       res.status(404).send({
         success: false,
+        message: 'Playbook not found',
       });
       return;
     }

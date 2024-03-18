@@ -23,7 +23,7 @@ interface ResponseStructure {
  */
 export const errorConfig: RequestConfig = {
   errorConfig: {
-    errorThrower: (res) => {
+    errorThrower: (res: any) => {
       const { success, data, errorCode, errorMessage, showType } =
         res as unknown as ResponseStructure;
       if (!success) {
@@ -80,7 +80,7 @@ export const errorConfig: RequestConfig = {
   },
 
   responseInterceptors: [
-    (response) => {
+    (response: any) => {
       const { data } = response as unknown as ResponseStructure;
 
       if (data?.success === false) {

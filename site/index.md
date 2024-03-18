@@ -46,14 +46,14 @@ SSM is currently in active development and not usable for production yet. We enc
 </style>
 
 ### Stay informed
+<div style="text-align:center">
 <form name="contact" netlify>
   <p>
-    <label>Email <input type="email" name="email" /></label>
-  </p>
-  <p>
-    <button type="submit">Send</button>
+    <label>Your email: <input type="email" name="email" style="background-color: white; border-radius: 0.3em; width: 300px"/></label>
+    <button type="submit" style="margin-left: 20px; background-color: #3a5ccc; border-radius: 0.3em; width: 60px">Send</button>
   </p>
 </form>
+</div>
 
 ### Dashboard
 ![dashboard](/dashboard.png)

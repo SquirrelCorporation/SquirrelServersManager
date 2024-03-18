@@ -1,5 +1,6 @@
 import {
   BugOutlined,
+  DeleteOutlined,
   DownloadOutlined,
   LoginOutlined,
   PlayCircleOutlined,
@@ -108,11 +109,26 @@ const QuickActionReference: QuickActionReferenceType[] = [
     ),
   },
   {
-    type: Types.ACTION,
+    type: Types.PLAYBOOK,
     onAdvancedMenu: true,
+    playbookFile: '_retrieveAgentLogs',
     label: (
       <>
         <BugOutlined /> Retrieve Agent Logs
+      </>
+    ),
+  },
+  {
+    onAdvancedMenu: true,
+    type: Types.DIVIDER,
+  },
+  {
+    type: Types.PLAYBOOK,
+    playbookFile: '_uninstallAgent',
+    onAdvancedMenu: true,
+    label: (
+      <>
+        <DeleteOutlined /> Uninstall Agent
       </>
     ),
   },

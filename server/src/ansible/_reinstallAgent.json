@@ -1,0 +1,10 @@
+{
+  "playableInBatch": false,
+  "extraVars": [
+    {
+      "extraVar": "_ssm_masterNodeUrl",
+      "required": true,
+      "canBeOverride": true
+    }
+  ]
+}

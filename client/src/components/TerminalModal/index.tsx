@@ -39,7 +39,7 @@ const TerminalModal = (props: TerminalModalProps) => {
     },
   };
   const terminalContentStyle = {
-    fontSize: '12px',
+    fontSize: '11px',
     fontFamily: 'Menlo',
   };
   const taskInit: TaskStatusTimelineType = {
@@ -103,7 +103,7 @@ const TerminalModal = (props: TerminalModalProps) => {
         duration: 8,
       });
       setIsPollingEnabled(true);
-    } catch (err) {
+    } catch (error: any) {
       message.error({
         type: 'error',
         content: 'Error running playbook',
@@ -171,10 +171,15 @@ const TerminalModal = (props: TerminalModalProps) => {
                     <>
                       {previous}
                       <span style={terminalContentStyle}>
-                        {execLog.stdout?.split('\n').map((e) => {
+                        {execLog.stdout?.split('\n').map((e, index, array) => {
                           return (
                             <>
-                              {e} {e !== '' ? <br /> : ''}
+                              {e}
+                              {e !== '' && index < array.length - 1 ? (
+                                <br />
+                              ) : (
+                                ''
+                              )}
                             </>
                           );
                         })}
