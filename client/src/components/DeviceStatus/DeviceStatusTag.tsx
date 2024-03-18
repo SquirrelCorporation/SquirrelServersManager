@@ -8,7 +8,7 @@ const DeviceStatusTag = (deviceStatus: DeviceStatusTagType) => {
   switch (deviceStatus.status) {
     case DeviceStatus.REGISTERING:
       return (
-        <Tag bordered={false} color="processing">
+        <Tag bordered={false} color="warning">
           Registering
         </Tag>
       );
@@ -26,7 +26,7 @@ const DeviceStatusTag = (deviceStatus: DeviceStatusTagType) => {
       );
     case DeviceStatus.UNMANAGED:
       return (
-        <Tag bordered={false} color="warning">
+        <Tag bordered={false} color="processing">
           Unmanaged
         </Tag>
       );

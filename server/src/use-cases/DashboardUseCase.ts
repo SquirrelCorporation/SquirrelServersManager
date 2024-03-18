@@ -1,4 +1,4 @@
-import {SettingsKeys} from 'ssm-shared-lib';
+import { SettingsKeys } from 'ssm-shared-lib';
 import { getConfFromCache } from '../redis';
 import logger from '../logger';
 import DeviceStatsUseCases from './DeviceStatsUseCases';
@@ -23,10 +23,10 @@ async function getSystemPerformance() {
   };
   const status = {
     message:
-      values.currentMem < parseInt(minMem) && values.currentCpu < parseInt(maxCpu)
+      values.currentMem > parseInt(minMem) && values.currentCpu < parseInt(maxCpu)
         ? 'HEALTHY'
         : 'POOR',
-    danger: !(values.currentMem < parseInt(minMem) && values.currentCpu < parseInt(maxCpu)),
+    danger: !(values.currentMem > parseInt(minMem) && values.currentCpu < parseInt(maxCpu)),
   };
   return { ...values, ...status };
 }

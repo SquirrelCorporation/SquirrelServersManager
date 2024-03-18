@@ -86,15 +86,17 @@ export const DevicesHeaderWidget: React.FC = () => {
                 e.status === Devicestatus.ONLINE
                   ? 'success'
                   : e.status === Devicestatus.UNMANAGED
-                    ? 'warning'
-                    : 'error'
+                    ? 'processing'
+                    : e.status === Devicestatus.REGISTERING
+                      ? 'warning'
+                      : 'error'
               }
               text={
                 <Typography.Text
                   style={{ width: 200 }}
                   ellipsis={{ tooltip: e.name }}
                 >
-                  {e.name}
+                  {e.name || <i>Unknown device</i>}
                 </Typography.Text>
               }
             />

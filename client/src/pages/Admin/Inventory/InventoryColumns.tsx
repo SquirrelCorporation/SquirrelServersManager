@@ -73,7 +73,7 @@ const InventoryColumns = (
         },
         3: {
           text: 'Unmanaged',
-          status: 'Warning',
+          status: 'Processing',
         },
       },
     },
