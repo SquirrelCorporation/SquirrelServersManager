@@ -12,6 +12,7 @@ router.post(`/:id`, async (req, res) => {
   if (device == null) {
     res.status(404).send({
       success: false,
+      message: 'Device not found',
     });
     return;
   }
@@ -29,6 +30,7 @@ router.get(`/:id/stats/:type/`, Authentication.isAuthenticated, async (req, res)
   if (device == null) {
     res.status(404).send({
       success: false,
+      message: 'Device not found',
     });
     return;
   }
@@ -56,6 +58,7 @@ router.get(`/:id/stat/:type/`, Authentication.isAuthenticated, async (req, res) 
   if (device == null) {
     res.status(404).send({
       success: false,
+      message: 'Device not found',
     });
     return;
   }

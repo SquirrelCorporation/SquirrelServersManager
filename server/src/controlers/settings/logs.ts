@@ -11,12 +11,14 @@ router.post(`/logs/:key`, Authentication.isAuthenticated, async (req, res) => {
   if (!req.params.key) {
     res.status(404).send({
       success: false,
+      message: 'Key (type) is undefined',
     });
     return;
   }
   if (isNaN(req.body.value)) {
     res.status(401).send({
       success: false,
+      message: 'Value is undefined',
     });
     return;
   }

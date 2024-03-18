@@ -101,6 +101,7 @@ router.post(`/dashboard/stats/:type/`, Authentication.isAuthenticated, async (re
   if (!devices || !from || !to) {
     res.status(401).send({
       success: false,
+      message: 'Devices, from or to not specified',
     });
     return;
   }
@@ -109,6 +110,7 @@ router.post(`/dashboard/stats/:type/`, Authentication.isAuthenticated, async (re
     if (!devicesToQuery || devicesToQuery.length !== devices.length) {
       res.status(401).send({
         success: false,
+        message: 'Devices to query not found',
       });
       return;
     }

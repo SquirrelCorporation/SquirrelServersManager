@@ -66,7 +66,7 @@ export const errorConfig: RequestConfig = {
       } else if (error.response) {
         // Axios
         message.error({
-          content: `Response status:${error.response.status}`,
+          content: `Response status: ${error.response.status}${error.response?.data?.message ? ' - ' + error.response.data.message : ''}`,
           duration: 6,
         });
       } else if (error.request) {

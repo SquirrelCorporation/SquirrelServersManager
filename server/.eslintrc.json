@@ -17,6 +17,7 @@
         "@typescript-eslint", "import", "prettier"
     ],
     "rules": {
+      "@typescript-eslint/no-explicit-any": "off",
       // Possible errors
       "no-empty": [
         "error",

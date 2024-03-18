@@ -8,6 +8,7 @@ router.post(`/extravars/:varname`, Authentication.isAuthenticated, async (req, r
   if (!req.params.varname || !req.body.value) {
     res.status(400).send({
       success: false,
+      message: 'Playbook or value is undefined',
     });
     return;
   }
@@ -16,8 +17,9 @@ router.post(`/extravars/:varname`, Authentication.isAuthenticated, async (req, r
     res.send({
       success: true,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).send({
+      message: error.message,
       success: false,
     });
   }

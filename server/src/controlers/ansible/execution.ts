@@ -9,17 +9,18 @@ import PlaybookUseCases from '../../use-cases/PlaybookUseCases';
 
 const router = express.Router();
 
-router.post(`/exec/playbook`, Authentication.isAuthenticated, async (req, res) => {
+router.post(`/exec/playbook/:playbook`, Authentication.isAuthenticated, async (req, res) => {
   logger.info(`[CONTROLLER] - POST - /ansible/exec/playbook`);
-  if (!req.body.playbook) {
+  if (!req.params.playbook) {
     res.status(400).send({
       success: false,
+      message: 'Playbook is undefined',
     });
     return;
   }
   try {
-    logger.info(`[CONTROLLER]- POST - /ansible/exec/playbook - '${req.body.playbook}'`);
-    const playbook = await PlaybookRepo.findOne(req.body.playbook);
+    logger.info(`[CONTROLLER]- POST - /ansible/exec/playbook - '${req.params.playbook}'`);
+    const playbook = await PlaybookRepo.findOne(req.params.playbook);
     if (!playbook) {
       res.status(404).send({
         success: false,
@@ -36,10 +37,11 @@ router.post(`/exec/playbook`, Authentication.isAuthenticated, async (req, res) =
       success: true,
       data: { execId: execId },
     });
-  } catch (err) {
-    logger.error(err);
+  } catch (error: any) {
+    logger.error(error);
     res.status(500).send({
       success: false,
+      message: error.message,
     });
     return;
   }

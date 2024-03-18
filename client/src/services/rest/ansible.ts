@@ -7,7 +7,7 @@ export async function executePlaybook(
   extraVars?: API.ExtraVars,
   options?: Record<string, any>,
 ) {
-  return request<API.Exec>('/api/ansible/exec/playbook', {
+  return request<API.Exec>(`/api/ansible/exec/playbook/${playbook}`, {
     method: 'POST',
     data: { playbook: playbook, target: target, extraVars: extraVars },
     ...(options || {}),

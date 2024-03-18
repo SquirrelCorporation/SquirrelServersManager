@@ -15,9 +15,10 @@ router.get(`/playbooks`, Authentication.isAuthenticated, async (req, res) => {
       success: true,
       data: listOfPlaybooksToSelect,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).send({
       success: false,
+      message: error.message,
     });
   }
 });
@@ -27,6 +28,7 @@ router.get(`/playbooks/:playbook/content`, Authentication.isAuthenticated, async
   if (!req.params.playbook) {
     res.status(400).send({
       success: false,
+      message: 'Playbook is undefined',
     });
     return;
   }
@@ -37,9 +39,10 @@ router.get(`/playbooks/:playbook/content`, Authentication.isAuthenticated, async
       success: true,
       data: content,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).send({
       success: false,
+      message: error.message,
     });
   }
 });
@@ -49,6 +52,7 @@ router.patch(`/playbooks/:playbook/`, Authentication.isAuthenticated, async (req
   if (!req.params.playbook) {
     res.status(400).send({
       success: false,
+      message: 'Playbook is undefined',
     });
     return;
   }
@@ -57,6 +61,7 @@ router.patch(`/playbooks/:playbook/`, Authentication.isAuthenticated, async (req
     logger.error(req.body);
     res.status(400).send({
       success: false,
+      message: 'Missing body',
     });
     return;
   }
@@ -66,9 +71,10 @@ router.patch(`/playbooks/:playbook/`, Authentication.isAuthenticated, async (req
     res.send({
       success: true,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).send({
       success: false,
+      message: error.message,
     });
   }
 });
@@ -78,6 +84,7 @@ router.put(`/playbooks/:playbook/`, Authentication.isAuthenticated, async (req, 
   if (!req.params.playbook) {
     res.status(400).send({
       success: false,
+      message: 'Playbook is undefined',
     });
     return;
   }
@@ -94,8 +101,9 @@ router.put(`/playbooks/:playbook/`, Authentication.isAuthenticated, async (req, 
     res.send({
       success: true,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).send({
+      message: error.message,
       success: false,
     });
   }
@@ -106,6 +114,7 @@ router.delete(`/playbooks/:playbook/`, Authentication.isAuthenticated, async (re
   if (!req.params.playbook) {
     res.status(400).send({
       success: false,
+      message: 'Playbook is undefined',
     });
     return;
   }
@@ -122,8 +131,9 @@ router.delete(`/playbooks/:playbook/`, Authentication.isAuthenticated, async (re
     res.send({
       success: true,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).send({
+      message: error.message,
       success: false,
     });
   }
@@ -134,6 +144,7 @@ router.post(`/playbooks/:playbook/extravars`, Authentication.isAuthenticated, as
   if (!req.params.playbook) {
     res.status(400).send({
       success: false,
+      message: 'Playbook is undefined',
     });
     return;
   }
@@ -148,6 +159,7 @@ router.post(`/playbooks/:playbook/extravars`, Authentication.isAuthenticated, as
   if (!playbook) {
     res.status(404).send({
       success: false,
+      message: 'Playbook not found',
     });
     return;
   }
@@ -156,9 +168,10 @@ router.post(`/playbooks/:playbook/extravars`, Authentication.isAuthenticated, as
     res.send({
       success: true,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).send({
       success: false,
+      message: error.message,
     });
   }
 });
@@ -173,6 +186,7 @@ router.delete(
     if (!req.params.playbook || !req.params.varname) {
       res.status(400).send({
         success: false,
+        message: 'Playbook or varname is undefined',
       });
       return;
     }
@@ -180,6 +194,7 @@ router.delete(
     if (!playbook) {
       res.status(404).send({
         success: false,
+        message: 'Playbook not found',
       });
       return;
     }
@@ -188,8 +203,9 @@ router.delete(
       res.send({
         success: true,
       });
-    } catch (error) {
+    } catch (error: any) {
       res.status(500).send({
+        message: error.message,
         success: false,
       });
     }

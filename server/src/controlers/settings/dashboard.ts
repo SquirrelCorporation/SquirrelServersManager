@@ -11,12 +11,14 @@ router.post(`/dashboard/:key`, Authentication.isAuthenticated, async (req, res) 
   if (!req.params.key) {
     res.status(404).send({
       success: false,
+      message: 'Key (type) not defined',
     });
     return;
   }
   if (isNaN(req.body.value)) {
     res.status(401).send({
       success: false,
+      message: 'Value is undefined',
     });
     return;
   }
@@ -39,10 +41,11 @@ router.post(`/dashboard/:key`, Authentication.isAuthenticated, async (req, res) 
           success: false,
         });
     }
-  } catch (error) {
+  } catch (error: any) {
     logger.error(error);
     res.status(500).send({
       success: false,
+      message: error.message,
     });
     return;
   }

@@ -24,6 +24,7 @@ router.get(`/inventory`, async (req, res) => {
   } else {
     res.send({
       success: false,
+      message: 'No devices auth found',
     });
   }
 });
