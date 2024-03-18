@@ -10,6 +10,7 @@ import Authentication from '../../middlewares/Authentication';
 import DeviceAuthRepo from '../../database/repository/DeviceAuthRepo';
 import DeviceAuth from '../../database/model/DeviceAuth';
 import { setToCache } from '../../redis';
+import DeviceUseCases from '../../use-cases/DeviceUseCases';
 
 const router = express.Router();
 
@@ -61,6 +62,7 @@ router.put('/', async (req, res) => {
       data: {
         device: createdDevice,
       },
+      test: 'test',
     });
     return;
   } catch (error) {
@@ -176,6 +178,33 @@ router.get(`/`, Authentication.isAuthenticated, async (req, res) => {
   };
 
   return res.json(result);
+});
+
+router.delete(`/:uuid`, async (req, res) => {
+  logger.info(`[CONTROLLER] - DELETE - /devices/${req.params.uuid}`);
+  if (!req.params.uuid) {
+    logger.error('[CONTROLLER] Device - Is called with no UUID specified');
+    res.status(401).send({
+      success: false,
+      message: 'UUID is not specified',
+    });
+    return;
+  }
+
+  const device = await DeviceRepo.findOneById(req.params.uuid);
+
+  if (!device) {
+    logger.error('[CONTROLLER] Device not found');
+    res.status(403).send({
+      success: false,
+      message: 'Device not found',
+    });
+    return;
+  }
+  await DeviceUseCases.deleteDevice(device);
+  res.send({
+    success: true,
+  });
 });
 
 export default router;

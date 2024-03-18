@@ -179,6 +179,10 @@ async function findSingleAveragedStatAndType(
   ]).exec()) as [{ value: number }] | null;
 }
 
+async function deleteManyByDevice(device: Device) {
+  await DeviceStatModel.deleteMany({ device: device }).exec();
+}
+
 export default {
   create,
   findLatestStat,
@@ -187,4 +191,5 @@ export default {
   findStatsByDevicesAndType,
   findSingleAveragedStatByDevicesAndType,
   findSingleAveragedStatAndType,
+  deleteManyByDevice,
 };

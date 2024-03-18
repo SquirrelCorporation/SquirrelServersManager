@@ -6,7 +6,7 @@ import QuickActionReference, {
 } from '@/components/QuickAction/QuickActionReference';
 import TerminalModal, { TerminalStateProps } from '@/components/TerminalModal';
 import InventoryColumns from '@/pages/Admin/Inventory/InventoryColumns';
-import { getDevices } from '@/services/rest/device';
+import { deleteDevice, getDevices } from '@/services/rest/device';
 import type {
   ActionType,
   ProDescriptionsItemProps,
@@ -17,16 +17,28 @@ import {
   ProDescriptions,
   ProTable,
 } from '@ant-design/pro-components';
-import { Button, Col, Drawer, Dropdown, MenuProps, Row } from 'antd';
-import React, { useRef, useState } from 'react';
+import {
+  Button,
+  Col,
+  Drawer,
+  Dropdown,
+  MenuProps,
+  message,
+  Popconfirm,
+  Row,
+} from 'antd';
+import React, { Key, useRef, useState } from 'react';
 import { TerminalContextProvider } from 'react-terminal';
 import ConfigurationModal from './components/ConfigurationModal';
 import OsSoftwareVersions from '@/components/OSSoftwaresVersions/OsSoftwareVersions';
 import NewUnManagedDeviceModal from '@/components/NewDeviceModal/NewUnManagedDeviceModal';
 import { API } from 'ssm-shared-lib';
+import { WarningOutlined } from '@ant-design/icons';
 
 const Inventory: React.FC = () => {
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
+  const [showConfirmDeleteDevice, setShowConfirmDeleteDevice] =
+    useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API.DeviceItem>();
@@ -72,11 +84,13 @@ const Inventory: React.FC = () => {
     </svg>
   );
 
-  const onDropDownClicked = (key: string) => {
-    const idx = parseInt(key);
+  const onDropDownClicked = (idx: number) => {
     if (QuickActionReference[idx].type === Types.ACTION) {
       if (QuickActionReference[idx].action === Actions.CONNECT) {
         window.location.href = 'ssh://' + currentRow?.ip;
+      }
+      if (QuickActionReference[idx].action === Actions.DELETE) {
+        setShowConfirmDeleteDevice(true);
       }
     }
   };
@@ -98,15 +112,40 @@ const Inventory: React.FC = () => {
     },
   ];
   const onAddNewDevice = (target: API.DeviceItem) => {
+    actionRef?.current?.reload();
     setTerminal({
       target: [target],
       isOpen: true,
       command: '_installAgent',
     });
   };
+  const onDeleteNewDevice = async () => {
+    if (currentRow) {
+      await deleteDevice(currentRow?.uuid).then(() => {
+        setShowConfirmDeleteDevice(false);
+        message.warning({ content: 'Device deleted', duration: 6 });
+        actionRef?.current?.reload();
+      });
+    }
+  };
   return (
     <TerminalContextProvider>
       <PageContainer>
+        <Popconfirm
+          title="Delete a device"
+          description={
+            <>
+              Are you sure to delete the device? {currentRow?.ip} <br />
+              The agent must be manually uninstalled previously before
+            </>
+          }
+          open={showConfirmDeleteDevice}
+          onConfirm={() => onDeleteNewDevice()}
+          onCancel={() => setShowConfirmDeleteDevice(false)}
+          okText="Delete the device and all its data"
+          cancelText="Cancel"
+          icon={<WarningOutlined style={{ color: 'red' }} />}
+        />
         <NewDeviceModal
           isModalOpen={addNewDeviceModalIsOpen}
           setIsModalOpen={setAddNewDeviceModalIsOpen}
@@ -116,6 +155,7 @@ const Inventory: React.FC = () => {
           isModalOpen={addNewUnManagedDeviceModalIsOpen}
           setIsModalOpen={setAddNewUnManagedDeviceModalIsOpen}
         />
+
         <ProTable<API.DeviceItem, API.PageParams>
           headerTitle="List of Devices"
           actionRef={actionRef}

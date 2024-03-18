@@ -19,6 +19,7 @@ import {
 import React, { useState } from 'react';
 import SSHConnectionForm from '@/components/SSHConnectionForm/SSHConnectionForm';
 import { putDevice } from '@/services/rest/device';
+import { NewDevice } from 'ssm-shared-lib/distribution/types/api';
 
 export type NewDeviceModalProps = {
   isModalOpen: boolean;
@@ -139,7 +140,6 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
               <StepsForm
                 onFinish={async (values) => {
                   setLoading(true);
-                  alert(values.controlNodeURL);
                   await putDevice(
                     values.deviceIp,
                     {
@@ -152,7 +152,8 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                     values.controlNodeURL,
                   ).then((res) => {
                     setLoading(false);
-                    props.onAddNewDevice(res.data);
+                    props.setIsModalOpen(false);
+                    props.onAddNewDevice(res.data?.device);
                   });
                 }}
                 submitter={{

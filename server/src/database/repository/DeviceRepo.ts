@@ -57,6 +57,10 @@ async function setDeviceOfflineAfter(inactivityInMinutes: number) {
   }
 }
 
+async function deleteByUuid(uuid: string): Promise<void> {
+  await DeviceModel.deleteOne({ uuid: uuid }).exec();
+}
+
 export default {
   create,
   update,
@@ -65,4 +69,5 @@ export default {
   setDeviceOfflineAfter,
   findOneByIp,
   findByIds,
+  deleteByUuid,
 };

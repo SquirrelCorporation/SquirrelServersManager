@@ -14,6 +14,12 @@ const InventoryColumns = (
 ) => {
   const columns: ProColumns<API.DeviceItem>[] = [
     {
+      title: 'Host ID ',
+      dataIndex: 'uuid',
+      valueType: 'textarea',
+      hideInTable: true,
+    },
+    {
       title: 'Type',
       dataIndex: 'osLogoFile',
       render: (dom, entity) => {

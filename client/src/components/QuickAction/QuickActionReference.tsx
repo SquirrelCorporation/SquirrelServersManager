@@ -10,12 +10,14 @@ import {
   ToTopOutlined,
 } from '@ant-design/icons';
 import React from 'react';
+import { MenuProps } from 'antd';
 
 export enum Types {
   PLAYBOOK = 'playbook',
   PLAYBOOK_SELECTION = 'playbook-selection',
   ACTION = 'action',
   DIVIDER = 'divider',
+  SUBMENU = 'submenu',
 }
 
 export type QuickActionReferenceType = {
@@ -24,10 +26,12 @@ export type QuickActionReferenceType = {
   playbookFile?: string;
   label?: React.JSX.Element;
   onAdvancedMenu: boolean;
+  children?: QuickActionReferenceType[];
 };
 
 export enum Actions {
   CONNECT = 'connect',
+  DELETE = 'delete',
 }
 
 const QuickActionReference: QuickActionReferenceType[] = [
@@ -129,6 +133,16 @@ const QuickActionReference: QuickActionReferenceType[] = [
     label: (
       <>
         <DeleteOutlined /> Uninstall Agent
+      </>
+    ),
+  },
+  {
+    type: Types.ACTION,
+    action: Actions.DELETE,
+    onAdvancedMenu: true,
+    label: (
+      <>
+        <DeleteOutlined /> Delete device
       </>
     ),
   },

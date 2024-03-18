@@ -37,7 +37,7 @@ const QuickActionDropDown: React.FC<QuickActionProps> = (props) => {
       } else if (QuickActionReference[idx].type === Types.PLAYBOOK_SELECTION) {
         setPlaybookSelectionModalIsOpened(true);
       } else {
-        props.onDropDownClicked(key);
+        props.onDropDownClicked(idx);
       }
     }
   };
@@ -48,12 +48,18 @@ const QuickActionDropDown: React.FC<QuickActionProps> = (props) => {
       return {
         label: e.label,
         key: `${index}`,
+        children: e.children?.map((f, submenuIndex) => {
+          return { label: f.label, key: `${index}-${submenuIndex}` };
+        }),
       };
     } else if (!e.onAdvancedMenu) {
       if (e.type === Types.DIVIDER) return { type: 'divider' };
       return {
         label: e.label,
         key: `${index}`,
+        children: e.children?.map((f, submenuIndex) => {
+          return { label: f.label, key: `${index}-${submenuIndex}` };
+        }),
       };
     }
   }) as ItemType[];

@@ -127,6 +127,11 @@ export type DeviceList = {
   success?: boolean;
 };
 
+export type NewDevice = {
+  data?: {device: DeviceItem};
+  success?: boolean;
+};
+
 export type VersionData = {
   kernel?: string;
   openssl?: string;

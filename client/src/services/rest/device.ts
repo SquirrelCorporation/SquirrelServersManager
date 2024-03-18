@@ -2,6 +2,7 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 import { API } from 'ssm-shared-lib';
+import { NewDevice } from 'ssm-shared-lib/distribution/types/api';
 
 export async function getDevices(
   params?: API.DeviceListParams,
@@ -22,9 +23,19 @@ export async function putDevice(
   masterNodeUrl?: string,
   options?: { [key: string]: any },
 ) {
-  return request<API.DeviceItem>('/api/devices', {
+  return request<API.NewDevice>('/api/devices', {
     data: { ip: ip, masterNodeUrl: masterNodeUrl, ...deviceAuth },
     method: 'PUT',
+    ...(options || {}),
+  });
+}
+
+export async function deleteDevice(
+  uuid: string,
+  options?: { [key: string]: any },
+) {
+  return request<API.SimpleResult>(`/api/devices/${uuid}`, {
+    method: 'DELETE',
     ...(options || {}),
   });
 }

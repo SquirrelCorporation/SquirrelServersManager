@@ -49,8 +49,13 @@ async function sumTotalDownTimePerDeviceOnPeriod(
   ]).exec()) as [{ _id: string; duration: number }];
 }
 
+async function deleteManyByDevice(device: Device) {
+  await DeviceDownTimeEventModel.deleteMany({ device: device }).exec();
+}
+
 export default {
   create,
   closeDownTimeEvent,
   sumTotalDownTimePerDeviceOnPeriod,
+  deleteManyByDevice,
 };

@@ -4,6 +4,8 @@ import Device from '../database/model/Device';
 import DeviceRepo from '../database/repository/DeviceRepo';
 import logger from '../logger';
 import DeviceDownTimeEventRepo from '../database/repository/DeviceDownTimeEventRepo';
+import DeviceStatRepo from '../database/repository/DeviceStatRepo';
+import DeviceAuthRepo from '../database/repository/DeviceAuthRepo';
 
 async function getDevicesOverview() {
   logger.info(`[USECASES][DEVICE] - getDevicesOverview`);
@@ -70,7 +72,16 @@ async function updateDeviceFromJson(body: any, device: Device) {
   return device;
 }
 
+async function deleteDevice(device: Device) {
+  logger.info(`[USECASES][DEVICE] - deleteDevice - DeviceUuid: ${device.uuid}`);
+  await DeviceStatRepo.deleteManyByDevice(device);
+  await DeviceAuthRepo.deleteByDevice(device);
+  await DeviceDownTimeEventRepo.deleteManyByDevice(device);
+  await DeviceRepo.deleteByUuid(device.uuid);
+}
+
 export default {
   updateDeviceFromJson,
   getDevicesOverview,
+  deleteDevice,
 };

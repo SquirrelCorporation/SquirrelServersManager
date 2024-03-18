@@ -36,10 +36,15 @@ async function findAllPop(): Promise<DeviceAuth[] | null> {
   return await DeviceAuthModel.find().populate({ path: 'device' }).exec();
 }
 
+async function deleteByDevice(device: Device) {
+  await DeviceAuthModel.deleteOne({ device: device }).exec();
+}
+
 export default {
   updateOrCreateIfNotExist,
   findOneByDevice,
   findOneByDeviceUuid,
   findAllPop,
   findManyByDevicesUuid,
+  deleteByDevice,
 };

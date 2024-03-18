@@ -1,4 +1,8 @@
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  LogoutOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { useModel } from '@umijs/max';
 import { Badge, Spin } from 'antd';
@@ -28,7 +32,6 @@ export const AvatarActionsDropdown: React.FC = () => {
   const onMenuClick = useCallback(
     (event: MenuInfo) => {
       const { key } = event;
-      alert(key);
       if (key === 'logout') {
         return;
       }
