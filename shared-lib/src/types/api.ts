@@ -3,8 +3,9 @@ export type HasUsers = {
   data?: { hasUsers?: boolean };
 };
 
-export type SimpleResult = {
+export type SimpleResult<T> = {
   success?: boolean;
+  data?: T;
 };
 
 export type UserSystemPerformance = {
@@ -86,13 +87,16 @@ export type FakeCaptcha = {
 export type LoginParams = {
   username?: string;
   password?: string;
-  autoLogin?: boolean;
   type?: string;
 };
 
-export type LoginResult = {
-  status?: string;
+export type LoginInfo = {
   currentAuthority?: string;
+};
+
+export type LoginResult = {
+  success: boolean;
+  data: LoginInfo;
 };
 
 export type NoticeIconItem = {
@@ -216,35 +220,43 @@ export type Cron = {
 };
 
 export type Exec = {
-  data: { execId: string };
+  data: ExecId;
   success?: boolean;
 };
+
+export type ExecId = {
+ execId: string;
+}
+
 export type ExecLog = {
   content: string;
-  createdAt: string;
+  createdAt: Date;
   stdout?: string;
   ident: string;
   logRunnerId: string;
 };
+
 export type ExecLogs = {
-  data: {
-    execId: string;
-    execLogs?: ExecLog[];
-  };
+  execId: string;
+  execLogs?: ExecLog[];
+}
+
+export type ExecLogsResponse = {
+  data: ExecLogs;
   success?: boolean;
 };
 
 export type ExecStatus = {
   ident: string;
   status: string;
-  createdAt: string;
+  createdAt: Date;
 };
-
 export type ExecStatuses = {
-  data: {
-    execId: string;
-    execStatuses?: ExecStatus[];
-  };
+  execId: string;
+  execStatuses?: ExecStatus[];
+}
+export type ExecStatusesResponse = {
+  data: ExecStatuses;
   success?: boolean;
 };
 

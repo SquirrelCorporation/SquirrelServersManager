@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
-import DeviceDownTimeEventRepo from '../database/repository/DeviceDownTimeEventRepo';
-import DeviceRepo from '../database/repository/DeviceRepo';
+import DeviceDownTimeEventRepo from '../data/database/repository/DeviceDownTimeEventRepo';
+import DeviceRepo from '../data/database/repository/DeviceRepo';
 import logger from '../logger';
 
 async function getDevicesAvailability(from: Date, to: Date) {

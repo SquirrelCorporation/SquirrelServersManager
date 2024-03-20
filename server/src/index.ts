@@ -2,11 +2,11 @@ import MongoStore from 'connect-mongo';
 import express from 'express';
 import session from 'express-session';
 import { SECRET, db } from './config';
-import { connection } from './database';
-import routes from './controlers';
-import scheduledFunctions from './crons';
+import { connection } from './data/database';
+import routes from './routes';
+import scheduledFunctions from './integrations/crons';
 import logger from './logger';
-import Configuration from './configuration';
+import Configuration from './core/startup';
 
 //const pino = require('pino-http')();
 

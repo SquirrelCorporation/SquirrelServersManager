@@ -1,9 +1,9 @@
 import { AnsibleReservedExtraVarsKeys } from 'ssm-shared-lib/distribution/enums/settings';
 import { API } from 'ssm-shared-lib';
 import { SSMReservedExtraVars } from 'ssm-shared-lib/distribution/enums/ansible';
-import { getFromCache } from '../../redis';
+import Playbook from '../../data/database/model/Playbook';
+import { getFromCache } from '../../data/redis';
 import logger from '../../logger';
-import Playbook from '../../database/model/Playbook';
 
 function getDefaultExtraVars(playbook: Playbook, target: string[] | undefined) {
   const defaultExtraVars = target

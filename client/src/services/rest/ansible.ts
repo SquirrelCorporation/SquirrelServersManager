@@ -36,13 +36,10 @@ export async function getPlaybooks(): Promise<API.Playbooks> {
 }
 
 export async function readPlaybookContent(playbook: string) {
-  return request<API.PlaybookContent>(
-    `/api/ansible/playbooks/${playbook}/content`,
-    {
-      method: 'GET',
-      ...{},
-    },
-  );
+  return request<API.PlaybookContent>(`/api/ansible/playbooks/${playbook}`, {
+    method: 'GET',
+    ...{},
+  });
 }
 
 export async function patchPlaybook(playbook: string, content: string) {

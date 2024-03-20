@@ -1,12 +1,12 @@
 import { API } from 'ssm-shared-lib';
-import shell from '../shell';
-import PlaybookRepo from '../database/repository/PlaybookRepo';
-import Playbook, { PlaybookModel } from '../database/model/Playbook';
-import { Ansible } from '../typings';
+import Playbook, { PlaybookModel } from '../data/database/model/Playbook';
+import User from '../data/database/model/User';
+import PlaybookRepo from '../data/database/repository/PlaybookRepo';
+import { setToCache } from '../data/redis';
+import shell from '../integrations/shell';
+import { Ansible } from '../types/typings';
 import logger from '../logger';
-import User from '../database/model/User';
 import ExtraVars from '../integrations/ansible/ExtraVars';
-import { setToCache } from '../redis';
 
 async function executePlaybook(
   playbook: Playbook,
@@ -65,7 +65,7 @@ async function getAllPlaybooks() {
       custom: playbook.custom,
     });
   }
-  return substitutedListOfPlaybooks?.sort((a, b) => (a.value.startsWith('_') ? -1 : 1));
+  return substitutedListOfPlaybooks?.sort((a) => (a.value.startsWith('_') ? -1 : 1));
 }
 
 async function createCustomPlaybook(name: string) {
@@ -74,9 +74,9 @@ async function createCustomPlaybook(name: string) {
   });
 }
 
-async function deleteCustomPlaybook(name: string) {
-  await PlaybookModel.deleteOne({ name: name }).then(async () => {
-    await shell.deletePlaybook(name);
+async function deleteCustomPlaybook(playbook: Playbook) {
+  await PlaybookModel.deleteOne({ name: playbook.name }).then(async () => {
+    await shell.deletePlaybook(playbook.name);
   });
 }
 

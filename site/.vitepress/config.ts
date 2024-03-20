@@ -32,6 +32,7 @@ export default defineConfig({
         text: 'About',
         link: '/about.md',
       },
+      { text: 'Documentation', link: '/docs/' },
       { text: 'Contribute', link: '/contrib-guide/' },
       {
         text: 'Resources',
@@ -57,13 +58,23 @@ export default defineConfig({
     ],
 
     sidebar: {
-      '/contrib-guide/': [
+      '/docs/': [
         { text: 'Overview', link: '/contrib-guide/' },
-        { text: 'Setup', link: '/contrib-guide/setup.md' },
+        {
+          text: 'Quick Setup', link: '/contrib-guide/setup.md', items: [
+            {
+              text: 'Build', link: '/contrib-guide/build.md'
+            },
+            {
+              text: 'Dev', link: '/contrib-guide/build.md'
+            }
+          ]
+        },
         { text: 'Build', link: '/contrib-guide/build.md' },
         { text: 'Test', link: '/contrib-guide/test.md' },
         { text: 'Docs', link: '/contrib-guide/docs.md' },
         { text: 'Release', link: '/contrib-guide/release.md' },
+        { text: 'Stack', link: '/contrib-guide/release.md' },
       ],
     },
 

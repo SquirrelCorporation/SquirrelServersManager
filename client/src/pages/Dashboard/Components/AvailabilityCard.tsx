@@ -34,7 +34,7 @@ const AvailabilityCard: React.FC = () => {
       bordered={false}
       title={<Typography.Title level={5}>System Availability</Typography.Title>}
       action={
-        <Tooltip title={'This month'}>
+        <Tooltip title={'The percentage of uptime of your combined devices'}>
           <InfoCircleFilled style={{ color: 'white' }} />
         </Tooltip>
       }

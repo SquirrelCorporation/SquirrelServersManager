@@ -1,10 +1,10 @@
 import { DateTime } from 'luxon';
 import { API, SettingsKeys } from 'ssm-shared-lib';
-import DeviceStatRepo from '../database/repository/DeviceStatRepo';
-import Device from '../database/model/Device';
+import Device from '../data/database/model/Device';
+import DeviceStat from '../data/database/model/DeviceStat';
+import DeviceStatRepo from '../data/database/repository/DeviceStatRepo';
+import { getIntConfFromCache } from '../data/redis';
 import logger from '../logger';
-import DeviceStat from '../database/model/DeviceStat';
-import { getIntConfFromCache } from '../redis';
 
 async function createDeviceStatFromJson(deviceInfo: API.DeviceInfo, device: Device) {
   logger.info(`[USECASE][DEVICESTATS] - createDeviceStatFromJson - DeviceUuid: ${device?.uuid}`);

@@ -1,6 +1,6 @@
-import DeviceAuth, { SSHType } from '../../../database/model/DeviceAuth';
+import DeviceAuth, { SSHType } from '../../../data/database/model/DeviceAuth';
 import logger from '../../../logger';
-import { Ansible } from '../../../typings';
+import { Ansible } from '../../../types/typings';
 
 function inventoryBuilder(devicesAuth: DeviceAuth[]) {
   logger.info(`[TRANSFORMERS][INVENTORY] - Inventory for ${devicesAuth.length} device(s)`);

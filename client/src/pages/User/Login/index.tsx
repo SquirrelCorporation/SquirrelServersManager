@@ -8,30 +8,14 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { history, useModel } from '@umijs/max';
-import { Alert, Divider, message } from 'antd';
-import React, { useState } from 'react';
+import { Divider, message } from 'antd';
+import React from 'react';
 import { flushSync } from 'react-dom';
 // @ts-ignore
 import loginBackground from '@/pages/User/Login/assets/login-background.mp4';
 import { API } from 'ssm-shared-lib';
 
-const LoginMessage: React.FC<{
-  content: string;
-}> = ({ content }) => {
-  return (
-    <Alert
-      style={{
-        marginBottom: 24,
-      }}
-      message={content}
-      type="error"
-      showIcon
-    />
-  );
-};
-
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const { initialState, setInitialState } = useModel('@@initialState');
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
@@ -56,8 +40,8 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (values: API.LoginParams) => {
     try {
-      const msg = await login({ ...values });
-      if (msg.status === 'ok') {
+      const res = await login({ ...values });
+      if (res.success) {
         const defaultLoginSuccessMessage = 'Success！';
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
@@ -65,15 +49,11 @@ const Login: React.FC = () => {
         history.push(urlParams.get('redirect') || '/');
         return;
       }
-      console.log(msg);
-      setUserLoginState(msg);
     } catch (error) {
       const defaultLoginFailureMessage = 'Login failed！';
-      console.log(error);
       message.error(defaultLoginFailureMessage);
     }
   };
-  const { status } = userLoginState;
 
   return (
     <ProConfigProvider dark>
@@ -127,11 +107,6 @@ const Login: React.FC = () => {
             </div>
           }
         >
-          {status === 'error' && (
-            <LoginMessage
-              content={'Incorrect username/password(admin/ant.design)'}
-            />
-          )}
           <>
             <ProFormText
               name="username"

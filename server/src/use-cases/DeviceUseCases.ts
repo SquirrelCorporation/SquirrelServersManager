@@ -1,11 +1,11 @@
 import { DeviceStatus } from 'ssm-shared-lib/distribution/enums/status';
 import { API } from 'ssm-shared-lib';
-import Device from '../database/model/Device';
-import DeviceRepo from '../database/repository/DeviceRepo';
+import Device from '../data/database/model/Device';
+import DeviceAuthRepo from '../data/database/repository/DeviceAuthRepo';
+import DeviceDownTimeEventRepo from '../data/database/repository/DeviceDownTimeEventRepo';
+import DeviceRepo from '../data/database/repository/DeviceRepo';
+import DeviceStatRepo from '../data/database/repository/DeviceStatRepo';
 import logger from '../logger';
-import DeviceDownTimeEventRepo from '../database/repository/DeviceDownTimeEventRepo';
-import DeviceStatRepo from '../database/repository/DeviceStatRepo';
-import DeviceAuthRepo from '../database/repository/DeviceAuthRepo';
 
 async function getDevicesOverview() {
   logger.info(`[USECASES][DEVICE] - getDevicesOverview`);

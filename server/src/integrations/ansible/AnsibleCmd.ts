@@ -1,6 +1,6 @@
 import { API } from 'ssm-shared-lib';
-import User from '../../database/model/User';
-import { Ansible } from '../../typings';
+import User from '../../data/database/model/User';
+import { Ansible } from '../../types/typings';
 import ExtraVarsTransformer from './transformers/ExtraVarsTransformer';
 
 const sudo = 'sudo';

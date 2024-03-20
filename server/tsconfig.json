@@ -12,7 +12,7 @@
     "resolveJsonModule": true,
     "noImplicitAny": false,
     "typeRoots": [
-      "./typings",
+      "./src/types",
       "./node_modules/@types/"
     ]
   },
