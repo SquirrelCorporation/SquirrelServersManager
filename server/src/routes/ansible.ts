@@ -26,13 +26,13 @@ router.post(`/exec/playbook/:playbook`, execPlaybook);
 router.get(`/exec/:id/logs`, getLogs);
 router.get(`/exec/:id/status`, getStatus);
 router.post(`/extravars/:varname`, AddOrUpdateExtraVar);
-router.get(`/playbooks`, getPlaybooks);
 router
   .route('/playbooks/:playbook/')
   .get(getPlaybook)
   .patch(editPlaybook)
   .put(addPlaybook)
   .delete(deletePlaybook);
+router.get(`/playbooks`, getPlaybooks);
 router.post(`/playbooks/:playbook/extravars`, addExtraVarToPlaybook);
 router.delete(`/playbooks/:playbook/extravars/:varname`, deleteExtraVarFromPlaybook);
 
