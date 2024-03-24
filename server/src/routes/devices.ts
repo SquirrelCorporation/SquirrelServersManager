@@ -34,6 +34,9 @@ import {
 
 const router = express.Router();
 
+router.post(`/:uuid`, updateDeviceAndAddDeviceStatValidator, updateDeviceAndAddDeviceStat);
+router.post('/', addDeviceAutoValidator, addDeviceAuto);
+
 router.use(Authentication.isAuthenticated);
 
 router.get(`/dashboard/stats/performances`, getDashboardPerformanceStats);
@@ -48,13 +51,8 @@ router
   .route(`/:uuid/auth`)
   .get(getDeviceAuthValidator, getDeviceAuth)
   .post(addOrUpdateDeviceAuthValidator, addOrUpdateDeviceAuth);
-router
-  .route('/')
-  .put(addDeviceValidator, addDevice)
-  .post(addDeviceAutoValidator, addDeviceAuto)
-  .get(getDevices);
+router.route('/').put(addDeviceValidator, addDevice).get(getDevices);
 router.delete(`/:uuid`, deleteDeviceValidator, deleteDevice);
-router.post(`/:uuid`, updateDeviceAndAddDeviceStatValidator, updateDeviceAndAddDeviceStat);
 router.get(`/:uuid/stats/:type/`, getDeviceStatsByDeviceUuidValidator, getDeviceStatsByDeviceUuid);
 router.get(`/:uuid/stat/:type/`, getDeviceStatByDeviceUuidValidator, getDeviceStatByDeviceUuid);
 
