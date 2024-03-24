@@ -1,5 +1,5 @@
 import express from 'express';
-import Authentication from '../middlewares/Authentication';
+import Authentication from '../middlewares/authentication';
 import { getCrons } from '../services/admin/cron';
 
 const router = express.Router();

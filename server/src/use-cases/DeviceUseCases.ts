@@ -36,10 +36,9 @@ async function getDevicesOverview() {
   };
 }
 
-async function updateDeviceFromJson(body: any, device: Device) {
+async function updateDeviceFromJson(deviceInfo: API.DeviceInfo, device: Device) {
   logger.info(`[USECASES][DEVICE] - updateDeviceFromJson - DeviceUuid: ${device?.uuid}`);
-  logger.debug(body);
-  const deviceInfo: API.DeviceInfo = body;
+  logger.debug(deviceInfo);
   device.ip = deviceInfo.ip;
   device.hostname = deviceInfo.hostname;
   device.uptime = deviceInfo.uptime;

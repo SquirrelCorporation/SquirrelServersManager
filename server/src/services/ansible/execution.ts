@@ -9,14 +9,6 @@ import logger from '../../logger';
 import PlaybookUseCases from '../../use-cases/PlaybookUseCases';
 
 export const execPlaybook = asyncHandler(async (req, res, next) => {
-  logger.info(`[CONTROLLER] - POST - /ansible/exec/playbook`);
-  if (!req.params.playbook) {
-    res.status(400).send({
-      success: false,
-      message: 'Playbook is undefined',
-    });
-    return;
-  }
   logger.info(`[CONTROLLER]- POST - /ansible/exec/playbook - '${req.params.playbook}'`);
   const playbook = await PlaybookRepo.findOne(
     req.params.playbook + (req.params.playbook.endsWith('.yml') ? '' : '.yml'),
@@ -40,12 +32,6 @@ export const execPlaybook = asyncHandler(async (req, res, next) => {
 
 export const getLogs = asyncHandler(async (req, res) => {
   logger.info(`[CONTROLLER]- GET - /ansible/exec/${req.params.id}/logs`);
-  if (!req.params.id) {
-    res.status(400).send({
-      success: false,
-    });
-    return;
-  }
   const execLogs = await AnsibleLogsRepo.findAllByIdent(req.params.id);
   logger.debug(execLogs);
   new SuccessResponse('Execution logs', {

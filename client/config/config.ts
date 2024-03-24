@@ -4,6 +4,8 @@ import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
 const { REACT_APP_ENV = 'dev' } = process.env;
+import MonacoEditorWebpackPlugin from 'monaco-editor-webpack-plugin';
+
 export default defineConfig({
   /**
    * @doc https://umijs.org/docs/api/config#hash
@@ -95,4 +97,8 @@ export default defineConfig({
   esbuildMinifyIIFE: true,
   requestRecord: {},
   clientLoader: {},
+  chainWebpack(memo: any) {
+    memo.plugin('monaco-editor').use(MonacoEditorWebpackPlugin, []);
+    return memo;
+  },
 });

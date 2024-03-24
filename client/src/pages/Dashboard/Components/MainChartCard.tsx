@@ -63,8 +63,8 @@ const MainChartCard: React.FC<any> = ({}) => {
   const asyncFetch = async () => {
     if (devices && devices.length > 0) {
       await getDashboardDevicesStats(devices, type, {
-        from: rangePickerValue[0],
-        to: rangePickerValue[1],
+        from: rangePickerValue[0].toDate(),
+        to: rangePickerValue[1].toDate(),
       })
         .then((response) => {
           setGraphData(response.data);
@@ -73,8 +73,8 @@ const MainChartCard: React.FC<any> = ({}) => {
           console.log('fetch data failed', error);
         });
       await getDashboardAveragedDevicesStats(devices, type, {
-        from: rangePickerValue[0],
-        to: rangePickerValue[1],
+        from: rangePickerValue[0].toDate(),
+        to: rangePickerValue[1].toDate(),
       })
         .then((response) => setTopTenData(response.data))
         .catch((error) => {

@@ -1,7 +1,13 @@
 import express from 'express';
-import Authentication from '../middlewares/Authentication';
+import Authentication from '../middlewares/authentication';
 import { execPlaybook, getLogs, getStatus } from '../services/ansible/execution';
-import { AddOrUpdateExtraVar } from '../services/ansible/extravar';
+import {
+  execPlaybookValidator,
+  getLogsValidator,
+  getStatusValidator,
+} from '../services/ansible/execution.validator';
+import { addOrUpdateExtraVarValue } from '../services/ansible/extravar';
+import { addOrUpdateExtraVarValueValidator } from '../services/ansible/extravar.validator';
 import { addTaskEvent, addTaskStatus } from '../services/ansible/hook';
 import { getInventory } from '../services/ansible/inventory';
 import {
@@ -13,6 +19,14 @@ import {
   getPlaybook,
   getPlaybooks,
 } from '../services/ansible/playbook';
+import {
+  addExtraVarToPlaybookValidator,
+  addPlaybookValidator,
+  deleteExtraVarFromPlaybookValidator,
+  deletePlaybookValidator,
+  editPlaybookValidator,
+  getPlaybookValidator,
+} from '../services/ansible/playbook.validator';
 
 const router = express.Router();
 
@@ -22,18 +36,26 @@ router.get(`/inventory`, getInventory);
 
 router.use(Authentication.isAuthenticated);
 
-router.post(`/exec/playbook/:playbook`, execPlaybook);
-router.get(`/exec/:id/logs`, getLogs);
-router.get(`/exec/:id/status`, getStatus);
-router.post(`/extravars/:varname`, AddOrUpdateExtraVar);
+router.post(`/exec/playbook/:playbook`, execPlaybookValidator, execPlaybook);
+router.get(`/exec/:id/logs`, getLogsValidator, getLogs);
+router.get(`/exec/:id/status`, getStatusValidator, getStatus);
+router.post(`/extravars/:varname`, addOrUpdateExtraVarValueValidator, addOrUpdateExtraVarValue);
 router
   .route('/playbooks/:playbook/')
-  .get(getPlaybook)
-  .patch(editPlaybook)
-  .put(addPlaybook)
-  .delete(deletePlaybook);
+  .get(getPlaybookValidator, getPlaybook)
+  .patch(editPlaybookValidator, editPlaybook)
+  .put(addPlaybookValidator, addPlaybook)
+  .delete(deletePlaybookValidator, deletePlaybook);
 router.get(`/playbooks`, getPlaybooks);
-router.post(`/playbooks/:playbook/extravars`, addExtraVarToPlaybook);
-router.delete(`/playbooks/:playbook/extravars/:varname`, deleteExtraVarFromPlaybook);
+router.post(
+  `/playbooks/:playbook/extravars`,
+  addExtraVarToPlaybookValidator,
+  addExtraVarToPlaybook,
+);
+router.delete(
+  `/playbooks/:playbook/extravars/:varname`,
+  deleteExtraVarFromPlaybookValidator,
+  deleteExtraVarFromPlaybook,
+);
 
 export default router;

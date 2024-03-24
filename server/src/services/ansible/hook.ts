@@ -25,7 +25,7 @@ export const addTaskStatus = asyncHandler(async (req, res) => {
       ident: ident,
       status: status,
     });
-    new SuccessResponse('Added task status', {}).send(res);
+    new SuccessResponse('Added task status').send(res);
   } else {
     logger.error(`[CONTROLLER] ansible/hook/status - Task ident not found ${ident}`);
     throw new NotFoundError('Task not found');
@@ -54,5 +54,5 @@ export const addTaskEvent = asyncHandler(async (req, res) => {
     content: JSON.stringify(req.body),
   };
   await AnsibleLogsRepo.create(ansibleLog);
-  new SuccessResponse('Added task event', {}).send(res);
+  new SuccessResponse('Added task event').send(res);
 });

@@ -1,4 +1,7 @@
+import DeviceLogos from '@/components/DeviceLogos/DeviceLogos';
 import NewDeviceModal from '@/components/NewDeviceModal/NewDeviceModal';
+import { OsLogo } from '@/components/OsLogo/OsLogo';
+import { DeviconPlainBash } from '@/components/OSSoftwaresVersions/SoftwareIcons';
 import PlaybookSelectionModal from '@/components/PlaybookSelectionModal/PlaybookSelectionModal';
 import QuickActionReference, {
   Actions,
@@ -19,6 +22,7 @@ import {
 } from '@ant-design/pro-components';
 import {
   Button,
+  Card,
   Col,
   Drawer,
   Dropdown,
@@ -26,6 +30,7 @@ import {
   message,
   Popconfirm,
   Row,
+  Typography,
 } from 'antd';
 import React, { Key, useRef, useState } from 'react';
 import { TerminalContextProvider } from 'react-terminal';
@@ -33,7 +38,12 @@ import ConfigurationModal from './components/ConfigurationModal';
 import OsSoftwareVersions from '@/components/OSSoftwaresVersions/OsSoftwareVersions';
 import NewUnManagedDeviceModal from '@/components/NewDeviceModal/NewUnManagedDeviceModal';
 import { API } from 'ssm-shared-lib';
-import { WarningOutlined } from '@ant-design/icons';
+import {
+  DatabaseOutlined,
+  InteractionOutlined,
+  WarningOutlined,
+} from '@ant-design/icons';
+import Avatar from 'antd/es/avatar/avatar';
 
 const Inventory: React.FC = () => {
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
@@ -130,7 +140,40 @@ const Inventory: React.FC = () => {
   };
   return (
     <TerminalContextProvider>
-      <PageContainer>
+      <PageContainer
+        header={{
+          title: (
+            <Row>
+              <Col>
+                <Avatar
+                  style={{ backgroundColor: '#9f0f2e' }}
+                  shape="square"
+                  icon={<DatabaseOutlined />}
+                />
+              </Col>
+              <Col
+                style={{
+                  marginLeft: 5,
+                  marginTop: 'auto',
+                  marginBottom: 'auto',
+                }}
+              >
+                <Typography.Title
+                  style={{
+                    marginLeft: 5,
+                    marginTop: 'auto',
+                    marginBottom: 'auto',
+                  }}
+                  level={4}
+                >
+                  {' '}
+                  Inventory
+                </Typography.Title>
+              </Col>
+            </Row>
+          ),
+        }}
+      >
         <Popconfirm
           title="Delete a device"
           description={
@@ -237,17 +280,20 @@ const Inventory: React.FC = () => {
           closable={false}
         >
           {currentRow?.ip && (
-            <ProDescriptions<API.DeviceItem>
-              column={1}
-              title={currentRow?.ip}
-              request={async () => ({
-                data: currentRow || {},
-              })}
-              params={{
-                id: currentRow?.ip,
-              }}
-              columns={columns as ProDescriptionsItemProps<API.DeviceItem>[]}
-            />
+            <>
+              <ProDescriptions<API.DeviceItem>
+                extra={<DeviceLogos device={currentRow} />}
+                column={1}
+                title={currentRow?.ip}
+                request={async () => ({
+                  data: currentRow || {},
+                })}
+                params={{
+                  id: currentRow?.ip,
+                }}
+                columns={columns as ProDescriptionsItemProps<API.DeviceItem>[]}
+              />
+            </>
           )}
           {currentRow?.versions && (
             <div style={{ marginTop: '20px' }}>

@@ -16,5 +16,5 @@ export const setUserLoglevel = asyncHandler(async (req, res) => {
   logger.info('[CONTROLLER] - POST - /user/settings/logs');
   const userLogsLevel = req.body as UserLogsLevel;
   await UserRepo.updateLogsLevel(req.user.email, userLogsLevel);
-  new SuccessResponse('Set user log level', {}).send(res);
+  new SuccessResponse('Set user log level').send(res);
 });

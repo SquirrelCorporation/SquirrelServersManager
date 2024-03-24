@@ -20,19 +20,6 @@ const InventoryColumns = (
       hideInTable: true,
     },
     {
-      title: 'Type',
-      dataIndex: 'osLogoFile',
-      render: (dom, entity) => {
-        return (
-          <Avatar
-            src={
-              <img src={OsLogo(entity.osLogoFile)} alt={entity.osLogoFile} />
-            }
-          />
-        );
-      },
-    },
-    {
       title: 'IP',
       dataIndex: 'ip',
       render: (dom, entity) => {

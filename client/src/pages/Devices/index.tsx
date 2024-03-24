@@ -8,7 +8,12 @@ import QuickActionDropDown from '@/components/QuickAction/QuickActionDropDown';
 import TerminalModal from '@/components/TerminalModal';
 import { getDevices } from '@/services/rest/device';
 import { useClientLoaderData } from '@@/exports';
-import { AppstoreOutlined, ControlOutlined } from '@ant-design/icons';
+import {
+  AppstoreOutlined,
+  ControlOutlined,
+  PlaySquareOutlined,
+  TableOutlined,
+} from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import {
   Avatar,
@@ -227,13 +232,46 @@ const Index = memo(() => {
   );
   return (
     <TerminalContextProvider>
-      <PageContainer>
+      <PageContainer
+        header={{
+          title: (
+            <Row>
+              <Col>
+                <Avatar
+                  style={{ backgroundColor: '#5e9a35' }}
+                  shape="square"
+                  icon={<TableOutlined />}
+                />
+              </Col>
+              <Col
+                style={{
+                  marginLeft: 5,
+                  marginTop: 'auto',
+                  marginBottom: 'auto',
+                }}
+              >
+                <Typography.Title
+                  style={{
+                    marginLeft: 5,
+                    marginTop: 'auto',
+                    marginBottom: 'auto',
+                  }}
+                  level={4}
+                >
+                  {' '}
+                  Devices
+                </Typography.Title>
+              </Col>
+            </Row>
+          ),
+        }}
+      >
         <div className={styles.standardList}>
           <Card
             title={'List of your devices'}
             className={styles.listCard}
             bordered={false}
-            style={{ marginTop: 24 }}
+            style={{ marginTop: 0 }}
             bodyStyle={{ padding: '0 32px 40px 32px' }}
             extra={
               <a href="#">

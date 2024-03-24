@@ -68,6 +68,10 @@ def parse_args():
 
 def execute():
     args = parse_args()
+    extra_vars = None
+    if args.extra_vars is not None:
+        extra_vars = json.loads(args.extra_vars)
+
     thread_obj, runner_obj = ansible_runner.run_async(
         private_data_dir='./',
         playbook=args.playbook,
@@ -76,7 +80,7 @@ def execute():
         status_handler=status_handler,
         rotate_artifacts=10,
         inventory=args.specific_host,
-        extravars=json.loads(args.extra_vars),
+        extravars=extra_vars,
         #debug=False,
         #ignore_logging=False
         verbosity=args.log_level

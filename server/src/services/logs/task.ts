@@ -6,5 +6,5 @@ import logger from '../../logger';
 export const getTaskLogs = asyncHandler(async (req, res) => {
   logger.info(`[CONTROLLER] - GET - /logs/tasks`);
   const tasks = await AnsibleTaskRepo.findAll();
-  new SuccessResponse('Get task logs', tasks).send(res);
+  new SuccessResponse('Get task logs successful', tasks).send(res);
 });

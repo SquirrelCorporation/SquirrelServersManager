@@ -3,7 +3,9 @@ import {
   TableOutlined,
   WarningOutlined,
 } from '@ant-design/icons';
+import { Generator } from '@umijs/utils';
 import {
+  Avatar,
   Button,
   Card,
   Col,
@@ -26,6 +28,7 @@ import {
   postResetSettings,
 } from '@/services/rest/settings';
 import SystemPerformanceCard from '@/pages/Dashboard/Components/SystemPerformanceCard';
+import { GeneralSettingsKeys } from 'ssm-shared-lib/distribution/enums/settings';
 
 export const PajamasLog = (props: any) => (
   <svg
@@ -100,67 +103,89 @@ const GeneralSettings: React.FC = () => {
   const onChangeMaxCpu = async (newValue: number | null) => {
     if (newValue) {
       await postDashboardSetting(
-        'consider-performance-good-cpu-if-greater',
+        GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
         newValue,
       ).then(() => {
         setDashboardMaxCpuInPercent(newValue);
+        message.success({
+          content: 'Setting successfully updated',
+          duration: 6,
+        });
       });
-      message.success({ content: 'Setting successfully updated', duration: 6 });
     }
   };
 
   const onChangeMinMem = async (newValue: number | null) => {
     if (newValue) {
       await postDashboardSetting(
-        'consider-performance-good-mem-if-greater',
+        GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
         newValue,
       ).then(() => {
         setDashboardMinMemInPercent(newValue);
+        message.success({
+          content: 'Setting successfully updated',
+          duration: 6,
+        });
       });
-      message.success({ content: 'Setting successfully updated', duration: 6 });
     }
   };
 
   const onChangeConsiderDeviceOnline = async (newValue: number | null) => {
     if (newValue) {
       await postDeviceSetting(
-        'consider-device-offline-after-in-minutes',
+        GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
         newValue,
       ).then(() => {
         setConsiderDeviceOnlineInMinutes(newValue);
+        message.success({
+          content: 'Setting successfully updated',
+          duration: 6,
+        });
       });
-      message.success({ content: 'Setting successfully updated', duration: 6 });
     }
   };
 
   const onChangeAnsibleCleanUp = async (newValue: number | null) => {
     if (newValue) {
-      await postLogsSetting('clean-up-ansible', newValue).then(() => {
+      await postLogsSetting(
+        GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
+        newValue,
+      ).then(() => {
         setAnsibleCleanUpInSeconds(newValue);
+        message.success({
+          content: 'Setting successfully updated',
+          duration: 6,
+        });
       });
-      message.success({ content: 'Setting successfully updated', duration: 6 });
     }
   };
   const onChangeServerLogsRetention = async (newValue: number | null) => {
     if (newValue) {
-      await postLogsSetting('server-log-retention-in-days', newValue).then(
-        () => {
-          setServerLogsRetentionInDays(newValue);
-        },
-      );
-      message.success({ content: 'Setting successfully updated', duration: 6 });
+      await postLogsSetting(
+        GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS,
+        newValue,
+      ).then(() => {
+        setServerLogsRetentionInDays(newValue);
+        message.success({
+          content: 'Setting successfully updated',
+          duration: 6,
+        });
+      });
     }
   };
 
   const onChangeRegisterDeviceStatEvery = async (newValue: number | null) => {
     if (newValue) {
       await postDeviceSetting(
-        'device-stat-frequency-in-seconds',
+        GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
         newValue,
       ).then(() => {
         setRegisterDeviceStatEveryXSeconds(newValue);
+        message.success({
+          content: 'Setting successfully updated',
+          duration: 6,
+        });
       });
-      message.success({ content: 'Setting successfully updated', duration: 6 });
     }
   };
 
@@ -176,9 +201,17 @@ const GeneralSettings: React.FC = () => {
         title={
           <Row>
             <Col>
-              <PajamasLog />
+              <Avatar
+                style={{ backgroundColor: '#7c4275' }}
+                shape="square"
+                icon={<PajamasLog />}
+              />
             </Col>
-            <Col style={{ marginLeft: 3 }}>Logs Retention</Col>
+            <Col
+              style={{ marginLeft: 5, marginTop: 'auto', marginBottom: 'auto' }}
+            >
+              Logs Retention
+            </Col>
           </Row>
         }
       >
@@ -238,9 +271,17 @@ const GeneralSettings: React.FC = () => {
         title={
           <Row>
             <Col>
-              <TableOutlined style={{ width: 20, height: 20 }} />
+              <Avatar
+                style={{ backgroundColor: '#ab6e43' }}
+                shape="square"
+                icon={<TableOutlined />}
+              />
             </Col>
-            <Col style={{ marginLeft: 3 }}>Devices</Col>
+            <Col
+              style={{ marginLeft: 5, marginTop: 'auto', marginBottom: 'auto' }}
+            >
+              Devices
+            </Col>
           </Row>
         }
         style={{ marginTop: 16 }}
@@ -305,9 +346,17 @@ const GeneralSettings: React.FC = () => {
         title={
           <Row>
             <Col>
-              <MaterialSymbolsDashboard />
+              <Avatar
+                style={{ backgroundColor: '#b0412a' }}
+                shape="square"
+                icon={<MaterialSymbolsDashboard />}
+              />
             </Col>
-            <Col style={{ marginLeft: 3 }}>Dashboard</Col>
+            <Col
+              style={{ marginLeft: 5, marginTop: 'auto', marginBottom: 'auto' }}
+            >
+              Dashboard
+            </Col>
           </Row>
         }
         style={{ marginTop: 16 }}
@@ -388,9 +437,17 @@ const GeneralSettings: React.FC = () => {
         title={
           <Row>
             <Col>
-              <MynauiDangerTriangle />
+              <Avatar
+                style={{ backgroundColor: '#f51b36' }}
+                shape="square"
+                icon={<MynauiDangerTriangle />}
+              />
             </Col>
-            <Col style={{ marginLeft: 3 }}>Danger</Col>
+            <Col
+              style={{ marginLeft: 5, marginTop: 'auto', marginBottom: 'auto' }}
+            >
+              Danger Zone
+            </Col>
           </Row>
         }
         style={{ marginTop: 16 }}
@@ -407,7 +464,15 @@ const GeneralSettings: React.FC = () => {
               icon={<WarningOutlined style={{ color: 'red' }} />}
             >
               <Typography>
-                Reset to default <Button danger>Reset</Button>
+                <Popover
+                  content={'This will reset all your settings to default'}
+                >
+                  <InfoCircleFilled />
+                </Popover>{' '}
+                Reset settings to default{' '}
+                <Button style={{ marginLeft: 10 }} danger>
+                  Reset
+                </Button>
               </Typography>
             </Popconfirm>
             <Space.Compact style={{ width: '100%' }} />

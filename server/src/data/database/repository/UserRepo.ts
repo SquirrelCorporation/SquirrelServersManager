@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
-import logger from '../../logger';
 import User, { UserLogsLevel, UsersModel, schema } from '../model/User';
 
 async function create(user: User): Promise<User> {

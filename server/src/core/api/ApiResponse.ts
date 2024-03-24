@@ -94,7 +94,7 @@ export class FailureMsgResponse extends ApiResponse {
 export class SuccessResponse<T> extends ApiResponse {
   constructor(
     message: string,
-    private data: T,
+    private data?: T,
   ) {
     super(true, ResponseStatus.SUCCESS, message);
   }

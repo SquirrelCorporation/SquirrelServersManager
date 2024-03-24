@@ -11,7 +11,7 @@ export enum SSHType {
 
 export default interface DeviceAuth {
   device: Device;
-  type?: string;
+  type?: SSHType;
   sshUser?: string;
   sshPwd?: string;
   sshKey?: string;

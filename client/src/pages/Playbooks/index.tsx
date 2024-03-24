@@ -6,8 +6,10 @@ import {
   readPlaybookContent,
 } from '@/services/rest/ansible';
 import {
+  DatabaseOutlined,
   FileOutlined,
   FileSearchOutlined,
+  PlaySquareOutlined,
   RedoOutlined,
   SaveOutlined,
 } from '@ant-design/icons';
@@ -21,7 +23,6 @@ import {
   Button,
   Card,
   Col,
-  Collapse,
   FloatButton,
   message,
   Popconfirm,
@@ -31,13 +32,31 @@ import {
   Tree,
   Typography,
 } from 'antd';
+import Avatar from 'antd/es/avatar/avatar';
 import type { DirectoryTreeProps } from 'antd/es/tree';
+import { configureMonacoYaml, SchemasSettings } from 'monaco-yaml';
 import React, { useEffect } from 'react';
-import { editor } from 'monaco-editor';
+import { editor, languages } from 'monaco-editor';
 import { AddCircleOutline, DeleteOutline } from 'antd-mobile-icons';
 import IStandaloneCodeEditor = editor.IStandaloneCodeEditor;
 import { PlaybookFileList } from 'ssm-shared-lib/distribution/types/api';
 import ExtraVarsViewEdition from '@/pages/Playbooks/ExtraVarsViewEdition';
+import { editor as orgEditor, Uri } from 'monaco-editor';
+
+window.MonacoEnvironment = {
+  getWorker(moduleId, label) {
+    switch (label) {
+      case 'editorWorkerService':
+        return new Worker(
+          new URL('monaco-editor/esm/vs/editor/editor.worker', import.meta.url),
+        );
+      case 'yaml':
+        return new Worker(new URL('monaco-yaml/yaml.worker', import.meta.url));
+      default:
+        throw new Error(`Unknown label ${label}`);
+    }
+  },
+};
 
 const { DirectoryTree } = Tree;
 
@@ -58,34 +77,26 @@ const Index: React.FC = () => {
 
   const asyncFetchPlaybookContent = async () => {
     if (selectedFile) {
-      await readPlaybookContent(selectedFile.value)
-        .then((content) => {
-          setDownloadedContent(content.data);
-        })
-        .catch((error) => {
-          message.error(error);
-        });
+      await readPlaybookContent(selectedFile.value).then((content) => {
+        setDownloadedContent(content.data);
+      });
     }
     setIsLoading(false);
   };
   const asyncFetch = async (createdPlaybook?: string) => {
-    await getPlaybooks()
-      .then((list) => {
-        if (list?.data) {
-          setPlaybookFilesList(list.data);
-          if (createdPlaybook) {
-            setSelectedFile(list.data.find((e) => e.label === createdPlaybook));
-          }
-        } else {
-          message.error({
-            content: 'Playbooks list is empty, please check your configuration',
-            duration: 6,
-          });
+    await getPlaybooks().then((list) => {
+      if (list?.data) {
+        setPlaybookFilesList(list.data);
+        if (createdPlaybook) {
+          setSelectedFile(list.data.find((e) => e.label === createdPlaybook));
         }
-      })
-      .catch((error) => {
-        message.error(error);
-      });
+      } else {
+        message.error({
+          content: 'Playbooks list is empty, please check your configuration',
+          duration: 6,
+        });
+      }
+    });
   };
   useEffect(() => {
     asyncFetch();
@@ -107,11 +118,24 @@ const Index: React.FC = () => {
   const onExpand: DirectoryTreeProps['onExpand'] = (keys, info) => {
     console.log('Trigger Expand', keys, info);
   };
+  const keywords = ['ansible', 'test', 'ggg'];
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-shadow
   const editorDidMount = (editor: IStandaloneCodeEditor, monaco: Monaco) => {
     // @ts-ignore
     editorRef.current = editor;
     editor.focus();
+    configureMonacoYaml(monaco, {
+      enableSchemaRequest: true,
+      schemas: [
+        {
+          // If YAML file is opened matching this glob
+          fileMatch: ['*.yml'],
+          // Then this schema will be downloaded from the internet and used.
+          uri: 'https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook',
+        },
+      ],
+    });
   };
 
   const onClickDeletePlaybook = async () => {
@@ -124,10 +148,7 @@ const Index: React.FC = () => {
           await asyncFetch();
           setIsLoading(false);
         })
-        .catch((error) => {
-          message.error(
-            `Playbook '${selectedFile.value}' deletion error (${error.message})`,
-          );
+        .catch(() => {
           setIsLoading(false);
         });
     } else {
@@ -145,10 +166,7 @@ const Index: React.FC = () => {
           message.success(`Playbook '${selectedFile.value}' saved`);
           setIsLoading(false);
         })
-        .catch((error) => {
-          message.error(
-            `Playbook '${selectedFile.value}' saving error (${error.message})`,
-          );
+        .catch(() => {
           setIsLoading(false);
         });
     } else {
@@ -167,15 +185,14 @@ const Index: React.FC = () => {
 
   const submitNewPlaybook = async (name: string) => {
     setIsLoading(true);
-    return await newPlaybook(name + '.yml')
+    return await newPlaybook(name)
       .then(async () => {
         message.success(`Playbook '${name}' successfully created`);
         await asyncFetch(name);
         setIsLoading(false);
         return true;
       })
-      .catch(async (error) => {
-        message.error(`Playbook '${name}' not created ${error.message}`);
+      .catch(async () => {
         await asyncFetch();
         setIsLoading(false);
         return false;
@@ -183,7 +200,40 @@ const Index: React.FC = () => {
   };
 
   return (
-    <PageContainer>
+    <PageContainer
+      header={{
+        title: (
+          <Row>
+            <Col>
+              <Avatar
+                style={{ backgroundColor: '#554dce' }}
+                shape="square"
+                icon={<PlaySquareOutlined />}
+              />
+            </Col>
+            <Col
+              style={{
+                marginLeft: 5,
+                marginTop: 'auto',
+                marginBottom: 'auto',
+              }}
+            >
+              <Typography.Title
+                style={{
+                  marginLeft: 5,
+                  marginTop: 'auto',
+                  marginBottom: 'auto',
+                }}
+                level={4}
+              >
+                {' '}
+                Playbooks
+              </Typography.Title>
+            </Col>
+          </Row>
+        ),
+      }}
+    >
       <Spin spinning={isLoading} fullscreen />
       <Row wrap={false} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
         <Col span={6}>
@@ -300,8 +350,9 @@ const Index: React.FC = () => {
               <Editor
                 theme="vs-dark"
                 height="90vh"
-                defaultLanguage="yaml"
-                path={selectedFile?.value}
+                //defaultLanguage="yaml"
+                language="yaml"
+                path={selectedFile?.value || 'playbook.yml'}
                 value={downloadedContent}
                 onMount={editorDidMount}
               />

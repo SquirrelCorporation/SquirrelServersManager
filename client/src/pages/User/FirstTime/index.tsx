@@ -1,4 +1,4 @@
-import { createUser } from '@/services/rest/api';
+import { createUser } from '@/services/rest/user';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import {
   PageContainer,

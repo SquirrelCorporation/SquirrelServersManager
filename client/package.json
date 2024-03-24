@@ -76,7 +76,9 @@
     "rc-queue-anim": "^2.0.0",
     "rc-tween-one": "^3.0.6",
     "react-confetti": "^6.1.0",
-    "@antv/g2plot": "^2.4.31"
+    "@antv/g2plot": "^2.4.31",
+    "monaco-yaml":"^5.1.1",
+    "monaco-editor-webpack-plugin": "^7.1.0"
   },
   "devDependencies": {
     "antd-pro-merge-less": "^3.0.11",

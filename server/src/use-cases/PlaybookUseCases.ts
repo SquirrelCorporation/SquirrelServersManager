@@ -69,6 +69,9 @@ async function getAllPlaybooks() {
 }
 
 async function createCustomPlaybook(name: string) {
+  if (!name.endsWith('.yml')) {
+    name += '.yml';
+  }
   await PlaybookModel.create({ name: name, custom: true }).then(async () => {
     await shell.newPlaybook(name);
   });

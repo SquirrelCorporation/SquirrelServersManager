@@ -1,4 +1,8 @@
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  LogoutOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { history, useModel } from '@umijs/max';
 import { Spin } from 'antd';
@@ -7,7 +11,7 @@ import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
 import { flushSync } from 'react-dom';
 import HeaderDropdown from '../HeaderDropdown';
-import { outLogin } from '@/services/rest/login';
+import { outLogin } from '@/services/rest/user';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -20,7 +24,10 @@ export const AvatarName = () => {
   return <span className="anticon">{currentUser?.name}</span>;
 };
 
-export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, children }) => {
+export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
+  menu,
+  children,
+}) => {
   const loginOut = async () => {
     await outLogin();
     const { search, pathname } = window.location;
@@ -59,7 +66,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
       const { key } = event;
       if (key === 'logout') {
         flushSync(() => {
-          setInitialState((s) => ({ ...s, currentUser: undefined }));
+          setInitialState((s: any) => ({ ...s, currentUser: undefined }));
         });
         loginOut();
         return;

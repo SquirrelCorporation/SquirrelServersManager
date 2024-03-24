@@ -1,5 +1,5 @@
-import { hasUser } from '@/services/rest/api';
-import { login } from '@/services/rest/login';
+import { hasUser } from '@/services/rest/user';
+import { user } from '@/services/rest/user';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import {
   LoginFormPage,
@@ -40,7 +40,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (values: API.LoginParams) => {
     try {
-      const res = await login({ ...values });
+      const res = await user({ ...values });
       if (res.success) {
         const defaultLoginSuccessMessage = 'Success！';
         message.success(defaultLoginSuccessMessage);

@@ -1,9 +1,13 @@
 import UserSettings from '@/pages/Admin/Settings/components/UserSettings';
 import GeneralSettings from '@/pages/Admin/Settings/components/GeneralSettings';
 import Information from '@/pages/Admin/Settings/components/Information';
-import { InfoCircleOutlined, SettingOutlined } from '@ant-design/icons';
+import {
+  InfoCircleOutlined,
+  SettingOutlined,
+  UnorderedListOutlined,
+} from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { Tabs } from 'antd';
+import { Avatar, Col, Row, Tabs, Typography } from 'antd';
 import React from 'react';
 
 const Settings: React.FC = () => {
@@ -45,9 +49,37 @@ const Settings: React.FC = () => {
     },
   ];
   return (
-    <PageContainer content={'This page can only be viewed by admin'}>
-      <Tabs type={'card'} items={settingsTabItems} />
-    </PageContainer>
+    <PageContainer
+      header={{
+        title: (
+          <Row>
+            <Col>
+              <Avatar
+                style={{ backgroundColor: '#266ea8' }}
+                shape="square"
+                icon={<SettingOutlined />}
+              />
+            </Col>
+            <Col
+              style={{ marginLeft: 5, marginTop: 'auto', marginBottom: 'auto' }}
+            >
+              <Typography.Title
+                style={{
+                  marginLeft: 5,
+                  marginTop: 'auto',
+                  marginBottom: 'auto',
+                }}
+                level={4}
+              >
+                {' '}
+                Settings
+              </Typography.Title>
+            </Col>
+          </Row>
+        ),
+      }}
+      tabList={settingsTabItems}
+    />
   );
 };
 

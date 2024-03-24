@@ -3,9 +3,8 @@ export type HasUsers = {
   data?: { hasUsers?: boolean };
 };
 
-export type SimpleResult<T> = {
+export type SimpleResult = {
   success?: boolean;
-  data?: T;
 };
 
 export type UserSystemPerformance = {
@@ -279,6 +278,7 @@ export type DeviceStatParams = {
 
 export type DashboardDevicesStatParams = {
   from?: number;
+  to?: number;
 };
 
 export type DeviceStats = {
@@ -341,7 +341,7 @@ export type DeviceAuthResponse = {
 };
 
 export type DeviceAuthParams = {
-  type: string;
+  authType: string;
   sshPort: number;
   sshKey?: string;
   sshPwd?: string;

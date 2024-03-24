@@ -37,17 +37,13 @@ export const getDashboardAvailabilityStats = asyncHandler(async (req, res) => {
 
 export const getDashboardAveragedStats = asyncHandler(async (req, res) => {
   const { from, to } = req.query;
-  const devices = req.body.devices;
-  logger.info(`[CONTROLLER] - POST - /dashboard/stats/averaged/${req.params.type}`);
-  if (!devices || !from || !to) {
-    res.status(401).send({
-      success: false,
-    });
-    return;
-  }
+  const { devices } = req.body;
+  const { type } = req.params;
+  logger.info(`[CONTROLLER] - POST - /dashboard/stats/averaged/${type}`);
+
   const devicesToQuery = await DeviceRepo.findByUuids(devices);
   if (!devicesToQuery || devicesToQuery.length !== devices.length) {
-    throw new NotFoundError();
+    throw new NotFoundError('Some devices were not found');
   }
   try {
     const fromDate = DateTime.fromJSDate(new Date((from as string).split('T')[0]))
@@ -60,9 +56,9 @@ export const getDashboardAveragedStats = asyncHandler(async (req, res) => {
       devicesToQuery,
       fromDate,
       toDate,
-      req.params.type,
+      type,
     );
-    new SuccessResponse('Get dashboard averaged stats', stats).send(res);
+    new SuccessResponse('Get dashboard averaged stats successful', stats).send(res);
   } catch (error: any) {
     logger.error(error);
     throw new InternalError(error.message);
@@ -71,15 +67,10 @@ export const getDashboardAveragedStats = asyncHandler(async (req, res) => {
 
 export const getDashboardStat = asyncHandler(async (req, res) => {
   const { from, to } = req.query;
-  const devices = req.body.devices;
+  const { devices } = req.body;
+  const { type } = req.params;
+
   logger.info(`[CONTROLLER] - POST - /dashboard/stats/${req.params.type}`);
-  if (!devices || !from || !to) {
-    res.status(401).send({
-      success: false,
-      message: 'Devices, from or to not specified',
-    });
-    return;
-  }
   const devicesToQuery = await DeviceRepo.findByUuids(devices);
   if (!devicesToQuery || devicesToQuery.length !== devices.length) {
     throw new NotFoundError();
@@ -95,9 +86,9 @@ export const getDashboardStat = asyncHandler(async (req, res) => {
       devicesToQuery,
       fromDate,
       toDate,
-      req.params.type,
+      type,
     );
-    new SuccessResponse('Get dashboard stat', stats).send(res);
+    new SuccessResponse('Get dashboard stat successful', stats).send(res);
   } catch (error: any) {
     logger.error(error);
     throw new InternalError(error.message);

@@ -1,8 +1,9 @@
 import ServerLogsColumns from '@/pages/Admin/Logs/ServerLogsColums';
 import { getServerLogs, getTasksLogs } from '@/services/rest/logs';
+import { SettingOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import React from 'react';
-import { Tabs } from 'antd';
+import { Avatar, Col, Row, Tabs, Typography } from 'antd';
 import TaskLogsColumns from '@/pages/Admin/Logs/TaskLogsColumns';
 import { API } from 'ssm-shared-lib';
 
@@ -41,7 +42,36 @@ const logsTabItem = [
 
 const Index: React.FC = () => {
   return (
-    <PageContainer>
+    <PageContainer
+      header={{
+        title: (
+          <Row>
+            <Col>
+              <Avatar
+                style={{ backgroundColor: '#21561b' }}
+                shape="square"
+                icon={<UnorderedListOutlined />}
+              />
+            </Col>
+            <Col
+              style={{ marginLeft: 5, marginTop: 'auto', marginBottom: 'auto' }}
+            >
+              <Typography.Title
+                style={{
+                  marginLeft: 5,
+                  marginTop: 'auto',
+                  marginBottom: 'auto',
+                }}
+                level={4}
+              >
+                {' '}
+                Logs
+              </Typography.Title>
+            </Col>
+          </Row>
+        ),
+      }}
+    >
       <Tabs items={logsTabItem} />
     </PageContainer>
   );

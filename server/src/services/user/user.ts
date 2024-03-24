@@ -95,7 +95,7 @@ export const createFirstUser = asyncHandler(async (req, res) => {
     role: Role.ADMIN,
     avatar: avatar || '/avatars/squirrel.png',
   });
-  new SuccessResponse('Create first user', {}).send(res);
+  new SuccessResponse('Create first user').send(res);
 });
 
 export const hasUser = asyncHandler(async (req, res) => {

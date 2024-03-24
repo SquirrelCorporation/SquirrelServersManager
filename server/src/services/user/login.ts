@@ -7,7 +7,7 @@ import logger from '../../logger';
 
 export const login = asyncHandler(async (req, res, next) => {
   logger.info('[CONTROLLER] - POST - /login/account');
-  const { password, username, type } = req.body;
+  const { password, username } = req.body;
   if (!password || !username) {
     res.status(401).send({
       data: {
@@ -36,7 +36,6 @@ export const login = asyncHandler(async (req, res, next) => {
       }
       logger.info('[CONTROLLER][USER] - /login/account - Logged in successfull');
       new SuccessResponse('Login success', {
-        type,
         currentAuthority: user.role,
       } as API.LoginInfo).send(res);
     });
@@ -54,7 +53,7 @@ export const logout = asyncHandler(async (req, res, next) => {
       if (err) {
         next(err);
       }
-      new SuccessResponse('Logout', {}).send(res);
+      new SuccessResponse('Logout success').send(res);
     });
   });
 });

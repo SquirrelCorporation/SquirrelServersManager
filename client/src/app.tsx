@@ -1,6 +1,6 @@
 import { AvatarDropdown, AvatarName, Footer } from '@/components';
 import { DevicesHeaderWidget } from '@/components/HeaderComponents/DevicesHeaderWidget';
-import { currentUser as queryCurrentUser, hasUser } from '@/services/rest/api';
+import { currentUser as queryCurrentUser, hasUser } from '@/services/rest/user';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
@@ -94,7 +94,7 @@ export const layout: RunTimeLayoutConfig = ({
     //  403
     // unAccessible: <div>unAccessible</div>,
     //  loading
-    childrenRender: (children) => {
+    childrenRender: (children: any) => {
       // if (initialState?.loading) return <PageLoading />;
       return (
         <>
@@ -105,7 +105,7 @@ export const layout: RunTimeLayoutConfig = ({
               enableDarkTheme
               settings={initialState?.settings}
               onSettingChange={(settings) => {
-                setInitialState((preInitialState) => ({
+                setInitialState((preInitialState: any) => ({
                   ...preInitialState,
                   settings,
                 }));
