@@ -1,6 +1,6 @@
 import React from 'react';
 import { Avatar, Table, TableColumnsType } from 'antd';
-import SoftwareIcon from '@/components/OSSoftwaresVersions/SoftwareIcon';
+import SoftwareIcon from '@/components/DeviceComponents/OSSoftwaresVersions/SoftwareIcon';
 import { API } from 'ssm-shared-lib';
 
 type OsSoftwareVersionsType = {

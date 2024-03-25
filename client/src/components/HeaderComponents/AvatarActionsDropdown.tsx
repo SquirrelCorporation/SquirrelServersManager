@@ -8,7 +8,7 @@ import { useModel } from '@umijs/max';
 import { Badge, Spin } from 'antd';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
-import HeaderDropdown from '../HeaderDropdown';
+import HeaderDropdown from './HeaderDropDown';
 
 export const AvatarActionsDropdown: React.FC = () => {
   const actionClassName = useEmotionCss(({ token }) => {

@@ -10,7 +10,7 @@ import { stringify } from 'querystring';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
 import { flushSync } from 'react-dom';
-import HeaderDropdown from '../HeaderDropdown';
+import HeaderDropdown from './HeaderDropDown';
 import { outLogin } from '@/services/rest/user';
 
 export type GlobalHeaderRightProps = {
@@ -37,6 +37,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
     if (window.location.pathname !== '/user/login' && !redirect) {
       history.replace({
         pathname: '/user/login',
+        // @ts-ignore
         search: stringify({
           redirect: pathname + search,
         }),

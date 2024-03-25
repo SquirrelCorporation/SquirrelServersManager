@@ -1,6 +1,11 @@
+import Title, { PageContainerTitleColors } from '@/components/Template/Title';
 import ServerLogsColumns from '@/pages/Admin/Logs/ServerLogsColums';
 import { getServerLogs, getTasksLogs } from '@/services/rest/logs';
-import { SettingOutlined, UnorderedListOutlined } from '@ant-design/icons';
+import {
+  DatabaseOutlined,
+  SettingOutlined,
+  UnorderedListOutlined,
+} from '@ant-design/icons';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import React from 'react';
 import { Avatar, Col, Row, Tabs, Typography } from 'antd';
@@ -45,35 +50,15 @@ const Index: React.FC = () => {
     <PageContainer
       header={{
         title: (
-          <Row>
-            <Col>
-              <Avatar
-                style={{ backgroundColor: '#21561b' }}
-                shape="square"
-                icon={<UnorderedListOutlined />}
-              />
-            </Col>
-            <Col
-              style={{ marginLeft: 5, marginTop: 'auto', marginBottom: 'auto' }}
-            >
-              <Typography.Title
-                style={{
-                  marginLeft: 5,
-                  marginTop: 'auto',
-                  marginBottom: 'auto',
-                }}
-                level={4}
-              >
-                {' '}
-                Logs
-              </Typography.Title>
-            </Col>
-          </Row>
+          <Title.MainTitle
+            title={'Logs'}
+            backgroundColor={PageContainerTitleColors.LOGS}
+            icon={<UnorderedListOutlined />}
+          />
         ),
       }}
-    >
-      <Tabs items={logsTabItem} />
-    </PageContainer>
+      tabList={logsTabItem}
+    />
   );
 };
 

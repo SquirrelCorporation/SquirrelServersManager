@@ -20,9 +20,11 @@ export type ExtraVarsViewEditionProps = {
   playbook: API.PlaybookFileList;
 };
 
-const ExtraVarsViewEdition: React.FC<ExtraVarsViewEditionProps> = (props) => {
+const ExtraVarsViewEditor: React.FC<ExtraVarsViewEditionProps> = (
+  extraVarViewEditorProps,
+) => {
   const [currentExtraVars, setCurrentExtraVars] = React.useState(
-    props.playbook?.extraVars || [],
+    extraVarViewEditorProps.playbook?.extraVars || [],
   );
   const [isOpened, setIsOpened] = React.useState(false);
   const [showCreateNewVarForm, setShowCreateNewVarForm] = React.useState(false);
@@ -30,19 +32,22 @@ const ExtraVarsViewEdition: React.FC<ExtraVarsViewEditionProps> = (props) => {
     setIsOpened(key !== undefined && key[0] != undefined);
   };
   const handleRemove = async (extraVarName: string) => {
-    await deletePlaybookExtraVar(props.playbook.label, extraVarName);
+    await deletePlaybookExtraVar(
+      extraVarViewEditorProps.playbook.label,
+      extraVarName,
+    );
     setCurrentExtraVars(
       currentExtraVars?.filter((e) => e.extraVar !== extraVarName),
     );
   };
   useEffect(() => {
-    setCurrentExtraVars(props.playbook?.extraVars || []);
+    setCurrentExtraVars(extraVarViewEditorProps.playbook?.extraVars || []);
     setIsOpened(false);
-  }, [props.playbook]);
+  }, [extraVarViewEditorProps.playbook]);
   return (
     <>
       <Collapse
-        key={props.playbook.label}
+        key={extraVarViewEditorProps.playbook.label}
         bordered={false}
         style={{ width: '100%', marginBottom: 10 }}
         size="small"
@@ -144,7 +149,7 @@ const ExtraVarsViewEdition: React.FC<ExtraVarsViewEditionProps> = (props) => {
                           true,
                       };
                       await postPlaybookExtraVar(
-                        props.playbook?.value,
+                        extraVarViewEditorProps.playbook?.value,
                         newExtraVar,
                       );
                       setShowCreateNewVarForm(false);
@@ -240,6 +245,7 @@ const ExtraVarsViewEdition: React.FC<ExtraVarsViewEditionProps> = (props) => {
                                 .flat();
                               if (keyWords !== '') {
                                 result?.push({
+                                  // @ts-ignore
                                   label: <i> {keyWords} </i>,
                                   value: keyWords,
                                 });
@@ -277,4 +283,4 @@ const ExtraVarsViewEdition: React.FC<ExtraVarsViewEditionProps> = (props) => {
   );
 };
 
-export default ExtraVarsViewEdition;
+export default ExtraVarsViewEditor;

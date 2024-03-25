@@ -31,7 +31,7 @@ import {
   VscodeIconsFileTypePip,
   VscodeIconsFileTypeTsconfig,
   WhhPerlalt,
-} from '@/components/OSSoftwaresVersions/SoftwareIcons';
+} from '@/components/DeviceComponents/OSSoftwaresVersions/SoftwareIcons';
 
 type SoftwareIconType = {
   name: string;

@@ -1,11 +1,15 @@
 import {
+  MaterialSymbolsDashboard,
+  MynauiDangerTriangle,
+  PajamasLog,
+} from '@/components/Icons/CustomIcons';
+import Title, { SettingsSubTitleColors } from '@/components/Template/Title';
+import {
   InfoCircleFilled,
   TableOutlined,
   WarningOutlined,
 } from '@ant-design/icons';
-import { Generator } from '@umijs/utils';
 import {
-  Avatar,
   Button,
   Card,
   Col,
@@ -29,55 +33,6 @@ import {
 } from '@/services/rest/settings';
 import SystemPerformanceCard from '@/pages/Dashboard/Components/SystemPerformanceCard';
 import { GeneralSettingsKeys } from 'ssm-shared-lib/distribution/enums/settings';
-
-export const PajamasLog = (props: any) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 16 16"
-    {...props}
-  >
-    <path
-      fill="currentColor"
-      fillRule="evenodd"
-      d="M3.5 2.5v11h9v-11h-9ZM3 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3Zm5 10a.75.75 0 0 1 .75-.75h1.75a.75.75 0 0 1 0 1.5H8.75A.75.75 0 0 1 8 11Zm-2 1a1 1 0 1 0 0-2a1 1 0 0 0 0 2Zm2-4a.75.75 0 0 1 .75-.75h1.75a.75.75 0 0 1 0 1.5H8.75A.75.75 0 0 1 8 8ZM6 9a1 1 0 1 0 0-2a1 1 0 0 0 0 2Zm2-4a.75.75 0 0 1 .75-.75h1.75a.75.75 0 0 1 0 1.5H8.75A.75.75 0 0 1 8 5ZM6 6a1 1 0 1 0 0-2a1 1 0 0 0 0 2Z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
-export const MaterialSymbolsDashboard = (props: any) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    {...props}
-  >
-    <path
-      fill="currentColor"
-      d="M13 9V3h8v6h-8ZM3 13V3h8v10H3Zm10 8V11h8v10h-8ZM3 21v-6h8v6H3Z"
-    />
-  </svg>
-);
-export const MynauiDangerTriangle = (props: any) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    {...props}
-  >
-    <path
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="1.5"
-      d="M12 8.5V14m0 3.247v-.5m-6.02-5.985C8.608 5.587 9.92 3 12 3c2.08 0 3.393 2.587 6.02 7.762l.327.644c2.182 4.3 3.274 6.45 2.287 8.022C19.648 21 17.208 21 12.327 21h-.654c-4.88 0-7.321 0-8.307-1.572c-.987-1.572.105-3.722 2.287-8.022z"
-    />
-  </svg>
-);
 
 const GeneralSettings: React.FC = () => {
   const { initialState } = useModel('@@initialState');
@@ -199,20 +154,11 @@ const GeneralSettings: React.FC = () => {
       <Card
         type="inner"
         title={
-          <Row>
-            <Col>
-              <Avatar
-                style={{ backgroundColor: '#7c4275' }}
-                shape="square"
-                icon={<PajamasLog />}
-              />
-            </Col>
-            <Col
-              style={{ marginLeft: 5, marginTop: 'auto', marginBottom: 'auto' }}
-            >
-              Logs Retention
-            </Col>
-          </Row>
+          <Title.SubTitle
+            title={'Logs Retention'}
+            backgroundColor={SettingsSubTitleColors.LOGS_RETENTION}
+            icon={<PajamasLog />}
+          />
         }
       >
         <Flex vertical gap={32} style={{ width: '50%' }}>
@@ -269,20 +215,11 @@ const GeneralSettings: React.FC = () => {
       <Card
         type="inner"
         title={
-          <Row>
-            <Col>
-              <Avatar
-                style={{ backgroundColor: '#ab6e43' }}
-                shape="square"
-                icon={<TableOutlined />}
-              />
-            </Col>
-            <Col
-              style={{ marginLeft: 5, marginTop: 'auto', marginBottom: 'auto' }}
-            >
-              Devices
-            </Col>
-          </Row>
+          <Title.SubTitle
+            title={'Devices'}
+            backgroundColor={SettingsSubTitleColors.DEVICES}
+            icon={<TableOutlined />}
+          />
         }
         style={{ marginTop: 16 }}
       >
@@ -344,20 +281,11 @@ const GeneralSettings: React.FC = () => {
       <Card
         type="inner"
         title={
-          <Row>
-            <Col>
-              <Avatar
-                style={{ backgroundColor: '#b0412a' }}
-                shape="square"
-                icon={<MaterialSymbolsDashboard />}
-              />
-            </Col>
-            <Col
-              style={{ marginLeft: 5, marginTop: 'auto', marginBottom: 'auto' }}
-            >
-              Dashboard
-            </Col>
-          </Row>
+          <Title.SubTitle
+            title={'Dashboard'}
+            backgroundColor={SettingsSubTitleColors.DASHBOARD}
+            icon={<MaterialSymbolsDashboard />}
+          />
         }
         style={{ marginTop: 16 }}
       >
@@ -435,20 +363,11 @@ const GeneralSettings: React.FC = () => {
       <Card
         type="inner"
         title={
-          <Row>
-            <Col>
-              <Avatar
-                style={{ backgroundColor: '#f51b36' }}
-                shape="square"
-                icon={<MynauiDangerTriangle />}
-              />
-            </Col>
-            <Col
-              style={{ marginLeft: 5, marginTop: 'auto', marginBottom: 'auto' }}
-            >
-              Danger Zone
-            </Col>
-          </Row>
+          <Title.SubTitle
+            title={'Danger Zone'}
+            backgroundColor={SettingsSubTitleColors.DANGER_ZONE}
+            icon={<MynauiDangerTriangle />}
+          />
         }
         style={{ marginTop: 16 }}
       >

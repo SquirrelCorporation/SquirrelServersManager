@@ -10,7 +10,6 @@ import {
   ToTopOutlined,
 } from '@ant-design/icons';
 import React from 'react';
-import { MenuProps } from 'antd';
 
 export enum Types {
   PLAYBOOK = 'playbook',

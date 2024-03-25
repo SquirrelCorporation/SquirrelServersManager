@@ -1,13 +1,9 @@
+import Title, { PageContainerTitleColors } from '@/components/Template/Title';
 import UserSettings from '@/pages/Admin/Settings/components/UserSettings';
 import GeneralSettings from '@/pages/Admin/Settings/components/GeneralSettings';
 import Information from '@/pages/Admin/Settings/components/Information';
-import {
-  InfoCircleOutlined,
-  SettingOutlined,
-  UnorderedListOutlined,
-} from '@ant-design/icons';
+import { InfoCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { Avatar, Col, Row, Tabs, Typography } from 'antd';
 import React from 'react';
 
 const Settings: React.FC = () => {
@@ -52,30 +48,11 @@ const Settings: React.FC = () => {
     <PageContainer
       header={{
         title: (
-          <Row>
-            <Col>
-              <Avatar
-                style={{ backgroundColor: '#266ea8' }}
-                shape="square"
-                icon={<SettingOutlined />}
-              />
-            </Col>
-            <Col
-              style={{ marginLeft: 5, marginTop: 'auto', marginBottom: 'auto' }}
-            >
-              <Typography.Title
-                style={{
-                  marginLeft: 5,
-                  marginTop: 'auto',
-                  marginBottom: 'auto',
-                }}
-                level={4}
-              >
-                {' '}
-                Settings
-              </Typography.Title>
-            </Col>
-          </Row>
+          <Title.MainTitle
+            title={'Logs'}
+            backgroundColor={PageContainerTitleColors.SETTINGS}
+            icon={<SettingOutlined />}
+          />
         ),
       }}
       tabList={settingsTabItems}

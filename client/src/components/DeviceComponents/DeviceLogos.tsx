@@ -1,5 +1,5 @@
-import { CPULogo } from '@/components/CPULogo/CPULogo';
-import { OsLogo } from '@/components/OsLogo/OsLogo';
+import { CPULogo } from '@/components/DeviceComponents/CPULogo';
+import { OsLogo } from '@/components/DeviceComponents/OsLogo/OsLogo';
 import Avatar from 'antd/es/avatar/avatar';
 import React from 'react';
 import { DeviceItem } from 'ssm-shared-lib/distribution/types/api';

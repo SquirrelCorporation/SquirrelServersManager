@@ -1,3 +1,4 @@
+import Title, { PageContainerTitleColors } from '@/components/Template/Title';
 import {
   deletePlaybook,
   getPlaybooks,
@@ -6,7 +7,6 @@ import {
   readPlaybookContent,
 } from '@/services/rest/ansible';
 import {
-  DatabaseOutlined,
   FileOutlined,
   FileSearchOutlined,
   PlaySquareOutlined,
@@ -32,16 +32,14 @@ import {
   Tree,
   Typography,
 } from 'antd';
-import Avatar from 'antd/es/avatar/avatar';
 import type { DirectoryTreeProps } from 'antd/es/tree';
-import { configureMonacoYaml, SchemasSettings } from 'monaco-yaml';
+import { configureMonacoYaml } from 'monaco-yaml';
 import React, { useEffect } from 'react';
 import { editor, languages } from 'monaco-editor';
 import { AddCircleOutline, DeleteOutline } from 'antd-mobile-icons';
 import IStandaloneCodeEditor = editor.IStandaloneCodeEditor;
 import { PlaybookFileList } from 'ssm-shared-lib/distribution/types/api';
-import ExtraVarsViewEdition from '@/pages/Playbooks/ExtraVarsViewEdition';
-import { editor as orgEditor, Uri } from 'monaco-editor';
+import ExtraVarsViewEditor from '@/pages/Playbooks/ExtraVarsViewEditor';
 
 window.MonacoEnvironment = {
   getWorker(moduleId, label) {
@@ -203,34 +201,11 @@ const Index: React.FC = () => {
     <PageContainer
       header={{
         title: (
-          <Row>
-            <Col>
-              <Avatar
-                style={{ backgroundColor: '#554dce' }}
-                shape="square"
-                icon={<PlaySquareOutlined />}
-              />
-            </Col>
-            <Col
-              style={{
-                marginLeft: 5,
-                marginTop: 'auto',
-                marginBottom: 'auto',
-              }}
-            >
-              <Typography.Title
-                style={{
-                  marginLeft: 5,
-                  marginTop: 'auto',
-                  marginBottom: 'auto',
-                }}
-                level={4}
-              >
-                {' '}
-                Playbooks
-              </Typography.Title>
-            </Col>
-          </Row>
+          <Title.MainTitle
+            title={'Playbooks'}
+            backgroundColor={PageContainerTitleColors.PLAYBOOKS}
+            icon={<PlaySquareOutlined />}
+          />
         ),
       }}
     >
@@ -346,7 +321,7 @@ const Index: React.FC = () => {
                   </Popconfirm>
                 )}
               </FloatButton.Group>
-              <ExtraVarsViewEdition playbook={selectedFile} />
+              <ExtraVarsViewEditor playbook={selectedFile} />
               <Editor
                 theme="vs-dark"
                 height="90vh"

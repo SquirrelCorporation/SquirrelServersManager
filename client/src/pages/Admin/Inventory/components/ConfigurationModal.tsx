@@ -1,8 +1,7 @@
 import { Button, Modal, Tabs, TabsProps } from 'antd';
 import React from 'react';
 import ConfigurationFormSSH from '@/pages/Admin/Inventory/components/ConfigurationFormSSH';
-
-export type FormValueType = Partial<API.DeviceItem>;
+import { API } from 'ssm-shared-lib';
 
 export type ConfigurationModalProps = {
   updateModalOpen: boolean;

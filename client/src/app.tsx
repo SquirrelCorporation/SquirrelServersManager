@@ -1,4 +1,8 @@
-import { AvatarDropdown, AvatarName, Footer } from '@/components';
+import Footer from '@/components/Footer';
+import {
+  AvatarDropdown,
+  AvatarName,
+} from '@/components/HeaderComponents/AvatarDropdown';
 import { DevicesHeaderWidget } from '@/components/HeaderComponents/DevicesHeaderWidget';
 import { currentUser as queryCurrentUser, hasUser } from '@/services/rest/user';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
@@ -75,7 +79,7 @@ export const layout: RunTimeLayoutConfig = ({
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
-      render: (_, avatarChildren) => {
+      render: (_: any, avatarChildren: any) => {
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
     },

@@ -78,7 +78,7 @@ const SystemPerformanceCard: React.FC = () => {
         }
         style={{ marginRight: 16 }}
       >
-        <Typography.Text>Weekly CPU Changes</Typography.Text>
+        <Typography.Text>Weekly CPU Variation</Typography.Text>
         <span className={styles.trendText}>
           <Typography.Text>
             {(
@@ -95,7 +95,7 @@ const SystemPerformanceCard: React.FC = () => {
             : 'down'
         }
       >
-        <Typography.Text>Weekly MEM Changes</Typography.Text>
+        <Typography.Text>Weekly MEM Variation</Typography.Text>
         <span className={styles.trendText}>
           <Typography.Text>
             {(

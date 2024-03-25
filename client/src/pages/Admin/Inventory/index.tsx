@@ -1,7 +1,7 @@
-import DeviceLogos from '@/components/DeviceLogos/DeviceLogos';
+import DeviceLogos from '@/components/DeviceComponents/DeviceLogos';
+import { GrommetIconsInstall } from '@/components/Icons/CustomIcons';
 import NewDeviceModal from '@/components/NewDeviceModal/NewDeviceModal';
-import { OsLogo } from '@/components/OsLogo/OsLogo';
-import { DeviconPlainBash } from '@/components/OSSoftwaresVersions/SoftwareIcons';
+import Title, { PageContainerTitleColors } from '@/components/Template/Title';
 import PlaybookSelectionModal from '@/components/PlaybookSelectionModal/PlaybookSelectionModal';
 import QuickActionReference, {
   Actions,
@@ -22,7 +22,6 @@ import {
 } from '@ant-design/pro-components';
 import {
   Button,
-  Card,
   Col,
   Drawer,
   Dropdown,
@@ -30,20 +29,14 @@ import {
   message,
   Popconfirm,
   Row,
-  Typography,
 } from 'antd';
-import React, { Key, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { TerminalContextProvider } from 'react-terminal';
 import ConfigurationModal from './components/ConfigurationModal';
-import OsSoftwareVersions from '@/components/OSSoftwaresVersions/OsSoftwareVersions';
+import OsSoftwareVersions from '@/components/DeviceComponents/OSSoftwaresVersions/OsSoftwareVersions';
 import NewUnManagedDeviceModal from '@/components/NewDeviceModal/NewUnManagedDeviceModal';
 import { API } from 'ssm-shared-lib';
-import {
-  DatabaseOutlined,
-  InteractionOutlined,
-  WarningOutlined,
-} from '@ant-design/icons';
-import Avatar from 'antd/es/avatar/avatar';
+import { DatabaseOutlined, WarningOutlined } from '@ant-design/icons';
 
 const Inventory: React.FC = () => {
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
@@ -77,22 +70,6 @@ const Inventory: React.FC = () => {
       target: target,
     });
   };
-  const GrommetIconsInstall = (props: any) => (
-    <svg
-      width="0.8em"
-      height="0.8em"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
-      <path
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        d="M19 13.5v4L12 22l-7-4.5v-4m7 8.5v-8.5m6.5-5l-6.5-4L15.5 2L22 6zm-13 0l6.5-4L8.5 2L2 6zm13 .5L12 13l3.5 2.5l6.5-4zm-13 0l6.5 4l-3.5 2.5l-6.5-4z"
-      />
-    </svg>
-  );
 
   const onDropDownClicked = (idx: number) => {
     if (QuickActionReference[idx].type === Types.ACTION) {
@@ -112,7 +89,7 @@ const Inventory: React.FC = () => {
     onDropDownClicked,
     setTerminal,
   );
-  const onMenuClick: MenuProps['onClick'] = (e) => {
+  const onMenuClick: MenuProps['onClick'] = () => {
     setAddNewUnManagedDeviceModalIsOpen(true);
   };
   const items = [
@@ -143,34 +120,11 @@ const Inventory: React.FC = () => {
       <PageContainer
         header={{
           title: (
-            <Row>
-              <Col>
-                <Avatar
-                  style={{ backgroundColor: '#9f0f2e' }}
-                  shape="square"
-                  icon={<DatabaseOutlined />}
-                />
-              </Col>
-              <Col
-                style={{
-                  marginLeft: 5,
-                  marginTop: 'auto',
-                  marginBottom: 'auto',
-                }}
-              >
-                <Typography.Title
-                  style={{
-                    marginLeft: 5,
-                    marginTop: 'auto',
-                    marginBottom: 'auto',
-                  }}
-                  level={4}
-                >
-                  {' '}
-                  Inventory
-                </Typography.Title>
-              </Col>
-            </Row>
+            <Title.MainTitle
+              title={'Inventory'}
+              backgroundColor={PageContainerTitleColors.INVENTORY}
+              icon={<DatabaseOutlined />}
+            />
           ),
         }}
       >

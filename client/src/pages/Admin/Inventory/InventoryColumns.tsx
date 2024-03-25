@@ -1,7 +1,5 @@
-import { OsLogo } from '@/components/OsLogo/OsLogo';
 import QuickActionDropDown from '@/components/QuickAction/QuickActionDropDown';
 import type { ProColumns } from '@ant-design/pro-components';
-import { Avatar } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 

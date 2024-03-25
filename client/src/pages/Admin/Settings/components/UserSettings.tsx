@@ -1,14 +1,13 @@
-import { MynauiDangerTriangle } from '@/pages/Admin/Settings/components/GeneralSettings';
+import { MynauiApi } from '@/components/Icons/CustomIcons';
+import Title, { SettingsSubTitleColors } from '@/components/Template/Title';
 import { postResetApiKey, postUserLogs } from '@/services/rest/usersettings';
 import { useModel } from '@@/exports';
 import {
   InfoCircleFilled,
-  KeyOutlined,
   UnorderedListOutlined,
   WarningOutlined,
 } from '@ant-design/icons';
 import {
-  Avatar,
   Button,
   Card,
   Col,
@@ -52,48 +51,42 @@ const UserSettings: React.FC = () => {
     });
   };
 
-  const MynauiApi = (props: any) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
-      <path
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.5"
-        d="M5.5 13L7 11.5l5.5 5.5l-1.5 1.5c-.75.75-3.5 2-5.5 0s-.75-4.75 0-5.5ZM3 21l2.5-2.5m13-7.5L17 12.5L11.5 7L13 5.5c.75-.75 3.5-2 5.5 0s.75 4.75 0 5.5Zm-6-3l-2 2M21 3l-2.5 2.5m-2.5 6l-2 2"
-      />
-    </svg>
-  );
   return (
     <Card>
       <Card
         type="inner"
         title={
-          <Row>
-            <Col>
-              <Avatar
-                style={{ backgroundColor: '#6d26a8' }}
-                shape="square"
-                icon={<UnorderedListOutlined />}
-              />
-            </Col>
-            <Col
-              style={{ marginLeft: 5, marginTop: 'auto', marginBottom: 'auto' }}
-            >
-              Logs
-            </Col>
-          </Row>
+          <Title.SubTitle
+            title={'User Level Logs'}
+            backgroundColor={SettingsSubTitleColors.USER_LOGS}
+            icon={<UnorderedListOutlined />}
+          />
         }
       >
         <Flex vertical gap={32} style={{ width: '50%' }}>
           <Space direction="horizontal" size="middle">
-            <Typography>Log level of terminal</Typography>{' '}
+            <Typography>
+              <Popover
+                content={
+                  <>
+                    The verbosity level of Ansible output, as described{' '}
+                    <a
+                      target={'_blank'}
+                      href={
+                        'https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html#cmdoption-ansible-playbook-v'
+                      }
+                      rel="noreferrer"
+                    >
+                      {' '}
+                      here
+                    </a>
+                  </>
+                }
+              >
+                <InfoCircleFilled />
+              </Popover>{' '}
+              Log level of terminal
+            </Typography>{' '}
             <Row>
               <Col span={12}>
                 <Slider
@@ -121,20 +114,11 @@ const UserSettings: React.FC = () => {
       <Card
         type="inner"
         title={
-          <Row>
-            <Col>
-              <Avatar
-                style={{ backgroundColor: '#1e6d80' }}
-                shape="square"
-                icon={<MynauiApi />}
-              />
-            </Col>
-            <Col
-              style={{ marginLeft: 5, marginTop: 'auto', marginBottom: 'auto' }}
-            >
-              API
-            </Col>
-          </Row>
+          <Title.SubTitle
+            title={'API'}
+            backgroundColor={SettingsSubTitleColors.API}
+            icon={<MynauiApi />}
+          />
         }
         style={{ marginTop: 16 }}
       >
@@ -142,7 +126,11 @@ const UserSettings: React.FC = () => {
           <Space direction="horizontal" size="middle">
             <Typography>
               {' '}
-              <Popover content={'This will reset all your settings to default'}>
+              <Popover
+                content={
+                  'The API key is used for programmatic access such as agent or direct REST API'
+                }
+              >
                 <InfoCircleFilled />
               </Popover>{' '}
               API KEY
