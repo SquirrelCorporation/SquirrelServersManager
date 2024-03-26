@@ -11,7 +11,7 @@ export enum SSHType {
 
 export default interface DeviceAuth {
   device: Device;
-  type?: SSHType;
+  authType?: SSHType;
   sshUser?: string;
   sshPwd?: string;
   sshKey?: string;
@@ -30,7 +30,7 @@ const schema = new Schema<DeviceAuth>(
       index: true,
       unique: true,
     },
-    type: {
+    authType: {
       type: Schema.Types.String,
       enum: SSHType,
       required: true,

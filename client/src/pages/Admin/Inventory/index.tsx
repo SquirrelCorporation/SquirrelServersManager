@@ -10,6 +10,7 @@ import QuickActionReference, {
 import TerminalModal, { TerminalStateProps } from '@/components/TerminalModal';
 import InventoryColumns from '@/pages/Admin/Inventory/InventoryColumns';
 import { deleteDevice, getDevices } from '@/services/rest/device';
+import { useParams } from '@@/exports';
 import type {
   ActionType,
   ProDescriptionsItemProps,
@@ -39,7 +40,9 @@ import { API } from 'ssm-shared-lib';
 import { DatabaseOutlined, WarningOutlined } from '@ant-design/icons';
 
 const Inventory: React.FC = () => {
-  const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
+  const { id } = useParams();
+  const [configurationModalOpen, handleConfigurationModalOpen] =
+    useState<boolean>(false);
   const [showConfirmDeleteDevice, setShowConfirmDeleteDevice] =
     useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
@@ -85,7 +88,7 @@ const Inventory: React.FC = () => {
   const columns = InventoryColumns(
     setCurrentRow,
     setShowDetail,
-    handleUpdateModalOpen,
+    handleConfigurationModalOpen,
     onDropDownClicked,
     setTerminal,
   );
@@ -115,6 +118,7 @@ const Inventory: React.FC = () => {
       });
     }
   };
+
   return (
     <TerminalContextProvider>
       <PageContainer
@@ -161,6 +165,15 @@ const Inventory: React.FC = () => {
             labelWidth: 120,
           }}
           request={getDevices}
+          onDataSourceChange={(dataSource) => {
+            if (id) {
+              const foundId = dataSource.find((e) => e.uuid === id);
+              if (foundId) {
+                setCurrentRow(foundId);
+                setShowDetail(true);
+              }
+            }
+          }}
           columns={columns}
           rowSelection={{
             onChange: (_, selectedRows) => {
@@ -219,8 +232,8 @@ const Inventory: React.FC = () => {
           terminalProps={{ ...terminal, setIsOpen: openOrCloseTerminalModal }}
         />
         <ConfigurationModal
-          handleUpdateModalOpen={handleUpdateModalOpen}
-          updateModalOpen={updateModalOpen}
+          handleUpdateModalOpen={handleConfigurationModalOpen}
+          updateModalOpen={configurationModalOpen}
           values={currentRow || {}}
         />
 

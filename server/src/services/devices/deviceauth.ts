@@ -25,7 +25,7 @@ export const getDeviceAuth = asyncHandler(async (req, res) => {
 });
 
 export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {
-  const { authType, sshKey, sshUser, sshPwd, sshPort } = req.body;
+  const { authType, sshKey, sshUser, sshPwd, sshPort } = req.body as API.DeviceAuthParams;
   const { uuid } = req.params;
   const device = await DeviceRepo.findOneByUuid(uuid);
   if (!device) {
@@ -34,7 +34,7 @@ export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {
   }
   const deviceAuth = await DeviceAuthRepo.updateOrCreateIfNotExist({
     device: device,
-    type: authType,
+    authType: authType,
     sshKey: sshKey,
     sshUser: sshUser,
     sshPwd: sshPwd,
@@ -48,5 +48,7 @@ export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {
     `[CONTROLLER] - POST - Device Auth - Updated or Created device with uuid: ${device.uuid}`,
   );
 
-  new SuccessResponse('Add or update device auth successful', { type: deviceAuth.type }).send(res);
+  new SuccessResponse('Add or update device auth successful', { type: deviceAuth.authType }).send(
+    res,
+  );
 });

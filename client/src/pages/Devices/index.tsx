@@ -9,7 +9,7 @@ import Title, { PageContainerTitleColors } from '@/components/Template/Title';
 import QuickActionDropDown from '@/components/QuickAction/QuickActionDropDown';
 import TerminalModal from '@/components/TerminalModal';
 import { getDevices } from '@/services/rest/device';
-import { useClientLoaderData } from '@@/exports';
+import { Link, useClientLoaderData } from '@@/exports';
 import {
   AppstoreOutlined,
   ControlOutlined,
@@ -242,16 +242,14 @@ const Index = memo(() => {
                         <AppstoreOutlined />
                       </Tooltip>
                     </a>,
-                    <a
+                    <Link
+                      to={`/admin/inventory/${item.uuid}`}
                       key={`devicesettings-${item.uuid}`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                      }}
                     >
                       <Tooltip title="Device Settings">
                         <ControlOutlined />
                       </Tooltip>
-                    </a>,
+                    </Link>,
                     <a key={`quickAction-${item.uuid}`} onClick={() => {}}>
                       <QuickActionDropDown
                         onDropDownClicked={onDropDownClicked}

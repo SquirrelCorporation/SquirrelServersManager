@@ -131,8 +131,8 @@ export type DeviceList = {
 };
 
 export type NewDevice = {
-  data?: {device: DeviceItem};
-  success?: boolean;
+  data: {device: DeviceItem};
+  success: boolean;
 };
 
 export type VersionData = {
@@ -333,7 +333,11 @@ export type ServerLog = {
 };
 
 export type DeviceAuthResponse = {
- type: string;
+  data: DeviceAuth;
+};
+
+export type DeviceAuth = {
+  authType: string;
   sshPort: number;
   sshUser?: string;
   sshPwd?: string;

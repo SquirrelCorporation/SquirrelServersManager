@@ -38,7 +38,7 @@ const SSHConnectionForm = () => {
       />
       <ProFormSelect
         label="SSH Connection Type"
-        name="type"
+        name="authType"
         rules={[
           {
             required: true,
@@ -47,9 +47,9 @@ const SSHConnectionForm = () => {
         width="md"
         options={connectionTypes}
       />
-      <ProFormDependency name={['type']}>
-        {({ type }) => {
-          if (type === 'userPwd')
+      <ProFormDependency name={['authType']}>
+        {({ authType }) => {
+          if (authType === 'userPwd')
             return (
               <>
                 <ProFormText
@@ -68,7 +68,7 @@ const SSHConnectionForm = () => {
                 />
               </>
             );
-          if (type === 'keyBased')
+          if (authType === 'keyBased')
             return (
               <>
                 <ProFormTextArea

@@ -123,7 +123,7 @@ const OnboardingStepsArray = [
               pattern:
                 /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
               message:
-                'Minimum eight characters, at least one upper case English letter, one lower case English letter, one number and one special character',
+                'Minimum eight (8) characters, at least one (1) upper case English letter, one (1) lower case English letter, one (1) number and one (1) special character',
             },
           ]}
         />

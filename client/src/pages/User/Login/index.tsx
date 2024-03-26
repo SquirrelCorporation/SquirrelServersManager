@@ -123,7 +123,7 @@ const Login: React.FC = () => {
                   />
                 ),
               }}
-              placeholder={'admin or user'}
+              placeholder={'email'}
               rules={[
                 {
                   required: true,

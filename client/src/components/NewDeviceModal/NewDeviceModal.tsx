@@ -97,18 +97,22 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                   await putDevice(
                     values.deviceIp,
                     {
-                      type: values.type,
+                      authType: values.authType,
                       sshPort: values.sshPort,
                       sshUser: values.sshUser,
                       sshPwd: values.sshPwd,
                       sshKey: values.sshKey,
                     },
                     values.controlNodeURL,
-                  ).then((res) => {
-                    setLoading(false);
-                    props.setIsModalOpen(false);
-                    props.onAddNewDevice(res.data?.device);
-                  });
+                  )
+                    .then((res) => {
+                      setLoading(false);
+                      props.setIsModalOpen(false);
+                      props.onAddNewDevice(res.data?.device);
+                    })
+                    .catch(() => {
+                      setLoading(false);
+                    });
                 }}
                 submitter={{
                   render: ({ form, onSubmit, step, onPre }) => {

@@ -66,4 +66,8 @@ export default [
   },
   { path: '/', redirect: '/welcome' },
   { path: '*', layout: false, component: './404' },
+  {
+    path: '/admin/inventory/:id',
+    component: './Admin/Inventory',
+  },
 ];

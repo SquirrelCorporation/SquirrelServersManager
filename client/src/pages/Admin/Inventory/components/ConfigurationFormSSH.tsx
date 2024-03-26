@@ -28,11 +28,11 @@ const ConfigurationFormSSH: React.FC<ConfigurationFormSSHProps> = (props) => {
           if (props?.values?.uuid && values) {
             await putDeviceAuth(props.values.uuid, {
               sshPort: values.sshPort,
-              type: values.type,
+              authType: values.authType,
               sshUser: values.sshUser,
               sshPwd: values.sshPwd,
               sshKey: values.sshKey,
-            })
+            } as API.DeviceAuthParams)
               .then(() => {
                 message.success({
                   content: 'Configuration updated',
@@ -57,7 +57,7 @@ const ConfigurationFormSSH: React.FC<ConfigurationFormSSHProps> = (props) => {
             return await getDeviceAuth(props.values.uuid).then((res) => {
               return {
                 sshPort: res.data.sshPort,
-                type: res.data.type,
+                authType: res.data.authType,
                 sshUser: res.data.sshUser,
                 sshPwd: res.data.sshPwd,
                 sshKey: res.data.sshKey,

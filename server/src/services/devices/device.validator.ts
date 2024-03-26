@@ -19,7 +19,7 @@ export const addDeviceValidator = [
   body('masterNodeUrl')
     .optional()
     .isString()
-    .isURL()
+    .isURL({ protocols: ['http', 'https'], require_protocol: true, require_tld: false })
     .withMessage('Master node url is not correctly formatted'),
   body('sshKey').if(body('authType').equals(SSHType.KeyBased)).exists().notEmpty().isString(),
   body('sshUser').if(body('authType').equals(SSHType.UserPassword)).exists().notEmpty().isString(),

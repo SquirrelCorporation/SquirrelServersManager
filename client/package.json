@@ -50,7 +50,6 @@
     "@ant-design/pro-components": "^2.6.52",
     "@ant-design/use-emotion-css": "1.0.4",
     "@umijs/route-utils": "^4.0.1",
-    "@umijs/utils": "^4.1.5",
     "@ant-design/charts": "^2.0.3",
     "antd": "^5.15.3",
     "classnames": "^2.5.1",

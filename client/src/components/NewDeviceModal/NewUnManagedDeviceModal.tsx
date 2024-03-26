@@ -59,7 +59,7 @@ const NewUnManagedDeviceModal: React.FC<NewUnManagedDeviceModalProps> = (
                     if (values) {
                       await putDevice(values.deviceIp, {
                         sshPort: values.sshPort,
-                        type: values.type,
+                        authType: values.authType,
                         sshUser: values.sshUser,
                         sshPwd: values.sshPwd,
                         sshKey: values.sshKey,
