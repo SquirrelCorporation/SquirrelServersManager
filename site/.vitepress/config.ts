@@ -127,5 +127,10 @@ export default defineConfig({
       message: 'Made with love',
       copyright: 'Copyright © 2024-present Squirrel Team & Contributors'
     }
-  }
+  },
+  ignoreDeadLinks: [
+    // ignore all localhost links
+    /^https?:\/\/localhost/,
+    /^https:\/\/localhost/
+    ]
 });
