@@ -5,7 +5,7 @@ import logger from '../../logger';
 import CronRepo from '../../data/database/repository/CronRepo';
 import AnsibleTaskRepo from '../../data/database/repository/AnsibleTaskRepo';
 import LogsRepo from '../../data/database/repository/LogsRepo';
-import { getConfFromCache } from '../../data/redis';
+import { getConfFromCache } from '../../data/cache';
 
 const CRONS = [
   {

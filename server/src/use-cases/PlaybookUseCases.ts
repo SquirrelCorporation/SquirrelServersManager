@@ -2,7 +2,7 @@ import { API } from 'ssm-shared-lib';
 import Playbook, { PlaybookModel } from '../data/database/model/Playbook';
 import User from '../data/database/model/User';
 import PlaybookRepo from '../data/database/repository/PlaybookRepo';
-import { setToCache } from '../data/redis';
+import { setToCache } from '../data/cache';
 import shell from '../integrations/shell';
 import { Ansible } from '../types/typings';
 import logger from '../logger';

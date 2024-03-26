@@ -1,5 +1,5 @@
 import { SettingsKeys } from 'ssm-shared-lib';
-import { getConfFromCache } from '../data/redis';
+import { getConfFromCache } from '../data/cache';
 import logger from '../logger';
 import DeviceStatsUseCases from './DeviceStatsUseCases';
 

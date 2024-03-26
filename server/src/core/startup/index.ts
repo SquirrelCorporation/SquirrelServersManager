@@ -1,6 +1,6 @@
 import { DefaultValue, GeneralSettingsKeys } from 'ssm-shared-lib/distribution/enums/settings';
-import { getFromCache } from '../../data/redis';
-import initRedisValues from '../../data/redis/defaults';
+import { getFromCache } from '../../data/cache';
+import initRedisValues from '../../data/cache/defaults';
 import logger from '../../logger';
 import PlaybookUseCases from '../../use-cases/PlaybookUseCases';
 

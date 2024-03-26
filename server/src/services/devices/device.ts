@@ -8,7 +8,7 @@ import Device from '../../data/database/model/Device';
 import DeviceAuth from '../../data/database/model/DeviceAuth';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
-import { setToCache } from '../../data/redis';
+import { setToCache } from '../../data/cache';
 import asyncHandler from '../../helpers/AsyncHandler';
 import logger from '../../logger';
 import DeviceUseCases from '../../use-cases/DeviceUseCases';

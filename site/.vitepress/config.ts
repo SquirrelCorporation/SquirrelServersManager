@@ -65,11 +65,11 @@ export default defineConfig({
     sidebar: {
       '/contribute/': [
         {
-          text: 'Contribution Guide', link: '/docs/quickstart.md', items: [
-            { text: 'Test', link: '/contrib-guide/test.md' },
-            { text: 'Docs', link: '/contrib-guide/docs.md' },
-            { text: 'Release', link: '/contrib-guide/release.md' },
-            { text: 'Stack', link: '/contrib-guide/release.md' }
+          text: 'Contribution Guide', link: '/contribute/', items: [
+            { text: 'Conventions', link: '/contribute/conventions.md' },
+            { text: 'Docs', link: '/contribute/docs.md' },
+            { text: 'Release', link: '/contribute/release.md' },
+            { text: 'Stack', link: '/contribute/stack.md' }
           ]
         }
         ],
@@ -93,7 +93,10 @@ export default defineConfig({
               text: 'Adding an unmanaged device (agentless)', link: '/docs/add-unamanaged.md'
             },
             {
-              text: 'Executing a playbook', link: '/docs/playbook.md'
+              text: 'Playbooks', link: '/docs/playbooks.md'
+            },
+            {
+              text: 'Executing a playbook', link: '/docs/exec-playbook.md'
             },
             {
               text: 'Settings', link: '/docs/settings.md'
@@ -102,10 +105,13 @@ export default defineConfig({
         },
         {
           text: 'Technical Guide', link: '/docs/technical-guide.md', items: [
-            { text: 'Ansible', link: '/contrib-guide/ansible.md' },
-            { text: 'Docker', link: '/contrib-guide/docker.md' },
+            { text: 'Ansible', link: '/docs/ansible.md' },
+            { text: 'Docker', link: '/docs/docker.md' },
             {
               text: 'Manually installing the agent', link: '/docs/manual-install-agent.md'
+            },
+            {
+              text: 'Troubleshoot', link: '/docs/troubleshoot.md'
             },
           ]
         }

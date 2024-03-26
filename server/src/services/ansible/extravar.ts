@@ -1,6 +1,6 @@
 import { InternalError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
-import { setToCache } from '../../data/redis';
+import { setToCache } from '../../data/cache';
 import asyncHandler from '../../helpers/AsyncHandler';
 import logger from '../../logger';
 

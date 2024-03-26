@@ -4,6 +4,7 @@ import {
   AvatarName,
 } from '@/components/HeaderComponents/AvatarDropdown';
 import { DevicesHeaderWidget } from '@/components/HeaderComponents/DevicesHeaderWidget';
+import DocumentationWidget from '@/components/HeaderComponents/DocumentationWidget';
 import { currentUser as queryCurrentUser, hasUser } from '@/services/rest/user';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
@@ -73,6 +74,7 @@ export const layout: RunTimeLayoutConfig = ({
   return {
     logo: Logo,
     actionsRender: () => [
+      <DocumentationWidget key="doc" />,
       <DevicesHeaderWidget key="online" />,
       <HealthWidget key="health" />,
     ],

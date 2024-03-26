@@ -118,7 +118,7 @@ const SoftwareIcon: React.FC<SoftwareIconType> = (props) => {
       "git": "2.23.0",
       "tsc": "5.3.3",
       "mysql": "",
-      "redis": "",
+      "cache": "",
       "mongodb": "7.0.2",
       "apache": "2.4.56",
       "nginx": "",

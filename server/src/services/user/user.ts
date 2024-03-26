@@ -3,7 +3,7 @@ import { AuthFailureError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
 import { Role } from '../../data/database/model/User';
 import UserRepo from '../../data/database/repository/UserRepo';
-import { getIntConfFromCache } from '../../data/redis';
+import { getIntConfFromCache } from '../../data/cache';
 import asyncHandler from '../../helpers/AsyncHandler';
 import logger from '../../logger';
 import DashboardUseCase from '../../use-cases/DashboardUseCase';

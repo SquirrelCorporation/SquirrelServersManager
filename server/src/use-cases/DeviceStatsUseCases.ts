@@ -3,7 +3,7 @@ import { API, SettingsKeys } from 'ssm-shared-lib';
 import Device from '../data/database/model/Device';
 import DeviceStat from '../data/database/model/DeviceStat';
 import DeviceStatRepo from '../data/database/repository/DeviceStatRepo';
-import { getIntConfFromCache } from '../data/redis';
+import { getIntConfFromCache } from '../data/cache';
 import logger from '../logger';
 
 async function createDeviceStatFromJson(deviceInfo: API.DeviceInfo, device: Device) {
