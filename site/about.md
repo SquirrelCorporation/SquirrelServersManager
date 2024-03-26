@@ -35,4 +35,4 @@ SSM is still in early stage. I have a lot of ground to cover, and I won't be abl
 ### Useful Links
 
 - [GitHub](https://github.com/SquirrelCorporation/SquirrelServersManager/)
-- [Contribution Guide](/contrib-guide/)
+- [Contribution Guide](/contribute/)
