@@ -1,5 +1,7 @@
 <script setup>
-import { VPTeamMembers } from 'vitepress/theme'
+import {   VPTeamPage,
+  VPTeamPageTitle,
+  VPTeamMembers } from 'vitepress/theme'
 
 const members = [
   {
@@ -12,9 +14,14 @@ const members = [
   }
 ]
 </script>
-
-# Team
-
-The Squirrel project was originally created by [Emmanuel Costa](https://github.com/SquirrelCorporation).
-
-<VPTeamMembers size="small" :members="members" />
+<VPTeamPage>
+  <VPTeamPageTitle>
+    <template #title>
+        Team
+    </template>
+    <template #lead>
+        The Squirrel project was originally created by Emmanuel Costa.
+    </template>
+  </VPTeamPageTitle>
+    <VPTeamMembers size="small" :members="members" />
+</VPTeamPage>

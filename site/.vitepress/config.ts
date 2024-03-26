@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig } from 'vitepress';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -20,72 +20,106 @@ export default defineConfig({
     ['meta', { property: 'og:site_name', content: 'SquirrelServersManager' }],
     ['meta', { property: 'og:url', content: 'https://squirrelserversmanager.io' }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-    ['meta', { name: 'twitter:site', content: '@SquirrelSrvrsMg' }],
+    ['meta', { name: 'twitter:site', content: '@SquirrelSrvrsMg' }]
   ],
 
   themeConfig: {
     logo: { src: '/logo.svg', width: 24, height: 24 },
-
+    search: {
+      provider: 'local'
+    },
+    editLink: {
+      pattern: 'https://github.com/SquirrelCorporation/SquirrelServersManager/tree/master/site/:path'
+    },
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       {
         text: 'About',
-        link: '/about.md',
+        link: '/about.md'
       },
       { text: 'Documentation', link: '/docs/' },
-      { text: 'Contribute', link: '/contrib-guide/' },
+      { text: 'Contribute', link: '/contribute/' },
       {
         text: 'Resources',
         items: [
           {
             text: 'Team',
-            link: '/team.md',
+            link: '/team.md'
           },
           {
             text: 'Roadmap',
-            link: 'https://github.com/SquirrelCorporation/SquirrelServersManager/wiki',
+            link: 'https://github.com/SquirrelCorporation/SquirrelServersManager/wiki'
           },
           {
             items: [
               {
                 text: 'Twitter',
-                link: 'https://twitter.com/SquirrelSrvrsMg',
-              },
-            ],
-          },
-        ],
-      },
+                link: 'https://twitter.com/SquirrelSrvrsMg'
+              }
+            ]
+          }
+        ]
+      }
     ],
 
     sidebar: {
-      '/docs/': [
-        { text: 'Overview', link: '/contrib-guide/' },
+      '/contribute/': [
         {
-          text: 'Quick Setup', link: '/contrib-guide/setup.md', items: [
+          text: 'Contribution Guide', link: '/docs/quickstart.md', items: [
+            { text: 'Test', link: '/contrib-guide/test.md' },
+            { text: 'Docs', link: '/contrib-guide/docs.md' },
+            { text: 'Release', link: '/contrib-guide/release.md' },
+            { text: 'Stack', link: '/contrib-guide/release.md' }
+          ]
+        }
+        ],
+      '/docs/': [
+        { text: 'Overview', link: '/docs/' },
+        {
+          text: '→ Quick Start', link: '/docs/quickstart.md', items: [
             {
-              text: 'Build', link: '/contrib-guide/build.md'
+              text: 'Requirements', link: '/docs/requirements.md'
             },
             {
-              text: 'Dev', link: '/contrib-guide/build.md'
+              text: 'Development mode', link: '/docs/devmode.md'
             }
           ]
         },
-        { text: 'Build', link: '/contrib-guide/build.md' },
-        { text: 'Test', link: '/contrib-guide/test.md' },
-        { text: 'Docs', link: '/contrib-guide/docs.md' },
-        { text: 'Release', link: '/contrib-guide/release.md' },
-        { text: 'Stack', link: '/contrib-guide/release.md' },
-      ],
+        {
+          text: 'User Guide', link: '/docs/userguide.md', items: [
+            { text: 'First time using SSM', link: '/docs/first-time.md' },
+            { text: 'Adding a device', link: '/docs/add-device.md' },
+            {
+              text: 'Adding an unmanaged device (agentless)', link: '/docs/add-unamanaged.md'
+            },
+            {
+              text: 'Executing a playbook', link: '/docs/playbook.md'
+            },
+            {
+              text: 'Settings', link: '/docs/settings.md'
+            }
+          ]
+        },
+        {
+          text: 'Technical Guide', link: '/docs/technical-guide.md', items: [
+            { text: 'Ansible', link: '/contrib-guide/ansible.md' },
+            { text: 'Docker', link: '/contrib-guide/docker.md' },
+            {
+              text: 'Manually installing the agent', link: '/docs/manual-install-agent.md'
+            },
+          ]
+        }
+      ]
     },
 
     socialLinks: [
       { icon: 'x', link: 'https://twitter.com/SquirrelSrvrsMg' },
-      { icon: 'github', link: 'https://github.com/SquirrelCorporation/SquirrelServersManager' },
+      { icon: 'github', link: 'https://github.com/SquirrelCorporation/SquirrelServersManager' }
     ],
 
     footer: {
       message: 'Made with love',
-      copyright: 'Copyright © 2024-present Squirrel Team & Contributors',
-    },
-  },
-})
+      copyright: 'Copyright © 2024-present Squirrel Team & Contributors'
+    }
+  }
+});
