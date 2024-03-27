@@ -13,7 +13,7 @@ At the end of the tutorial, you will be asked to create an admin user
 
 Enter your full name, an email and a password and click on "Submit"
 
-:::info Password Rule
+:::tip Password Rule
 Please note that the password must be composed of a minimum of eight (8) characters, at least one (1) upper case English letter, one (1) lower case English letter, one (1) number and one (1) special character
 :::
 
