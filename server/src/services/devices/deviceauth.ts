@@ -21,7 +21,7 @@ export const getDeviceAuth = asyncHandler(async (req, res) => {
     logger.error('[CONTROLLER] - GET - Device Auth - DeviceAuth not found');
     throw new NotFoundError('Device Auth not found');
   }
-  new SuccessResponse('Get device auth successful', deviceAuth as API.DeviceAuthResponse).send(res);
+  new SuccessResponse('Get device auth successful', deviceAuth as API.DeviceAuth).send(res);
 });
 
 export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {

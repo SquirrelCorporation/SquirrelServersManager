@@ -59,8 +59,8 @@ function getInventoryConnectionVars(deviceAuth: DeviceAuth, escape: boolean) {
     ansible_become_pass: 'server',
     /* prettier-ignore */
     ansible_ssh_extra_args: "'" + (escape ? "\\" + "''" : '') + "-o StrictHostKeyChecking=no" + "'" + (escape ? "\\" + "''" : ''),
-    ansible_user: deviceAuth.type === SSHType.UserPassword ? deviceAuth.sshUser : undefined,
-    ansible_ssh_pass: deviceAuth.type === SSHType.UserPassword ? deviceAuth.sshPwd : undefined,
+    ansible_user: deviceAuth.authType === SSHType.UserPassword ? deviceAuth.sshUser : undefined,
+    ansible_ssh_pass: deviceAuth.authType === SSHType.UserPassword ? deviceAuth.sshPwd : undefined,
   };
 }
 
