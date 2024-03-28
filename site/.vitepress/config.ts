@@ -90,7 +90,7 @@ export default defineConfig({
             { text: 'First time using SSM', link: '/docs/first-time.md' },
             { text: 'Adding a device', link: '/docs/add-device.md' },
             {
-              text: 'Adding an unmanaged device (agentless)', link: '/docs/add-unamanaged.md'
+              text: 'Adding an unmanaged device (agentless mode)', link: '/docs/add-unamanaged.md'
             },
             {
               text: 'Playbooks', link: '/docs/playbooks.md'
@@ -100,6 +100,9 @@ export default defineConfig({
             },
             {
               text: 'Settings', link: '/docs/settings.md'
+            },
+            {
+              text: 'Deleting a device', link: '/docs/delete-device.md'
             }
           ]
         },

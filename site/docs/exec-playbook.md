@@ -4,7 +4,7 @@ As a core feature of SSM, executing a playbook can be done from multiples locati
 
 ## 1.A. Executing a playbook from the Devices panel
 
-From the devices panel, you can apply **to all your devices** a playbook.
+From the devices panel, you can apply **to all your devices** a playbook ("Apply to all" button, right top corner).
 
 ![execplaybook1](/exec-playbook-1.png)
 
@@ -18,6 +18,7 @@ You can also apply a playbook to only one device by clicking on the bottom facin
 
 The Inventory panel provides a more customizable way of applying playbooks to your devices.
 You can select one or more devices and choose a playbook to execute
+
 ![execplaybook4](/exec-playbook-4.png)
 
 ## 2. Playbook selection modal

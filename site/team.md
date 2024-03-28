@@ -9,7 +9,8 @@ const members = [
     name: 'Manu Costa',
     links: [
       { icon: 'github', link: 'https://github.com/SquirrelCorporation' },
-      { icon: 'twitter', link: 'https://twitter.com/SquirrelSrvrsMg' }
+      { icon: 'twitter', link: 'https://twitter.com/SquirrelSrvrsMg' },
+      { icon: 'linkedin', link: 'https://www.linkedin.com/in/emmanuelcosta/'}
     ]
   }
 ]

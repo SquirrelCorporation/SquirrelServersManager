@@ -49,7 +49,7 @@ const Settings: React.FC = () => {
       header={{
         title: (
           <Title.MainTitle
-            title={'Logs'}
+            title={'Settings'}
             backgroundColor={PageContainerTitleColors.SETTINGS}
             icon={<SettingOutlined />}
           />

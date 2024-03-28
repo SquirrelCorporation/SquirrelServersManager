@@ -6,3 +6,4 @@ Follow those simple steps to understand the basics of SSM interface
 3. [Playbooks](/docs/playbooks)
 4. [Executing a playbook](/docs/exec-playbook)
 5. [Settings](/docs/settings)
+6. [Deleting a device](/docs/delete-device)
