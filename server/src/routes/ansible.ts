@@ -27,11 +27,13 @@ import {
   editPlaybookValidator,
   getPlaybookValidator,
 } from '../services/ansible/playbook.validator';
+import { getVaultPwd } from '../services/ansible/vault';
 
 const router = express.Router();
 
-router.post(`/hook/task/status`, addTaskStatus);
-router.post(`/hook/task/event`, addTaskEvent);
+router.post(`/hook/task/status`, Authentication.isAuthenticatedWithToken, addTaskStatus);
+router.post(`/hook/task/event`, Authentication.isAuthenticatedWithToken, addTaskEvent);
+router.get('/vault', Authentication.isAuthenticatedWithToken, getVaultPwd);
 router.get(`/inventory`, getInventory);
 
 router.use(Authentication.isAuthenticated);

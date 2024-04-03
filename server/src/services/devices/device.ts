@@ -3,19 +3,31 @@ import { AnsibleReservedExtraVarsKeys } from 'ssm-shared-lib/distribution/enums/
 import { SsmStatus } from 'ssm-shared-lib';
 import { API } from 'ssm-shared-lib';
 import { BadRequestError, NotFoundError } from '../../core/api/ApiError';
-import { BadRequestResponse, SuccessResponse } from '../../core/api/ApiResponse';
+import { SuccessResponse } from '../../core/api/ApiResponse';
 import Device from '../../data/database/model/Device';
 import DeviceAuth from '../../data/database/model/DeviceAuth';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
 import { setToCache } from '../../data/cache';
 import asyncHandler from '../../helpers/AsyncHandler';
+import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../integrations/ansible-vault/vault';
 import logger from '../../logger';
 import DeviceUseCases from '../../use-cases/DeviceUseCases';
 
 export const addDevice = asyncHandler(async (req, res) => {
   logger.info(`[CONTROLLER] - PUT - /devices/`);
-  const { masterNodeUrl, ip, authType, sshKey, sshUser, sshPwd, sshPort, unManaged } = req.body;
+  const {
+    masterNodeUrl,
+    ip,
+    authType,
+    sshKey,
+    sshUser,
+    sshPwd,
+    sshPort,
+    unManaged,
+    becomeMethod,
+    becomePass,
+  } = req.body;
   if (masterNodeUrl) {
     await setToCache(AnsibleReservedExtraVarsKeys.MASTER_NODE_URL, req.body.masterNodeUrl);
   }
@@ -29,14 +41,13 @@ export const addDevice = asyncHandler(async (req, res) => {
     } as Device);
     await DeviceAuthRepo.updateOrCreateIfNotExist({
       device: createdDevice,
-      type: authType,
-      sshKey: sshKey,
+      authType: authType,
       sshUser: sshUser,
-      sshPwd: sshPwd,
+      sshPwd: sshPwd ? await vaultEncrypt(sshPwd, DEFAULT_VAULT_ID) : undefined,
       sshPort: sshPort,
-      __enc_sshPwd: true,
-      __enc_sshUser: true,
-      __enc_sshKey: true,
+      sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
+      becomeMethod: becomeMethod,
+      becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
     } as DeviceAuth);
     logger.info(`[CONTROLLER] Device - Created device with uuid: ${createdDevice.uuid}`);
     new SuccessResponse('Add device successful', { device: createdDevice as API.DeviceItem }).send(

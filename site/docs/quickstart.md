@@ -41,3 +41,21 @@ Docker will create a volume directory *.data.prod* in the directory for persiste
 ## 6. Open a browser and open:
 
 [http://localhost:8000](http://localhost:8000) or [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+# Updating SSM
+
+In SSM cloned directory:
+
+```shell
+git pull
+```
+
+```shell
+docker-compose up --build
+```
+
+or
+
+```shell
+docker compose up --build
+```

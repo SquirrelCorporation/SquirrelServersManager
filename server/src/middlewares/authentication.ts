@@ -15,6 +15,21 @@ const isAuthenticated = async (req: Request, res: Response, next: NextFunction) 
   }
 };
 
+const isAuthenticatedWithToken = async (req: Request, res: Response, next: NextFunction) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (token) {
+    const user = await UserRepo.findByApiKey(token);
+    if (!user) {
+      return next(new AuthFailureError('API Key not found'));
+    }
+    req.user = user;
+    next();
+  } else {
+    next(new AuthFailureError('Not logged in'));
+  }
+};
+
 export default {
   isAuthenticated,
+  isAuthenticatedWithToken,
 };

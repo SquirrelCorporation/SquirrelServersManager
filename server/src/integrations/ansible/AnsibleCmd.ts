@@ -6,6 +6,7 @@ import ExtraVarsTransformer from './transformers/ExtraVarsTransformer';
 const sudo = 'sudo';
 const python = 'python3';
 const ansibleRunner = 'ssm-ansible-run.py';
+const ssmApiKeyEnv = 'SSM_API_KEY';
 
 function sanitizeInventory(inventoryTargets: Ansible.All & Ansible.HostGroups) {
   return JSON.stringify(inventoryTargets).replaceAll('\\\\', '\\') + "'";
@@ -25,6 +26,7 @@ function getExtraVars(extraVars?: API.ExtraVars) {
 
 function buildAnsibleCmd(
   playbook: string,
+  uuid: string,
   inventoryTargets: Ansible.All & Ansible.HostGroups,
   user: User,
   extraVars?: API.ExtraVars,
@@ -32,7 +34,8 @@ function buildAnsibleCmd(
   const inventoryTargetsCmd = getInventoryTargets(inventoryTargets);
   const logLevel = getLogLevel(user);
   const extraVarsCmd = getExtraVars(extraVars);
-  return `${sudo} ${python} ${ansibleRunner} --playbook ${playbook} ${inventoryTargetsCmd} ${logLevel} ${extraVarsCmd}`;
+  const ident = `--ident '${uuid}'`;
+  return `${sudo} ${ssmApiKeyEnv}=${user.apiKey} ${python} ${ansibleRunner} --playbook ${playbook} ${ident} ${inventoryTargetsCmd} ${logLevel} ${extraVarsCmd}`;
 }
 
 export default {

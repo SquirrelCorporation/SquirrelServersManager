@@ -15,3 +15,4 @@ export const redisConf = {
 
 export const SECRET = process.env.SECRET || '';
 export const SALT = process.env.SALT || '';
+export const VAULT_PWD = process.env.VAULT_PWD || '';

@@ -1,4 +1,5 @@
-import DeviceAuth, { SSHType } from '../../../data/database/model/DeviceAuth';
+import { SSHType } from 'ssm-shared-lib/distribution/enums/ansible';
+import DeviceAuth from '../../../data/database/model/DeviceAuth';
 import logger from '../../../logger';
 import { Ansible } from '../../../types/typings';
 
@@ -36,9 +37,6 @@ function inventoryBuilderForTarget(devicesAuth: DeviceAuth[]) {
   };
   devicesAuth.forEach((e) => {
     logger.info(`[TRANSFORMERS][INVENTORY] - Building inventory for ${e.device.uuid}`);
-    /*   ansibleInventory.all[
-      `host${e.device.uuid.replaceAll('-', '')}` as keyof typeof ansibleInventory
-    ] = `device${e.device.uuid.replaceAll('-', '')}`;*/
     ansibleInventory[
       `device${e.device.uuid.replaceAll('-', '')}` as keyof typeof ansibleInventory
     ] = {
@@ -55,12 +53,15 @@ function getInventoryConnectionVars(deviceAuth: DeviceAuth, escape: boolean) {
   return {
     ansible_connection: 'ssh',
     ansible_become: 'yes',
-    ansible_become_method: 'sudo',
-    ansible_become_pass: 'server',
+    ansible_become_method: deviceAuth.becomeMethod,
+    ansible_become_pass: { __ansible_vault: deviceAuth.becomePass },
     /* prettier-ignore */
-    ansible_ssh_extra_args: "'" + (escape ? "\\" + "''" : '') + "-o StrictHostKeyChecking=no" + "'" + (escape ? "\\" + "''" : ''),
+    ansible_ssh_extra_args: !deviceAuth.strictHostKeyChecking ? "'" + (escape ? "\\" + "''" : '') + "-o StrictHostKeyChecking=no" + "'" + (escape ? "\\" + "''" : '') : undefined,
     ansible_user: deviceAuth.authType === SSHType.UserPassword ? deviceAuth.sshUser : undefined,
-    ansible_ssh_pass: deviceAuth.authType === SSHType.UserPassword ? deviceAuth.sshPwd : undefined,
+    ansible_ssh_pass:
+      deviceAuth.authType === SSHType.UserPassword
+        ? { __ansible_vault: deviceAuth.sshPwd }
+        : undefined,
   };
 }
 

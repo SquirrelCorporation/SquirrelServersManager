@@ -1,5 +1,6 @@
 import shell from 'shelljs';
 import { API } from 'ssm-shared-lib';
+import { v4 as uuidv4 } from 'uuid';
 import User from '../../data/database/model/User';
 import AnsibleTaskRepo from '../../data/database/repository/AnsibleTaskRepo';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
@@ -32,9 +33,10 @@ async function executePlaybook(
   }
   shell.cd(ANSIBLE_PATH);
   shell.rm('/server/src/ansible/inventory/hosts');
-  shell.rm('/server/src/ansible/env/extravars');
+  shell.rm('/server/src/ansible/env/_extravars');
+  const uuid = uuidv4();
   const result = await new Promise<string | null>((resolve) => {
-    const cmd = ansibleCmd.buildAnsibleCmd(playbook, inventoryTargets, user, extraVars);
+    const cmd = ansibleCmd.buildAnsibleCmd(playbook, uuid, inventoryTargets, user, extraVars);
     logger.info(`[SHELL]-[ANSIBLE] - executePlaybook - Executing ${cmd}`);
     const child = shell.exec(cmd, {
       async: true,
@@ -48,8 +50,8 @@ async function executePlaybook(
   });
   logger.info('[SHELL]-[ANSIBLE] - executePlaybook - ended');
   if (result) {
-    logger.info(`[SHELL]-[ANSIBLE] - executePlaybook - ExecId is ${result}`);
-    await AnsibleTaskRepo.create({ ident: result, status: 'created', cmd: `playbook ${playbook}` });
+    logger.info(`[SHELL]-[ANSIBLE] - executePlaybook - ExecId is ${uuid}`);
+    await AnsibleTaskRepo.create({ ident: uuid, status: 'created', cmd: `playbook ${playbook}` });
     return result;
   } else {
     logger.error('[SHELL]-[ANSIBLE] - executePlaybook - Result was not properly set');

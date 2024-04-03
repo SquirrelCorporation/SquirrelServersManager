@@ -23,11 +23,9 @@ def send_request(url, data, headers={}, urlpath=None):
 
 
 def get_configuration(url):
-    runner_url = url #runner_config.settings.get("runner_http_url", None)
-    #runner_url = os.getenv("RUNNER_HTTP_URL", runner_url)
     runner_path = None
-    runner_headers = None
-    return dict(runner_url=runner_url,
+    runner_headers = { 'Authorization': "Bearer {}".format(os.getenv("SSM_API_KEY"))}
+    return dict(runner_url=url,
                 runner_path=runner_path,
                 runner_headers=runner_headers)
 
@@ -59,8 +57,10 @@ def parse_args():
         description="SSM Ansible Run"
     )
     arg_parser.add_argument("--playbook",  help="Playbook path", required=True)
+    arg_parser.add_argument("--ident",  help="UUID of task", required=True)
     arg_parser.add_argument("--log-level",  help="Verbosity", type=int, required=False, default=None)
     arg_parser.add_argument("--extra-vars",  help="Extra vars", required=False, default=None)
+    arg_parser.add_argument("--debug",  help="Debug", required=False, default=False)
     group = arg_parser.add_mutually_exclusive_group(required=False)
     group.add_argument("--specific-host", help="Specify a host manually in json", default=None)
     group.add_argument("--host-pattern", help="Specify a host pattern in inventory", default="all")
@@ -69,21 +69,29 @@ def parse_args():
 def execute():
     args = parse_args()
     extra_vars = None
+    debug = False
+    specific_host = None
     if args.extra_vars is not None:
         extra_vars = json.loads(args.extra_vars)
+    if args.debug is not False:
+        debug = True
+    if args.specific_host is not None:
+        specific_host = json.loads(args.specific_host)
 
     thread_obj, runner_obj = ansible_runner.run_async(
+        ident=args.ident,
         private_data_dir='./',
         playbook=args.playbook,
         host_pattern=args.host_pattern,
         event_handler=event_handler,
         status_handler=status_handler,
         rotate_artifacts=10,
-        inventory=args.specific_host,
+        inventory=specific_host,
         extravars=extra_vars,
-        #debug=False,
-        #ignore_logging=False
-        verbosity=args.log_level
+        debug=debug,
+        #ignore_logging=False,
+        verbosity=args.log_level,
+        #cmdline='--vault-password-file ssm-ansible-vault-password.py',
        )
     sys.stdout.write(runner_obj.config.ident)
 execute()

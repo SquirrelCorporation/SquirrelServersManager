@@ -49,11 +49,6 @@ services:
     environment:
       NODE_ENV: development
       DEBUG: nodejs-docker-express:*
-      DB_HOST: ${DB_HOST}
-      DB_NAME: ${DB_NAME}
-      DB_PORT: ${DB_PORT}
-      DB_USER: ${DB_USER}
-      DB_USER_PWD: ${DB_USER_PWD}
   client:
     restart: unless-stopped
     environment:

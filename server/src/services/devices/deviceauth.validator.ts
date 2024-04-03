@@ -1,5 +1,5 @@
 import { body, param } from 'express-validator';
-import { SSHType } from '../../data/database/model/DeviceAuth';
+import { SSHType } from 'ssm-shared-lib/distribution/enums/ansible';
 import validator from '../../middlewares/validator';
 
 export const getDeviceAuthValidator = [

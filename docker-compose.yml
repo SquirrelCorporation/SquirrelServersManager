@@ -41,11 +41,6 @@ services:
     env_file: .env
     environment:
       NODE_ENV: production
-      DB_HOST: ${DB_HOST}
-      DB_NAME: ${DB_NAME}
-      DB_PORT: ${DB_PORT}
-      DB_USER: ${DB_USER}
-      DB_USER_PWD: ${DB_USER_PWD}
   client:
     restart: unless-stopped
     depends_on:

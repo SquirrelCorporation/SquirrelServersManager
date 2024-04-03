@@ -5,6 +5,7 @@ import DeviceAuth from '../../data/database/model/DeviceAuth';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
 import asyncHandler from '../../helpers/AsyncHandler';
+import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../integrations/ansible-vault/vault';
 import logger from '../../logger';
 
 export const getDeviceAuth = asyncHandler(async (req, res) => {
@@ -25,7 +26,8 @@ export const getDeviceAuth = asyncHandler(async (req, res) => {
 });
 
 export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {
-  const { authType, sshKey, sshUser, sshPwd, sshPort } = req.body as API.DeviceAuthParams;
+  const { authType, sshKey, sshUser, sshPwd, sshPort, becomeMethod, becomePass } =
+    req.body as API.DeviceAuthParams;
   const { uuid } = req.params;
   const device = await DeviceRepo.findOneByUuid(uuid);
   if (!device) {
@@ -35,13 +37,12 @@ export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {
   const deviceAuth = await DeviceAuthRepo.updateOrCreateIfNotExist({
     device: device,
     authType: authType,
-    sshKey: sshKey,
     sshUser: sshUser,
-    sshPwd: sshPwd,
+    sshPwd: sshPwd ? await vaultEncrypt(sshPwd, DEFAULT_VAULT_ID) : undefined,
     sshPort: sshPort,
-    __enc_sshPwd: true,
-    __enc_sshUser: true,
-    __enc_sshKey: true,
+    sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
+    becomeMethod: becomeMethod,
+    becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
   } as DeviceAuth);
 
   logger.info(

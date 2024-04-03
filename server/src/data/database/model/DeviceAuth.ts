@@ -1,13 +1,11 @@
-import { Schema, model } from 'mongoose';
+import { CallbackError, Schema, model } from 'mongoose';
+import { SSHType } from 'ssm-shared-lib/distribution/enums/ansible';
+import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../../integrations/ansible-vault/vault';
+import logger from '../../../logger';
 import Device from './Device';
 
 export const DOCUMENT_NAME = 'DeviceAuth';
 export const COLLECTION_NAME = 'deviceauth';
-
-export enum SSHType {
-  UserPassword = 'userPwd',
-  KeyBased = 'keyBased',
-}
 
 export default interface DeviceAuth {
   device: Device;
@@ -16,6 +14,9 @@ export default interface DeviceAuth {
   sshPwd?: string;
   sshKey?: string;
   sshPort?: number;
+  becomePass?: string;
+  becomeMethod?: string;
+  strictHostKeyChecking?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -45,6 +46,18 @@ const schema = new Schema<DeviceAuth>(
     },
     sshKey: {
       type: Schema.Types.String,
+      required: false,
+    },
+    becomePass: {
+      type: Schema.Types.String,
+      required: false,
+    },
+    becomeMethod: {
+      type: Schema.Types.String,
+      required: false,
+    },
+    strictHostKeyChecking: {
+      type: Schema.Types.Boolean,
       required: false,
     },
     sshPort: {

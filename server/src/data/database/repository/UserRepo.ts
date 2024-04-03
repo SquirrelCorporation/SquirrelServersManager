@@ -7,6 +7,10 @@ async function create(user: User): Promise<User> {
   return created.toObject();
 }
 
+async function findByApiKey(apiKey: string) {
+  return await UsersModel.findOne({ apiKey: apiKey }).exec();
+}
+
 async function findByEmailAndPassword(email: string, password: string): Promise<User | null> {
   const User = mongoose.model('User', schema);
   const messageToSearchWith = new User({ password: password });
@@ -45,4 +49,5 @@ export default {
   findByEmail,
   resetApiKey,
   updateLogsLevel,
+  findByApiKey,
 };
