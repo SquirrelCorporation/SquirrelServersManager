@@ -86,45 +86,12 @@ SSM is currently in active development and not usable for production yet. We enc
 
 ❤️ Rediscover Ansible and Docker as they unite under one intuitive, open-source interface. Welcome to simplicity and power in perfect harmony.
 
-<component :is="'script'">
-let slideIndex = 1; showSlides(slideIndex); function showSlides(n) { let i; let slides = document.getElementsByClassName("cust-mySlides"); let dots = document.getElementsByClassName("cust-dot"); if (n > slides.length) {slideIndex = 1} if (n < 1) {slideIndex = slides.length} for (i = 0; i < slides.length; i++) { slides[i].style.display = "none"; } for (i = 0; i < dots.length; i++) { dots[i].className = dots[i].className.replace(" active", ""); } slides[slideIndex-1].style.display = "block"; dots[slideIndex-1].className += " active"; } function plusSlides(n) { showSlides(slideIndex += n); } function currentSlide(n) { showSlides(slideIndex = n); }
-</component>
 
-::: raw
-<div>
-<div class="cust-slideshow-container">
-
-  <!-- Full-width images with number and caption text -->
-  <div class="cust-mySlides cust-fade">
-    <div class="cust-numbertext">1 / 3</div>
-    <img src="/dashboard.png" style="width:100%">
-    <div class="cust-text">Dashboard</div>
-  </div>
-
-  <div class="cust-mySlides cust-fade">
-    <div class="cust-numbertext">2 / 3</div>
-    <img src="/devices.png" style="width:100%">
-    <div class="cust-text">Devices</div>
-  </div>
-
-  <div class="cust-mySlides cust-fade">
-    <div class="cust-numbertext">3 / 3</div>
-    <img src="/device-info.png" style="width:100%">
-    <div class="cust-text">Devices</div>
-  </div>
-
-  <!-- Next and previous buttons -->
-<a class="cust-prev" onclick="plusSlides(-1)">&#10094;</a>
-<a class="cust-next" onclick="plusSlides(1)">&#10095;</a>
-</div>
-<br>
-
-<!-- The dots/circles -->
-<div style="text-align:center">
-  <span class="cust-dot" onclick="currentSlide(1)"></span>
-  <span class="cust-dot" onclick="currentSlide(2)"></span>
-  <span class="cust-dot" onclick="currentSlide(3)"></span>
-</div>
-</div>
-:::
-
+### Dashboard
+![dashboard](/dashboard.png)
+### Devices
+![devices](/devices.png)
+### Playbook editor
+![playbook](/playbook.png)
+### Device Info
+![deviceinfo](/device-info.png)
