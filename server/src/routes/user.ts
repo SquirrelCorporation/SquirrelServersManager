@@ -1,4 +1,5 @@
 import express from 'express';
+import passport from 'passport';
 import Authentication from '../middlewares/authentication';
 import { login, logout } from '../services/user/login';
 import { loginValidator } from '../services/user/login.validator';
@@ -14,7 +15,7 @@ router.post(`/users`, createFirstUserValidator, createFirstUser);
 router.post('/users/login', loginValidator, login);
 router.post('/users/logout', logout);
 
-router.use(Authentication.isAuthenticated);
+router.use(passport.authenticate('jwt', { session: false }));
 
 router.get(`/users/current`, getCurrentUser);
 router.post('/users/settings/resetApiKey', resetUserApiKey);

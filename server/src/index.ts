@@ -1,12 +1,13 @@
-import MongoStore from 'connect-mongo';
 import express from 'express';
-import session from 'express-session';
-import { SECRET, db } from './config';
+import passport from 'passport';
+import { SECRET } from './config';
 import { connection } from './data/database';
 import routes from './routes';
 import scheduledFunctions from './integrations/crons';
 import logger from './logger';
 import Configuration from './core/startup';
+import './middlewares/passport';
+import cookieParser from 'cookie-parser';
 
 //const pino = require('pino-http')();
 
@@ -18,22 +19,9 @@ app.use(express.json());
 if (!SECRET) {
   throw new Error('No secret defined');
 }
+app.use(cookieParser());
+app.use(passport.initialize());
 
-app.use(
-  session({
-    secret: SECRET,
-    saveUninitialized: false,
-    cookie: { maxAge: 86400000 },
-    store: MongoStore.create({
-      // @ts-ignore
-      clientPromise: connection().then((con) => con.getClient()),
-      dbName: db.name,
-      stringify: false,
-      autoRemove: 'interval',
-      autoRemoveInterval: 1,
-    }),
-  }),
-);
 connection().then(async () => {
   await Configuration.needConfigurationInit();
   scheduledFunctions();

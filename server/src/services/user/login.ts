@@ -1,4 +1,6 @@
 import { API } from 'ssm-shared-lib';
+import * as jwt from 'jsonwebtoken';
+import { SECRET, SESSION_DURATION } from '../../config';
 import { AuthFailureError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
 import UserRepo from '../../data/database/repository/UserRepo';
@@ -22,38 +24,31 @@ export const login = asyncHandler(async (req, res, next) => {
   if (!user) {
     throw new AuthFailureError('Identification is incorrect！');
   }
-  req.session.regenerate(function (err) {
-    if (err) {
-      next(err);
-    }
-    req.session.user = user.email;
 
-    // save the session before redirection to ensure page
-    // load does not happen before session is saved
-    req.session.save(function (err) {
-      if (err) {
-        return next(err);
-      }
-      logger.info('[CONTROLLER][USER] - /login/account - Logged in successfull');
-      new SuccessResponse('Login success', {
-        currentAuthority: user.role,
-      } as API.LoginInfo).send(res);
-    });
-  });
+  const payload = {
+    email: user.email,
+    expiration: Date.now() + SESSION_DURATION,
+  };
+
+  const token = jwt.sign(JSON.stringify(payload), SECRET);
+  new SuccessResponse('Login success', {
+    currentAuthority: user.role,
+  } as API.LoginInfo).send(
+    res.cookie('jwt', token, {
+      httpOnly: true,
+      secure: false, //--> SET TO TRUE ON PRODUCTION
+    }),
+  );
 });
 
 export const logout = asyncHandler(async (req, res, next) => {
   logger.info('[CONTROLLER] - POST - /login/outLogin');
-  req.session.user = null;
-  req.session.save(function (err) {
-    if (err) {
-      next(err);
-    }
-    req.session.regenerate(function (err) {
-      if (err) {
-        next(err);
-      }
-      new SuccessResponse('Logout success').send(res);
+
+  if (req.cookies['jwt']) {
+    new SuccessResponse('Logout success').send(res.clearCookie('jwt'));
+  } else {
+    res.status(401).json({
+      error: 'Invalid jwt',
     });
-  });
+  }
 });

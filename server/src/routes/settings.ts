@@ -1,5 +1,5 @@
 import express from 'express';
-import Authentication from '../middlewares/authentication';
+import passport from 'passport';
 import { postDashboardSettings } from '../services/settings/dashboard';
 import { postDashboardSettingsValidator } from '../services/settings/dashboard.validator';
 import { postDevicesSettings } from '../services/settings/devices';
@@ -9,7 +9,7 @@ import { postLogsSettingsValidator } from '../services/settings/logs.validator';
 
 const router = express.Router();
 
-router.use(Authentication.isAuthenticated);
+router.use(passport.authenticate('jwt', { session: false }));
 
 router.post(`/dashboard/:key`, postDashboardSettingsValidator, postDashboardSettings);
 router.post(`/devices/:key`, postDevicesSettingsValidator, postDevicesSettings);

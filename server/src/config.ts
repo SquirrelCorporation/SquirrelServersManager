@@ -14,5 +14,5 @@ export const redisConf = {
 };
 
 export const SECRET = process.env.SECRET || '';
-export const SALT = process.env.SALT || '';
 export const VAULT_PWD = process.env.VAULT_PWD || '';
+export const SESSION_DURATION = parseInt(process.env.SESSION_DURATION || '86400000');

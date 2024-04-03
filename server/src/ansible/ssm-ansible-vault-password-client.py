@@ -2,6 +2,10 @@
 import os
 from sys import exit, stderr, stdout
 import requests
+import logging
+import json
+
+logger = logging.getLogger('ansible-runner')
 
 def send_request():
     url_actual = "http://localhost:3000/ansible/vault"
@@ -12,8 +16,8 @@ def send_request():
 
 
 def main():
-
-  stdout.write("test\n")
+  response = send_request()
+  stdout.write("{}\n".format(response.json()['data']['pwd']))
 
 
 if __name__ == "__main__":

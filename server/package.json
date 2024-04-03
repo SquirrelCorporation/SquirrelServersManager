@@ -19,14 +19,18 @@
     "pino": "^8.19.0",
     "shelljs": "^0.8.5",
     "pino-mongodb": "^4.3.0",
-    "mongoose-field-encryption": "^7.0.1",
     "pino-pretty": "^11.0.0",
     "pino-http": "^9.0.0",
-    "express-session": "^1.18.0",
     "connect-mongo": "^5.1.0",
     "redis": "^4.6.13",
     "express-validator": "^7.0.1",
-    "ansible-vault": "^1.1.1"
+    "ansible-vault": "^1.1.1",
+    "passport": "^0.7.0",
+    "bcrypt": "^5.1.1",
+    "passport-jwt": "^4.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "cookie-parser": "^1.4.6",
+    "passport-http-bearer": "^1.0.1"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
@@ -45,7 +49,12 @@
     "ts-node": "^10.9.2",
     "prettier": "^3.2.5",
     "typescript": "^5.4.3",
-    "@types/express-session": "^1.18.0",
-    "@types/node": "^20.12.3"
+    "@types/node": "^20.12.3",
+    "@types/bcrypt": "^5.0.2",
+    "@types/passport": "^1.0.16",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/passport-http-bearer": "^1.0.41"
   }
 }

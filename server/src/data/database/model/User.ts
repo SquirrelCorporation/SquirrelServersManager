@@ -1,10 +1,10 @@
 import { Schema, model } from 'mongoose';
-import { fieldEncryption } from 'mongoose-field-encryption';
 import { v4 as uuidv4 } from 'uuid';
-import { SALT, SECRET } from '../../../config';
+import bcrypt from 'bcrypt';
 
 export const DOCUMENT_NAME = 'User';
 export const COLLECTION_NAME = 'users';
+const SALT_ROUNDS = 8;
 
 export enum Role {
   ADMIN = 'admin',
@@ -72,12 +72,11 @@ export const schema = new Schema<User>(
   },
 );
 
-schema.plugin(fieldEncryption, {
-  fields: ['password'],
-  secret: SECRET,
-  saltGenerator: function () {
-    return SALT;
-  },
+schema.pre('save', async function (next) {
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, SALT_ROUNDS);
+  }
+  next();
 });
 
 export const UsersModel = model<User>(DOCUMENT_NAME, schema, COLLECTION_NAME);

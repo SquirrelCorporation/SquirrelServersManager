@@ -1,5 +1,5 @@
 import express from 'express';
-import Authentication from '../middlewares/authentication';
+import passport from 'passport';
 import { execPlaybook, getLogs, getStatus } from '../services/ansible/execution';
 import {
   execPlaybookValidator,
@@ -31,12 +31,16 @@ import { getVaultPwd } from '../services/ansible/vault';
 
 const router = express.Router();
 
-router.post(`/hook/task/status`, Authentication.isAuthenticatedWithToken, addTaskStatus);
-router.post(`/hook/task/event`, Authentication.isAuthenticatedWithToken, addTaskEvent);
-router.get('/vault', Authentication.isAuthenticatedWithToken, getVaultPwd);
+router.post(
+  `/hook/task/status`,
+  passport.authenticate('bearer', { session: false }),
+  addTaskStatus,
+);
+router.post(`/hook/task/event`, passport.authenticate('bearer', { session: false }), addTaskEvent);
+router.get('/vault', passport.authenticate('bearer', { session: false }), getVaultPwd);
 router.get(`/inventory`, getInventory);
 
-router.use(Authentication.isAuthenticated);
+router.use(passport.authenticate('jwt', { session: false }));
 
 router.post(`/exec/playbook/:playbook`, execPlaybookValidator, execPlaybook);
 router.get(`/exec/:id/logs`, getLogsValidator, getLogs);

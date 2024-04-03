@@ -1,5 +1,5 @@
 import express from 'express';
-import Authentication from '../middlewares/authentication';
+import passport from 'passport';
 import { addDevice, addDeviceAuto, deleteDevice, getDevices } from '../services/devices/device';
 import {
   addDeviceAutoValidator,
@@ -37,7 +37,7 @@ const router = express.Router();
 router.post(`/:uuid`, updateDeviceAndAddDeviceStatValidator, updateDeviceAndAddDeviceStat);
 router.post('/', addDeviceAutoValidator, addDeviceAuto);
 
-router.use(Authentication.isAuthenticated);
+router.use(passport.authenticate('jwt', { session: false }));
 
 router.get(`/dashboard/stats/performances`, getDashboardPerformanceStats);
 router.post(

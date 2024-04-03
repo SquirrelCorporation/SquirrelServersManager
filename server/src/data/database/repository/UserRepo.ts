@@ -1,5 +1,7 @@
+import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
+import user from '../../../routes/user';
 import User, { UserLogsLevel, UsersModel, schema } from '../model/User';
 
 async function create(user: User): Promise<User> {
@@ -12,14 +14,14 @@ async function findByApiKey(apiKey: string) {
 }
 
 async function findByEmailAndPassword(email: string, password: string): Promise<User | null> {
-  const User = mongoose.model('User', schema);
-  const messageToSearchWith = new User({ password: password });
-  // @ts-expect-error - Not recognizing the field
-  messageToSearchWith.encryptFieldsSync();
-  return await UsersModel.findOne({
+  const user = await UsersModel.findOne({
     email: email,
-    password: messageToSearchWith.password,
   }).exec();
+  if (user && bcrypt.compareSync(password, user.password)) {
+    return user.toObject();
+  } else {
+    return null;
+  }
 }
 
 async function findByEmail(email: string): Promise<User | null> {

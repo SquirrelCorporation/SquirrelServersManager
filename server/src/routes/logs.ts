@@ -1,11 +1,11 @@
 import express from 'express';
-import Authentication from '../middlewares/authentication';
+import passport from 'passport';
 import { getServerLogs } from '../services/logs/server';
 import { getTaskLogs } from '../services/logs/task';
 
 const router = express.Router();
 
-router.use(Authentication.isAuthenticated);
+router.use(passport.authenticate('jwt', { session: false }));
 
 router.get(`/server`, getServerLogs);
 router.get(`/tasks`, getTaskLogs);
