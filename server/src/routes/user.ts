@@ -1,6 +1,5 @@
 import express from 'express';
 import passport from 'passport';
-import Authentication from '../middlewares/authentication';
 import { login, logout } from '../services/user/login';
 import { loginValidator } from '../services/user/login.validator';
 import { resetUserApiKey, setUserLoglevel } from '../services/user/settings';
