@@ -8,10 +8,10 @@ export declare namespace Ansible {
   type ConnectVars = {
     ansible_connection?: string;
     ansible_user?: string;
-    ansible_ssh_pass?: string;
+    ansible_ssh_pass?: any;
     ansible_become?: string;
     ansible_become_method?: string;
-    ansible_ssh_extra_args?: string;
+    ansible_ssh_extra_args?: any;
   };
 
   type HostGroup = {

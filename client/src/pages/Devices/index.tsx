@@ -230,7 +230,7 @@ const Index = memo(() => {
                 showQuickJumper: true,
               }}
               dataSource={deviceList?.data}
-              renderItem={(item, index) => (
+              renderItem={(item) => (
                 <List.Item
                   actions={[
                     <a
