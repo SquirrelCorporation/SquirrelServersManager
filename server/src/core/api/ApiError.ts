@@ -22,17 +22,14 @@ export abstract class ApiError extends Error {
   constructor(
     public type: ErrorType,
     public message: string = 'error',
-    public req?: Request,
   ) {
     super(type);
   }
 
-  public static handle(err: ApiError, res: Response): Response {
-    if (err.req) {
-      logger.error(
-        `[ERROR] - ${err?.req?.method} from ${err?.req?.url} - ${err.type} - ${err.message} - ${err?.req?.ip}`,
-      );
-    }
+  public static handle(err: ApiError, res: Response, req: Request): Response {
+    logger.error(
+      `[ERROR] ${err.type} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
+    );
     switch (err.type) {
       case ErrorType.UNAUTHORIZED:
         return new AuthFailureResponse(err.message).send(res);
@@ -54,43 +51,43 @@ export abstract class ApiError extends Error {
 }
 
 export class AuthFailureError extends ApiError {
-  constructor(message = 'Invalid Credentials', req?: Request) {
-    super(ErrorType.UNAUTHORIZED, message, req);
+  constructor(message = 'Invalid Credentials') {
+    super(ErrorType.UNAUTHORIZED, message);
   }
 }
 
 export class InternalError extends ApiError {
-  constructor(message = 'Internal error', req?: Request) {
-    super(ErrorType.INTERNAL, message, req);
+  constructor(message = 'Internal error') {
+    super(ErrorType.INTERNAL, message);
   }
 }
 
 export class BadRequestError extends ApiError {
-  constructor(message = 'Bad Request', req?: Request) {
-    super(ErrorType.BAD_REQUEST, message, req);
+  constructor(message = 'Bad Request') {
+    super(ErrorType.BAD_REQUEST, message);
   }
 }
 
 export class NotFoundError extends ApiError {
-  constructor(message = 'Not Found', req?: Request) {
-    super(ErrorType.NOT_FOUND, message, req);
+  constructor(message = 'Not Found') {
+    super(ErrorType.NOT_FOUND, message);
   }
 }
 
 export class ForbiddenError extends ApiError {
-  constructor(message = 'Permission denied', req?: Request) {
-    super(ErrorType.FORBIDDEN, message, req);
+  constructor(message = 'Permission denied') {
+    super(ErrorType.FORBIDDEN, message);
   }
 }
 
 export class NoEntryError extends ApiError {
-  constructor(message = "Entry don't exists", req?: Request) {
-    super(ErrorType.NO_ENTRY, message, req);
+  constructor(message = "Entry don't exists") {
+    super(ErrorType.NO_ENTRY, message);
   }
 }
 
 export class NoDataError extends ApiError {
-  constructor(message = 'No data available', req?: Request) {
-    super(ErrorType.NO_DATA, message, req);
+  constructor(message = 'No data available') {
+    super(ErrorType.NO_DATA, message);
   }
 }
