@@ -28,6 +28,8 @@ connection().then(async () => {
   await Configuration.needConfigurationInit();
   scheduledFunctions();
   app.use('/', routes);
+  // Middleware Error Handler
+  // TODO: move to middlewares
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     if (err instanceof ApiError) {
