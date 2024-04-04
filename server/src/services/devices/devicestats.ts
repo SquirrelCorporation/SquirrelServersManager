@@ -12,7 +12,7 @@ export const updateDeviceAndAddDeviceStat = asyncHandler(async (req, res) => {
   const deviceInfo: API.DeviceInfo = req.body;
   const device = await DeviceRepo.findOneByUuid(uuid);
   if (device == null) {
-    throw new NotFoundError('Device not found');
+    throw new NotFoundError(`Device not found (${uuid})`);
   }
   await DeviceUseCases.updateDeviceFromJson(deviceInfo, device);
   await DeviceStatsUseCases.createStatIfMinInterval(deviceInfo, device);

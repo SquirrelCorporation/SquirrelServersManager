@@ -159,7 +159,7 @@ export const deleteDevice = asyncHandler(async (req, res) => {
 
   if (!device) {
     logger.error('[CONTROLLER] Device not found');
-    throw new NotFoundError('Device not found');
+    throw new NotFoundError(`Device not found (${req.params.uuid})`);
   }
   await DeviceUseCases.deleteDevice(device);
   new SuccessResponse('Delete device successful').send(res);
