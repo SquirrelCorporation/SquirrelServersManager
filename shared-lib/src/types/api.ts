@@ -350,8 +350,9 @@ export type DeviceAuthParams = {
   sshKey?: string;
   sshPwd?: string;
   sshUser?: string;
-  becomeMethod: string;
-  becomePass: string;
+  becomeMethod?: string;
+  becomePass?: string;
+  becomeUser?: string;
 };
 
 export type UserSettingsResetApiKey = {

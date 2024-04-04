@@ -31,6 +31,9 @@ const ConfigurationFormSSH: React.FC<ConfigurationFormSSHProps> = (props) => {
               sshUser: values.sshUser,
               sshPwd: values.sshPwd,
               sshKey: values.sshKey,
+              becomeUser: values.becomeUser,
+              becomeMethod: values.becomeMethod,
+              becomePass: values.becomePass,
             } as API.DeviceAuthParams)
               .then(() => {
                 message.success({
@@ -60,6 +63,9 @@ const ConfigurationFormSSH: React.FC<ConfigurationFormSSHProps> = (props) => {
                 sshUser: res.data.sshUser,
                 sshPwd: res.data.sshPwd,
                 sshKey: res.data.sshKey,
+                becomeUser: res.data.becomeUser,
+                becomeMethod: res.data.becomeMethod,
+                becomePass: res.data.becomePass,
               };
             });
           } else {

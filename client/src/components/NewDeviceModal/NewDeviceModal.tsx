@@ -102,6 +102,9 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                       sshUser: values.sshUser,
                       sshPwd: values.sshPwd,
                       sshKey: values.sshKey,
+                      becomeUser: values.becomeUser,
+                      becomeMethod: values.becomeMethod,
+                      becomePass: values.becomePass
                     },
                     values.controlNodeURL,
                   )
