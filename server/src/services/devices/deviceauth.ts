@@ -15,12 +15,12 @@ export const getDeviceAuth = asyncHandler(async (req, res) => {
   const device = await DeviceRepo.findOneByUuid(uuid);
   if (!device) {
     logger.error('[CONTROLLER] - POST - Device Auth - Device not found');
-    throw new NotFoundError('Device not found');
+    throw new NotFoundError(`Device not found (${uuid})`);
   }
   const deviceAuth = await DeviceAuthRepo.findOneByDevice(device);
   if (!deviceAuth) {
     logger.error('[CONTROLLER] - GET - Device Auth - DeviceAuth not found');
-    throw new NotFoundError('Device Auth not found');
+    throw new NotFoundError(`Device Auth not found (${uuid}`);
   }
   new SuccessResponse('Get device auth successful', deviceAuth as API.DeviceAuth).send(res);
 });
