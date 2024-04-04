@@ -13,7 +13,7 @@
         dest: /opt/squirrelserversmanager
 
     - name: Run Shell Script
-      ansible.builtin.shell: "sudo /opt/squirrelserversmanager/install.sh -a -u {{ _ssm_masterNodeUrl }}"
+      ansible.builtin.shell: "sudo /opt/squirrelserversmanager/install.sh -a -u {{ _ssm_masterNodeUrl }} -s {{ _ssm_deviceId }}"
       register: shell_output
       tags:
         - skip_ansible_lint  # provided variable could require shell modele
