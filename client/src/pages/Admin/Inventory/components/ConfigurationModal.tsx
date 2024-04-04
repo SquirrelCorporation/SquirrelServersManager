@@ -20,8 +20,8 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
 
   return (
     <Modal
-      width={640}
       style={{ padding: '32px 40px 48px' }}
+      width={600}
       destroyOnClose
       title={`${props.values.hostname} (${props.values.ip})`}
       open={props.updateModalOpen}

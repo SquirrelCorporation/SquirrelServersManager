@@ -22,6 +22,12 @@ export default defineConfig({
    */
   theme: {
     'root-entry-name': 'variable',
+    components: {
+      Modal: {
+        contentBg: '#1d222e',
+        headerBg: '#1d222e',
+      },
+    },
   },
   /**
    * @doc https://umijs.org/docs/api/config#ignoremomentlocale
@@ -71,7 +77,23 @@ export default defineConfig({
    */ /**
    * @doc https://umijs.org/docs/max/antd#antd
    */
-  antd: {},
+  antd: {
+    theme: {
+      token: {
+        colorBgElevated: '#1d222e',
+        colorBgContainer: '#151921',
+      },
+      components: {
+        Modal: {
+          contentBg: '#1d222e',
+          headerBg: '#1d222e',
+        },
+        Input: {
+          activeBg: '#1d222e',
+        },
+      },
+    },
+  },
   /**
    * @doc https://umijs.org/docs/max/request
    */

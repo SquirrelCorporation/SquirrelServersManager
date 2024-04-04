@@ -35,7 +35,7 @@ const TinyRingProgressDeviceIndicator: React.FC<TinyRingProps> = (
     //color: ['rgba(232,237,243,0.4)', parseFloat(value.percent) < 0.8 ? '#1668dc' : '#dc4446'],
     innerRadius: 0.85,
     radius: 0.98,
-    theme: 'classicDark',
+    loading: false,
     annotations: [
       {
         type: 'text',

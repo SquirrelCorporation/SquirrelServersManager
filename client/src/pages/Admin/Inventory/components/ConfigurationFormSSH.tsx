@@ -13,7 +13,6 @@ const ConfigurationFormSSH: React.FC<ConfigurationFormSSHProps> = (props) => {
   return (
     <>
       <ProForm
-        layout="vertical"
         grid={false}
         rowProps={{
           gutter: [16, 0],

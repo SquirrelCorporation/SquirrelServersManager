@@ -49,7 +49,7 @@ const TinyRingProgressDeviceGraph: React.FC<TinyRingProps> = (
     ],
     innerRadius: 0.85,
     radius: 0.98,
-    theme: 'classicDark',
+    loading: false,
     annotations: [
       {
         type: 'text',
