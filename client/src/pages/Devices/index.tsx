@@ -9,7 +9,7 @@ import Title, { PageContainerTitleColors } from '@/components/Template/Title';
 import QuickActionDropDown from '@/components/QuickAction/QuickActionDropDown';
 import TerminalModal from '@/components/TerminalModal';
 import { getDevices } from '@/services/rest/device';
-import { Link, useClientLoaderData } from '@@/exports';
+import { Link } from '@@/exports';
 import {
   AppstoreOutlined,
   ControlOutlined,
@@ -32,6 +32,7 @@ import { TerminalContextProvider } from 'react-terminal';
 import styles from './Devices.less';
 import DeviceStatus from '@/utils/devicestatus';
 import { API } from 'ssm-shared-lib';
+import QueueAnim from 'rc-queue-anim';
 
 const { Text } = Typography;
 
@@ -41,15 +42,9 @@ export type StateType = {
   current?: API.DeviceItem;
 };
 
-// https://umijs.org/en-US/docs/guides/client-loader
-export async function clientLoader() {
-  return await getDevices();
-}
-
 const Index = memo(() => {
   const [deviceList, setDeviceList] = React.useState<API.DeviceList>({});
   const [loading, setLoading] = React.useState(false);
-  const { data } = useClientLoaderData();
   const [terminal, setTerminal] = useState<{
     isOpen: boolean;
     command: string | undefined;
@@ -63,8 +58,14 @@ const Index = memo(() => {
     setTerminal({ ...terminal, isOpen: open });
   };
 
+  const fetchDeviceList = async () => {
+    await getDevices().then((data) => {
+      setDeviceList(data);
+    });
+  };
+
   useEffect(() => {
-    setDeviceList(data);
+    fetchDeviceList();
   }, []);
   /*
   const showModal = () => {
@@ -229,7 +230,7 @@ const Index = memo(() => {
                 showQuickJumper: true,
               }}
               dataSource={deviceList?.data}
-              renderItem={(item) => (
+              renderItem={(item, index) => (
                 <List.Item
                   actions={[
                     <a

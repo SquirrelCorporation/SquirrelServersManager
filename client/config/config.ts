@@ -84,6 +84,9 @@ export default defineConfig({
         colorBgContainer: '#151921',
       },
       components: {
+        Message: {
+          contentBg: 'white',
+        },
         Modal: {
           contentBg: '#1d222e',
           headerBg: '#1d222e',
