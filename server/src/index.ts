@@ -23,22 +23,26 @@ if (!SECRET) {
 }
 app.use(cookieParser());
 app.use(passport.initialize());
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  if (err instanceof ApiError) {
-    ApiError.handle(err, res, req);
-    if (err.type === ErrorType.INTERNAL) {
-      logger.error(`[ERROR] 500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
-    }
-  } else {
-    logger.error(`[ERROR] 500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
-    logger.error(err);
-    ApiError.handle(new InternalError(), res, req);
-  }
-});
+
 connection().then(async () => {
   await Configuration.needConfigurationInit();
   scheduledFunctions();
   app.use('/', routes);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    if (err instanceof ApiError) {
+      ApiError.handle(err, res, req);
+      if (err.type === ErrorType.INTERNAL) {
+        logger.error(
+          `[ERROR] 500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
+        );
+      }
+    } else {
+      logger.error(`[ERROR] 500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+      logger.error(err);
+      ApiError.handle(new InternalError(), res, req);
+    }
+  });
   app.listen(3000, () =>
     logger.info(`
     🐿 Squirrel Servers Manager
