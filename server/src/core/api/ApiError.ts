@@ -28,10 +28,11 @@ export abstract class ApiError extends Error {
   }
 
   public static handle(err: ApiError, res: Response): Response {
-    logger.error(
-      `[ERROR] - ${err?.req?.method} from ${err?.req?.url} - ${err.type} - ${err.message} - ${err?.req?.ip}`,
-    );
-
+    if (err.req) {
+      logger.error(
+        `[ERROR] - ${err?.req?.method} from ${err?.req?.url} - ${err.type} - ${err.message} - ${err?.req?.ip}`,
+      );
+    }
     switch (err.type) {
       case ErrorType.UNAUTHORIZED:
         return new AuthFailureResponse(err.message).send(res);
