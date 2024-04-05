@@ -20,7 +20,9 @@ const DeviceLogos: React.FC<DeviceLogosProps> = (props: DeviceLogosProps) => (
         }
       />
     )}
-    {props?.device?.cpuBrand && <CPULogo cpuBrand={props.device.cpuBrand} />}
+    {props?.device?.cpuBrand && (
+      <CPULogo cpuBrand={props.device.cpuBrand} osArch={props.device.osArch} />
+    )}
   </>
 );
 
