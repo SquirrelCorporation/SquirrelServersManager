@@ -59,7 +59,7 @@ export const schema = new Schema<User>(
       type: Schema.Types.String,
       required: true,
       unique: true,
-      default: uuidv4(),
+      default: uuidv4,
     },
     logsLevel: {
       type: Object,
