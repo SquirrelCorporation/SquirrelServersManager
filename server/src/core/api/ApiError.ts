@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { findIpAddress } from '../../helpers/utils';
 import logger from '../../logger';
 import {
   AuthFailureResponse,
@@ -28,7 +29,7 @@ export abstract class ApiError extends Error {
 
   public static handle(err: ApiError, res: Response, req: Request): Response {
     logger.error(
-      `[ERROR] ${err.type} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
+      `[ERROR] ${err.type} - ${err.message} - ${req.originalUrl} - ${req.method} - ${findIpAddress(req)}`,
     );
     switch (err.type) {
       case ErrorType.UNAUTHORIZED:

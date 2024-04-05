@@ -5,6 +5,7 @@ import { NextFunction, Request, Response } from 'express';
 import { SECRET } from './config';
 import { ApiError, ErrorType, InternalError } from './core/api/ApiError';
 import { connection } from './data/database';
+import { findIpAddress } from './helpers/utils';
 import routes from './routes';
 import scheduledFunctions from './integrations/crons';
 import logger from './logger';
@@ -36,11 +37,13 @@ connection().then(async () => {
       ApiError.handle(err, res, req);
       if (err.type === ErrorType.INTERNAL) {
         logger.error(
-          `[ERROR] 500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
+          `[ERROR] 500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${findIpAddress(req)}`,
         );
       }
     } else {
-      logger.error(`[ERROR] 500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+      logger.error(
+        `[ERROR] 500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${findIpAddress(req)}`,
+      );
       logger.error(err);
       ApiError.handle(new InternalError(), res, req);
     }
