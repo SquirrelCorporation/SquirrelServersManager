@@ -29,7 +29,7 @@ export const addDevice = asyncHandler(async (req, res) => {
     becomePass,
   } = req.body;
   if (masterNodeUrl) {
-    await setToCache(AnsibleReservedExtraVarsKeys.MASTER_NODE_URL, req.body.masterNodeUrl);
+    await setToCache(AnsibleReservedExtraVarsKeys.MASTER_NODE_URL, masterNodeUrl);
   }
   try {
     const isUnManagedDevice = unManaged === true;
@@ -54,6 +54,7 @@ export const addDevice = asyncHandler(async (req, res) => {
       res,
     );
   } catch (error) {
+    logger.error(error);
     throw new BadRequestError('The ip likely already exists');
   }
 });
