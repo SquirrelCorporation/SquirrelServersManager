@@ -52,7 +52,6 @@ function inventoryBuilderForTarget(devicesAuth: DeviceAuth[]) {
 function getInventoryConnectionVars(deviceAuth: DeviceAuth, escape: boolean) {
   return {
     ansible_connection: 'ssh',
-    ansible_become: 'yes',
     ansible_become_method: deviceAuth.becomeMethod,
     ansible_become_pass: { __ansible_vault: deviceAuth.becomePass },
     /* prettier-ignore */
