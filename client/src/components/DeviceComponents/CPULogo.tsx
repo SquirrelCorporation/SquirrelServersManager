@@ -49,16 +49,19 @@ export const LogosAmd = (props: any) => (
 
 type CPULogoProps = {
   cpuBrand?: string;
+  osArch?: string;
 };
 
 export const CPULogo: React.FC<CPULogoProps> = (props: CPULogoProps) => {
-  if (props.cpuBrand?.includes('intel'))
+  const cpuBrand = props.cpuBrand?.toLocaleLowerCase();
+  const osArch = props.osArch?.toLocaleLowerCase();
+  if (cpuBrand?.includes('intel'))
     return (
       <Avatar style={{ backgroundColor: '#3c3d3a' }} src={<LogosIntel />} />
     );
-  if (props.cpuBrand?.includes('arm'))
+  if (cpuBrand?.includes('arm') || osArch?.includes('arm'))
     return <Avatar style={{ backgroundColor: '#3c3d3a' }} src={<LogosArm />} />;
-  if (props.cpuBrand?.includes('amd'))
+  if (cpuBrand?.includes('amd'))
     return <Avatar style={{ backgroundColor: '#3c3d3a' }} src={<LogosAmd />} />;
   return <></>;
 };

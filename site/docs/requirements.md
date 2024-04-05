@@ -1,5 +1,9 @@
 # Requirements
 
+:::warning ⚠️ Node & NPM
+Do avoid any problems, use the **latests versions** of Node and NPM
+:::
+
 ### Client/Server:
 - **Docker >= 2.17** (Need 'additional_context' supports, which has been added with version [2.17.0](https://docs.docker.com/compose/release-notes/#2170))
 - Please be aware that MongoDB needs a CPU supporting AVX

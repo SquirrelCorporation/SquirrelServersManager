@@ -7,12 +7,14 @@
       ansible.builtin.apt:
         upgrade: dist
         update_cache: yes
+      timeout: 600
 
     - name: Check if a reboot is required.
       ansible.builtin.stat:
         path: /var/run/reboot-required
         get_checksum: no
       register: reboot_required_file
+      timeout: 600
 
     - name: Reboot the server (if required).
       ansible.builtin.reboot:
