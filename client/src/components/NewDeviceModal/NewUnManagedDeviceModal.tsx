@@ -58,11 +58,15 @@ const NewUnManagedDeviceModal: React.FC<NewUnManagedDeviceModalProps> = (
                   onFinish={async (values) => {
                     if (values) {
                       await putDevice(values.deviceIp, {
-                        sshPort: values.sshPort,
                         authType: values.authType,
+                        sshPort: values.sshPort,
                         sshUser: values.sshUser,
                         sshPwd: values.sshPwd,
                         sshKey: values.sshKey,
+                        becomeUser: values.becomeUser,
+                        becomeMethod: values.becomeMethod,
+                        becomePass: values.becomePass,
+                        strictHostChecking: values.strictHostChecking,
                       }).then((res) => {
                         setDeviceUuid(res.data.device.uuid);
                       });
@@ -74,13 +78,6 @@ const NewUnManagedDeviceModal: React.FC<NewUnManagedDeviceModalProps> = (
                     }
                   }}
                 >
-                  <ProFormText
-                    name="deviceIp"
-                    label="Device IP"
-                    width="md"
-                    placeholder="192.168.0.1"
-                    rules={[{ required: true }]}
-                  />
                   <SSHConnectionForm />
                 </ProForm>
               )) || (

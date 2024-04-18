@@ -1,5 +1,5 @@
 import React from 'react';
-import { message } from 'antd';
+import { Space, message } from 'antd';
 import { ProForm } from '@ant-design/pro-form/lib';
 import SSHConnectionForm from '@/components/SSHConnectionForm/SSHConnectionForm';
 import { getDeviceAuth, putDeviceAuth } from '@/services/rest/deviceauth';
@@ -13,14 +13,17 @@ const ConfigurationFormSSH: React.FC<ConfigurationFormSSHProps> = (props) => {
   return (
     <>
       <ProForm
-        grid={false}
-        rowProps={{
-          gutter: [16, 0],
-        }}
+        layout="horizontal"
         submitter={{
           // eslint-disable-next-line @typescript-eslint/no-shadow
           render: (props, doms) => {
-            return doms;
+            return (
+              <div style={{ textAlign: 'right' }}>
+                <Space direction="horizontal" size="middle">
+                  {doms}
+                </Space>
+              </div>
+            );
           },
         }}
         onFinish={async (values) => {
@@ -34,6 +37,7 @@ const ConfigurationFormSSH: React.FC<ConfigurationFormSSHProps> = (props) => {
               becomeUser: values.becomeUser,
               becomeMethod: values.becomeMethod,
               becomePass: values.becomePass,
+              strictHostChecking: values.strictHostChecking,
             } as API.DeviceAuthParams)
               .then(() => {
                 message.success({
@@ -76,7 +80,7 @@ const ConfigurationFormSSH: React.FC<ConfigurationFormSSHProps> = (props) => {
           }
         }}
       >
-        <SSHConnectionForm />
+        <SSHConnectionForm deviceIp={props.values.ip} />
       </ProForm>
     </>
   );

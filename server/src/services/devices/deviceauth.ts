@@ -26,7 +26,7 @@ export const getDeviceAuth = asyncHandler(async (req, res) => {
 });
 
 export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {
-  const { authType, sshKey, sshUser, sshPwd, sshPort, becomeMethod, becomePass } =
+  const { authType, sshKey, sshUser, sshPwd, sshPort, becomeMethod, becomePass, becomeUser } =
     req.body as API.DeviceAuthParams;
   const { uuid } = req.params;
   const device = await DeviceRepo.findOneByUuid(uuid);
@@ -43,6 +43,7 @@ export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {
     sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
     becomeMethod: becomeMethod,
     becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
+    becomeUser: becomeUser,
   } as DeviceAuth);
 
   logger.info(

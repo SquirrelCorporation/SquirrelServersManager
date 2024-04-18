@@ -1,12 +1,11 @@
 import {
-  CilControl,
-  EpConnection,
   GrommetIconsInstall,
+  TablerPlugConnected,
 } from '@/components/Icons/CustomIcons';
-import { DownloadOutlined } from '@ant-design/icons';
+import { DownloadOutlined, InfoCircleFilled } from '@ant-design/icons';
 import {
-  ProCard,
   ProForm,
+  ProFormInstance,
   ProFormText,
   StepsForm,
 } from '@ant-design/pro-components';
@@ -20,8 +19,11 @@ import {
   message,
   Row,
   Col,
+  Avatar,
+  Tooltip,
+  Card,
 } from 'antd';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import SSHConnectionForm from '@/components/SSHConnectionForm/SSHConnectionForm';
 import { putDevice } from '@/services/rest/device';
 
@@ -32,6 +34,7 @@ export type NewDeviceModalProps = {
 };
 
 const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
+  const formRef = useRef<ProFormInstance>();
   const [loading, setLoading] = useState(false);
   const [sshConnection, setSshConnection] = useState({});
   const [controlNodeConnectionString, setControlNodeConnectionString] =
@@ -79,7 +82,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
         )}
       >
         <Row style={{ alignItems: 'center' }} justify="center">
-          <Col span={12}>
+          <Col span={8}>
             <DotLottiePlayer
               src="/Animation-1709649662243.json"
               autoplay
@@ -89,95 +92,131 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
               style={{ height: '90%', width: '90%', alignSelf: 'center' }}
             />
           </Col>
-          <Col span={12}>
-            <ProCard>
-              <StepsForm
-                onFinish={async (values) => {
-                  setLoading(true);
-                  await putDevice(
-                    values.deviceIp,
-                    {
-                      authType: values.authType,
-                      sshPort: values.sshPort,
-                      sshUser: values.sshUser,
-                      sshPwd: values.sshPwd,
-                      sshKey: values.sshKey,
-                      becomeUser: values.becomeUser,
-                      becomeMethod: values.becomeMethod,
-                      becomePass: values.becomePass
-                    },
-                    values.controlNodeURL,
-                  )
-                    .then((res) => {
-                      setLoading(false);
-                      props.setIsModalOpen(false);
-                      props.onAddNewDevice(res.data?.device);
-                    })
-                    .catch(() => {
-                      setLoading(false);
-                    });
-                }}
-                submitter={{
-                  render: ({ form, onSubmit, step, onPre }) => {
-                    return [
-                      step > 0 && (
-                        <Button
-                          key="pre"
-                          onClick={() => {
-                            if (step === 1) setSshConnection({});
-                            if (step === 2) setControlNodeConnectionString({});
-                            onPre?.();
-                          }}
-                        >
-                          Back
-                        </Button>
-                      ),
+          <Col span={16}>
+            <StepsForm
+              formRef={formRef}
+              onFinish={async (values) => {
+                setLoading(true);
+                await putDevice(
+                  values.deviceIp,
+                  {
+                    authType: values.authType,
+                    sshPort: values.sshPort,
+                    sshUser: values.sshUser,
+                    sshPwd: values.sshPwd,
+                    sshKey: values.sshKey,
+                    becomeUser: values.becomeUser,
+                    becomeMethod: values.becomeMethod,
+                    becomePass: values.becomePass,
+                    strictHostChecking: values.strictHostChecking,
+                  },
+                  values.controlNodeURL,
+                )
+                  .then((res) => {
+                    formRef.current?.resetFields();
+                    setLoading(false);
+                    props.setIsModalOpen(false);
+                    props.onAddNewDevice(res.data?.device);
+                  })
+                  .catch(() => {
+                    setLoading(false);
+                  });
+              }}
+              submitter={{
+                render: ({ form, onSubmit, step, onPre }) => {
+                  return [
+                    step > 0 && (
                       <Button
-                        key="next"
-                        loading={loading}
-                        type="primary"
+                        key="pre"
                         onClick={() => {
-                          if (step === 0)
-                            setSshConnection(form?.getFieldsValue());
-                          if (step === 1)
-                            setControlNodeConnectionString(
-                              form?.getFieldsValue(),
-                            );
-                          onSubmit?.();
+                          if (step === 1) setSshConnection({});
+                          if (step === 2) setControlNodeConnectionString({});
+                          onPre?.();
                         }}
-                        icon={step < 2 ? undefined : <DownloadOutlined />}
                       >
-                        {step < 2 ? 'Next' : 'Confirm & Install Agent'}
-                      </Button>,
-                    ];
-                  },
-                }}
-                formProps={{
-                  validateMessages: {
-                    required: 'This field is required',
-                  },
+                        Back
+                      </Button>
+                    ),
+                    <Button
+                      key="next"
+                      loading={loading}
+                      type="primary"
+                      onClick={() => {
+                        if (step === 0)
+                          setSshConnection(form?.getFieldsValue());
+                        if (step === 1)
+                          setControlNodeConnectionString(
+                            form?.getFieldsValue(),
+                          );
+                        onSubmit?.();
+                      }}
+                      icon={step < 2 ? undefined : <DownloadOutlined />}
+                    >
+                      {step < 2 ? 'Next' : 'Confirm & Install Agent'}
+                    </Button>,
+                  ];
+                },
+              }}
+              formProps={{
+                validateMessages: {
+                  required: 'This field is required',
+                },
+              }}
+            >
+              <StepsForm.StepForm
+                name="base"
+                title="SSH"
+                style={{ alignItems: 'start' }}
+              >
+                <SSHConnectionForm />
+              </StepsForm.StepForm>
+              <StepsForm.StepForm
+                name="checkbox"
+                title="Node"
+                style={{ minHeight: '350px' }}
+                onFinish={async (formData) => {
+                  setLoading(true);
+                  await checkHostAPI(formData.controlNodeURL);
+                  setLoading(false);
+                  return true;
                 }}
               >
-                <StepsForm.StepForm name="base" title="SSH">
-                  <ProFormText
-                    name="deviceIp"
-                    label="Device IP"
-                    width="md"
-                    placeholder="192.168.0.1"
-                    rules={[{ required: true }]}
-                  />
-                  <SSHConnectionForm />
-                </StepsForm.StepForm>
-                <StepsForm.StepForm
-                  name="checkbox"
-                  title="Node"
-                  style={{ minHeight: '350px' }}
-                  onFinish={async (formData) => {
-                    setLoading(true);
-                    await checkHostAPI(formData.controlNodeURL);
-                    setLoading(false);
-                    return true;
+                <Card
+                  type="inner"
+                  title={
+                    <Row>
+                      <Col>
+                        <Avatar
+                          style={{ backgroundColor: '#8e5416' }}
+                          shape="square"
+                          icon={<TablerPlugConnected />}
+                        />
+                      </Col>
+                      <Col
+                        style={{
+                          marginLeft: 10,
+                          marginTop: 'auto',
+                          marginBottom: 'auto',
+                        }}
+                      >
+                        SSM URL
+                      </Col>
+                    </Row>
+                  }
+                  style={{ marginBottom: 10 }}
+                  styles={{
+                    header: { height: 45, minHeight: 45, paddingLeft: 15 },
+                    body: { paddingBottom: 0 },
                   }}
+                  extra={
+                    <Tooltip
+                      title={
+                        'The URL of this server, to enable the agent to connect to your device. This will set the API_URL_MASTER variable in the .env file of the agent.'
+                      }
+                    >
+                      <InfoCircleFilled />
+                    </Tooltip>
+                  }
                 >
                   <ProForm.Group>
                     <ProFormText
@@ -189,22 +228,51 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                       initialValue={`http://${document.location.hostname}:8000`}
                     />
                   </ProForm.Group>
-                </StepsForm.StepForm>
-                <StepsForm.StepForm name="confirm" title="Confirm">
-                  <ProForm.Item
-                    label={
-                      <>
-                        <EpConnection style={{ marginRight: '5px' }} />{' '}
-                        Connection configuration
-                      </>
-                    }
-                  >
-                    <Flex vertical gap={16}>
-                      {Object.keys(sshConnection).map((e) => (
-                        <div key={e}>
+                </Card>
+              </StepsForm.StepForm>
+              <StepsForm.StepForm name="confirm" title="Confirm">
+                <Card
+                  type="inner"
+                  title={
+                    <Row>
+                      <Col>
+                        <Avatar
+                          style={{ backgroundColor: '#168e2e' }}
+                          shape="square"
+                          icon={<GrommetIconsInstall />}
+                        />
+                      </Col>
+                      <Col
+                        style={{
+                          marginLeft: 10,
+                          marginTop: 'auto',
+                          marginBottom: 'auto',
+                        }}
+                      >
+                        Summary
+                      </Col>
+                    </Row>
+                  }
+                  style={{ marginBottom: 10 }}
+                  styles={{
+                    header: { height: 45, minHeight: 45, paddingLeft: 15 },
+                    body: { paddingBottom: 20 },
+                  }}
+                >
+                  <Flex vertical gap={16}>
+                    {Object.keys(sshConnection).map((e) => (
+                      <Row key={e}>
+                        <Col
+                          style={{
+                            marginTop: 'auto',
+                            marginBottom: 'auto',
+                            width: '150px',
+                          }}
+                        >
                           <Typography>{e} :</Typography>{' '}
+                        </Col>
+                        <Col flex="auto">
                           <Input
-                            style={{ width: '80%' }}
                             value={
                               e.toLowerCase().indexOf('password') !== -1
                                 ? '••••••'
@@ -212,24 +280,22 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                             }
                             disabled
                           />
-                        </div>
-                      ))}
-                    </Flex>
-                  </ProForm.Item>
-                  <ProForm.Item
-                    label={
-                      <>
-                        <CilControl style={{ marginRight: '5px' }} />
-                        Control Node configuration (URL_MASTER .env)
-                      </>
-                    }
-                  >
-                    <Flex vertical gap={16}>
-                      {Object.keys(controlNodeConnectionString).map((e) => (
-                        <div key={e}>
+                        </Col>
+                      </Row>
+                    ))}
+                    {Object.keys(controlNodeConnectionString).map((e) => (
+                      <Row key={e} style={{ marginTop: 10 }}>
+                        <Col
+                          style={{
+                            marginTop: 'auto',
+                            marginBottom: 'auto',
+                            width: '150px',
+                          }}
+                        >
                           <Typography>{e} :</Typography>{' '}
+                        </Col>
+                        <Col flex="auto">
                           <Input
-                            style={{ width: '80%' }}
                             value={
                               controlNodeConnectionString[
                                 e as keyof typeof sshConnection
@@ -237,13 +303,13 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                             }
                             disabled
                           />
-                        </div>
-                      ))}
-                    </Flex>
-                  </ProForm.Item>
-                </StepsForm.StepForm>
-              </StepsForm>
-            </ProCard>
+                        </Col>
+                      </Row>
+                    ))}
+                  </Flex>
+                </Card>
+              </StepsForm.StepForm>
+            </StepsForm>
           </Col>
         </Row>
       </Modal>

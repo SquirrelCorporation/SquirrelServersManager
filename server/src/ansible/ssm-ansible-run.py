@@ -81,6 +81,7 @@ def execute():
     thread_obj, runner_obj = ansible_runner.run_async(
         ident=args.ident,
         private_data_dir='./',
+        project_dir='./',
         playbook=args.playbook,
         host_pattern=args.host_pattern,
         event_handler=event_handler,

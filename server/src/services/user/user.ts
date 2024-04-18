@@ -93,7 +93,7 @@ export const createFirstUser = asyncHandler(async (req, res) => {
     password: password,
     name: name,
     role: Role.ADMIN,
-    avatar: avatar || '/avatars/squirrel.png',
+    avatar: avatar || '/avatars/squirrel.svg',
   });
   new SuccessResponse('Create first user').send(res);
 });

@@ -21,25 +21,14 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
   return (
     <Modal
       style={{ padding: '32px 40px 48px' }}
-      width={600}
+      width={1000}
       destroyOnClose
       title={`${props.values.hostname} (${props.values.ip})`}
       open={props.updateModalOpen}
       onCancel={() => {
         props.handleUpdateModalOpen(false);
       }}
-      footer={() => (
-        <>
-          <Button
-            type={'primary'}
-            onClick={() => {
-              props.handleUpdateModalOpen(false);
-            }}
-          >
-            Close
-          </Button>
-        </>
-      )}
+      footer={() => <div />}
     >
       <Tabs
         onChange={(key: string) => {

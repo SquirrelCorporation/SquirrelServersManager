@@ -61,7 +61,7 @@ const MainChartCard: React.FC<any> = ({}) => {
     setRangePickerValue(getTimeDistance(dateType));
   };
   const asyncFetch = async () => {
-    if (devices && devices.length > 0) {
+    if (devices && devices.length > 0 && devices[0]) {
       await getDashboardDevicesStats(devices, type, {
         from: rangePickerValue[0].toDate(),
         to: rangePickerValue[1].toDate(),
@@ -86,16 +86,33 @@ const MainChartCard: React.FC<any> = ({}) => {
   useEffect(() => {
     asyncFetch();
   }, [devices, type, rangePickerValue]);
-
+  // see https://ant-design-charts-next.antgroup.com/en/options/plots/component/legend
   const config = {
     data: graphData,
-    theme: 'dark',
+    theme: {
+      view: {
+        viewFill: '#151921',
+      },
+    },
     xField: 'date',
     yField: 'value',
     colorField: 'name',
     seriesField: 'name',
     xAxis: {
       type: 'time',
+    },
+    legend: {
+      color: {
+        itemLabelFill: '#fff',
+      },
+    },
+    axis: {
+      x: {
+        labelFill: '#fff',
+      },
+      y: {
+        labelFill: '#fff',
+      },
     },
     tooltip: { channel: 'y', valueFormatter: '.2' },
     yAxis: {

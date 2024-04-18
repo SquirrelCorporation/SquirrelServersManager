@@ -1,7 +1,5 @@
-import { CallbackError, Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { SSHType } from 'ssm-shared-lib/distribution/enums/ansible';
-import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../../integrations/ansible-vault/vault';
-import logger from '../../../logger';
 import Device from './Device';
 
 export const DOCUMENT_NAME = 'DeviceAuth';
@@ -16,7 +14,12 @@ export default interface DeviceAuth {
   sshPort?: number;
   becomePass?: string;
   becomeMethod?: string;
+  becomeExe?: string;
+  becomeFlags?: string;
   strictHostKeyChecking?: boolean;
+  becomeUser?: string;
+  sshCommonArgs?: string;
+  sshExecutable?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -56,6 +59,10 @@ const schema = new Schema<DeviceAuth>(
       type: Schema.Types.String,
       required: false,
     },
+    becomeUser: {
+      type: Schema.Types.String,
+      required: false,
+    },
     strictHostKeyChecking: {
       type: Schema.Types.Boolean,
       required: false,
@@ -63,6 +70,22 @@ const schema = new Schema<DeviceAuth>(
     sshPort: {
       type: Schema.Types.Number,
       required: true,
+    },
+    sshCommonArgs: {
+      type: Schema.Types.String,
+      required: false,
+    },
+    sshExecutable: {
+      type: Schema.Types.String,
+      required: false,
+    },
+    becomeExe: {
+      type: Schema.Types.String,
+      required: false,
+    },
+    becomeFlags: {
+      type: Schema.Types.String,
+      required: false,
     },
   },
   {

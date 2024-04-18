@@ -1,5 +1,72 @@
 import React from 'react';
 
+export const TablerPlugConnected = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      d="m7 12l5 5l-1.5 1.5a3.536 3.536 0 1 1-5-5L7 12zm10 0l-5-5l1.5-1.5a3.536 3.536 0 1 1 5 5L17 12zM3 21l2.5-2.5m13-13L21 3m-11 8l-2 2m5 1l-2 2"
+    />
+  </svg>
+);
+
+export const StreamlineLockRotationSolid = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 14 14"
+    {...props}
+  >
+    <g fill="currentColor" fillRule="evenodd" clipRule="evenodd">
+      <path d="M1.5 7a5.5 5.5 0 0 1 9.82-3.405l-.966.965a.5.5 0 0 0 .353.854H13.5a.5.5 0 0 0 .5-.5V2.12a.5.5 0 0 0-.854-.354l-.76.761a7 7 0 1 0 1.427 6.086a.75.75 0 0 0-1.46-.344A5.5 5.5 0 0 1 1.5 7" />
+      <path d="M6.125 5.813a.875.875 0 1 1 1.75 0v.5h-1.75zm-1.25.719v-.72a2.125 2.125 0 1 1 4.25 0v.72a.998.998 0 0 1 .375.78v2a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1v-2c0-.315.146-.597.375-.78" />
+    </g>
+  </svg>
+);
+
+export const EosIconsAdmin = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      id="eosIconsAdmin0"
+      fill="currentColor"
+      d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12c5.16-1.26 9-6.45 9-12V5Zm0 3.9a3 3 0 1 1-3 3a3 3 0 0 1 3-3Zm0 7.9c2 0 6 1.09 6 3.08a7.2 7.2 0 0 1-12 0c0-1.99 4-3.08 6-3.08Z"
+    />
+  </svg>
+);
+
+export const GrommetIconsHost = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      d="M17 4h1v1h-1V4ZM3 1h18v22H3V1Zm0 12h18H3Zm0 5h18H3ZM3 8h18H3Z"
+    />
+  </svg>
+);
+
 export const ElNetwork = (props: any) => (
   <svg
     width="1.5em"
