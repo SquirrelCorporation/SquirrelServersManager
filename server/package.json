@@ -16,7 +16,7 @@
     "luxon": "^3.4.4",
     "mongoose": "^8.3.2",
     "node-cron": "^3.0.3",
-    "pino": "^8.20.0",
+    "pino": "^9.0.0",
     "shelljs": "^0.8.5",
     "pino-mongodb": "^4.3.0",
     "pino-pretty": "^11.0.0",
