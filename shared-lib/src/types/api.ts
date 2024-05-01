@@ -464,4 +464,76 @@ export type ExtraVar = {
   canBeOverride?: boolean;
 };
 
+export type Image = {
+  id: string;
+  registry: {
+    name: string;
+    url: string;
+  };
+  name: string;
+  tag: {
+    value: string;
+    semver?: boolean;
+  };
+  digest: {
+    watch?: boolean;
+    value?: string;
+    repo?: string;
+  };
+  architecture: string;
+  os: string;
+  variant?: string[];
+  created?: string;
+};
+
+export type ContainerUpdate = {
+  kind: 'tag' | 'digest' | 'unknown';
+  localValue?: string;
+  remoteValue?: string;
+  semverDiff?: 'major' | 'minor' | 'patch' | 'prerelease' | 'unknown';
+}
+
+export type ContainerInspectResult = {
+  tag?: string;
+  digest?: string;
+  created?: string;
+  link?: string;
+}
+
+export type Container = {
+  id?: string;
+  name?: string;
+  watcher?: string;
+  updateAvailable?: boolean;
+  status?:string;
+  image?: Image;
+  updateKind?: ContainerUpdate;
+  result?: ContainerInspectResult;
+}
+
+
+export type ContainerResult = {
+  container?: any;
+}
+
+export type ContainersResponse = SimpleResult & {
+  data?: Container[];
+}
+
+export type ContainerRegistries = {
+  registries?: ContainerRegistry[];
+}
+
+export type ContainerRegistryResponse = SimpleResult & {
+  data?: ContainerRegistries;
+}
+
+export type ContainerRegistry ={
+  name: string;
+  authScheme: any;
+  provider: string;
+  authSet: boolean;
+  canAuth: boolean;
+}
+
 export type ExtraVars = ExtraVar[];

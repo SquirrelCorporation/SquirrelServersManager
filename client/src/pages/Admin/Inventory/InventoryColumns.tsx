@@ -1,4 +1,4 @@
-import QuickActionDropDown from '@/components/QuickAction/QuickActionDropDown';
+import DeviceQuickActionDropDown from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionDropDown';
 import type { ProColumns } from '@ant-design/pro-components';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
@@ -143,7 +143,7 @@ const InventoryColumns = (
             setCurrentRow(record);
           }}
         >
-          <QuickActionDropDown
+          <DeviceQuickActionDropDown
             advancedMenu={true}
             onDropDownClicked={onDropDownClicked}
             setTerminal={setTerminal}

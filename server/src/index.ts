@@ -6,6 +6,7 @@ import { SECRET } from './config';
 import { ApiError, ErrorType, InternalError } from './core/api/ApiError';
 import { connection } from './data/database';
 import { findIpAddress } from './helpers/utils';
+import States from './integrations/docker/core/States';
 import routes from './routes';
 import scheduledFunctions from './integrations/crons';
 import logger from './logger';
@@ -27,6 +28,7 @@ app.use(passport.initialize());
 
 connection().then(async () => {
   await Configuration.needConfigurationInit();
+  await States.init();
   scheduledFunctions();
   app.use('/', routes);
   // Middleware Error Handler

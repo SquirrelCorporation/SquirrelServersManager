@@ -54,7 +54,12 @@ export const HealthWidget: React.FC = () => {
             src={
               <FluentMdl2Health
                 className={'svg-small-anim-pulse'}
-                style={{ color: 'rgba(255, 255, 255, 0.65)' }}
+                style={{
+                  color: 'rgba(255, 255, 255, 0.65)',
+                }}
+                width={'20px'}
+                height={'20px'}
+                size={20}
               />
             }
           />

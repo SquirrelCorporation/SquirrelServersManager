@@ -33,7 +33,7 @@ export enum Actions {
   DELETE = 'delete',
 }
 
-const QuickActionReference: QuickActionReferenceType[] = [
+const DeviceQuickActionReference: QuickActionReferenceType[] = [
   {
     type: Types.PLAYBOOK_SELECTION,
     label: (
@@ -147,4 +147,4 @@ const QuickActionReference: QuickActionReferenceType[] = [
   },
 ];
 
-export default QuickActionReference;
+export default DeviceQuickActionReference;

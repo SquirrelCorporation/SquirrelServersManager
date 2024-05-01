@@ -1,4 +1,5 @@
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
+import ExtraVarsViewEditor from '@/pages/Playbooks/ExtraVarsViewEditor';
 import {
   deletePlaybook,
   getPlaybooks,
@@ -32,14 +33,13 @@ import {
   Tree,
   Typography,
 } from 'antd';
+import { AddCircleOutline, DeleteOutline } from 'antd-mobile-icons';
 import type { DirectoryTreeProps } from 'antd/es/tree';
+import { editor } from 'monaco-editor';
 import { configureMonacoYaml } from 'monaco-yaml';
 import React, { useEffect } from 'react';
-import { editor, languages } from 'monaco-editor';
-import { AddCircleOutline, DeleteOutline } from 'antd-mobile-icons';
-import IStandaloneCodeEditor = editor.IStandaloneCodeEditor;
 import { PlaybookFileList } from 'ssm-shared-lib/distribution/types/api';
-import ExtraVarsViewEditor from '@/pages/Playbooks/ExtraVarsViewEditor';
+import IStandaloneCodeEditor = editor.IStandaloneCodeEditor;
 
 window.MonacoEnvironment = {
   getWorker(moduleId, label) {

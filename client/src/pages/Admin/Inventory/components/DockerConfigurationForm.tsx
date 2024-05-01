@@ -1,15 +1,17 @@
-import React from 'react';
-import { Space, message } from 'antd';
-import { ProForm } from '@ant-design/pro-form/lib';
-import SSHConnectionForm from '@/components/SSHConnectionForm/SSHConnectionForm';
+import { DockerConnectionForm } from '@/components/DeviceConfiguration/DockerConnectionForm';
 import { getDeviceAuth, putDeviceAuth } from '@/services/rest/deviceauth';
+import { ProForm } from '@ant-design/pro-form/lib';
+import { message, Space } from 'antd';
+import React from 'react';
 import { API } from 'ssm-shared-lib';
 
-export type ConfigurationFormSSHProps = {
+export type DockerConfigurationFormProps = {
   values: Partial<API.DeviceItem>;
 };
 
-const ConfigurationFormSSH: React.FC<ConfigurationFormSSHProps> = (props) => {
+const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
+  props,
+) => {
   return (
     <>
       <ProForm
@@ -70,6 +72,7 @@ const ConfigurationFormSSH: React.FC<ConfigurationFormSSHProps> = (props) => {
                 becomeUser: res.data.becomeUser,
                 becomeMethod: res.data.becomeMethod,
                 becomePass: res.data.becomePass,
+                strictHostChecking: res.data.strictHostChecking,
               };
             });
           } else {
@@ -80,10 +83,10 @@ const ConfigurationFormSSH: React.FC<ConfigurationFormSSHProps> = (props) => {
           }
         }}
       >
-        <SSHConnectionForm deviceIp={props.values.ip} />
+        <DockerConnectionForm deviceIp={props.values.ip} />
       </ProForm>
     </>
   );
 };
 
-export default ConfigurationFormSSH;
+export default DockerConfigurationForm;

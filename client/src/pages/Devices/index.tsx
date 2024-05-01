@@ -6,7 +6,7 @@ import DeviceStatusTag from '@/components/DeviceComponents/DeviceStatusTag';
 import { OsLogo } from '@/components/DeviceComponents/OsLogo/OsLogo';
 import { CarbonBatchJob, WhhCpu, WhhRam } from '@/components/Icons/CustomIcons';
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
-import QuickActionDropDown from '@/components/QuickAction/QuickActionDropDown';
+import DeviceQuickActionDropDown from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionDropDown';
 import TerminalModal from '@/components/TerminalModal';
 import { getDevices } from '@/services/rest/device';
 import { Link } from '@@/exports';
@@ -212,12 +212,12 @@ const Index = memo(() => {
             bodyStyle={{ padding: '0 32px 40px 32px' }}
             extra={
               <a href="#">
-                <QuickActionDropDown
+                <DeviceQuickActionDropDown
                   onDropDownClicked={onDropDownClicked}
                   setTerminal={setTerminal}
                 >
                   <Button icon={<CarbonBatchJob />}>Apply to all</Button>
-                </QuickActionDropDown>
+                </DeviceQuickActionDropDown>
               </a>
             }
           >
@@ -252,7 +252,7 @@ const Index = memo(() => {
                       </Tooltip>
                     </Link>,
                     <a key={`quickAction-${item.uuid}`} onClick={() => {}}>
-                      <QuickActionDropDown
+                      <DeviceQuickActionDropDown
                         onDropDownClicked={onDropDownClicked}
                         setTerminal={setTerminal}
                         target={[item]}

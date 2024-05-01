@@ -109,7 +109,12 @@ export const DevicesHeaderWidget: React.FC = () => {
             src={
               <ElNetwork
                 className={'svg-small-anim-rotate'}
-                style={{ color: 'rgba(255, 255, 255, 0.65)' }}
+                style={{
+                  color: 'rgba(255, 255, 255, 0.65)',
+                }}
+                width={'20px'}
+                height={'20px'}
+                size={20}
               />
             }
           />

@@ -8,7 +8,7 @@ import asyncHandler from '../../helpers/AsyncHandler';
 import logger from '../../logger';
 import PlaybookUseCases from '../../use-cases/PlaybookUseCases';
 
-export const execPlaybook = asyncHandler(async (req, res, next) => {
+export const execPlaybook = asyncHandler(async (req, res) => {
   logger.info(`[CONTROLLER]- POST - /ansible/exec/playbook - '${req.params.playbook}'`);
   const playbook = await PlaybookRepo.findOne(
     req.params.playbook + (req.params.playbook.endsWith('.yml') ? '' : '.yml'),

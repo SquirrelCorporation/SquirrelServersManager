@@ -10,7 +10,8 @@
     "clean": "rm -rf distribution"
   },
   "types": "distribution/index.d.ts",
-  "devDependencies": {
-
+  "dependencies": {
+    "typescript": "^5.4.5"
   }
 }
+

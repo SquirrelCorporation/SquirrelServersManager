@@ -2,9 +2,9 @@ import { TerminalStateProps } from '@/components/TerminalModal';
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, MenuProps, Space } from 'antd';
 import React, { Dispatch, ReactNode, SetStateAction } from 'react';
-import QuickActionReference, {
+import DeviceQuickActionReference, {
   Types,
-} from '@/components/QuickAction/QuickActionReference';
+} from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionReference';
 import PlaybookSelectionModal from '@/components/PlaybookSelectionModal/PlaybookSelectionModal';
 import { ItemType } from 'rc-menu/es/interface';
 import { API } from 'ssm-shared-lib';
@@ -17,24 +17,26 @@ export type QuickActionProps = {
   children?: ReactNode;
 };
 
-const QuickActionDropDown: React.FC<QuickActionProps> = (props) => {
+const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
   const [playbookSelectionModalIsOpened, setPlaybookSelectionModalIsOpened] =
     React.useState(false);
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
     const idx = parseInt(key);
     if (idx >= 0) {
-      if (idx >= QuickActionReference.length) {
+      if (idx >= DeviceQuickActionReference.length) {
         alert('Internal Error');
         return;
       }
-      if (QuickActionReference[idx].type === Types.PLAYBOOK) {
+      if (DeviceQuickActionReference[idx].type === Types.PLAYBOOK) {
         props.setTerminal({
           isOpen: true,
-          command: QuickActionReference[idx].playbookFile,
+          command: DeviceQuickActionReference[idx].playbookFile,
           target: props.target,
         });
-      } else if (QuickActionReference[idx].type === Types.PLAYBOOK_SELECTION) {
+      } else if (
+        DeviceQuickActionReference[idx].type === Types.PLAYBOOK_SELECTION
+      ) {
         setPlaybookSelectionModalIsOpened(true);
       } else {
         props.onDropDownClicked(idx);
@@ -42,7 +44,7 @@ const QuickActionDropDown: React.FC<QuickActionProps> = (props) => {
     }
   };
 
-  const items = QuickActionReference.map((e, index) => {
+  const items = DeviceQuickActionReference.map((e, index) => {
     if (e.onAdvancedMenu && props.advancedMenu === true) {
       if (e.type === Types.DIVIDER) return { type: 'divider' };
       return {
@@ -94,4 +96,4 @@ const QuickActionDropDown: React.FC<QuickActionProps> = (props) => {
   );
 };
 
-export default QuickActionDropDown;
+export default DeviceQuickActionDropDown;

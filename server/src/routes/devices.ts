@@ -11,6 +11,7 @@ import {
   addOrUpdateDeviceAuthValidator,
   getDeviceAuthValidator,
 } from '../services/devices/deviceauth.validator';
+import { addOrUpdateDeviceContainers } from '../services/devices/devicecontainers';
 import {
   getDeviceStatByDeviceUuid,
   getDeviceStatsByDeviceUuid,
@@ -36,6 +37,7 @@ const router = express.Router();
 
 router.post(`/:uuid`, updateDeviceAndAddDeviceStatValidator, updateDeviceAndAddDeviceStat);
 router.post('/', addDeviceAutoValidator, addDeviceAuto);
+router.post('/containers/:uuid', addOrUpdateDeviceContainers);
 
 router.use(passport.authenticate('jwt', { session: false }));
 
@@ -55,5 +57,4 @@ router.route('/').put(addDeviceValidator, addDevice).get(getDevices);
 router.delete(`/:uuid`, deleteDeviceValidator, deleteDevice);
 router.get(`/:uuid/stats/:type/`, getDeviceStatsByDeviceUuidValidator, getDeviceStatsByDeviceUuid);
 router.get(`/:uuid/stat/:type/`, getDeviceStatByDeviceUuidValidator, getDeviceStatByDeviceUuid);
-
 export default router;
