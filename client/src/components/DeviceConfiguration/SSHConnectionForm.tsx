@@ -284,7 +284,21 @@ const SSHConnectionForm: React.FC<SSHConnectionFormProps> = (props) => {
                 );
               if (authType === 'keyBased')
                 return (
-                  <>
+                  <ProForm.Group>
+                    <ProFormText
+                      name="sshUser"
+                      label="SSH User Name"
+                      width="xs"
+                      placeholder="root"
+                      rules={[{ required: true }]}
+                    />
+                    <ProFormText.Password
+                      name="sshKeyPass"
+                      label="SSH Key Passphrase"
+                      width="xs"
+                      placeholder="passphrase"
+                      rules={[{ required: false }]}
+                    />
                     <ProFormTextArea
                       name="sshKey"
                       label="SSH Private Key"
@@ -292,7 +306,7 @@ const SSHConnectionForm: React.FC<SSHConnectionFormProps> = (props) => {
                       placeholder="root"
                       rules={[{ required: true }]}
                     />
-                  </>
+                  </ProForm.Group>
                 );
             }}
           </ProFormDependency>

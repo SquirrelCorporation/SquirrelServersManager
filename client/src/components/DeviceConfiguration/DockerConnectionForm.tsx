@@ -3,27 +3,67 @@ import {
   UilDocker,
 } from '@/components/Icons/CustomIcons';
 import { CardHeader } from '@/components/Template/CardHeader';
-import { InfoCircleFilled } from '@ant-design/icons';
+import { updateDeviceDockerWatcher } from '@/services/rest/device';
+import { FieldTimeOutlined, InfoCircleFilled } from '@ant-design/icons';
 import {
   ProForm,
-  ProFormDigit,
+  ProFormDependency,
   ProFormSelect,
+  ProFormSwitch,
   ProFormText,
-  ProFormUploadButton,
+  ProFormTextArea,
 } from '@ant-design/pro-components';
 import { Card, Flex, message, Space, Switch, Tooltip, Upload } from 'antd';
-import { RcFile } from 'antd/es/upload/interface';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import Cron from 'react-js-cron';
+import 'react-js-cron/dist/styles.css';
 
-export const DockerConnectionForm = (props: any) => {
+const connectionTypes = [
+  {
+    value: 'userPwd',
+    label: 'User/Password',
+  },
+  { value: 'keyBased', label: 'Keys' },
+];
+
+export type ConfigurationFormDockerProps = {
+  deviceUuid: string;
+  deviceIp?: string;
+  dockerWatcher?: boolean;
+  dockerWatcherCron?: string;
+};
+
+export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
   const [showAdvanced, setShowAdvanced] = React.useState(false);
-  const beforeUpload = (file: RcFile) => {
-    const isPNG = file.type === 'image/png';
-    if (!isPNG) {
-      message.error(`${file.name} is not a png file`);
-    }
-    return isPNG || Upload.LIST_IGNORE;
+  const [dockerWatcher, setDockerWatcher] = React.useState(
+    props.dockerWatcher || true,
+  );
+  const [dockerWatcherCron, setDockerWatcherCron] = useState(
+    props.dockerWatcherCron,
+  );
+
+  const handleOnChangeDockerWatcher = async () => {
+    await updateDeviceDockerWatcher(props.deviceUuid, dockerWatcher).then(
+      (data) => {
+        setDockerWatcher(data.dockerWatcher);
+        message.success({ content: 'Setting updated' });
+      },
+    );
   };
+  const handleOnChangeDockerWatcherCron = async () => {
+    await updateDeviceDockerWatcher(
+      props.deviceUuid,
+      dockerWatcher,
+      dockerWatcherCron,
+    ).then(() => {
+      message.success({ content: 'Setting updated' });
+    });
+  };
+  useEffect(() => {
+    if (props.dockerWatcherCron !== dockerWatcherCron) {
+      handleOnChangeDockerWatcherCron();
+    }
+  }, [dockerWatcherCron]);
   return (
     <>
       <Card
@@ -44,7 +84,7 @@ export const DockerConnectionForm = (props: any) => {
           <>
             <Tooltip
               title={
-                'Ip of the host cannot be modified. Specify port and eventually enforce http/https.'
+                'Ip of the host cannot be modified. Disable/Enable containers watch, or specify in advanced options a different SSH connection method'
               }
             >
               <InfoCircleFilled />
@@ -62,46 +102,122 @@ export const DockerConnectionForm = (props: any) => {
             initialValue={props.deviceIp}
             rules={[{ required: true }]}
           />
-          <ProFormDigit
-            name="dockerPort"
-            label="Docker Port"
-            width="xs"
-            initialValue={3000}
-            rules={[
-              { required: true },
-              {
-                pattern: /^[0-9]+$/,
-                message: 'Please enter a number',
-              },
-            ]}
-            fieldProps={{ precision: 0 }}
+          <ProFormSwitch
+            checkedChildren={'Watch Docker containers'}
+            unCheckedChildren={'Docker containers not watched'}
+            fieldProps={{
+              value: dockerWatcher,
+              onChange: handleOnChangeDockerWatcher,
+            }}
           />
-          <ProFormSelect
-            label="Protocol"
-            name="dockerProtocol"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-            width="xs"
-            initialValue={'auto'}
-            options={[
-              {
-                value: 'auto',
-                label: 'auto',
-              },
-              {
-                value: 'http',
-                label: 'http',
-              },
-              {
-                value: 'https',
-                label: 'https',
-              },
-            ]}
-          />
+          {showAdvanced && (
+            <>
+              <ProFormSwitch
+                name={'customDockerSSH'}
+                label={
+                  <Tooltip
+                    title={
+                      'Use a different method to connect through SSH for Docker'
+                    }
+                  >
+                    Use custom Docker SSH Auth
+                  </Tooltip>
+                }
+              />
+              <ProFormDependency name={['customDockerSSH']}>
+                {({ customDockerSSH }) => {
+                  if (customDockerSSH === true) {
+                    return (
+                      <ProFormSelect
+                        label="SSH Connection Type"
+                        name="dockerCustomAuthType"
+                        width="sm"
+                        rules={[{ required: true }]}
+                        options={connectionTypes}
+                      />
+                    );
+                  }
+                }}
+              </ProFormDependency>
+            </>
+          )}
         </ProForm.Group>
+        {showAdvanced && (
+          <ProForm.Group>
+            <ProFormDependency name={['dockerCustomAuthType']}>
+              {({ dockerCustomAuthType }) => {
+                if (dockerCustomAuthType === 'userPwd')
+                  return (
+                    <ProForm.Group>
+                      <ProFormText
+                        name="dockerCustomSshUser"
+                        label="SSH User Name"
+                        width="xs"
+                        placeholder="root"
+                        rules={[{ required: true }]}
+                      />
+                      <ProFormText.Password
+                        name="dockerCustomSshPwd"
+                        label="SSH Password"
+                        width="sm"
+                        placeholder="password"
+                        rules={[{ required: true }]}
+                      />
+                    </ProForm.Group>
+                  );
+                if (dockerCustomAuthType === 'keyBased')
+                  return (
+                    <ProForm.Group>
+                      <ProFormText
+                        name="dockerCustomSshUser"
+                        label="SSH User Name"
+                        width="xs"
+                        placeholder="root"
+                        rules={[{ required: true }]}
+                      />
+                      <ProFormText.Password
+                        name="dockerCustomSshKeyPass"
+                        label="SSH Key Passphrase"
+                        width="xs"
+                        placeholder="passphrase"
+                        rules={[{ required: false }]}
+                      />
+                      <ProFormTextArea
+                        name="dockerCustomSshKey"
+                        label="SSH Private Key"
+                        width="md"
+                        placeholder="root"
+                        rules={[{ required: true }]}
+                      />
+                    </ProForm.Group>
+                  );
+              }}
+            </ProFormDependency>
+          </ProForm.Group>
+        )}
+      </Card>
+      <Card
+        type="inner"
+        title={
+          <CardHeader
+            title={'Docker Watcher Cron'}
+            color={'#3c8036'}
+            icon={<FieldTimeOutlined />}
+          />
+        }
+        style={{ marginBottom: 10 }}
+        styles={{
+          header: { height: 45, minHeight: 45, paddingLeft: 15 },
+          body: { paddingBottom: 0 },
+        }}
+      >
+        <Space direction={'horizontal'} style={{ width: '100%' }}>
+          <Cron
+            value={dockerWatcherCron || ''}
+            setValue={setDockerWatcherCron}
+            clearButton={false}
+          />
+        </Space>
       </Card>
       {showAdvanced && (
         <Card
@@ -118,47 +234,61 @@ export const DockerConnectionForm = (props: any) => {
             header: { height: 45, minHeight: 45, paddingLeft: 15 },
             body: { paddingBottom: 0 },
           }}
-          extra={
-            <>
-              <Tooltip title={'Docker connection with CA, Cert and Key'}>
-                <InfoCircleFilled />
-              </Tooltip>
-            </>
-          }
         >
           <ProForm.Group>
-            <ProFormUploadButton
-              name="ca"
-              label="CA"
-              title={'Upload'}
-              max={1}
-              fieldProps={{
-                name: 'file',
-                //beforeUpload: beforeUpload,
-                maxCount: 1,
-              }}
+            <ProFormDependency name={['customDockerForcev4']}>
+              {({ customDockerForcev4 }) => (
+                <ProFormSwitch
+                  name={'customDockerForcev6'}
+                  label={
+                    <Tooltip
+                      title={'Only connect via resolved IPv4 address for host.'}
+                    >
+                      Force IPV6
+                    </Tooltip>
+                  }
+                  disabled={customDockerForcev4}
+                />
+              )}
+            </ProFormDependency>
+            <ProFormDependency name={['customDockerForcev6']}>
+              {({ customDockerForcev6 }) => (
+                <ProFormSwitch
+                  name={'customDockerForcev4'}
+                  label={
+                    <Tooltip
+                      title={'Only connect via resolved IPv6 address for host.'}
+                    >
+                      Force IPV4
+                    </Tooltip>
+                  }
+                  disabled={customDockerForcev6}
+                />
+              )}
+            </ProFormDependency>
+            <ProFormSwitch
+              name={'customDockerAgentForward'}
+              label={
+                <Tooltip
+                  title={
+                    'Use OpenSSH agent forwarding (auth-agent@openssh. com) for the life of the connection.'
+                  }
+                >
+                  Agent Forward
+                </Tooltip>
+              }
             />
-            <ProFormUploadButton
-              name="cert"
-              label="Cert"
-              title={'Upload'}
-              max={1}
-              fieldProps={{
-                name: 'file',
-                //beforeUpload: beforeUpload,
-                maxCount: 1,
-              }}
-            />
-            <ProFormUploadButton
-              name="key"
-              label="Key"
-              title={'Upload'}
-              max={1}
-              fieldProps={{
-                name: 'file',
-                //beforeUpload: beforeUpload,
-                maxCount: 1,
-              }}
+            <ProFormSwitch
+              name={'customDockerTryKeyboard'}
+              label={
+                <Tooltip
+                  title={
+                    'Try keyboard-interactive user authentication if primary user authentication method fails.'
+                  }
+                >
+                  Try keyboard
+                </Tooltip>
+              }
             />
           </ProForm.Group>
         </Card>

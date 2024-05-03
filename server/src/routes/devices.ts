@@ -1,17 +1,20 @@
 import express from 'express';
 import passport from 'passport';
-import { addDevice, addDeviceAuto, deleteDevice, getDevices } from '../services/devices/device';
+import { addDevice, addDeviceAuto, deleteDevice, getDevices, updateDockerWatcher } from '../services/devices/device';
 import {
   addDeviceAutoValidator,
   addDeviceValidator,
   deleteDeviceValidator,
 } from '../services/devices/device.validator';
-import { addOrUpdateDeviceAuth, getDeviceAuth } from '../services/devices/deviceauth';
+import {
+  addOrUpdateDeviceAuth,
+  getDeviceAuth,
+  updateDockerAuth,
+} from '../services/devices/deviceauth';
 import {
   addOrUpdateDeviceAuthValidator,
   getDeviceAuthValidator,
 } from '../services/devices/deviceauth.validator';
-import { addOrUpdateDeviceContainers } from '../services/devices/devicecontainers';
 import {
   getDeviceStatByDeviceUuid,
   getDeviceStatsByDeviceUuid,
@@ -37,7 +40,6 @@ const router = express.Router();
 
 router.post(`/:uuid`, updateDeviceAndAddDeviceStatValidator, updateDeviceAndAddDeviceStat);
 router.post('/', addDeviceAutoValidator, addDeviceAuto);
-router.post('/containers/:uuid', addOrUpdateDeviceContainers);
 
 router.use(passport.authenticate('jwt', { session: false }));
 
@@ -53,6 +55,9 @@ router
   .route(`/:uuid/auth`)
   .get(getDeviceAuthValidator, getDeviceAuth)
   .post(addOrUpdateDeviceAuthValidator, addOrUpdateDeviceAuth);
+router.route('/:uuid/docker').post(updateDockerAuth);
+router.route('/:uuid/docker-watcher').post(updateDockerWatcher);
+
 router.route('/').put(addDeviceValidator, addDevice).get(getDevices);
 router.delete(`/:uuid`, deleteDeviceValidator, deleteDevice);
 router.get(`/:uuid/stats/:type/`, getDeviceStatsByDeviceUuidValidator, getDeviceStatsByDeviceUuid);

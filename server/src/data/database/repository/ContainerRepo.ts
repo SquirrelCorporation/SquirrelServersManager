@@ -7,7 +7,17 @@ import Container, { ContainerModel } from '../model/Container';
 import Device from '../model/Device';
 
 async function findAll() {
-  return await ContainerModel.find().lean().exec();
+  return await ContainerModel.aggregate([
+    {
+      $lookup: {
+        from: 'devices',
+        localField: 'device',
+        foreignField: '_id',
+        as: 'device',
+      },
+    },
+    { $unwind: '$device' },
+  ]).exec();
 }
 
 async function findContainerById(id: string) {

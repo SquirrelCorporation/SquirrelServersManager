@@ -9,15 +9,29 @@ import {
 import {
   createCustomRegistry,
   getRegistries,
+  removeRegistry,
+  resetRegistry,
   updateRegistry,
 } from '@/services/rest/containers';
+import { UndoOutlined } from '@ant-design/icons';
 import {
   ModalForm,
   ProForm,
   ProFormText,
   ProList,
 } from '@ant-design/pro-components';
-import { Alert, Avatar, Card, message, Space, Tag } from 'antd';
+import {
+  Alert,
+  Avatar,
+  Button,
+  Card,
+  message,
+  Popconfirm,
+  Space,
+  Tag,
+  Tooltip,
+} from 'antd';
+import { DeleteOutline } from 'antd-mobile-icons';
 import React, { useEffect, useState } from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -54,6 +68,16 @@ const RegistrySettings: React.FC = () => {
   const [ghost, setGhost] = useState<boolean>(false);
   const [modalOpened, setModalOpened] = useState<boolean>(false);
   const [selectedRecord, setSelectedRecord] = useState<any>();
+
+  const onDeleteRegistry = async (item: API.ContainerRegistry) => {
+    await removeRegistry(item.name);
+    asyncFetch();
+  };
+  const onResetRegistry = async (item: API.ContainerRegistry) => {
+    await resetRegistry(item.name);
+    asyncFetch();
+  };
+
   return (
     <Card>
       <ModalForm<any>
@@ -183,7 +207,7 @@ const RegistrySettings: React.FC = () => {
           ghost,
         }}
         pagination={{
-          defaultPageSize: 8,
+          defaultPageSize: 20,
           showSizeChanger: false,
         }}
         showActions="hover"
@@ -259,14 +283,52 @@ const RegistrySettings: React.FC = () => {
           })
           .map((item: API.ContainerRegistry) => ({
             title:
-              item.name === 'custom' ? 'Add a new custom provider' : item.name,
+              item.name === 'custom'
+                ? 'Add a new custom provider'
+                : item.name?.toUpperCase(),
             name: item.name,
             authScheme: item.authScheme,
             provider: item.provider,
             subTitle: <></>,
             canAuth: item.canAuth,
             authSet: item.authSet,
-            actions: [],
+            actions: [
+              item.name !== 'custom' && item.authSet ? (
+                item.provider === 'custom' ? (
+                  <Tooltip title={'Delete this custom registry'}>
+                    {' '}
+                    <Popconfirm
+                      title={
+                        'Are you sure ? This will delete the registry and auth data'
+                      }
+                      onConfirm={() => onDeleteRegistry(item)}
+                    >
+                      <Button danger icon={<DeleteOutline />}>
+                        Delete
+                      </Button>
+                    </Popconfirm>
+                  </Tooltip>
+                ) : (
+                  <Tooltip
+                    title={
+                      'Reset this registry back to anonymous authentication'
+                    }
+                  >
+                    <Popconfirm
+                      title={'Are you sure ? This will delete the auth data'}
+                      onConfirm={() => onResetRegistry(item)}
+                    >
+                      {' '}
+                      <Button danger icon={<UndoOutlined />}>
+                        Reset
+                      </Button>
+                    </Popconfirm>
+                  </Tooltip>
+                )
+              ) : (
+                <></>
+              ),
+            ],
             avatar: (
               <Avatar
                 size={50}
@@ -293,7 +355,7 @@ const RegistrySettings: React.FC = () => {
                     {(item.name !== 'custom' &&
                       ((item.authSet && (
                         <Tag color={'cyan'}>Authentified</Tag>
-                      )) || <Tag color={'magenta'}>Unauthentified</Tag>)) ||
+                      )) || <Tag color={'magenta'}>Anonymous</Tag>)) ||
                       ''}
                   </div>
                 </div>

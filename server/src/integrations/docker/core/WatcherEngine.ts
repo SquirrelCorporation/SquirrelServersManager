@@ -1,5 +1,7 @@
+import DeviceRepo from '../../../data/database/repository/DeviceRepo';
 import logger from '../../../logger';
 import ContainerRegistryUseCases from '../../../use-cases/ContainerRegistryUseCases';
+import DeviceUseCases from '../../../use-cases/DeviceUseCases';
 import Ecr from '../registries/providers/ecr/Ecr';
 import Gcr from '../registries/providers/gcr/Gcr';
 import Ghcr from '../registries/providers/ghcr/Ghcr';
@@ -10,7 +12,6 @@ import Registry from '../registries/Registry';
 import { SSMServicesTypes } from '../typings';
 import Docker from '../watchers/providers/docker/Docker';
 import Component from './Component';
-import ConfigurationRegistrySchema = SSMServicesTypes.ConfigurationRegistrySchema;
 
 export enum Kind {
   WATCHER = 'watcher',
@@ -95,7 +96,7 @@ async function registerComponent(
         break;
       case Kind.REGISTRY:
         state.registry[componentRegistered.getId()] = componentRegistered;
-        await ContainerRegistryUseCases.addIfNotExists(componentRegistered);
+        await ContainerRegistryUseCases.addIfNotExists(componentRegistered as Registry);
         break;
       default:
         throw new Error(`Unknown registering component: ${componentRegistered.getId()}`);
@@ -110,18 +111,18 @@ async function registerComponent(
  * @returns {Promise}
  */
 async function registerWatchers() {
-  const configurations: SSMServicesTypes.ConfigurationWatcherSchema[] = [
-    {
-      host: '0.0.0.0',
-      socket: '/var/run/docker.sock',
-      port: 2222,
-      cron: '0 * * * *',
+  const devicesToWatch = await DeviceUseCases.getDevicesToWatch();
+  const configurations = devicesToWatch?.map((device) => {
+    return {
+      cron: device.dockerWatcherCron,
       watchbydefault: true,
-    },
-  ];
+      deviceUuid: device.uuid,
+    };
+  });
+
   try {
     const watchersToRegister: any = [];
-    configurations.forEach((configuration) => {
+    configurations?.forEach((configuration) => {
       watchersToRegister.push(registerComponent(Kind.WATCHER, 'docker', 'docker', configuration));
     });
     await Promise.all(watchersToRegister);
@@ -136,14 +137,16 @@ async function registerWatchers() {
  * @returns {Promise}
  */
 async function registerRegistries() {
-  const configurations: SSMServicesTypes.UserConfigurationRegistrySchema[] = [
-    {
-      id: 'test',
-      provider: 'hub',
-      login: 'facos86@gmail.com',
-      password: '300186Manu!',
-    },
-  ];
+  const containerRegistries = await ContainerRegistryUseCases.listAllSetupRegistries();
+  const configurations = containerRegistries?.map((registry) => {
+    return {
+      ...{
+        name: registry.name,
+        provider: registry.provider,
+      },
+      ...registry.auth,
+    };
+  });
   const registriesToRegister: Record<string, any> = {};
 
   // Default registries
@@ -155,7 +158,7 @@ async function registerRegistries() {
   registriesToRegister['ghcr'] = async () => registerComponent(Kind.REGISTRY, 'ghcr', 'ghcr', {});
   registriesToRegister['quay'] = async () => registerComponent(Kind.REGISTRY, 'quay', 'quay', {});
   try {
-    configurations.forEach((configuration, index) => {
+    configurations?.forEach((configuration, index) => {
       registriesToRegister[configuration.provider] = async () =>
         registerComponent(
           Kind.REGISTRY,
@@ -164,14 +167,14 @@ async function registerRegistries() {
           configurations[index],
         );
     });
-    logger.info('Configuration registered will be processed...');
+    logger.info('[STATES] Configuration registered will be processed...');
     await Promise.all(
       Object.values(registriesToRegister)
         .sort()
         .map((registerFn) => registerFn()),
     );
   } catch (e: any) {
-    logger.warn(`Some registries failed to register (${e.message})`);
+    logger.warn(`[STATES] Some registries failed to register (${e.message})`);
     logger.debug(e);
   }
 }
@@ -182,16 +185,29 @@ async function registerRegistries() {
  * @param kind
  * @returns {Promise}
  */
-async function deregisterComponent(component: Component<SSMServicesTypes.ConfigurationSchema>) {
+async function deregisterComponent(
+  kind: Kind,
+  component: Component<SSMServicesTypes.ConfigurationSchema>,
+) {
   try {
     await component.deregister();
   } catch (e) {
     throw new Error(`Error when de-registering component ${component.getId()}`);
   } finally {
     let components: Registry[] | Docker[] | undefined = undefined;
-    components = getStates().registry;
+
+    switch (kind) {
+      case Kind.WATCHER:
+        components = getStates().watcher;
+        break;
+      case Kind.REGISTRY:
+        components = getStates().registry;
+        break;
+      default:
+        throw new Error(`Unknown kind: ${kind}`);
+    }
     if (components) {
-      delete components.find((e) => e.getId() === component.getId());
+      delete components[component.getId()];
     }
   }
 }
@@ -202,8 +218,13 @@ async function deregisterComponent(component: Component<SSMServicesTypes.Configu
  * @param kind
  * @returns {Promise}
  */
-async function deregisterComponents(components: Component<SSMServicesTypes.ConfigurationSchema>[]) {
-  const deregisterPromises = components.map(async (component) => deregisterComponent(component));
+async function deregisterComponents(
+  kind: Kind,
+  components: Component<SSMServicesTypes.ConfigurationSchema>[],
+) {
+  const deregisterPromises = components.map(async (component) =>
+    deregisterComponent(kind, component),
+  );
   return Promise.all(deregisterPromises);
 }
 
@@ -212,7 +233,15 @@ async function deregisterComponents(components: Component<SSMServicesTypes.Confi
  * @returns {Promise}
  */
 async function deregisterRegistries() {
-  return deregisterComponents(Object.values(getStates().registry));
+  return deregisterComponents(Kind.REGISTRY, Object.values(getStates().registry));
+}
+
+/**
+ * Deregister all registries.
+ * @returns {Promise}
+ */
+async function deregisterWatchers() {
+  return deregisterComponents(Kind.WATCHER, Object.values(getStates().watcher));
 }
 
 /**
@@ -222,6 +251,7 @@ async function deregisterRegistries() {
 async function deregisterAll() {
   try {
     await deregisterRegistries();
+    await deregisterWatchers();
   } catch (e: any) {
     throw new Error(`Error when trying to deregister ${e.message}`);
   }
@@ -239,4 +269,8 @@ async function init() {
 export default {
   getStates,
   init,
+  deregisterRegistries,
+  registerRegistries,
+  deregisterWatchers,
+  registerWatchers,
 };

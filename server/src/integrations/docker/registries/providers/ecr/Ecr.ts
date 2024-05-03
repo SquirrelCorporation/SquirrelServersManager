@@ -57,7 +57,6 @@ export default class Ecr extends Registry {
    */
   // eslint-disable-next-line class-methods-use-this
   match(image: SSMServicesTypes.Image) {
-    this.childLogger.info(`[ECR] - match`);
     return (
       /^.*\.dkr\.ecr\..*\.amazonaws\.com$/.test(image.registry.url) ||
       image.registry.url === ECR_PUBLIC_GALLERY_HOSTNAME

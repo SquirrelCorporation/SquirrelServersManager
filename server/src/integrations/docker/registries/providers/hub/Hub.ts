@@ -1,4 +1,5 @@
 import axios from 'axios';
+import logger from '../../../../../logger';
 import { SSMServicesTypes } from '../../../typings';
 import Custom from '../custom/Custom';
 
@@ -21,16 +22,28 @@ export default class Hub extends Custom {
         type: 'string',
       },
       {
-        name: 'password',
-        type: 'string',
-      },
-      {
-        name: 'token',
-        type: 'string',
-      },
-      {
-        name: 'auth',
-        type: 'string',
+        name: 'Connection type',
+        type: 'choice',
+        values: [
+          [
+            {
+              name: 'password',
+              type: 'string',
+            },
+          ],
+          [
+            {
+              name: 'token',
+              type: 'string',
+            },
+          ],
+          [
+            {
+              name: 'auth',
+              type: 'string',
+            },
+          ],
+        ],
       },
     ];
   }
@@ -73,7 +86,6 @@ export default class Hub extends Custom {
    */
   // eslint-disable-next-line class-methods-use-this
   match(image: SSMServicesTypes.Image) {
-    this.childLogger.info(`[HUB] - match`);
     return !image.registry.url || /^.*\.?docker.io$/.test(image.registry.url);
   }
 
@@ -115,6 +127,11 @@ export default class Hub extends Custom {
 
     // Add Authorization if any
     const credentials = this.getAuthCredentials();
+    if (credentials) {
+      this.childLogger.info(
+        '[HUB] An authentication credentials for registry docker.io has been set, trying...',
+      );
+    }
     if (credentials && request.headers) {
       request.headers.Authorization = `Basic ${credentials}`;
     }
@@ -124,6 +141,7 @@ export default class Hub extends Custom {
       if (requestOptionsWithAuth.headers) {
         requestOptionsWithAuth.headers.Authorization = `Bearer ${response.data.token}`;
       }
+      this.childLogger.info(`[HUB] - Authentication done - ${response.status}`);
       return requestOptionsWithAuth;
     } catch (e: any) {
       this.childLogger.error('[HUB] - Authentication failed');

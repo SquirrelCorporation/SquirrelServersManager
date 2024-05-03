@@ -1,5 +1,9 @@
 import { DockerConnectionForm } from '@/components/DeviceConfiguration/DockerConnectionForm';
-import { getDeviceAuth, putDeviceAuth } from '@/services/rest/deviceauth';
+import {
+  getDeviceAuth,
+  putDeviceAuth,
+  putDeviceDockerAuth,
+} from '@/services/rest/deviceauth';
 import { ProForm } from '@ant-design/pro-form/lib';
 import { message, Space } from 'antd';
 import React from 'react';
@@ -30,16 +34,17 @@ const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
         }}
         onFinish={async (values) => {
           if (props?.values?.uuid && values) {
-            await putDeviceAuth(props.values.uuid, {
-              sshPort: values.sshPort,
-              authType: values.authType,
-              sshUser: values.sshUser,
-              sshPwd: values.sshPwd,
-              sshKey: values.sshKey,
-              becomeUser: values.becomeUser,
-              becomeMethod: values.becomeMethod,
-              becomePass: values.becomePass,
-              strictHostChecking: values.strictHostChecking,
+            await putDeviceDockerAuth(props.values.uuid, {
+              customDockerSSH: values.customDockerSSH,
+              dockerCustomAuthType: values.dockerCustomAuthType,
+              dockerCustomSshUser: values.dockerCustomSshUser,
+              dockerCustomSshPwd: values.dockerCustomSshPwd,
+              dockerCustomSshKeyPass: values.dockerCustomSshKeyPass,
+              dockerCustomSshKey: values.dockerCustomSshKey,
+              customDockerForcev4: values.customDockerForcev4,
+              customDockerForcev6: values.customDockerForcev6,
+              customDockerAgentForward: values.customDockerAgentForward,
+              customDockerTryKeyboard: values.customDockerTryKeyboard,
             } as API.DeviceAuthParams)
               .then(() => {
                 message.success({
@@ -64,15 +69,16 @@ const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
           if (props?.values?.uuid) {
             return await getDeviceAuth(props.values.uuid).then((res) => {
               return {
-                sshPort: res.data.sshPort,
-                authType: res.data.authType,
-                sshUser: res.data.sshUser,
-                sshPwd: res.data.sshPwd,
-                sshKey: res.data.sshKey,
-                becomeUser: res.data.becomeUser,
-                becomeMethod: res.data.becomeMethod,
-                becomePass: res.data.becomePass,
-                strictHostChecking: res.data.strictHostChecking,
+                customDockerSSH: res.data.customDockerSSH,
+                dockerCustomAuthType: res.data.dockerCustomAuthType,
+                dockerCustomSshUser: res.data.dockerCustomSshUser,
+                dockerCustomSshPwd: res.data.dockerCustomSshPwd,
+                dockerCustomSshKeyPass: res.data.dockerCustomSshKeyPass,
+                dockerCustomSshKey: res.data.dockerCustomSshKey,
+                customDockerForcev4: res.data.customDockerForcev4,
+                customDockerForcev6: res.data.customDockerForcev6,
+                customDockerAgentForward: res.data.customDockerAgentForward,
+                customDockerTryKeyboard: res.data.customDockerTryKeyboard,
               };
             });
           } else {
@@ -83,7 +89,12 @@ const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
           }
         }}
       >
-        <DockerConnectionForm deviceIp={props.values.ip} />
+        <DockerConnectionForm
+          deviceIp={props.values.ip}
+          dockerWatcher={props.values.dockerWatcher}
+          dockerWatcherCron={props.values.dockerWatcherCron}
+          deviceUuid={props.values.uuid}
+        />
       </ProForm>
     </>
   );

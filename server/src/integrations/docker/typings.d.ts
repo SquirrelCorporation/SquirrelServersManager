@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Container from '../../data/database/model/Container';
+import Device from '../../data/database/model/Device';
 
 export declare namespace SSMServicesTypes {
   export type ConfigurationRegistrySchema = {
@@ -24,11 +25,7 @@ export declare namespace SSMServicesTypes {
   };
 
   export type ConfigurationWatcherSchema = {
-    socket: string;
-    host: string;
-    port: number;
-    username?: string;
-    password?: string;
+    socket?: string;
     cafile?: string;
     certfile?: string;
     keyfile?: string;
@@ -37,6 +34,7 @@ export declare namespace SSMServicesTypes {
     watchall?: boolean;
     watchdigest?: any;
     watchevents?: boolean;
+    deviceUuid: string;
   };
 
   export type ConfigurationTriggerSchema = {

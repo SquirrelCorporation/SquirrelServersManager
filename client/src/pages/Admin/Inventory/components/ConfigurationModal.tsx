@@ -1,5 +1,6 @@
 import { DockerConnectionForm } from '@/components/DeviceConfiguration/DockerConnectionForm';
 import { UilDocker, WhhSsh } from '@/components/Icons/CustomIcons';
+import DockerConfigurationForm from '@/pages/Admin/Inventory/components/DockerConfigurationForm';
 import { Modal, Tabs, TabsProps } from 'antd';
 import React from 'react';
 import SSHConfigurationForm from '@/pages/Admin/Inventory/components/SSHConfigurationForm';
@@ -21,7 +22,7 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
     {
       key: '2',
       label: 'Docker',
-      children: <DockerConnectionForm values={props.values} />,
+      children: <DockerConfigurationForm values={props.values} />,
     },
   ];
 

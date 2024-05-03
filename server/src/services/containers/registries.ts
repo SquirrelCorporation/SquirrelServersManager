@@ -1,4 +1,4 @@
-import { BadRequestError, NotFoundError } from '../../core/api/ApiError';
+import { BadRequestError, ForbiddenError, NotFoundError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
 import ContainerRegistryRepo from '../../data/database/repository/ContainerRegistryRepo';
 import asyncHandler from '../../helpers/AsyncHandler';
@@ -33,4 +33,29 @@ export const createCustomRegistry = asyncHandler(async (req, res) => {
   }
   await ContainerRegistryUseCases.createCustomRegistry(name, req.body.auth, req.body.authScheme);
   new SuccessResponse('Get registries', {}).send(res);
+});
+
+export const resetRegistry = asyncHandler(async (req, res) => {
+  const { name } = req.params;
+  const containerRegistry = await ContainerRegistryRepo.findOneByName(name);
+  if (!containerRegistry) {
+    logger.error('[CONTROLLER] - DELETE - Container Registry - Registry not found');
+    throw new NotFoundError(`Registry not found (${name})`);
+  }
+  await ContainerRegistryUseCases.removeRegistryAuth(containerRegistry);
+  new SuccessResponse('Reset registry', {}).send(res);
+});
+
+export const removeRegistry = asyncHandler(async (req, res) => {
+  const { name } = req.params;
+  const containerRegistry = await ContainerRegistryRepo.findOneByName(name);
+  if (!containerRegistry) {
+    logger.error('[CONTROLLER] - DELETE - Container Registry - Registry not found');
+    throw new NotFoundError(`Registry not found (${name})`);
+  }
+  if (containerRegistry.provider !== 'custom') {
+    throw new ForbiddenError('You cannot delete a non custom registry provider');
+  }
+  await ContainerRegistryRepo.deleteOne(containerRegistry);
+  new SuccessResponse('Remove registry', {}).send(res);
 });

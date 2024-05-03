@@ -2,7 +2,7 @@ import Dockerode from 'dockerode';
 import ContainerRepo from '../../../data/database/repository/ContainerRepo';
 import logger from '../../../logger';
 import Registry from '../registries/Registry';
-import registry from '../core/States';
+import registry from '../core/WatcherEngine';
 import Container from '../../../data/database/model/Container';
 import Tag from './tag';
 import tagUtil from './tag';

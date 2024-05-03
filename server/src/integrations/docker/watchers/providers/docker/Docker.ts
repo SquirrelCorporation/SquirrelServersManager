@@ -1,17 +1,20 @@
-import * as fs from 'node:fs';
 import debounce from 'debounce';
 import Dockerode, { ContainerInfo } from 'dockerode';
+import cron from 'node-cron';
 import parse from 'parse-docker-image-name';
 import { ConnectConfig } from 'ssh2';
-import { API } from 'ssm-shared-lib';
-import cron from 'node-cron';
-import ContainerRepo from '../../../../../data/database/repository/ContainerRepo';
-import logger from '../../../../../logger';
-import { SSMServicesTypes } from '../../../typings';
-import EventHandler from '../../../event/EventHandler';
-import Component from '../../../core/Component';
-import { Label } from '../../../utils/label';
+import { SSHType } from 'ssm-shared-lib/distribution/enums/ansible';
 import Container from '../../../../../data/database/model/Container';
+import ContainerRepo from '../../../../../data/database/repository/ContainerRepo';
+import DeviceAuthRepo from '../../../../../data/database/repository/DeviceAuthRepo';
+import DeviceRepo from '../../../../../data/database/repository/DeviceRepo';
+import logger from '../../../../../logger';
+import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../../../ansible-vault/vault';
+import Component from '../../../core/Component';
+import EventHandler from '../../../event/EventHandler';
+import { SSMServicesTypes } from '../../../typings';
+import { Label } from '../../../utils/label';
+import tag from '../../../utils/tag';
 import {
   fullName,
   getContainerName,
@@ -24,7 +27,6 @@ import {
   normalizeContainer,
   pruneOldContainers,
 } from '../../../utils/utils';
-import tag from '../../../utils/tag';
 import ConfigurationWatcherSchema = SSMServicesTypes.ConfigurationWatcherSchema;
 
 // The delay before starting the watcher when the app is started
@@ -38,7 +40,8 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
   public watchCronTimeout: any;
   public watchCronDebounced: any;
   public listenDockerEventsTimeout: any;
-  public dockerApi: any;
+  // @ts-ignore
+  public dockerApi: Dockerode;
 
   getConfigurationSchema() {
     return this.joi.object().keys({
@@ -54,13 +57,14 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
       watchbydefault: this.joi.boolean().default(true),
       watchall: this.joi.boolean().default(false),
       watchevents: this.joi.boolean().default(true),
+      deviceUuid: this.joi.string().required(),
     });
   }
   /**
    * Init the Watcher.
    */
   async init() {
-    this.initWatcher();
+    await this.initWatcher();
     if (this.configuration.watchdigest !== undefined) {
       this.childLogger.warn(
         "WUD_WATCHER_{watcher_name}_WATCHDIGEST environment variable is deprecated and won't be supported in upcoming versions",
@@ -84,31 +88,70 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
     }
   }
 
-  initWatcher() {
+  async initWatcher() {
+    const device = await DeviceRepo.findOneByUuid(this.configuration.deviceUuid);
+    if (!device) {
+      throw new Error(`Device not found: ${this.configuration.deviceUuid}`);
+    }
+    const deviceAuth = await DeviceAuthRepo.findOneByDevice(device);
+    if (!deviceAuth) {
+      throw new Error(`DeviceAuth not found: ${this.configuration.deviceUuid}`);
+    }
     const options: Dockerode.DockerOptions = {};
-    /* if (this.configuration.host) {
-      options.host = this.configuration.host;
-      options.port = this.configuration.port;
-      if (this.configuration.cafile) {
-        options.ca = fs.readFileSync(this.configuration.cafile);
-      }
-      if (this.configuration.certfile) {
-        options.cert = fs.readFileSync(this.configuration.certfile);
-      }
-      if (this.configuration.keyfile) {
-        options.key = fs.readFileSync(this.configuration.keyfile);
+    options.protocol = 'ssh';
+    options.port = deviceAuth.sshPort;
+    options.username = deviceAuth.sshUser;
+    //TODO: If device change ip, reset watchers
+    options.host = device.ip;
+    const basedSshOptions = {
+      tryKeyboard: deviceAuth.customDockerTryKeyboard,
+      forceIPv4: deviceAuth.customDockerForcev4,
+      forceIPv6: deviceAuth.customDockerForcev6,
+      host: device.ip,
+      port: deviceAuth.sshPort,
+      debug: (message) => {
+        logger.debug(message);
+      },
+    };
+    let sshOptions = {};
+    if (deviceAuth.customDockerSSH) {
+      if (deviceAuth.dockerCustomAuthType === SSHType.KeyBased) {
+        sshOptions = {
+          username: deviceAuth.dockerCustomSshUser,
+          privateKey: await vaultDecrypt(deviceAuth.dockerCustomSshKey as string, DEFAULT_VAULT_ID),
+          passphrase: deviceAuth.dockerCustomSshKeyPass
+            ? await vaultDecrypt(deviceAuth.dockerCustomSshKeyPass as string, DEFAULT_VAULT_ID)
+            : undefined,
+        } as ConnectConfig;
+      } else if (deviceAuth.dockerCustomAuthType === SSHType.UserPassword) {
+        sshOptions = {
+          username: deviceAuth.dockerCustomSshUser,
+          password: await vaultDecrypt(deviceAuth.dockerCustomSshPwd as string, DEFAULT_VAULT_ID),
+        } as ConnectConfig;
       }
     } else {
-      options.socketPath = this.configuration.socket;
-    }*/
-    const sshOptions: ConnectConfig = {
-      host: this.configuration.host,
-      port: this.configuration.port,
-      username: this.configuration.username,
-      password: this.configuration.password,
-    };
-    options.sshOptions = sshOptions;
-    this.dockerApi = new Dockerode(options);
+      if (deviceAuth.authType === SSHType.KeyBased) {
+        sshOptions = {
+          username: deviceAuth.sshUser,
+          privateKey: await vaultDecrypt(deviceAuth.sshKey as string, DEFAULT_VAULT_ID),
+          passphrase: deviceAuth.sshKeyPass
+            ? await vaultDecrypt(deviceAuth.sshKeyPass as string, DEFAULT_VAULT_ID)
+            : undefined,
+        } as ConnectConfig;
+      } else if (deviceAuth.authType === SSHType.UserPassword) {
+        sshOptions = {
+          username: deviceAuth.sshUser,
+          password: await vaultDecrypt(deviceAuth.sshPwd as string, DEFAULT_VAULT_ID),
+        } as ConnectConfig;
+      }
+    }
+    options.sshOptions = { ...basedSshOptions, ...sshOptions };
+    logger.debug(options);
+    try {
+      this.dockerApi = new Dockerode(options);
+    } catch (error: any) {
+      logger.error(error);
+    }
   }
 
   /**
@@ -159,14 +202,18 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
         event: ['create', 'destroy', 'start', 'stop', 'pause', 'unpause', 'die', 'update'],
       },
     };
-    this.dockerApi.getEvents(options, (err, stream) => {
-      if (err) {
-        this.childLogger.warn(`Unable to listen to Docker events [${err.message}]`);
-        this.childLogger.debug(err);
-      } else {
-        stream?.on('data', (chunk) => this.onDockerEvent(chunk));
-      }
-    });
+    try {
+      this.dockerApi.getEvents(options, (err, stream) => {
+        if (err) {
+          this.childLogger.warn(`Unable to listen to Docker events [${err.message}]`);
+          this.childLogger.debug(err);
+        } else {
+          stream?.on('data', (chunk) => this.onDockerEvent(chunk));
+        }
+      });
+    } catch (error: any) {
+      logger.error(error);
+    }
   }
 
   /**
@@ -269,6 +316,7 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
   /**
    * Watch a Container.
    * @param container
+   * @param device
    * @returns {Promise<*>}
    */
   async watchContainer(container: Container) {
@@ -407,94 +455,110 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
     displayName: string,
     displayIcon: string,
   ) {
-    const containerId = container.Id;
+    try {
+      const containerId = container.Id;
 
-    // Is container already in store? just return it :)
-    const containerInStore = await ContainerRepo.findContainerById(containerId);
-    if (
-      containerInStore !== undefined &&
-      containerInStore !== null &&
-      containerInStore.error === undefined
-    ) {
-      this.childLogger.info(`Container ${containerInStore.id} already in store`);
-      return containerInStore;
-    }
-    this.childLogger.info(`[DOCKER] ${container.Id} addImageDetailsToContainer - getImage`);
-    const img = await this.dockerApi.getImage(container.Image);
-    // Get container image details
-    this.childLogger.info(`[DOCKER] ${container.Id} addImageDetailsToContainer - inspect`);
-    const image = await img.inspect();
-    this.childLogger.info(`[DOCKER] ${container.Id} addImageDetailsToContainer - distribution`);
-    const distribution = await img.distribution();
-    // Get useful properties
-    const containerName = getContainerName(container);
-    const status = container.State;
-    const architecture = image.Architecture;
-    const os = image.Os;
-    const variant = distribution.Platforms.map((e) => e.variant);
-    const created = image.Created;
-    const repoDigest = getRepoDigest(image);
-    const imageId = image.Id;
-
-    // Parse image to get registries, organization...
-    let imageNameToParse = container.Image;
-    if (imageNameToParse.includes('sha256:')) {
-      if (!image.RepoTags || image.RepoTags.length === 0) {
-        this.childLogger.warn(`Cannot get a reliable tag for this image [${imageNameToParse}]`);
-        return undefined;
+      // Is container already in store? just return it :)
+      const containerInStore = await ContainerRepo.findContainerById(containerId);
+      if (
+        containerInStore !== undefined &&
+        containerInStore !== null &&
+        containerInStore.error === undefined
+      ) {
+        this.childLogger.info(
+          `[DOCKER] addImageDetailsToContainer - Container ${container.Image} already in store`,
+        );
+        return containerInStore;
       }
-      // Get the first repo tag (better than nothing ;)
-      [imageNameToParse] = image.RepoTags;
-    }
-    const parsedImage = parse(imageNameToParse);
-    const tagName = parsedImage.tag || 'latest';
-    const parsedTag = tag.parseSemver(tag.transformTag(transformTags, tagName));
-    const isSemver = parsedTag !== null && parsedTag !== undefined;
-    const watchDigest = isDigestToWatch(container.Labels[Label.wudWatchDigest], isSemver);
-    if (!isSemver && !watchDigest) {
-      this.childLogger.warn(
-        "Image is not a semver and digest watching is disabled so wud won't report any update. Please review the configuration to enable digest watching for this container or exclude this container from being watched",
+      this.childLogger.info(`[DOCKER] addImageDetailsToContainer - getImage: ${container.Image}`);
+      const img = this.dockerApi.getImage(container.Image);
+      const containerStats = await this.dockerApi.getContainer(containerId).stats();
+      this.childLogger.info(JSON.stringify(containerStats));
+      // Get container image details
+      this.childLogger.info(`[DOCKER] addImageDetailsToContainer - inspect: ${container.Image}`);
+      const image = await img.inspect();
+      this.childLogger.info(
+        `[DOCKER] addImageDetailsToContainer - distribution: ${container.Image}`,
       );
+      const distribution = await img.distribution();
+      // Get useful properties
+      const containerName = getContainerName(container);
+      const status = container.State;
+      const architecture = image.Architecture;
+      const os = image.Os;
+      const variant = distribution.Platforms.map((e) => e.variant);
+      const created = image.Created;
+      const repoDigest = getRepoDigest(image);
+      const imageId = image.Id;
+
+      // Parse image to get registries, organization...
+      let imageNameToParse = container.Image;
+      if (imageNameToParse.includes('sha256:')) {
+        if (!image.RepoTags || image.RepoTags.length === 0) {
+          this.childLogger.warn(
+            `[DOCKER] addImageDetailsToContainer - Cannot get a reliable tag for this image [${imageNameToParse}]`,
+          );
+          return undefined;
+        }
+        // Get the first repo tag (better than nothing ;)
+        [imageNameToParse] = image.RepoTags;
+      }
+      const parsedImage = parse(imageNameToParse);
+      const tagName = parsedImage.tag || 'latest';
+      const parsedTag = tag.parseSemver(tag.transformTag(transformTags, tagName));
+      const isSemver = parsedTag !== null && parsedTag !== undefined;
+      const watchDigest = isDigestToWatch(container.Labels[Label.wudWatchDigest], isSemver);
+      if (!isSemver && !watchDigest) {
+        this.childLogger.warn(
+          "[DOCKER] addImageDetailsToContainer - Image is not a semver and digest watching is disabled so wud won't report any update. Please review the configuration to enable digest watching for this container or exclude this container from being watched",
+        );
+      }
+      return normalizeContainer({
+        id: containerId,
+        name: containerName || 'unknown',
+        status,
+        watcher: this.name,
+        includeTags,
+        excludeTags,
+        transformTags,
+        linkTemplate,
+        displayName,
+        displayIcon,
+        image: {
+          id: imageId,
+          registry: {
+            url: parsedImage.domain,
+          },
+          name: parsedImage.path,
+          tag: {
+            value: tagName,
+            semver: isSemver,
+          },
+          digest: {
+            watch: watchDigest,
+            repo: repoDigest,
+          },
+          architecture,
+          os,
+          variant,
+          created,
+        },
+        result: {
+          tag: tagName,
+        },
+      });
+    } catch (error: any) {
+      logger.error(
+        `[DOCKER] addImageDetailsToContainer - Error during normalizing image ${container.Image}`,
+      );
+      logger.error(error);
     }
-    return normalizeContainer({
-      id: containerId,
-      name: containerName || 'unknown',
-      status,
-      watcher: this.name,
-      includeTags,
-      excludeTags,
-      transformTags,
-      linkTemplate,
-      displayName,
-      displayIcon,
-      image: {
-        id: imageId,
-        registry: {
-          url: parsedImage.domain,
-        },
-        name: parsedImage.path,
-        tag: {
-          value: tagName,
-          semver: isSemver,
-        },
-        digest: {
-          watch: watchDigest,
-          repo: repoDigest,
-        },
-        architecture,
-        os,
-        variant,
-        created,
-      },
-      result: {
-        tag: tagName,
-      },
-    });
   }
 
   /**
    * Process a Container with result and map to a containerReport.
    * @param containerWithResult
+   * @param device
    * @return {*}
    */
   async mapContainerToContainerReport(containerWithResult: Container) {
@@ -502,14 +566,17 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
       container: containerWithResult,
       changed: false,
     };
-
+    const device = await DeviceRepo.findOneByUuid(this.configuration.deviceUuid);
+    if (!device) {
+      throw new Error(`Device not found: ${this.configuration.deviceUuid}`);
+    }
     // Find container in db & compare
     const containerInDb = await ContainerRepo.findContainerById(containerWithResult.id);
 
     // Not found in DB? => Save it
     if (!containerInDb) {
       this.childLogger.debug('Container watched for the first time');
-      containerReport.container = await ContainerRepo.createContainer(containerWithResult);
+      containerReport.container = await ContainerRepo.createContainer(containerWithResult, device);
       containerReport.changed = true;
 
       // Found in DB? => update it
@@ -522,6 +589,17 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
     }
     return containerReport;
   }
-}
 
-module.exports = Docker;
+  /**
+   * Sanitize sensitive data
+   * @returns {*}
+   */
+  maskConfiguration() {
+    return {
+      ...this.configuration,
+      cafile: Component.mask(this.configuration.cafile),
+      certfile: Component.mask(this.configuration.certfile),
+      keyfile: Component.mask(this.configuration.keyfile),
+    };
+  }
+}

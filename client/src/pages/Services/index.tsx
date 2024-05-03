@@ -1,12 +1,24 @@
 import ServiceQuickActionDropDown from '@/components/ServiceComponents/ServiceQuickAction/ServiceQuickActionDropDown';
+import ServiceQuickActionReference, {
+  ServiceQuickActionReferenceActions,
+  ServiceQuickActionReferenceTypes,
+} from '@/components/ServiceComponents/ServiceQuickAction/ServiceQuickActionReference';
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
 import InfoToolTipCard from '@/pages/Services/components/InfoToolTipCard';
 import StatusTag from '@/pages/Services/components/StatusTag';
 import UpdateAvailableTag from '@/pages/Services/components/UpdateAvailableTag';
-import { getContainers } from '@/services/rest/containers';
+import {
+  getContainers,
+  updateContainerCustomName,
+} from '@/services/rest/containers';
 import { AppstoreOutlined, InfoCircleOutlined } from '@ant-design/icons';
-import { PageContainer, ProList } from '@ant-design/pro-components';
-import { Avatar, Flex, Progress, Tag, Tooltip } from 'antd';
+import {
+  ModalForm,
+  PageContainer,
+  ProFormText,
+  ProList,
+} from '@ant-design/pro-components';
+import { Avatar, Flex, message, Progress, Tag, Tooltip } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -14,6 +26,12 @@ const Index: React.FC = () => {
   const [cardActionProps] = useState<'actions' | 'extra'>('extra');
   const [ghost] = useState<boolean>(false);
   const [containers, setContainers] = useState<API.Container[]>([]);
+  const [
+    isEditContainerCustomNameModalOpened,
+    setIsEditContainerCustomNameModalOpened,
+  ] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState();
+
   const asyncFetch = async () => {
     await getContainers().then((list) => {
       if (list?.data) {
@@ -24,6 +42,20 @@ const Index: React.FC = () => {
   useEffect(() => {
     asyncFetch();
   }, []);
+
+  const handleQuickAction = (idx: number) => {
+    if (
+      ServiceQuickActionReference[idx].type ===
+      ServiceQuickActionReferenceTypes.ACTION
+    ) {
+      if (
+        ServiceQuickActionReference[idx].action ===
+        ServiceQuickActionReferenceActions.RENAME
+      ) {
+        setIsEditContainerCustomNameModalOpened(true);
+      }
+    }
+  };
 
   const colorPalette = [
     '#f56a00',
@@ -50,6 +82,34 @@ const Index: React.FC = () => {
         ),
       }}
     >
+      <ModalForm<{ customName: string }>
+        title={`Edit container name`}
+        open={isEditContainerCustomNameModalOpened}
+        autoFocusFirstInput
+        modalProps={{
+          destroyOnClose: true,
+          onCancel: () => setIsEditContainerCustomNameModalOpened(false),
+        }}
+        onFinish={async (values) => {
+          if (!selectedRecord) {
+            message.error({ content: 'Internal error, no selected record' });
+          }
+          await updateContainerCustomName(
+            values.customName,
+            selectedRecord?.id,
+          );
+          await asyncFetch();
+          setIsEditContainerCustomNameModalOpened(false);
+          message.success({ content: 'Container properties updated' });
+          return true;
+        }}
+      >
+        <ProFormText
+          name={'customName'}
+          label={'Name'}
+          initialValue={selectedRecord?.title}
+        />
+      </ModalForm>
       <ProList<any>
         size={'large'}
         ghost={ghost}
@@ -66,10 +126,10 @@ const Index: React.FC = () => {
         onItem={(record: any) => {
           return {
             onMouseEnter: () => {
-              console.log(record);
+              setSelectedRecord(record);
             },
             onClick: () => {
-              console.log(record);
+              setSelectedRecord(record);
             },
           };
         }}
@@ -80,10 +140,12 @@ const Index: React.FC = () => {
           avatar: {},
           content: {},
           actions: { cardActionProps },
+          id: {},
         }}
         headerTitle="Containers"
         dataSource={containers.map((item) => ({
-          title: item.name,
+          id: item.id,
+          title: item.customName || item.name,
           subTitle: (
             <>
               <StatusTag status={item.status} />
@@ -103,7 +165,9 @@ const Index: React.FC = () => {
                 console.log(item);
               }}
             >
-              <ServiceQuickActionDropDown onDropDownClicked={() => {}} />
+              <ServiceQuickActionDropDown
+                onDropDownClicked={handleQuickAction}
+              />
             </a>,
           ],
           avatar: (
@@ -118,7 +182,7 @@ const Index: React.FC = () => {
                   ],
               }}
             >
-              {item.name?.slice(0, 4)}
+              {item.customName?.slice(0, 4) || item.name?.slice(0, 4)}
             </Avatar>
           ),
           content: (
@@ -133,7 +197,7 @@ const Index: React.FC = () => {
                 }}
               >
                 <div>
-                  On <Tag color="black">127.0.0.1 </Tag>
+                  On <Tag color="black">{item.device?.ip}</Tag>
                 </div>
                 <Flex gap="middle">
                   <Progress

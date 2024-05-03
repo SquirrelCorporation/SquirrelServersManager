@@ -12,7 +12,12 @@ async function findOneByName(name: string): Promise<ContainerRegistry | null> {
   return await ContainerRegistryModel.findOne({ name: name }).lean().exec();
 }
 
+async function findMany(filter: any): Promise<ContainerRegistry[] | null> {
+  return await ContainerRegistryModel.find(filter).lean().exec();
+}
+
 async function updateOne(registry: ContainerRegistry) {
+  // @ts-ignore
   return await ContainerRegistryModel.updateOne({ _id: registry._id }, registry).exec();
 }
 
@@ -21,10 +26,16 @@ async function create(containerRegistry: ContainerRegistry) {
   return createdObject.toObject();
 }
 
+async function deleteOne(containerRegistry: ContainerRegistry) {
+  await ContainerRegistryModel.deleteOne(containerRegistry);
+}
+
 export default {
   findOneByProvider,
   create,
   findAll,
   findOneByName,
   updateOne,
+  deleteOne,
+  findMany,
 };

@@ -1,5 +1,6 @@
-import { Types } from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionReference';
-import ServiceQuickActionReference from '@/components/ServiceComponents/ServiceQuickAction/ServiceQuickActionReference';
+import ServiceQuickActionReference, {
+  ServiceQuickActionReferenceTypes,
+} from '@/components/ServiceComponents/ServiceQuickAction/ServiceQuickActionReference';
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, MenuProps, Space } from 'antd';
 import { ItemType } from 'rc-menu/es/interface';
@@ -13,9 +14,6 @@ export type ServiceQuickActionProps = {
 const ServiceQuickActionDropDown: React.FC<ServiceQuickActionProps> = (
   props,
 ) => {
-  const [playbookSelectionModalIsOpened, setPlaybookSelectionModalIsOpened] =
-    React.useState(false);
-
   const onClick: MenuProps['onClick'] = ({ key }) => {
     const idx = parseInt(key);
     if (idx >= 0) {
@@ -24,10 +22,12 @@ const ServiceQuickActionDropDown: React.FC<ServiceQuickActionProps> = (
         return;
       }
     }
+    props.onDropDownClicked(idx);
   };
 
   const items = ServiceQuickActionReference.map((e, index) => {
-    if (e.type === Types.DIVIDER) return { type: 'divider' };
+    if (e.type === ServiceQuickActionReferenceTypes.DIVIDER)
+      return { type: 'divider' };
     return {
       label: e.label,
       key: `${index}`,

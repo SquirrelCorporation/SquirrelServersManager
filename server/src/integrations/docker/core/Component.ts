@@ -2,7 +2,7 @@ import Joi from 'joi';
 import _joi from 'joi';
 import logger from '../../../logger';
 import { SSMServicesTypes } from '../typings';
-import { Kind } from './States';
+import { Kind } from './WatcherEngine';
 import ConfigurationRegistrySchema = SSMServicesTypes.ConfigurationRegistrySchema;
 import ConfigurationTriggerSchema = SSMServicesTypes.ConfigurationTriggerSchema;
 import ConfigurationWatcherSchema = SSMServicesTypes.ConfigurationWatcherSchema;
@@ -19,7 +19,7 @@ export default class Component<
   public type: string;
   public name: string;
   public configuration: T;
-  public childLogger;
+  public childLogger: any;
   public kind: Kind;
 
   /**

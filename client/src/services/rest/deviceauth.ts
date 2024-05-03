@@ -25,3 +25,15 @@ export async function putDeviceAuth(
     ...(options || {}),
   });
 }
+
+export async function putDeviceDockerAuth(
+  deviceId: string,
+  data: API.DeviceDockerAuthParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.SimpleResult>(`/api/devices/${deviceId}/docker`, {
+    method: 'POST',
+    data: data,
+    ...(options || {}),
+  });
+}

@@ -44,6 +44,34 @@ export async function updateRegistry(
   });
 }
 
+export async function resetRegistry(
+  name: string,
+  params?: any,
+  options?: Record<string, any>,
+) {
+  return request<API.SimpleResult>(`/api/containers/registries/${name}`, {
+    method: 'PATCH',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+export async function removeRegistry(
+  name: string,
+  params?: any,
+  options?: Record<string, any>,
+) {
+  return request<API.SimpleResult>(`/api/containers/registries/${name}`, {
+    method: 'DELETE',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 export async function createCustomRegistry(
   name: string,
   auth: any,
@@ -54,6 +82,22 @@ export async function createCustomRegistry(
   return request<API.SimpleResult>(`/api/containers/registries/${name}`, {
     method: 'PUT',
     data: { auth: auth, authScheme: authScheme },
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+export async function updateContainerCustomName(
+  customName: string,
+  containerId: string,
+  params?: any,
+  options?: Record<string, any>,
+) {
+  return request<API.SimpleResult>(`/api/containers/${containerId}/name`, {
+    method: 'POST',
+    data: { customName: customName },
     params: {
       ...params,
     },

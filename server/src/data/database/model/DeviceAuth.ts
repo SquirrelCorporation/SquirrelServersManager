@@ -11,6 +11,7 @@ export default interface DeviceAuth {
   sshUser?: string;
   sshPwd?: string;
   sshKey?: string;
+  sshKeyPass?: string;
   sshPort?: number;
   becomePass?: string;
   becomeMethod?: string;
@@ -20,6 +21,16 @@ export default interface DeviceAuth {
   becomeUser?: string;
   sshCommonArgs?: string;
   sshExecutable?: string;
+  customDockerSSH?: boolean;
+  dockerCustomAuthType?: SSHType;
+  dockerCustomSshUser?: string;
+  dockerCustomSshPwd?: string;
+  dockerCustomSshKeyPass?: string;
+  dockerCustomSshKey?: string;
+  customDockerForcev6?: boolean;
+  customDockerForcev4?: boolean;
+  customDockerAgentForward?: boolean;
+  customDockerTryKeyboard?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -48,6 +59,10 @@ const schema = new Schema<DeviceAuth>(
       required: false,
     },
     sshKey: {
+      type: Schema.Types.String,
+      required: false,
+    },
+    sshKeyPass: {
       type: Schema.Types.String,
       required: false,
     },
@@ -84,6 +99,47 @@ const schema = new Schema<DeviceAuth>(
       required: false,
     },
     becomeFlags: {
+      type: Schema.Types.String,
+      required: false,
+    },
+    customDockerSSH: {
+      type: Schema.Types.Boolean,
+      default: false,
+    },
+    customDockerAgentForward: {
+      type: Schema.Types.Boolean,
+      default: false,
+    },
+    customDockerForcev4: {
+      type: Schema.Types.Boolean,
+      default: false,
+    },
+    customDockerForcev6: {
+      type: Schema.Types.Boolean,
+      default: false,
+    },
+    customDockerTryKeyboard: {
+      type: Schema.Types.Boolean,
+      default: false,
+    },
+    dockerCustomAuthType: {
+      type: Schema.Types.String,
+      enum: SSHType,
+      required: false,
+    },
+    dockerCustomSshKey: {
+      type: Schema.Types.String,
+      required: false,
+    },
+    dockerCustomSshKeyPass: {
+      type: Schema.Types.String,
+      required: false,
+    },
+    dockerCustomSshPwd: {
+      type: Schema.Types.String,
+      required: false,
+    },
+    dockerCustomSshUser: {
       type: Schema.Types.String,
       required: false,
     },

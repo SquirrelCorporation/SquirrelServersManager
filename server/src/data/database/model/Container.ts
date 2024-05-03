@@ -9,6 +9,7 @@ export default interface Container {
   device: Device;
   id: string;
   name: string;
+  customName?: string;
   displayName: string;
   displayIcon: string;
   status: string;
@@ -97,6 +98,9 @@ const schema = new Schema<Container>(
     updateKind: {
       type: Object,
     },
+    customName: {
+      type: Schema.Types.String,
+    }
   },
   {
     versionKey: false,

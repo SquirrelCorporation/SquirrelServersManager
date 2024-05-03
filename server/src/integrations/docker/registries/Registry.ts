@@ -116,9 +116,11 @@ export default class Registry extends Component<ConfigurationRegistrySchema> {
     digest?: string,
   ): Promise<{ digest: string; version: number; created?: string }> {
     const tagOrDigest = digest || image.tag.value;
-    let manifestDigestFound;
-    let manifestMediaType;
-    logger.info(`${this.getId()} - Get ${image.name}:${tagOrDigest} manifest`);
+    let manifestDigestFound: string | undefined = undefined;
+    let manifestMediaType: string | undefined = undefined;
+    logger.info(
+      `[REGISTRY] getImageManifestDigest - ${this.getId()} - Get ${image.name}:${tagOrDigest} manifest`,
+    );
     const responseManifests = (
       await this.callRegistry({
         image,
@@ -131,15 +133,19 @@ export default class Registry extends Component<ConfigurationRegistrySchema> {
     )?.data;
     if (responseManifests) {
       if (responseManifests.schemaVersion === 2) {
-        this.childLogger.debug('Manifests found with schemaVersion = 2');
-        this.childLogger.debug(`Manifests media type detected [${responseManifests.mediaType}]`);
+        this.childLogger.debug(
+          '[REGISTRY] getImageManifestDigest - Manifests found with schemaVersion = 2',
+        );
+        this.childLogger.debug(
+          `[REGISTRY] getImageManifestDigest - Manifests media type detected [${responseManifests.mediaType}]`,
+        );
         if (
           responseManifests.mediaType ===
             'application/vnd.docker.distribution.manifest.list.v2+json' ||
           responseManifests.mediaType === 'application/vnd.oci.image.index.v1+json'
         ) {
           this.childLogger.debug(
-            `Filter manifest for [arch=${image.architecture}, os=${image.os}, variant=${image.variant}]`,
+            `[REGISTRY] getImageManifestDigest - Filter manifest for [arch=${image.architecture}, os=${image.os}, variant=${image.variant}]`,
           );
           let manifestFound;
           const manifestFounds = responseManifests.manifests.filter(
@@ -167,7 +173,7 @@ export default class Registry extends Component<ConfigurationRegistrySchema> {
 
           if (manifestFound) {
             this.childLogger.debug(
-              `Manifest found with [digest=${manifestFound.digest}, mediaType=${manifestFound.mediaType}]`,
+              `[REGISTRY] getImageManifestDigest - Manifest found with [digest=${manifestFound.digest}, mediaType=${manifestFound.mediaType}]`,
             );
             manifestDigestFound = manifestFound.digest;
             manifestMediaType = manifestFound.mediaType;
@@ -177,13 +183,15 @@ export default class Registry extends Component<ConfigurationRegistrySchema> {
           responseManifests.mediaType === 'application/vnd.oci.image.manifest.v1+json'
         ) {
           this.childLogger.debug(
-            `Manifest found with [digest=${responseManifests.config.digest}, mediaType=${responseManifests.config.mediaType}]`,
+            `[REGISTRY] getImageManifestDigest - Manifest found with [digest=${responseManifests.config.digest}, mediaType=${responseManifests.config.mediaType}]`,
           );
           manifestDigestFound = responseManifests.config.digest;
           manifestMediaType = responseManifests.config.mediaType;
         }
       } else if (responseManifests.schemaVersion === 1) {
-        this.childLogger.debug('Manifests found with schemaVersion = 1');
+        this.childLogger.debug(
+          '[REGISTRY] getImageManifestDigest - Manifests found with schemaVersion = 1',
+        );
         const v1Compat = JSON.parse(responseManifests.history[0].v1Compatibility);
         const manifestFound = {
           digest: v1Compat.config ? v1Compat.config.Image : undefined,
@@ -191,7 +199,7 @@ export default class Registry extends Component<ConfigurationRegistrySchema> {
           version: 1,
         };
         this.childLogger.debug(
-          `Manifest found with [digest=${manifestFound.digest}, created=${manifestFound.created}, version=${manifestFound.version}]`,
+          `[REGISTRY] getImageManifestDigest - Manifest found with [digest=${manifestFound.digest}, created=${manifestFound.created}, version=${manifestFound.version}]`,
         );
         return manifestFound;
       }
@@ -200,7 +208,9 @@ export default class Registry extends Component<ConfigurationRegistrySchema> {
           manifestMediaType === 'application/vnd.docker.distribution.manifest.v2+json') ||
         (manifestDigestFound && manifestMediaType === 'application/vnd.oci.image.manifest.v1+json')
       ) {
-        this.childLogger.debug('Calling registries to get docker-content-digest header');
+        this.childLogger.info(
+          '[REGISTRY] getImageManifestDigest - Calling registries to get docker-content-digest header',
+        );
         const responseManifest = await this.callRegistry({
           image,
           method: 'head',
@@ -213,8 +223,8 @@ export default class Registry extends Component<ConfigurationRegistrySchema> {
           digest: responseManifest.headers['docker-content-digest'],
           version: 2,
         };
-        this.childLogger.debug(
-          `Manifest found with [digest=${manifestFound.digest}, version=${manifestFound.version}]`,
+        this.childLogger.info(
+          `[REGISTRY] getImageManifestDigest - Manifest found with [digest=${manifestFound.digest}, version=${manifestFound.version}]`,
         );
         return manifestFound;
       }
@@ -228,13 +238,13 @@ export default class Registry extends Component<ConfigurationRegistrySchema> {
           version: 1,
         };
         this.childLogger.debug(
-          `Manifest found with [digest=${manifestFound.digest}, version=${manifestFound.version}]`,
+          `[REGISTRY] getImageManifestDigest - Manifest found with [digest=${manifestFound.digest}, version=${manifestFound.version}]`,
         );
         return manifestFound;
       }
     }
     // Empty result...
-    throw new Error('Unexpected error; no manifest found');
+    throw new Error('[REGISTRY] getImageManifestDigest - Unexpected error; no manifest found');
   }
 
   async callRegistry({
@@ -250,15 +260,19 @@ export default class Registry extends Component<ConfigurationRegistrySchema> {
     method?: string;
     headers?: { Accept?: string; Authorization?: string };
   }) {
-    // Request options
-    const getRequestOptions: axios.AxiosRequestConfig = {
-      url: url,
-      method,
-      headers,
-    };
-    this.childLogger.debug(`[REGISTRY] - callRegistry ${JSON.stringify(getRequestOptions)}`);
-    const getRequestOptionsWithAuth = await this.authenticate(image, getRequestOptions);
-    return await axios.request(getRequestOptionsWithAuth);
+    try {
+      const getRequestOptions: axios.AxiosRequestConfig = {
+        url: url,
+        method,
+        headers,
+      };
+      this.childLogger.debug(`[REGISTRY] - callRegistry ${JSON.stringify(getRequestOptions)}`);
+      const getRequestOptionsWithAuth = await this.authenticate(image, getRequestOptions);
+      return await axios.request(getRequestOptionsWithAuth);
+    } catch (error: any) {
+      logger.error(error);
+      throw error;
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this

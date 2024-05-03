@@ -1,3 +1,5 @@
+import { SSHType } from '../enums/ansible';
+
 export type HasUsers = {
   success?: boolean;
   data?: { hasUsers?: boolean };
@@ -178,6 +180,8 @@ export type RaspberryRevisionData = {
 export type DeviceItem = {
   uuid: string;
   disabled?: boolean;
+  dockerWatcher?: boolean;
+  dockerWatcherCron?: string;
   hostname?: string;
   fqdn?: string;
   ip?: string;
@@ -342,6 +346,16 @@ export type DeviceAuth = {
   sshUser?: string;
   sshPwd?: string;
   sshKey?: string;
+  customDockerSSH?: boolean;
+  dockerCustomAuthType?: SSHType;
+  dockerCustomSshUser?: string;
+  dockerCustomSshPwd?: string;
+  dockerCustomSshKeyPass?: string;
+  dockerCustomSshKey?: string;
+  customDockerForcev6?: boolean;
+  customDockerForcev4?: boolean;
+  customDockerAgentForward?: boolean;
+  customDockerTryKeyboard?: boolean;
 };
 
 export type DeviceAuthParams = {
@@ -350,6 +364,7 @@ export type DeviceAuthParams = {
   sshKey?: string;
   sshPwd?: string;
   sshUser?: string;
+  sshKeyPass?: string;
   becomeMethod?: string;
   becomePass?: string;
   becomeUser?: string;
@@ -358,6 +373,29 @@ export type DeviceAuthParams = {
   strictHostChecking?: boolean;
   sshCommonArgs?: string;
   sshExecutable?: string;
+  customDockerSSH?: boolean;
+  dockerCustomAuthType?: SSHType;
+  dockerCustomSshUser?: string;
+  dockerCustomSshPwd?: string;
+  dockerCustomSshKeyPass?: string;
+  dockerCustomSshKey?: string;
+  customDockerForcev6?: boolean;
+  customDockerForcev4?: boolean;
+  customDockerAgentForward?: boolean;
+  customDockerTryKeyboard?: boolean;
+};
+
+export type DeviceDockerAuthParams = {
+  customDockerSSH?: boolean;
+  dockerCustomAuthType?: SSHType;
+  dockerCustomSshUser?: string;
+  dockerCustomSshPwd?: string;
+  dockerCustomSshKeyPass?: string;
+  dockerCustomSshKey?: string;
+  customDockerForcev6?: boolean;
+  customDockerForcev4?: boolean;
+  customDockerAgentForward?: boolean;
+  customDockerTryKeyboard?: boolean;
 };
 
 export type UserSettingsResetApiKey = {
@@ -501,8 +539,10 @@ export type ContainerInspectResult = {
 }
 
 export type Container = {
+  device?: DeviceItem;
   id?: string;
   name?: string;
+  customName?: string;
   watcher?: string;
   updateAvailable?: boolean;
   status?:string;
