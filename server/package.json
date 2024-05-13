@@ -20,7 +20,7 @@
     "shelljs": "^0.8.5",
     "pino-mongodb": "^4.3.0",
     "pino-pretty": "^11.0.0",
-    "pino-http": "^9.0.0",
+    "pino-http": "^10.1.0",
     "connect-mongo": "^5.1.0",
     "redis": "^4.6.13",
     "express-validator": "^7.0.1",
