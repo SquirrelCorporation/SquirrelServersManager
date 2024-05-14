@@ -1,4 +1,3 @@
-import DeviceRepo from '../../../data/database/repository/DeviceRepo';
 import logger from '../../../logger';
 import ContainerRegistryUseCases from '../../../use-cases/ContainerRegistryUseCases';
 import DeviceUseCases from '../../../use-cases/DeviceUseCases';
@@ -114,7 +113,7 @@ async function registerWatchers() {
   const devicesToWatch = await DeviceUseCases.getDevicesToWatch();
   const configurations = devicesToWatch?.map((device) => {
     return {
-      cron: device.dockerWatcherCron,
+      cron: device.dockerWatcherCron as string,
       watchbydefault: true,
       deviceUuid: device.uuid,
     };
@@ -204,7 +203,7 @@ async function deregisterComponent(
         components = getStates().registry;
         break;
       default:
-        throw new Error(`Unknown kind: ${kind}`);
+        logger.error(`[WATCHER-ENGINE] Unknown kind ${kind}`);
     }
     if (components) {
       delete components[component.getId()];
@@ -249,6 +248,7 @@ async function deregisterWatchers() {
  * @returns {Promise}
  */
 async function deregisterAll() {
+  logger.warn('[WATCHER-ENGINE] All registered providers will be deregistered.');
   try {
     await deregisterRegistries();
     await deregisterWatchers();
@@ -273,4 +273,5 @@ export default {
   registerRegistries,
   deregisterWatchers,
   registerWatchers,
+  deregisterAll,
 };

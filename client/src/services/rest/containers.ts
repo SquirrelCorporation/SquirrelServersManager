@@ -1,6 +1,5 @@
 import { request } from '@umijs/max';
 import { API } from 'ssm-shared-lib';
-import { ContainersResponse } from 'ssm-shared-lib/distribution/types/api';
 
 export async function getContainers(
   params?: any,
@@ -103,4 +102,36 @@ export async function updateContainerCustomName(
     },
     ...(options || {}),
   });
+}
+
+export async function getContainerStat(
+  containerId: string,
+  type: string,
+  params?: any,
+  options?: Record<string, any>,
+) {
+  return request<API.SimpleDeviceStat>(
+    `/api/containers/${containerId}/stat/${type}`,
+    {
+      method: 'GET',
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    },
+  );
+}
+
+export async function getContainerStats(
+  containerId: string,
+  type: string,
+  options?: Record<string, any>,
+) {
+  return request<API.ContainerStats>(
+    `/api/containers/${containerId}/stats/${type}`,
+    {
+      method: 'GET',
+      ...(options || {}),
+    },
+  );
 }

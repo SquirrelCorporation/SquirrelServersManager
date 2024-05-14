@@ -6,6 +6,7 @@ export const DOCUMENT_NAME = 'Container';
 export const COLLECTION_NAME = 'containers';
 
 export default interface Container {
+  _id: string;
   device: Device;
   id: string;
   name: string;
@@ -100,7 +101,7 @@ const schema = new Schema<Container>(
     },
     customName: {
       type: Schema.Types.String,
-    }
+    },
   },
   {
     versionKey: false,

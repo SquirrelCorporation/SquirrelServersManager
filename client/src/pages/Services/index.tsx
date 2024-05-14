@@ -4,6 +4,7 @@ import ServiceQuickActionReference, {
   ServiceQuickActionReferenceTypes,
 } from '@/components/ServiceComponents/ServiceQuickAction/ServiceQuickActionReference';
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
+import ContainerStatProgress from '@/pages/Services/components/ContainerStatProgress';
 import InfoToolTipCard from '@/pages/Services/components/InfoToolTipCard';
 import StatusTag from '@/pages/Services/components/StatusTag';
 import UpdateAvailableTag from '@/pages/Services/components/UpdateAvailableTag';
@@ -13,35 +14,28 @@ import {
 } from '@/services/rest/containers';
 import { AppstoreOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import {
+  type ActionType,
   ModalForm,
   PageContainer,
   ProFormText,
   ProList,
 } from '@ant-design/pro-components';
-import { Avatar, Flex, message, Progress, Tag, Tooltip } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { Avatar, Flex, message, Popover, Tag, Tooltip } from 'antd';
+import React, { useRef, useState } from 'react';
 import { API } from 'ssm-shared-lib';
 
 const Index: React.FC = () => {
   const [cardActionProps] = useState<'actions' | 'extra'>('extra');
+  const actionRef = useRef<ActionType>();
+
   const [ghost] = useState<boolean>(false);
-  const [containers, setContainers] = useState<API.Container[]>([]);
   const [
     isEditContainerCustomNameModalOpened,
     setIsEditContainerCustomNameModalOpened,
   ] = useState(false);
-  const [selectedRecord, setSelectedRecord] = useState();
-
-  const asyncFetch = async () => {
-    await getContainers().then((list) => {
-      if (list?.data) {
-        setContainers(list.data?.containers || []);
-      }
-    });
-  };
-  useEffect(() => {
-    asyncFetch();
-  }, []);
+  const [selectedRecord, setSelectedRecord] = useState<
+    API.Container | undefined
+  >();
 
   const handleQuickAction = (idx: number) => {
     if (
@@ -93,21 +87,24 @@ const Index: React.FC = () => {
         onFinish={async (values) => {
           if (!selectedRecord) {
             message.error({ content: 'Internal error, no selected record' });
+            return;
           }
-          await updateContainerCustomName(
-            values.customName,
-            selectedRecord?.id,
-          );
-          await asyncFetch();
-          setIsEditContainerCustomNameModalOpened(false);
-          message.success({ content: 'Container properties updated' });
+          if (selectedRecord && selectedRecord.id) {
+            await updateContainerCustomName(
+              values.customName,
+              selectedRecord?.id,
+            );
+            actionRef?.current?.reload();
+            setIsEditContainerCustomNameModalOpened(false);
+            message.success({ content: 'Container properties updated' });
+          }
           return true;
         }}
       >
         <ProFormText
           name={'customName'}
           label={'Name'}
-          initialValue={selectedRecord?.title}
+          initialValue={selectedRecord?.customName || selectedRecord?.name}
         />
       </ModalForm>
       <ProList<any>
@@ -116,6 +113,8 @@ const Index: React.FC = () => {
         itemCardProps={{
           ghost,
         }}
+        actionRef={actionRef}
+        rowKey={'id'}
         pagination={{
           defaultPageSize: 8,
           showSizeChanger: false,
@@ -134,87 +133,110 @@ const Index: React.FC = () => {
           };
         }}
         metas={{
-          title: {},
-          subTitle: {},
-          type: {},
-          avatar: {},
-          content: {},
-          actions: { cardActionProps },
-          id: {},
-        }}
-        headerTitle="Containers"
-        dataSource={containers.map((item) => ({
-          id: item.id,
-          title: item.customName || item.name,
-          subTitle: (
-            <>
-              <StatusTag status={item.status} />
-              <UpdateAvailableTag updateAvailable={item.updateAvailable} />
-            </>
-          ),
-          actions: [
-            <Tooltip
-              color={'transparent'}
-              title={<InfoToolTipCard item={item} />}
-            >
-              <InfoCircleOutlined style={{ color: 'rgb(22, 104, 220)' }} />
-            </Tooltip>,
-            <a
-              key="quickAction"
-              onClick={() => {
-                console.log(item);
-              }}
-            >
-              <ServiceQuickActionDropDown
-                onDropDownClicked={handleQuickAction}
-              />
-            </a>,
-          ],
-          avatar: (
-            <Avatar
-              size={50}
-              shape="square"
-              style={{
-                marginRight: 4,
-                backgroundColor:
-                  colorPalette[
-                    (item.id?.charCodeAt(0) || 0) % colorPalette.length
-                  ],
-              }}
-            >
-              {item.customName?.slice(0, 4) || item.name?.slice(0, 4)}
-            </Avatar>
-          ),
-          content: (
-            <div
-              style={{
-                flex: 1,
-              }}
-            >
-              <div
-                style={{
-                  width: 300,
+          title: {
+            search: true,
+            title: 'Name',
+            render: (_, row) => {
+              return row.customName || row.name;
+            },
+          },
+          subTitle: {
+            search: false,
+            render: (_, row) => {
+              return (
+                <>
+                  <StatusTag status={row.status} />
+                  <UpdateAvailableTag updateAvailable={row.updateAvailable} />
+                </>
+              );
+            },
+          },
+          updateAvailable: {
+            dataIndex: 'updateAvailable',
+            title: 'Update Available',
+          },
+          avatar: {
+            search: false,
+            render: (_, row) => {
+              return (
+                <Avatar
+                  size={50}
+                  shape="square"
+                  style={{
+                    marginRight: 4,
+                    backgroundColor:
+                      colorPalette[
+                        (row.id?.charCodeAt(0) || 0) % colorPalette.length
+                      ],
+                  }}
+                >
+                  {row.customName?.slice(0, 4) || row.name?.slice(0, 4)}
+                </Avatar>
+              );
+            },
+          },
+          content: {
+            search: false,
+            render: (_, row) => {
+              return (
+                <div
+                  style={{
+                    flex: 1,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 300,
+                    }}
+                  >
+                    <>
+                      On{' '}
+                      <Popover content={row.device?.fqdn}>
+                        <Tag color="black">{row.device?.ip}</Tag>
+                      </Popover>
+                      <Flex gap="middle">
+                        <ContainerStatProgress containerId={row.id} />
+                      </Flex>
+                    </>
+                  </div>
+                </div>
+              );
+            },
+          },
+          actions: {
+            cardActionProps,
+            search: false,
+            render: (text, row) => [
+              <Tooltip
+                key={`info-${row.id}`}
+                color={'transparent'}
+                title={<InfoToolTipCard item={row} />}
+              >
+                <InfoCircleOutlined style={{ color: 'rgb(22, 104, 220)' }} />
+              </Tooltip>,
+              <a
+                key={`quickAction-${row.id}`}
+                onClick={() => {
+                  setSelectedRecord(row);
                 }}
               >
-                <div>
-                  On <Tag color="black">{item.device?.ip}</Tag>
-                </div>
-                <Flex gap="middle">
-                  <Progress
-                    strokeColor={{ from: '#10e967', to: '#d12b44' }}
-                    size={'small'}
-                    percent={80}
-                  />{' '}
-                  <Progress
-                    strokeColor={{ from: '#10e967', to: '#d12b44' }}
-                    size={'small'}
-                    percent={80}
-                  />
-                </Flex>
-              </div>
-            </div>
-          ),
-        }))}
+                <ServiceQuickActionDropDown
+                  onDropDownClicked={handleQuickAction}
+                />
+              </a>,
+            ],
+          },
+          id: {
+            dataIndex: 'id',
+            search: false,
+          },
+        }}
+        headerTitle="Containers"
+        request={async (params = {}) => {
+          return await getContainers().then((e) => {
+            return { data: e.data?.containers || [] };
+          });
+        }}
       />
     </PageContainer>
   );

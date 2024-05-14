@@ -89,6 +89,7 @@ const MainChartCard: React.FC<any> = ({}) => {
   // see https://ant-design-charts-next.antgroup.com/en/options/plots/component/legend
   const config = {
     data: graphData,
+    animate: { enter: { type: 'waveIn' } },
     theme: {
       view: {
         viewFill: '#151921',
@@ -112,9 +113,13 @@ const MainChartCard: React.FC<any> = ({}) => {
       },
       y: {
         labelFill: '#fff',
+        labelFormatter: (v: string) => `${v}%`,
       },
     },
-    tooltip: { channel: 'y', valueFormatter: '.2' },
+    tooltip: {
+      channel: 'y',
+      valueFormatter: (d: string) => `${parseFloat(d).toFixed(2)}%`,
+    },
     yAxis: {
       label: {
         formatter: (v: any) => `${v.toFixed(2)}%`,

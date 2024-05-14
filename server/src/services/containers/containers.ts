@@ -1,4 +1,3 @@
-import { req } from 'pino-std-serializers';
 import { API } from 'ssm-shared-lib';
 import { NotFoundError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';

@@ -1,16 +1,19 @@
 import debounce from 'debounce';
+import DockerModem from 'docker-modem';
 import Dockerode, { ContainerInfo } from 'dockerode';
-import cron from 'node-cron';
+import CronJob from 'node-cron';
 import parse from 'parse-docker-image-name';
 import { ConnectConfig } from 'ssh2';
 import { SSHType } from 'ssm-shared-lib/distribution/enums/ansible';
 import Container from '../../../../../data/database/model/Container';
 import ContainerRepo from '../../../../../data/database/repository/ContainerRepo';
+import ContainerStatsRepo from '../../../../../data/database/repository/ContainerStatsRepo';
 import DeviceAuthRepo from '../../../../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../../../../data/database/repository/DeviceRepo';
 import logger from '../../../../../logger';
 import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../../../ansible-vault/vault';
 import Component from '../../../core/Component';
+import { getCustomAgent } from '../../../core/CustomAgent';
 import EventHandler from '../../../event/EventHandler';
 import { SSMServicesTypes } from '../../../typings';
 import { Label } from '../../../utils/label';
@@ -37,10 +40,11 @@ const DEBOUNCED_WATCH_CRON_MS = 5000;
 
 export default class Docker extends Component<ConfigurationWatcherSchema> {
   public watchCron: any;
+  public watchCronStat: any;
   public watchCronTimeout: any;
   public watchCronDebounced: any;
   public listenDockerEventsTimeout: any;
-  // @ts-ignore
+  // @ts-expect-error Initialized in init
   public dockerApi: Dockerode;
 
   getConfigurationSchema() {
@@ -64,40 +68,55 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
    * Init the Watcher.
    */
   async init() {
-    await this.initWatcher();
-    if (this.configuration.watchdigest !== undefined) {
-      this.childLogger.warn(
-        "WUD_WATCHER_{watcher_name}_WATCHDIGEST environment variable is deprecated and won't be supported in upcoming versions",
-      );
-    }
-    this.childLogger.info(`Cron scheduled (${this.configuration.cron})`);
-    this.watchCron = cron.schedule(this.configuration.cron, () => this.watchFromCron());
+    try {
+      await this.initWatcher();
+      await this.dockerApi.ping();
 
-    // watch at startup (after all components have been registered)
-    this.watchCronTimeout = setTimeout(() => this.watchFromCron(), START_WATCHER_DELAY_MS);
+      if (this.configuration.watchdigest !== undefined) {
+        this.childLogger.warn(
+          "WUD_WATCHER_{watcher_name}_WATCHDIGEST environment variable is deprecated and won't be supported in upcoming versions",
+        );
+      }
+      this.childLogger.info(`[DOCKER][WATCHER] - Cron scheduled (${this.configuration.cron})`);
+      this.watchCron = CronJob.schedule(this.configuration.cron, () => {
+        this.watchFromCron();
+      });
+      this.watchCronStat = CronJob.schedule('*/1 * * * *', () => {
+        this.watchContainerStats();
+      });
 
-    // listen to docker events
-    if (this.configuration.watchevents) {
+      // watch at startup (after all components have been registered)
+      this.watchCronTimeout = setTimeout(() => this.watchFromCron(), START_WATCHER_DELAY_MS);
+
       this.watchCronDebounced = debounce(() => {
         this.watchFromCron();
       }, DEBOUNCED_WATCH_CRON_MS);
-      this.listenDockerEventsTimeout = setTimeout(
-        () => this.listenDockerEvents(),
-        START_WATCHER_DELAY_MS,
-      );
+      // listen to docker events
+      if (this.configuration.watchevents) {
+        this.listenDockerEventsTimeout = setTimeout(
+          () => this.listenDockerEvents(),
+          START_WATCHER_DELAY_MS,
+        );
+      }
+
+      this.watchCron.start();
+      this.watchCronStat.start();
+    } catch (error: any) {
+      this.childLogger.warn(error);
     }
   }
 
   async initWatcher() {
     const device = await DeviceRepo.findOneByUuid(this.configuration.deviceUuid);
     if (!device) {
-      throw new Error(`Device not found: ${this.configuration.deviceUuid}`);
+      throw new Error(`[DOCKER][WATCHER] - Device not found: ${this.configuration.deviceUuid}`);
     }
     const deviceAuth = await DeviceAuthRepo.findOneByDevice(device);
     if (!deviceAuth) {
-      throw new Error(`DeviceAuth not found: ${this.configuration.deviceUuid}`);
+      throw new Error(`[DOCKER][WATCHER] - DeviceAuth not found: ${this.configuration.deviceUuid}`);
     }
-    const options: Dockerode.DockerOptions = {};
+    const options: Dockerode.DockerOptions & { modem?: any; _deviceUuid?: string } = {};
+    options._deviceUuid = this.configuration.deviceUuid;
     options.protocol = 'ssh';
     options.port = deviceAuth.sshPort;
     options.username = deviceAuth.sshUser;
@@ -113,7 +132,8 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
         logger.debug(message);
       },
     };
-    let sshOptions = {};
+    let sshOptions: ConnectConfig = {};
+    //sshOptions.agent = getCustomAgent(options);
     if (deviceAuth.customDockerSSH) {
       if (deviceAuth.dockerCustomAuthType === SSHType.KeyBased) {
         sshOptions = {
@@ -146,11 +166,20 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
       }
     }
     options.sshOptions = { ...basedSshOptions, ...sshOptions };
+    sshOptions.keepaliveInterval;
     logger.debug(options);
     try {
+      options.modem = new DockerModem({
+        agent: getCustomAgent({
+          port: options.port,
+          host: options.host,
+          ...sshOptions,
+        }),
+      });
       this.dockerApi = new Dockerode(options);
     } catch (error: any) {
       logger.error(error);
+      throw new Error(error.message);
     }
   }
 
@@ -158,10 +187,15 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
    * Deregister the component.
    * @returns {Promise<void>}
    */
-  async deregisterComponent() {
+  async deregisterComponent(): Promise<void> {
+    this.childLogger.info('[DOCKER][WATCHER] - deregisterComponent');
     if (this.watchCron) {
       this.watchCron.stop();
       delete this.watchCron;
+    }
+    if (this.watchCronStat) {
+      this.watchCronStat.stop();
+      delete this.watchCronStat;
     }
     if (this.watchCronTimeout) {
       clearTimeout(this.watchCronTimeout);
@@ -176,8 +210,8 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
    * Listen and react to docker events.
    * @return {Promise<void>}
    */
-  async listenDockerEvents() {
-    this.childLogger.info('Listening to docker events');
+  async listenDockerEvents(): Promise<void> {
+    this.childLogger.info('[DOCKER][WATCHER] - Listening to docker events');
     const options: {
       filters: {
         type?:
@@ -205,7 +239,9 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
     try {
       this.dockerApi.getEvents(options, (err, stream) => {
         if (err) {
-          this.childLogger.warn(`Unable to listen to Docker events [${err.message}]`);
+          this.childLogger.warn(
+            `[DOCKER][WATCHER] - Unable to listen to Docker events [${err.message}]`,
+          );
           this.childLogger.debug(err);
         } else {
           stream?.on('data', (chunk) => this.onDockerEvent(chunk));
@@ -221,12 +257,12 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
    * @param dockerEventChunk
    * @return {Promise<void>}
    */
-  async onDockerEvent(dockerEventChunk: any) {
-    logger.info('onDockerEvent');
+  async onDockerEvent(dockerEventChunk: any): Promise<void> {
+    logger.info('[DOCKER][WATCHER] - onDockerEvent');
     const dockerEvent = JSON.parse(dockerEventChunk.toString());
     const action = dockerEvent.Action;
     const containerId = dockerEvent.id;
-    logger.info('onDockerEvent - action: ' + action);
+    logger.info('[DOCKER][WATCHER] - onDockerEvent - action: ' + action);
 
     // If the container was created or destroyed => perform a watch
     if (action === 'destroy' || action === 'create') {
@@ -234,7 +270,7 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
     } else {
       // Update container state in db if so
       try {
-        const container = await this.dockerApi.getContainer(containerId);
+        const container = this.dockerApi.getContainer(containerId);
         const containerInspect = await container.inspect();
         const newStatus = containerInspect.State.Status;
         const containerFound = await ContainerRepo.findContainerById(containerId);
@@ -251,7 +287,9 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
           }
         }
       } catch (e) {
-        this.childLogger.debug(`Unable to get container details for container id=[${containerId}]`);
+        this.childLogger.debug(
+          `[DOCKER][WATCHER] - Unable to get container details for container id=[${containerId}]`,
+        );
       }
     }
   }
@@ -260,8 +298,8 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
    * Watch containers (called by cron scheduled tasks).
    * @returns {Promise<*[]>}
    */
-  async watchFromCron() {
-    logger.info(`Cron started (${this.configuration.cron})`);
+  async watchFromCron(): Promise<any[]> {
+    logger.info(`[DOCKER][WATCHER] - Cron started (${this.configuration.cron})`);
 
     // Get container reports
     const containerReports = await this.watch();
@@ -280,7 +318,7 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
     ).length;
 
     const stats = `${containerReportsCount} containers watched, ${containerErrorsCount} errors, ${containerUpdatesCount} available updates`;
-    this.childLogger.info(`Cron finished (${stats})`);
+    this.childLogger.info(`[DOCKER][WATCHER] - Cron finished (${stats})`);
     return containerReports;
   }
 
@@ -288,7 +326,7 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
    * Watch main method.
    * @returns {Promise<*[]>}
    */
-  async watch() {
+  async watch(): Promise<any[]> {
     let containers: any[] = [];
 
     // List images to watch
@@ -297,7 +335,7 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
     } catch (e: any) {
       this.childLogger.error(e);
       this.childLogger.warn(
-        `Error when trying to get the list of the containers to watch (${e.message})`,
+        `[DOCKER][WATCHER] - Error when trying to get the list of the containers to watch (${e.message})`,
       );
     }
     try {
@@ -308,7 +346,9 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
       return containerReports;
     } catch (e: any) {
       logger.error(e);
-      this.childLogger.warn(`Error when processing some containers (${e.message})`);
+      this.childLogger.warn(
+        `[DOCKER][WATCHER] - Error when processing some containers (${e.message})`,
+      );
       return [];
     }
   }
@@ -316,10 +356,9 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
   /**
    * Watch a Container.
    * @param container
-   * @param device
    * @returns {Promise<*>}
    */
-  async watchContainer(container: Container) {
+  async watchContainer(container: Container): Promise<any> {
     const containerWithResult = container;
 
     // Reset previous results if so
@@ -330,7 +369,7 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
     try {
       containerWithResult.result = await this.findNewVersion(container);
     } catch (e: any) {
-      this.childLogger.warn(`Error when processing (${e.message})`);
+      this.childLogger.warn(`[DOCKER][WATCHER] - Error when processing (${e.message})`);
       this.childLogger.debug(e);
       containerWithResult.error = {
         message: e.message,
@@ -345,93 +384,104 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
    * Get all containers to watch.
    * @returns {Promise<unknown[]>}
    */
-  async getContainers() {
-    this.childLogger.debug('[DOCKER][WATCHER] - getContainers');
-    const listContainersOptions = { all: false };
-    if (this.configuration.watchall) {
-      listContainersOptions.all = true;
-    }
-    this.childLogger.info('[DOCKER][WATCHER] - getContainers - dockerApi.listContainers');
-    const containers = await this.dockerApi.listContainers(listContainersOptions);
-    // Filter on containers to watch
-    const filteredContainers = containers.filter((container) =>
-      isContainerToWatch(container.Labels[Label.wudWatch], this.configuration.watchbydefault),
-    );
-    this.childLogger.debug(
-      `[DOCKER][WATCHER] - filteredContainers: ${JSON.stringify(filteredContainers)}`,
-    );
-    this.childLogger.info('[DOCKER][WATCHER] - getContainers - getImageDetails');
-    const containerPromises = filteredContainers.map((container: ContainerInfo) =>
-      this.addImageDetailsToContainer(
-        container,
-        container.Labels[Label.wudTagInclude],
-        container.Labels[Label.wudTagExclude],
-        container.Labels[Label.wudTagTransform],
-        container.Labels[Label.wudLinkTemplate],
-        container.Labels[Label.wudDisplayName],
-        container.Labels[Label.wudDisplayIcon],
-      ),
-    );
-    const containersWithImage = await Promise.all(containerPromises);
-    // Return containers to process
-    const containersToReturn = containersWithImage.filter(
-      (imagePromise) => imagePromise !== undefined,
-    );
-
-    // Prune old containers from the store
+  async getContainers(): Promise<unknown[]> {
     try {
-      const containersFromTheStore = await ContainerRepo.findContainersByWatcher(this.name);
-      pruneOldContainers(containersToReturn, containersFromTheStore);
-    } catch (e: any) {
-      this.childLogger.warn(`Error when trying to prune the old containers (${e.message})`);
+      this.childLogger.debug('[DOCKER][WATCHER] - getContainers');
+      const listContainersOptions = { all: false };
+      if (this.configuration.watchall) {
+        listContainersOptions.all = true;
+      }
+      this.childLogger.info('[DOCKER][WATCHER] - getContainers - dockerApi.listContainers');
+      const containers = await this.dockerApi.listContainers(listContainersOptions);
+      // Filter on containers to watch
+      const filteredContainers = containers.filter((container) =>
+        isContainerToWatch(container.Labels[Label.wudWatch], this.configuration.watchbydefault),
+      );
+      this.childLogger.debug(
+        `[DOCKER][WATCHER] - filteredContainers: ${JSON.stringify(filteredContainers)}`,
+      );
+      this.childLogger.info('[DOCKER][WATCHER] - getContainers - getImageDetails');
+      const containerPromises = filteredContainers.map((container: ContainerInfo) =>
+        this.addImageDetailsToContainer(
+          container,
+          container.Labels[Label.wudTagInclude],
+          container.Labels[Label.wudTagExclude],
+          container.Labels[Label.wudTagTransform],
+          container.Labels[Label.wudLinkTemplate],
+          container.Labels[Label.wudDisplayName],
+          container.Labels[Label.wudDisplayIcon],
+        ),
+      );
+      const containersWithImage = await Promise.all(containerPromises);
+      // Return containers to process
+      const containersToReturn = containersWithImage.filter(
+        (imagePromise) => imagePromise !== undefined,
+      );
+
+      // Prune old containers from the store
+      try {
+        const containersFromTheStore = await ContainerRepo.findContainersByWatcher(this.name);
+        pruneOldContainers(containersToReturn, containersFromTheStore);
+      } catch (e: any) {
+        this.childLogger.warn(`Error when trying to prune the old containers (${e.message})`);
+      }
+      return containersToReturn;
+    } catch (error: any) {
+      this.childLogger.error(error);
+      return [];
     }
-    return containersToReturn;
   }
 
   /**
    * Find new version for a Container.
    */
-
   /* eslint-disable-next-line */
   async findNewVersion(container: Container) {
-    const registryProvider = getRegistry(container.image.registry.name);
-    const result: { tag: string; digest?: string; created?: string } = {
-      tag: container.image.tag.value,
-    };
-    if (!registryProvider) {
-      this.childLogger.error(`Unsupported registry (${container.image.registry.name})`);
-    } else {
-      // Must watch digest? => Find local/remote digests on registries
-      if (container.image.digest.watch && container.image.digest.repo) {
-        const remoteDigest = await registryProvider.getImageManifestDigest(container.image);
-        result.digest = remoteDigest.digest;
-        result.created = remoteDigest.created;
+    try {
+      const registryProvider = getRegistry(container.image.registry.name);
+      const result: { tag: string; digest?: string; created?: string } = {
+        tag: container.image.tag.value,
+      };
+      if (!registryProvider) {
+        this.childLogger.error(
+          `[DOCKER] - findNewVersion - Unsupported registry (${container.image.registry.name})`,
+        );
+      } else {
+        // Must watch digest? => Find local/remote digests on registries
+        if (container.image.digest.watch && container.image.digest.repo) {
+          const remoteDigest = await registryProvider.getImageManifestDigest(container.image);
+          result.digest = remoteDigest.digest;
+          result.created = remoteDigest.created;
 
-        if (remoteDigest.version === 2) {
-          // Regular v2 manifest => Get manifest digest
-          /*  eslint-disable no-param-reassign */
-          const digestV2 = await registryProvider.getImageManifestDigest(
-            container.image,
-            container.image.digest.repo,
-          );
-          container.image.digest.value = digestV2.digest;
-        } else {
-          // Legacy v1 image => take Image digest as reference for comparison
-          const image = await this.dockerApi.getImage(container.image.id).inspect();
-          container.image.digest.value = image.Config.Image === '' ? undefined : image.Config.Image;
+          if (remoteDigest.version === 2) {
+            // Regular v2 manifest => Get manifest digest
+            /*  eslint-disable no-param-reassign */
+            const digestV2 = await registryProvider.getImageManifestDigest(
+              container.image,
+              container.image.digest.repo,
+            );
+            container.image.digest.value = digestV2.digest;
+          } else {
+            // Legacy v1 image => take Image digest as reference for comparison
+            const image = await this.dockerApi.getImage(container.image.id).inspect();
+            container.image.digest.value =
+              image.Config.Image === '' ? undefined : image.Config.Image;
+          }
         }
-      }
-      this.childLogger.debug(`[DOCKER] findNewVersion - getTags`);
-      const tags = await registryProvider.getTags(container.image);
-      this.childLogger.debug(`[DOCKER] findNewVersion - tags: ${tags}`);
-      // Get candidates (based on tag name)
-      const tagsCandidates = getTagCandidates(container, tags);
+        this.childLogger.debug(`[DOCKER] findNewVersion - getTags`);
+        const tags = await registryProvider.getTags(container.image);
+        this.childLogger.debug(`[DOCKER] findNewVersion - tags: ${tags}`);
+        // Get candidates (based on tag name)
+        const tagsCandidates = getTagCandidates(container, tags);
 
-      // The first one in the array is the highest
-      if (tagsCandidates && tagsCandidates.length > 0) {
-        result.tag = tagsCandidates[0];
+        // The first one in the array is the highest
+        if (tagsCandidates && tagsCandidates.length > 0) {
+          result.tag = tagsCandidates[0];
+        }
+        return result;
       }
-      return result;
+    } catch (error: any) {
+      this.childLogger.error(error);
     }
   }
 
@@ -444,7 +494,7 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
    * @param linkTemplate
    * @param displayName
    * @param displayIcon
-   * @returns {Promise<Image>}
+   * @returns {Promise<Container | undefined>}
    */
   async addImageDetailsToContainer(
     container: Dockerode.ContainerInfo,
@@ -454,10 +504,9 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
     linkTemplate: string,
     displayName: string,
     displayIcon: string,
-  ) {
+  ): Promise<Container | undefined> {
     try {
       const containerId = container.Id;
-
       // Is container already in store? just return it :)
       const containerInStore = await ContainerRepo.findContainerById(containerId);
       if (
@@ -472,8 +521,6 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
       }
       this.childLogger.info(`[DOCKER] addImageDetailsToContainer - getImage: ${container.Image}`);
       const img = this.dockerApi.getImage(container.Image);
-      const containerStats = await this.dockerApi.getContainer(containerId).stats();
-      this.childLogger.info(JSON.stringify(containerStats));
       // Get container image details
       this.childLogger.info(`[DOCKER] addImageDetailsToContainer - inspect: ${container.Image}`);
       const image = await img.inspect();
@@ -558,24 +605,23 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
   /**
    * Process a Container with result and map to a containerReport.
    * @param containerWithResult
-   * @param device
    * @return {*}
    */
-  async mapContainerToContainerReport(containerWithResult: Container) {
+  async mapContainerToContainerReport(containerWithResult: Container): Promise<any> {
     const containerReport = {
       container: containerWithResult,
       changed: false,
     };
     const device = await DeviceRepo.findOneByUuid(this.configuration.deviceUuid);
     if (!device) {
-      throw new Error(`Device not found: ${this.configuration.deviceUuid}`);
+      throw new Error(`[DOCKER][WATCHER] - Device not found: ${this.configuration.deviceUuid}`);
     }
     // Find container in db & compare
     const containerInDb = await ContainerRepo.findContainerById(containerWithResult.id);
 
     // Not found in DB? => Save it
     if (!containerInDb) {
-      this.childLogger.debug('Container watched for the first time');
+      this.childLogger.debug('[DOCKER][WATCHER] - Container watched for the first time');
       containerReport.container = await ContainerRepo.createContainer(containerWithResult, device);
       containerReport.changed = true;
 
@@ -594,12 +640,36 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
    * Sanitize sensitive data
    * @returns {*}
    */
-  maskConfiguration() {
+  maskConfiguration(): any {
     return {
       ...this.configuration,
       cafile: Component.mask(this.configuration.cafile),
       certfile: Component.mask(this.configuration.certfile),
       keyfile: Component.mask(this.configuration.keyfile),
     };
+  }
+
+  async watchContainerStats() {
+    this.childLogger.info('[DOCKER][WATCHER]  - cron - watchContainerStats');
+    try {
+      const containers = await ContainerRepo.findContainersByWatcher(this.name);
+      if (!containers) {
+        return;
+      }
+      for (const container of containers) {
+        this.childLogger.info(`[DOCKER][WATCHER]  - cron - watchContainerStats ${container.id}`);
+        try {
+          const dockerContainer = this.dockerApi.getContainer(container.id);
+          const dockerStats = await dockerContainer.stats({ stream: false });
+          await ContainerStatsRepo.create(container, dockerStats);
+        } catch (error: any) {
+          this.childLogger.error(
+            `[DOCKER][WATCHER] - cron - Error retrieving start for ${container.id}}`,
+          );
+        }
+      }
+    } catch (error: any) {
+      this.childLogger.error(error);
+    }
   }
 }

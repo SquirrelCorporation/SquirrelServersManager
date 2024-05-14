@@ -22,6 +22,9 @@ export default defineConfig({
    */
   theme: {
     'root-entry-name': 'variable',
+    token: {
+      colorBgSpotlight: '#1d222e',
+    },
     components: {
       Modal: {
         contentBg: '#1d222e',

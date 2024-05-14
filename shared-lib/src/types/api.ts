@@ -295,6 +295,16 @@ export type DeviceStat = {
   value: number;
 };
 
+export type ContainerStats = {
+  data?: ContainerStat[];
+  success?: boolean;
+};
+
+export type ContainerStat = {
+  date: string;
+  value: number;
+};
+
 export type SimpleDeviceStat = {
   value: number;
 };

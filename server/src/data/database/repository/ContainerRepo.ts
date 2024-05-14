@@ -20,11 +20,11 @@ async function findAll() {
   ]).exec();
 }
 
-async function findContainerById(id: string) {
+async function findContainerById(id: string): Promise<Container | null> {
   return await ContainerModel.findOne({ id: id }).lean().exec();
 }
 
-async function findContainersByWatcher(watcher: string) {
+async function findContainersByWatcher(watcher: string): Promise<Container[] | null> {
   return await ContainerModel.find({ watcher: watcher }).lean().exec();
 }
 

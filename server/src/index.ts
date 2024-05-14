@@ -1,18 +1,15 @@
 import express from 'express';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
-import { NextFunction, Request, Response } from 'express';
 import { SECRET } from './config';
-import { ApiError, ErrorType, InternalError } from './core/api/ApiError';
 import { connection } from './data/database';
-import { findIpAddress } from './helpers/utils';
-import States from './integrations/docker/core/WatcherEngine';
+import WatcherEngine from './integrations/docker/core/WatcherEngine';
+import { errorHandler } from './middlewares/errorHandler';
 import routes from './routes';
-import scheduledFunctions from './integrations/crons';
 import logger from './logger';
 import Configuration from './core/startup';
 import './middlewares/passport';
-
+import Crons from './integrations/crons';
 //const pino = require('pino-http')();
 
 const app = express();
@@ -29,30 +26,13 @@ app.use(passport.initialize());
 let server: any;
 
 const start = () => {
+  logger.info(`Starting server...`);
   connection().then(async () => {
     await Configuration.needConfigurationInit();
-    await States.init();
-    scheduledFunctions();
+    await WatcherEngine.init();
+    Crons.initScheduledJobs();
     app.use('/', routes);
-    // Middleware Error Handler
-    // TODO: move to middlewares
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-      if (err instanceof ApiError) {
-        ApiError.handle(err, res, req);
-        if (err.type === ErrorType.INTERNAL) {
-          logger.error(
-            `[ERROR] 500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${findIpAddress(req)}`,
-          );
-        }
-      } else {
-        logger.error(
-          `[ERROR] 500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${findIpAddress(req)}`,
-        );
-        logger.error(err);
-        ApiError.handle(new InternalError(), res, req);
-      }
-    });
+    app.use(errorHandler);
     server = app.listen(3000, () =>
       logger.info(`
     🐿 Squirrel Servers Manager
@@ -62,10 +42,18 @@ const start = () => {
 };
 start();
 
-export const restart = () => {
+export const restart = async () => {
+  await WatcherEngine.deregisterAll();
+  Crons.stopAllScheduledJobs();
   server.close(() => {
     logger.info('Server is closed');
     logger.info('\n----------------- restarting -------------');
     start();
   });
 };
+
+/*process.on('uncaughtException', (err, origin) => {
+  console.error('Unhandled exception. Please handle!', err.stack || err);
+  console.error(`Origin: ${JSON.stringify(origin)}`);
+});
+*/

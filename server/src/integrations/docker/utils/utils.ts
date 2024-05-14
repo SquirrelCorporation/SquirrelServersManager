@@ -106,7 +106,7 @@ export function getRegistry(registryName: string): Registry {
  */
 export function getOldContainers(
   newContainers: (Container | undefined)[] | undefined,
-  containersFromTheStore: Container[],
+  containersFromTheStore: Container[] | null,
 ) {
   if (!containersFromTheStore || !newContainers) {
     return [];
@@ -126,7 +126,7 @@ export function getOldContainers(
  */
 export function pruneOldContainers(
   newContainers: (Container | undefined)[] | undefined,
-  containersFromTheStore: Container[],
+  containersFromTheStore: Container[] | null,
 ) {
   const containersToRemove = getOldContainers(newContainers, containersFromTheStore);
   containersToRemove.forEach((containerToRemove) => {
