@@ -11,7 +11,7 @@ function getDefaultExtraVars(playbook: Playbook, target: string[] | undefined) {
         API.ExtraVar,
       ])
     : [];
-  logger.info(JSON.stringify(playbook.extraVars));
+  logger.debug(JSON.stringify(playbook.extraVars));
   return defaultExtraVars;
 }
 

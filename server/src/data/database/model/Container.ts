@@ -1,18 +1,18 @@
 import { Schema, model } from 'mongoose';
-import { SSMServicesTypes } from '../../../integrations/docker/typings';
+import { SSMServicesTypes } from '../../../types/SSMServicesTypes';
 import Device from './Device';
 
 export const DOCUMENT_NAME = 'Container';
 export const COLLECTION_NAME = 'containers';
 
 export default interface Container {
-  _id: string;
-  device: Device;
+  _id?: string;
+  device?: Device;
   id: string;
   name: string;
   customName?: string;
-  displayName: string;
-  displayIcon: string;
+  displayName?: string;
+  displayIcon?: string;
   status: string;
   watcher: string;
   includeTags?: string;
@@ -22,7 +22,7 @@ export default interface Container {
   link?: string;
   image: SSMServicesTypes.Image;
   result?: {
-    tag?: string;
+    tag: string;
     digest?: string;
     created?: string;
     link?: string;
@@ -31,7 +31,7 @@ export default interface Container {
     message?: string;
   };
   updateAvailable?: boolean;
-  updateKind: {
+  updateKind?: {
     kind: 'tag' | 'digest' | 'unknown';
     localValue?: string;
     remoteValue?: string;

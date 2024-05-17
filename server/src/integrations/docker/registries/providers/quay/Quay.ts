@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SSMServicesTypes } from '../../../typings';
+import { SSMServicesTypes } from '../../../../../types/SSMServicesTypes';
 import Registry from '../../Registry';
 
 /**

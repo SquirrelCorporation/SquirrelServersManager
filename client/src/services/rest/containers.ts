@@ -14,6 +14,19 @@ export async function getContainers(
   });
 }
 
+export async function postRefreshAll(
+  params?: any,
+  options?: Record<string, any>,
+) {
+  return request<API.ContainersResponse>('/api/containers/refresh-all', {
+    method: 'POST',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 export async function getRegistries(
   params?: any,
   options?: Record<string, any>,

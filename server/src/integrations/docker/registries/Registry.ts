@@ -1,13 +1,12 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import logger from '../../../logger';
 import Component from '../core/Component';
-import { SSMServicesTypes } from '../typings';
-import ConfigurationRegistrySchema = SSMServicesTypes.ConfigurationRegistrySchema;
+import type { SSMServicesTypes } from '../../../types/typings.d.ts';
 
 /**
  * Docker Registry Abstract class.
  */
-export default class Registry extends Component<ConfigurationRegistrySchema> {
+abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistrySchema> {
   /**
    * Encode Bse64(login:password)
    * @param login
@@ -261,7 +260,7 @@ export default class Registry extends Component<ConfigurationRegistrySchema> {
     headers?: { Accept?: string; Authorization?: string };
   }) {
     try {
-      const getRequestOptions: axios.AxiosRequestConfig = {
+      const getRequestOptions: AxiosRequestConfig = {
         url: url,
         method,
         headers,
@@ -296,3 +295,5 @@ export default class Registry extends Component<ConfigurationRegistrySchema> {
     return undefined;
   }
 }
+
+export default Registry;

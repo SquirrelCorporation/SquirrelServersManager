@@ -1,19 +1,20 @@
 import Joi from 'joi';
 import _joi from 'joi';
 import logger from '../../../logger';
-import { SSMServicesTypes } from '../typings';
-import { Kind } from './WatcherEngine';
-import ConfigurationRegistrySchema = SSMServicesTypes.ConfigurationRegistrySchema;
-import ConfigurationTriggerSchema = SSMServicesTypes.ConfigurationTriggerSchema;
-import ConfigurationWatcherSchema = SSMServicesTypes.ConfigurationWatcherSchema;
-import ConfigurationAuthenticationSchema = SSMServicesTypes.ConfigurationAuthenticationSchema;
+import type { SSMServicesTypes } from '../../../types/typings.d.ts';
 
-export default class Component<
+export enum Kind {
+  WATCHER = 'watcher',
+  REGISTRY = 'registry',
+  UNKNOWN = 'unknown',
+}
+
+abstract class Component<
   T extends
-    | ConfigurationRegistrySchema
-    | ConfigurationTriggerSchema
-    | ConfigurationWatcherSchema
-    | ConfigurationAuthenticationSchema,
+    | SSMServicesTypes.ConfigurationRegistrySchema
+    | SSMServicesTypes.ConfigurationTriggerSchema
+    | SSMServicesTypes.ConfigurationWatcherSchema
+    | SSMServicesTypes.ConfigurationAuthenticationSchema,
 > {
   public joi: Joi.Root;
   public type: string;
@@ -43,7 +44,6 @@ export default class Component<
    * @param configuration the configuration of the component
    */
   async register(kind: Kind, type: string, name: string, configuration: T) {
-    // Child log for the component
     this.kind = kind;
     this.type = type;
     this.name = name;
@@ -146,4 +146,4 @@ export default class Component<
   }
 }
 
-module.exports = Component;
+export default Component;

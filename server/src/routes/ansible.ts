@@ -38,7 +38,7 @@ router.post(
 );
 router.post(`/hook/task/event`, passport.authenticate('bearer', { session: false }), addTaskEvent);
 router.get('/vault', passport.authenticate('bearer', { session: false }), getVaultPwd);
-router.get(`/inventory`, getInventory);
+router.get(`/inventory`, passport.authenticate('bearer', { session: false }), getInventory);
 
 router.use(passport.authenticate('jwt', { session: false }));
 

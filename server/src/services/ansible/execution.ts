@@ -9,7 +9,7 @@ import logger from '../../logger';
 import PlaybookUseCases from '../../use-cases/PlaybookUseCases';
 
 export const execPlaybook = asyncHandler(async (req, res) => {
-  logger.info(`[CONTROLLER]- POST - /ansible/exec/playbook - '${req.params.playbook}'`);
+  logger.info(`[CONTROLLER] - POST - ansible/exec/playbook - '${req.params.playbook}'`);
   const playbook = await PlaybookRepo.findOne(
     req.params.playbook + (req.params.playbook.endsWith('.yml') ? '' : '.yml'),
   );
@@ -31,7 +31,7 @@ export const execPlaybook = asyncHandler(async (req, res) => {
 });
 
 export const getLogs = asyncHandler(async (req, res) => {
-  logger.info(`[CONTROLLER]- GET - /ansible/exec/${req.params.id}/logs`);
+  logger.info(`[CONTROLLER] - GET - ansible/exec/${req.params.id}/logs`);
   const execLogs = await AnsibleLogsRepo.findAllByIdent(req.params.id);
   logger.debug(execLogs);
   new SuccessResponse('Execution logs', {
@@ -41,7 +41,7 @@ export const getLogs = asyncHandler(async (req, res) => {
 });
 
 export const getStatus = asyncHandler(async (req, res) => {
-  logger.info(`[CONTROLLER] - GET - /ansible/exec/:${req.params.id}/status`);
+  logger.info(`[CONTROLLER] - GET - ansible/exec/:${req.params.id}/status`);
   if (!req.params.id) {
     res.status(400).send({
       success: false,

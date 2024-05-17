@@ -1,18 +1,11 @@
 import Dockerode from 'dockerode';
 import ContainerRepo from '../../../data/database/repository/ContainerRepo';
 import logger from '../../../logger';
+import { getRegistries } from '../core/WatcherEngine';
 import Registry from '../registries/Registry';
-import registry from '../core/WatcherEngine';
 import Container from '../../../data/database/model/Container';
 import Tag from './tag';
 import tagUtil from './tag';
-/**
- * Return all supported registries
- * @returns {*}
- */
-export function getRegistries() {
-  return registry.getStates().registry;
-}
 
 /**
  * Filter candidate tags (based on tag name).
@@ -68,7 +61,7 @@ export function getTagCandidates(container: Container, tags: string[]) {
 
 export function normalizeContainer(container: Container) {
   const containerWithNormalizedImage = container;
-  logger.info(`[UTILS] - normalizeContainer - for name: ${container.image.name}`);
+  logger.info(`[UTILS] - normalizeContainer - for name: ${container.image?.name}`);
   const registryProvider = Object.values(getRegistries()).find((provider) =>
     provider.match(container.image),
   );
@@ -93,7 +86,9 @@ export function fullName(container: Container) {
 export function getRegistry(registryName: string): Registry {
   const registryToReturn = Object.values(getRegistries()).find((e) => e.name === registryName);
   if (!registryToReturn) {
-    throw new Error(`Unsupported Registry ${registryName}`);
+    throw new Error(
+      `Unsupported Registry ${registryName} - (${JSON.stringify(Object.values(getRegistries()))}`,
+    );
   }
   return registryToReturn;
 }
@@ -106,7 +101,7 @@ export function getRegistry(registryName: string): Registry {
  */
 export function getOldContainers(
   newContainers: (Container | undefined)[] | undefined,
-  containersFromTheStore: Container[] | null,
+  containersFromTheStore?: Container[] | null,
 ) {
   if (!containersFromTheStore || !newContainers) {
     return [];
@@ -237,7 +232,7 @@ export function isUpdateAvailable(container: Container) {
  * @param isSemver
  * @returns {undefined|*}
  */
-function getLink(linkTemplate, tagValue, isSemver) {
+function getLink(linkTemplate: string | undefined, tagValue: string, isSemver: boolean) {
   if (!linkTemplate) {
     return undefined;
   }
@@ -248,12 +243,12 @@ function getLink(linkTemplate, tagValue, isSemver) {
     const versionSemver = Tag.parseSemver(tagValue);
     if (versionSemver !== null) {
       const { major, minor, patch, prerelease } = versionSemver;
-      link = link.replace(/\${\s*major\s*}/g, major);
-      link = link.replace(/\${\s*minor\s*}/g, minor);
-      link = link.replace(/\${\s*patch\s*}/g, patch);
+      link = link.replace(/\${\s*major\s*}/g, `${major}`);
+      link = link.replace(/\${\s*minor\s*}/g, `${minor}`);
+      link = link.replace(/\${\s*patch\s*}/g, `${patch}`);
       link = link.replace(
         /\${\s*prerelease\s*}/g,
-        prerelease && prerelease.length > 0 ? prerelease[0] : '',
+        `${prerelease && prerelease.length > 0 ? prerelease[0] : ''}`,
       );
     }
   }
@@ -265,7 +260,8 @@ function getLink(linkTemplate, tagValue, isSemver) {
  * @param container
  * @returns {undefined|*}
  */
-export function addLinkProperty(container) {
+//TODO that is not correct
+export function addLinkProperty(container: Container) {
   if (container.linkTemplate) {
     return getLink(
       container.linkTemplate,
@@ -282,7 +278,7 @@ export function addLinkProperty(container) {
   }
 }
 
-export function getKindProperty(container) {
+export function getKindProperty(container: Container) {
   const updateKind: {
     kind: 'unknown' | 'tag' | 'digest';
     localValue?: string;

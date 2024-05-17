@@ -5,6 +5,7 @@ import { Role } from '../../data/database/model/User';
 import UserRepo from '../../data/database/repository/UserRepo';
 import { getIntConfFromCache } from '../../data/cache';
 import asyncHandler from '../../helpers/AsyncHandler';
+import Shell from '../../integrations/shell';
 import logger from '../../logger';
 import DashboardUseCase from '../../use-cases/DashboardUseCase';
 import DeviceUseCases from '../../use-cases/DeviceUseCases';
@@ -33,6 +34,7 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
     GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
   );
   const systemPerformance = await DashboardUseCase.getSystemPerformance();
+  const ansibleVersion = await Shell.getAnsibleVersion();
 
   new SuccessResponse('Get current user', {
     name: req.user?.name,
@@ -54,7 +56,7 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
     },
     settings: {
       userSpecific: {
-        userLogsLevel: req.user.logsLevel,
+        userLogsLevel: req.user?.logsLevel,
       },
       logs: {
         serverRetention: serverLogRetention,
@@ -75,6 +77,7 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
         version: version,
         deps: dependencies,
         processes: process.versions,
+        ansibleVersion: ansibleVersion,
       },
     },
   }).send(res);

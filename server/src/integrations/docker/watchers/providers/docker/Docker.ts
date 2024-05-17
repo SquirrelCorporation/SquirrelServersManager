@@ -15,7 +15,7 @@ import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../../../ansible-vault/vault'
 import Component from '../../../core/Component';
 import { getCustomAgent } from '../../../core/CustomAgent';
 import EventHandler from '../../../event/EventHandler';
-import { SSMServicesTypes } from '../../../typings';
+import type { SSMServicesTypes } from '../../../../../types/typings.d.ts';
 import { Label } from '../../../utils/label';
 import tag from '../../../utils/tag';
 import {
@@ -30,7 +30,6 @@ import {
   normalizeContainer,
   pruneOldContainers,
 } from '../../../utils/utils';
-import ConfigurationWatcherSchema = SSMServicesTypes.ConfigurationWatcherSchema;
 
 // The delay before starting the watcher when the app is started
 const START_WATCHER_DELAY_MS = 1000;
@@ -38,13 +37,13 @@ const START_WATCHER_DELAY_MS = 1000;
 // Debounce delay used when performing a watch after a docker event has been received
 const DEBOUNCED_WATCH_CRON_MS = 5000;
 
-export default class Docker extends Component<ConfigurationWatcherSchema> {
+export default class Docker extends Component<SSMServicesTypes.ConfigurationWatcherSchema> {
   public watchCron: any;
   public watchCronStat: any;
   public watchCronTimeout: any;
   public watchCronDebounced: any;
   public listenDockerEventsTimeout: any;
-  // @ts-expect-error Initialized in init
+  // @ts-ignore
   public dockerApi: Dockerode;
 
   getConfigurationSchema() {
@@ -72,11 +71,6 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
       await this.initWatcher();
       await this.dockerApi.ping();
 
-      if (this.configuration.watchdigest !== undefined) {
-        this.childLogger.warn(
-          "WUD_WATCHER_{watcher_name}_WATCHDIGEST environment variable is deprecated and won't be supported in upcoming versions",
-        );
-      }
       this.childLogger.info(`[DOCKER][WATCHER] - Cron scheduled (${this.configuration.cron})`);
       this.watchCron = CronJob.schedule(this.configuration.cron, () => {
         this.watchFromCron();
@@ -132,8 +126,8 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
         logger.debug(message);
       },
     };
+    // eslint-disable-next-line init-declarations
     let sshOptions: ConnectConfig = {};
-    //sshOptions.agent = getCustomAgent(options);
     if (deviceAuth.customDockerSSH) {
       if (deviceAuth.dockerCustomAuthType === SSHType.KeyBased) {
         sshOptions = {
@@ -327,6 +321,7 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
    * @returns {Promise<*[]>}
    */
   async watch(): Promise<any[]> {
+    // eslint-disable-next-line init-declarations
     let containers: any[] = [];
 
     // List images to watch
@@ -442,6 +437,8 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
       const result: { tag: string; digest?: string; created?: string } = {
         tag: container.image.tag.value,
       };
+      console.log(JSON.stringify(registryProvider));
+
       if (!registryProvider) {
         this.childLogger.error(
           `[DOCKER] - findNewVersion - Unsupported registry (${container.image.registry.name})`,
@@ -502,8 +499,8 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
     excludeTags: string,
     transformTags: string,
     linkTemplate: string,
-    displayName: string,
-    displayIcon: string,
+    displayName?: string,
+    displayIcon?: string,
   ): Promise<Container | undefined> {
     try {
       const containerId = container.Id;
@@ -539,6 +536,7 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
       const imageId = image.Id;
 
       // Parse image to get registries, organization...
+      // eslint-disable-next-line init-declarations
       let imageNameToParse = container.Image;
       if (imageNameToParse.includes('sha256:')) {
         if (!image.RepoTags || image.RepoTags.length === 0) {
@@ -574,6 +572,7 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
         image: {
           id: imageId,
           registry: {
+            name: 'unknown',
             url: parsedImage.domain,
           },
           name: parsedImage.path,
@@ -599,6 +598,7 @@ export default class Docker extends Component<ConfigurationWatcherSchema> {
         `[DOCKER] addImageDetailsToContainer - Error during normalizing image ${container.Image}`,
       );
       logger.error(error);
+      throw new Error(error.message);
     }
   }
 

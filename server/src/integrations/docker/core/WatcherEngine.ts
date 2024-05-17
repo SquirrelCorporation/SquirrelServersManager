@@ -8,15 +8,9 @@ import Hotio from '../registries/providers/hotio/Hotio';
 import Hub from '../registries/providers/hub/Hub';
 import Quay from '../registries/providers/quay/Quay';
 import Registry from '../registries/Registry';
-import { SSMServicesTypes } from '../typings';
+import { SSMServicesTypes } from '../../../types/typings';
 import Docker from '../watchers/providers/docker/Docker';
-import Component from './Component';
-
-export enum Kind {
-  WATCHER = 'watcher',
-  REGISTRY = 'registry',
-  UNKNOWN = 'unknown',
-}
+import Component, { Kind } from './Component';
 
 /**
  * Registry state.
@@ -33,6 +27,14 @@ const state: stateType = {
 
 function getStates() {
   return state;
+}
+
+/**
+ * Return all supported registries
+ * @returns {*}
+ */
+export function getRegistries() {
+  return getStates().registry;
 }
 
 function getComponentClass(

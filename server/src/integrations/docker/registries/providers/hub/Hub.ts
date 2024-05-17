@@ -1,6 +1,6 @@
 import axios from 'axios';
 import logger from '../../../../../logger';
-import { SSMServicesTypes } from '../../../typings';
+import { SSMServicesTypes } from '../../../../../types/SSMServicesTypes';
 import Custom from '../custom/Custom';
 
 const URL = 'https://registry-1.docker.io';

@@ -26,7 +26,7 @@ const ContainerStatProgress: React.FC<ProgressProps> = (
 
   React.useEffect(() => {
     asyncFetch();
-  });
+  }, []);
 
   return (
     <>

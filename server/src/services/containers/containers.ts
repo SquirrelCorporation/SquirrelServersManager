@@ -1,8 +1,9 @@
 import { API } from 'ssm-shared-lib';
-import { NotFoundError } from '../../core/api/ApiError';
+import { InternalError, NotFoundError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
 import ContainerRepo from '../../data/database/repository/ContainerRepo';
 import asyncHandler from '../../helpers/AsyncHandler';
+import WatcherEngine from '../../integrations/docker/core/WatcherEngine';
 import logger from '../../logger';
 import ContainerUseCases from '../../use-cases/ContainerUseCases';
 
@@ -23,4 +24,15 @@ export const postCustomNameOfContainer = asyncHandler(async (req, res) => {
   }
   await ContainerUseCases.updateCustomName(customName, container);
   new SuccessResponse('Updated container', {}).send(res);
+});
+
+export const refreshAll = asyncHandler(async (req, res) => {
+  try {
+    await Promise.all(
+      Object.values(WatcherEngine.getStates().watcher).map((watcher) => watcher.watch()),
+    );
+    new SuccessResponse('refreshed all containers', {}).send(res);
+  } catch (e: any) {
+    throw new InternalError(`Error when watching images (${e.message})`);
+  }
 });

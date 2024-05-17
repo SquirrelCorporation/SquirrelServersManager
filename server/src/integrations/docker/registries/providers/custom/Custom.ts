@@ -1,4 +1,4 @@
-import { SSMServicesTypes } from '../../../typings';
+import { SSMServicesTypes } from '../../../../../types/typings';
 import Registry from '../../Registry';
 
 /**

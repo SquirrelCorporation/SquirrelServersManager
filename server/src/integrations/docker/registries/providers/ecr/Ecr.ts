@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SSMServicesTypes } from '../../../typings';
+import { SSMServicesTypes } from '../../../../../types/SSMServicesTypes';
 import Registry from '../../Registry';
 
 const ECR_PUBLIC_GALLERY_HOSTNAME = 'public.ecr.aws';
@@ -7,7 +7,7 @@ const ECR_PUBLIC_GALLERY_HOSTNAME = 'public.ecr.aws';
 /**
  * Elastic Container Registry integration.
  */
-export default class Ecr extends Registry {
+class Ecr extends Registry {
   getConnectedConfigurationSchema() {
     return [
       {
@@ -125,3 +125,5 @@ export default class Ecr extends Registry {
       : undefined;
   }
 }
+
+export default Ecr;

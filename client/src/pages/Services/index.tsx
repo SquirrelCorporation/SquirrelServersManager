@@ -10,9 +10,14 @@ import StatusTag from '@/pages/Services/components/StatusTag';
 import UpdateAvailableTag from '@/pages/Services/components/UpdateAvailableTag';
 import {
   getContainers,
+  postRefreshAll,
   updateContainerCustomName,
 } from '@/services/rest/containers';
-import { AppstoreOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import {
+  AppstoreOutlined,
+  InfoCircleOutlined,
+  ReloadOutlined,
+} from '@ant-design/icons';
 import {
   type ActionType,
   ModalForm,
@@ -20,14 +25,14 @@ import {
   ProFormText,
   ProList,
 } from '@ant-design/pro-components';
-import { Avatar, Flex, message, Popover, Tag, Tooltip } from 'antd';
+import { Avatar, Button, Flex, message, Popover, Tag, Tooltip } from 'antd';
 import React, { useRef, useState } from 'react';
 import { API } from 'ssm-shared-lib';
 
 const Index: React.FC = () => {
   const [cardActionProps] = useState<'actions' | 'extra'>('extra');
   const actionRef = useRef<ActionType>();
-
+  const [refreshAllIsLoading, setRefreshAllIsLoading] = useState(false);
   const [ghost] = useState<boolean>(false);
   const [
     isEditContainerCustomNameModalOpened,
@@ -49,6 +54,17 @@ const Index: React.FC = () => {
         setIsEditContainerCustomNameModalOpened(true);
       }
     }
+  };
+
+  const handleRefreshAll = () => {
+    setRefreshAllIsLoading(true);
+    postRefreshAll()
+      .then(() => {
+        actionRef?.current?.reload();
+      })
+      .finally(() => {
+        setRefreshAllIsLoading(false);
+      });
   };
 
   const colorPalette = [
@@ -112,6 +128,19 @@ const Index: React.FC = () => {
         ghost={ghost}
         itemCardProps={{
           ghost,
+        }}
+        toolBarRender={() => {
+          return [
+            <Button
+              icon={<ReloadOutlined />}
+              key="refresh"
+              type="primary"
+              loading={refreshAllIsLoading}
+              onClick={handleRefreshAll}
+            >
+              Refresh
+            </Button>,
+          ];
         }}
         actionRef={actionRef}
         rowKey={'id'}

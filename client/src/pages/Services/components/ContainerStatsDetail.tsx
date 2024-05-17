@@ -44,7 +44,7 @@ const ContainerStatsDetail: React.FC<ContainerStatsDetailProps> = (
 
   useEffect(() => {
     asyncFetch();
-  });
+  }, []);
 
   const config = {
     animate: { enter: { type: 'waveIn' } },
