@@ -1,17 +1,15 @@
 import express from 'express';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
-import { NextFunction, Request, Response } from 'express';
 import { SECRET } from './config';
-import { ApiError, ErrorType, InternalError } from './core/api/ApiError';
 import { connection } from './data/database';
-import { findIpAddress } from './helpers/utils';
+import WatcherEngine from './integrations/docker/core/WatcherEngine';
+import { errorHandler } from './middlewares/errorHandler';
 import routes from './routes';
-import scheduledFunctions from './integrations/crons';
 import logger from './logger';
 import Configuration from './core/startup';
 import './middlewares/passport';
-
+import Crons from './integrations/crons';
 //const pino = require('pino-http')();
 
 const app = express();
@@ -25,32 +23,37 @@ if (!SECRET) {
 app.use(cookieParser());
 app.use(passport.initialize());
 
-connection().then(async () => {
-  await Configuration.needConfigurationInit();
-  scheduledFunctions();
-  app.use('/', routes);
-  // Middleware Error Handler
-  // TODO: move to middlewares
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    if (err instanceof ApiError) {
-      ApiError.handle(err, res, req);
-      if (err.type === ErrorType.INTERNAL) {
-        logger.error(
-          `[ERROR] 500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${findIpAddress(req)}`,
-        );
-      }
-    } else {
-      logger.error(
-        `[ERROR] 500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${findIpAddress(req)}`,
-      );
-      logger.error(err);
-      ApiError.handle(new InternalError(), res, req);
-    }
-  });
-  app.listen(3000, () =>
-    logger.info(`
+let server: any;
+
+const start = () => {
+  logger.info(`Starting server...`);
+  connection().then(async () => {
+    await Configuration.needConfigurationInit();
+    await WatcherEngine.init();
+    Crons.initScheduledJobs();
+    app.use('/', routes);
+    app.use(errorHandler);
+    server = app.listen(3000, () =>
+      logger.info(`
     🐿 Squirrel Servers Manager
     🚀 Server ready at: http://localhost:3000`),
-  );
+    );
+  });
+};
+start();
+
+export const restart = async () => {
+  await WatcherEngine.deregisterAll();
+  Crons.stopAllScheduledJobs();
+  server.close(() => {
+    logger.info('Server is closed');
+    logger.info('\n----------------- restarting -------------');
+    start();
+  });
+};
+
+/*process.on('uncaughtException', (err, origin) => {
+  console.error('Unhandled exception. Please handle!', err.stack || err);
+  console.error(`Origin: ${JSON.stringify(origin)}`);
 });
+*/

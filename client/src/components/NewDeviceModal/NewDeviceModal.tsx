@@ -24,7 +24,7 @@ import {
   Card,
 } from 'antd';
 import React, { useRef, useState } from 'react';
-import SSHConnectionForm from '@/components/SSHConnectionForm/SSHConnectionForm';
+import SSHConnectionForm from '@/components/DeviceConfiguration/SSHConnectionForm';
 import { putDevice } from '@/services/rest/device';
 
 export type NewDeviceModalProps = {

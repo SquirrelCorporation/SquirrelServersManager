@@ -11,11 +11,16 @@ export default [
       },
     ],
   },
-  { path: '/', name: 'Dashboard', icon: 'smile', component: './Welcome' },
+  {
+    path: '/',
+    name: 'Dashboard',
+    icon: 'FundOutlined',
+    component: './Welcome',
+  },
   {
     path: '/manage',
     name: 'Manage',
-    icon: 'crown',
+    icon: 'GlobalOutlined',
     routes: [
       {
         name: 'Devices',
@@ -28,6 +33,12 @@ export default [
         icon: 'PlaySquareOutlined',
         path: '/manage/playbooks',
         component: './Playbooks',
+      },
+      {
+        name: 'Services',
+        icon: 'AppstoreOutlined',
+        path: '/manage/services',
+        component: './Services',
       },
     ],
   },

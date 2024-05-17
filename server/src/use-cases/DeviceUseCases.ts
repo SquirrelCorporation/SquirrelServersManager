@@ -79,8 +79,27 @@ async function deleteDevice(device: Device) {
   await DeviceRepo.deleteByUuid(device.uuid);
 }
 
+async function updateDockerWatcher(
+  device: Device,
+  dockerWatcher: boolean,
+  dockerWatcherCron?: string,
+) {
+  logger.info(`[USECASES][DEVICE] - updateDockerWatcher - DeviceUuid: ${device.uuid}`);
+  device.dockerWatcher = dockerWatcher;
+  device.dockerWatcherCron = dockerWatcherCron;
+  await DeviceRepo.update(device);
+}
+
+async function getDevicesToWatch() {
+  return DeviceRepo.findWithFilter({
+    dockerWatcher: true,
+  });
+}
+
 export default {
   updateDeviceFromJson,
   getDevicesOverview,
   deleteDevice,
+  updateDockerWatcher,
+  getDevicesToWatch,
 };

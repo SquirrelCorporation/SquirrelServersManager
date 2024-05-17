@@ -1,4 +1,5 @@
 import express from 'express';
+import containers from './containers';
 import ping from './ping';
 import devices from './devices';
 import admin from './admin';
@@ -17,5 +18,6 @@ router.use('/ansible', ansible);
 router.use('/logs/', logs);
 router.use('/settings', settings);
 router.use('/', user);
+router.use('/containers', containers);
 
 export default router;

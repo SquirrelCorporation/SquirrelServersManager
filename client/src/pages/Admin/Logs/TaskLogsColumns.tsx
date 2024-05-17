@@ -23,7 +23,13 @@ const TaskLogsColumns: ProColumns<API.Task>[] = [
       return (
         <Tag
           bordered={false}
-          color={entity.status === 'successful' ? 'success' : 'error'}
+          color={
+            entity.status === 'successful'
+              ? 'success'
+              : entity.status === 'failed'
+                ? 'error'
+                : 'default'
+          }
         >
           {entity.status}
         </Tag>

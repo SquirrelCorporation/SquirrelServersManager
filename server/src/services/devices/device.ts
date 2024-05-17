@@ -27,6 +27,7 @@ export const addDevice = asyncHandler(async (req, res) => {
     unManaged,
     becomeMethod,
     becomePass,
+    sshKeyPass,
   } = req.body;
   if (masterNodeUrl) {
     await setToCache(AnsibleReservedExtraVarsKeys.MASTER_NODE_URL, masterNodeUrl);
@@ -46,6 +47,7 @@ export const addDevice = asyncHandler(async (req, res) => {
       sshPwd: sshPwd ? await vaultEncrypt(sshPwd, DEFAULT_VAULT_ID) : undefined,
       sshPort: sshPort,
       sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
+      sshKeyPass: sshKeyPass ? await vaultEncrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
       becomeMethod: becomeMethod,
       becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
     } as DeviceAuth);
@@ -164,4 +166,20 @@ export const deleteDevice = asyncHandler(async (req, res) => {
   }
   await DeviceUseCases.deleteDevice(device);
   new SuccessResponse('Delete device successful').send(res);
+});
+
+export const updateDockerWatcher = asyncHandler(async (req, res) => {
+  logger.info(`[CONTROLLER] - POST - /devices/${req.params.uuid}/docker-watcher`);
+  const { dockerWatcher, dockerWatcherCron } = req.body;
+  const device = await DeviceRepo.findOneByUuid(req.params.uuid);
+
+  if (!device) {
+    logger.error('[CONTROLLER] Device not found');
+    throw new NotFoundError(`Device not found (${req.params.uuid})`);
+  }
+  await DeviceUseCases.updateDockerWatcher(device, dockerWatcher, dockerWatcherCron);
+  new SuccessResponse('Update docker watcher flag successful', {
+    dockerWatcher: dockerWatcher,
+    dockerWatcherCron: dockerWatcherCron,
+  }).send(res);
 });

@@ -1,5 +1,5 @@
 import { useModel } from '@umijs/max';
-import { Flex } from 'antd';
+import { Descriptions, Flex } from 'antd';
 import React from 'react';
 import { version } from '../../../../../package.json';
 
@@ -9,48 +9,37 @@ const Information: React.FC = () => {
 
   return (
     <Flex vertical gap={32} style={{ width: '50%' }}>
-      <table style={{ border: '1px solid white' }}>
-        <tbody>
-          <tr>
-            <td>Client Version</td>
-            <td>{version}</td>
-          </tr>
-          <tr>
-            <td>Server Version</td>
-            <td>{currentUser?.settings?.server.version}</td>
-          </tr>
-          <tr>
-            <td>Server Deps</td>
-            <td>
-              <table style={{ border: '1px dashed white' }}>
-                <tbody>
-                  {Object.keys(currentUser?.settings?.server.deps).map((e) => (
-                    <tr key={e}>
-                      <td>{e}</td>
-                      <td>{currentUser?.settings?.server.deps[e]}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td>Server Processes</td>
-            <td>
-              <table style={{ border: '1px dashed white' }}>
-                <tbody>
-                  {Object.keys(currentUser?.settings?.server.processes).map((e) => (
-                    <tr key={e}>
-                      <td>{e}</td>
-                      <td>{currentUser?.settings?.server.processes[e]}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <Descriptions title="Client Information">
+        <Descriptions.Item label="Version">{version}</Descriptions.Item>
+      </Descriptions>
+      <Descriptions title="Server Information">
+        <Descriptions.Item label="Server Version">
+          {currentUser?.settings?.server.version}
+        </Descriptions.Item>
+      </Descriptions>
+      <Descriptions title="Ansible">
+        {currentUser?.settings?.server.ansibleVersion
+          ?.split('\n')
+          .map((e: any) => (
+            <Descriptions.Item contentStyle={{ fontSize: '12px' }} key={e}>
+              {e}
+            </Descriptions.Item>
+          ))}
+      </Descriptions>
+      <Descriptions title="Server Deps">
+        {Object.keys(currentUser?.settings?.server.deps).map((e) => (
+          <Descriptions.Item key={e} label={e}>
+            {currentUser?.settings?.server.deps[e]}
+          </Descriptions.Item>
+        ))}
+      </Descriptions>
+      <Descriptions title="Server Processes">
+        {Object.keys(currentUser?.settings?.server.processes).map((e) => (
+          <Descriptions.Item key={e} label={e}>
+            {currentUser?.settings?.server.processes[e]}
+          </Descriptions.Item>
+        ))}
+      </Descriptions>
     </Flex>
   );
 };

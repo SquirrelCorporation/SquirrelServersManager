@@ -3,10 +3,10 @@ import { GrommetIconsInstall } from '@/components/Icons/CustomIcons';
 import NewDeviceModal from '@/components/NewDeviceModal/NewDeviceModal';
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
 import PlaybookSelectionModal from '@/components/PlaybookSelectionModal/PlaybookSelectionModal';
-import QuickActionReference, {
+import DeviceQuickActionReference, {
   Actions,
   Types,
-} from '@/components/QuickAction/QuickActionReference';
+} from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionReference';
 import TerminalModal, { TerminalStateProps } from '@/components/TerminalModal';
 import InventoryColumns from '@/pages/Admin/Inventory/InventoryColumns';
 import { deleteDevice, getDevices } from '@/services/rest/device';
@@ -75,11 +75,11 @@ const Inventory: React.FC = () => {
   };
 
   const onDropDownClicked = (idx: number) => {
-    if (QuickActionReference[idx].type === Types.ACTION) {
-      if (QuickActionReference[idx].action === Actions.CONNECT) {
+    if (DeviceQuickActionReference[idx].type === Types.ACTION) {
+      if (DeviceQuickActionReference[idx].action === Actions.CONNECT) {
         window.location.href = 'ssh://' + currentRow?.ip;
       }
-      if (QuickActionReference[idx].action === Actions.DELETE) {
+      if (DeviceQuickActionReference[idx].action === Actions.DELETE) {
         setShowConfirmDeleteDevice(true);
       }
     }

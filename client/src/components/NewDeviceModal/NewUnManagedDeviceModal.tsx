@@ -4,7 +4,7 @@ import { Col, message, Modal, Result, Row, Typography } from 'antd';
 import { DotLottiePlayer, PlayMode } from '@dotlottie/react-player';
 import { ProCard, ProFormText } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
-import SSHConnectionForm from '@/components/SSHConnectionForm/SSHConnectionForm';
+import SSHConnectionForm from '@/components/DeviceConfiguration/SSHConnectionForm';
 import { putDevice } from '@/services/rest/device';
 
 export type NewUnManagedDeviceModalProps = {

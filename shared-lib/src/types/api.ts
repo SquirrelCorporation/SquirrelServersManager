@@ -1,3 +1,5 @@
+import { SSHType } from '../enums/ansible';
+
 export type HasUsers = {
   success?: boolean;
   data?: { hasUsers?: boolean };
@@ -178,6 +180,8 @@ export type RaspberryRevisionData = {
 export type DeviceItem = {
   uuid: string;
   disabled?: boolean;
+  dockerWatcher?: boolean;
+  dockerWatcherCron?: string;
   hostname?: string;
   fqdn?: string;
   ip?: string;
@@ -291,6 +295,16 @@ export type DeviceStat = {
   value: number;
 };
 
+export type ContainerStats = {
+  data?: ContainerStat[];
+  success?: boolean;
+};
+
+export type ContainerStat = {
+  date: string;
+  value: number;
+};
+
 export type SimpleDeviceStat = {
   value: number;
 };
@@ -342,6 +356,16 @@ export type DeviceAuth = {
   sshUser?: string;
   sshPwd?: string;
   sshKey?: string;
+  customDockerSSH?: boolean;
+  dockerCustomAuthType?: SSHType;
+  dockerCustomSshUser?: string;
+  dockerCustomSshPwd?: string;
+  dockerCustomSshKeyPass?: string;
+  dockerCustomSshKey?: string;
+  customDockerForcev6?: boolean;
+  customDockerForcev4?: boolean;
+  customDockerAgentForward?: boolean;
+  customDockerTryKeyboard?: boolean;
 };
 
 export type DeviceAuthParams = {
@@ -350,6 +374,7 @@ export type DeviceAuthParams = {
   sshKey?: string;
   sshPwd?: string;
   sshUser?: string;
+  sshKeyPass?: string;
   becomeMethod?: string;
   becomePass?: string;
   becomeUser?: string;
@@ -358,6 +383,29 @@ export type DeviceAuthParams = {
   strictHostChecking?: boolean;
   sshCommonArgs?: string;
   sshExecutable?: string;
+  customDockerSSH?: boolean;
+  dockerCustomAuthType?: SSHType;
+  dockerCustomSshUser?: string;
+  dockerCustomSshPwd?: string;
+  dockerCustomSshKeyPass?: string;
+  dockerCustomSshKey?: string;
+  customDockerForcev6?: boolean;
+  customDockerForcev4?: boolean;
+  customDockerAgentForward?: boolean;
+  customDockerTryKeyboard?: boolean;
+};
+
+export type DeviceDockerAuthParams = {
+  customDockerSSH?: boolean;
+  dockerCustomAuthType?: SSHType;
+  dockerCustomSshUser?: string;
+  dockerCustomSshPwd?: string;
+  dockerCustomSshKeyPass?: string;
+  dockerCustomSshKey?: string;
+  customDockerForcev6?: boolean;
+  customDockerForcev4?: boolean;
+  customDockerAgentForward?: boolean;
+  customDockerTryKeyboard?: boolean;
 };
 
 export type UserSettingsResetApiKey = {
@@ -463,5 +511,79 @@ export type ExtraVar = {
   required?: boolean;
   canBeOverride?: boolean;
 };
+
+export type Image = {
+  id: string;
+  registry: {
+    name: string;
+    url: string;
+  };
+  name: string;
+  tag: {
+    value: string;
+    semver?: boolean;
+  };
+  digest: {
+    watch?: boolean;
+    value?: string;
+    repo?: string;
+  };
+  architecture: string;
+  os: string;
+  variant?: string[];
+  created?: string;
+};
+
+export type ContainerUpdate = {
+  kind: 'tag' | 'digest' | 'unknown';
+  localValue?: string;
+  remoteValue?: string;
+  semverDiff?: 'major' | 'minor' | 'patch' | 'prerelease' | 'unknown';
+}
+
+export type ContainerInspectResult = {
+  tag?: string;
+  digest?: string;
+  created?: string;
+  link?: string;
+}
+
+export type Container = {
+  device?: DeviceItem;
+  id?: string;
+  name?: string;
+  customName?: string;
+  watcher?: string;
+  updateAvailable?: boolean;
+  status?:string;
+  image?: Image;
+  updateKind?: ContainerUpdate;
+  result?: ContainerInspectResult;
+}
+
+
+export type ContainerResult = {
+  container?: any;
+}
+
+export type ContainersResponse = SimpleResult & {
+  data?: Container[];
+}
+
+export type ContainerRegistries = {
+  registries?: ContainerRegistry[];
+}
+
+export type ContainerRegistryResponse = SimpleResult & {
+  data?: ContainerRegistries;
+}
+
+export type ContainerRegistry ={
+  name: string;
+  authScheme: any;
+  provider: string;
+  authSet: boolean;
+  canAuth: boolean;
+}
 
 export type ExtraVars = ExtraVar[];

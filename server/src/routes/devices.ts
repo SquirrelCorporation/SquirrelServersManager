@@ -1,12 +1,16 @@
 import express from 'express';
 import passport from 'passport';
-import { addDevice, addDeviceAuto, deleteDevice, getDevices } from '../services/devices/device';
+import { addDevice, addDeviceAuto, deleteDevice, getDevices, updateDockerWatcher } from '../services/devices/device';
 import {
   addDeviceAutoValidator,
   addDeviceValidator,
   deleteDeviceValidator,
 } from '../services/devices/device.validator';
-import { addOrUpdateDeviceAuth, getDeviceAuth } from '../services/devices/deviceauth';
+import {
+  addOrUpdateDeviceAuth,
+  getDeviceAuth,
+  updateDockerAuth,
+} from '../services/devices/deviceauth';
 import {
   addOrUpdateDeviceAuthValidator,
   getDeviceAuthValidator,
@@ -51,9 +55,11 @@ router
   .route(`/:uuid/auth`)
   .get(getDeviceAuthValidator, getDeviceAuth)
   .post(addOrUpdateDeviceAuthValidator, addOrUpdateDeviceAuth);
+router.route('/:uuid/docker').post(updateDockerAuth);
+router.route('/:uuid/docker-watcher').post(updateDockerWatcher);
+
 router.route('/').put(addDeviceValidator, addDevice).get(getDevices);
 router.delete(`/:uuid`, deleteDeviceValidator, deleteDevice);
 router.get(`/:uuid/stats/:type/`, getDeviceStatsByDeviceUuidValidator, getDeviceStatsByDeviceUuid);
 router.get(`/:uuid/stat/:type/`, getDeviceStatByDeviceUuidValidator, getDeviceStatByDeviceUuid);
-
 export default router;

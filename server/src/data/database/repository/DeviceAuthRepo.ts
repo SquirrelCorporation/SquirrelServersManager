@@ -10,6 +10,14 @@ async function updateOrCreateIfNotExist(deviceAuth: DeviceAuth): Promise<DeviceA
   return _deviceAuth.toObject();
 }
 
+async function update(deviceAuth: DeviceAuth): Promise<DeviceAuth | undefined> {
+  const _deviceAuth = await DeviceAuthModel.findOneAndUpdate(
+    { device: deviceAuth.device },
+    deviceAuth,
+  );
+  return _deviceAuth?.toObject();
+}
+
 async function findOneByDevice(device: Device): Promise<DeviceAuth | null> {
   return await DeviceAuthModel.findOne({ device: device }).lean().exec();
 }
@@ -47,4 +55,5 @@ export default {
   findAllPop,
   findManyByDevicesUuid,
   deleteByDevice,
+  update,
 };

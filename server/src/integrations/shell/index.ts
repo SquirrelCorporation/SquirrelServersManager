@@ -136,6 +136,15 @@ async function deletePlaybook(playbook: string) {
   }
 }
 
+async function getAnsibleVersion() {
+  try {
+    logger.info('[SHELL] - getAnsibleVersion - Starting...');
+    return shell.exec('ansible --version').toString();
+  } catch (error) {
+    logger.error('[SHELL]- - getAnsibleVersion');
+  }
+}
+
 export default {
   executePlaybook,
   listPlaybooks,
@@ -144,4 +153,5 @@ export default {
   newPlaybook,
   deletePlaybook,
   readPlaybookConfiguration,
+  getAnsibleVersion,
 };

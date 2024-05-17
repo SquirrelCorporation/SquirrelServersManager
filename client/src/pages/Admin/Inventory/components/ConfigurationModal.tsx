@@ -1,6 +1,9 @@
-import { Button, Modal, Tabs, TabsProps } from 'antd';
+import { DockerConnectionForm } from '@/components/DeviceConfiguration/DockerConnectionForm';
+import { UilDocker, WhhSsh } from '@/components/Icons/CustomIcons';
+import DockerConfigurationForm from '@/pages/Admin/Inventory/components/DockerConfigurationForm';
+import { Modal, Tabs, TabsProps } from 'antd';
 import React from 'react';
-import ConfigurationFormSSH from '@/pages/Admin/Inventory/components/ConfigurationFormSSH';
+import SSHConfigurationForm from '@/pages/Admin/Inventory/components/SSHConfigurationForm';
 import { API } from 'ssm-shared-lib';
 
 export type ConfigurationModalProps = {
@@ -14,7 +17,12 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
     {
       key: '1',
       label: 'SSH',
-      children: <ConfigurationFormSSH values={props.values} />,
+      children: <SSHConfigurationForm values={props.values} />,
+    },
+    {
+      key: '2',
+      label: 'Docker',
+      children: <DockerConfigurationForm values={props.values} />,
     },
   ];
 

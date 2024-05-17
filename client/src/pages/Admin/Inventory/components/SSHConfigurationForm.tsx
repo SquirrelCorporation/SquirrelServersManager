@@ -1,7 +1,7 @@
 import React from 'react';
 import { Space, message } from 'antd';
 import { ProForm } from '@ant-design/pro-form/lib';
-import SSHConnectionForm from '@/components/SSHConnectionForm/SSHConnectionForm';
+import SSHConnectionForm from '@/components/DeviceConfiguration/SSHConnectionForm';
 import { getDeviceAuth, putDeviceAuth } from '@/services/rest/deviceauth';
 import { API } from 'ssm-shared-lib';
 
@@ -9,7 +9,7 @@ export type ConfigurationFormSSHProps = {
   values: Partial<API.DeviceItem>;
 };
 
-const ConfigurationFormSSH: React.FC<ConfigurationFormSSHProps> = (props) => {
+const SSHConfigurationForm: React.FC<ConfigurationFormSSHProps> = (props) => {
   return (
     <>
       <ProForm
@@ -34,6 +34,7 @@ const ConfigurationFormSSH: React.FC<ConfigurationFormSSHProps> = (props) => {
               sshUser: values.sshUser,
               sshPwd: values.sshPwd,
               sshKey: values.sshKey,
+              sshKeyPass: values.sshKeyPass,
               becomeUser: values.becomeUser,
               becomeMethod: values.becomeMethod,
               becomePass: values.becomePass,
@@ -67,9 +68,11 @@ const ConfigurationFormSSH: React.FC<ConfigurationFormSSHProps> = (props) => {
                 sshUser: res.data.sshUser,
                 sshPwd: res.data.sshPwd,
                 sshKey: res.data.sshKey,
+                sshKeyPass: res.data.sshKeyPass,
                 becomeUser: res.data.becomeUser,
                 becomeMethod: res.data.becomeMethod,
                 becomePass: res.data.becomePass,
+                strictHostChecking: res.data.strictHostChecking,
               };
             });
           } else {
@@ -86,4 +89,4 @@ const ConfigurationFormSSH: React.FC<ConfigurationFormSSHProps> = (props) => {
   );
 };
 
-export default ConfigurationFormSSH;
+export default SSHConfigurationForm;

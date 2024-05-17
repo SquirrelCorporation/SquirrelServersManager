@@ -1,4 +1,6 @@
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
+import AdvancedSettings from '@/pages/Admin/Settings/components/AdvancedSettings';
+import RegistrySettings from '@/pages/Admin/Settings/components/RegistrySettings';
 import UserSettings from '@/pages/Admin/Settings/components/UserSettings';
 import GeneralSettings from '@/pages/Admin/Settings/components/GeneralSettings';
 import Information from '@/pages/Admin/Settings/components/Information';
@@ -30,12 +32,22 @@ const Settings: React.FC = () => {
       key: '3',
       label: (
         <div>
-          <SettingOutlined /> Clean up
+          <SettingOutlined /> Registries
         </div>
       ),
+      children: <RegistrySettings />,
     },
     {
       key: '4',
+      label: (
+        <div>
+          <SettingOutlined /> Advanced
+        </div>
+      ),
+      children: <AdvancedSettings />,
+    },
+    {
+      key: '5',
       label: (
         <div>
           <InfoCircleOutlined /> System Information

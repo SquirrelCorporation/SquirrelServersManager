@@ -61,6 +61,10 @@ async function deleteByUuid(uuid: string): Promise<void> {
   await DeviceModel.deleteOne({ uuid: uuid }).exec();
 }
 
+async function findWithFilter(filter: any): Promise<Device[] | null> {
+  return await DeviceModel.find(filter).lean().exec();
+}
+
 export default {
   create,
   update,
@@ -70,4 +74,5 @@ export default {
   findOneByIp,
   findByUuids,
   deleteByUuid,
+  findWithFilter,
 };

@@ -54,4 +54,11 @@ const initScheduledJobs = () => {
   });
 };
 
-export default initScheduledJobs;
+const stopAllScheduledJobs = () => {
+  logger.warn('[CRON] - stopping all scheduled jobs.');
+  CronJob.getTasks().forEach((e) => {
+    e.stop();
+  });
+};
+
+export default { initScheduledJobs, stopAllScheduledJobs };

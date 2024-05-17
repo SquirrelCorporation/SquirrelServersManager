@@ -5,16 +5,16 @@ import {
 } from '@/components/HeaderComponents/AvatarDropdown';
 import { DevicesHeaderWidget } from '@/components/HeaderComponents/DevicesHeaderWidget';
 import DocumentationWidget from '@/components/HeaderComponents/DocumentationWidget';
+import { HealthWidget } from '@/components/HeaderComponents/HealthWidget';
 import { currentUser as queryCurrentUser, hasUser } from '@/services/rest/user';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
-import type { RunTimeLayoutConfig } from '@umijs/max';
-import { history } from '@umijs/max';
+// @ts-ignore
+import { history, RunTimeLayoutConfig } from '@umijs/max';
+import { API } from 'ssm-shared-lib';
 import defaultSettings from '../config/defaultSettings';
 import Logo from '../public/logo.svg';
 import { errorConfig } from './requestErrorConfig';
-import { HealthWidget } from '@/components/HeaderComponents/HealthWidget';
-import { API } from 'ssm-shared-lib';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -51,6 +51,7 @@ export async function getInitialState(): Promise<{
     return undefined;
   };
 
+  // @ts-ignore
   const { location } = history;
   if (location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
@@ -68,7 +69,9 @@ export async function getInitialState(): Promise<{
 
 // ProLayout  https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({
+  // @ts-ignore
   initialState,
+  // @ts-ignore
   setInitialState,
 }) => {
   return {
@@ -88,6 +91,7 @@ export const layout: RunTimeLayoutConfig = ({
     menu: { type: 'group' },
     footerRender: () => <Footer />,
     onPageChange: () => {
+      // @ts-ignore
       const { location } = history;
       // login
       if (!initialState?.currentUser && location.pathname !== loginPath) {

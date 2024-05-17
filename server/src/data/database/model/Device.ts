@@ -10,6 +10,8 @@ export default interface Device {
   _id: string;
   uuid: string;
   disabled?: boolean;
+  dockerWatcher?: boolean;
+  dockerWatcherCron?: string;
   hostname?: string;
   fqdn?: string;
   ip?: string;
@@ -51,6 +53,16 @@ const schema = new Schema<Device>(
       type: Schema.Types.Boolean,
       required: true,
       default: false,
+    },
+    dockerWatcher: {
+      type: Schema.Types.Boolean,
+      required: true,
+      default: true,
+    },
+    dockerWatcherCron: {
+      type: Schema.Types.String,
+      required: true,
+      default: '0 * * * *',
     },
     hostname: {
       type: Schema.Types.String,

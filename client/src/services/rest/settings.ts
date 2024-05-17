@@ -47,3 +47,27 @@ export async function postResetSettings(options?: Record<string, any>) {
     ...(options || {}),
   });
 }
+
+export async function postRestartServer(options?: Record<string, any>) {
+  return request<API.SimpleResult>(`/api/settings/advanced/restart`, {
+    method: 'POST',
+    ...{},
+    ...(options || {}),
+  });
+}
+
+export async function deleteServerLogs(options?: Record<string, any>) {
+  return request<API.SimpleResult>(`/api/settings/advanced/logs`, {
+    method: 'DELETE',
+    ...{},
+    ...(options || {}),
+  });
+}
+
+export async function deleteAnsibleLogs(options?: Record<string, any>) {
+  return request<API.SimpleResult>(`/api/settings/advanced/ansible-logs`, {
+    method: 'DELETE',
+    ...{},
+    ...(options || {}),
+  });
+}
