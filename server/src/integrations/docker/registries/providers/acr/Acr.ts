@@ -1,4 +1,4 @@
-import { SSMServicesTypes } from '../../../../../types/SSMServicesTypes';
+import type { SSMServicesTypes } from '../../../../../types/typings.d.ts';
 import Registry from '../../Registry';
 
 /**
@@ -7,6 +7,8 @@ import Registry from '../../Registry';
 class Acr extends Registry {
   getConfigurationSchema() {
     return this.joi.object().keys({
+      name: this.joi.string().optional(),
+      provider: this.joi.string().optional(),
       clientid: this.joi.string().required(),
       clientsecret: this.joi.string().required(),
     });

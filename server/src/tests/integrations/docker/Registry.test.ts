@@ -49,7 +49,12 @@ describe('testing Registry', () => {
     registryMocked.childLogger = { debug: vi.fn(), info: vi.fn(), error: vi.fn(), warn: vi.fn() };
     // @ts-expect-error partial type
     registryMocked.callRegistry = async () => {
-      return { headers: { Accept: 'xxx' }, data: { tags: ['v1', 'v2', 'v3'] } };
+      return {
+        headers: {
+          'docker-content-digest': '123456789',
+        },
+        data: { tags: ['v1', 'v2', 'v3'] },
+      };
     };
     await expect(
       // @ts-expect-error partial type
@@ -126,7 +131,7 @@ describe('testing Registry', () => {
     const registryMocked = new Registry();
     registryMocked.childLogger = { debug: vi.fn(), info: vi.fn(), error: vi.fn(), warn: vi.fn() };
     // @ts-expect-error partial type
-    registryMocked.callRegistry = (options) => {
+    registryMocked.callRegistry = async (options) => {
       if (
         // @ts-expect-error partial type
         options.headers.Accept ===
@@ -183,7 +188,7 @@ describe('testing Registry', () => {
     const registryMocked = new Registry();
     registryMocked.childLogger = { debug: vi.fn(), info: vi.fn(), error: vi.fn(), warn: vi.fn() };
     // @ts-expect-error partial type
-    registryMocked.callRegistry = (options) => {
+    registryMocked.callRegistry = async (options) => {
       if (
         // @ts-expect-error partial type
         options.headers.Accept ===
@@ -234,7 +239,7 @@ describe('testing Registry', () => {
     const registryMocked = new Registry();
     registryMocked.childLogger = { debug: vi.fn(), info: vi.fn(), error: vi.fn(), warn: vi.fn() };
     // @ts-expect-error partial type
-    registryMocked.callRegistry = (options) => {
+    registryMocked.callRegistry = async (options) => {
       if (
         // @ts-expect-error partial type
         options.headers.Accept ===
@@ -302,16 +307,18 @@ describe('testing Registry', () => {
     );
   });
 
-  test('callRegistry should call authenticate', () => {
+  test('callRegistry should call authenticate', async () => {
     const registryMocked = new Registry();
     registryMocked.childLogger = { debug: vi.fn(), info: vi.fn(), error: vi.fn(), warn: vi.fn() };
     const spyAuthenticate = vi.spyOn(registryMocked, 'authenticate');
-    registryMocked.callRegistry({
-      // @ts-expect-error partial type
-      image: {},
-      url: 'url',
-      method: 'get',
-    });
+    try {
+      await registryMocked.callRegistry({
+        // @ts-expect-error partial type
+        image: {},
+        url: 'url',
+        method: 'get',
+      });
+    } catch (error: any) {}
     expect(spyAuthenticate).toHaveBeenCalledTimes(1);
   });
 });

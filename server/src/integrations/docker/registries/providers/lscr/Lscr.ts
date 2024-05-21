@@ -1,15 +1,15 @@
-import type { SSMServicesTypes } from '../../../../../types/typings.d.ts';
-import Registry from '../../Registry';
+import Joi from 'joi';
+import type { SSMServicesTypes } from '../../../../../types/typings';
+import Ghcr from '../ghcr/Ghcr';
 
 /**
- * Hotio.dev Container Registry integration.
+ * Linux-Server Container Registry integration.
  */
-export default class Hotio extends Registry {
-  getConfigurationSchema() {
-    return this.joi
-      .object()
-      .keys({ name: this.joi.string().optional(), provider: this.joi.string().optional() })
-      .allow(null);
+class Lscr extends Ghcr {
+  getConfigurationSchema(): Joi.ObjectSchema<any> | Joi.AlternativesSchema<any> {
+    return this.joi.object().keys({
+      token: this.joi.string().allow('').required(),
+    });
   }
 
   /**
@@ -19,7 +19,7 @@ export default class Hotio extends Registry {
    */
   // eslint-disable-next-line class-methods-use-this
   match(image: SSMServicesTypes.Image) {
-    return /^.*\.?hotio.dev/.test(image.registry.url);
+    return /^.*\.?lscr.io$/.test(image.registry.url);
   }
 
   /**
@@ -30,10 +30,12 @@ export default class Hotio extends Registry {
   // eslint-disable-next-line class-methods-use-this
   normalizeImage(image: SSMServicesTypes.Image) {
     const imageNormalized = image;
-    imageNormalized.registry.name = 'hotio';
+    imageNormalized.registry.name = 'lscr';
     if (!imageNormalized.registry.url.startsWith('https://')) {
       imageNormalized.registry.url = `https://${imageNormalized.registry.url}/v2`;
     }
     return imageNormalized;
   }
 }
+
+export default Lscr;

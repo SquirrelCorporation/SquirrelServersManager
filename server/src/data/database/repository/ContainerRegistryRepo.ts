@@ -17,7 +17,7 @@ async function findMany(filter: any): Promise<ContainerRegistry[] | null> {
 }
 
 async function updateOne(registry: ContainerRegistry) {
-  // @ts-ignore
+  // @ts-expect-error id is not exposed
   return await ContainerRegistryModel.updateOne({ _id: registry._id }, registry).exec();
 }
 

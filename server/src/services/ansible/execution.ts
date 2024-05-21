@@ -19,6 +19,7 @@ export const execPlaybook = asyncHandler(async (req, res) => {
   try {
     const execId = await PlaybookUseCases.executePlaybook(
       playbook,
+      // @ts-expect-error user will not be null
       req.user,
       req.body.target,
       req.body.extraVars as API.ExtraVars,

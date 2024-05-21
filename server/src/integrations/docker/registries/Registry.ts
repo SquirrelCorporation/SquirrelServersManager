@@ -146,7 +146,7 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
           this.childLogger.debug(
             `[REGISTRY] getImageManifestDigest - Filter manifest for [arch=${image.architecture}, os=${image.os}, variant=${image.variant}]`,
           );
-          let manifestFound;
+          let manifestFound: any;
           const manifestFounds = responseManifests.manifests.filter(
             (manifest: SSMServicesTypes.Manifest) =>
               manifest.platform.architecture === image.architecture &&

@@ -6,28 +6,16 @@ import Registry from '../../Registry';
  * Google Container Registry integration.
  */
 export default class Gcr extends Registry {
-  getConnectedConfigurationSchema() {
-    return [
-      {
-        name: 'clientemail',
-        type: 'string',
-      },
-      {
-        name: 'privatekey',
-        type: 'string',
-      },
-    ];
-  }
-
-  // @ts-expect-error alternatives type
   getConfigurationSchema() {
-    return this.joi.alternatives([
-      this.joi.object().allow({}),
-      this.joi.object().keys({
+    return this.joi.alternatives().try(
+      this.joi.object().optional().keys({
+        name: this.joi.string().optional(),
+        provider: this.joi.string().optional(),
         clientemail: this.joi.string().required(),
         privatekey: this.joi.string().required(),
       }),
-    ]);
+      this.joi.object().equal({}),
+    );
   }
 
   /**

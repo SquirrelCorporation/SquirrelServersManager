@@ -1,39 +1,22 @@
 import axios from 'axios';
-import { SSMServicesTypes } from '../../../../../types/SSMServicesTypes';
+import type { SSMServicesTypes } from '../../../../../types/typings.d.ts';
 import Registry from '../../Registry';
 
 /**
  * Quay.io Registry integration.
  */
 export default class Quay extends Registry {
-  getConnectedConfigurationSchema() {
-    return [
-      {
-        name: 'namespace',
-        type: 'string',
-      },
-      {
-        name: 'account',
-        type: 'string',
-      },
-      {
-        name: 'token',
-        type: 'string',
-      },
-    ];
-  }
-  // @ts-expect-error alternatives types
   getConfigurationSchema() {
-    return this.joi.alternatives([
-      // Anonymous configuration
-      this.joi.object().allow({}),
-      // Auth configuration
-      this.joi.object().keys({
+    return this.joi.alternatives().try(
+      this.joi.object().optional().keys({
+        name: this.joi.string().optional(),
+        provider: this.joi.string().optional(),
         namespace: this.joi.string().required(),
         account: this.joi.string().required(),
         token: this.joi.string().required(),
       }),
-    ]);
+      this.joi.object().equal({}),
+    );
   }
 
   /**
@@ -90,7 +73,7 @@ export default class Quay extends Registry {
         },
       };
       try {
-        const response = await axios.request(request);
+        const response = await axios(request);
         token = response.data.token;
       } catch (e: any) {
         this.childLogger.warn(`Error when trying to get an access token (${e.message})`);

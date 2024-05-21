@@ -580,10 +580,12 @@ export type ContainerRegistryResponse = SimpleResult & {
 
 export type ContainerRegistry ={
   name: string;
+  fullName: string;
   authScheme: any;
   provider: string;
   authSet: boolean;
   canAuth: boolean;
+  canAnonymous: boolean;
 }
 
 export type ExtraVars = ExtraVar[];

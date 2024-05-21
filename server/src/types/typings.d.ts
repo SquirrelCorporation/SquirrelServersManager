@@ -192,6 +192,21 @@ export declare namespace SSMServicesTypes {
     variant: string[];
     created: string;
   };
+
+  export type RegistryAuthScheme = {
+    name: string;
+    type: string;
+    values?: RegistryAuthScheme[][];
+  };
+  export type RegistryAuthConfig = {
+    name: string;
+    provider: string;
+    default: boolean;
+    persist: boolean;
+    fullName?: string;
+    config: { canAnonymous: boolean };
+    authScheme?: RegistryAuthScheme[];
+  };
 }
 
 declare module '../integrations/docker/watchers/providers/docker/Docker';

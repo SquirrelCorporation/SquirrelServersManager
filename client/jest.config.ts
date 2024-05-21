@@ -6,8 +6,7 @@ export default async () => {
       target: 'browser',
     }),
   });
-  console.log(JSON.stringify(config));
-
+  F;
   return {
     ...config,
     testEnvironmentOptions: {

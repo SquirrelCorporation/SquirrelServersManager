@@ -1,27 +1,23 @@
-import { SSMServicesTypes } from '../../../../../types/SSMServicesTypes';
+import Joi from 'joi';
+import type { SSMServicesTypes } from '../../../../../types/typings.d.ts';
 import Registry from '../../Registry';
 
 /**
  * Github Container Registry integration.
  */
 export default class Ghcr extends Registry {
-  getConnectedConfigurationSchema() {
-    return [
-      {
-        name: 'token',
-        type: 'string',
-      },
-    ];
-  }
-
-  // @ts-expect-error alternatives type
-  getConfigurationSchema() {
-    return this.joi.alternatives([
-      this.joi.object().allow({}),
-      this.joi.object().keys({
-        token: this.joi.string().allow('').required(),
-      }),
-    ]);
+  getConfigurationSchema(): Joi.ObjectSchema<any> | Joi.AlternativesSchema<any> {
+    return this.joi.alternatives().try(
+      this.joi
+        .object()
+        .optional()
+        .keys({
+          name: this.joi.string().optional(),
+          provider: this.joi.string().optional(),
+          token: this.joi.string().allow('').required(),
+        }),
+      this.joi.object().equal({}),
+    );
   }
 
   /**

@@ -26,6 +26,7 @@ export const updateRegistry = asyncHandler(async (req, res) => {
 
 export const createCustomRegistry = asyncHandler(async (req, res) => {
   const { name } = req.params;
+  logger.info(`[CONTROLLER] - PUT - /containers/registries/${name}`);
   const containerRegistry = await ContainerRegistryRepo.findOneByName(name);
   if (containerRegistry) {
     logger.error('[CONTROLLER] - PUT - Container Registry - already exist with same name');

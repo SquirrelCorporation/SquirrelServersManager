@@ -1,3 +1,4 @@
+import Joi from 'joi';
 import { SSMServicesTypes } from '../../../../../types/typings';
 import Registry from '../../Registry';
 
@@ -5,41 +6,13 @@ import Registry from '../../Registry';
  * Docker Custom Registry V2 integration.
  */
 export default class Custom extends Registry {
-  getConnectedConfigurationSchema() {
-    return [
-      {
-        name: 'url',
-        type: 'string',
-      },
-      {
-        name: 'Connection Type',
-        type: 'choice',
-        values: [
-          [
-            {
-              name: 'login',
-              type: 'string',
-            },
-            {
-              name: 'password',
-              type: 'string',
-            },
-          ],
-          [
-            {
-              name: 'auth',
-              type: 'string',
-            },
-          ],
-        ],
-      },
-    ];
-  }
-  // @ts-expect-error alternatives type
-  getConfigurationSchema() {
-    return this.joi.alternatives().try(
-      this.joi.object().allow({}),
-      this.joi.object().keys({
+  getConfigurationSchema(): Joi.ObjectSchema<any> | Joi.AlternativesSchema<any> {
+    return this.joi
+      .object()
+      .optional()
+      .keys({
+        name: this.joi.string().optional(),
+        provider: this.joi.string().optional(),
         url: this.joi.string().uri().required(),
         login: this.joi.alternatives().conditional('password', {
           not: undefined,
@@ -58,8 +31,7 @@ export default class Custom extends Registry {
             .alternatives()
             .try(this.joi.string().base64(), this.joi.string().valid('')),
         }),
-      }),
-    ) as SSMServicesTypes.ConfigurationRegistrySchema;
+      });
   }
 
   /**

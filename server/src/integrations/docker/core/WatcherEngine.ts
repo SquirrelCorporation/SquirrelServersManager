@@ -1,11 +1,16 @@
 import logger from '../../../logger';
 import ContainerRegistryUseCases from '../../../use-cases/ContainerRegistryUseCases';
 import DeviceUseCases from '../../../use-cases/DeviceUseCases';
+import Custom from '../registries/providers/custom/Custom';
 import Ecr from '../registries/providers/ecr/Ecr';
+import Forjejo from '../registries/providers/forjejo/Forjejo';
 import Gcr from '../registries/providers/gcr/Gcr';
 import Ghcr from '../registries/providers/ghcr/Ghcr';
+import Gitea from '../registries/providers/gitea/Gitea';
 import Hotio from '../registries/providers/hotio/Hotio';
 import Hub from '../registries/providers/hub/Hub';
+import Lscr from '../registries/providers/lscr/Lscr';
+import providerConf from '../registries/providers/provider.conf';
 import Quay from '../registries/providers/quay/Quay';
 import Registry from '../registries/Registry';
 import { SSMServicesTypes } from '../../../types/typings';
@@ -45,22 +50,25 @@ function getComponentClass(
     case 'watcher/docker':
       return new Docker();
     case 'registry/hub':
-      // @ts-expect-error alternative type
       return new Hub();
+    case 'registry/custom':
+      return new Custom();
     case 'registry/gcr':
-      // @ts-expect-error alternative type
       return new Gcr();
     case 'registry/ghcr':
-      // @ts-expect-error alternative type
       return new Ghcr();
     case 'registry/quay':
-      // @ts-expect-error alternative type
       return new Quay();
     case 'registry/hotio':
       return new Hotio();
     case 'registry/ecr':
-      // @ts-expect-error alternative type
       return new Ecr();
+    case 'registry/gitea':
+      return new Gitea();
+    case 'registry/forjejo':
+      return new Forjejo();
+    case 'registry/lscr':
+      return new Lscr();
     default:
       throw new Error(`Unknown kind.provider: ${kind}/${provider}`);
   }
@@ -97,7 +105,6 @@ async function registerComponent(
         break;
       case Kind.REGISTRY:
         state.registry[componentRegistered.getId()] = componentRegistered;
-        await ContainerRegistryUseCases.addIfNotExists(componentRegistered as Registry);
         break;
       default:
         throw new Error(`Unknown registering component: ${componentRegistered.getId()}`);
@@ -150,14 +157,13 @@ async function registerRegistries() {
   });
   const registriesToRegister: Record<string, any> = {};
 
-  // Default registries
-  registriesToRegister['hotio'] = async () =>
-    registerComponent(Kind.REGISTRY, 'hotio', 'hotio', {});
-  registriesToRegister['ecr'] = async () => registerComponent(Kind.REGISTRY, 'ecr', 'ecr', {});
-  registriesToRegister['hub'] = async () => registerComponent(Kind.REGISTRY, 'hub', 'hub', {});
-  registriesToRegister['gcr'] = async () => registerComponent(Kind.REGISTRY, 'gcr', 'gcr', {});
-  registriesToRegister['ghcr'] = async () => registerComponent(Kind.REGISTRY, 'ghcr', 'ghcr', {});
-  registriesToRegister['quay'] = async () => registerComponent(Kind.REGISTRY, 'quay', 'quay', {});
+  // Default anonymous registries, will be overrode if a connected one exist
+  providerConf
+    .filter((e) => e.default)
+    .map((e) => {
+      registriesToRegister[e.name] = async () =>
+        registerComponent(Kind.REGISTRY, e.provider, e.name, {});
+    });
   try {
     configurations?.forEach((configuration, index) => {
       registriesToRegister[configuration.provider] = async () =>

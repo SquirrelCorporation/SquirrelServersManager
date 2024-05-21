@@ -9,11 +9,11 @@ const ansibleRunner = 'ssm-ansible-run.py';
 const ssmApiKeyEnv = 'SSM_API_KEY';
 
 function sanitizeInventory(inventoryTargets: Ansible.All & Ansible.HostGroups) {
-  return JSON.stringify(inventoryTargets).replaceAll('\\\\', '\\') + "'";
+  return "'" + JSON.stringify(inventoryTargets).replaceAll('\\\\', '\\') + "'";
 }
 
 function getInventoryTargets(inventoryTargets: Ansible.All & Ansible.HostGroups) {
-  return `${inventoryTargets ? "--specific-host '" + sanitizeInventory(inventoryTargets) : ''}`;
+  return `${inventoryTargets ? '--specific-host ' + sanitizeInventory(inventoryTargets) : ''}`;
 }
 
 function getLogLevel(user: User) {
@@ -40,4 +40,8 @@ function buildAnsibleCmd(
 
 export default {
   buildAnsibleCmd,
+  sanitizeInventory,
+  getInventoryTargets,
+  getLogLevel,
+  getExtraVars,
 };

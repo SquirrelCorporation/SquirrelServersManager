@@ -1,10 +1,16 @@
 import {
+  DeviconAzure,
   DeviconGooglecloud,
   FluentMdl2RegistryEditor,
   LogoHotIo,
   LogosAws,
   LogosQuay,
+  OouiUserAnonymous,
+  SimpleIconsForgejo,
+  SimpleIconsGitea,
+  VaadinCubes,
   VscodeIconsFileTypeDocker2,
+  ZmdiGithub,
 } from '@/components/Icons/CustomIcons';
 import {
   createCustomRegistry,
@@ -13,7 +19,12 @@ import {
   resetRegistry,
   updateRegistry,
 } from '@/services/rest/containers';
-import { UndoOutlined } from '@ant-design/icons';
+import {
+  CheckCircleOutlined,
+  MinusCircleOutlined,
+  UndoOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import {
   ModalForm,
   ProForm,
@@ -34,12 +45,16 @@ import {
 import { DeleteOutline } from 'antd-mobile-icons';
 import React, { useEffect, useState } from 'react';
 import { API } from 'ssm-shared-lib';
+import { ContainerRegistry } from 'ssm-shared-lib/distribution/types/api';
 
 const getRegistryLogo = (provider: string) => {
   switch (provider) {
-    case 'gcr':
     case 'ghcr':
+      return <ZmdiGithub />;
+    case 'gcr':
       return <DeviconGooglecloud />;
+    case 'acr':
+      return <DeviconAzure />;
     case 'hotio':
       return <LogoHotIo />;
     case 'hub':
@@ -48,6 +63,12 @@ const getRegistryLogo = (provider: string) => {
       return <LogosAws />;
     case 'quay':
       return <LogosQuay />;
+    case 'forjejo':
+      return <SimpleIconsForgejo />;
+    case 'gitea':
+      return <SimpleIconsGitea />;
+    case 'lscr':
+      return <VaadinCubes />;
     default:
       return <FluentMdl2RegistryEditor />;
   }
@@ -58,7 +79,11 @@ const RegistrySettings: React.FC = () => {
   const asyncFetch = async () => {
     await getRegistries().then((list) => {
       if (list?.data) {
-        setRegistries(list.data?.registries || []);
+        setRegistries(
+          list.data?.registries.sort((a: ContainerRegistry, b) =>
+            a.authSet && !b.authSet ? -1 : 1,
+          ) || [],
+        );
       }
     });
   };
@@ -120,7 +145,7 @@ const RegistrySettings: React.FC = () => {
         {selectedRecord?.authSet && (
           <Space
             direction="vertical"
-            style={{ width: '100%', marginBottom: '5px' }}
+            style={{ width: '100%', marginBottom: '15px', marginTop: '15px' }}
           >
             <Alert
               message="The authentication is already set for this provider"
@@ -134,10 +159,10 @@ const RegistrySettings: React.FC = () => {
           <>
             <Space
               direction="vertical"
-              style={{ width: '100%', marginBottom: '5px' }}
+              style={{ width: '100%', marginBottom: '15px', marginTop: '15px' }}
             >
               <Alert
-                message="Custom registry provider creation"
+                message="You will create a new custom registry provider"
                 type="info"
                 showIcon
               />
@@ -244,6 +269,7 @@ const RegistrySettings: React.FC = () => {
           provider: {},
           name: {},
           authSet: false,
+          canAnonymous: false,
         }}
         headerTitle="Registries"
         dataSource={registries
@@ -252,6 +278,7 @@ const RegistrySettings: React.FC = () => {
             provider: 'custom',
             authSet: false,
             canAuth: true,
+            canAnonymous: false,
             authScheme: [
               {
                 name: 'url',
@@ -289,7 +316,8 @@ const RegistrySettings: React.FC = () => {
             name: item.name,
             authScheme: item.authScheme,
             provider: item.provider,
-            subTitle: <></>,
+            canAnonymous: item.canAnonymous,
+            subTitle: <>{item.fullName}</>,
             canAuth: item.canAuth,
             authSet: item.authSet,
             actions: [
@@ -354,9 +382,19 @@ const RegistrySettings: React.FC = () => {
                   <div>
                     {(item.name !== 'custom' &&
                       ((item.authSet && (
-                        <Tag color={'cyan'}>Authentified</Tag>
-                      )) || <Tag color={'magenta'}>Anonymous</Tag>)) ||
-                      ''}
+                        <Tag icon={<CheckCircleOutlined />} color={'cyan'}>
+                          Authentified
+                        </Tag>
+                      )) ||
+                        (item.canAnonymous && (
+                          <Tag icon={<UserOutlined />} color={'magenta'}>
+                            Anonymous
+                          </Tag>
+                        )))) || (
+                      <Tag icon={<MinusCircleOutlined />} color={'geekblue'}>
+                        Deactivated
+                      </Tag>
+                    )}
                   </div>
                 </div>
               </div>

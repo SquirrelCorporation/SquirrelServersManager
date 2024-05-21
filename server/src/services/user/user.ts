@@ -1,11 +1,11 @@
 import { GeneralSettingsKeys } from 'ssm-shared-lib/distribution/enums/settings';
 import { AuthFailureError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
+import { getAnsibleVersion } from '../../core/system/version';
 import { Role } from '../../data/database/model/User';
 import UserRepo from '../../data/database/repository/UserRepo';
 import { getIntConfFromCache } from '../../data/cache';
 import asyncHandler from '../../helpers/AsyncHandler';
-import Shell from '../../integrations/shell';
 import logger from '../../logger';
 import DashboardUseCase from '../../use-cases/DashboardUseCase';
 import DeviceUseCases from '../../use-cases/DeviceUseCases';
@@ -34,7 +34,6 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
     GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
   );
   const systemPerformance = await DashboardUseCase.getSystemPerformance();
-  const ansibleVersion = await Shell.getAnsibleVersion();
 
   new SuccessResponse('Get current user', {
     name: req.user?.name,
@@ -77,7 +76,7 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
         version: version,
         deps: dependencies,
         processes: process.versions,
-        ansibleVersion: ansibleVersion,
+        ansibleVersion: await getAnsibleVersion(),
       },
     },
   }).send(res);

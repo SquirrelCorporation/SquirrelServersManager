@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { SSMServicesTypes } from '../../../types/SSMServicesTypes';
+import type { SSMServicesTypes } from '../../../types/typings.d.ts';
 import Device from './Device';
 
 export const DOCUMENT_NAME = 'Container';

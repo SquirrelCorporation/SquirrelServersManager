@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi, { AlternativesSchema } from 'joi';
 import _joi from 'joi';
 import logger from '../../../logger';
 import type { SSMServicesTypes } from '../../../types/typings.d.ts';
@@ -90,16 +90,12 @@ abstract class Component<
     return schemaValidated.value ? schemaValidated.value : {};
   }
 
-  getConnectedConfigurationSchema(): any {
-    return undefined;
-  }
-
   /**
    * Get the component configuration schema.
    * Can be overridden by the component implementation class
    * @returns {*}
    */
-  getConfigurationSchema() {
+  getConfigurationSchema(): Joi.ObjectSchema<any> | AlternativesSchema<any> {
     return this.joi.object();
   }
 

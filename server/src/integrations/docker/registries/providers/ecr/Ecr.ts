@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SSMServicesTypes } from '../../../../../types/SSMServicesTypes';
+import type { SSMServicesTypes } from '../../../../../types/typings.d.ts';
 import Registry from '../../Registry';
 
 const ECR_PUBLIC_GALLERY_HOSTNAME = 'public.ecr.aws';
@@ -8,33 +8,17 @@ const ECR_PUBLIC_GALLERY_HOSTNAME = 'public.ecr.aws';
  * Elastic Container Registry integration.
  */
 class Ecr extends Registry {
-  getConnectedConfigurationSchema() {
-    return [
-      {
-        name: 'accesskeyid',
-        type: 'string',
-      },
-      {
-        name: 'secretaccesskey',
-        type: 'string',
-      },
-      {
-        name: 'region',
-        type: 'string',
-      },
-    ];
-  }
-
-  // @ts-expect-error alternatives types
   getConfigurationSchema() {
-    return this.joi.alternatives([
-      this.joi.object().allow({}),
-      this.joi.object().keys({
+    return this.joi.alternatives().try(
+      this.joi.object().optional().keys({
+        name: this.joi.string().optional(),
+        provider: this.joi.string().optional(),
         accesskeyid: this.joi.string().required(),
         secretaccesskey: this.joi.string().required(),
         region: this.joi.string().required(),
       }),
-    ]);
+      this.joi.object().equal({}),
+    );
   }
 
   /**
@@ -93,6 +77,7 @@ class Ecr extends Registry {
         },
         region: this.configuration.region,
       });
+      console.log(JSON.stringify(ecr));
       const authorizationToken = await ecr.getAuthorizationToken().promise();
       if (requestOptionsWithAuth.headers) {
         if (authorizationToken.authorizationData && authorizationToken.authorizationData[0]) {

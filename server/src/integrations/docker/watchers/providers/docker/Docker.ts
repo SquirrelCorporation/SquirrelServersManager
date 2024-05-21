@@ -14,7 +14,6 @@ import logger from '../../../../../logger';
 import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../../../ansible-vault/vault';
 import Component from '../../../core/Component';
 import { getCustomAgent } from '../../../core/CustomAgent';
-import EventHandler from '../../../event/EventHandler';
 import type { SSMServicesTypes } from '../../../../../types/typings.d.ts';
 import { Label } from '../../../utils/label';
 import tag from '../../../utils/tag';
@@ -337,7 +336,6 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
       const containerReports = await Promise.all(
         containers.map((container) => this.watchContainer(container)),
       );
-      EventHandler.emitContainerReports(containerReports);
       return containerReports;
     } catch (e: any) {
       logger.error(e);
@@ -371,7 +369,6 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
       };
     }
     const containerReport = this.mapContainerToContainerReport(containerWithResult);
-    EventHandler.emitContainerReport(containerReport);
     return containerReport;
   }
 
@@ -437,7 +434,6 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
       const result: { tag: string; digest?: string; created?: string } = {
         tag: container.image.tag.value,
       };
-      console.log(JSON.stringify(registryProvider));
 
       if (!registryProvider) {
         this.childLogger.error(

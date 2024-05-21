@@ -1,18 +1,24 @@
 import ContainerRegistry from '../data/database/model/ContainerRegistry';
 import ContainerRegistryRepo from '../data/database/repository/ContainerRegistryRepo';
 import WatcherEngine from '../integrations/docker/core/WatcherEngine';
-import Registry from '../integrations/docker/registries/Registry';
+import logger from '../logger';
+import type { SSMServicesTypes } from '../types/typings.d.ts';
 
-async function addIfNotExists(registry: Registry) {
-  const containerRegistry = await ContainerRegistryRepo.findOneByProvider(registry.getId());
+async function addIfNotExists(registry: SSMServicesTypes.RegistryAuthConfig) {
+  const containerRegistry = await ContainerRegistryRepo.findOneByProvider(registry.provider);
   if (!containerRegistry) {
-    await ContainerRegistryRepo.create({
+    const savedRegistry = await ContainerRegistryRepo.create({
       name: registry.name,
-      provider: registry.getId(),
-      authScheme: registry.getConnectedConfigurationSchema(),
+      fullName: registry.fullName,
+      provider: registry.provider,
+      authScheme: registry.authScheme,
       authSet: false,
-      canAuth: registry.getConnectedConfigurationSchema() !== undefined,
+      canAnonymous: registry.config.canAnonymous || false,
+      canAuth: registry.authScheme !== undefined,
     });
+    logger.info(`[CONTAINERREGISTRY][USECASES] - Saved registry ${savedRegistry.name}`);
+  } else {
+    logger.info(`[CONTAINERREGISTRY][USECASES] - Registry ${registry.name} already exists`);
   }
 }
 
@@ -25,11 +31,14 @@ async function updateRegistryAuth(registry: ContainerRegistry, auth: any) {
 }
 
 async function createCustomRegistry(name: string, auth: any, authScheme: any) {
+  logger.info(`[CONTAINERREGISTRY][USECASES] - Creating registry : ${name}`);
+
   const newRegistry = await ContainerRegistryRepo.create({
     name: name,
     auth: auth,
     authSet: true,
     provider: 'custom',
+    canAnonymous: false,
     canAuth: true,
     authScheme: authScheme,
   });

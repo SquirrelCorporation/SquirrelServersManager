@@ -10,6 +10,8 @@ export default interface ContainerRegistry {
   provider: string;
   authSet: boolean;
   canAuth: boolean;
+  canAnonymous: boolean;
+  fullName?: string;
 }
 
 const schema = new Schema<ContainerRegistry>({
@@ -32,6 +34,13 @@ const schema = new Schema<ContainerRegistry>({
   canAuth: {
     type: Schema.Types.Boolean,
     default: false,
+  },
+  canAnonymous: {
+    type: Schema.Types.Boolean,
+    default: false,
+  },
+  fullName: {
+    type: Schema.Types.String,
   },
 });
 

@@ -6,12 +6,11 @@
     "strict": true,
     "lib": ["esnext"],
     "esModuleInterop": true,
-    "moduleResolution": "Node",
-    "module": "ESNext",
+    "moduleResolution": "node16",
+    "module": "Node16",
     "downlevelIteration": true,
     "resolveJsonModule": true,
     "noImplicitAny": false,
-    "allowJs": true,
     "typeRoots": [
       "./src/types",
       "./node_modules/@types/"

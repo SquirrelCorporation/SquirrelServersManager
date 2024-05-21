@@ -1,6 +1,5 @@
 import axios from 'axios';
-import logger from '../../../../../logger';
-import { SSMServicesTypes } from '../../../../../types/SSMServicesTypes';
+import type { SSMServicesTypes } from '../../../../../types/typings.d.ts';
 import Custom from '../custom/Custom';
 
 const URL = 'https://registry-1.docker.io';
@@ -15,53 +14,22 @@ export default class Hub extends Custom {
     }
   }
 
-  getConnectedConfigurationSchema() {
-    return [
-      {
-        name: 'login',
-        type: 'string',
-      },
-      {
-        name: 'Connection type',
-        type: 'choice',
-        values: [
-          [
-            {
-              name: 'password',
-              type: 'string',
-            },
-          ],
-          [
-            {
-              name: 'token',
-              type: 'string',
-            },
-          ],
-          [
-            {
-              name: 'auth',
-              type: 'string',
-            },
-          ],
-        ],
-      },
-    ];
-  }
   /**
    * Get the Hub configuration schema.
    * @returns {*}
    */
-  // @ts-expect-error alternative type
   getConfigurationSchema() {
-    return this.joi.alternatives([
-      this.joi.object().allow({}),
-      this.joi.object().keys({
+    return this.joi.alternatives().try(
+      this.joi.object().optional().keys({
+        name: this.joi.string().optional(),
+        provider: this.joi.string().optional(),
         login: this.joi.string(),
         password: this.joi.string(),
         token: this.joi.string(),
         auth: this.joi.string().base64(),
       }),
-    ]);
+      this.joi.object().equal({}),
+    );
   }
 
   /**
@@ -136,7 +104,7 @@ export default class Hub extends Custom {
       request.headers.Authorization = `Basic ${credentials}`;
     }
     try {
-      const response = await axios.request(request);
+      const response = await axios(request);
       const requestOptionsWithAuth = requestOptions;
       if (requestOptionsWithAuth.headers) {
         requestOptionsWithAuth.headers.Authorization = `Bearer ${response.data.token}`;
