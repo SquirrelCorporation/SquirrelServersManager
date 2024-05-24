@@ -14,7 +14,7 @@ describe('testing Registry', () => {
     vi.resetAllMocks();
     registry = new Registry();
     registry.childLogger = { debug: vi.fn(), info: vi.fn(), error: vi.fn(), warn: vi.fn() };
-    await registry.register(Kind.REGISTRY, 'hub', 'test', {});
+    await registry.register('test', Kind.REGISTRY, 'hub', 'test', {});
   });
 
   afterEach(() => {

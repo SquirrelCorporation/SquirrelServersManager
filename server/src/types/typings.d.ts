@@ -124,12 +124,15 @@ export declare namespace SSMServicesTypes {
     id: string;
   };
 
+  // TODO: convert to camelCase
   export type ConfigurationWatcherSchema = {
     socket?: string;
     cafile?: string;
     certfile?: string;
     keyfile?: string;
     cron: string;
+    watchstats?: boolean;
+    cronstats: string;
     watchbydefault: boolean;
     watchall?: boolean;
     watchevents?: boolean;

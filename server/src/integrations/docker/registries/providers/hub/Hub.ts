@@ -97,7 +97,7 @@ export default class Hub extends Custom {
     const credentials = this.getAuthCredentials();
     if (credentials) {
       this.childLogger.info(
-        '[HUB] An authentication credentials for registry docker.io has been set, trying...',
+        'An authentication credentials for registry docker.io has been set, trying...',
       );
     }
     if (credentials && request.headers) {
@@ -109,10 +109,10 @@ export default class Hub extends Custom {
       if (requestOptionsWithAuth.headers) {
         requestOptionsWithAuth.headers.Authorization = `Bearer ${response.data.token}`;
       }
-      this.childLogger.info(`[HUB] - Authentication done - ${response.status}`);
+      this.childLogger.info(`Authentication done - ${response.status}`);
       return requestOptionsWithAuth;
     } catch (e: any) {
-      this.childLogger.error('[HUB] - Authentication failed');
+      this.childLogger.error('Authentication failed');
       throw e;
     }
   }

@@ -40,7 +40,7 @@ abstract class Component<
 
   /**
    * Register the component.
-   * @param id
+   * @param _id
    * @param kind
    * @param type the type of the component
    * @param name the name of the component
@@ -52,7 +52,10 @@ abstract class Component<
     this.type = type;
     this.name = name;
     this.configuration = this.validateConfiguration(configuration);
-    this.childLogger = logger.child({ module: `registry/${type}/${name}` });
+    this.childLogger = logger.child(
+      { module: `${kind}/${type}/${name}` },
+      { msgPrefix: `[${kind.toUpperCase()}][${type.toUpperCase()}] - ` },
+    );
     this.childLogger.info(
       `Register with configuration ${JSON.stringify(this.maskConfiguration())}`,
     );

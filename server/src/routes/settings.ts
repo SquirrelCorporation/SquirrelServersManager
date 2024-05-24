@@ -6,7 +6,13 @@ import { postDevicesSettings } from '../services/settings/devices';
 import { postDevicesSettingsValidator } from '../services/settings/devices.validator';
 import { postLogsSettings } from '../services/settings/logs';
 import { postLogsSettingsValidator } from '../services/settings/logs.validator';
-import { deleteAnsibleLogs, deleteLogs, postRestartServer } from '../services/settings/advanced';
+import {
+  deleteAnsibleLogs,
+  deleteContainerStats,
+  deleteDeviceStats,
+  deleteLogs,
+  postRestartServer,
+} from '../services/settings/advanced';
 
 const router = express.Router();
 
@@ -18,5 +24,7 @@ router.post(`/logs/:key`, postLogsSettingsValidator, postLogsSettings);
 router.post('/advanced/restart', postRestartServer);
 router.delete('/advanced/logs', deleteLogs);
 router.delete('/advanced/ansible-logs', deleteAnsibleLogs);
+router.delete('/advanced/device-stats', deleteDeviceStats);
+router.delete('/advanced/container-stats', deleteContainerStats);
 
 export default router;

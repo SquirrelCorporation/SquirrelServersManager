@@ -1,6 +1,6 @@
 import { DeviceStatus } from 'ssm-shared-lib/distribution/enums/status';
 import { API } from 'ssm-shared-lib';
-import Device from '../data/database/model/Device';
+import Device, { DeviceModel } from '../data/database/model/Device';
 import DeviceAuthRepo from '../data/database/repository/DeviceAuthRepo';
 import DeviceDownTimeEventRepo from '../data/database/repository/DeviceDownTimeEventRepo';
 import DeviceRepo from '../data/database/repository/DeviceRepo';
@@ -96,10 +96,21 @@ async function getDevicesToWatch() {
   });
 }
 
+async function updateDockerInfo(uuid: string, dockerId: string, dockerVersion: string) {
+  const device = await DeviceRepo.findOneByUuid(uuid);
+  if (device) {
+    device.updatedAt = new Date();
+    device.dockerId = dockerId;
+    device.dockerVersion = dockerVersion;
+    return DeviceModel.findOneAndUpdate({ uuid: device.uuid }, device).lean().exec();
+  }
+}
+
 export default {
   updateDeviceFromJson,
   getDevicesOverview,
   deleteDevice,
   updateDockerWatcher,
   getDevicesToWatch,
+  updateDockerInfo,
 };

@@ -31,6 +31,7 @@ export default interface DeviceAuth {
   customDockerForcev4?: boolean;
   customDockerAgentForward?: boolean;
   customDockerTryKeyboard?: boolean;
+  customDockerSocket?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -140,6 +141,10 @@ const schema = new Schema<DeviceAuth>(
       required: false,
     },
     dockerCustomSshUser: {
+      type: Schema.Types.String,
+      required: false,
+    },
+    customDockerSocket: {
       type: Schema.Types.String,
       required: false,
     },

@@ -13,7 +13,7 @@ import {
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
-import { Card, Flex, message, Space, Switch, Tooltip, Upload } from 'antd';
+import { Card, Flex, message, Space, Switch, Tooltip } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Cron from 'react-js-cron';
 import 'react-js-cron/dist/styles.css';
@@ -27,7 +27,7 @@ const connectionTypes = [
 ];
 
 export type ConfigurationFormDockerProps = {
-  deviceUuid: string;
+  deviceUuid?: string;
   deviceIp?: string;
   dockerWatcher?: boolean;
   dockerWatcherCron?: string;
@@ -36,28 +36,36 @@ export type ConfigurationFormDockerProps = {
 export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
   const [showAdvanced, setShowAdvanced] = React.useState(false);
   const [dockerWatcher, setDockerWatcher] = React.useState(
-    props.dockerWatcher || true,
+    props.dockerWatcher === undefined ? true : props.dockerWatcher,
   );
   const [dockerWatcherCron, setDockerWatcherCron] = useState(
     props.dockerWatcherCron,
   );
 
   const handleOnChangeDockerWatcher = async () => {
-    await updateDeviceDockerWatcher(props.deviceUuid, !dockerWatcher).then(
-      (data) => {
-        setDockerWatcher(data.dockerWatcher);
-        message.success({ content: 'Setting updated' });
-      },
-    );
+    if (props.deviceUuid) {
+      await updateDeviceDockerWatcher(props.deviceUuid, !dockerWatcher).then(
+        (response) => {
+          setDockerWatcher(response.data.dockerWatcher);
+          message.success({ content: 'Setting updated' });
+        },
+      );
+    } else {
+      message.error({ content: 'Internal error - no device id' });
+    }
   };
   const handleOnChangeDockerWatcherCron = async () => {
-    await updateDeviceDockerWatcher(
-      props.deviceUuid,
-      dockerWatcher,
-      dockerWatcherCron,
-    ).then(() => {
-      message.success({ content: 'Setting updated' });
-    });
+    if (props.deviceUuid) {
+      await updateDeviceDockerWatcher(
+        props.deviceUuid,
+        dockerWatcher,
+        dockerWatcherCron,
+      ).then(() => {
+        message.success({ content: 'Setting updated' });
+      });
+    } else {
+      message.error({ content: 'Internal error - no device id' });
+    }
   };
   useEffect(() => {
     if (props.dockerWatcherCron !== dockerWatcherCron) {

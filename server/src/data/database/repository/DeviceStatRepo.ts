@@ -182,6 +182,10 @@ async function deleteManyByDevice(device: Device) {
   await DeviceStatModel.deleteMany({ device: device }).exec();
 }
 
+async function deleteAll(): Promise<void> {
+  await DeviceStatModel.deleteMany().exec();
+}
+
 export default {
   create,
   findLatestStat,
@@ -191,4 +195,5 @@ export default {
   findSingleAveragedStatByDevicesAndType,
   findSingleAveragedStatAndType,
   deleteManyByDevice,
+  deleteAll,
 };

@@ -12,6 +12,11 @@ export default interface Device {
   disabled?: boolean;
   dockerWatcher?: boolean;
   dockerWatcherCron?: string;
+  dockerStatsWatcher?: boolean;
+  dockerStatsCron?: string;
+  dockerEventsWatcher?: boolean;
+  dockerVersion?: string;
+  dockerId?: string;
   hostname?: string;
   fqdn?: string;
   ip?: string;
@@ -60,6 +65,11 @@ const schema = new Schema<Device>(
       default: true,
     },
     dockerWatcherCron: {
+      type: Schema.Types.String,
+      required: true,
+      default: '0 * * * *',
+    },
+    dockerStatsCron: {
       type: Schema.Types.String,
       required: true,
       default: '0 * * * *',
@@ -161,6 +171,22 @@ const schema = new Schema<Device>(
     raspberry: {
       type: Object,
       required: false,
+    },
+    dockerVersion: {
+      type: Schema.Types.String,
+      required: false,
+    },
+    dockerId: {
+      type: Schema.Types.String,
+      required: false,
+    },
+    dockerStatsWatcher: {
+      type: Schema.Types.Boolean,
+      required: true,
+    },
+    dockerEventsWatcher: {
+      type: Schema.Types.Boolean,
+      required: true,
     },
   },
   {

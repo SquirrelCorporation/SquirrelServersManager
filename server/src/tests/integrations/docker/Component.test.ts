@@ -42,7 +42,7 @@ describe('testing Component', () => {
   test('getId should return the concatenation $type.$name', () => {
     const component = new Component();
     // @ts-expect-error partial type
-    component.register('kind', 'type', 'name', { x: 'x' });
+    component.register('id', 'kind', 'type', 'name', { x: 'x' });
     expect(component.getId()).toEqual('kind.type.name');
   });
 
@@ -51,7 +51,7 @@ describe('testing Component', () => {
     const spyValidateConsiguration = vi.spyOn(component, 'validateConfiguration');
     const spyInit = vi.spyOn(component, 'init');
     // @ts-expect-error partial type
-    component.register('kind', 'type', 'name', { x: 'x' });
+    component.register('id', 'kind', 'type', 'name', { x: 'x' });
     expect(spyValidateConsiguration).toHaveBeenCalledWith({ x: 'x' });
     expect(spyInit).toHaveBeenCalledTimes(1);
   });

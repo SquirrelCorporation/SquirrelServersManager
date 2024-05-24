@@ -21,7 +21,7 @@ const ContainerStatsDetail: React.FC<ContainerStatsDetailProps> = (
           .map((e: { date: string; value: number }) => {
             return {
               date: moment(e.date).format('YYYY-MM-DD, HH:mm'),
-              value: parseFloat(e.value.toFixed(2)),
+              value: e.value ? parseFloat(e.value.toFixed(2)) : NaN,
             };
           })
           .reduce((accumulator: API.ContainerStat[], current) => {

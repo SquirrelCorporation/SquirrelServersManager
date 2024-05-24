@@ -71,3 +71,19 @@ export async function deleteAnsibleLogs(options?: Record<string, any>) {
     ...(options || {}),
   });
 }
+
+export async function deleteContainerStats(options?: Record<string, any>) {
+  return request<API.SimpleResult>(`/api/settings/advanced/container-stats`, {
+    method: 'DELETE',
+    ...{},
+    ...(options || {}),
+  });
+}
+
+export async function deleteDeviceStats(options?: Record<string, any>) {
+  return request<API.SimpleResult>(`/api/settings/advanced/device-stats`, {
+    method: 'DELETE',
+    ...{},
+    ...(options || {}),
+  });
+}

@@ -1,6 +1,9 @@
 import DeviceQuickActionDropDown from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionDropDown';
+import title from '@/components/Template/Title';
+import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-components';
 import React from 'react';
+import { Col, Row, Typography } from 'antd';
 import { API } from 'ssm-shared-lib';
 
 const InventoryColumns = (
@@ -63,6 +66,40 @@ const InventoryColumns = (
       },
     },
     {
+      title: 'Watch Containers',
+      dataIndex: 'dockerWatcher',
+      width: '10%',
+      render: (dom, entity) => {
+        return entity.dockerWatcher ? (
+          <Row style={{ alignItems: 'center' }} justify="center">
+            <Col>
+              <CheckCircleOutlined
+                style={{ fontSize: '16px', color: '#08c', marginRight: '4px' }}
+              />
+            </Col>
+            <Col>
+              <Typography.Text>({entity.dockerWatcherCron})</Typography.Text>
+            </Col>
+          </Row>
+        ) : (
+          <Row style={{ alignItems: 'center' }} justify="center">
+            <Col>
+              <CloseCircleOutlined
+                style={{
+                  fontSize: '16px',
+                  color: '#cc0036',
+                  marginRight: '4px',
+                }}
+              />
+            </Col>
+            <Col>
+              <Typography.Text>({entity.dockerWatcherCron})</Typography.Text>
+            </Col>
+          </Row>
+        );
+      },
+    },
+    {
       title: 'Os Distro',
       dataIndex: 'osDistro',
       valueType: 'textarea',
@@ -122,6 +159,13 @@ const InventoryColumns = (
       sorter: true,
       dataIndex: 'agentVersion',
       valueType: 'textarea',
+    },
+    {
+      title: 'Docker Version',
+      sorter: true,
+      dataIndex: 'dockerVersion',
+      valueType: 'textarea',
+      hideInTable: true,
     },
     {
       title: 'Operating',

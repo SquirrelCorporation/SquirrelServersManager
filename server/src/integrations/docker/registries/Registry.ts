@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import logger from '../../../logger';
 import Component from '../core/Component';
 import type { SSMServicesTypes } from '../../../types/typings.d.ts';
 
@@ -65,7 +64,7 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
    * @returns {*}
    */
   async getTags(image: SSMServicesTypes.Image) {
-    this.childLogger.info(`[REGISTRY] - getTags: ${this.getId()} - Get ${image.name} tags`);
+    this.childLogger.info(`getTags: ${this.getId()} - Get ${image.name} tags`);
     const tags: string[] = [];
     let page;
     let hasNext = true;
@@ -117,8 +116,8 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
     const tagOrDigest = digest || image.tag.value;
     let manifestDigestFound: string | undefined = undefined;
     let manifestMediaType: string | undefined = undefined;
-    logger.info(
-      `[REGISTRY] getImageManifestDigest - ${this.getId()} - Get ${image.name}:${tagOrDigest} manifest`,
+    this.childLogger.info(
+      `getImageManifestDigest - ${this.getId()} - Get ${image.name}:${tagOrDigest} manifest`,
     );
     const responseManifests = (
       await this.callRegistry({
@@ -132,11 +131,9 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
     )?.data;
     if (responseManifests) {
       if (responseManifests.schemaVersion === 2) {
+        this.childLogger.debug('getImageManifestDigest - Manifests found with schemaVersion = 2');
         this.childLogger.debug(
-          '[REGISTRY] getImageManifestDigest - Manifests found with schemaVersion = 2',
-        );
-        this.childLogger.debug(
-          `[REGISTRY] getImageManifestDigest - Manifests media type detected [${responseManifests.mediaType}]`,
+          `getImageManifestDigest - Manifests media type detected [${responseManifests.mediaType}]`,
         );
         if (
           responseManifests.mediaType ===
@@ -144,7 +141,7 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
           responseManifests.mediaType === 'application/vnd.oci.image.index.v1+json'
         ) {
           this.childLogger.debug(
-            `[REGISTRY] getImageManifestDigest - Filter manifest for [arch=${image.architecture}, os=${image.os}, variant=${image.variant}]`,
+            `getImageManifestDigest - Filter manifest for [arch=${image.architecture}, os=${image.os}, variant=${image.variant}]`,
           );
           let manifestFound: any;
           const manifestFounds = responseManifests.manifests.filter(
@@ -172,7 +169,7 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
 
           if (manifestFound) {
             this.childLogger.debug(
-              `[REGISTRY] getImageManifestDigest - Manifest found with [digest=${manifestFound.digest}, mediaType=${manifestFound.mediaType}]`,
+              `getImageManifestDigest - Manifest found with [digest=${manifestFound.digest}, mediaType=${manifestFound.mediaType}]`,
             );
             manifestDigestFound = manifestFound.digest;
             manifestMediaType = manifestFound.mediaType;
@@ -182,15 +179,13 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
           responseManifests.mediaType === 'application/vnd.oci.image.manifest.v1+json'
         ) {
           this.childLogger.debug(
-            `[REGISTRY] getImageManifestDigest - Manifest found with [digest=${responseManifests.config.digest}, mediaType=${responseManifests.config.mediaType}]`,
+            `getImageManifestDigest - Manifest found with [digest=${responseManifests.config.digest}, mediaType=${responseManifests.config.mediaType}]`,
           );
           manifestDigestFound = responseManifests.config.digest;
           manifestMediaType = responseManifests.config.mediaType;
         }
       } else if (responseManifests.schemaVersion === 1) {
-        this.childLogger.debug(
-          '[REGISTRY] getImageManifestDigest - Manifests found with schemaVersion = 1',
-        );
+        this.childLogger.debug('getImageManifestDigest - Manifests found with schemaVersion = 1');
         const v1Compat = JSON.parse(responseManifests.history[0].v1Compatibility);
         const manifestFound = {
           digest: v1Compat.config ? v1Compat.config.Image : undefined,
@@ -198,7 +193,7 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
           version: 1,
         };
         this.childLogger.debug(
-          `[REGISTRY] getImageManifestDigest - Manifest found with [digest=${manifestFound.digest}, created=${manifestFound.created}, version=${manifestFound.version}]`,
+          `getImageManifestDigest - Manifest found with [digest=${manifestFound.digest}, created=${manifestFound.created}, version=${manifestFound.version}]`,
         );
         return manifestFound;
       }
@@ -208,7 +203,7 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
         (manifestDigestFound && manifestMediaType === 'application/vnd.oci.image.manifest.v1+json')
       ) {
         this.childLogger.info(
-          '[REGISTRY] getImageManifestDigest - Calling registries to get docker-content-digest header',
+          'getImageManifestDigest - Calling registries to get docker-content-digest header',
         );
         const responseManifest = await this.callRegistry({
           image,
@@ -223,7 +218,7 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
           version: 2,
         };
         this.childLogger.info(
-          `[REGISTRY] getImageManifestDigest - Manifest found with [digest=${manifestFound.digest}, version=${manifestFound.version}]`,
+          `getImageManifestDigest - Manifest found with [digest=${manifestFound.digest}, version=${manifestFound.version}]`,
         );
         return manifestFound;
       }
@@ -237,13 +232,13 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
           version: 1,
         };
         this.childLogger.debug(
-          `[REGISTRY] getImageManifestDigest - Manifest found with [digest=${manifestFound.digest}, version=${manifestFound.version}]`,
+          `getImageManifestDigest - Manifest found with [digest=${manifestFound.digest}, version=${manifestFound.version}]`,
         );
         return manifestFound;
       }
     }
     // Empty result...
-    throw new Error('[REGISTRY] getImageManifestDigest - Unexpected error; no manifest found');
+    throw new Error('getImageManifestDigest - Unexpected error; no manifest found');
   }
 
   async callRegistry({
@@ -265,11 +260,11 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
         method,
         headers,
       };
-      this.childLogger.debug(`[REGISTRY] - callRegistry ${JSON.stringify(getRequestOptions)}`);
+      this.childLogger.debug(`callRegistry ${JSON.stringify(getRequestOptions)}`);
       const getRequestOptionsWithAuth = await this.authenticate(image, getRequestOptions);
       return await axios.request(getRequestOptionsWithAuth);
     } catch (error: any) {
-      logger.error(error);
+      this.childLogger.error(error);
       throw error;
     }
   }

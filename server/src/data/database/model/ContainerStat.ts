@@ -6,12 +6,12 @@ export const COLLECTION_NAME = 'containerstats';
 
 export default interface ContainerStat {
   container: Container;
-  cpuDelta: number;
-  cpuSystemDelta: number;
-  memUsed: number;
-  memAvailable: number;
-  memUsedPercentage: number;
-  cpuUsedPercentage: number;
+  cpuDelta?: number;
+  cpuSystemDelta?: number;
+  memUsed?: number;
+  memAvailable?: number;
+  memUsedPercentage?: number;
+  cpuUsedPercentage?: number;
   raw: any;
   createdAt?: Date;
   updatedAt?: Date;

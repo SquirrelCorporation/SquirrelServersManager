@@ -2,25 +2,28 @@ import Dockerode from 'dockerode';
 import { DateTime } from 'luxon';
 import mongoose from 'mongoose';
 import { ContainerStats } from 'ssm-shared-lib/distribution/types/api';
+import logger from '../../../logger';
 import Container from '../model/Container';
 import { ContainerStatModel } from '../model/ContainerStat';
 
 async function create(container: Container, stats: Dockerode.ContainerStats) {
   const { cpu_stats, precpu_stats, memory_stats } = stats;
+  logger.debug({ cpu_stats, precpu_stats, memory_stats });
   const cpuDelta = cpu_stats.cpu_usage.total_usage - precpu_stats.cpu_usage.total_usage;
 
   const cpuSystemDelta = cpu_stats.system_cpu_usage - precpu_stats.system_cpu_usage;
 
-  const memUsed = memory_stats.usage - (memory_stats.stats.cache || 0);
+  const memUsed: undefined | number = memory_stats.usage - (memory_stats.stats.cache || 0);
   const memAvailable = memory_stats.limit;
+
   await ContainerStatModel.create({
     container: container,
-    cpuDelta: cpuDelta,
-    cpuSystemDelta: cpuSystemDelta,
-    memUsed: memUsed,
-    memAvailable: memAvailable,
-    memUsedPercentage: Math.round((memUsed / memAvailable) * 100.0),
-    cpuUsedPercentage: Math.round((cpuDelta / cpuSystemDelta) * 100),
+    cpuDelta: cpuDelta || undefined,
+    cpuSystemDelta: cpuSystemDelta || undefined,
+    memUsed: memUsed || undefined,
+    memAvailable: memAvailable || undefined,
+    memUsedPercentage: Math.round((memUsed / memAvailable) * 100.0) || undefined,
+    cpuUsedPercentage: Math.round((cpuDelta / cpuSystemDelta) * 100) || undefined,
     raw: {
       numProcs: stats.num_procs,
       cpuUsageInUserMode: stats.cpu_stats?.cpu_usage.usage_in_usermode,
@@ -114,9 +117,14 @@ async function findAllAveragedStatsByType(
     .exec();
 }
 
+async function deleteAll(): Promise<void> {
+  await ContainerStatModel.deleteMany().exec();
+}
+
 export default {
   create,
   findStatByDeviceAndType,
   findStatsByDeviceAndType,
   findAllAveragedStatsByType,
+  deleteAll,
 };

@@ -128,12 +128,13 @@ async function registerWatchers() {
 
   try {
     const watchersToRegister: any = [];
-    devicesToWatch?.map((device, index) => {
+    devicesToWatch?.map((device) => {
       watchersToRegister.push(
-        registerComponent(device._id, Kind.WATCHER, 'docker', `docker-${index}`, {
+        registerComponent(device._id, Kind.WATCHER, 'docker', `docker-${device.uuid}`, {
           cron: device.dockerWatcherCron as string,
           watchbydefault: true,
           deviceUuid: device.uuid,
+          cronstats: device.dockerStatsCron as string,
         }),
       );
     });

@@ -17,11 +17,10 @@ async function findMany(filter: any): Promise<ContainerRegistry[] | null> {
 }
 
 async function updateOne(registry: ContainerRegistry) {
-  // @ts-expect-error id is not exposed
   return await ContainerRegistryModel.updateOne({ _id: registry._id }, registry).exec();
 }
 
-async function create(containerRegistry: ContainerRegistry) {
+async function create(containerRegistry: Partial<ContainerRegistry>) {
   const createdObject = await ContainerRegistryModel.create(containerRegistry);
   return createdObject.toObject();
 }

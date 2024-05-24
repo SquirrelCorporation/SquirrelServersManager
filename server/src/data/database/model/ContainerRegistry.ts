@@ -4,6 +4,7 @@ export const DOCUMENT_NAME = 'ContainerRegistry';
 export const COLLECTION_NAME = 'containerregistries';
 
 export default interface ContainerRegistry {
+  _id: string;
   name: string;
   auth?: any;
   authScheme: any;
