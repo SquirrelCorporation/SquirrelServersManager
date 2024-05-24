@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "./distribution/index.js",
+  "author": "Squirrel Team",
   "scripts": {
     "build": "npm run clean && tsc -p ./tsconfig.json",
     "build:check": "tsc -p ./tsconfig.json --noEmit",

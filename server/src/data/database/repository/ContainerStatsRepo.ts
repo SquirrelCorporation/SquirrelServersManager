@@ -83,8 +83,40 @@ async function findStatsByDeviceAndType(
     .exec();
 }
 
+async function findAllAveragedStatsByType(
+  type: string,
+  from: Date,
+  to: Date,
+): Promise<ContainerStats[] | null> {
+  return await ContainerStatModel.aggregate([
+    {
+      $match: {
+        createdAt: { $gt: from, $lte: to },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          byHour: { $dateToString: { format: '%Y-%m-%d-%H:00:00', date: '$createdAt' } },
+        },
+        averageValue: { $avg: `${type}` },
+      },
+    },
+    {
+      $project: {
+        _id: '',
+        date: '$_id.byHour',
+        value: `$averageValue`,
+      },
+    },
+  ])
+    .sort({ date: 1 })
+    .exec();
+}
+
 export default {
   create,
   findStatByDeviceAndType,
   findStatsByDeviceAndType,
+  findAllAveragedStatsByType,
 };

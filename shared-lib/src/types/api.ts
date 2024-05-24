@@ -300,6 +300,15 @@ export type ContainerStats = {
   success?: boolean;
 };
 
+export type ContainerAveragedStats = {
+  data?: {
+    cpuStats: ContainerStat[];
+    memStats: ContainerStat[];
+  };
+  success?: boolean;
+};
+
+
 export type ContainerStat = {
   date: string;
   value: number;

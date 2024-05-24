@@ -4,3 +4,8 @@ export enum DeviceStatus {
   OFFLINE = 2,
   UNMANAGED = 3,
 }
+
+export enum ContainerStatus {
+  RUNNING = 'running',
+  PAUSED = 'paused'
+}

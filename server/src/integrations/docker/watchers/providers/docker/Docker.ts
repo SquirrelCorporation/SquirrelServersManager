@@ -11,10 +11,10 @@ import ContainerStatsRepo from '../../../../../data/database/repository/Containe
 import DeviceAuthRepo from '../../../../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../../../../data/database/repository/DeviceRepo';
 import logger from '../../../../../logger';
+import type { SSMServicesTypes } from '../../../../../types/typings.d.ts';
 import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../../../ansible-vault/vault';
 import Component from '../../../core/Component';
 import { getCustomAgent } from '../../../core/CustomAgent';
-import type { SSMServicesTypes } from '../../../../../types/typings.d.ts';
 import { Label } from '../../../utils/label';
 import tag from '../../../utils/tag';
 import {
@@ -42,7 +42,7 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
   public watchCronTimeout: any;
   public watchCronDebounced: any;
   public listenDockerEventsTimeout: any;
-  // @ts-ignore
+  // @ts-expect-error initialized later
   public dockerApi: Dockerode;
 
   getConfigurationSchema() {
@@ -116,17 +116,15 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
     //TODO: If device change ip, reset watchers
     options.host = device.ip;
     const basedSshOptions = {
-      tryKeyboard: deviceAuth.customDockerTryKeyboard,
+      tryKeyboard: true, //deviceAuth.customDockerTryKeyboard,
       forceIPv4: deviceAuth.customDockerForcev4,
       forceIPv6: deviceAuth.customDockerForcev6,
       host: device.ip,
       port: deviceAuth.sshPort,
-      debug: (message) => {
-        logger.debug(message);
-      },
     };
     // eslint-disable-next-line init-declarations
     let sshOptions: ConnectConfig = {};
+
     if (deviceAuth.customDockerSSH) {
       if (deviceAuth.dockerCustomAuthType === SSHType.KeyBased) {
         sshOptions = {
@@ -158,16 +156,22 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
         } as ConnectConfig;
       }
     }
-    options.sshOptions = { ...basedSshOptions, ...sshOptions };
-    sshOptions.keepaliveInterval;
-    logger.debug(options);
+    options.sshOptions = {
+      ...basedSshOptions,
+      ...sshOptions,
+    };
+    this.childLogger.debug(options);
+    const agent = getCustomAgent(this.childLogger, {
+      port: options.port,
+      host: options.host,
+      debug: (message) => {
+        this.childLogger.debug(message);
+      },
+      ...sshOptions,
+    });
     try {
       options.modem = new DockerModem({
-        agent: getCustomAgent({
-          port: options.port,
-          host: options.host,
-          ...sshOptions,
-        }),
+        agent: agent,
       });
       this.dockerApi = new Dockerode(options);
     } catch (error: any) {
@@ -333,10 +337,7 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
       );
     }
     try {
-      const containerReports = await Promise.all(
-        containers.map((container) => this.watchContainer(container)),
-      );
-      return containerReports;
+      return await Promise.all(containers.map((container) => this.watchContainer(container)));
     } catch (e: any) {
       logger.error(e);
       this.childLogger.warn(
@@ -368,8 +369,7 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
         message: e.message,
       };
     }
-    const containerReport = this.mapContainerToContainerReport(containerWithResult);
-    return containerReport;
+    return this.mapContainerToContainerReport(containerWithResult);
   }
 
   /**
@@ -590,10 +590,10 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
         },
       });
     } catch (error: any) {
-      logger.error(
+      console.error(error);
+      this.childLogger.error(
         `[DOCKER] addImageDetailsToContainer - Error during normalizing image ${container.Image}`,
       );
-      logger.error(error);
       throw new Error(error.message);
     }
   }
@@ -656,6 +656,9 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
         this.childLogger.info(`[DOCKER][WATCHER]  - cron - watchContainerStats ${container.id}`);
         try {
           const dockerContainer = this.dockerApi.getContainer(container.id);
+          this.childLogger.info(
+            `[DOCKER][WATCHER]  - cron - watchContainerStats getContainer - ${dockerContainer.id}`,
+          );
           const dockerStats = await dockerContainer.stats({ stream: false });
           await ContainerStatsRepo.create(container, dockerStats);
         } catch (error: any) {

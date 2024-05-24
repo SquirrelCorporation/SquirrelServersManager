@@ -1,5 +1,5 @@
 import React from 'react';
-import { Progress, Tooltip } from 'antd';
+import { Progress } from 'antd';
 
 const MiniProgress: React.FC<any> = ({ percent }) => {
   return (

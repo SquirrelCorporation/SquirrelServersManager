@@ -134,17 +134,3 @@ export async function getContainerStat(
     },
   );
 }
-
-export async function getContainerStats(
-  containerId: string,
-  type: string,
-  options?: Record<string, any>,
-) {
-  return request<API.ContainerStats>(
-    `/api/containers/${containerId}/stats/${type}`,
-    {
-      method: 'GET',
-      ...(options || {}),
-    },
-  );
-}

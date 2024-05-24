@@ -7,8 +7,10 @@ import {
 } from '../services/containers/containers';
 import { postCustomNameOfContainerValidator } from '../services/containers/containers.validator';
 import {
+  getAveragedStats,
   getContainerStatByContainerId,
   getContainerStatsByContainerId,
+  getNbContainersByStatus
 } from '../services/containers/containerstats';
 import {
   getContainerStatByContainerIdValidator,
@@ -40,6 +42,8 @@ router
   .patch(resetRegistryValidator, resetRegistry);
 router.route('/').get(getContainers);
 router.route('/refresh-all').post(refreshAll);
+router.route('/stats/count/:status/').get(getNbContainersByStatus);
+router.route('/stats/averaged').get(getAveragedStats);
 router.route('/:id/name').post(postCustomNameOfContainerValidator, postCustomNameOfContainer);
 router.get(
   `/:id/stat/:type/`,

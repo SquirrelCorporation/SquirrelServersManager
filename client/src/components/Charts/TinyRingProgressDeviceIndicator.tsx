@@ -1,26 +1,30 @@
+import { DeviceStatType } from '@/components/Charts/DeviceStatType';
+import { getDeviceStat } from '@/services/rest/devicestat';
 import { Tiny } from '@ant-design/plots';
-import { Skeleton, Tooltip } from 'antd';
-import moment from 'moment';
+import { message, Skeleton } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 export type TinyRingProps = {
   deviceUuid: string;
+  type: DeviceStatType;
 };
 
 const TinyRingProgressDeviceIndicator: React.FC<TinyRingProps> = (
   props: TinyRingProps,
 ) => {
-  const [value, setValue] = useState<{ percent: number; date: string }>({
-    percent: 0,
-    date: 'never',
-  });
+  const [value, setValue] = useState<number>(NaN);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const asyncFetch = async () => {
-    setValue({
-      percent: 1,
-      date: moment(new Date()).format('YYYY-MM-DD, HH:mm'),
-    });
+    await getDeviceStat(props.deviceUuid, props.type, {})
+      .then((res) => {
+        if (res.data && !isNaN(res.data.value)) {
+          setValue(res.data.value);
+        }
+      })
+      .catch((error) => {
+        message.error({ content: error.message, duration: 8 });
+      });
     setIsLoading(false);
   };
   useEffect(() => {
@@ -29,7 +33,7 @@ const TinyRingProgressDeviceIndicator: React.FC<TinyRingProps> = (
   }, []);
 
   const config = {
-    percent: value.percent.toFixed(2),
+    percent: 1,
     width: 50,
     height: 50,
     //color: ['rgba(232,237,243,0.4)', parseFloat(value.percent) < 0.8 ? '#1668dc' : '#dc4446'],
@@ -40,7 +44,7 @@ const TinyRingProgressDeviceIndicator: React.FC<TinyRingProps> = (
       {
         type: 'text',
         style: {
-          text: `1`,
+          text: `${value}`,
           x: '50%',
           y: '40%',
           textAlign: 'center',
@@ -65,12 +69,10 @@ const TinyRingProgressDeviceIndicator: React.FC<TinyRingProps> = (
     ],
   };
 
-  return isLoading || !value ? (
+  return isLoading || isNaN(value) ? (
     <Skeleton.Avatar active size={'large'} shape={'circle'} />
   ) : (
-    <Tooltip title={`Updated at ${value.date}`}>
-      <Tiny.Ring {...config} />{' '}
-    </Tooltip>
+    <Tiny.Ring {...config} />
   );
 };
 

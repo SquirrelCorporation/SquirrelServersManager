@@ -3,6 +3,7 @@ import { API, SettingsKeys } from 'ssm-shared-lib';
 import { DeviceStatsType } from 'ssm-shared-lib/distribution/enums/stats';
 import Device from '../data/database/model/Device';
 import DeviceStat from '../data/database/model/DeviceStat';
+import ContainerRepo from '../data/database/repository/ContainerRepo';
 import DeviceStatRepo from '../data/database/repository/DeviceStatRepo';
 import { getIntConfFromCache } from '../data/cache';
 import logger from '../logger';
@@ -137,7 +138,7 @@ async function getSingleAveragedStatsByDevicesAndType(
 async function getStatByDeviceAndType(
   device: Device,
   type?: string,
-): Promise<[{ _id: string; value: number; createdAt: string }] | null> {
+): Promise<[{ _id?: string; value: number; createdAt?: string }] | null> {
   logger.info(
     `[USECASE][DEVICESTATS] - getStatByDeviceAndType - type: ${type}, device: ${device.uuid}`,
   );
@@ -148,6 +149,8 @@ async function getStatByDeviceAndType(
       return await DeviceStatRepo.findStatByDeviceAndType(device, '$memUsedPercentage');
     case DeviceStatsType.MEM_FREE:
       return await DeviceStatRepo.findStatByDeviceAndType(device, '$memFreePercentage');
+    case DeviceStatsType.SERVICES:
+      return [{ value: await ContainerRepo.countByDeviceId(device._id) }];
     default:
       throw new Error('Unknown Type');
   }

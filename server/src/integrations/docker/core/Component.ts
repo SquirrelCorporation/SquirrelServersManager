@@ -16,6 +16,7 @@ abstract class Component<
     | SSMServicesTypes.ConfigurationWatcherSchema
     | SSMServicesTypes.ConfigurationAuthenticationSchema,
 > {
+  public _id: string;
   public joi: Joi.Root;
   public type: string;
   public name: string;
@@ -27,6 +28,7 @@ abstract class Component<
    * Constructor.
    */
   constructor() {
+    this._id = 'unknown';
     this.joi = _joi;
     this.kind = Kind.UNKNOWN;
     this.type = 'unknown';
@@ -38,12 +40,14 @@ abstract class Component<
 
   /**
    * Register the component.
+   * @param id
    * @param kind
    * @param type the type of the component
    * @param name the name of the component
    * @param configuration the configuration of the component
    */
-  async register(kind: Kind, type: string, name: string, configuration: T) {
+  async register(_id: string, kind: Kind, type: string, name: string, configuration: T) {
+    this._id = _id;
     this.kind = kind;
     this.type = type;
     this.name = name;

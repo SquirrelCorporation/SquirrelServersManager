@@ -77,12 +77,14 @@ function getComponentClass(
 /**
  * Register a component.
  *
+ * @param _id
  * @param {*} kind
  * @param {*} provider
  * @param {*} name
  * @param {*} configuration
  */
 async function registerComponent(
+  _id: string,
   kind: Kind,
   provider: string,
   name: string,
@@ -94,6 +96,7 @@ async function registerComponent(
     logger.info(`Registering "${provider}/${name}" component`);
     const component = getComponentClass(kind, provider);
     const componentRegistered = await component.register(
+      _id,
       kind,
       providerLowercase,
       nameLowercase,
@@ -111,7 +114,9 @@ async function registerComponent(
     }
     return componentRegistered;
   } catch (e: any) {
-    throw new Error(`Error when registering component ${providerLowercase} (${e.message})`);
+    throw new Error(
+      `Error when registering component ${providerLowercase}/${nameLowercase} (${e.message})`,
+    );
   }
 }
 /**
@@ -120,18 +125,17 @@ async function registerComponent(
  */
 async function registerWatchers() {
   const devicesToWatch = await DeviceUseCases.getDevicesToWatch();
-  const configurations = devicesToWatch?.map((device) => {
-    return {
-      cron: device.dockerWatcherCron as string,
-      watchbydefault: true,
-      deviceUuid: device.uuid,
-    };
-  });
 
   try {
     const watchersToRegister: any = [];
-    configurations?.forEach((configuration) => {
-      watchersToRegister.push(registerComponent(Kind.WATCHER, 'docker', 'docker', configuration));
+    devicesToWatch?.map((device, index) => {
+      watchersToRegister.push(
+        registerComponent(device._id, Kind.WATCHER, 'docker', `docker-${index}`, {
+          cron: device.dockerWatcherCron as string,
+          watchbydefault: true,
+          deviceUuid: device.uuid,
+        }),
+      );
     });
     await Promise.all(watchersToRegister);
   } catch (e: any) {
@@ -146,15 +150,6 @@ async function registerWatchers() {
  */
 async function registerRegistries() {
   const containerRegistries = await ContainerRegistryUseCases.listAllSetupRegistries();
-  const configurations = containerRegistries?.map((registry) => {
-    return {
-      ...{
-        name: registry.name,
-        provider: registry.provider,
-      },
-      ...registry.auth,
-    };
-  });
   const registriesToRegister: Record<string, any> = {};
 
   // Default anonymous registries, will be overrode if a connected one exist
@@ -162,17 +157,18 @@ async function registerRegistries() {
     .filter((e) => e.default)
     .map((e) => {
       registriesToRegister[e.name] = async () =>
-        registerComponent(Kind.REGISTRY, e.provider, e.name, {});
+        registerComponent('default', Kind.REGISTRY, e.provider, e.name, {});
     });
   try {
-    configurations?.forEach((configuration, index) => {
-      registriesToRegister[configuration.provider] = async () =>
-        registerComponent(
-          Kind.REGISTRY,
-          configuration.provider,
-          configuration.provider,
-          configurations[index],
-        );
+    containerRegistries?.map((registry) => {
+      registriesToRegister[registry.provider] = async () =>
+        registerComponent(registry._id, Kind.REGISTRY, registry.provider, registry.name, {
+          ...{
+            name: registry.name,
+            provider: registry.provider,
+          },
+          ...registry.auth,
+        });
     });
     logger.info('[STATES] Configuration registered will be processed...');
     await Promise.all(

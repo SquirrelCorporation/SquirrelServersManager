@@ -2,13 +2,14 @@ import { DeviceStatType } from '@/components/Charts/DeviceStatType';
 import TinyLineDeviceGraph from '@/components/Charts/TinyLineDeviceGraph';
 import TinyRingProgressDeviceGraph from '@/components/Charts/TinyRingProgressDeviceGraph';
 import TinyRingProgressDeviceIndicator from '@/components/Charts/TinyRingProgressDeviceIndicator';
+import DeviceQuickActionDropDown from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionDropDown';
 import DeviceStatusTag from '@/components/DeviceComponents/DeviceStatusTag';
 import { OsLogo } from '@/components/DeviceComponents/OsLogo/OsLogo';
 import { CarbonBatchJob, WhhCpu, WhhRam } from '@/components/Icons/CustomIcons';
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
-import DeviceQuickActionDropDown from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionDropDown';
 import TerminalModal from '@/components/TerminalModal';
 import { getDevices } from '@/services/rest/device';
+import DeviceStatus from '@/utils/devicestatus';
 import { Link } from '@@/exports';
 import {
   AppstoreOutlined,
@@ -29,10 +30,8 @@ import {
 } from 'antd';
 import React, { memo, useEffect, useState } from 'react';
 import { TerminalContextProvider } from 'react-terminal';
-import styles from './Devices.less';
-import DeviceStatus from '@/utils/devicestatus';
 import { API } from 'ssm-shared-lib';
-import QueueAnim from 'rc-queue-anim';
+import styles from './Devices.less';
 
 const { Text } = Typography;
 
@@ -54,6 +53,7 @@ const Index = memo(() => {
     command: undefined,
     target: undefined,
   });
+
   const openOrCloseTerminalModal = (open: boolean) => {
     setTerminal({ ...terminal, isOpen: open });
   };
@@ -133,7 +133,10 @@ const Index = memo(() => {
                     />
                   </Col>
                   <Col span={6}>
-                    <TinyRingProgressDeviceIndicator deviceUuid={props.uuid} />
+                    <TinyRingProgressDeviceIndicator
+                      deviceUuid={props.uuid}
+                      type={DeviceStatType.SERVICES}
+                    />
                   </Col>
                 </Row>
               </div>

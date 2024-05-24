@@ -1,4 +1,4 @@
-import { getContainerStats } from '@/services/rest/containers';
+import { getContainerStats } from '@/services/rest/containersstats';
 import moment from 'moment';
 import React, { useEffect } from 'react';
 import { API } from 'ssm-shared-lib/distribution';

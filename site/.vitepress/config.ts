@@ -96,10 +96,14 @@ export default defineConfig({
               text: 'Playbooks', link: '/docs/playbooks.md'
             },
             {
+              text: 'Services', link: '/docs/services.md'
+            },
+            {
               text: 'Executing a playbook', link: '/docs/exec-playbook.md'
             },
             {
-              text: 'Settings', link: '/docs/settings.md'
+              text: 'Settings', link: '/docs/settings.md', items: [
+                { text: 'Configuring a Docker Registry', link: '/docs/registry.md' },]
             },
             {
               text: 'Deleting a device', link: '/docs/delete-device.md'
@@ -117,6 +121,9 @@ export default defineConfig({
               text: 'Troubleshoot', link: '/docs/troubleshoot.md'
             },
           ]
+        },
+        {
+          text: 'Credits', link: '/docs/credits.md'
         }
       ]
     },

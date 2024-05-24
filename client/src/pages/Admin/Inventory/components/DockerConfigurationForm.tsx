@@ -1,9 +1,5 @@
 import { DockerConnectionForm } from '@/components/DeviceConfiguration/DockerConnectionForm';
-import {
-  getDeviceAuth,
-  putDeviceAuth,
-  putDeviceDockerAuth,
-} from '@/services/rest/deviceauth';
+import { getDeviceAuth, putDeviceDockerAuth } from '@/services/rest/deviceauth';
 import { ProForm } from '@ant-design/pro-form/lib';
 import { message, Space } from 'antd';
 import React from 'react';

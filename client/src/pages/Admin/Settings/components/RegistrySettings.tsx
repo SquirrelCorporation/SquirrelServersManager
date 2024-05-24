@@ -5,7 +5,6 @@ import {
   LogoHotIo,
   LogosAws,
   LogosQuay,
-  OouiUserAnonymous,
   SimpleIconsForgejo,
   SimpleIconsGitea,
   VaadinCubes,

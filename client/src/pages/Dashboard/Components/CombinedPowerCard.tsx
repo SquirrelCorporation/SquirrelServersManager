@@ -42,11 +42,29 @@ const CombinedPowerCard: React.FC = () => {
     colorField: 'uuid',
     normalize: true,
     paddingTop: 20,
+    paddingLeft: 0,
+    paddingRight: 0,
+    paddingBottom: -20,
+    marginRight: 0,
+    marginLeft: 0,
     stack: true,
     height: 100,
+    //width: '100%',
     autoFit: true,
     legend: false,
     axis: { y: false, x: false },
+    scale: {
+      color: {
+        range: [
+          'linear-gradient(-180deg, rgba(34, 44, 205, 0.4) 0%, rgba(34, 44, 205, 0.2) 100%)',
+          'linear-gradient(-180deg, rgba(239, 138, 8, 0.4) 0%, rgba(239, 138, 8, 0.2) 100%)',
+          'linear-gradient(-180deg, rgba(29, 138, 98, 0.4) 0%, rgba(29, 138, 98, 0.2) 100%)',
+        ],
+      },
+      y: {
+        domain: [0, 1],
+      },
+    },
     tooltip: { channel: 'y0', valueFormatter: '.00%' },
   };
 

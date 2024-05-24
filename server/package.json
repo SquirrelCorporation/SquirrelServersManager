@@ -7,11 +7,13 @@
     "dev": "pwd && nodemon",
     "start": "npm run build-shared && npm run build && cross-env NODE_ENV=production node dist/index.js",
     "build": "tsc",
-    "test": "vitest --disable-console-intercept --reporter=basic "
+    "test": "vitest --disable-console-intercept --reporter=basic ",
+    "coverage": "vitest run --coverage"
   },
-  "author": "",
+  "author": "Squirrel Team",
   "dependencies": {
     "ansible-vault": "^1.1.1",
+    "aws-sdk": "^2.1624.0",
     "axios": "^1.7.1",
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",
@@ -27,9 +29,11 @@
     "luxon": "^3.4.4",
     "mongoose": "^8.4.0",
     "node-cron": "^3.0.3",
+    "node-ssh": "^13.2.0",
     "parse-docker-image-name": "^3.0.0",
     "passport": "^0.7.0",
     "passport-anonymous": "^1.0.1",
+    "passport-http": "^0.3.0",
     "passport-http-bearer": "^1.0.1",
     "passport-jwt": "^4.0.1",
     "pino": "^9.1.0",
@@ -37,13 +41,10 @@
     "pino-mongodb": "^4.3.0",
     "pino-pretty": "^11.0.0",
     "redis": "^4.6.14",
+    "rewire": "^7.0.0",
     "semver": "^7.6.2",
     "shelljs": "^0.8.5",
-    "aws-sdk": "^2.1624.0",
-    "passport-http": "^0.3.0",
-    "ssm-shared-lib": "file:../shared-lib/",
-    "node-ssh": "^13.2.0",
-    "rewire": "^7.0.0"
+    "ssm-shared-lib": "file:../shared-lib/"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -58,22 +59,23 @@
     "@types/node-os-utils": "^1.3.4",
     "@types/passport": "^1.0.16",
     "@types/passport-anonymous": "^1.0.5",
+    "@types/passport-http": "^0.3.11",
     "@types/passport-http-bearer": "^1.0.41",
     "@types/passport-jwt": "^4.0.1",
+    "@types/rewire": "^2.5.30",
     "@types/shelljs": "^0.8.15",
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^7.10.0",
     "@typescript-eslint/parser": "^7.10.0",
-    "@types/passport-http": "^0.3.11",
+    "@vitest/coverage-v8": "^1.6.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prettier": "^5.1.3",
+    "node-mocks-http": "^1.14.1",
     "prettier": "^3.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
-    "vitest": "^1.6.0",
-    "@types/rewire": "^2.5.30",
-    "node-mocks-http": "^1.14.1"
+    "vitest": "^1.6.0"
   }
 }

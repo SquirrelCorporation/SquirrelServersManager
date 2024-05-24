@@ -1,3 +1,4 @@
+import { ContainerStatus } from 'ssm-shared-lib/distribution/enums/status';
 import { InternalError, NotFoundError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
 import ContainerRepo from '../../data/database/repository/ContainerRepo';
@@ -40,6 +41,30 @@ export const getContainerStatsByContainerId = asyncHandler(async (req, res) => {
       type,
     );
     new SuccessResponse('Get container stats by container id successful', stats).send(res);
+  } catch (error: any) {
+    throw new InternalError(error.message);
+  }
+});
+
+export const getNbContainersByStatus = asyncHandler(async (req, res) => {
+  const { status } = req.params;
+  try {
+    if (status === 'all') {
+      const nbContainers = await ContainerRepo.count();
+      new SuccessResponse('Get nb containers', nbContainers).send(res);
+    } else {
+      const nbContainers = await ContainerRepo.countByStatus(status);
+      new SuccessResponse('Get nb containers', nbContainers).send(res);
+    }
+  } catch (error: any) {
+    throw new InternalError(error.message);
+  }
+});
+
+export const getAveragedStats = asyncHandler(async (req, res) => {
+  try {
+    const stats = await ContainerStatsUseCases.getCpUAndMemAveragedStats();
+    new SuccessResponse('Get averaged stats', stats).send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }

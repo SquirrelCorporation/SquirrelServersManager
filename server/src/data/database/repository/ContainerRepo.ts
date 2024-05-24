@@ -1,3 +1,4 @@
+import { ObjectId } from 'bson';
 import {
   addLinkProperty,
   getKindProperty,
@@ -49,6 +50,18 @@ async function updateContainer(container: Container) {
   return container;
 }
 
+async function countByDeviceId(deviceId: string) {
+  return await ContainerModel.countDocuments({ device: new ObjectId(deviceId) }).exec();
+}
+
+async function countByStatus(status: string) {
+  return await ContainerModel.countDocuments({ status: status }).exec();
+}
+
+async function count() {
+  return await ContainerModel.countDocuments().exec();
+}
+
 export default {
   findContainerById,
   findContainersByWatcher,
@@ -56,4 +69,7 @@ export default {
   createContainer,
   updateContainer,
   findAll,
+  countByDeviceId,
+  countByStatus,
+  count,
 };

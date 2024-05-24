@@ -1,6 +1,4 @@
-import { DateTime } from 'luxon';
 import AnsibleTaskStatus, { AnsibleTaskStatusModel } from '../model/AnsibleTaskStatus';
-import { AnsibleLogModel } from '../model/AnsibleLogs';
 
 async function create(ansibleTaskStatus: AnsibleTaskStatus): Promise<AnsibleTaskStatus> {
   const created = await AnsibleTaskStatusModel.create(ansibleTaskStatus);

@@ -43,7 +43,7 @@ export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
   );
 
   const handleOnChangeDockerWatcher = async () => {
-    await updateDeviceDockerWatcher(props.deviceUuid, dockerWatcher).then(
+    await updateDeviceDockerWatcher(props.deviceUuid, !dockerWatcher).then(
       (data) => {
         setDockerWatcher(data.dockerWatcher);
         message.success({ content: 'Setting updated' });

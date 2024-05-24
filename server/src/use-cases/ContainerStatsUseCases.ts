@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { API } from 'ssm-shared-lib';
 import { ContainerStatsType } from 'ssm-shared-lib/distribution/enums/stats';
 import Container from '../data/database/model/Container';
@@ -46,7 +47,26 @@ async function getStatsByDeviceAndType(
       throw new Error('Unknown Type');
   }
 }
+
+async function getCpUAndMemAveragedStats() {
+  const cpuStats = await ContainerStatsRepo.findAllAveragedStatsByType(
+    '$cpuUsedPercentage',
+    DateTime.now().minus({ day: 7 }).toJSDate(),
+    DateTime.now().toJSDate(),
+  );
+  const memStats = await ContainerStatsRepo.findAllAveragedStatsByType(
+    '$memUsedPercentage',
+    DateTime.now().minus({ day: 7 }).toJSDate(),
+    DateTime.now().toJSDate(),
+  );
+  return {
+    cpuStats: cpuStats,
+    memStats: memStats,
+  };
+}
+
 export default {
   getStatByDeviceAndType,
   getStatsByDeviceAndType,
+  getCpUAndMemAveragedStats
 };

@@ -1,37 +1,50 @@
-import http from 'http';
-import ssh2 from 'ssh2';
-import logger from '../../../logger';
+import { Agent } from 'http';
+import { Client } from 'ssh2';
 
-export const getCustomAgent = (opt: any) => {
-  const conn = new ssh2.Client();
-  const cAgent = new http.Agent();
-  // @ts-expect-error creating a new function
-  cAgent.createConnection = function (options, fn) {
-    conn
-      .once('ready', function () {
-        conn.exec('docker system dial-stdio', function (err, stream) {
-          if (err) {
-            conn.end();
-            cAgent.destroy();
-            return;
-          }
+export const getCustomAgent = (childLogger: any, opt: any) => {
+  class SsmSshAgent extends Agent {
+    public client: Client;
+    public options: any;
 
-          fn(null, stream);
+    constructor() {
+      super();
+      this.client = new Client();
+      this.setMaxListeners(20);
+      this.options = opt;
+    }
+    handleError(err: any) {
+      console.log('------------------  handlerrror');
+      this.client.end();
+      this.destroy();
+      throw err;
+    }
+    createConnection(options, fn) {
+      this.client
+        .once('ready', () => {
+          this.client.exec('docker system dial-stdio', (err, stream) => {
+            if (err) {
+              this.handleError(err);
+            }
 
-          stream.once('close', () => {
-            conn.end();
-            cAgent.destroy();
+            fn(null, stream);
+            stream.addListener('error', (err) => {
+              this.handleError(err);
+            });
+            stream.once('close', () => {
+              this.client.end();
+              this.destroy();
+            });
           });
-        });
-      })
-      .on('error', (err) => {
-        logger.error(err);
-        fn(err);
-      })
-      .connect(opt);
+        })
+        .on('error', (err) => {
+          //childLogger.error(`Error connecting to ${opt.host}`);
+          //childLogger.error(err);
+          fn(err);
+        })
+        .connect(opt);
 
-    conn.once('end', () => cAgent.destroy());
-  };
-
-  return cAgent;
+      this.client.once('end', () => this.destroy());
+    }
+  }
+  return new SsmSshAgent();
 };

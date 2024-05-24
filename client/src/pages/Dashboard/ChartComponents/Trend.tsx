@@ -3,7 +3,6 @@ import {
   CaretDownFilled,
   CaretRightOutlined,
   CaretUpFilled,
-  LineOutlined,
 } from '@ant-design/icons';
 import classNames from 'classnames';
 import React from 'react';

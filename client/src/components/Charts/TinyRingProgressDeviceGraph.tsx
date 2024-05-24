@@ -20,18 +20,14 @@ const TinyRingProgressDeviceGraph: React.FC<TinyRingProps> = (
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const asyncFetch = async () => {
-    await getDeviceStat(props.deviceUuid, props.type, {})
-      .then((res) => {
-        if (res.data && res.data.value) {
-          setValue({
-            percent: parseFloat((res.data.value / 100).toFixed(2)),
-            date: moment(res.data.date).format('YYYY-MM-DD, HH:mm'),
-          });
-        }
-      })
-      .catch((error) => {
-        message.error({ content: error.message, duration: 8 });
-      });
+    await getDeviceStat(props.deviceUuid, props.type, {}).then((res) => {
+      if (res.data && res.data.value) {
+        setValue({
+          percent: parseFloat((res.data.value / 100).toFixed(2)),
+          date: moment(res.data.date).format('YYYY-MM-DD, HH:mm'),
+        });
+      }
+    });
     setIsLoading(false);
   };
   useEffect(() => {
