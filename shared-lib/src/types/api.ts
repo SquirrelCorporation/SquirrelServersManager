@@ -64,10 +64,16 @@ export type Settings = {
     processes: any;
   };
   logs: LogsSettings;
+  stats: StatsSettings,
   userSpecific: {
     userLogsLevel: UserLogsLevel;
   };
   dashboard: DashboardSettings;
+};
+
+export type StatsSettings = {
+  deviceStatsRetention: number;
+  containerStatsRetention: number;
 };
 
 export type UserLogsLevel = {
@@ -206,6 +212,8 @@ export type DeviceItem = {
   mem?: number;
   versions?: VersionData;
   raspberry?: RaspberryRevisionData;
+  dockerStatsWatcher?: boolean,
+  dockerStatsCron?: string;
   updatedAt?: string;
   createdAt?: string;
 };
@@ -375,6 +383,7 @@ export type DeviceAuth = {
   customDockerForcev4?: boolean;
   customDockerAgentForward?: boolean;
   customDockerTryKeyboard?: boolean;
+  customDockerSocket?: string;
 };
 
 export type DeviceAuthParams = {
@@ -402,6 +411,7 @@ export type DeviceAuthParams = {
   customDockerForcev4?: boolean;
   customDockerAgentForward?: boolean;
   customDockerTryKeyboard?: boolean;
+  customDockerSocket?: string;
 };
 
 export type DeviceDockerAuthParams = {
@@ -415,6 +425,7 @@ export type DeviceDockerAuthParams = {
   customDockerForcev4?: boolean;
   customDockerAgentForward?: boolean;
   customDockerTryKeyboard?: boolean;
+  customDockerSocket?: string;
 };
 
 export type UserSettingsResetApiKey = {

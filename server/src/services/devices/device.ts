@@ -6,7 +6,6 @@ import { BadRequestError, NotFoundError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
 import Device from '../../data/database/model/Device';
 import DeviceAuth from '../../data/database/model/DeviceAuth';
-import ContainerRepo from '../../data/database/repository/ContainerRepo';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
 import { setToCache } from '../../data/cache';
@@ -169,18 +168,35 @@ export const deleteDevice = asyncHandler(async (req, res) => {
   new SuccessResponse('Delete device successful').send(res);
 });
 
+//TODO validation
 export const updateDockerWatcher = asyncHandler(async (req, res) => {
   logger.info(`[CONTROLLER] - POST - /devices/${req.params.uuid}/docker-watcher`);
-  const { dockerWatcher, dockerWatcherCron } = req.body;
+  const {
+    dockerWatcher,
+    dockerWatcherCron,
+    dockerStatsWatcher,
+    dockerStatsCron,
+    dockerEventsWatcher,
+  } = req.body;
   const device = await DeviceRepo.findOneByUuid(req.params.uuid);
 
   if (!device) {
     logger.error('[CONTROLLER] Device not found');
     throw new NotFoundError(`Device not found (${req.params.uuid})`);
   }
-  await DeviceUseCases.updateDockerWatcher(device, dockerWatcher, dockerWatcherCron);
+  await DeviceUseCases.updateDockerWatcher(
+    device,
+    dockerWatcher,
+    dockerWatcherCron,
+    dockerStatsWatcher,
+    dockerStatsCron,
+    dockerEventsWatcher,
+  );
   new SuccessResponse('Update docker watcher flag successful', {
     dockerWatcher: dockerWatcher,
     dockerWatcherCron: dockerWatcherCron,
+    dockerStatsWatcher: dockerStatsWatcher,
+    dockerEventsWatcher: dockerEventsWatcher,
+    dockerStatsCron: dockerStatsCron,
   }).send(res);
 });

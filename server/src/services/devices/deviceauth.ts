@@ -1,6 +1,4 @@
 import { API } from 'ssm-shared-lib';
-import { SSHType } from 'ssm-shared-lib/distribution/enums/ansible';
-import { DeviceDockerAuthParams } from 'ssm-shared-lib/distribution/types/api';
 import { InternalError, NotFoundError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
 import DeviceAuth from '../../data/database/model/DeviceAuth';
@@ -62,6 +60,7 @@ export const getDeviceAuth = asyncHandler(async (req, res) => {
       customDockerForcev4: deviceAuth.customDockerForcev4,
       customDockerAgentForward: deviceAuth.customDockerAgentForward,
       customDockerTryKeyboard: deviceAuth.customDockerTryKeyboard,
+      customDockerSocket: deviceAuth.customDockerSocket
     } as API.DeviceAuth;
     new SuccessResponse('Get device auth successful', deviceAuthDecrypted as API.DeviceAuth).send(
       res,

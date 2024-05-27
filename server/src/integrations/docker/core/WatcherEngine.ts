@@ -114,7 +114,7 @@ async function registerComponent(
     }
     return componentRegistered;
   } catch (e: any) {
-    throw new Error(
+    logger.error(
       `Error when registering component ${providerLowercase}/${nameLowercase} (${e.message})`,
     );
   }
@@ -123,7 +123,7 @@ async function registerComponent(
  * Register registries.
  * @returns {Promise}
  */
-async function registerWatchers() {
+async function registerWatchers(): Promise<any> {
   const devicesToWatch = await DeviceUseCases.getDevicesToWatch();
 
   try {
@@ -134,7 +134,9 @@ async function registerWatchers() {
           cron: device.dockerWatcherCron as string,
           watchbydefault: true,
           deviceUuid: device.uuid,
+          watchstats: device.dockerStatsWatcher,
           cronstats: device.dockerStatsCron as string,
+          watchevents: device.dockerEventsWatcher,
         }),
       );
     });
@@ -192,7 +194,7 @@ async function registerRegistries() {
 async function deregisterComponent(
   kind: Kind,
   component: Component<SSMServicesTypes.ConfigurationSchema>,
-) {
+): Promise<any> {
   try {
     await component.deregister();
   } catch (e) {
@@ -225,7 +227,7 @@ async function deregisterComponent(
 async function deregisterComponents(
   kind: Kind,
   components: Component<SSMServicesTypes.ConfigurationSchema>[],
-) {
+): Promise<any> {
   const deregisterPromises = components.map(async (component) =>
     deregisterComponent(kind, component),
   );
@@ -236,7 +238,7 @@ async function deregisterComponents(
  * Deregister all registries.
  * @returns {Promise}
  */
-async function deregisterRegistries() {
+async function deregisterRegistries(): Promise<any> {
   return deregisterComponents(Kind.REGISTRY, Object.values(getStates().registry));
 }
 
@@ -244,7 +246,7 @@ async function deregisterRegistries() {
  * Deregister all registries.
  * @returns {Promise}
  */
-async function deregisterWatchers() {
+async function deregisterWatchers(): Promise<any> {
   return deregisterComponents(Kind.WATCHER, Object.values(getStates().watcher));
 }
 
@@ -252,7 +254,7 @@ async function deregisterWatchers() {
  * Deregister all components.
  * @returns {Promise}
  */
-async function deregisterAll() {
+async function deregisterAll(): Promise<any> {
   logger.warn('[WATCHER-ENGINE] All registered providers will be deregistered.');
   try {
     await deregisterRegistries();
@@ -263,9 +265,10 @@ async function deregisterAll() {
 }
 
 async function init() {
-  await registerWatchers();
   // Register registries
   await registerRegistries();
+  // Register Watchers
+  await registerWatchers();
   // Gracefully exit when possible
   process.on('SIGINT', deregisterAll);
   process.on('SIGTERM', deregisterAll);

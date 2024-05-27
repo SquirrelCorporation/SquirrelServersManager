@@ -79,8 +79,9 @@ const RegistrySettings: React.FC = () => {
     await getRegistries().then((list) => {
       if (list?.data) {
         setRegistries(
-          list.data?.registries.sort((a: ContainerRegistry, b) =>
-            a.authSet && !b.authSet ? -1 : 1,
+          list.data?.registries.sort(
+            (a: ContainerRegistry, b: ContainerRegistry) =>
+              a.authSet && !b.authSet ? -1 : 1,
           ) || [],
         );
       }
@@ -89,7 +90,7 @@ const RegistrySettings: React.FC = () => {
   useEffect(() => {
     asyncFetch();
   }, []);
-  const [ghost, setGhost] = useState<boolean>(false);
+  const [ghost] = useState<boolean>(false);
   const [modalOpened, setModalOpened] = useState<boolean>(false);
   const [selectedRecord, setSelectedRecord] = useState<any>();
 

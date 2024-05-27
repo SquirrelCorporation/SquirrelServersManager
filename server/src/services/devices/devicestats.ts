@@ -1,7 +1,6 @@
 import { API } from 'ssm-shared-lib';
 import { InternalError, NotFoundError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
-import ContainerRepo from '../../data/database/repository/ContainerRepo';
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
 import asyncHandler from '../../helpers/AsyncHandler';
 import logger from '../../logger';
@@ -54,4 +53,3 @@ export const getDeviceStatByDeviceUuid = asyncHandler(async (req, res) => {
     throw new InternalError(error.message);
   }
 });
-

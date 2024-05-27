@@ -1,4 +1,5 @@
 import {
+  EosIconsCronjob,
   OuiMlCreateAdvancedJob,
   UilDocker,
 } from '@/components/Icons/CustomIcons';
@@ -15,6 +16,7 @@ import {
 } from '@ant-design/pro-components';
 import { Card, Flex, message, Space, Switch, Tooltip } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { API } from 'ssm-shared-lib';
 import Cron from 'react-js-cron';
 import 'react-js-cron/dist/styles.css';
 
@@ -27,40 +29,89 @@ const connectionTypes = [
 ];
 
 export type ConfigurationFormDockerProps = {
-  deviceUuid?: string;
-  deviceIp?: string;
-  dockerWatcher?: boolean;
-  dockerWatcherCron?: string;
+  device: Partial<API.DeviceItem>;
 };
 
 export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
   const [showAdvanced, setShowAdvanced] = React.useState(false);
   const [dockerWatcher, setDockerWatcher] = React.useState(
-    props.dockerWatcher === undefined ? true : props.dockerWatcher,
+    props.device.dockerWatcher === undefined
+      ? true
+      : props.device.dockerWatcher,
   );
   const [dockerWatcherCron, setDockerWatcherCron] = useState(
-    props.dockerWatcherCron,
+    props.device.dockerWatcherCron,
   );
-
+  const [dockerStatsCron, setDockerStatsCron] = useState(
+    props.device.dockerStatsCron,
+  );
+  const [dockerStatsWatcher, setDockerStatsWatcher] = React.useState(
+    props.device.dockerStatsWatcher,
+  );
+  const [dockerEventsWatcher, setDockerEventsWatcher] = React.useState(
+    props.device.dockerEventsWatcher,
+  );
   const handleOnChangeDockerWatcher = async () => {
-    if (props.deviceUuid) {
-      await updateDeviceDockerWatcher(props.deviceUuid, !dockerWatcher).then(
-        (response) => {
-          setDockerWatcher(response.data.dockerWatcher);
-          message.success({ content: 'Setting updated' });
-        },
-      );
+    if (props.device.uuid) {
+      await updateDeviceDockerWatcher(
+        props.device.uuid,
+        !dockerWatcher,
+        dockerStatsWatcher,
+        dockerEventsWatcher,
+      ).then((response) => {
+        setDockerWatcher(response.data.dockerWatcher);
+        setDockerEventsWatcher(response.data.dockerEventsWatcher);
+        setDockerStatsWatcher(response.data.dockerStatsWatcher);
+        message.success({ content: 'Setting updated' });
+      });
     } else {
       message.error({ content: 'Internal error - no device id' });
     }
   };
+
+  const handleOnChangeStatsWatcher = async () => {
+    if (props.device.uuid) {
+      await updateDeviceDockerWatcher(props.device.uuid, {
+        dockerWatcher: dockerWatcher,
+        dockerStatsWatcher: !dockerStatsWatcher,
+        dockerEventsWatcher: dockerEventsWatcher,
+      }).then((response) => {
+        setDockerWatcher(response.data.dockerWatcher);
+        setDockerEventsWatcher(response.data.dockerEventsWatcher);
+        setDockerStatsWatcher(response.data.dockerStatsWatcher);
+        message.success({ content: 'Setting updated' });
+      });
+    } else {
+      message.error({ content: 'Internal error - no device id' });
+    }
+  };
+
+  const handleOnChangeEventsWatcher = async () => {
+    if (props.device.uuid) {
+      await updateDeviceDockerWatcher(props.device.uuid, {
+        dockerWatcher: dockerWatcher,
+        dockerStatsWatcher: dockerStatsWatcher,
+        dockerEventsWatcher: !dockerEventsWatcher,
+      }).then((response) => {
+        setDockerWatcher(response.data.dockerWatcher);
+        setDockerEventsWatcher(response.data.dockerEventsWatcher);
+        setDockerStatsWatcher(response.data.dockerStatsWatcher);
+        message.success({ content: 'Setting updated' });
+      });
+    } else {
+      message.error({ content: 'Internal error - no device id' });
+    }
+  };
+
   const handleOnChangeDockerWatcherCron = async () => {
-    if (props.deviceUuid) {
-      await updateDeviceDockerWatcher(
-        props.deviceUuid,
+    if (props.device.uuid) {
+      await updateDeviceDockerWatcher(props.device.uuid, {
         dockerWatcher,
+        dockerStatsWatcher,
+        dockerEventsWatcher,
         dockerWatcherCron,
-      ).then(() => {
+        dockerStatsCron,
+      }).then(() => {
         message.success({ content: 'Setting updated' });
       });
     } else {
@@ -68,12 +119,81 @@ export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
     }
   };
   useEffect(() => {
-    if (props.dockerWatcherCron !== dockerWatcherCron) {
+    if (
+      props.device.dockerWatcherCron !== dockerWatcherCron ||
+      props.device.dockerStatsCron != dockerStatsCron
+    ) {
       handleOnChangeDockerWatcherCron();
     }
-  }, [dockerWatcherCron]);
+  }, [dockerWatcherCron, dockerStatsCron]);
   return (
     <>
+      <Card
+        type="inner"
+        title={
+          <CardHeader
+            title={'Watch'}
+            color={'#4d329f'}
+            icon={<EosIconsCronjob />}
+          />
+        }
+        style={{ marginBottom: 10 }}
+        styles={{
+          header: { height: 45, minHeight: 45, paddingLeft: 15 },
+          body: { paddingBottom: 0 },
+        }}
+        extra={
+          <>
+            <Tooltip
+              title={
+                <>
+                  Activate or deactivate cronjobs on this device: <br />
+                  &quot;Watch Container&quot; will check updates of your
+                  container,
+                  <br />
+                  &quot;Watch Container Stats&quot; will pull container
+                  statistics, <br />
+                  &quot;Watch Container Events&quot; will listen to any change
+                  of status
+                </>
+              }
+            >
+              <InfoCircleFilled />
+            </Tooltip>
+          </>
+        }
+      >
+        <ProForm.Group>
+          <ProFormSwitch
+            checkedChildren={'Watch Containers'}
+            unCheckedChildren={'Containers not watched'}
+            style={{
+              marginTop: 'auto',
+              marginBottom: 'auto',
+            }}
+            fieldProps={{
+              value: dockerWatcher,
+              onChange: handleOnChangeDockerWatcher,
+            }}
+          />
+          <ProFormSwitch
+            checkedChildren={'Watch Containers Stats'}
+            unCheckedChildren={'Containers stats not watched'}
+            fieldProps={{
+              value: dockerStatsWatcher,
+              onChange: handleOnChangeStatsWatcher,
+            }}
+          />
+          <ProFormSwitch
+            checkedChildren={'Watch Container Events'}
+            unCheckedChildren={'Containers events not watched'}
+            fieldProps={{
+              value: dockerEventsWatcher,
+              onChange: handleOnChangeEventsWatcher,
+            }}
+          />
+        </ProForm.Group>
+      </Card>
       <Card
         type="inner"
         title={
@@ -107,16 +227,16 @@ export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
             width="sm"
             placeholder="192.168.0.1"
             disabled
-            initialValue={props.deviceIp}
+            initialValue={props.device.ip}
             rules={[{ required: true }]}
           />
-          <ProFormSwitch
-            checkedChildren={'Watch Docker containers'}
-            unCheckedChildren={'Docker containers not watched'}
-            fieldProps={{
-              value: dockerWatcher,
-              onChange: handleOnChangeDockerWatcher,
-            }}
+          <ProFormText
+            name="customDockerSocket"
+            label="Docker Sock"
+            width="sm"
+            placeholder="/var/run/docker.sock"
+            disabled={!showAdvanced}
+            rules={[{ required: false }]}
           />
           {showAdvanced && (
             <>
@@ -208,7 +328,7 @@ export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
         type="inner"
         title={
           <CardHeader
-            title={'Docker Watcher Cron'}
+            title={'Watcher Crons'}
             color={'#3c8036'}
             icon={<FieldTimeOutlined />}
           />
@@ -219,10 +339,25 @@ export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
           body: { paddingBottom: 0 },
         }}
       >
-        <Space direction={'horizontal'} style={{ width: '100%' }}>
+        Watch Containers:{' '}
+        <Space
+          direction={'horizontal'}
+          style={{ width: '100%', marginTop: '5px', marginLeft: '10px' }}
+        >
           <Cron
             value={dockerWatcherCron || ''}
             setValue={setDockerWatcherCron}
+            clearButton={false}
+          />
+        </Space>
+        Watch Containers Stats:
+        <Space
+          direction={'horizontal'}
+          style={{ width: '100%', marginTop: '5px', marginLeft: '10px' }}
+        >
+          <Cron
+            value={dockerStatsCron || ''}
+            setValue={setDockerStatsCron}
             clearButton={false}
           />
         </Space>

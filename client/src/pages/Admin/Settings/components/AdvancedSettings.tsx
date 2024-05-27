@@ -1,4 +1,5 @@
 import {
+  IonServer,
   MaterialSymbolsDashboard,
   PajamasLog,
 } from '@/components/Icons/CustomIcons';
@@ -134,8 +135,8 @@ const AdvancedSettings: React.FC = () => {
         title={
           <Title.SubTitle
             title={'Server'}
-            backgroundColor={SettingsSubTitleColors.DEVICES}
-            icon={<TableOutlined />}
+            backgroundColor={SettingsSubTitleColors.SERVER}
+            icon={<IonServer />}
           />
         }
         style={{ marginTop: 16 }}

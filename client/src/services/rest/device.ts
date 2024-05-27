@@ -41,15 +41,19 @@ export async function deleteDevice(
 
 export async function updateDeviceDockerWatcher(
   uuid: string,
-  dockerWatcher: boolean,
-  dockerWatcherCron?: string,
+  dockerOptions: {
+    dockerWatcher: boolean;
+    dockerStatsWatcher: boolean;
+    dockerEventsWatcher: boolean;
+    dockerWatcherCron?: string;
+    dockerStatsCron?: string;
+  },
   options?: { [key: string]: any },
 ) {
   return request<API.SimpleResult>(`/api/devices/${uuid}/docker-watcher`, {
     method: 'POST',
     data: {
-      dockerWatcherCron: dockerWatcherCron,
-      dockerWatcher: dockerWatcher,
+      ...dockerOptions,
     },
     ...(options || {}),
   });

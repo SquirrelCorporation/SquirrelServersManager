@@ -21,6 +21,12 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
   const serverLogRetention = await getIntConfFromCache(
     GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS,
   );
+  const containerStatsRetention = await getIntConfFromCache(
+    GeneralSettingsKeys.CONTAINER_STATS_RETENTION_IN_DAYS,
+  );
+  const deviceStatsRetention = await getIntConfFromCache(
+    GeneralSettingsKeys.DEVICE_STATS_RETENTION_IN_DAYS,
+  );
   const ansibleLogRetention = await getIntConfFromCache(
     GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
   );
@@ -60,6 +66,10 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
       logs: {
         serverRetention: serverLogRetention,
         ansibleRetention: ansibleLogRetention,
+      },
+      stats: {
+        deviceStatsRetention: deviceStatsRetention,
+        containerStatsRetention: containerStatsRetention,
       },
       dashboard: {
         performance: {

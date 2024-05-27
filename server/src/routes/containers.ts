@@ -10,11 +10,12 @@ import {
   getAveragedStats,
   getContainerStatByContainerId,
   getContainerStatsByContainerId,
-  getNbContainersByStatus
+  getNbContainersByStatus,
 } from '../services/containers/containerstats';
 import {
   getContainerStatByContainerIdValidator,
   getContainerStatsByContainerIdValidator,
+  getNbContainersByStatusValidator,
 } from '../services/containers/containerstats.validator';
 import {
   createCustomRegistry,
@@ -42,7 +43,9 @@ router
   .patch(resetRegistryValidator, resetRegistry);
 router.route('/').get(getContainers);
 router.route('/refresh-all').post(refreshAll);
-router.route('/stats/count/:status/').get(getNbContainersByStatus);
+router
+  .route('/stats/count/:status/')
+  .get(getNbContainersByStatusValidator, getNbContainersByStatus);
 router.route('/stats/averaged').get(getAveragedStats);
 router.route('/:id/name').post(postCustomNameOfContainerValidator, postCustomNameOfContainer);
 router.get(

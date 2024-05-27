@@ -17,6 +17,7 @@ export enum SettingsSubTitleColors {
   DANGER_ZONE = '#f51b36',
   USER_LOGS = '#6d26a8',
   API = '#1e6d80',
+  SERVER = '#8e7d50',
 }
 
 export type PageContainerTitleProps = {

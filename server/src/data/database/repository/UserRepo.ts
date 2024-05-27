@@ -1,8 +1,6 @@
 import bcrypt from 'bcrypt';
-import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
-import user from '../../../routes/user';
-import User, { UserLogsLevel, UsersModel, schema } from '../model/User';
+import User, { UserLogsLevel, UsersModel } from '../model/User';
 
 async function create(user: User): Promise<User> {
   const created = await UsersModel.create(user);

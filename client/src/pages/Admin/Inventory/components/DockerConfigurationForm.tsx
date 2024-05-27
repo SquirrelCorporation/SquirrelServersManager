@@ -6,7 +6,7 @@ import React from 'react';
 import { API } from 'ssm-shared-lib';
 
 export type DockerConfigurationFormProps = {
-  values: Partial<API.DeviceItem>;
+  device: Partial<API.DeviceItem>;
 };
 
 const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
@@ -29,8 +29,8 @@ const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
           },
         }}
         onFinish={async (values) => {
-          if (props?.values?.uuid && values) {
-            await putDeviceDockerAuth(props.values.uuid, {
+          if (props?.device?.uuid && values) {
+            await putDeviceDockerAuth(props.device.uuid, {
               customDockerSSH: values.customDockerSSH,
               dockerCustomAuthType: values.dockerCustomAuthType,
               dockerCustomSshUser: values.dockerCustomSshUser,
@@ -41,6 +41,7 @@ const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
               customDockerForcev6: values.customDockerForcev6,
               customDockerAgentForward: values.customDockerAgentForward,
               customDockerTryKeyboard: values.customDockerTryKeyboard,
+              customDockerSocket: values.customDockerSocket,
             } as API.DeviceAuthParams)
               .then(() => {
                 message.success({
@@ -62,8 +63,8 @@ const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
           }
         }}
         request={async () => {
-          if (props?.values?.uuid) {
-            return await getDeviceAuth(props.values.uuid).then((res) => {
+          if (props?.device?.uuid) {
+            return await getDeviceAuth(props.device.uuid).then((res) => {
               return {
                 customDockerSSH: res.data.customDockerSSH,
                 dockerCustomAuthType: res.data.dockerCustomAuthType,
@@ -75,6 +76,7 @@ const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
                 customDockerForcev6: res.data.customDockerForcev6,
                 customDockerAgentForward: res.data.customDockerAgentForward,
                 customDockerTryKeyboard: res.data.customDockerTryKeyboard,
+                customDockerSocket: res.data.customDockerSocket,
               };
             });
           } else {
@@ -85,12 +87,7 @@ const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
           }
         }}
       >
-        <DockerConnectionForm
-          deviceIp={props.values.ip}
-          dockerWatcher={props.values.dockerWatcher}
-          dockerWatcherCron={props.values.dockerWatcherCron}
-          deviceUuid={props.values.uuid}
-        />
+        <DockerConnectionForm device={props.device} />
       </ProForm>
     </>
   );

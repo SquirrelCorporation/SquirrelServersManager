@@ -83,10 +83,16 @@ async function updateDockerWatcher(
   device: Device,
   dockerWatcher: boolean,
   dockerWatcherCron?: string,
+  dockerStatsWatcher?: boolean,
+  dockerStatsCron?: string,
+  dockerEventsWatcher?: boolean,
 ) {
   logger.info(`[USECASES][DEVICE] - updateDockerWatcher - DeviceUuid: ${device.uuid}`);
   device.dockerWatcher = dockerWatcher;
   device.dockerWatcherCron = dockerWatcherCron;
+  device.dockerStatsCron = dockerStatsCron;
+  device.dockerStatsWatcher = dockerStatsWatcher;
+  device.dockerEventsWatcher = dockerEventsWatcher;
   await DeviceRepo.update(device);
 }
 

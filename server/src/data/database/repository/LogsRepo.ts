@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon';
 import Logs, { LogsModel } from '../model/Logs';
 
-async function deleteAllOld(ageInMinutes: number): Promise<void> {
+async function deleteAllOld(ageInDays: number): Promise<void> {
   await LogsModel.deleteMany({
-    time: { $lt: DateTime.now().minus({ minute: ageInMinutes }).toJSDate() },
+    time: { $lt: DateTime.now().minus({ day: ageInDays }).toJSDate() },
   }).exec();
 }
 

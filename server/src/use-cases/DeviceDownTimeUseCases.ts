@@ -20,11 +20,11 @@ async function getDevicesAvailability(from: Date, to: Date) {
     });
     const downtime = searchIndex !== -1 ? devicesDownTimeDuration[searchIndex].duration : 0;
     const uptime = period - downtime;
-    logger.debug(`Uptime : ${downtime} - DownTime: ${downtime}`);
+    logger.info(`Period: ${period} - Uptime: ${uptime} - DownTime: ${downtime}`);
     return {
       uuid: device.uuid,
-      uptime: uptime,
-      downtime: downtime,
+      uptime: uptime < 0 ? 0 : uptime,
+      downtime: downtime > period ? period : downtime,
       availability: (uptime / (uptime + downtime)).toFixed(6),
     };
   });
@@ -36,6 +36,7 @@ async function getDevicesAvailabilitySumUpCurrentMonthLastMonth() {
     const to = new Date();
     const from = DateTime.now().startOf('month').toJSDate();
     const availabilities = await getDevicesAvailability(from, to);
+    logger.info(availabilities);
     const totalUptime = availabilities?.reduce((accumulator, currentValue) => {
       return accumulator + currentValue.uptime;
     }, 0);

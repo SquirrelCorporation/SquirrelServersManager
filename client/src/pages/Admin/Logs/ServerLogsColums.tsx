@@ -23,6 +23,11 @@ const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
     dataIndex: 'msg',
     key: 'msg',
   },
+  {
+    title: 'Module',
+    dataIndex: 'module',
+    key: 'module',
+  },
 ];
 
 export default ServerLogsColumns;

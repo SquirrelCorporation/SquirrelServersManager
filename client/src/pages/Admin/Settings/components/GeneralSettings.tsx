@@ -26,8 +26,10 @@ import {
 import React, { useState } from 'react';
 import { useModel } from '@@/exports';
 import {
+  postContainerStatsSettings,
   postDashboardSetting,
   postDeviceSetting,
+  postDeviceStatsSettings,
   postLogsSetting,
   postResetSettings,
 } from '@/services/rest/settings';
@@ -55,6 +57,13 @@ const GeneralSettings: React.FC = () => {
     useState<number | null>(
       currentUser?.settings.device.registerDeviceStatEvery,
     );
+  const [containerStatsRetentionInDays, setContainerStatsRetentionInDays] =
+    useState<number | null>(
+      currentUser?.settings.stats.containerStatsRetention,
+    );
+  const [deviceStatsRetentionInDays, setDeviceStatsRetentionInDays] = useState<
+    number | null
+  >(currentUser?.settings.stats.deviceStatsRetention);
   const onChangeMaxCpu = async (newValue: number | null) => {
     if (newValue) {
       await postDashboardSetting(
@@ -149,13 +158,43 @@ const GeneralSettings: React.FC = () => {
       message.warning({ content: 'Settings have been reset', duration: 6 });
     });
   };
+
+  const onChangeDeviceStatsRetention = async (newValue: number | null) => {
+    if (newValue) {
+      await postDeviceStatsSettings(
+        GeneralSettingsKeys.DEVICE_STATS_RETENTION_IN_DAYS,
+        newValue,
+      ).then(() => {
+        setDeviceStatsRetentionInDays(newValue);
+        message.success({
+          content: 'Setting successfully updated',
+          duration: 6,
+        });
+      });
+    }
+  };
+
+  const onChangeContainerStatsRetention = async (newValue: number | null) => {
+    if (newValue) {
+      await postContainerStatsSettings(
+        GeneralSettingsKeys.CONTAINER_STATS_RETENTION_IN_DAYS,
+        newValue,
+      ).then(() => {
+        setContainerStatsRetentionInDays(newValue);
+        message.success({
+          content: 'Setting successfully updated',
+          duration: 6,
+        });
+      });
+    }
+  };
   return (
     <Card>
       <Card
         type="inner"
         title={
           <Title.SubTitle
-            title={'Logs Retention'}
+            title={'Logs & Statistics Retention'}
             backgroundColor={SettingsSubTitleColors.LOGS_RETENTION}
             icon={<PajamasLog />}
           />
@@ -207,6 +246,48 @@ const GeneralSettings: React.FC = () => {
               suffix="second(s)"
               style={{ width: 'auto' }}
               onChange={onChangeAnsibleCleanUp}
+            />
+            <Space.Compact style={{ width: '100%' }} />
+          </Space>
+          <Space direction="horizontal" size="middle">
+            <Typography>
+              {' '}
+              <Popover content={'Delete device statistics after X days'}>
+                <InfoCircleFilled />
+              </Popover>{' '}
+              Device statistics retention days
+            </Typography>{' '}
+            <InputNumber
+              min={1}
+              defaultValue={
+                typeof deviceStatsRetentionInDays === 'number'
+                  ? deviceStatsRetentionInDays
+                  : 0
+              }
+              suffix="day(s)"
+              style={{ width: 'auto' }}
+              onChange={onChangeDeviceStatsRetention}
+            />
+            <Space.Compact style={{ width: '100%' }} />
+          </Space>
+          <Space direction="horizontal" size="middle">
+            <Typography>
+              {' '}
+              <Popover content={'Delete container statistics after X days'}>
+                <InfoCircleFilled />
+              </Popover>{' '}
+              Container statistics retention days
+            </Typography>{' '}
+            <InputNumber
+              min={1}
+              defaultValue={
+                typeof containerStatsRetentionInDays === 'number'
+                  ? containerStatsRetentionInDays
+                  : 0
+              }
+              suffix="day(s)"
+              style={{ width: 'auto' }}
+              onChange={onChangeContainerStatsRetention}
             />
             <Space.Compact style={{ width: '100%' }} />
           </Space>

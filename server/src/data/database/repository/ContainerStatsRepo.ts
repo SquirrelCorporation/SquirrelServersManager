@@ -121,10 +121,17 @@ async function deleteAll(): Promise<void> {
   await ContainerStatModel.deleteMany().exec();
 }
 
+async function deleteAllOld(ageInDays: number): Promise<void> {
+  await ContainerStatModel.deleteMany({
+    createdAt: { $lt: DateTime.now().minus({ day: ageInDays }).toJSDate() },
+  }).exec();
+}
+
 export default {
   create,
   findStatByDeviceAndType,
   findStatsByDeviceAndType,
   findAllAveragedStatsByType,
   deleteAll,
+  deleteAllOld,
 };

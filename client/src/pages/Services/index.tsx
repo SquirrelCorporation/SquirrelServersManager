@@ -4,6 +4,7 @@ import ServiceQuickActionReference, {
   ServiceQuickActionReferenceTypes,
 } from '@/components/ServiceComponents/ServiceQuickAction/ServiceQuickActionReference';
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
+import AppStoreModal from '@/pages/Services/components/AppStoreModal';
 import ContainerStatProgress from '@/pages/Services/components/ContainerStatProgress';
 import InfoToolTipCard from '@/pages/Services/components/InfoToolTipCard';
 import StatusTag from '@/pages/Services/components/StatusTag';
@@ -14,6 +15,7 @@ import {
   updateContainerCustomName,
 } from '@/services/rest/containers';
 import {
+  AppstoreAddOutlined,
   AppstoreOutlined,
   InfoCircleOutlined,
   ReloadOutlined,
@@ -38,6 +40,7 @@ const Index: React.FC = () => {
     isEditContainerCustomNameModalOpened,
     setIsEditContainerCustomNameModalOpened,
   ] = useState(false);
+  const [appStoreModalOpened, setAppStoreModalOpened] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<
     API.Container | undefined
   >();
@@ -67,17 +70,33 @@ const Index: React.FC = () => {
       });
   };
 
+  const hashCode = (str: string) => {
+    let hash = 0,
+      i,
+      chr;
+    if (str.length === 0) return hash;
+    for (i = 0; i < str.length; i++) {
+      chr = str.charCodeAt(i);
+      hash = (hash << 5) - hash + chr;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return Math.abs(hash);
+  };
   const colorPalette = [
     '#f56a00',
     '#234398',
     '#801872',
     '#807718',
     '#476e2f',
+    '#804018',
+    '#238f26',
     '#188030',
+    '#7e7123',
     '#801843',
     '#561880',
     '#19554e',
     '#184280',
+    '#187780',
   ];
 
   return (
@@ -92,6 +111,10 @@ const Index: React.FC = () => {
         ),
       }}
     >
+      <AppStoreModal
+        setOpen={setAppStoreModalOpened}
+        open={appStoreModalOpened}
+      />
       <ModalForm<{ customName: string }>
         title={`Edit container name`}
         open={isEditContainerCustomNameModalOpened}
@@ -131,6 +154,14 @@ const Index: React.FC = () => {
         }}
         toolBarRender={() => {
           return [
+            <Button
+              icon={<AppstoreAddOutlined />}
+              key="appstore"
+              type="primary"
+              onClick={() => setAppStoreModalOpened(true)}
+            >
+              Store
+            </Button>,
             <Button
               icon={<ReloadOutlined />}
               key="refresh"
@@ -195,7 +226,7 @@ const Index: React.FC = () => {
                     marginRight: 4,
                     backgroundColor:
                       colorPalette[
-                        (row.id?.charCodeAt(0) || 0) % colorPalette.length
+                        (row.id ? hashCode(row.id) : 0) % colorPalette.length
                       ],
                   }}
                 >

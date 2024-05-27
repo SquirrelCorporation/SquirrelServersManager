@@ -1,5 +1,5 @@
 import { param } from 'express-validator';
-import { ContainerStatsType, DeviceStatsType } from 'ssm-shared-lib/distribution/enums/stats';
+import { DeviceStatsType } from 'ssm-shared-lib/distribution/enums/stats';
 import validator from '../../middlewares/validator';
 
 export const updateDeviceAndAddDeviceStatValidator = [
@@ -19,7 +19,11 @@ export const getDeviceStatsByDeviceUuidValidator = [
     .withMessage('Uuid is required')
     .isUUID()
     .withMessage('Uuid is not valid'),
-  param('type').exists().notEmpty().isIn(Object.values(DeviceStatsType)).withMessage('Type is required'),
+  param('type')
+    .exists()
+    .notEmpty()
+    .isIn(Object.values(DeviceStatsType))
+    .withMessage('Type is required'),
   validator,
 ];
 
@@ -30,6 +34,10 @@ export const getDeviceStatByDeviceUuidValidator = [
     .withMessage('Uuid is required')
     .isUUID()
     .withMessage('Uuid is not valid'),
-  param('type').exists().notEmpty().isIn(Object.values(DeviceStatsType)).withMessage('Type is required'),
+  param('type')
+    .exists()
+    .notEmpty()
+    .isIn(Object.values(DeviceStatsType))
+    .withMessage('Type is required'),
   validator,
 ];

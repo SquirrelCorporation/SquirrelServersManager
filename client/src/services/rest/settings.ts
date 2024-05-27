@@ -87,3 +87,29 @@ export async function deleteDeviceStats(options?: Record<string, any>) {
     ...(options || {}),
   });
 }
+
+export async function postContainerStatsSettings(
+  type: string,
+  value: number,
+  options?: Record<string, any>,
+) {
+  return request<API.SimpleResult>(`/api/settings/container-stats/${type}`, {
+    method: 'POST',
+    ...{},
+    data: { value: value },
+    ...(options || {}),
+  });
+}
+
+export async function postDeviceStatsSettings(
+  type: string,
+  value: number,
+  options?: Record<string, any>,
+) {
+  return request<API.SimpleResult>(`/api/settings/device-stats/${type}`, {
+    method: 'POST',
+    ...{},
+    data: { value: value },
+    ...(options || {}),
+  });
+}

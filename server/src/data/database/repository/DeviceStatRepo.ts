@@ -186,6 +186,12 @@ async function deleteAll(): Promise<void> {
   await DeviceStatModel.deleteMany().exec();
 }
 
+async function deleteAllOld(ageInDays: number): Promise<void> {
+  await DeviceStatModel.deleteMany({
+    createdAt: { $lt: DateTime.now().minus({ day: ageInDays }).toJSDate() },
+  }).exec();
+}
+
 export default {
   create,
   findLatestStat,
@@ -196,4 +202,5 @@ export default {
   findSingleAveragedStatAndType,
   deleteManyByDevice,
   deleteAll,
+  deleteAllOld,
 };

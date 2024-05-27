@@ -22,7 +22,7 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
     {
       key: '2',
       label: 'Docker',
-      children: <DockerConfigurationForm values={props.values} />,
+      children: <DockerConfigurationForm device={props.values} />,
     },
   ];
 
