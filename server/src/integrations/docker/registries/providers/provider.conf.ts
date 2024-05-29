@@ -231,6 +231,27 @@ const providerConf: SSMServicesTypes.RegistryAuthConfig[] = [
       },
     ],
   },
+  {
+    name: 'gitlab',
+    provider: 'gitlab',
+    default: false,
+    persist: true,
+    config: { canAnonymous: false },
+    authScheme: [
+      {
+        name: 'url',
+        type: 'string',
+      },
+      {
+        name: 'authurl',
+        type: 'string',
+      },
+      {
+        name: 'token',
+        type: 'string',
+      },
+    ],
+  },
 ];
 
 export default providerConf;

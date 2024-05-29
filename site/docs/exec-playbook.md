@@ -23,7 +23,9 @@ You can select one or more devices and choose a playbook to execute
 
 ## 2. Playbook selection modal
 
-Before executing your playbook, you can choose to override the variables contains in the playbook
+Before executing your playbook, you can choose to override the variables contained in the playbook
+
+[See official documentation](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html)
 
 ![execplaybook5](/exec-playbook-5.png)
 

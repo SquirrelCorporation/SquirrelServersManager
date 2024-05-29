@@ -11,7 +11,7 @@ async function needConfigurationInit() {
   logger.info(`[CONFIGURATION] - needInit`);
   return await getFromCache(GeneralSettingsKeys.SCHEME_VERSION).then(async (version) => {
     logger.info(`[CONFIGURATION] - needInit - Scheme Version: ${version}`);
-    if (version !== DefaultValue.SCHEME_VERSION + 1) {
+    if (version !== DefaultValue.SCHEME_VERSION) {
       await initRedisValues();
       await PlaybookUseCases.initPlaybook();
       await setAnsibleVersion();

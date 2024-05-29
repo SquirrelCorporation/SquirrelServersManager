@@ -117,6 +117,7 @@ export declare namespace SSMServicesTypes {
     account?: string;
     clientid?: string;
     clientsecret?: string;
+    authurl?: string;
   };
 
   export type UserConfigurationRegistrySchema = ConfigurationRegistrySchema & {

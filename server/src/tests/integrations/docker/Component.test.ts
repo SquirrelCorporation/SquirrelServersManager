@@ -63,7 +63,7 @@ describe('testing Component', () => {
     };
     const spyInit = vi.spyOn(component, 'init');
     // @ts-expect-error partial type
-    expect(component.register('type', 'name', { x: 'x' })).rejects.toThrowError(
+    expect(component.register('id', 'type', 'name', { x: 'x' })).rejects.toThrowError(
       'validation failed',
     );
     expect(spyInit).toHaveBeenCalledTimes(0);
@@ -75,6 +75,8 @@ describe('testing Component', () => {
       throw new Error('init failed');
     };
     // @ts-expect-error partial type
-    expect(component.register('type', 'name', { x: 'x' })).rejects.toThrowError('init failed');
+    expect(component.register('id', 'type', 'name', { x: 'x' })).rejects.toThrowError(
+      'init failed',
+    );
   });
 });

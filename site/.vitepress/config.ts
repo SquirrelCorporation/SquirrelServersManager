@@ -103,7 +103,7 @@ export default defineConfig({
             },
             {
               text: 'Settings', link: '/docs/settings.md', items: [
-                { text: 'Configuring a Docker Registry', link: '/docs/registry.md' },]
+                { text: 'Configuring a Registry', link: '/docs/registry.md' },]
             },
             {
               text: 'Deleting a device', link: '/docs/delete-device.md'

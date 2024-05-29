@@ -4,6 +4,7 @@ import {
   FluentMdl2RegistryEditor,
   LogoHotIo,
   LogosAws,
+  LogosGitlab,
   LogosQuay,
   SimpleIconsForgejo,
   SimpleIconsGitea,
@@ -68,6 +69,8 @@ const getRegistryLogo = (provider: string) => {
       return <SimpleIconsGitea />;
     case 'lscr':
       return <VaadinCubes />;
+    case 'gitlab':
+      return <LogosGitlab />;
     default:
       return <FluentMdl2RegistryEditor />;
   }

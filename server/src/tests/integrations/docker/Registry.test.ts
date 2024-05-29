@@ -302,9 +302,7 @@ describe('testing Registry', () => {
           url: 'url',
         },
       }),
-    ).rejects.toEqual(
-      new Error('[REGISTRY] getImageManifestDigest - Unexpected error; no manifest found'),
-    );
+    ).rejects.toEqual(new Error('getImageManifestDigest - Unexpected error; no manifest found'));
   });
 
   test('callRegistry should call authenticate', async () => {
