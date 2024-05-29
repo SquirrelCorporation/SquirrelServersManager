@@ -1,3 +1,6 @@
+---
+layout: page
+---
 <script setup>
 import {   VPTeamPage,
   VPTeamPageTitle,
@@ -7,6 +10,7 @@ const members = [
   {
     avatar: 'https://avatars.githubusercontent.com/u/161006161?v=4',
     name: 'Manu Costa',
+    title: 'Creator',
     links: [
       { icon: 'github', link: 'https://github.com/SquirrelCorporation' },
       { icon: 'twitter', link: 'https://twitter.com/SquirrelSrvrsMg' },
