@@ -1,7 +1,7 @@
 on:
   pull_request:
     branches:
-    - main
+    - master
 jobs:
   label_issue:
     runs-on: ubuntu-latest
