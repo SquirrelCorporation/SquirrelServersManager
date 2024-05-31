@@ -28,10 +28,10 @@ describe('test InventoryTransformer', () => {
       device123456789101: {
         hosts: ['192.168.1.1'],
         vars: {
-          ansible_connection: 'ssh',
+          ansible_connection: 'paramiko',
           ansible_become_method: 'sudo',
           ansible_become_pass: { __ansible_vault: 'password' },
-          ansible_ssh_extra_args: "'-o StrictHostKeyChecking=no'",
+          ansible_ssh_host_key_checking: false,
           ansible_user: 'root',
           ansible_ssh_pass: { __ansible_vault: undefined },
         },
@@ -56,10 +56,10 @@ describe('test InventoryTransformer', () => {
       device123456789102: {
         hosts: '192.168.1.2',
         vars: {
-          ansible_connection: 'ssh',
+          ansible_connection: 'paramiko',
           ansible_become_method: 'sudo',
           ansible_become_pass: { __ansible_vault: 'qwerty' },
-          ansible_ssh_extra_args: "'\\''-o StrictHostKeyChecking=no'\\''",
+          ansible_ssh_host_key_checking: false,
           ansible_user: 'admin',
           ansible_ssh_pass: { __ansible_vault: undefined },
         },
@@ -103,10 +103,10 @@ describe('test InventoryTransformer', () => {
       device123456789103: {
         hosts: ['192.168.1.3'],
         vars: {
-          ansible_connection: 'ssh',
+          ansible_connection: 'paramiko',
           ansible_become_method: 'su',
           ansible_become_pass: { __ansible_vault: 'adminpassword' },
-          ansible_ssh_extra_args: undefined,
+          ansible_ssh_host_key_checking: true,
           ansible_user: undefined,
           ansible_ssh_pass: { __ansible_vault: undefined },
         },
@@ -125,10 +125,10 @@ describe('test InventoryTransformer', () => {
       device123456789104: {
         hosts: undefined,
         vars: {
-          ansible_connection: 'ssh',
+          ansible_connection: 'paramiko',
           ansible_become_method: undefined,
           ansible_become_pass: { __ansible_vault: undefined },
-          ansible_ssh_extra_args: "'\\''-o StrictHostKeyChecking=no'\\''",
+          ansible_ssh_host_key_checking: false,
           ansible_user: undefined,
           ansible_ssh_pass: { __ansible_vault: undefined },
         },
@@ -161,10 +161,10 @@ describe('test InventoryTransformer', () => {
       device123456789105: {
         hosts: '192.168.1.4',
         vars: {
-          ansible_connection: 'ssh',
+          ansible_connection: 'paramiko',
           ansible_become_method: 'sudo',
           ansible_become_pass: { __ansible_vault: 'password1' },
-          ansible_ssh_extra_args: "'\\''-o StrictHostKeyChecking=no'\\''",
+          ansible_ssh_host_key_checking: false,
           ansible_user: 'root',
           ansible_ssh_pass: { __ansible_vault: undefined },
         },
@@ -172,10 +172,10 @@ describe('test InventoryTransformer', () => {
       device223456789106: {
         hosts: '192.168.1.5',
         vars: {
-          ansible_connection: 'ssh',
+          ansible_connection: 'paramiko',
           ansible_become_method: 'sudo',
           ansible_become_pass: { __ansible_vault: 'password2' },
-          ansible_ssh_extra_args: "'\\''-o StrictHostKeyChecking=no'\\''",
+          ansible_ssh_host_key_checking: false,
           ansible_user: 'root',
           ansible_ssh_pass: { __ansible_vault: undefined },
         },

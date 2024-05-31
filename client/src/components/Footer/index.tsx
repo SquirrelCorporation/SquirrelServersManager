@@ -15,13 +15,13 @@ const Footer: React.FC = () => {
         {
           key: 'ssm',
           title: 'Squirrel Servers Manager',
-          href: 'https://pro.ant.design',
+          href: 'https://squirrelserversmanager.io/',
           blankTarget: true,
         },
         {
           key: 'github',
           title: <GithubOutlined />,
-          href: 'https://github.com/facos86/ssm',
+          href: 'https://github.com/SquirrelCorporation/SquirrelServersManager',
           blankTarget: true,
         },
       ]}

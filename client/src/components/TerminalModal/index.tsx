@@ -164,6 +164,7 @@ const TerminalModal = (props: TerminalModalProps) => {
               );
             });
             logs.data.execLogs.forEach((execLog: API.ExecLog) => {
+              let braces = 0;
               if (!logsSet.has(execLog.logRunnerId)) {
                 logsSet.add(execLog.logRunnerId);
                 if (execLog.stdout) {
@@ -174,7 +175,18 @@ const TerminalModal = (props: TerminalModalProps) => {
                         {execLog.stdout?.split('\n').map((e, index, array) => {
                           return (
                             <>
-                              {e}
+                              {e.split('\\r\\n').map((f) => {
+                                braces +=
+                                  (f.match(/\{/g)?.length || [].length) -
+                                  (f.match(/}/g)?.length || [].length);
+                                return (
+                                  <>
+                                    {/* Small trick to render &nbsp; for json object */}
+                                    {'\u00A0'.repeat(braces)}
+                                    {f}
+                                  </>
+                                );
+                              })}
                               {e !== '' && index < array.length - 1 ? (
                                 <br />
                               ) : (

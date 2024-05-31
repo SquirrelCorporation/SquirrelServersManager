@@ -22,7 +22,7 @@ function inventoryBuilder(devicesAuth: DeviceAuth[]) {
       `device${e.device.uuid.replaceAll('-', '')}` as keyof typeof ansibleInventory
     ] = {
       hosts: [e.device.ip as string],
-      vars: getInventoryConnectionVars(e, false),
+      vars: getInventoryConnectionVars(e),
     };
   });
   logger.debug(ansibleInventory);
@@ -42,25 +42,37 @@ function inventoryBuilderForTarget(devicesAuth: DeviceAuth[]) {
     ] = {
       // @ts-expect-error I cannot comprehend generic typescript type
       hosts: e.device.ip as string,
-      vars: getInventoryConnectionVars(e, true),
+      vars: getInventoryConnectionVars(e),
     };
   });
   logger.info(ansibleInventory);
   return ansibleInventory;
 }
 
-function getInventoryConnectionVars(deviceAuth: DeviceAuth, escape: boolean) {
+function getAuth(deviceAuth: DeviceAuth) {
+  switch (deviceAuth.authType) {
+    case SSHType.KeyBased:
+      return {
+        ansible_ssh_private_key_file: `/tmp/${deviceAuth.device.uuid}.key`,
+        ansible_paramiko_pass: { __ansible_vault: deviceAuth.sshKeyPass },
+      };
+    case SSHType.UserPassword:
+      return { ansible_ssh_pass: { __ansible_vault: deviceAuth.sshPwd } };
+    default:
+      throw new Error('Unknown device Auth type');
+  }
+}
+
+function getInventoryConnectionVars(deviceAuth: DeviceAuth) {
+  // See https://docs.ansible.com/ansible/latest/collections/ansible/builtin/paramiko_ssh_connection.html
   return {
-    ansible_connection: 'ssh',
+    ansible_connection: 'paramiko',
     ansible_become_method: deviceAuth.becomeMethod,
     ansible_become_pass: { __ansible_vault: deviceAuth.becomePass },
     /* prettier-ignore */
-    ansible_ssh_extra_args: !deviceAuth.strictHostKeyChecking ? "'" + (escape ? "\\" + "''" : '') + "-o StrictHostKeyChecking=no" + "'" + (escape ? "\\" + "''" : '') : undefined,
-    ansible_user: deviceAuth.authType === SSHType.UserPassword ? deviceAuth.sshUser : undefined,
-    ansible_ssh_pass:
-      deviceAuth.authType === SSHType.UserPassword
-        ? { __ansible_vault: deviceAuth.sshPwd }
-        : undefined,
+    ansible_ssh_host_key_checking: !!deviceAuth.strictHostKeyChecking,
+    ansible_user: deviceAuth.sshUser,
+    ...getAuth(deviceAuth),
   };
 }
 

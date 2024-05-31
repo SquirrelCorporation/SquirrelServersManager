@@ -11,6 +11,7 @@ import DeviceRepo from '../../data/database/repository/DeviceRepo';
 import { setToCache } from '../../data/cache';
 import asyncHandler from '../../helpers/AsyncHandler';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../integrations/ansible-vault/vault';
+import Shell from '../../integrations/shell';
 import logger from '../../logger';
 import DeviceUseCases from '../../use-cases/DeviceUseCases';
 
@@ -51,6 +52,9 @@ export const addDevice = asyncHandler(async (req, res) => {
       becomeMethod: becomeMethod,
       becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
     } as DeviceAuth);
+    if (sshKey) {
+      await Shell.vaultSshKey(sshKey, createdDevice.uuid);
+    }
     logger.info(`[CONTROLLER] Device - Created device with uuid: ${createdDevice.uuid}`);
     new SuccessResponse('Add device successful', { device: createdDevice as API.DeviceItem }).send(
       res,

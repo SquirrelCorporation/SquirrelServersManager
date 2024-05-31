@@ -11,6 +11,7 @@ import {
   vaultEncrypt,
 } from '../../integrations/ansible-vault/vault';
 import WatcherEngine from '../../integrations/docker/core/WatcherEngine';
+import Shell from '../../integrations/shell';
 import logger from '../../logger';
 
 export const getDeviceAuth = asyncHandler(async (req, res) => {
@@ -60,7 +61,7 @@ export const getDeviceAuth = asyncHandler(async (req, res) => {
       customDockerForcev4: deviceAuth.customDockerForcev4,
       customDockerAgentForward: deviceAuth.customDockerAgentForward,
       customDockerTryKeyboard: deviceAuth.customDockerTryKeyboard,
-      customDockerSocket: deviceAuth.customDockerSocket
+      customDockerSocket: deviceAuth.customDockerSocket,
     } as API.DeviceAuth;
     new SuccessResponse('Get device auth successful', deviceAuthDecrypted as API.DeviceAuth).send(
       res,
@@ -101,12 +102,14 @@ export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {
     becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
     becomeUser: becomeUser,
   } as DeviceAuth);
-
+  if (sshKey) {
+    await Shell.vaultSshKey(sshKey, device.uuid);
+  }
   logger.info(
     `[CONTROLLER] - POST - Device Auth - Updated or Created device with uuid: ${device.uuid}`,
   );
-  await WatcherEngine.deregisterWatchers();
-  await WatcherEngine.registerWatchers();
+  WatcherEngine.deregisterWatchers();
+  WatcherEngine.registerWatchers();
   new SuccessResponse('Add or update device auth successful', { type: deviceAuth.authType }).send(
     res,
   );

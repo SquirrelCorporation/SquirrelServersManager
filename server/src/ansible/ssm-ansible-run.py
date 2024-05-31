@@ -90,6 +90,7 @@ def execute():
         inventory=specific_host,
         extravars=extra_vars,
         debug=debug,
+        json_mode=True,
         #ignore_logging=False,
         verbosity=args.log_level,
         #cmdline='--vault-password-file ssm-ansible-vault-password.py',

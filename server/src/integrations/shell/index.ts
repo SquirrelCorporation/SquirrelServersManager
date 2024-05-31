@@ -5,11 +5,12 @@ import User from '../../data/database/model/User';
 import AnsibleTaskRepo from '../../data/database/repository/AnsibleTaskRepo';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
 import logger from '../../logger';
+import { DEFAULT_VAULT_ID, vaultEncrypt } from '../ansible-vault/vault';
 import Inventory from '../ansible/transformers/InventoryTransformer';
 import { Ansible } from '../../types/typings';
 import ansibleCmd from '../ansible/AnsibleCmd';
 
-const ANSIBLE_PATH = '/server/src/ansible/';
+export const ANSIBLE_PATH = '/server/src/ansible/';
 
 async function executePlaybook(
   playbook: string,
@@ -35,6 +36,7 @@ async function executePlaybook(
   shell.rm('/server/src/ansible/inventory/hosts');
   shell.rm('/server/src/ansible/env/_extravars');
   const uuid = uuidv4();
+  shell.exec('ssh-add -l');
   const result = await new Promise<string | null>((resolve) => {
     const cmd = ansibleCmd.buildAnsibleCmd(playbook, uuid, inventoryTargets, user, extraVars);
     logger.info(`[SHELL]-[ANSIBLE] - executePlaybook - Executing ${cmd}`);
@@ -145,6 +147,21 @@ async function getAnsibleVersion() {
   }
 }
 
+async function vaultSshKey(key: string, uuid: string) {
+  try {
+    logger.info('[SHELL] - vaultSshKey Starting...');
+    if (shell.exec(`echo '${key}' > /tmp/${uuid}.key`).code !== 0) {
+      throw new Error('[SHELL] - vaultSshKey - Error creating tmp file');
+    }
+    if (shell.chmod(600, `/tmp/${uuid}.key`).code !== 0) {
+      throw new Error('[SHELL] - vaultSshKey - Error chmoding file');
+    }
+  } catch (error) {
+    logger.error('[SHELL] - vaultSshKey');
+    throw error;
+  }
+}
+
 export default {
   executePlaybook,
   listPlaybooks,
@@ -154,4 +171,5 @@ export default {
   deletePlaybook,
   readPlaybookConfiguration,
   getAnsibleVersion,
+  vaultSshKey,
 };

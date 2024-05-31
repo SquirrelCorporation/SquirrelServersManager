@@ -1,9 +1,9 @@
-FROM node:21-alpine as base
+FROM node:22-alpine as base
 
 WORKDIR /server
-RUN apk update && apk add ansible nmap sudo openssh sshpass py3-pip
+RUN apk update && apk add ansible nmap sudo openssh sshpass py3-pip expect
 RUN npm install -g npm@latest
-RUN rm /usr/lib/python3.11/EXTERNALLY-MANAGED
+RUN rm -f /usr/lib/python3.12/EXTERNALLY-MANAGED
 RUN pip install ansible-runner \
     ansible-runner-http
 RUN npm install -g typescript

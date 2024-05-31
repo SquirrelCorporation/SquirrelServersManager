@@ -214,6 +214,7 @@ export type DeviceItem = {
   raspberry?: RaspberryRevisionData;
   dockerStatsWatcher?: boolean,
   dockerStatsCron?: string;
+  dockerEventsWatcher?: boolean;
   updatedAt?: string;
   createdAt?: string;
 };
