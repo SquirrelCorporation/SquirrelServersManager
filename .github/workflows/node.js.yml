@@ -19,7 +19,7 @@ jobs:
         working-directory: ./server
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [22.x, 23.x, 24.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -28,7 +28,6 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
     - run: npm install
     - run: npm run build --if-present
     - run: npm test
