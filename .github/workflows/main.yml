@@ -1,0 +1,14 @@
+on:
+  pull_request:
+    branches:
+    - main
+jobs:
+  label_issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check
+        working-directory: ./server
+        run: |
+          npm install
+          npm run build
+          npm test
