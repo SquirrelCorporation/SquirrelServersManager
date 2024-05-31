@@ -16,7 +16,7 @@ cd ./SquirrelServersManager
 ```shell
 vim .env
 ```
-## 4. Replace the value of "SECRET" and "SALT"
+## 4. Replace the value of "SECRET", "SALT", "VAULT_PWD"
 ```
 SECRET=REPLACE_ME
 ```
@@ -25,6 +25,11 @@ and
 SALT=1234567890123456
 ```
 ⚠ **SALT value MUST be alphanumerical string of exactly 16 chars**
+
+and
+```
+VAULT_PWD=REPLACE_ME
+```
 
 ## 5. Open a terminal and execute:
 ```shell
