@@ -1,3 +1,4 @@
+// @ts-nocheck
 import pino from 'pino';
 import { Client } from 'ssh2';
 import ssh2 from 'ssh2';
@@ -9,7 +10,10 @@ export const getCustomAgent = (childLogger: any, opt: any) => {
     constructor() {
       super(opt, { keepAlive: true });
       this.setMaxListeners(20);
-      this.logger = childLogger.child({ module: `SsmSshAgent/${opt.host}` });
+      this.logger = childLogger.child(
+        { module: `SsmSshAgent/${opt.host}` },
+        { msgPrefix: '[SSH] - ' },
+      );
     }
 
     createConnection(options, fn) {
@@ -17,6 +21,7 @@ export const getCustomAgent = (childLogger: any, opt: any) => {
 
       const handleError = (err: any) => {
         conn.end();
+        // eslint-disable-next-line class-methods-use-this
         this.destroy();
         throw err;
       };
@@ -33,17 +38,17 @@ export const getCustomAgent = (childLogger: any, opt: any) => {
         .once('ready', () => {
           conn.exec('docker system dial-stdio', (err, stream) => {
             if (err) {
-              this.logger.error('[SSH] - Encountering an exec SSH error');
+              this.logger.error('Encountering an exec SSH error');
               this.logger.error(err);
               handleError(err);
             }
             stream.addListener('error', (err) => {
-              this.logger.error('[SSH] - Encountering an stream SSH error');
+              this.logger.error('Encountering an stream SSH error');
               this.logger.error(err);
               handleError(err);
             });
             stream.once('close', () => {
-              this.logger.warn('[SSH] - Stream closed');
+              this.logger.warn('Stream closed');
               conn.end();
               this.destroy();
             });
@@ -51,12 +56,12 @@ export const getCustomAgent = (childLogger: any, opt: any) => {
           });
         })
         .on('error', (err) => {
-          this.logger.error(`[SSH] - Error connecting to ${opt.host}`);
+          this.logger.error(`Error connecting to ${opt.host}`);
           this.logger.error(err);
           fn(err);
         })
         .once('end', () => {
-          this.logger.warn('[SSH] - Agent destroy');
+          this.logger.warn('Agent destroy');
           conn.end();
           this.destroy();
         })

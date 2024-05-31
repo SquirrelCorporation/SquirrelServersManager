@@ -16,10 +16,12 @@ export const execPlaybook = asyncHandler(async (req, res) => {
   if (!playbook) {
     throw new NotFoundError('Playbook not found');
   }
+  if (!req.user) {
+    throw new NotFoundError('No user');
+  }
   try {
     const execId = await PlaybookUseCases.executePlaybook(
       playbook,
-      // @ts-expect-error user will not be null
       req.user,
       req.body.target,
       req.body.extraVars as API.ExtraVars,

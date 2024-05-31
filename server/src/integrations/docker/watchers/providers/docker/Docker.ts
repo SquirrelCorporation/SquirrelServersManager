@@ -41,11 +41,11 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
   public watchCronTimeout: any;
   public watchCronDebounced: any;
   public listenDockerEventsTimeout: any;
-  // @ts-expect-error initialized later
-  public dockerApi: Dockerode;
+  public dockerApi: Dockerode | any;
 
   getConfigurationSchema() {
     return this.joi.object().keys({
+      // TODO: move the default somewhere else
       socket: this.joi.string().default('/var/run/docker.sock'),
       host: this.joi.string(),
       port: this.joi.number().port().default(2375),

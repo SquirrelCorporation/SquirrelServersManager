@@ -87,7 +87,8 @@
       ],
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": "error",
-
+      "report-unused-disable-directives": "warn",
+      "@typescript-eslint/report-unused-disable-directives": "warn",
       // ES6+
       "sort-imports": [
         "error",
