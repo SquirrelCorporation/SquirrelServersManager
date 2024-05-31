@@ -42,6 +42,10 @@ features:
 SSM is currently in active development and not usable for production yet. We encourage you to learn about [why we are building it](/about.md) and welcome community contributions. If you are interested in getting involved, check out the [Contribution Guide](/contribute/) !
 :::
 
+<div>
+<iframe width="560" height="315" style="margin-left: auto; margin-right: auto" src="https://www.youtube.com/embed/8w_9QKz47uc?si=n1ySaHKivEmvz6wx" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
+
 <style>
 :root {
   --vp-home-hero-name-color: transparent;
