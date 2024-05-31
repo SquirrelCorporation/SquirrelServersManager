@@ -42,10 +42,6 @@ features:
 SSM is currently in active development and not usable for production yet. We encourage you to learn about [why we are building it](/about.md) and welcome community contributions. If you are interested in getting involved, check out the [Contribution Guide](/contribute/) !
 :::
 
-<div style="width: 100%; text-align:center">
-<iframe width="560" height="315" style="margin: auto;" src="https://www.youtube.com/embed/8w_9QKz47uc?si=iAtIN0S_MItZH_58" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-</div>
-
 <style>
 :root {
   --vp-home-hero-name-color: transparent;
@@ -80,8 +76,6 @@ SSM is currently in active development and not usable for production yet. We enc
 
 &nbsp;
 :::
-
-
 ## Experience the immense power encapsulated within these tools, now exclusitely presented through a user-friendly interface.
 
 🔌 We blend the automation powerhouse of Ansible with the portable setup of Docker in a clean and engaging interface.
@@ -97,11 +91,7 @@ SSM is currently in active development and not usable for production yet. We enc
 ![dashboard](/dashboard.png)
 ### Devices
 ![devices](/devices.png)
-### Services
-![services](/services.png)
 ### Playbook editor
 ![playbook](/playbook.png)
 ### Device Info
 ![deviceinfo](/device-info.png)
-### Inventory
-![inventory](/inventory.png)
