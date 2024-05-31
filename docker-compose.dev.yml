@@ -1,0 +1,67 @@
+version: '3.8'
+services:
+  proxy:
+    restart: unless-stopped
+    build:
+      context: ./proxy
+    ports:
+      - "8000:8000"
+    depends_on:
+      - client
+      - mongo
+      - server
+      - redis
+  mongo:
+    env_file:
+      - ./.env.dev
+    container_name: mongo
+    image: mongo
+    restart: unless-stopped
+    volumes:
+      - ./.data.dev/db:/data/db
+    command: --quiet
+    ports:
+      - "${DB_PORT}:27017"
+  redis:
+    container_name: cache-ssm
+    image: redis
+    restart: unless-stopped
+    volumes:
+      - ./.data.dev/cache:/data
+    command: --save 60 1
+  server:
+    restart: unless-stopped
+    external_links:
+      - mongo
+      - redis
+    depends_on:
+      - mongo
+      - redis
+    build:
+      context: ./server
+      additional_contexts:
+        - shared-lib=./shared-lib
+      target: dev
+    env_file:
+      - ./.env.dev
+    volumes:
+      - ./server/src:/server/src
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      NODE_ENV: development
+      DEBUG: nodejs-docker-express:*
+  client:
+    restart: unless-stopped
+    environment:
+      DEBUG: http-proxy-middleware*
+    depends_on:
+      - server
+    build:
+      context: ./client
+      additional_contexts:
+        - shared-lib=./shared-lib
+      target: dev
+    volumes:
+      - ./client/src:/client/src
+      - ./client/config:/client/config
+      - ./client/public:/client/public

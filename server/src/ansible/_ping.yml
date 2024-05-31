@@ -1,0 +1,5 @@
+- hosts: all
+  tasks:
+    - name: Test Connection
+      ping:
+      timeout: 600

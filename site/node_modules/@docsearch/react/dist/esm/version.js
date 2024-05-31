@@ -1,0 +1,1 @@
+export var version = '3.6.0';

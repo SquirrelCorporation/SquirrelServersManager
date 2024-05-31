@@ -1,0 +1,14 @@
+{
+  "name": "Squirrel Servers Manager",
+  "short_name": "SSM",
+  "display": "standalone",
+  "start_url": "./?utm_source=homescreen",
+  "theme_color": "#002140",
+  "background_color": "#001529",
+  "icons": [
+    {
+      "src": "icons/icon-512x512.png",
+      "sizes": "512x512"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+export { default } from './ruby.mjs';
+import './html.mjs';
+import './javascript.mjs';
+import './css.mjs';
+import './xml.mjs';
+import './java.mjs';
+import './sql.mjs';
+import './c.mjs';
+import './shellscript.mjs';
+import './lua.mjs';

@@ -1,0 +1,459 @@
+import {
+  EosIconsCronjob,
+  OuiMlCreateAdvancedJob,
+  UilDocker,
+} from '@/components/Icons/CustomIcons';
+import { CardHeader } from '@/components/Template/CardHeader';
+import { updateDeviceDockerWatcher } from '@/services/rest/device';
+import { FieldTimeOutlined, InfoCircleFilled } from '@ant-design/icons';
+import {
+  ProForm,
+  ProFormDependency,
+  ProFormSelect,
+  ProFormSwitch,
+  ProFormText,
+  ProFormTextArea,
+} from '@ant-design/pro-components';
+import { Card, Flex, message, Space, Switch, Tooltip } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { API } from 'ssm-shared-lib';
+import Cron from 'react-js-cron';
+import 'react-js-cron/dist/styles.css';
+
+const connectionTypes = [
+  {
+    value: 'userPwd',
+    label: 'User/Password',
+  },
+  { value: 'keyBased', label: 'Keys' },
+];
+
+export type ConfigurationFormDockerProps = {
+  device: Partial<API.DeviceItem>;
+};
+
+export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
+  const [showAdvanced, setShowAdvanced] = React.useState(false);
+  const [dockerWatcher, setDockerWatcher] = React.useState(
+    props.device.dockerWatcher === undefined
+      ? true
+      : props.device.dockerWatcher,
+  );
+  const [dockerWatcherCron, setDockerWatcherCron] = useState(
+    props.device.dockerWatcherCron,
+  );
+  const [dockerStatsCron, setDockerStatsCron] = useState(
+    props.device.dockerStatsCron,
+  );
+  const [dockerStatsWatcher, setDockerStatsWatcher] = React.useState(
+    props.device.dockerStatsWatcher,
+  );
+  const [dockerEventsWatcher, setDockerEventsWatcher] = React.useState(
+    props.device.dockerEventsWatcher,
+  );
+  const handleOnChangeDockerWatcher = async () => {
+    if (props.device.uuid) {
+      await updateDeviceDockerWatcher(
+        props.device.uuid,
+        !dockerWatcher,
+        dockerStatsWatcher,
+        dockerEventsWatcher,
+      ).then((response) => {
+        setDockerWatcher(response.data.dockerWatcher);
+        setDockerEventsWatcher(response.data.dockerEventsWatcher);
+        setDockerStatsWatcher(response.data.dockerStatsWatcher);
+        message.success({ content: 'Setting updated' });
+      });
+    } else {
+      message.error({ content: 'Internal error - no device id' });
+    }
+  };
+
+  const handleOnChangeStatsWatcher = async () => {
+    if (props.device.uuid) {
+      await updateDeviceDockerWatcher(props.device.uuid, {
+        dockerWatcher: dockerWatcher,
+        dockerStatsWatcher: !dockerStatsWatcher,
+        dockerEventsWatcher: dockerEventsWatcher,
+      }).then((response) => {
+        setDockerWatcher(response.data.dockerWatcher);
+        setDockerEventsWatcher(response.data.dockerEventsWatcher);
+        setDockerStatsWatcher(response.data.dockerStatsWatcher);
+        message.success({ content: 'Setting updated' });
+      });
+    } else {
+      message.error({ content: 'Internal error - no device id' });
+    }
+  };
+
+  const handleOnChangeEventsWatcher = async () => {
+    if (props.device.uuid) {
+      await updateDeviceDockerWatcher(props.device.uuid, {
+        dockerWatcher: dockerWatcher,
+        dockerStatsWatcher: dockerStatsWatcher,
+        dockerEventsWatcher: !dockerEventsWatcher,
+      }).then((response) => {
+        setDockerWatcher(response.data.dockerWatcher);
+        setDockerEventsWatcher(response.data.dockerEventsWatcher);
+        setDockerStatsWatcher(response.data.dockerStatsWatcher);
+        message.success({ content: 'Setting updated' });
+      });
+    } else {
+      message.error({ content: 'Internal error - no device id' });
+    }
+  };
+
+  const handleOnChangeDockerWatcherCron = async () => {
+    if (props.device.uuid) {
+      await updateDeviceDockerWatcher(props.device.uuid, {
+        dockerWatcher,
+        dockerStatsWatcher,
+        dockerEventsWatcher,
+        dockerWatcherCron,
+        dockerStatsCron,
+      }).then(() => {
+        message.success({ content: 'Setting updated' });
+      });
+    } else {
+      message.error({ content: 'Internal error - no device id' });
+    }
+  };
+  useEffect(() => {
+    if (
+      props.device.dockerWatcherCron !== dockerWatcherCron ||
+      props.device.dockerStatsCron != dockerStatsCron
+    ) {
+      handleOnChangeDockerWatcherCron();
+    }
+  }, [dockerWatcherCron, dockerStatsCron]);
+  return (
+    <>
+      <Card
+        type="inner"
+        title={
+          <CardHeader
+            title={'Watch'}
+            color={'#4d329f'}
+            icon={<EosIconsCronjob />}
+          />
+        }
+        style={{ marginBottom: 10 }}
+        styles={{
+          header: { height: 45, minHeight: 45, paddingLeft: 15 },
+          body: { paddingBottom: 0 },
+        }}
+        extra={
+          <>
+            <Tooltip
+              title={
+                <>
+                  Activate or deactivate cronjobs on this device: <br />
+                  &quot;Watch Container&quot; will check updates of your
+                  container,
+                  <br />
+                  &quot;Watch Container Stats&quot; will pull container
+                  statistics, <br />
+                  &quot;Watch Container Events&quot; will listen to any change
+                  of status
+                </>
+              }
+            >
+              <InfoCircleFilled />
+            </Tooltip>
+          </>
+        }
+      >
+        <ProForm.Group>
+          <ProFormSwitch
+            checkedChildren={'Watch Containers'}
+            unCheckedChildren={'Containers not watched'}
+            style={{
+              marginTop: 'auto',
+              marginBottom: 'auto',
+            }}
+            fieldProps={{
+              value: dockerWatcher,
+              onChange: handleOnChangeDockerWatcher,
+            }}
+          />
+          <ProFormSwitch
+            checkedChildren={'Watch Containers Stats'}
+            unCheckedChildren={'Containers stats not watched'}
+            fieldProps={{
+              value: dockerStatsWatcher,
+              onChange: handleOnChangeStatsWatcher,
+            }}
+          />
+          <ProFormSwitch
+            checkedChildren={'Watch Container Events'}
+            unCheckedChildren={'Containers events not watched'}
+            fieldProps={{
+              value: dockerEventsWatcher,
+              onChange: handleOnChangeEventsWatcher,
+            }}
+          />
+        </ProForm.Group>
+      </Card>
+      <Card
+        type="inner"
+        title={
+          <CardHeader
+            title={'Docker Engine Host'}
+            color={'#328e9f'}
+            icon={<UilDocker />}
+          />
+        }
+        style={{ marginBottom: 10 }}
+        styles={{
+          header: { height: 45, minHeight: 45, paddingLeft: 15 },
+          body: { paddingBottom: 0 },
+        }}
+        extra={
+          <>
+            <Tooltip
+              title={
+                'Ip of the host cannot be modified. Disable/Enable containers watch, or specify in advanced options a different SSH connection method'
+              }
+            >
+              <InfoCircleFilled />
+            </Tooltip>
+          </>
+        }
+      >
+        <ProForm.Group>
+          <ProFormText
+            name="dockerIp"
+            label="Device IP"
+            width="sm"
+            placeholder="192.168.0.1"
+            disabled
+            initialValue={props.device.ip}
+            rules={[{ required: true }]}
+          />
+          <ProFormText
+            name="customDockerSocket"
+            label="Docker Sock"
+            width="sm"
+            placeholder="/var/run/docker.sock"
+            disabled={!showAdvanced}
+            rules={[{ required: false }]}
+          />
+          {showAdvanced && (
+            <>
+              <ProFormSwitch
+                name={'customDockerSSH'}
+                label={
+                  <Tooltip
+                    title={
+                      'Use a different method to connect through SSH for Docker'
+                    }
+                  >
+                    Use custom Docker SSH Auth
+                  </Tooltip>
+                }
+              />
+              <ProFormDependency name={['customDockerSSH']}>
+                {({ customDockerSSH }) => {
+                  if (customDockerSSH === true) {
+                    return (
+                      <ProFormSelect
+                        label="SSH Connection Type"
+                        name="dockerCustomAuthType"
+                        width="sm"
+                        rules={[{ required: true }]}
+                        options={connectionTypes}
+                      />
+                    );
+                  }
+                }}
+              </ProFormDependency>
+            </>
+          )}
+        </ProForm.Group>
+        {showAdvanced && (
+          <ProForm.Group>
+            <ProFormDependency name={['dockerCustomAuthType']}>
+              {({ dockerCustomAuthType }) => {
+                if (dockerCustomAuthType === 'userPwd')
+                  return (
+                    <ProForm.Group>
+                      <ProFormText
+                        name="dockerCustomSshUser"
+                        label="SSH User Name"
+                        width="xs"
+                        placeholder="root"
+                        rules={[{ required: true }]}
+                      />
+                      <ProFormText.Password
+                        name="dockerCustomSshPwd"
+                        label="SSH Password"
+                        width="sm"
+                        placeholder="password"
+                        rules={[{ required: true }]}
+                      />
+                    </ProForm.Group>
+                  );
+                if (dockerCustomAuthType === 'keyBased')
+                  return (
+                    <ProForm.Group>
+                      <ProFormText
+                        name="dockerCustomSshUser"
+                        label="SSH User Name"
+                        width="xs"
+                        placeholder="root"
+                        rules={[{ required: true }]}
+                      />
+                      <ProFormText.Password
+                        name="dockerCustomSshKeyPass"
+                        label="SSH Key Passphrase"
+                        width="xs"
+                        placeholder="passphrase"
+                        rules={[{ required: false }]}
+                      />
+                      <ProFormTextArea
+                        name="dockerCustomSshKey"
+                        label="SSH Private Key"
+                        width="md"
+                        placeholder="root"
+                        rules={[{ required: true }]}
+                      />
+                    </ProForm.Group>
+                  );
+              }}
+            </ProFormDependency>
+          </ProForm.Group>
+        )}
+      </Card>
+      <Card
+        type="inner"
+        title={
+          <CardHeader
+            title={'Watcher Crons'}
+            color={'#3c8036'}
+            icon={<FieldTimeOutlined />}
+          />
+        }
+        style={{ marginBottom: 10 }}
+        styles={{
+          header: { height: 45, minHeight: 45, paddingLeft: 15 },
+          body: { paddingBottom: 0 },
+        }}
+      >
+        Watch Containers:{' '}
+        <Space
+          direction={'horizontal'}
+          style={{ width: '100%', marginTop: '5px', marginLeft: '10px' }}
+        >
+          <Cron
+            value={dockerWatcherCron || ''}
+            setValue={setDockerWatcherCron}
+            clearButton={false}
+          />
+        </Space>
+        Watch Containers Stats:
+        <Space
+          direction={'horizontal'}
+          style={{ width: '100%', marginTop: '5px', marginLeft: '10px' }}
+        >
+          <Cron
+            value={dockerStatsCron || ''}
+            setValue={setDockerStatsCron}
+            clearButton={false}
+          />
+        </Space>
+      </Card>
+      {showAdvanced && (
+        <Card
+          type="inner"
+          title={
+            <CardHeader
+              title={'Docker Advanced Connection'}
+              color={'#1e4f5a'}
+              icon={<OuiMlCreateAdvancedJob />}
+            />
+          }
+          style={{ marginBottom: 10 }}
+          styles={{
+            header: { height: 45, minHeight: 45, paddingLeft: 15 },
+            body: { paddingBottom: 0 },
+          }}
+        >
+          <ProForm.Group>
+            <ProFormDependency name={['customDockerForcev4']}>
+              {({ customDockerForcev4 }) => (
+                <ProFormSwitch
+                  name={'customDockerForcev6'}
+                  label={
+                    <Tooltip
+                      title={'Only connect via resolved IPv4 address for host.'}
+                    >
+                      Force IPV6
+                    </Tooltip>
+                  }
+                  disabled={customDockerForcev4}
+                />
+              )}
+            </ProFormDependency>
+            <ProFormDependency name={['customDockerForcev6']}>
+              {({ customDockerForcev6 }) => (
+                <ProFormSwitch
+                  name={'customDockerForcev4'}
+                  label={
+                    <Tooltip
+                      title={'Only connect via resolved IPv6 address for host.'}
+                    >
+                      Force IPV4
+                    </Tooltip>
+                  }
+                  disabled={customDockerForcev6}
+                />
+              )}
+            </ProFormDependency>
+            <ProFormSwitch
+              name={'customDockerAgentForward'}
+              label={
+                <Tooltip
+                  title={
+                    'Use OpenSSH agent forwarding (auth-agent@openssh. com) for the life of the connection.'
+                  }
+                >
+                  Agent Forward
+                </Tooltip>
+              }
+            />
+            <ProFormSwitch
+              name={'customDockerTryKeyboard'}
+              label={
+                <Tooltip
+                  title={
+                    'Try keyboard-interactive user authentication if primary user authentication method fails.'
+                  }
+                >
+                  Try keyboard
+                </Tooltip>
+              }
+            />
+          </ProForm.Group>
+        </Card>
+      )}
+      <Flex
+        style={{
+          marginBottom: 10,
+        }}
+      >
+        <Space
+          direction="horizontal"
+          size="middle"
+          style={{ marginLeft: 'auto' }}
+        >
+          Show advanced
+          <Switch
+            size="small"
+            value={showAdvanced}
+            onChange={() => setShowAdvanced(!showAdvanced)}
+          />
+        </Space>
+      </Flex>
+    </>
+  );
+};

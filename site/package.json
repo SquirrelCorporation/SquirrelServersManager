@@ -1,0 +1,14 @@
+{
+  "name": "ssm-site",
+  "type": "module",
+  "private": true,
+  "author": "Squirrel Team",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "devDependencies": {
+    "vitepress": "^1.2.2"
+  }
+}

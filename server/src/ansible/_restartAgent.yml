@@ -1,0 +1,19 @@
+- name: Restart agent on targeted device
+  hosts: all
+  become: true
+  gather_facts: false
+  vars:
+    shell_script: undef
+
+  tasks:
+    - name: Run Shell Script
+      ansible.builtin.shell: "sudo /opt/squirrelserversmanager/restart.sh"
+      register: shell_output
+      tags:
+        - skip_ansible_lint  # provided variable could require shell modele
+      timeout: 600
+
+    - name: Print script output
+      ansible.builtin.debug:
+        var: shell_output.stdout_lines
+      timeout: 600
