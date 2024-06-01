@@ -183,10 +183,12 @@ const schema = new Schema<Device>(
     dockerStatsWatcher: {
       type: Schema.Types.Boolean,
       required: true,
+      default: true,
     },
     dockerEventsWatcher: {
       type: Schema.Types.Boolean,
       required: true,
+      default: true,
     },
   },
   {
