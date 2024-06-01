@@ -67,6 +67,7 @@ const NewUnManagedDeviceModal: React.FC<NewUnManagedDeviceModalProps> = (
                         becomeMethod: values.becomeMethod,
                         becomePass: values.becomePass,
                         strictHostChecking: values.strictHostChecking,
+                        unManaged: true,
                       }).then((res) => {
                         setDeviceUuid(res.data.device.uuid);
                       });
