@@ -13,17 +13,16 @@ describe('testing ECR Registry', () => {
     vi.restoreAllMocks();
   });
 
-  vi.mock('aws-sdk/clients/ecr.js', () => {
+  vi.mock('@aws-sdk/client-ecr', () => {
     const ECR = vi.fn(() => {
       return {
-        getAuthorizationToken: () => ({
-          promise: () => ({ authorizationData: [{ authorizationToken: 'xxxxx' }] }),
-        }),
+        getAuthorizationToken: async () => {
+          return { authorizationData: [{ authorizationToken: 'xxxxx' }] };
+        },
       };
     });
-    return { default: ECR };
+    return { ECR: ECR };
   });
-
   test('validatedConfiguration should initialize when configuration is valid', () => {
     expect(
       ecr.validateConfiguration({
