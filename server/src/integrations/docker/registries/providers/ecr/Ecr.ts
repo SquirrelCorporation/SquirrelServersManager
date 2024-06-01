@@ -1,4 +1,5 @@
 import axios from 'axios';
+import ECR from '@aws-sdk/client-ecr';
 import type { SSMServicesTypes } from '../../../../../types/typings.d.ts';
 import Registry from '../../Registry';
 
@@ -69,8 +70,7 @@ class Ecr extends Registry {
     const requestOptionsWithAuth = requestOptions;
     // Private registry
     if (this.configuration.accesskeyid && this.configuration.secretaccesskey) {
-      const ECR = await import('aws-sdk/clients/ecr.js');
-      const ecr = new ECR.default({
+      const ecr = new ECR.ECR({
         credentials: {
           accessKeyId: this.configuration.accesskeyid,
           secretAccessKey: this.configuration.secretaccesskey,
@@ -78,7 +78,7 @@ class Ecr extends Registry {
         region: this.configuration.region,
       });
       console.log(JSON.stringify(ecr));
-      const authorizationToken = await ecr.getAuthorizationToken().promise();
+      const authorizationToken = await ecr.getAuthorizationToken();
       if (requestOptionsWithAuth.headers) {
         if (authorizationToken.authorizationData && authorizationToken.authorizationData[0]) {
           const tokenValue = authorizationToken.authorizationData[0].authorizationToken;

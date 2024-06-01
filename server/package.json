@@ -9,6 +9,7 @@
     "test": "vitest --disable-console-intercept --reporter=basic ",
     "coverage": "vitest run --coverage"
   },
+  "version": "0.1.0",
   "author": "Squirrel Team",
   "dependencies": {
     "ansible-vault": "^1.1.1",
@@ -42,7 +43,8 @@
     "rewire": "^7.0.0",
     "semver": "^7.6.2",
     "shelljs": "^0.8.5",
-    "ssm-shared-lib": "file:../shared-lib/"
+    "ssm-shared-lib": "file:../shared-lib/",
+    "@aws-sdk/client-ecr": "^3.588.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
