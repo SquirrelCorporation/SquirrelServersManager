@@ -2,7 +2,7 @@ import { GrommetIconsInstall } from '@/components/Icons/CustomIcons';
 import React from 'react';
 import { Col, message, Modal, Result, Row, Typography } from 'antd';
 import { DotLottiePlayer, PlayMode } from '@dotlottie/react-player';
-import { ProCard, ProFormText } from '@ant-design/pro-components';
+import { ProCard } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
 import SSHConnectionForm from '@/components/DeviceConfiguration/SSHConnectionForm';
 import { putDevice } from '@/services/rest/device';
@@ -57,7 +57,8 @@ const NewUnManagedDeviceModal: React.FC<NewUnManagedDeviceModalProps> = (
                 <ProForm
                   onFinish={async (values) => {
                     if (values) {
-                      await putDevice(values.deviceIp, {
+                      await putDevice(values.deviceIp,
+                        {
                         authType: values.authType,
                         sshPort: values.sshPort,
                         sshUser: values.sshUser,
@@ -67,8 +68,7 @@ const NewUnManagedDeviceModal: React.FC<NewUnManagedDeviceModalProps> = (
                         becomeMethod: values.becomeMethod,
                         becomePass: values.becomePass,
                         strictHostChecking: values.strictHostChecking,
-                        unManaged: true,
-                      }).then((res) => {
+                      }, true).then((res) => {
                         setDeviceUuid(res.data.device.uuid);
                       });
                     } else {

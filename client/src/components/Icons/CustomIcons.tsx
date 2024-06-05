@@ -1,5 +1,26 @@
 import React from 'react';
 
+export const StreamlineComputerConnection = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1.8em"
+    height="1.8em"
+    viewBox="0 0 14 14"
+    {...props}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 9.5L.5 7L3 4.5m8 5L13.5 7L11 4.5" />
+      <circle cx="9" cy="7" r=".5" />
+      <circle cx="5" cy="7" r=".5" />
+    </g>
+  </svg>
+);
+
 export const LogosGitlab = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

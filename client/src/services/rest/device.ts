@@ -19,16 +19,46 @@ export async function getDevices(
 export async function putDevice(
   ip: string,
   deviceAuth: API.DeviceAuthParams,
+  unManaged?: boolean,
   masterNodeUrl?: string,
   options?: { [key: string]: any },
 ) {
   return request<API.NewDevice>('/api/devices', {
-    data: { ip: ip, masterNodeUrl: masterNodeUrl, ...deviceAuth },
+    data: {
+      ip: ip,
+      masterNodeUrl: masterNodeUrl,
+      unManaged: unManaged,
+      ...deviceAuth,
+    },
     method: 'PUT',
     ...(options || {}),
   });
 }
 
+export async function postCheckAnsibleConnection(
+  ip: string,
+  deviceAuth: API.DeviceAuthParams,
+  masterNodeUrl?: string,
+  options?: { [key: string]: any },
+) {
+  return request<API.NewDevice>('/api/devices/check-connection/ansible', {
+    data: { ip: ip, masterNodeUrl: masterNodeUrl, ...deviceAuth },
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+
+export async function postCheckDockerConnection(
+  ip: string,
+  deviceAuth: API.DeviceAuthParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.NewDevice>('/api/devices/check-connection/docker', {
+    data: { ip: ip, ...deviceAuth },
+    method: 'POST',
+    ...(options || {}),
+  });
+}
 export async function deleteDevice(
   uuid: string,
   options?: { [key: string]: any },

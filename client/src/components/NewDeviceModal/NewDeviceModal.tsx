@@ -1,7 +1,9 @@
 import {
   GrommetIconsInstall,
+  StreamlineComputerConnection,
   TablerPlugConnected,
 } from '@/components/Icons/CustomIcons';
+import CheckDeviceConnection from '@/components/NewDeviceModal/CheckDeviceConnection';
 import { DownloadOutlined, InfoCircleFilled } from '@ant-design/icons';
 import {
   ProForm,
@@ -25,7 +27,11 @@ import {
 } from 'antd';
 import React, { useRef, useState } from 'react';
 import SSHConnectionForm from '@/components/DeviceConfiguration/SSHConnectionForm';
-import { putDevice } from '@/services/rest/device';
+import {
+  postCheckDockerConnection,
+  postCheckAnsibleConnection,
+  putDevice,
+} from '@/services/rest/device';
 
 export type NewDeviceModalProps = {
   isModalOpen: boolean;
@@ -36,7 +42,11 @@ export type NewDeviceModalProps = {
 const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
   const formRef = useRef<ProFormInstance>();
   const [loading, setLoading] = useState(false);
-  const [sshConnection, setSshConnection] = useState({});
+  const [sshConnection, setSshConnection] = useState<any>({});
+  const [execId, setExecId] = useState();
+  const [dockerConnectionStatus, setDockerConnectionStatus] = useState();
+  const [dockerConnectionErrorMessage, setDockerConnectionErrorMessage] =
+    useState();
   const [controlNodeConnectionString, setControlNodeConnectionString] =
     useState({});
 
@@ -130,7 +140,12 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                         key="pre"
                         onClick={() => {
                           if (step === 1) setSshConnection({});
-                          if (step === 2) setControlNodeConnectionString({});
+                          if (step === 2) {
+                            setControlNodeConnectionString({});
+                            setDockerConnectionStatus(undefined);
+                            setDockerConnectionErrorMessage(undefined);
+                            setExecId(undefined);
+                          }
                           onPre?.();
                         }}
                       >
@@ -144,15 +159,58 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                       onClick={() => {
                         if (step === 0)
                           setSshConnection(form?.getFieldsValue());
-                        if (step === 1)
+                        if (step === 1) {
                           setControlNodeConnectionString(
                             form?.getFieldsValue(),
                           );
+                          setDockerConnectionStatus(undefined);
+                          setDockerConnectionErrorMessage(undefined);
+                          setExecId(undefined);
+                          postCheckAnsibleConnection(
+                            sshConnection.deviceIp,
+                            {
+                              authType: sshConnection.authType,
+                              sshPort: sshConnection.sshPort,
+                              sshUser: sshConnection.sshUser,
+                              sshPwd: sshConnection.sshPwd,
+                              sshKey: sshConnection.sshKey,
+                              becomeUser: sshConnection.becomeUser,
+                              becomeMethod: sshConnection.becomeMethod,
+                              becomePass: sshConnection.becomePass,
+                              strictHostChecking:
+                                sshConnection.strictHostChecking,
+                            },
+                            form?.getFieldsValue().controlNodeURL,
+                          ).then((e) => {
+                            setExecId(e.data.taskId);
+                          });
+                          postCheckDockerConnection(
+                            sshConnection.deviceIp,
+                            {
+                              authType: sshConnection.authType,
+                              sshPort: sshConnection.sshPort,
+                              sshUser: sshConnection.sshUser,
+                              sshPwd: sshConnection.sshPwd,
+                              sshKey: sshConnection.sshKey,
+                              becomeUser: sshConnection.becomeUser,
+                              becomeMethod: sshConnection.becomeMethod,
+                              becomePass: sshConnection.becomePass,
+                              strictHostChecking:
+                                sshConnection.strictHostChecking,
+                            },
+                            form?.getFieldsValue().controlNodeURL,
+                          ).then((e) => {
+                            setDockerConnectionStatus(e.data.connectionStatus);
+                            setDockerConnectionErrorMessage(
+                              e.data.errorMessage,
+                            );
+                          });
+                        }
                         onSubmit?.();
                       }}
-                      icon={step < 2 ? undefined : <DownloadOutlined />}
+                      icon={step < 3 ? undefined : <DownloadOutlined />}
                     >
-                      {step < 2 ? 'Next' : 'Confirm & Install Agent'}
+                      {step < 3 ? 'Next' : 'Confirm & Install Agent'}
                     </Button>,
                   ];
                 },
@@ -230,6 +288,46 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                   </ProForm.Group>
                 </Card>
               </StepsForm.StepForm>
+              <StepsForm.StepForm
+                name="test"
+                title="Test"
+                style={{ alignItems: 'start' }}
+              >
+                <Card
+                  type="inner"
+                  title={
+                    <Row>
+                      <Col>
+                        <Avatar
+                          style={{ backgroundColor: '#16728e' }}
+                          shape="square"
+                          icon={<StreamlineComputerConnection />}
+                        />
+                      </Col>
+                      <Col
+                        style={{
+                          marginLeft: 10,
+                          marginTop: 'auto',
+                          marginBottom: 'auto',
+                        }}
+                      >
+                        Test connections
+                      </Col>
+                    </Row>
+                  }
+                  style={{ marginBottom: 10 }}
+                  styles={{
+                    header: { height: 45, minHeight: 45, paddingLeft: 15 },
+                    body: { paddingBottom: 0 },
+                  }}
+                >
+                  <CheckDeviceConnection
+                    execId={execId}
+                    dockerConnRes={dockerConnectionStatus}
+                    dockerConnErrorMessage={dockerConnectionErrorMessage}
+                  />
+                </Card>
+              </StepsForm.StepForm>
               <StepsForm.StepForm name="confirm" title="Confirm">
                 <Card
                   type="inner"
@@ -298,7 +396,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                           <Input
                             value={
                               controlNodeConnectionString[
-                                e as keyof typeof sshConnection
+                                e as keyof typeof controlNodeConnectionString
                               ]
                             }
                             disabled

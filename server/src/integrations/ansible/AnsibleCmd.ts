@@ -12,7 +12,7 @@ function sanitizeInventory(inventoryTargets: Ansible.All & Ansible.HostGroups) {
   return "'" + JSON.stringify(inventoryTargets).replaceAll('\\\\', '\\') + "'";
 }
 
-function getInventoryTargets(inventoryTargets: Ansible.All & Ansible.HostGroups) {
+function getInventoryTargets(inventoryTargets: (Ansible.All & Ansible.HostGroups) | undefined) {
   return `${inventoryTargets ? '--specific-host ' + sanitizeInventory(inventoryTargets) : ''}`;
 }
 
@@ -27,7 +27,7 @@ function getExtraVars(extraVars?: API.ExtraVars) {
 function buildAnsibleCmd(
   playbook: string,
   uuid: string,
-  inventoryTargets: Ansible.All & Ansible.HostGroups,
+  inventoryTargets: (Ansible.All & Ansible.HostGroups) | undefined,
   user: User,
   extraVars?: API.ExtraVars,
 ) {

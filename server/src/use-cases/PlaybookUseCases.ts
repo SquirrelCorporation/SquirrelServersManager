@@ -1,16 +1,15 @@
 import { API } from 'ssm-shared-lib';
+import { setToCache } from '../data/cache';
 import Playbook, { PlaybookModel } from '../data/database/model/Playbook';
 import User from '../data/database/model/User';
 import PlaybookRepo from '../data/database/repository/PlaybookRepo';
-import { setToCache } from '../data/cache';
-import shell from '../integrations/shell';
-import { Ansible } from '../types/typings';
-import logger from '../logger';
 import ExtraVars from '../integrations/ansible/ExtraVars';
+import shell from '../integrations/shell';
+import logger from '../logger';
+import { Ansible } from '../types/typings';
 
-async function executePlaybook(
+async function completeExtraVar(
   playbook: Playbook,
-  user: User,
   target: string[] | undefined,
   extraVarsForcedValues?: API.ExtraVars,
 ) {
@@ -22,9 +21,40 @@ async function executePlaybook(
       ...(defaultExtraVars || []),
     ]);
   }
-  const execId = await shell.executePlaybook(playbook.name, user, target, substitutedExtraVars);
+  return substitutedExtraVars;
+}
 
-  return execId;
+async function executePlaybook(
+  playbook: Playbook,
+  user: User,
+  target: string[] | undefined,
+  extraVarsForcedValues?: API.ExtraVars,
+) {
+  let substitutedExtraVars: API.ExtraVars | undefined = await completeExtraVar(
+    playbook,
+    target,
+    extraVarsForcedValues,
+  );
+  return await shell.executePlaybook(playbook.name, user, target, substitutedExtraVars);
+}
+
+async function executePlaybookOnInventory(
+  playbook: Playbook,
+  user: User,
+  inventoryTargets?: Ansible.All & Ansible.HostGroups,
+  extraVarsForcedValues?: API.ExtraVars,
+) {
+  let substitutedExtraVars: API.ExtraVars | undefined = await completeExtraVar(
+    playbook,
+    undefined,
+    extraVarsForcedValues,
+  );
+  return await shell.executePlaybookOnInventory(
+    playbook.name,
+    user,
+    inventoryTargets,
+    substitutedExtraVars,
+  );
 }
 
 async function initPlaybook() {
@@ -114,6 +144,7 @@ export default {
   createCustomPlaybook,
   deleteCustomPlaybook,
   executePlaybook,
+  executePlaybookOnInventory,
   addExtraVarToPlaybook,
   deleteExtraVarFromPlaybook,
 };
