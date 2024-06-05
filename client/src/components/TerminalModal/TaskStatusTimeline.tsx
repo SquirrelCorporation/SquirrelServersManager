@@ -1,3 +1,4 @@
+import { TaskStatusTimelineType } from '@/components/TerminalModal/TerminalHandler';
 import { StepsProps } from 'antd';
 import {
   CheckCircleOutlined,
@@ -7,12 +8,8 @@ import {
   VerticalAlignBottomOutlined,
 } from '@ant-design/icons';
 import React, { ReactNode } from 'react';
-import { TaskStatusTimelineType } from '@/components/TerminalModal/index';
 import { API } from 'ssm-shared-lib';
 
-const isFinalStatus = (status: string): boolean => {
-  return status === 'failed' || status === 'successful';
-};
 const transformToTaskStatusTimeline = (
   execStatus: API.ExecStatus,
 ): TaskStatusTimelineType => {
@@ -46,5 +43,4 @@ const transformToTaskStatusTimeline = (
 
 export default {
   transformToTaskStatusTimeline,
-  isFinalStatus,
 };

@@ -1,6 +1,12 @@
 import express from 'express';
 import passport from 'passport';
-import { addDevice, addDeviceAuto, deleteDevice, getDevices, updateDockerWatcher } from '../services/devices/device';
+import {
+  addDevice,
+  addDeviceAuto,
+  deleteDevice,
+  getDevices,
+  updateDockerWatcher,
+} from '../services/devices/device';
 import {
   addDeviceAutoValidator,
   addDeviceValidator,
@@ -35,6 +41,14 @@ import {
   getDashboardAveragedStatsValidator,
   getDashboardStatValidator,
 } from '../services/devices/devicestatsdashboard.validator';
+import {
+  postCheckAnsibleConnection,
+  postCheckDockerConnection,
+} from '../services/devices/check-connection';
+import {
+  postCheckAnsibleConnectionValidator,
+  postCheckDockerConnectionValidator,
+} from '../services/devices/check-connection.validator';
 
 const router = express.Router();
 
@@ -42,6 +56,17 @@ router.post(`/:uuid`, updateDeviceAndAddDeviceStatValidator, updateDeviceAndAddD
 router.post('/', addDeviceAutoValidator, addDeviceAuto);
 
 router.use(passport.authenticate('jwt', { session: false }));
+
+router.post(
+  '/check-connection/ansible',
+  postCheckAnsibleConnectionValidator,
+  postCheckAnsibleConnection,
+);
+router.post(
+  '/check-connection/docker',
+  postCheckDockerConnectionValidator,
+  postCheckDockerConnection,
+);
 
 router.get(`/dashboard/stats/performances`, getDashboardPerformanceStats);
 router.post(

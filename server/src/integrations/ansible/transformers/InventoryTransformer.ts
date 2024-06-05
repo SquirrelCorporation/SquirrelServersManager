@@ -29,16 +29,16 @@ function inventoryBuilder(devicesAuth: DeviceAuth[]) {
   return ansibleInventory;
 }
 
-function inventoryBuilderForTarget(devicesAuth: DeviceAuth[]) {
+function inventoryBuilderForTarget(devicesAuth: Partial<DeviceAuth>[]) {
   logger.info(`[TRANSFORMERS][INVENTORY] - Inventory for ${devicesAuth.length} device(s)`);
   const ansibleInventory: Ansible.All & Ansible.HostGroups = {
     // @ts-expect-error I cannot comprehend generic typescript type
     all: {},
   };
   devicesAuth.forEach((e) => {
-    logger.info(`[TRANSFORMERS][INVENTORY] - Building inventory for ${e.device.uuid}`);
+    logger.info(`[TRANSFORMERS][INVENTORY] - Building inventory for ${e.device?.uuid}`);
     ansibleInventory[
-      `device${e.device.uuid.replaceAll('-', '')}` as keyof typeof ansibleInventory
+      `device${e.device?.uuid.replaceAll('-', '')}` as keyof typeof ansibleInventory
     ] = {
       // @ts-expect-error I cannot comprehend generic typescript type
       hosts: e.device.ip as string,
@@ -49,11 +49,11 @@ function inventoryBuilderForTarget(devicesAuth: DeviceAuth[]) {
   return ansibleInventory;
 }
 
-function getAuth(deviceAuth: DeviceAuth) {
+function getAuth(deviceAuth: Partial<DeviceAuth>) {
   switch (deviceAuth.authType) {
     case SSHType.KeyBased:
       return {
-        ansible_ssh_private_key_file: `/tmp/${deviceAuth.device.uuid}.key`,
+        ansible_ssh_private_key_file: `/tmp/${deviceAuth.device?.uuid}.key`,
         ansible_paramiko_pass: { __ansible_vault: deviceAuth.sshKeyPass },
       };
     case SSHType.UserPassword:
@@ -63,7 +63,7 @@ function getAuth(deviceAuth: DeviceAuth) {
   }
 }
 
-function getInventoryConnectionVars(deviceAuth: DeviceAuth) {
+function getInventoryConnectionVars(deviceAuth: Partial<DeviceAuth>) {
   // See https://docs.ansible.com/ansible/latest/collections/ansible/builtin/paramiko_ssh_connection.html
   return {
     ansible_connection: 'paramiko',

@@ -5,7 +5,7 @@ import Playbook from '../../data/database/model/Playbook';
 import { getFromCache } from '../../data/cache';
 import logger from '../../logger';
 
-function getDefaultExtraVars(playbook: Playbook, target: string[] | undefined) {
+function getDefaultExtraVars(playbook: Playbook, target?: string[]) {
   const defaultExtraVars = target
     ? (JSON.parse(`[{"extraVar": "${SSMReservedExtraVars.DEVICE_ID}", "value": "${target}"}]`) as [
         API.ExtraVar,

@@ -1,11 +1,27 @@
+import DockerModem from 'docker-modem';
+import Dockerode from 'dockerode';
+import { req } from 'pino-std-serializers';
+import { AuthenticationType } from 'ssh2';
+import { SSHType } from 'ssm-shared-lib/distribution/enums/ansible';
+import { AnsibleReservedExtraVarsKeys } from 'ssm-shared-lib/distribution/enums/settings';
 import { DeviceStatus } from 'ssm-shared-lib/distribution/enums/status';
 import { API } from 'ssm-shared-lib';
+import { InternalError } from '../core/api/ApiError';
+import { setToCache } from '../data/cache';
 import Device, { DeviceModel } from '../data/database/model/Device';
+import User from '../data/database/model/User';
 import DeviceAuthRepo from '../data/database/repository/DeviceAuthRepo';
 import DeviceDownTimeEventRepo from '../data/database/repository/DeviceDownTimeEventRepo';
 import DeviceRepo from '../data/database/repository/DeviceRepo';
 import DeviceStatRepo from '../data/database/repository/DeviceStatRepo';
+import PlaybookRepo from '../data/database/repository/PlaybookRepo';
+import { DEFAULT_VAULT_ID, vaultEncrypt } from '../integrations/ansible-vault/vault';
+import Inventory from '../integrations/ansible/transformers/InventoryTransformer';
+import { getCustomAgent } from '../integrations/docker/core/CustomAgent';
+import DockerAPIHelper from '../integrations/docker/core/DockerAPIHelper';
+import Shell from '../integrations/shell';
 import logger from '../logger';
+import PlaybookUseCases from './PlaybookUseCases';
 
 async function getDevicesOverview() {
   logger.info(`[USECASES][DEVICE] - getDevicesOverview`);
@@ -112,6 +128,109 @@ async function updateDockerInfo(uuid: string, dockerId: string, dockerVersion: s
   }
 }
 
+async function checkAnsibleConnection(
+  user: User,
+  masterNodeUrl?: string,
+  ip?: string,
+  authType?: SSHType,
+  sshKey?: string,
+  sshUser?: string,
+  sshPwd?: string,
+  sshPort?: number,
+  becomeMethod?: string,
+  becomePass?: string,
+  sshKeyPass?: string,
+) {
+  if (masterNodeUrl) {
+    await setToCache(AnsibleReservedExtraVarsKeys.MASTER_NODE_URL, masterNodeUrl);
+  }
+  if (sshKey) {
+    await Shell.saveSshKey(sshKey, 'tmp');
+  }
+  const mockedInventoryTarget = Inventory.inventoryBuilderForTarget([
+    {
+      device: {
+        _id: 'tmp',
+        ip,
+        uuid: 'tmp',
+        status: DeviceStatus.REGISTERING,
+      },
+      authType,
+      sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
+      sshUser,
+      sshPwd: sshPwd ? await vaultEncrypt(sshPwd, DEFAULT_VAULT_ID) : undefined,
+      sshPort: sshPort || 22,
+      becomeMethod,
+      becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
+      sshKeyPass: sshKeyPass ? await vaultEncrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
+    },
+  ]);
+  const playbook = await PlaybookRepo.findOne('_checkDeviceBeforeAdd.yml');
+  if (!playbook) {
+    throw new InternalError('_checkDeviceBeforeAdd.yml not found.');
+  }
+  const taskId = await PlaybookUseCases.executePlaybookOnInventory(
+    playbook,
+    user,
+    mockedInventoryTarget,
+  );
+  return {
+    taskId: taskId,
+  };
+}
+
+async function checkDockerConnection(
+  ip?: string,
+  authType?: SSHType,
+  sshKey?: string,
+  sshUser?: string,
+  sshPwd?: string,
+  sshPort?: number,
+  becomeMethod?: string,
+  becomePass?: string,
+  sshKeyPass?: string,
+) {
+  try {
+    const mockedDeviceAuth = {
+      device: {
+        _id: 'tmp',
+        ip,
+        uuid: 'tmp',
+        status: DeviceStatus.REGISTERING,
+      },
+      authType,
+      sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
+      sshUser,
+      sshPwd: sshPwd ? await vaultEncrypt(sshPwd, DEFAULT_VAULT_ID) : undefined,
+      sshPort: sshPort || 22,
+      becomeMethod,
+      becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
+      sshKeyPass: sshKeyPass ? await vaultEncrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
+    };
+    const options = await DockerAPIHelper.getDockerSshConnectionOptions(
+      mockedDeviceAuth.device,
+      mockedDeviceAuth,
+    );
+    const agent = getCustomAgent(logger, {
+      ...options.sshOptions,
+    });
+    options.modem = new DockerModem({
+      agent: agent,
+    });
+    const dockerApi = new Dockerode(options);
+    await dockerApi.ping();
+    await dockerApi.info();
+    return {
+      status: 'successful',
+    };
+  } catch (error: any) {
+    return {
+      status: 'failed',
+      message: error.message,
+    };
+  }
+}
+
 export default {
   updateDeviceFromJson,
   getDevicesOverview,
@@ -119,4 +238,6 @@ export default {
   updateDockerWatcher,
   getDevicesToWatch,
   updateDockerInfo,
+  checkAnsibleConnection,
+  checkDockerConnection,
 };

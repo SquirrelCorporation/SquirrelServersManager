@@ -1,12 +1,11 @@
-import taskStatusTimeline from '@/components/TerminalModal/TaskStatusTimeline';
-import {
-  executePlaybook,
-  getExecLogs,
-  getTaskStatuses,
-} from '@/services/rest/ansible';
+import TerminalHandler, {
+  TaskStatusTimelineType,
+} from '@/components/TerminalModal/TerminalHandler';
+import TerminalLogs from '@/components/TerminalModal/TerminalLogs';
+import { executePlaybook } from '@/services/rest/ansible';
 import { ClockCircleOutlined, ThunderboltOutlined } from '@ant-design/icons';
-import { Button, Col, Modal, Row, Steps, StepsProps, message } from 'antd';
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import { Button, Col, Modal, Row, Steps, message } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 import { ReactTerminal, TerminalContext } from 'react-terminal';
 import { DotLottiePlayer } from '@dotlottie/react-player';
 import { API } from 'ssm-shared-lib';
@@ -22,12 +21,6 @@ export type TerminalModalProps = {
   terminalProps: TerminalStateProps & {
     setIsOpen: (open: boolean) => void;
   };
-};
-
-export type TaskStatusTimelineType = StepsProps & {
-  _status: string;
-  icon: ReactNode;
-  title: string;
 };
 
 const TerminalModal = (props: TerminalModalProps) => {
@@ -54,15 +47,29 @@ const TerminalModal = (props: TerminalModalProps) => {
   const [isPollingEnabled, setIsPollingEnabled] = useState(false);
   const [savedStatuses, setSavedStatuses] = useState(statusesType);
   const [hasReachedFinalStatus, setHasReachedFinalStatus] = useState(false);
-  let statusesSet = new Set<string>();
-  let logsSet = new Set<string>();
+  const execLogCallBack = (execLog: API.ExecLog) => {
+    setBufferedContent((previous) => (
+      <TerminalLogs
+        execLog={execLog}
+        previous={previous}
+        terminalContentStyle={terminalContentStyle}
+      />
+    ));
+  };
+
+  const terminalHandler = new TerminalHandler(
+    setIsPollingEnabled,
+    setHasReachedFinalStatus,
+    execLogCallBack,
+    undefined,
+    setSavedStatuses,
+  );
 
   const resetTerminal = () => {
     setBufferedContent('');
     setIsPollingEnabled(false);
     setSavedStatuses([taskInit]);
-    statusesSet = new Set();
-    logsSet = new Set();
+    terminalHandler.resetTerminal();
   };
 
   const handleOk = () => {
@@ -121,93 +128,7 @@ const TerminalModal = (props: TerminalModalProps) => {
   }, [savedStatuses]);
 
   useEffect(() => {
-    const pollingCallback = async () => {
-      await getTaskStatuses(execId)
-        .then((statuses) => {
-          if (statuses && statuses.data.execStatuses) {
-            statuses.data.execStatuses.sort(
-              (a: API.ExecStatus, b: API.ExecStatus) => {
-                return (
-                  new Date(a.createdAt).getTime() -
-                  new Date(b.createdAt).getTime()
-                );
-              },
-            );
-            statuses.data.execStatuses.forEach((status: API.ExecStatus) => {
-              if (!statusesSet.has(status.status)) {
-                statusesSet.add(status.status);
-                setSavedStatuses((oldStatuses) => [
-                  ...oldStatuses,
-                  taskStatusTimeline.transformToTaskStatusTimeline(status),
-                ]);
-                if (taskStatusTimeline.isFinalStatus(status.status)) {
-                  setHasReachedFinalStatus(true);
-                  setTimeout(() => {
-                    setIsPollingEnabled(false);
-                  }, 5000);
-                }
-              }
-            });
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
-      await getExecLogs(execId)
-        .then((logs) => {
-          if (logs && logs.data.execLogs) {
-            logs.data.execLogs.sort((a: API.ExecLog, b: API.ExecLog) => {
-              return (
-                new Date(a.createdAt).getTime() -
-                new Date(b.createdAt).getTime()
-              );
-            });
-            logs.data.execLogs.forEach((execLog: API.ExecLog) => {
-              let braces = 0;
-              if (!logsSet.has(execLog.logRunnerId)) {
-                logsSet.add(execLog.logRunnerId);
-                if (execLog.stdout) {
-                  setBufferedContent((previous) => (
-                    <>
-                      {previous}
-                      <span style={terminalContentStyle}>
-                        {execLog.stdout?.split('\n').map((e, index, array) => {
-                          return (
-                            <>
-                              {e.split('\\r\\n').map((f) => {
-                                braces +=
-                                  (f.match(/\{/g)?.length || [].length) -
-                                  (f.match(/}/g)?.length || [].length);
-                                return (
-                                  <>
-                                    {/* Small trick to render &nbsp; for json object */}
-                                    {'\u00A0'.repeat(braces)}
-                                    {f}
-                                  </>
-                                );
-                              })}
-                              {e !== '' && index < array.length - 1 ? (
-                                <br />
-                              ) : (
-                                ''
-                              )}
-                            </>
-                          );
-                        })}
-                      </span>
-                      <br />
-                    </>
-                  ));
-                }
-              }
-            });
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
+    const pollingCallback = () => terminalHandler.pollingCallback(execId);
 
     const startPolling = () => {
       // pollingCallback(); // To immediately start fetching data

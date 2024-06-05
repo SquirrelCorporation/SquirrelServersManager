@@ -413,7 +413,6 @@ export type DeviceAuthParams = {
   customDockerAgentForward?: boolean;
   customDockerTryKeyboard?: boolean;
   customDockerSocket?: string;
-  unManaged?: boolean;
 };
 
 export type DeviceDockerAuthParams = {

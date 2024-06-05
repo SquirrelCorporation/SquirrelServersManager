@@ -19,24 +19,33 @@ async function executePlaybook(
   extraVars?: API.ExtraVars,
 ) {
   logger.info('[SHELL]-[ANSIBLE] - executePlaybook - Starting...');
-  if (!playbook.endsWith('.yml')) {
-    playbook += '.yml';
-  }
-  let inventoryTargets: Ansible.All & Ansible.HostGroups;
+
+  let inventoryTargets: (Ansible.All & Ansible.HostGroups) | undefined;
   if (target) {
     logger.info(`[SHELL]-[ANSIBLE] - executePlaybook - called with target: ${target}`);
     const devicesAuth = await DeviceAuthRepo.findManyByDevicesUuid(target);
-    if (!devicesAuth) {
+    if (!devicesAuth || devicesAuth.length === 0) {
       logger.error(`[SHELL]-[ANSIBLE] - executePlaybook - Target not found`);
       throw new Error('Exec failed, no matching target');
     }
     inventoryTargets = Inventory.inventoryBuilderForTarget(devicesAuth);
   }
+  return await executePlaybookOnInventory(playbook, user, inventoryTargets, extraVars);
+}
+
+async function executePlaybookOnInventory(
+  playbook: string,
+  user: User,
+  inventoryTargets?: Ansible.All & Ansible.HostGroups,
+  extraVars?: API.ExtraVars,
+) {
+  if (!playbook.endsWith('.yml')) {
+    playbook += '.yml';
+  }
   shell.cd(ANSIBLE_PATH);
   shell.rm('/server/src/ansible/inventory/hosts');
   shell.rm('/server/src/ansible/env/_extravars');
   const uuid = uuidv4();
-  shell.exec('ssh-add -l');
   const result = await new Promise<string | null>((resolve) => {
     const cmd = ansibleCmd.buildAnsibleCmd(playbook, uuid, inventoryTargets, user, extraVars);
     logger.info(`[SHELL]-[ANSIBLE] - executePlaybook - Executing ${cmd}`);
@@ -50,7 +59,7 @@ async function executePlaybook(
       resolve(null);
     });
   });
-  logger.info('[SHELL]-[ANSIBLE] - executePlaybook - ended');
+  logger.info('[SHELL]-[ANSIBLE] - executePlaybook - launched');
   if (result) {
     logger.info(`[SHELL]-[ANSIBLE] - executePlaybook - ExecId is ${uuid}`);
     await AnsibleTaskRepo.create({ ident: uuid, status: 'created', cmd: `playbook ${playbook}` });
@@ -147,7 +156,7 @@ async function getAnsibleVersion() {
   }
 }
 
-async function vaultSshKey(key: string, uuid: string) {
+async function saveSshKey(key: string, uuid: string) {
   try {
     logger.info('[SHELL] - vaultSshKey Starting...');
     if (shell.exec(`echo '${key}' > /tmp/${uuid}.key`).code !== 0) {
@@ -171,5 +180,6 @@ export default {
   deletePlaybook,
   readPlaybookConfiguration,
   getAnsibleVersion,
-  vaultSshKey,
+  saveSshKey,
+  executePlaybookOnInventory,
 };

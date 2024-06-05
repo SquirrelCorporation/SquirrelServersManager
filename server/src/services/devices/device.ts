@@ -53,7 +53,7 @@ export const addDevice = asyncHandler(async (req, res) => {
       becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
     } as DeviceAuth);
     if (sshKey) {
-      await Shell.vaultSshKey(sshKey, createdDevice.uuid);
+      await Shell.saveSshKey(sshKey, createdDevice.uuid);
     }
     logger.info(`[CONTROLLER] Device - Created device with uuid: ${createdDevice.uuid}`);
     new SuccessResponse('Add device successful', { device: createdDevice as API.DeviceItem }).send(
