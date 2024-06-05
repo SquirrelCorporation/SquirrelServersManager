@@ -1,5 +1,6 @@
 ![Squirrel](./client/public/logo.svg)
 # SQUIRREL SERVERS MANAGER
+[![Publish Containers to Ghcr.io](https://github.com/SquirrelCorporation/SquirrelServersManager/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/SquirrelCorporation/SquirrelServersManager/actions/workflows/docker-publish.yml)
 
 NOTE:
 This is a pre-alpha version, It may not work on your system. I am currently looking for testers and contributors.
