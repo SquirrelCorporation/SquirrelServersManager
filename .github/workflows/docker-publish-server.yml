@@ -73,7 +73,7 @@ jobs:
         with:
           context: ./server
           build-contexts: |
-            - shared-lib=./shared-lib
+            shared-lib=./shared-lib
           build-args: |
             NODE_ENV: production
           target: production
