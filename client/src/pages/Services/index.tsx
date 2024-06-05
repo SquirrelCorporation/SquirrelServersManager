@@ -158,6 +158,7 @@ const Index: React.FC = () => {
               icon={<AppstoreAddOutlined />}
               key="appstore"
               type="primary"
+              disabled={true}
               onClick={() => setAppStoreModalOpened(true)}
             >
               Store
