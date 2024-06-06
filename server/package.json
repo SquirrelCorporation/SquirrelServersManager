@@ -9,7 +9,7 @@
     "test": "vitest --disable-console-intercept --reporter=basic ",
     "coverage": "vitest run --coverage"
   },
-  "version": "0.1.0",
+  "version": "0.1.2",
   "author": "Squirrel Team",
   "dependencies": {
     "ansible-vault": "^1.1.1",

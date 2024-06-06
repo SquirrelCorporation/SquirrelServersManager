@@ -1,6 +1,6 @@
 {
   "name": "squirrel-servers-manager",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": true,
   "description": "A simple way to manage all your servers",
   "author": "Squirrel Team",

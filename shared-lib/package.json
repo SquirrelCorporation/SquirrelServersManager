@@ -1,6 +1,6 @@
 {
   "name": "ssm-shared-lib",
-  "version": "1.0.0",
+  "version": "0.1.2",
   "description": "",
   "main": "./distribution/index.js",
   "author": "Squirrel Team",
