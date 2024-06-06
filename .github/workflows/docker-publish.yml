@@ -20,11 +20,6 @@ env:
 jobs:
   build-and-publish-server:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        platform:
-          - linux/arm64/v8
-          - linux/amd64
     permissions:
       contents: read
       packages: write
@@ -78,13 +73,13 @@ jobs:
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
           context: ./server
-          provenance: false
           build-contexts: |
             shared-lib=./shared-lib
           build-args: |
             NODE_ENV: production
           target: production
-          platforms: ${{ matrix.platform }}
+          provenance: false
+          platforms: linux/amd64,linux/arm64,linux/arm64/v8
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -166,11 +161,11 @@ jobs:
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
           context: ./client
-          provenance: false
           build-contexts: |
             shared-lib=./shared-lib
           target: production
-          platforms: ${{ matrix.platform }}
+          provenance: false
+          platforms: linux/amd64,linux/arm64,linux/arm64/v8
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
