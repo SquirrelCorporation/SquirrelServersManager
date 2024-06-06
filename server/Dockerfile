@@ -1,8 +1,7 @@
+FROM node:22-alpine as base
 LABEL org.opencontainers.image.source=https://github.com/SquirrelCorporation/SquirrelServersManager
 LABEL org.opencontainers.image.description="SSM Server"
 LABEL org.opencontainers.image.licenses="GNU AFFERO GENERAL PUBLIC LICENSE"
-
-FROM node:22-alpine as base
 
 WORKDIR /server
 RUN apk update && apk add ansible nmap sudo openssh sshpass py3-pip expect
