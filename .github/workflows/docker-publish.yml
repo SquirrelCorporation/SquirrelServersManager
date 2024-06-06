@@ -21,6 +21,11 @@ env:
 jobs:
   build-and-publish-server:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform:
+          - linux/arm64/v8
+          - linux/amd64
     permissions:
       contents: read
       packages: write
@@ -79,7 +84,7 @@ jobs:
           build-args: |
             NODE_ENV: production
           target: production
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ matrix.platform }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -103,6 +108,11 @@ jobs:
         
   build-and-publish-client:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform:
+          - linux/arm64/v8
+          - linux/amd64
     permissions:
       contents: read
       packages: write
@@ -159,7 +169,7 @@ jobs:
           build-contexts: |
             shared-lib=./shared-lib
           target: production
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ matrix.platform }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -183,6 +193,11 @@ jobs:
         
   build-and-publish-proxy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform:
+          - linux/arm64/v8
+          - linux/amd64
     permissions:
       contents: read
       packages: write
@@ -236,7 +251,7 @@ jobs:
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
           context: ./proxy
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ matrix.platform }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
