@@ -23,7 +23,7 @@ FROM base as production
 ENV NODE_ENV=production
 WORKDIR /server
 COPY . .
-RUN npm install  --verbose
+RUN npm install  --verbose --no-audit
 RUN npm run build
 CMD ["node", "./dist/src/index.js"]
 
