@@ -3,17 +3,27 @@
   become: true
   gather_facts: false
   vars:
-    shell_script: undef
+    base_path: /opt/squirrelserversmanager
 
   tasks:
-    - name: Run Shell Script
-      ansible.builtin.shell: "sudo /opt/squirrelserversmanager/restart.sh"
-      register: shell_output
-      tags:
-        - skip_ansible_lint  # provided variable could require shell modele
-      timeout: 600
+    - name: Stop PM2 Agent if running
+      command: pm2 stop agent
+      ignore_errors: yes
 
-    - name: Print script output
-      ansible.builtin.debug:
-        var: shell_output.stdout_lines
-      timeout: 600
+    - name: Delete PM2 Agent if present
+      command: pm2 delete agent
+      ignore_errors: yes
+
+    - name: Start PM2 Agent
+      command:
+        chdir: "{{ base_path }}"
+        cmd: pm2 start -f "./build/agent.js"
+
+    - name: Install PM2 on startup
+      command: pm2 startup
+
+    - name: Save Agent on startup
+      command: pm2 save
+
+    - name: Save Agent on startup
+      command: pm2 update
