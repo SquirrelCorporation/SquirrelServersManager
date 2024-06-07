@@ -120,6 +120,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                     becomePass: values.becomePass,
                     strictHostChecking: values.strictHostChecking,
                   },
+                  false,
                   values.controlNodeURL,
                 )
                   .then((res) => {
