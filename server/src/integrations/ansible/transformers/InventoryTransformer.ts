@@ -52,10 +52,15 @@ function inventoryBuilderForTarget(devicesAuth: Partial<DeviceAuth>[]) {
 function getAuth(deviceAuth: Partial<DeviceAuth>) {
   switch (deviceAuth.authType) {
     case SSHType.KeyBased:
-      return {
-        ansible_ssh_private_key_file: `/tmp/${deviceAuth.device?.uuid}.key`,
-        ansible_paramiko_pass: { __ansible_vault: deviceAuth.sshKeyPass },
-      };
+      const privateKey = { ansible_ssh_private_key_file: `/tmp/${deviceAuth.device?.uuid}.key` };
+      if (deviceAuth.sshKeyPass) {
+        return {
+          ...privateKey,
+          ansible_paramiko_pass: { __ansible_vault: deviceAuth.sshKeyPass },
+        };
+      } else {
+        return privateKey;
+      }
     case SSHType.UserPassword:
       return { ansible_ssh_pass: { __ansible_vault: deviceAuth.sshPwd } };
     default:

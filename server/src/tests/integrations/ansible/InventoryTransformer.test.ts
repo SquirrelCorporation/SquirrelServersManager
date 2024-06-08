@@ -69,6 +69,78 @@ describe('test InventoryTransformer', () => {
     expect(result).toEqual(expectedResult);
   });
 
+  test('inventoryBuilderForTargetWithSshKey', () => {
+    const deviceAuth = {
+      device: { uuid: '1234-5678-9102', ip: '192.168.1.2' },
+      authType: SSHType.KeyBased,
+      becomeMethod: 'sudo',
+      becomePass: 'qwerty',
+      sshUser: 'admin',
+      sshKey:
+        'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAklOUpkDHrfHY17SbrmTIpNLTGK9Tjom/BWDSU\n' +
+        'GPl+nafzlHDTYW7hdI4yZ5ew18JH4JW9jbhUFrviQzM7xlELEVf4h9lFX5QVkbPppSwg0cda3\n' +
+        'Pbv7kOdJ/MTyBlWXFCR+HAo3FXRitBqxiX1nKhXpHAZsMciLq8V6RjsNAQwdsdMFvSlVK/7XA\n' +
+        't3FaoJoAsncM1Q9x5+3V0Ww68/eIFmb1zuUFljQJKprrX88XypNDvjYNby6vw/Pb0rwert/En\n' +
+        'mZ+AW4OZPnTPI89ZPmVMLuayrD2cE86Z/il8b+gw3r3+1nKatmIkjn2so1d01QraTlMqVSsbx\n' +
+        'NrRFi9wrf+M7Q== test@test.local',
+    };
+    // @ts-expect-error partial type
+    const result = InventoryTransformer.inventoryBuilderForTarget([deviceAuth]);
+    const expectedResult = {
+      all: {},
+      device123456789102: {
+        hosts: '192.168.1.2',
+        vars: {
+          ansible_connection: 'paramiko',
+          ansible_become_method: 'sudo',
+          ansible_become_pass: { __ansible_vault: 'qwerty' },
+          ansible_ssh_host_key_checking: false,
+          ansible_user: 'admin',
+          ansible_ssh_private_key_file: '/tmp/1234-5678-9102.key',
+        },
+      },
+    };
+
+    expect(result).toEqual(expectedResult);
+  });
+
+  test('inventoryBuilderForTargetWithSshKeyAndKeyPhrase', () => {
+    const deviceAuth = {
+      device: { uuid: '1234-5678-9102', ip: '192.168.1.2' },
+      authType: SSHType.KeyBased,
+      becomeMethod: 'sudo',
+      becomePass: 'qwerty',
+      sshUser: 'admin',
+      sshKeyPass: 'test',
+      sshKey:
+        'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAklOUpkDHrfHY17SbrmTIpNLTGK9Tjom/BWDSU\n' +
+        'GPl+nafzlHDTYW7hdI4yZ5ew18JH4JW9jbhUFrviQzM7xlELEVf4h9lFX5QVkbPppSwg0cda3\n' +
+        'Pbv7kOdJ/MTyBlWXFCR+HAo3FXRitBqxiX1nKhXpHAZsMciLq8V6RjsNAQwdsdMFvSlVK/7XA\n' +
+        't3FaoJoAsncM1Q9x5+3V0Ww68/eIFmb1zuUFljQJKprrX88XypNDvjYNby6vw/Pb0rwert/En\n' +
+        'mZ+AW4OZPnTPI89ZPmVMLuayrD2cE86Z/il8b+gw3r3+1nKatmIkjn2so1d01QraTlMqVSsbx\n' +
+        'NrRFi9wrf+M7Q== test@test.local',
+    };
+    // @ts-expect-error partial type
+    const result = InventoryTransformer.inventoryBuilderForTarget([deviceAuth]);
+    const expectedResult = {
+      all: {},
+      device123456789102: {
+        hosts: '192.168.1.2',
+        vars: {
+          ansible_connection: 'paramiko',
+          ansible_become_method: 'sudo',
+          ansible_become_pass: { __ansible_vault: 'qwerty' },
+          ansible_paramiko_pass: { __ansible_vault: 'test' },
+          ansible_user: 'admin',
+          ansible_ssh_host_key_checking: false,
+          ansible_ssh_private_key_file: '/tmp/1234-5678-9102.key',
+        },
+      },
+    };
+
+    expect(result).toEqual(expectedResult);
+  });
+
   test('inventoryBuilder with no devicesAuth', () => {
     const result = InventoryTransformer.inventoryBuilder([]);
     const expectedResult = {
