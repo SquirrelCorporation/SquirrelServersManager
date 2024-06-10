@@ -1,12 +1,11 @@
 import TerminalHandler from '@/components/TerminalModal/TerminalHandler';
-import TerminalLogs from '@/components/TerminalModal/TerminalLogs';
 import {
   CheckCircleOutlined,
   CloseOutlined,
   InfoCircleFilled,
   LoadingOutlined,
 } from '@ant-design/icons';
-import { Popover, Steps, Tooltip, Typography } from 'antd';
+import { Popover, Steps, Typography } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { API } from 'ssm-shared-lib';
 

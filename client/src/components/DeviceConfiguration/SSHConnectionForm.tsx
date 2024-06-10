@@ -3,11 +3,16 @@ import {
   GrommetIconsHost,
   StreamlineLockRotationSolid,
 } from '@/components/Icons/CustomIcons';
-import { InfoCircleFilled } from '@ant-design/icons';
+import {
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+  InfoCircleFilled,
+} from '@ant-design/icons';
 import {
   ProForm,
   ProFormDependency,
   ProFormDigit,
+  ProFormInstance,
   ProFormSelect,
   ProFormSwitch,
   ProFormText,
@@ -15,6 +20,8 @@ import {
 } from '@ant-design/pro-components';
 import { Avatar, Card, Col, Flex, Row, Space, Switch, Tooltip } from 'antd';
 import React from 'react';
+import { AnsibleBecomeMethod } from 'ssm-shared-lib/distribution/enums/ansible';
+import { privateKeyRegexp } from 'ssm-shared-lib/distribution/validation';
 
 const connectionTypes = [
   {
@@ -26,6 +33,7 @@ const connectionTypes = [
 
 export type SSHConnectionFormProps = {
   deviceIp?: string;
+  formRef: React.MutableRefObject<ProFormInstance | undefined>;
 };
 
 const SSHConnectionForm: React.FC<SSHConnectionFormProps> = (props) => {
@@ -159,44 +167,10 @@ const SSHConnectionForm: React.FC<SSHConnectionFormProps> = (props) => {
               },
             ]}
             width="xs"
-            options={[
-              {
-                value: 'sudo',
-                label: 'sudo',
-              },
-              {
-                value: 'su',
-                label: 'su',
-              },
-              {
-                value: 'pbrun',
-                label: 'pbrun',
-              },
-              {
-                value: 'pfexec',
-                label: 'pfexec',
-              },
-              {
-                value: 'doas',
-                label: 'doas',
-              },
-              {
-                value: 'dzdo',
-                label: 'dzdo',
-              },
-              {
-                value: 'ksu',
-                label: 'ksu',
-              },
-              {
-                value: 'runas',
-                label: 'runas',
-              },
-              {
-                value: 'machinectl',
-                label: 'machinectl',
-              },
-            ]}
+            options={Object.values(AnsibleBecomeMethod).map((e) => ({
+              value: e,
+              label: e,
+            }))}
           />
           <ProFormText
             name="becomeUser"
@@ -209,6 +183,33 @@ const SSHConnectionForm: React.FC<SSHConnectionFormProps> = (props) => {
             label="Sudo Password"
             width="sm"
             placeholder="password"
+            fieldProps={{
+              iconRender: (visible) =>
+                typeof props.formRef?.current?.getFieldValue === 'function' &&
+                props.formRef?.current?.getFieldValue('becomePass') !==
+                  'REDACTED' ? (
+                  visible ? (
+                    <EyeTwoTone />
+                  ) : (
+                    <EyeInvisibleOutlined />
+                  )
+                ) : undefined,
+              onFocus: () => {
+                if (
+                  props.formRef?.current?.getFieldValue('becomePass') ===
+                  'REDACTED'
+                ) {
+                  props.formRef?.current?.setFieldValue('becomePass', '');
+                }
+              },
+              onBlur: () => {
+                if (
+                  props.formRef?.current?.getFieldValue('becomePass') === ''
+                ) {
+                  props.formRef?.current?.resetFields(['becomePass']);
+                }
+              },
+            }}
           />
         </ProForm.Group>
       </Card>
@@ -279,6 +280,35 @@ const SSHConnectionForm: React.FC<SSHConnectionFormProps> = (props) => {
                       width="sm"
                       placeholder="password"
                       rules={[{ required: true }]}
+                      fieldProps={{
+                        iconRender: (visible) =>
+                          typeof props.formRef?.current?.getFieldValue ===
+                            'function' &&
+                          props.formRef?.current?.getFieldValue('sshPwd') !==
+                            'REDACTED' ? (
+                            visible ? (
+                              <EyeTwoTone />
+                            ) : (
+                              <EyeInvisibleOutlined />
+                            )
+                          ) : undefined,
+                        onFocus: () => {
+                          if (
+                            props.formRef?.current?.getFieldValue('sshPwd') ===
+                            'REDACTED'
+                          ) {
+                            props.formRef?.current?.setFieldValue('sshPwd', '');
+                          }
+                        },
+                        onBlur: () => {
+                          if (
+                            props.formRef?.current?.getFieldValue('sshPwd') ===
+                            ''
+                          ) {
+                            props.formRef?.current?.resetFields(['sshPwd']);
+                          }
+                        },
+                      }}
                     />
                   </ProForm.Group>
                 );
@@ -298,13 +328,76 @@ const SSHConnectionForm: React.FC<SSHConnectionFormProps> = (props) => {
                       width="xs"
                       placeholder="passphrase"
                       rules={[{ required: false }]}
+                      fieldProps={{
+                        iconRender: (visible) =>
+                          typeof props.formRef?.current?.getFieldValue ===
+                            'function' &&
+                          props.formRef?.current?.getFieldValue(
+                            'sshKeyPass',
+                          ) !== 'REDACTED' ? (
+                            visible ? (
+                              <EyeTwoTone />
+                            ) : (
+                              <EyeInvisibleOutlined />
+                            )
+                          ) : undefined,
+                        onFocus: () => {
+                          if (
+                            props.formRef?.current?.getFieldValue(
+                              'sshKeyPass',
+                            ) === 'REDACTED'
+                          ) {
+                            props.formRef?.current?.setFieldValue(
+                              'sshKeyPass',
+                              '',
+                            );
+                          }
+                        },
+                        onBlur: () => {
+                          if (
+                            props.formRef?.current?.getFieldValue(
+                              'sshKeyPass',
+                            ) === ''
+                          ) {
+                            props.formRef?.current?.resetFields(['sshKeyPass']);
+                          }
+                        },
+                      }}
                     />
                     <ProFormTextArea
                       name="sshKey"
                       label="SSH Private Key"
                       width="md"
                       placeholder="root"
-                      rules={[{ required: true }]}
+                      rules={[
+                        { required: true },
+                        {
+                          pattern: privateKeyRegexp,
+                          message:
+                            'The ssh key doesnt seems in a correct format',
+                        },
+                      ]}
+                      fieldProps={{
+                        style: {
+                          fontFamily: 'monospace',
+                        },
+                        onFocus: () => {
+                          if (
+                            props.formRef?.current?.getFieldValue('sshKey') ===
+                            'REDACTED'
+                          ) {
+                            props.formRef?.current?.setFieldValue('sshKey', '');
+                          }
+                        },
+                        onBlur: () => {
+                          if (
+                            props.formRef?.current?.getFieldValue('sshKey') ===
+                            ''
+                          ) {
+                            props.formRef?.current?.resetFields(['sshKey']);
+                          }
+                        },
+                      }}
                     />
                   </ProForm.Group>
                 );

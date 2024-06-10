@@ -5,10 +5,16 @@ import {
 } from '@/components/Icons/CustomIcons';
 import { CardHeader } from '@/components/Template/CardHeader';
 import { updateDeviceDockerWatcher } from '@/services/rest/device';
-import { FieldTimeOutlined, InfoCircleFilled } from '@ant-design/icons';
+import {
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+  FieldTimeOutlined,
+  InfoCircleFilled,
+} from '@ant-design/icons';
 import {
   ProForm,
   ProFormDependency,
+  ProFormInstance,
   ProFormSelect,
   ProFormSwitch,
   ProFormText,
@@ -19,6 +25,7 @@ import React, { useEffect, useState } from 'react';
 import { API } from 'ssm-shared-lib';
 import Cron from 'react-js-cron';
 import 'react-js-cron/dist/styles.css';
+import { privateKeyRegexp } from 'ssm-shared-lib/distribution/validation';
 
 const connectionTypes = [
   {
@@ -30,6 +37,7 @@ const connectionTypes = [
 
 export type ConfigurationFormDockerProps = {
   device: Partial<API.DeviceItem>;
+  formRef: React.MutableRefObject<ProFormInstance | undefined>;
 };
 
 export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
@@ -49,16 +57,17 @@ export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
     props.device.dockerStatsWatcher,
   );
   const [dockerEventsWatcher, setDockerEventsWatcher] = React.useState(
-    props.device.dockerEventsWatcher,
+    props.device.dockerEventsWatcher === undefined
+      ? true
+      : props.device.dockerEventsWatcher,
   );
   const handleOnChangeDockerWatcher = async () => {
     if (props.device.uuid) {
-      await updateDeviceDockerWatcher(
-        props.device.uuid,
-        !dockerWatcher,
-        dockerStatsWatcher,
-        dockerEventsWatcher,
-      ).then((response) => {
+      await updateDeviceDockerWatcher(props.device.uuid, {
+        dockerWatcher: !dockerWatcher,
+        dockerStatsWatcher: dockerStatsWatcher,
+        dockerEventsWatcher: dockerEventsWatcher,
+      }).then((response) => {
         setDockerWatcher(response.data.dockerWatcher);
         setDockerEventsWatcher(response.data.dockerEventsWatcher);
         setDockerStatsWatcher(response.data.dockerStatsWatcher);
@@ -290,6 +299,43 @@ export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
                         width="sm"
                         placeholder="password"
                         rules={[{ required: true }]}
+                        fieldProps={{
+                          iconRender: (visible) =>
+                            typeof props.formRef?.current?.getFieldValue ===
+                              'function' &&
+                            props.formRef?.current?.getFieldValue(
+                              'dockerCustomSshPwd',
+                            ) !== 'REDACTED' ? (
+                              visible ? (
+                                <EyeTwoTone />
+                              ) : (
+                                <EyeInvisibleOutlined />
+                              )
+                            ) : undefined,
+                          onFocus: () => {
+                            if (
+                              props.formRef?.current?.getFieldValue(
+                                'dockerCustomSshPwd',
+                              ) === 'REDACTED'
+                            ) {
+                              props.formRef?.current?.setFieldValue(
+                                'dockerCustomSshPwd',
+                                '',
+                              );
+                            }
+                          },
+                          onBlur: () => {
+                            if (
+                              props.formRef?.current?.getFieldValue(
+                                'dockerCustomSshPwd',
+                              ) === ''
+                            ) {
+                              props.formRef?.current?.resetFields([
+                                'dockerCustomSshPwd',
+                              ]);
+                            }
+                          },
+                        }}
                       />
                     </ProForm.Group>
                   );
@@ -309,13 +355,86 @@ export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
                         width="xs"
                         placeholder="passphrase"
                         rules={[{ required: false }]}
+                        fieldProps={{
+                          iconRender: (visible) =>
+                            typeof props.formRef?.current?.getFieldValue ===
+                              'function' &&
+                            props.formRef?.current?.getFieldValue(
+                              'dockerCustomSshKeyPass',
+                            ) !== 'REDACTED' ? (
+                              visible ? (
+                                <EyeTwoTone />
+                              ) : (
+                                <EyeInvisibleOutlined />
+                              )
+                            ) : undefined,
+                          onFocus: () => {
+                            if (
+                              props.formRef?.current?.getFieldValue(
+                                'dockerCustomSshKeyPass',
+                              ) === 'REDACTED'
+                            ) {
+                              props.formRef?.current?.setFieldValue(
+                                'dockerCustomSshKeyPass',
+                                '',
+                              );
+                            }
+                          },
+                          onBlur: () => {
+                            if (
+                              props.formRef?.current?.getFieldValue(
+                                'dockerCustomSshKeyPass',
+                              ) === ''
+                            ) {
+                              props.formRef?.current?.resetFields([
+                                'dockerCustomSshKeyPass',
+                              ]);
+                            }
+                          },
+                        }}
                       />
                       <ProFormTextArea
                         name="dockerCustomSshKey"
                         label="SSH Private Key"
                         width="md"
                         placeholder="root"
-                        rules={[{ required: true }]}
+                        rules={[
+                          { required: true },
+                          { required: true },
+                          {
+                            pattern: privateKeyRegexp,
+                            message:
+                              'The ssh key doesnt seems in a correct format',
+                          },
+                        ]}
+                        fieldProps={{
+                          style: {
+                            fontFamily: 'monospace',
+                          },
+                          onFocus: () => {
+                            if (
+                              props.formRef?.current?.getFieldValue(
+                                'dockerCustomSshKey',
+                              ) === 'REDACTED'
+                            ) {
+                              props.formRef?.current?.setFieldValue(
+                                'dockerCustomSshKey',
+                                '',
+                              );
+                            }
+                          },
+                          onBlur: () => {
+                            if (
+                              props.formRef?.current?.getFieldValue(
+                                'dockerCustomSshKey',
+                              ) === ''
+                            ) {
+                              props.formRef?.current?.resetFields([
+                                'dockerCustomSshKey',
+                              ]);
+                            }
+                          },
+                        }}
                       />
                     </ProForm.Group>
                   );
