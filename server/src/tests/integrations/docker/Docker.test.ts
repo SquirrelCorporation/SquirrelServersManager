@@ -29,6 +29,7 @@ const configurationValid = {
   watchall: false,
   watchevents: true,
   cron: '0 * * * *',
+  cronstats: '0 * * * *',
 };
 
 describe('testing Docker', () => {
@@ -105,9 +106,7 @@ describe('testing Docker', () => {
   test('addImageDetailsToContainer should add an image definition to the container', async () => {
     docker.dockerApi = {
       getImage: () => ({
-        // @ts-expect-error partial type
         distribution: () => ({ Platforms: [] }),
-        // @ts-expect-error partial type
         inspect: async () => ({
           Id: 'image-123456789',
           Architecture: 'arch',
@@ -161,9 +160,7 @@ describe('testing Docker', () => {
   test('addImageDetailsToContainer should support transforms', async () => {
     docker.dockerApi = {
       getImage: () => ({
-        // @ts-expect-error partial type
         distribution: () => ({ Platforms: [] }),
-        // @ts-expect-error partial type
         inspect: async () => ({
           Id: 'image-123456789',
           Architecture: 'arch',
@@ -256,12 +253,9 @@ describe('testing Docker', () => {
       },
     };
     docker.dockerApi = {
-      // @ts-expect-error partial type
       listContainers: () => [container1],
       getImage: () => ({
-        // @ts-expect-error partial type
         distribution: () => ({ Platforms: [] }),
-        // @ts-expect-error partial type
         inspect: () => ({
           Architecture: 'arch',
           Os: 'os',
