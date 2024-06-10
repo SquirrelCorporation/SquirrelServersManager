@@ -20,6 +20,7 @@ import {
 import {
   addOrUpdateDeviceAuthValidator,
   getDeviceAuthValidator,
+  updateDockerAuthValidator,
 } from '../services/devices/deviceauth.validator';
 import {
   getDeviceStatByDeviceUuid,
@@ -42,10 +43,14 @@ import {
   getDashboardStatValidator,
 } from '../services/devices/devicestatsdashboard.validator';
 import {
+  getCheckDeviceAnsibleConnection,
+  getCheckDeviceDockerConnection,
   postCheckAnsibleConnection,
   postCheckDockerConnection,
 } from '../services/devices/check-connection';
 import {
+  getCheckDeviceAnsibleConnectionValidator,
+  getCheckDeviceDockerConnectionValidator,
   postCheckAnsibleConnectionValidator,
   postCheckDockerConnectionValidator,
 } from '../services/devices/check-connection.validator';
@@ -80,8 +85,14 @@ router
   .route(`/:uuid/auth`)
   .get(getDeviceAuthValidator, getDeviceAuth)
   .post(addOrUpdateDeviceAuthValidator, addOrUpdateDeviceAuth);
-router.route('/:uuid/docker').post(updateDockerAuth);
+router.route('/:uuid/docker').post(updateDockerAuthValidator, updateDockerAuth);
 router.route('/:uuid/docker-watcher').post(updateDockerWatcher);
+router
+  .route(`/:uuid/check-connection/ansible`)
+  .get(getCheckDeviceAnsibleConnectionValidator, getCheckDeviceAnsibleConnection);
+router
+  .route(`/:uuid/check-connection/docker`)
+  .get(getCheckDeviceDockerConnectionValidator, getCheckDeviceDockerConnection);
 
 router.route('/').put(addDeviceValidator, addDevice).get(getDevices);
 router.delete(`/:uuid`, deleteDeviceValidator, deleteDevice);

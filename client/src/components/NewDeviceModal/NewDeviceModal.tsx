@@ -3,7 +3,7 @@ import {
   StreamlineComputerConnection,
   TablerPlugConnected,
 } from '@/components/Icons/CustomIcons';
-import CheckDeviceConnection from '@/components/NewDeviceModal/CheckDeviceConnection';
+import CheckDeviceConnection from '@/components/DeviceConfiguration/CheckDeviceConnection';
 import { DownloadOutlined, InfoCircleFilled } from '@ant-design/icons';
 import {
   ProForm,
@@ -227,7 +227,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                 title="SSH"
                 style={{ alignItems: 'start' }}
               >
-                <SSHConnectionForm />
+                <SSHConnectionForm formRef={formRef} />
               </StepsForm.StepForm>
               <StepsForm.StepForm
                 name="checkbox"

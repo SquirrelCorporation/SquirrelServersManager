@@ -1,5 +1,6 @@
 import { DockerConnectionForm } from '@/components/DeviceConfiguration/DockerConnectionForm';
 import { UilDocker, WhhSsh } from '@/components/Icons/CustomIcons';
+import ConnectionTestTab from '@/pages/Admin/Inventory/components/ConnectionTestTab';
 import DockerConfigurationForm from '@/pages/Admin/Inventory/components/DockerConfigurationForm';
 import { Modal, Tabs, TabsProps } from 'antd';
 import React from 'react';
@@ -23,6 +24,11 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
       key: '2',
       label: 'Docker',
       children: <DockerConfigurationForm device={props.values} />,
+    },
+    {
+      key: '3',
+      label: 'Connection test',
+      children: <ConnectionTestTab device={props.values} />,
     },
   ];
 
