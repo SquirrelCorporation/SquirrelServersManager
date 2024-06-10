@@ -28,6 +28,7 @@ async function getDockerSshConnectionOptions(device: Device, deviceAuth: DeviceA
   };
 
   const basedSshOptions = {
+    // TODO: Fix this
     tryKeyboard: true, //deviceAuth.customDockerTryKeyboard,
     forceIPv4: deviceAuth.customDockerForcev4,
     forceIPv6: deviceAuth.customDockerForcev6,
