@@ -1,4 +1,4 @@
-import { body } from 'express-validator';
+import { body, param } from 'express-validator';
 import { SSHType } from 'ssm-shared-lib/distribution/enums/ansible';
 import validator from '../../middlewares/validator';
 
@@ -43,5 +43,25 @@ export const postCheckDockerConnectionValidator = [
   body('sshKey').if(body('authType').equals(SSHType.KeyBased)).exists().notEmpty().isString(),
   body('sshUser').if(body('authType').equals(SSHType.UserPassword)).exists().notEmpty().isString(),
   body('sshPwd').if(body('authType').equals(SSHType.UserPassword)).exists().notEmpty().isString(),
+  validator,
+];
+
+export const getCheckDeviceDockerConnectionValidator = [
+  param('uuid')
+    .exists()
+    .notEmpty()
+    .withMessage('Uuid is required')
+    .isUUID()
+    .withMessage('Uuid is not valid'),
+  validator,
+];
+
+export const getCheckDeviceAnsibleConnectionValidator = [
+  param('uuid')
+    .exists()
+    .notEmpty()
+    .withMessage('Uuid is required')
+    .isUUID()
+    .withMessage('Uuid is not valid'),
   validator,
 ];

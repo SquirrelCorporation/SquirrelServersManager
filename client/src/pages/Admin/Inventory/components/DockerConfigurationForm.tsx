@@ -1,5 +1,6 @@
 import { DockerConnectionForm } from '@/components/DeviceConfiguration/DockerConnectionForm';
 import { getDeviceAuth, putDeviceDockerAuth } from '@/services/rest/deviceauth';
+import { ProFormInstance } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
 import { message, Space } from 'antd';
 import React from 'react';
@@ -12,10 +13,12 @@ export type DockerConfigurationFormProps = {
 const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
   props,
 ) => {
+  const formRef = React.useRef<ProFormInstance | undefined>();
   return (
     <>
       <ProForm
         layout="horizontal"
+        formRef={formRef}
         submitter={{
           // eslint-disable-next-line @typescript-eslint/no-shadow
           render: (props, doms) => {
@@ -87,7 +90,7 @@ const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
           }
         }}
       >
-        <DockerConnectionForm device={props.device} />
+        <DockerConnectionForm device={props.device} formRef={formRef} />
       </ProForm>
     </>
   );

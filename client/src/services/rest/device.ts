@@ -59,6 +59,7 @@ export async function postCheckDockerConnection(
     ...(options || {}),
   });
 }
+
 export async function deleteDevice(
   uuid: string,
   options?: { [key: string]: any },
@@ -73,7 +74,7 @@ export async function updateDeviceDockerWatcher(
   uuid: string,
   dockerOptions: {
     dockerWatcher: boolean;
-    dockerStatsWatcher: boolean;
+    dockerStatsWatcher?: boolean;
     dockerEventsWatcher: boolean;
     dockerWatcherCron?: string;
     dockerStatsCron?: string;
@@ -87,4 +88,30 @@ export async function updateDeviceDockerWatcher(
     },
     ...(options || {}),
   });
+}
+
+export async function getCheckDeviceDockerConnection(
+  uuid: string,
+  options?: { [key: string]: any },
+) {
+  return request<API.SimpleResult>(
+    `/api/devices/${uuid}/check-connection/docker`,
+    {
+      method: 'GET',
+      ...(options || {}),
+    },
+  );
+}
+
+export async function getCheckDeviceAnsibleConnection(
+  uuid: string,
+  options?: { [key: string]: any },
+) {
+  return request<API.SimpleResult>(
+    `/api/devices/${uuid}/check-connection/ansible`,
+    {
+      method: 'GET',
+      ...(options || {}),
+    },
+  );
 }

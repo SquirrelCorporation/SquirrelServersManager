@@ -1,4 +1,5 @@
-import React from 'react';
+import { ProFormInstance } from '@ant-design/pro-components';
+import React, { useRef } from 'react';
 import { Space, message } from 'antd';
 import { ProForm } from '@ant-design/pro-form/lib';
 import SSHConnectionForm from '@/components/DeviceConfiguration/SSHConnectionForm';
@@ -10,10 +11,12 @@ export type ConfigurationFormSSHProps = {
 };
 
 const SSHConfigurationForm: React.FC<ConfigurationFormSSHProps> = (props) => {
+  const formRef = useRef<ProFormInstance | undefined>();
   return (
     <>
       <ProForm
         layout="horizontal"
+        formRef={formRef}
         submitter={{
           // eslint-disable-next-line @typescript-eslint/no-shadow
           render: (props, doms) => {
@@ -83,7 +86,7 @@ const SSHConfigurationForm: React.FC<ConfigurationFormSSHProps> = (props) => {
           }
         }}
       >
-        <SSHConnectionForm deviceIp={props.values.ip} />
+        <SSHConnectionForm deviceIp={props.values.ip} formRef={formRef} />
       </ProForm>
     </>
   );

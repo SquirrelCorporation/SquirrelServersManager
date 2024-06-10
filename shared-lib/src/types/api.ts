@@ -188,6 +188,9 @@ export type DeviceItem = {
   disabled?: boolean;
   dockerWatcher?: boolean;
   dockerWatcherCron?: string;
+  dockerStatsWatcher?: boolean,
+  dockerStatsCron?: string;
+  dockerEventsWatcher?: boolean;
   hostname?: string;
   fqdn?: string;
   ip?: string;
@@ -212,9 +215,6 @@ export type DeviceItem = {
   mem?: number;
   versions?: VersionData;
   raspberry?: RaspberryRevisionData;
-  dockerStatsWatcher?: boolean,
-  dockerStatsCron?: string;
-  dockerEventsWatcher?: boolean;
   updatedAt?: string;
   createdAt?: string;
 };

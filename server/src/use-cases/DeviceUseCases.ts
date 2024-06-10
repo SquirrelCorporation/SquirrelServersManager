@@ -9,6 +9,7 @@ import { API } from 'ssm-shared-lib';
 import { InternalError } from '../core/api/ApiError';
 import { setToCache } from '../data/cache';
 import Device, { DeviceModel } from '../data/database/model/Device';
+import DeviceAuth from '../data/database/model/DeviceAuth';
 import User from '../data/database/model/User';
 import DeviceAuthRepo from '../data/database/repository/DeviceAuthRepo';
 import DeviceDownTimeEventRepo from '../data/database/repository/DeviceDownTimeEventRepo';
@@ -231,6 +232,40 @@ async function checkDockerConnection(
   }
 }
 
+async function checkDeviceDockerConnection(device: Device, deviceAuth: DeviceAuth) {
+  try {
+    const options = await DockerAPIHelper.getDockerSshConnectionOptions(device, deviceAuth);
+    const agent = getCustomAgent(logger, {
+      ...options.sshOptions,
+    });
+    options.modem = new DockerModem({
+      agent: agent,
+    });
+    const dockerApi = new Dockerode(options);
+    await dockerApi.ping();
+    await dockerApi.info();
+    return {
+      status: 'successful',
+    };
+  } catch (error: any) {
+    return {
+      status: 'failed',
+      message: error.message,
+    };
+  }
+}
+
+async function checkDeviceAnsibleConnection(user: User, device: Device) {
+  const playbook = await PlaybookRepo.findOne('_checkDeviceBeforeAdd.yml');
+  if (!playbook) {
+    throw new InternalError('_checkDeviceBeforeAdd.yml not found.');
+  }
+  const taskId = await PlaybookUseCases.executePlaybook(playbook, user, [device.uuid]);
+  return {
+    taskId: taskId,
+  };
+}
+
 export default {
   updateDeviceFromJson,
   getDevicesOverview,
@@ -240,4 +275,6 @@ export default {
   updateDockerInfo,
   checkAnsibleConnection,
   checkDockerConnection,
+  checkDeviceDockerConnection,
+  checkDeviceAnsibleConnection,
 };

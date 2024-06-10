@@ -14,6 +14,23 @@ import WatcherEngine from '../../integrations/docker/core/WatcherEngine';
 import Shell from '../../integrations/shell';
 import logger from '../../logger';
 
+const SENSITIVE_PLACEHOLDER = 'REDACTED';
+
+const redactSensitiveInfos = (key?: string) => {
+  return key ? SENSITIVE_PLACEHOLDER : undefined;
+};
+
+const preWriteSensitiveInfos = async (newKey: string, originalKey?: string) => {
+  if (newKey === 'REDACTED') {
+    if (!originalKey) {
+      throw new InternalError('Received a redacted key, but original is not set');
+    }
+    return originalKey;
+  } else {
+    return await vaultEncrypt(newKey, DEFAULT_VAULT_ID);
+  }
+};
+
 export const getDeviceAuth = asyncHandler(async (req, res) => {
   const { uuid } = req.params;
   logger.info(`[CONTROLLER] - GET - /devices/auth/${uuid}`);
@@ -31,32 +48,20 @@ export const getDeviceAuth = asyncHandler(async (req, res) => {
   try {
     const deviceAuthDecrypted = {
       authType: deviceAuth.authType,
-      sshKey: deviceAuth.sshKey
-        ? await vaultDecrypt(deviceAuth.sshKey, DEFAULT_VAULT_ID)
-        : undefined,
+      sshKey: redactSensitiveInfos(deviceAuth.sshKey),
       sshUser: deviceAuth.sshUser,
-      sshPwd: deviceAuth.sshPwd
-        ? await vaultDecrypt(deviceAuth.sshPwd, DEFAULT_VAULT_ID)
-        : undefined,
+      sshPwd: redactSensitiveInfos(deviceAuth.sshPwd),
       sshPort: deviceAuth.sshPort,
       becomeMethod: deviceAuth.becomeMethod,
-      becomePass: deviceAuth.becomeMethod,
+      becomePass: redactSensitiveInfos(deviceAuth.becomePass),
       becomeUser: deviceAuth.becomeUser,
-      sshKeyPass: deviceAuth.sshKeyPass
-        ? await vaultDecrypt(deviceAuth.sshKeyPass, DEFAULT_VAULT_ID)
-        : undefined,
+      sshKeyPass: redactSensitiveInfos(deviceAuth.sshKeyPass),
       customDockerSSH: deviceAuth.customDockerSSH,
       dockerCustomAuthType: deviceAuth.dockerCustomAuthType,
       dockerCustomSshUser: deviceAuth.dockerCustomSshUser,
-      dockerCustomSshPwd: deviceAuth.dockerCustomSshPwd
-        ? await vaultDecrypt(deviceAuth.dockerCustomSshPwd, DEFAULT_VAULT_ID)
-        : undefined,
-      dockerCustomSshKeyPass: deviceAuth.dockerCustomSshKeyPass
-        ? await vaultDecrypt(deviceAuth.dockerCustomSshKeyPass, DEFAULT_VAULT_ID)
-        : undefined,
-      dockerCustomSshKey: deviceAuth.dockerCustomSshKey
-        ? await vaultDecrypt(deviceAuth.dockerCustomSshKey, DEFAULT_VAULT_ID)
-        : undefined,
+      dockerCustomSshPwd: redactSensitiveInfos(deviceAuth.dockerCustomSshPwd),
+      dockerCustomSshKeyPass: redactSensitiveInfos(deviceAuth.dockerCustomSshKeyPass),
+      dockerCustomSshKey: redactSensitiveInfos(deviceAuth.dockerCustomSshKey),
       customDockerForcev6: deviceAuth.customDockerForcev6,
       customDockerForcev4: deviceAuth.customDockerForcev4,
       customDockerAgentForward: deviceAuth.customDockerAgentForward,
@@ -90,16 +95,25 @@ export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {
     logger.error('[CONTROLLER] - POST - Device Auth - Device not found');
     throw new NotFoundError('Device ID not found');
   }
+  const optionalExistingDeviceAuth = await DeviceAuthRepo.findOneByDevice(device);
   const deviceAuth = await DeviceAuthRepo.updateOrCreateIfNotExist({
     device: device,
     authType: authType,
     sshUser: sshUser,
-    sshPwd: sshPwd ? await vaultEncrypt(sshPwd, DEFAULT_VAULT_ID) : undefined,
+    sshPwd: sshPwd
+      ? await preWriteSensitiveInfos(sshPwd, optionalExistingDeviceAuth?.sshPwd)
+      : undefined,
     sshPort: sshPort,
-    sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
-    sshKeyPass: sshKeyPass ? await vaultEncrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
+    sshKey: sshKey
+      ? await preWriteSensitiveInfos(sshKey, optionalExistingDeviceAuth?.sshKey)
+      : undefined,
+    sshKeyPass: sshKeyPass
+      ? await preWriteSensitiveInfos(sshKeyPass, optionalExistingDeviceAuth?.sshKeyPass)
+      : undefined,
     becomeMethod: becomeMethod,
-    becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
+    becomePass: becomePass
+      ? await preWriteSensitiveInfos(becomePass, optionalExistingDeviceAuth?.becomePass)
+      : undefined,
     becomeUser: becomeUser,
   } as DeviceAuth);
   if (sshKey) {
@@ -134,19 +148,29 @@ export const updateDockerAuth = asyncHandler(async (req, res) => {
     logger.error('[CONTROLLER] - POST - Device Docker Auth - Device not found');
     throw new NotFoundError('Device ID not found');
   }
+  const optionalExistingDeviceAuth = await DeviceAuthRepo.findOneByDevice(device);
   const deviceAuth = await DeviceAuthRepo.update({
     device: device,
     customDockerSSH: customDockerSSH,
     dockerCustomAuthType: dockerCustomAuthType,
     dockerCustomSshUser: dockerCustomSshUser,
     dockerCustomSshPwd: dockerCustomSshPwd
-      ? await vaultEncrypt(dockerCustomSshPwd, DEFAULT_VAULT_ID)
+      ? await preWriteSensitiveInfos(
+          dockerCustomSshPwd,
+          optionalExistingDeviceAuth?.dockerCustomSshPwd,
+        )
       : undefined,
     dockerCustomSshKeyPass: dockerCustomSshKeyPass
-      ? await vaultEncrypt(dockerCustomSshKeyPass, DEFAULT_VAULT_ID)
+      ? await preWriteSensitiveInfos(
+          dockerCustomSshKeyPass,
+          optionalExistingDeviceAuth?.dockerCustomSshKeyPass,
+        )
       : undefined,
     dockerCustomSshKey: dockerCustomSshKey
-      ? await vaultEncrypt(dockerCustomSshKey, DEFAULT_VAULT_ID)
+      ? await preWriteSensitiveInfos(
+          dockerCustomSshKey,
+          optionalExistingDeviceAuth?.dockerCustomSshKey,
+        )
       : undefined,
     customDockerForcev6: customDockerForcev6,
     customDockerForcev4: customDockerForcev4,
@@ -157,8 +181,8 @@ export const updateDockerAuth = asyncHandler(async (req, res) => {
   logger.info(
     `[CONTROLLER] - POST - Device Docker Auth - Updated device with uuid: ${device.uuid}`,
   );
-  await WatcherEngine.deregisterWatchers();
-  await WatcherEngine.registerWatchers();
+  WatcherEngine.deregisterWatchers();
+  WatcherEngine.registerWatchers();
   new SuccessResponse('Update docker auth successful', {
     dockerCustomAuthType: deviceAuth?.dockerCustomAuthType,
   }).send(res);
