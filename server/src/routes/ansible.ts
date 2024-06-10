@@ -8,6 +8,8 @@ import {
 } from '../services/ansible/execution.validator';
 import { addOrUpdateExtraVarValue } from '../services/ansible/extravar';
 import { addOrUpdateExtraVarValueValidator } from '../services/ansible/extravar.validator';
+import { getAnsibleGalaxyCollections } from '../services/ansible/galaxy';
+import { getAnsibleGalaxyCollectionsValidator } from '../services/ansible/galaxy.validator';
 import { addTaskEvent, addTaskStatus } from '../services/ansible/hook';
 import { getInventory } from '../services/ansible/inventory';
 import {
@@ -42,6 +44,7 @@ router.get(`/inventory`, passport.authenticate('bearer', { session: false }), ge
 
 router.use(passport.authenticate('jwt', { session: false }));
 
+router.get(`/galaxy/collection`, getAnsibleGalaxyCollectionsValidator, getAnsibleGalaxyCollections);
 router.post(`/exec/playbook/:playbook`, execPlaybookValidator, execPlaybook);
 router.get(`/exec/:id/logs`, getLogsValidator, getLogs);
 router.get(`/exec/:id/status`, getStatusValidator, getStatus);

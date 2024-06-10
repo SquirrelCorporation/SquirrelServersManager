@@ -107,3 +107,16 @@ export async function postExtraVarValue(extraVar: string, value: string) {
     ...{},
   });
 }
+
+export async function getCollections(
+  params?: any,
+  options?: Record<string, any>,
+) {
+  return request<any>('/api/ansible/galaxy/collection', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
