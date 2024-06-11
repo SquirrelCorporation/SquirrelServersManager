@@ -46,7 +46,6 @@ services:
       - ./.env.dev
     volumes:
       - ./server/src:/server/src
-      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       NODE_ENV: development
       DEBUG: nodejs-docker-express:*
