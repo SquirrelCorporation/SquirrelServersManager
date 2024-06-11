@@ -27,8 +27,6 @@ services:
     command: --save 60 1
   server:
     restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
     external_links:
       - mongo
       - redis

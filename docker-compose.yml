@@ -28,8 +28,6 @@ services:
   server:
     image: "ghcr.io/squirrelcorporation/squirrelserversmanager-server:latest"
     restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
     external_links:
       - mongo
       - redis
