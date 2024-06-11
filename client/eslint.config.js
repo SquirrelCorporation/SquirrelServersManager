@@ -7,8 +7,8 @@ module.exports = {
   },
   // ...
   rules: {
-    "@typescript-eslint/no-parameter-properties": "off",
-    "@typescript-eslint/consistent-type-imports": "off",
-    '@typescript-eslint/switch-exhaustiveness-check': "off",
-  }
+    '@typescript-eslint/no-parameter-properties': 'off',
+    '@typescript-eslint/consistent-type-imports': 'off',
+    '@typescript-eslint/switch-exhaustiveness-check': 'off',
+  },
 };
