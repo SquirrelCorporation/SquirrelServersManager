@@ -3,7 +3,7 @@ import { setToCache } from '../data/cache';
 import Playbook, { PlaybookModel } from '../data/database/model/Playbook';
 import User from '../data/database/model/User';
 import PlaybookRepo from '../data/database/repository/PlaybookRepo';
-import ExtraVars from '../integrations/ansible/ExtraVars';
+import ExtraVars from '../integrations/ansible/utils/ExtraVars';
 import shell from '../integrations/shell';
 import logger from '../logger';
 import { Ansible } from '../types/typings';
@@ -14,7 +14,7 @@ async function completeExtraVar(
   extraVarsForcedValues?: API.ExtraVars,
 ) {
   let substitutedExtraVars: API.ExtraVars | undefined = undefined;
-  if (playbook.extraVars?.length > 0) {
+  if (playbook.extraVars && playbook.extraVars.length > 0) {
     const defaultExtraVars = ExtraVars.getDefaultExtraVars(playbook, target);
     substitutedExtraVars = await ExtraVars.findValueOfExtraVars(playbook.extraVars, [
       ...(extraVarsForcedValues || []),
@@ -59,43 +59,57 @@ async function executePlaybookOnInventory(
 
 async function initPlaybook() {
   logger.info(`[USECASES][PLAYBOOK] - initPlaybook`);
+
   const playbooks = await shell.listPlaybooks();
-  playbooks?.map(async (playbook) => {
+  const playbookPromises = playbooks?.map(async (playbook) => {
     const configurationFileContent = await shell.readPlaybookConfiguration(
       playbook.replaceAll('.yml', '.json'),
     );
+
+    const isCustomPlaybook = !playbook.startsWith('_');
+    const playbookData: Playbook = {
+      name: playbook,
+      custom: isCustomPlaybook,
+    };
+
     if (configurationFileContent) {
       logger.info(`[USECASES][PLAYBOOK] - playbook has configuration file`);
+
       const playbookConfiguration = JSON.parse(
         configurationFileContent,
       ) as Ansible.PlaybookConfigurationFile;
-      await PlaybookRepo.updateOrCreate({
-        name: playbook,
-        custom: !playbook.startsWith('_'),
-        playableInBatch: playbookConfiguration.playableInBatch,
-        extraVars: playbookConfiguration.extraVars,
-      } as Playbook);
-    } else {
-      await PlaybookRepo.updateOrCreate({
-        name: playbook,
-        custom: !playbook.startsWith('_'),
-      } as Playbook);
+
+      playbookData.playableInBatch = playbookConfiguration.playableInBatch;
+      playbookData.extraVars = playbookConfiguration.extraVars;
     }
+
+    await PlaybookRepo.updateOrCreate(playbookData);
   });
+
+  await Promise.all(playbookPromises);
 }
 
 async function getAllPlaybooks() {
-  const listOfPlaybooks = (await PlaybookRepo.findAll()) || [];
-  const substitutedListOfPlaybooks: any = [];
-  for (const playbook of listOfPlaybooks) {
-    substitutedListOfPlaybooks.push({
+  const listOfPlaybooks = await PlaybookRepo.findAll();
+  if (!listOfPlaybooks) {
+    return [];
+  }
+
+  const substitutedListOfPlaybooks = listOfPlaybooks.map(async (playbook) => {
+    const extraVars = playbook.extraVars
+      ? await ExtraVars.findValueOfExtraVars(playbook.extraVars, undefined, true)
+      : undefined;
+    return {
       value: playbook.name,
       label: playbook.name.replaceAll('.yml', ''),
-      extraVars: await ExtraVars.findValueOfExtraVars(playbook.extraVars, undefined, true),
+      extraVars,
       custom: playbook.custom,
-    });
-  }
-  return substitutedListOfPlaybooks?.sort((a) => (a.value.startsWith('_') ? -1 : 1));
+    };
+  });
+
+  return (await Promise.all(substitutedListOfPlaybooks)).sort((a) =>
+    a.value.startsWith('_') ? -1 : 1,
+  );
 }
 
 async function createCustomPlaybook(name: string) {
@@ -108,9 +122,8 @@ async function createCustomPlaybook(name: string) {
 }
 
 async function deleteCustomPlaybook(playbook: Playbook) {
-  await PlaybookModel.deleteOne({ name: playbook.name }).then(async () => {
-    await shell.deletePlaybook(playbook.name);
-  });
+  await PlaybookModel.deleteOne({ name: playbook.name });
+  await shell.deletePlaybook(playbook.name);
 }
 
 async function addExtraVarToPlaybook(playbook: Playbook, extraVar: API.ExtraVar) {
@@ -132,7 +145,7 @@ async function addExtraVarToPlaybook(playbook: Playbook, extraVar: API.ExtraVar)
 }
 
 async function deleteExtraVarFromPlaybook(playbook: Playbook, extraVarName: string) {
-  const removedVar = playbook.extraVars.filter((e) => {
+  const removedVar = playbook.extraVars?.filter((e) => {
     return e.extraVar !== extraVarName;
   });
   await PlaybookModel.updateOne({ name: playbook.name }, { extraVars: removedVar }).lean().exec();

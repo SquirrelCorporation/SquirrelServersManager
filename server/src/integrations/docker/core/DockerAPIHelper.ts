@@ -22,57 +22,56 @@ async function getDockerSshConnectionOptions(device: Device, deviceAuth: DeviceA
     _deviceUuid: device.uuid,
     protocol: 'ssh',
     port: deviceAuth.sshPort,
-    username: deviceAuth.sshUser,
-    //TODO: If device change ip, reset watchers
+    username: deviceAuth.sshUser, //TODO: If device change ip, reset watchers
     host: device.ip,
   };
 
-  const basedSshOptions = {
-    // TODO: Fix this
+  const baseSsh: ConnectConfig = {
     tryKeyboard: true, //deviceAuth.customDockerTryKeyboard,
     forceIPv4: deviceAuth.customDockerForcev4,
     forceIPv6: deviceAuth.customDockerForcev6,
     host: device.ip,
     port: deviceAuth.sshPort,
   };
-  // eslint-disable-next-line init-declarations
-  let sshOptions: ConnectConfig = {};
 
+  let sshCredentials: ConnectConfig = {};
   if (deviceAuth.customDockerSSH) {
+    const sshUsername = deviceAuth.dockerCustomSshUser;
+    const sshPwd = deviceAuth.dockerCustomSshPwd;
+    const sshKey = deviceAuth.dockerCustomSshKey;
+    const sshKeyPass = deviceAuth.dockerCustomSshKeyPass;
     if (deviceAuth.dockerCustomAuthType === SSHType.KeyBased) {
-      sshOptions = {
-        username: deviceAuth.dockerCustomSshUser,
-        privateKey: await vaultDecrypt(deviceAuth.dockerCustomSshKey as string, DEFAULT_VAULT_ID),
-        passphrase: deviceAuth.dockerCustomSshKeyPass
-          ? await vaultDecrypt(deviceAuth.dockerCustomSshKeyPass as string, DEFAULT_VAULT_ID)
-          : undefined,
-      } as ConnectConfig;
+      sshCredentials = {
+        username: sshUsername,
+        privateKey: sshKey ? await vaultDecrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
+        passphrase: sshKeyPass ? await vaultDecrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
+      };
     } else if (deviceAuth.dockerCustomAuthType === SSHType.UserPassword) {
-      sshOptions = {
-        username: deviceAuth.dockerCustomSshUser,
-        password: await vaultDecrypt(deviceAuth.dockerCustomSshPwd as string, DEFAULT_VAULT_ID),
-      } as ConnectConfig;
+      sshCredentials = {
+        username: sshUsername,
+        password: sshPwd ? await vaultDecrypt(sshPwd, DEFAULT_VAULT_ID) : undefined,
+      };
     }
   } else {
+    const sshUsername = deviceAuth.sshUser;
+    const sshPwd = deviceAuth.sshPwd;
+    const sshKey = deviceAuth.sshKey;
+    const sshKeyPass = deviceAuth.sshKeyPass;
     if (deviceAuth.authType === SSHType.KeyBased) {
-      sshOptions = {
-        username: deviceAuth.sshUser,
-        privateKey: await vaultDecrypt(deviceAuth.sshKey as string, DEFAULT_VAULT_ID),
-        passphrase: deviceAuth.sshKeyPass
-          ? await vaultDecrypt(deviceAuth.sshKeyPass as string, DEFAULT_VAULT_ID)
-          : undefined,
-      } as ConnectConfig;
+      sshCredentials = {
+        username: sshUsername,
+        privateKey: sshKey ? await vaultDecrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
+        passphrase: sshKeyPass ? await vaultDecrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
+      };
     } else if (deviceAuth.authType === SSHType.UserPassword) {
-      sshOptions = {
-        username: deviceAuth.sshUser,
-        password: await vaultDecrypt(deviceAuth.sshPwd as string, DEFAULT_VAULT_ID),
-      } as ConnectConfig;
+      sshCredentials = {
+        username: sshUsername,
+        password: sshPwd ? await vaultDecrypt(sshPwd, DEFAULT_VAULT_ID) : undefined,
+      };
     }
   }
-  options.sshOptions = {
-    ...basedSshOptions,
-    ...sshOptions,
-  };
+
+  options.sshOptions = { ...baseSsh, ...sshCredentials };
   return options;
 }
 

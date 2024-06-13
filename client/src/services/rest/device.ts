@@ -4,7 +4,7 @@ import { request } from '@umijs/max';
 import { API } from 'ssm-shared-lib';
 
 export async function getDevices(
-  params?: API.DeviceListParams,
+  params?: API.PageParams,
   options?: { [key: string]: any },
 ) {
   return request<API.DeviceList>('/api/devices', {

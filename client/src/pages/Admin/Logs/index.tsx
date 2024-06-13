@@ -1,14 +1,10 @@
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
 import ServerLogsColumns from '@/pages/Admin/Logs/ServerLogsColums';
 import { getServerLogs, getTasksLogs } from '@/services/rest/logs';
-import {
-  DatabaseOutlined,
-  SettingOutlined,
-  UnorderedListOutlined,
-} from '@ant-design/icons';
+import { UnorderedListOutlined } from '@ant-design/icons';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { Statistic } from 'antd';
 import React from 'react';
-import { Avatar, Col, Row, Tabs, Typography } from 'antd';
 import TaskLogsColumns from '@/pages/Admin/Logs/TaskLogsColumns';
 import { API } from 'ssm-shared-lib';
 
@@ -19,10 +15,12 @@ const logsTabItem = [
     children: (
       <ProTable<API.ServerLog>
         rowKey="_id"
+        tooltip={'test'}
         request={getServerLogs}
         columns={ServerLogsColumns}
         search={{
           labelWidth: 120,
+          filterType: 'light',
         }}
         dateFormatter="string"
       />
@@ -38,6 +36,7 @@ const logsTabItem = [
         columns={TaskLogsColumns}
         search={{
           labelWidth: 120,
+          filterType: 'light',
         }}
         dateFormatter="string"
       />

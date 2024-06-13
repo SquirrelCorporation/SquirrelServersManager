@@ -9,7 +9,7 @@ function transformExtraVars(extraVars: API.ExtraVars) {
     .reduce((previousValue, currentValue) => {
       return previousValue + ',' + currentValue;
     });
-  logger.info(stringifyObject);
+  logger.debug(stringifyObject);
   return JSON.parse('{' + stringifyObject + '}');
 }
 

@@ -12,8 +12,8 @@ describe('getDockerSshConnectionOptions', () => {
   vi.mock('../../../integrations/ansible-vault/vault', async (importOriginal) => {
     return {
       ...(await importOriginal<typeof import('../../../data/database/repository/DeviceRepo')>()),
-      vaultDecrypt: async () => {
-        return 'decrypted';
+      vaultDecrypt: async (value: string, vault: string) => {
+        return value;
       },
     };
   });
@@ -66,7 +66,7 @@ describe('getDockerSshConnectionOptions', () => {
         port: 22,
         passphrase: undefined,
         username: 'apiuser',
-        privateKey: 'decrypted',
+        privateKey: '!2#4%',
       },
     });
 
@@ -91,7 +91,7 @@ describe('getDockerSshConnectionOptions', () => {
         forceIPv6: undefined,
         host: '0.0.0.0',
         port: 22,
-        password: 'decrypted',
+        password: '!2#4%',
         username: 'apiuser',
       },
     });

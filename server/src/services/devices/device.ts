@@ -10,6 +10,9 @@ import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
 import { setToCache } from '../../data/cache';
 import asyncHandler from '../../helpers/AsyncHandler';
+import { filterByFields, filterByQueryParams } from '../../helpers/FilterHelper';
+import { paginate } from '../../helpers/PaginationHelper';
+import { sortByFields } from '../../helpers/SorterHelper';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../integrations/ansible-vault/vault';
 import Shell from '../../integrations/shell';
 import logger from '../../logger';
@@ -99,64 +102,22 @@ export const getDevices = asyncHandler(async (req, res) => {
     };
   const devices = await DeviceRepo.findAll();
   if (!devices) {
-    return res.json([]);
+    return new SuccessResponse('Get Devices successful', []).send(res);
   }
-  let dataSource = [...devices].slice(
-    ((current as number) - 1) * (pageSize as number),
-    (current as number) * (pageSize as number),
-  );
-  if (params.sorter) {
-    const sorter = JSON.parse(params.sorter);
-    dataSource = dataSource.sort((prev, next) => {
-      let sortNumber = 0;
-      (Object.keys(sorter) as Array<keyof API.DeviceItem>).forEach((uuid) => {
-        const nextSort = next?.uuid as string;
-        const preSort = prev?.uuid as string;
-        if (sorter[uuid] === 'descend') {
-          if (preSort.localeCompare(nextSort) > 0) {
-            sortNumber += -1;
-          } else {
-            sortNumber += 1;
-          }
-          return;
-        }
-        if (preSort.localeCompare(nextSort) > 0) {
-          sortNumber += 1;
-        } else {
-          sortNumber += -1;
-        }
-      });
-      return sortNumber;
-    });
-  }
-  if (params.filter) {
-    const filter = JSON.parse(params.filter as any) as {
-      [key: string]: string[];
-    };
-    if (Object.keys(filter).length > 0) {
-      dataSource = dataSource.filter((item) => {
-        return (Object.keys(filter) as Array<keyof API.DeviceItem>).some((uuid) => {
-          if (!filter[uuid]) {
-            return true;
-          }
-          return filter[uuid].includes(`${item.uuid}`);
-        });
-      });
-    }
-  }
+  // Add pagination
+  let dataSource = paginate(devices, current as number, pageSize as number);
+  // Use the separated services
+  dataSource = sortByFields(dataSource, params);
+  dataSource = filterByFields(dataSource, params);
+  //TODO: update validator
+  dataSource = filterByQueryParams(dataSource, params, ['ip', 'uuid', 'status', 'hostname']);
 
-  if (params.ip) {
-    dataSource = dataSource.filter((data) => data?.ip?.includes(params.ip || ''));
-  }
-  const result = {
-    data: dataSource,
+  new SuccessResponse('Get Devices successful', dataSource, {
     total: devices.length,
     success: true,
     pageSize,
     current: parseInt(`${params.current}`, 10) || 1,
-  };
-
-  return res.json(result);
+  }).send(res);
 });
 
 export const deleteDevice = asyncHandler(async (req, res) => {

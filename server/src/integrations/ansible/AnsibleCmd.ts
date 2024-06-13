@@ -1,47 +1,44 @@
 import { API } from 'ssm-shared-lib';
 import User from '../../data/database/model/User';
 import { Ansible } from '../../types/typings';
-import ExtraVarsTransformer from './transformers/ExtraVarsTransformer';
+import ExtraVarsTransformer from './utils/ExtraVarsTransformer';
 
-const sudo = 'sudo';
-const python = 'python3';
-const ansibleRunner = 'ssm-ansible-run.py';
-const ssmApiKeyEnv = 'SSM_API_KEY';
+class AnsibleCommandBuilder {
+  static readonly sudo = 'sudo';
+  static readonly python = 'python3';
+  static readonly ansibleRunner = 'ssm-ansible-run.py';
+  static readonly ssmApiKeyEnv = 'SSM_API_KEY';
 
-function sanitizeInventory(inventoryTargets: Ansible.All & Ansible.HostGroups) {
-  return "'" + JSON.stringify(inventoryTargets).replaceAll('\\\\', '\\') + "'";
+  sanitizeInventory(inventoryTargets: Ansible.All & Ansible.HostGroups) {
+    return "'" + JSON.stringify(inventoryTargets).replaceAll('\\\\', '\\') + "'";
+  }
+
+  getInventoryTargets(inventoryTargets: (Ansible.All & Ansible.HostGroups) | undefined) {
+    return `${inventoryTargets ? '--specific-host ' + this.sanitizeInventory(inventoryTargets) : ''}`;
+  }
+
+  getLogLevel(user: User) {
+    return `--log-level ${user.logsLevel?.terminal || 1}`;
+  }
+
+  getExtraVars(extraVars?: API.ExtraVars) {
+    return `${extraVars ? "--extra-vars '" + JSON.stringify(ExtraVarsTransformer.transformExtraVars(extraVars)) + "'" : ''}`;
+  }
+
+  buildAnsibleCmd(
+    playbook: string,
+    uuid: string,
+    inventoryTargets: (Ansible.All & Ansible.HostGroups) | undefined,
+    user: User,
+    extraVars?: API.ExtraVars,
+  ) {
+    const inventoryTargetsCmd = this.getInventoryTargets(inventoryTargets);
+    const logLevel = this.getLogLevel(user);
+    const extraVarsCmd = this.getExtraVars(extraVars);
+    const ident = `--ident '${uuid}'`;
+
+    return `${AnsibleCommandBuilder.sudo} ${AnsibleCommandBuilder.ssmApiKeyEnv}=${user.apiKey} ${AnsibleCommandBuilder.python} ${AnsibleCommandBuilder.ansibleRunner} --playbook ${playbook} ${ident} ${inventoryTargetsCmd} ${logLevel} ${extraVarsCmd}`;
+  }
 }
 
-function getInventoryTargets(inventoryTargets: (Ansible.All & Ansible.HostGroups) | undefined) {
-  return `${inventoryTargets ? '--specific-host ' + sanitizeInventory(inventoryTargets) : ''}`;
-}
-
-function getLogLevel(user: User) {
-  return `--log-level ${user.logsLevel?.terminal || 1}`;
-}
-
-function getExtraVars(extraVars?: API.ExtraVars) {
-  return `${extraVars ? "--extra-vars '" + JSON.stringify(ExtraVarsTransformer.transformExtraVars(extraVars)) + "'" : ''}`;
-}
-
-function buildAnsibleCmd(
-  playbook: string,
-  uuid: string,
-  inventoryTargets: (Ansible.All & Ansible.HostGroups) | undefined,
-  user: User,
-  extraVars?: API.ExtraVars,
-) {
-  const inventoryTargetsCmd = getInventoryTargets(inventoryTargets);
-  const logLevel = getLogLevel(user);
-  const extraVarsCmd = getExtraVars(extraVars);
-  const ident = `--ident '${uuid}'`;
-  return `${sudo} ${ssmApiKeyEnv}=${user.apiKey} ${python} ${ansibleRunner} --playbook ${playbook} ${ident} ${inventoryTargetsCmd} ${logLevel} ${extraVarsCmd}`;
-}
-
-export default {
-  buildAnsibleCmd,
-  sanitizeInventory,
-  getInventoryTargets,
-  getLogLevel,
-  getExtraVars,
-};
+export default new AnsibleCommandBuilder();
