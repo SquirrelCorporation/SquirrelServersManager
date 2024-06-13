@@ -15,7 +15,7 @@ const InventoryColumns = (
 ) => {
   const columns: ProColumns<API.DeviceItem>[] = [
     {
-      title: 'Host ID ',
+      title: 'Host Id',
       dataIndex: 'uuid',
       valueType: 'textarea',
       hideInTable: true,
@@ -69,6 +69,7 @@ const InventoryColumns = (
       title: 'Watch Containers',
       dataIndex: 'dockerWatcher',
       width: '10%',
+      hideInSearch: true,
       render: (dom, entity) => {
         return entity.dockerWatcher ? (
           <Row style={{ alignItems: 'center' }} justify="center">
@@ -104,30 +105,35 @@ const InventoryColumns = (
       dataIndex: 'osDistro',
       valueType: 'textarea',
       hideInTable: true,
+      hideInSearch: true,
     },
     {
       title: 'Os Arch',
       dataIndex: 'osArch',
       valueType: 'textarea',
       hideInTable: true,
+      hideInSearch: true,
     },
     {
       title: 'Os Code Name',
       dataIndex: 'osCodeName',
       valueType: 'textarea',
       hideInTable: true,
+      hideInSearch: true,
     },
     {
       title: 'Os Platform',
       dataIndex: 'osPlatform',
       valueType: 'textarea',
       hideInTable: true,
+      hideInSearch: true,
     },
     {
       title: 'Os Kernel',
       dataIndex: 'osKernel',
       valueType: 'textarea',
       hideInTable: true,
+      hideInSearch: true,
     },
 
     {
@@ -135,24 +141,28 @@ const InventoryColumns = (
       dataIndex: 'cpuBrand',
       valueType: 'textarea',
       hideInTable: true,
+      hideInSearch: true,
     },
     {
       title: 'System Manufacturer ',
       dataIndex: 'systemManufacturer',
       valueType: 'textarea',
       hideInTable: true,
+      hideInSearch: true,
     },
     {
       title: 'System Model',
       dataIndex: 'systemModel',
       valueType: 'textarea',
       hideInTable: true,
+      hideInSearch: true,
     },
     {
       title: 'Updated at',
       sorter: true,
       dataIndex: 'updatedAt',
       valueType: 'dateTime',
+      hideInSearch: true,
     },
     {
       title: 'Agent Version',
@@ -166,11 +176,13 @@ const InventoryColumns = (
       dataIndex: 'dockerVersion',
       valueType: 'textarea',
       hideInTable: true,
+      hideInSearch: true,
     },
     {
       title: 'Operating',
       dataIndex: 'option',
       valueType: 'option',
+      hideInSearch: true,
       render: (_, record) => [
         <a
           key="config"

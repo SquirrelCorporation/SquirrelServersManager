@@ -7,6 +7,7 @@ import Logger = pino.Logger;
 export const getCustomAgent = (childLogger: any, opt: any) => {
   class SsmSshAgent extends ssh2.HTTPAgent {
     public logger: Logger<never>;
+
     constructor() {
       super(opt, { keepAlive: true });
       this.setMaxListeners(20);
@@ -17,60 +18,65 @@ export const getCustomAgent = (childLogger: any, opt: any) => {
     }
 
     createConnection(options, fn) {
-      const conn = new Client();
+      try {
+        const conn = new Client();
 
-      const handleError = (err: any) => {
-        conn.end();
-        // eslint-disable-next-line class-methods-use-this
-        this.destroy();
-        throw err;
-      };
-      const decorateHttpStream = (stream) => {
-        stream.setKeepAlive = () => {};
-        stream.setNoDelay = () => {};
-        stream.setTimeout = () => {};
-        stream.ref = () => {};
-        stream.unref = () => {};
-        stream.destroySoon = stream.destroy;
-        return stream;
-      };
-      conn
-        .once('ready', () => {
-          conn.exec('docker system dial-stdio', (err, stream) => {
-            if (err) {
-              this.logger.error('Encountering an exec SSH error');
-              this.logger.error(err);
-              handleError(err);
-            }
-            stream.addListener('error', (err) => {
-              this.logger.error('Encountering an stream SSH error');
-              this.logger.error(err);
-              handleError(err);
-            });
-            stream.once('close', () => {
-              this.logger.warn('Stream closed');
-              conn.end();
-              this.destroy();
-            });
-            return fn(null, decorateHttpStream(stream));
-          });
-        })
-        .on('error', (err) => {
-          this.logger.error(`Error connecting to ${opt.host}`);
-          this.logger.error(err);
-          fn(err);
-        })
-        .once('end', () => {
-          this.logger.warn('Agent destroy');
+        const handleError = (err: any) => {
           conn.end();
+          // eslint-disable-next-line class-methods-use-this
           this.destroy();
-        })
-        .connect(opt);
+          throw err;
+        };
+        const decorateHttpStream = (stream) => {
+          stream.setKeepAlive = () => {};
+          stream.setNoDelay = () => {};
+          stream.setTimeout = () => {};
+          stream.ref = () => {};
+          stream.unref = () => {};
+          stream.destroySoon = stream.destroy;
+          return stream;
+        };
+        conn
+          .once('ready', () => {
+            conn.exec('docker system dial-stdio', (err, stream) => {
+              if (err) {
+                this.logger.error('Encountering an exec SSH error');
+                this.logger.error(err);
+                handleError(err);
+              }
+              stream.addListener('error', (err) => {
+                this.logger.error('Encountering an stream SSH error');
+                this.logger.error(err);
+                handleError(err);
+              });
+              stream.once('close', () => {
+                this.logger.warn('Stream closed');
+                conn.end();
+                this.destroy();
+              });
+              return fn(null, decorateHttpStream(stream));
+            });
+          })
+          .on('error', (err) => {
+            this.logger.error(`Error connecting to ${opt.host}`);
+            this.logger.error(err);
+            fn(err);
+          })
+          .once('end', () => {
+            this.logger.warn('Agent destroy');
+            conn.end();
+            this.destroy();
+          })
+          .connect(opt);
+      } catch (error: any) {
+        logger.error(error);
+      }
+
+      return new SsmSshAgent();
     }
   }
-  return new SsmSshAgent();
-
-  /*
+};
+/*
   const cAgent = new ssh2.HTTPAgent(opt, { keepAlive: true });
   // @ts-expect-error creating a new function
   cAgent.createConnection = function (options, fn) {
@@ -134,4 +140,3 @@ export const getCustomAgent = (childLogger: any, opt: any) => {
     }
   };
   return cAgent;*/
-};

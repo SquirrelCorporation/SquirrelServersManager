@@ -10,7 +10,7 @@ enum ResponseStatus {
 }
 
 abstract class ApiResponse {
-  constructor(
+  protected constructor(
     protected success: boolean,
     protected status: ResponseStatus,
     protected message: string,
@@ -20,11 +20,12 @@ abstract class ApiResponse {
     res: Response,
     response: T,
     headers: { [key: string]: string },
+    extras?: any,
   ): Response {
     for (const [key, value] of Object.entries(headers)) {
       res.append(key, value);
     }
-    return res.status(this.status).json(ApiResponse.sanitize(response));
+    return res.status(this.status).json(ApiResponse.sanitize({ ...response, ...extras }));
   }
 
   public send(res: Response, headers: { [key: string]: string } = {}): Response {
@@ -95,11 +96,12 @@ export class SuccessResponse<T> extends ApiResponse {
   constructor(
     message: string,
     private data?: T,
+    private extras?: any,
   ) {
     super(true, ResponseStatus.SUCCESS, message);
   }
 
   send(res: Response, headers: { [key: string]: string } = {}): Response {
-    return super.prepare<SuccessResponse<T>>(res, this, headers);
+    return super.prepare<SuccessResponse<T>>(res, this, headers, this.extras);
   }
 }

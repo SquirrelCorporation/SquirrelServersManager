@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { SSHType } from 'ssm-shared-lib/distribution/enums/ansible';
-import InventoryTransformer from '../../../integrations/ansible/transformers/InventoryTransformer'; // replace with actual file path
+import InventoryTransformer from '../../../integrations/ansible/utils/InventoryTransformer'; // replace with actual file path
 
 describe('test InventoryTransformer', () => {
   test('inventoryBuilder', () => {

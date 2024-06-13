@@ -31,7 +31,8 @@ import {
   Popconfirm,
   Row,
 } from 'antd';
-import React, { useRef, useState } from 'react';
+import { get, set } from 'lodash';
+import React, { useEffect, useRef, useState } from 'react';
 import { TerminalContextProvider } from 'react-terminal';
 import ConfigurationModal from './components/ConfigurationModal';
 import OsSoftwareVersions from '@/components/DeviceComponents/OSSoftwaresVersions/OsSoftwareVersions';
@@ -118,7 +119,15 @@ const Inventory: React.FC = () => {
       });
     }
   };
-
+  const [data, setData] = useState<API.DeviceItem>();
+  const asyncFetch = () => {
+    getDevices().then((e) => {
+      setData(e.data);
+    });
+  };
+  useEffect(() => {
+    asyncFetch();
+  }, []);
   return (
     <TerminalContextProvider>
       <PageContainer
@@ -160,7 +169,7 @@ const Inventory: React.FC = () => {
         <ProTable<API.DeviceItem, API.PageParams>
           headerTitle="List of Devices"
           actionRef={actionRef}
-          rowKey="uuid"
+          rowKey="ip"
           search={{
             labelWidth: 120,
           }}

@@ -17,7 +17,7 @@ import DeviceRepo from '../data/database/repository/DeviceRepo';
 import DeviceStatRepo from '../data/database/repository/DeviceStatRepo';
 import PlaybookRepo from '../data/database/repository/PlaybookRepo';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../integrations/ansible-vault/vault';
-import Inventory from '../integrations/ansible/transformers/InventoryTransformer';
+import Inventory from '../integrations/ansible/utils/InventoryTransformer';
 import { getCustomAgent } from '../integrations/docker/core/CustomAgent';
 import DockerAPIHelper from '../integrations/docker/core/DockerAPIHelper';
 import Shell from '../integrations/shell';

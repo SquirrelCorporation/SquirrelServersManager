@@ -9,7 +9,13 @@ import AnsibleTaskRepo from '../../data/database/repository/AnsibleTaskRepo';
 import LogsRepo from '../../data/database/repository/LogsRepo';
 import { getConfFromCache } from '../../data/cache';
 
-const CRONS = [
+interface CronJobType {
+  name: string;
+  schedule: string;
+  fun: () => Promise<void>;
+}
+
+const CRONS: CronJobType[] = [
   {
     name: '_isDeviceOffline',
     schedule: '*/1 * * * *',
@@ -62,25 +68,26 @@ const CRONS = [
   },
 ];
 
-const initScheduledJobs = () => {
-  CRONS.forEach(async (cron) => {
-    await CronRepo.updateOrCreateIfNotExist({ name: cron.name, expression: cron.schedule });
-    const scheduledTask = CronJob.schedule(cron.schedule, () => {
-      logger.info(`[CRON] - ${cron.name} is starting...`);
-      cron.fun().then(() => {
-        logger.info(`[CRON] - ${cron.name} has ended...`);
-        CronRepo.updateCron({ name: cron.name, lastExecution: new Date() });
-      });
-    });
-    scheduledTask.start();
-  });
-};
+export default class Scheduler {
+  static initScheduledJobs(): Promise<void[]> {
+    return Promise.all(
+      CRONS.map(async (cron) => {
+        await CronRepo.updateOrCreateIfNotExist({ name: cron.name, expression: cron.schedule });
 
-const stopAllScheduledJobs = () => {
-  logger.warn('[CRON] - stopping all scheduled jobs.');
-  CronJob.getTasks().forEach((e) => {
-    e.stop();
-  });
-};
+        const scheduledTask = CronJob.schedule(cron.schedule, async () => {
+          logger.info(`[CRON] - ${cron.name} is starting...`);
+          await cron.fun();
+          logger.info(`[CRON] - ${cron.name} has ended...`);
+          void CronRepo.updateCron({ name: cron.name, lastExecution: new Date() });
+        });
 
-export default { initScheduledJobs, stopAllScheduledJobs };
+        scheduledTask.start();
+      }),
+    );
+  }
+
+  static stopAllScheduledJobs(): void {
+    logger.warn('[CRON] - stopping all scheduled jobs.');
+    CronJob.getTasks().forEach((e) => e.stop());
+  }
+}
