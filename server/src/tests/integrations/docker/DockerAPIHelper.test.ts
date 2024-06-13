@@ -1,6 +1,5 @@
-import { ConnectConfig } from 'ssh2';
-import { SSHType } from 'ssm-shared-lib/distribution/enums/ansible';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { SsmAnsible } from 'ssm-shared-lib';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import Device from '../../../data/database/model/Device';
 import DeviceAuth from '../../../data/database/model/DeviceAuth';
 import * as vault from '../../../integrations/ansible-vault/vault';
@@ -13,7 +12,7 @@ describe('getDockerSshConnectionOptions', () => {
     return {
       ...(await importOriginal<typeof import('../../../data/database/repository/DeviceRepo')>()),
       vaultDecrypt: async (value: string, vault: string) => {
-        return value;
+        return value + '-decrypted';
       },
     };
   });
@@ -22,7 +21,7 @@ describe('getDockerSshConnectionOptions', () => {
   let device: Device, deviceAuth: DeviceAuth;
 
   beforeEach(() => {
-    const spy = vi.spyOn(vault, 'vaultDecrypt');
+    vi.spyOn(vault, 'vaultDecrypt');
     // @ts-expect-error partial type
     device = {
       uuid: 'x',
@@ -32,7 +31,7 @@ describe('getDockerSshConnectionOptions', () => {
     deviceAuth = {
       sshPort: 22,
       sshUser: 'apiuser',
-      sshKey: '!2#4%',
+      sshKey: 'sshkey',
       // @ts-expect-error partial type
       authType: '',
       sshKeyPass: undefined,
@@ -49,7 +48,7 @@ describe('getDockerSshConnectionOptions', () => {
   });
 
   test('should handle key-based SSHType for default Docker SSH', async () => {
-    deviceAuth.authType = SSHType.KeyBased;
+    deviceAuth.authType = SsmAnsible.SSHType.KeyBased;
     const result = DockerAPIHelper.getDockerSshConnectionOptions(device, deviceAuth);
 
     expect(result).resolves.toMatchObject({
@@ -66,7 +65,7 @@ describe('getDockerSshConnectionOptions', () => {
         port: 22,
         passphrase: undefined,
         username: 'apiuser',
-        privateKey: '!2#4%',
+        privateKey: 'sshkey-decrypted',
       },
     });
 
@@ -74,8 +73,8 @@ describe('getDockerSshConnectionOptions', () => {
   });
 
   test('should handle user-password SSHType for default Docker SSH', async () => {
-    deviceAuth.authType = SSHType.UserPassword;
-    deviceAuth.sshPwd = '!2#4%';
+    deviceAuth.authType = SsmAnsible.SSHType.UserPassword;
+    deviceAuth.sshPwd = 'sshpwd';
 
     const result = await DockerAPIHelper.getDockerSshConnectionOptions(device, deviceAuth);
 
@@ -91,7 +90,7 @@ describe('getDockerSshConnectionOptions', () => {
         forceIPv6: undefined,
         host: '0.0.0.0',
         port: 22,
-        password: '!2#4%',
+        password: 'sshpwd-decrypted',
         username: 'apiuser',
       },
     });
@@ -100,13 +99,13 @@ describe('getDockerSshConnectionOptions', () => {
   });
 
   test('should handle key-based SSHType for custom Docker SSH', async () => {
-    deviceAuth.authType = SSHType.UserPassword;
-    deviceAuth.sshPwd = '!2#4%';
+    deviceAuth.authType = SsmAnsible.SSHType.UserPassword;
+    deviceAuth.sshPwd = 'sshpwd';
     deviceAuth.customDockerSSH = true;
-    deviceAuth.dockerCustomAuthType = SSHType.KeyBased;
+    deviceAuth.dockerCustomAuthType = SsmAnsible.SSHType.KeyBased;
     deviceAuth.dockerCustomSshUser = '$customUser';
-    deviceAuth.dockerCustomSshKey = 'decrypted';
-    deviceAuth.dockerCustomSshKeyPass = 'decrypted';
+    deviceAuth.dockerCustomSshKey = 'sshkey';
+    deviceAuth.dockerCustomSshKeyPass = 'sshkeypass';
 
     const result = await DockerAPIHelper.getDockerSshConnectionOptions(device, deviceAuth);
 
@@ -122,9 +121,9 @@ describe('getDockerSshConnectionOptions', () => {
         forceIPv6: undefined,
         host: '0.0.0.0',
         port: 22,
-        passphrase: 'decrypted',
+        passphrase: 'sshkeypass-decrypted',
         username: '$customUser',
-        privateKey: 'decrypted',
+        privateKey: 'sshkey-decrypted',
       },
     });
 
@@ -132,12 +131,12 @@ describe('getDockerSshConnectionOptions', () => {
   });
 
   test('should handle user-password SSHType for custom Docker SSH', async () => {
-    deviceAuth.authType = SSHType.UserPassword;
-    deviceAuth.sshPwd = '!2#4%';
+    deviceAuth.authType = SsmAnsible.SSHType.UserPassword;
+    deviceAuth.sshPwd = 'sshpwd';
     deviceAuth.customDockerSSH = true;
-    deviceAuth.dockerCustomAuthType = SSHType.UserPassword;
+    deviceAuth.dockerCustomAuthType = SsmAnsible.SSHType.UserPassword;
     deviceAuth.dockerCustomSshUser = '$customUser';
-    deviceAuth.dockerCustomSshPwd = 'decrypted';
+    deviceAuth.dockerCustomSshPwd = 'sshcustompwd';
 
     const result = await DockerAPIHelper.getDockerSshConnectionOptions(device, deviceAuth);
 
@@ -153,7 +152,7 @@ describe('getDockerSshConnectionOptions', () => {
         forceIPv6: undefined,
         host: '0.0.0.0',
         port: 22,
-        password: 'decrypted',
+        password: 'sshcustompwd-decrypted',
         username: '$customUser',
       },
     });

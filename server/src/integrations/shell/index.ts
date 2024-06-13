@@ -5,7 +5,6 @@ import User from '../../data/database/model/User';
 import AnsibleTaskRepo from '../../data/database/repository/AnsibleTaskRepo';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
 import logger from '../../logger';
-import { DEFAULT_VAULT_ID, vaultEncrypt } from '../ansible-vault/vault';
 import Inventory from '../ansible/utils/InventoryTransformer';
 import { Ansible } from '../../types/typings';
 import ansibleCmd from '../ansible/AnsibleCmd';
