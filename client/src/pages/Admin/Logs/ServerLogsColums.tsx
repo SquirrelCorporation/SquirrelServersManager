@@ -12,21 +12,29 @@ const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
     title: 'Level',
     dataIndex: 'level',
     key: 'level',
+    filters: true,
+    onFilter: true,
   },
   {
     title: 'PID',
     dataIndex: 'pid',
     key: 'pid',
+    filters: true,
+    onFilter: true,
   },
   {
     title: 'Message',
     dataIndex: 'msg',
     key: 'msg',
+    filters: true,
+    onFilter: true,
   },
   {
     title: 'Module',
     dataIndex: 'module',
     key: 'module',
+    filters: true,
+    onFilter: true,
   },
 ];
 

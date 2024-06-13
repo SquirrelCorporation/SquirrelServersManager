@@ -219,11 +219,6 @@ export type DeviceItem = {
   createdAt?: string;
 };
 
-export type DeviceListParams = {
-  current?: number;
-  pageSize?: number;
-};
-
 export type Cron = {
   name: string;
   disabled?: boolean;

@@ -44,6 +44,12 @@ async function findAllPop(): Promise<DeviceAuth[] | null> {
   return await DeviceAuthModel.find().populate({ path: 'device' }).exec();
 }
 
+async function findAllPopWithSshKey(): Promise<DeviceAuth[] | null> {
+  return await DeviceAuthModel.find({ sshKey: { $ne: null } })
+    .populate({ path: 'device' })
+    .exec();
+}
+
 async function deleteByDevice(device: Device) {
   await DeviceAuthModel.deleteOne({ device: device }).exec();
 }
@@ -56,4 +62,5 @@ export default {
   findManyByDevicesUuid,
   deleteByDevice,
   update,
+  findAllPopWithSshKey,
 };

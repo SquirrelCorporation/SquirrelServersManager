@@ -5,11 +5,7 @@ import DeviceAuth from '../../data/database/model/DeviceAuth';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
 import asyncHandler from '../../helpers/AsyncHandler';
-import {
-  DEFAULT_VAULT_ID,
-  vaultDecrypt,
-  vaultEncrypt,
-} from '../../integrations/ansible-vault/vault';
+import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../integrations/ansible-vault/vault';
 import WatcherEngine from '../../integrations/docker/core/WatcherEngine';
 import Shell from '../../integrations/shell';
 import logger from '../../logger';
@@ -122,8 +118,8 @@ export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {
   logger.info(
     `[CONTROLLER] - POST - Device Auth - Updated or Created device with uuid: ${device.uuid}`,
   );
-  WatcherEngine.deregisterWatchers();
-  WatcherEngine.registerWatchers();
+  void WatcherEngine.deregisterWatchers();
+  void WatcherEngine.registerWatchers();
   new SuccessResponse('Add or update device auth successful', { type: deviceAuth.authType }).send(
     res,
   );
@@ -181,8 +177,8 @@ export const updateDockerAuth = asyncHandler(async (req, res) => {
   logger.info(
     `[CONTROLLER] - POST - Device Docker Auth - Updated device with uuid: ${device.uuid}`,
   );
-  WatcherEngine.deregisterWatchers();
-  WatcherEngine.registerWatchers();
+  void WatcherEngine.deregisterWatchers();
+  void WatcherEngine.registerWatchers();
   new SuccessResponse('Update docker auth successful', {
     dockerCustomAuthType: deviceAuth?.dockerCustomAuthType,
   }).send(res);

@@ -19,6 +19,12 @@ const TaskLogsColumns: ProColumns<API.Task>[] = [
     title: 'Status',
     dataIndex: 'status',
     key: 'status',
+    valueType: 'select',
+    valueEnum: {
+      failed: { text: 'failed' },
+      successful: { text: 'successful' },
+      starting: { text: 'starting' },
+    },
     render: (dom, entity) => {
       return (
         <Tag
@@ -40,6 +46,7 @@ const TaskLogsColumns: ProColumns<API.Task>[] = [
     title: 'Command',
     dataIndex: 'cmd',
     key: 'cmd',
+    valueType: 'code',
   },
 ];
 

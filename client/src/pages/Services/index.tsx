@@ -24,6 +24,7 @@ import {
   type ActionType,
   ModalForm,
   PageContainer,
+  ProFieldValueType,
   ProFormText,
   ProList,
 } from '@ant-design/pro-components';
@@ -152,6 +153,8 @@ const Index: React.FC = () => {
         itemCardProps={{
           ghost,
         }}
+        headerTitle="Containers"
+        request={getContainers}
         toolBarRender={() => {
           return [
             <Button
@@ -177,8 +180,12 @@ const Index: React.FC = () => {
         actionRef={actionRef}
         rowKey={'id'}
         pagination={{
-          defaultPageSize: 8,
-          showSizeChanger: false,
+          defaultPageSize: 12,
+          showSizeChanger: true,
+        }}
+        search={{
+          labelWidth: 120,
+          filterType: 'light',
         }}
         showActions="hover"
         rowSelection={false}
@@ -197,6 +204,7 @@ const Index: React.FC = () => {
           title: {
             search: true,
             title: 'Name',
+            dataIndex: 'name',
             render: (_, row) => {
               return row.customName || row.name;
             },
@@ -215,6 +223,22 @@ const Index: React.FC = () => {
           updateAvailable: {
             dataIndex: 'updateAvailable',
             title: 'Update Available',
+            valueType: 'switch' as ProFieldValueType,
+          },
+          status: {
+            dataIndex: 'status',
+            title: 'Status',
+            valueType: 'select' as ProFieldValueType,
+            valueEnum: {
+              running: {
+                text: 'running',
+                label: 'running',
+              },
+              paused: {
+                text: 'paused',
+                value: 'paused',
+              },
+            },
           },
           avatar: {
             search: false,
@@ -291,12 +315,6 @@ const Index: React.FC = () => {
             dataIndex: 'id',
             search: false,
           },
-        }}
-        headerTitle="Containers"
-        request={async (params = {}) => {
-          return await getContainers().then((e) => {
-            return { data: e.data?.containers || [] };
-          });
         }}
       />
     </PageContainer>

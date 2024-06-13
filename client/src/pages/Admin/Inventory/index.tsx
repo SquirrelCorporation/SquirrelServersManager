@@ -160,7 +160,7 @@ const Inventory: React.FC = () => {
         <ProTable<API.DeviceItem, API.PageParams>
           headerTitle="List of Devices"
           actionRef={actionRef}
-          rowKey="uuid"
+          rowKey="ip"
           search={{
             labelWidth: 120,
           }}
