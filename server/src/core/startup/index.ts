@@ -1,4 +1,4 @@
-import { DefaultValue, GeneralSettingsKeys } from 'ssm-shared-lib/distribution/enums/settings';
+import { SettingsKeys } from 'ssm-shared-lib';
 import { getFromCache } from '../../data/cache';
 import initRedisValues from '../../data/cache/defaults';
 import providerConf from '../../integrations/docker/registries/providers/provider.conf';
@@ -10,16 +10,16 @@ import { setAnsibleVersion } from '../system/version';
 
 async function needConfigurationInit() {
   logger.info(`[CONFIGURATION] - needInit`);
-  await DeviceAuthUseCases.saveAllDeviceAuthSshKeys();
+  void DeviceAuthUseCases.saveAllDeviceAuthSshKeys();
 
-  const version = await getFromCache(GeneralSettingsKeys.SCHEME_VERSION);
+  const version = await getFromCache(SettingsKeys.GeneralSettingsKeys.SCHEME_VERSION);
 
   logger.info(`[CONFIGURATION] - needInit - Scheme Version: ${version}`);
 
-  if (version !== DefaultValue.SCHEME_VERSION) {
+  if (version !== SettingsKeys.DefaultValue.SCHEME_VERSION) {
     await initRedisValues();
     await PlaybookUseCases.initPlaybook();
-    await setAnsibleVersion();
+    void setAnsibleVersion();
 
     providerConf
       .filter(({ persist }) => persist)
