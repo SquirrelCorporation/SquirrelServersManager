@@ -69,12 +69,11 @@ export const getCustomAgent = (childLogger: any, opt: any) => {
           })
           .connect(opt);
       } catch (error: any) {
-        logger.error(error);
+        this.logger.error(error);
       }
-
-      return new SsmSshAgent();
     }
   }
+  return new SsmSshAgent();
 };
 /*
   const cAgent = new ssh2.HTTPAgent(opt, { keepAlive: true });
