@@ -1,5 +1,5 @@
 import { body, param } from 'express-validator';
-import { GeneralSettingsKeys } from 'ssm-shared-lib/distribution/enums/settings';
+import { SettingsKeys } from 'ssm-shared-lib';
 import validator from '../../middlewares/validator';
 
 export const postDashboardSettingsValidator = [
@@ -7,7 +7,7 @@ export const postDashboardSettingsValidator = [
     .exists()
     .notEmpty()
     .withMessage('Key param is required')
-    .isIn(Object.values(GeneralSettingsKeys))
+    .isIn(Object.values(SettingsKeys.GeneralSettingsKeys))
     .withMessage('Unknown key'),
   body('value').exists().isNumeric().withMessage('Value must be numeric'),
   validator,

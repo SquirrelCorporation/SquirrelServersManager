@@ -8,8 +8,7 @@ import { Tiny } from '@ant-design/charts';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { Tooltip, Typography } from 'antd';
 import React, { useEffect } from 'react';
-import { ContainerStatus } from 'ssm-shared-lib/distribution/enums/status';
-import { API } from 'ssm-shared-lib';
+import { SsmStatus, API } from 'ssm-shared-lib';
 
 const ServicesCard: React.FC = () => {
   const [loading, setLoading] = React.useState(false);
@@ -18,9 +17,11 @@ const ServicesCard: React.FC = () => {
   const [stats, setStats] = React.useState();
 
   const asyncFetch = async () => {
-    await getNbContainersByStatus(ContainerStatus.RUNNING).then((response) => {
-      setNbRunning(response.data);
-    });
+    await getNbContainersByStatus(SsmStatus.ContainerStatus.RUNNING).then(
+      (response) => {
+        setNbRunning(response.data);
+      },
+    );
     await getNbContainersByStatus('all').then((response) => {
       setNbTotal(response.data);
     });

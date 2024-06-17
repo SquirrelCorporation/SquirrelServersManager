@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { DeviceStatus } from 'ssm-shared-lib/distribution/enums/status';
+import { SsmStatus } from 'ssm-shared-lib';
 import logger from '../../../logger';
 import Device, { DeviceModel } from '../model/Device';
 import DeviceDownTimeEventRepo from './DeviceDownTimeEventRepo';
@@ -36,9 +36,9 @@ async function setDeviceOfflineAfter(inactivityInMinutes: number) {
   const devices = await DeviceModel.find({
     updatedAt: { $lt: DateTime.now().minus({ minute: inactivityInMinutes }).toJSDate() },
     $and: [
-      { status: { $ne: DeviceStatus.OFFLINE } },
-      { status: { $ne: DeviceStatus.UNMANAGED } },
-      { status: { $ne: DeviceStatus.REGISTERING } },
+      { status: { $ne: SsmStatus.DeviceStatus.OFFLINE } },
+      { status: { $ne: SsmStatus.DeviceStatus.UNMANAGED } },
+      { status: { $ne: SsmStatus.DeviceStatus.REGISTERING } },
     ],
   })
     .lean()
@@ -49,7 +49,7 @@ async function setDeviceOfflineAfter(inactivityInMinutes: number) {
     await DeviceModel.updateOne(
       { uuid: device.uuid },
       {
-        $set: { status: DeviceStatus.OFFLINE },
+        $set: { status: SsmStatus.DeviceStatus.OFFLINE },
       },
     )
       .lean()

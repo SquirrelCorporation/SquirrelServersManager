@@ -2,7 +2,6 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 import { API } from 'ssm-shared-lib';
-import { SimpleResult } from 'ssm-shared-lib/distribution/types/api';
 
 export async function getDeviceAuth(
   deviceId: string,

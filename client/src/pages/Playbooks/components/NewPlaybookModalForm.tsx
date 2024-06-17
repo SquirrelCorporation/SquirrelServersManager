@@ -2,11 +2,11 @@ import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { Button } from 'antd';
 import { AddCircleOutline } from 'antd-mobile-icons';
 import React from 'react';
-import { PlaybookFileList } from 'ssm-shared-lib/distribution/types/api';
+import { API } from 'ssm-shared-lib';
 
 export type NewPlaybookModalFormProps = {
   submitNewPlaybook: (name: string) => Promise<boolean>;
-  playbookFilesList: PlaybookFileList[];
+  playbookFilesList: API.PlaybookFileList[];
 };
 
 const NewPlaybookModalForm: React.FC<NewPlaybookModalFormProps> = (props) => {

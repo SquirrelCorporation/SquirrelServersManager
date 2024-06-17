@@ -1,9 +1,11 @@
 import Dockerode from 'dockerode';
 import { ConnectConfig } from 'ssh2';
-import { SSHType } from 'ssm-shared-lib/distribution/enums/ansible';
+import { SsmAnsible } from 'ssm-shared-lib';
 import Device from '../../../data/database/model/Device';
 import DeviceAuth from '../../../data/database/model/DeviceAuth';
 import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../ansible-vault/vault';
+
+const SSHType = SsmAnsible.SSHType;
 
 function getDockerApiAuth() {
   const auth = {

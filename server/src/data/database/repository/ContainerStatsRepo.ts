@@ -1,7 +1,7 @@
 import Dockerode from 'dockerode';
 import { DateTime } from 'luxon';
 import mongoose from 'mongoose';
-import { ContainerStats } from 'ssm-shared-lib/distribution/types/api';
+import { API } from 'ssm-shared-lib';
 import logger from '../../../logger';
 import Container from '../model/Container';
 import { ContainerStatModel } from '../model/ContainerStat';
@@ -66,7 +66,7 @@ async function findStatsByDeviceAndType(
   container: Container,
   type: string,
   from: number,
-): Promise<ContainerStats[] | null> {
+): Promise<API.ContainerStats[] | null> {
   const ObjectId = mongoose.Types.ObjectId;
   return await ContainerStatModel.aggregate([
     {
@@ -90,7 +90,7 @@ async function findAllAveragedStatsByType(
   type: string,
   from: Date,
   to: Date,
-): Promise<ContainerStats[] | null> {
+): Promise<API.ContainerStats[] | null> {
   return await ContainerStatModel.aggregate([
     {
       $match: {

@@ -86,6 +86,7 @@ const MainChartCard: React.FC<any> = ({}) => {
   useEffect(() => {
     asyncFetch();
   }, [devices, type, rangePickerValue]);
+
   // see https://ant-design-charts-next.antgroup.com/en/options/plots/component/legend
   const config = {
     data: graphData,

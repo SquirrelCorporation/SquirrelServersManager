@@ -45,7 +45,6 @@ import {
 import { DeleteOutline } from 'antd-mobile-icons';
 import React, { useEffect, useState } from 'react';
 import { API } from 'ssm-shared-lib';
-import { ContainerRegistry } from 'ssm-shared-lib/distribution/types/api';
 
 const getRegistryLogo = (provider: string) => {
   switch (provider) {
@@ -83,7 +82,7 @@ const RegistrySettings: React.FC = () => {
       if (list?.data) {
         setRegistries(
           list.data?.registries.sort(
-            (a: ContainerRegistry, b: ContainerRegistry) =>
+            (a: API.ContainerRegistry, b: API.ContainerRegistry) =>
               a.authSet && !b.authSet ? -1 : 1,
           ) || [],
         );

@@ -1,7 +1,7 @@
 import { getContainerStats } from '@/services/rest/containersstats';
 import moment from 'moment';
 import React, { useEffect } from 'react';
-import { API } from 'ssm-shared-lib/distribution';
+import { API } from 'ssm-shared-lib';
 import { Line } from '@ant-design/plots';
 
 export type ContainerStatsDetailProps = {

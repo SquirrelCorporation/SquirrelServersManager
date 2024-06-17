@@ -1,4 +1,4 @@
-import { GeneralSettingsKeys } from 'ssm-shared-lib/distribution/enums/settings';
+import { SettingsKeys } from 'ssm-shared-lib';
 import { InternalError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
 import { setToCache } from '../../data/cache';
@@ -11,11 +11,17 @@ export const postDevicesSettings = asyncHandler(async (req, res) => {
   logger.info(`[CONTROLLER] - POST - /settings/devices/${key}`);
   try {
     switch (key) {
-      case GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES:
-        await setToCache(GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES, value);
+      case SettingsKeys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES:
+        await setToCache(
+          SettingsKeys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
+          value,
+        );
         return new SuccessResponse(`${key} successfully updated`).send(res);
-      case GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS:
-        await setToCache(GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS, value);
+      case SettingsKeys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS:
+        await setToCache(
+          SettingsKeys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
+          value,
+        );
         return new SuccessResponse(`${key} successfully updated`).send(res);
       default:
         return res.status(404).send({

@@ -34,7 +34,7 @@ import {
   postResetSettings,
 } from '@/services/rest/settings';
 import SystemPerformanceCard from '@/pages/Dashboard/Components/SystemPerformanceCard';
-import { GeneralSettingsKeys } from 'ssm-shared-lib/distribution/enums/settings';
+import { SettingsKeys } from 'ssm-shared-lib';
 
 const GeneralSettings: React.FC = () => {
   const { initialState } = useModel('@@initialState');
@@ -67,7 +67,7 @@ const GeneralSettings: React.FC = () => {
   const onChangeMaxCpu = async (newValue: number | null) => {
     if (newValue) {
       await postDashboardSetting(
-        GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
+        SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
         newValue,
       ).then(() => {
         setDashboardMaxCpuInPercent(newValue);
@@ -82,7 +82,8 @@ const GeneralSettings: React.FC = () => {
   const onChangeMinMem = async (newValue: number | null) => {
     if (newValue) {
       await postDashboardSetting(
-        GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
+        SettingsKeys.GeneralSettingsKeys
+          .CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
         newValue,
       ).then(() => {
         setDashboardMinMemInPercent(newValue);
@@ -97,7 +98,8 @@ const GeneralSettings: React.FC = () => {
   const onChangeConsiderDeviceOnline = async (newValue: number | null) => {
     if (newValue) {
       await postDeviceSetting(
-        GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
+        SettingsKeys.GeneralSettingsKeys
+          .CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
         newValue,
       ).then(() => {
         setConsiderDeviceOnlineInMinutes(newValue);
@@ -112,7 +114,8 @@ const GeneralSettings: React.FC = () => {
   const onChangeAnsibleCleanUp = async (newValue: number | null) => {
     if (newValue) {
       await postLogsSetting(
-        GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
+        SettingsKeys.GeneralSettingsKeys
+          .CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
         newValue,
       ).then(() => {
         setAnsibleCleanUpInSeconds(newValue);
@@ -126,7 +129,7 @@ const GeneralSettings: React.FC = () => {
   const onChangeServerLogsRetention = async (newValue: number | null) => {
     if (newValue) {
       await postLogsSetting(
-        GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS,
+        SettingsKeys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS,
         newValue,
       ).then(() => {
         setServerLogsRetentionInDays(newValue);
@@ -141,7 +144,7 @@ const GeneralSettings: React.FC = () => {
   const onChangeRegisterDeviceStatEvery = async (newValue: number | null) => {
     if (newValue) {
       await postDeviceSetting(
-        GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
+        SettingsKeys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
         newValue,
       ).then(() => {
         setRegisterDeviceStatEveryXSeconds(newValue);
@@ -162,7 +165,7 @@ const GeneralSettings: React.FC = () => {
   const onChangeDeviceStatsRetention = async (newValue: number | null) => {
     if (newValue) {
       await postDeviceStatsSettings(
-        GeneralSettingsKeys.DEVICE_STATS_RETENTION_IN_DAYS,
+        SettingsKeys.GeneralSettingsKeys.DEVICE_STATS_RETENTION_IN_DAYS,
         newValue,
       ).then(() => {
         setDeviceStatsRetentionInDays(newValue);
@@ -177,7 +180,7 @@ const GeneralSettings: React.FC = () => {
   const onChangeContainerStatsRetention = async (newValue: number | null) => {
     if (newValue) {
       await postContainerStatsSettings(
-        GeneralSettingsKeys.CONTAINER_STATS_RETENTION_IN_DAYS,
+        SettingsKeys.GeneralSettingsKeys.CONTAINER_STATS_RETENTION_IN_DAYS,
         newValue,
       ).then(() => {
         setContainerStatsRetentionInDays(newValue);

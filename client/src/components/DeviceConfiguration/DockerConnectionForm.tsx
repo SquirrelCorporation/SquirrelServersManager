@@ -25,7 +25,7 @@ import React, { useEffect, useState } from 'react';
 import { API } from 'ssm-shared-lib';
 import Cron from 'react-js-cron';
 import 'react-js-cron/dist/styles.css';
-import { privateKeyRegexp } from 'ssm-shared-lib/distribution/validation';
+import { Validation } from 'ssm-shared-lib';
 
 const connectionTypes = [
   {
@@ -402,7 +402,7 @@ export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
                           { required: true },
                           { required: true },
                           {
-                            pattern: privateKeyRegexp,
+                            pattern: Validation.privateKeyRegexp,
                             message:
                               'The ssh key doesnt seems in a correct format',
                           },

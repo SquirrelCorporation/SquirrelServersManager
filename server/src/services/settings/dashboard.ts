@@ -1,4 +1,4 @@
-import { GeneralSettingsKeys } from 'ssm-shared-lib/distribution/enums/settings';
+import { SettingsKeys } from 'ssm-shared-lib';
 import { InternalError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
 import { setToCache } from '../../data/cache';
@@ -11,11 +11,17 @@ export const postDashboardSettings = asyncHandler(async (req, res) => {
   logger.info(`[CONTROLLER] - POST - /settings/dashboard/${key}`);
   try {
     switch (key) {
-      case GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER:
-        await setToCache(GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER, value);
+      case SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER:
+        await setToCache(
+          SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
+          value,
+        );
         return new SuccessResponse(`${key} successfully updated`).send(res);
-      case GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER:
-        await setToCache(GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER, value);
+      case SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER:
+        await setToCache(
+          SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
+          value,
+        );
         return new SuccessResponse(`${key} successfully updated`).send(res);
       default:
         return res.status(404).send({

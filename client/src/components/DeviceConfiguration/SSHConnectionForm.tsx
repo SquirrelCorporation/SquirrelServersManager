@@ -20,8 +20,7 @@ import {
 } from '@ant-design/pro-components';
 import { Avatar, Card, Col, Flex, Row, Space, Switch, Tooltip } from 'antd';
 import React from 'react';
-import { AnsibleBecomeMethod } from 'ssm-shared-lib/distribution/enums/ansible';
-import { privateKeyRegexp } from 'ssm-shared-lib/distribution/validation';
+import { Validation, SsmAnsible } from 'ssm-shared-lib';
 
 const connectionTypes = [
   {
@@ -167,7 +166,7 @@ const SSHConnectionForm: React.FC<SSHConnectionFormProps> = (props) => {
               },
             ]}
             width="xs"
-            options={Object.values(AnsibleBecomeMethod).map((e) => ({
+            options={Object.values(SsmAnsible.AnsibleBecomeMethod).map((e) => ({
               value: e,
               label: e,
             }))}
@@ -372,7 +371,7 @@ const SSHConnectionForm: React.FC<SSHConnectionFormProps> = (props) => {
                       rules={[
                         { required: true },
                         {
-                          pattern: privateKeyRegexp,
+                          pattern: Validation.privateKeyRegexp,
                           message:
                             'The ssh key doesnt seems in a correct format',
                         },

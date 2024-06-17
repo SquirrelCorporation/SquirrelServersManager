@@ -1,7 +1,7 @@
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
 import ExtraVarsViewEditor from '@/pages/Playbooks/components/ExtraVarsViewEditor';
 import GalaxyStoreModal from '@/pages/Playbooks/components/GalaxyStoreModal';
-import NewPlaybookModalForm from '@/pages/Playbooks/components/NexPlaybookModalForm';
+import NewPlaybookModalForm from '@/pages/Playbooks/components/NewPlaybookModalForm';
 import {
   deletePlaybook,
   getPlaybooks,
@@ -41,7 +41,7 @@ import type { DirectoryTreeProps } from 'antd/es/tree';
 import { editor } from 'monaco-editor';
 import { configureMonacoYaml } from 'monaco-yaml';
 import React, { useEffect } from 'react';
-import { PlaybookFileList } from 'ssm-shared-lib/distribution/types/api';
+import { API } from 'ssm-shared-lib';
 import IStandaloneCodeEditor = editor.IStandaloneCodeEditor;
 
 window.MonacoEnvironment = {
@@ -65,10 +65,10 @@ const { Paragraph, Text } = Typography;
 
 const Index: React.FC = () => {
   const [playbookFilesList, setPlaybookFilesList] = React.useState<
-    PlaybookFileList[]
+    API.PlaybookFileList[]
   >([]);
   const [selectedFile, setSelectedFile] = React.useState<
-    PlaybookFileList | undefined
+    API.PlaybookFileList | undefined
   >();
   const [downloadedContent, setDownloadedContent] = React.useState<
     string | undefined

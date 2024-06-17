@@ -1,5 +1,5 @@
 import { body, param } from 'express-validator';
-import { playbookNameRegexp } from 'ssm-shared-lib/distribution/validation';
+import { Validation } from 'ssm-shared-lib';
 import validator from '../../middlewares/validator';
 
 export const getPlaybookValidator = [
@@ -18,7 +18,7 @@ export const addPlaybookValidator = [
     .exists()
     .notEmpty()
     .withMessage('Playbook name required')
-    .matches(playbookNameRegexp)
+    .matches(Validation?.playbookNameRegexp)
     .withMessage('Forbidden characters in playbook name'),
   validator,
 ];

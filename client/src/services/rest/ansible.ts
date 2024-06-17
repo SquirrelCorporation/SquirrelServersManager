@@ -120,3 +120,31 @@ export async function getCollections(
     ...(options || {}),
   });
 }
+
+export async function getCollection(
+  params: { name: string; namespace: string; version: string },
+  options?: Record<string, any>,
+) {
+  return request<any>('/api/ansible/galaxy/collection/details', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+export async function postInstallCollection(
+  body: { name: string; namespace: string },
+  params?: any,
+  options?: Record<string, any>,
+) {
+  return request<any>('/api/ansible/galaxy/collection/install', {
+    method: 'POST',
+    data: body,
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
