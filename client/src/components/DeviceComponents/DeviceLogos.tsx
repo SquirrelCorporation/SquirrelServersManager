@@ -2,10 +2,10 @@ import { CPULogo } from '@/components/DeviceComponents/CPULogo';
 import { OsLogo } from '@/components/DeviceComponents/OsLogo/OsLogo';
 import Avatar from 'antd/es/avatar/avatar';
 import React from 'react';
-import { DeviceItem } from 'ssm-shared-lib/distribution/types/api';
+import { API } from 'ssm-shared-lib';
 
 type DeviceLogosProps = {
-  device?: DeviceItem;
+  device?: API.DeviceItem;
 };
 
 const DeviceLogos: React.FC<DeviceLogosProps> = (props: DeviceLogosProps) => (

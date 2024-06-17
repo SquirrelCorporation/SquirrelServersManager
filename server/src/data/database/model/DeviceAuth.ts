@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { SSHType } from 'ssm-shared-lib/distribution/enums/ansible';
+import { SsmAnsible } from 'ssm-shared-lib';
 import Device from './Device';
 
 export const DOCUMENT_NAME = 'DeviceAuth';
@@ -7,7 +7,7 @@ export const COLLECTION_NAME = 'deviceauth';
 
 export default interface DeviceAuth {
   device: Device;
-  authType?: SSHType;
+  authType?: SsmAnsible.SSHType;
   sshUser?: string;
   sshPwd?: string;
   sshKey?: string;
@@ -22,7 +22,7 @@ export default interface DeviceAuth {
   sshCommonArgs?: string;
   sshExecutable?: string;
   customDockerSSH?: boolean;
-  dockerCustomAuthType?: SSHType;
+  dockerCustomAuthType?: SsmAnsible.SSHType;
   dockerCustomSshUser?: string;
   dockerCustomSshPwd?: string;
   dockerCustomSshKeyPass?: string;
@@ -48,7 +48,7 @@ const schema = new Schema<DeviceAuth>(
     },
     authType: {
       type: Schema.Types.String,
-      enum: SSHType,
+      enum: SsmAnsible.SSHType,
       required: true,
     },
     sshUser: {
@@ -125,7 +125,7 @@ const schema = new Schema<DeviceAuth>(
     },
     dockerCustomAuthType: {
       type: Schema.Types.String,
-      enum: SSHType,
+      enum: SsmAnsible.SSHType,
       required: false,
     },
     dockerCustomSshKey: {

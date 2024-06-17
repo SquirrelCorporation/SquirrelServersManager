@@ -1,5 +1,7 @@
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
-import ExtraVarsViewEditor from '@/pages/Playbooks/ExtraVarsViewEditor';
+import ExtraVarsViewEditor from '@/pages/Playbooks/components/ExtraVarsViewEditor';
+import GalaxyStoreModal from '@/pages/Playbooks/components/GalaxyStoreModal';
+import NewPlaybookModalForm from '@/pages/Playbooks/components/NewPlaybookModalForm';
 import {
   deletePlaybook,
   getPlaybooks,
@@ -8,6 +10,7 @@ import {
   readPlaybookContent,
 } from '@/services/rest/ansible';
 import {
+  AppstoreOutlined,
   FileOutlined,
   FileSearchOutlined,
   PlaySquareOutlined,
@@ -38,7 +41,7 @@ import type { DirectoryTreeProps } from 'antd/es/tree';
 import { editor } from 'monaco-editor';
 import { configureMonacoYaml } from 'monaco-yaml';
 import React, { useEffect } from 'react';
-import { PlaybookFileList } from 'ssm-shared-lib/distribution/types/api';
+import { API } from 'ssm-shared-lib';
 import IStandaloneCodeEditor = editor.IStandaloneCodeEditor;
 
 window.MonacoEnvironment = {
@@ -62,16 +65,17 @@ const { Paragraph, Text } = Typography;
 
 const Index: React.FC = () => {
   const [playbookFilesList, setPlaybookFilesList] = React.useState<
-    PlaybookFileList[]
+    API.PlaybookFileList[]
   >([]);
   const [selectedFile, setSelectedFile] = React.useState<
-    PlaybookFileList | undefined
+    API.PlaybookFileList | undefined
   >();
   const [downloadedContent, setDownloadedContent] = React.useState<
     string | undefined
   >();
   const [isLoading, setIsLoading] = React.useState(false);
   const editorRef = React.useRef(null);
+  const [storeModal, setStoreModal] = React.useState(false);
 
   const asyncFetchPlaybookContent = async () => {
     if (selectedFile) {
@@ -216,7 +220,16 @@ const Index: React.FC = () => {
             title="List of playbooks"
             bordered={false}
             style={{ width: '300px', minHeight: '90vh' }}
+            extra={[
+              <Button
+                icon={<AppstoreOutlined />}
+                onClick={() => setStoreModal(true)}
+              >
+                Store
+              </Button>,
+            ]}
           >
+            <GalaxyStoreModal open={storeModal} setOpen={setStoreModal} />
             <DirectoryTree
               multiple
               defaultExpandAll
@@ -232,60 +245,10 @@ const Index: React.FC = () => {
               })}
               selectedKeys={[selectedFile?.value as React.Key]}
             />
-            <ModalForm<{ name: string }>
-              title={'Create a new playbook'}
-              trigger={
-                <Button
-                  icon={<AddCircleOutline />}
-                  type="primary"
-                  style={{ marginTop: '8px' }}
-                  block
-                >
-                  New Playbook
-                </Button>
-              }
-              autoFocusFirstInput
-              modalProps={{
-                destroyOnClose: true,
-              }}
-              onFinish={async (values) => {
-                return await submitNewPlaybook(values.name);
-              }}
-            >
-              <ProFormText
-                width={'xl'}
-                required={true}
-                name={'name'}
-                label={'Playbook name'}
-                tooltip={
-                  "Enter a playbook name, character '_' is not authorized"
-                }
-                placeholder="playbook name"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input your playbook name!',
-                  },
-                  {
-                    pattern: new RegExp('^[0-9a-zA-Z\\-]{0,100}$'),
-                    message:
-                      'Please enter a valid file name (only alphanumerical and "-" authorized), max 100 chars',
-                  },
-                  {
-                    validator(_, value) {
-                      if (
-                        playbookFilesList.findIndex(
-                          (e) => e.label === value,
-                        ) === -1
-                      ) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject('Playbook name already exists');
-                    },
-                  },
-                ]}
-              />
-            </ModalForm>
+            <NewPlaybookModalForm
+              submitNewPlaybook={submitNewPlaybook}
+              playbookFilesList={playbookFilesList}
+            />
           </Card>
         </Col>
         <Col span={18}>

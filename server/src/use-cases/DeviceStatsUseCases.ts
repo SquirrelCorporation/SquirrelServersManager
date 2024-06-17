@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon';
-import { API, SettingsKeys } from 'ssm-shared-lib';
-import { DeviceStatsType } from 'ssm-shared-lib/distribution/enums/stats';
+import { API, SettingsKeys, StatsType } from 'ssm-shared-lib';
 import Device from '../data/database/model/Device';
 import DeviceStat from '../data/database/model/DeviceStat';
 import ContainerRepo from '../data/database/repository/ContainerRepo';
@@ -57,11 +56,11 @@ async function getStatsByDeviceAndType(
     `[USECASE][DEVICESTATS] - getStatsByDeviceAndType - type: ${type}, from: ${from}, device: ${device.uuid}`,
   );
   switch (type) {
-    case DeviceStatsType.CPU:
+    case StatsType.DeviceStatsType.CPU:
       return await DeviceStatRepo.findStatsByDeviceAndType(device, '$cpuUsage', from);
-    case DeviceStatsType.MEM_USED:
+    case StatsType.DeviceStatsType.MEM_USED:
       return await DeviceStatRepo.findStatsByDeviceAndType(device, '$memUsedPercentage', from);
-    case DeviceStatsType.MEM_FREE:
+    case StatsType.DeviceStatsType.MEM_FREE:
       return await DeviceStatRepo.findStatsByDeviceAndType(device, '$memFreePercentage', from);
     default:
       throw new Error('Unknown Type');
@@ -78,16 +77,16 @@ async function getStatsByDevicesAndType(
     `[USECASE][DEVICESTATS] - findStatsByDevicesAndType - type: ${type}, from: ${from}, nb devices: ${devices.length}`,
   );
   switch (type) {
-    case DeviceStatsType.CPU:
+    case StatsType.DeviceStatsType.CPU:
       return await DeviceStatRepo.findStatsByDevicesAndType(devices, '$cpuUsage', from, to);
-    case DeviceStatsType.MEM_USED:
+    case StatsType.DeviceStatsType.MEM_USED:
       return await DeviceStatRepo.findStatsByDevicesAndType(
         devices,
         '$memUsedPercentage',
         from,
         to,
       );
-    case DeviceStatsType.MEM_FREE:
+    case StatsType.DeviceStatsType.MEM_FREE:
       return await DeviceStatRepo.findStatsByDevicesAndType(
         devices,
         '$memFreePercentage',
@@ -109,21 +108,21 @@ async function getSingleAveragedStatsByDevicesAndType(
     `[USECASE][DEVICESTATS] - findSingleAveragedStatByDevicesAndType - type: ${type}, from: ${from}, to: ${to}, nb devices: ${devices.length}`,
   );
   switch (type) {
-    case DeviceStatsType.CPU:
+    case StatsType.DeviceStatsType.CPU:
       return await DeviceStatRepo.findSingleAveragedStatByDevicesAndType(
         devices,
         '$cpuUsage',
         from,
         to,
       );
-    case DeviceStatsType.MEM_USED:
+    case StatsType.DeviceStatsType.MEM_USED:
       return await DeviceStatRepo.findSingleAveragedStatByDevicesAndType(
         devices,
         '$memUsedPercentage',
         from,
         to,
       );
-    case DeviceStatsType.MEM_FREE:
+    case StatsType.DeviceStatsType.MEM_FREE:
       return await DeviceStatRepo.findSingleAveragedStatByDevicesAndType(
         devices,
         '$memFreePercentage',
@@ -143,13 +142,13 @@ async function getStatByDeviceAndType(
     `[USECASE][DEVICESTATS] - getStatByDeviceAndType - type: ${type}, device: ${device.uuid}`,
   );
   switch (type) {
-    case DeviceStatsType.CPU:
+    case StatsType.DeviceStatsType.CPU:
       return await DeviceStatRepo.findStatByDeviceAndType(device, '$cpuUsage');
-    case DeviceStatsType.MEM_USED:
+    case StatsType.DeviceStatsType.MEM_USED:
       return await DeviceStatRepo.findStatByDeviceAndType(device, '$memUsedPercentage');
-    case DeviceStatsType.MEM_FREE:
+    case StatsType.DeviceStatsType.MEM_FREE:
       return await DeviceStatRepo.findStatByDeviceAndType(device, '$memFreePercentage');
-    case DeviceStatsType.SERVICES:
+    case StatsType.DeviceStatsType.SERVICES:
       return [{ value: await ContainerRepo.countByDeviceId(device._id) }];
     default:
       throw new Error('Unknown Type');
@@ -163,11 +162,11 @@ async function getSingleAveragedStatByType(
 ): Promise<[{ value: number }] | null> {
   logger.info(`[USECASE][DEVICESTATS] - getStatByType - type: ${type}`);
   switch (type) {
-    case DeviceStatsType.CPU:
+    case StatsType.DeviceStatsType.CPU:
       return await DeviceStatRepo.findSingleAveragedStatAndType('$cpuUsage', from, to);
-    case DeviceStatsType.MEM_USED:
+    case StatsType.DeviceStatsType.MEM_USED:
       return await DeviceStatRepo.findSingleAveragedStatAndType('$memUsedPercentage', from, to);
-    case DeviceStatsType.MEM_FREE:
+    case StatsType.DeviceStatsType.MEM_FREE:
       return await DeviceStatRepo.findSingleAveragedStatAndType('$memFreePercentage', from, to);
     default:
       throw new Error('Unknown Type');

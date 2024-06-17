@@ -1,5 +1,5 @@
-import { GeneralSettingsKeys } from 'ssm-shared-lib/distribution/enums/settings';
-import { InternalError } from '../../core/api/ApiError';
+import { SettingsKeys } from 'ssm-shared-lib';
+import { InternalError, NotFoundError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
 import { setToCache } from '../../data/cache';
 import asyncHandler from '../../helpers/AsyncHandler';
@@ -11,13 +11,11 @@ export const postContainerStatsSettings = asyncHandler(async (req, res) => {
   logger.info(`[CONTROLLER] - POST - /settings/container-stats/${key}`);
   try {
     switch (key) {
-      case GeneralSettingsKeys.CONTAINER_STATS_RETENTION_IN_DAYS:
-        await setToCache(GeneralSettingsKeys.CONTAINER_STATS_RETENTION_IN_DAYS, value);
+      case SettingsKeys.GeneralSettingsKeys.CONTAINER_STATS_RETENTION_IN_DAYS:
+        await setToCache(SettingsKeys.GeneralSettingsKeys.CONTAINER_STATS_RETENTION_IN_DAYS, value);
         return new SuccessResponse(`${key} successfully updated`).send(res);
       default:
-        return res.status(404).send({
-          success: false,
-        });
+        return new NotFoundError();
     }
   } catch (error: any) {
     logger.error(error);

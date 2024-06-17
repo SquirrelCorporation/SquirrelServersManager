@@ -1,4 +1,4 @@
-import { SSHType } from 'ssm-shared-lib/distribution/enums/ansible';
+import { SsmAnsible } from 'ssm-shared-lib';
 import DeviceAuth from '../../../data/database/model/DeviceAuth';
 import logger from '../../../logger';
 import { Ansible } from '../../../types/typings';
@@ -64,13 +64,13 @@ function getAuth(deviceAuth: Partial<DeviceAuth>): Auth {
   const auth: Auth = {};
 
   switch (deviceAuth.authType) {
-    case SSHType.KeyBased:
+    case SsmAnsible.SSHType.KeyBased:
       auth.ansible_ssh_private_key_file = `/tmp/${deviceAuth.device?.uuid}.key`;
       if (deviceAuth.sshKeyPass) {
         auth.ansible_paramiko_pass = { __ansible_vault: deviceAuth.sshKeyPass };
       }
       break;
-    case SSHType.UserPassword:
+    case SsmAnsible.SSHType.UserPassword:
       auth.ansible_ssh_pass = { __ansible_vault: deviceAuth.sshPwd };
       break;
     default:

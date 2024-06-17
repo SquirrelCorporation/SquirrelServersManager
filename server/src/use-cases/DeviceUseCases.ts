@@ -1,11 +1,6 @@
 import DockerModem from 'docker-modem';
 import Dockerode from 'dockerode';
-import { req } from 'pino-std-serializers';
-import { AuthenticationType } from 'ssh2';
-import { SSHType } from 'ssm-shared-lib/distribution/enums/ansible';
-import { AnsibleReservedExtraVarsKeys } from 'ssm-shared-lib/distribution/enums/settings';
-import { DeviceStatus } from 'ssm-shared-lib/distribution/enums/status';
-import { API } from 'ssm-shared-lib';
+import { API, SsmAnsible, SsmStatus, SettingsKeys } from 'ssm-shared-lib';
 import { InternalError } from '../core/api/ApiError';
 import { setToCache } from '../data/cache';
 import Device, { DeviceModel } from '../data/database/model/Device';
@@ -27,11 +22,11 @@ import PlaybookUseCases from './PlaybookUseCases';
 async function getDevicesOverview() {
   logger.info(`[USECASES][DEVICE] - getDevicesOverview`);
   const devices = await DeviceRepo.findAll();
-  const offline = devices?.filter((e) => e.status === DeviceStatus.OFFLINE).length;
-  const online = devices?.filter((e) => e.status === DeviceStatus.ONLINE).length;
+  const offline = devices?.filter((e) => e.status === SsmStatus.DeviceStatus.OFFLINE).length;
+  const online = devices?.filter((e) => e.status === SsmStatus.DeviceStatus.ONLINE).length;
   const overview = devices?.map((e) => {
     return {
-      name: e.status !== DeviceStatus.UNMANAGED ? e.fqdn : e.ip,
+      name: e.status !== SsmStatus.DeviceStatus.UNMANAGED ? e.fqdn : e.ip,
       status: e.status,
       uuid: e.uuid,
       cpu: e.cpuSpeed,
@@ -79,9 +74,9 @@ async function updateDeviceFromJson(deviceInfo: API.DeviceInfo, device: Device) 
   device.versions = deviceInfo.os?.versionData;
   device.cpuSpeed = deviceInfo.cpu?.speed;
   device.mem = deviceInfo.mem?.memTotalMb;
-  if (device.status !== DeviceStatus.ONLINE) {
+  if (device.status !== SsmStatus.DeviceStatus.ONLINE) {
     await DeviceDownTimeEventRepo.closeDownTimeEvent(device);
-    device.status = DeviceStatus.ONLINE;
+    device.status = SsmStatus.DeviceStatus.ONLINE;
   }
   device.raspberry = deviceInfo.system?.raspberry;
   await DeviceRepo.update(device);
@@ -133,7 +128,7 @@ async function checkAnsibleConnection(
   user: User,
   masterNodeUrl?: string,
   ip?: string,
-  authType?: SSHType,
+  authType?: SsmAnsible.SSHType,
   sshKey?: string,
   sshUser?: string,
   sshPwd?: string,
@@ -143,7 +138,7 @@ async function checkAnsibleConnection(
   sshKeyPass?: string,
 ) {
   if (masterNodeUrl) {
-    await setToCache(AnsibleReservedExtraVarsKeys.MASTER_NODE_URL, masterNodeUrl);
+    await setToCache(SettingsKeys.AnsibleReservedExtraVarsKeys.MASTER_NODE_URL, masterNodeUrl);
   }
   if (sshKey) {
     await Shell.saveSshKey(sshKey, 'tmp');
@@ -154,7 +149,7 @@ async function checkAnsibleConnection(
         _id: 'tmp',
         ip,
         uuid: 'tmp',
-        status: DeviceStatus.REGISTERING,
+        status: SsmStatus.DeviceStatus.REGISTERING,
       },
       authType,
       sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
@@ -182,7 +177,7 @@ async function checkAnsibleConnection(
 
 async function checkDockerConnection(
   ip?: string,
-  authType?: SSHType,
+  authType?: SsmAnsible.SSHType,
   sshKey?: string,
   sshUser?: string,
   sshPwd?: string,
@@ -197,7 +192,7 @@ async function checkDockerConnection(
         _id: 'tmp',
         ip,
         uuid: 'tmp',
-        status: DeviceStatus.REGISTERING,
+        status: SsmStatus.DeviceStatus.REGISTERING,
       },
       authType,
       sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,

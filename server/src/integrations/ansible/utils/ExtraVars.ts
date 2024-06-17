@@ -1,15 +1,15 @@
-import { AnsibleReservedExtraVarsKeys } from 'ssm-shared-lib/distribution/enums/settings';
+import { SettingsKeys } from 'ssm-shared-lib';
 import { API } from 'ssm-shared-lib';
-import { SSMReservedExtraVars } from 'ssm-shared-lib/distribution/enums/ansible';
+import { SsmAnsible } from 'ssm-shared-lib';
 import Playbook from '../../../data/database/model/Playbook';
 import { getFromCache } from '../../../data/cache';
 import logger from '../../../logger';
 
 function getDefaultExtraVars(playbook: Playbook, target?: string[]) {
   const defaultExtraVars = target
-    ? (JSON.parse(`[{"extraVar": "${SSMReservedExtraVars.DEVICE_ID}", "value": "${target}"}]`) as [
-        API.ExtraVar,
-      ])
+    ? (JSON.parse(
+        `[{"extraVar": "${SsmAnsible.SSMReservedExtraVars.DEVICE_ID}", "value": "${target}"}]`,
+      ) as [API.ExtraVar])
     : [];
   logger.debug(JSON.stringify(playbook.extraVars));
   return defaultExtraVars;
@@ -18,12 +18,12 @@ function getDefaultExtraVars(playbook: Playbook, target?: string[]) {
 async function substitutedExtraVar(extraVar: string, forcedValues?: API.ExtraVars) {
   const forcedValue = forcedValues?.find((e) => e.extraVar === extraVar)?.value;
   switch (extraVar) {
-    case SSMReservedExtraVars.DEVICE_ID:
+    case SsmAnsible.SSMReservedExtraVars.DEVICE_ID:
       return forcedValue;
-    case SSMReservedExtraVars.MASTER_NODE_URL:
+    case SsmAnsible.SSMReservedExtraVars.MASTER_NODE_URL:
       return forcedValue
         ? forcedValue
-        : await getFromCache(AnsibleReservedExtraVarsKeys.MASTER_NODE_URL);
+        : await getFromCache(SettingsKeys.AnsibleReservedExtraVarsKeys.MASTER_NODE_URL);
     default:
       return await getFromCache(extraVar);
   }

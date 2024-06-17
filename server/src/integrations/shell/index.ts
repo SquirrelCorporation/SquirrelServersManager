@@ -5,11 +5,16 @@ import User from '../../data/database/model/User';
 import AnsibleTaskRepo from '../../data/database/repository/AnsibleTaskRepo';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
 import logger from '../../logger';
+import AnsibleGalaxyCmd from '../ansible/AnsibleGalaxyCmd';
 import Inventory from '../ansible/utils/InventoryTransformer';
 import { Ansible } from '../../types/typings';
 import ansibleCmd from '../ansible/AnsibleCmd';
 
 export const ANSIBLE_PATH = '/server/src/ansible/';
+
+function timeout(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 async function executePlaybook(
   playbook: string,
@@ -170,6 +175,33 @@ async function saveSshKey(key: string, uuid: string) {
   }
 }
 
+async function installAnsibleGalaxyCollection(name: string, namespace: string) {
+  try {
+    logger.info('[SHELL] - installAnsibleGalaxyCollection Starting...');
+    const result = shell.exec(AnsibleGalaxyCmd.getInstallCollectionCmd(name, namespace));
+    if (result.code !== 0) {
+      throw new Error('[SHELL] - installAnsibleGalaxyCollection has failed');
+    }
+    let collectionList = '';
+    let i = 0;
+    while (!collectionList.includes(`${namespace}.${name}`) && i++ < 60) {
+      await timeout(2000);
+      const resultList = shell.exec(
+        AnsibleGalaxyCmd.getListCollectionsCmd(name, namespace) +
+          ' > /tmp/ansible-collection-output.tmp.txt',
+      );
+      await timeout(2000);
+      collectionList = shell.cat('/tmp/ansible-collection-output.tmp.txt').toString();
+    }
+    if (!collectionList.includes(`${namespace}.${name}`)) {
+      throw new Error('[SHELL] - installAnsibleGalaxyCollection has failed');
+    }
+  } catch (error) {
+    logger.error('[SHELL] - installAnsibleGalaxyCollection');
+    throw error;
+  }
+}
+
 export default {
   executePlaybook,
   listPlaybooks,
@@ -181,4 +213,5 @@ export default {
   getAnsibleVersion,
   saveSshKey,
   executePlaybookOnInventory,
+  installAnsibleGalaxyCollection,
 };

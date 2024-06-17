@@ -1,6 +1,5 @@
 import { parse } from 'url';
-import { AnsibleReservedExtraVarsKeys } from 'ssm-shared-lib/distribution/enums/settings';
-import { SsmStatus } from 'ssm-shared-lib';
+import { SsmStatus, SettingsKeys } from 'ssm-shared-lib';
 import { API } from 'ssm-shared-lib';
 import { BadRequestError, NotFoundError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
@@ -34,7 +33,7 @@ export const addDevice = asyncHandler(async (req, res) => {
     sshKeyPass,
   } = req.body;
   if (masterNodeUrl) {
-    await setToCache(AnsibleReservedExtraVarsKeys.MASTER_NODE_URL, masterNodeUrl);
+    await setToCache(SettingsKeys.AnsibleReservedExtraVarsKeys.MASTER_NODE_URL, masterNodeUrl);
   }
   try {
     const isUnManagedDevice = unManaged === true;

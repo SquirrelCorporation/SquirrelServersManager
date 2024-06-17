@@ -8,6 +8,16 @@ import {
 } from '../services/ansible/execution.validator';
 import { addOrUpdateExtraVarValue } from '../services/ansible/extravar';
 import { addOrUpdateExtraVarValueValidator } from '../services/ansible/extravar.validator';
+import {
+  getAnsibleGalaxyCollection,
+  getAnsibleGalaxyCollections,
+  postInstallAnsibleGalaxyCollection,
+} from '../services/ansible/galaxy';
+import {
+  getAnsibleGalaxyCollectionsValidator,
+  getAnsibleGalaxyCollectionValidator,
+  postInstallAnsibleGalaxyCollectionValidator,
+} from '../services/ansible/galaxy.validator';
 import { addTaskEvent, addTaskStatus } from '../services/ansible/hook';
 import { getInventory } from '../services/ansible/inventory';
 import {
@@ -41,6 +51,18 @@ router.get('/vault', passport.authenticate('bearer', { session: false }), getVau
 router.get(`/inventory`, passport.authenticate('bearer', { session: false }), getInventory);
 
 router.use(passport.authenticate('jwt', { session: false }));
+
+router.get(`/galaxy/collection`, getAnsibleGalaxyCollectionsValidator, getAnsibleGalaxyCollections);
+router.get(
+  `/galaxy/collection/details`,
+  getAnsibleGalaxyCollectionValidator,
+  getAnsibleGalaxyCollection,
+);
+router.post(
+  `/galaxy/collection/install`,
+  postInstallAnsibleGalaxyCollectionValidator,
+  postInstallAnsibleGalaxyCollection,
+);
 
 router.post(`/exec/playbook/:playbook`, execPlaybookValidator, execPlaybook);
 router.get(`/exec/:id/logs`, getLogsValidator, getLogs);

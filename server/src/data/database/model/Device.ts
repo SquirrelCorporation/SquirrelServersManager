@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
-import { DeviceStatus } from 'ssm-shared-lib/distribution/enums/status';
+import { SsmStatus } from 'ssm-shared-lib';
 import { API } from 'ssm-shared-lib';
 
 export const DOCUMENT_NAME = 'Device';
@@ -89,7 +89,7 @@ const schema = new Schema<Device>(
     },
     status: {
       type: Schema.Types.Number,
-      default: DeviceStatus.REGISTERING,
+      default: SsmStatus.DeviceStatus.REGISTERING,
       required: true,
     },
     osArch: {

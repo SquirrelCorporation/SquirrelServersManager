@@ -1,6 +1,6 @@
 import { Tag } from 'antd';
 import React from 'react';
-import { ContainerStatus } from 'ssm-shared-lib/distribution/enums/status';
+import { SsmStatus } from 'ssm-shared-lib';
 
 export type StatusTagProps = {
   status?: string;
@@ -8,9 +8,9 @@ export type StatusTagProps = {
 
 const StatusTag: React.FC<StatusTagProps> = (props: StatusTagProps) => {
   switch (props.status) {
-    case ContainerStatus.RUNNING:
+    case SsmStatus.ContainerStatus.RUNNING:
       return <Tag color="success">Running</Tag>;
-    case ContainerStatus.PAUSED:
+    case SsmStatus.ContainerStatus.PAUSED:
       return <Tag color="warning">Paused</Tag>;
     default:
       return <Tag>{props.status}</Tag>;
