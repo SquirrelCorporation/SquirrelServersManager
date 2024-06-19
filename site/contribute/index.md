@@ -21,10 +21,10 @@ Firstly, start by creating your own 'fork' of our repository.
 
 ```sh
 # Clone the repository
-git clone https://github.com/<YOUR-USERNAME>/<REPO-NAME>.git
+git clone https://github.com/SquirrelCorporation/SquirrelServersManager.git
 
 # Go to your local repository
-cd <REPO-NAME>
+cd SquirrelCorporation
 
 # Ensure you are in the 'master' branch
 git checkout master
