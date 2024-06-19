@@ -21,7 +21,7 @@ On the next screen, SSM will try to ping itself through this URL.
 ## 4. Test of the connections
 ![adddevice4](/add-device/add-device-6.png)
 Ansible and Docker connections will automatically launched to test your previous inputs. Wait for the result and fix any problems that may occured.
-If you wish to use a different authentication for Docker, you can always later specifically the docker configuration (see [Device Configuration](/device-configuration))
+If you wish to use a different authentication for Docker, you can always later specifically the docker configuration (see [Device Configuration](/docs/device-configuration))
 
 ## 5. Adding a device: Confirmation screen
 ![adddevice4](/add-device/add-device-4.png)

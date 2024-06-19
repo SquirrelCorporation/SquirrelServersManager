@@ -23,10 +23,10 @@ You can show advanced connection option by clicking on the switch on the bottom 
 
 Advanced options will allow you to setup a different authentication for Dockers, and will offer you advanced options for the connection
 
-![deviceconf3](/device-configuration/device-configuration-5.png)
+![deviceconf5](/device-configuration/device-configuration-5.png)
 
 
 ## Connection test tab
 This tab allows you to test the connection for Ansible and Docker integrations
 
-![deviceconf3](/device-configuration/device-configuration-4.png)
+![deviceconf4](/device-configuration/device-configuration-4.png)

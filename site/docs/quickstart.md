@@ -58,7 +58,7 @@ services:
 ```
 
 ### .env file
-```dotenv
+```
 #SECRETS
 SECRET=REPLACE_ME
 SALT=1234567890123456
