@@ -7,6 +7,7 @@ describe('testing GHCR Registry', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     ghcr.configuration = {
+      username: 'user',
       token: 'token',
     };
     ghcr.childLogger = { debug: vi.fn(), info: vi.fn(), error: vi.fn(), warn: vi.fn() };
@@ -19,15 +20,18 @@ describe('testing GHCR Registry', () => {
   test('validatedConfiguration should initialize when configuration is valid', () => {
     expect(
       ghcr.validateConfiguration({
+        username: 'user',
         token: 'token',
       }),
     ).toStrictEqual({
+      username: 'user',
       token: 'token',
     });
   });
 
   test('maskConfiguration should mask configuration secrets', () => {
     expect(ghcr.maskConfiguration()).toEqual({
+      username: 'user',
       token: 't***n',
     });
   });

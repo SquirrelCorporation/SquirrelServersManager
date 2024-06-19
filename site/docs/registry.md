@@ -12,6 +12,16 @@ SSM supports the following registries:
 - LSCR (LinuxServer Container Registry)
 - Quay
 
+:::info ℹ️ Default registries
+By default, the following registries will be available using anonymous access:
+ECR, GHCR, GCR, HUB, QUAY
+:::
+
+## Configuring a registry
+### 1. Go to settings, "Registries" tag
+![registries1](/registries/registries-1.png)
+### 2. Select a predefined integration or custom integrations (see bellow)
+
 ## ACR (Azure Container Registry)
 
 The `acr`registry lets you configure [ACR](https://azure.microsoft.com/services/container-registry/) integration.
@@ -26,7 +36,7 @@ The `acr`registry lets you configure [ACR](https://azure.microsoft.com/services/
 ### Example
 
 <!-- tabs:start -->
-test
+![image](/registries/acr/acr.png)
 <!-- tabs:end -->
 
 ### How to create Registry credentials on Microsoft Azure Platform
@@ -60,11 +70,14 @@ The `custom` registry lets you configure a self-hosted [Docker Registry](https:/
 
 #### Configure for anonymous access
 <!-- tabs:start -->
+![image](/registries/custom/custom-1.png)
 
 <!-- tabs:end -->
 
 #### Configure [for Basic Auth](https://docs.docker.com/registry/configuration/#htpasswd)
 <!-- tabs:start -->
+![image](/registries/custom/custom-2.png)
+![image](/registries/custom/custom-3.png)
 
 <!-- tabs:end -->
 
@@ -84,7 +97,7 @@ The `ecr` registry lets you configure [ECR](https://aws.amazon.com/ecr/) integra
 
 ### Examples
 <!-- tabs:start -->
-test
+![image](/registries/ecr/ecr.png)
 <!-- tabs:end -->
 
 ### How to create an AWS IAM user and get programmatic access
@@ -114,7 +127,9 @@ The `forgejo` registry lets you configure a self-hosted [Forgejo](https://forgej
 
 #### Configure
 <!-- tabs:start -->
-test
+![image](/registries/forgejo/forgejo-1.png)
+![image](/registries/forgejo/forgejo-2.png)
+
 <!-- tabs:end -->
 
 ## GCR (Google Container Registry)
@@ -130,14 +145,10 @@ The `gcr` registry lets you configure [GCR](https://cloud.google.com/container-r
 
 ### Examples
 
-#### Configure for anonymous access
-<!-- tabs:start -->
-test
-<!-- tabs:end -->
-
 #### Configure for authenticated access
 <!-- tabs:start -->
-test
+![image](/registries/gcr/gcr.png)
+
 <!-- tabs:end -->
 
 ### How to create a Service Account on Google Cloud Platform
@@ -162,22 +173,17 @@ The `ghcr` registry lets you configure [GHCR](https://docs.github.com/en/package
 
 ### Variables
 
-| Env var | Required       | Description     | Supported values                         | Default value when missing |
-|---------|:--------------:| --------------- | ---------------------------------------- | -------------------------- | 
-| `token` | :white_circle: | Github token    | Github password or Github Personal Token |                            |
-
+| Env var    | Required       | Description     | Supported values                         | Default value when missing |
+|------------|:--------------:| --------------- | ---------------------------------------- | -------------------------- | 
+| `username` | :white_circle: | Github username |                                          |                            |
+| `token`    | :white_circle: | Github token    | Github password or Github Personal Token |                            |
 ### Examples
-
-#### Configure to access public images (no credentials needed)
-
-<!-- tabs:start -->
-test
-<!-- tabs:end -->
 
 #### Configure to access private images (credentials needed)
 
 <!-- tabs:start -->
-test
+![image](/registries/ghcr/ghcr.png)
+
 <!-- tabs:end -->
 
 ### How to create a Github Personal Token
@@ -207,7 +213,7 @@ The `gitea` registry lets you configure a self-hosted [Gitea](https://gitea.com)
 
 #### Configure
 <!-- tabs:start -->
-test
+![image](/registries/gitea/gitea.png)
 <!-- tabs:end -->
 
 ## Gitlab (Gitlab Container Registry)
@@ -227,13 +233,13 @@ The `gitlab` registry lets you configure [GITLAB](https://docs.gitlab.com/ee/use
 #### Configure to access images from gitlab.com
 
 <!-- tabs:start -->
-test
+![image](/registries/gitlab/gitlab-1.png)
 <!-- tabs:end -->
 
 #### Configure to access images from self hosted gitlab instance
 
 <!-- tabs:start -->
-test
+![image](/registries/gitlab/gitlab-2.png)
 <!-- tabs:end -->
 
 ### How to create a Gitlab Personal Access Token
@@ -270,10 +276,7 @@ Don't forget to configure authentication if you're using [Docker Hub Private Rep
 
 ### Examples
 
-#### Configure for anonymous access
-<!-- tabs:start -->
-test
-<!-- tabs:end -->
+![image](/registries/hub/hub-1.png)
 
 #### Configure Authentication using Login/Token
 
@@ -287,7 +290,7 @@ test
 ![image](/registries/hub/hub_token.png)
 
 <!-- tabs:start -->
-test
+![image](/registries/hub/hub-2.png)
 <!-- tabs:end -->
 
 #### Configure Authentication using Base64 encoded credentials
@@ -304,7 +307,7 @@ For example,
 - the resulting encoded string would be `am9obmRvZToyYzFiZDg3Mi1lZmI2LTRmM2EtODFhYS03MjQ1MThhMGE1OTI=`
 
 <!-- tabs:start -->
-test
+![image](/registries/hub/hub-3.png)
 <!-- tabs:end -->
 
 ## LSCR (LinuxServer Container Registry)
@@ -313,15 +316,15 @@ The `lscr` registry lets you configure [LSCR](https://fleet.linuxserver.io/) int
 
 ### Variables
 
-| Env var |   Required    | Description     | Supported values                         | Default value when missing |
-|---------|:-------------:|-----------------|------------------------------------------|----------------------------| 
-| `token` | :red_circle:  | Github token    | Github password or Github Personal Token |                            |
+| Env var    |   Required    | Description     | Supported values                         | Default value when missing |
+|------------|:-------------:|-----------------|------------------------------------------|----------------------------| 
+| `username` | :red_circle:  | Github username    |  |                            |
+| `token`    | :red_circle:  | Github token    | Github password or Github Personal Token |                            |
 
 ### Examples
 
 <!-- tabs:start -->
-#### **Docker Compose**
-test
+![image](/registries/lscr/lscr.png)
 <!-- tabs:end -->
 
 ### How to create a Github Personal Token
@@ -349,17 +352,10 @@ The `quay` registry lets you configure [QUAY](https://quay.io/) integration.
 
 ### Examples
 
-#### Configure to access public images (no credentials needed)
-
-<!-- tabs:start -->
-#### **Docker Compose**
-test
-<!-- tabs:end -->
-
 #### Configure to access private images (credentials needed)
 
 <!-- tabs:start -->
-test
+![image](/registries/quay/quay.png)
 <!-- tabs:end -->
 
 ### How to create a Quay.io robot account
@@ -373,3 +369,15 @@ Choose a name & create it
 #### Copy the part after  the `+` sign and set it as the `account` env var
 #### Copy the token value and set it as the `token` env var
 ![image](/registries/quay/quay_02.png)
+
+## Deleting a registry
+
+### Deleting a custom registry
+To delete a custom registry, simply click on "Delete" on the tile of your custom registry
+![image](/registries/registries-2.png)
+![image](/registries/registries-3.png)
+
+### Reseting a default registry
+To reset a default registry, simply click on "Reset" on the tile of your custom registry
+![image](/registries/registries-4.png)
+

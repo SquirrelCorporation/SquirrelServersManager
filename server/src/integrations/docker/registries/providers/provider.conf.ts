@@ -67,6 +67,10 @@ const providerConf: SSMServicesTypes.RegistryAuthConfig[] = [
     config: { canAnonymous: true },
     authScheme: [
       {
+        name: 'username',
+        type: 'string',
+      },
+      {
         name: 'token',
         type: 'string',
       },
@@ -89,13 +93,6 @@ const providerConf: SSMServicesTypes.RegistryAuthConfig[] = [
         type: 'string',
       },
     ],
-  },
-  {
-    name: 'hotio',
-    provider: 'hotio',
-    default: true,
-    persist: true,
-    config: { canAnonymous: true },
   },
   {
     name: 'hub',
@@ -197,23 +194,37 @@ const providerConf: SSMServicesTypes.RegistryAuthConfig[] = [
     ],
   },
   {
-    name: 'forjejo',
-    provider: 'forjejo',
+    name: 'forgejo',
+    provider: 'forgejo',
     default: false,
     persist: true,
     config: { canAnonymous: false },
     authScheme: [
       {
-        name: 'login',
-        type: 'string',
-      },
-      {
-        name: 'password',
-        type: 'string',
-      },
-      {
         name: 'url',
         type: 'string',
+      },
+      {
+        name: 'Connection Type',
+        type: 'choice',
+        values: [
+          [
+            {
+              name: 'login',
+              type: 'string',
+            },
+            {
+              name: 'password',
+              type: 'string',
+            },
+          ],
+          [
+            {
+              name: 'auth',
+              type: 'string',
+            },
+          ],
+        ],
       },
     ],
   },
@@ -225,6 +236,10 @@ const providerConf: SSMServicesTypes.RegistryAuthConfig[] = [
     fullName: 'Linux Server Container Registry',
     config: { canAnonymous: false },
     authScheme: [
+      {
+        name: 'username',
+        type: 'string',
+      },
       {
         name: 'token',
         type: 'string',
