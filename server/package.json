@@ -46,11 +46,14 @@
     "ssm-shared-lib": "file:../shared-lib/",
     "@aws-sdk/client-ecr": "^3.598.0"
   },
+  "overrides": {
+    "minimatch": "5.1.2",
+    "glob": "8.1.0"
+  },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.7",
     "@types/dockerode": "^3.3.29",
-    "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/luxon": "^3.4.2",
