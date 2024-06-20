@@ -62,7 +62,7 @@ const getRegistryLogo = (provider: string) => {
       return <LogosAws />;
     case 'quay':
       return <LogosQuay />;
-    case 'forjejo':
+    case 'forgejo':
       return <SimpleIconsForgejo />;
     case 'gitea':
       return <SimpleIconsGitea />;

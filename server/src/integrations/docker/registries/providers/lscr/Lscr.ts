@@ -8,7 +8,8 @@ import Ghcr from '../ghcr/Ghcr';
 class Lscr extends Ghcr {
   getConfigurationSchema(): Joi.ObjectSchema<any> | Joi.AlternativesSchema<any> {
     return this.joi.object().keys({
-      token: this.joi.string().allow('').required(),
+      username: this.joi.string().required(),
+      token: this.joi.string().required(),
     });
   }
 

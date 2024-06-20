@@ -3,12 +3,11 @@ import ContainerRegistryUseCases from '../../../use-cases/ContainerRegistryUseCa
 import DeviceUseCases from '../../../use-cases/DeviceUseCases';
 import Custom from '../registries/providers/custom/Custom';
 import Ecr from '../registries/providers/ecr/Ecr';
-import Forjejo from '../registries/providers/forjejo/Forjejo';
+import Forgejo from '../registries/providers/forgejo/Forgejo';
 import Gcr from '../registries/providers/gcr/Gcr';
 import Ghcr from '../registries/providers/ghcr/Ghcr';
 import Gitea from '../registries/providers/gitea/Gitea';
 import Gitlab from '../registries/providers/gitlab/Gitlab';
-import Hotio from '../registries/providers/hotio/Hotio';
 import Hub from '../registries/providers/hub/Hub';
 import Lscr from '../registries/providers/lscr/Lscr';
 import providerConf from '../registries/providers/provider.conf';
@@ -60,14 +59,12 @@ function getComponentClass(
       return new Ghcr();
     case 'registry/quay':
       return new Quay();
-    case 'registry/hotio':
-      return new Hotio();
     case 'registry/ecr':
       return new Ecr();
     case 'registry/gitea':
       return new Gitea();
-    case 'registry/forjejo':
-      return new Forjejo();
+    case 'registry/forgejo':
+      return new Forgejo();
     case 'registry/lscr':
       return new Lscr();
     case 'registry/gitlab':

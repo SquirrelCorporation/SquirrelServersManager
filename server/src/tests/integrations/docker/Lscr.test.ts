@@ -4,15 +4,18 @@ import Lscr from '../../../integrations/docker/registries/providers/lscr/Lscr';
 describe('testing Lscr Registry', () => {
   const lscr = new Lscr();
   lscr.configuration = {
+    username: 'user',
     token: 'token',
   };
 
   test('validatedConfiguration should initialize when configuration is valid', () => {
     expect(
       lscr.validateConfiguration({
+        username: 'user',
         token: 'token',
       }),
     ).toStrictEqual({
+      username: 'user',
       token: 'token',
     });
   });
@@ -20,7 +23,7 @@ describe('testing Lscr Registry', () => {
   test('validatedConfiguration should throw error when configuration is missing', () => {
     expect(() => {
       lscr.validateConfiguration({});
-    }).toThrow('"token" is required');
+    }).toThrow('"username" is required');
   });
 
   test('match should return true when registry url is from lscr', () => {

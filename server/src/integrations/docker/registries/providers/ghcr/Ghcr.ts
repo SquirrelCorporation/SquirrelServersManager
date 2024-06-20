@@ -8,14 +8,10 @@ import Registry from '../../Registry';
 export default class Ghcr extends Registry {
   getConfigurationSchema(): Joi.ObjectSchema<any> | Joi.AlternativesSchema<any> {
     return this.joi.alternatives().try(
-      this.joi
-        .object()
-        .optional()
-        .keys({
-          name: this.joi.string().optional(),
-          provider: this.joi.string().optional(),
-          token: this.joi.string().allow('').required(),
-        }),
+      this.joi.object().optional().keys({
+        username: this.joi.string().required(),
+        token: this.joi.string().required(),
+      }),
       this.joi.object().equal({}),
     );
   }

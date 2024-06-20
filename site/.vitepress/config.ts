@@ -67,7 +67,6 @@ export default defineConfig({
         {
           text: 'Contribution Guide', link: '/contribute/', items: [
             { text: 'Conventions', link: '/contribute/conventions.md' },
-            { text: 'Docs', link: '/contribute/docs.md' },
             { text: 'Release', link: '/contribute/release.md' },
             { text: 'Stack', link: '/contribute/stack.md' }
           ]
@@ -104,6 +103,9 @@ export default defineConfig({
             {
               text: 'Settings', link: '/docs/settings.md', items: [
                 { text: 'Configuring a Registry', link: '/docs/registry.md' },]
+            },
+            {
+              text: 'Device Configuration', link: '/docs/device-configuration.md'
             },
             {
               text: 'Deleting a device', link: '/docs/delete-device.md'
