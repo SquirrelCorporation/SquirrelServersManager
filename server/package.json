@@ -65,7 +65,7 @@
     "@types/passport-http-bearer": "^1.0.41",
     "@types/passport-jwt": "^4.0.1",
     "@types/shelljs": "^0.8.15",
-    "@types/uuid": "^9.0.8",
+    "@types/uuid": "^10.0.0",
     "@vitest/coverage-v8": "^1.6.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
