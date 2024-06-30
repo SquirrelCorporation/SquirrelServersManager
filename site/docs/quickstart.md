@@ -54,7 +54,6 @@ services:
     restart: unless-stopped
     depends_on:
       - server
-`
 ```
 
 ### .env file
