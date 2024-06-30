@@ -32,8 +32,7 @@ git checkout master
 # Pull the latest updates
 git pull
 
-# Create a new branch for your changes
-playbooks-repository checkout -b <YOUR-BRANCH-NAME>
+git checkout -b <YOUR-BRANCH-NAME>
 ```
 
 ## Making Changes
@@ -51,13 +50,13 @@ After your changes, commit and push them to your GitHub repository.
 
 ```sh
 # Add changes
-playbooks-repository add .
+git add .
 
 # Commit the changes
-playbooks-repository commit -m "<COMMIT-MESSAGE>"
+git commit -m "<COMMIT-MESSAGE>"
 
 # Push your changes to your repository
-playbooks-repository push origin <YOUR-BRANCH-NAME>
+git push origin <YOUR-BRANCH-NAME>
 ```
 
 ## Submitting a Pull Request
