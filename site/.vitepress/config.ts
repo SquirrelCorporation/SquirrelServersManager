@@ -114,7 +114,7 @@ export default defineConfig({
         },
         {
           text: 'Technical Guide', link: '/docs/technical-guide.md', items: [
-            { text: 'Ansible', link: '/docs/playbooks.md' },
+            { text: 'Ansible', link: '/docs/ansible.md' },
             { text: 'Docker', link: '/docs/docker.md' },
             {
               text: 'Manually installing the agent', link: '/docs/manual-install-agent.md'

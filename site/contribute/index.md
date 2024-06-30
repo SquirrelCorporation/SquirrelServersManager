@@ -27,7 +27,7 @@ git clone https://github.com/SquirrelCorporation/SquirrelServersManager.git
 cd SquirrelCorporation
 
 # Ensure you are in the 'master' branch
-playbooks-repository checkout master
+git checkout master
 
 # Pull the latest updates
 playbooks-repository pull

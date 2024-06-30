@@ -1,5 +1,5 @@
 class AnsibleGalaxyCommandBuilder {
-  static readonly ansibleGalaxy = 'playbooks-galaxy';
+  static readonly ansibleGalaxy = 'ansible-galaxy';
   static readonly collection = 'collection';
 
   getInstallCollectionCmd(name: string, namespace: string) {

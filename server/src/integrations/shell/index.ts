@@ -151,7 +151,7 @@ async function deletePlaybook(playbookPath: string) {
 async function getAnsibleVersion() {
   try {
     logger.info('[SHELL] - getAnsibleVersion - Starting...');
-    return shell.exec('playbooks --version').toString();
+    return shell.exec('ansible --version').toString();
   } catch (error) {
     logger.error('[SHELL]- - getAnsibleVersion');
   }
@@ -185,10 +185,10 @@ async function installAnsibleGalaxyCollection(name: string, namespace: string) {
       await timeout(2000);
       shell.exec(
         AnsibleGalaxyCmd.getListCollectionsCmd(name, namespace) +
-          ' > /tmp/playbooks-collection-output.tmp.txt',
+          ' > /tmp/ansible-collection-output.tmp.txt',
       );
       await timeout(2000);
-      collectionList = shell.cat('/tmp/playbooks-collection-output.tmp.txt').toString();
+      collectionList = shell.cat('/tmp/ansible-collection-output.tmp.txt').toString();
     }
     if (!collectionList.includes(`${namespace}.${name}`)) {
       throw new Error('[SHELL] - installAnsibleGalaxyCollection has failed');
