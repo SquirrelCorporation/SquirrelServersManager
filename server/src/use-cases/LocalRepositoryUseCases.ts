@@ -4,7 +4,6 @@ import { NotFoundError } from '../core/api/ApiError';
 import PlaybooksRepositoryRepo from '../data/database/repository/PlaybooksRepositoryRepo';
 import { DIRECTORY_ROOT } from '../integrations/playbooks-repository/PlaybooksRepositoryComponent';
 import PlaybooksRepositoryEngine from '../integrations/playbooks-repository/PlaybooksRepositoryEngine';
-import { createDirectoryWithFullPath } from '../integrations/shell/utils';
 import logger from '../logger';
 
 async function addLocalRepository(name: string) {
@@ -16,7 +15,6 @@ async function addLocalRepository(name: string) {
     enabled: true,
     directory: DIRECTORY_ROOT,
   });
-  logger.info(localRepository.uuid);
   await PlaybooksRepositoryRepo.create({
     uuid,
     type: Playbooks.PlaybooksRepositoryType.LOCAL,
@@ -25,7 +23,7 @@ async function addLocalRepository(name: string) {
     enabled: true,
   });
   try {
-    await createDirectoryWithFullPath(localRepository.getDirectory());
+    await localRepository.init();
     void localRepository.syncToDatabase();
   } catch (error: any) {
     logger.warn(error);

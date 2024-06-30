@@ -10,7 +10,7 @@ import logger from '../../logger';
 import { Playbooks } from '../../types/typings';
 import Shell from '../shell';
 import { deleteFilesAndDirectory } from '../shell/utils';
-import { recursivelyFlattenTree } from './utils';
+import { recursivelyFlattenTree } from './tree-utils';
 
 export const DIRECTORY_ROOT = '/playbooks';
 export const FILE_PATTERN = /\.yml$/;
@@ -160,7 +160,6 @@ export interface AbstractComponent extends PlaybooksRepositoryComponent {
   save(playbookUuid: string, content: string): Promise<void>;
   init(): Promise<void>;
   delete(): Promise<void>;
-  syncToRepository(): Promise<void>;
   syncFromRepository(): Promise<void>;
 }
 

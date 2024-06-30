@@ -5,7 +5,7 @@ import PlaybooksRepository from '../data/database/model/PlaybooksRepository';
 import PlaybooksRepositoryRepo from '../data/database/repository/PlaybooksRepositoryRepo';
 import PlaybooksRepositoryComponent from '../integrations/playbooks-repository/PlaybooksRepositoryComponent';
 import PlaybooksRepositoryEngine from '../integrations/playbooks-repository/PlaybooksRepositoryEngine';
-import { recursiveTreeCompletion } from '../integrations/playbooks-repository/utils';
+import { recursiveTreeCompletion } from '../integrations/playbooks-repository/tree-utils';
 import shell from '../integrations/shell';
 import { createDirectoryWithFullPath, deleteFilesAndDirectory } from '../integrations/shell/utils';
 import logger from '../logger';

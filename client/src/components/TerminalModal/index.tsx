@@ -111,7 +111,7 @@ const TerminalModal = (props: TerminalModalProps) => {
     try {
       const res = !props.terminalProps.quickRef
         ? await executePlaybook(
-            props.terminalProps.command,
+            props.terminalProps.command as string,
             props.terminalProps.target?.map((e) => e.uuid),
             props.terminalProps.extraVars,
           )

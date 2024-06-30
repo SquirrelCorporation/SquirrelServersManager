@@ -121,13 +121,6 @@ class GitRepositoryComponent extends PlaybooksRepositoryComponent implements Abs
     await this.clone();
   }
 
-  async syncToRepository() {
-    const files = await findFilesInDirectory(this.directory, FILE_PATTERN);
-    for (const file of files) {
-      this.childLogger.info(`syncToDatabase --> ${file}`);
-    }
-  }
-
   async syncFromRepository() {
     await this.forcePull();
   }

@@ -19,10 +19,6 @@ class LocalRepositoryComponent extends PlaybooksRepositoryComponent implements A
   async syncFromRepository(): Promise<void> {
     await this.syncToDatabase();
   }
-
-  async syncToRepository(): Promise<void> {
-    await this.syncToDatabase();
-  }
 }
 
 export default LocalRepositoryComponent;
