@@ -32,6 +32,7 @@ git checkout master
 # Pull the latest updates
 git pull
 
+# Create a new branch for your changes
 git checkout -b <YOUR-BRANCH-NAME>
 ```
 
