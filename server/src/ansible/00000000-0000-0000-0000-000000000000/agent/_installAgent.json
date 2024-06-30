@@ -1,0 +1,16 @@
+{
+  "playableInBatch": false,
+  "uniqueQuickRef": "installAgent",
+  "extraVars": [
+    {
+      "extraVar": "_ssm_masterNodeUrl",
+      "required": true,
+      "canBeOverride": true
+    },
+    {
+      "extraVar": "_ssm_deviceId",
+      "required": true,
+      "canBeOverride": false
+    }
+  ]
+}

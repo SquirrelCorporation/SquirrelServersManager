@@ -1,7 +1,7 @@
 import { API } from 'ssm-shared-lib';
 import { describe, expect, test } from 'vitest';
 import User from '../../../data/database/model/User';
-import type { Ansible } from '../../../types/typings';
+import type { Playbooks } from '../../../types/typings';
 import AnsibleCmd from '../../../integrations/ansible/AnsibleCmd'; // note: replace with actual file path
 
 describe('helper functions', () => {
@@ -14,7 +14,7 @@ describe('helper functions', () => {
           hosts: ['host1\\example', 'host2\\example'],
         },
       },
-    } as Ansible.All & Ansible.HostGroups;
+    } as Playbooks.All & Playbooks.HostGroups;
     const result = AnsibleCmd.sanitizeInventory(inventory);
     const expectedResult =
       '\'{"all":{"example_group":{"hosts":["host1\\example","host2\\example"]}}}\'';
@@ -22,7 +22,7 @@ describe('helper functions', () => {
   });
 
   test('sanitizeInventory handles empty inventory', () => {
-    const inventory = {} as Ansible.All & Ansible.HostGroups;
+    const inventory = {} as Playbooks.All & Playbooks.HostGroups;
     const result = AnsibleCmd.sanitizeInventory(inventory);
     const expectedResult = "'{}'";
     expect(result).toEqual(expectedResult);
@@ -33,13 +33,13 @@ describe('helper functions', () => {
     // @ts-expect-error partial type
     const inventory = {
       all: { hosts: ['testhost1', 'testhost2'] },
-    } as Ansible.All & Ansible.HostGroups;
+    } as Playbooks.All & Playbooks.HostGroups;
     const result = AnsibleCmd.getInventoryTargets(inventory);
     expect(result).toEqual(`--specific-host ${AnsibleCmd.sanitizeInventory(inventory)}`);
   });
 
   test('getInventoryTargets handles empty targets', () => {
-    const inventory = {} as Ansible.All & Ansible.HostGroups;
+    const inventory = {} as Playbooks.All & Playbooks.HostGroups;
     const result = AnsibleCmd.getInventoryTargets(inventory);
     expect(result).toEqual("--specific-host '{}'");
   });
@@ -84,7 +84,7 @@ describe('buildAnsibleCmd() function', () => {
         hosts: ['host1', 'host2'],
       },
     },
-  } as Ansible.All & Ansible.HostGroups;
+  } as Playbooks.All & Playbooks.HostGroups;
 
   const extraVars: API.ExtraVars = [
     {

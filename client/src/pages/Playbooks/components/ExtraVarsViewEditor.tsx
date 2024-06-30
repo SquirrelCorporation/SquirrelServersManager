@@ -14,10 +14,10 @@ import {
   getPlaybooks,
   postExtraVarValue,
   postPlaybookExtraVar,
-} from '@/services/rest/ansible';
+} from '@/services/rest/playbooks';
 
 export type ExtraVarsViewEditionProps = {
-  playbook: API.PlaybookFileList;
+  playbook: API.PlaybookFile;
 };
 
 const ExtraVarsViewEditor: React.FC<ExtraVarsViewEditionProps> = (
@@ -33,7 +33,7 @@ const ExtraVarsViewEditor: React.FC<ExtraVarsViewEditionProps> = (
   };
   const handleRemove = async (extraVarName: string) => {
     await deletePlaybookExtraVar(
-      extraVarViewEditorProps.playbook.label,
+      extraVarViewEditorProps.playbook.uuid,
       extraVarName,
     );
     setCurrentExtraVars(
@@ -47,7 +47,7 @@ const ExtraVarsViewEditor: React.FC<ExtraVarsViewEditionProps> = (
   return (
     <>
       <Collapse
-        key={extraVarViewEditorProps.playbook.label}
+        key={extraVarViewEditorProps.playbook.path}
         bordered={false}
         style={{ width: '100%', marginBottom: 10 }}
         size="small"
@@ -149,7 +149,7 @@ const ExtraVarsViewEditor: React.FC<ExtraVarsViewEditionProps> = (
                           true,
                       };
                       await postPlaybookExtraVar(
-                        extraVarViewEditorProps.playbook?.value,
+                        extraVarViewEditorProps.playbook?.uuid,
                         newExtraVar,
                       );
                       setShowCreateNewVarForm(false);

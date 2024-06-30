@@ -2,11 +2,9 @@ import { API } from 'ssm-shared-lib';
 import { setToCache } from '../data/cache';
 import Playbook, { PlaybookModel } from '../data/database/model/Playbook';
 import User from '../data/database/model/User';
-import PlaybookRepo from '../data/database/repository/PlaybookRepo';
 import ExtraVars from '../integrations/ansible/utils/ExtraVars';
 import shell from '../integrations/shell';
-import logger from '../logger';
-import { Ansible } from '../types/typings';
+import { Playbooks } from '../types/typings';
 
 async function completeExtraVar(
   playbook: Playbook,
@@ -30,100 +28,31 @@ async function executePlaybook(
   target: string[] | undefined,
   extraVarsForcedValues?: API.ExtraVars,
 ) {
-  let substitutedExtraVars: API.ExtraVars | undefined = await completeExtraVar(
+  const substitutedExtraVars: API.ExtraVars | undefined = await completeExtraVar(
     playbook,
     target,
     extraVarsForcedValues,
   );
-  return await shell.executePlaybook(playbook.name, user, target, substitutedExtraVars);
+  return await shell.executePlaybook(playbook.path, user, target, substitutedExtraVars);
 }
 
 async function executePlaybookOnInventory(
   playbook: Playbook,
   user: User,
-  inventoryTargets?: Ansible.All & Ansible.HostGroups,
+  inventoryTargets?: Playbooks.All & Playbooks.HostGroups,
   extraVarsForcedValues?: API.ExtraVars,
 ) {
-  let substitutedExtraVars: API.ExtraVars | undefined = await completeExtraVar(
+  const substitutedExtraVars: API.ExtraVars | undefined = await completeExtraVar(
     playbook,
     undefined,
     extraVarsForcedValues,
   );
   return await shell.executePlaybookOnInventory(
-    playbook.name,
+    playbook.path,
     user,
     inventoryTargets,
     substitutedExtraVars,
   );
-}
-
-async function initPlaybook() {
-  logger.info(`[USECASES][PLAYBOOK] - initPlaybook`);
-
-  const playbooks = await shell.listPlaybooks();
-  const playbookPromises = playbooks?.map(async (playbook) => {
-    const configurationFileContent = await shell.readPlaybookConfiguration(
-      playbook.replaceAll('.yml', '.json'),
-    );
-
-    const isCustomPlaybook = !playbook.startsWith('_');
-    const playbookData: Playbook = {
-      name: playbook,
-      custom: isCustomPlaybook,
-    };
-
-    if (configurationFileContent) {
-      logger.info(`[USECASES][PLAYBOOK] - playbook has configuration file`);
-
-      const playbookConfiguration = JSON.parse(
-        configurationFileContent,
-      ) as Ansible.PlaybookConfigurationFile;
-
-      playbookData.playableInBatch = playbookConfiguration.playableInBatch;
-      playbookData.extraVars = playbookConfiguration.extraVars;
-    }
-
-    await PlaybookRepo.updateOrCreate(playbookData);
-  });
-
-  await Promise.all(playbookPromises);
-}
-
-async function getAllPlaybooks() {
-  const listOfPlaybooks = await PlaybookRepo.findAll();
-  if (!listOfPlaybooks) {
-    return [];
-  }
-
-  const substitutedListOfPlaybooks = listOfPlaybooks.map(async (playbook) => {
-    const extraVars = playbook.extraVars
-      ? await ExtraVars.findValueOfExtraVars(playbook.extraVars, undefined, true)
-      : undefined;
-    return {
-      value: playbook.name,
-      label: playbook.name.replaceAll('.yml', ''),
-      extraVars,
-      custom: playbook.custom,
-    };
-  });
-
-  return (await Promise.all(substitutedListOfPlaybooks)).sort((a) =>
-    a.value.startsWith('_') ? -1 : 1,
-  );
-}
-
-async function createCustomPlaybook(name: string) {
-  if (!name.endsWith('.yml')) {
-    name += '.yml';
-  }
-  await PlaybookModel.create({ name: name, custom: true }).then(async () => {
-    await shell.newPlaybook(name);
-  });
-}
-
-async function deleteCustomPlaybook(playbook: Playbook) {
-  await PlaybookModel.deleteOne({ name: playbook.name });
-  await shell.deletePlaybook(playbook.name);
 }
 
 async function addExtraVarToPlaybook(playbook: Playbook, extraVar: API.ExtraVar) {
@@ -152,10 +81,6 @@ async function deleteExtraVarFromPlaybook(playbook: Playbook, extraVarName: stri
 }
 
 export default {
-  initPlaybook,
-  getAllPlaybooks,
-  createCustomPlaybook,
-  deleteCustomPlaybook,
   executePlaybook,
   executePlaybookOnInventory,
   addExtraVarToPlaybook,

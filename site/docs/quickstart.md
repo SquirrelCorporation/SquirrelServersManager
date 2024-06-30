@@ -92,7 +92,7 @@ docker compose up
 
 ### 1. Clone the main repo
 ```shell
-git clone https://github.com/SquirrelCorporation/SquirrelServersManager
+playbooks-repository clone https://github.com/SquirrelCorporation/SquirrelServersManager
 ```
 ### 2. CD to the directory:
 ```shell
@@ -138,7 +138,7 @@ Docker will create a volume directory *.data.prod* in the directory for persiste
 In SSM cloned directory:
 
 ```shell
-git pull
+playbooks-repository pull
 ```
 
 ```shell

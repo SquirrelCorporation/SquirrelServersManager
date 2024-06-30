@@ -1,5 +1,5 @@
 import taskStatusTimeline from '@/components/TerminalModal/TaskStatusTimeline';
-import { getExecLogs, getTaskStatuses } from '@/services/rest/ansible';
+import { getExecLogs, getTaskStatuses } from '@/services/rest/playbooks';
 import { StepsProps } from 'antd';
 import React, { ReactNode } from 'react';
 import { API } from 'ssm-shared-lib';

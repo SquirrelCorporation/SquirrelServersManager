@@ -31,7 +31,7 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
       if (DeviceQuickActionReference[idx].type === Types.PLAYBOOK) {
         props.setTerminal({
           isOpen: true,
-          command: DeviceQuickActionReference[idx].playbookFile,
+          quickRef: DeviceQuickActionReference[idx].playbookQuickRef,
           target: props.target,
         });
       } else if (

@@ -1,42 +1,26 @@
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
+import DirectoryTreeView from '@/pages/Playbooks/components/DirectoryTreeView';
 import ExtraVarsViewEditor from '@/pages/Playbooks/components/ExtraVarsViewEditor';
-import GalaxyStoreModal from '@/pages/Playbooks/components/GalaxyStoreModal';
-import NewPlaybookModalForm from '@/pages/Playbooks/components/NewPlaybookModalForm';
+import FloatingButtonsBar from '@/pages/Playbooks/components/FloatingButtonsBar';
+import {
+  buildTree,
+  ClientPlaybooksTrees,
+} from '@/pages/Playbooks/components/TreeComponent';
 import {
   deletePlaybook,
-  getPlaybooks,
-  newPlaybook,
   patchPlaybook,
   readPlaybookContent,
-} from '@/services/rest/ansible';
+} from '@/services/rest/playbooks';
 import {
-  AppstoreOutlined,
-  FileOutlined,
-  FileSearchOutlined,
-  PlaySquareOutlined,
-  RedoOutlined,
-  SaveOutlined,
-} from '@ant-design/icons';
-import {
-  ModalForm,
-  PageContainer,
-  ProFormText,
-} from '@ant-design/pro-components';
+  createDirectoryInRepository,
+  createEmptyPlaybookInRepository,
+  deleteAnyInRepository,
+  getPlaybooksRepositories,
+} from '@/services/rest/playbooks-repositories';
+import { PlaySquareOutlined } from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-components';
 import Editor, { Monaco } from '@monaco-editor/react';
-import {
-  Button,
-  Card,
-  Col,
-  FloatButton,
-  message,
-  Popconfirm,
-  Result,
-  Row,
-  Spin,
-  Tree,
-  Typography,
-} from 'antd';
-import { AddCircleOutline, DeleteOutline } from 'antd-mobile-icons';
+import { Col, message, Result, Row, Spin, Typography } from 'antd';
 import type { DirectoryTreeProps } from 'antd/es/tree';
 import { editor } from 'monaco-editor';
 import { configureMonacoYaml } from 'monaco-yaml';
@@ -59,38 +43,114 @@ window.MonacoEnvironment = {
   },
 };
 
-const { DirectoryTree } = Tree;
-
 const { Paragraph, Text } = Typography;
 
 const Index: React.FC = () => {
-  const [playbookFilesList, setPlaybookFilesList] = React.useState<
-    API.PlaybookFileList[]
+  const [playbookRepositories, setPlaybookRepositories] = React.useState<
+    ClientPlaybooksTrees[]
   >([]);
   const [selectedFile, setSelectedFile] = React.useState<
-    API.PlaybookFileList | undefined
+    API.PlaybookFile | undefined
   >();
   const [downloadedContent, setDownloadedContent] = React.useState<
     string | undefined
   >();
   const [isLoading, setIsLoading] = React.useState(false);
   const editorRef = React.useRef(null);
-  const [storeModal, setStoreModal] = React.useState(false);
+  const [newRepositoryFileModal, setNewRepositoryFileModal] = React.useState({
+    opened: false,
+    playbookRepositoryUuid: '',
+    playbookRepositoryName: '',
+    playbookRepositoryBasePath: '',
+    path: '',
+    mode: '',
+  });
 
   const asyncFetchPlaybookContent = async () => {
     if (selectedFile) {
-      await readPlaybookContent(selectedFile.value).then((content) => {
-        setDownloadedContent(content.data);
-      });
+      if (selectedFile.uuid) {
+        await readPlaybookContent(selectedFile.uuid)
+          .then((content) => {
+            setDownloadedContent(content.data);
+          })
+          .catch(() => {
+            setIsLoading(false);
+          });
+      } else {
+        message.error(
+          'Selected file has no uuid - try to synchronize again the repo',
+        );
+      }
     }
     setIsLoading(false);
   };
-  const asyncFetch = async (createdPlaybook?: string) => {
-    await getPlaybooks().then((list) => {
+
+  const handleShouldCreatePlaybook = (
+    path: string,
+    playbookRepositoryUuid: string,
+    playbookRepositoryName: string,
+    playbookRepositoryBasePath: string,
+  ) => {
+    setNewRepositoryFileModal({
+      opened: true,
+      mode: 'playbook',
+      path: path,
+      playbookRepositoryUuid: playbookRepositoryUuid,
+      playbookRepositoryName: playbookRepositoryName,
+      playbookRepositoryBasePath: playbookRepositoryBasePath,
+    });
+  };
+
+  const handleShouldCreateRepository = (
+    path: string,
+    playbookRepositoryUuid: string,
+    playbookRepositoryName: string,
+    playbookRepositoryBasePath: string,
+  ) => {
+    setNewRepositoryFileModal({
+      opened: true,
+      mode: 'directory',
+      path: path,
+      playbookRepositoryUuid: playbookRepositoryUuid,
+      playbookRepositoryName: playbookRepositoryName,
+      playbookRepositoryBasePath: playbookRepositoryBasePath,
+    });
+  };
+
+  const handleShouldDeleteFile = async (
+    playbooksRepositoryUuid: string,
+    path: string,
+  ) => {
+    setIsLoading(true);
+    await deleteAnyInRepository(playbooksRepositoryUuid, path)
+      .then(async () => {
+        message.warning(`File deleted`);
+        if (selectedFile?.path === path) {
+          setSelectedFile(undefined);
+        }
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        await asyncFetch();
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
+  };
+
+  const asyncFetch = async (createdPlaybook?: API.PlaybookFile) => {
+    await getPlaybooksRepositories().then((list) => {
       if (list?.data) {
-        setPlaybookFilesList(list.data);
+        setPlaybookRepositories(
+          list.data.map((e: API.PlaybooksRepository) => {
+            return buildTree(e, {
+              callbackCreatePlaybook: handleShouldCreatePlaybook,
+              callbackCreateDirectory: handleShouldCreateRepository,
+              callbackDeleteFile: handleShouldDeleteFile,
+            });
+          }),
+        );
         if (createdPlaybook) {
-          setSelectedFile(list.data.find((e) => e.label === createdPlaybook));
+          setSelectedFile(createdPlaybook);
         }
       } else {
         message.error({
@@ -101,26 +161,26 @@ const Index: React.FC = () => {
     });
   };
   useEffect(() => {
-    asyncFetch();
+    void asyncFetch();
   }, []);
   useEffect(() => {
-    asyncFetchPlaybookContent();
+    void asyncFetchPlaybookContent();
   }, [selectedFile]);
 
   const onSelect: DirectoryTreeProps['onSelect'] = (keys, info) => {
-    if (keys[0] !== selectedFile?.label) {
+    if (keys[0] !== selectedFile?.path) {
       setIsLoading(true);
-      setSelectedFile(
-        playbookFilesList.find((e) => e.value === (keys[0] as string)),
-      );
+      const playbook = info.node as unknown as ClientPlaybooksTrees;
+      setSelectedFile({
+        name: playbook._name,
+        extraVars: playbook.extraVars || [],
+        uuid: playbook.uuid || '',
+        path: playbook.key,
+        custom: playbook.custom,
+      });
     }
     console.log('Trigger Select', keys, info);
   };
-
-  const onExpand: DirectoryTreeProps['onExpand'] = (keys, info) => {
-    console.log('Trigger Expand', keys, info);
-  };
-  const keywords = ['ansible', 'test', 'ggg'];
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-shadow
   const editorDidMount = (editor: IStandaloneCodeEditor, monaco: Monaco) => {
@@ -143,9 +203,9 @@ const Index: React.FC = () => {
   const onClickDeletePlaybook = async () => {
     if (selectedFile) {
       setIsLoading(true);
-      await deletePlaybook(selectedFile.value)
+      await deletePlaybook(selectedFile.uuid)
         .then(async () => {
-          message.warning(`Playbook '${selectedFile.value}' deleted`);
+          message.warning(`Playbook '${selectedFile.name}' deleted`);
           setSelectedFile(undefined);
           await asyncFetch();
           setIsLoading(false);
@@ -163,9 +223,9 @@ const Index: React.FC = () => {
     if (selectedFile && editorRef.current?.getValue()) {
       setIsLoading(true);
       // @ts-ignore
-      await patchPlaybook(selectedFile.value, editorRef.current.getValue())
+      await patchPlaybook(selectedFile.uuid, editorRef.current.getValue())
         .then(() => {
-          message.success(`Playbook '${selectedFile.value}' saved`);
+          message.success(`Playbook '${selectedFile.name}' saved`);
           setIsLoading(false);
         })
         .catch(() => {
@@ -185,20 +245,50 @@ const Index: React.FC = () => {
     }
   };
 
-  const submitNewPlaybook = async (name: string) => {
+  const createNewFile = async (
+    playbooksRepositoryUuid: string,
+    fileName: string,
+    fullPath: string,
+    mode: 'directory' | 'playbook',
+  ): Promise<boolean> => {
     setIsLoading(true);
-    return await newPlaybook(name)
-      .then(async () => {
-        message.success(`Playbook '${name}' successfully created`);
-        await asyncFetch(name);
-        setIsLoading(false);
-        return true;
-      })
-      .catch(async () => {
-        await asyncFetch();
-        setIsLoading(false);
-        return false;
-      });
+    if (mode === 'playbook') {
+      return await createEmptyPlaybookInRepository(
+        playbooksRepositoryUuid,
+        fileName,
+        fullPath,
+      )
+        .then(async (e) => {
+          message.success(`Playbook '${fileName}' successfully created`);
+          await asyncFetch(e.data);
+          setIsLoading(false);
+          return true;
+        })
+        .catch(async () => {
+          await asyncFetch();
+          setIsLoading(false);
+          return false;
+        });
+    }
+    if (mode === 'directory') {
+      return await createDirectoryInRepository(
+        playbooksRepositoryUuid,
+        fileName,
+        fullPath,
+      )
+        .then(async () => {
+          message.success(`Directory '${fileName}' successfully created`);
+          await asyncFetch();
+          setIsLoading(false);
+          return true;
+        })
+        .catch(async () => {
+          await asyncFetch();
+          setIsLoading(false);
+          return false;
+        });
+    }
+    throw new Error('Mode is unknown');
   };
 
   return (
@@ -216,81 +306,31 @@ const Index: React.FC = () => {
       <Spin spinning={isLoading} fullscreen />
       <Row wrap={false} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
         <Col span={6}>
-          <Card
-            title="List of playbooks"
-            bordered={false}
-            style={{ width: '300px', minHeight: '90vh' }}
-            extra={[
-              <Button
-                icon={<AppstoreOutlined />}
-                onClick={() => setStoreModal(true)}
-              >
-                Store
-              </Button>,
-            ]}
-          >
-            <GalaxyStoreModal open={storeModal} setOpen={setStoreModal} />
-            <DirectoryTree
-              multiple
-              defaultExpandAll
-              onSelect={onSelect}
-              onExpand={onExpand}
-              treeData={playbookFilesList?.map((e) => {
-                return {
-                  title: e.label,
-                  key: e.value,
-                  icon: ({ selected }) =>
-                    selected ? <FileSearchOutlined /> : <FileOutlined />,
-                };
-              })}
-              selectedKeys={[selectedFile?.value as React.Key]}
-            />
-            <NewPlaybookModalForm
-              submitNewPlaybook={submitNewPlaybook}
-              playbookFilesList={playbookFilesList}
-            />
-          </Card>
+          <DirectoryTreeView
+            onSelect={onSelect}
+            playbookRepositories={playbookRepositories}
+            newRepositoryFileModal={newRepositoryFileModal}
+            setNewRepositoryFileModal={setNewRepositoryFileModal}
+            createNewFile={createNewFile}
+            selectedFile={selectedFile}
+          />
         </Col>
         <Col span={18}>
           {(selectedFile && (
             <>
-              <FloatButton.Group shape="square" style={{ right: 94 }}>
-                <FloatButton
-                  onClick={onClickSavePlaybook}
-                  tooltip={'Save file'}
-                  icon={<SaveOutlined style={{ color: 'blueviolet' }} />}
-                />
-                <FloatButton.BackTop
-                  tooltip={'Scroll to top'}
-                  visibilityHeight={0}
-                />
-                <FloatButton
-                  tooltip={'Reset changes'}
-                  icon={<RedoOutlined />}
-                  onClick={onClickUndoPlaybook}
-                />
-                {!selectedFile?.value.startsWith('_') && (
-                  <Popconfirm
-                    title="Delete the playbook"
-                    description="Are you sure to delete this playbook?"
-                    onConfirm={onClickDeletePlaybook}
-                    okText="Yes"
-                    cancelText="No"
-                  >
-                    <FloatButton
-                      tooltip={'Delete file'}
-                      icon={<DeleteOutline style={{ color: 'red' }} />}
-                    />
-                  </Popconfirm>
-                )}
-              </FloatButton.Group>
+              <FloatingButtonsBar
+                onClickSavePlaybook={onClickSavePlaybook}
+                onClickDeletePlaybook={onClickDeletePlaybook}
+                onClickUndoPlaybook={onClickUndoPlaybook}
+                selectedFile={selectedFile}
+              />
               <ExtraVarsViewEditor playbook={selectedFile} />
               <Editor
                 theme="vs-dark"
                 height="90vh"
                 //defaultLanguage="yaml"
                 language="yaml"
-                path={selectedFile?.value || 'playbook.yml'}
+                path={selectedFile?.path || 'playbook.yml'}
                 value={downloadedContent}
                 onMount={editorDidMount}
               />

@@ -1,7 +1,7 @@
 import { SsmAnsible } from 'ssm-shared-lib';
 import DeviceAuth from '../../../data/database/model/DeviceAuth';
 import logger from '../../../logger';
-import { Ansible } from '../../../types/typings';
+import { Playbooks } from '../../../types/typings';
 
 function generateDeviceKey(uuid: string) {
   return `device${uuid.replaceAll('-', '')}`;
@@ -10,7 +10,7 @@ function generateDeviceKey(uuid: string) {
 function inventoryBuilder(devicesAuth: DeviceAuth[]) {
   logger.info(`[TRANSFORMERS][INVENTORY] - Inventory for ${devicesAuth.length} device(s)`);
   // @ts-expect-error
-  const ansibleInventory: Ansible.Hosts = {
+  const ansibleInventory: Playbooks.Hosts = {
     _meta: { hostvars: {} },
     all: { children: [] },
   };
@@ -36,7 +36,7 @@ function inventoryBuilder(devicesAuth: DeviceAuth[]) {
 
 function inventoryBuilderForTarget(devicesAuth: Partial<DeviceAuth>[]) {
   logger.info(`[TRANSFORMERS][INVENTORY] - Inventory for ${devicesAuth.length} device(s)`);
-  const ansibleInventory: Ansible.All & Ansible.HostGroups = {
+  const ansibleInventory: Playbooks.All & Playbooks.HostGroups = {
     // @ts-expect-error I cannot comprehend generic typescript type
     all: {},
   };
@@ -50,7 +50,7 @@ function inventoryBuilderForTarget(devicesAuth: Partial<DeviceAuth>[]) {
       vars: getInventoryConnectionVars(e),
     };
   });
-  logger.info(ansibleInventory);
+  logger.debug(ansibleInventory);
   return ansibleInventory;
 }
 

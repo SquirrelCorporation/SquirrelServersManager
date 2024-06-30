@@ -7,7 +7,7 @@ import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
 import logger from '../../logger';
 import AnsibleGalaxyCmd from '../ansible/AnsibleGalaxyCmd';
 import Inventory from '../ansible/utils/InventoryTransformer';
-import { Ansible } from '../../types/typings';
+import { Playbooks } from '../../types/typings';
 import ansibleCmd from '../ansible/AnsibleCmd';
 
 export const ANSIBLE_PATH = '/server/src/ansible/';
@@ -17,41 +17,40 @@ function timeout(ms: number) {
 }
 
 async function executePlaybook(
-  playbook: string,
+  playbookPath: string,
   user: User,
   target?: string[],
   extraVars?: API.ExtraVars,
 ) {
   logger.info('[SHELL]-[ANSIBLE] - executePlaybook - Starting...');
 
-  let inventoryTargets: (Ansible.All & Ansible.HostGroups) | undefined;
+  let inventoryTargets: (Playbooks.All & Playbooks.HostGroups) | undefined;
   if (target) {
     logger.info(`[SHELL]-[ANSIBLE] - executePlaybook - called with target: ${target}`);
     const devicesAuth = await DeviceAuthRepo.findManyByDevicesUuid(target);
     if (!devicesAuth || devicesAuth.length === 0) {
-      logger.error(`[SHELL]-[ANSIBLE] - executePlaybook - Target not found`);
-      throw new Error('Exec failed, no matching target');
+      logger.error(
+        `[SHELL]-[ANSIBLE] - executePlaybook - Target not found (Authentication not found)`,
+      );
+      throw new Error('Exec failed, no matching target (Authentication not found)');
     }
     inventoryTargets = Inventory.inventoryBuilderForTarget(devicesAuth);
   }
-  return await executePlaybookOnInventory(playbook, user, inventoryTargets, extraVars);
+  return await executePlaybookOnInventory(playbookPath, user, inventoryTargets, extraVars);
 }
 
 async function executePlaybookOnInventory(
-  playbook: string,
+  playbookPath: string,
   user: User,
-  inventoryTargets?: Ansible.All & Ansible.HostGroups,
+  inventoryTargets?: Playbooks.All & Playbooks.HostGroups,
   extraVars?: API.ExtraVars,
 ) {
-  if (!playbook.endsWith('.yml')) {
-    playbook += '.yml';
-  }
   shell.cd(ANSIBLE_PATH);
-  shell.rm('/server/src/ansible/inventory/hosts');
-  shell.rm('/server/src/ansible/env/_extravars');
+  shell.rm('/server/src/playbooks/inventory/hosts');
+  shell.rm('/server/src/playbooks/env/_extravars');
   const uuid = uuidv4();
   const result = await new Promise<string | null>((resolve) => {
-    const cmd = ansibleCmd.buildAnsibleCmd(playbook, uuid, inventoryTargets, user, extraVars);
+    const cmd = ansibleCmd.buildAnsibleCmd(playbookPath, uuid, inventoryTargets, user, extraVars);
     logger.info(`[SHELL]-[ANSIBLE] - executePlaybook - Executing ${cmd}`);
     const child = shell.exec(cmd, {
       async: true,
@@ -66,7 +65,11 @@ async function executePlaybookOnInventory(
   logger.info('[SHELL]-[ANSIBLE] - executePlaybook - launched');
   if (result) {
     logger.info(`[SHELL]-[ANSIBLE] - executePlaybook - ExecId is ${uuid}`);
-    await AnsibleTaskRepo.create({ ident: uuid, status: 'created', cmd: `playbook ${playbook}` });
+    await AnsibleTaskRepo.create({
+      ident: uuid,
+      status: 'created',
+      cmd: `playbook ${playbookPath}`,
+    });
     return result;
   } else {
     logger.error('[SHELL]-[ANSIBLE] - executePlaybook - Result was not properly set');
@@ -93,7 +96,6 @@ async function listPlaybooks() {
 async function readPlaybook(playbook: string) {
   try {
     logger.info(`[SHELL]-[ANSIBLE] - readPlaybook - ${playbook}  - Starting...`);
-    shell.cd(ANSIBLE_PATH);
     return shell.cat(playbook).toString();
   } catch (error) {
     logger.error('[SHELL]-[ANSIBLE] - readPlaybook');
@@ -101,28 +103,24 @@ async function readPlaybook(playbook: string) {
   }
 }
 
-async function readPlaybookConfiguration(playbookConfigurationFile: string) {
+async function readPlaybookConfigurationFileIfExists(path: string) {
   try {
-    logger.info(
-      `[SHELL]-[ANSIBLE] - readPlaybookConfiguration - ${playbookConfigurationFile} - Starting...`,
-    );
-    shell.cd(ANSIBLE_PATH);
-    if (!shell.test('-f', ANSIBLE_PATH + playbookConfigurationFile)) {
+    logger.info(`[SHELL]-[ANSIBLE] - readPlaybookConfiguration - ${path} - Starting...`);
+    if (!shell.test('-f', `${path}`)) {
       logger.info(`[SHELL]-[ANSIBLE] - readPlaybookConfiguration - not found`);
       return undefined;
     }
-    return shell.cat(playbookConfigurationFile).toString();
+    return shell.cat(`${path}`).toString();
   } catch (error) {
     logger.error('[SHELL]-[ANSIBLE] - readPlaybookConfiguration');
     throw new Error('readPlaybookConfiguration failed');
   }
 }
 
-async function editPlaybook(playbook: string, content: string) {
+async function editPlaybook(playbookPath: string, content: string) {
   try {
     logger.info('[SHELL]-[ANSIBLE] - editPlaybook - Starting...');
-    shell.cd(ANSIBLE_PATH);
-    shell.ShellString(content).to(playbook);
+    shell.ShellString(content).to(playbookPath);
   } catch (error) {
     logger.error('[SHELL]-[ANSIBLE] - editPlaybook');
     throw new Error('editPlaybook failed');
@@ -140,13 +138,12 @@ async function newPlaybook(playbook: string) {
   }
 }
 
-async function deletePlaybook(playbook: string) {
+async function deletePlaybook(playbookPath: string) {
   try {
-    logger.info('[SHELL]-[ANSIBLE] - newPlaybook - Starting...');
-    shell.cd(ANSIBLE_PATH);
-    shell.rm(playbook);
+    logger.info('[SHELL]-[ANSIBLE] - deletePlaybook - Starting...');
+    shell.rm(playbookPath);
   } catch (error) {
-    logger.error('[SHELL]-[ANSIBLE] - newPlaybook');
+    logger.error('[SHELL]-[ANSIBLE] - deletePlaybook');
     throw new Error('deletePlaybook failed');
   }
 }
@@ -154,7 +151,7 @@ async function deletePlaybook(playbook: string) {
 async function getAnsibleVersion() {
   try {
     logger.info('[SHELL] - getAnsibleVersion - Starting...');
-    return shell.exec('ansible --version').toString();
+    return shell.exec('playbooks --version').toString();
   } catch (error) {
     logger.error('[SHELL]- - getAnsibleVersion');
   }
@@ -186,12 +183,12 @@ async function installAnsibleGalaxyCollection(name: string, namespace: string) {
     let i = 0;
     while (!collectionList.includes(`${namespace}.${name}`) && i++ < 60) {
       await timeout(2000);
-      const resultList = shell.exec(
+      shell.exec(
         AnsibleGalaxyCmd.getListCollectionsCmd(name, namespace) +
-          ' > /tmp/ansible-collection-output.tmp.txt',
+          ' > /tmp/playbooks-collection-output.tmp.txt',
       );
       await timeout(2000);
-      collectionList = shell.cat('/tmp/ansible-collection-output.tmp.txt').toString();
+      collectionList = shell.cat('/tmp/playbooks-collection-output.tmp.txt').toString();
     }
     if (!collectionList.includes(`${namespace}.${name}`)) {
       throw new Error('[SHELL] - installAnsibleGalaxyCollection has failed');
@@ -209,7 +206,7 @@ export default {
   editPlaybook,
   newPlaybook,
   deletePlaybook,
-  readPlaybookConfiguration,
+  readPlaybookConfigurationFileIfExists,
   getAnsibleVersion,
   saveSshKey,
   executePlaybookOnInventory,

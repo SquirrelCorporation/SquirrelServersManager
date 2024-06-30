@@ -19,3 +19,4 @@ export enum AnsibleBecomeMethod {
   RUNAS = 'runas',
   MACHINECTL = 'machinectl',
 }
+

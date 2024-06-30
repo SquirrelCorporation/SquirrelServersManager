@@ -1,4 +1,4 @@
-import { getPlaybooks } from '@/services/rest/ansible';
+import { getPlaybooks } from '@/services/rest/playbooks';
 import { RightSquareOutlined } from '@ant-design/icons';
 import {
   ModalForm,
@@ -28,15 +28,18 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
 ) => {
   const [form] = Form.useForm<{ playbook: { value: string } }>();
   const [listOfPlaybooks, setListOfPlaybooks] = React.useState<
-    API.PlaybookFileList[] | undefined
+    API.PlaybookFile[] | undefined
   >();
   const [selectedPlaybookExtraVars, setSelectedPlaybookExtraVars] =
     React.useState<any>();
   const [overrideExtraVars, setOverrideExtraVars] = React.useState<any>([]);
 
-  const handleSelectedPlaybook = (newValue: API.PlaybookFileList) => {
+  const handleSelectedPlaybook = (newValue: {
+    label: string;
+    value: string;
+  }) => {
     const selectedPlaybook = listOfPlaybooks?.find(
-      (e) => e.value === newValue?.value,
+      (e) => e.uuid === newValue?.value,
     );
     if (selectedPlaybook) {
       setOverrideExtraVars(
@@ -150,9 +153,16 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
             return (await getPlaybooks()
               .then((e) => {
                 setListOfPlaybooks(e.data);
-                return e.data?.filter(({ value, label }) => {
-                  return value.includes(keyWords) || label.includes(keyWords);
-                });
+                return e.data
+                  ?.filter(({ name, path }: { name: string; path: string }) => {
+                    return name.includes(keyWords) || path.includes(keyWords);
+                  })
+                  .map((f: API.PlaybookFile) => {
+                    return {
+                      value: f.uuid,
+                      label: f.name,
+                    };
+                  });
               })
               .catch((error) => {
                 message.error({
@@ -179,7 +189,7 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
             return (
               <span style={{ marginTop: 10 }}>
                 <RightSquareOutlined /> SSM will apply &quot;
-                {playbook ? playbook.value : '?'}
+                {playbook ? playbook.label : '?'}
                 &quot; on{' '}
                 {props.itemSelected?.map((e) => {
                   return '[' + e.ip + '] ';

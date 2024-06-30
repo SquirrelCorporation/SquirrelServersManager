@@ -21,19 +21,19 @@ Firstly, start by creating your own 'fork' of our repository.
 
 ```sh
 # Clone the repository
-git clone https://github.com/SquirrelCorporation/SquirrelServersManager.git
+playbooks-repository clone https://github.com/SquirrelCorporation/SquirrelServersManager.git
 
 # Go to your local repository
 cd SquirrelCorporation
 
 # Ensure you are in the 'master' branch
-git checkout master
+playbooks-repository checkout master
 
 # Pull the latest updates
-git pull
+playbooks-repository pull
 
 # Create a new branch for your changes
-git checkout -b <YOUR-BRANCH-NAME>
+playbooks-repository checkout -b <YOUR-BRANCH-NAME>
 ```
 
 ## Making Changes
@@ -51,13 +51,13 @@ After your changes, commit and push them to your GitHub repository.
 
 ```sh
 # Add changes
-git add .
+playbooks-repository add .
 
 # Commit the changes
-git commit -m "<COMMIT-MESSAGE>"
+playbooks-repository commit -m "<COMMIT-MESSAGE>"
 
 # Push your changes to your repository
-git push origin <YOUR-BRANCH-NAME>
+playbooks-repository push origin <YOUR-BRANCH-NAME>
 ```
 
 ## Submitting a Pull Request

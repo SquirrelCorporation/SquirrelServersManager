@@ -4,7 +4,7 @@ LABEL org.opencontainers.image.description="SSM Server"
 LABEL org.opencontainers.image.licenses="GNU AFFERO GENERAL PUBLIC LICENSE"
 
 WORKDIR /server
-RUN apk update && apk add ansible nmap sudo openssh sshpass py3-pip expect
+RUN apk update && apk add ansible nmap sudo openssh sshpass py3-pip expect gcompat libcurl
 RUN npm install -g npm@latest
 RUN rm -f /usr/lib/python3.12/EXTERNALLY-MANAGED
 RUN pip install ansible-runner \
@@ -23,7 +23,7 @@ FROM base as production
 ENV NODE_ENV=production
 WORKDIR /server
 COPY . .
-RUN npm install  --verbose --no-audit
+RUN npm install --verbose --no-audit
 RUN npm run build
 CMD ["node", "./dist/src/index.js"]
 
@@ -31,5 +31,5 @@ FROM base as dev
 ENV NODE_ENV=development
 WORKDIR /server
 COPY ./nodemon.json .
-RUN npm install -g nodemon && npm install --verbose
+RUN npm install -g nodemon && npm install --verbose --no-audit
 CMD ["npm", "run", "dev"]

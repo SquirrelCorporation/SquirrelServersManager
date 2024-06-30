@@ -22,7 +22,7 @@ export enum Types {
 export type QuickActionReferenceType = {
   type: Types;
   action?: string;
-  playbookFile?: string;
+  playbookQuickRef?: string;
   label?: React.JSX.Element;
   onAdvancedMenu: boolean;
   children?: QuickActionReferenceType[];
@@ -45,7 +45,7 @@ const DeviceQuickActionReference: QuickActionReferenceType[] = [
   },
   {
     type: Types.PLAYBOOK,
-    playbookFile: '_reboot',
+    playbookQuickRef: 'reboot',
     label: (
       <>
         <ReloadOutlined /> Reboot
@@ -69,7 +69,7 @@ const DeviceQuickActionReference: QuickActionReferenceType[] = [
   },
   {
     type: Types.PLAYBOOK,
-    playbookFile: '_ping',
+    playbookQuickRef: 'ping',
     label: (
       <>
         <ShakeOutlined /> Ping
@@ -83,7 +83,7 @@ const DeviceQuickActionReference: QuickActionReferenceType[] = [
   },
   {
     type: Types.PLAYBOOK,
-    playbookFile: '_updateAgent',
+    playbookQuickRef: 'updateAgent',
     onAdvancedMenu: true,
     label: (
       <>
@@ -93,7 +93,7 @@ const DeviceQuickActionReference: QuickActionReferenceType[] = [
   },
   {
     type: Types.PLAYBOOK,
-    playbookFile: '_reinstallAgent',
+    playbookQuickRef: 'reinstallAgent',
     onAdvancedMenu: true,
     label: (
       <>
@@ -103,7 +103,7 @@ const DeviceQuickActionReference: QuickActionReferenceType[] = [
   },
   {
     type: Types.PLAYBOOK,
-    playbookFile: '_restartAgent',
+    playbookQuickRef: 'restartAgent',
     onAdvancedMenu: true,
     label: (
       <>
@@ -114,7 +114,7 @@ const DeviceQuickActionReference: QuickActionReferenceType[] = [
   {
     type: Types.PLAYBOOK,
     onAdvancedMenu: true,
-    playbookFile: '_retrieveAgentLogs',
+    playbookQuickRef: 'retrieveAgentLogs',
     label: (
       <>
         <BugOutlined /> Retrieve Agent Logs
@@ -127,7 +127,7 @@ const DeviceQuickActionReference: QuickActionReferenceType[] = [
   },
   {
     type: Types.PLAYBOOK,
-    playbookFile: '_uninstallAgent',
+    playbookQuickRef: 'uninstallAgent',
     onAdvancedMenu: true,
     label: (
       <>

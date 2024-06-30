@@ -115,7 +115,7 @@ const SoftwareIcon: React.FC<SoftwareIconType> = (props) => {
   /*
       "systemOpenssl": "3.2.0",
 
-      "git": "2.23.0",
+      "playbooks-repository": "2.23.0",
       "tsc": "5.3.3",
       "mysql": "",
       "cache": "",

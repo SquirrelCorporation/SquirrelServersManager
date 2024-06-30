@@ -5,3 +5,5 @@ export * as SsmStatus from './enums/status';
 export * as SsmAnsible from './enums/ansible';
 export * as Validation from './validation/index';
 export * as StatsType from './enums/stats';
+export * as DirectoryTree from './types/tree'
+export * as Playbooks from './enums/playbooks'
