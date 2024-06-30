@@ -8,7 +8,7 @@ Before initiating a new release, ensure you have pulled the latest changes from 
 
 ```sh
 # Pull the latest changes from the remote repository
-playbooks-repository pull origin master
+git pull origin master
 
 # Run your tests to ensure everything works as expected
 npm  test
@@ -21,11 +21,11 @@ Once your master branch is up to date and tests are passing, create a new Git ta
 ```sh
 # The format is v<MAJOR>.<MINOR>.<PATCH>
 # For example:
-playbooks-repository tag v1.0.0
+git tag v1.0.0
 ```
 
 After creating the new tag, it needs to be pushed to the GitHub repository.
 
 ```sh
-playbooks-repository push origin v1.0.0
+git push origin v1.0.0
 ```

@@ -137,7 +137,7 @@ Docker will create a volume directory *.data.prod* in the directory for persiste
 In SSM cloned directory:
 
 ```shell
-playbooks-repository pull
+git pull
 ```
 
 ```shell

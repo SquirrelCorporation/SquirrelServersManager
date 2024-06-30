@@ -30,7 +30,7 @@ cd SquirrelCorporation
 git checkout master
 
 # Pull the latest updates
-playbooks-repository pull
+git pull
 
 # Create a new branch for your changes
 playbooks-repository checkout -b <YOUR-BRANCH-NAME>

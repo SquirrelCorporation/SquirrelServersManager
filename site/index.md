@@ -27,7 +27,7 @@ features:
   - title: Ansible & Docker Compatible
     details: Thanks to the power of Ansible and Docker, you can totally manage your servers, services and configuration from SSM
     icon:
-      src: /playbooks.svg
+      src: /ansible.svg
   - title: Simple to use, yet powerful 
     details: Even is SSM is focused on easiness of use, it flexibility enables you to make powerful and complex setups
     icon:
