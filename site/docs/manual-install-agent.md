@@ -8,7 +8,7 @@ If you have difficulties installing the agent with UI, you can install it manual
 
 ### Method 1: Installing the agent with the provided shell script
 ```shell
-playbooks-repository clone https://github.com/SquirrelCorporation/SquirrelServersManager-Agent
+git clone https://github.com/SquirrelCorporation/SquirrelServersManager-Agent
 cd ./SquirrelServersManager-Agent
 ```
 Replace below MASTER_NODE_URL by the URL to SSM
@@ -27,7 +27,7 @@ and replace DEVICE_ID by the uuid of the device in SSM (Inventory, click on the 
 ### Method 2: Building & Installing the agent manually
 
 ```shell
-playbooks-repository clone https://github.com/SquirrelCorporation/SquirrelServersManager-Agent
+git clone https://github.com/SquirrelCorporation/SquirrelServersManager-Agent
 cd ./SquirrelServersManager-Agent
 ```
 

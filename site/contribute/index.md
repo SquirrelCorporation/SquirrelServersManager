@@ -21,7 +21,7 @@ Firstly, start by creating your own 'fork' of our repository.
 
 ```sh
 # Clone the repository
-playbooks-repository clone https://github.com/SquirrelCorporation/SquirrelServersManager.git
+git clone https://github.com/SquirrelCorporation/SquirrelServersManager.git
 
 # Go to your local repository
 cd SquirrelCorporation

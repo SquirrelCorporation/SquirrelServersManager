@@ -9,7 +9,7 @@ If you don't understand React or TypeScript, or have security concerns, don't us
 
 ### 1. Clone the main repo
 ```shell
-playbooks-repository clone https://github.com/SquirrelCorporation/SquirrelServersManager
+git clone https://github.com/SquirrelCorporation/SquirrelServersManager
 ```
 
 ### 2. CD to the directory and open with your favorite editor:
