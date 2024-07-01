@@ -142,11 +142,7 @@ const Index: React.FC = () => {
       if (list?.data) {
         setPlaybookRepositories(
           list.data.map((e: API.PlaybooksRepository) => {
-            return buildTree(e, {
-              callbackCreatePlaybook: handleShouldCreatePlaybook,
-              callbackCreateDirectory: handleShouldCreateRepository,
-              callbackDeleteFile: handleShouldDeleteFile,
-            });
+            return buildTree(e);
           }),
         );
         if (createdPlaybook) {
@@ -313,6 +309,11 @@ const Index: React.FC = () => {
             setNewRepositoryFileModal={setNewRepositoryFileModal}
             createNewFile={createNewFile}
             selectedFile={selectedFile}
+            callbacks={{
+              callbackCreatePlaybook: handleShouldCreatePlaybook,
+              callbackCreateDirectory: handleShouldCreateRepository,
+              callbackDeleteFile: handleShouldDeleteFile,
+            }}
           />
         </Col>
         <Col span={18}>

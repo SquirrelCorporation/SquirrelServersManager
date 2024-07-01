@@ -19,7 +19,7 @@ async function addLocalRepository(name: string) {
     uuid,
     type: Playbooks.PlaybooksRepositoryType.LOCAL,
     name,
-    directory: DIRECTORY_ROOT,
+    directory: localRepository.getDirectory(),
     enabled: true,
   });
   try {

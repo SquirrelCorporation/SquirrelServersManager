@@ -20,6 +20,7 @@ export type CreateFileInRepositoryModalFormProps = {
 const CreateFileInRepositoryModalForm: React.FC<
   CreateFileInRepositoryModalFormProps
 > = (props) => {
+  console.log(`path: ${props.path}, basedPath: ${props.basedPath}`);
   return (
     <ModalForm<{ name: string }>
       title={`Create a new ${props.mode}`}

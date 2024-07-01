@@ -1,4 +1,5 @@
 import { GitProcess } from 'dugite';
+import myLogger from '../../../logger';
 import { credentialOff, credentialOn } from './credential';
 import { defaultGitInfo as defaultDefaultGitInfo } from './defaultGitInfo';
 import {
@@ -44,7 +45,7 @@ export async function commitAndSync(options: ICommitAndSyncOptions): Promise<voi
   const {
     dir,
     remoteUrl,
-    commitMessage = 'Updated with Git-Sync',
+    commitMessage = 'Updated with SSM',
     userInfo,
     logger,
     defaultGitInfo = defaultDefaultGitInfo,
@@ -91,6 +92,9 @@ export async function commitAndSync(options: ICommitAndSyncOptions): Promise<voi
     defaultGitInfo,
     userInfo,
   });
+
+  await GitProcess.exec(['config', 'user.email', `"${email ?? defaultGitInfo.email}"`], dir);
+  await GitProcess.exec(['config', `user.name`, `"${gitUserName}"`], dir);
 
   if (await haveLocalChanges(dir)) {
     logProgress(GitStep.HaveThingsToCommit);

@@ -3,7 +3,7 @@ import { SuccessResponse } from '../../core/api/ApiResponse';
 import PlaybookRepo from '../../data/database/repository/PlaybookRepo';
 import asyncHandler from '../../helpers/AsyncHandler';
 import logger from '../../logger';
-import shell from '../../integrations/shell';
+import Shell from '../../integrations/shell';
 import PlaybooksRepositoryUseCases from '../../use-cases/PlaybooksRepositoryUseCases';
 import PlaybookUseCases from '../../use-cases/PlaybookUseCases';
 
@@ -24,7 +24,7 @@ export const getPlaybook = asyncHandler(async (req, res) => {
     throw new NotFoundError(`Playbook ${uuid} not found`);
   }
   try {
-    const content = await shell.readPlaybook(playbook.path);
+    const content = await Shell.PlaybookFileShell.readPlaybook(playbook.path);
     new SuccessResponse('Get Playbook successful', content).send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
@@ -39,7 +39,7 @@ export const editPlaybook = asyncHandler(async (req, res) => {
     throw new NotFoundError(`Playbook ${uuid} not found`);
   }
   try {
-    await shell.editPlaybook(playbook.path, req.body.content);
+    await Shell.PlaybookFileShell.editPlaybook(playbook.path, req.body.content);
     new SuccessResponse('Edit playbook successful').send(res);
   } catch (error: any) {
     throw new InternalError(error.message);

@@ -27,7 +27,7 @@ async function getAllPlaybooksRepositories() {
           children: await recursiveTreeCompletion(playbookRepository.tree),
           type: playbookRepository.type,
           uuid: playbookRepository.uuid,
-          path: playbookRepository.directory + '/' + playbookRepository.uuid,
+          path: playbookRepository.directory,
           default: playbookRepository.default,
         };
       },

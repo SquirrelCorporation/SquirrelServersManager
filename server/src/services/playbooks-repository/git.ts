@@ -101,6 +101,7 @@ export const forcePullRepository = asyncHandler(async (req, res) => {
     throw new NotFoundError();
   }
   await repository.forcePull();
+  await repository.syncToDatabase();
   return new SuccessResponse('Forced pull playbooks git repository').send(res);
 });
 
@@ -114,6 +115,7 @@ export const forceCloneRepository = asyncHandler(async (req, res) => {
     throw new NotFoundError();
   }
   await repository.clone();
+  await repository.syncToDatabase();
   return new SuccessResponse('Forced cloned playbooks git repository').send(res);
 });
 

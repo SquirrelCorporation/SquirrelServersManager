@@ -1,6 +1,9 @@
+import { Model } from 'mongoose';
 import { Playbooks, SettingsKeys } from 'ssm-shared-lib';
 import { getFromCache } from '../../data/cache';
 import initRedisValues from '../../data/cache/defaults';
+import { connection } from '../../data/database';
+import { PlaybookModel } from '../../data/database/model/Playbook';
 import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
 import Crons from '../../integrations/crons';
 import WatcherEngine from '../../integrations/docker/core/WatcherEngine';
@@ -16,7 +19,7 @@ const corePlaybooksRepository = {
   uuid: '00000000-0000-0000-0000-000000000000',
   enabled: true,
   type: Playbooks.PlaybooksRepositoryType.LOCAL,
-  directory: '/server/src/ansible',
+  directory: '/server/src/ansible/00000000-0000-0000-0000-000000000000',
   default: true,
 };
 
@@ -25,7 +28,7 @@ const toolsPlaybooksRepository = {
   uuid: '00000000-0000-0000-0000-000000000001',
   enabled: true,
   type: Playbooks.PlaybooksRepositoryType.LOCAL,
-  directory: '/server/src/ansible',
+  directory: '/server/src/ansible/00000000-0000-0000-0000-000000000001',
   default: true,
 };
 
@@ -41,7 +44,8 @@ async function init() {
   void Crons.initScheduledJobs();
   void WatcherEngine.init();
 
-  if (version !== SettingsKeys.DefaultValue.SCHEME_VERSION) {
+  if (version !== SettingsKeys.DefaultValue.SCHEME_VERSION + 1) {
+    await migrate();
     logger.warn(`[CONFIGURATION] - Scheme version differed, starting writing updates`);
     await initRedisValues();
     void setAnsibleVersion();
@@ -51,6 +55,14 @@ async function init() {
       .map((e) => {
         ContainerRegistryUseCases.addIfNotExists(e);
       });
+  }
+}
+
+async function migrate() {
+  try {
+    await PlaybookModel.syncIndexes();
+  } catch (error: any) {
+    logger.error(error);
   }
 }
 

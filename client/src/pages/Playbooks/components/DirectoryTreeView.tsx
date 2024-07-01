@@ -1,13 +1,30 @@
 import GalaxyStoreModal from '@/pages/Playbooks/components/GalaxyStoreModal';
 import CreateFileInRepositoryModalForm from '@/pages/Playbooks/components/CreateFileInRepositoryModalForm';
 import NewFileDrawerForm from '@/pages/Playbooks/components/NewFileDrawerForm';
+import PlaybookDropdownMenu from '@/pages/Playbooks/components/PlaybookDropdownMenu';
 import { ClientPlaybooksTrees } from '@/pages/Playbooks/components/TreeComponent';
 import { AppstoreOutlined } from '@ant-design/icons';
-import { Button, Card, Tree } from 'antd';
+import { Button, Card, Tree, Typography } from 'antd';
 import React, { Key } from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, DirectoryTree as SSMDirectoryTree } from 'ssm-shared-lib';
 
 const { DirectoryTree } = Tree;
+
+export type Callbacks = {
+  callbackCreateDirectory: (
+    path: string,
+    playbookRepositoryUuid: string,
+    playbookRepositoryName: string,
+    playbookRepositoryBasePath: string,
+  ) => void;
+  callbackCreatePlaybook: (
+    path: string,
+    playbookRepositoryUuid: string,
+    playbookRepositoryName: string,
+    playbookRepositoryBasePath: string,
+  ) => void;
+  callbackDeleteFile: (path: string, playbookRepositoryUuid: string) => void;
+};
 
 type DirectoryTreeViewProps = {
   onSelect: (
@@ -37,11 +54,12 @@ type DirectoryTreeViewProps = {
     mode: 'directory' | 'playbook',
   ) => Promise<boolean>;
   selectedFile?: API.PlaybookFile;
+  callbacks: Callbacks;
 };
 
 const DirectoryTreeView: React.FC<DirectoryTreeViewProps> = (props) => {
   const [storeModal, setStoreModal] = React.useState(false);
-  const [selectedPath, setSelectedPath] = React.useState('');
+  const [selectedPath, setSelectedPath] = React.useState([]);
   const {
     onSelect,
     selectedFile,
@@ -51,6 +69,7 @@ const DirectoryTreeView: React.FC<DirectoryTreeViewProps> = (props) => {
     setNewRepositoryFileModal,
   } = props;
   // @ts-ignore
+
   return (
     <Card
       title="List of playbooks"
@@ -72,7 +91,53 @@ const DirectoryTreeView: React.FC<DirectoryTreeViewProps> = (props) => {
         onSelect={onSelect}
         treeData={playbookRepositories}
         selectedKeys={[selectedFile?.path as React.Key]}
-        expandedKeys={[selectedPath as React.Key]}
+        titleRender={(node) => {
+          if (node.nodeType === SSMDirectoryTree.CONSTANTS.DIRECTORY) {
+            return (
+              <PlaybookDropdownMenu
+                type={SSMDirectoryTree.CONSTANTS.DIRECTORY}
+                path={
+                  node.rootNode ? node.playbookRepository.basePath : node.key
+                }
+                playbookRepository={{
+                  uuid: node.playbookRepository.uuid,
+                  name: node.playbookRepository.name,
+                  basePath: node.playbookRepository.basePath,
+                }}
+                callbacks={props.callbacks}
+                remoteRootNode={node.remoteRootNode}
+              >
+                <Typography.Text
+                  style={{ maxWidth: 150 - 10 * node.depth }}
+                  ellipsis={{ tooltip: true }}
+                >
+                  {node._name}
+                </Typography.Text>
+              </PlaybookDropdownMenu>
+            );
+          } else {
+            return (
+              <PlaybookDropdownMenu
+                type={SSMDirectoryTree.CONSTANTS.FILE}
+                path={node.key}
+                playbookRepository={{
+                  uuid: node.playbookRepository.uuid,
+                  name: node.playbookRepository.name,
+                  basePath: node.playbookRepository.basePath,
+                }}
+                callbacks={props.callbacks}
+                cannotDelete={!node.custom}
+              >
+                <Typography.Text
+                  style={{ maxWidth: 150 - 10 * node.depth }}
+                  ellipsis={{ tooltip: true }}
+                >
+                  {node._name}
+                </Typography.Text>
+              </PlaybookDropdownMenu>
+            );
+          }
+        }}
       />
       <NewFileDrawerForm
         submitNewFile={createNewFile}

@@ -1,4 +1,8 @@
-import { Callbacks } from '@/pages/Playbooks/components/TreeComponent';
+import { Callbacks } from '@/pages/Playbooks/components/DirectoryTreeView';
+import {
+  commitAndSyncGitRepository,
+  forcePullGitRepository,
+} from '@/services/rest/playbooks-repositories';
 import {
   ArrowDownOutlined,
   DeleteOutlined,
@@ -6,7 +10,7 @@ import {
   FolderOpenOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
-import { Dropdown, MenuProps, Popconfirm } from 'antd';
+import { Dropdown, MenuProps, message, Popconfirm } from 'antd';
 import React from 'react';
 import { DirectoryTree } from 'ssm-shared-lib';
 
@@ -103,6 +107,21 @@ const PlaybookDropdownMenu: React.FC<PlaybookDropdownMenuType> = (props) => {
         break;
       case '3':
         setOpen(true);
+        break;
+      case '4':
+        await commitAndSyncGitRepository(props.playbookRepository.uuid).then(
+          () => {
+            message.info({
+              content: 'Commit & sync command sent',
+              duration: 6,
+            });
+          },
+        );
+        break;
+      case '5':
+        await forcePullGitRepository(props.playbookRepository.uuid).then(() => {
+          message.info({ content: 'Force pull command sent', duration: 6 });
+        });
         break;
     }
   };

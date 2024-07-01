@@ -15,57 +15,35 @@ import PlaybookDropdownMenu from './PlaybookDropdownMenu';
 export type ClientPlaybooksTrees = {
   isLeaf?: boolean;
   _name: string;
-  title: ReactNode;
+  nodeType: DirectoryTree.CONSTANTS;
   children?: ClientPlaybooksTrees[];
+  rootNode?: boolean;
+  remoteRootNode?: boolean;
+  playbookRepository: { uuid: string; name: string; basePath: string };
+  depth: number;
   key: string;
   uuid?: string;
   extraVars?: API.ExtraVar[];
   custom?: boolean;
   selectable?: boolean;
-};
-
-export type Callbacks = {
-  callbackCreateDirectory: (
-    path: string,
-    playbookRepositoryUuid: string,
-    playbookRepositoryName: string,
-    playbookRepositoryBasePath: string,
-  ) => void;
-  callbackCreatePlaybook: (
-    path: string,
-    playbookRepositoryUuid: string,
-    playbookRepositoryName: string,
-    playbookRepositoryBasePath: string,
-  ) => void;
-  callbackDeleteFile: (path: string, playbookRepositoryUuid: string) => void;
+  icon?: ReactNode;
 };
 
 export function buildTree(
   rootNode: API.PlaybooksRepository,
-  callbacks: Callbacks,
-) {
+): ClientPlaybooksTrees {
   return {
     _name: rootNode.name,
-    title: (
-      <PlaybookDropdownMenu
-        type={DirectoryTree.CONSTANTS.DIRECTORY}
-        path={rootNode.path}
-        playbookRepository={{
-          uuid: rootNode.uuid,
-          name: rootNode.name,
-          basePath: rootNode.path,
-        }}
-        callbacks={callbacks}
-        cannotDelete={true}
-        remoteRootNode={rootNode.type === Playbooks.PlaybooksRepositoryType.GIT}
-      >
-        <Typography.Text strong style={{ width: '100%' }}>
-          {rootNode.name}
-          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-        </Typography.Text>
-      </PlaybookDropdownMenu>
-    ),
+    remoteRootNode: rootNode.type === Playbooks.PlaybooksRepositoryType.GIT,
+    depth: 0,
+    rootNode: true,
+    playbookRepository: {
+      basePath: rootNode.path,
+      name: rootNode.name,
+      uuid: rootNode.uuid,
+    },
     key: rootNode.name,
+    nodeType: DT.CONSTANTS.DIRECTORY,
     icon:
       rootNode.type === Playbooks.PlaybooksRepositoryType.LOCAL ? (
         <StreamlineLocalStorageFolderSolid style={{ marginTop: 6 }} />
@@ -81,7 +59,6 @@ export function buildTree(
             path: rootNode.name,
           },
           { uuid: rootNode.uuid, name: rootNode.name, basePath: rootNode.path },
-          callbacks,
         )
       : undefined,
   };
@@ -90,7 +67,6 @@ export function buildTree(
 export function recursiveTreeTransform(
   tree: DirectoryTree.ExtendedTreeNode,
   playbookRepository: { uuid: string; name: string; basePath: string },
-  callbacks: Callbacks,
   depth = 0,
 ): ClientPlaybooksTrees[] {
   const node = tree;
@@ -106,26 +82,17 @@ export function recursiveTreeTransform(
         newTree.push({
           key: child.path,
           _name: child.name,
-          title: (
-            <PlaybookDropdownMenu
-              type={DirectoryTree.CONSTANTS.DIRECTORY}
-              path={child.path}
-              playbookRepository={playbookRepository}
-              callbacks={callbacks}
-            >
-              <Typography.Text
-                style={{ maxWidth: 150 - 10 * depth }}
-                ellipsis={{ tooltip: true }}
-              >
-                {child.name}
-              </Typography.Text>
-            </PlaybookDropdownMenu>
-          ),
+          nodeType: child.type,
+          playbookRepository: {
+            basePath: playbookRepository.basePath,
+            name: playbookRepository.name,
+            uuid: playbookRepository.uuid,
+          },
+          depth: depth,
           selectable: false,
           children: recursiveTreeTransform(
             child,
             playbookRepository,
-            callbacks,
             depth + 1,
           ),
         });
@@ -134,22 +101,13 @@ export function recursiveTreeTransform(
           newTree.push({
             key: child.path,
             _name: child.name,
-            title: (
-              <PlaybookDropdownMenu
-                type={DirectoryTree.CONSTANTS.FILE}
-                path={child.path}
-                playbookRepository={playbookRepository}
-                callbacks={callbacks}
-                cannotDelete={!(child as DirectoryTree.ExtendedTreeNode).custom}
-              >
-                <Typography.Text
-                  style={{ maxWidth: 150 - 10 * depth }}
-                  ellipsis={{ tooltip: true }}
-                >
-                  {child.name}
-                </Typography.Text>
-              </PlaybookDropdownMenu>
-            ),
+            nodeType: DirectoryTree.CONSTANTS.FILE,
+            playbookRepository: {
+              basePath: playbookRepository.basePath,
+              name: playbookRepository.name,
+              uuid: playbookRepository.uuid,
+            },
+            depth: depth,
             uuid: (child as DirectoryTree.ExtendedTreeNode).uuid,
             extraVars: (child as DirectoryTree.ExtendedTreeNode).extraVars,
             custom: (child as DirectoryTree.ExtendedTreeNode).custom,
@@ -162,22 +120,13 @@ export function recursiveTreeTransform(
     newTree.push({
       key: node.path,
       _name: node.name,
-      title: (
-        <PlaybookDropdownMenu
-          type={DirectoryTree.CONSTANTS.FILE}
-          path={node.path}
-          playbookRepository={playbookRepository}
-          callbacks={callbacks}
-          cannotDelete={!node.custom}
-        >
-          <Typography.Text
-            style={{ maxWidth: 150 - 10 * depth }}
-            ellipsis={{ tooltip: true }}
-          >
-            {node.name}
-          </Typography.Text>
-        </PlaybookDropdownMenu>
-      ),
+      nodeType: DirectoryTree.CONSTANTS.FILE,
+      playbookRepository: {
+        basePath: playbookRepository.basePath,
+        name: playbookRepository.name,
+        uuid: playbookRepository.uuid,
+      },
+      depth: depth,
       uuid: node.uuid,
       extraVars: node.extraVars,
       custom: node.custom,

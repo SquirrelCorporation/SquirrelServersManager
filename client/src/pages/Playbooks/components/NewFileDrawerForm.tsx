@@ -50,6 +50,7 @@ const NewFileDrawerForm: React.FC<NewFileModalFormProps> = (props) => {
       }
       drawerProps={{
         destroyOnClose: true,
+        onClose: () => props.setSelectedNode([]),
       }}
       onFinish={async (values) => {
         setLoading(true);
