@@ -221,7 +221,7 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
         const newStatus = containerInspect.State.Status;
         const containerFound = await ContainerRepo.findContainerById(containerId);
         if (containerFound) {
-          logger.error(JSON.stringify(containerInspect));
+          this.childLogger.debug(JSON.stringify(containerInspect));
           // Child logger for the container to process
           const oldStatus = containerFound.status;
           containerFound.status = newStatus;
@@ -619,5 +619,25 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
     } catch (error: any) {
       this.childLogger.error(error);
     }
+  }
+
+  async pauseContainer(container: Container) {
+    return await this.dockerApi.getContainer(container.id).pause();
+  }
+
+  async stopContainer(container: Container) {
+    return await this.dockerApi.getContainer(container.id).stop();
+  }
+
+  async startContainer(container: Container) {
+    return await this.dockerApi.getContainer(container.id).start();
+  }
+
+  async restartContainer(container: Container) {
+    return await this.dockerApi.getContainer(container.id).restart();
+  }
+
+  async killContainer(container: Container) {
+    return await this.dockerApi.getContainer(container.id).kill();
   }
 }

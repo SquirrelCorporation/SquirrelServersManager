@@ -11,6 +11,7 @@ import StatusTag from '@/pages/Services/components/StatusTag';
 import UpdateAvailableTag from '@/pages/Services/components/UpdateAvailableTag';
 import {
   getContainers,
+  postContainerAction,
   postRefreshAll,
   updateContainerCustomName,
 } from '@/services/rest/containers';
@@ -30,7 +31,7 @@ import {
 } from '@ant-design/pro-components';
 import { Avatar, Button, Flex, message, Popover, Tag, Tooltip } from 'antd';
 import React, { useRef, useState } from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, SsmContainer } from 'ssm-shared-lib';
 
 const Index: React.FC = () => {
   const [cardActionProps] = useState<'actions' | 'extra'>('extra');
@@ -46,7 +47,7 @@ const Index: React.FC = () => {
     API.Container | undefined
   >();
 
-  const handleQuickAction = (idx: number) => {
+  const handleQuickAction = async (idx: number) => {
     if (
       ServiceQuickActionReference[idx].type ===
       ServiceQuickActionReferenceTypes.ACTION
@@ -56,6 +57,20 @@ const Index: React.FC = () => {
         ServiceQuickActionReferenceActions.RENAME
       ) {
         setIsEditContainerCustomNameModalOpened(true);
+      }
+      if (
+        Object.values(SsmContainer.Actions).includes(
+          ServiceQuickActionReference[idx].action as SsmContainer.Actions,
+        )
+      ) {
+        await postContainerAction(
+          selectedRecord?.id as string,
+          ServiceQuickActionReference[idx].action as SsmContainer.Actions,
+        ).then(() => {
+          message.info({
+            content: `Container : ${ServiceQuickActionReference[idx].action}`,
+          });
+        });
       }
     }
   };

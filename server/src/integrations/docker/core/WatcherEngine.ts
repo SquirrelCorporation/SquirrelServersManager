@@ -1,3 +1,4 @@
+import Device from '../../../data/database/model/Device';
 import logger from '../../../logger';
 import ContainerRegistryUseCases from '../../../use-cases/ContainerRegistryUseCases';
 import DeviceUseCases from '../../../use-cases/DeviceUseCases';
@@ -120,7 +121,7 @@ async function registerComponent(
   }
 }
 /**
- * Register registries.
+ * Register watchers from database.
  * @returns {Promise}
  */
 async function registerWatchers(): Promise<any> {
@@ -147,6 +148,25 @@ async function registerWatchers(): Promise<any> {
   }
 }
 
+/**
+ * Register watcher.
+ * @returns {Promise}
+ */
+async function registerWatcher(device: Device): Promise<any> {
+  try {
+    await registerComponent(device._id, Kind.WATCHER, 'device', `docker-${device.uuid}`, {
+      cron: device.dockerWatcherCron as string,
+      watchbydefault: true,
+      deviceUuid: device.uuid,
+      watchstats: device.dockerStatsWatcher,
+      cronstats: device.dockerStatsCron as string,
+      watchevents: device.dockerEventsWatcher,
+    });
+  } catch (e: any) {
+    logger.warn(`Some watchers failed to register (${e.message})`);
+    logger.debug(e);
+  }
+}
 /**
  * Register registries.
  * @returns {Promise}
@@ -274,6 +294,10 @@ async function init() {
   process.on('SIGTERM', deregisterAll);
 }
 
+function buildId(kind: Kind, provider: string, name: string) {
+  return `${kind}.${provider}.${name}`;
+}
+
 export default {
   getStates,
   init,
@@ -282,4 +306,6 @@ export default {
   deregisterWatchers,
   registerWatchers,
   deregisterAll,
+  buildId,
+  registerWatcher,
 };

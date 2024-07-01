@@ -13,6 +13,7 @@ import { filterByFields, filterByQueryParams } from '../../helpers/FilterHelper'
 import { paginate } from '../../helpers/PaginationHelper';
 import { sortByFields } from '../../helpers/SorterHelper';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../integrations/ansible-vault/vault';
+import WatcherEngine from '../../integrations/docker/core/WatcherEngine';
 import Shell from '../../integrations/shell';
 import logger from '../../logger';
 import DeviceUseCases from '../../use-cases/DeviceUseCases';
@@ -57,6 +58,7 @@ export const addDevice = asyncHandler(async (req, res) => {
     if (sshKey) {
       await Shell.AuthenticationShell.saveSshKey(sshKey, createdDevice.uuid);
     }
+    void WatcherEngine.registerWatcher(createdDevice);
     logger.info(`[CONTROLLER] Device - Created device with uuid: ${createdDevice.uuid}`);
     new SuccessResponse('Add device successful', { device: createdDevice as API.DeviceItem }).send(
       res,

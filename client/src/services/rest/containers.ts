@@ -1,5 +1,5 @@
 import { request } from '@umijs/max';
-import { API } from 'ssm-shared-lib';
+import { API, SsmContainer } from 'ssm-shared-lib';
 
 export async function getContainers(
   params?: any,
@@ -127,6 +127,24 @@ export async function getContainerStat(
     `/api/containers/${containerId}/stat/${type}`,
     {
       method: 'GET',
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    },
+  );
+}
+
+export async function postContainerAction(
+  containerId: string,
+  action: SsmContainer.Actions,
+  params?: any,
+  options?: Record<string, any>,
+): Promise<API.Response<any>> {
+  return request<API.Response<any>>(
+    `/api/containers/${containerId}/action/${action}`,
+    {
+      method: 'POST',
       params: {
         ...params,
       },
