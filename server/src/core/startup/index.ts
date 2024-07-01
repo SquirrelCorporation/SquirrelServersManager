@@ -42,7 +42,7 @@ async function init() {
   void Crons.initScheduledJobs();
   void WatcherEngine.init();
 
-  if (version !== SettingsKeys.DefaultValue.SCHEME_VERSION + 1) {
+  if (version !== SettingsKeys.DefaultValue.SCHEME_VERSION) {
     await migrate();
     logger.warn(`[CONFIGURATION] - Scheme version differed, starting writing updates`);
     await initRedisValues();

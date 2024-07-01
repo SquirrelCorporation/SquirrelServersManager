@@ -53,7 +53,7 @@ async function registerLocalRepository(playbookRepository: PlaybooksRepository) 
     playbookRepository.uuid,
     logger,
     playbookRepository.name,
-    playbookRepository.directory,
+    playbookRepository.directory.replace(`/${playbookRepository.uuid}`, ''),
   );
 }
 
