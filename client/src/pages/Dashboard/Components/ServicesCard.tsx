@@ -17,6 +17,7 @@ const ServicesCard: React.FC = () => {
   const [stats, setStats] = React.useState();
 
   const asyncFetch = async () => {
+    setLoading(true);
     await getNbContainersByStatus(SsmStatus.ContainerStatus.RUNNING).then(
       (response) => {
         setNbRunning(response.data);
@@ -41,7 +42,6 @@ const ServicesCard: React.FC = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
     asyncFetch();
   }, []);
 

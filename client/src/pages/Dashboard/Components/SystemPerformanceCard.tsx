@@ -1,5 +1,5 @@
 import ChartCard from '@/pages/Dashboard/ChartComponents/ChartCard';
-import { Tooltip, Typography } from 'antd';
+import { Skeleton, Tooltip, Typography } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
 import Field from '@/pages/Dashboard/ChartComponents/Field';
 import Trend from '@/pages/Dashboard/ChartComponents/Trend';
@@ -21,18 +21,17 @@ const SystemPerformanceCard: React.FC = () => {
     });
 
   const asyncFetch = async () => {
+    setLoading(true);
     await getDashboardSystemPerformance()
       .then((response) => {
         setPerformancesStat(response.data);
       })
-      .catch((error) => {
-        console.log('fetch data failed', error);
+      .finally(() => {
+        setLoading(false);
       });
-    setLoading(false);
   };
 
   useEffect(() => {
-    setLoading(true);
     asyncFetch();
   }, []);
 

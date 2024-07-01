@@ -25,6 +25,7 @@ const { RangePicker } = DatePicker;
 const MainChartCard: React.FC<any> = ({}) => {
   const { initialState } = useModel('@@initialState');
   const { currentUser }: { currentUser: API.CurrentUser } = initialState || {};
+  const [loading, setLoading] = React.useState(false);
   const [graphData, setGraphData] = useState([]);
   const [topTenData, setTopTenData] = useState<
     [{ value: number; name: string }] | []
@@ -61,8 +62,9 @@ const MainChartCard: React.FC<any> = ({}) => {
     setRangePickerValue(getTimeDistance(dateType));
   };
   const asyncFetch = async () => {
+    setLoading(true);
     if (devices && devices.length > 0 && devices[0]) {
-      await getDashboardDevicesStats(devices, type, {
+      await getDashboardDevicesStats(devices as string[], type, {
         from: rangePickerValue[0].toDate(),
         to: rangePickerValue[1].toDate(),
       })
@@ -72,7 +74,7 @@ const MainChartCard: React.FC<any> = ({}) => {
         .catch((error) => {
           console.log('fetch data failed', error);
         });
-      await getDashboardAveragedDevicesStats(devices, type, {
+      await getDashboardAveragedDevicesStats(devices as string[], type, {
         from: rangePickerValue[0].toDate(),
         to: rangePickerValue[1].toDate(),
       })
@@ -81,6 +83,9 @@ const MainChartCard: React.FC<any> = ({}) => {
           console.log('fetch data failed', error);
         });
     }
+    setTimeout(() => {
+      setLoading(false);
+    }, 5000);
   };
 
   useEffect(() => {
@@ -90,6 +95,8 @@ const MainChartCard: React.FC<any> = ({}) => {
   // see https://ant-design-charts-next.antgroup.com/en/options/plots/component/legend
   const config = {
     data: graphData,
+    // Waiting for https://github.com/ant-design/ant-design-charts/issues/2580
+    //loading: loading,
     animate: { enter: { type: 'waveIn' } },
     theme: {
       view: {

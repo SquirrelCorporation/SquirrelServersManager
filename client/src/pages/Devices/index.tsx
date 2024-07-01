@@ -7,7 +7,7 @@ import DeviceStatusTag from '@/components/DeviceComponents/DeviceStatusTag';
 import { OsLogo } from '@/components/DeviceComponents/OsLogo/OsLogo';
 import { CarbonBatchJob, WhhCpu, WhhRam } from '@/components/Icons/CustomIcons';
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
-import TerminalModal from '@/components/TerminalModal';
+import TerminalModal, { TerminalStateProps } from '@/components/TerminalModal';
 import { getDevices } from '@/services/rest/device';
 import DeviceStatus from '@/utils/devicestatus';
 import { Link } from '@@/exports';
@@ -44,11 +44,7 @@ export type StateType = {
 const Index = memo(() => {
   const [deviceList, setDeviceList] = React.useState<API.DeviceList>({});
   const [loading, setLoading] = React.useState(false);
-  const [terminal, setTerminal] = useState<{
-    isOpen: boolean;
-    command: string | undefined;
-    target?: API.DeviceItem[];
-  }>({
+  const [terminal, setTerminal] = useState<TerminalStateProps>({
     isOpen: false,
     command: undefined,
     target: undefined,
@@ -59,9 +55,14 @@ const Index = memo(() => {
   };
 
   const fetchDeviceList = async () => {
-    await getDevices().then((data) => {
-      setDeviceList(data);
-    });
+    setLoading(true);
+    await getDevices()
+      .then((data) => {
+        setDeviceList(data);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -109,6 +110,7 @@ const Index = memo(() => {
           <Carousel
             style={{ width: 300, height: 70, zIndex: 1000 }}
             dotPosition={'right'}
+            lazyLoad={'ondemand'}
           >
             <div style={{ width: 300, height: 70, zIndex: 1000 }}>
               <div
