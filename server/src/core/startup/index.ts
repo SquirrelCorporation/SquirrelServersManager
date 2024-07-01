@@ -1,8 +1,6 @@
-import { Model } from 'mongoose';
 import { Playbooks, SettingsKeys } from 'ssm-shared-lib';
 import { getFromCache } from '../../data/cache';
 import initRedisValues from '../../data/cache/defaults';
-import { connection } from '../../data/database';
 import { PlaybookModel } from '../../data/database/model/Playbook';
 import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
 import Crons from '../../integrations/crons';
