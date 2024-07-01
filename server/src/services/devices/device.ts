@@ -1,5 +1,5 @@
 import { parse } from 'url';
-import { SsmStatus, SettingsKeys } from 'ssm-shared-lib';
+import { SettingsKeys, SsmStatus } from 'ssm-shared-lib';
 import { API } from 'ssm-shared-lib';
 import { BadRequestError, NotFoundError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
@@ -55,7 +55,7 @@ export const addDevice = asyncHandler(async (req, res) => {
       becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
     } as DeviceAuth);
     if (sshKey) {
-      await Shell.saveSshKey(sshKey, createdDevice.uuid);
+      await Shell.AuthenticationShell.saveSshKey(sshKey, createdDevice.uuid);
     }
     logger.info(`[CONTROLLER] Device - Created device with uuid: ${createdDevice.uuid}`);
     new SuccessResponse('Add device successful', { device: createdDevice as API.DeviceItem }).send(

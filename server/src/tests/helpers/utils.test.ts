@@ -52,6 +52,7 @@ describe('findIpAddress()', () => {
         id: 42,
       },
     });
+    // @ts-expect-error for test
     mockExpressRequest.ip = expectedIp;
 
     const resultIp = findIpAddress(mockExpressRequest);

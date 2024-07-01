@@ -2,7 +2,10 @@ import TerminalHandler, {
   TaskStatusTimelineType,
 } from '@/components/TerminalModal/TerminalHandler';
 import TerminalLogs from '@/components/TerminalModal/TerminalLogs';
-import { executePlaybook } from '@/services/rest/ansible';
+import {
+  executePlaybook,
+  executePlaybookByQuickRef,
+} from '@/services/rest/playbooks';
 import { ClockCircleOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { Button, Col, Modal, Row, Steps, message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
@@ -12,7 +15,8 @@ import { API } from 'ssm-shared-lib';
 
 export type TerminalStateProps = {
   isOpen: boolean;
-  command: string | undefined;
+  command?: string;
+  quickRef?: string;
   target?: API.DeviceItem[];
   extraVars?: API.ExtraVars;
 };
@@ -90,20 +94,32 @@ const TerminalModal = (props: TerminalModalProps) => {
         <br />
       </>
     ));
-    if (!props.terminalProps.command) {
+    if (!props.terminalProps.command && !props.terminalProps.quickRef) {
       message.error({
         type: 'error',
         content: 'Error running playbook (internal)',
         duration: 8,
       });
+      setBufferedContent(() => (
+        <>
+          <span style={terminalContentStyle}>No command</span>
+          <br />
+        </>
+      ));
       return;
     }
     try {
-      const res = await executePlaybook(
-        props.terminalProps.command,
-        props.terminalProps.target?.map((e) => e.uuid),
-        props.terminalProps.extraVars,
-      );
+      const res = !props.terminalProps.quickRef
+        ? await executePlaybook(
+            props.terminalProps.command as string,
+            props.terminalProps.target?.map((e) => e.uuid),
+            props.terminalProps.extraVars,
+          )
+        : await executePlaybookByQuickRef(
+            props.terminalProps.quickRef,
+            props.terminalProps.target?.map((e) => e.uuid),
+            props.terminalProps.extraVars,
+          );
       setExecId(res.data.execId);
       message.loading({
         content: `Playbook is running with id "${res.data.execId}"`,
@@ -176,7 +192,8 @@ const TerminalModal = (props: TerminalModalProps) => {
                 transform: 'translate(0, -50%)',
               }}
             >
-              Executing playbook {props.terminalProps.command}...{' '}
+              Executing playbook{' '}
+              {props.terminalProps.command || props.terminalProps.quickRef}...{' '}
             </div>
           </div>
         }

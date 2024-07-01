@@ -37,6 +37,8 @@ services:
     env_file: .env
     environment:
       NODE_ENV: production
+    volumes:
+      - ./.data.prod/playbooks:/playbooks
   client:
     image: "ghcr.io/squirrelcorporation/squirrelserversmanager-client:latest"
     restart: unless-stopped

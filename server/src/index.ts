@@ -4,7 +4,6 @@ import cookieParser from 'cookie-parser';
 import { SECRET } from './config';
 import { connection } from './data/database';
 import WatcherEngine from './integrations/docker/core/WatcherEngine';
-import Shell from './integrations/shell';
 import { errorHandler } from './middlewares/errorHandler';
 import routes from './routes';
 import logger from './logger';
@@ -29,8 +28,7 @@ let server: any;
 const start = () => {
   logger.info(`Starting server...`);
   connection().then(async () => {
-    await Configuration.needConfigurationInit();
-    Crons.initScheduledJobs();
+    await Configuration.init();
     app.use('/', routes);
     app.use(errorHandler);
     server = app.listen(3000, () =>
@@ -38,7 +36,6 @@ const start = () => {
     🐿 Squirrel Servers Manager
     🚀 Server ready at: http://localhost:3000`),
     );
-    await WatcherEngine.init();
   });
 };
 start();

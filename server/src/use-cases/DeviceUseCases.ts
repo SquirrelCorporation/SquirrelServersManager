@@ -1,6 +1,6 @@
 import DockerModem from 'docker-modem';
 import Dockerode from 'dockerode';
-import { API, SsmAnsible, SsmStatus, SettingsKeys } from 'ssm-shared-lib';
+import { API, SettingsKeys, SsmAnsible, SsmStatus } from 'ssm-shared-lib';
 import { InternalError } from '../core/api/ApiError';
 import { setToCache } from '../data/cache';
 import Device, { DeviceModel } from '../data/database/model/Device';
@@ -141,7 +141,7 @@ async function checkAnsibleConnection(
     await setToCache(SettingsKeys.AnsibleReservedExtraVarsKeys.MASTER_NODE_URL, masterNodeUrl);
   }
   if (sshKey) {
-    await Shell.saveSshKey(sshKey, 'tmp');
+    await Shell.AuthenticationShell.saveSshKey(sshKey, 'tmp');
   }
   const mockedInventoryTarget = Inventory.inventoryBuilderForTarget([
     {
@@ -161,7 +161,7 @@ async function checkAnsibleConnection(
       sshKeyPass: sshKeyPass ? await vaultEncrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
     },
   ]);
-  const playbook = await PlaybookRepo.findOne('_checkDeviceBeforeAdd.yml');
+  const playbook = await PlaybookRepo.findOneByUniqueQuickReference('checkDeviceBeforeAdd');
   if (!playbook) {
     throw new InternalError('_checkDeviceBeforeAdd.yml not found.');
   }
@@ -251,7 +251,7 @@ async function checkDeviceDockerConnection(device: Device, deviceAuth: DeviceAut
 }
 
 async function checkDeviceAnsibleConnection(user: User, device: Device) {
-  const playbook = await PlaybookRepo.findOne('_checkDeviceBeforeAdd.yml');
+  const playbook = await PlaybookRepo.findOneByUniqueQuickReference('checkDeviceBeforeAdd');
   if (!playbook) {
     throw new InternalError('_checkDeviceBeforeAdd.yml not found.');
   }

@@ -4,6 +4,7 @@
   "description": "",
   "main": "./distribution/index.js",
   "author": "Squirrel Team",
+  "license": "AGPL-3.0 license",
   "scripts": {
     "build": "npm run clean && tsc -p ./tsconfig.json",
     "build:check": "tsc -p ./tsconfig.json --noEmit",

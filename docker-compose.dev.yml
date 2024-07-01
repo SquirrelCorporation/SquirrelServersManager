@@ -46,6 +46,7 @@ services:
       - ./.env.dev
     volumes:
       - ./server/src:/server/src
+      - ./.data.dev/playbooks:/playbooks
     environment:
       NODE_ENV: development
       DEBUG: nodejs-docker-express:*

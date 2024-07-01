@@ -1,13 +1,19 @@
 import { Schema, model } from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
+import PlaybooksRepository from './PlaybooksRepository';
 
 export const DOCUMENT_NAME = 'Playbook';
 export const COLLECTION_NAME = 'playbooks';
 
 export default interface Playbook {
   custom: boolean;
+  uuid?: string;
   name: string;
+  path: string;
   extraVars?: [{ extraVar: string; required: boolean }];
   playableInBatch?: boolean;
+  playbooksRepository?: PlaybooksRepository;
+  uniqueQuickRef?: string;
 }
 
 const schema = new Schema<Playbook>(
@@ -16,6 +22,20 @@ const schema = new Schema<Playbook>(
       type: Schema.Types.String,
       required: true,
       unique: true,
+    },
+    uuid: {
+      type: Schema.Types.String,
+      default: uuidv4,
+      required: true,
+      unique: true,
+    },
+    uniqueQuickRef: {
+      type: Schema.Types.String,
+      unique: true,
+    },
+    path: {
+      type: Schema.Types.String,
+      required: true,
     },
     playableInBatch: {
       type: Schema.Types.Boolean,
@@ -29,6 +49,13 @@ const schema = new Schema<Playbook>(
     extraVars: {
       type: [Object],
       required: false,
+    },
+    playbooksRepository: {
+      type: Schema.Types.ObjectId,
+      ref: 'PlaybooksRepository',
+      required: true,
+      select: true,
+      index: true,
     },
   },
   {

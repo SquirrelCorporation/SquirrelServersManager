@@ -33,6 +33,8 @@ services:
     depends_on:
       - mongo
       - redis
+    volumes:
+      - ./.data.prod/playbooks:/playbooks
     build:
       context: ./server
       additional_contexts:

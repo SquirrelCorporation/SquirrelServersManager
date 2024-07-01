@@ -8,7 +8,7 @@ import json
 logger = logging.getLogger('ansible-runner')
 
 def send_request():
-    url_actual = "http://localhost:3000/ansible/vault"
+    url_actual = "http://localhost:3000/playbooks/vault"
     headers = headers = { 'Authorization': "Bearer {}".format(os.getenv("SSM_API_KEY"))}
     session = requests.Session()
     logger.debug("Getting {}".format(url_actual))

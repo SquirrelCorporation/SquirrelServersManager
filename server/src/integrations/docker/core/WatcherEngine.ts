@@ -38,7 +38,7 @@ function getStates() {
  * Return all supported registries
  * @returns {*}
  */
-export function getRegistries() {
+export function getRegistries(): Registry[] {
   return getStates().registry;
 }
 

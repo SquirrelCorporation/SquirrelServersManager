@@ -80,7 +80,7 @@ SSM is currently in active development and not usable for production yet. We enc
 
 &nbsp;
 :::
-## Experience the immense power encapsulated within these tools, now exclusitely presented through a user-friendly interface.
+## Experience the immense power encapsulated within these tools, now presented through a user-friendly interface.
 
 🔌 We blend the automation powerhouse of Ansible with the portable setup of Docker in a clean and engaging interface.
 

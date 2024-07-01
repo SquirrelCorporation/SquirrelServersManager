@@ -1,7 +1,8 @@
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
 import AdvancedSettings from '@/pages/Admin/Settings/components/AdvancedSettings';
+import PlaybookSettings from '@/pages/Admin/Settings/components/PlaybooksSettings';
 import RegistrySettings from '@/pages/Admin/Settings/components/RegistrySettings';
-import UserSettings from '@/pages/Admin/Settings/components/UserSettings';
+import AuthenticationSettings from '@/pages/Admin/Settings/components/AuthenticationSettings';
 import GeneralSettings from '@/pages/Admin/Settings/components/GeneralSettings';
 import Information from '@/pages/Admin/Settings/components/Information';
 import { InfoCircleOutlined, SettingOutlined } from '@ant-design/icons';
@@ -23,22 +24,31 @@ const Settings: React.FC = () => {
       key: '2',
       label: (
         <div>
-          <SettingOutlined /> User settings
+          <SettingOutlined /> Authentication
         </div>
       ),
-      children: <UserSettings />,
+      children: <AuthenticationSettings />,
     },
     {
       key: '3',
       label: (
         <div>
-          <SettingOutlined /> Registries
+          <SettingOutlined /> Playbooks
+        </div>
+      ),
+      children: <PlaybookSettings />,
+    },
+    {
+      key: '4',
+      label: (
+        <div>
+          <SettingOutlined /> Container Registries
         </div>
       ),
       children: <RegistrySettings />,
     },
     {
-      key: '4',
+      key: '5',
       label: (
         <div>
           <SettingOutlined /> Advanced
@@ -47,7 +57,7 @@ const Settings: React.FC = () => {
       children: <AdvancedSettings />,
     },
     {
-      key: '5',
+      key: '6',
       label: (
         <div>
           <InfoCircleOutlined /> System Information

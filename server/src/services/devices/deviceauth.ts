@@ -113,7 +113,7 @@ export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {
     becomeUser: becomeUser,
   } as DeviceAuth);
   if (sshKey) {
-    await Shell.saveSshKey(sshKey, device.uuid);
+    await Shell.AuthenticationShell.saveSshKey(sshKey, device.uuid);
   }
   logger.info(
     `[CONTROLLER] - POST - Device Auth - Updated or Created device with uuid: ${device.uuid}`,

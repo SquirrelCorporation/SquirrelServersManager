@@ -1,5 +1,5 @@
+import { describe, expect, test } from 'vitest';
 import { filterByFields, filterByQueryParams } from '../../helpers/FilterHelper';
-import { describe, test, expect } from 'vitest';
 
 const data = [
   { name: 'John Doe', age: 30, registered: true },
@@ -50,8 +50,8 @@ const params2 = {
 
 describe('filterByQueryParams', () => {
   test('filters by the given query param', () => {
-    let params = { name: 'doe' };
-    let result = filterByQueryParams(data, params, authorizedParams);
+    const params = { name: 'doe' };
+    const result = filterByQueryParams(data, params, authorizedParams);
     expect(result.length).toBe(2);
     result.forEach((r) => expect(r.name.toLowerCase()).toContain(params.name));
   });
@@ -72,7 +72,7 @@ describe('filterByQueryParams', () => {
   });
 
   test('filters by multiple given query params', () => {
-    let result = filterByQueryParams(data, params2, authorizedParams);
+    const result = filterByQueryParams(data, params2, authorizedParams);
     expect(result.length).toBe(1);
     expect(result[0].name.toLowerCase()).toContain(params2.name);
     expect(result[0].age).toBe(parseInt(params2.age));
@@ -80,7 +80,7 @@ describe('filterByQueryParams', () => {
 
   test('processes numeric params correctly', () => {
     const params = { age: '18' }; // This should match Donald Duck
-    let result = filterByQueryParams(data, params, authorizedParams);
+    const result = filterByQueryParams(data, params, authorizedParams);
     expect(result.length).toBe(1);
     expect(result[0].name).toBe('Donald Duck');
   });

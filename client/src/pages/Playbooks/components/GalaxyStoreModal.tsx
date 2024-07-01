@@ -3,7 +3,7 @@ import {
   getCollection,
   getCollections,
   postInstallCollection,
-} from '@/services/rest/ansible';
+} from '@/services/rest/playbooks';
 import {
   ProDescriptions,
   ProForm,

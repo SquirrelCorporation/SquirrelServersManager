@@ -1,4 +1,12 @@
 import { SSHType } from '../enums/ansible';
+import { PlaybooksRepositoryType } from '../enums/playbooks';
+import { ExtendedTreeNode } from './tree';
+
+export type Response<T> = {
+  success: boolean;
+  message: string;
+  data: T
+};
 
 export type HasUsers = {
   success?: boolean;
@@ -326,16 +334,26 @@ export type AveragedDeviceStat = {
   data?: [{ value: number; name: string }];
   success?: boolean;
 };
-export type PlaybookFileList = {
-  label: string;
-  value: string;
+
+export type PlaybookFile = {
+  name: string;
+  uuid: string;
+  path: string;
   custom?: boolean;
   extraVars?: ExtraVars;
 };
 
-export type Playbooks = {
+export type PlaybooksRepository = {
+  name: string;
+  uuid: string;
+  path: string;
+  type: PlaybooksRepositoryType;
+  children?: ExtendedTreeNode[];
+};
+
+export type PlaybooksRepositories = {
   success?: boolean;
-  data?: PlaybookFileList[];
+  data?: PlaybooksRepository[];
 };
 
 export type PlaybookContent = {
@@ -594,7 +612,7 @@ export type ContainerRegistryResponse = SimpleResult & {
   data?: ContainerRegistries;
 }
 
-export type ContainerRegistry ={
+export type ContainerRegistry = {
   name: string;
   fullName: string;
   authScheme: any;
@@ -602,6 +620,24 @@ export type ContainerRegistry ={
   authSet: boolean;
   canAuth: boolean;
   canAnonymous: boolean;
+}
+
+export type GitRepository = {
+  uuid?: string;
+  name: string;
+  email: string;
+  branch: string;
+  userName: string;
+  remoteUrl: string;
+  default: boolean;
+}
+
+export type LocalRepository = {
+  uuid: string;
+  name: string;
+  directory: string;
+  enabled: boolean;
+  default: boolean;
 }
 
 export type ExtraVars = ExtraVar[];

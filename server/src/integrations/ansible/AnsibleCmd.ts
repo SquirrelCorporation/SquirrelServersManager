@@ -1,6 +1,6 @@
 import { API } from 'ssm-shared-lib';
 import User from '../../data/database/model/User';
-import { Ansible } from '../../types/typings';
+import { Playbooks } from '../../types/typings';
 import ExtraVarsTransformer from './utils/ExtraVarsTransformer';
 
 class AnsibleCommandBuilder {
@@ -9,11 +9,11 @@ class AnsibleCommandBuilder {
   static readonly ansibleRunner = 'ssm-ansible-run.py';
   static readonly ssmApiKeyEnv = 'SSM_API_KEY';
 
-  sanitizeInventory(inventoryTargets: Ansible.All & Ansible.HostGroups) {
+  sanitizeInventory(inventoryTargets: Playbooks.All & Playbooks.HostGroups) {
     return "'" + JSON.stringify(inventoryTargets).replaceAll('\\\\', '\\') + "'";
   }
 
-  getInventoryTargets(inventoryTargets: (Ansible.All & Ansible.HostGroups) | undefined) {
+  getInventoryTargets(inventoryTargets: (Playbooks.All & Playbooks.HostGroups) | undefined) {
     return `${inventoryTargets ? '--specific-host ' + this.sanitizeInventory(inventoryTargets) : ''}`;
   }
 
@@ -28,7 +28,7 @@ class AnsibleCommandBuilder {
   buildAnsibleCmd(
     playbook: string,
     uuid: string,
-    inventoryTargets: (Ansible.All & Ansible.HostGroups) | undefined,
+    inventoryTargets: (Playbooks.All & Playbooks.HostGroups) | undefined,
     user: User,
     extraVars?: API.ExtraVars,
   ) {

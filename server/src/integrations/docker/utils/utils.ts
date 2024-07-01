@@ -64,7 +64,7 @@ export function normalizeContainer(container: Container) {
   logger.info(`[UTILS] - normalizeContainer - for name: ${container.image?.name}`);
   const registryProvider = Object.values(getRegistries()).find((provider) =>
     provider.match(container.image),
-  );
+  ) as Registry;
   if (!registryProvider) {
     logger.warn(`${fullName(container)} - No Registry Provider found`);
     containerWithNormalizedImage.image.registry.name = 'unknown';

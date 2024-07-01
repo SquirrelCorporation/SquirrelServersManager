@@ -81,4 +81,8 @@ export default [
     path: '/admin/inventory/:id',
     component: './Admin/Inventory',
   },
+  {
+    path: '/manage/playbooks/:id',
+    component: './Playbooks',
+  },
 ];

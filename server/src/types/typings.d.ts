@@ -1,7 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 import Container from '../data/database/model/Container';
 
-export declare namespace Ansible {
+export declare namespace Playbooks {
   type HostVar = {
     ip: string[];
   };
@@ -42,6 +42,7 @@ export declare namespace Ansible {
   type PlaybookConfigurationFile = {
     playableInBatch: boolean;
     extraVars?: [{ extraVar: string; required: boolean }];
+    uniqueQuickRef?: string;
   };
 }
 
