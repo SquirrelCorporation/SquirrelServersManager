@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v.0.1.14...HEAD)
+
+**Implemented enhancements:**
+
+- \[CHORE\] Small optimisations & fixes [\#61](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/61)
+
+**Merged pull requests:**
+
+- Add loading states and optimize data fetching [\#62](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/62) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 ## [v.0.1.14](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v.0.1.14) (2024-07-01)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v.0.1.13...v.0.1.14)
