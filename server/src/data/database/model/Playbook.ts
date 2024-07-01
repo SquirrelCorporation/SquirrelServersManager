@@ -21,7 +21,6 @@ const schema = new Schema<Playbook>(
     name: {
       type: Schema.Types.String,
       required: true,
-      unique: true,
     },
     uuid: {
       type: Schema.Types.String,

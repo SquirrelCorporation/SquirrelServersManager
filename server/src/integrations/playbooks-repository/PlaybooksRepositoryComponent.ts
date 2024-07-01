@@ -57,12 +57,12 @@ abstract class PlaybooksRepositoryComponent {
     );
     const playbooksListFromDirectory = recursivelyFlattenTree(filteredTree).map((treeNode) => {
       if (treeNode && treeNode.extension?.match(FILE_PATTERN)) {
-        this.childLogger.info(`Found child : ${JSON.stringify(treeNode)}`);
+        this.childLogger.debug(`Found child : ${JSON.stringify(treeNode)}`);
         const { name, path } = treeNode;
         return { name, path } as Playbook;
       }
     });
-    this.childLogger.error(playbooksListFromDirectory);
+    this.childLogger.debug(playbooksListFromDirectory);
     this.childLogger.info(
       `Found ${playbooksListFromDirectory?.length || 0} playbooks from directory`,
     );
