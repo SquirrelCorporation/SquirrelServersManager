@@ -14,17 +14,16 @@ const AvailabilityCard: React.FC = () => {
     API.AvailabilityStat | undefined
   >();
   const asyncFetch = async () => {
+    setLoading(true);
     await getDashboardAvailabilityStat()
       .then((response) => {
         setAvailabilityStat(response.data);
       })
-      .catch((error) => {
-        console.log('fetch data failed', error);
+      .finally(() => {
+        setLoading(false);
       });
-    setLoading(false);
   };
   useEffect(() => {
-    setLoading(true);
     asyncFetch();
   }, []);
 

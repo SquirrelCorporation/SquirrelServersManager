@@ -1,6 +1,6 @@
 import styles from './ChartCard.less';
 import classNames from 'classnames';
-import { Typography } from 'antd';
+import { Skeleton, Typography } from 'antd';
 import React from 'react';
 
 const renderTotal = (total: any) => {
@@ -37,7 +37,7 @@ const ChartCard: React.FC<any> = ({
   loading,
 }) => {
   if (loading) {
-    return false;
+    return <Skeleton active className={styles.chartCard} />;
   }
   return (
     <div className={styles.chartCard}>
