@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+## [v.0.1.14](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v.0.1.14) (2024-07-01)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v.0.1.13...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v.0.1.13...v.0.1.14)
 
 **Implemented enhancements:**
 
