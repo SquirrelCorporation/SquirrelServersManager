@@ -1,11 +1,7 @@
-import { Error } from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
 import { Playbooks } from 'ssm-shared-lib';
-import PlaybooksRepository from '../data/database/model/PlaybooksRepository';
-import PlaybookRepo from '../data/database/repository/PlaybookRepo';
+import { v4 as uuidv4 } from 'uuid';
 import PlaybooksRepositoryRepo from '../data/database/repository/PlaybooksRepositoryRepo';
 import PlaybooksRepositoryEngine from '../integrations/playbooks-repository/PlaybooksRepositoryEngine';
-import playbooksRepository from '../routes/playbooks-repository';
 
 async function addGitRepository(
   name: string,

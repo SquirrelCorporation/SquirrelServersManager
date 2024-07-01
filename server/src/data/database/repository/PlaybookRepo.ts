@@ -25,11 +25,17 @@ async function findAllWithActiveRepositories(): Promise<Playbook[] | null> {
 }
 
 async function findOneByName(name: string): Promise<Playbook | null> {
-  return await PlaybookModel.findOne({ name: name }).lean().exec();
+  return await PlaybookModel.findOne({ name: name })
+    .populate({ path: 'playbooksRepository' })
+    .lean()
+    .exec();
 }
 
 async function findOneByUuid(uuid: string): Promise<Playbook | null> {
-  return await PlaybookModel.findOne({ uuid: uuid }).lean().exec();
+  return await PlaybookModel.findOne({ uuid: uuid })
+    .populate({ path: 'playbooksRepository' })
+    .lean()
+    .exec();
 }
 
 async function listAllByRepository(
@@ -43,11 +49,17 @@ async function deleteByUuid(uuid: string): Promise<void> {
 }
 
 async function findOneByPath(path: string): Promise<Playbook | null> {
-  return await PlaybookModel.findOne({ path: path }).lean().exec();
+  return await PlaybookModel.findOne({ path: path })
+    .populate({ path: 'playbooksRepository' })
+    .lean()
+    .exec();
 }
 
 async function findOneByUniqueQuickReference(quickRef: string): Promise<Playbook | null> {
-  return await PlaybookModel.findOne({ uniqueQuickRef: quickRef }).lean().exec();
+  return await PlaybookModel.findOne({ uniqueQuickRef: quickRef })
+    .populate({ path: 'playbooksRepository' })
+    .lean()
+    .exec();
 }
 
 async function deleteByRepository(playbooksRepository: PlaybooksRepository): Promise<void> {

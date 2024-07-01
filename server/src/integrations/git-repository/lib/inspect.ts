@@ -25,10 +25,10 @@ export interface ModifiedFileList {
 }
 /**
  * Get modified files and modify type in a folder
- * @param {string} wikiFolderPath location to scan playbooks-repository modify state
+ * @param {string} folderPath location to scan playbooks-repository modify state
  */
-export async function getModifiedFileList(wikiFolderPath: string): Promise<ModifiedFileList[]> {
-  const { stdout } = await GitProcess.exec(['status', '--porcelain'], wikiFolderPath);
+export async function getModifiedFileList(folderPath: string): Promise<ModifiedFileList[]> {
+  const { stdout } = await GitProcess.exec(['status', '--porcelain'], folderPath);
   const stdoutLines = stdout.split('\n');
   const nonEmptyLines = compact(stdoutLines);
   const statusMatrixLines = compact(
@@ -66,7 +66,7 @@ export async function getModifiedFileList(wikiFolderPath: string): Promise<Modif
       return {
         type,
         fileRelativePath,
-        filePath: path.normalize(path.join(wikiFolderPath, fileRelativePath)),
+        filePath: path.normalize(path.join(folderPath, fileRelativePath)),
       };
     })
     .sort((item, item2) => item.fileRelativePath.localeCompare(item2.fileRelativePath, 'zh'));
@@ -74,7 +74,7 @@ export async function getModifiedFileList(wikiFolderPath: string): Promise<Modif
 
 /**
  * Inspect playbooks-repository's remote url from folder's .playbooks-repository config
- * @param dir wiki folder path, playbooks-repository folder to inspect
+ * @param dir folder path, playbooks-repository folder to inspect
  * @param remoteName
  * @returns remote url, without `'.playbooks-repository'`
  * @example ```ts
@@ -98,27 +98,27 @@ export async function getRemoteUrl(dir: string, remoteName: string): Promise<str
  * @returns
  */
 export function getRemoteRepoName(remoteUrl: string): string | undefined {
-  let wikiRepoName = new url.URL(remoteUrl).pathname;
-  if (wikiRepoName.startsWith('/')) {
+  let repoName = new url.URL(remoteUrl).pathname;
+  if (repoName.startsWith('/')) {
     // deepcode ignore GlobalReplacementRegex: change only the first match
-    wikiRepoName = wikiRepoName.replace('/', '');
+    repoName = repoName.replace('/', '');
   }
-  if (wikiRepoName.length > 0) {
-    return wikiRepoName;
+  if (repoName.length > 0) {
+    return repoName;
   }
   return undefined;
 }
 
 /**
  * See if there is any file not being committed
- * @param {string} wikiFolderPath repo path to test
+ * @param {string} folderPath repo path to test
  * @example ```ts
 if (await haveLocalChanges(dir)) {
   // ... do commit and push
 ```
  */
-export async function haveLocalChanges(wikiFolderPath: string): Promise<boolean> {
-  const { stdout } = await GitProcess.exec(['status', '--porcelain'], wikiFolderPath);
+export async function haveLocalChanges(folderPath: string): Promise<boolean> {
+  const { stdout } = await GitProcess.exec(['status', '--porcelain'], folderPath);
   const matchResult = stdout.match(/^(\?\?|[ACMR] |[ ACMR][DM])*/gm);
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   return !!matchResult?.some?.(Boolean);
@@ -128,11 +128,11 @@ export async function haveLocalChanges(wikiFolderPath: string): Promise<boolean>
  * Get "master" or "main" from playbooks-repository repo
  *
  * https://github.com/simonthum/git-sync/blob/31cc140df2751e09fae2941054d5b61c34e8b649/git-sync#L228-L232
- * @param wikiFolderPath
+ * @param folderPath
  */
-export async function getDefaultBranchName(wikiFolderPath: string): Promise<string | undefined> {
+export async function getDefaultBranchName(folderPath: string): Promise<string | undefined> {
   try {
-    const { stdout } = await GitProcess.exec(['rev-parse', '--abbrev-ref', 'HEAD'], wikiFolderPath);
+    const { stdout } = await GitProcess.exec(['rev-parse', '--abbrev-ref', 'HEAD'], folderPath);
     const [branchName] = stdout.split('\n');
     // don't return empty string, so we can use ?? syntax
     if (branchName === '') {
@@ -218,12 +218,12 @@ export async function getSyncState(
 }
 
 export async function assumeSync(
-  wikiFolderPath: string,
+  folderPath: string,
   defaultBranchName: string,
   remoteName: string,
   logger?: ILogger,
 ): Promise<void> {
-  const syncState = await getSyncState(wikiFolderPath, defaultBranchName, remoteName, logger);
+  const syncState = await getSyncState(folderPath, defaultBranchName, remoteName, logger);
   if (syncState === 'equal') {
     return;
   }
@@ -232,19 +232,16 @@ export async function assumeSync(
 
 /**
  * get various repo state in string format
- * @param wikiFolderPath repo path to check
+ * @param folderPath repo path to check
  * @param logger
  * @returns gitState
  * // TODO: use template literal type to get exact type of playbooks-repository state
  */
-export async function getGitRepositoryState(
-  wikiFolderPath: string,
-  logger?: ILogger,
-): Promise<string> {
-  if (!(await hasGit(wikiFolderPath))) {
+export async function getGitRepositoryState(folderPath: string, logger?: ILogger): Promise<string> {
+  if (!(await hasGit(folderPath))) {
     return 'NOGIT';
   }
-  const gitDirectory = await getGitDirectory(wikiFolderPath, logger);
+  const gitDirectory = await getGitDirectory(folderPath, logger);
   const [isRebaseI, isRebaseM, isAMRebase, isMerging, isCherryPicking, isBisecting] =
     await Promise.all([
       // isRebaseI
@@ -295,7 +292,7 @@ export async function getGitRepositoryState(
     }
   }
   result += (
-    await GitProcess.exec(['rev-parse', '--is-bare-repository', wikiFolderPath], wikiFolderPath)
+    await GitProcess.exec(['rev-parse', '--is-bare-repository', folderPath], folderPath)
   ).stdout.startsWith('true')
     ? '|BARE'
     : '';
@@ -308,7 +305,7 @@ export async function getGitRepositoryState(
     }
   } */
   // previous above `playbooks-repository diff --no-ext-diff --quiet --exit-code` logic from playbooks-repository-sync script can only detect if an existed file changed, can't detect newly added file, so we use `haveLocalChanges` instead
-  if (await haveLocalChanges(wikiFolderPath)) {
+  if (await haveLocalChanges(folderPath)) {
     result += '|DIRTY';
   }
 
@@ -340,7 +337,10 @@ export async function getGitDirectory(dir: string, logger?: ILogger): Promise<st
     throw new CantSyncGitNotInitializedError(dir);
   }
   if (stdout.startsWith('true')) {
-    const { stdout: stdout2 } = await GitProcess.exec(['rev-parse', '--playbooks-repository-dir', dir], dir);
+    const { stdout: stdout2 } = await GitProcess.exec(
+      ['rev-parse', '--playbooks-repository-dir', dir],
+      dir,
+    );
     const [gitPath2, gitPath1] = compact(stdout2.split('\n'));
     if (gitPath2 !== undefined && gitPath1 !== undefined) {
       return path.resolve(gitPath1, gitPath2);

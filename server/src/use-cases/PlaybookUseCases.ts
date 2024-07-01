@@ -3,7 +3,7 @@ import { setToCache } from '../data/cache';
 import Playbook, { PlaybookModel } from '../data/database/model/Playbook';
 import User from '../data/database/model/User';
 import ExtraVars from '../integrations/ansible/utils/ExtraVars';
-import shell from '../integrations/shell';
+import Shell from '../integrations/shell';
 import { Playbooks } from '../types/typings';
 
 async function completeExtraVar(
@@ -33,7 +33,12 @@ async function executePlaybook(
     target,
     extraVarsForcedValues,
   );
-  return await shell.executePlaybook(playbook.path, user, target, substitutedExtraVars);
+  return await Shell.AnsibleShell.executePlaybook(
+    playbook.path,
+    user,
+    target,
+    substitutedExtraVars,
+  );
 }
 
 async function executePlaybookOnInventory(
@@ -47,7 +52,7 @@ async function executePlaybookOnInventory(
     undefined,
     extraVarsForcedValues,
   );
-  return await shell.executePlaybookOnInventory(
+  return await Shell.AnsibleShell.executePlaybookOnInventory(
     playbook.path,
     user,
     inventoryTargets,

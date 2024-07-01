@@ -34,7 +34,7 @@ export enum GitStep {
   NoNeedToSync = 'NoNeedToSync',
   NoUpstreamCantPush = 'NoUpstreamCantPush',
   PerformLastCheckBeforeSynchronizationFinish = 'PerformLastCheckBeforeSynchronizationFinish',
-  PrepareCloneOnlineWiki = 'PrepareCloneOnlineWiki',
+  PrepareClone = 'PrepareClone',
   PrepareSync = 'PrepareSync',
   PreparingUserInfo = 'PreparingUserInfo',
   RebaseConflictNeedsResolve = 'RebaseConflictNeedsResolve',

@@ -44,7 +44,7 @@ export async function clone(options: {
       remoteUrl,
     });
 
-  logProgress(GitStep.PrepareCloneOnlineWiki);
+  logProgress(GitStep.PrepareClone);
 
   logDebug(
     JSON.stringify({
@@ -54,17 +54,20 @@ export async function clone(options: {
         length: 24,
       }),
     }),
-    GitStep.PrepareCloneOnlineWiki,
+    GitStep.PrepareClone,
   );
-  logDebug(`Running git init for clone in dir ${dir}`, GitStep.PrepareCloneOnlineWiki);
+  logDebug(`Running git init for clone in dir ${dir}`, GitStep.PrepareClone);
   await initGitWithBranch(dir, branch, { initialCommit: false });
   const remoteName = await getRemoteName(dir, branch);
-  logDebug(`Successfully Running git init for clone in dir ${dir}`, GitStep.PrepareCloneOnlineWiki);
+  logDebug(`Successfully Running git init for clone in dir ${dir}`, GitStep.PrepareClone);
   logProgress(GitStep.StartConfiguringGithubRemoteRepository);
   await credentialOn(dir, remoteUrl, gitUserName, accessToken, remoteName);
   try {
     logProgress(GitStep.StartFetchingFromGithubRemote);
-    const { stderr: pullStdError, exitCode } = await GitProcess.exec(['pull', remoteName, `${branch}:${branch}`], dir);
+    const { stderr: pullStdError, exitCode } = await GitProcess.exec(
+      ['pull', remoteName, `${branch}:${branch}`],
+      dir,
+    );
     if (exitCode === 0) {
       logProgress(GitStep.SynchronizationFinish);
     } else {

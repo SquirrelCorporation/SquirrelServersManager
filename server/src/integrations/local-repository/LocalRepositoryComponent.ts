@@ -4,8 +4,8 @@ import PlaybooksRepositoryComponent, {
 import { createDirectoryWithFullPath } from '../shell/utils';
 
 class LocalRepositoryComponent extends PlaybooksRepositoryComponent implements AbstractComponent {
-  constructor(uuid: string, logger: any, name: string, path: string) {
-    super(uuid, name, path);
+  constructor(uuid: string, logger: any, name: string, rootPath: string) {
+    super(uuid, name, rootPath);
     this.childLogger = logger.child(
       { module: `local-repository/${this.name}` },
       { msgPrefix: `[LOCAL_REPOSITORY] - ` },

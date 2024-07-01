@@ -72,7 +72,7 @@ async function registerRepository(playbookRepository: PlaybooksRepository) {
         await registerLocalRepository(playbookRepository);
       break;
     default:
-      throw new Error('Unknown playbook type');
+      throw new Error('Unknown playbook repository type');
   }
   return state.playbooksRepository[playbookRepository.uuid];
 }

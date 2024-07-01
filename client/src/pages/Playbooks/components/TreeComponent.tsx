@@ -5,10 +5,10 @@ import {
 import { Typography } from 'antd';
 import React, { ReactNode } from 'react';
 import {
-  DirectoryTree,
   API,
-  Playbooks,
+  DirectoryTree,
   DirectoryTree as DT,
+  Playbooks,
 } from 'ssm-shared-lib';
 import PlaybookDropdownMenu from './PlaybookDropdownMenu';
 
@@ -40,8 +40,6 @@ export type Callbacks = {
   callbackDeleteFile: (path: string, playbookRepositoryUuid: string) => void;
 };
 
-export type RootNode = {};
-
 export function buildTree(
   rootNode: API.PlaybooksRepository,
   callbacks: Callbacks,
@@ -59,16 +57,18 @@ export function buildTree(
         }}
         callbacks={callbacks}
         cannotDelete={true}
+        remoteRootNode={rootNode.type === Playbooks.PlaybooksRepositoryType.GIT}
       >
         <Typography.Text strong style={{ width: '100%' }}>
           {rootNode.name}
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
         </Typography.Text>
       </PlaybookDropdownMenu>
     ),
     key: rootNode.name,
     icon:
       rootNode.type === Playbooks.PlaybooksRepositoryType.LOCAL ? (
-        <StreamlineLocalStorageFolderSolid style={{ marginTop: 5 }} />
+        <StreamlineLocalStorageFolderSolid style={{ marginTop: 6 }} />
       ) : (
         <SimpleIconsGit style={{ height: '1em', width: '1em', marginTop: 5 }} />
       ),

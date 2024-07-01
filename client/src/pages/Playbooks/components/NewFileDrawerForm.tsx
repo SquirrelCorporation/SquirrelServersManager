@@ -18,6 +18,7 @@ export type NewFileModalFormProps = {
     fullPath: string,
     mode: 'playbook' | 'directory',
   ) => Promise<boolean>;
+  setSelectedNode: any;
 };
 
 const NewFileDrawerForm: React.FC<NewFileModalFormProps> = (props) => {
@@ -64,11 +65,15 @@ const NewFileDrawerForm: React.FC<NewFileModalFormProps> = (props) => {
           .finally(() => {
             setLoading(false);
           });
+        return true;
       }}
     >
       <ProFormSelect
         placeholder={'For repository'}
         name={'repository'}
+        onChange={(e) => {
+          props.setSelectedNode(repositories?.find((f) => f.uuid === e)?.name);
+        }}
         request={async () => {
           return await getPlaybooksRepositories().then((e) => {
             setRepositories(e?.data);

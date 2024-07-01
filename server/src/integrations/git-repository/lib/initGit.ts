@@ -9,7 +9,7 @@ import { commitFiles } from './sync';
 export interface IInitGitOptionsSyncImmediately {
   /** Optional fallback of userInfo. If some info is missing in userInfo, will use defaultGitInfo instead. */
   defaultGitInfo?: typeof defaultDefaultGitInfo;
-  /** wiki folder path, can be relative */
+  /**  folder path, can be relative */
   dir: string;
   logger?: ILogger;
   /** only required if syncImmediately is true, the storage service url we are sync to, for example your github repo url */
@@ -21,7 +21,7 @@ export interface IInitGitOptionsSyncImmediately {
 }
 export interface IInitGitOptionsNotSync {
   defaultGitInfo?: typeof defaultDefaultGitInfo;
-  /** wiki folder path, can be relative */
+  /**  folder path, can be relative */
   dir: string;
   logger?: ILogger;
   /** should we sync after playbooks-repository init? */

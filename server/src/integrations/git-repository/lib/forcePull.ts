@@ -10,7 +10,7 @@ import { fetchRemote } from './sync';
 export interface IForcePullOptions {
   /** Optional fallback of userInfo. If some info is missing in userInfo, will use defaultGitInfo instead. */
   defaultGitInfo?: typeof defaultDefaultGitInfo;
-  /** wiki folder path, can be relative */
+  /** folder path, can be relative */
   dir: string;
   logger?: ILogger;
   /** the storage service url we are sync to, for example your github repo url

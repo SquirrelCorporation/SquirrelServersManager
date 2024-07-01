@@ -41,6 +41,7 @@ type DirectoryTreeViewProps = {
 
 const DirectoryTreeView: React.FC<DirectoryTreeViewProps> = (props) => {
   const [storeModal, setStoreModal] = React.useState(false);
+  const [selectedPath, setSelectedPath] = React.useState('');
   const {
     onSelect,
     selectedFile,
@@ -71,8 +72,12 @@ const DirectoryTreeView: React.FC<DirectoryTreeViewProps> = (props) => {
         onSelect={onSelect}
         treeData={playbookRepositories}
         selectedKeys={[selectedFile?.path as React.Key]}
+        expandedKeys={[selectedPath as React.Key]}
       />
-      <NewFileDrawerForm submitNewFile={createNewFile} />
+      <NewFileDrawerForm
+        submitNewFile={createNewFile}
+        setSelectedNode={setSelectedPath}
+      />
       <CreateFileInRepositoryModalForm
         opened={newRepositoryFileModal.opened}
         // @ts-expect-error partial type

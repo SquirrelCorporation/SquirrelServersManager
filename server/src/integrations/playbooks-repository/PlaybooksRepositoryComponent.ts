@@ -20,9 +20,11 @@ abstract class PlaybooksRepositoryComponent {
   public directory: string;
   public uuid: string;
   public childLogger: pino.Logger<never>;
+  public rootPath: string;
 
-  protected constructor(uuid: string, name: string, path: string) {
-    const dir = `${path}/${uuid}`;
+  protected constructor(uuid: string, name: string, rootPath: string) {
+    this.rootPath = rootPath;
+    const dir = `${rootPath}/${uuid}`;
     this.uuid = uuid;
     this.directory = dir;
     this.name = name;
@@ -118,9 +120,10 @@ abstract class PlaybooksRepositoryComponent {
     foundPlaybook: Playbook,
     playbooksRepository: PlaybooksRepository,
   ): Promise<void> {
-    const configurationFileContent = await Shell.readPlaybookConfigurationFileIfExists(
-      foundPlaybook.path.replace('.yml', '.json'),
-    );
+    const configurationFileContent =
+      await Shell.PlaybookFileShell.readPlaybookConfigurationFileIfExists(
+        foundPlaybook.path.replace('.yml', '.json'),
+      );
     const isCustomPlaybook = !foundPlaybook.name.startsWith('_');
     const playbookFoundInDatabase = await PlaybookRepo.findOneByPath(foundPlaybook.path);
     const playbookData: Playbook = {

@@ -1,8 +1,10 @@
 import { Callbacks } from '@/pages/Playbooks/components/TreeComponent';
 import {
+  ArrowDownOutlined,
   DeleteOutlined,
   FileOutlined,
   FolderOpenOutlined,
+  SyncOutlined,
 } from '@ant-design/icons';
 import { Dropdown, MenuProps, Popconfirm } from 'antd';
 import React from 'react';
@@ -15,6 +17,7 @@ type PlaybookDropdownMenuType = {
   children: React.ReactNode;
   callbacks: Callbacks;
   cannotDelete?: boolean;
+  remoteRootNode?: boolean;
 };
 
 type PlaybookDrownMenuItemType = {
@@ -46,6 +49,21 @@ const menuItems: PlaybookDrownMenuItemType[] = [
   },
 ];
 
+const menuItemsGitRootNode: PlaybookDrownMenuItemType[] = [
+  {
+    label: 'Commit & Sync',
+    icon: <SyncOutlined />,
+    key: '4',
+    fileType: 'any',
+  },
+  {
+    label: 'Force pull',
+    icon: <ArrowDownOutlined />,
+    key: '5',
+    fileType: 'any',
+  },
+];
+
 const PlaybookDropdownMenu: React.FC<PlaybookDropdownMenuType> = (props) => {
   const [open, setOpen] = React.useState(false);
   const items = menuItems
@@ -61,7 +79,9 @@ const PlaybookDropdownMenu: React.FC<PlaybookDropdownMenuType> = (props) => {
         icon: e.icon,
       };
     }) as MenuProps['items'];
-
+  if (props.remoteRootNode) {
+    items?.push(...menuItemsGitRootNode);
+  }
   const onClick: MenuProps['onClick'] = async ({ key, domEvent }) => {
     domEvent.stopPropagation();
     switch (key) {
