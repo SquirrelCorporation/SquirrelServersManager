@@ -1,6 +1,6 @@
-import { API } from 'ssm-shared-lib';
 import { parse } from 'url';
-import { InternalError, NotFoundError } from '../../core/api/ApiError';
+import { API, SsmContainer } from 'ssm-shared-lib';
+import { BadRequestError, InternalError, NotFoundError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
 import ContainerRepo from '../../data/database/repository/ContainerRepo';
 import asyncHandler from '../../helpers/AsyncHandler';
@@ -57,4 +57,17 @@ export const refreshAll = asyncHandler(async (req, res) => {
   } catch (e: any) {
     throw new InternalError(`Error when watching images (${e.message})`);
   }
+});
+
+export const postContainerAction = asyncHandler(async (req, res) => {
+  const { id, action } = req.params;
+  const container = await ContainerRepo.findContainerById(id);
+  if (!container) {
+    throw new NotFoundError(`Container with id ${id} not found`);
+  }
+  if (!(Object.values(SsmContainer.Actions) as string[]).includes(action)) {
+    throw new BadRequestError();
+  }
+  const result = await ContainerUseCases.performAction(container, action as SsmContainer.Actions);
+  new SuccessResponse('Performed container action', result).send(res);
 });

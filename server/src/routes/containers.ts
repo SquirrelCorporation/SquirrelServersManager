@@ -2,10 +2,14 @@ import express from 'express';
 import passport from 'passport';
 import {
   getContainers,
+  postContainerAction,
   postCustomNameOfContainer,
   refreshAll,
 } from '../services/containers/containers';
-import { postCustomNameOfContainerValidator } from '../services/containers/containers.validator';
+import {
+  postContainerActionValidator,
+  postCustomNameOfContainerValidator,
+} from '../services/containers/containers.validator';
 import {
   getAveragedStats,
   getContainerStatByContainerId,
@@ -58,5 +62,6 @@ router.get(
   getContainerStatsByContainerIdValidator,
   getContainerStatsByContainerId,
 );
+router.route('/:id/action/:action').post(postContainerActionValidator, postContainerAction);
 
 export default router;

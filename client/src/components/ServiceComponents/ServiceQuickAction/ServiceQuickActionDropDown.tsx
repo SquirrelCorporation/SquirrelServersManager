@@ -7,7 +7,7 @@ import { ItemType } from 'rc-menu/es/interface';
 import React, { ReactNode } from 'react';
 
 export type ServiceQuickActionProps = {
-  onDropDownClicked: any;
+  onDropDownClicked: (idx: number) => Promise<void>;
   children?: ReactNode;
 };
 
@@ -22,7 +22,7 @@ const ServiceQuickActionDropDown: React.FC<ServiceQuickActionProps> = (
         return;
       }
     }
-    props.onDropDownClicked(idx);
+    void props.onDropDownClicked(idx);
   };
 
   const items = ServiceQuickActionReference.map((e, index) => {
