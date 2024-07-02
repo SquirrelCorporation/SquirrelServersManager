@@ -85,7 +85,8 @@ interface ConnectionVars {
   ansible_become_method: any;
   ansible_become_pass: { __ansible_vault: any };
   ansible_ssh_host_key_checking: boolean;
-  ansible_user: any;
+  ansible_user?: string;
+  ansible_ssh_port?: number;
 }
 
 function getInventoryConnectionVars(deviceAuth: Partial<DeviceAuth>): ConnectionVars {
@@ -96,6 +97,7 @@ function getInventoryConnectionVars(deviceAuth: Partial<DeviceAuth>): Connection
     ansible_become_pass: { __ansible_vault: deviceAuth.becomePass },
     ansible_ssh_host_key_checking: !!deviceAuth.strictHostKeyChecking,
     ansible_user: deviceAuth.sshUser,
+    ansible_ssh_port: deviceAuth.sshPort,
   };
 
   return { ...vars, ...getAuth(deviceAuth) };
