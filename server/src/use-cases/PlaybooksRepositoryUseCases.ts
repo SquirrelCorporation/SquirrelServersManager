@@ -7,7 +7,6 @@ import PlaybooksRepositoryComponent from '../integrations/playbooks-repository/P
 import PlaybooksRepositoryEngine from '../integrations/playbooks-repository/PlaybooksRepositoryEngine';
 import { recursiveTreeCompletion } from '../integrations/playbooks-repository/tree-utils';
 import Shell from '../integrations/shell';
-import { createDirectoryWithFullPath, deleteFilesAndDirectory } from '../integrations/shell/utils';
 import logger from '../logger';
 
 async function getAllPlaybooksRepositories() {
@@ -55,7 +54,7 @@ async function createDirectoryInPlaybookRepository(
   if (!playbooksRepositoryComponent.fileBelongToRepository(path)) {
     throw new ForbiddenError("The selected path doesn't seems to belong to the repository");
   }
-  await createDirectoryWithFullPath(path, playbooksRepositoryComponent.rootPath);
+  Shell.FileSystemManager.createDirectory(path, playbooksRepositoryComponent.rootPath);
   await playbooksRepositoryComponent.updateDirectoriesTree();
 }
 
@@ -80,7 +79,7 @@ async function createPlaybookInRepository(
     playbooksRepository: playbooksRepository,
     playableInBatch: true,
   });
-  await Shell.PlaybookFileShell.newPlaybook(fullPath + '.yml');
+  Shell.PlaybookFileManager.newPlaybook(fullPath + '.yml');
   await playbooksRepositoryComponent.syncToDatabase();
   return playbook;
 }
@@ -93,7 +92,7 @@ async function deletePlaybooksInRepository(playbook: Playbook) {
     throw new InternalError(`PlaybookRepository doesnt seem registered`);
   }
   await PlaybookModel.deleteOne({ uuid: playbook.uuid });
-  await Shell.PlaybookFileShell.deletePlaybook(playbook.path);
+  Shell.PlaybookFileManager.deletePlaybook(playbook.path);
   await playbooksRepositoryComponent.syncToDatabase();
 }
 
@@ -110,7 +109,7 @@ async function deleteAnyInPlaybooksRepository(
   if (!playbooksRepositoryComponent.fileBelongToRepository(fullPath)) {
     throw new ForbiddenError('The selected path doesnt seems to belong to the repository');
   }
-  await deleteFilesAndDirectory(fullPath, playbooksRepositoryComponent.rootPath);
+  Shell.FileSystemManager.createDirectory(fullPath, playbooksRepositoryComponent.rootPath);
   await playbooksRepositoryComponent.syncToDatabase();
 }
 
@@ -125,7 +124,7 @@ async function deleteRepository(repository: PlaybooksRepository): Promise<void> 
   const rootPath = playbooksRepositoryComponent.rootPath;
   await PlaybooksRepositoryEngine.deregisterRepository(repository.uuid);
   await PlaybooksRepositoryRepo.deleteByUuid(repository.uuid);
-  await deleteFilesAndDirectory(directory, rootPath);
+  Shell.FileSystemManager.deleteFiles(directory, rootPath);
 }
 
 export default {

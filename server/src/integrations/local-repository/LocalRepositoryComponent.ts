@@ -1,7 +1,7 @@
 import PlaybooksRepositoryComponent, {
   AbstractComponent,
 } from '../playbooks-repository/PlaybooksRepositoryComponent';
-import { createDirectoryWithFullPath } from '../shell/utils';
+import Shell from '../shell';
 
 class LocalRepositoryComponent extends PlaybooksRepositoryComponent implements AbstractComponent {
   constructor(uuid: string, logger: any, name: string, rootPath: string) {
@@ -13,7 +13,7 @@ class LocalRepositoryComponent extends PlaybooksRepositoryComponent implements A
   }
 
   async init(): Promise<void> {
-    await createDirectoryWithFullPath(this.directory);
+    Shell.FileSystemManager.createDirectory(this.directory);
   }
 
   async syncFromRepository(): Promise<void> {

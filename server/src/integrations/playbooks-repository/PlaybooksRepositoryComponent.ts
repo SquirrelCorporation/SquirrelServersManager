@@ -9,7 +9,6 @@ import directoryTree from '../../helpers/directory-tree/directory-tree';
 import logger from '../../logger';
 import { Playbooks } from '../../types/typings';
 import Shell from '../shell';
-import { deleteFilesAndDirectory } from '../shell/utils';
 import { recursivelyFlattenTree } from './tree-utils';
 
 export const DIRECTORY_ROOT = '/playbooks';
@@ -33,7 +32,7 @@ abstract class PlaybooksRepositoryComponent {
   }
 
   public async delete() {
-    await deleteFilesAndDirectory(this.directory);
+    Shell.FileSystemManager.deleteFiles(this.directory);
   }
 
   public async save(playbookUuid: string, content: string) {
@@ -120,10 +119,9 @@ abstract class PlaybooksRepositoryComponent {
     foundPlaybook: Playbook,
     playbooksRepository: PlaybooksRepository,
   ): Promise<void> {
-    const configurationFileContent =
-      await Shell.PlaybookFileShell.readPlaybookConfigurationFileIfExists(
-        foundPlaybook.path.replace('.yml', '.json'),
-      );
+    const configurationFileContent = Shell.PlaybookFileManager.readConfigIfExists(
+      foundPlaybook.path.replace('.yml', '.json'),
+    );
     const isCustomPlaybook = !foundPlaybook.name.startsWith('_');
     const playbookFoundInDatabase = await PlaybookRepo.findOneByPath(foundPlaybook.path);
     const playbookData: Playbook = {

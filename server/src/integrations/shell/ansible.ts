@@ -9,9 +9,12 @@ import { Playbooks } from '../../types/typings';
 import ansibleCmd from '../ansible/AnsibleCmd';
 import AnsibleGalaxyCmd from '../ansible/AnsibleGalaxyCmd';
 import Inventory from '../ansible/utils/InventoryTransformer';
-import { timeout } from './utils';
 
 export const ANSIBLE_PATH = '/server/src/ansible/';
+
+export function timeout(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 async function executePlaybook(
   playbookPath: string,

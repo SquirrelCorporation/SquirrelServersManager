@@ -4,7 +4,10 @@ import Shell from '../integrations/shell';
 async function saveAllDeviceAuthSshKeys() {
   const devicesAuth = (await DeviceAuthRepo.findAllPopWithSshKey()) || [];
   for (const deviceAuth of devicesAuth) {
-    await Shell.AuthenticationShell.saveSshKey(deviceAuth.sshKey as string, deviceAuth.device.uuid);
+    await Shell.SshPrivateKeyFileManager.saveSshKey(
+      deviceAuth.sshKey as string,
+      deviceAuth.device.uuid,
+    );
   }
 }
 

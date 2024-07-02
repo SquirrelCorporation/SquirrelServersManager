@@ -1,9 +1,13 @@
 import * as AnsibleShell from './ansible';
-import * as AuthenticationShell from './authentication';
-import * as PlaybookFileShell from './playbook-file';
+import * as AuthenticationShell from './managers/SshPrivateKeyFileManager';
+import PlaybookFileManager from './managers/PlaybookFileManager';
+import FileSystemManager from './managers/FileSystemManager';
+import SshPrivateKeyFileManager from './managers/SshPrivateKeyFileManager';
 
 export default {
   AnsibleShell,
   AuthenticationShell,
-  PlaybookFileShell,
+  PlaybookFileManager,
+  FileSystemManager,
+  SshPrivateKeyFileManager,
 };

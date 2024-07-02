@@ -141,7 +141,7 @@ async function checkAnsibleConnection(
     await setToCache(SettingsKeys.AnsibleReservedExtraVarsKeys.MASTER_NODE_URL, masterNodeUrl);
   }
   if (sshKey) {
-    await Shell.AuthenticationShell.saveSshKey(sshKey, 'tmp');
+    await Shell.SshPrivateKeyFileManager.saveSshKey(sshKey, 'tmp');
   }
   const mockedInventoryTarget = Inventory.inventoryBuilderForTarget([
     {
