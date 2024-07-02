@@ -1,4 +1,4 @@
-import { test, vi, expect, describe } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import extraVarsOps from '../../../integrations/ansible/utils/ExtraVars';
 
 describe('test ExtraVars', () => {
