@@ -19,9 +19,7 @@ describe('transformExtraVars function', () => {
 
   test('empty input', () => {
     const input: API.ExtraVar[] = [];
-    expect(() => ExtraVarsTransformer.transformExtraVars(input)).toThrow(
-      'Error during transformExtraVars',
-    );
+    expect(ExtraVarsTransformer.transformExtraVars(input)).toEqual({});
   });
 
   test('should handle missing value field in extraVar', () => {
@@ -29,7 +27,7 @@ describe('transformExtraVars function', () => {
     const result = ExtraVarsTransformer.transformExtraVars(input);
     expect(result).toEqual({
       var1: 'value1',
-      var2: 'undefined',
+      var2: '',
     });
   });
 
