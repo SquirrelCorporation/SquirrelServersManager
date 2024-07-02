@@ -5,6 +5,7 @@ import ServiceQuickActionReference, {
 } from '@/components/ServiceComponents/ServiceQuickAction/ServiceQuickActionReference';
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
 import AppStoreModal from '@/pages/Services/components/AppStoreModal';
+import ContainerAvatar from '@/pages/Services/components/ContainerAvatar';
 import ContainerStatProgress from '@/pages/Services/components/ContainerStatProgress';
 import InfoToolTipCard from '@/pages/Services/components/InfoToolTipCard';
 import StatusTag from '@/pages/Services/components/StatusTag';
@@ -29,7 +30,7 @@ import {
   ProFormText,
   ProList,
 } from '@ant-design/pro-components';
-import { Avatar, Button, Flex, message, Popover, Tag, Tooltip } from 'antd';
+import { Button, Flex, message, Popover, Tag, Tooltip } from 'antd';
 import React, { useRef, useState } from 'react';
 import { API, SsmContainer } from 'ssm-shared-lib';
 
@@ -86,35 +87,6 @@ const Index: React.FC = () => {
       });
   };
 
-  const hashCode = (str: string) => {
-    let hash = 0,
-      i,
-      chr;
-    if (str.length === 0) return hash;
-    for (i = 0; i < str.length; i++) {
-      chr = str.charCodeAt(i);
-      hash = (hash << 5) - hash + chr;
-      hash |= 0; // Convert to 32bit integer
-    }
-    return Math.abs(hash);
-  };
-  const colorPalette = [
-    '#f56a00',
-    '#234398',
-    '#801872',
-    '#807718',
-    '#476e2f',
-    '#804018',
-    '#238f26',
-    '#188030',
-    '#7e7123',
-    '#801843',
-    '#561880',
-    '#19554e',
-    '#184280',
-    '#187780',
-  ];
-
   return (
     <PageContainer
       header={{
@@ -162,7 +134,7 @@ const Index: React.FC = () => {
           initialValue={selectedRecord?.customName || selectedRecord?.name}
         />
       </ModalForm>
-      <ProList<any>
+      <ProList<API.Container>
         size={'large'}
         ghost={ghost}
         itemCardProps={{
@@ -247,32 +219,16 @@ const Index: React.FC = () => {
             valueEnum: {
               running: {
                 text: 'running',
-                label: 'running',
               },
               paused: {
                 text: 'paused',
-                value: 'paused',
               },
             },
           },
           avatar: {
             search: false,
             render: (_, row) => {
-              return (
-                <Avatar
-                  size={50}
-                  shape="square"
-                  style={{
-                    marginRight: 4,
-                    backgroundColor:
-                      colorPalette[
-                        (row.id ? hashCode(row.id) : 0) % colorPalette.length
-                      ],
-                  }}
-                >
-                  {row.customName?.slice(0, 4) || row.name?.slice(0, 4)}
-                </Avatar>
-              );
+              return <ContainerAvatar row={row} key={row.id} />;
             },
           },
           content: {

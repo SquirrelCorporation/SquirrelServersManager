@@ -7,10 +7,14 @@ const mapExtraVarToPair = (extraVar: API.ExtraVar): [string, string] => [
 ];
 
 function transformExtraVars(extraVars: API.ExtraVars) {
-  const keyValuePairs = extraVars.map(mapExtraVarToPair);
+  try {
+    const keyValuePairs = extraVars.map(mapExtraVarToPair);
   const result = Object.fromEntries(keyValuePairs);
   logger.debug(JSON.stringify(result));
   return result;
+  } catch (error: any) {
+    throw new Error('Error during transformExtraVars');
+  }
 }
 
 export default {
