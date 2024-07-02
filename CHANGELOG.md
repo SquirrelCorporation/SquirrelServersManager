@@ -23,6 +23,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] refactoring classes [\#70](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/70) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Add tests and error handling for ExtraVarsTransformer [\#69](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/69) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Add loading states and optimize data fetching [\#62](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/62) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
