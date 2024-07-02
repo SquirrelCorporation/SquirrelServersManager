@@ -9,7 +9,7 @@ function generateDeviceKey(uuid: string) {
 
 function inventoryBuilder(devicesAuth: DeviceAuth[]) {
   logger.info(`[TRANSFORMERS][INVENTORY] - Inventory for ${devicesAuth.length} device(s)`);
-  // @ts-expect-error
+  // @ts-expect-error generic type
   const ansibleInventory: Playbooks.Hosts = {
     _meta: { hostvars: {} },
     all: { children: [] },

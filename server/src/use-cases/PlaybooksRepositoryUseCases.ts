@@ -80,7 +80,7 @@ async function createPlaybookInRepository(
     playbooksRepository: playbooksRepository,
     playableInBatch: true,
   });
-  await Shell.PlaybookFileShell.newPlaybook(fullPath + '.yml');
+  await Shell.PlaybookFileManager.newPlaybook(fullPath + '.yml');
   await playbooksRepositoryComponent.syncToDatabase();
   return playbook;
 }
@@ -93,7 +93,7 @@ async function deletePlaybooksInRepository(playbook: Playbook) {
     throw new InternalError(`PlaybookRepository doesnt seem registered`);
   }
   await PlaybookModel.deleteOne({ uuid: playbook.uuid });
-  await Shell.PlaybookFileShell.deletePlaybook(playbook.path);
+  await Shell.PlaybookFileManager.deletePlaybook(playbook.path);
   await playbooksRepositoryComponent.syncToDatabase();
 }
 

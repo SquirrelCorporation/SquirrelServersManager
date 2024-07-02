@@ -1,7 +1,23 @@
 import path from 'path';
 import fs from 'fs-extra';
 import shell, { ShellString } from 'shelljs';
+import { Logger } from 'pino';
 
+export function shellCmdWrapper<T extends (...args: any[]) => any>(
+  shellCmd: T,
+  logger: Logger,
+  task: string,
+) {
+  return (...args: Parameters<T>): ReturnType<T> => {
+    try {
+      logger.info(`${task} - Starting...`);
+      return shellCmd(...args);
+    } catch (error) {
+      logger.error(`${task} - Failed`);
+      throw new Error(`${task} failed`);
+    }
+  };
+}
 export async function createDirectoryWithFullPath(
   fullPath: string,
   rootPath?: string,

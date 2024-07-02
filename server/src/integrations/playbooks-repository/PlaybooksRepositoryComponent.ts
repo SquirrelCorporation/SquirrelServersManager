@@ -121,7 +121,7 @@ abstract class PlaybooksRepositoryComponent {
     playbooksRepository: PlaybooksRepository,
   ): Promise<void> {
     const configurationFileContent =
-      await Shell.PlaybookFileShell.readPlaybookConfigurationFileIfExists(
+      await Shell.PlaybookFileManager.readPlaybookConfigurationFileIfExists(
         foundPlaybook.path.replace('.yml', '.json'),
       );
     const isCustomPlaybook = !foundPlaybook.name.startsWith('_');

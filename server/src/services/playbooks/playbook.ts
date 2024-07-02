@@ -24,7 +24,7 @@ export const getPlaybook = asyncHandler(async (req, res) => {
     throw new NotFoundError(`Playbook ${uuid} not found`);
   }
   try {
-    const content = await Shell.PlaybookFileShell.readPlaybook(playbook.path);
+    const content = Shell.PlaybookFileManager.readPlaybook(playbook.path);
     new SuccessResponse('Get Playbook successful', content).send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
@@ -39,7 +39,7 @@ export const editPlaybook = asyncHandler(async (req, res) => {
     throw new NotFoundError(`Playbook ${uuid} not found`);
   }
   try {
-    await Shell.PlaybookFileShell.editPlaybook(playbook.path, req.body.content);
+    Shell.PlaybookFileManager.editPlaybook(playbook.path, req.body.content);
     new SuccessResponse('Edit playbook successful').send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
