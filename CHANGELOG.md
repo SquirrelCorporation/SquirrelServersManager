@@ -9,9 +9,15 @@
 - \[CHORE\] Small optimisations & fixes [\#61](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/61)
 - \[FEAT\]  Actions on containers [\#64](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/64) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
+**Fixed bugs:**
+
+- SSH Connection error if not on port 22 [\#65](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/65)
+- Update InventoryTransformer to include SSH port [\#66](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/66) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Closed issues:**
 
 - \[FEAT\] Docker Actions [\#57](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/57)
+- \[BUG\] Imported Encrypted SSH Key, now api is crashing [\#42](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/42)
 
 **Merged pull requests:**
 
