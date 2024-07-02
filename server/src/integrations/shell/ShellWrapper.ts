@@ -1,10 +1,14 @@
 import shell from 'shelljs';
 
-class ShellWrapper {
-  public cat = shell.cat;
-  public touch = shell.touch;
-  public test = shell.test;
-  public rm = shell.rm;
-}
+const ShellWrapper = {
+  mkdir: shell.mkdir.bind(shell),
+  rm: shell.rm.bind(shell),
+  cat: shell.cat.bind(shell),
+  echo: shell.echo.bind(shell),
+  touch: shell.touch.bind(shell),
+  test: shell.test.bind(shell),
+  chmod: shell.chmod.bind(shell),
+  to: (str: string, path: string) => shell.ShellString(str).to(path),
+};
 
-export default new ShellWrapper();
+export default ShellWrapper;

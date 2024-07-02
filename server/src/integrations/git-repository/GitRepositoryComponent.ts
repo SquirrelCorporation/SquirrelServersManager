@@ -2,7 +2,7 @@ import PlaybooksRepositoryComponent, {
   AbstractComponent,
   DIRECTORY_ROOT,
 } from '../playbooks-repository/PlaybooksRepositoryComponent';
-import { createDirectoryWithFullPath } from '../shell/utils';
+import Shell from '../shell';
 import {
   GitStep,
   IGitUserInfos,
@@ -51,7 +51,7 @@ class GitRepositoryComponent extends PlaybooksRepositoryComponent implements Abs
   async clone() {
     this.childLogger.info('Clone starting...');
     try {
-      void createDirectoryWithFullPath(this.directory, DIRECTORY_ROOT);
+      void Shell.FileSystemManager.createDirectory(this.directory, DIRECTORY_ROOT);
       await clone({
         ...this.options,
         logger: {

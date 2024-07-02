@@ -56,7 +56,7 @@ export const addDevice = asyncHandler(async (req, res) => {
       becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
     } as DeviceAuth);
     if (sshKey) {
-      await Shell.AuthenticationShell.saveSshKey(sshKey, createdDevice.uuid);
+      await Shell.SshPrivateKeyFileManager.saveSshKey(sshKey, createdDevice.uuid);
     }
     void WatcherEngine.registerWatcher(createdDevice);
     logger.info(`[CONTROLLER] Device - Created device with uuid: ${createdDevice.uuid}`);
