@@ -12,6 +12,8 @@
 **Fixed bugs:**
 
 - SSH Connection error if not on port 22 [\#65](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/65)
+- \[BUG\] Fix protected directory [\#77](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/77) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- BUGFIX - Fix deletion following refacto [\#76](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/76) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Extract ContainerAvatar to a separate component [\#68](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/68) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Update InventoryTransformer to include SSH port [\#66](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/66) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
