@@ -92,7 +92,10 @@ export default defineConfig({
               text: 'Adding an unmanaged device (agentless mode)', link: '/docs/add-unamanaged.md'
             },
             {
-              text: 'Playbooks', link: '/docs/playbooks.md'
+              text: 'Playbooks', link: '/docs/playbooks/playbooks.md', items: [
+                { text: 'Local Playbooks Repository', link: '/docs/playbooks/local-playbooks.md'},
+                { text: 'Remote Playbooks Repository', link: '/docs/playbooks/remote-playbooks.md'}
+              ]
             },
             {
               text: 'Services', link: '/docs/services.md'

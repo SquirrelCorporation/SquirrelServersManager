@@ -10,11 +10,12 @@ The "General Settings" tab enables to you to change the behaviour of SSM globall
 
 ![settings-1](/settings-1.png)
 
-## User Settings
+## Container Registries
 
-The "User Settings" tab only apply to a specific user. Currently, SSM doesn't support multiple users but the feature is planned for a future release.
+The "Container Registries' tab allow to configure several registries so you can watch for container updates on private repositories such as GCR, GHCR, ECR, etc...
+[See more here on how to configure a registry](/docs/registry)
 
-![settings-2](/settings-2.png)
+![settings-1](/settings-2.png)
 
 ## System information
 
