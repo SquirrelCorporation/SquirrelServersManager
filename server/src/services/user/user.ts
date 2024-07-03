@@ -1,6 +1,7 @@
 import { SettingsKeys } from 'ssm-shared-lib';
 import { AuthFailureError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
+import { createADefaultLocalUserRepository } from '../../core/startup';
 import { getAnsibleVersion } from '../../core/system/version';
 import { Role } from '../../data/database/model/User';
 import UserRepo from '../../data/database/repository/UserRepo';
@@ -99,7 +100,7 @@ export const createFirstUser = asyncHandler(async (req, res) => {
   if (hasUser) {
     throw new AuthFailureError('Your instance already has a user, you must first connect');
   }
-
+  // TODO: move to use cases
   await UserRepo.create({
     email: email,
     password: password,
@@ -107,6 +108,7 @@ export const createFirstUser = asyncHandler(async (req, res) => {
     role: Role.ADMIN,
     avatar: avatar || '/avatars/squirrel.svg',
   });
+  await createADefaultLocalUserRepository();
   new SuccessResponse('Create first user').send(res);
 });
 
