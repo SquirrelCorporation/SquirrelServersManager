@@ -110,7 +110,7 @@ const Index = memo(() => {
           <Carousel
             style={{ width: 300, height: 70, zIndex: 1000 }}
             dotPosition={'right'}
-            lazyLoad={'ondemand'}
+            lazyLoad={'progressive'}
           >
             <div style={{ width: 300, height: 70, zIndex: 1000 }}>
               <div
