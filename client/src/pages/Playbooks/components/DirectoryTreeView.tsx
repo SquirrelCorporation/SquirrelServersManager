@@ -106,6 +106,7 @@ const DirectoryTreeView: React.FC<DirectoryTreeViewProps> = (props) => {
                 }}
                 callbacks={props.callbacks}
                 remoteRootNode={node.remoteRootNode}
+                cannotDelete={!node.custom || node.rootNode}
               >
                 <Typography.Text
                   style={{ maxWidth: 150 - 10 * node.depth }}
