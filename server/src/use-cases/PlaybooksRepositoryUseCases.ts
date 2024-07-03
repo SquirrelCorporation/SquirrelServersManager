@@ -109,7 +109,7 @@ async function deleteAnyInPlaybooksRepository(
   if (!playbooksRepositoryComponent.fileBelongToRepository(fullPath)) {
     throw new ForbiddenError('The selected path doesnt seems to belong to the repository');
   }
-  Shell.FileSystemManager.createDirectory(fullPath, playbooksRepositoryComponent.rootPath);
+  Shell.FileSystemManager.deleteFiles(fullPath, playbooksRepositoryComponent.rootPath);
   await playbooksRepositoryComponent.syncToDatabase();
 }
 

@@ -148,7 +148,9 @@ abstract class PlaybooksRepositoryComponent {
   }
 
   public fileBelongToRepository(path: string) {
-    logger.info(`rootPath: ${this.directory?.split('/')[0]} versus ${path.split('/')[0]}`);
+    this.childLogger.info(
+      `rootPath: ${this.directory?.split('/')[0]} versus ${path.split('/')[0]}`,
+    );
     return this.directory?.split('/')[0] === path.split('/')[0];
   }
 
