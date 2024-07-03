@@ -39,7 +39,7 @@ export const editPlaybook = asyncHandler(async (req, res) => {
     throw new NotFoundError(`Playbook ${uuid} not found`);
   }
   try {
-    Shell.PlaybookFileManager.editPlaybook(playbook.path, req.body.content);
+    Shell.PlaybookFileManager.editPlaybook(req.body.content, playbook.path);
     new SuccessResponse('Edit playbook successful').send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
