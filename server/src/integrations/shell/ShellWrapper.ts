@@ -8,7 +8,7 @@ const ShellWrapper = {
   touch: shell.touch.bind(shell),
   test: shell.test.bind(shell),
   chmod: shell.chmod.bind(shell),
-  to: (str: string, path: string) => shell.ShellString(str).to(path),
+  to: (content: string, path: string) => shell.ShellString(content).to(path),
 };
 
 export default ShellWrapper;
