@@ -25,7 +25,7 @@ type PlaybookDropdownMenuType = {
 };
 
 type PlaybookDrownMenuItemType = {
-  fileType: DirectoryTree.CONSTANTS | 'any';
+  fileType: DirectoryTree.CONSTANTS | 'any' | 'deletable';
   playbookQuickRef?: string;
   icon?: React.JSX.Element;
   label: string;
@@ -49,7 +49,7 @@ const menuItems: PlaybookDrownMenuItemType[] = [
     label: 'Delete',
     icon: <DeleteOutlined />,
     key: '3',
-    fileType: 'any',
+    fileType: 'deletable',
   },
 ];
 
@@ -73,7 +73,7 @@ const PlaybookDropdownMenu: React.FC<PlaybookDropdownMenuType> = (props) => {
   const items = menuItems
     .filter(
       (e) =>
-        (e.fileType === 'any' && !props.cannotDelete) ||
+        (e.fileType === 'deletable' && !props.cannotDelete) ||
         e.fileType === props.type,
     )
     .map((e) => {

@@ -2,7 +2,6 @@ import {
   SimpleIconsGit,
   StreamlineLocalStorageFolderSolid,
 } from '@/components/Icons/CustomIcons';
-import { Typography } from 'antd';
 import React, { ReactNode } from 'react';
 import {
   API,
@@ -10,7 +9,6 @@ import {
   DirectoryTree as DT,
   Playbooks,
 } from 'ssm-shared-lib';
-import PlaybookDropdownMenu from './PlaybookDropdownMenu';
 
 export type ClientPlaybooksTrees = {
   isLeaf?: boolean;
@@ -83,11 +81,21 @@ export function recursiveTreeTransform(
           key: child.path,
           _name: child.name,
           nodeType: child.type,
+          rootNode: false,
           playbookRepository: {
             basePath: playbookRepository.basePath,
             name: playbookRepository.name,
             uuid: playbookRepository.uuid,
           },
+          // TODO ugly fix to prevent user breaking the system
+          custom:
+            (child as DirectoryTree.ExtendedTreeNode).custom === undefined &&
+            !child.path.includes(
+              '/server/src/ansible/00000000-0000-0000-0000-000000000000/agent',
+            ) &&
+            !child.path.includes(
+              '/server/src/ansible/00000000-0000-0000-0000-000000000000/device',
+            ),
           depth: depth,
           selectable: false,
           children: recursiveTreeTransform(
@@ -102,6 +110,7 @@ export function recursiveTreeTransform(
             key: child.path,
             _name: child.name,
             nodeType: DirectoryTree.CONSTANTS.FILE,
+            rootNode: false,
             playbookRepository: {
               basePath: playbookRepository.basePath,
               name: playbookRepository.name,
@@ -120,6 +129,7 @@ export function recursiveTreeTransform(
     newTree.push({
       key: node.path,
       _name: node.name,
+      rootNode: false,
       nodeType: DirectoryTree.CONSTANTS.FILE,
       playbookRepository: {
         basePath: playbookRepository.basePath,
