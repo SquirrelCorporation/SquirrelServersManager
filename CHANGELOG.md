@@ -6,12 +6,15 @@
 
 **Implemented enhancements:**
 
+- \[FEAT\] Create default LocalPlaybooksRepository for user [\#75](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/75)
 - \[CHORE\] Small optimisations & fixes [\#61](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/61)
+- \[FEAT\] Add default local repository for playbooks on user creation [\#78](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/78) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\]  Actions on containers [\#64](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/64) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Fixed bugs:**
 
 - SSH Connection error if not on port 22 [\#65](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/65)
+- \[FIX\] Fix incorrect argument order in editPlaybook function [\#79](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/79) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Fix protected directory [\#77](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/77) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - BUGFIX - Fix deletion following refacto [\#76](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/76) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Extract ContainerAvatar to a separate component [\#68](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/68) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
