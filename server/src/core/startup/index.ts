@@ -3,10 +3,12 @@ import { getFromCache } from '../../data/cache';
 import initRedisValues from '../../data/cache/defaults';
 import { PlaybookModel } from '../../data/database/model/Playbook';
 import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
+import UserRepo from '../../data/database/repository/UserRepo';
 import Crons from '../../integrations/crons';
 import WatcherEngine from '../../integrations/docker/core/WatcherEngine';
 import providerConf from '../../integrations/docker/registries/providers/provider.conf';
 import PlaybooksRepositoryEngine from '../../integrations/playbooks-repository/PlaybooksRepositoryEngine';
+import Shell from '../../integrations/shell';
 import logger from '../../logger';
 import ContainerRegistryUseCases from '../../use-cases/ContainerRegistryUseCases';
 import DeviceAuthUseCases from '../../use-cases/DeviceAuthUseCases';
@@ -44,6 +46,7 @@ async function init() {
 
   if (version !== SettingsKeys.DefaultValue.SCHEME_VERSION) {
     await migrate();
+    await createADefaultLocalUserRepository();
     logger.warn(`[CONFIGURATION] - Scheme version differed, starting writing updates`);
     await initRedisValues();
     void setAnsibleVersion();
@@ -61,6 +64,23 @@ async function migrate() {
     await PlaybookModel.syncIndexes();
   } catch (error: any) {
     logger.error(error);
+  }
+}
+
+export async function createADefaultLocalUserRepository() {
+  const user = await UserRepo.findFirst();
+  if (user) {
+    const userPlaybooksRepository = {
+      name: user?.email.trim().split('@')[0] || 'user-default',
+      enabled: true,
+      type: Playbooks.PlaybooksRepositoryType.LOCAL,
+      directory: '/playbooks/00000000-0000-0000-0000-000000000002',
+      uuid: '00000000-0000-0000-0000-000000000002',
+    };
+    await PlaybooksRepositoryRepo.updateOrCreate(userPlaybooksRepository);
+    try {
+      Shell.FileSystemManager.createDirectory(userPlaybooksRepository.directory);
+    } catch (error: any) {}
   }
 }
 

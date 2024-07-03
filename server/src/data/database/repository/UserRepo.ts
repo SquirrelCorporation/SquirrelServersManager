@@ -42,6 +42,10 @@ async function updateLogsLevel(email: string, userLogsLevel: UserLogsLevel): Pro
   await UsersModel.updateOne({ email: email }, { logsLevel: userLogsLevel }).exec();
 }
 
+async function findFirst(): Promise<User | null> {
+  return await UsersModel.findOne().lean().exec();
+}
+
 export default {
   create,
   findByEmailAndPassword,
@@ -50,4 +54,5 @@ export default {
   resetApiKey,
   updateLogsLevel,
   findByApiKey,
+  findFirst,
 };

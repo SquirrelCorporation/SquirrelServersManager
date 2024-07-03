@@ -31,6 +31,7 @@ const schema = new Schema<Playbook>(
     uniqueQuickRef: {
       type: Schema.Types.String,
       unique: true,
+      sparse: true,
     },
     path: {
       type: Schema.Types.String,
