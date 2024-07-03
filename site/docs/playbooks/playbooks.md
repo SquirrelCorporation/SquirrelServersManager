@@ -5,6 +5,12 @@
 [Reference](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html)
 :::
 
+## Playbooks Architecture
+
+The Playbooks page displays a list of `Playbooks Repositories`, that can be expanded to view a directory tree.
+There are two type of `Playbooks Repository`, **Local** and **Remote** repositories.
+
+
 ## Default playbooks
 
 SSM is shipped with several default playbooks to operate basics tasks such as installing the agent, updating the OS, rebooting, etc...
@@ -19,11 +25,18 @@ SSM is shipped with several default playbooks to operate basics tasks such as in
 Default playbooks are starting with '_' chars and cannot be deleted.
 You can find the list of default playbooks [here](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/master/server/src/ansible)
 
-## Editing and creating playbooks
+## Creating a directory or an empty playbook
 
-You can edit the default playbooks as well as creating your own custom ones with the editor
+- Directory: On the playbooks directory tree view, right-click on the **title** of the parent directory, and on the dropdown menu, click `Create a directory`
+- Empty Playbook: On the playbooks directory tree view, right-click on the **title** of the parent directory, and on the dropdown menu, click `Create a playbook`
 
-Go to the **"Playbooks"** section on the left menu, and click on a existing playbook or create a custom one
+![add-file](/playbooks/add-file.gif)
+
+## Editing playbooks
+
+You can edit the default playbooks as well as your own custom ones with the editor
+
+Just click on a playbook file and the editor will open.
 
 ![playbooks1](/playbooks-1.png)
 
