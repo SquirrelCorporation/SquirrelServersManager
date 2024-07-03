@@ -14,6 +14,7 @@
 **Fixed bugs:**
 
 - SSH Connection error if not on port 22 [\#65](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/65)
+- \[BUG\] Update Carousel lazyLoad setting to progressive [\#81](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/81) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FIX\] Fix incorrect argument order in editPlaybook function [\#79](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/79) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Fix protected directory [\#77](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/77) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - BUGFIX - Fix deletion following refacto [\#76](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/76) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
@@ -28,6 +29,7 @@
 
 **Merged pull requests:**
 
+- \[DOC\] Doc update doc [\#80](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/80) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] refactoring classes [\#70](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/70) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Add tests and error handling for ExtraVarsTransformer [\#69](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/69) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Add loading states and optimize data fetching [\#62](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/62) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
