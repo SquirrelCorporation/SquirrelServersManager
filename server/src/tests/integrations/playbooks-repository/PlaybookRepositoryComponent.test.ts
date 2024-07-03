@@ -6,7 +6,11 @@ describe('PlaybooksRepositoryComponent', () => {
   let playbooksRepositoryComponent: PlaybooksRepositoryComponent;
 
   beforeEach(() => {
-    const logger = { child: vi.fn() };
+    const logger = {
+      child: () => {
+        return { info: vi.fn(), warn: vi.fn(), error: vi.fn() };
+      },
+    };
     playbooksRepositoryComponent = new LocalRepositoryComponent('uuid', logger, 'name', 'path');
   });
 
