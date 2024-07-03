@@ -6,7 +6,9 @@ By default, according to the docker-compose.yml, local playbooks are stored on y
 
 ## Creating a new local repository
 
-In Settings > Playbooks tab, in the Local Repository panel, click on the blue button `Add a local repository`.
+![add-file](/playbooks/add-local.gif)
+
+In Settings > Playbooks tab, in the Local Repository panel, click on the blue button `Add a new local repository`.
 In the modal, enter a name and click `OK`. 
 The playbook repository will be saved on your filesystem.
 
@@ -14,7 +16,10 @@ The playbook repository will be saved on your filesystem.
 
 - SSM **will not** listen to changes (addition/deletion) made outside it's interface unless a manual synchronization is triggered.
 - Any changes made **inside** SSM will be automatically synchronized
-If you believe SSM is desynchronized from the actual files structure of the repository, click 
+If you believe SSM is desynchronized from the actual files structure of the repository, click on `...` of the `Actions` button of the Repository modal, and click on `Sync to database`
+
+![add-file](/playbooks/manual-sync.gif)
+
 
 ## Delete a local repository
 
@@ -23,4 +28,6 @@ This action is permanent. Deleting a local repository will effectively delete th
 :::
 
 Click on the local repository to open the the modal, click on the `Delete` button.
+
+![add-file](/playbooks/delete-repo.png)
 

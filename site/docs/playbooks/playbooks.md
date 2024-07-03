@@ -26,12 +26,18 @@ You can edit the default playbooks as well as your own custom ones with the edit
 
 Just click on a playbook file and the editor will open.
 
-![playbooks1](/playbooks-1.png)
+![edit-file](/playbooks/edit-playbook.gif)
 
 :::warning ⚠️ Playbooks are not saved automatically!
 To prevent any unwanted modifications on playbooks content, playbooks are not saved automatically.
 You must click on the save button (bottom right floating menu)
 ::: 
+
+## Syncing playbooks (only for remote repositories)
+
+When you working with a [remote repository](/docs/playbooks/remote-playbooks), a *right-click* on a the root node will offer you additional possibilities, such as Commit & Syncing your changes, or force pulling from the repository
+
+![edit-file](/playbooks/remote-dropdown.gif)
 
 
 ## Playbooks Architecture
