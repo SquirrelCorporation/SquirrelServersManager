@@ -8,14 +8,11 @@ import {
   deleteAnsibleLogs,
   deleteContainerStats,
   deleteDeviceStats,
+  deletePlaybooksAndResync,
   deleteServerLogs,
   postRestartServer,
 } from '@/services/rest/settings';
-import {
-  InfoCircleFilled,
-  RedoOutlined,
-  TableOutlined,
-} from '@ant-design/icons';
+import { BugFilled, InfoCircleFilled, RedoOutlined } from '@ant-design/icons';
 import { Button, Card, Flex, Popover, Space, Typography } from 'antd';
 import { DeleteOutline } from 'antd-mobile-icons';
 import React from 'react';
@@ -158,6 +155,37 @@ const AdvancedSettings: React.FC = () => {
               Restart
             </Button>
             <Space.Compact style={{ width: 'auto' }} />
+          </Space>
+        </Flex>
+      </Card>
+      <Card
+        type="inner"
+        style={{ marginTop: 16 }}
+        title={
+          <Title.SubTitle
+            title={'Debug'}
+            backgroundColor={SettingsSubTitleColors.DEBUG}
+            icon={<BugFilled />}
+          />
+        }
+      >
+        <Flex vertical gap={32} style={{ width: '50%' }}>
+          <Space direction="horizontal" size="middle">
+            <Typography>
+              {' '}
+              <Popover content={'Delete all playbooks and resync'}>
+                <InfoCircleFilled />
+              </Popover>{' '}
+              Playbooks
+            </Typography>{' '}
+            <Button
+              danger
+              icon={<DeleteOutline />}
+              onClick={async () => await deletePlaybooksAndResync()}
+            >
+              Purge & Sync again
+            </Button>
+            <Space.Compact style={{ width: '100%' }} />
           </Space>
         </Flex>
       </Card>

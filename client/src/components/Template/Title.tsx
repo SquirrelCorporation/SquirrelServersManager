@@ -20,6 +20,7 @@ export enum SettingsSubTitleColors {
   SERVER = '#8e7d50',
   GIT = '#336048',
   LOCAL = '#4b4a4a',
+  DEBUG = '#b614b6',
 }
 
 export type PageContainerTitleProps = {

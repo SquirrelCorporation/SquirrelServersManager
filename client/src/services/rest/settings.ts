@@ -88,6 +88,17 @@ export async function deleteDeviceStats(options?: Record<string, any>) {
   });
 }
 
+export async function deletePlaybooksAndResync(options?: Record<string, any>) {
+  return request<API.SimpleResult>(
+    `/api/settings/advanced/playbooks-and-resync`,
+    {
+      method: 'DELETE',
+      ...{},
+      ...(options || {}),
+    },
+  );
+}
+
 export async function postContainerStatsSettings(
   type: string,
   value: number,
