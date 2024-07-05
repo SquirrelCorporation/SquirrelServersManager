@@ -94,7 +94,7 @@ const CheckDeviceConnection: React.FC<CheckDeviceConnectionProps> = (props) => {
       direction="vertical"
       items={[
         {
-          title: 'Ansible Playbook test',
+          title: 'Ansible Playbook : Ansible Ping & Call SSM API URL',
           description: (
             <>
               {playbookStatus}{' '}

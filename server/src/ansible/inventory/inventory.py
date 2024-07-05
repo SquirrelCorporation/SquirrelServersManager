@@ -48,8 +48,8 @@ def parse_args():
 
 
 def load_inventory():
-    headers = {'Accept': 'application/json', 'Authorization': "Bearer {}".format(os.getenv("SSM_API_KEY")}
-    r = requests.get('http://localhost:3000/ansible/inventory', headers=headers)
+    headers = {'Accept': 'application/json', 'Authorization': "Bearer {}".format(os.getenv("SSM_API_KEY"))}
+    r = requests.get('http://localhost:3000/playbooks/inventory', headers=headers)
     return r.json()['data']
 
 

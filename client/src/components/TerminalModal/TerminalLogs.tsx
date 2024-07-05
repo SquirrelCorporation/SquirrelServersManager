@@ -13,17 +13,17 @@ const TerminalLogs: React.FC<TerminalLogsProps> = (props) => {
     <>
       {previous}
       <span style={terminalContentStyle}>
-        {execLog.stdout?.split('\n').map((e, index, array) => {
+        {execLog.stdout?.split('\n')?.map((e, index, array) => {
           return (
             <>
-              {e.split('\\r\\n').map((f) => {
+              {e.split('\\r\\n')?.map((f) => {
                 braces +=
                   (f.match(/\{/g)?.length || [].length) -
                   (f.match(/}/g)?.length || [].length);
                 return (
                   <>
                     {/* Small trick to render &nbsp; for json object */}
-                    {'\u00A0'.repeat(braces)}
+                    {'\u00A0'.repeat(braces < 0 ? 0 : braces)}
                     {f}
                   </>
                 );
