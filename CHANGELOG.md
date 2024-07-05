@@ -6,6 +6,7 @@
 
 **Fixed bugs:**
 
+- Add feature to delete and resync playbooks [\#85](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/85) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Update ansible URL and refine UI messages [\#84](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/84) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.15-alpha2](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.15-alpha2) (2024-07-05)
