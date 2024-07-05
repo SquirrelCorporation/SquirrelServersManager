@@ -15,6 +15,7 @@ import {
   deleteContainerStats,
   deleteDeviceStats,
   deleteLogs,
+  deletePlaybooksModelAndResync,
   postRestartServer,
 } from '../services/settings/advanced';
 
@@ -36,5 +37,5 @@ router.delete('/advanced/logs', deleteLogs);
 router.delete('/advanced/ansible-logs', deleteAnsibleLogs);
 router.delete('/advanced/device-stats', deleteDeviceStats);
 router.delete('/advanced/container-stats', deleteContainerStats);
-
+router.delete('/advanced/playbooks-and-resync', deletePlaybooksModelAndResync);
 export default router;
