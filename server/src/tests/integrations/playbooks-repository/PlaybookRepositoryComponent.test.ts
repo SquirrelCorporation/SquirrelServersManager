@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import LocalRepositoryComponent from '../../../integrations/local-repository/LocalRepositoryComponent';
+import LocalRepositoryComponent from '../../../integrations/playbooks-repository/local-repository/LocalRepositoryComponent';
 import PlaybooksRepositoryComponent from '../../../integrations/playbooks-repository/PlaybooksRepositoryComponent';
 
 describe('PlaybooksRepositoryComponent', () => {

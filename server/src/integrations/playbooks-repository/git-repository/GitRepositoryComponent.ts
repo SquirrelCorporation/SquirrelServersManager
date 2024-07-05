@@ -1,8 +1,8 @@
 import PlaybooksRepositoryComponent, {
   AbstractComponent,
   DIRECTORY_ROOT,
-} from '../playbooks-repository/PlaybooksRepositoryComponent';
-import Shell from '../shell';
+} from '../PlaybooksRepositoryComponent';
+import Shell from '../../shell';
 import {
   GitStep,
   IGitUserInfos,

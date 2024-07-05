@@ -4,7 +4,7 @@ import { SuccessResponse } from '../../core/api/ApiResponse';
 import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
 import asyncHandler from '../../helpers/AsyncHandler';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../integrations/ansible-vault/vault';
-import GitRepositoryComponent from '../../integrations/git-repository/GitRepositoryComponent';
+import GitRepositoryComponent from '../../integrations/playbooks-repository/git-repository/GitRepositoryComponent';
 import PlaybooksRepositoryEngine from '../../integrations/playbooks-repository/PlaybooksRepositoryEngine';
 import logger from '../../logger';
 import GitRepositoryUseCases from '../../use-cases/GitRepositoryUseCases';

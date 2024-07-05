@@ -40,6 +40,12 @@ export default [
         path: '/manage/services',
         component: './Services',
       },
+      {
+        path: '/manage/automations',
+        name: 'Automations',
+        icon: 'interaction',
+        component: './Automations/Automations',
+      },
     ],
   },
   {
@@ -54,12 +60,6 @@ export default [
         icon: 'database',
         path: '/admin/inventory',
         component: './Admin/Inventory',
-      },
-      {
-        path: '/admin/crons',
-        name: 'Crons',
-        icon: 'interaction',
-        component: './Admin/Crons/Crons',
       },
       {
         path: '/admin/logs',
