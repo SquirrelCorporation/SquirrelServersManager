@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+## [v0.1.15-alpha3](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.15-alpha3) (2024-07-05)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.15-alpha2...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.15-alpha2...v0.1.15-alpha3)
 
 **Fixed bugs:**
 
