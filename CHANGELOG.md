@@ -2,7 +2,19 @@
 
 ## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v.0.1.14...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.15-alpha-1...HEAD)
+
+**Fixed bugs:**
+
+- Refactor SSH private key file creation [\#83](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/83) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Closed issues:**
+
+- \[BUG\] Cannot create a playbook on a local repository [\#82](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/82)
+
+## [v0.1.15-alpha-1](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.15-alpha-1) (2024-07-03)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v.0.1.14...v0.1.15-alpha-1)
 
 **Implemented enhancements:**
 
