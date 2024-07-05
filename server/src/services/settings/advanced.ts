@@ -1,7 +1,8 @@
-import { Promise } from 'mongoose';
-import { res } from 'pino-std-serializers';
 import { SuccessResponse } from '../../core/api/ApiResponse';
-import { PlaybookModel } from '../../data/database/model/Playbook';
+import {
+  COLLECTION_NAME as PlaybookCollectionName,
+  PlaybookModel,
+} from '../../data/database/model/Playbook';
 import AnsibleLogsRepo from '../../data/database/repository/AnsibleLogsRepo';
 import ContainerStatsRepo from '../../data/database/repository/ContainerStatsRepo';
 import DeviceStatRepo from '../../data/database/repository/DeviceStatRepo';
@@ -35,7 +36,7 @@ export const deleteDeviceStats = asyncHandler(async (req, res) => {
 });
 
 export const deletePlaybooksModelAndResync = asyncHandler(async (req, res) => {
-  await PlaybookModel.db.collection('playbooks').drop();
+  await PlaybookModel.db.collection(PlaybookCollectionName).drop();
   await PlaybooksRepositoryEngine.registerRepositories();
   await PlaybooksRepositoryEngine.syncAllRegistered();
   new SuccessResponse('All data purged successfully').send(res);
