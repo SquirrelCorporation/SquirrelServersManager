@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.15-alpha-1...HEAD)
 
+**Fixed bugs:**
+
+- Refactor SSH private key file creation [\#83](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/83) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Closed issues:**
 
 - \[BUG\] Cannot create a playbook on a local repository [\#82](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/82)
