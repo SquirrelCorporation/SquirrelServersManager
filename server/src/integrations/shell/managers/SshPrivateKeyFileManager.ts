@@ -14,9 +14,7 @@ class SshPrivateKeyFileManager extends AbstractShellCommander {
 
       const keyFilePath = path.join('/tmp', `${uuid}.key`);
 
-      if (this.executeCommand(shellWrapper.echo, `${key} > ${keyFilePath}`).code !== 0) {
-        throw new Error('vaultSshKey - Error creating tmp file');
-      }
+      this.executeCommand(shellWrapper.to, key, keyFilePath);
 
       if (this.executeCommand(shellWrapper.chmod, '600', keyFilePath).code !== 0) {
         throw new Error('vaultSshKey - Error chmoding file');
