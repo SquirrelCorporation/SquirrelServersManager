@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.15-alpha2...HEAD)
+
+**Fixed bugs:**
+
+- Update ansible URL and refine UI messages [\#84](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/84) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 ## [v0.1.15-alpha2](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.15-alpha2) (2024-07-05)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.15-alpha-1...v0.1.15-alpha2)
