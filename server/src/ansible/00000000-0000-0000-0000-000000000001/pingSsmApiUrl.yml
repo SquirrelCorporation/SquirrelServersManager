@@ -1,0 +1,5 @@
+- hosts: all
+  tasks:
+    - name: Check that you can connect (GET) to the API and it returns a status 200
+      ansible.builtin.uri:
+        url: "{{ _ssm_masterNodeUrl }}/api/ping"

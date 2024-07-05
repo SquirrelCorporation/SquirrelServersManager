@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Col, Input, Row } from 'antd';
+import { Button } from 'antd';
 import { API } from 'ssm-shared-lib';
+import { ProForm, ProFormText } from '@ant-design/pro-components';
 
 export type ExtraVarViewProps = {
   extraVar: API.ExtraVar;
@@ -26,30 +27,26 @@ const ExtraVarView: React.FC<ExtraVarViewProps> = (props) => {
     );
   };
   return (
-    <Row
-      gutter={[24, 24]}
-      style={{ marginTop: 5, width: '100%' }}
-      key={props.extraVar.extraVar}
-    >
-      <Col>
-        <Input disabled value={props.extraVar.extraVar} />
-      </Col>
-      <Col>
-        <Input
-          disabled={!props.extraVar.canBeOverride}
-          onChange={handleChange}
-          defaultValue={
+    <ProForm.Group>
+      <ProFormText
+        disabled
+        fieldProps={{ value: props.extraVar.extraVar }}
+        colProps={{ md: 12, xl: 8 }}
+      />
+      <ProFormText
+        colProps={{ md: 12, xl: 8 }}
+        disabled={!props.extraVar.canBeOverride}
+        fieldProps={{
+          onChange: handleChange,
+          defaultValue:
             props.extraVar.value ||
-            (!props.extraVar.canBeOverride ? '' : 'COMPUTED')
-          }
-        />
-      </Col>
-      <Col>
-        <Button disabled={!props.extraVar.canBeOverride}>
-          Save for future execution
-        </Button>
-      </Col>
-    </Row>
+            (!props.extraVar.canBeOverride ? '' : 'COMPUTED'),
+        }}
+      />
+      <Button disabled={!props.extraVar.canBeOverride}>
+        Save for future execution
+      </Button>
+    </ProForm.Group>
   );
 };
 
