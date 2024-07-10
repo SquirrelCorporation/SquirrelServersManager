@@ -10,7 +10,7 @@ import {
 import { Collapse, Form, message } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
-import ExtraVarView from '@/components/PlaybookSelectionModal/ExtraVarView';
+import ExtraVarView from '@/components/PlaybookSelection/ExtraVarView';
 
 export type PlaybookSelectionModalProps = {
   isModalOpen: boolean;
@@ -18,6 +18,7 @@ export type PlaybookSelectionModalProps = {
   itemSelected?: API.DeviceItem[];
   callback: (
     playbook: string,
+    playbookName: string,
     target: API.DeviceItem[] | undefined,
     extraVars?: API.ExtraVars,
   ) => void;
@@ -120,7 +121,8 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
       onFinish={async (values: { playbook: { value: string } }) => {
         props.callback(
           values.playbook.value,
-          props.itemSelected,
+          listOfPlaybooks?.find((e) => values.playbook.value === e.uuid)
+            ?.name as string,
           overrideExtraVars
             ?.filter((e: { value?: string; overrideVar: string }) => e.value)
             .map((e: { overrideVar: string; value: string }) => {

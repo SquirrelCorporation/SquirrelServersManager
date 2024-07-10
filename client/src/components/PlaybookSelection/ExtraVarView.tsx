@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'antd';
+import { Button, Space, Typography } from 'antd';
 import { API } from 'ssm-shared-lib';
 import { ProForm, ProFormText } from '@ant-design/pro-components';
 
@@ -7,6 +7,7 @@ export type ExtraVarViewProps = {
   extraVar: API.ExtraVar;
   setOverrideExtraVars: any;
   overrideExtraVars: any;
+  smallView?: boolean;
 };
 
 const ExtraVarView: React.FC<ExtraVarViewProps> = (props) => {
@@ -27,15 +28,13 @@ const ExtraVarView: React.FC<ExtraVarViewProps> = (props) => {
     );
   };
   return (
-    <ProForm.Group>
+    <Space direction="horizontal" align={'center'}>
+      <ProFormText disabled fieldProps={{ value: props.extraVar.extraVar }} />
       <ProFormText
-        disabled
-        fieldProps={{ value: props.extraVar.extraVar }}
-        colProps={{ md: 12, xl: 8 }}
-      />
-      <ProFormText
-        colProps={{ md: 12, xl: 8 }}
         disabled={!props.extraVar.canBeOverride}
+        placeholder={
+          !props.extraVar.canBeOverride ? 'COMPUTED' : 'Please enter'
+        }
         fieldProps={{
           onChange: handleChange,
           defaultValue:
@@ -43,10 +42,21 @@ const ExtraVarView: React.FC<ExtraVarViewProps> = (props) => {
             (!props.extraVar.canBeOverride ? '' : 'COMPUTED'),
         }}
       />
-      <Button disabled={!props.extraVar.canBeOverride}>
-        Save for future execution
-      </Button>
-    </ProForm.Group>
+      <ProForm.Item>
+        <Button
+          disabled={!props.extraVar.canBeOverride}
+          style={{ marginTop: 0 }}
+        >
+          <Typography.Text
+            ellipsis
+            style={props.smallView ? { width: 50 } : {}}
+          >
+            {' '}
+            Save for future execution
+          </Typography.Text>
+        </Button>
+      </ProForm.Item>
+    </Space>
   );
 };
 

@@ -2,7 +2,7 @@ import DeviceLogos from '@/components/DeviceComponents/DeviceLogos';
 import { GrommetIconsInstall } from '@/components/Icons/CustomIcons';
 import NewDeviceModal from '@/components/NewDeviceModal/NewDeviceModal';
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
-import PlaybookSelectionModal from '@/components/PlaybookSelectionModal/PlaybookSelectionModal';
+import PlaybookSelectionModal from '@/components/PlaybookSelection/PlaybookSelectionModal';
 import DeviceQuickActionReference, {
   Actions,
   Types,
@@ -52,6 +52,7 @@ const Inventory: React.FC = () => {
     target: undefined,
     isOpen: false,
     command: undefined,
+    playbookName: undefined,
   });
   const [addNewDeviceModalIsOpen, setAddNewDeviceModalIsOpen] = useState(false);
   const [
@@ -66,11 +67,16 @@ const Inventory: React.FC = () => {
   const openOrCloseTerminalModal = (open: boolean) => {
     setTerminal({ ...terminal, isOpen: open });
   };
-  const onSelectPlaybook = (playbook: string, target?: API.DeviceItem[]) => {
+  const onSelectPlaybook = (
+    playbook: string,
+    playbookName: string,
+    target?: API.DeviceItem[],
+  ) => {
     setTerminal({
       isOpen: true,
       command: playbook,
       target: target,
+      playbookName: playbookName,
     });
   };
 

@@ -48,6 +48,7 @@ const Index = memo(() => {
     isOpen: false,
     command: undefined,
     target: undefined,
+    playbookName: undefined,
   });
 
   const openOrCloseTerminalModal = (open: boolean) => {

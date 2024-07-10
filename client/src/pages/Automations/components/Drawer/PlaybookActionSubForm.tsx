@@ -1,11 +1,13 @@
-import ExtraVarView from '@/components/PlaybookSelectionModal/ExtraVarView';
+import ExtraVarView from '@/components/PlaybookSelection/ExtraVarView';
+import { getDevices } from '@/services/rest/device';
 import { getPlaybooks } from '@/services/rest/playbooks';
-import { ProForm, ProFormSelect } from '@ant-design/pro-components';
-import { Collapse } from 'antd';
+import { CheckCircleFilled, FileOutlined, LockFilled } from '@ant-design/icons';
+import { ProFormSelect } from '@ant-design/pro-components';
+import { Collapse, Space } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
-const PlaybookAction = () => {
+const PlaybookActionSubForm = () => {
   const [listOfPlaybooks, setListOfPlaybooks] = React.useState<
     API.PlaybookFile[] | undefined
   >();
@@ -84,11 +86,37 @@ const PlaybookAction = () => {
         placeholder={'Select a playbook'}
         onChange={handleSelectedPlaybook}
         fieldProps={{
+          menuItemSelectedIcon: <CheckCircleFilled />,
+          labelRender: (props) => (
+            <Space>
+              <span role="img" aria-label={props.label as string}>
+                <FileOutlined />
+              </span>
+              {props.label}
+            </Space>
+          ),
+          optionRender: (option) => (
+            <Space>
+              <span role="img" aria-label={option.data.label as string}>
+                {(option.data.label as string).startsWith('_') ? (
+                  <LockFilled />
+                ) : (
+                  <FileOutlined />
+                )}
+              </span>
+              {option.data.label}
+            </Space>
+          ),
           mode: undefined,
           style: {
             minWidth: 240,
           },
         }}
+        rules={[
+          {
+            required: true,
+          },
+        ]}
         request={async () => {
           return await getPlaybooks().then((response) => {
             setListOfPlaybooks(response.data);
@@ -102,11 +130,31 @@ const PlaybookAction = () => {
         <Collapse
           items={selectedPlaybookExtraVars}
           bordered={false}
-          style={{ width: '100%' }}
+          style={{ width: '100%', marginBottom: 20 }}
         />
       )}
+      <ProFormSelect.SearchSelect
+        name="actionDevices"
+        placeholder={'Select at least one device'}
+        fieldProps={{
+          menuItemSelectedIcon: <CheckCircleFilled />,
+          style: {
+            minWidth: 240,
+          },
+        }}
+        rules={[
+          { required: true, message: 'Please select at least one device!' },
+        ]}
+        request={async () => {
+          return getDevices().then((response) => {
+            return response.data.map((e: API.DeviceItem) => {
+              return { label: `${e.fqdn} (${e.ip})`, value: e.uuid };
+            });
+          });
+        }}
+      />
     </>
   );
 };
 
-export default PlaybookAction;
+export default PlaybookActionSubForm;

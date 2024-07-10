@@ -213,7 +213,7 @@ const ExtraVarsViewEditor: React.FC<ExtraVarsViewEditionProps> = (
                             validator(_, value) {
                               if (
                                 currentExtraVars?.findIndex(
-                                  (e) => e.extraVar === value.value + 'r',
+                                  (e) => e.extraVar === value.value,
                                 ) === -1
                               ) {
                                 return Promise.resolve();

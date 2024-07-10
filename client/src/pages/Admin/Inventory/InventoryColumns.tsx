@@ -1,5 +1,4 @@
 import DeviceQuickActionDropDown from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionDropDown';
-import title from '@/components/Template/Title';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-components';
 import React from 'react';

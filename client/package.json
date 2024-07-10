@@ -75,7 +75,7 @@
     "rc-tween-one": "^3.0.6",
     "react-confetti": "^6.1.0",
     "@monaco-editor/react": "^4.6.0",
-    "monaco-yaml": "^5.2.0",
+    "monaco-yaml": "^5.2.1",
     "monaco-editor-webpack-plugin": "^7.1.0",
     "react-js-cron": "^5.0.1",
     "monaco-languageserver-types": "^0.3.4"
@@ -108,7 +108,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3",
     "eslint-plugin-react": "^7.34.3",
-    "@typescript-eslint/eslint-plugin": "^7.15.0",
+    "@typescript-eslint/eslint-plugin": "^7.16.0",
     "eslint-plugin-jest": "^28.6.0",
     "eslint-plugin-react-hooks": "^4.6.2"
   },

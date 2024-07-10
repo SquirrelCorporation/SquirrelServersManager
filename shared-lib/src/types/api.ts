@@ -641,3 +641,12 @@ export type LocalRepository = {
 }
 
 export type ExtraVars = ExtraVar[];
+
+export type Automation = {
+  name: string;
+  uuid: string;
+  automationChains: string;
+  lastExecutionStatus: 'failed' | 'success';
+  lastExecutionTime: Date;
+  enabled: boolean;
+}

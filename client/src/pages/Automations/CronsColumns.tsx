@@ -1,7 +1,7 @@
 import { GrommetIconsSystem } from '@/components/Icons/CustomIcons';
 import { LockFilled } from '@ant-design/icons';
 import { ProColumns } from '@ant-design/pro-components';
-import { Avatar, Flex, Space } from 'antd';
+import { Avatar } from 'antd';
 import { API } from 'ssm-shared-lib';
 
 const CronColumns: ProColumns<API.Cron>[] = [

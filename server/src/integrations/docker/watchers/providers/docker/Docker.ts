@@ -638,6 +638,7 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
   }
 
   async killContainer(container: Container) {
-    return await this.dockerApi.getContainer(container.id).kill();
+    this.childLogger.info(`killContainer ${container.id}`);
+    await this.dockerApi.getContainer(container.id).kill();
   }
 }

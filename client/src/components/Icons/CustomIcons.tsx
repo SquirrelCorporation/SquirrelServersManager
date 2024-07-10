@@ -753,3 +753,44 @@ export const TablerSquareNumber2Filled = (props: any) => (
     />
   </svg>
 );
+
+export const CarbonIbmEventAutomation = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 32 32"
+    {...props}
+  >
+    <circle cx="4" cy="22" r="2" fill="currentColor" />
+    <path
+      fill="currentColor"
+      d="M13.5 30a9.527 9.527 0 0 1-7.73-3.977l1.626-1.164A7.523 7.523 0 0 0 13.5 28c3.969 0 7.258-3.1 7.487-7.058l1.997.116C22.694 26.072 18.527 30 13.5 30Z"
+    />
+    <circle cx="28" cy="23" r="2" fill="currentColor" />
+    <path
+      fill="currentColor"
+      d="m30.641 19.095l-1.924-.545A7.521 7.521 0 0 0 29 16.5c0-4.136-3.364-7.5-7.5-7.5a7.438 7.438 0 0 0-3.088.663l-.824-1.822A9.424 9.424 0 0 1 21.5 7c5.238 0 9.5 4.262 9.5 9.5c0 .88-.12 1.754-.359 2.595zm-10.227-4.51l-3-3C17.037 11.209 16.534 11 16 11s-1.037.208-1.414.586l-3 3c-.39.39-.586.902-.586 1.414s.196 1.024.586 1.414l3 3c.377.378.88.586 1.414.586s1.037-.208 1.414-.586l3-3c.39-.39.586-.902.586-1.414s-.196-1.024-.586-1.414zM16 19l-3-3l3-3l3 3l-3 3z"
+    />
+    <circle cx="16" cy="3" r="2" fill="currentColor" />
+    <path
+      fill="currentColor"
+      d="M8.025 19.882A9.49 9.49 0 0 1 3 11.5c0-5.027 3.928-9.193 8.942-9.484l.116 1.997a7.502 7.502 0 0 0-3.089 14.105l-.944 1.764Z"
+    />
+  </svg>
+);
+
+export const FluentMdl2FileTemplate = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 2048 2048"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="m1243 0l549 549v219h-128V640h-512V128H256v1792h768v128H128V0h1115zm37 512h293l-293-293v293zm640 1408h128v128h-128v-128zm-256 0h128v128h-128v-128zm-256 0h128v128h-128v-128zm256-1024h128v128h-128V896zm-256 0h128v128h-128V896zm-256 1024h128v128h-128v-128zm768-256h128v128h-128v-128zm-768 0h128v128h-128v-128zm768-256h128v128h-128v-128zm-768 0h128v128h-128v-128zm768-256h128v128h-128v-128zm-768 0h128v128h-128v-128zm896-256v128h-128V896h128zm-896 0h128v128h-128V896z"
+    />
+  </svg>
+);
