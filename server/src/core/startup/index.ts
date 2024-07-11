@@ -44,6 +44,7 @@ async function init() {
   void DeviceAuthUseCases.saveAllDeviceAuthSshKeys();
   void Crons.initScheduledJobs();
   void WatcherEngine.init();
+  void AutomationEngine.init();
 
   if (version !== SettingsKeys.DefaultValue.SCHEME_VERSION) {
     await migrate();

@@ -1,5 +1,6 @@
 import { SSHType } from '../enums/ansible';
 import { PlaybooksRepositoryType } from '../enums/playbooks';
+import { AutomationChain } from '../form/automation';
 import { ExtendedTreeNode } from './tree';
 
 export type Response<T> = {
@@ -641,3 +642,12 @@ export type LocalRepository = {
 }
 
 export type ExtraVars = ExtraVar[];
+
+export type Automation = {
+  name: string;
+  uuid: string;
+  automationChains: AutomationChain;
+  lastExecutionStatus: 'failed' | 'success';
+  lastExecutionTime: Date;
+  enabled: boolean;
+}

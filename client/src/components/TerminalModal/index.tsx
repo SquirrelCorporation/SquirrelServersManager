@@ -16,6 +16,7 @@ import { API } from 'ssm-shared-lib';
 export type TerminalStateProps = {
   isOpen: boolean;
   command?: string;
+  playbookName?: string;
   quickRef?: string;
   target?: API.DeviceItem[];
   extraVars?: API.ExtraVars;
@@ -193,7 +194,8 @@ const TerminalModal = (props: TerminalModalProps) => {
               }}
             >
               Executing playbook{' '}
-              {props.terminalProps.command || props.terminalProps.quickRef}...{' '}
+              {props.terminalProps.quickRef || props.terminalProps.playbookName}
+              ...{' '}
             </div>
           </div>
         }

@@ -28,6 +28,8 @@ async function performAction(container: Container, action: SsmContainer.Actions)
       return await registeredComponent.stopContainer(container);
     case SsmContainer.Actions.START:
       return await registeredComponent.startContainer(container);
+    default:
+      throw new Error(`Unknown action type ${action}`);
   }
 }
 

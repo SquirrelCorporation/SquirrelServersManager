@@ -8,3 +8,4 @@ export * as StatsType from './enums/stats';
 export * as DirectoryTree from './types/tree'
 export * as Playbooks from './enums/playbooks'
 export * as SsmContainer from  './enums/container'
+export * as Automations from './form/automation';

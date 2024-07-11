@@ -12,6 +12,7 @@ import logger from '../../logger';
 import ContainerUseCases from '../../use-cases/ContainerUseCases';
 
 export const getContainers = asyncHandler(async (req, res) => {
+  logger.info(`[CONTROLLER] - GET - /containers/`);
   const realUrl = req.url;
   const { current = 1, pageSize = 10 } = req.query;
   const params = parse(realUrl, true).query as unknown as API.PageParams &

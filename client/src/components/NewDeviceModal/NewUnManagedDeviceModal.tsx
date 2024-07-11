@@ -21,6 +21,7 @@ const NewUnManagedDeviceModal: React.FC<NewUnManagedDeviceModalProps> = (
     setDeviceUuid(undefined);
     props.setIsModalOpen(false);
   };
+  const formRef = React.useRef();
 
   return (
     <>
@@ -55,6 +56,7 @@ const NewUnManagedDeviceModal: React.FC<NewUnManagedDeviceModalProps> = (
             <ProCard>
               {(!deviceUuid && (
                 <ProForm
+                  formRef={formRef}
                   onFinish={async (values) => {
                     if (values) {
                       await putDevice(values.deviceIp,
@@ -79,7 +81,7 @@ const NewUnManagedDeviceModal: React.FC<NewUnManagedDeviceModalProps> = (
                     }
                   }}
                 >
-                  <SSHConnectionForm />
+                  <SSHConnectionForm formRef={formRef} />
                 </ProForm>
               )) || (
                 <Result
