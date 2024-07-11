@@ -1,6 +1,6 @@
 import ContainerRegistry from '../data/database/model/ContainerRegistry';
 import ContainerRegistryRepo from '../data/database/repository/ContainerRegistryRepo';
-import WatcherEngine from '../integrations/docker/core/WatcherEngine';
+import WatcherEngine from '../modules/docker/core/WatcherEngine';
 import logger from '../logger';
 import type { SSMServicesTypes } from '../types/typings.d.ts';
 

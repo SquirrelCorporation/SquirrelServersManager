@@ -1,5 +1,5 @@
 import { getFromCache, setToCache } from '../../data/cache';
-import Shell from '../../integrations/shell';
+import Shell from '../../modules/shell';
 
 export async function getAnsibleVersion() {
   const ansibleVersion = await getFromCache('ansible-version');

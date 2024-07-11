@@ -5,9 +5,9 @@ import DeviceAuth from '../../data/database/model/DeviceAuth';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
 import asyncHandler from '../../helpers/AsyncHandler';
-import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../integrations/ansible-vault/vault';
-import WatcherEngine from '../../integrations/docker/core/WatcherEngine';
-import Shell from '../../integrations/shell';
+import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../modules/ansible-vault/vault';
+import WatcherEngine from '../../modules/docker/core/WatcherEngine';
+import Shell from '../../modules/shell';
 import logger from '../../logger';
 
 const SENSITIVE_PLACEHOLDER = 'REDACTED';

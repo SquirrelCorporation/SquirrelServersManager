@@ -1,11 +1,11 @@
 import { randomUUID } from 'node:crypto';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import Container from '../../../data/database/model/Container';
-import Acr from '../../../integrations/docker/registries/providers/acr/Acr';
-import Ecr from '../../../integrations/docker/registries/providers/ecr/Ecr';
-import Gcr from '../../../integrations/docker/registries/providers/gcr/Gcr';
-import Hub from '../../../integrations/docker/registries/providers/hub/Hub';
-import Docker from '../../../integrations/docker/watchers/providers/docker/Docker';
+import Acr from '../../../modules/docker/registries/providers/acr/Acr';
+import Ecr from '../../../modules/docker/registries/providers/ecr/Ecr';
+import Gcr from '../../../modules/docker/registries/providers/gcr/Gcr';
+import Hub from '../../../modules/docker/registries/providers/hub/Hub';
+import Docker from '../../../modules/docker/watchers/providers/docker/Docker';
 import sampleSemver from './samples/semver.json';
 
 let docker: Docker;
@@ -77,9 +77,9 @@ describe('testing Docker', () => {
     };
   });
 
-  vi.mock('../../../integrations/docker/core/WatcherEngine', async (importOriginal) => {
+  vi.mock('../../../modules/docker/core/WatcherEngine', async (importOriginal) => {
     return {
-      ...(await importOriginal<typeof import('../../../integrations/docker/core/WatcherEngine')>()),
+      ...(await importOriginal<typeof import('../../../modules/docker/core/WatcherEngine')>()),
       // this will only affect "getRegistries" outside of the original module
       getRegistries: () => getRegistries(),
     };

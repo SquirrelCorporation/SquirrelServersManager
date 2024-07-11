@@ -9,7 +9,7 @@ import DeviceStatRepo from '../../data/database/repository/DeviceStatRepo';
 import LogsRepo from '../../data/database/repository/LogsRepo';
 import asyncHandler from '../../helpers/AsyncHandler';
 import { restart } from '../../index';
-import PlaybooksRepositoryEngine from '../../integrations/playbooks-repository/PlaybooksRepositoryEngine';
+import PlaybooksRepositoryEngine from '../../modules/playbooks-repository/PlaybooksRepositoryEngine';
 
 export const postRestartServer = asyncHandler(async (req, res) => {
   await restart();

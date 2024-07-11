@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import tag from '../../../integrations/docker/utils/tag';
+import tag from '../../../modules/docker/utils/tag';
 
 describe('testing tag', () => {
   const parseTestCases = [

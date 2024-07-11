@@ -11,11 +11,11 @@ import DeviceDownTimeEventRepo from '../data/database/repository/DeviceDownTimeE
 import DeviceRepo from '../data/database/repository/DeviceRepo';
 import DeviceStatRepo from '../data/database/repository/DeviceStatRepo';
 import PlaybookRepo from '../data/database/repository/PlaybookRepo';
-import { DEFAULT_VAULT_ID, vaultEncrypt } from '../integrations/ansible-vault/vault';
-import Inventory from '../integrations/ansible/utils/InventoryTransformer';
-import { getCustomAgent } from '../integrations/docker/core/CustomAgent';
-import DockerAPIHelper from '../integrations/docker/core/DockerAPIHelper';
-import Shell from '../integrations/shell';
+import { DEFAULT_VAULT_ID, vaultEncrypt } from '../modules/ansible-vault/vault';
+import Inventory from '../modules/ansible/utils/InventoryTransformer';
+import { getCustomAgent } from '../modules/docker/core/CustomAgent';
+import DockerAPIHelper from '../modules/docker/core/DockerAPIHelper';
+import Shell from '../modules/shell';
 import logger from '../logger';
 import PlaybookUseCases from './PlaybookUseCases';
 

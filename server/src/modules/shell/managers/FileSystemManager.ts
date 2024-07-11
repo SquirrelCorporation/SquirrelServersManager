@@ -7,7 +7,7 @@ import { AbstractShellCommander } from '../AbstractShellCommander';
 
 export class FileSystemManager extends AbstractShellCommander {
   constructor() {
-    super(logger.child({ module: 'FileSystem' }), 'FileSystem');
+    super(logger.child({ module: 'FileSystemManager' }), 'FileSystem');
   }
 
   createDirectory(fullPath: string, rootPath?: string): ShellString {

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import Quay from '../../../integrations/docker/registries/providers/quay/Quay';
+import Quay from '../../../modules/docker/registries/providers/quay/Quay';
 
 describe('testing Quay Registry', () => {
   const quay = new Quay();

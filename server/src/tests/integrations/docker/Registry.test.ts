@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { Kind } from '../../../integrations/docker/core/Component';
-import AbstractRegistry from '../../../integrations/docker/registries/Registry';
+import { Kind } from '../../../modules/docker/core/Component';
+import AbstractRegistry from '../../../modules/docker/registries/Registry';
 
 class Registry extends AbstractRegistry {
   constructor() {

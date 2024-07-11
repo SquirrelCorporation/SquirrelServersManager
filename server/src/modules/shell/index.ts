@@ -1,4 +1,4 @@
-import * as AnsibleShell from './ansible';
+import * as AnsibleShell from './managers/AnsibleShellCommandsManager';
 import * as AuthenticationShell from './managers/SshPrivateKeyFileManager';
 import PlaybookFileManager from './managers/PlaybookFileManager';
 import FileSystemManager from './managers/FileSystemManager';

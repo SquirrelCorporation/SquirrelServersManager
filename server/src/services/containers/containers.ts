@@ -7,7 +7,7 @@ import asyncHandler from '../../helpers/AsyncHandler';
 import { filterByFields, filterByQueryParams } from '../../helpers/FilterHelper';
 import { paginate } from '../../helpers/PaginationHelper';
 import { sortByFields } from '../../helpers/SorterHelper';
-import WatcherEngine from '../../integrations/docker/core/WatcherEngine';
+import WatcherEngine from '../../modules/docker/core/WatcherEngine';
 import logger from '../../logger';
 import ContainerUseCases from '../../use-cases/ContainerUseCases';
 

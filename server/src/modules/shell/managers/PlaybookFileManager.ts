@@ -4,7 +4,7 @@ import { AbstractShellCommander } from '../AbstractShellCommander';
 
 class PlaybookFileManager extends AbstractShellCommander {
   constructor() {
-    super(logger.child({ module: 'PlaybookManager' }), 'Playbook');
+    super(logger.child({ module: 'PlaybookFileManager' }), 'Playbook');
   }
 
   readPlaybook(path: string): string {

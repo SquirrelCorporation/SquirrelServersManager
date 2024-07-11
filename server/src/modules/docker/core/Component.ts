@@ -53,7 +53,7 @@ abstract class Component<
     this.name = name;
     this.configuration = this.validateConfiguration(configuration);
     this.childLogger = logger.child(
-      { module: `${kind}/${type}/${name}` },
+      { module: `${kind}`, moduleId: `${this._id}`, moduleName: `${name}`, moduleType: `${type}` },
       { msgPrefix: `[${kind.toUpperCase()}][${type.toUpperCase()}] - ` },
     );
     this.childLogger.info(

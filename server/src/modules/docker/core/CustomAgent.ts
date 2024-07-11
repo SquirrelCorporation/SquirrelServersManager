@@ -13,7 +13,7 @@ export const getCustomAgent = (childLogger: any, opt: any) => {
       super(opt, { keepAlive: true });
       this.setMaxListeners(20);
       this.logger = childLogger.child(
-        { module: `SsmSshAgent/${opt.host}` },
+        { module: 'SsmSshDockerAgent', moduleId: `${opt.host}` },
         { msgPrefix: '[SSH] - ' },
       );
     }

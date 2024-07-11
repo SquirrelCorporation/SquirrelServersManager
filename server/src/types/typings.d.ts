@@ -214,4 +214,4 @@ export declare namespace SSMServicesTypes {
   };
 }
 
-declare module '../integrations/docker/watchers/providers/docker/Docker';
+declare module '../modules/docker/watchers/providers/docker/Docker';

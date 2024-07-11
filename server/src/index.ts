@@ -3,13 +3,13 @@ import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import { SECRET } from './config';
 import { connection } from './data/database';
-import WatcherEngine from './integrations/docker/core/WatcherEngine';
+import WatcherEngine from './modules/docker/core/WatcherEngine';
 import { errorHandler } from './middlewares/errorHandler';
 import routes from './routes';
 import logger from './logger';
 import Configuration from './core/startup';
 import './middlewares/passport';
-import Crons from './integrations/crons';
+import Crons from './modules/crons';
 //const pino = require('pino-http')();
 
 const app = express();
