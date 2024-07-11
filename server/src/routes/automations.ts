@@ -5,11 +5,13 @@ import {
   getAllAutomations,
   getTemplate,
   manualAutomationExecution,
+  postAutomation,
   putAutomation,
 } from '../services/automations/automations';
 import {
   deleteAutomationValidator,
   manualAutomationExecutionValidator,
+  postAutomationValidator,
   putAutomationValidator,
 } from '../services/automations/automations.validator';
 
@@ -20,6 +22,9 @@ router.route('/').get(getAllAutomations);
 router.route('/template/:templateId').get(getTemplate);
 router.route('/:name').put(putAutomationValidator, putAutomation);
 router.route('/:uuid/execute').post(manualAutomationExecutionValidator, manualAutomationExecution);
-router.route('/:uuid').delete(deleteAutomationValidator, deleteAutomation);
+router
+  .route('/:uuid')
+  .delete(deleteAutomationValidator, deleteAutomation)
+  .post(postAutomationValidator, postAutomation);
 
 export default router;

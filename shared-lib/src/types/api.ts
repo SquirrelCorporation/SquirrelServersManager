@@ -645,7 +645,7 @@ export type ExtraVars = ExtraVar[];
 export type Automation = {
   name: string;
   uuid: string;
-  automationChains: string;
+  automationChains: any;
   lastExecutionStatus: 'failed' | 'success';
   lastExecutionTime: Date;
   enabled: boolean;

@@ -19,6 +19,7 @@ const Automations: React.FC = () => {
     API.Automation | undefined
   >();
   const actionRef = React.useRef<ActionType | undefined>(null);
+  const [drawerOpened, setDrawerOpened] = React.useState(false);
 
   const reload = () => {
     actionRef.current?.reload();
@@ -34,11 +35,18 @@ const Automations: React.FC = () => {
             actionRef={actionRef}
             rowKey="name"
             request={getAutomations}
-            columns={AutomationsColumns(setCurrentRow, reload)}
+            columns={AutomationsColumns(setCurrentRow, reload, setDrawerOpened)}
             search={false}
             dateFormatter="string"
             toolBarRender={() => [
-              <AutomationEditionDrawer key={'automation-edit'} />,
+              <AutomationEditionDrawer
+                key={'automation-edit'}
+                open={drawerOpened}
+                setOpen={setDrawerOpened}
+                reload={reload}
+                selectedRow={currentRow}
+                setSelectedRow={setCurrentRow}
+              />,
             ]}
           />
         </>

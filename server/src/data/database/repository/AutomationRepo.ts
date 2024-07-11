@@ -26,6 +26,10 @@ async function findAllEnabled(): Promise<Automation[] | null> {
   return await AutomationModel.find({ enabled: true }).lean().exec();
 }
 
+async function update(automation: Partial<Automation>): Promise<void> {
+  await AutomationModel.updateOne({ uuid: automation.uuid }, automation).exec();
+}
+
 export default {
   create,
   findAll,
@@ -33,4 +37,5 @@ export default {
   deleteByUuid,
   findByUuid,
   findAllEnabled,
+  update,
 };

@@ -17,6 +17,7 @@ export const getAllAutomations = asyncHandler(async (req, res) => {
 export const putAutomation = asyncHandler(async (req, res) => {
   const { rawChain } = req.body;
   const { name } = req.params;
+  logger.info(`[CONTROLLER] - PUT - /automations/${name}`);
   const automation = await AutomationUseCases.createAutomation({
     name: name,
     automationChains: rawChain,
@@ -24,8 +25,23 @@ export const putAutomation = asyncHandler(async (req, res) => {
   return new SuccessResponse('Automation created successfully.', automation).send(res);
 });
 
+export const postAutomation = asyncHandler(async (req, res) => {
+  const { rawChain, name } = req.body;
+  const { uuid } = req.params;
+  logger.info(`[CONTROLLER] - POST - /automations/${uuid}`);
+  const automation = await AutomationRepo.findByUuid(uuid);
+  if (!automation) {
+    throw new NotFoundError(`Automation uuid ${uuid} not found`);
+  }
+  automation.name = name;
+  automation.automationChains = rawChain;
+  await AutomationRepo.update(automation);
+  return new SuccessResponse('Automation updated successfully.', automation).send(res);
+});
+
 export const deleteAutomation = asyncHandler(async (req, res) => {
   const { uuid } = req.params;
+  logger.info(`[CONTROLLER] - DELETE - /automations/${uuid}`);
   const automation = await AutomationRepo.findByUuid(uuid);
   if (!automation) {
     throw new NotFoundError(`Automation uuid ${uuid} not found`);
@@ -36,6 +52,7 @@ export const deleteAutomation = asyncHandler(async (req, res) => {
 
 export const manualAutomationExecution = asyncHandler(async (req, res) => {
   const { uuid } = req.params;
+  logger.info(`[CONTROLLER] - POST - /automations/${uuid}/execute`);
   const automation = await AutomationRepo.findByUuid(uuid);
   if (!automation) {
     throw new NotFoundError(`Automation uuid ${uuid} not found`);

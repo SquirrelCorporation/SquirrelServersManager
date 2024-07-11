@@ -1,9 +1,11 @@
 import AutomationActionInnerCard from '@/pages/Automations/components/Drawer/AutomationActionInnerCard';
 import AutomationTriggerInnerCard from '@/pages/Automations/components/Drawer/AutomationTriggerInnerCard';
 import items from '@/pages/Automations/components/Drawer/templates-data/TemplateList';
+import { transformAutomationChain } from '@/pages/Automations/components/Drawer/utils';
 import {
   getAutomations,
   getTemplate,
+  postAutomation,
   putAutomation,
 } from '@/services/rest/automations';
 import { ArrowDownOutlined, PlusOutlined, UpOutlined } from '@ant-design/icons';
@@ -15,12 +17,18 @@ import {
 } from '@ant-design/pro-components';
 import { Button, Dropdown, Flex, MenuProps, message, Space } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
-import { Automations } from 'ssm-shared-lib';
-import { Actions } from 'ssm-shared-lib/distribution/form/automation';
-import { Automation } from 'ssm-shared-lib/distribution/types/api';
+import { API, Automations } from 'ssm-shared-lib';
 
-const AutomationEditionDrawer: React.FC = () => {
-  const [automations, setAutomations] = useState<Automation[]>([]);
+type AutomationEditProps = {
+  reload: () => void;
+  selectedRow?: API.Automation;
+  setSelectedRow: any;
+  open: boolean;
+  setOpen: any;
+};
+
+const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
+  const [automations, setAutomations] = useState<API.Automation[]>([]);
   const [onUpdate, setOnUpdate] = React.useState<string | undefined>();
   const formRef = useRef<ProFormInstance | undefined>(undefined);
   const formRefName = useRef<ProFormInstance<{ name: string }> | undefined>(
@@ -41,29 +49,7 @@ const AutomationEditionDrawer: React.FC = () => {
     await getTemplate(idx).then(
       (response: { data: Automations.AutomationChain }) => {
         const automation = response.data;
-        formRef?.current?.setFieldsValue({
-          trigger: automation.trigger,
-          cronValue: automation.cronValue,
-          action: automation.actions[0]?.action,
-          playbook: {
-            value: (automation.actions[0] as Automations.ActionChainPlaybook)
-              ?.playbook,
-          },
-          actionDevices: (
-            automation.actions[0] as Automations.ActionChainPlaybook
-          )?.actionDevices?.map((device) => ({
-            value: device,
-          })),
-          dockerAction: {
-            value: (automation.actions[0] as Automations.ActionChainDocker)
-              ?.dockerAction,
-          },
-          dockerContainers: (
-            automation.actions[0] as Automations.ActionChainDocker
-          )?.dockerContainers?.map((container) => ({
-            value: container,
-          })),
-        });
+        formRef?.current?.setFieldsValue(transformAutomationChain(automation));
         setOnUpdate(key);
       },
     );
@@ -74,9 +60,23 @@ const AutomationEditionDrawer: React.FC = () => {
       <DrawerForm
         title="Automation Editor"
         formRef={formRef}
+        open={props.open}
+        request={
+          props.selectedRow
+            ? async () => {
+                return transformAutomationChain(
+                  props.selectedRow.automationChains,
+                );
+              }
+            : undefined
+        }
         drawerProps={{
           placement: 'left',
           destroyOnClose: true,
+          onClose: () => {
+            props.setOpen(false);
+            props.setSelectedRow(undefined);
+          },
           extra: (
             <Space direction={'vertical'} align={'center'}>
               <ProForm<{ name: string }>
@@ -88,11 +88,13 @@ const AutomationEditionDrawer: React.FC = () => {
                 <ProFormText
                   name={'name'}
                   style={{ marginBottom: 0 }}
+                  initialValue={props.selectedRow?.name}
                   rules={[
                     { required: true },
                     {
                       validator(_, value) {
                         if (
+                          props.selectedRow?.name === value ||
                           automations?.findIndex((e) => e.name === value) === -1
                         ) {
                           return Promise.resolve();
@@ -120,7 +122,7 @@ const AutomationEditionDrawer: React.FC = () => {
           };
           if (formData.action === Automations.Actions.PLAYBOOK) {
             const actionChain: Automations.ActionChainPlaybook = {
-              action: Actions.PLAYBOOK,
+              action: Automations.Actions.PLAYBOOK,
               playbook: formData.playbook.value,
               actionDevices: formData.actionDevices.map(
                 (e: { value: string }) => e.value,
@@ -129,7 +131,7 @@ const AutomationEditionDrawer: React.FC = () => {
             rawChain.actions.push(actionChain);
           } else if (formData.action === Automations.Actions.DOCKER) {
             const actionChain: Automations.ActionChainDocker = {
-              action: Actions.DOCKER,
+              action: Automations.Actions.DOCKER,
               dockerAction: formData.dockerAction.value,
               dockerContainers: formData.dockerContainers.map(
                 (e: { value: string }) => e.value,
@@ -140,7 +142,31 @@ const AutomationEditionDrawer: React.FC = () => {
             message.error({ content: 'Automation format is not correct' });
             return;
           }
-          await putAutomation(value.name, rawChain);
+          if (props.selectedRow) {
+            return await postAutomation(
+              props.selectedRow.uuid,
+              value.name,
+              rawChain,
+            )
+              .then(() => {
+                props.reload();
+                props.setOpen(false);
+                return true;
+              })
+              .catch(() => {
+                return false;
+              });
+          } else {
+            return await putAutomation(value.name, rawChain)
+              .then(() => {
+                props.reload();
+                props.setOpen(false);
+                return true;
+              })
+              .catch(() => {
+                return false;
+              });
+          }
         }}
         submitter={{
           render: (_, defaultDoms) => {
@@ -156,7 +182,13 @@ const AutomationEditionDrawer: React.FC = () => {
                   </Space>
                 </Button>
               </Dropdown>,
-              <Button onClick={() => formRef?.current?.resetFields()}>
+              <Button
+                key="reset"
+                type={'dashed'}
+                onClick={() => {
+                  formRef?.current?.resetFields();
+                }}
+              >
                 Reset
               </Button>,
               ...defaultDoms,

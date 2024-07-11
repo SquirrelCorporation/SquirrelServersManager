@@ -30,6 +30,23 @@ export async function putAutomation(
   });
 }
 
+export async function postAutomation(
+  uuid: string,
+  name: string,
+  rawChain: any,
+  params?: any,
+  options?: Record<string, any>,
+) {
+  return request<API.Response<API.Automation>>(`/api/automations/${uuid}`, {
+    method: 'POST',
+    data: { rawChain: rawChain, name: name },
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 export async function deleteAutomation(
   uuid: string,
   params?: any,

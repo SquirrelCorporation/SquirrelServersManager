@@ -5,7 +5,11 @@ import { Avatar } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
-const AutomationsColumns = (setCurrentRow: any, reload: () => void) => {
+const AutomationsColumns = (
+  setCurrentRow: any,
+  reload: () => void,
+  setDrawerOpened: any,
+) => {
   const columns: ProColumns<API.Automation>[] = [
     {
       align: 'center',
@@ -55,6 +59,7 @@ const AutomationsColumns = (setCurrentRow: any, reload: () => void) => {
           key="config"
           onClick={() => {
             setCurrentRow(record);
+            setDrawerOpened(true);
           }}
         >
           Configuration
