@@ -706,3 +706,91 @@ export const StreamlineLocalStorageFolderSolid = (props: any) => (
     />
   </svg>
 );
+
+export const GrommetIconsSystem = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      d="M1 19h22V1H1v18Zm4 4h14H5Zm3 0h8v-4H8v4ZM7.757 5.757l2.122 2.122l-2.122-2.122ZM9 10H6h3Zm.879 2.121l-2.122 2.122l2.122-2.122ZM12 13v3v-3Zm2.121-.879l2.122 2.122l-2.122-2.122ZM18 10h-3h3Zm-1.757-4.243l-2.122 2.122l2.122-2.122ZM12 7V4v3Zm0 0a3 3 0 1 0 0 6a3 3 0 0 0 0-6Z"
+    />
+  </svg>
+);
+
+export const TablerSquareNumber1Filled = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M18.333 2c1.96 0 3.56 1.537 3.662 3.472l.005.195v12.666c0 1.96-1.537 3.56-3.472 3.662l-.195.005H5.667a3.667 3.667 0 0 1-3.662-3.472L2 18.333V5.667c0-1.96 1.537-3.56 3.472-3.662L5.667 2zm-5.339 5.886c-.083-.777-1.008-1.16-1.617-.67l-.084.077l-2 2l-.083.094a1 1 0 0 0 0 1.226l.083.094l.094.083a1 1 0 0 0 1.226 0l.094-.083l.293-.293V16l.007.117a1 1 0 0 0 1.986 0L13 16V8z"
+    />
+  </svg>
+);
+
+export const TablerSquareNumber2Filled = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M18.333 2c1.96 0 3.56 1.537 3.662 3.472l.005.195v12.666c0 1.96-1.537 3.56-3.472 3.662l-.195.005H5.667a3.667 3.667 0 0 1-3.662-3.472L2 18.333V5.667c0-1.96 1.537-3.56 3.472-3.662L5.667 2zM13 7h-3l-.117.007a1 1 0 0 0 0 1.986L10 9h3v2h-2l-.15.005a2 2 0 0 0-1.844 1.838L9 13v2l.005.15a2 2 0 0 0 1.838 1.844L11 17h3l.117-.007a1 1 0 0 0 0-1.986L14 15h-3v-2h2l.15-.005a2 2 0 0 0 1.844-1.838L15 11V9l-.005-.15a2 2 0 0 0-1.838-1.844z"
+    />
+  </svg>
+);
+
+export const CarbonIbmEventAutomation = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 32 32"
+    {...props}
+  >
+    <circle cx="4" cy="22" r="2" fill="currentColor" />
+    <path
+      fill="currentColor"
+      d="M13.5 30a9.527 9.527 0 0 1-7.73-3.977l1.626-1.164A7.523 7.523 0 0 0 13.5 28c3.969 0 7.258-3.1 7.487-7.058l1.997.116C22.694 26.072 18.527 30 13.5 30Z"
+    />
+    <circle cx="28" cy="23" r="2" fill="currentColor" />
+    <path
+      fill="currentColor"
+      d="m30.641 19.095l-1.924-.545A7.521 7.521 0 0 0 29 16.5c0-4.136-3.364-7.5-7.5-7.5a7.438 7.438 0 0 0-3.088.663l-.824-1.822A9.424 9.424 0 0 1 21.5 7c5.238 0 9.5 4.262 9.5 9.5c0 .88-.12 1.754-.359 2.595zm-10.227-4.51l-3-3C17.037 11.209 16.534 11 16 11s-1.037.208-1.414.586l-3 3c-.39.39-.586.902-.586 1.414s.196 1.024.586 1.414l3 3c.377.378.88.586 1.414.586s1.037-.208 1.414-.586l3-3c.39-.39.586-.902.586-1.414s-.196-1.024-.586-1.414zM16 19l-3-3l3-3l3 3l-3 3z"
+    />
+    <circle cx="16" cy="3" r="2" fill="currentColor" />
+    <path
+      fill="currentColor"
+      d="M8.025 19.882A9.49 9.49 0 0 1 3 11.5c0-5.027 3.928-9.193 8.942-9.484l.116 1.997a7.502 7.502 0 0 0-3.089 14.105l-.944 1.764Z"
+    />
+  </svg>
+);
+
+export const FluentMdl2FileTemplate = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 2048 2048"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="m1243 0l549 549v219h-128V640h-512V128H256v1792h768v128H128V0h1115zm37 512h293l-293-293v293zm640 1408h128v128h-128v-128zm-256 0h128v128h-128v-128zm-256 0h128v128h-128v-128zm256-1024h128v128h-128V896zm-256 0h128v128h-128V896zm-256 1024h128v128h-128v-128zm768-256h128v128h-128v-128zm-768 0h128v128h-128v-128zm768-256h128v128h-128v-128zm-768 0h128v128h-128v-128zm768-256h128v128h-128v-128zm-768 0h128v128h-128v-128zm896-256v128h-128V896h128zm-896 0h128v128h-128V896z"
+    />
+  </svg>
+);

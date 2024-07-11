@@ -4,6 +4,7 @@ import initRedisValues from '../../data/cache/defaults';
 import { PlaybookModel } from '../../data/database/model/Playbook';
 import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
 import UserRepo from '../../data/database/repository/UserRepo';
+import AutomationEngine from '../../integrations/automations/AutomationEngine';
 import Crons from '../../integrations/crons';
 import WatcherEngine from '../../integrations/docker/core/WatcherEngine';
 import providerConf from '../../integrations/docker/registries/providers/provider.conf';
@@ -43,6 +44,7 @@ async function init() {
   void DeviceAuthUseCases.saveAllDeviceAuthSshKeys();
   void Crons.initScheduledJobs();
   void WatcherEngine.init();
+  void AutomationEngine.init();
 
   if (version !== SettingsKeys.DefaultValue.SCHEME_VERSION) {
     await migrate();

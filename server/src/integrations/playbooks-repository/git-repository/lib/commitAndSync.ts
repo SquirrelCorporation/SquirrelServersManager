@@ -1,5 +1,5 @@
 import { GitProcess } from 'dugite';
-import myLogger from '../../../logger';
+import myLogger from '../../../../logger';
 import { credentialOff, credentialOn } from './credential';
 import { defaultGitInfo as defaultDefaultGitInfo } from './defaultGitInfo';
 import {

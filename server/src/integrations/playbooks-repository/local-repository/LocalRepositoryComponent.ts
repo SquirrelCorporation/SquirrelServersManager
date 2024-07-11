@@ -1,7 +1,5 @@
-import PlaybooksRepositoryComponent, {
-  AbstractComponent,
-} from '../playbooks-repository/PlaybooksRepositoryComponent';
-import Shell from '../shell';
+import PlaybooksRepositoryComponent, { AbstractComponent } from '../PlaybooksRepositoryComponent';
+import Shell from '../../shell';
 
 class LocalRepositoryComponent extends PlaybooksRepositoryComponent implements AbstractComponent {
   constructor(uuid: string, logger: any, name: string, rootPath: string) {

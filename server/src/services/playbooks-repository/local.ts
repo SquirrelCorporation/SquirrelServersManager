@@ -3,7 +3,7 @@ import { NotFoundError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
 import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
 import asyncHandler from '../../helpers/AsyncHandler';
-import LocalRepositoryComponent from '../../integrations/local-repository/LocalRepositoryComponent';
+import LocalRepositoryComponent from '../../integrations/playbooks-repository/local-repository/LocalRepositoryComponent';
 import PlaybooksRepositoryEngine from '../../integrations/playbooks-repository/PlaybooksRepositoryEngine';
 import logger from '../../logger';
 import LocalRepositoryUseCases from '../../use-cases/LocalRepositoryUseCases';

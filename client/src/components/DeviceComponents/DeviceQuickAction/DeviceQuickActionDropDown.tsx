@@ -5,7 +5,7 @@ import React, { Dispatch, ReactNode, SetStateAction } from 'react';
 import DeviceQuickActionReference, {
   Types,
 } from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionReference';
-import PlaybookSelectionModal from '@/components/PlaybookSelectionModal/PlaybookSelectionModal';
+import PlaybookSelectionModal from '@/components/PlaybookSelection/PlaybookSelectionModal';
 import { ItemType } from 'rc-menu/es/interface';
 import { API } from 'ssm-shared-lib';
 
@@ -68,6 +68,7 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
 
   const onSelectPlaybook = (
     playbook: string,
+    playbookName: string,
     target: API.DeviceItem[] | undefined,
     extraVars?: API.ExtraVars,
   ) => {
@@ -76,6 +77,7 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
       command: playbook,
       target: props.target,
       extraVars: extraVars,
+      playbookName: playbookName,
     });
   };
 
