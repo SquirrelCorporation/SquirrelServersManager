@@ -34,7 +34,7 @@ class AutomationComponent {
         this.trigger = new CronTriggerComponent(this.automationChain.cronValue, this);
         break;
       default:
-        throw new Error('Unknown trigger type');
+        throw new Error(`Unknown trigger type ${this.automationChain.trigger}`);
     }
     const actionsChain = this.automationChain.actions;
     this.actions = actionsChain.map((actionChain) => {

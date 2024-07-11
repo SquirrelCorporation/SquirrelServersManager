@@ -1,9 +1,14 @@
 import { CarbonIbmEventAutomation } from '@/components/Icons/CustomIcons';
 import AutomationQuickAction from '@/pages/Automations/components/AutomationQuickAction';
+import {
+  ClockCircleFilled,
+  DockerOutlined,
+  FileOutlined,
+} from '@ant-design/icons';
 import { ProColumns } from '@ant-design/pro-components';
-import { Avatar } from 'antd';
+import { Avatar, Tooltip } from 'antd';
 import React from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, Automations } from 'ssm-shared-lib';
 
 const AutomationsColumns = (
   setCurrentRow: any,
@@ -13,7 +18,7 @@ const AutomationsColumns = (
   const columns: ProColumns<API.Automation>[] = [
     {
       align: 'center',
-      render: () => (
+      render: (_, row) => (
         <div style={{ width: '100%' }}>
           <Avatar
             style={{
@@ -23,6 +28,49 @@ const AutomationsColumns = (
             }}
             icon={<CarbonIbmEventAutomation />}
           />{' '}
+          {row.automationChains.trigger === Automations.Triggers.CRON && (
+            <Tooltip title={row.automationChains.cronValue} placement="top">
+              <Avatar
+                size={'small'}
+                style={{
+                  backgroundColor: '#4c4c4e',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                }}
+                icon={<ClockCircleFilled />}
+              />
+            </Tooltip>
+          )}{' '}
+          {row.automationChains.actions?.map((e: Automations.ActionChain) => (
+            <>
+              {e.action === Automations.Actions.PLAYBOOK && (
+                <Tooltip title={`${e.playbook}`} placement="top">
+                  <Avatar
+                    size={'small'}
+                    style={{
+                      backgroundColor: '#4c4c4e',
+                      marginLeft: 'auto',
+                      marginRight: 'auto',
+                    }}
+                    icon={<FileOutlined />}
+                  />
+                </Tooltip>
+              )}
+              {e.action === Automations.Actions.DOCKER && (
+                <Tooltip title={`${e.dockerAction}`} placement="top">
+                  <Avatar
+                    size={'small'}
+                    style={{
+                      backgroundColor: '#4c4c4e',
+                      marginLeft: 'auto',
+                      marginRight: 'auto',
+                    }}
+                    icon={<DockerOutlined />}
+                  />
+                </Tooltip>
+              )}
+            </>
+          ))}
         </div>
       ),
     },
