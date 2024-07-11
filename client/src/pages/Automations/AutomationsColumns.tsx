@@ -11,9 +11,11 @@ import React from 'react';
 import { API, Automations } from 'ssm-shared-lib';
 
 const AutomationsColumns = (
-  setCurrentRow: any,
+  setCurrentRow: React.Dispatch<
+    React.SetStateAction<API.Automation | undefined>
+  >,
   reload: () => void,
-  setDrawerOpened: any,
+  setDrawerOpened: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
   const columns: ProColumns<API.Automation>[] = [
     {

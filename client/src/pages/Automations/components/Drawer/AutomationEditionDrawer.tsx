@@ -22,16 +22,17 @@ import { API, Automations } from 'ssm-shared-lib';
 type AutomationEditProps = {
   reload: () => void;
   selectedRow?: API.Automation;
-  setSelectedRow: any;
+  setSelectedRow: React.Dispatch<
+    React.SetStateAction<API.Automation | undefined>
+  >;
   open: boolean;
-  setOpen: any;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
+  const [form] = ProForm.useForm<any>();
   const [automations, setAutomations] = useState<API.Automation[]>([]);
-  const [onUpdate, setOnUpdate] = React.useState<string | undefined>();
   const [overrideExtraVars, setOverrideExtraVars] = React.useState<any>([]);
-  const formRef = useRef<ProFormInstance | undefined>(undefined);
   const formRefName = useRef<ProFormInstance<{ name: string }> | undefined>(
     null,
   );
@@ -50,8 +51,7 @@ const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
     await getTemplate(idx).then(
       (response: { data: Automations.AutomationChain }) => {
         const automation = response.data;
-        formRef?.current?.setFieldsValue(transformAutomationChain(automation));
-        setOnUpdate(key);
+        form.setFieldsValue(transformAutomationChain(automation));
       },
     );
   };
@@ -59,8 +59,8 @@ const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
   return (
     <>
       <DrawerForm
+        form={form}
         title="Automation Editor"
-        formRef={formRef}
         open={props.open}
         request={
           props.selectedRow
@@ -188,7 +188,7 @@ const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
                 key="reset"
                 type={'dashed'}
                 onClick={() => {
-                  formRef?.current?.resetFields();
+                  form.resetFields();
                 }}
               >
                 Reset
@@ -212,7 +212,7 @@ const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
         }}
       >
         <ProForm.Group>
-          <AutomationTriggerInnerCard formRef={formRef} onUpdate={onUpdate} />
+          <AutomationTriggerInnerCard formRef={form} />
           <Flex
             align={'center'}
             justify={'center'}
@@ -223,6 +223,7 @@ const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
           <AutomationActionInnerCard
             setOverrideExtraVars={setOverrideExtraVars}
             overrideExtraVars={overrideExtraVars}
+            formRef={form}
           />
         </ProForm.Group>
       </DrawerForm>

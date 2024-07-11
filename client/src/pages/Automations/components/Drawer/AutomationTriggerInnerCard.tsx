@@ -6,32 +6,32 @@ import {
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
-import { Card, Space } from 'antd';
+import { Card, Form, Space } from 'antd';
+import { FormInstance } from 'antd/lib';
 import React, { useEffect } from 'react';
 import Cron from 'react-js-cron';
 
 const options = [{ label: 'Cron', value: 'cron', icon: <ClockCircleFilled /> }];
 
 type AutomationTriggerInnerCardProps = {
-  formRef: any;
-  onUpdate: any;
+  formRef: FormInstance<any>;
 };
 
 const AutomationTriggerInnerCard: React.FC<AutomationTriggerInnerCardProps> = (
   props,
 ) => {
+  const newCronValue = Form.useWatch('cronValue', props.formRef);
+
   const [cronValue, setCronValue] = React.useState('0 * * * *');
   useEffect(() => {
-    if (typeof props.formRef?.current?.setFieldValue === 'function') {
-      props.formRef?.current?.setFieldValue('cronValue', cronValue);
-    }
+    props.formRef?.setFieldValue?.('cronValue', cronValue);
   }, [cronValue, props.formRef]);
 
   useEffect(() => {
-    if (typeof props.formRef?.current?.getFieldValue === 'function') {
-      setCronValue(props.formRef?.current?.getFieldValue('cronValue'));
+    if (newCronValue) {
+      setCronValue(newCronValue);
     }
-  }, [props.onUpdate]);
+  }, [newCronValue]);
 
   return (
     <Card

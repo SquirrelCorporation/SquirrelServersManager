@@ -2,93 +2,96 @@ import ExtraVarView from '@/components/PlaybookSelection/ExtraVarView';
 import { getDevices } from '@/services/rest/device';
 import { getPlaybooks } from '@/services/rest/playbooks';
 import { CheckCircleFilled, FileOutlined, LockFilled } from '@ant-design/icons';
-import { ProFormSelect } from '@ant-design/pro-components';
+import { CaptFieldRef, ProFormSelect } from '@ant-design/pro-components';
+import { ProForm } from '@ant-design/pro-form/lib';
 import { Collapse, Space } from 'antd';
-import React from 'react';
+import { FormInstance } from 'antd/lib';
+import React, { useEffect, useRef } from 'react';
 import { API } from 'ssm-shared-lib';
 
 type PlaybookActionSubFormProps = {
   setOverrideExtraVars: any;
   overrideExtraVars: any;
+  formRef: FormInstance<any>;
 };
 
 const PlaybookActionSubForm: React.FC<PlaybookActionSubFormProps> = (props) => {
+  const newPlaybookValue = ProForm.useWatch('playbook', props.formRef);
   const [listOfPlaybooks, setListOfPlaybooks] = React.useState<
     API.PlaybookFile[] | undefined
   >();
   const [selectedPlaybookExtraVars, setSelectedPlaybookExtraVars] =
     React.useState<any>();
 
-  const handleSelectedPlaybook = (newValue: {
-    label: string;
-    value: string;
-  }) => {
-    const selectedPlaybook = listOfPlaybooks?.find(
-      (e) => e.uuid === newValue?.value,
-    );
-    if (selectedPlaybook) {
-      props.setOverrideExtraVars(
-        selectedPlaybook.extraVars?.map((e) => {
-          return { overrideVar: e.extraVar };
-        }),
+  useEffect(() => {
+    if (newPlaybookValue) {
+      const selectedPlaybook = listOfPlaybooks?.find(
+        (e) => e.uuid === newPlaybookValue.value,
       );
-      const reservedVars =
-        (selectedPlaybook.extraVars &&
-          selectedPlaybook.extraVars.length > 0 &&
-          selectedPlaybook.extraVars.filter((e) => e.extraVar.startsWith('_'))
-            .length > 0 &&
-          selectedPlaybook.extraVars.filter((e) =>
-            e.extraVar.startsWith('_'),
-          )) ||
-        undefined;
-      const customVars =
-        (selectedPlaybook.extraVars &&
-          selectedPlaybook.extraVars.length > 0 &&
-          selectedPlaybook.extraVars.filter((e) => !e.extraVar.startsWith('_'))
-            .length > 0 &&
-          selectedPlaybook.extraVars.filter(
-            (e) => !e.extraVar.startsWith('_'),
-          )) ||
-        undefined;
-      setSelectedPlaybookExtraVars([
-        {
-          key: 'reserved-vars',
-          label: 'Reserved ExtraVars',
-          children:
-            reservedVars?.map((e) => (
-              <ExtraVarView
-                key={e.extraVar}
-                extraVar={e}
-                setOverrideExtraVars={props.setOverrideExtraVars}
-                overrideExtraVars={props.overrideExtraVars}
-              />
-            )) || 'NONE',
-        },
-        {
-          key: 'custom-vars',
-          label: 'ExtraVars',
-          children:
-            customVars?.map((e) => (
-              <ExtraVarView
-                key={e.extraVar}
-                extraVar={e}
-                setOverrideExtraVars={props.setOverrideExtraVars}
-                overrideExtraVars={props.overrideExtraVars}
-              />
-            )) || 'NONE',
-        },
-      ]);
-    } else {
-      setSelectedPlaybookExtraVars(undefined);
+      if (selectedPlaybook) {
+        props.setOverrideExtraVars(
+          selectedPlaybook.extraVars?.map((e) => {
+            return { overrideVar: e.extraVar };
+          }),
+        );
+        const reservedVars =
+          (selectedPlaybook.extraVars &&
+            selectedPlaybook.extraVars.length > 0 &&
+            selectedPlaybook.extraVars.filter((e) => e.extraVar.startsWith('_'))
+              .length > 0 &&
+            selectedPlaybook.extraVars.filter((e) =>
+              e.extraVar.startsWith('_'),
+            )) ||
+          undefined;
+        const customVars =
+          (selectedPlaybook.extraVars &&
+            selectedPlaybook.extraVars.length > 0 &&
+            selectedPlaybook.extraVars.filter(
+              (e) => !e.extraVar.startsWith('_'),
+            ).length > 0 &&
+            selectedPlaybook.extraVars.filter(
+              (e) => !e.extraVar.startsWith('_'),
+            )) ||
+          undefined;
+        setSelectedPlaybookExtraVars([
+          {
+            key: 'reserved-vars',
+            label: 'Reserved ExtraVars',
+            children:
+              reservedVars?.map((e) => (
+                <ExtraVarView
+                  key={e.extraVar}
+                  extraVar={e}
+                  setOverrideExtraVars={props.setOverrideExtraVars}
+                  overrideExtraVars={props.overrideExtraVars}
+                />
+              )) || 'NONE',
+          },
+          {
+            key: 'custom-vars',
+            label: 'ExtraVars',
+            children:
+              customVars?.map((e) => (
+                <ExtraVarView
+                  key={e.extraVar}
+                  extraVar={e}
+                  setOverrideExtraVars={props.setOverrideExtraVars}
+                  overrideExtraVars={props.overrideExtraVars}
+                />
+              )) || 'NONE',
+          },
+        ]);
+      } else {
+        setSelectedPlaybookExtraVars(undefined);
+      }
     }
-  };
+  }, [newPlaybookValue, listOfPlaybooks]);
 
   return (
     <>
       <ProFormSelect.SearchSelect
         name="playbook"
         placeholder={'Select a playbook'}
-        onChange={handleSelectedPlaybook}
         fieldProps={{
           menuItemSelectedIcon: <CheckCircleFilled />,
           labelRender: (props) => (

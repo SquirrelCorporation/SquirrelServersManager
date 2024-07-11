@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons';
 import { ProFormDependency, ProFormSelect } from '@ant-design/pro-components';
 import { Card, Space } from 'antd';
+import { FormInstance } from 'antd/lib';
 import React from 'react';
 import { Automations } from 'ssm-shared-lib';
 
@@ -28,6 +29,7 @@ const options = [
 type AutomationActionProps = {
   setOverrideExtraVars: any;
   overrideExtraVars: any;
+  formRef: FormInstance<any>;
 };
 
 const AutomationActionInnerCard: React.FC<AutomationActionProps> = (props) => {
@@ -82,6 +84,7 @@ const AutomationActionInnerCard: React.FC<AutomationActionProps> = (props) => {
               <PlaybookActionSubForm
                 overrideExtraVars={props.overrideExtraVars}
                 setOverrideExtraVars={props.setOverrideExtraVars}
+                formRef={props.formRef}
               />
             );
           }
