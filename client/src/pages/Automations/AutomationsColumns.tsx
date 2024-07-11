@@ -41,36 +41,38 @@ const AutomationsColumns = (
               />
             </Tooltip>
           )}{' '}
-          {row.automationChains.actions?.map((e: Automations.ActionChain) => (
-            <>
-              {e.action === Automations.Actions.PLAYBOOK && (
-                <Tooltip title={`${e.playbook}`} placement="top">
-                  <Avatar
-                    size={'small'}
-                    style={{
-                      backgroundColor: '#4c4c4e',
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                    }}
-                    icon={<FileOutlined />}
-                  />
-                </Tooltip>
-              )}
-              {e.action === Automations.Actions.DOCKER && (
-                <Tooltip title={`${e.dockerAction}`} placement="top">
-                  <Avatar
-                    size={'small'}
-                    style={{
-                      backgroundColor: '#4c4c4e',
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                    }}
-                    icon={<DockerOutlined />}
-                  />
-                </Tooltip>
-              )}
-            </>
-          ))}
+          {row.automationChains.actions?.map((e) => {
+            return (
+              <>
+                {e.action === Automations.Actions.PLAYBOOK && (
+                  <Tooltip title={`${e.playbook}`} placement="top">
+                    <Avatar
+                      size={'small'}
+                      style={{
+                        backgroundColor: '#4c4c4e',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                      }}
+                      icon={<FileOutlined />}
+                    />
+                  </Tooltip>
+                )}
+                {e.action === Automations.Actions.DOCKER && (
+                  <Tooltip title={`${e.dockerAction}`} placement="top">
+                    <Avatar
+                      size={'small'}
+                      style={{
+                        backgroundColor: '#4c4c4e',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                      }}
+                      icon={<DockerOutlined />}
+                    />
+                  </Tooltip>
+                )}
+              </>
+            );
+          })}
         </div>
       ),
     },

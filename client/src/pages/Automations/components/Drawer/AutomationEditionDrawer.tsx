@@ -30,6 +30,7 @@ type AutomationEditProps = {
 const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
   const [automations, setAutomations] = useState<API.Automation[]>([]);
   const [onUpdate, setOnUpdate] = React.useState<string | undefined>();
+  const [overrideExtraVars, setOverrideExtraVars] = React.useState<any>([]);
   const formRef = useRef<ProFormInstance | undefined>(undefined);
   const formRefName = useRef<ProFormInstance<{ name: string }> | undefined>(
     null,
@@ -127,6 +128,7 @@ const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
               actionDevices: formData.actionDevices.map(
                 (e: { value: string }) => e.value,
               ),
+              extraVarsForcedValues: overrideExtraVars,
             };
             rawChain.actions.push(actionChain);
           } else if (formData.action === Automations.Actions.DOCKER) {
@@ -218,7 +220,10 @@ const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
           >
             <ArrowDownOutlined style={{ fontSize: 30, textAlign: 'center' }} />
           </Flex>
-          <AutomationActionInnerCard />
+          <AutomationActionInnerCard
+            setOverrideExtraVars={setOverrideExtraVars}
+            overrideExtraVars={overrideExtraVars}
+          />
         </ProForm.Group>
       </DrawerForm>
     </>

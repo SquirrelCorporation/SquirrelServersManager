@@ -10,7 +10,7 @@ import {
 import { ProFormDependency, ProFormSelect } from '@ant-design/pro-components';
 import { Card, Space } from 'antd';
 import React from 'react';
-import {Automations} from 'ssm-shared-lib';
+import { Automations } from 'ssm-shared-lib';
 
 const options = [
   {
@@ -25,7 +25,12 @@ const options = [
   },
 ];
 
-const AutomationActionInnerCard: React.FC = () => {
+type AutomationActionProps = {
+  setOverrideExtraVars: any;
+  overrideExtraVars: any;
+};
+
+const AutomationActionInnerCard: React.FC<AutomationActionProps> = (props) => {
   return (
     <Card
       type="inner"
@@ -73,7 +78,12 @@ const AutomationActionInnerCard: React.FC = () => {
       <ProFormDependency name={['action']}>
         {({ action }) => {
           if (action === Automations.Actions.PLAYBOOK) {
-            return <PlaybookActionSubForm />;
+            return (
+              <PlaybookActionSubForm
+                overrideExtraVars={props.overrideExtraVars}
+                setOverrideExtraVars={props.setOverrideExtraVars}
+              />
+            );
           }
           if (action === Automations.Actions.DOCKER) {
             return <DockerActionSubForm />;

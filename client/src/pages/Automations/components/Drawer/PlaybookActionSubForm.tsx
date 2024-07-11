@@ -7,13 +7,17 @@ import { Collapse, Space } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
-const PlaybookActionSubForm = () => {
+type PlaybookActionSubFormProps = {
+  setOverrideExtraVars: any;
+  overrideExtraVars: any;
+};
+
+const PlaybookActionSubForm: React.FC<PlaybookActionSubFormProps> = (props) => {
   const [listOfPlaybooks, setListOfPlaybooks] = React.useState<
     API.PlaybookFile[] | undefined
   >();
   const [selectedPlaybookExtraVars, setSelectedPlaybookExtraVars] =
     React.useState<any>();
-  const [overrideExtraVars, setOverrideExtraVars] = React.useState<any>([]);
 
   const handleSelectedPlaybook = (newValue: {
     label: string;
@@ -23,7 +27,7 @@ const PlaybookActionSubForm = () => {
       (e) => e.uuid === newValue?.value,
     );
     if (selectedPlaybook) {
-      setOverrideExtraVars(
+      props.setOverrideExtraVars(
         selectedPlaybook.extraVars?.map((e) => {
           return { overrideVar: e.extraVar };
         }),
@@ -55,8 +59,8 @@ const PlaybookActionSubForm = () => {
               <ExtraVarView
                 key={e.extraVar}
                 extraVar={e}
-                setOverrideExtraVars={setOverrideExtraVars}
-                overrideExtraVars={overrideExtraVars}
+                setOverrideExtraVars={props.setOverrideExtraVars}
+                overrideExtraVars={props.overrideExtraVars}
               />
             )) || 'NONE',
         },
@@ -68,8 +72,8 @@ const PlaybookActionSubForm = () => {
               <ExtraVarView
                 key={e.extraVar}
                 extraVar={e}
-                setOverrideExtraVars={setOverrideExtraVars}
-                overrideExtraVars={overrideExtraVars}
+                setOverrideExtraVars={props.setOverrideExtraVars}
+                overrideExtraVars={props.overrideExtraVars}
               />
             )) || 'NONE',
         },
