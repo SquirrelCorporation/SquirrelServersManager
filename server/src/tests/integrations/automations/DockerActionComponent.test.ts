@@ -4,7 +4,7 @@ import Automation from '../../../data/database/model/Automation';
 import Container from '../../../data/database/model/Container';
 import ContainerRepo from '../../../data/database/repository/ContainerRepo';
 import ContainerUseCases from '../../../use-cases/ContainerUseCases';
-import DockerActionComponent from '../../../integrations/automations/actions/DockerActionComponent';
+import DockerActionComponent from '../../../modules/automations/actions/DockerActionComponent';
 
 const automationUuid = 'test-uuid';
 const automationName = 'test-name';

@@ -3,7 +3,7 @@ import Playbook from '../../../data/database/model/Playbook';
 import PlaybookRepo from '../../../data/database/repository/PlaybookRepo';
 import UserRepo from '../../../data/database/repository/UserRepo';
 import PlaybookUseCases from '../../../use-cases/PlaybookUseCases';
-import PlaybookActionComponent from '../../../integrations/automations/actions/PlaybookActionComponent';
+import PlaybookActionComponent from '../../../modules/automations/actions/PlaybookActionComponent';
 
 const automationUuid = 'test-uuid';
 const automationName = 'test-name';

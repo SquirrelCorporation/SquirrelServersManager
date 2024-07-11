@@ -3,7 +3,7 @@ import { SuccessResponse } from '../../core/api/ApiResponse';
 import DeviceAuth from '../../data/database/model/DeviceAuth';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
 import asyncHandler from '../../helpers/AsyncHandler';
-import InventoryTransformer from '../../integrations/ansible/utils/InventoryTransformer';
+import InventoryTransformer from '../../modules/ansible/utils/InventoryTransformer';
 import logger from '../../logger';
 
 export const getInventory = asyncHandler(async (req, res) => {

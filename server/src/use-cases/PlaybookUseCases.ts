@@ -33,7 +33,7 @@ async function executePlaybook(
     target,
     extraVarsForcedValues,
   );
-  return await Shell.AnsibleShell.executePlaybook(
+  return await Shell.AnsibleShellCommandsManager.executePlaybook(
     playbook.path,
     user,
     target,
@@ -52,7 +52,7 @@ async function executePlaybookOnInventory(
     undefined,
     extraVarsForcedValues,
   );
-  return await Shell.AnsibleShell.executePlaybookOnInventory(
+  return await Shell.AnsibleShellCommandsManager.executePlaybookOnInventory(
     playbook.path,
     user,
     inventoryTargets,

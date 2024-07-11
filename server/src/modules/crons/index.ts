@@ -3,11 +3,13 @@ import { SettingsKeys } from 'ssm-shared-lib';
 import ContainerStatsRepo from '../../data/database/repository/ContainerStatsRepo';
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
 import DeviceStatRepo from '../../data/database/repository/DeviceStatRepo';
-import logger from '../../logger';
+import PinoLogger from '../../logger';
 import CronRepo from '../../data/database/repository/CronRepo';
 import AnsibleTaskRepo from '../../data/database/repository/AnsibleTaskRepo';
 import LogsRepo from '../../data/database/repository/LogsRepo';
 import { getConfFromCache } from '../../data/cache';
+
+const logger = PinoLogger.child({ module: 'Cron' }, { msgPrefix: '[CRON] - ' });
 
 interface CronJobType {
   name: string;
@@ -75,9 +77,9 @@ export default class Scheduler {
         await CronRepo.updateOrCreateIfNotExist({ name: cron.name, expression: cron.schedule });
 
         const scheduledTask = CronJob.schedule(cron.schedule, async () => {
-          logger.info(`[CRON] - ${cron.name} is starting...`);
+          logger.info(`${cron.name} is starting...`);
           await cron.fun();
-          logger.info(`[CRON] - ${cron.name} has ended...`);
+          logger.info(` ${cron.name} has ended...`);
           void CronRepo.updateCron({ name: cron.name, lastExecution: new Date() });
         });
 
@@ -87,7 +89,7 @@ export default class Scheduler {
   }
 
   static stopAllScheduledJobs(): void {
-    logger.warn('[CRON] - stopping all scheduled jobs.');
+    logger.warn('stopping all scheduled jobs.');
     CronJob.getTasks().forEach((e) => e.stop());
   }
 }

@@ -1,10 +1,15 @@
 import { DateTime } from 'luxon';
 import DeviceDownTimeEventRepo from '../data/database/repository/DeviceDownTimeEventRepo';
 import DeviceRepo from '../data/database/repository/DeviceRepo';
-import logger from '../logger';
+import PinoLogger from '../logger';
+
+const logger = PinoLogger.child(
+  { module: 'DeviceDownTimeUseCases' },
+  { msgPrefix: '[DEVICE_DOWN_TIME] - ' },
+);
 
 async function getDevicesAvailability(from: Date, to: Date) {
-  logger.info(`[USECASES][DEVICEDOWNTIME] - getDevicesAvailability From:${from} - To:${to}`);
+  logger.info(`getDevicesAvailability From:${from} - To:${to}`);
   const devices = await DeviceRepo.findAll();
   if (!devices) {
     return;
@@ -20,7 +25,7 @@ async function getDevicesAvailability(from: Date, to: Date) {
     });
     const downtime = searchIndex !== -1 ? devicesDownTimeDuration[searchIndex].duration : 0;
     const uptime = period - downtime;
-    logger.info(`Period: ${period} - Uptime: ${uptime} - DownTime: ${downtime}`);
+    logger.debug(`Period: ${period} - Uptime: ${uptime} - DownTime: ${downtime}`);
     return {
       uuid: device.uuid,
       uptime: uptime < 0 ? 0 : uptime,
@@ -32,7 +37,7 @@ async function getDevicesAvailability(from: Date, to: Date) {
 
 async function getDevicesAvailabilitySumUpCurrentMonthLastMonth() {
   try {
-    logger.info(`[USECASES][DEVICEDOWNTIME] - getDevicesAvailabilitySumUpCurrentMonthLastMonth`);
+    logger.info(`getDevicesAvailabilitySumUpCurrentMonthLastMonth`);
     const to = new Date();
     const from = DateTime.now().startOf('month').toJSDate();
     const availabilities = await getDevicesAvailability(from, to);
@@ -70,6 +75,5 @@ async function getDevicesAvailabilitySumUpCurrentMonthLastMonth() {
 }
 
 export default {
-  getDevicesAvailability,
   getDevicesAvailabilitySumUpCurrentMonthLastMonth,
 };

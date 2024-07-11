@@ -11,16 +11,18 @@ import DeviceDownTimeEventRepo from '../data/database/repository/DeviceDownTimeE
 import DeviceRepo from '../data/database/repository/DeviceRepo';
 import DeviceStatRepo from '../data/database/repository/DeviceStatRepo';
 import PlaybookRepo from '../data/database/repository/PlaybookRepo';
+import PinoLogger from '../logger';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../modules/ansible-vault/vault';
 import Inventory from '../modules/ansible/utils/InventoryTransformer';
 import { getCustomAgent } from '../modules/docker/core/CustomAgent';
 import DockerAPIHelper from '../modules/docker/core/DockerAPIHelper';
 import Shell from '../modules/shell';
-import logger from '../logger';
 import PlaybookUseCases from './PlaybookUseCases';
 
+const logger = PinoLogger.child({ module: 'DeviceUseCases' }, { msgPrefix: '[DEVICE] - ' });
+
 async function getDevicesOverview() {
-  logger.info(`[USECASES][DEVICE] - getDevicesOverview`);
+  logger.info(`getDevicesOverview`);
   const devices = await DeviceRepo.findAll();
   const offline = devices?.filter((e) => e.status === SsmStatus.DeviceStatus.OFFLINE).length;
   const online = devices?.filter((e) => e.status === SsmStatus.DeviceStatus.ONLINE).length;
@@ -49,7 +51,7 @@ async function getDevicesOverview() {
 }
 
 async function updateDeviceFromJson(deviceInfo: API.DeviceInfo, device: Device) {
-  logger.info(`[USECASES][DEVICE] - updateDeviceFromJson - DeviceUuid: ${device?.uuid}`);
+  logger.info(`updateDeviceFromJson - DeviceUuid: ${device?.uuid}`);
   logger.debug(deviceInfo);
   device.ip = deviceInfo.ip;
   device.hostname = deviceInfo.hostname;
@@ -84,7 +86,7 @@ async function updateDeviceFromJson(deviceInfo: API.DeviceInfo, device: Device) 
 }
 
 async function deleteDevice(device: Device) {
-  logger.info(`[USECASES][DEVICE] - deleteDevice - DeviceUuid: ${device.uuid}`);
+  logger.info(`deleteDevice - DeviceUuid: ${device.uuid}`);
   await DeviceStatRepo.deleteManyByDevice(device);
   await DeviceAuthRepo.deleteByDevice(device);
   await DeviceDownTimeEventRepo.deleteManyByDevice(device);
@@ -99,7 +101,7 @@ async function updateDockerWatcher(
   dockerStatsCron?: string,
   dockerEventsWatcher?: boolean,
 ) {
-  logger.info(`[USECASES][DEVICE] - updateDockerWatcher - DeviceUuid: ${device.uuid}`);
+  logger.info(`updateDockerWatcher - DeviceUuid: ${device.uuid}`);
   device.dockerWatcher = dockerWatcher;
   device.dockerWatcherCron = dockerWatcherCron;
   device.dockerStatsCron = dockerStatsCron;

@@ -46,7 +46,7 @@ export const deleteAutomation = asyncHandler(async (req, res) => {
   if (!automation) {
     throw new NotFoundError(`Automation uuid ${uuid} not found`);
   }
-  await AutomationRepo.deleteByUuid(uuid);
+  await AutomationUseCases.deleteAutomation(automation);
   return new SuccessResponse('Deleted automation', uuid).send(res);
 });
 

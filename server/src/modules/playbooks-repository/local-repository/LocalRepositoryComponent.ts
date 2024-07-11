@@ -5,7 +5,7 @@ class LocalRepositoryComponent extends PlaybooksRepositoryComponent implements A
   constructor(uuid: string, logger: any, name: string, rootPath: string) {
     super(uuid, name, rootPath);
     this.childLogger = logger.child(
-      { module: `local-repository/${this.name}` },
+      { module: `LocalRepository`, moduleId: `${this.uuid}`, moduleName: `${this.name}` },
       { msgPrefix: `[LOCAL_REPOSITORY] - ` },
     );
   }

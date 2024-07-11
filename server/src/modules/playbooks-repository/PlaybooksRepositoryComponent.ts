@@ -6,7 +6,6 @@ import PlaybooksRepository from '../../data/database/model/PlaybooksRepository';
 import PlaybookRepo from '../../data/database/repository/PlaybookRepo';
 import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
 import directoryTree from '../../helpers/directory-tree/directory-tree';
-import logger from '../../logger';
 import { Playbooks } from '../../types/typings';
 import Shell from '../shell';
 import { recursivelyFlattenTree } from './tree-utils';

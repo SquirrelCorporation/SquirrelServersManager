@@ -1,5 +1,5 @@
 import Device from '../../../data/database/model/Device';
-import logger from '../../../logger';
+import PinoLogger from '../../../logger';
 import ContainerRegistryUseCases from '../../../use-cases/ContainerRegistryUseCases';
 import DeviceUseCases from '../../../use-cases/DeviceUseCases';
 import Custom from '../registries/providers/custom/Custom';
@@ -18,6 +18,7 @@ import { SSMServicesTypes } from '../../../types/typings';
 import Docker from '../watchers/providers/docker/Docker';
 import Component, { Kind } from './Component';
 
+const logger = PinoLogger.child({ module: 'WatcherEngine' }, { msgPrefix: '[WATCHER_ENGINE] - ' });
 /**
  * Registry state.
  */
@@ -71,7 +72,7 @@ function getComponentClass(
     case 'registry/gitlab':
       return new Gitlab();
     default:
-      throw new Error(`Unknown kind.provider: ${kind}/${provider}`);
+      throw new Error(`Unknown kind/provider: ${kind}/${provider}`);
   }
 }
 
@@ -193,14 +194,14 @@ async function registerRegistries() {
           ...registry.auth,
         });
     });
-    logger.info('[STATES] Configuration registered will be processed...');
+    logger.info('Configuration registered will be processed...');
     await Promise.all(
       Object.values(registriesToRegister)
         .sort()
         .map((registerFn) => registerFn()),
     );
   } catch (e: any) {
-    logger.warn(`[STATES] Some registries failed to register (${e.message})`);
+    logger.warn(`Some registries failed to register (${e.message})`);
     logger.debug(e);
   }
 }
@@ -230,7 +231,7 @@ async function deregisterComponent(
         components = getStates().registry;
         break;
       default:
-        logger.error(`[WATCHER-ENGINE] Unknown kind ${kind}`);
+        logger.error(`Unknown kind ${kind}`);
     }
     if (components) {
       delete components[component.getId()];
@@ -275,7 +276,7 @@ async function deregisterWatchers(): Promise<any> {
  * @returns {Promise}
  */
 async function deregisterAll(): Promise<any> {
-  logger.warn('[WATCHER-ENGINE] All registered providers will be deregistered.');
+  logger.warn('All registered providers will be deregistered.');
   try {
     await deregisterRegistries();
     await deregisterWatchers();

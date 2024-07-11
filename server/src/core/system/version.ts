@@ -6,7 +6,7 @@ export async function getAnsibleVersion() {
   if (ansibleVersion) {
     return ansibleVersion;
   } else {
-    const retrievedAnsibleVersion = await Shell.AnsibleShell.getAnsibleVersion();
+    const retrievedAnsibleVersion = await Shell.AnsibleShellCommandsManager.getAnsibleVersion();
     if (retrievedAnsibleVersion) {
       await setToCache('ansible-version', retrievedAnsibleVersion);
     }
@@ -15,7 +15,7 @@ export async function getAnsibleVersion() {
 }
 
 export async function setAnsibleVersion() {
-  const retrievedAnsibleVersion = await Shell.AnsibleShell.getAnsibleVersion();
+  const retrievedAnsibleVersion = await Shell.AnsibleShellCommandsManager.getAnsibleVersion();
   if (retrievedAnsibleVersion) {
     await setToCache('ansible-version', retrievedAnsibleVersion);
   }

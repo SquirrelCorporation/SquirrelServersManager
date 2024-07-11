@@ -43,7 +43,7 @@ class GitRepositoryComponent extends PlaybooksRepositoryComponent implements Abs
     };
 
     this.childLogger = logger.child(
-      { module: `git-repository/${this.name}/${branch}` },
+      { module: `GitRepository`, moduleId: `${this.uuid}`, moduleName: `${this.name}` },
       { msgPrefix: `[GIT_REPOSITORY] - ` },
     );
   }

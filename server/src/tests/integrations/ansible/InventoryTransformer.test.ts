@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { SsmAnsible } from 'ssm-shared-lib';
-import InventoryTransformer from '../../../integrations/ansible/utils/InventoryTransformer'; // replace with actual file path
+import InventoryTransformer from '../../../modules/ansible/utils/InventoryTransformer'; // replace with actual file path
 
 describe('test InventoryTransformer', () => {
   test('inventoryBuilder', () => {

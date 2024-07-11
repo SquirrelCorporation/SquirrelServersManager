@@ -30,16 +30,14 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
     target?: string[],
     extraVars?: API.ExtraVars,
   ) {
-    this.logger.info('[SHELL] - executePlaybook - Starting...');
+    this.logger.info('executePlaybook - Starting...');
 
     let inventoryTargets: (Playbooks.All & Playbooks.HostGroups) | undefined;
     if (target) {
-      this.logger.info(`[SHELL] - executePlaybook - called with target: ${target}`);
+      this.logger.info(`executePlaybook - called with target: ${target}`);
       const devicesAuth = await DeviceAuthRepo.findManyByDevicesUuid(target);
       if (!devicesAuth || devicesAuth.length === 0) {
-        this.logger.error(
-          `[SHELL] - executePlaybook - Target not found (Authentication not found)`,
-        );
+        this.logger.error(`executePlaybook - Target not found (Authentication not found)`);
         throw new Error('Exec failed, no matching target (Authentication not found)');
       }
       inventoryTargets = Inventory.inventoryBuilderForTarget(devicesAuth);
@@ -59,7 +57,7 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
     const uuid = uuidv4();
     const result = await new Promise<string | null>((resolve) => {
       const cmd = ansibleCmd.buildAnsibleCmd(playbookPath, uuid, inventoryTargets, user, extraVars);
-      this.logger.info(`[SHELL] - executePlaybook - Executing ${cmd}`);
+      this.logger.info(`executePlaybook - Executing ${cmd}`);
       const child = shell.exec(cmd, {
         async: true,
       });
@@ -70,9 +68,9 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
         resolve(null);
       });
     });
-    this.logger.info('[SHELL] - executePlaybook - launched');
+    this.logger.info('executePlaybook - launched');
     if (result) {
-      this.logger.info(`[SHELL] - executePlaybook - ExecId is ${uuid}`);
+      this.logger.info(`executePlaybook - ExecId is ${uuid}`);
       await AnsibleTaskRepo.create({
         ident: uuid,
         status: 'created',
@@ -80,14 +78,14 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
       });
       return result;
     } else {
-      this.logger.error('[SHELL] - executePlaybook - Result was not properly set');
+      this.logger.error('executePlaybook - Result was not properly set');
       throw new Error('Exec failed');
     }
   }
 
   async getAnsibleVersion() {
     try {
-      this.logger.info('[SHELL] - getAnsibleVersion - Starting...');
+      this.logger.info('getAnsibleVersion - Starting...');
       return shell.exec('ansible --version').toString();
     } catch (error) {
       this.logger.error('[SHELL]- - getAnsibleVersion');
@@ -96,10 +94,10 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
 
   async installAnsibleGalaxyCollection(name: string, namespace: string) {
     try {
-      this.logger.info('[SHELL] - installAnsibleGalaxyCollection Starting...');
+      this.logger.info('installAnsibleGalaxyCollection Starting...');
       const result = shell.exec(AnsibleGalaxyCmd.getInstallCollectionCmd(name, namespace));
       if (result.code !== 0) {
-        throw new Error('[SHELL] - installAnsibleGalaxyCollection has failed');
+        throw new Error('installAnsibleGalaxyCollection has failed');
       }
       let collectionList = '';
       let i = 0;
@@ -113,10 +111,10 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
         collectionList = shell.cat('/tmp/ansible-collection-output.tmp.txt').toString();
       }
       if (!collectionList.includes(`${namespace}.${name}`)) {
-        throw new Error('[SHELL] - installAnsibleGalaxyCollection has failed');
+        throw new Error('installAnsibleGalaxyCollection has failed');
       }
     } catch (error) {
-      this.logger.error('[SHELL] - installAnsibleGalaxyCollection');
+      this.logger.error('installAnsibleGalaxyCollection');
       throw error;
     }
   }

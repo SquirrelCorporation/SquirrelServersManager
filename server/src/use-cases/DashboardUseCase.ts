@@ -1,10 +1,12 @@
 import { SettingsKeys } from 'ssm-shared-lib';
 import { getConfFromCache } from '../data/cache';
-import logger from '../logger';
+import PinoLogger from '../logger';
 import DeviceStatsUseCases from './DeviceStatsUseCases';
 
+const logger = PinoLogger.child({ module: 'DashboardUseCases' }, { msgPrefix: '[DASHBOARD] - ' });
+
 async function getSystemPerformance() {
-  logger.info(`[USECASES][DASHBOARD] - getSystemPerformance`);
+  logger.info(`getSystemPerformance`);
   const currentMem = await DeviceStatsUseCases.getSingleAveragedStatByType(7, 0, 'memFree');
   const previousMem = await DeviceStatsUseCases.getSingleAveragedStatByType(14, 7, 'memFree');
   const currentCpu = await DeviceStatsUseCases.getSingleAveragedStatByType(7, 0, 'cpu');

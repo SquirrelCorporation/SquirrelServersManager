@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { Automations } from 'ssm-shared-lib';
-import AutomationComponent from './../../../integrations/automations/AutomationComponent';
-import CronTriggerComponent from './../../../integrations/automations/triggers/CronTriggerComponent';
-import DockerActionComponent from './../../../integrations/automations/actions/DockerActionComponent';
-import PlaybookActionComponent from './../../../integrations/automations/actions/PlaybookActionComponent';
+import AutomationComponent from '../../../modules/automations/AutomationComponent';
+import CronTriggerComponent from '../../../modules/automations/triggers/CronTriggerComponent';
+import DockerActionComponent from '../../../modules/automations/actions/DockerActionComponent';
+import PlaybookActionComponent from '../../../modules/automations/actions/PlaybookActionComponent';
 
-vi.mock('./../../../integrations/automations/triggers/CronTriggerComponent');
-vi.mock('./../../../integrations/automations/actions/DockerActionComponent');
-vi.mock('./../../../integrations/automations/actions/PlaybookActionComponent');
+vi.mock('./../../../modules/automations/triggers/CronTriggerComponent');
+vi.mock('./../../../modules/automations/actions/DockerActionComponent');
+vi.mock('./../../../modules/automations/actions/PlaybookActionComponent');
 
 const uuid = '123';
 const name = 'automation-name';

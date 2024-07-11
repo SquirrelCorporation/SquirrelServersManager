@@ -6,17 +6,18 @@ let redisClient: RedisClientType;
 let isReady: boolean = false;
 
 export const dbURI = `redis://${redisConf.host}:${redisConf.port}`;
+const childLogger = logger.child({ module: 'redis' }, { msgPrefix: '[REDIS] - ' });
 
 async function createRedisClient(): Promise<any> {
   const redisClient = createClient({
     url: dbURI,
   });
   redisClient
-    .on('error', (err) => logger.error('[REDIS] - Redis Client Error', err))
-    .on('connect', () => logger.info('[REDIS] - Successfully connected to Redis'))
+    .on('error', (err) => childLogger.error('Redis Client Error', err))
+    .on('connect', () => childLogger.info('Successfully connected to Redis'))
     .on('ready', () => {
       isReady = true;
-      logger.info('[REDIS] - Redis ready');
+      childLogger.info(' Redis ready');
     });
 
   await redisClient.connect();

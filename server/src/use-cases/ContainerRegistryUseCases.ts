@@ -1,8 +1,13 @@
 import ContainerRegistry from '../data/database/model/ContainerRegistry';
 import ContainerRegistryRepo from '../data/database/repository/ContainerRegistryRepo';
 import WatcherEngine from '../modules/docker/core/WatcherEngine';
-import logger from '../logger';
+import PinoLogger from '../logger';
 import type { SSMServicesTypes } from '../types/typings.d.ts';
+
+const logger = PinoLogger.child(
+  { module: 'ContainerRegistryUseCases' },
+  { msgPrefix: '[CONTAINER_REGISTRY] - ' },
+);
 
 async function addIfNotExists(registry: SSMServicesTypes.RegistryAuthConfig) {
   const containerRegistry = await ContainerRegistryRepo.findOneByProvider(registry.provider);
@@ -16,9 +21,9 @@ async function addIfNotExists(registry: SSMServicesTypes.RegistryAuthConfig) {
       canAnonymous: registry.config.canAnonymous || false,
       canAuth: registry.authScheme !== undefined,
     });
-    logger.info(`[CONTAINERREGISTRY][USECASES] - Saved registry ${savedRegistry.name}`);
+    logger.info(`Saved registry ${savedRegistry.name}`);
   } else {
-    logger.info(`[CONTAINERREGISTRY][USECASES] - Registry ${registry.name} already exists`);
+    logger.info(`Registry ${registry.name} already exists`);
   }
 }
 

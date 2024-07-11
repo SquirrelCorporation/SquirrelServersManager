@@ -3,15 +3,18 @@ import { API } from 'ssm-shared-lib';
 import { StatsType } from 'ssm-shared-lib';
 import Container from '../data/database/model/Container';
 import ContainerStatsRepo from '../data/database/repository/ContainerStatsRepo';
-import logger from '../logger';
+import PinoLogger from '../logger';
+
+const logger = PinoLogger.child(
+  { module: 'ContainerStatsUseCases' },
+  { msgPrefix: '[CONTAINER_STATS] - ' },
+);
 
 async function getStatByDeviceAndType(
   container: Container,
   type?: string,
 ): Promise<[{ _id: string; value: number; createdAt: string }] | null> {
-  logger.info(
-    `[USECASE][CONTAINERSTATS] - getStatByDeviceAndType - type: ${type}, device: ${container.id}`,
-  );
+  logger.info(`getStatByDeviceAndType - type: ${type}, device: ${container.id}`);
   switch (type) {
     case StatsType.ContainerStatsType.CPU:
       return await ContainerStatsRepo.findStatByDeviceAndType(container, '$cpuUsedPercentage');
@@ -27,9 +30,7 @@ async function getStatsByDeviceAndType(
   from: number,
   type?: string,
 ): Promise<API.ContainerStats[] | null> {
-  logger.info(
-    `[USECASE][CONTAINERSTATS] - getStatsByDeviceAndType - type: ${type}, from: ${from}, container: ${container.id}`,
-  );
+  logger.info(`getStatsByDeviceAndType - type: ${type}, from: ${from}, container: ${container.id}`);
   switch (type) {
     case StatsType.ContainerStatsType.CPU:
       return await ContainerStatsRepo.findStatsByDeviceAndType(

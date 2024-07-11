@@ -1,5 +1,5 @@
 import DeviceAuthRepo from '../data/database/repository/DeviceAuthRepo';
-import Shell from '../integrations/shell';
+import Shell from '../modules/shell';
 
 async function saveAllDeviceAuthSshKeys() {
   const devicesAuth = (await DeviceAuthRepo.findAllPopWithSshKey()) || [];

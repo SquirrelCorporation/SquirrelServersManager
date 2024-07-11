@@ -4,8 +4,7 @@ import { API } from 'ssm-shared-lib';
 import { InternalError } from '../../core/api/ApiError';
 import { SuccessResponse } from '../../core/api/ApiResponse';
 import asyncHandler from '../../helpers/AsyncHandler';
-import Shell from '../../integrations/shell';
-import logger from '../../logger';
+import Shell from '../../modules/shell';
 
 export const getAnsibleGalaxyCollections = asyncHandler(async (req, res) => {
   const realUrl = req.url;
@@ -50,7 +49,7 @@ export const getAnsibleGalaxyCollection = asyncHandler(async (req, res) => {
 export const postInstallAnsibleGalaxyCollection = asyncHandler(async (req, res) => {
   const { name, namespace } = req.body;
   try {
-    await Shell.AnsibleShell.installAnsibleGalaxyCollection(name, namespace);
+    await Shell.AnsibleShellCommandsManager.installAnsibleGalaxyCollection(name, namespace);
   } catch (error: any) {
     throw new InternalError(error.message);
   }

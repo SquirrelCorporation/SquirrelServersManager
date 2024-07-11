@@ -3,7 +3,7 @@ import { SuccessResponse } from '../../core/api/ApiResponse';
 import PlaybookRepo from '../../data/database/repository/PlaybookRepo';
 import asyncHandler from '../../helpers/AsyncHandler';
 import logger from '../../logger';
-import Shell from '../../integrations/shell';
+import Shell from '../../modules/shell';
 import PlaybooksRepositoryUseCases from '../../use-cases/PlaybooksRepositoryUseCases';
 import PlaybookUseCases from '../../use-cases/PlaybookUseCases';
 

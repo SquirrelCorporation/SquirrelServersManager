@@ -36,6 +36,13 @@ const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
     filters: true,
     onFilter: true,
   },
+  {
+    title: 'Module ID',
+    dataIndex: 'moduleId',
+    key: 'moduleId',
+    filters: true,
+    onFilter: true,
+  },
 ];
 
 export default ServerLogsColumns;

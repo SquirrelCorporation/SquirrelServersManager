@@ -3,11 +3,16 @@ import { ForbiddenError, InternalError } from '../core/api/ApiError';
 import Playbook, { PlaybookModel } from '../data/database/model/Playbook';
 import PlaybooksRepository from '../data/database/model/PlaybooksRepository';
 import PlaybooksRepositoryRepo from '../data/database/repository/PlaybooksRepositoryRepo';
-import PlaybooksRepositoryComponent from '../integrations/playbooks-repository/PlaybooksRepositoryComponent';
-import PlaybooksRepositoryEngine from '../integrations/playbooks-repository/PlaybooksRepositoryEngine';
-import { recursiveTreeCompletion } from '../integrations/playbooks-repository/tree-utils';
-import Shell from '../integrations/shell';
-import logger from '../logger';
+import PinoLogger from '../logger';
+import PlaybooksRepositoryComponent from '../modules/playbooks-repository/PlaybooksRepositoryComponent';
+import PlaybooksRepositoryEngine from '../modules/playbooks-repository/PlaybooksRepositoryEngine';
+import { recursiveTreeCompletion } from '../modules/playbooks-repository/tree-utils';
+import Shell from '../modules/shell';
+
+const logger = PinoLogger.child(
+  { module: 'PlaybookRepositoryUseCases' },
+  { msgPrefix: '[PLAYBOOK_REPOSITORY] - ' },
+);
 
 async function getAllPlaybooksRepositories() {
   try {
@@ -18,9 +23,7 @@ async function getAllPlaybooksRepositories() {
 
     const substitutedListOfPlaybooks = listOfPlaybooksRepositories.map(
       async (playbookRepository) => {
-        logger.info(
-          `[PLAYBOOKS_REPOSITORY_USECASES] - getAllPlaybooksRepositories - processing ${playbookRepository.name}`,
-        );
+        logger.info(`getAllPlaybooksRepositories - processing ${playbookRepository.name}`);
         return {
           name: playbookRepository.name,
           children: await recursiveTreeCompletion(playbookRepository.tree),
@@ -37,7 +40,7 @@ async function getAllPlaybooksRepositories() {
     ) as API.PlaybooksRepository[];
   } catch (error: any) {
     logger.error(error);
-    logger.error(`[PLAYBOOKS_REPOSITORY_USECASES] - Error during processing`);
+    logger.error(`Error during processing`);
   }
 }
 
