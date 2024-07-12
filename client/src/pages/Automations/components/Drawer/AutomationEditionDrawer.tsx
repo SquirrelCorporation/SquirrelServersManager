@@ -66,7 +66,7 @@ const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
           props.selectedRow
             ? async () => {
                 return transformAutomationChain(
-                  props.selectedRow.automationChains,
+                  (props.selectedRow as API.Automation).automationChains,
                 );
               }
             : undefined

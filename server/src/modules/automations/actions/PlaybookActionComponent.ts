@@ -20,7 +20,7 @@ class PlaybookActionComponent extends AbstractActionComponent {
   ) {
     super(automationUuid, automationName, Automations.Actions.PLAYBOOK);
     if (!playbookUuid || !targets) {
-      throw new Error('Empty parameters')
+      throw new Error('Empty parameters');
     }
     this.playbookUuid = playbookUuid;
     this.targets = targets;
@@ -54,11 +54,19 @@ class PlaybookActionComponent extends AbstractActionComponent {
     return status === 'failed' || status === 'successful';
   };
 
-  async waitForResult(execId: string) {
+  async waitForResult(execId: string, timeoutCount = 0) {
     try {
+      if (timeoutCount > 100) {
+        this.childLogger.error('Timeout reached for task');
+        await this.onError();
+        return;
+      }
       const execStatuses = await AnsibleTaskStatusRepo.findAllByIdent(execId);
       if (!execStatuses || execStatuses.length === 0) {
-        this.childLogger.error(`No execution statuses found for execId: ${execId}`);
+        this.childLogger.warn(`No execution statuses found (yet) for execId: ${execId}`);
+        setTimeout(() => {
+          this.waitForResult(execId, timeoutCount + 1);
+        }, 5000);
         return;
       }
       const lastExecStatus = execStatuses[execStatuses.length - 1];
@@ -70,7 +78,7 @@ class PlaybookActionComponent extends AbstractActionComponent {
         }
       } else {
         setTimeout(() => {
-          this.waitForResult(execId);
+          this.waitForResult(execId, timeoutCount + 1);
         }, 5000);
       }
     } catch (error: any) {

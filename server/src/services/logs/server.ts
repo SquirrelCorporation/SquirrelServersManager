@@ -1,16 +1,13 @@
 import { parse } from 'url';
 import { API } from 'ssm-shared-lib';
-import { NotFoundError } from '../../middlewares/api/ApiError';
-import { NotFoundResponse, SuccessResponse } from '../../middlewares/api/ApiResponse';
+import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import LogsRepo from '../../data/database/repository/LogsRepo';
 import asyncHandler from '../../middlewares/AsyncHandler';
 import { filterByFields, filterByQueryParams } from '../../helpers/FilterHelper';
 import { paginate } from '../../helpers/PaginationHelper';
 import { sortByFields } from '../../helpers/SorterHelper';
-import logger from '../../logger';
 
 export const getServerLogs = asyncHandler(async (req, res) => {
-  logger.info(`[CONTROLLER] - GET - /logs/server`);
   const realUrl = req.url;
   const { current = 1, pageSize = 10 } = req.query;
   const params = parse(realUrl, true).query as unknown as API.PageParams &
