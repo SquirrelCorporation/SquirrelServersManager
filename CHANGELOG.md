@@ -6,7 +6,9 @@
 
 **Implemented enhancements:**
 
+- \[FEAT\] Ability to directly see automations logs [\#97](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/97)
 - \[FEAT\] Refacto of logger for better filtering [\#88](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/88)
+- \[FEAT\] Implement improved error handling and query processing [\#98](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/98) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Merged pull requests:**
 
