@@ -1,3 +1,4 @@
+import { PajamasLog } from '@/components/Icons/CustomIcons';
 import {
   deleteAutomation,
   executeAutomation,
@@ -10,6 +11,7 @@ import {
 import { Dropdown, MenuProps, message, Space } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
+import { history } from '@umijs/max';
 
 type AutomationQuickActionProps = {
   record: API.Automation;
@@ -28,10 +30,18 @@ const items = [
   {
     label: (
       <>
+        <PajamasLog /> Show execution logs
+      </>
+    ),
+    key: 2,
+  },
+  {
+    label: (
+      <>
         <DeleteOutlined /> Delete
       </>
     ),
-    key: '2',
+    key: '3',
   },
 ];
 
@@ -46,7 +56,7 @@ const AutomationQuickAction: React.FC<AutomationQuickActionProps> = (props) => {
           });
         });
         break;
-      case '2':
+      case '3':
         await deleteAutomation(props.record.uuid).then(() => {
           props.reload();
           message.warning({
@@ -55,6 +65,12 @@ const AutomationQuickAction: React.FC<AutomationQuickActionProps> = (props) => {
           });
         });
         break;
+      case '2':
+        history.push({
+          pathname: '/admin/logs',
+          // @ts-expect-error lib missing type
+          search: `?module=automation&moduleId=${props.record.uuid}`,
+        });
     }
   };
   return (
