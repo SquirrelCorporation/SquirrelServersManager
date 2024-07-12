@@ -42,9 +42,7 @@ class PlaybookActionComponent extends AbstractActionComponent {
         this.targets,
         this.extraVarsForcedValues,
       );
-      setTimeout(() => {
-        void this.waitForResult(execId);
-      }, 10000);
+      void this.waitForResult(execId);
     } catch (error: any) {
       this.childLogger.error(error);
       await this.onError();
@@ -65,6 +63,7 @@ class PlaybookActionComponent extends AbstractActionComponent {
       }
       const execStatuses = await AnsibleTaskStatusRepo.findAllByIdent(execId);
       if (!execStatuses || execStatuses.length === 0) {
+        this.childLogger.warn(`No execution statuses found (yet) for execId: ${execId}`);
         setTimeout(() => {
           this.waitForResult(execId, timeoutCount + 1);
         }, 5000);

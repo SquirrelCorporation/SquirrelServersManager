@@ -1,4 +1,3 @@
-import { PajamasLog } from '@/components/Icons/CustomIcons';
 import {
   deleteAutomation,
   executeAutomation,
@@ -7,6 +6,7 @@ import {
   DeleteOutlined,
   DownOutlined,
   PlayCircleOutlined,
+  UnorderedListOutlined,
 } from '@ant-design/icons';
 import { Dropdown, MenuProps, message, Space } from 'antd';
 import React from 'react';
@@ -30,7 +30,7 @@ const items = [
   {
     label: (
       <>
-        <PajamasLog /> Show execution logs
+        <UnorderedListOutlined /> Show execution logs
       </>
     ),
     key: 2,
