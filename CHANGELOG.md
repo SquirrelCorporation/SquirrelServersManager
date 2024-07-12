@@ -1,13 +1,25 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.15...HEAD)
+
+**Implemented enhancements:**
+
+- \[FEAT\] Refacto of logger for better filtering [\#88](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/88)
+
+**Merged pull requests:**
+
+- \[CHORE\] Refacto logger [\#96](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/96) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 ## [v0.1.15](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.15) (2024-07-11)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.15-alpha3...v0.1.15)
 
 **Implemented enhancements:**
 
-- \[FEAT\] Automations - MVP [\#54](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/54)
 - \[FEAT\] Create default LocalPlaybooksRepository for user [\#75](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/75)
+- \[FEAT\] Automations - MVP [\#54](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/54)
 - \[FEAT\] Automations mvp [\#86](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/86) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Fixed bugs:**
@@ -36,18 +48,9 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.15-alpha2...v0.1.15-alpha3)
 
-**Fixed bugs:**
-
-- Add feature to delete and resync playbooks [\#85](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/85) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- Update ansible URL and refine UI messages [\#84](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/84) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-
 ## [v0.1.15-alpha2](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.15-alpha2) (2024-07-05)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.15-alpha-1...v0.1.15-alpha2)
-
-**Fixed bugs:**
-
-- Refactor SSH private key file creation [\#83](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/83) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Closed issues:**
 
@@ -59,32 +62,18 @@
 
 **Implemented enhancements:**
 
-- \[FEAT\] Create default LocalPlaybooksRepository for user [\#75](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/75)
 - \[CHORE\] Small optimisations & fixes [\#61](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/61)
 - \[FEAT\] Add default local repository for playbooks on user creation [\#78](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/78) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\]  Actions on containers [\#64](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/64) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
-**Fixed bugs:**
-
-- SSH Connection error if not on port 22 [\#65](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/65)
-- \[BUG\] Update Carousel lazyLoad setting to progressive [\#81](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/81) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[FIX\] Fix incorrect argument order in editPlaybook function [\#79](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/79) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[BUG\] Fix protected directory [\#77](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/77) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- BUGFIX - Fix deletion following refacto [\#76](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/76) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[BUG\] Extract ContainerAvatar to a separate component [\#68](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/68) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- Update InventoryTransformer to include SSH port [\#66](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/66) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-
 **Closed issues:**
 
 - \[BUG\] e.slice is not a function on services page, no default playbooks present? [\#67](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/67)
-- \[FEAT\] Docker Actions [\#57](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/57)
 - \[BUG\] Imported Encrypted SSH Key, now api is crashing [\#42](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/42)
 
 **Merged pull requests:**
 
 - \[DOC\] Doc update doc [\#80](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/80) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] refactoring classes [\#70](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/70) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- Add tests and error handling for ExtraVarsTransformer [\#69](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/69) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Add loading states and optimize data fetching [\#62](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/62) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v.0.1.14](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v.0.1.14) (2024-07-01)
