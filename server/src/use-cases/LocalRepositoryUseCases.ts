@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Playbooks } from 'ssm-shared-lib';
-import { NotFoundError } from '../core/api/ApiError';
+import { NotFoundError } from '../middlewares/api/ApiError';
 import PlaybooksRepositoryRepo from '../data/database/repository/PlaybooksRepositoryRepo';
 import PinoLogger from '../logger';
 import { DIRECTORY_ROOT } from '../modules/playbooks-repository/PlaybooksRepositoryComponent';

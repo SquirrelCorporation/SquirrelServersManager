@@ -79,7 +79,7 @@ export default class Scheduler {
         const scheduledTask = CronJob.schedule(cron.schedule, async () => {
           logger.info(`${cron.name} is starting...`);
           await cron.fun();
-          logger.info(` ${cron.name} has ended...`);
+          logger.info(`${cron.name} has ended...`);
           void CronRepo.updateCron({ name: cron.name, lastExecution: new Date() });
         });
 

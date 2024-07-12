@@ -1,7 +1,7 @@
 import DockerModem from 'docker-modem';
 import Dockerode from 'dockerode';
 import { API, SettingsKeys, SsmAnsible, SsmStatus } from 'ssm-shared-lib';
-import { InternalError } from '../core/api/ApiError';
+import { InternalError } from '../middlewares/api/ApiError';
 import { setToCache } from '../data/cache';
 import Device, { DeviceModel } from '../data/database/model/Device';
 import DeviceAuth from '../data/database/model/DeviceAuth';

@@ -1,8 +1,8 @@
-import { NotFoundError } from '../../core/api/ApiError';
-import { SuccessResponse } from '../../core/api/ApiResponse';
+import { NotFoundError } from '../../middlewares/api/ApiError';
+import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import DeviceAuth from '../../data/database/model/DeviceAuth';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
-import asyncHandler from '../../helpers/AsyncHandler';
+import asyncHandler from '../../middlewares/AsyncHandler';
 import InventoryTransformer from '../../modules/ansible/utils/InventoryTransformer';
 import logger from '../../logger';
 

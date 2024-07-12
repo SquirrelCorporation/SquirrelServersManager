@@ -1,12 +1,10 @@
-import { InternalError, NotFoundError } from '../../core/api/ApiError';
-import { SuccessResponse } from '../../core/api/ApiResponse';
+import { InternalError, NotFoundError } from '../../middlewares/api/ApiError';
+import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
-import asyncHandler from '../../helpers/AsyncHandler';
-import logger from '../../logger';
+import asyncHandler from '../../middlewares/AsyncHandler';
 import PlaybooksRepositoryUseCases from '../../use-cases/PlaybooksRepositoryUseCases';
 
 export const getPlaybooksRepositories = asyncHandler(async (req, res) => {
-  logger.info(`[CONTROLLER] - GET - /playbook-repositories`);
   try {
     const listOfPlaybooksToSelect = await PlaybooksRepositoryUseCases.getAllPlaybooksRepositories();
     new SuccessResponse('Get playbooks successful', listOfPlaybooksToSelect).send(res);
@@ -16,9 +14,9 @@ export const getPlaybooksRepositories = asyncHandler(async (req, res) => {
 });
 
 export const addDirectoryToPlaybookRepository = asyncHandler(async (req, res) => {
-  const { uuid, directoryName } = req.params;
+  const { uuid } = req.params;
   const { fullPath } = req.body;
-  logger.info(`[CONTROLLER] - PUT - /playbook-repositories/${uuid}/directory/${directoryName}`);
+
   const playbookRepository = await PlaybooksRepositoryRepo.findByUuid(uuid);
   if (!playbookRepository) {
     throw new NotFoundError(`PlaybookRepository ${uuid} not found`);
@@ -37,7 +35,7 @@ export const addDirectoryToPlaybookRepository = asyncHandler(async (req, res) =>
 export const addPlaybookToRepository = asyncHandler(async (req, res) => {
   const { uuid, playbookName } = req.params;
   const { fullPath } = req.body;
-  logger.info(`[CONTROLLER] - PUT - /playbook-repositories/${uuid}/playbook/${playbookName}`);
+
   const playbookRepository = await PlaybooksRepositoryRepo.findByUuid(uuid);
   if (!playbookRepository) {
     throw new NotFoundError(`PlaybookRepository ${uuid} not found`);
@@ -57,7 +55,7 @@ export const addPlaybookToRepository = asyncHandler(async (req, res) => {
 export const deleteAnyFromRepository = asyncHandler(async (req, res) => {
   const { uuid } = req.params;
   const { fullPath } = req.body;
-  logger.info(`[CONTROLLER] - DELETE - /playbook-repositories/${uuid}/playbook/`);
+
   const playbookRepository = await PlaybooksRepositoryRepo.findByUuid(uuid);
   if (!playbookRepository) {
     throw new NotFoundError(`PlaybookRepository ${uuid} not found`);

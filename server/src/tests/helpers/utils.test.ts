@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import httpMocks from 'node-mocks-http';
-import { findIpAddress } from '../../helpers/utils'; // replace './utils' with actual file path
+import { findIpAddress } from '../../helpers/Utils'; // replace './utils' with actual file path
 
 vi.mock('http');
 

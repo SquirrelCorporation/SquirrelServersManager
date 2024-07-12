@@ -1,5 +1,5 @@
 import { API } from 'ssm-shared-lib';
-import { ForbiddenError, InternalError } from '../core/api/ApiError';
+import { ForbiddenError, InternalError } from '../middlewares/api/ApiError';
 import Playbook, { PlaybookModel } from '../data/database/model/Playbook';
 import PlaybooksRepository from '../data/database/model/PlaybooksRepository';
 import PlaybooksRepositoryRepo from '../data/database/repository/PlaybooksRepositoryRepo';

@@ -1,6 +1,6 @@
 import pino from 'pino';
 import shell from 'shelljs';
-import { NotFoundError } from '../../core/api/ApiError';
+import { NotFoundError } from '../../middlewares/api/ApiError';
 import Playbook from '../../data/database/model/Playbook';
 import PlaybooksRepository from '../../data/database/model/PlaybooksRepository';
 import PlaybookRepo from '../../data/database/repository/PlaybookRepo';

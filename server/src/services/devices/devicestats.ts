@@ -1,9 +1,8 @@
 import { API } from 'ssm-shared-lib';
-import { InternalError, NotFoundError } from '../../core/api/ApiError';
-import { SuccessResponse } from '../../core/api/ApiResponse';
+import { InternalError, NotFoundError } from '../../middlewares/api/ApiError';
+import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
-import asyncHandler from '../../helpers/AsyncHandler';
-import logger from '../../logger';
+import asyncHandler from '../../middlewares/AsyncHandler';
 import DeviceStatsUseCases from '../../use-cases/DeviceStatsUseCases';
 import DeviceUseCases from '../../use-cases/DeviceUseCases';
 
@@ -22,7 +21,6 @@ export const updateDeviceAndAddDeviceStat = asyncHandler(async (req, res) => {
 export const getDeviceStatsByDeviceUuid = asyncHandler(async (req, res) => {
   const { uuid, type } = req.params;
   const { from = 24 } = req.query;
-  logger.info(`[CONTROLLER] - GET - /${uuid}/stats/${type}/`);
 
   const device = await DeviceRepo.findOneByUuid(uuid);
   if (device == null) {
@@ -38,7 +36,6 @@ export const getDeviceStatsByDeviceUuid = asyncHandler(async (req, res) => {
 
 export const getDeviceStatByDeviceUuid = asyncHandler(async (req, res) => {
   const { uuid, type } = req.params;
-  logger.info(`[CONTROLLER] - GET - /${uuid}/stat/${type}/`);
 
   const device = await DeviceRepo.findOneByUuid(uuid);
   if (device == null) {

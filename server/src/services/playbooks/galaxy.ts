@@ -1,9 +1,9 @@
 import { parse } from 'url';
 import axios from 'axios';
 import { API } from 'ssm-shared-lib';
-import { InternalError } from '../../core/api/ApiError';
-import { SuccessResponse } from '../../core/api/ApiResponse';
-import asyncHandler from '../../helpers/AsyncHandler';
+import { InternalError } from '../../middlewares/api/ApiError';
+import { SuccessResponse } from '../../middlewares/api/ApiResponse';
+import asyncHandler from '../../middlewares/AsyncHandler';
 import Shell from '../../modules/shell';
 
 export const getAnsibleGalaxyCollections = asyncHandler(async (req, res) => {

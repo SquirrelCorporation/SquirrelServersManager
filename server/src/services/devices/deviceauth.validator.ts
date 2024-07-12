@@ -1,7 +1,7 @@
 import { body, param } from 'express-validator';
 import { SsmAnsible } from 'ssm-shared-lib';
 import { Validation } from 'ssm-shared-lib';
-import validator from '../../middlewares/validator';
+import validator from '../../middlewares/Validator';
 
 export const getDeviceAuthValidator = [
   param('uuid')

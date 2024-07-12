@@ -1,5 +1,5 @@
 import { body, query } from 'express-validator';
-import validator from '../../middlewares/validator';
+import validator from '../../middlewares/Validator';
 
 export const getAnsibleGalaxyCollectionsValidator = [
   query('offset')

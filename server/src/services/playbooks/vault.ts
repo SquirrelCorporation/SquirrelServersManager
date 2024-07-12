@@ -1,10 +1,7 @@
 import { VAULT_PWD } from '../../config';
-import { SuccessResponse } from '../../core/api/ApiResponse';
-import asyncHandler from '../../helpers/AsyncHandler';
-import logger from '../../logger';
+import { SuccessResponse } from '../../middlewares/api/ApiResponse';
+import asyncHandler from '../../middlewares/AsyncHandler';
 
 export const getVaultPwd = asyncHandler(async (req, res) => {
-  logger.info('[CONTROLLER] - GET - playbooks/vault');
-
   new SuccessResponse('Successfully got vault pwd', { pwd: VAULT_PWD }).send(res);
 });

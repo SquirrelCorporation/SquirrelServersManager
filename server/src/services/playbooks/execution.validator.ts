@@ -1,5 +1,5 @@
 import { param } from 'express-validator';
-import validator from '../../middlewares/validator';
+import validator from '../../middlewares/Validator';
 
 export const execPlaybookValidator = [
   param('uuid').exists().notEmpty().isUUID().withMessage('Playbook uuid required'),

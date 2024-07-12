@@ -1,14 +1,13 @@
 import { API } from 'ssm-shared-lib';
-import { InternalError, NotFoundError } from '../../core/api/ApiError';
-import { SuccessResponse } from '../../core/api/ApiResponse';
+import { InternalError, NotFoundError } from '../../middlewares/api/ApiError';
+import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import DeviceAuth from '../../data/database/model/DeviceAuth';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
-import asyncHandler from '../../helpers/AsyncHandler';
+import asyncHandler from '../../middlewares/AsyncHandler';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../modules/ansible-vault/vault';
 import WatcherEngine from '../../modules/docker/core/WatcherEngine';
 import Shell from '../../modules/shell';
-import logger from '../../logger';
 
 const SENSITIVE_PLACEHOLDER = 'REDACTED';
 
@@ -29,16 +28,13 @@ const preWriteSensitiveInfos = async (newKey: string, originalKey?: string) => {
 
 export const getDeviceAuth = asyncHandler(async (req, res) => {
   const { uuid } = req.params;
-  logger.info(`[CONTROLLER] - GET - /devices/auth/${uuid}`);
 
   const device = await DeviceRepo.findOneByUuid(uuid);
   if (!device) {
-    logger.error('[CONTROLLER] - POST - Device Auth - Device not found');
     throw new NotFoundError(`Device not found (${uuid})`);
   }
   const deviceAuth = await DeviceAuthRepo.findOneByDevice(device);
   if (!deviceAuth) {
-    logger.error('[CONTROLLER] - GET - Device Auth - DeviceAuth not found');
     throw new NotFoundError(`Device Auth not found (${uuid}`);
   }
   try {
@@ -68,7 +64,6 @@ export const getDeviceAuth = asyncHandler(async (req, res) => {
       res,
     );
   } catch (error: any) {
-    logger.error(error);
     throw new InternalError(error.message);
   }
 });
@@ -88,7 +83,6 @@ export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {
   const { uuid } = req.params;
   const device = await DeviceRepo.findOneByUuid(uuid);
   if (!device) {
-    logger.error('[CONTROLLER] - POST - Device Auth - Device not found');
     throw new NotFoundError('Device ID not found');
   }
   const optionalExistingDeviceAuth = await DeviceAuthRepo.findOneByDevice(device);
@@ -115,9 +109,6 @@ export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {
   if (sshKey) {
     await Shell.SshPrivateKeyFileManager.saveSshKey(sshKey, device.uuid);
   }
-  logger.info(
-    `[CONTROLLER] - POST - Device Auth - Updated or Created device with uuid: ${device.uuid}`,
-  );
   void WatcherEngine.deregisterWatchers();
   void WatcherEngine.registerWatchers();
   new SuccessResponse('Add or update device auth successful', { type: deviceAuth.authType }).send(
@@ -141,7 +132,6 @@ export const updateDockerAuth = asyncHandler(async (req, res) => {
   const { uuid } = req.params;
   const device = await DeviceRepo.findOneByUuid(uuid);
   if (!device) {
-    logger.error('[CONTROLLER] - POST - Device Docker Auth - Device not found');
     throw new NotFoundError('Device ID not found');
   }
   const optionalExistingDeviceAuth = await DeviceAuthRepo.findOneByDevice(device);
@@ -174,9 +164,6 @@ export const updateDockerAuth = asyncHandler(async (req, res) => {
     customDockerTryKeyboard: customDockerTryKeyboard,
   } as DeviceAuth);
 
-  logger.info(
-    `[CONTROLLER] - POST - Device Docker Auth - Updated device with uuid: ${device.uuid}`,
-  );
   void WatcherEngine.deregisterWatchers();
   void WatcherEngine.registerWatchers();
   new SuccessResponse('Update docker auth successful', {

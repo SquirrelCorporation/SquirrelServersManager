@@ -1,19 +1,17 @@
 import { SettingsKeys } from 'ssm-shared-lib';
-import { AuthFailureError } from '../../core/api/ApiError';
-import { SuccessResponse } from '../../core/api/ApiResponse';
+import { AuthFailureError } from '../../middlewares/api/ApiError';
+import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import { createADefaultLocalUserRepository } from '../../core/startup';
 import { getAnsibleVersion } from '../../core/system/version';
 import { Role } from '../../data/database/model/User';
 import UserRepo from '../../data/database/repository/UserRepo';
 import { getIntConfFromCache } from '../../data/cache';
-import asyncHandler from '../../helpers/AsyncHandler';
-import logger from '../../logger';
+import asyncHandler from '../../middlewares/AsyncHandler';
 import DashboardUseCase from '../../use-cases/DashboardUseCase';
 import DeviceUseCases from '../../use-cases/DeviceUseCases';
 import { dependencies, version } from '../../../package.json';
 
 export const getCurrentUser = asyncHandler(async (req, res) => {
-  logger.info(`[CONTROLLER] - GET - /currentUser ${req.user?.email}`);
   const { online, offline, totalCpu, totalMem, overview } =
     await DeviceUseCases.getDevicesOverview();
   const considerDeviceOffline = await getIntConfFromCache(
@@ -94,7 +92,6 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
 });
 
 export const createFirstUser = asyncHandler(async (req, res) => {
-  logger.info('[CONTROLLER] - POST - /createFirstUser');
   const { email, password, name, avatar } = req.body;
   const hasUser = (await UserRepo.count()) > 0;
   if (hasUser) {
@@ -113,7 +110,6 @@ export const createFirstUser = asyncHandler(async (req, res) => {
 });
 
 export const hasUser = asyncHandler(async (req, res) => {
-  logger.info('[CONTROLLER] - GET - /hasUsers');
   const hasUser = (await UserRepo.count()) > 0;
   new SuccessResponse('Has user', { hasUsers: hasUser }).send(res);
 });

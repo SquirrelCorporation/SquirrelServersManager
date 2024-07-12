@@ -2,13 +2,11 @@ import Dockerode from 'dockerode';
 import { DateTime } from 'luxon';
 import mongoose from 'mongoose';
 import { API } from 'ssm-shared-lib';
-import logger from '../../../logger';
 import Container from '../model/Container';
 import { ContainerStatModel } from '../model/ContainerStat';
 
 async function create(container: Container, stats: Dockerode.ContainerStats) {
   const { cpu_stats, precpu_stats, memory_stats } = stats;
-  logger.debug({ cpu_stats, precpu_stats, memory_stats });
   const cpuDelta = cpu_stats.cpu_usage.total_usage - precpu_stats.cpu_usage.total_usage;
 
   const cpuSystemDelta = cpu_stats.system_cpu_usage - precpu_stats.system_cpu_usage;

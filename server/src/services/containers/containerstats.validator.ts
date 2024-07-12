@@ -1,6 +1,6 @@
 import { oneOf, param } from 'express-validator';
 import { SsmStatus, StatsType } from 'ssm-shared-lib';
-import validator from '../../middlewares/validator';
+import validator from '../../middlewares/Validator';
 
 export const getContainerStatByContainerIdValidator = [
   param('id').exists().notEmpty().isString(),

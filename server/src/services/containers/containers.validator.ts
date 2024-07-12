@@ -1,6 +1,6 @@
 import { body, param } from 'express-validator';
 import { SsmContainer } from 'ssm-shared-lib';
-import validator from '../../middlewares/validator';
+import validator from '../../middlewares/Validator';
 
 export const postCustomNameOfContainerValidator = [
   param('id').exists().notEmpty().isString(),
