@@ -12,6 +12,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Update various package versions [\#99](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/99) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refacto logger [\#96](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/96) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.15](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.15) (2024-07-11)
