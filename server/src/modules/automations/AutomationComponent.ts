@@ -20,7 +20,9 @@ class AutomationComponent {
     this.name = name;
     this.childLogger = logger.child(
       {
-        module: `AutomationComponent/${this.uuid}/${name}`,
+        module: `Automation`,
+        moduleId: `${this.uuid}`,
+        moduleName: `${name}`,
       },
       { msgPrefix: '[AUTOMATION-COMPONENT] - ' },
     );

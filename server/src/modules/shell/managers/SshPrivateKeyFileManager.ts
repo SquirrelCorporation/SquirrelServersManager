@@ -5,7 +5,7 @@ import { AbstractShellCommander } from '../AbstractShellCommander';
 
 class SshPrivateKeyFileManager extends AbstractShellCommander {
   constructor() {
-    super(logger.child({ module: 'Authentication' }), 'Authentication');
+    super(logger.child({ module: 'SshPrivateKeyFileManager' }), 'SshPrivateKey');
   }
 
   async saveSshKey(key: string, uuid: string) {

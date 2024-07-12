@@ -6,7 +6,7 @@ import type { SSMServicesTypes } from '../../../types/typings.d.ts';
 export enum Kind {
   WATCHER = 'watcher',
   REGISTRY = 'registry',
-  UNKNOWN = 'unknown',
+  UNKNOWN = 'Unknown',
 }
 
 abstract class Component<
@@ -53,7 +53,12 @@ abstract class Component<
     this.name = name;
     this.configuration = this.validateConfiguration(configuration);
     this.childLogger = logger.child(
-      { module: `${kind}/${type}/${name}` },
+      {
+        module: `${kind.charAt(0).toUpperCase() + kind.slice(1)}`,
+        moduleId: `${this._id}`,
+        moduleName: `${name}`,
+        moduleType: `${type}`,
+      },
       { msgPrefix: `[${kind.toUpperCase()}][${type.toUpperCase()}] - ` },
     );
     this.childLogger.info(

@@ -1,14 +1,13 @@
 import { SettingsKeys } from 'ssm-shared-lib';
-import { InternalError } from '../../core/api/ApiError';
-import { SuccessResponse } from '../../core/api/ApiResponse';
+import { InternalError } from '../../middlewares/api/ApiError';
+import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import { setToCache } from '../../data/cache';
-import asyncHandler from '../../helpers/AsyncHandler';
-import logger from '../../logger';
+import asyncHandler from '../../middlewares/AsyncHandler';
 
 export const postDashboardSettings = asyncHandler(async (req, res) => {
   const { key } = req.params;
   const { value } = req.body;
-  logger.info(`[CONTROLLER] - POST - /settings/dashboard/${key}`);
+
   try {
     switch (key) {
       case SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER:
@@ -29,7 +28,6 @@ export const postDashboardSettings = asyncHandler(async (req, res) => {
         });
     }
   } catch (error: any) {
-    logger.error(error);
     throw new InternalError(error.message);
   }
 });

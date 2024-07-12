@@ -1,18 +1,16 @@
 import { parse } from 'url';
 import { API, SsmContainer } from 'ssm-shared-lib';
-import { BadRequestError, InternalError, NotFoundError } from '../../core/api/ApiError';
-import { SuccessResponse } from '../../core/api/ApiResponse';
+import { BadRequestError, InternalError, NotFoundError } from '../../middlewares/api/ApiError';
+import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import ContainerRepo from '../../data/database/repository/ContainerRepo';
-import asyncHandler from '../../helpers/AsyncHandler';
+import asyncHandler from '../../middlewares/AsyncHandler';
 import { filterByFields, filterByQueryParams } from '../../helpers/FilterHelper';
 import { paginate } from '../../helpers/PaginationHelper';
 import { sortByFields } from '../../helpers/SorterHelper';
-import WatcherEngine from '../../integrations/docker/core/WatcherEngine';
-import logger from '../../logger';
+import WatcherEngine from '../../modules/docker/core/WatcherEngine';
 import ContainerUseCases from '../../use-cases/ContainerUseCases';
 
 export const getContainers = asyncHandler(async (req, res) => {
-  logger.info(`[CONTROLLER] - GET - /containers/`);
   const realUrl = req.url;
   const { current = 1, pageSize = 10 } = req.query;
   const params = parse(realUrl, true).query as unknown as API.PageParams &
@@ -21,7 +19,6 @@ export const getContainers = asyncHandler(async (req, res) => {
       filter: any;
     };
   const containers = (await ContainerRepo.findAll()) as API.Container[];
-  logger.debug(containers);
   // Add pagination
   let dataSource = paginate(containers, current as number, pageSize as number);
   // Use the separated services

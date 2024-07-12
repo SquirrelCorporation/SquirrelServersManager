@@ -1,10 +1,15 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Playbooks } from 'ssm-shared-lib';
-import { NotFoundError } from '../core/api/ApiError';
+import { NotFoundError } from '../middlewares/api/ApiError';
 import PlaybooksRepositoryRepo from '../data/database/repository/PlaybooksRepositoryRepo';
-import { DIRECTORY_ROOT } from '../integrations/playbooks-repository/PlaybooksRepositoryComponent';
-import PlaybooksRepositoryEngine from '../integrations/playbooks-repository/PlaybooksRepositoryEngine';
-import logger from '../logger';
+import PinoLogger from '../logger';
+import { DIRECTORY_ROOT } from '../modules/playbooks-repository/PlaybooksRepositoryComponent';
+import PlaybooksRepositoryEngine from '../modules/playbooks-repository/PlaybooksRepositoryEngine';
+
+const logger = PinoLogger.child(
+  { module: 'LocalRepositoryUseCases' },
+  { msgPrefix: '[LOCAL_REPOSITORY] - ' },
+);
 
 async function addLocalRepository(name: string) {
   const uuid = uuidv4();

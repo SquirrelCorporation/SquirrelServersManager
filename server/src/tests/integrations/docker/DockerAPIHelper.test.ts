@@ -2,15 +2,15 @@ import { SsmAnsible } from 'ssm-shared-lib';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import Device from '../../../data/database/model/Device';
 import DeviceAuth from '../../../data/database/model/DeviceAuth';
-import * as vault from '../../../integrations/ansible-vault/vault';
-import DockerAPIHelper from '../../../integrations/docker/core/DockerAPIHelper';
+import * as vault from '../../../modules/ansible-vault/vault';
+import DockerAPIHelper from '../../../modules/docker/core/DockerAPIHelper';
 
 // The test cases
 describe('getDockerSshConnectionOptions', () => {
   // Mock the vaultDecrypt function
-  vi.mock('../../../integrations/ansible-vault/vault', async (importOriginal) => {
+  vi.mock('../../../modules/ansible-vault/vault', async (importOriginal) => {
     return {
-      ...(await importOriginal<typeof import('../../../data/database/repository/DeviceRepo')>()),
+      ...(await importOriginal<typeof import('../../../modules/ansible-vault/vault')>()),
       vaultDecrypt: async (value: string, vault: string) => {
         return value + '-decrypted';
       },

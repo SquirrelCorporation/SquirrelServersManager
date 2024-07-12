@@ -3,7 +3,7 @@ import { DirectoryTree } from 'ssm-shared-lib';
 import {
   recursiveTreeCompletion,
   recursivelyFlattenTree,
-} from '../../../integrations/playbooks-repository/tree-utils';
+} from '../../../modules/playbooks-repository/tree-utils';
 
 const mockTree: DirectoryTree.TreeNode = {
   path: '/root',
@@ -132,10 +132,10 @@ describe('recursiveTreeCompletion', () => {
     };
   });
 
-  vi.mock('../../../integrations/ansible/utils/ExtraVars', async (importOriginal) => {
+  vi.mock('../../../modules/ansible/utils/ExtraVars', async (importOriginal) => {
     return {
       default: {
-        ...(await importOriginal<typeof import('../../../integrations/ansible/utils/ExtraVars')>()),
+        ...(await importOriginal<typeof import('../../../modules/ansible/utils/ExtraVars')>()),
         findValueOfExtraVars: async () => {
           return undefined;
         },

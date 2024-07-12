@@ -1,11 +1,9 @@
 import { API } from 'ssm-shared-lib';
-import { SuccessResponse } from '../../core/api/ApiResponse';
+import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import CronRepo from '../../data/database/repository/CronRepo';
-import asyncHandler from '../../helpers/AsyncHandler';
-import logger from '../../logger';
+import asyncHandler from '../../middlewares/AsyncHandler';
 
 export const getCrons = asyncHandler(async (req, res) => {
-  logger.info(`[CONTROLLER] - GET - /crons`);
   const crons = await CronRepo.findAll();
   new SuccessResponse('Get crons', crons as API.Cron[]).send(res);
 });

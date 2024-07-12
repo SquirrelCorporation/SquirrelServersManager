@@ -12,7 +12,12 @@ abstract class AbstractActionComponent {
     this.type = type;
     this.automationUuid = automationUuid;
     this.childLogger = logger.child(
-      { module: `ActionComponent/${automationUuid}/${automationName}`, type: type },
+      {
+        module: `AutomationAction`,
+        moduleId: `${automationUuid}`,
+        moduleName: `${automationName}`,
+        type: type,
+      },
       { msgPrefix: '[ACTION-COMPONENT] - ' },
     );
   }

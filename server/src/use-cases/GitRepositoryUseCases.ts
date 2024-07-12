@@ -1,7 +1,7 @@
 import { Playbooks } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
 import PlaybooksRepositoryRepo from '../data/database/repository/PlaybooksRepositoryRepo';
-import PlaybooksRepositoryEngine from '../integrations/playbooks-repository/PlaybooksRepositoryEngine';
+import PlaybooksRepositoryEngine from '../modules/playbooks-repository/PlaybooksRepositoryEngine';
 
 async function addGitRepository(
   name: string,

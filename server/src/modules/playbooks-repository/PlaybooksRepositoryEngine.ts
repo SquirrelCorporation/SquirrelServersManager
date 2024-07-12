@@ -1,11 +1,16 @@
 import { Playbooks } from 'ssm-shared-lib';
 import PlaybooksRepository from '../../data/database/model/PlaybooksRepository';
 import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
-import logger from '../../logger';
+import PinoLogger from '../../logger';
 import { DEFAULT_VAULT_ID, vaultDecrypt } from '../ansible-vault/vault';
 import GitRepositoryComponent from './git-repository/GitRepositoryComponent';
 import LocalRepositoryComponent from './local-repository/LocalRepositoryComponent';
 import { AbstractComponent } from './PlaybooksRepositoryComponent';
+
+const logger = PinoLogger.child(
+  { module: 'PlaybooksRepositoryEngine' },
+  { msgPrefix: '[PLAYBOOK_REPOSITORY_ENGINE] - ' },
+);
 
 type stateType = {
   playbooksRepository: AbstractComponent[];

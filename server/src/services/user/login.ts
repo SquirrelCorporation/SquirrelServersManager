@@ -1,14 +1,12 @@
 import { API } from 'ssm-shared-lib';
 import * as jwt from 'jsonwebtoken';
 import { SECRET, SESSION_DURATION } from '../../config';
-import { AuthFailureError } from '../../core/api/ApiError';
-import { SuccessResponse } from '../../core/api/ApiResponse';
+import { AuthFailureError } from '../../middlewares/api/ApiError';
+import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import UserRepo from '../../data/database/repository/UserRepo';
-import asyncHandler from '../../helpers/AsyncHandler';
-import logger from '../../logger';
+import asyncHandler from '../../middlewares/AsyncHandler';
 
 export const login = asyncHandler(async (req, res, next) => {
-  logger.info('[CONTROLLER] - POST - /login/account');
   const { password, username } = req.body;
   if (!password || !username) {
     res.status(401).send({
@@ -42,8 +40,6 @@ export const login = asyncHandler(async (req, res, next) => {
 });
 
 export const logout = asyncHandler(async (req, res, next) => {
-  logger.info('[CONTROLLER] - POST - /login/outLogin');
-
   if (req.cookies['jwt']) {
     new SuccessResponse('Logout success').send(res.clearCookie('jwt'));
   } else {

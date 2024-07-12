@@ -1,5 +1,5 @@
 import { body, param } from 'express-validator';
-import validator from '../../middlewares/validator';
+import validator from '../../middlewares/Validator';
 
 export const addDirectoryToPlaybookRepositoryValidator = [
   param('uuid').exists().isString().isUUID().withMessage('Uuid is incorrect'),

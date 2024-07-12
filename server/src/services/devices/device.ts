@@ -1,25 +1,23 @@
 import { parse } from 'url';
 import { SettingsKeys, SsmStatus } from 'ssm-shared-lib';
 import { API } from 'ssm-shared-lib';
-import { BadRequestError, NotFoundError } from '../../core/api/ApiError';
-import { SuccessResponse } from '../../core/api/ApiResponse';
+import { BadRequestError, ForbiddenError, NotFoundError } from '../../middlewares/api/ApiError';
+import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import Device from '../../data/database/model/Device';
 import DeviceAuth from '../../data/database/model/DeviceAuth';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
 import { setToCache } from '../../data/cache';
-import asyncHandler from '../../helpers/AsyncHandler';
+import asyncHandler from '../../middlewares/AsyncHandler';
 import { filterByFields, filterByQueryParams } from '../../helpers/FilterHelper';
 import { paginate } from '../../helpers/PaginationHelper';
 import { sortByFields } from '../../helpers/SorterHelper';
-import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../integrations/ansible-vault/vault';
-import WatcherEngine from '../../integrations/docker/core/WatcherEngine';
-import Shell from '../../integrations/shell';
-import logger from '../../logger';
+import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../modules/ansible-vault/vault';
+import WatcherEngine from '../../modules/docker/core/WatcherEngine';
+import Shell from '../../modules/shell';
 import DeviceUseCases from '../../use-cases/DeviceUseCases';
 
 export const addDevice = asyncHandler(async (req, res) => {
-  logger.info(`[CONTROLLER] - PUT - /devices/`);
   const {
     masterNodeUrl,
     ip,
@@ -59,41 +57,32 @@ export const addDevice = asyncHandler(async (req, res) => {
       await Shell.SshPrivateKeyFileManager.saveSshKey(sshKey, createdDevice.uuid);
     }
     void WatcherEngine.registerWatcher(createdDevice);
-    logger.info(`[CONTROLLER] Device - Created device with uuid: ${createdDevice.uuid}`);
     new SuccessResponse('Add device successful', { device: createdDevice as API.DeviceItem }).send(
       res,
     );
-  } catch (error) {
-    logger.error(error);
-    throw new BadRequestError('The ip likely already exists');
+  } catch (error: any) {
+    throw new BadRequestError(`The ip likely already exists ${error.message}`);
   }
 });
 
 export const addDeviceAuto = asyncHandler(async (req, res) => {
-  logger.info(`[CONTROLLER] - POST - /devices/`);
   const { ip } = req.body;
 
   const device = await DeviceRepo.findOneByIp(ip);
 
   if (device) {
-    logger.error('[CONTROLLER] Device - Is called ip already existing');
-    res.status(403).send({
-      success: false,
-      message:
-        'The ip already exists, please delete or change your devices before registering this device',
-    });
-    return;
+    throw new ForbiddenError(
+      'The ip already exists, please delete or change your devices before registering this device',
+    );
   }
 
   const createdDevice = await DeviceRepo.create({
     ip: ip,
   } as Device);
-  logger.info(`[CONTROLLER] Device - Created device with uuid: ${createdDevice.uuid}`);
   new SuccessResponse('Add device auto successful', { id: createdDevice.uuid }).send(res);
 });
 
 export const getDevices = asyncHandler(async (req, res) => {
-  logger.info(`[CONTROLLER] - GET - /devices/`);
   const realUrl = req.url;
   const { current = 1, pageSize = 10 } = req.query;
   const params = parse(realUrl, true).query as unknown as API.PageParams &
@@ -122,12 +111,10 @@ export const getDevices = asyncHandler(async (req, res) => {
 });
 
 export const deleteDevice = asyncHandler(async (req, res) => {
-  logger.info(`[CONTROLLER] - DELETE - /devices/${req.params.uuid}`);
-
-  const device = await DeviceRepo.findOneByUuid(req.params.uuid);
+  const { uuid } = req.params;
+  const device = await DeviceRepo.findOneByUuid(uuid);
 
   if (!device) {
-    logger.error('[CONTROLLER] Device not found');
     throw new NotFoundError(`Device not found (${req.params.uuid})`);
   }
   await DeviceUseCases.deleteDevice(device);
@@ -136,7 +123,6 @@ export const deleteDevice = asyncHandler(async (req, res) => {
 
 //TODO validation
 export const updateDockerWatcher = asyncHandler(async (req, res) => {
-  logger.info(`[CONTROLLER] - POST - /devices/${req.params.uuid}/docker-watcher`);
   const {
     dockerWatcher,
     dockerWatcherCron,
@@ -147,7 +133,6 @@ export const updateDockerWatcher = asyncHandler(async (req, res) => {
   const device = await DeviceRepo.findOneByUuid(req.params.uuid);
 
   if (!device) {
-    logger.error('[CONTROLLER] Device not found');
     throw new NotFoundError(`Device not found (${req.params.uuid})`);
   }
   await DeviceUseCases.updateDockerWatcher(

@@ -376,6 +376,8 @@ export type ServerLog = {
   pid: number;
   level: number;
   msg: string;
+  req: any;
+  res: any;
 };
 
 export type DeviceAuthResponse = {

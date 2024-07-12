@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest';
-import extraVarsOps from '../../../integrations/ansible/utils/ExtraVars';
+import extraVarsOps from '../../../modules/ansible/utils/ExtraVars';
 
 describe('test ExtraVars', () => {
   vi.mock('../../../data/cache', () => ({

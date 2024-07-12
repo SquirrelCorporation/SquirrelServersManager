@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import Hub from '../../../integrations/docker/registries/providers/hub/Hub';
+import Hub from '../../../modules/docker/registries/providers/hub/Hub';
 
 describe('testing Hub Registry', () => {
   const hub = new Hub();

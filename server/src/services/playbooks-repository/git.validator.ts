@@ -1,5 +1,5 @@
 import { body, param } from 'express-validator';
-import validator from '../../middlewares/validator';
+import validator from '../../middlewares/Validator';
 
 export const addGitRepositoryValidator = [
   body('name').exists().isString().withMessage('Name is incorrect'),

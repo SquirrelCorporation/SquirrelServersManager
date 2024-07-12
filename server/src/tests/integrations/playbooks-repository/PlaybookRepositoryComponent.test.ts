@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import LocalRepositoryComponent from '../../../integrations/playbooks-repository/local-repository/LocalRepositoryComponent';
-import PlaybooksRepositoryComponent from '../../../integrations/playbooks-repository/PlaybooksRepositoryComponent';
+import LocalRepositoryComponent from '../../../modules/playbooks-repository/local-repository/LocalRepositoryComponent';
+import PlaybooksRepositoryComponent from '../../../modules/playbooks-repository/PlaybooksRepositoryComponent';
 
 describe('PlaybooksRepositoryComponent', () => {
   let playbooksRepositoryComponent: PlaybooksRepositoryComponent;

@@ -1,12 +1,12 @@
 import { parse } from 'url';
-import { SuccessResponse } from '../../core/api/ApiResponse';
+import { API } from 'ssm-shared-lib';
+import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import AnsibleTaskRepo from '../../data/database/repository/AnsibleTaskRepo';
-import asyncHandler from '../../helpers/AsyncHandler';
+import asyncHandler from '../../middlewares/AsyncHandler';
 import { filterByFields, filterByQueryParams } from '../../helpers/FilterHelper';
 import { paginate } from '../../helpers/PaginationHelper';
 import { sortByFields } from '../../helpers/SorterHelper';
 import logger from '../../logger';
-import { API } from 'ssm-shared-lib';
 
 export const getTaskLogs = asyncHandler(async (req, res) => {
   logger.info(`[CONTROLLER] - GET - /logs/tasks`);

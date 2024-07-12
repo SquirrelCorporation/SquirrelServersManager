@@ -1,5 +1,5 @@
 import { body, param, query } from 'express-validator';
-import validator from '../../middlewares/validator';
+import validator from '../../middlewares/Validator';
 
 export const getDashboardAveragedStatsValidator = [
   body('devices').exists().notEmpty().isArray().withMessage('Devices uuid in body required'),

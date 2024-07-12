@@ -1,6 +1,6 @@
 import { param } from 'express-validator';
 import { StatsType } from 'ssm-shared-lib';
-import validator from '../../middlewares/validator';
+import validator from '../../middlewares/Validator';
 
 export const updateDeviceAndAddDeviceStatValidator = [
   param('uuid')

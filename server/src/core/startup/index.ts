@@ -4,16 +4,18 @@ import initRedisValues from '../../data/cache/defaults';
 import { PlaybookModel } from '../../data/database/model/Playbook';
 import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
 import UserRepo from '../../data/database/repository/UserRepo';
-import AutomationEngine from '../../integrations/automations/AutomationEngine';
-import Crons from '../../integrations/crons';
-import WatcherEngine from '../../integrations/docker/core/WatcherEngine';
-import providerConf from '../../integrations/docker/registries/providers/provider.conf';
-import PlaybooksRepositoryEngine from '../../integrations/playbooks-repository/PlaybooksRepositoryEngine';
-import Shell from '../../integrations/shell';
-import logger from '../../logger';
+import PinoLogger from '../../logger';
+import AutomationEngine from '../../modules/automations/AutomationEngine';
+import Crons from '../../modules/crons';
+import WatcherEngine from '../../modules/docker/core/WatcherEngine';
+import providerConf from '../../modules/docker/registries/providers/provider.conf';
+import PlaybooksRepositoryEngine from '../../modules/playbooks-repository/PlaybooksRepositoryEngine';
+import Shell from '../../modules/shell';
 import ContainerRegistryUseCases from '../../use-cases/ContainerRegistryUseCases';
 import DeviceAuthUseCases from '../../use-cases/DeviceAuthUseCases';
 import { setAnsibleVersion } from '../system/version';
+
+const logger = PinoLogger.child({ module: 'Startup' }, { msgPrefix: '[STARTUP] - ' });
 
 const corePlaybooksRepository = {
   name: 'ssm-core',
@@ -35,8 +37,8 @@ const toolsPlaybooksRepository = {
 
 async function init() {
   const version = await getFromCache(SettingsKeys.GeneralSettingsKeys.SCHEME_VERSION);
-  logger.info(`[CONFIGURATION] - initialization`);
-  logger.info(`[CONFIGURATION] - initialization - Scheme Version: ${version}`);
+  logger.info(`initialization`);
+  logger.info(`initialization - Scheme Version: ${version}`);
 
   await PlaybooksRepositoryRepo.updateOrCreate(corePlaybooksRepository);
   await PlaybooksRepositoryRepo.updateOrCreate(toolsPlaybooksRepository);
@@ -49,7 +51,7 @@ async function init() {
   if (version !== SettingsKeys.DefaultValue.SCHEME_VERSION) {
     await migrate();
     await createADefaultLocalUserRepository();
-    logger.warn(`[CONFIGURATION] - Scheme version differed, starting writing updates`);
+    logger.warn(`Scheme version differed, starting writing updates`);
     await initRedisValues();
     void setAnsibleVersion();
     await PlaybooksRepositoryEngine.syncAllRegistered();

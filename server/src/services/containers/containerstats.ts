@@ -1,13 +1,11 @@
-import { InternalError, NotFoundError } from '../../core/api/ApiError';
-import { SuccessResponse } from '../../core/api/ApiResponse';
+import { InternalError, NotFoundError } from '../../middlewares/api/ApiError';
+import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import ContainerRepo from '../../data/database/repository/ContainerRepo';
-import asyncHandler from '../../helpers/AsyncHandler';
-import logger from '../../logger';
+import asyncHandler from '../../middlewares/AsyncHandler';
 import ContainerStatsUseCases from '../../use-cases/ContainerStatsUseCases';
 
 export const getContainerStatByContainerId = asyncHandler(async (req, res) => {
   const { id, type } = req.params;
-  logger.info(`[CONTROLLER] - GET - /${id}/stat/${type}/`);
 
   const container = await ContainerRepo.findContainerById(id);
   if (container == null) {
@@ -27,7 +25,6 @@ export const getContainerStatByContainerId = asyncHandler(async (req, res) => {
 export const getContainerStatsByContainerId = asyncHandler(async (req, res) => {
   const { id, type } = req.params;
   const { from = 24 } = req.query;
-  logger.info(`[CONTROLLER] - GET - /${id}/stats/${type}/`);
 
   const container = await ContainerRepo.findContainerById(id);
   if (container == null) {

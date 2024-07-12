@@ -1,15 +1,15 @@
-import { test, expect } from 'vitest';
+import { expect, test } from 'vitest';
 import {
   AuthFailureResponse,
-  NotFoundResponse,
-  ForbiddenResponse,
   BadRequestResponse,
-  InternalErrorResponse,
-  SuccessMsgResponse,
   FailureMsgResponse,
-  SuccessResponse,
+  ForbiddenResponse,
+  InternalErrorResponse,
+  NotFoundResponse,
   ResponseStatus,
-} from '../../core/api/ApiResponse';
+  SuccessMsgResponse,
+  SuccessResponse,
+} from '../../middlewares/api/ApiResponse';
 
 test('AuthFailureResponse works as expected', () => {
   const mockRes = {

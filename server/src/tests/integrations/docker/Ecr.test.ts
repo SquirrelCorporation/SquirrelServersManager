@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
-import Ecr from '../../../integrations/docker/registries/providers/ecr/Ecr';
+import Ecr from '../../../modules/docker/registries/providers/ecr/Ecr';
 
 describe('testing ECR Registry', () => {
   const ecr = new Ecr();

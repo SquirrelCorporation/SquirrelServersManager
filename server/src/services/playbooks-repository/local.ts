@@ -1,10 +1,10 @@
 import { Playbooks } from 'ssm-shared-lib';
-import { NotFoundError } from '../../core/api/ApiError';
-import { SuccessResponse } from '../../core/api/ApiResponse';
+import { NotFoundError } from '../../middlewares/api/ApiError';
+import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
-import asyncHandler from '../../helpers/AsyncHandler';
-import LocalRepositoryComponent from '../../integrations/playbooks-repository/local-repository/LocalRepositoryComponent';
-import PlaybooksRepositoryEngine from '../../integrations/playbooks-repository/PlaybooksRepositoryEngine';
+import asyncHandler from '../../middlewares/AsyncHandler';
+import LocalRepositoryComponent from '../../modules/playbooks-repository/local-repository/LocalRepositoryComponent';
+import PlaybooksRepositoryEngine from '../../modules/playbooks-repository/PlaybooksRepositoryEngine';
 import logger from '../../logger';
 import LocalRepositoryUseCases from '../../use-cases/LocalRepositoryUseCases';
 import PlaybooksRepositoryUseCases from '../../use-cases/PlaybooksRepositoryUseCases';

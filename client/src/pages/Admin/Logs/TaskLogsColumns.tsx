@@ -11,12 +11,12 @@ const TaskLogsColumns: ProColumns<API.Task>[] = [
     valueType: 'dateTime',
   },
   {
-    title: 'Identifier',
+    title: 'Task Identifier',
     dataIndex: 'ident',
     key: 'ident',
   },
   {
-    title: 'Status',
+    title: 'Task Status',
     dataIndex: 'status',
     key: 'status',
     valueType: 'select',

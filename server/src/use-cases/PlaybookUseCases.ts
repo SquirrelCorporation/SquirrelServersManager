@@ -2,8 +2,8 @@ import { API } from 'ssm-shared-lib';
 import { setToCache } from '../data/cache';
 import Playbook, { PlaybookModel } from '../data/database/model/Playbook';
 import User from '../data/database/model/User';
-import ExtraVars from '../integrations/ansible/utils/ExtraVars';
-import Shell from '../integrations/shell';
+import ExtraVars from '../modules/ansible/utils/ExtraVars';
+import Shell from '../modules/shell';
 import { Playbooks } from '../types/typings';
 
 async function completeExtraVar(
@@ -33,7 +33,7 @@ async function executePlaybook(
     target,
     extraVarsForcedValues,
   );
-  return await Shell.AnsibleShell.executePlaybook(
+  return await Shell.AnsibleShellCommandsManager.executePlaybook(
     playbook.path,
     user,
     target,
@@ -52,7 +52,7 @@ async function executePlaybookOnInventory(
     undefined,
     extraVarsForcedValues,
   );
-  return await Shell.AnsibleShell.executePlaybookOnInventory(
+  return await Shell.AnsibleShellCommandsManager.executePlaybookOnInventory(
     playbook.path,
     user,
     inventoryTargets,

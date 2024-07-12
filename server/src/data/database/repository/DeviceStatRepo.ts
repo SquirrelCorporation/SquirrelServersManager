@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import { DateTime } from 'luxon';
 import DeviceStat, { DeviceStatModel } from '../model/DeviceStat';
 import Device from '../model/Device';
-import logger from '../../../logger';
 
 async function create(deviceStat: DeviceStat): Promise<DeviceStat> {
   const createdDeviceStat = await DeviceStatModel.create(deviceStat);
@@ -89,9 +88,6 @@ async function findSingleAveragedStatByDevicesAndType(
   to: Date,
 ): Promise<[{ value: string; name: string }] | null> {
   const ObjectId = mongoose.Types.ObjectId;
-  logger.info(
-    `[DEVICESTATREPO] - findSingleAveragedStatByDevicesAndType - from: ${from} - to: ${to}`,
-  );
   return (await DeviceStatModel.aggregate([
     {
       $match: {

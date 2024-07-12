@@ -2,7 +2,7 @@ import { API } from 'ssm-shared-lib';
 import { describe, expect, test } from 'vitest';
 import User from '../../../data/database/model/User';
 import type { Playbooks } from '../../../types/typings';
-import AnsibleCmd from '../../../integrations/ansible/AnsibleCmd'; // note: replace with actual file path
+import AnsibleCmd from '../../../modules/ansible/AnsibleCmd'; // note: replace with actual file path
 
 describe('helper functions', () => {
   // sanitizing inventory

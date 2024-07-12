@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import Gcr from '../../../integrations/docker/registries/providers/gcr/Gcr';
+import Gcr from '../../../modules/docker/registries/providers/gcr/Gcr';
 
 describe('testing GCR Registry', () => {
   const gcr = new Gcr();

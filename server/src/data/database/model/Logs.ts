@@ -9,6 +9,8 @@ export default interface Logs {
   pid: number;
   hostname: string;
   msg: string;
+  req: any;
+  res: any;
 }
 
 const schema = new Schema<Logs>(
@@ -35,6 +37,16 @@ const schema = new Schema<Logs>(
     },
     msg: {
       type: Schema.Types.String,
+      immutable: true,
+      required: false,
+    },
+    req: {
+      type: Object,
+      immutable: true,
+      required: false,
+    },
+    res: {
+      type: Object,
       immutable: true,
       required: false,
     },
