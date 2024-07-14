@@ -1,4 +1,4 @@
-- name: Re install agent on targeted device
+- name: Reinstall agent on targeted device
   hosts: all
   become: true
   gather_facts: false
