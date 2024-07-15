@@ -4,54 +4,126 @@
   gather_facts: false
   vars:
     base_path: /opt/squirrelserversmanager
+    nvm_dir: "/root/.nvm"
 
   tasks:
     - name: Install agent on targeted device
       ansible.builtin.debug:
         msg: Host ID {{ _ssm_deviceId }} with API URL {{ _ssm_masterNodeUrl }}
 
-    - name: Check if NodeJS does exist
-      ansible.builtin.raw: which node
-      check_mode: false
+    - name: Check if NodeJS is installed
+      command: which node
+      register: node_check
+      ignore_errors: true
       changed_when: false
-      failed_when: which_res_node.rc > 1
-      register: which_res_node
 
-    - name: Check if NPM does exist
-      ansible.builtin.raw: which npm
-      check_mode: false
+    - name: Check if npm is installed
+      command: which npm
+      register: npm_check
+      ignore_errors: true
       changed_when: false
-      failed_when: which_res_npm.rc > 1
-      register: which_res_npm
 
-    - name: Install "PM2" node.js package globally.
-      community.general.npm:
-        name: pm2
-        global: true
-        state: latest
+    - name: Install Node.js and npm using NVM
+      shell: >-
+        wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+        && export NVM_DIR="{{ nvm_dir }}"
+        && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        && nvm install --lts
+        && nvm use --lts
+      args:
+        creates: "{{ nvm_dir }}/nvm.sh"
+      when: node_check.rc != 0 or npm_check.rc != 0
+
+    - name: Add NVM to .bashrc
+      lineinfile:
+        path: "/root/.bashrc"
+        line: "{{ item }}"
+      loop:
+        - 'export NVM_DIR="{{ nvm_dir }}"'
+        - '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
+        - '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'
+      when: node_check.rc != 0 or npm_check.rc != 0
+
+    - name: Reload .bashrc
+      shell: source /root/.bashrc
+      args:
+        executable: /bin/bash
+      when: node_check.rc != 0 or npm_check.rc != 0
+
+    - name: Verify Node.js installation
+      shell: . {{ nvm_dir }}/nvm.sh && node --version
+      register: node_version
+      changed_when: false
+
+    - name: Verify npm installation
+      shell: . {{ nvm_dir }}/nvm.sh && npm --version
+      register: npm_version
+      changed_when: false
+
+    - name: Display Node.js and npm versions
+      debug:
+        msg: 
+          - "Node.js version: {{ node_version.stdout }}"
+          - "npm version: {{ npm_version.stdout }}"
+
+    - name: Check if PM2 is installed
+      shell: . {{ nvm_dir }}/nvm.sh && npm list -g pm2
+      register: pm2_check
+      ignore_errors: true
+      changed_when: false
+
+    - name: Install "PM2" node.js package globally
+      shell: . {{ nvm_dir }}/nvm.sh && npm install -g pm2
+      args:
+        executable: /bin/bash
+      when: pm2_check.rc != 0
 
     - name: Install PM2 LogRotate
-      command: pm2 install pm2-logrotate
+      shell: . {{ nvm_dir }}/nvm.sh && pm2 install pm2-logrotate
+      args:
+        executable: /bin/bash
+
+    - name: Check if Git is installed
+      command: which git
+      register: git_check
+      ignore_errors: true
+      changed_when: false
+
+    - name: Install Git
+      package:
+        name: git
+        state: present
+      when: git_check.rc != 0
 
     - name: Check out agent
       ansible.builtin.git:
         force: true
         repo: 'https://github.com/SquirrelCorporation/SquirrelServersManager-Agent.git'
         dest: "{{ base_path }}"
+      register: git_checkout
       timeout: 600
 
     - name: Stop PM2 Agent if running
-      command: pm2 stop agent
-      ignore_errors: yes
+      shell: . {{ nvm_dir }}/nvm.sh && pm2 stop agent
+      ignore_errors: true
+      args:
+        executable: /bin/bash
 
     - name: Delete PM2 Agent if present
-      command: pm2 delete agent
-      ignore_errors: yes
+      shell: . {{ nvm_dir }}/nvm.sh && pm2 delete agent
+      ignore_errors: true
+      args:
+        executable: /bin/bash
 
     - name: Clean directory
-      command:
-        chdir: "{{ base_path }}"
-        cmd: rm -f ssm-agent && rm -f agent.blob && rm -rf ./build && rm -f ./hostid.txt
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - "{{ base_path }}/ssm-agent"
+        - "{{ base_path }}/agent.blob"
+        - "{{ base_path }}/build"
+        - "{{ base_path }}/hostid.txt"
 
     - name: Write Node Url in .env file
       copy:
@@ -64,26 +136,45 @@
         dest: "{{ base_path }}/hostid.txt"
 
     - name: NPM install
-      command:
+      shell: . {{ nvm_dir }}/nvm.sh && npm install
+      args:
         chdir: "{{ base_path }}"
-        cmd: npm install
+        executable: /bin/bash
+      register: npm_install
+      failed_when: npm_install.rc != 0
 
     - name: NPM run build
-      command:
+      shell: . {{ nvm_dir }}/nvm.sh && npm run build
+      args:
         chdir: "{{ base_path }}"
-        cmd: npm run build
+        executable: /bin/bash
+      register: npm_build
+      failed_when: npm_build.rc != 0
 
     - name: Start PM2 Agent
-      command:
+      shell: . {{ nvm_dir }}/nvm.sh && pm2 start -f "./build/agent.js"
+      args:
         chdir: "{{ base_path }}"
-        cmd: pm2 start -f "./build/agent.js"
+        executable: /bin/bash
+      register: pm2_start
+      failed_when: pm2_start.rc != 0
 
     - name: Install PM2 on startup
-      command: pm2 startup
+      shell: . {{ nvm_dir }}/nvm.sh && pm2 startup
+      args:
+        executable: /bin/bash
 
     - name: Save Agent on startup
-      command: pm2 save
+      shell: . {{ nvm_dir }}/nvm.sh && pm2 save
+      args:
+        executable: /bin/bash
 
-    - name: Save Agent on startup
-      command: pm2 update
+    - name: Update PM2
+      shell: . {{ nvm_dir }}/nvm.sh && pm2 update
+      args:
+        executable: /bin/bash
 
+    - name: Report execution status
+      debug:
+        msg: "Agent installation completed successfully"
+      when: git_checkout.changed and npm_install.rc == 0 and npm_build.rc == 0 and pm2_start.rc == 0
