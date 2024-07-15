@@ -9,6 +9,8 @@
 - \[FEAT\] Ability to directly see automations logs [\#97](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/97)
 - \[BUG\] Agent overrides IP to LAN [\#94](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/94)
 - \[FEAT\] Refacto of logger for better filtering [\#88](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/88)
+- \[FEAT\] Use TreeSelect AntD component for Create button / drawer in Playbooks [\#72](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/72)
+- \[FEAT\] Update NewFileDrawerForm and TreeComponent [\#106](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/106) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Implement improved error handling and query processing [\#98](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/98) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Closed issues:**
