@@ -4,12 +4,109 @@
   gather_facts: false
   vars:
     base_path: /opt/squirrelserversmanager
-    nvm_dir: "/root/.nvm"
+    nvm_dir: "~/.nvm"
+    nvm_profile: "~/.bashrc"
+    nvm_install: 'wget' #options are : wget, curl or git
+    autocomplete: false
+    nodejs_version: "lts"
+    default: false
 
   tasks:
     - name: Install agent on targeted device
       ansible.builtin.debug:
         msg: Host ID {{ _ssm_deviceId }} with API URL {{ _ssm_masterNodeUrl }}
+
+    - name: "Who is running this playbook?"
+      ansible.builtin.command: whoami
+      register: mg_nvm_whoami
+      changed_when: false
+
+    - name: Set a fact with the user name running the playbook.
+      ansible.builtin.set_fact:
+        mg_login_user: "{{ mg_nvm_whoami.stdout }}"
+
+    - name: Set full nvm_profile path | Default
+      ansible.builtin.set_fact:
+        nvm_profile: "$HOME/.bashrc"
+
+    # ERROR HANDLING
+    - name: test to ensure symbiotic variables are declared | nvm_dir AND nvm_profile
+      ansible.builtin.fail:
+        msg: "If setting a custom nvm_dir directory e.g. /opt/nvm, nvm_dir MUST be used in combination with nvm_profile"
+      when: nvm_dir and nvm_profile == '.bashrc' and nvm_install != 'git'
+
+    - name: test to ensure symbiotic variables are declared | nvm_dir AND nvm_install = git
+      ansible.builtin.fail:
+        msg: "If installing via GIT nvm_install: git MUST be used in combination with nvm_dir and include the full path e.g. nvm_dir: '$HOME/.nvm'"
+      when: not nvm_dir and nvm_install == 'git'
+
+    - name: Determine shell in which we are running
+      block:
+        - name: set default found path
+          ansible.builtin.set_fact:
+            mg_found_path: ''
+
+        - name: test for shells
+          ansible.builtin.command: "which {{ item }}"
+          loop:
+            - bash
+            - dash
+            - zsh
+            - csh
+            - tcsh
+          register: mg_shell_path
+          when: item in nvm_profile
+          changed_when: "mg_shell_path.rc != 0"
+
+    - name: set found path
+      ansible.builtin.set_fact:
+        mg_found_path: "{{ mg_shell_path.results | selectattr('stdout', 'defined') | map(attribute = 'stdout') | list | first }}"
+      when: mg_shell_path.results | selectattr('stdout', 'defined') | map(attribute = 'stdout') | list | length > 0
+
+    - name: set bash command
+      ansible.builtin.set_fact:
+        mg_user_shell: { 'command': '{{ mg_found_path }} -ic', 'alias': 'bash' }
+      when: '"bash" in nvm_profile'
+
+    - name: set dash command
+      ansible.builtin.set_fact:
+        mg_user_shell: { 'command': '{{ mg_found_path }} -ic', 'alias': 'dash' }
+      when: '"dash" in nvm_profile'
+
+    - name: set zsh command
+      ansible.builtin.set_fact:
+        mg_user_shell: { 'command': '{{ mg_found_path }} -ic', 'alias': 'zsh' }
+      when: '"zsh" in nvm_profile'
+
+    - name: set csh command
+      ansible.builtin.set_fact:
+        mg_user_shell: { 'command': '{{ mg_found_path }} -ic', 'alias': 'csh' }
+      when: "'csh' in nvm_profile and 'tcsh' not in nvm_profile"
+
+    - name: set tcsh command
+      ansible.builtin.set_fact:
+        mg_user_shell: { 'command': '{{ mg_found_path }} -ic', 'alias': 'tcsh' }
+      when: "'tcsh' in nvm_profile"
+
+    - name: "!WARNING! set unrecommended default for any other nvm_profile value !WARNING!"
+      ansible.builtin.set_fact:
+        mg_user_shell: { 'command': '/etc/bash -ic', 'alias': 'bash' }
+      when: (mg_shell_path is undefined) or (mg_found_path | length == 0)
+
+    - name: does profile file exist
+      ansible.builtin.stat:
+        path: "{{ nvm_profile }}"
+      register: mg_profile_file
+
+    - name: Create profile file if it does not exist
+      ansible.builtin.file:
+        group: "{{ ansible_become_user | default(ansible_user) }}"
+        owner: "{{ ansible_become_user | default(ansible_user) }}"
+        mode: 0777
+        path: "{{ nvm_profile }}"
+        state: touch
+      when: not mg_profile_file.stat.exists
+      become: true
 
     - name: Check if NodeJS is installed
       command: which node
@@ -23,65 +120,140 @@
       ignore_errors: true
       changed_when: false
 
-    - name: Install Node.js and npm using NVM
-      shell: >-
-        wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-        && export NVM_DIR="{{ nvm_dir }}"
-        && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-        && nvm install --lts
-        && nvm use --lts
-      args:
-        creates: "{{ nvm_dir }}/nvm.sh"
-      when: node_check.rc != 0 or npm_check.rc != 0
+    - name: Install NVM
+      block:
+        # wget (deault) or curl
+        - name: Installing via curl or wget
+          block:
+            - name: Check if wget or curl is installed
+              ansible.builtin.command: "which {{ nvm_install }}"
+              register: mg_cmd
+              changed_when: "mg_cmd.rc != 0"
 
-    - name: Add NVM to .bashrc
-      lineinfile:
-        path: "/root/.bashrc"
-        line: "{{ item }}"
-      loop:
-        - 'export NVM_DIR="{{ nvm_dir }}"'
-        - '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
-        - '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'
-      when: node_check.rc != 0 or npm_check.rc != 0
+            - name: Determine if install type wget
+              ansible.builtin.set_fact:
+                run_command: 'wget -qO-'
+              when: "'/wget' in mg_cmd.stdout"
 
-    - name: Reload .bashrc
-      shell: source /root/.bashrc
-      args:
-        executable: /bin/bash
-      when: node_check.rc != 0 or npm_check.rc != 0
+            - name: Determine if install type curl
+              ansible.builtin.set_fact:
+                run_command: 'curl -o-'
+              when: "'/curl' in mg_cmd.stdout"
 
-    - name: Verify Node.js installation
-      shell: . {{ nvm_dir }}/nvm.sh && node --version
+            - name: Create nvm_dir if it does not exist
+              ansible.builtin.file:
+                group: "{{ ansible_become_user | default(ansible_user) }}"
+                owner: "{{ ansible_become_user | default(ansible_user) }}"
+                mode: 0775
+                path: "{{ nvm_dir }}"
+                state: directory
+              become: true
+              when: nvm_dir | length != 0
+
+            # There are some potential security concerns with piping the install.sh script to whatever shell alias is defined: Risk is Low but not absolute
+            # https://blog.dijit.sh//don-t-pipe-curl-to-bash
+            # https://news.ycombinator.com/item?id=12766049
+            # https://sandstorm.io/news/2015-09-24-is-curl-bash-insecure-pgp-verified-install
+            - name: Install NVM
+              ansible.builtin.shell: "{{ run_command }} https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | PROFILE={{ nvm_profile }} {{ mg_user_shell.alias }}"
+              register: mg_nvm_result
+              changed_when: "'already installed' not in mg_nvm_result.stdout"
+              failed_when:
+                - "'permission denied' in mg_nvm_result.stderr"
+
+            - name: Update profile permissions to lock it down after writing
+              ansible.builtin.file:
+                group: "{{ ansible_become_user | default(ansible_user) }}"
+                owner: "{{ ansible_become_user | default(ansible_user) }}"
+                mode: 0644
+                path: "{{ nvm_profile }}"
+              become: true
+              when: not mg_profile_file.stat.exists
+
+    - name: Check NVM Version # noqa 305
+      ansible.builtin.shell: "{{ mg_user_shell.command + ' \"nvm --version\"' }}"
+      register: mg_nvm_version_response
+      changed_when: "mg_nvm_version_response.rc != 0"
+
+    # Autocomplete
+    - name: Add NVM autocomplete to nvm_profile
+      ansible.builtin.blockinfile:
+        block: |
+          [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+        insertafter: "# This loads nvm"
+        marker_begin: "Installed nvm autocomplete via {{ role_repo }} START"
+        marker_end: "{{ role_repo }} END"
+        mode: 0644
+        path: "{{ nvm_profile }}"
+        state: present
+      when: autocomplete
+
+    - name: LTS Check
+      ansible.builtin.set_fact:
+        nodejs_version: --lts
+        nodejs_alias: lts/*
+      when: "nodejs_version == 'lts'"
+
+    # This scenario handles the first run/install of NVM because this will automatically
+    # alias the specified version as default - This should handle most use cases
+    - name: Install Node # noqa 305
+      ansible.builtin.shell: "{{ mg_user_shell.command + ' \"nvm install ' +  nodejs_version + '\"' }}"
+      register: mg_node_version_response
+      changed_when: "'already installed' not in mg_node_version_response.stderr"
+
+    # Test is there is a default already set
+    - name: Is there a default already set # noqa 305
+      ansible.builtin.shell: "{{ mg_user_shell.command + ' \"cat \\$(printenv NVM_DIR)/alias/default\"' }}"
+      register: mg_nvm_default_response
+      changed_when: "mg_nvm_default_response.rc != 0"
+
+    # In the event there are multiple versions of Node being installed/used/upgraded
+    # on the same machine we'll need to alias the default version accordingly
+    - name: Set default version of Node if multiple versions exist # noqa 305
+      ansible.builtin.shell: "{{ mg_user_shell.command + ' \"nvm alias default ' +  nodejs_version + '\"' }}"
+      when:
+        - default | bool
+        - nodejs_version != '--lts'
+      changed_when: "'nodejs_version' not in mg_nvm_default_response.stdout"
+
+    # Addresses an issue where the LTS version is set as a default. The version above
+    # doesn't work because --lts is not an alias, according to nvm documentation it is lts/*
+    - name: Set default version of Node LTS if multiple versions exist # noqa 305
+      ansible.builtin.shell: "{{ mg_user_shell.command + ' \"nvm alias default ' +  nodejs_alias + '\"' }}"
+      when:
+        - default | bool
+        - nodejs_version == '--lts'
+      changed_when: "'nodejs_version' not in mg_nvm_default_response.stdout"
+
+
+    - name: Verify Node.js installation with NVM
+      shell: "{{ mg_user_shell.command + ' \" node --version\"' }}"
       register: node_version
       changed_when: false
 
     - name: Verify npm installation
-      shell: . {{ nvm_dir }}/nvm.sh && npm --version
+      shell: "{{ mg_user_shell.command + ' \" npm --version\"' }}"
       register: npm_version
       changed_when: false
 
     - name: Display Node.js and npm versions
       debug:
-        msg: 
+        msg:
           - "Node.js version: {{ node_version.stdout }}"
           - "npm version: {{ npm_version.stdout }}"
 
     - name: Check if PM2 is installed
-      shell: . {{ nvm_dir }}/nvm.sh && npm list -g pm2
+      shell:  "{{ mg_user_shell.command + ' \"npm list -g pm2\"' }}"
       register: pm2_check
       ignore_errors: true
       changed_when: false
 
     - name: Install "PM2" node.js package globally
-      shell: . {{ nvm_dir }}/nvm.sh && npm install -g pm2
-      args:
-        executable: /bin/bash
+      shell: "{{ mg_user_shell.command + ' \"npm install -g pm2\"' }}"
       when: pm2_check.rc != 0
 
     - name: Install PM2 LogRotate
-      shell: . {{ nvm_dir }}/nvm.sh && pm2 install pm2-logrotate
-      args:
-        executable: /bin/bash
+      shell: "{{ mg_user_shell.command + ' \" pm2 install pm2-logrotate\"' }}"
 
     - name: Check if Git is installed
       command: which git
@@ -104,16 +276,12 @@
       timeout: 600
 
     - name: Stop PM2 Agent if running
-      shell: . {{ nvm_dir }}/nvm.sh && pm2 stop agent
+      shell: "{{ mg_user_shell.command + ' \" pm2 stop agent\"' }}"
       ignore_errors: true
-      args:
-        executable: /bin/bash
 
     - name: Delete PM2 Agent if present
-      shell: . {{ nvm_dir }}/nvm.sh && pm2 delete agent
+      shell: "{{ mg_user_shell.command + ' \" pm2 delete agent\"' }}"
       ignore_errors: true
-      args:
-        executable: /bin/bash
 
     - name: Clean directory
       file:
@@ -136,43 +304,35 @@
         dest: "{{ base_path }}/hostid.txt"
 
     - name: NPM install
-      shell: . {{ nvm_dir }}/nvm.sh && npm install
+      shell: "{{ mg_user_shell.command + ' \" npm install\"' }}"
       args:
         chdir: "{{ base_path }}"
-        executable: /bin/bash
       register: npm_install
       failed_when: npm_install.rc != 0
 
     - name: NPM run build
-      shell: . {{ nvm_dir }}/nvm.sh && npm run build
+      shell: "{{ mg_user_shell.command + ' \"  npm run build\"' }}"
       args:
         chdir: "{{ base_path }}"
-        executable: /bin/bash
       register: npm_build
       failed_when: npm_build.rc != 0
 
     - name: Start PM2 Agent
-      shell: . {{ nvm_dir }}/nvm.sh && pm2 start -f "./build/agent.js"
+      shell: "{{ mg_user_shell.command + ' \"  pm2 start -f ./build/agent.js \"' }}"
       args:
         chdir: "{{ base_path }}"
-        executable: /bin/bash
       register: pm2_start
       failed_when: pm2_start.rc != 0
 
     - name: Install PM2 on startup
-      shell: . {{ nvm_dir }}/nvm.sh && pm2 startup
-      args:
-        executable: /bin/bash
+      shell: "{{ mg_user_shell.command + ' \" pm2 startup\"' }}"
 
     - name: Save Agent on startup
-      shell: . {{ nvm_dir }}/nvm.sh && pm2 save
-      args:
-        executable: /bin/bash
+      shell: "{{ mg_user_shell.command + ' \"pm2 save\"' }}"
 
     - name: Update PM2
-      shell: . {{ nvm_dir }}/nvm.sh && pm2 update
-      args:
-        executable: /bin/bash
+      shell: "{{ mg_user_shell.command + ' \"pm2 update\"' }}"
+
 
     - name: Report execution status
       debug:
