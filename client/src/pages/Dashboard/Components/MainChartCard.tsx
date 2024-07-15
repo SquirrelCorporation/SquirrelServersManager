@@ -1,7 +1,9 @@
+import { LoadingOutlined } from '@ant-design/icons';
 import {
   Card,
   Col,
   DatePicker,
+  Flex,
   Row,
   Select,
   Tabs,
@@ -83,9 +85,7 @@ const MainChartCard: React.FC<any> = ({}) => {
           console.log('fetch data failed', error);
         });
     }
-    setTimeout(() => {
-      setLoading(false);
-    }, 5000);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -96,13 +96,21 @@ const MainChartCard: React.FC<any> = ({}) => {
   const config = {
     data: graphData,
     // Waiting for https://github.com/ant-design/ant-design-charts/issues/2580
-    //loading: loading,
+    loading: loading,
     animate: { enter: { type: 'waveIn' } },
     theme: {
       view: {
         viewFill: '#151921',
       },
     },
+    loadingTemplate: (
+      <Flex
+        justify={'center'}
+        style={{ backgroundColor: '#151921', width: '100%', height: '100%' }}
+      >
+        <LoadingOutlined style={{ fontSize: '32px' }} />
+      </Flex>
+    ),
     xField: 'date',
     yField: 'value',
     colorField: 'name',
