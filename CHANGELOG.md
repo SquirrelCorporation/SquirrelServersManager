@@ -7,11 +7,17 @@
 **Implemented enhancements:**
 
 - \[FEAT\] Ability to directly see automations logs [\#97](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/97)
+- \[BUG\] Agent overrides IP to LAN [\#94](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/94)
 - \[FEAT\] Refacto of logger for better filtering [\#88](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/88)
 - \[FEAT\] Implement improved error handling and query processing [\#98](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/98) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
+**Closed issues:**
+
+- \[Question\] Is RAM percentage displayed on dashboard based on available or free RAM [\#100](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/100)
+
 **Merged pull requests:**
 
+- \[CHORE\] Validate domain [\#105](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/105) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update various package versions [\#99](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/99) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refacto logger [\#96](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/96) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
