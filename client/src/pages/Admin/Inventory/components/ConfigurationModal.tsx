@@ -1,5 +1,3 @@
-import { DockerConnectionForm } from '@/components/DeviceConfiguration/DockerConnectionForm';
-import { UilDocker, WhhSsh } from '@/components/Icons/CustomIcons';
 import ConnectionTestTab from '@/pages/Admin/Inventory/components/ConnectionTestTab';
 import DockerConfigurationForm from '@/pages/Admin/Inventory/components/DockerConfigurationForm';
 import { Modal, Tabs, TabsProps } from 'antd';

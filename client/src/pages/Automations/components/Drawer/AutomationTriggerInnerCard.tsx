@@ -41,7 +41,7 @@ const AutomationTriggerInnerCard: React.FC<AutomationTriggerInnerCardProps> = (
           title={'Trigger'}
           icon={
             <TablerSquareNumber1Filled
-              style={{ width: '1.8em', height: '1.8em', marginTop: 6 }}
+              style={{ fontSize: '25px', marginTop: 3 }}
             />
           }
         />

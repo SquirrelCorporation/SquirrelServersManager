@@ -5,7 +5,7 @@ import {
 } from '@ant-design/icons';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { history, useModel } from '@umijs/max';
-import { Spin } from 'antd';
+import { Spin, Typography } from 'antd';
 import { stringify } from 'querystring';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
@@ -21,7 +21,19 @@ export type GlobalHeaderRightProps = {
 export const AvatarName = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
-  return <span className="anticon">{currentUser?.name}</span>;
+  return (
+    <Typography.Title
+      level={5}
+      className="anticon"
+      style={{
+        color: 'rgba(255, 255, 255, 0.65)',
+        marginBottom: '0.9em',
+        fontSize: '14px',
+      }}
+    >
+      {currentUser?.name}
+    </Typography.Title>
+  );
 };
 
 export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({

@@ -2,7 +2,6 @@ import {
   DeviconAzure,
   DeviconGooglecloud,
   FluentMdl2RegistryEditor,
-  LogoHotIo,
   LogosAws,
   LogosGitlab,
   LogosQuay,
@@ -21,29 +20,27 @@ type RegistryLogoProps = {
 const RegistryLogo: React.FC<RegistryLogoProps> = (props) => {
   switch (props.provider) {
     case 'ghcr':
-      return <ZmdiGithub />;
+      return <ZmdiGithub style={{ fontSize: '28px' }} />;
     case 'gcr':
-      return <DeviconGooglecloud />;
+      return <DeviconGooglecloud style={{ fontSize: '28px' }} />;
     case 'acr':
-      return <DeviconAzure />;
-    case 'hotio':
-      return <LogoHotIo />;
+      return <DeviconAzure style={{ fontSize: '28px' }} />;
     case 'hub':
-      return <VscodeIconsFileTypeDocker2 />;
+      return <VscodeIconsFileTypeDocker2 style={{ fontSize: '28px' }} />;
     case 'ecr':
-      return <LogosAws />;
+      return <LogosAws style={{ fontSize: '28px' }} />;
     case 'quay':
-      return <LogosQuay />;
+      return <LogosQuay style={{ fontSize: '28px' }} />;
     case 'forgejo':
-      return <SimpleIconsForgejo />;
+      return <SimpleIconsForgejo style={{ fontSize: '28px' }} />;
     case 'gitea':
-      return <SimpleIconsGitea />;
+      return <SimpleIconsGitea style={{ fontSize: '28px' }} />;
     case 'lscr':
-      return <VaadinCubes />;
+      return <VaadinCubes style={{ fontSize: '28px' }} />;
     case 'gitlab':
-      return <LogosGitlab />;
+      return <LogosGitlab style={{ fontSize: '28px' }} />;
     default:
-      return <FluentMdl2RegistryEditor />;
+      return <FluentMdl2RegistryEditor style={{ fontSize: '28px' }} />;
   }
 };
 
