@@ -1,14 +1,16 @@
+import { buildTree } from '@/pages/Playbooks/components/TreeComponent';
 import { getPlaybooksRepositories } from '@/services/rest/playbooks-repositories';
+import { FileAddOutlined, FolderAddOutlined } from '@ant-design/icons';
 import {
   DrawerForm,
   ProFormDependency,
-  ProFormSelect,
+  ProFormItem,
   ProFormText,
-  ProFormRadio,
+  ProFormTreeSelect,
 } from '@ant-design/pro-components';
-import { Button } from 'antd';
+import { Button, Card, Select, TreeSelectProps, Typography } from 'antd';
 import { AddCircleOutline } from 'antd-mobile-icons';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { API } from 'ssm-shared-lib';
 
 export type NewFileModalFormProps = {
@@ -20,12 +22,44 @@ export type NewFileModalFormProps = {
   ) => Promise<boolean>;
   setSelectedNode: any;
 };
+const { Option } = Select;
 
 const NewFileDrawerForm: React.FC<NewFileModalFormProps> = (props) => {
   const [repositories, setRepositories] = React.useState<
     API.PlaybooksRepository[] | undefined
   >();
   const [loading, setLoading] = React.useState(false);
+  const [fileType, setFileType] = React.useState('directory');
+  const [selectedPlaybook, setSelectedPlaybook] = React.useState<
+    API.PlaybooksRepository | undefined
+  >();
+
+  useEffect(() => {
+    setLoading(true);
+    void getPlaybooksRepositories()
+      .then((res) => {
+        setRepositories(res.data);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  const onSelect: TreeSelectProps['onSelect'] = (value, info) => {
+    setSelectedPlaybook(
+      repositories?.find((e) => info?.playbookRepository?.uuid === e.uuid),
+    );
+  };
+
+  const selectBefore = (
+    <Select
+      defaultValue="directory"
+      onSelect={(value: string) => setFileType(value)}
+    >
+      <Option value="directory">Directory</Option>
+      <Option value="playbook">Playbook</Option>
+    </Select>
+  );
   return (
     <DrawerForm<{ name: string; repository: string; type: string }>
       title={`Create a new file`}
@@ -56,12 +90,10 @@ const NewFileDrawerForm: React.FC<NewFileModalFormProps> = (props) => {
         setLoading(true);
         await props
           .submitNewFile(
-            values.repository,
+            selectedPlaybook?.uuid as string,
             values.name,
-            `${
-              repositories?.find((e) => e.uuid === values.repository)?.path
-            }/${values.name}`,
-            values.type as 'playbook' | 'directory',
+            `${values.repository}/${values.name}`,
+            fileType as 'playbook' | 'directory',
           )
           .finally(() => {
             setLoading(false);
@@ -69,83 +101,90 @@ const NewFileDrawerForm: React.FC<NewFileModalFormProps> = (props) => {
         return true;
       }}
     >
-      <ProFormSelect
-        placeholder={'For repository'}
+      <ProFormTreeSelect
+        label={`Repository path`}
+        style={{ width: '100%' }}
         name={'repository'}
-        onChange={(e) => {
-          props.setSelectedNode(repositories?.find((f) => f.uuid === e)?.name);
+        rules={[
+          {
+            required: true,
+            message: `Please choose a path!`,
+          },
+        ]}
+        fieldProps={{
+          onSelect: onSelect,
+          onDeselect: () => {
+            setSelectedPlaybook(undefined);
+          },
+          showSearch: true,
+          dropdownStyle: { maxHeight: 400, overflow: 'auto' },
+          fieldNames: {
+            label: '_name',
+            value: 'key',
+          },
+          treeDefaultExpandAll: true,
+          treeData: repositories?.map((e) => {
+            return {
+              ...buildTree(e as API.PlaybooksRepository, true),
+              key: e.path,
+            };
+          }),
         }}
-        request={async () => {
-          return await getPlaybooksRepositories().then((e) => {
-            setRepositories(e?.data);
-            return e.data
-              ? e.data.map((f) => {
-                  return {
-                    label: f.name,
-                    value: f.uuid,
-                    path: f.path,
-                  };
-                })
-              : [];
-          });
-        }}
+        placeholder="Please select"
+        allowClear
       />
       <ProFormDependency name={['repository']}>
         {({ repository }) => {
           if (repository) {
             return (
               <>
-                <ProFormRadio.Group
-                  label="Type"
-                  radioType="button"
-                  name={'type'}
-                  colProps={{
-                    span: 20,
-                  }}
-                  options={['directory', 'playbook']}
+                {' '}
+                <ProFormText
+                  width={'xl'}
                   required={true}
+                  name={'name'}
+                  label={`File or directory name`}
+                  tooltip={`Enter a name (the character '_' is not authorized)`}
+                  placeholder={`name`}
+                  fieldProps={{
+                    addonBefore: selectBefore,
+                    suffix: fileType === 'playbook' ? '.yml' : undefined,
+                  }}
                   rules={[
                     {
                       required: true,
-                      message: `Please select a type!`,
+                      message: `Please input a name!`,
+                    },
+                    {
+                      pattern: new RegExp('^[0-9a-zA-Z\\-]{0,100}$'),
+                      message:
+                        'Please enter a valid name (only alphanumerical and "-" authorized), max 100 chars',
                     },
                   ]}
                 />
-                <ProFormDependency name={['type']}>
-                  {({ type }) => {
-                    if (type) {
-                      return (
-                        <ProFormText
-                          width={'xl'}
-                          required={true}
-                          name={'name'}
-                          label={`File or directory name`}
-                          tooltip={`Enter a name (the character '_' is not authorized)`}
-                          placeholder={`name`}
-                          fieldProps={{
-                            prefix: `${
-                              repositories?.find((e) => e.uuid === repository)
-                                ?.name
-                            }/`,
-                            suffix: type === 'playbook' ? '.yml' : undefined,
-                          }}
-                          rules={[
-                            {
-                              required: true,
-                              message: `Please input a name!`,
-                            },
-                            {
-                              pattern: new RegExp('^[0-9a-zA-Z\\-]{0,100}$'),
-                              message:
-                                'Please enter a valid name (only alphanumerical and "-" authorized), max 100 chars',
-                            },
-                          ]}
-                        />
-                      );
-                    }
-                  }}
-                </ProFormDependency>
               </>
+            );
+          }
+        }}
+      </ProFormDependency>
+      <ProFormDependency name={['name', 'repository']}>
+        {({ name, repository }) => {
+          if (repository) {
+            return (
+              <ProFormItem>
+                {fileType === 'playbook' ? (
+                  <FileAddOutlined />
+                ) : (
+                  <FolderAddOutlined />
+                )}
+                <Typography.Text code>
+                  {repository?.replace(
+                    selectedPlaybook?.path,
+                    selectedPlaybook?.name,
+                  )}
+                  /{`${name}${fileType === 'playbook' ? '.yml' : ''}`}
+                </Typography.Text>
+              </ProFormItem>
             );
           }
         }}

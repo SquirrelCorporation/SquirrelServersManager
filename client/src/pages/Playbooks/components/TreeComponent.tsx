@@ -29,6 +29,7 @@ export type ClientPlaybooksTrees = {
 
 export function buildTree(
   rootNode: API.PlaybooksRepository,
+  onlyDirectories?: boolean,
 ): ClientPlaybooksTrees {
   return {
     _name: rootNode.name,
@@ -48,7 +49,7 @@ export function buildTree(
       ) : (
         <SimpleIconsGit style={{ height: '1em', width: '1em', marginTop: 5 }} />
       ),
-    selectable: false,
+    selectable: !!onlyDirectories,
     children: rootNode.children
       ? recursiveTreeTransform(
           {
@@ -57,6 +58,7 @@ export function buildTree(
             path: rootNode.name,
           },
           { uuid: rootNode.uuid, name: rootNode.name, basePath: rootNode.path },
+          onlyDirectories,
         )
       : undefined,
   };
@@ -65,6 +67,7 @@ export function buildTree(
 export function recursiveTreeTransform(
   tree: DirectoryTree.ExtendedTreeNode,
   playbookRepository: { uuid: string; name: string; basePath: string },
+  onlyDirectories?: boolean,
   depth = 0,
 ): ClientPlaybooksTrees[] {
   const node = tree;
@@ -97,15 +100,16 @@ export function recursiveTreeTransform(
               '/server/src/ansible/00000000-0000-0000-0000-000000000000/device',
             ),
           depth: depth,
-          selectable: false,
+          selectable: !!onlyDirectories,
           children: recursiveTreeTransform(
             child,
             playbookRepository,
+            onlyDirectories,
             depth + 1,
           ),
         });
       } else {
-        if (child) {
+        if (child && !onlyDirectories) {
           newTree.push({
             key: child.path,
             _name: child.name,
@@ -125,7 +129,7 @@ export function recursiveTreeTransform(
         }
       }
     }
-  } else {
+  } else if (!onlyDirectories) {
     newTree.push({
       key: node.path,
       _name: node.name,
