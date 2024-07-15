@@ -11,7 +11,6 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 // @ts-ignore
 import { history, RunTimeLayoutConfig } from '@umijs/max';
-import { Avatar } from 'antd';
 import { API } from 'ssm-shared-lib';
 import defaultSettings from '../config/defaultSettings';
 import Logo from '../public/logo.svg';
