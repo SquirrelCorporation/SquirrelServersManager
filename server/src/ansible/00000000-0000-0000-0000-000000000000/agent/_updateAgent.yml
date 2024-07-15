@@ -27,15 +27,19 @@
       shell: . {{ nvm_dir }}/nvm.sh && node --version
       register: node_version
       changed_when: false
+      args:
+        executable: /bin/bash
 
     - name: Verify npm installation
       shell: . {{ nvm_dir }}/nvm.sh && npm --version
       register: npm_version
       changed_when: false
+      args:
+        executable: /bin/bash
 
     - name: Display Node.js and npm versions
       debug:
-        msg: 
+        msg:
           - "Node.js version: {{ node_version.stdout }}"
           - "npm version: {{ npm_version.stdout }}"
 
@@ -44,6 +48,8 @@
       register: pm2_check
       ignore_errors: true
       changed_when: false
+      args:
+        executable: /bin/bash
 
     - name: Install "PM2" node.js package globally
       shell: . {{ nvm_dir }}/nvm.sh && npm install -g pm2
