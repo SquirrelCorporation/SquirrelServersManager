@@ -25,7 +25,13 @@ export const getAnsibleGalaxyCollectionValidator = [
 ];
 
 export const postInstallAnsibleGalaxyCollectionValidator = [
-  body('name').notEmpty().isString(),
-  body('namespace').notEmpty().isString(),
+  body('name')
+    .notEmpty()
+    .isString()
+    .matches(/^[\w.\-/]+$/),
+  body('namespace')
+    .notEmpty()
+    .isString()
+    .matches(/^[\w.\-/]+$/),
   validator,
 ];
