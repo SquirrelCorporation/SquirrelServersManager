@@ -20,7 +20,19 @@ export default defineConfig({
     ['meta', { property: 'og:site_name', content: 'SquirrelServersManager' }],
     ['meta', { property: 'og:url', content: 'https://squirrelserversmanager.io' }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
-    ['meta', { name: 'twitter:site', content: '@SquirrelSrvrsMg' }]
+    ['meta', { name: 'twitter:site', content: '@SquirrelSrvrsMg' }],
+    [
+      'script',
+      { async: '', src: 'https://www.googletagmanager.com/gtag/js?id=G-E48803PZJL' }
+    ],
+    [
+      'script',
+      {},
+      `window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-E48803PZJL');`
+    ]
   ],
 
   themeConfig: {
@@ -48,7 +60,7 @@ export default defineConfig({
           },
           {
             text: 'Roadmap',
-            link: 'https://github.com/SquirrelCorporation/SquirrelServersManager/wiki'
+            link: 'https://github.com/orgs/SquirrelCorporation/projects/2/views/1'
           },
           {
             items: [
