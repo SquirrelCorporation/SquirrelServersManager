@@ -36,6 +36,7 @@ features:
     details: SSM is open source, we pledge for transparency, flexibility, and adaptability, allowing you to customize the software to your specific needs.
     icon:
       src: /source-code.svg
+
 ---
 
 :::warning 🚧 Work in Progress
@@ -90,7 +91,20 @@ SSM is currently in active development and not usable for production yet. We enc
 
 ❤️ Rediscover Ansible and Docker as they unite under one intuitive, open-source interface. Welcome to simplicity and power in perfect harmony.
 
+## Features
 
+|                                                  | Features                               | Description                                                                                                                                                                  |
+|:------------------------------------------------:|:---------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|       ![statistics](/home/statistics.svg)        | **Metrics & Statistics**               | :white_circle: Follow the main metrics of your servers (CPU, RAM, ...) and detect anomalies                                                                                  |
+|   ![playbooks](/home/playback-speed-bold.svg)    | **Playbooks management and execution** | :white_circle: Manage your playbooks, locally and remotely and run them on your devices                                                                                      |
+|        ![container](/home/container.svg)         | **Container Management**               | :white_circle: See all running containers, statistics and be alerted when a update is available                                                                              |
+|  ![automation](/home/ibm-event-automation.svg)   | **Automations**                        | :white_circle: Run actions on trigger like playbooks execution or container actions                                                                                          |
+|         ![security](/home/security.svg)          | **Security**                           | :white_circle: We do our best to ensure your secrets and authentication info are well kept with Ansible Vault and Bcrypt                                                     | 
+| ![advancedsettings](/home/advanced-settings.svg) | **Advanced configuration**             | :white_circle: Even though SSM is made to be userfriendly and easy to use as possible, because every setup is different, you can set up advanced options fitting your needs. | 
+|  ![integration](/home/integration-general.svg)   | **Integrations** (Coming soon)         | :white_circle: Be able to trigger automations from others tools, as well as call other services                                                                              | 
+|      ![libraries](/home/library-filled.svg)      | **Collections** (Coming soon)          | :white_circle: Install on your devices in one click from a collection of open source services                                                                                | 
+
+## Screenshots
 ### Dashboard
 ![dashboard](/dashboard.png)
 ### Devices
