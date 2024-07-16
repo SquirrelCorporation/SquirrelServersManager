@@ -6,7 +6,7 @@ https://squirrelserversmanager.io
 [![Tests](https://github.com/SquirrelCorporation/SquirrelServersManager/actions/workflows/node.js.yml/badge.svg)](https://github.com/SquirrelCorporation/SquirrelServersManager/actions/workflows/node.js.yml)
 
 NOTE:
-This is a pre-alpha version, It may not work on your system. I am currently looking for testers and contributors.
+This is a Alpha version, It may not work on your system. I am currently looking for testers and contributors.
 Absolutely no warranties. 
 
 See https://squirrelserversmanager.io/docs/quickstart
@@ -21,6 +21,12 @@ docker compose up
 ```console
 docker compose up -f docker-compose.dev.yml up 
 ```
+
+## Main features:
+- Statistics & metrics of your servers
+- Ansible playbooks management and execution
+- Containers management (actions, updates)
+- Automations 
 
 ## Screenshots
 ![dashboard](./site/public/dashboard.png)
