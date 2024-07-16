@@ -19,7 +19,9 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Ensure size coherence across UI by using AntD custom icon component [\#108](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/108) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Validate domain [\#105](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/105) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Standardize and enhance agent installation, reinstallation, and update playbooks [\#103](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/103) ([rtuszik](https://github.com/rtuszik))
 - \[CHORE\] Update various package versions [\#99](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/99) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refacto logger [\#96](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/96) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
