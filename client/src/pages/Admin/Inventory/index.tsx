@@ -112,7 +112,7 @@ const Inventory: React.FC = () => {
     setTerminal({
       target: [target],
       isOpen: true,
-      command: '_installAgent',
+      quickRef: 'installAgent',
     });
   };
   const onDeleteNewDevice = async () => {

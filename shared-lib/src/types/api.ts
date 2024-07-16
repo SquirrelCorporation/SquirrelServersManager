@@ -547,6 +547,7 @@ export type ExtraVar = {
   value?: string;
   required?: boolean;
   canBeOverride?: boolean;
+  local?: boolean;
 };
 
 export type Image = {

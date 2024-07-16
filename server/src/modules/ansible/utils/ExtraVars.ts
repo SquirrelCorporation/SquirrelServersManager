@@ -42,14 +42,17 @@ async function findValueOfExtraVars(
       logger.error(
         `[INTEGRATION][ANSIBLE] - findValueOfExtraVars - ExtraVar not found : ${e.extraVar}`,
       );
-      throw new Error('ExtraVars value not found !');
+      if (!e.local) {
+        throw new Error('ExtraVars value not found !');
+      }
+    } else {
+      substitutedExtraVars.push({
+        extraVar: e.extraVar,
+        value: value || undefined,
+        required: e.required,
+        canBeOverride: e.canBeOverride,
+      });
     }
-    substitutedExtraVars.push({
-      extraVar: e.extraVar,
-      value: value || undefined,
-      required: e.required,
-      canBeOverride: e.canBeOverride,
-    });
   }
   logger.debug(substitutedExtraVars);
   return substitutedExtraVars;
