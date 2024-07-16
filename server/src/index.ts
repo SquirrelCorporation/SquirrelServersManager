@@ -30,7 +30,7 @@ app.use(
     },
     // Define a custom success message
     customSuccessMessage: function (req, res) {
-      return `${req.method} completed ${req.originalUrl}`;
+      return `${req.method} completed ${(req as typeof req & { originalUrl: string }).originalUrl}`;
     },
 
     // Define a custom receive message

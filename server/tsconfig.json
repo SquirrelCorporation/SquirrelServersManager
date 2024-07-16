@@ -11,6 +11,7 @@
     "downlevelIteration": true,
     "resolveJsonModule": true,
     "noImplicitAny": false,
+    "skipLibCheck": true,
     "typeRoots": [
       "./src/types",
       "./node_modules/@types/"
