@@ -25,6 +25,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Update multiple package versions [\#113](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/113) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Ensure size coherence across UI by using AntD custom icon component [\#108](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/108) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update loading state in MainChartCard [\#107](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/107) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Validate domain [\#105](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/105) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
