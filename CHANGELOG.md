@@ -10,8 +10,14 @@
 - \[BUG\] Agent overrides IP to LAN [\#94](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/94)
 - \[FEAT\] Refacto of logger for better filtering [\#88](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/88)
 - \[FEAT\] Use TreeSelect AntD component for Create button / drawer in Playbooks [\#72](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/72)
+- \[FEAT\] Add ability to show containers for specific device [\#109](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/109) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Update NewFileDrawerForm and TreeComponent [\#106](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/106) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Implement improved error handling and query processing [\#98](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/98) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Fixed bugs:**
+
+- \[BUG\] Fix links on Device page [\#71](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/71)
+- \[FIX\] Refactor extra variable handling and command reference [\#112](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/112) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Closed issues:**
 
@@ -20,6 +26,7 @@
 **Merged pull requests:**
 
 - \[CHORE\] Ensure size coherence across UI by using AntD custom icon component [\#108](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/108) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update loading state in MainChartCard [\#107](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/107) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Validate domain [\#105](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/105) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Standardize and enhance agent installation, reinstallation, and update playbooks [\#103](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/103) ([rtuszik](https://github.com/rtuszik))
 - \[CHORE\] Update various package versions [\#99](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/99) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
