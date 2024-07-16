@@ -16,8 +16,9 @@ export const getAnsibleGalaxyCollections = asyncHandler(async (req, res) => {
     content?: string;
     namespace?: string;
   };
+  const offset = ((current as number) - 1) * (pageSize as number);
   const response = await axios.get(
-    `https://galaxy.ansible.com/api/v3/plugin/ansible/search/collection-versions/?${params.namespace ? 'namespace=' + encodeURIComponent(params.namespace) + '&' : ''}${params.content ? 'keywords=' + encodeURIComponent(params.content) + '&' : ''}is_deprecated=false&repository_label=!hide_from_search&is_highest=true&offset=${current}&limit=${pageSize}&order_by=name`,
+    `https://galaxy.ansible.com/api/v3/plugin/ansible/search/collection-versions/?${params.namespace ? 'namespace=' + encodeURIComponent(params.namespace) + '&' : ''}${params.content ? 'keywords=' + encodeURIComponent(params.content) + '&' : ''}is_deprecated=false&repository_label=!hide_from_search&is_highest=true&offset=${offset}&limit=${pageSize}&order_by=name`,
   );
   new SuccessResponse('Get Ansible Galaxy Collections successful', response.data?.data || [], {
     total: response.data?.meta?.count,
