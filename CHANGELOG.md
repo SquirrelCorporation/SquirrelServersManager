@@ -26,6 +26,7 @@
 
 **Merged pull requests:**
 
+- \[DOC\] Update site [\#121](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/121) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Sec no funny business [\#115](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/115) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update SCHEME\_VERSION in DefaultValue enum [\#114](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/114) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update multiple package versions [\#113](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/113) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
