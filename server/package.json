@@ -44,12 +44,11 @@
     "semver": "^7.6.2",
     "shelljs": "^0.8.5",
     "ssm-shared-lib": "file:../shared-lib/",
-    "@aws-sdk/client-ecr": "^3.609.0",
+    "@aws-sdk/client-ecr": "^3.614.0",
     "dugite": "^2.7.1",
     "fs-extra": "^11.2.0",
     "isomorphic-git": "^1.27.1",
-    "lodash": "^4.17.21",
-    "@smithy/util-stream": "^3.1.0"
+    "lodash": "^4.17.21"
   },
   "overrides": {
     "minimatch": "5.1.2",
