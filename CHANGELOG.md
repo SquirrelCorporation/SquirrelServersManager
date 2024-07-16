@@ -17,6 +17,7 @@
 **Fixed bugs:**
 
 - \[BUG\] Fix links on Device page [\#71](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/71)
+- \[BUG\] Fix offset calculation for Ansible Galaxy service [\#116](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/116) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FIX\] Refactor extra variable handling and command reference [\#112](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/112) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Closed issues:**
@@ -25,6 +26,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Sec no funny business [\#115](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/115) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update SCHEME\_VERSION in DefaultValue enum [\#114](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/114) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update multiple package versions [\#113](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/113) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Ensure size coherence across UI by using AntD custom icon component [\#108](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/108) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
