@@ -17,6 +17,7 @@ export const getContainers = asyncHandler(async (req, res) => {
     API.Container & {
       sorter: any;
       filter: any;
+      deviceUuid?: string;
     };
   const containers = (await ContainerRepo.findAll()) as API.Container[];
   // Add pagination
@@ -24,8 +25,17 @@ export const getContainers = asyncHandler(async (req, res) => {
   // Use the separated services
   dataSource = sortByFields(dataSource, params);
   dataSource = filterByFields(dataSource, params);
+  let deviceUuid = undefined;
+  try {
+    // @ts-expect-error TODO: change the type
+    deviceUuid = params.device ? JSON.parse(params.device).uuid : undefined;
+  } catch {}
   //TODO: update validator
-  dataSource = filterByQueryParams(dataSource, params, ['status', 'name', 'updateAvailable']);
+  dataSource = filterByQueryParams(
+    dataSource.map((e) => ({ ...e, deviceUuid: e.device?.uuid })),
+    { ...params, deviceUuid: deviceUuid },
+    ['status', 'name', 'updateAvailable', 'deviceUuid'],
+  );
 
   new SuccessResponse('Get containers', dataSource, {
     total: dataSource.length,

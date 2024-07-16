@@ -1,44 +1,26 @@
-import ServiceQuickActionDropDown from '@/components/ServiceComponents/ServiceQuickAction/ServiceQuickActionDropDown';
-import ServiceQuickActionReference, {
-  ServiceQuickActionReferenceActions,
-  ServiceQuickActionReferenceTypes,
-} from '@/components/ServiceComponents/ServiceQuickAction/ServiceQuickActionReference';
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
+import ContainerMetas from '@/pages/Devices/ContainerMetas';
 import AppStoreModal from '@/pages/Services/components/AppStoreModal';
-import ContainerAvatar from '@/pages/Services/components/ContainerAvatar';
-import ContainerStatProgress from '@/pages/Services/components/ContainerStatProgress';
-import InfoToolTipCard from '@/pages/Services/components/InfoToolTipCard';
-import StatusTag from '@/pages/Services/components/StatusTag';
-import UpdateAvailableTag from '@/pages/Services/components/UpdateAvailableTag';
-import {
-  getContainers,
-  postContainerAction,
-  postRefreshAll,
-  updateContainerCustomName,
-} from '@/services/rest/containers';
+import EditContainerNameModal from '@/pages/Services/components/EditContainerNameModal';
+import { getContainers, postRefreshAll } from '@/services/rest/containers';
+import { getQueryStringParams } from '@/utils/querystring';
 import {
   AppstoreAddOutlined,
   AppstoreOutlined,
-  InfoCircleOutlined,
   ReloadOutlined,
 } from '@ant-design/icons';
 import {
   type ActionType,
-  ModalForm,
   PageContainer,
-  ProFieldValueType,
-  ProFormText,
   ProList,
 } from '@ant-design/pro-components';
-import { Button, Flex, message, Popover, Tag, Tooltip } from 'antd';
-import React, { useRef, useState } from 'react';
-import { API, SsmContainer } from 'ssm-shared-lib';
+import { useLocation } from '@umijs/max';
+import { Button, Form } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { API } from 'ssm-shared-lib';
 
 const Index: React.FC = () => {
-  const [cardActionProps] = useState<'actions' | 'extra'>('extra');
   const actionRef = useRef<ActionType>();
-  const [refreshAllIsLoading, setRefreshAllIsLoading] = useState(false);
-  const [ghost] = useState<boolean>(false);
   const [
     isEditContainerCustomNameModalOpened,
     setIsEditContainerCustomNameModalOpened,
@@ -47,34 +29,18 @@ const Index: React.FC = () => {
   const [selectedRecord, setSelectedRecord] = useState<
     API.Container | undefined
   >();
+  const [form] = Form.useForm();
+  const [refreshAllIsLoading, setRefreshAllIsLoading] = useState(false);
+  const { search } = useLocation();
+  const query = getQueryStringParams(search);
 
-  const handleQuickAction = async (idx: number) => {
-    if (
-      ServiceQuickActionReference[idx].type ===
-      ServiceQuickActionReferenceTypes.ACTION
-    ) {
-      if (
-        ServiceQuickActionReference[idx].action ===
-        ServiceQuickActionReferenceActions.RENAME
-      ) {
-        setIsEditContainerCustomNameModalOpened(true);
-      }
-      if (
-        Object.values(SsmContainer.Actions).includes(
-          ServiceQuickActionReference[idx].action as SsmContainer.Actions,
-        )
-      ) {
-        await postContainerAction(
-          selectedRecord?.id as string,
-          ServiceQuickActionReference[idx].action as SsmContainer.Actions,
-        ).then(() => {
-          message.info({
-            content: `Container : ${ServiceQuickActionReference[idx].action}`,
-          });
-        });
-      }
+  useEffect(() => {
+    if (query.deviceUuid) {
+      form.setFieldsValue({
+        device: { uuid: query.deviceUuid },
+      });
     }
-  };
+  }, [query.deviceUuid]);
 
   const handleRefreshAll = () => {
     setRefreshAllIsLoading(true);
@@ -103,42 +69,21 @@ const Index: React.FC = () => {
         setOpen={setAppStoreModalOpened}
         open={appStoreModalOpened}
       />
-      <ModalForm<{ customName: string }>
-        title={`Edit container name`}
-        open={isEditContainerCustomNameModalOpened}
-        autoFocusFirstInput
-        modalProps={{
-          destroyOnClose: true,
-          onCancel: () => setIsEditContainerCustomNameModalOpened(false),
-        }}
-        onFinish={async (values) => {
-          if (!selectedRecord) {
-            message.error({ content: 'Internal error, no selected record' });
-            return;
-          }
-          if (selectedRecord && selectedRecord.id) {
-            await updateContainerCustomName(
-              values.customName,
-              selectedRecord?.id,
-            );
-            actionRef?.current?.reload();
-            setIsEditContainerCustomNameModalOpened(false);
-            message.success({ content: 'Container properties updated' });
-          }
-          return true;
-        }}
-      >
-        <ProFormText
-          name={'customName'}
-          label={'Name'}
-          initialValue={selectedRecord?.customName || selectedRecord?.name}
-        />
-      </ModalForm>
+      <EditContainerNameModal
+        isEditContainerCustomNameModalOpened={
+          isEditContainerCustomNameModalOpened
+        }
+        setIsEditContainerCustomNameModalOpened={
+          setIsEditContainerCustomNameModalOpened
+        }
+        selectedRecord={selectedRecord}
+        actionRef={actionRef}
+      />
       <ProList<API.Container>
         size={'large'}
-        ghost={ghost}
+        ghost={false}
         itemCardProps={{
-          ghost,
+          ghost: false,
         }}
         headerTitle="Containers"
         request={getContainers}
@@ -171,7 +116,8 @@ const Index: React.FC = () => {
           showSizeChanger: true,
         }}
         search={{
-          labelWidth: 120,
+          form: form,
+          labelWidth: 140,
           filterType: 'light',
         }}
         showActions="hover"
@@ -187,106 +133,12 @@ const Index: React.FC = () => {
             },
           };
         }}
-        metas={{
-          title: {
-            search: true,
-            title: 'Name',
-            dataIndex: 'name',
-            render: (_, row) => {
-              return row.customName || row.name;
-            },
-          },
-          subTitle: {
-            search: false,
-            render: (_, row) => {
-              return (
-                <>
-                  <StatusTag status={row.status} />
-                  <UpdateAvailableTag updateAvailable={row.updateAvailable} />
-                </>
-              );
-            },
-          },
-          updateAvailable: {
-            dataIndex: 'updateAvailable',
-            title: 'Update Available',
-            valueType: 'switch' as ProFieldValueType,
-          },
-          status: {
-            dataIndex: 'status',
-            title: 'Status',
-            valueType: 'select' as ProFieldValueType,
-            valueEnum: {
-              running: {
-                text: 'running',
-              },
-              paused: {
-                text: 'paused',
-              },
-            },
-          },
-          avatar: {
-            search: false,
-            render: (_, row) => {
-              return <ContainerAvatar row={row} key={row.id} />;
-            },
-          },
-          content: {
-            search: false,
-            render: (_, row) => {
-              return (
-                <div
-                  style={{
-                    flex: 1,
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 300,
-                    }}
-                  >
-                    <>
-                      On{' '}
-                      <Popover content={row.device?.fqdn}>
-                        <Tag color="black">{row.device?.ip}</Tag>
-                      </Popover>
-                      <Flex gap="middle">
-                        <ContainerStatProgress containerId={row.id} />
-                      </Flex>
-                    </>
-                  </div>
-                </div>
-              );
-            },
-          },
-          actions: {
-            cardActionProps,
-            search: false,
-            render: (text, row) => [
-              <Tooltip
-                key={`info-${row.id}`}
-                color={'transparent'}
-                title={<InfoToolTipCard item={row} />}
-              >
-                <InfoCircleOutlined style={{ color: 'rgb(22, 104, 220)' }} />
-              </Tooltip>,
-              <a
-                key={`quickAction-${row.id}`}
-                onClick={() => {
-                  setSelectedRecord(row);
-                }}
-              >
-                <ServiceQuickActionDropDown
-                  onDropDownClicked={handleQuickAction}
-                />
-              </a>,
-            ],
-          },
-          id: {
-            dataIndex: 'id',
-            search: false,
-          },
-        }}
+        metas={ContainerMetas({
+          selectedRecord: selectedRecord,
+          setSelectedRecord: setSelectedRecord,
+          setIsEditContainerCustomNameModalOpened:
+            setIsEditContainerCustomNameModalOpened,
+        })}
       />
     </PageContainer>
   );
