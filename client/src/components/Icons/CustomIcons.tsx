@@ -1,6 +1,10 @@
+import { GetProps } from 'antd';
 import React from 'react';
+import Icon from '@ant-design/icons';
 
-export const StreamlineComputerConnection = (props: any) => (
+type CustomIconComponentProps = GetProps<typeof Icon>;
+
+const StreamlineComputerConnectionSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1.8em"
@@ -21,7 +25,11 @@ export const StreamlineComputerConnection = (props: any) => (
   </svg>
 );
 
-export const LogosGitlab = (props: any) => (
+export const StreamlineComputerConnection = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={StreamlineComputerConnectionSvg} {...props} />;
+
+const LogosGitlabSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="2em"
@@ -60,7 +68,11 @@ export const LogosGitlab = (props: any) => (
   </svg>
 );
 
-export const EosIconsCronjob = (props: any) => (
+export const LogosGitlab = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={LogosGitlabSvg} {...props} />
+);
+
+const EosIconsCronjobSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -75,7 +87,11 @@ export const EosIconsCronjob = (props: any) => (
   </svg>
 );
 
-export const IonServer = (props: any) => (
+export const EosIconsCronjob = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EosIconsCronjobSvg} {...props} />
+);
+
+const IonServerSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -98,30 +114,11 @@ export const IonServer = (props: any) => (
   </svg>
 );
 
-export const LogoHotIo = (props: any) => (
-  <svg
-    version="1.1"
-    viewBox="0 0 1000 1278.9"
-    width="2em"
-    height="2em"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
-    <g transform="matrix(4.1255 0 0 4.1255 -1716.3 -791.31)" fill="#ffb64c">
-      <path
-        d="m539.91 193.95c-1.774-1.489-3.832-2.149-5.836-2.137-4.667 0.03-9.081 3.711-9.081 9.093 0 100.73-108.97 104.87-108.97 200.98 0 58.666 56.136 96.768 58.527 98.361 7.016 4.68 16.079-1.955 13.766-10.049-14.238-49.846-12.616-101.6 25.795-136.71-6.877 25.359-0.811 45.851 19.959 54.865 15.419 6.695 35.59 5.582 52.28 3.075 18.694 16.496 5.315 54.744-5.921 77.203-4.147 8.3 5.466 16.751 13.161 11.617 40.693-27.127 62.444-61.179 64.647-101.22 4.443-80.75-74.787-168.55-118.33-205.08z"
-        fill="#ffdf8e"
-      />
-      <path d="m658.24 399.03c-2.204 40.039-23.954 74.091-64.647 101.22-7.694 5.134-17.308-3.317-13.161-11.617 11.236-22.459 24.614-60.707 5.921-77.203-16.69 2.506-36.861 3.62-52.28-3.075v-216.54c2.004-0.012 4.062 0.648 5.836 2.137 43.544 36.528 122.78 124.33 118.33 205.08zm-149.86 76.982v-32.517h-16.984v-9.815h29.53v42.332zm5.718-48.989q-3.67 0-6.06-2.048-2.304-2.048-2.304-5.548 0-3.499 2.304-5.633 2.39-2.219 6.06-2.219t5.974 2.219q2.39 2.134 2.39 5.633t-2.39 5.548q-2.304 2.048-5.974 2.048z" />
-      <path
-        d="m561.46 477.04q-4.182 0-8.108-1.451-3.841-1.536-6.913-4.353-2.987-2.817-4.779-6.913-1.792-4.182-1.792-9.474 0-5.291 1.792-9.388 1.792-4.182 4.779-6.998 3.072-2.817 6.913-4.267 3.926-1.536 8.108-1.536t8.023 1.536q3.926 1.451 6.913 4.267 3.072 2.817 4.865 6.998 1.792 4.097 1.792 9.388t-1.792 9.474q-1.792 4.097-4.865 6.913-2.987 2.817-6.913 4.353-3.841 1.451-8.023 1.451zm0-10.156q4.353 0 6.486-3.243 2.219-3.243 2.219-8.791t-2.219-8.791q-2.134-3.243-6.486-3.243-4.353 0-6.572 3.243-2.134 3.243-2.134 8.791t2.134 8.791q2.219 3.243 6.572 3.243z"
-        fill="#ffdf8e"
-      />
-    </g>
-  </svg>
+export const IonServer = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={IonServerSvg} {...props} />
 );
 
-export const LogosQuay = (props: any) => (
+const LogosQuaySvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="2em"
@@ -140,7 +137,11 @@ export const LogosQuay = (props: any) => (
   </svg>
 );
 
-export const LogosAws = (props: any) => (
+export const LogosQuay = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={LogosQuaySvg} {...props} />
+);
+
+const LogosAwsSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="2em"
@@ -158,7 +159,12 @@ export const LogosAws = (props: any) => (
     />
   </svg>
 );
-export const VscodeIconsFileTypeDocker2 = (props: any) => (
+
+export const LogosAws = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={LogosAwsSvg} {...props} />
+);
+
+const VscodeIconsFileTypeDocker2Svg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="2em"
@@ -177,7 +183,11 @@ export const VscodeIconsFileTypeDocker2 = (props: any) => (
   </svg>
 );
 
-export const FluentMdl2RegistryEditor = (props: any) => (
+export const VscodeIconsFileTypeDocker2 = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={VscodeIconsFileTypeDocker2Svg} {...props} />;
+
+const FluentMdl2RegistryEditorSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1.8em"
@@ -192,7 +202,11 @@ export const FluentMdl2RegistryEditor = (props: any) => (
   </svg>
 );
 
-export const DeviconGooglecloud = (props: any) => (
+export const FluentMdl2RegistryEditor = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={FluentMdl2RegistryEditorSvg} {...props} />;
+
+const DeviconGooglecloudSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="2em"
@@ -218,7 +232,12 @@ export const DeviconGooglecloud = (props: any) => (
     />
   </svg>
 );
-export const OuiMlCreateAdvancedJob = (props: any) => (
+
+export const DeviconGooglecloud = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={DeviconGooglecloudSvg} {...props} />;
+
+const OuiMlCreateAdvancedJobSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -238,7 +257,11 @@ export const OuiMlCreateAdvancedJob = (props: any) => (
   </svg>
 );
 
-export const UilDocker = (props: any) => (
+export const OuiMlCreateAdvancedJob = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={OuiMlCreateAdvancedJobSvg} {...props} />;
+
+const UilDockerSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -253,22 +276,11 @@ export const UilDocker = (props: any) => (
   </svg>
 );
 
-export const WhhSsh = (props: any) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="1em"
-    height="1em"
-    viewBox="0 0 1024 832"
-    {...props}
-  >
-    <path
-      fill="currentColor"
-      d="M992 768H800q-13 0-22.5-9.5T768 736t9.5-22.5T800 704h192q13 0 22.5 9.5t9.5 22.5t-9.5 22.5T992 768zM736 640h-32v32q0 12-7.5 20.5T678 703q-2 1-6 1h-32v96q0 13-9.5 22.5T608 832h-64q-13 0-22.5-9.5T512 800v-96h-32q-4 0-6-1q-11-2-18.5-10.5T448 672v-32h-32q-13 0-22.5-9.5T384 608v-64q0-13 9.5-22.5T416 512h64q13 0 22.5 9.5T512 544v96h128V448H480q-4 0-6-1q-11-2-18.5-10.5T448 416v-32h-32q-13 0-22.5-9.5T384 352V224q0-13 9.5-22.5T416 192h32v-32q0-12 7.5-20.5T474 129q2-1 6-1h32V32q0-13 9.5-22.5T544 0h64q13 0 22.5 9.5T640 32v96h32q4 0 6 1q11 2 18.5 10.5T704 160v32h32q13 0 22.5 9.5T768 224v64q0 13-9.5 22.5T736 320h-64q-13 0-22.5-9.5T640 288v-96H512v192h160q4 0 6 1q11 2 18.5 10.5T704 416v32h32q13 0 22.5 9.5T768 480v128q0 13-9.5 22.5T736 640zM288 512h-32v32q0 12-7.5 20.5T230 575q-2 1-6 1h-32v32q0 12-7.5 20.5T166 639q-2 1-6 1h-32v32q0 11-7.5 20T102 703q-2 1-6 1H32q-13 0-22.5-9.5T0 672t9.5-22.5T32 640h32v-32q0-12 7.5-20.5T90 577q2-1 6-1h32v-32q0-12 7.5-20.5T154 513q2-1 6-1h32v-64h-32q-4 0-6-1q-11-2-18.5-10.5T128 416v-32H96q-4 0-6-1q-11-2-18.5-10.5T64 352v-32H32q-13 0-22.5-9.5T0 288t9.5-22.5T32 256h64q4 0 6 1q11 2 18.5 10.5T128 288v32h32q4 0 6 1q11 2 18.5 10.5T192 352v32h32q4 0 6 1q11 2 18.5 10.5T256 416v32h32q13 0 22.5 9.5T320 480t-9.5 22.5T288 512z"
-    />
-  </svg>
+export const UilDocker = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={UilDockerSvg} {...props} />
 );
 
-export const TablerPlugConnected = (props: any) => (
+const TablerPlugConnectedSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -287,7 +299,11 @@ export const TablerPlugConnected = (props: any) => (
   </svg>
 );
 
-export const StreamlineLockRotationSolid = (props: any) => (
+export const TablerPlugConnected = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={TablerPlugConnectedSvg} {...props} />;
+
+const StreamlineLockRotationSolidSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -302,7 +318,11 @@ export const StreamlineLockRotationSolid = (props: any) => (
   </svg>
 );
 
-export const EosIconsAdmin = (props: any) => (
+export const StreamlineLockRotationSolid = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={StreamlineLockRotationSolidSvg} {...props} />;
+
+const EosIconsAdminSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -318,7 +338,11 @@ export const EosIconsAdmin = (props: any) => (
   </svg>
 );
 
-export const GrommetIconsHost = (props: any) => (
+export const EosIconsAdmin = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EosIconsAdminSvg} {...props} />
+);
+
+const GrommetIconsHostSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -335,7 +359,11 @@ export const GrommetIconsHost = (props: any) => (
   </svg>
 );
 
-export const ElNetwork = (props: any) => (
+export const GrommetIconsHost = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={GrommetIconsHostSvg} {...props} />
+);
+
+const ElNetworkSvg = (props: any) => (
   <svg
     width="1.5em"
     height="1.5em"
@@ -350,7 +378,11 @@ export const ElNetwork = (props: any) => (
   </svg>
 );
 
-export const FluentMdl2Health = (props: any) => (
+export const ElNetwork = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ElNetworkSvg} {...props} />
+);
+
+const FluentMdl2HealthSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1.5em"
@@ -363,6 +395,10 @@ export const FluentMdl2Health = (props: any) => (
       d="M347 1024h-39l716 716l588-588h181l-769 769l-865-864q-35-35-62-75t-47-86h243l283-282l448 447l320-319l155 154h355q32-51 49-108t17-117q0-87-32-162t-89-130t-132-87t-163-32q-84 0-149 26t-120 70t-105 97t-106 111q-54-54-105-109t-106-99t-121-72t-148-28q-86 0-161 32t-132 89t-89 132t-33 162q0 47 11 97H9q-5-24-6-48t-2-48q0-113 42-212t116-173t173-116t212-43q83 0 148 19t120 52t106 81t106 103q55-56 105-103t106-80t121-53t148-19q112 0 211 42t172 116t116 172t43 211q0 97-34 188t-97 167h-470l-101-102l-320 321l-448-449l-229 230z"
     />
   </svg>
+);
+
+export const FluentMdl2Health = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={FluentMdl2HealthSvg} {...props} />
 );
 
 export const PajamasLog = (props: any) => (
@@ -381,7 +417,8 @@ export const PajamasLog = (props: any) => (
     />
   </svg>
 );
-export const MaterialSymbolsDashboard = (props: any) => (
+
+const MaterialSymbolsDashboardSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="20"
@@ -396,7 +433,11 @@ export const MaterialSymbolsDashboard = (props: any) => (
   </svg>
 );
 
-export const MynauiDangerTriangle = (props: any) => (
+export const MaterialSymbolsDashboard = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={MaterialSymbolsDashboardSvg} {...props} />;
+
+const MynauiDangerTriangleSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="20"
@@ -415,7 +456,11 @@ export const MynauiDangerTriangle = (props: any) => (
   </svg>
 );
 
-export const MynauiApi = (props: any) => (
+export const MynauiDangerTriangle = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={MynauiDangerTriangleSvg} {...props} />;
+
+const MynauiApiSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -434,7 +479,11 @@ export const MynauiApi = (props: any) => (
   </svg>
 );
 
-export const CarbonBatchJob = (props: any) => (
+export const MynauiApi = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={MynauiApiSvg} {...props} />
+);
+
+const CarbonBatchJobSvg = (props: any) => (
   <svg
     width="1em"
     height="1em"
@@ -451,7 +500,11 @@ export const CarbonBatchJob = (props: any) => (
   </svg>
 );
 
-export const WhhCpu = (props: any) => (
+export const CarbonBatchJob = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={CarbonBatchJobSvg} {...props} />
+);
+
+const WhhCpuSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="10"
@@ -466,7 +519,11 @@ export const WhhCpu = (props: any) => (
   </svg>
 );
 
-export const WhhRam = (props: any) => (
+export const WhhCpu = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={WhhCpuSvg} {...props} />
+);
+
+const WhhRamSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="10"
@@ -481,41 +538,11 @@ export const WhhRam = (props: any) => (
   </svg>
 );
 
-export const EpConnection = (iconProps: any) => (
-  <svg
-    width="1em"
-    height="1em"
-    viewBox="0 0 1024 1024"
-    xmlns="http://www.w3.org/2000/svg"
-    {...iconProps}
-  >
-    <path
-      fill="currentColor"
-      d="M640 384v64H448a128 128 0 0 0-128 128v128a128 128 0 0 0 128 128h320a128 128 0 0 0 128-128V576a128 128 0 0 0-64-110.848V394.88c74.56 26.368 128 97.472 128 181.056v128a192 192 0 0 1-192 192H448a192 192 0 0 1-192-192V576a192 192 0 0 1 192-192z"
-    />
-    <path
-      fill="currentColor"
-      d="M384 640v-64h192a128 128 0 0 0 128-128V320a128 128 0 0 0-128-128H256a128 128 0 0 0-128 128v128a128 128 0 0 0 64 110.848v70.272A192.064 192.064 0 0 1 64 448V320a192 192 0 0 1 192-192h320a192 192 0 0 1 192 192v128a192 192 0 0 1-192 192z"
-    />
-  </svg>
+export const WhhRam = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={WhhRamSvg} {...props} />
 );
 
-export const CilControl = (iconProps: any) => (
-  <svg
-    width="1em"
-    height="1em"
-    viewBox="0 0 512 512"
-    xmlns="http://www.w3.org/2000/svg"
-    {...iconProps}
-  >
-    <path
-      fill="currentColor"
-      d="M336 256a80 80 0 1 0-80 80a80.091 80.091 0 0 0 80-80m-128 0a48 48 0 1 1 48 48a48.055 48.055 0 0 1-48-48m-48 141.988L245.307 496h21.386L352 397.988V368H160ZM307.825 400L256 459.544L204.175 400ZM245.307 16L160 114.012V144h192v-29.988L266.693 16Zm-41.132 96L256 52.456L307.825 112ZM16 245.307v21.386L114.013 352H144V160h-29.987Zm96 62.519L52.455 256L112 204.174ZM397.987 160H368v192h29.987L496 266.693v-21.386ZM400 307.826V204.174L459.545 256Z"
-    />
-  </svg>
-);
-
-export const GrommetIconsInstall = (iconProps: any) => (
+const GrommetIconsInstallSvg = (iconProps: any) => (
   <svg
     width="0.8em"
     height="0.8em"
@@ -532,6 +559,10 @@ export const GrommetIconsInstall = (iconProps: any) => (
   </svg>
 );
 
+export const GrommetIconsInstall = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={GrommetIconsInstallSvg} {...props} />;
+
 export const GameIconsAcorn = (props: any) => (
   <svg
     width="1em"
@@ -547,7 +578,7 @@ export const GameIconsAcorn = (props: any) => (
   </svg>
 );
 
-export const DeviconAzure = (props: any) => (
+const DeviconAzureSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1.8em"
@@ -615,7 +646,11 @@ export const DeviconAzure = (props: any) => (
   </svg>
 );
 
-export const ZmdiGithub = (props: any) => (
+export const DeviconAzure = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={DeviconAzureSvg} {...props} />
+);
+
+const ZmdiGithubSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1.8em"
@@ -630,7 +665,11 @@ export const ZmdiGithub = (props: any) => (
   </svg>
 );
 
-export const SimpleIconsForgejo = (props: any) => (
+export const ZmdiGithub = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ZmdiGithubSvg} {...props} />
+);
+
+const SimpleIconsForgejoSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1.8em"
@@ -645,7 +684,11 @@ export const SimpleIconsForgejo = (props: any) => (
   </svg>
 );
 
-export const SimpleIconsGitea = (props: any) => (
+export const SimpleIconsForgejo = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={SimpleIconsForgejoSvg} {...props} />;
+
+const SimpleIconsGiteaSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1.8em"
@@ -660,7 +703,11 @@ export const SimpleIconsGitea = (props: any) => (
   </svg>
 );
 
-export const VaadinCubes = (props: any) => (
+export const SimpleIconsGitea = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={SimpleIconsGiteaSvg} {...props} />
+);
+
+const VaadinCubesSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1.8em"
@@ -675,7 +722,11 @@ export const VaadinCubes = (props: any) => (
   </svg>
 );
 
-export const SimpleIconsGit = (props: any) => (
+export const VaadinCubes = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={VaadinCubesSvg} {...props} />
+);
+
+const SimpleIconsGitSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1.2em"
@@ -690,7 +741,11 @@ export const SimpleIconsGit = (props: any) => (
   </svg>
 );
 
-export const StreamlineLocalStorageFolderSolid = (props: any) => (
+export const SimpleIconsGit = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={SimpleIconsGitSvg} {...props} />
+);
+
+const StreamlineLocalStorageFolderSolidSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="0.8em"
@@ -707,7 +762,11 @@ export const StreamlineLocalStorageFolderSolid = (props: any) => (
   </svg>
 );
 
-export const GrommetIconsSystem = (props: any) => (
+export const StreamlineLocalStorageFolderSolid = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={StreamlineLocalStorageFolderSolidSvg} {...props} />;
+
+const GrommetIconsSystemSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -724,7 +783,11 @@ export const GrommetIconsSystem = (props: any) => (
   </svg>
 );
 
-export const TablerSquareNumber1Filled = (props: any) => (
+export const GrommetIconsSystem = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={GrommetIconsSystemSvg} {...props} />;
+
+const TablerSquareNumber1FilledSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -739,7 +802,11 @@ export const TablerSquareNumber1Filled = (props: any) => (
   </svg>
 );
 
-export const TablerSquareNumber2Filled = (props: any) => (
+export const TablerSquareNumber1Filled = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={TablerSquareNumber1FilledSvg} {...props} />;
+
+const TablerSquareNumber2FilledSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -754,7 +821,11 @@ export const TablerSquareNumber2Filled = (props: any) => (
   </svg>
 );
 
-export const CarbonIbmEventAutomation = (props: any) => (
+export const TablerSquareNumber2Filled = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={TablerSquareNumber2FilledSvg} {...props} />;
+
+const CarbonIbmEventAutomationSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -780,7 +851,11 @@ export const CarbonIbmEventAutomation = (props: any) => (
   </svg>
 );
 
-export const FluentMdl2FileTemplate = (props: any) => (
+export const CarbonIbmEventAutomation = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={CarbonIbmEventAutomationSvg} {...props} />;
+
+const FluentMdl2FileTemplateSvg = (props: any) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -794,3 +869,7 @@ export const FluentMdl2FileTemplate = (props: any) => (
     />
   </svg>
 );
+
+export const FluentMdl2FileTemplate = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={FluentMdl2FileTemplateSvg} {...props} />;

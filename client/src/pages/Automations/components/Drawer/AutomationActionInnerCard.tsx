@@ -41,7 +41,7 @@ const AutomationActionInnerCard: React.FC<AutomationActionProps> = (props) => {
           title={'Execute'}
           icon={
             <TablerSquareNumber2Filled
-              style={{ width: '1.8em', height: '1.8em', marginTop: 6 }}
+              style={{ fontSize: '25px', marginTop: 3 }}
             />
           }
         />

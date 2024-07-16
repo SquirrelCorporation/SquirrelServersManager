@@ -56,10 +56,8 @@ export const HealthWidget: React.FC = () => {
                 className={'svg-small-anim-pulse'}
                 style={{
                   color: 'rgba(255, 255, 255, 0.65)',
+                  fontSize: '20px',
                 }}
-                width={'20px'}
-                height={'20px'}
-                size={20}
               />
             }
           />

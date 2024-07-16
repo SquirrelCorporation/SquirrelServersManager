@@ -45,9 +45,9 @@ export function buildTree(
     nodeType: DT.CONSTANTS.DIRECTORY,
     icon:
       rootNode.type === Playbooks.PlaybooksRepositoryType.LOCAL ? (
-        <StreamlineLocalStorageFolderSolid style={{ marginTop: 3 }} />
+        <StreamlineLocalStorageFolderSolid />
       ) : (
-        <SimpleIconsGit style={{ height: '1em', width: '1em', marginTop: 5 }} />
+        <SimpleIconsGit />
       ),
     selectable: !!onlyDirectories,
     children: rootNode.children
