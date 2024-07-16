@@ -83,7 +83,7 @@ export default defineConfig({
             { text: 'Stack', link: '/contribute/stack.md' }
           ]
         }
-        ],
+      ],
       '/docs/': [
         { text: 'Overview', link: '/docs/' },
         {
@@ -99,31 +99,45 @@ export default defineConfig({
         {
           text: 'User Guide', link: '/docs/userguide.md', items: [
             { text: 'First time using SSM', link: '/docs/first-time.md' },
-            { text: 'Adding a device', link: '/docs/add-device.md' },
             {
-              text: 'Adding an unmanaged device (agentless mode)', link: '/docs/add-unamanaged.md'
-            },
-            {
-              text: 'Playbooks', link: '/docs/playbooks/playbooks.md', items: [
-                { text: 'Local Playbooks Repository', link: '/docs/playbooks/local-playbooks.md'},
-                { text: 'Remote Playbooks Repository', link: '/docs/playbooks/remote-playbooks.md'}
+              text: 'Devices', items: [
+                {
+                  text: 'Adding a device', link: '/docs/add-device.md'
+                },
+                {
+                  text: 'Adding an unmanaged device (agentless mode)', link: '/docs/add-unamanaged.md'
+                },
+                {
+                  text: 'Deleting a device', link: '/docs/delete-device.md'
+                },
+                {
+                  text: 'Device configuration', link: '/docs/device-configuration.md'
+                }
               ]
             },
             {
-              text: 'Services', link: '/docs/services.md'
+              text: 'Playbooks', items: [
+                { text: 'Overview', link: '/docs/playbooks/playbooks.md' },
+                { text: 'Executing a playbook', link: '/docs/exec-playbook.md' },
+                ]
             },
             {
-              text: 'Executing a playbook', link: '/docs/exec-playbook.md'
+              text: 'Playbooks Repositories', items: [
+
+                { text: 'Local Playbooks Repositories', link: '/docs/playbooks/local-playbooks.md' },
+                { text: 'Remote Playbooks Repositories', link: '/docs/playbooks/remote-playbooks.md' }
+              ]
             },
             {
-              text: 'Settings', link: '/docs/settings.md', items: [
-                { text: 'Configuring a Registry', link: '/docs/registry.md' },]
+              text: 'Services', items: [{text: 'Overview', link: '/docs/services.md'}]
             },
             {
-              text: 'Device Configuration', link: '/docs/device-configuration.md'
+              text: 'Automations',  items: [{text: 'Overview',link: '/docs/automations/automations.md'}]
             },
             {
-              text: 'Deleting a device', link: '/docs/delete-device.md'
+              text: 'Settings', items: [
+                { text: 'Overview', link: '/docs/settings.md' },
+                { text: 'Configuring a Registry', link: '/docs/registry.md' }]
             }
           ]
         },
@@ -136,7 +150,7 @@ export default defineConfig({
             },
             {
               text: 'Troubleshoot', link: '/docs/troubleshoot.md'
-            },
+            }
           ]
         },
         {
@@ -159,5 +173,5 @@ export default defineConfig({
     // ignore all localhost links
     /^https?:\/\/localhost/,
     /^https:\/\/localhost/
-    ]
+  ]
 });
