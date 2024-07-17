@@ -42,7 +42,14 @@ async function init() {
 
   await PlaybooksRepositoryRepo.updateOrCreate(corePlaybooksRepository);
   await PlaybooksRepositoryRepo.updateOrCreate(toolsPlaybooksRepository);
-  await PlaybooksRepositoryEngine.init();
+  try {
+    await PlaybooksRepositoryEngine.init();
+  } catch (error) {
+    logger.fatal(
+      'Error during PlaybooksRepositoryEngine initialization, your system may not be stable',
+    );
+    logger.fatal(error);
+  }
   void DeviceAuthUseCases.saveAllDeviceAuthSshKeys();
   void Crons.initScheduledJobs();
   void WatcherEngine.init();

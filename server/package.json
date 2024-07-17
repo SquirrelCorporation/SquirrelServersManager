@@ -7,8 +7,8 @@
     "dev": "pwd && nodemon",
     "start": "npm run build-shared && npm run build && cross-env NODE_ENV=production node dist/index.js",
     "build": "tsc",
-    "test": "vitest --disable-console-intercept --reporter=basic ",
-    "coverage": "vitest run --coverage"
+    "test": "NODE_ENV=test vitest --disable-console-intercept --reporter=basic ",
+    "coverage": "NODE_ENV=test vitest run --coverage"
   },
   "version": "0.1.15",
   "author": "Squirrel Team",
@@ -82,6 +82,10 @@
     "prettier": "^3.3.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3",
-    "vitest": "^2.0.3"
+    "vitest": "^2.0.3",
+    "supertest": "^7.0.0",
+    "mongodb-memory-server": "^9.4.1",
+    "redis-memory-server": "^0.11.0",
+    "@types/supertest": "^6.0.2"
   }
 }
