@@ -26,6 +26,7 @@
 
 **Merged pull requests:**
 
+- \[TEST\] Refactor project structure and update package dependencies [\#124](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/124) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Automations documentation, refresh website [\#122](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/122) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Update site [\#121](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/121) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Sec no funny business [\#115](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/115) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
