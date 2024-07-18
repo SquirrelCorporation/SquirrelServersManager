@@ -7,8 +7,8 @@
     "dev": "pwd && nodemon",
     "start": "npm run build-shared && npm run build && cross-env NODE_ENV=production node dist/index.js",
     "build": "tsc",
-    "test": "NODE_ENV=test vitest --disable-console-intercept --reporter=basic ",
-    "coverage": "NODE_ENV=test vitest run --coverage"
+    "test": "vitest --disable-console-intercept --reporter=basic ",
+    "coverage": "vitest run --coverage"
   },
   "version": "0.1.15",
   "author": "Squirrel Team",
