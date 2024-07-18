@@ -3,9 +3,9 @@ import { API } from 'ssm-shared-lib';
 import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import LogsRepo from '../../data/database/repository/LogsRepo';
 import asyncHandler from '../../middlewares/AsyncHandler';
-import { filterByFields, filterByQueryParams } from '../../helpers/FilterHelper';
-import { paginate } from '../../helpers/PaginationHelper';
-import { sortByFields } from '../../helpers/SorterHelper';
+import { filterByFields, filterByQueryParams } from '../../helpers/query/FilterHelper';
+import { paginate } from '../../helpers/query/PaginationHelper';
+import { sortByFields } from '../../helpers/query/SorterHelper';
 
 export const getServerLogs = asyncHandler(async (req, res) => {
   const realUrl = req.url;

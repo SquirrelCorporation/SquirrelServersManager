@@ -20,4 +20,32 @@ const transport = pino.transport({
   ],
 });
 
+export const httpLoggerOptions = {
+  // Define a custom logger level
+  customLogLevel: function (req, res, err) {
+    if (res.statusCode >= 400 && res.statusCode < 500) {
+      return 'warn';
+    } else if (res.statusCode >= 500 || err) {
+      return 'error';
+    } else if (res.statusCode >= 300 && res.statusCode < 400) {
+      return 'silent';
+    }
+    return 'info';
+  },
+  // Define a custom success message
+  customSuccessMessage: function (req, res) {
+    return `${req.method} completed ${(req as typeof req & { originalUrl: string }).originalUrl}`;
+  },
+
+  // Define a custom receive message
+  customReceivedMessage: function (req, res) {
+    return `request received: ${req.method} - ${req.url}`;
+  },
+
+  // Define a custom error message
+  customErrorMessage: function (req, res, err) {
+    return 'request errored with status code: ' + res.statusCode;
+  },
+};
+
 export default pino(transport);

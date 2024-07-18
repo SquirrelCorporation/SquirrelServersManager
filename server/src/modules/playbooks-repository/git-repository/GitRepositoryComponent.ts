@@ -11,7 +11,7 @@ import {
   clone,
   commitAndSync,
   forcePull,
-} from './lib';
+} from '../../../helpers/git';
 
 class GitRepositoryComponent extends PlaybooksRepositoryComponent implements AbstractComponent {
   private readonly options: IInitGitOptionsSyncImmediately;

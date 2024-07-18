@@ -4,9 +4,9 @@ import { BadRequestError, InternalError, NotFoundError } from '../../middlewares
 import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import ContainerRepo from '../../data/database/repository/ContainerRepo';
 import asyncHandler from '../../middlewares/AsyncHandler';
-import { filterByFields, filterByQueryParams } from '../../helpers/FilterHelper';
-import { paginate } from '../../helpers/PaginationHelper';
-import { sortByFields } from '../../helpers/SorterHelper';
+import { filterByFields, filterByQueryParams } from '../../helpers/query/FilterHelper';
+import { paginate } from '../../helpers/query/PaginationHelper';
+import { sortByFields } from '../../helpers/query/SorterHelper';
 import WatcherEngine from '../../modules/docker/core/WatcherEngine';
 import ContainerUseCases from '../../use-cases/ContainerUseCases';
 
