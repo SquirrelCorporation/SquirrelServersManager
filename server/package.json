@@ -85,7 +85,6 @@
     "vitest": "^2.0.3",
     "supertest": "^7.0.0",
     "mongodb-memory-server": "^9.4.1",
-    "redis-memory-server": "^0.11.0",
     "@types/supertest": "^6.0.2"
   }
 }

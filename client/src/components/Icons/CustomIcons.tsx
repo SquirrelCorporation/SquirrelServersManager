@@ -873,3 +873,43 @@ const FluentMdl2FileTemplateSvg = (props: any) => (
 export const FluentMdl2FileTemplate = (
   props: Partial<CustomIconComponentProps>,
 ) => <Icon component={FluentMdl2FileTemplateSvg} {...props} />;
+
+const TdesignNotificationSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="2em"
+    height="2em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M4 8a8 8 0 1 1 16 0v4.697l2 3V20h-5.611a4.502 4.502 0 0 1-8.777 0H2v-4.303l2-3V8Zm5.708 12a2.5 2.5 0 0 0 4.584 0H9.708ZM12 2a6 6 0 0 0-6 6v5.303l-2 3V18h16v-1.697l-2-3V8a6 6 0 0 0-6-6Z"
+    />
+  </svg>
+);
+
+export const TdesignNotification = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={TdesignNotificationSvg} {...props} />;
+
+const PajamasErrorSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 16 16"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M8 14.5a6.5 6.5 0 1 0 0-13a6.5 6.5 0 0 0 0 13ZM8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16Zm1-5a1 1 0 1 1-2 0a1 1 0 0 1 2 0Zm-.25-6.25a.75.75 0 0 0-1.5 0v3.5a.75.75 0 0 0 1.5 0v-3.5Z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+
+export const PajamasError = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={PajamasErrorSvg} {...props} />
+);

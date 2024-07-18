@@ -214,3 +214,42 @@ ol {
     transform: scale(1);
   }
 }
+
+
+.svg-small-wiggle-anim {
+  animation-play-state: paused;
+  animation-name: wiggle;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-fill-mode: none;
+}
+
+.svg-small-wiggle-anim:hover {
+  animation-play-state: running;
+}
+
+/* Keyframes */
+@keyframes wiggle {
+  0%, 7% {
+    transform: rotateZ(0);
+  }
+  15% {
+    transform: rotateZ(-15deg);
+  }
+  20% {
+    transform: rotateZ(10deg);
+  }
+  25% {
+    transform: rotateZ(-10deg);
+  }
+  30% {
+    transform: rotateZ(6deg);
+  }
+  35% {
+    transform: rotateZ(-4deg);
+  }
+  40%, 100% {
+    transform: rotateZ(0);
+  }
+}
