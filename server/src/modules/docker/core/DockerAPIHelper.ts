@@ -3,7 +3,7 @@ import { ConnectConfig } from 'ssh2';
 import { SsmAnsible } from 'ssm-shared-lib';
 import Device from '../../../data/database/model/Device';
 import DeviceAuth from '../../../data/database/model/DeviceAuth';
-import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../ansible-vault/vault';
+import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../ansible-vault/ansible-vault';
 
 const SSHType = SsmAnsible.SSHType;
 

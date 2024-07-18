@@ -13,7 +13,6 @@
   "version": "0.1.15",
   "author": "Squirrel Team",
   "dependencies": {
-    "ansible-vault": "^1.1.1",
     "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",

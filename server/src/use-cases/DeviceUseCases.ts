@@ -12,7 +12,7 @@ import DeviceRepo from '../data/database/repository/DeviceRepo';
 import DeviceStatRepo from '../data/database/repository/DeviceStatRepo';
 import PlaybookRepo from '../data/database/repository/PlaybookRepo';
 import PinoLogger from '../logger';
-import { DEFAULT_VAULT_ID, vaultEncrypt } from '../modules/ansible-vault/vault';
+import { DEFAULT_VAULT_ID, vaultEncrypt } from '../modules/ansible-vault/ansible-vault';
 import Inventory from '../modules/ansible/utils/InventoryTransformer';
 import { getCustomAgent } from '../modules/docker/core/CustomAgent';
 import DockerAPIHelper from '../modules/docker/core/DockerAPIHelper';

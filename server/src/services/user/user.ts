@@ -2,7 +2,7 @@ import { SettingsKeys } from 'ssm-shared-lib';
 import { AuthFailureError } from '../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import { createADefaultLocalUserRepository } from '../../core/startup';
-import { getAnsibleVersion } from '../../core/system/version';
+import { getAnsibleRunnerVersion, getAnsibleVersion } from '../../core/system/ansible-versions';
 import { Role } from '../../data/database/model/User';
 import UserRepo from '../../data/database/repository/UserRepo';
 import { getIntConfFromCache } from '../../data/cache';
@@ -86,6 +86,7 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
         deps: dependencies,
         processes: process.versions,
         ansibleVersion: await getAnsibleVersion(),
+        ansibleRunnerVersion: await getAnsibleRunnerVersion(),
       },
     },
   }).send(res);
