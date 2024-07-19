@@ -26,6 +26,7 @@
 
 **Merged pull requests:**
 
+- Bump the npm\_and\_yarn group in /client with 6 updates [\#127](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/127) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Internal ansible vault package [\#126](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/126) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Publish proxy image to ghcr [\#125](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/125) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[TEST\] Refactor project structure and update package dependencies [\#124](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/124) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
