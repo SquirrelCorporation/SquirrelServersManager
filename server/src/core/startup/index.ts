@@ -1,100 +1,59 @@
-import { Playbooks, SettingsKeys } from 'ssm-shared-lib';
+import { SettingsKeys } from 'ssm-shared-lib';
 import { getFromCache } from '../../data/cache';
 import initRedisValues from '../../data/cache/defaults';
 import { PlaybookModel } from '../../data/database/model/Playbook';
-import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
-import UserRepo from '../../data/database/repository/UserRepo';
 import PinoLogger from '../../logger';
 import AutomationEngine from '../../modules/automations/AutomationEngine';
 import Crons from '../../modules/crons';
 import WatcherEngine from '../../modules/docker/core/WatcherEngine';
 import providerConf from '../../modules/docker/registries/providers/provider.conf';
+import NotificationComponent from '../../modules/notifications/NotificationComponent';
+import { createADefaultLocalUserRepository } from '../../modules/playbooks-repository/default-repositories';
 import PlaybooksRepositoryEngine from '../../modules/playbooks-repository/PlaybooksRepositoryEngine';
-import Shell from '../../modules/shell';
 import ContainerRegistryUseCases from '../../use-cases/ContainerRegistryUseCases';
 import DeviceAuthUseCases from '../../use-cases/DeviceAuthUseCases';
 import { setAnsibleVersions } from '../system/ansible-versions';
 
-const logger = PinoLogger.child({ module: 'Startup' }, { msgPrefix: '[STARTUP] - ' });
+class Startup {
+  private logger = PinoLogger.child({ module: 'Startup' }, { msgPrefix: '[STARTUP] - ' });
 
-const corePlaybooksRepository = {
-  name: 'ssm-core',
-  uuid: '00000000-0000-0000-0000-000000000000',
-  enabled: true,
-  type: Playbooks.PlaybooksRepositoryType.LOCAL,
-  directory: '/server/src/ansible/00000000-0000-0000-0000-000000000000',
-  default: true,
-};
+  async init() {
+    const version = await getFromCache(SettingsKeys.GeneralSettingsKeys.SCHEME_VERSION);
+    this.logger.info(`initialization`);
+    this.logger.info(`initialization - Scheme Version: ${version}`);
 
-const toolsPlaybooksRepository = {
-  name: 'ssm-tools',
-  uuid: '00000000-0000-0000-0000-000000000001',
-  enabled: true,
-  type: Playbooks.PlaybooksRepositoryType.LOCAL,
-  directory: '/server/src/ansible/00000000-0000-0000-0000-000000000001',
-  default: true,
-};
-
-async function init() {
-  const version = await getFromCache(SettingsKeys.GeneralSettingsKeys.SCHEME_VERSION);
-  logger.info(`initialization`);
-  logger.info(`initialization - Scheme Version: ${version}`);
-
-  await PlaybooksRepositoryRepo.updateOrCreate(corePlaybooksRepository);
-  await PlaybooksRepositoryRepo.updateOrCreate(toolsPlaybooksRepository);
-  try {
+    // Must be called first
+    void DeviceAuthUseCases.saveAllDeviceAuthSshKeys();
+    // Sync to prevent empty UI.
     await PlaybooksRepositoryEngine.init();
-  } catch (error) {
-    logger.fatal(
-      'Error during PlaybooksRepositoryEngine initialization, your system may not be stable',
-    );
-    logger.fatal(error);
-  }
-  void DeviceAuthUseCases.saveAllDeviceAuthSshKeys();
-  void Crons.initScheduledJobs();
-  void WatcherEngine.init();
-  void AutomationEngine.init();
+    // the rest
+    void NotificationComponent.init();
+    void Crons.initScheduledJobs();
+    void WatcherEngine.init();
+    void AutomationEngine.init();
 
-  if (version !== SettingsKeys.DefaultValue.SCHEME_VERSION) {
-    await migrate();
-    await createADefaultLocalUserRepository();
-    logger.warn(`Scheme version differed, starting writing updates`);
-    await initRedisValues();
-    void setAnsibleVersions();
-    await PlaybooksRepositoryEngine.syncAllRegistered();
-    providerConf
-      .filter(({ persist }) => persist)
-      .map((e) => {
-        ContainerRegistryUseCases.addIfNotExists(e);
-      });
+    if (version !== SettingsKeys.DefaultValue.SCHEME_VERSION) {
+      await this.migrate();
+      await createADefaultLocalUserRepository();
+      this.logger.warn(`Scheme version differed, starting writing updates`);
+      await initRedisValues();
+      void setAnsibleVersions();
+      await PlaybooksRepositoryEngine.syncAllRegistered();
+      providerConf
+        .filter(({ persist }) => persist)
+        .map((e) => {
+          ContainerRegistryUseCases.addIfNotExists(e);
+        });
+    }
   }
-}
 
-async function migrate() {
-  try {
-    await PlaybookModel.syncIndexes();
-  } catch (error: any) {
-    logger.error(error);
-  }
-}
-
-export async function createADefaultLocalUserRepository() {
-  const user = await UserRepo.findFirst();
-  if (user) {
-    const userPlaybooksRepository = {
-      name: user?.email.trim().split('@')[0] || 'user-default',
-      enabled: true,
-      type: Playbooks.PlaybooksRepositoryType.LOCAL,
-      directory: '/playbooks/00000000-0000-0000-0000-000000000002',
-      uuid: '00000000-0000-0000-0000-000000000002',
-    };
-    await PlaybooksRepositoryRepo.updateOrCreate(userPlaybooksRepository);
+  private async migrate() {
     try {
-      Shell.FileSystemManager.createDirectory(userPlaybooksRepository.directory);
-    } catch (error: any) {}
+      await PlaybookModel.syncIndexes();
+    } catch (error: any) {
+      this.logger.error(error);
+    }
   }
 }
 
-export default {
-  init,
-};
+export default new Startup();

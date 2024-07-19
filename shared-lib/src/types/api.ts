@@ -27,8 +27,6 @@ export type CurrentUser = {
   name?: string;
   avatar?: string;
   email?: string;
-  notifyCount?: number;
-  unreadCount?: number;
   access?: string;
   systemPerformance: UserSystemPerformance;
   devices?: {
@@ -653,4 +651,15 @@ export type Automation = {
   lastExecutionStatus: 'failed' | 'success';
   lastExecutionTime: Date;
   enabled: boolean;
+}
+
+export type InAppNotification = {
+  message: string;
+  severity: 'info' | 'warning' | 'error';
+  event: string;
+  module: string;
+  moduleId?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  seen: boolean;
 }

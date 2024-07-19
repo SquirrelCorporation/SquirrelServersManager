@@ -6,6 +6,7 @@ import { DEFAULT_VAULT_ID, vaultDecrypt } from '../ansible-vault/ansible-vault';
 import GitRepositoryComponent from './git-repository/GitRepositoryComponent';
 import LocalRepositoryComponent from './local-repository/LocalRepositoryComponent';
 import { AbstractComponent } from './PlaybooksRepositoryComponent';
+import { saveSSMDefaultPlaybooksRepositories } from './default-repositories';
 
 const logger = PinoLogger.child(
   { module: 'PlaybooksRepositoryEngine' },
@@ -109,7 +110,15 @@ async function clone(uuid: string) {
 }
 
 async function init() {
-  await registerRepositories();
+  await saveSSMDefaultPlaybooksRepositories();
+  try {
+    await registerRepositories();
+  } catch (error) {
+    logger.fatal(
+      'Error during PlaybooksRepositoryEngine initialization, your system may not be stable',
+    );
+    logger.fatal(error);
+  }
 }
 
 async function syncAllRegistered() {
