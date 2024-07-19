@@ -13,7 +13,7 @@ import PlaybooksRepositoryEngine from '../../modules/playbooks-repository/Playbo
 import Shell from '../../modules/shell';
 import ContainerRegistryUseCases from '../../use-cases/ContainerRegistryUseCases';
 import DeviceAuthUseCases from '../../use-cases/DeviceAuthUseCases';
-import { setAnsibleVersion } from '../system/version';
+import { setAnsibleVersions } from '../system/ansible-versions';
 
 const logger = PinoLogger.child({ module: 'Startup' }, { msgPrefix: '[STARTUP] - ' });
 
@@ -60,7 +60,7 @@ async function init() {
     await createADefaultLocalUserRepository();
     logger.warn(`Scheme version differed, starting writing updates`);
     await initRedisValues();
-    void setAnsibleVersion();
+    void setAnsibleVersions();
     await PlaybooksRepositoryEngine.syncAllRegistered();
     providerConf
       .filter(({ persist }) => persist)

@@ -12,7 +12,7 @@ import asyncHandler from '../../middlewares/AsyncHandler';
 import { filterByFields, filterByQueryParams } from '../../helpers/query/FilterHelper';
 import { paginate } from '../../helpers/query/PaginationHelper';
 import { sortByFields } from '../../helpers/query/SorterHelper';
-import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../modules/ansible-vault/vault';
+import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../modules/ansible-vault/ansible-vault';
 import WatcherEngine from '../../modules/docker/core/WatcherEngine';
 import Shell from '../../modules/shell';
 import DeviceUseCases from '../../use-cases/DeviceUseCases';

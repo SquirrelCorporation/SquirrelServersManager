@@ -2,7 +2,7 @@ import { Playbooks } from 'ssm-shared-lib';
 import PlaybooksRepository from '../../data/database/model/PlaybooksRepository';
 import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
 import PinoLogger from '../../logger';
-import { DEFAULT_VAULT_ID, vaultDecrypt } from '../ansible-vault/vault';
+import { DEFAULT_VAULT_ID, vaultDecrypt } from '../ansible-vault/ansible-vault';
 import GitRepositoryComponent from './git-repository/GitRepositoryComponent';
 import LocalRepositoryComponent from './local-repository/LocalRepositoryComponent';
 import { AbstractComponent } from './PlaybooksRepositoryComponent';

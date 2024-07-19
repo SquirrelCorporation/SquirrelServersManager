@@ -92,6 +92,15 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
     }
   }
 
+  async getAnsibleRunnerVersion() {
+    try {
+      this.logger.info('getAnsibleRunnerVersion - Starting...');
+      return shell.exec('ansible-runner --version').toString();
+    } catch (error) {
+      this.logger.error('[SHELL]- - getAnsibleRunnerVersion');
+    }
+  }
+
   async installAnsibleGalaxyCollection(name: string, namespace: string) {
     try {
       this.logger.info('installAnsibleGalaxyCollection Starting...');

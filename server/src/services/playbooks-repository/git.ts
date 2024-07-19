@@ -3,7 +3,7 @@ import { NotFoundError } from '../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
 import asyncHandler from '../../middlewares/AsyncHandler';
-import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../modules/ansible-vault/vault';
+import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../modules/ansible-vault/ansible-vault';
 import GitRepositoryComponent from '../../modules/playbooks-repository/git-repository/GitRepositoryComponent';
 import PlaybooksRepositoryEngine from '../../modules/playbooks-repository/PlaybooksRepositoryEngine';
 import GitRepositoryUseCases from '../../use-cases/GitRepositoryUseCases';

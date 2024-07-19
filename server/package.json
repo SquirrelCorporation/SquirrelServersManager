@@ -7,13 +7,12 @@
     "dev": "pwd && nodemon",
     "start": "npm run build-shared && npm run build && cross-env NODE_ENV=production node dist/index.js",
     "build": "tsc",
-    "test": "NODE_ENV=test vitest --disable-console-intercept --reporter=basic ",
-    "coverage": "NODE_ENV=test vitest run --coverage"
+    "test": "vitest --disable-console-intercept --reporter=basic ",
+    "coverage": "vitest run --coverage"
   },
   "version": "0.1.15",
   "author": "Squirrel Team",
   "dependencies": {
-    "ansible-vault": "^1.1.1",
     "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",
@@ -41,10 +40,10 @@
     "pino-pretty": "^11.2.1",
     "redis": "^4.6.15",
     "rewire": "^7.0.0",
-    "semver": "^7.6.2",
+    "semver": "^7.6.3",
     "shelljs": "^0.8.5",
     "ssm-shared-lib": "file:../shared-lib/",
-    "@aws-sdk/client-ecr": "^3.614.0",
+    "@aws-sdk/client-ecr": "^3.616.0",
     "dugite": "^2.7.1",
     "fs-extra": "^11.2.0",
     "isomorphic-git": "^1.27.1",
@@ -84,7 +83,7 @@
     "typescript": "^5.5.3",
     "vitest": "^2.0.3",
     "supertest": "^7.0.0",
-    "mongodb-memory-server": "^9.4.1",
+    "mongodb-memory-server": "^10.0.0",
     "@types/supertest": "^6.0.2"
   }
 }
