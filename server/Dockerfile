@@ -23,7 +23,7 @@ FROM base AS production
 ENV NODE_ENV=production
 WORKDIR /server
 COPY . .
-RUN npm install --verbose --no-audit
+RUN npm ci --verbose --no-audit
 RUN npm run build
 CMD ["node", "./dist/src/index.js"]
 
@@ -31,5 +31,5 @@ FROM base AS dev
 ENV NODE_ENV=development
 WORKDIR /server
 COPY ./nodemon.json .
-RUN npm install -g nodemon && npm install --verbose --no-audit
+RUN npm install -g nodemon && npm ci --verbose --no-audit
 CMD ["npm", "run", "dev"]
