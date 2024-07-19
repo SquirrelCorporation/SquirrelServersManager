@@ -26,6 +26,8 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Internal ansible vault package [\#126](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/126) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Publish proxy image to ghcr [\#125](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/125) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[TEST\] Refactor project structure and update package dependencies [\#124](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/124) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Automations documentation, refresh website [\#122](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/122) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Update site [\#121](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/121) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
