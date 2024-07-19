@@ -24,6 +24,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: ${{github.workspace}}/server/package-lock.json
     - name: Install
       working-directory: ./shared-lib
       run: npm ci
