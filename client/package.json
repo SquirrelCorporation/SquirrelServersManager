@@ -46,6 +46,9 @@
     "last 2 versions",
     "not ie <= 10"
   ],
+  "overrides": {
+    "immer": "^10.1.1"
+  },
   "dependencies": {
     "ssm-shared-lib": "file:../shared-lib/",
     "antd": "^5.19.1",

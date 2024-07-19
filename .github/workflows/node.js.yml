@@ -1,7 +1,7 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: Node.js CI
+name: CI Test
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [22.x]
+        node-version: [22.3.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
     - uses: actions/checkout@v4
@@ -23,15 +23,17 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: ${{github.workspace}}/server/package-lock.json
     - name: Install
       working-directory: ./shared-lib
-      run: npm install
+      run: npm ci
     - name: Build
       working-directory: ./shared-lib
       run: npm run build --if-present
     - name: Install
       working-directory: ./server
-      run: npm install
+      run: npm ci
     - name: Build
       working-directory: ./server
       run: npm run build --if-present

@@ -5,7 +5,7 @@ import DeviceAuth from '../../data/database/model/DeviceAuth';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
 import asyncHandler from '../../middlewares/AsyncHandler';
-import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../modules/ansible-vault/vault';
+import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../modules/ansible-vault/ansible-vault';
 import WatcherEngine from '../../modules/docker/core/WatcherEngine';
 import Shell from '../../modules/shell';
 
