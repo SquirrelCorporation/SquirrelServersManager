@@ -1,4 +1,4 @@
-FROM node:22-alpine as base
+FROM node:22.4.1-alpine AS base
 LABEL org.opencontainers.image.source=https://github.com/SquirrelCorporation/SquirrelServersManager
 LABEL org.opencontainers.image.description="SSM Server"
 LABEL org.opencontainers.image.licenses="GNU AFFERO GENERAL PUBLIC LICENSE"
@@ -19,7 +19,7 @@ RUN npm run build
 WORKDIR /client
 EXPOSE 3000
 
-FROM base as production
+FROM base AS production
 ENV NODE_ENV=production
 WORKDIR /server
 COPY . .
@@ -27,7 +27,7 @@ RUN npm install --verbose --no-audit
 RUN npm run build
 CMD ["node", "./dist/src/index.js"]
 
-FROM base as dev
+FROM base AS dev
 ENV NODE_ENV=development
 WORKDIR /server
 COPY ./nodemon.json .
