@@ -111,7 +111,7 @@
     "swagger-ui-dist": "^5.17.14",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3",
-    "eslint-plugin-react": "^7.34.3",
+    "eslint-plugin-react": "^7.35.0",
     "@typescript-eslint/eslint-plugin": "^7.16.0",
     "eslint-plugin-jest": "^28.6.0",
     "eslint-plugin-react-hooks": "^4.6.2"
