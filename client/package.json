@@ -71,7 +71,7 @@
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
     "react-terminal": "^1.4.4",
-    "dayjs": "^1.11.11",
+    "dayjs": "^1.11.12",
     "@dotlottie/react-player": "^1.6.19",
     "rc-banner-anim": "^2.4.5",
     "rc-queue-anim": "^2.0.0",
