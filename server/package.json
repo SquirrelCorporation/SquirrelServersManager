@@ -34,7 +34,7 @@
     "passport-http": "^0.3.0",
     "passport-http-bearer": "^1.0.1",
     "passport-jwt": "^4.0.1",
-    "pino": "^9.3.1",
+    "pino": "^9.3.2",
     "pino-http": "^10.2.0",
     "pino-mongodb": "^4.3.0",
     "pino-pretty": "^11.2.1",
