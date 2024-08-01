@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "ssm-shared-lib": "file:../shared-lib/",
-    "antd": "^5.19.1",
+    "antd": "^5.19.3",
     "@ant-design/icons": "^5.3.7",
     "@ant-design/pro-components": "^2.7.10",
     "@ant-design/use-emotion-css": "1.0.4",
