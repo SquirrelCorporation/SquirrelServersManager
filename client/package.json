@@ -78,7 +78,7 @@
     "rc-tween-one": "^3.0.6",
     "react-confetti": "^6.1.0",
     "@monaco-editor/react": "^4.6.0",
-    "monaco-yaml": "^5.2.1",
+    "monaco-yaml": "^5.2.2",
     "monaco-editor-webpack-plugin": "^7.1.0",
     "react-js-cron": "^5.0.1",
     "monaco-languageserver-types": "^0.4.0",
