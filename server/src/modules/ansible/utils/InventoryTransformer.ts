@@ -83,6 +83,7 @@ function getAuth(deviceAuth: Partial<DeviceAuth>): Auth {
 interface ConnectionVars {
   ansible_connection: string;
   ansible_become_method: any;
+  ansible_become_user?: string;
   ansible_become_pass: { __ansible_vault: any };
   ansible_ssh_host_key_checking: boolean;
   ansible_user?: string;
@@ -94,6 +95,7 @@ function getInventoryConnectionVars(deviceAuth: Partial<DeviceAuth>): Connection
   const vars: ConnectionVars = {
     ansible_connection: 'paramiko',
     ansible_become_method: deviceAuth.becomeMethod,
+    ansible_become_user: deviceAuth.becomeUser,
     ansible_become_pass: { __ansible_vault: deviceAuth.becomePass },
     ansible_ssh_host_key_checking: !!deviceAuth.strictHostKeyChecking,
     ansible_user: deviceAuth.sshUser,
