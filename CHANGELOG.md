@@ -26,6 +26,9 @@
 
 **Merged pull requests:**
 
+- Bump pino-pretty from 11.2.1 to 11.2.2 in /server [\#143](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/143) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump pino from 9.3.1 to 9.3.2 in /server [\#142](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/142) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @types/dockerode from 3.3.30 to 3.3.31 in /server [\#141](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/141) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Replace npm install with npm ci in Dockerfiles [\#128](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/128) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump the npm\_and\_yarn group in /client with 6 updates [\#127](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/127) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Internal ansible vault package [\#126](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/126) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
