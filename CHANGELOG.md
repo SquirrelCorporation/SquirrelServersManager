@@ -4,8 +4,14 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.16...HEAD)
 
+**Closed issues:**
+
+- Cannot run any playbook due to a `ValueError("Invalid padding bytes.")` [\#110](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/110)
+- \[CHORE\] Provide a pre-build container for NGINX 🧹 [\#102](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/102)
+
 **Merged pull requests:**
 
+- Switch proxy service to use prebuilt Docker image [\#146](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/146) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update package dependencies [\#145](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/145) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.16](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.16) (2024-08-02)
