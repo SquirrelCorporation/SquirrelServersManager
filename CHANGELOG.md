@@ -1,13 +1,5 @@
 # Changelog
 
-## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
-
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.16...HEAD)
-
-**Merged pull requests:**
-
-- \[CHORE\] Reorder Dockerfile COPY commands for consistency [\#151](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/151) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-
 ## [v0.1.16](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.16) (2024-08-02)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.15...v0.1.16)
@@ -39,6 +31,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Reorder Dockerfile COPY commands for consistency [\#151](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/151) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor container deletion and enable code splitting [\#148](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/148) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update container status handling for unreachable state [\#147](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/147) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Switch proxy service to use prebuilt Docker image [\#146](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/146) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
