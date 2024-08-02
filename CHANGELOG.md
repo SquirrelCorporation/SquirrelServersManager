@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.16...HEAD)
+
+**Merged pull requests:**
+
+- \[CHORE\] Reorder Dockerfile COPY commands for consistency [\#151](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/151) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 ## [v0.1.16](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.16) (2024-08-02)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.15...v0.1.16)
