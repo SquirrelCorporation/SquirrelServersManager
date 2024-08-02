@@ -24,6 +24,7 @@
 
 **Closed issues:**
 
+- No need for custom nginx image [\#150](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/150)
 - Cannot run any playbook due to a `ValueError("Invalid padding bytes.")` [\#110](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/110)
 - \[CHORE\] Provide a pre-build container for NGINX 🧹 [\#102](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/102)
 - \[Question\] Is RAM percentage displayed on dashboard based on available or free RAM [\#100](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/100)
