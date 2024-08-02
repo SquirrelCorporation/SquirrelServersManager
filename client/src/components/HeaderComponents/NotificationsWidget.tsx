@@ -6,9 +6,13 @@ import {
   getAllNotifications,
   markAsAllSeen,
 } from '@/services/rest/notifications';
-import { CloseOutlined, InfoCircleFilled } from '@ant-design/icons';
+import {
+  CheckSquareOutlined,
+  CloseOutlined,
+  InfoCircleFilled,
+} from '@ant-design/icons';
 import { ActionType, ProList } from '@ant-design/pro-components';
-import { Avatar, Badge, Popover, Tag, Typography } from 'antd';
+import { Avatar, Badge, Popover, Tag, Tooltip, Typography } from 'antd';
 import moment from 'moment';
 import React, { useRef, useState } from 'react';
 import { API } from 'ssm-shared-lib';
@@ -53,6 +57,7 @@ const NotificationsWidget: React.FC = () => {
             ghost={true}
             size={'small'}
             style={{
+              marginTop: '-15px',
               width: '500px',
               maxHeight: '400px',
               overflowY: 'scroll',
@@ -65,10 +70,12 @@ const NotificationsWidget: React.FC = () => {
             toolBarRender={() => {
               return [
                 <a key="1" type="primary" onClick={handleMarkAllSeen}>
-                  Mark all as read
+                  <Tooltip title={'Mark all as read'}>
+                    <CheckSquareOutlined />
+                  </Tooltip>
                 </a>,
                 <a key="2" onClick={hide}>
-                  Close
+                  <CloseOutlined />
                 </a>,
               ];
             }}

@@ -46,7 +46,7 @@ abstract class AbstractActionComponent extends EventManager {
     await AutomationRepo.setLastExecutionStatus(automation, 'failed');
     this.childLogger.error('Automation failed');
     this.emit(Events.AUTOMATION_FAILED, {
-      message: optionalMessage || `Automation "${this.moduleName}" failed`,
+      message: optionalMessage || `The automation "${this.moduleName}" failed`,
       severity: 'error',
       module: this.module,
       moduleId: this.automationUuid,
