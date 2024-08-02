@@ -20,7 +20,7 @@ env:
 
 jobs:
   build-and-publish-server:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -71,7 +71,7 @@ jobs:
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
         id: build-and-push
-        uses: docker/build-push-action@v5 
+        uses: docker/build-push-action@v6 
         with:
           context: ./server
           build-contexts: |
@@ -103,7 +103,7 @@ jobs:
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
         
   build-and-publish-client:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -154,7 +154,9 @@ jobs:
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
         id: build-and-push
-        uses: docker/build-push-action@v5 
+        uses: docker/build-push-action@v6
+        env:
+          BUILDKIT_PROGRESS: tty
         with:
           context: ./client
           build-contexts: |
@@ -183,7 +185,7 @@ jobs:
         # against the sigstore community Fulcio instance.
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
   build-and-publish-proxy:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
