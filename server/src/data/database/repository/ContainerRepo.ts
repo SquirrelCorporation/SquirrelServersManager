@@ -62,6 +62,10 @@ async function count() {
   return await ContainerModel.countDocuments().exec();
 }
 
+async function updateStatusByWatcher(watcher: string, status: string) {
+  await ContainerModel.updateMany({ watcher: watcher }, { status: status }).exec();
+}
+
 export default {
   findContainerById,
   findContainersByWatcher,
@@ -72,4 +76,5 @@ export default {
   countByDeviceId,
   countByStatus,
   count,
+  updateStatusByWatcher,
 };

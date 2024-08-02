@@ -7,5 +7,6 @@ export enum DeviceStatus {
 
 export enum ContainerStatus {
   RUNNING = 'running',
-  PAUSED = 'paused'
+  PAUSED = 'paused',
+  UNREACHABLE = 'unreachable'
 }
