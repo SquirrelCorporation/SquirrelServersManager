@@ -10,7 +10,7 @@
     "test": "vitest --disable-console-intercept --reporter=basic ",
     "coverage": "vitest run --coverage"
   },
-  "version": "0.1.15",
+  "version": "0.1.17",
   "author": "Squirrel Team",
   "dependencies": {
     "axios": "^1.7.3",
