@@ -1,21 +1,5 @@
 # Changelog
 
-## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
-
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.16...HEAD)
-
-**Closed issues:**
-
-- Cannot run any playbook due to a `ValueError("Invalid padding bytes.")` [\#110](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/110)
-- \[CHORE\] Provide a pre-build container for NGINX 🧹 [\#102](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/102)
-
-**Merged pull requests:**
-
-- \[CHORE\] Refactor container deletion and enable code splitting [\#148](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/148) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Update container status handling for unreachable state [\#147](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/147) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- Switch proxy service to use prebuilt Docker image [\#146](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/146) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Update package dependencies [\#145](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/145) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-
 ## [v0.1.16](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.16) (2024-08-02)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.15...v0.1.16)
@@ -40,10 +24,16 @@
 
 **Closed issues:**
 
+- Cannot run any playbook due to a `ValueError("Invalid padding bytes.")` [\#110](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/110)
+- \[CHORE\] Provide a pre-build container for NGINX 🧹 [\#102](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/102)
 - \[Question\] Is RAM percentage displayed on dashboard based on available or free RAM [\#100](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/100)
 
 **Merged pull requests:**
 
+- \[CHORE\] Refactor container deletion and enable code splitting [\#148](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/148) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update container status handling for unreachable state [\#147](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/147) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Switch proxy service to use prebuilt Docker image [\#146](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/146) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update package dependencies [\#145](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/145) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump the npm\_and\_yarn group in /server with 3 updates [\#144](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/144) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump pino-pretty from 11.2.1 to 11.2.2 in /server [\#143](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/143) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump pino from 9.3.1 to 9.3.2 in /server [\#142](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/142) ([dependabot[bot]](https://github.com/apps/dependabot))
