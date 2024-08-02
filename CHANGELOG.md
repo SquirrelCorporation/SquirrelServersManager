@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.16...HEAD)
+
+**Merged pull requests:**
+
+- \[CHORE\] Update package dependencies [\#145](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/145) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 ## [v0.1.16](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.16) (2024-08-02)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.15...v0.1.16)
@@ -40,20 +48,20 @@
 - Bump eslint-plugin-prettier from 5.1.3 to 5.2.1 in /server [\#132](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/132) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 22.4.1-alpine to 22.5.1-alpine in /server [\#131](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/131) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 22.4.1-alpine to 22.5.1-alpine in /client [\#130](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/130) ([dependabot[bot]](https://github.com/apps/dependabot))
-- \[CHORE\] Replace npm install with npm ci in Dockerfiles [\#128](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/128) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump the npm\_and\_yarn group in /client with 6 updates [\#127](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/127) ([dependabot[bot]](https://github.com/apps/dependabot))
-- \[CHORE\] Internal ansible vault package [\#126](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/126) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Publish proxy image to ghcr [\#125](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/125) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[DOC\] Update site [\#121](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/121) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Validate domain [\#105](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/105) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Replace npm install with npm ci in Dockerfiles [\#128](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/128) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Internal ansible vault package [\#126](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/126) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[TEST\] Refactor project structure and update package dependencies [\#124](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/124) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add become user field to ConnectionVars [\#123](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/123) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Automations documentation, refresh website [\#122](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/122) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[DOC\] Update site [\#121](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/121) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Sec no funny business [\#115](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/115) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update SCHEME\_VERSION in DefaultValue enum [\#114](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/114) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update multiple package versions [\#113](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/113) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Ensure size coherence across UI by using AntD custom icon component [\#108](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/108) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update loading state in MainChartCard [\#107](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/107) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Validate domain [\#105](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/105) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Standardize and enhance agent installation, reinstallation, and update playbooks [\#103](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/103) ([rtuszik](https://github.com/rtuszik))
 - \[CHORE\] Update various package versions [\#99](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/99) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refacto logger [\#96](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/96) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
