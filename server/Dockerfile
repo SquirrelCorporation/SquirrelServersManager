@@ -22,8 +22,8 @@ EXPOSE 3000
 FROM base AS production
 ENV NODE_ENV=production
 WORKDIR /server
-COPY . .
 RUN npm ci --verbose --no-audit
+COPY . .
 RUN npm run build
 CMD ["node", "./dist/src/index.js"]
 
