@@ -15,7 +15,7 @@ const StatusTag: React.FC<StatusTagProps> = (props: StatusTagProps) => {
       return <Tag color="warning">Paused</Tag>;
     case SsmStatus.ContainerStatus.UNREACHABLE:
       return (
-        <Tag icon={<ExclamationCircleOutlined />} color="default">
+        <Tag icon={<ExclamationCircleOutlined />} color="error">
           Unreachable
         </Tag>
       );
