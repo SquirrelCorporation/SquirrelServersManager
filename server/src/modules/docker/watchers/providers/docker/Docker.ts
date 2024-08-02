@@ -3,6 +3,7 @@ import DockerModem from 'docker-modem';
 import Dockerode, { ContainerInfo } from 'dockerode';
 import CronJob from 'node-cron';
 import parse from 'parse-docker-image-name';
+import { SsmStatus } from 'ssm-shared-lib';
 import Container from '../../../../../data/database/model/Container';
 import ContainerRepo from '../../../../../data/database/repository/ContainerRepo';
 import ContainerStatsRepo from '../../../../../data/database/repository/ContainerStatsRepo';
@@ -329,7 +330,14 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
         listContainersOptions.all = true;
       }
       this.childLogger.info('getContainers - dockerApi.listContainers');
-      const containers = await this.dockerApi.listContainers(listContainersOptions);
+      let containers: any[];
+      try {
+        containers = await this.dockerApi.listContainers(listContainersOptions);
+      } catch (e: any) {
+        this.childLogger.error(`listContainers - error: ${e.message}`);
+        await ContainerRepo.updateStatusByWatcher(this.name, SsmStatus.ContainerStatus.UNREACHABLE);
+        return [];
+      }
       // Filter on containers to watch
       const filteredContainers = containers.filter((container) =>
         isContainerToWatch(container.Labels[Label.wudWatch], this.configuration.watchbydefault),

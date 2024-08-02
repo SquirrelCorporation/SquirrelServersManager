@@ -55,7 +55,7 @@ class PlaybookActionComponent extends AbstractActionComponent {
   };
 
   async waitForResult(execId: string, timeoutCount = 0) {
-    this.childLogger.info(`wait for result ${execId} - ${timeoutCount}`);
+    this.childLogger.info(`wait for result ${execId} - (try: ${timeoutCount}/100)`);
     try {
       if (timeoutCount > 100) {
         this.childLogger.error('Timeout reached for task');
