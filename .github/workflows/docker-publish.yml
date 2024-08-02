@@ -31,7 +31,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+      - name: Get more space
+        run: |
+          df . -h
+          sudo apt-get autoremove -y >/dev/null 2>&1
+          sudo apt-get autoclean -y >/dev/null 2>&1
+          sudo rm -rf ${GITHUB_WORKSPACE}/.git
+          df . -h
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
@@ -80,7 +86,8 @@ jobs:
             NODE_ENV: production
           target: production
           provenance: false
-          no-cache: true
+          cache-from: type=gha,scope=buildkit
+          cache-to: type=gha,mode=max,scope=buildkit
           platforms: linux/amd64,linux/arm64,linux/arm64/v8
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
@@ -113,7 +120,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+      - name: Get more space
+        run: |
+          df . -h
+          sudo apt-get autoremove -y >/dev/null 2>&1
+          sudo apt-get autoclean -y >/dev/null 2>&1
+          sudo rm -rf ${GITHUB_WORKSPACE}/.git
+          df . -h
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
@@ -160,7 +173,8 @@ jobs:
             shared-lib=./shared-lib
           target: production
           provenance: false
-          no-cache: true
+          cache-from: type=gha,scope=buildkit
+          cache-to: type=gha,mode=max,scope=buildkit
           platforms: linux/amd64,linux/arm64,linux/arm64/v8
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
