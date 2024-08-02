@@ -166,7 +166,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=buildkit
-          cache-to: type=gha,mode=max,scope=buildkit
+          cache-to: type=gha,mode=min,scope=buildkit
           outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=Squirrel Servers Manager (SSM) Client ${{ steps.meta.outputs.tags }}
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
