@@ -6,6 +6,7 @@ import {
 import { DevicesHeaderWidget } from '@/components/HeaderComponents/DevicesHeaderWidget';
 import DocumentationWidget from '@/components/HeaderComponents/DocumentationWidget';
 import { HealthWidget } from '@/components/HeaderComponents/HealthWidget';
+import NotificationsWidget from '@/components/HeaderComponents/NotificationsWidget';
 import { currentUser as queryCurrentUser, hasUser } from '@/services/rest/user';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
@@ -80,6 +81,9 @@ export const layout: RunTimeLayoutConfig = ({
       <DocumentationWidget key="doc" />,
       <DevicesHeaderWidget key="online" />,
       <HealthWidget key="health" />,
+      <NotificationsWidget
+        key="notifications"
+      />,
     ],
     avatarProps: {
       src: initialState?.currentUser?.avatar,

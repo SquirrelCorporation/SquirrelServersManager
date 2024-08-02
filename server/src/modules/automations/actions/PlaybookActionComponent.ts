@@ -55,6 +55,7 @@ class PlaybookActionComponent extends AbstractActionComponent {
   };
 
   async waitForResult(execId: string, timeoutCount = 0) {
+    this.childLogger.info(`wait for result ${execId} - ${timeoutCount}`);
     try {
       if (timeoutCount > 100) {
         this.childLogger.error('Timeout reached for task');
@@ -67,19 +68,20 @@ class PlaybookActionComponent extends AbstractActionComponent {
         setTimeout(() => {
           this.waitForResult(execId, timeoutCount + 1);
         }, 5000);
-        return;
-      }
-      const lastExecStatus = execStatuses[execStatuses.length - 1];
-      if (PlaybookActionComponent.isFinalStatus(lastExecStatus.status as string)) {
-        if (lastExecStatus.status === 'successful') {
-          await this.onSuccess();
-        } else {
-          await this.onError();
-        }
       } else {
-        setTimeout(() => {
-          this.waitForResult(execId, timeoutCount + 1);
-        }, 5000);
+        const lastExecStatus = execStatuses[0];
+        this.childLogger.info(`Latest execution status ${lastExecStatus.status}`);
+        if (PlaybookActionComponent.isFinalStatus(lastExecStatus.status as string)) {
+          if (lastExecStatus.status === 'successful') {
+            await this.onSuccess();
+          } else {
+            await this.onError();
+          }
+        } else {
+          setTimeout(() => {
+            this.waitForResult(execId, timeoutCount + 1);
+          }, 5000);
+        }
       }
     } catch (error: any) {
       this.childLogger.error(error);

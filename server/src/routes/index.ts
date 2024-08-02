@@ -9,6 +9,7 @@ import user from './user';
 import settings from './settings';
 import playbooksRepository from './playbooks-repository';
 import automations from './automations';
+import notifications from './notifications';
 
 const router = express.Router();
 
@@ -23,5 +24,6 @@ router.use('/', user);
 router.use('/containers', containers);
 router.use('/playbooks-repository', playbooksRepository);
 router.use('/automations', automations);
+router.use('/notifications', notifications);
 
 export default router;

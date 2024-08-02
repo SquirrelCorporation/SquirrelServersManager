@@ -1,7 +1,7 @@
 import { connection } from './data/database';
 import WatcherEngine from './modules/docker/core/WatcherEngine';
 import logger from './logger';
-import Configuration from './core/startup';
+import Startup from './core/startup';
 import './middlewares/Passport';
 import Crons from './modules/crons';
 import app from './App';
@@ -9,7 +9,7 @@ import app from './App';
 const start = () => {
   logger.info(`Starting server...`);
   connection().then(async () => {
-    await Configuration.init();
+    await Startup.init();
     app.setupRoutes();
     app.startServer();
   });

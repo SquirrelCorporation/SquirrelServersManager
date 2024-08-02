@@ -1,12 +1,13 @@
-import { SettingsKeys } from 'ssm-shared-lib';
+import { API, SettingsKeys } from 'ssm-shared-lib';
+import InAppNotificationRepo from '../../data/database/repository/InAppNotificationRepo';
 import { AuthFailureError } from '../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../middlewares/api/ApiResponse';
-import { createADefaultLocalUserRepository } from '../../core/startup';
 import { getAnsibleRunnerVersion, getAnsibleVersion } from '../../core/system/ansible-versions';
 import { Role } from '../../data/database/model/User';
 import UserRepo from '../../data/database/repository/UserRepo';
 import { getIntConfFromCache } from '../../data/cache';
 import asyncHandler from '../../middlewares/AsyncHandler';
+import { createADefaultLocalUserRepository } from '../../modules/playbooks-repository/default-repositories';
 import DashboardUseCase from '../../use-cases/DashboardUseCase';
 import DeviceUseCases from '../../use-cases/DeviceUseCases';
 import { dependencies, version } from '../../../package.json';
@@ -44,8 +45,6 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
     name: req.user?.name,
     avatar: req.user?.avatar,
     email: req.user?.email,
-    notifyCount: 12,
-    unreadCount: 11,
     access: req.user?.role,
     devices: {
       online: online,
@@ -89,7 +88,7 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
         ansibleRunnerVersion: await getAnsibleRunnerVersion(),
       },
     },
-  }).send(res);
+  } as API.CurrentUser).send(res);
 });
 
 export const createFirstUser = asyncHandler(async (req, res) => {
