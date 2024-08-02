@@ -11,6 +11,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Update container status handling for unreachable state [\#147](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/147) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Switch proxy service to use prebuilt Docker image [\#146](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/146) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update package dependencies [\#145](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/145) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
