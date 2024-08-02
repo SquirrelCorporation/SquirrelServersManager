@@ -71,7 +71,7 @@ jobs:
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
         id: build-and-push
-        uses: docker/build-push-action@v6 
+        uses: docker/build-push-action@v5 
         with:
           context: ./server
           build-contexts: |
@@ -80,6 +80,8 @@ jobs:
             NODE_ENV: production
           target: production
           provenance: false
+          cache-from: type=gha,scope=buildkit
+          cache-to: type=gha,mode=max,scope=buildkit
           platforms: linux/amd64,linux/arm64,linux/arm64/v8
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
@@ -152,13 +154,15 @@ jobs:
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
         id: build-and-push
-        uses: docker/build-push-action@v6 
+        uses: docker/build-push-action@v5 
         with:
           context: ./client
           build-contexts: |
             shared-lib=./shared-lib
           target: production
           provenance: false
+          cache-from: type=gha,scope=buildkit
+          cache-to: type=gha,mode=max,scope=buildkit
           platforms: linux/amd64,linux/arm64,linux/arm64/v8
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
