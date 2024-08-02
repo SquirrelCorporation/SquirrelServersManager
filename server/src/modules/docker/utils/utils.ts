@@ -125,7 +125,7 @@ export function pruneOldContainers(
 ) {
   const containersToRemove = getOldContainers(newContainers, containersFromTheStore);
   containersToRemove.forEach((containerToRemove) => {
-    ContainerRepo.deleteContainerById(containerToRemove.id);
+    void ContainerRepo.deleteContainerById(containerToRemove.id);
   });
 }
 

@@ -129,4 +129,7 @@ export default defineConfig({
     memo.plugin('monaco-editor').use(MonacoEditorWebpackPlugin, []);
     return memo;
   },
+  codeSplitting: {
+    jsStrategy: 'granularChunks',
+  },
 });
