@@ -18,12 +18,12 @@ EXPOSE 8000
 
 FROM base AS production
 ENV NODE_ENV=production
-COPY . .
 RUN npm ci --verbose --no-audit
+COPY . .
 RUN npm run build
 CMD ["npm", "run", "serve"]
 
 FROM base AS dev
-COPY . .
 RUN npm ci --verbose --no-audit
+COPY . .
 CMD ["npm", "run", "start:pre"]
