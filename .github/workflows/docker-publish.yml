@@ -80,8 +80,7 @@ jobs:
             NODE_ENV: production
           target: production
           provenance: false
-          cache-from: type=gha,scope=buildkit
-          cache-to: type=gha,mode=max,scope=buildkit
+          no-cache: true
           platforms: linux/amd64,linux/arm64,linux/arm64/v8
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
@@ -163,8 +162,7 @@ jobs:
             shared-lib=./shared-lib
           target: production
           provenance: false
-          cache-from: type=gha,scope=buildkit
-          cache-to: type=gha,mode=max,scope=buildkit
+          no-cache: true
           platforms: linux/amd64,linux/arm64,linux/arm64/v8
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
