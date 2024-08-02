@@ -20,7 +20,7 @@ env:
 
 jobs:
   build-and-publish-server:
-    runs-on: server3
+    runs-on: macbook
     permissions:
       contents: read
       packages: write
@@ -103,7 +103,7 @@ jobs:
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
         
   build-and-publish-client:
-    runs-on: server3
+    runs-on: macbook
     permissions:
       contents: read
       packages: write
@@ -183,7 +183,7 @@ jobs:
         # against the sigstore community Fulcio instance.
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
   build-and-publish-proxy:
-    runs-on: server3
+    runs-on: macbook
     permissions:
       contents: read
       packages: write
