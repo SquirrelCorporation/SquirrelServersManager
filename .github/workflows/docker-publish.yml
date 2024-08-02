@@ -20,7 +20,7 @@ env:
 
 jobs:
   build-and-publish-server:
-    runs-on: ubuntu-latest
+    runs-on: builder
     permissions:
       contents: read
       packages: write
@@ -116,7 +116,7 @@ jobs:
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
         
   build-and-publish-client:
-    runs-on: ubuntu-latest
+    runs-on: builder
     permissions:
       contents: read
       packages: write
