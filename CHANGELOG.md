@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.16...HEAD)
+
+**Merged pull requests:**
+
+- \[CHORE\] Update Node.js version in client Dockerfile [\#154](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/154) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 ## [v0.1.16](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.16) (2024-08-02)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.15...v0.1.16)
