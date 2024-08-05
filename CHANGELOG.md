@@ -6,8 +6,12 @@
 
 **Merged pull requests:**
 
+- Bump @aws-sdk/client-ecr from 3.622.0 to 3.623.0 in /server [\#161](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/161) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump luxon from 3.4.4 to 3.5.0 in /server [\#160](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/160) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump lint-staged from 15.2.7 to 15.2.8 in /client [\#158](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/158) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint-plugin-jest from 28.6.0 to 28.7.0 in /client [\#157](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/157) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump antd from 5.19.4 to 5.20.0 in /client [\#156](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/156) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[CHORE\] Update package versions to 0.1.17 [\#149](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/149) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.17-alpha.3](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.17-alpha.3) (2024-08-05)
 
