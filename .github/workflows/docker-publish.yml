@@ -20,7 +20,7 @@ env:
 
 jobs:
   build-and-publish-server:
-    runs-on: [server3]
+    runs-on: self-hosted
     permissions:
       contents: read
       packages: write
@@ -102,7 +102,7 @@ jobs:
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
         
   build-and-publish-client:
-    runs-on: [server3]
+    runs-on: self-hosted
     permissions:
       contents: read
       packages: write
