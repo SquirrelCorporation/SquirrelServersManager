@@ -43,7 +43,7 @@
     "semver": "^7.6.3",
     "shelljs": "^0.8.5",
     "ssm-shared-lib": "file:../shared-lib/",
-    "@aws-sdk/client-ecr": "^3.622.0",
+    "@aws-sdk/client-ecr": "^3.623.0",
     "dugite": "^2.7.1",
     "fs-extra": "^11.2.0",
     "isomorphic-git": "^1.27.1",
