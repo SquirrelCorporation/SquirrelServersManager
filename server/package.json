@@ -24,7 +24,7 @@
     "express-validator": "^7.1.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
-    "luxon": "^3.4.4",
+    "luxon": "^3.5.0",
     "mongoose": "^8.5.2",
     "node-cron": "^3.0.3",
     "node-ssh": "^13.2.0",
