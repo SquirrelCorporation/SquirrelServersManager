@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.17-alpha.3...HEAD)
+
+**Merged pull requests:**
+
+- Bump luxon from 3.4.4 to 3.5.0 in /server [\#160](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/160) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v0.1.17-alpha.3](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.17-alpha.3) (2024-08-05)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.17-alpha.2...v0.1.17-alpha.3)
