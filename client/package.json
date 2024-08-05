@@ -112,7 +112,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4",
     "eslint-plugin-react": "^7.35.0",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
     "eslint-plugin-jest": "^28.7.0",
     "eslint-plugin-react-hooks": "^4.6.2"
   },
