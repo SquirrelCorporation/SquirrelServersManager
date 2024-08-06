@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.1.17-alpha.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.17-alpha.7) (2024-08-06)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.17-alpha.6...v0.1.17-alpha.7)
+
 ## [v0.1.17-alpha.6](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.17-alpha.6) (2024-08-06)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.17-alpha.5...v0.1.17-alpha.6)
