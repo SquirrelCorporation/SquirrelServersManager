@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+## [v0.1.17-alpha.4](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.17-alpha.4) (2024-08-06)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.17-alpha.3...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.17-alpha.3...v0.1.17-alpha.4)
 
 **Merged pull requests:**
 
