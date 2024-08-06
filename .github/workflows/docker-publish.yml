@@ -20,7 +20,7 @@ env:
 
 jobs:
   build-and-publish-server:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -85,7 +85,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=Squirrel Servers Manager (SSM) Server ${{ steps.meta.outputs.tags }}
+          outputs: type=image,name=target,"annotation-index.org.opencontainers.image.description=Squirrel Servers Manager (SSM) Server ${{ steps.meta.outputs.tags }}"
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
       # repository is public to avoid leaking data.  If you would like to publish
@@ -102,7 +102,7 @@ jobs:
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
         
   build-and-publish-client:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -165,7 +165,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=Squirrel Servers Manager (SSM) Client ${{ steps.meta.outputs.tags }}
+          outputs: type=image,name=target,"annotation-index.org.opencontainers.image.description=Squirrel Servers Manager (SSM) Client ${{ steps.meta.outputs.tags }}"
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
       # repository is public to avoid leaking data.  If you would like to publish
@@ -242,7 +242,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=buildkit
           cache-to: type=gha,mode=max,scope=buildkit
-          outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=Squirrel Servers Manager (SSM) Proxy ${{ steps.meta.outputs.tags }}
+          outputs: type=image,name=target,"annotation-index.org.opencontainers.image.description=Squirrel Servers Manager (SSM) Proxy ${{ steps.meta.outputs.tags }}"
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
       # repository is public to avoid leaking data.  If you would like to publish
