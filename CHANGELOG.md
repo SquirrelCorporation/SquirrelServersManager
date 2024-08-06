@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.1.17-alpha.5](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.17-alpha.5) (2024-08-06)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.17-alpha.4...v0.1.17-alpha.5)
+
 ## [v0.1.17-alpha.4](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.17-alpha.4) (2024-08-06)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.17-alpha.3...v0.1.17-alpha.4)
@@ -225,15 +229,15 @@
 
 ## [v0.1.10](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.10) (2024-06-07)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.10)
-
-## [v0.1.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.8) (2024-06-06)
-
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.8)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.10)
 
 ## [v0.1.9](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.9) (2024-06-06)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.9)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.9)
+
+## [v0.1.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.8) (2024-06-06)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.8)
 
 ## [v0.1.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.7) (2024-06-06)
 
