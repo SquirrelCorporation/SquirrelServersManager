@@ -11,7 +11,12 @@
 
 **Merged pull requests:**
 
+- Bump @aws-sdk/client-ecr from 3.623.0 to 3.624.0 in /server [\#175](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/175) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump express-validator from 7.1.0 to 7.2.0 in /server [\#174](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/174) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 22.5.1-alpine to 22.6.0-alpine in /server [\#172](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/172) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @umijs/lint from 4.3.11 to 4.3.12 in /client [\#170](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/170) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint-plugin-jest from 28.7.0 to 28.8.0 in /client [\#167](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/167) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 22.5.1-alpine to 22.6.0-alpine in /client [\#166](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/166) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [v0.1.17-alpha.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.17-alpha.7) (2024-08-06)
 
