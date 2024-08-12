@@ -9,6 +9,10 @@
 - \[FEAT\] Advanced features for container management, 'à la ' very know container management soft 🔥 [\#178](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/178)
 - \[FEAT\] Enhanced features for services [\#177](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/177) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
+**Merged pull requests:**
+
+- Bump @umijs/lint from 4.3.11 to 4.3.12 in /client [\#170](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/170) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v0.1.17-alpha.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.17-alpha.7) (2024-08-06)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.17-alpha.6...v0.1.17-alpha.7)
