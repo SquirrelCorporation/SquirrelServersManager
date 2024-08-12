@@ -663,3 +663,95 @@ export type InAppNotification = {
   updatedAt?: Date;
   seen: boolean;
 }
+
+export type Template = {
+  logo: string;
+  title: string;
+  name: string;
+  description: string;
+  categories: string[];
+  restart_policy?: string;
+  privileged?: boolean;
+  command?: string;
+  network?: string;
+  ports: {
+    host: string;
+    container: string;
+    protocol: string;
+  }[];
+  image: string;
+  volumes?: [
+    {
+      bind?: string;
+      container: string;
+      mode?: string;
+      readonly?: boolean;
+    },
+  ];
+  env?: [
+    {
+      name: string;
+      label: string;
+      default: string;
+      preset?: boolean;
+    },
+  ];
+  labels?: [
+    {
+      name: string;
+      value: string;
+    },
+  ];
+};
+
+export type Targets = {targets: string[];}
+
+export type ContainerNetwork = {
+  _id?: any;
+  name: string;
+  status: string;
+  watcher: string;
+  id: string;
+  device: DeviceItem;
+  created: string;
+  scope: string;
+  driver: string;
+  enableIPv6: boolean;
+  ipam?: any | undefined;
+  internal: boolean;
+  attachable: boolean;
+  ingress: boolean;
+  configFrom?: { Network: string } | undefined;
+  configOnly: boolean;
+  containers?: { [id: string]: any } | undefined;
+  options?: { [key: string]: string } | undefined;
+  labels?: { [key: string]: string } | undefined;
+}
+
+export type ContainerVolume = {
+  name: string;
+  device: DeviceItem;
+  watcher: string;
+  driver: string;
+  mountPoint: string;
+  status?: { [p: string]: string } | undefined;
+  labels: { [p: string]: string };
+  scope: 'local' | 'global';
+  options: { [p: string]: string } | null;
+  usageData?: { Size: number; RefCount: number } | null | undefined;
+}
+
+export type ContainerImage = {
+  id: string;
+  watcher: string;
+  device: DeviceItem;
+  parentId: string;
+  repoTags: string[] | undefined;
+  repoDigests?: string[] | undefined;
+  created: number;
+  size: number;
+  virtualSize: number;
+  sharedSize: number;
+  labels: { [p: string]: string };
+  containers: number;
+}

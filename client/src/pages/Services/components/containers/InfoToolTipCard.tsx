@@ -1,6 +1,6 @@
 import { CPULogo } from '@/components/DeviceComponents/CPULogo';
 import { OsLogo } from '@/components/DeviceComponents/OsLogo/OsLogo';
-import { StatusTagProps } from '@/pages/Services/components/StatusTag';
+import { StatusTagProps } from '@/pages/Services/components/containers/StatusTag';
 import {
   CloudSyncOutlined,
   DeploymentUnitOutlined,

@@ -11,5 +11,6 @@ module.exports = {
     '@typescript-eslint/consistent-type-imports': 'off',
     '@typescript-eslint/switch-exhaustiveness-check': 'off',
     '@typescript-eslint/no-throw-literal': 'off',
+    '@typescript-eslint/consistent-indexed-object-style': 'off',
   },
 };

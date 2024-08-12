@@ -94,16 +94,18 @@ export const getDevices = asyncHandler(async (req, res) => {
   if (!devices) {
     return new SuccessResponse('Get Devices successful', []).send(res);
   }
-  // Add pagination
-  let dataSource = paginate(devices, current as number, pageSize as number);
+
   // Use the separated services
-  dataSource = sortByFields(dataSource, params);
+  let dataSource = sortByFields(devices, params);
   dataSource = filterByFields(dataSource, params);
   //TODO: update validator
   dataSource = filterByQueryParams(dataSource, params, ['ip', 'uuid', 'status', 'hostname']);
+  const totalBeforePaginate = dataSource?.length || 0;
+  // Add pagination
+  dataSource = paginate(dataSource, current as number, pageSize as number);
 
   new SuccessResponse('Get Devices successful', dataSource, {
-    total: devices.length,
+    total: totalBeforePaginate,
     success: true,
     pageSize,
     current: parseInt(`${params.current}`, 10) || 1,

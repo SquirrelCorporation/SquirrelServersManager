@@ -913,3 +913,339 @@ const PajamasErrorSvg = (props: any) => (
 export const PajamasError = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={PajamasErrorSvg} {...props} />
 );
+
+const TemplatetoolkitSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 512 512"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="m83.62 46.544l353.47-2.646c110.008 10.36 92.868 178.97-12.368 180.224l-77.172 1.847v163.045c.093 101.333-174.376 107.79-177.199 4.86v-168.88H93.652c-117.969 6.632-128-171.818-10.031-178.45zm210.758 342.47V170.943h129.764c40.668 0 49.123-68.785 10.216-73.904l-349.4 2.667c-46.389 3.805-40.584 73.153 5.921 71.237h128.174v222.633c6.987 30.68 77.326 28.48 75.325-4.562z"
+    />
+  </svg>
+);
+
+export const Templatetoolkit = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={TemplatetoolkitSvg} {...props} />
+);
+
+const PromptTemplateSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 32 32"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M31.5 23c-.827 0-1.5-.673-1.5-1.5V20c0-1.102-.897-2-2-2h-2v2h2v1.5c0 .98.407 1.864 1.058 2.5A3.485 3.485 0 0 0 28 26.5V28h-2v2h2c1.103 0 2-.897 2-2v-1.5c0-.827.673-1.5 1.5-1.5h.5v-2zM16 20v1.5c0 .827-.673 1.5-1.5 1.5H14v2h.5c.827 0 1.5.673 1.5 1.5V28c0 1.103.897 2 2 2h2v-2h-2v-1.5c0-.98-.407-1.864-1.058-2.5A3.485 3.485 0 0 0 18 21.5V20h2v-2h-2c-1.103 0-2 .898-2 2m12-5h2V5c0-1.103-.897-2-2-2h-3v2h3z"
+    />
+    <circle cx="23" cy="13" r="2" fill="currentColor" />
+    <circle cx="16" cy="13" r="2" fill="currentColor" />
+    <circle cx="9" cy="13" r="2" fill="currentColor" />
+    <path
+      fill="currentColor"
+      d="M7 23H4c-1.103 0-2-.897-2-2V5c0-1.103.897-2 2-2h3v2H4v16h3z"
+    />
+  </svg>
+);
+
+export const PromptTemplate = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={PromptTemplateSvg} {...props} />
+);
+
+const ContainerVolumeSolidSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 36 36"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M32 18H18a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V20a2 2 0 0 0-2-2ZM18 32V20h14v12Z"
+      className="clr-i-solid clr-i-solid-path-1"
+    />
+    <path
+      fill="currentColor"
+      d="M21 21.7a.7.7 0 0 0-.7.7v7.49a.7.7 0 0 0 1.4 0V22.4a.7.7 0 0 0-.7-.7Z"
+      className="clr-i-solid clr-i-solid-path-2"
+    />
+    <path
+      fill="currentColor"
+      d="M25 21.82a.7.7 0 0 0-.7.7V30a.7.7 0 1 0 1.4 0v-7.48a.7.7 0 0 0-.7-.7Z"
+      className="clr-i-solid clr-i-solid-path-3"
+    />
+    <path
+      fill="currentColor"
+      d="M29 21.7a.7.7 0 0 0-.7.7v7.49a.7.7 0 1 0 1.4 0V22.4a.7.7 0 0 0-.7-.7Z"
+      className="clr-i-solid clr-i-solid-path-4"
+    />
+    <path
+      fill="currentColor"
+      d="M18 16h10V8.12c0-1.68-5.38-3-12-3s-12 1.32-12 3V28c0 1.5 4.33 2.75 10 3v-5.78a29.17 29.17 0 0 1-8-1.29v-1.49l.24.1A26.63 26.63 0 0 0 14 23.82V20a4 4 0 0 1 .29-1.47A29.19 29.19 0 0 1 6 17.23v-1.48l.24.09a29 29 0 0 0 9 1.32A4 4 0 0 1 18 16ZM6 10.54V9.05l.24.09A30.12 30.12 0 0 0 16 10.47a28.33 28.33 0 0 0 10-1.42v1.5a32.53 32.53 0 0 1-10 1.32a32.44 32.44 0 0 1-10-1.33Z"
+      className="clr-i-solid clr-i-solid-path-5"
+    />
+    <path fill="none" d="M0 0h36v36H0z" />
+  </svg>
+);
+
+export const ContainerVolumeSolid = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={ContainerVolumeSolidSvg} {...props} />;
+
+export const ContainerImageSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 16 16"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M8.38 1.103a.75.75 0 0 0-.76 0L.37 5.353a.75.75 0 0 0 0 1.294l7.25 4.25a.75.75 0 0 0 .76 0l7.25-4.25a.75.75 0 0 0 0-1.294l-7.25-4.25ZM8 9.381L2.233 6L8 2.62L13.767 6L8 9.38Zm-6.87-.028a.75.75 0 0 0-.76 1.294l7.25 4.25a.75.75 0 0 0 .76 0l7.25-4.25a.75.75 0 0 0-.76-1.294L8 13.381L1.13 9.353Z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+
+export const ContainerImage = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ContainerImageSvg} {...props} />
+);
+
+const PortInputSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 32 32"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M18 28c-3.593 0-6.967-1.59-9.257-4.363l1.542-1.274A9.975 9.975 0 0 0 18 26c5.514 0 10-4.486 10-10S23.514 6 18 6a9.975 9.975 0 0 0-7.715 3.637L8.743 8.363A11.969 11.969 0 0 1 18 4c6.617 0 12 5.383 12 12s-5.383 12-12 12Z"
+    />
+    <path
+      fill="currentColor"
+      d="m23 16l-7-7l-1.414 1.414L19.172 15H2v2h17.172l-4.586 4.586L16 23l7-7z"
+    />
+  </svg>
+);
+
+export const PortInput = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={PortInputSvg} {...props} />
+);
+
+export const VolumeBindingSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M6 19a6 6 0 0 1 6-6h4V3a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v16.001A2 2 0 0 0 4 21h2.349A5.976 5.976 0 0 1 6 19Zm8-17a1 1 0 1 1-1 1a1 1 0 0 1 1-1ZM9 3a5 5 0 1 1-2 9.578V10H4.422A4.991 4.991 0 0 1 9 3ZM4 2a1 1 0 1 1-1 1a1 1 0 0 1 1-1Zm0 18a1 1 0 1 1 1-1a1 1 0 0 1-1 1Z"
+    />
+    <circle cx="9" cy="8" r="2" fill="currentColor" />
+    <path fill="currentColor" d="M13 18h4v2h-4z" />
+    <path
+      fill="currentColor"
+      d="M18 15h-2v2h2a2 2 0 0 1 0 4h-2v2h2a4 4 0 0 0 0-8Zm-4 6h-2a2 2 0 0 1 0-4h2v-2h-2a4 4 0 0 0 0 8h2Z"
+    />
+  </svg>
+);
+
+export const VolumeBinding = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={VolumeBindingSvg} {...props} />
+);
+
+const EnvSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M20 18a1 1 0 0 1-1 1h-4a3 3 0 0 0-3 3a3 3 0 0 0-3-3H5a1 1 0 0 1-1-1H2a3 3 0 0 0 3 3h4a2 2 0 0 1 2 2h2a2 2 0 0 1 2-2h4a3 3 0 0 0 3-3Zm0-12a1 1 0 0 0-1-1h-4a3 3 0 0 1-3-3a3 3 0 0 1-3 3H5a1 1 0 0 0-1 1H2a3 3 0 0 1 3-3h4a2 2 0 0 0 2-2h2a2 2 0 0 0 2 2h4a3 3 0 0 1 3 3Zm-8 6L9 8H7v8h2v-4l3 4h2V8h-2v4zm9-4l-2 5.27L17 8h-2l3 8h2l3-8h-2zM1 8v8h5v-2H3v-1h2v-2H3v-1h3V8H1z"
+    />
+  </svg>
+);
+
+export const Env = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EnvSvg} {...props} />
+);
+
+const LabelSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 32 32"
+    {...props}
+  >
+    <g fill="none">
+      <path
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="m10 19l5.5-5.5M13 22l2.5-2.5M4.414 16.586l11-11A2 2 0 0 1 16.828 5H25a2 2 0 0 1 2 2v8.172a2 2 0 0 1-.586 1.414l-11 11a2 2 0 0 1-2.828 0l-8.172-8.172a2 2 0 0 1 0-2.828Z"
+      />
+      <path fill="currentColor" d="M23 10a1 1 0 1 1-2 0a1 1 0 0 1 2 0Z" />
+    </g>
+  </svg>
+);
+
+export const Label = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={LabelSvg} {...props} />
+);
+
+const DeploySvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      d="M23 1s-6.528-.458-9 2c-.023.037-4 4-4 4L5 8l-3 2l8 4l4 8l2-3l1-5s3.963-3.977 4-4c2.458-2.472 2-9 2-9Zm-6 7a1 1 0 1 1 0-2a1 1 0 0 1 0 2ZM7 17c-1-1-3-1-4 0s-1 5-1 5s4 0 5-1s1-3 0-4Z"
+    />
+  </svg>
+);
+
+export const Deploy = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={DeploySvg} {...props} />
+);
+
+const TargetSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 14 14"
+    {...props}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M13.48 7.516a6.5 6.5 0 1 1-6.93-7" />
+      <path d="M9.79 8.09A3 3 0 1 1 5.9 4.21M7 7l2.5-2.5m2 .5l-2-.5l-.5-2l2-2l.5 2l2 .5z" />
+    </g>
+  </svg>
+);
+
+export const Target = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={TargetSvg} {...props} />
+);
+
+const NutSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 48 48"
+    {...props}
+  >
+    <mask id="ipTNut0">
+      <g
+        fill="none"
+        stroke="#fff"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="4"
+      >
+        <path d="M37.699 6c-.527.534-2.46 2.672-3.69 3.741c-.175.535 2.109 2.672 2.636 3.207c.527.534 6.85-3.207 6.324-3.741c-.422-.428-3.69-2.316-5.27-3.207Z" />
+        <path
+          fill="#555"
+          d="M11.372 16.722a5.74 5.74 0 0 1-.03-.264a19.59 19.59 0 0 0-4.3 6.142a3.515 3.515 0 1 1-1.506 6.866c-.02 3.546 1.15 6.955 3.58 9.601c3.505 3.815 8.81 5.151 14.03 4.064c3.214-.668 6.395-2.254 9.106-4.745a19.996 19.996 0 0 0 3.39-4.051c-2.225.67-4.675-.412-5.601-2.598a3.683 3.683 0 0 0-2.577-2.155l-1.682-.381a5.972 5.972 0 0 1-4.24-3.65l-.091-.231a5.583 5.583 0 0 0-4.857-3.539a5.583 5.583 0 0 1-5.19-4.826l-.032-.233Z"
+        />
+        <path d="m13.154 11.658l-.251.27a5.87 5.87 0 0 0-1.53 4.794l.03.233a5.583 5.583 0 0 0 5.191 4.826a5.583 5.583 0 0 1 4.857 3.54l.09.23a5.973 5.973 0 0 0 4.241 3.65l1.683.381a3.684 3.684 0 0 1 2.576 2.155c.996 2.35 3.755 3.425 6.1 2.416c2.368-1.019 4.084-3.199 4.483-5.746l.207-1.33a9.933 9.933 0 0 0 .1-2.166l-.108-1.69a17.275 17.275 0 0 0-3.504-9.38l-.252-.331a15.79 15.79 0 0 0-14.1-6.138l-1.406.138a13.293 13.293 0 0 0-8.407 4.148Z" />
+      </g>
+    </mask>
+    <path fill="currentColor" d="M0 0h48v48H0z" mask="url(#ipTNut0)" />
+  </svg>
+);
+
+export const Nut = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={NutSvg} {...props} />
+);
+
+const BridgeSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M0 3h24v18.001h-6v-7.603a8.417 8.417 0 0 0-1.346-1.053A8.644 8.644 0 0 0 12 11c-2.02 0-3.586.671-4.654 1.345A8.42 8.42 0 0 0 6 13.398V21H0V3Zm6 7.836A10.644 10.644 0 0 1 12 9a10.644 10.644 0 0 1 6 1.836V5.001h-.625L12 5H6v5.836Zm14-5.835v14h2v-14h-2ZM4 5H2v14h2V5Z"
+    />
+  </svg>
+);
+
+export const Bridge = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={BridgeSvg} {...props} />
+);
+
+const ContainerSolidSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 36 36"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M32 6H4a2 2 0 0 0-2 2v20a2 2 0 0 0 2 2h28a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2ZM9.63 24.23a.79.79 0 0 1-.81.77a.79.79 0 0 1-.82-.77V11.77a.79.79 0 0 1 .82-.77a.79.79 0 0 1 .81.77Zm6 0a.79.79 0 0 1-.82.77a.79.79 0 0 1-.81-.77V11.77a.79.79 0 0 1 .81-.77a.79.79 0 0 1 .82.77Zm6.21 0a.79.79 0 0 1-.82.77a.79.79 0 0 1-.81-.77V11.77a.79.79 0 0 1 .81-.77a.79.79 0 0 1 .82.77Zm6.12 0a.79.79 0 0 1-.82.77a.79.79 0 0 1-.81-.77V11.77a.79.79 0 0 1 .81-.77a.79.79 0 0 1 .82.77Z"
+      className="clr-i-solid clr-i-solid-path-1"
+    />
+    <path fill="none" d="M0 0h36v36H0z" />
+  </svg>
+);
+
+export const ContainerSolid = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ContainerSolidSvg} {...props} />
+);
+
+const MoreSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 20 20"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M2.5 7.5a2.5 2.5 0 1 1 0 5a2.5 2.5 0 0 1 0-5Zm15 0a2.5 2.5 0 1 1 0 5a2.5 2.5 0 0 1 0-5Zm-7.274 0a2.5 2.5 0 1 1 0 5a2.5 2.5 0 0 1 0-5Z"
+    />
+  </svg>
+);
+
+export const More = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={MoreSvg} {...props} />
+);

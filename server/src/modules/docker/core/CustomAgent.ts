@@ -24,7 +24,6 @@ export const getCustomAgent = (childLogger: any, opt: any) => {
 
         const handleError = (err: any) => {
           conn.end();
-          // eslint-disable-next-line class-methods-use-this
           this.destroy();
           throw err;
         };

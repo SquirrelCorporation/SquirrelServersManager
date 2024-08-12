@@ -16,14 +16,19 @@ function getDefaultExtraVars(playbook: Playbook, target?: string[]) {
 }
 
 async function substitutedExtraVar(extraVar: string, forcedValues?: API.ExtraVars) {
+  logger.info('substitutedExtraVar extraVar' + extraVar);
+  logger.info('substitutedExtraVar ' + JSON.stringify(forcedValues));
+
   const forcedValue = forcedValues?.find((e) => e.extraVar === extraVar)?.value;
+  logger.info('forcedValue found' + forcedValue);
+  if (forcedValue) {
+    return forcedValue;
+  }
   switch (extraVar) {
     case SsmAnsible.SSMReservedExtraVars.DEVICE_ID:
       return forcedValue;
     case SsmAnsible.SSMReservedExtraVars.MASTER_NODE_URL:
-      return forcedValue
-        ? forcedValue
-        : await getFromCache(SettingsKeys.AnsibleReservedExtraVarsKeys.MASTER_NODE_URL);
+      return await getFromCache(SettingsKeys.AnsibleReservedExtraVarsKeys.MASTER_NODE_URL);
     default:
       return await getFromCache(extraVar);
   }

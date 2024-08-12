@@ -1,5 +1,6 @@
 import Joi, { AlternativesSchema } from 'joi';
 import _joi from 'joi';
+import pino from 'pino';
 import logger from '../../../logger';
 import type { SSMServicesTypes } from '../../../types/typings.d.ts';
 
@@ -20,8 +21,8 @@ abstract class Component<
   public joi: Joi.Root;
   public type: string;
   public name: string;
-  public configuration: T;
-  public childLogger: any;
+  public configuration!: T;
+  public childLogger!: pino.Logger<never>;
   public kind: Kind;
 
   /**
@@ -33,9 +34,6 @@ abstract class Component<
     this.kind = Kind.UNKNOWN;
     this.type = 'unknown';
     this.name = 'unknown';
-    // @ts-expect-error init
-    this.configuration = {};
-    this.childLogger = undefined;
   }
 
   /**

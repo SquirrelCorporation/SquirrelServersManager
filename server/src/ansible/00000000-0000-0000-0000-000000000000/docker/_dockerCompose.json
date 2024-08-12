@@ -1,0 +1,16 @@
+{
+  "playableInBatch": true,
+  "uniqueQuickRef": "deploy",
+  "extraVars": [
+    {
+      "extraVar": "project",
+      "required": true,
+      "canBeOverride": true
+    },
+    {
+      "extraVar": "definition",
+      "required": true,
+      "canBeOverride": true
+    }
+  ]
+}

@@ -19,6 +19,35 @@ export default interface Container {
   excludeTags?: string;
   transformTags?: string;
   linkTemplate?: string;
+  command?: string;
+  networkSettings?: {
+    Networks: {
+      [p: string]: {
+        IPAMConfig?: any;
+        Links?: any;
+        Aliases?: any;
+        NetworkID: string;
+        EndpointID: string;
+        Gateway: string;
+        IPAddress: string;
+        IPPrefixLen: number;
+        IPv6Gateway: string;
+        GlobalIPv6Address: string;
+        GlobalIPv6PrefixLen: number;
+        MacAddress: string;
+      };
+    };
+  };
+  mounts?: {
+    Name?: string | undefined;
+    Type: string;
+    Source: string;
+    Destination: string;
+    Driver?: string | undefined;
+    Mode: string;
+    RW: boolean;
+    Propagation: string;
+  }[];
   link?: string;
   image: SSMServicesTypes.Image;
   result?: {
@@ -101,6 +130,12 @@ const schema = new Schema<Container>(
     },
     customName: {
       type: Schema.Types.String,
+    },
+    command: {
+      type: Schema.Types.String,
+    },
+    networkSettings: {
+      type: Object,
     },
   },
   {

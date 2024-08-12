@@ -1,7 +1,7 @@
 import { DeviceStatType } from '@/components/Charts/DeviceStatType';
 import { getDeviceStat } from '@/services/rest/devicestat';
 import { Tiny } from '@ant-design/plots';
-import { message, Skeleton, Tooltip } from 'antd';
+import { Skeleton, Tooltip } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 

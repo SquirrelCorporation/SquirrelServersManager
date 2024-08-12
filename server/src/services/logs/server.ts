@@ -30,9 +30,10 @@ export const getServerLogs = asyncHandler(async (req, res) => {
     'moduleId',
     'moduleName',
   ]);
+  const totalBeforePaginate = dataSource?.length || 0;
   dataSource = paginate(dataSource, current as number, pageSize as number);
   new SuccessResponse('Get server logs successful', dataSource, {
-    total: logs.length,
+    total: totalBeforePaginate,
     success: true,
     pageSize,
     current: parseInt(`${params.current}`, 10) || 1,

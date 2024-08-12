@@ -1,5 +1,5 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Tag } from 'antd';
+import { Tag, Tooltip } from 'antd';
 import React from 'react';
 import { SsmStatus } from 'ssm-shared-lib';
 
@@ -15,9 +15,9 @@ const StatusTag: React.FC<StatusTagProps> = (props: StatusTagProps) => {
       return <Tag color="warning">Paused</Tag>;
     case SsmStatus.ContainerStatus.UNREACHABLE:
       return (
-        <Tag icon={<ExclamationCircleOutlined />} color="error">
-          Unreachable
-        </Tag>
+        <Tooltip title={props.status}>
+          <Tag icon={<ExclamationCircleOutlined />} color="error" />
+        </Tooltip>
       );
     default:
       return <Tag>{props.status}</Tag>;

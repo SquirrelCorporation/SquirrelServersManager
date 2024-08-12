@@ -20,8 +20,9 @@ const AutomationsColumns = (
   const columns: ProColumns<API.Automation>[] = [
     {
       align: 'center',
+      dataIndex: 'uuid',
       render: (_, row) => (
-        <div style={{ width: '100%' }}>
+        <div style={{ width: '100%' }} key={row.uuid}>
           <Avatar
             style={{
               backgroundColor: '#523f85',
@@ -108,7 +109,7 @@ const AutomationsColumns = (
       hideInSearch: true,
       render: (_, record) => [
         <a
-          key="config"
+          key={`${record.uuid}-config`}
           onClick={() => {
             setCurrentRow(record);
             setDrawerOpened(true);
@@ -116,7 +117,7 @@ const AutomationsColumns = (
         >
           Configuration
         </a>,
-        <a key="quickAction">
+        <a key={`${record.uuid}-action`}>
           <AutomationQuickAction record={record} reload={reload} />
         </a>,
       ],

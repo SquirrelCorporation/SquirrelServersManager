@@ -1,5 +1,7 @@
 // Filtering logic
 
+import logger from '../../logger';
+
 export function filterByFields<T>(data: T[], params: any): T[] {
   if (params.filter) {
     const filter = JSON.parse(params.filter as any) as {
@@ -40,6 +42,9 @@ export function filterByQueryParams<T>(
         }
         if (typeof item[e as keyof T] === 'boolean') {
           return (params[e] === 'true') === item[e as keyof T];
+        }
+        if (Object.prototype.toString.call(item[e as keyof T]) === '[object Array]') {
+          return (item[e as keyof T] as Array<string>).includes(params[e]);
         }
         return false;
       });
