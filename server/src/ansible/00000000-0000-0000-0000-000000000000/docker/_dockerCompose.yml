@@ -1,0 +1,15 @@
+- name: Docker Compose
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Present
+      community.docker.docker_compose_v2:
+        project_name: '{{ project }}'
+        definition: '{{ definition | from_yaml }}'
+        recreate: "always"
+      register: output
+
+    - name: Show results
+      ansible.builtin.debug:
+        var: output

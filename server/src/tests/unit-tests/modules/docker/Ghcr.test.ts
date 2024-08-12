@@ -10,6 +10,7 @@ describe('testing GHCR Registry', () => {
       username: 'user',
       token: 'token',
     };
+    // @ts-expect-error partial type
     ghcr.childLogger = { debug: vi.fn(), info: vi.fn(), error: vi.fn(), warn: vi.fn() };
   });
 

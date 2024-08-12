@@ -10,7 +10,6 @@ import ContainerStatsRepo from '../../../../../data/database/repository/Containe
 import DeviceAuthRepo from '../../../../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../../../../data/database/repository/DeviceRepo';
 import logger from '../../../../../logger';
-import type { SSMServicesTypes } from '../../../../../types/typings.d.ts';
 import DeviceUseCases from '../../../../../use-cases/DeviceUseCases';
 import Component from '../../../core/Component';
 import { getCustomAgent } from '../../../core/CustomAgent';
@@ -18,7 +17,6 @@ import DockerAPIHelper from '../../../core/DockerAPIHelper';
 import { Label } from '../../../utils/label';
 import tag from '../../../utils/tag';
 import {
-  fullName,
   getContainerName,
   getRegistry,
   getRepoDigest,
@@ -29,6 +27,7 @@ import {
   normalizeContainer,
   pruneOldContainers,
 } from '../../../utils/utils';
+import DockerImages from './AbstractDockerImages';
 
 // The delay before starting the watcher when the app is started
 const START_WATCHER_DELAY_MS = 1000;
@@ -36,13 +35,13 @@ const START_WATCHER_DELAY_MS = 1000;
 // Debounce delay used when performing a watch after a docker event has been received
 const DEBOUNCED_WATCH_CRON_MS = 5000;
 
-export default class Docker extends Component<SSMServicesTypes.ConfigurationWatcherSchema> {
-  public watchCron: any;
-  public watchCronStat: any;
-  public watchCronTimeout: any;
-  public watchCronDebounced: any;
-  public listenDockerEventsTimeout: any;
-  public dockerApi: Dockerode | any;
+export default class Docker extends DockerImages {
+  watchCron!: CronJob.ScheduledTask | undefined;
+  watchCronStat!: CronJob.ScheduledTask | undefined;
+  watchCronTimeout: any;
+  watchCronDebounced: any = undefined;
+  listenDockerEventsTimeout: any;
+  dockerApi: Dockerode | any = undefined;
 
   getConfigurationSchema() {
     return this.joi.object().keys({
@@ -76,7 +75,10 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
 
       this.childLogger.info(`Cron scheduled (${this.configuration.cron})`);
       this.watchCron = CronJob.schedule(this.configuration.cron, () => {
-        this.watchFromCron();
+        this.watchContainersFromCron();
+        this.watchNetworksFromCron();
+        this.watchVolumesFromCron();
+        this.watchImagesFromCron();
       });
       if (this.configuration.watchstats) {
         this.watchCronStat = CronJob.schedule(this.configuration.cronstats, () => {
@@ -84,10 +86,18 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
         });
       }
       // watch at startup (after all components have been registered)
-      this.watchCronTimeout = setTimeout(() => this.watchFromCron(), START_WATCHER_DELAY_MS);
+      this.watchCronTimeout = setTimeout(() => {
+        this.watchContainersFromCron();
+        this.watchNetworksFromCron();
+        this.watchVolumesFromCron();
+        this.watchImagesFromCron();
+      }, START_WATCHER_DELAY_MS);
 
       this.watchCronDebounced = debounce(() => {
-        this.watchFromCron();
+        this.watchContainersFromCron();
+        this.watchNetworksFromCron();
+        this.watchVolumesFromCron();
+        this.watchImagesFromCron();
       }, DEBOUNCED_WATCH_CRON_MS);
       // listen to docker events
       if (this.configuration.watchevents) {
@@ -98,7 +108,7 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
       }
 
       this.watchCron.start();
-      this.watchCronStat.start();
+      this.watchCronStat?.start();
     } catch (error: any) {
       this.childLogger.warn(error);
     }
@@ -156,94 +166,10 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
   }
 
   /**
-   * Listen and react to docker events.
-   * @return {Promise<void>}
-   */
-  async listenDockerEvents(): Promise<void> {
-    this.childLogger.info('Listening to docker events');
-    const options: {
-      filters: {
-        type?:
-          | Array<
-              | 'container'
-              | 'image'
-              | 'volume'
-              | 'network'
-              | 'daemon'
-              | 'plugin'
-              | 'service'
-              | 'node'
-              | 'secret'
-              | 'config'
-            >
-          | undefined;
-        event: string[] | undefined;
-      };
-    } = {
-      filters: {
-        type: ['container'],
-        event: ['create', 'destroy', 'start', 'stop', 'pause', 'unpause', 'die', 'update'],
-      },
-    };
-    try {
-      this.dockerApi.getEvents(options, (err, stream) => {
-        if (err) {
-          this.childLogger.warn(`Unable to listen to Docker events [${err.message}]`);
-          this.childLogger.debug(err);
-        } else {
-          stream?.on('data', (chunk) => this.onDockerEvent(chunk));
-        }
-      });
-    } catch (error: any) {
-      logger.error(error);
-    }
-  }
-
-  /**
-   * Process a docker event.
-   * @param dockerEventChunk
-   * @return {Promise<void>}
-   */
-  async onDockerEvent(dockerEventChunk: any): Promise<void> {
-    logger.info('onDockerEvent');
-    const dockerEvent = JSON.parse(dockerEventChunk.toString());
-    const action = dockerEvent.Action;
-    const containerId = dockerEvent.id;
-    logger.info('onDockerEvent - action: ' + action);
-
-    // If the container was created or destroyed => perform a watch
-    if (action === 'destroy' || action === 'create') {
-      await this.watchCronDebounced();
-    } else {
-      // Update container state in db if so
-      try {
-        const container = this.dockerApi.getContainer(containerId);
-        const containerInspect = await container.inspect();
-        const newStatus = containerInspect.State.Status;
-        const containerFound = await ContainerRepo.findContainerById(containerId);
-        if (containerFound) {
-          this.childLogger.debug(JSON.stringify(containerInspect));
-          // Child logger for the container to process
-          const oldStatus = containerFound.status;
-          containerFound.status = newStatus;
-          if (oldStatus !== newStatus) {
-            await ContainerRepo.updateContainer(containerFound);
-            this.childLogger.info(
-              `[${fullName(containerFound)}] Status changed from ${oldStatus} to ${newStatus}`,
-            );
-          }
-        }
-      } catch (e) {
-        this.childLogger.debug(`Unable to get container details for container id=[${containerId}]`);
-      }
-    }
-  }
-
-  /**
    * Watch containers (called by cron scheduled tasks).
    * @returns {Promise<*[]>}
    */
-  async watchFromCron(): Promise<any[]> {
+  async watchContainersFromCron(): Promise<any[]> {
     logger.info(`Cron started (${this.configuration.cron})`);
 
     // Get container reports
@@ -272,7 +198,6 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
    * @returns {Promise<*[]>}
    */
   async watch(): Promise<any[]> {
-    // eslint-disable-next-line init-declarations
     let containers: any[] = [];
 
     // List images to watch
@@ -382,7 +307,7 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
   /**
    * Find new version for a Container.
    */
-  /* eslint-disable-next-line */
+
   async findNewVersion(container: Container) {
     try {
       const registryProvider = getRegistry(container.image.registry.name);
@@ -403,7 +328,7 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
 
           if (remoteDigest.version === 2) {
             // Regular v2 manifest => Get manifest digest
-            /*  eslint-disable no-param-reassign */
+
             const digestV2 = await registryProvider.getImageManifestDigest(
               container.image,
               container.image.digest.repo,
@@ -465,7 +390,7 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
         this.childLogger.info(
           `addImageDetailsToContainer - Container ${container.Image} already in store`,
         );
-        return containerInStore;
+        return { ...containerInStore, status: container.State };
       }
       this.childLogger.info(`addImageDetailsToContainer - getImage: ${container.Image}`);
       const img = this.dockerApi.getImage(container.Image);
@@ -485,7 +410,6 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
       const imageId = image.Id;
 
       // Parse image to get registries, organization...
-      // eslint-disable-next-line init-declarations
       let imageNameToParse = container.Image;
       if (imageNameToParse.includes('sha256:')) {
         if (!image.RepoTags || image.RepoTags.length === 0) {
@@ -541,6 +465,9 @@ export default class Docker extends Component<SSMServicesTypes.ConfigurationWatc
         result: {
           tag: tagName,
         },
+        command: container.Command,
+        networkSettings: container.NetworkSettings,
+        mounts: container.Mounts,
       });
     } catch (error: any) {
       this.childLogger.error(

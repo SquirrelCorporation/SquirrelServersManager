@@ -40,17 +40,18 @@ const ContainerAvatar: React.FC<ContainerAvatarProps> = (props) => {
 
   const getName = () => {
     try {
-      return row.customName?.slice(0, 4) || row.name?.slice(0, 4);
+      return row.customName?.slice(0, 3) || row.name?.slice(0, 3);
     } catch (error: any) {
       return 'undefined';
     }
   };
   return (
     <Avatar
-      size={50}
+      size={{ xs: 24, sm: 50, md: 50, lg: 50, xl: 50, xxl: 50 }}
       shape="square"
       style={{
         marginRight: 4,
+        fontSize: 15,
         backgroundColor:
           colorPalette[(row.id ? hashCode(row.id) : 0) % colorPalette.length],
       }}

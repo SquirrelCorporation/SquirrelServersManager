@@ -21,7 +21,6 @@ class Startup {
     const version = await getFromCache(SettingsKeys.GeneralSettingsKeys.SCHEME_VERSION);
     this.logger.info(`initialization`);
     this.logger.info(`initialization - Scheme Version: ${version}`);
-
     // Must be called first
     void DeviceAuthUseCases.saveAllDeviceAuthSshKeys();
     // Sync to prevent empty UI.

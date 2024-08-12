@@ -31,10 +31,11 @@ export const getTaskLogs = asyncHandler(async (req, res) => {
     'createdAt',
     'updatedAt',
   ]);
+  const totalBeforePaginate = dataSource?.length || 0;
   dataSource = paginate(dataSource, current as number, pageSize as number);
 
   new SuccessResponse('Get task logs successful', dataSource, {
-    total: tasks.length,
+    total: totalBeforePaginate,
     success: true,
     pageSize,
     current: parseInt(`${params.current}`, 10) || 1,

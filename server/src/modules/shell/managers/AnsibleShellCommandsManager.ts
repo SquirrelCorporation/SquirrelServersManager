@@ -37,8 +37,10 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
       this.logger.info(`executePlaybook - called with target: ${target}`);
       const devicesAuth = await DeviceAuthRepo.findManyByDevicesUuid(target);
       if (!devicesAuth || devicesAuth.length === 0) {
-        this.logger.error(`executePlaybook - Target not found (Authentication not found)`);
-        throw new Error('Exec failed, no matching target (Authentication not found)');
+        this.logger.error(`executePlaybook - Target not found (Device Authentication not found)`);
+        throw new Error(
+          `Exec failed, no matching target (Device Authentication not found for target ${target})`,
+        );
       }
       inventoryTargets = Inventory.inventoryBuilderForTarget(devicesAuth);
     }
@@ -87,7 +89,7 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
     try {
       this.logger.info('getAnsibleVersion - Starting...');
       return shell.exec('ansible --version').toString();
-    } catch (error) {
+    } catch {
       this.logger.error('[SHELL]- - getAnsibleVersion');
     }
   }
@@ -96,7 +98,7 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
     try {
       this.logger.info('getAnsibleRunnerVersion - Starting...');
       return shell.exec('ansible-runner --version').toString();
-    } catch (error) {
+    } catch {
       this.logger.error('[SHELL]- - getAnsibleRunnerVersion');
     }
   }

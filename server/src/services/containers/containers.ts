@@ -1,5 +1,6 @@
 import { parse } from 'url';
 import { API, SsmContainer } from 'ssm-shared-lib';
+import logger from '../../logger';
 import { BadRequestError, InternalError, NotFoundError } from '../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../middlewares/api/ApiResponse';
 import ContainerRepo from '../../data/database/repository/ContainerRepo';
@@ -17,28 +18,25 @@ export const getContainers = asyncHandler(async (req, res) => {
     API.Container & {
       sorter: any;
       filter: any;
-      deviceUuid?: string;
     };
+  logger.error(JSON.stringify(params));
   const containers = (await ContainerRepo.findAll()) as API.Container[];
-  // Add pagination
-  let dataSource = paginate(containers, current as number, pageSize as number);
+
   // Use the separated services
-  dataSource = sortByFields(dataSource, params);
+  let dataSource = sortByFields(containers, params);
   dataSource = filterByFields(dataSource, params);
-  let deviceUuid = undefined;
-  try {
-    // @ts-expect-error TODO: change the type
-    deviceUuid = params.device ? JSON.parse(params.device).uuid : undefined;
-  } catch {}
-  //TODO: update validator
   dataSource = filterByQueryParams(
     dataSource.map((e) => ({ ...e, deviceUuid: e.device?.uuid })),
-    { ...params, deviceUuid: deviceUuid },
+    params,
     ['status', 'name', 'updateAvailable', 'deviceUuid'],
   );
+  const totalBeforePaginate = dataSource?.length || 0;
+
+  // Add pagination
+  dataSource = paginate(dataSource, current as number, pageSize as number);
 
   new SuccessResponse('Get containers', dataSource, {
-    total: dataSource.length,
+    total: totalBeforePaginate,
     success: true,
     pageSize,
     current: parseInt(`${params.current}`, 10) || 1,

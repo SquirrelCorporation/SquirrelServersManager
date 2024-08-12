@@ -3,15 +3,21 @@ import ServiceQuickActionReference, {
   ServiceQuickActionReferenceActions,
   ServiceQuickActionReferenceTypes,
 } from '@/components/ServiceComponents/ServiceQuickAction/ServiceQuickActionReference';
-import ContainerAvatar from '@/pages/Services/components/ContainerAvatar';
-import ContainerStatProgress from '@/pages/Services/components/ContainerStatProgress';
-import InfoToolTipCard from '@/pages/Services/components/InfoToolTipCard';
-import StatusTag from '@/pages/Services/components/StatusTag';
-import UpdateAvailableTag from '@/pages/Services/components/UpdateAvailableTag';
+import ContainerAvatar from '@/pages/Services/components/containers/ContainerAvatar';
+import ContainerStatProgress from '@/pages/Services/components/containers/ContainerStatProgress';
+import InfoToolTipCard from '@/pages/Services/components/containers/InfoToolTipCard';
+import StatusTag from '@/pages/Services/components/containers/StatusTag';
+import UpdateAvailableTag from '@/pages/Services/components/containers/UpdateAvailableTag';
 import { postContainerAction } from '@/services/rest/containers';
+import { getDevices } from '@/services/rest/device';
 import { InfoCircleOutlined } from '@ant-design/icons';
-import { ProFieldValueType, ProListMetas } from '@ant-design/pro-components';
-import { Flex, message, Popover, Tag, Tooltip } from 'antd';
+import {
+  ProFieldValueType,
+  ProFormSelect,
+  ProListMetas,
+  RequestOptionsType,
+} from '@ant-design/pro-components';
+import { Flex, message, Popover, Tag, Tooltip, Typography } from 'antd';
 import React from 'react';
 import { API, SsmContainer } from 'ssm-shared-lib';
 
@@ -59,7 +65,14 @@ const ContainerMetas = (props: ContainerMetasProps) => {
       title: 'Name',
       dataIndex: 'name',
       render: (_, row) => {
-        return row.customName || row.name;
+        return (
+          <Typography.Text
+            ellipsis={{ tooltip: row.customName || row.name }}
+            style={{ maxWidth: 140 }}
+          >
+            {row.customName || row.name}
+          </Typography.Text>
+        );
       },
     },
     subTitle: {
@@ -89,6 +102,9 @@ const ContainerMetas = (props: ContainerMetasProps) => {
         paused: {
           text: 'paused',
         },
+        unreachable: {
+          text: 'unreachable',
+        },
       },
     },
     avatar: {
@@ -98,9 +114,27 @@ const ContainerMetas = (props: ContainerMetasProps) => {
       },
     },
     device: {
-      title: 'Device',
-      search: true,
+      search: false,
       dataIndex: ['device', 'uuid'],
+    },
+    deviceUuid: {
+      dataIndex: 'deviceUuid',
+      hideInTable: true,
+      title: 'Device',
+      renderFormItem: () => (
+        <ProFormSelect
+          request={async () => {
+            return await getDevices().then((e: API.DeviceList) => {
+              return e.data?.map((f: API.DeviceItem) => {
+                return {
+                  label: `${f.fqdn} (${f.ip})`,
+                  value: f.uuid,
+                };
+              }) as RequestOptionsType[];
+            });
+          }}
+        />
+      ),
     },
     content: {
       search: false,
@@ -118,8 +152,14 @@ const ContainerMetas = (props: ContainerMetasProps) => {
             >
               <>
                 On{' '}
-                <Popover content={row.device?.fqdn}>
-                  <Tag color="black">{row.device?.ip}</Tag>
+                <Popover
+                  content={
+                    <>{row.device?.fqdn} (click to filter on this device)</>
+                  }
+                >
+                  <a href={`?deviceUuid=${row.device?.uuid}`}>
+                    <Tag color="black">{row.device?.ip}</Tag>
+                  </a>
                 </Popover>
                 <Flex gap="middle">
                   <ContainerStatProgress containerId={row.id} />

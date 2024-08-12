@@ -5,7 +5,7 @@ import logger from '../../../logger';
 import shellWrapper from '../ShellWrapper';
 import { AbstractShellCommander } from '../AbstractShellCommander';
 
-export class FileSystemManager extends AbstractShellCommander {
+class FileSystemManager extends AbstractShellCommander {
   constructor() {
     super(logger.child({ module: 'FileSystemManager' }), 'FileSystem');
   }
@@ -19,6 +19,10 @@ export class FileSystemManager extends AbstractShellCommander {
   deleteFiles(directory: string, rootPath?: string): void {
     this.checkPath(directory, rootPath);
     this.executeCommand(shellWrapper.rm, '-rf', directory);
+  }
+
+  writeFile(content: string, path: string): void {
+    this.executeCommand(shellWrapper.to, content, path);
   }
 
   protected checkPath(userPath: string, rootPath?: string) {

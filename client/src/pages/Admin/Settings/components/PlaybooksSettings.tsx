@@ -199,7 +199,7 @@ const PlaybookSettings: React.FC = () => {
               : false
           }
           rowSelection={false}
-          grid={{ gutter: 0, column: 4 }}
+          grid={{ gutter: 0, xs: 1, sm: 2, md: 2, lg: 2, xl: 4, xxl: 4 }}
           onItem={(record: API.LocalRepository) => {
             return {
               onMouseEnter: () => {
@@ -289,7 +289,7 @@ const PlaybookSettings: React.FC = () => {
               : false
           }
           rowSelection={false}
-          grid={{ gutter: 0, column: 4 }}
+          grid={{ gutter: 0, xs: 1, sm: 2, md: 2, lg: 2, xl: 4, xxl: 4 }}
           onItem={(record: API.GitRepository) => {
             return {
               onMouseEnter: () => {
