@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.17-alpha.7...HEAD)
+
+**Implemented enhancements:**
+
+- \[FEAT\] Advanced features for container management, 'à la ' very know container management soft 🔥 [\#178](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/178)
+- \[FEAT\] Enhanced features for services [\#177](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/177) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 ## [v0.1.17-alpha.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.17-alpha.7) (2024-08-06)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.17-alpha.6...v0.1.17-alpha.7)
