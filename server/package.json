@@ -24,7 +24,7 @@
     "dotenv": "^16.4.5",
     "dugite": "^2.7.1",
     "express": "^4.19.2",
-    "express-validator": "^7.1.0",
+    "express-validator": "^7.2.0",
     "fs-extra": "^11.2.0",
     "isomorphic-git": "^1.27.1",
     "joi": "^17.13.3",
