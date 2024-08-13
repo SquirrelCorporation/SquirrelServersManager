@@ -9,11 +9,11 @@ import ContainerRepo from '../../../../../data/database/repository/ContainerRepo
 import ContainerStatsRepo from '../../../../../data/database/repository/ContainerStatsRepo';
 import DeviceAuthRepo from '../../../../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../../../../data/database/repository/DeviceRepo';
+import SSHCredentialsHelper from '../../../../../helpers/ssh/SSHCredentialsHelper';
 import logger from '../../../../../logger';
 import DeviceUseCases from '../../../../../use-cases/DeviceUseCases';
 import Component from '../../../core/Component';
 import { getCustomAgent } from '../../../core/CustomAgent';
-import DockerAPIHelper from '../../../core/DockerAPIHelper';
 import { Label } from '../../../utils/label';
 import tag from '../../../utils/tag';
 import {
@@ -27,7 +27,7 @@ import {
   normalizeContainer,
   pruneOldContainers,
 } from '../../../utils/utils';
-import DockerImages from './AbstractDockerImages';
+import DockerLogs from './AbstractDockerLogs';
 
 // The delay before starting the watcher when the app is started
 const START_WATCHER_DELAY_MS = 1000;
@@ -35,7 +35,7 @@ const START_WATCHER_DELAY_MS = 1000;
 // Debounce delay used when performing a watch after a docker event has been received
 const DEBOUNCED_WATCH_CRON_MS = 5000;
 
-export default class Docker extends DockerImages {
+export default class Docker extends DockerLogs {
   watchCron!: CronJob.ScheduledTask | undefined;
   watchCronStat!: CronJob.ScheduledTask | undefined;
   watchCronTimeout: any;
@@ -123,7 +123,7 @@ export default class Docker extends DockerImages {
     if (!deviceAuth) {
       throw new Error(`DeviceAuth not found: ${this.configuration.deviceUuid}`);
     }
-    const options = await DockerAPIHelper.getDockerSshConnectionOptions(device, deviceAuth);
+    const options = await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
     this.childLogger.debug(options);
     const agent = getCustomAgent(this.childLogger, {
       debug: (message: any) => {

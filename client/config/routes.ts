@@ -85,4 +85,12 @@ export default [
     path: '/manage/playbooks/:id',
     component: './Playbooks',
   },
+  {
+    path: '/manage/services/logs/:id',
+    component: './Services/logs/Logs',
+  },
+  {
+    path: '/manage/devices/ssh/:id',
+    component: './Devices/DeviceSSHTerminal',
+  },
 ];

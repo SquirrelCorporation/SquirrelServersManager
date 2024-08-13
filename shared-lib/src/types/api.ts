@@ -106,6 +106,7 @@ export type LoginParams = {
 
 export type LoginInfo = {
   currentAuthority?: string;
+  token?: string;
 };
 
 export type LoginResult = {

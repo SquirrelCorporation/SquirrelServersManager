@@ -1,6 +1,7 @@
 import DockerModem from 'docker-modem';
 import Dockerode from 'dockerode';
 import { API, SettingsKeys, SsmAnsible, SsmStatus } from 'ssm-shared-lib';
+import SSHCredentialsHelper from '../helpers/ssh/SSHCredentialsHelper';
 import { InternalError } from '../middlewares/api/ApiError';
 import { setToCache } from '../data/cache';
 import Device, { DeviceModel } from '../data/database/model/Device';
@@ -15,7 +16,6 @@ import PinoLogger from '../logger';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../modules/ansible-vault/ansible-vault';
 import Inventory from '../modules/ansible/utils/InventoryTransformer';
 import { getCustomAgent } from '../modules/docker/core/CustomAgent';
-import DockerAPIHelper from '../modules/docker/core/DockerAPIHelper';
 import Shell from '../modules/shell';
 import PlaybookUseCases from './PlaybookUseCases';
 
@@ -205,7 +205,7 @@ async function checkDockerConnection(
       becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
       sshKeyPass: sshKeyPass ? await vaultEncrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
     };
-    const options = await DockerAPIHelper.getDockerSshConnectionOptions(
+    const options = await SSHCredentialsHelper.getDockerSshConnectionOptions(
       mockedDeviceAuth.device,
       mockedDeviceAuth,
     );
@@ -231,7 +231,7 @@ async function checkDockerConnection(
 
 async function checkDeviceDockerConnection(device: Device, deviceAuth: DeviceAuth) {
   try {
-    const options = await DockerAPIHelper.getDockerSshConnectionOptions(device, deviceAuth);
+    const options = await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
     const agent = getCustomAgent(logger, {
       ...options.sshOptions,
     });

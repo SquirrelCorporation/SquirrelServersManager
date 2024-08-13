@@ -27,6 +27,7 @@ const onboardingPath = '/user/onboarding';
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
+  token?: string;
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
@@ -81,9 +82,7 @@ export const layout: RunTimeLayoutConfig = ({
       <DocumentationWidget key="doc" />,
       <DevicesHeaderWidget key="online" />,
       <HealthWidget key="health" />,
-      <NotificationsWidget
-        key="notifications"
-      />,
+      <NotificationsWidget key="notifications" />,
     ],
     avatarProps: {
       src: initialState?.currentUser?.avatar,

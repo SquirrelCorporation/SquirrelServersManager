@@ -25,7 +25,7 @@ export async function outLogin(options?: { [key: string]: any }) {
 }
 
 export async function currentUser(options?: Record<string, any>) {
-  return request<API.CurrentUser>('/api/users/current', {
+  return request<API.Response<API.CurrentUser>>('/api/users/current', {
     method: 'GET',
     ...(options || {}),
   });
