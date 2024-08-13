@@ -83,7 +83,7 @@
     "react-terminal": "^1.4.4",
     "ssm-shared-lib": "file:../shared-lib/",
     "umi-presets-pro": "^2.0.3",
-    "socket.io-client": "^4.7.5",
+    "socket.io-client": "^4.7.5"
   },
   "devDependencies": {
     "@ant-design/plots": "^2.2.8",
