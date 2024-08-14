@@ -1,3 +1,4 @@
+import { Live24Filled } from '@/components/Icons/CustomIcons';
 import {
   CloseCircleOutlined,
   EditOutlined,
@@ -25,9 +26,19 @@ export type ServiceQuickActionReferenceType = {
 
 export enum ServiceQuickActionReferenceActions {
   RENAME = 'rename',
+  LIVE_LOGS = 'logs',
 }
 
 const ServiceQuickActionReference: ServiceQuickActionReferenceType[] = [
+  {
+    type: ServiceQuickActionReferenceTypes.ACTION,
+    action: ServiceQuickActionReferenceActions.LIVE_LOGS,
+    label: (
+      <>
+        <Live24Filled /> Live Logs
+      </>
+    ),
+  },
   {
     type: ServiceQuickActionReferenceTypes.ACTION,
     action: ServiceQuickActionReferenceActions.RENAME,

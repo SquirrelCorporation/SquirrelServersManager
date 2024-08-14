@@ -9,6 +9,7 @@ import { SECRET } from '../config';
 import UserRepo from '../data/database/repository/UserRepo';
 import _logger from '../logger';
 import { getContainerLogs } from '../services/socket/container-logs';
+import { startSSHSession } from '../services/socket/ssh-session';
 
 export type SSMSocket = _Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 export type SSMSocketServer = Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
@@ -35,6 +36,7 @@ export default class Socket {
     this.io.on('connection', async (socket) => {
       const io = this.io;
       socket.on('logs:getLogs', getContainerLogs({ io, socket }));
+      socket.on('ssh:start', startSSHSession({ io, socket }));
     });
     this.io.engine.on('connection_error', (err) => {
       this.logger.debug(err.req); // the request object

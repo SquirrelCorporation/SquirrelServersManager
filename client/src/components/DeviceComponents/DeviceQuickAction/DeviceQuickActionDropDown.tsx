@@ -1,8 +1,10 @@
 import { TerminalStateProps } from '@/components/TerminalModal';
 import { DownOutlined } from '@ant-design/icons';
+import { history } from '@umijs/max';
 import { Dropdown, MenuProps, Space } from 'antd';
 import React, { Dispatch, ReactNode, SetStateAction } from 'react';
 import DeviceQuickActionReference, {
+  Actions,
   Types,
 } from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionReference';
 import PlaybookSelectionModal from '@/components/PlaybookSelection/PlaybookSelectionModal';
@@ -13,7 +15,7 @@ export type QuickActionProps = {
   onDropDownClicked: any;
   advancedMenu?: boolean;
   setTerminal: Dispatch<SetStateAction<TerminalStateProps>>;
-  target?: API.DeviceItem[];
+  target?: API.DeviceItem;
   children?: ReactNode;
 };
 
@@ -28,19 +30,25 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
         alert('Internal Error');
         return;
       }
+      if (DeviceQuickActionReference[idx].action === Actions.CONNECT) {
+        history.push({
+          pathname: `/manage/devices/ssh/${props.target?.uuid}`,
+        });
+        return;
+      }
       if (DeviceQuickActionReference[idx].type === Types.PLAYBOOK) {
         props.setTerminal({
           isOpen: true,
           quickRef: DeviceQuickActionReference[idx].playbookQuickRef,
-          target: props.target,
+          target: props.target ? [props.target] : undefined,
         });
-      } else if (
-        DeviceQuickActionReference[idx].type === Types.PLAYBOOK_SELECTION
-      ) {
-        setPlaybookSelectionModalIsOpened(true);
-      } else {
-        props.onDropDownClicked(idx);
+        return;
       }
+      if (DeviceQuickActionReference[idx].type === Types.PLAYBOOK_SELECTION) {
+        setPlaybookSelectionModalIsOpened(true);
+        return;
+      }
+      props.onDropDownClicked(idx);
     }
   };
 
@@ -75,7 +83,7 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
     props.setTerminal({
       isOpen: true,
       command: playbook,
-      target: props.target,
+      target: props.target ? [props.target] : undefined,
       extraVars: extraVars,
       playbookName: playbookName,
     });
@@ -86,7 +94,7 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
       <PlaybookSelectionModal
         isModalOpen={playbookSelectionModalIsOpened}
         setIsModalOpen={setPlaybookSelectionModalIsOpened}
-        itemSelected={props.target}
+        itemSelected={props.target ? [props.target] : undefined}
         callback={onSelectPlaybook}
       />
       <Dropdown menu={{ items, onClick }}>

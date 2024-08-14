@@ -38,6 +38,7 @@ import OsSoftwareVersions from '@/components/DeviceComponents/OSSoftwaresVersion
 import NewUnManagedDeviceModal from '@/components/NewDeviceModal/NewUnManagedDeviceModal';
 import { API } from 'ssm-shared-lib';
 import { DatabaseOutlined, WarningOutlined } from '@ant-design/icons';
+import { history } from '@umijs/max';
 
 const Inventory: React.FC = () => {
   const { id } = useParams();
@@ -82,9 +83,6 @@ const Inventory: React.FC = () => {
 
   const onDropDownClicked = (idx: number) => {
     if (DeviceQuickActionReference[idx].type === Types.ACTION) {
-      if (DeviceQuickActionReference[idx].action === Actions.CONNECT) {
-        window.location.href = 'ssh://' + currentRow?.ip;
-      }
       if (DeviceQuickActionReference[idx].action === Actions.DELETE) {
         setShowConfirmDeleteDevice(true);
       }

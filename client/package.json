@@ -80,10 +80,11 @@
     "react-helmet-async": "^2.0.5",
     "react-js-cron": "^5.0.1",
     "react-json-formatter": "^0.4.0",
-    "react-terminal": "^1.4.4",
     "ssm-shared-lib": "file:../shared-lib/",
     "umi-presets-pro": "^2.0.3",
-    "socket.io-client": "^4.7.5"
+    "socket.io-client": "^4.7.5",
+    "xterm": "^5.3.0",
+    "@xterm/addon-fit": "^0.10.0"
   },
   "devDependencies": {
     "@ant-design/plots": "^2.2.8",

@@ -20,6 +20,7 @@ import {
 import { Flex, message, Popover, Tag, Tooltip, Typography } from 'antd';
 import React from 'react';
 import { API, SsmContainer } from 'ssm-shared-lib';
+import { history } from '@umijs/max';
 
 type ContainerMetasProps = {
   selectedRecord?: API.Container;
@@ -41,6 +42,14 @@ const ContainerMetas = (props: ContainerMetasProps) => {
         ServiceQuickActionReferenceActions.RENAME
       ) {
         props.setIsEditContainerCustomNameModalOpened(true);
+      }
+      if (
+        ServiceQuickActionReference[idx].action ===
+        ServiceQuickActionReferenceActions.LIVE_LOGS
+      ) {
+        history.push({
+          pathname: `/manage/services/logs/${props.selectedRecord?.id}`,
+        });
       }
       if (
         Object.values(SsmContainer.Actions).includes(

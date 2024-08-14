@@ -1,12 +1,22 @@
+import TerminalCore, {
+  TerminalCoreHandles,
+} from '@/components/Terminal/TerminalCore';
 import TerminalHandler, {
   TaskStatusTimelineType,
 } from '@/components/TerminalModal/TerminalHandler';
-import TerminalLogs from '@/components/TerminalModal/TerminalLogs';
 import { ClockCircleOutlined, ThunderboltOutlined } from '@ant-design/icons';
-import { DotLottiePlayer } from '@dotlottie/react-player';
+import {
+  DotLottieCommonPlayer,
+  DotLottiePlayer,
+} from '@dotlottie/react-player';
 import { Button, Col, Modal, Row, Steps } from 'antd';
-import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { ReactTerminal, TerminalContext } from 'react-terminal';
+import React, {
+  LegacyRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import { API } from 'ssm-shared-lib';
 
 export interface TerminalCoreModalHandles {
@@ -28,11 +38,6 @@ const modalStyles = {
   body: {
     height: '600px',
   },
-};
-
-const terminalContentStyle = {
-  fontSize: '11px',
-  fontFamily: 'Menlo',
 };
 
 const POLLING_INTERVAL_MS = 3000;
@@ -63,24 +68,24 @@ const TerminalCoreModal = React.forwardRef<
     const [savedStatuses, setSavedStatuses] = useState(statusesType);
     const timerIdRef = useRef();
     const [hasReachedFinalStatus, setHasReachedFinalStatus] = useState(false);
-    const { setBufferedContent } = React.useContext(TerminalContext);
+    const terminalRef = useRef<TerminalCoreHandles>(null);
+    const lottieRef = useRef<DotLottieCommonPlayer>();
+
+    useEffect(() => {
+      if (hasReachedFinalStatus) {
+        terminalRef?.current?.onDataIn('# Playbook execution finished', true);
+        lottieRef.current?.stop();
+      }
+    }, [hasReachedFinalStatus]);
+
     const execLogCallBack = (execLog: API.ExecLog) => {
-      setBufferedContent((previous) => (
-        <TerminalLogs
-          execLog={execLog}
-          previous={previous}
-          terminalContentStyle={terminalContentStyle}
-        />
-      ));
+      if (execLog.stdout) {
+        terminalRef?.current?.onDataIn(execLog.stdout as string, true);
+      }
     };
 
     const resetScreen = () => {
-      setBufferedContent(() => (
-        <>
-          <span style={terminalContentStyle}>Starting...</span>
-          <br />
-        </>
-      ));
+      terminalRef?.current?.resetTerminalContent();
     };
 
     const terminalHandler = new TerminalHandler(
@@ -131,7 +136,7 @@ const TerminalCoreModal = React.forwardRef<
     }, [isPollingEnabled]);
 
     const resetTerminal = () => {
-      setBufferedContent('');
+      resetScreen();
       setIsPollingEnabled(false);
       setSavedStatuses([taskInit]);
       terminalHandler.resetTerminal();
@@ -159,6 +164,7 @@ const TerminalCoreModal = React.forwardRef<
           title={
             <div style={{ verticalAlign: 'center' }}>
               <DotLottiePlayer
+                ref={lottieRef as LegacyRef<DotLottieCommonPlayer>}
                 src="/Animation-1705922266332.lottie"
                 autoplay
                 loop
@@ -198,12 +204,12 @@ const TerminalCoreModal = React.forwardRef<
           <Row>
             <Col span={24}>
               <div style={{ height: '500px' }}>
-                <ReactTerminal
-                  theme="material-dark"
-                  showControlBar={false}
-                  showControlButtons={false}
-                  enableInput={false}
-                  prompt={'$'}
+                <TerminalCore
+                  ref={terminalRef}
+                  disableStdin={true}
+                  rows={35}
+                  cols={130}
+                  convertEol={true}
                 />
               </div>
             </Col>
