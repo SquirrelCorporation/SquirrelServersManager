@@ -18,6 +18,8 @@
 
 **Merged pull requests:**
 
+- Bump elliptic from 6.5.5 to 6.5.7 in /client in the npm\_and\_yarn group [\#185](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/185) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump axios from 1.7.3 to 1.7.4 in /server in the npm\_and\_yarn group [\#182](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/182) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @aws-sdk/client-ecr from 3.623.0 to 3.624.0 in /server [\#175](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/175) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump express-validator from 7.1.0 to 7.2.0 in /server [\#174](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/174) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 22.5.1-alpine to 22.6.0-alpine in /server [\#172](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/172) ([dependabot[bot]](https://github.com/apps/dependabot))
