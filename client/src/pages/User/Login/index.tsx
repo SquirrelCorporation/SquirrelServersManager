@@ -17,7 +17,7 @@ import { API } from 'ssm-shared-lib';
 
 const Login: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
-  const fetchUserInfo = async (token: string) => {
+  const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {
       flushSync(() => {
@@ -45,7 +45,7 @@ const Login: React.FC = () => {
       if (res.success) {
         const defaultLoginSuccessMessage = 'Success！';
         message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo(res.data.token);
+        await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
         return;

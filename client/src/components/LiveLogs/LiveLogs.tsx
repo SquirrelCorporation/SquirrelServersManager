@@ -31,7 +31,6 @@ const LiveLogs = React.forwardRef<LiveLogsHandles, LiveLogsProps>(
 
     const onNewLogs = (value: any) => {
       if (value) {
-        console.log(value);
         terminalRef?.current?.onDataIn(value.data);
       }
     };
