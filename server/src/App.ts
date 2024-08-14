@@ -3,14 +3,17 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 import passport from 'passport';
 import pinoHttp from 'pino-http';
+import { Server } from 'socket.io';
 import { SECRET } from './config';
 import logger, { httpLoggerOptions } from './logger';
 import { errorHandler } from './middlewares/ErrorHandler';
+import Socket from './middlewares/Socket';
 import routes from './routes';
 
 class AppWrapper {
   protected readonly app = express();
   private server?: http.Server;
+  private socket!: Socket;
 
   constructor() {
     this.setup();
@@ -42,6 +45,7 @@ class AppWrapper {
     🐿 Squirrel Servers Manager
     🚀 Server ready at: http://localhost:3000`),
     );
+    this.socket = new Socket(this.server);
   }
 
   public stopServer(callback: () => any) {
@@ -54,6 +58,10 @@ class AppWrapper {
 
   public getExpressApp() {
     return this.app;
+  }
+
+  public getSocket() {
+    return this.socket;
   }
 }
 

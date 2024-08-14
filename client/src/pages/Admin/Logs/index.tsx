@@ -1,7 +1,6 @@
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
 import ServerLogsColumns from '@/pages/Admin/Logs/ServerLogsColums';
 import { getServerLogs, getTasksLogs } from '@/services/rest/logs';
-import { getQueryStringParams } from '@/utils/querystring';
 import { UnorderedListOutlined } from '@ant-design/icons';
 import {
   ColumnsState,
@@ -12,12 +11,12 @@ import { ProForm } from '@ant-design/pro-form/lib';
 import React, { useState } from 'react';
 import TaskLogsColumns from '@/pages/Admin/Logs/TaskLogsColumns';
 import { API } from 'ssm-shared-lib';
-import { useLocation } from '@umijs/max';
+import { useSearchParams } from '@umijs/max';
 
 const Index: React.FC = () => {
   const [form] = ProForm.useForm<any>();
-  const { search } = useLocation();
-  const query = getQueryStringParams(search);
+  const [searchParams] = useSearchParams();
+
   const [columnsStateMap, setColumnsStateMap] = useState<
     Record<string, ColumnsState>
   >({
@@ -28,11 +27,11 @@ const Index: React.FC = () => {
       show: false,
     },
   });
-  if (query.module) {
-    form.setFieldsValue({ module: query.module });
+  if (searchParams.get('module')) {
+    form.setFieldsValue({ module: searchParams.get('module') });
   }
-  if (query.moduleId) {
-    form.setFieldsValue({ moduleId: query.moduleId });
+  if (searchParams.get('moduleId')) {
+    form.setFieldsValue({ moduleId: searchParams.get('moduleId') });
   }
   const logsTabItem = [
     {

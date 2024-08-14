@@ -8,6 +8,7 @@ export enum PageContainerTitleColors {
   SETTINGS = '#266ea8',
   DEVICES = '#5e9a35',
   PLAYBOOKS = '#554dce',
+  CONTAINER_LOGS = '#4942ae',
 }
 
 export enum SettingsSubTitleColors {

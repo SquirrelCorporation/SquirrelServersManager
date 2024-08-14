@@ -81,9 +81,7 @@ export const layout: RunTimeLayoutConfig = ({
       <DocumentationWidget key="doc" />,
       <DevicesHeaderWidget key="online" />,
       <HealthWidget key="health" />,
-      <NotificationsWidget
-        key="notifications"
-      />,
+      <NotificationsWidget key="notifications" />,
     ],
     avatarProps: {
       src: initialState?.currentUser?.avatar,

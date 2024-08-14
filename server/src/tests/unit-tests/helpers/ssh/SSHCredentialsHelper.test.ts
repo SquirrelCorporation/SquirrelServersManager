@@ -2,11 +2,11 @@ import { SsmAnsible } from 'ssm-shared-lib';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import Device from '../../../../data/database/model/Device';
 import DeviceAuth from '../../../../data/database/model/DeviceAuth';
+import SSHCredentialsHelper from '../../../../helpers/ssh/SSHCredentialsHelper';
 import * as vault from '../../../../modules/ansible-vault/ansible-vault';
-import DockerAPIHelper from '../../../../modules/docker/core/DockerAPIHelper';
 
 // The test cases
-describe('getDockerSshConnectionOptions', () => {
+describe('SSHCredentialsHelper', () => {
   // Mock the vaultDecrypt function
   vi.mock('../../../../modules/ansible-vault/ansible-vault', async (importOriginal) => {
     return {
@@ -49,7 +49,7 @@ describe('getDockerSshConnectionOptions', () => {
 
   test('should handle key-based SSHType for default Docker SSH', async () => {
     deviceAuth.authType = SsmAnsible.SSHType.KeyBased;
-    const result = DockerAPIHelper.getDockerSshConnectionOptions(device, deviceAuth);
+    const result = SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
 
     expect(result).resolves.toMatchObject({
       protocol: 'ssh',
@@ -76,7 +76,7 @@ describe('getDockerSshConnectionOptions', () => {
     deviceAuth.authType = SsmAnsible.SSHType.UserPassword;
     deviceAuth.sshPwd = 'sshpwd';
 
-    const result = await DockerAPIHelper.getDockerSshConnectionOptions(device, deviceAuth);
+    const result = await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
 
     expect(result).toMatchObject({
       protocol: 'ssh',
@@ -107,7 +107,7 @@ describe('getDockerSshConnectionOptions', () => {
     deviceAuth.dockerCustomSshKey = 'sshkey';
     deviceAuth.dockerCustomSshKeyPass = 'sshkeypass';
 
-    const result = await DockerAPIHelper.getDockerSshConnectionOptions(device, deviceAuth);
+    const result = await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
 
     expect(result).toMatchObject({
       protocol: 'ssh',
@@ -138,7 +138,7 @@ describe('getDockerSshConnectionOptions', () => {
     deviceAuth.dockerCustomSshUser = '$customUser';
     deviceAuth.dockerCustomSshPwd = 'sshcustompwd';
 
-    const result = await DockerAPIHelper.getDockerSshConnectionOptions(device, deviceAuth);
+    const result = await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
 
     expect(result).toMatchObject({
       protocol: 'ssh',

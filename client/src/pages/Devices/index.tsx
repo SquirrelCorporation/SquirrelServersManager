@@ -121,7 +121,7 @@ const Index = memo(() => {
                       <DeviceQuickActionDropDown
                         onDropDownClicked={onDropDownClicked}
                         setTerminal={setTerminal}
-                        target={[item]}
+                        target={item}
                       />
                     </a>,
                   ]}

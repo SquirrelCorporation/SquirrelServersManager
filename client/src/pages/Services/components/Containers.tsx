@@ -1,13 +1,12 @@
-import ContainerMetas from '@/pages/Devices/ContainerMetas';
+import ContainerMetas from '@/pages/Services/components/containers/ContainerMetas';
 import EditContainerNameModal from '@/pages/Services/components/containers/EditContainerNameModal';
 import { getContainers, postRefreshAll } from '@/services/rest/containers';
-import { getQueryStringParams } from '@/utils/querystring';
 import { ReloadOutlined } from '@ant-design/icons';
 import { ActionType, ProList } from '@ant-design/pro-components';
-import { useLocation } from '@umijs/max';
 import { Button, Form } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { API } from 'ssm-shared-lib';
+import { useSearchParams } from '@umijs/max';
 
 const Containers: React.FC = () => {
   const actionRef = useRef<ActionType>();
@@ -20,17 +19,17 @@ const Containers: React.FC = () => {
   >();
   const [form] = Form.useForm();
   const [refreshAllIsLoading, setRefreshAllIsLoading] = useState(false);
-  const { search } = useLocation();
-  const query = getQueryStringParams(search);
+  const [searchParams] = useSearchParams();
+  const searchDeviceUuid = searchParams.get('deviceUuid');
 
   useEffect(() => {
-    if (query.deviceUuid) {
+    if (searchDeviceUuid) {
       form.setFieldsValue({
-        deviceUuid: query.deviceUuid,
+        deviceUuid: searchDeviceUuid,
       });
       form.submit();
     }
-  }, [query.deviceUuid]);
+  }, [searchDeviceUuid]);
 
   const handleRefreshAll = () => {
     setRefreshAllIsLoading(true);

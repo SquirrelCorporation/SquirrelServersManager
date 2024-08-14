@@ -40,7 +40,7 @@ const Index: React.FC = () => {
       children: [
         {
           icon: <Templatetoolkit />,
-          label: 'Templates',
+          label: 'Store',
           key: 'templates',
         },
         {

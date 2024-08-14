@@ -8,7 +8,7 @@ import UserRepo from '../data/database/repository/UserRepo';
 const JWTStrategy = passportJWT.Strategy;
 const BearerStrategy = passportBearer.Strategy;
 
-const cookieExtractor = (req: Request) => {
+export const cookieExtractor = (req: Request) => {
   let jwt = null;
   if (req && req.cookies) {
     jwt = req.cookies['jwt'];

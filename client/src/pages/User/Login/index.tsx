@@ -24,6 +24,7 @@ const Login: React.FC = () => {
         setInitialState((s: any) => ({
           ...s,
           currentUser: userInfo,
+          token: token,
         }));
       });
     }

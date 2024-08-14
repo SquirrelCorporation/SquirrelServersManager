@@ -202,7 +202,7 @@ const InventoryColumns = (
             advancedMenu={true}
             onDropDownClicked={onDropDownClicked}
             setTerminal={setTerminal}
-            target={[record]}
+            target={record}
           />
         </a>,
       ],
