@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import Events from '../../../helpers/events/events';
+import Events from '../../../core/events/events';
 
 export const DOCUMENT_NAME = 'Notification';
 export const COLLECTION_NAME = 'notifications';

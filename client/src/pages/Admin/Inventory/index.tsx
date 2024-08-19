@@ -37,7 +37,6 @@ import {
   Row,
 } from 'antd';
 import React, { useRef, useState } from 'react';
-import { TerminalContextProvider } from 'react-terminal';
 import { API } from 'ssm-shared-lib';
 import ConfigurationModal from './components/ConfigurationModal';
 
@@ -125,156 +124,154 @@ const Inventory: React.FC = () => {
   };
 
   return (
-    <TerminalContextProvider>
-      <PageContainer
-        header={{
-          title: (
-            <Title.MainTitle
-              title={'Inventory'}
-              backgroundColor={PageContainerTitleColors.INVENTORY}
-              icon={<DatabaseOutlined />}
-            />
-          ),
-        }}
-      >
-        <Popconfirm
-          title="Delete a device"
-          description={
-            <>
-              Are you sure to delete the device? {currentRow?.ip} <br />
-              The agent must be manually uninstalled previously before
-            </>
-          }
-          open={showConfirmDeleteDevice}
-          onConfirm={() => onDeleteNewDevice()}
-          onCancel={() => setShowConfirmDeleteDevice(false)}
-          okText="Delete the device and all its data"
-          cancelText="Cancel"
-          icon={<WarningOutlined style={{ color: 'red' }} />}
-        />
-        <NewDeviceModal
-          isModalOpen={addNewDeviceModalIsOpen}
-          setIsModalOpen={setAddNewDeviceModalIsOpen}
-          onAddNewDevice={onAddNewDevice}
-        />
-        <NewUnManagedDeviceModal
-          isModalOpen={addNewUnManagedDeviceModalIsOpen}
-          setIsModalOpen={setAddNewUnManagedDeviceModalIsOpen}
-        />
-
-        <ProTable<API.DeviceItem, API.PageParams>
-          headerTitle="List of Devices"
-          actionRef={actionRef}
-          rowKey="ip"
-          search={{
-            labelWidth: 120,
-          }}
-          request={getDevices}
-          onDataSourceChange={(dataSource) => {
-            if (id) {
-              const foundId = dataSource.find((e) => e.uuid === id);
-              if (foundId) {
-                setCurrentRow(foundId);
-                setShowDetail(true);
-              }
-            }
-          }}
-          columns={columns}
-          rowSelection={{
-            onChange: (_, selectedRows) => {
-              setSelectedRows(selectedRows);
-            },
-          }}
-          toolBarRender={() => {
-            return [
-              <Dropdown.Button
-                menu={{ items, onClick: onMenuClick }}
-                key="3"
-                type="primary"
-                onClick={() => {
-                  setAddNewDeviceModalIsOpen(true);
-                }}
-              >
-                <Row>
-                  <Col>
-                    <GrommetIconsInstall />
-                  </Col>
-                  <Col>&nbsp;Install agent on new device</Col>
-                </Row>
-              </Dropdown.Button>,
-            ];
-          }}
-        />
-        {selectedRowsState?.length > 0 && (
+    <PageContainer
+      header={{
+        title: (
+          <Title.MainTitle
+            title={'Inventory'}
+            backgroundColor={PageContainerTitleColors.INVENTORY}
+            icon={<DatabaseOutlined />}
+          />
+        ),
+      }}
+    >
+      <Popconfirm
+        title="Delete a device"
+        description={
           <>
-            <PlaybookSelectionModal
-              isModalOpen={playbookSelectionModalIsOpened}
-              setIsModalOpen={setPlaybookSelectionModalIsOpened}
-              itemSelected={selectedRowsState}
-              callback={onSelectPlaybook}
-            />
-            <FooterToolbar
-              extra={
-                <div>
-                  Chosen{' '}
-                  <a style={{ fontWeight: 600 }}>{selectedRowsState.length}</a>{' '}
-                  item(s)
-                </div>
-              }
+            Are you sure to delete the device? {currentRow?.ip} <br />
+            The agent must be manually uninstalled previously before
+          </>
+        }
+        open={showConfirmDeleteDevice}
+        onConfirm={() => onDeleteNewDevice()}
+        onCancel={() => setShowConfirmDeleteDevice(false)}
+        okText="Delete the device and all its data"
+        cancelText="Cancel"
+        icon={<WarningOutlined style={{ color: 'red' }} />}
+      />
+      <NewDeviceModal
+        isModalOpen={addNewDeviceModalIsOpen}
+        setIsModalOpen={setAddNewDeviceModalIsOpen}
+        onAddNewDevice={onAddNewDevice}
+      />
+      <NewUnManagedDeviceModal
+        isModalOpen={addNewUnManagedDeviceModalIsOpen}
+        setIsModalOpen={setAddNewUnManagedDeviceModalIsOpen}
+      />
+
+      <ProTable<API.DeviceItem, API.PageParams>
+        headerTitle="List of Devices"
+        actionRef={actionRef}
+        rowKey="ip"
+        search={{
+          labelWidth: 120,
+        }}
+        request={getDevices}
+        onDataSourceChange={(dataSource) => {
+          if (id) {
+            const foundId = dataSource.find((e) => e.uuid === id);
+            if (foundId) {
+              setCurrentRow(foundId);
+              setShowDetail(true);
+            }
+          }
+        }}
+        columns={columns}
+        rowSelection={{
+          onChange: (_, selectedRows) => {
+            setSelectedRows(selectedRows);
+          },
+        }}
+        toolBarRender={() => {
+          return [
+            <Dropdown.Button
+              menu={{ items, onClick: onMenuClick }}
+              key="3"
+              type="primary"
+              onClick={() => {
+                setAddNewDeviceModalIsOpen(true);
+              }}
             >
-              <Button
-                onClick={() => {
-                  setPlaybookSelectionModalIsOpened(true);
-                }}
-                type="primary"
-              >
-                Apply Batch Playbook
-              </Button>
-            </FooterToolbar>
+              <Row>
+                <Col>
+                  <GrommetIconsInstall />
+                </Col>
+                <Col>&nbsp;Install agent on new device</Col>
+              </Row>
+            </Dropdown.Button>,
+          ];
+        }}
+      />
+      {selectedRowsState?.length > 0 && (
+        <>
+          <PlaybookSelectionModal
+            isModalOpen={playbookSelectionModalIsOpened}
+            setIsModalOpen={setPlaybookSelectionModalIsOpened}
+            itemSelected={selectedRowsState}
+            callback={onSelectPlaybook}
+          />
+          <FooterToolbar
+            extra={
+              <div>
+                Chosen{' '}
+                <a style={{ fontWeight: 600 }}>{selectedRowsState.length}</a>{' '}
+                item(s)
+              </div>
+            }
+          >
+            <Button
+              onClick={() => {
+                setPlaybookSelectionModalIsOpened(true);
+              }}
+              type="primary"
+            >
+              Apply Batch Playbook
+            </Button>
+          </FooterToolbar>
+        </>
+      )}
+      <TerminalModal
+        terminalProps={{ ...terminal, setIsOpen: openOrCloseTerminalModal }}
+      />
+      <ConfigurationModal
+        handleUpdateModalOpen={handleConfigurationModalOpen}
+        updateModalOpen={configurationModalOpen}
+        values={currentRow || {}}
+      />
+
+      <Drawer
+        width={600}
+        open={showDetail}
+        onClose={() => {
+          setCurrentRow(undefined);
+          setShowDetail(false);
+        }}
+        closable={false}
+      >
+        {currentRow?.ip && (
+          <>
+            <ProDescriptions<API.DeviceItem>
+              extra={<DeviceLogos device={currentRow} />}
+              column={1}
+              title={currentRow?.ip}
+              request={async () => ({
+                data: currentRow || {},
+              })}
+              params={{
+                id: currentRow?.ip,
+              }}
+              columns={columns as ProDescriptionsItemProps<API.DeviceItem>[]}
+            />
           </>
         )}
-        <TerminalModal
-          terminalProps={{ ...terminal, setIsOpen: openOrCloseTerminalModal }}
-        />
-        <ConfigurationModal
-          handleUpdateModalOpen={handleConfigurationModalOpen}
-          updateModalOpen={configurationModalOpen}
-          values={currentRow || {}}
-        />
-
-        <Drawer
-          width={600}
-          open={showDetail}
-          onClose={() => {
-            setCurrentRow(undefined);
-            setShowDetail(false);
-          }}
-          closable={false}
-        >
-          {currentRow?.ip && (
-            <>
-              <ProDescriptions<API.DeviceItem>
-                extra={<DeviceLogos device={currentRow} />}
-                column={1}
-                title={currentRow?.ip}
-                request={async () => ({
-                  data: currentRow || {},
-                })}
-                params={{
-                  id: currentRow?.ip,
-                }}
-                columns={columns as ProDescriptionsItemProps<API.DeviceItem>[]}
-              />
-            </>
-          )}
-          {currentRow?.versions && (
-            <div style={{ marginTop: '20px' }}>
-              <OsSoftwareVersions versions={currentRow.versions} />
-            </div>
-          )}
-        </Drawer>
-      </PageContainer>
-    </TerminalContextProvider>
+        {currentRow?.versions && (
+          <div style={{ marginTop: '20px' }}>
+            <OsSoftwareVersions versions={currentRow.versions} />
+          </div>
+        )}
+      </Drawer>
+    </PageContainer>
   );
 };
 

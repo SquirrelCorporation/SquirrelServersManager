@@ -6,42 +6,49 @@ import { registerSshSession } from '../../modules/ssh/SSHTerminalEngine';
 
 const logger = PinoLogger.child({ module: 'SocketService' }, { msgPrefix: '[SSH_SESSION] - ' });
 
-const sshSession = Joi.object({
+const sshSessionSchema = Joi.object({
   deviceUuid: Joi.string().required(),
   rows: Joi.number().required(),
   cols: Joi.number().required(),
 });
 
-export function startSSHSession({ io, socket }: { io: SSMSocketServer; socket: SSMSocket }) {
-  return async (payload, callback) => {
-    logger.info('startSSHSession');
+type CallbackType = (response: { status: string; error?: string }) => void;
 
+const validatePayload = (payload: any) => sshSessionSchema.validate(payload);
+
+const handleValidationError = (error: Joi.ValidationError, callback: CallbackType): void => {
+  logger.error(error);
+  callback({
+    status: 'Bad Request',
+    error: error.details?.map((e) => e.message).join(', '),
+  });
+};
+
+const findDeviceByUuid = async (deviceUuid: string) => {
+  const device = await DeviceRepo.findOneByUuid(deviceUuid);
+  if (!device) {
+    logger.error(`Device Id ${deviceUuid} not found`);
+    throw new Error(`Device Id ${deviceUuid} not found`);
+  }
+  return device;
+};
+
+export function startSSHSession({ socket }: { io: SSMSocketServer; socket: SSMSocket }) {
+  return async (payload: any, callback: CallbackType) => {
+    logger.info('startSSHSession');
     if (typeof callback !== 'function') {
-      logger.error('callback not fun');
+      logger.error('callback not a function');
       return;
     }
-    const { error, value } = sshSession.validate(payload);
+
+    const { error, value } = validatePayload(payload);
     if (error) {
-      logger.error(error);
-      return callback({
-        status: 'Bad Request',
-        error: error.details?.map((e) => e.message).join(', '),
-      });
-    }
-    const device = await DeviceRepo.findOneByUuid(value.deviceUuid);
-    if (!device) {
-      logger.error(`Device Id ${value.deviceUuid} not found`);
-      return callback({
-        status: 'Bad Request',
-        error: `Device Id ${value.deviceUuid} not found`,
-      });
+      return handleValidationError(error, callback);
     }
 
     try {
-      registerSshSession(value.deviceUuid, socket, {
-        rows: value.rows,
-        cols: value.cols,
-      });
+      const device = await findDeviceByUuid(value.deviceUuid);
+      registerSshSession(device.uuid, socket, { rows: value.rows, cols: value.cols });
     } catch (error: any) {
       logger.error(error);
       return callback({
@@ -49,8 +56,7 @@ export function startSSHSession({ io, socket }: { io: SSMSocketServer; socket: S
         error: error.message,
       });
     }
-    callback({
-      status: 'OK',
-    });
+
+    callback({ status: 'OK' });
   };
 }

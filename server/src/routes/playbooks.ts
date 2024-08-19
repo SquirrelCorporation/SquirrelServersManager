@@ -5,27 +5,27 @@ import {
   execPlaybookByQuickRef,
   getLogs,
   getStatus,
-} from '../services/playbooks/execution';
+} from '../services/rest/playbooks/execution';
 import {
   execPlaybookByQuickRefValidator,
   execPlaybookValidator,
   getLogsValidator,
   getStatusValidator,
-} from '../services/playbooks/execution.validator';
-import { addOrUpdateExtraVarValue } from '../services/playbooks/extravar';
-import { addOrUpdateExtraVarValueValidator } from '../services/playbooks/extravar.validator';
+} from '../services/rest/playbooks/execution.validator';
+import { addOrUpdateExtraVarValue } from '../services/rest/playbooks/extravar';
+import { addOrUpdateExtraVarValueValidator } from '../services/rest/playbooks/extravar.validator';
 import {
   getAnsibleGalaxyCollection,
   getAnsibleGalaxyCollections,
   postInstallAnsibleGalaxyCollection,
-} from '../services/playbooks/galaxy';
+} from '../services/rest/playbooks/galaxy';
 import {
   getAnsibleGalaxyCollectionValidator,
   getAnsibleGalaxyCollectionsValidator,
   postInstallAnsibleGalaxyCollectionValidator,
-} from '../services/playbooks/galaxy.validator';
-import { addTaskEvent, addTaskStatus } from '../services/playbooks/hook';
-import { getInventory } from '../services/playbooks/inventory';
+} from '../services/rest/playbooks/galaxy.validator';
+import { addTaskEvent, addTaskStatus } from '../services/rest/playbooks/hook';
+import { getInventory } from '../services/rest/playbooks/inventory';
 import {
   addExtraVarToPlaybook,
   deleteExtraVarFromPlaybook,
@@ -33,15 +33,15 @@ import {
   editPlaybook,
   getPlaybook,
   getPlaybooks,
-} from '../services/playbooks/playbook';
+} from '../services/rest/playbooks/playbook';
 import {
   addExtraVarToPlaybookValidator,
   deleteExtraVarFromPlaybookValidator,
   deletePlaybookValidator,
   editPlaybookValidator,
   getPlaybookValidator,
-} from '../services/playbooks/playbook.validator';
-import { getVaultPwd } from '../services/playbooks/vault';
+} from '../services/rest/playbooks/playbook.validator';
+import { getVaultPwd } from '../services/rest/playbooks/vault';
 
 const router = express.Router();
 

@@ -1,9 +1,9 @@
 import express from 'express';
 import passport from 'passport';
-import { getImages } from '../services/containers-services/images';
-import { getNetworks } from '../services/containers-services/networks';
-import { deploy, getTemplates } from '../services/containers-services/templates';
-import { getVolumes } from '../services/containers-services/volumes';
+import { getImages } from '../services/rest/containers-services/images';
+import { getNetworks } from '../services/rest/containers-services/networks';
+import { deploy, getTemplates } from '../services/rest/containers-services/templates';
+import { getVolumes } from '../services/rest/containers-services/volumes';
 
 const router = express.Router();
 

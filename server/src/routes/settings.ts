@@ -1,15 +1,15 @@
 import express from 'express';
 import passport from 'passport';
-import { postContainerStatsSettings } from '../services/settings/containerstats';
-import { postContainerStatsSettingsValidator } from '../services/settings/containerstats.validator';
-import { postDashboardSettings } from '../services/settings/dashboard';
-import { postDashboardSettingsValidator } from '../services/settings/dashboard.validator';
-import { postDevicesSettings } from '../services/settings/devices';
-import { postDevicesSettingsValidator } from '../services/settings/devices.validator';
-import { postDeviceStatsSettings } from '../services/settings/devicestats';
-import { postDeviceStatsSettingsValidator } from '../services/settings/devicestats.validator';
-import { postLogsSettings } from '../services/settings/logs';
-import { postLogsSettingsValidator } from '../services/settings/logs.validator';
+import { postContainerStatsSettings } from '../services/rest/settings/containerstats';
+import { postContainerStatsSettingsValidator } from '../services/rest/settings/containerstats.validator';
+import { postDashboardSettings } from '../services/rest/settings/dashboard';
+import { postDashboardSettingsValidator } from '../services/rest/settings/dashboard.validator';
+import { postDevicesSettings } from '../services/rest/settings/devices';
+import { postDevicesSettingsValidator } from '../services/rest/settings/devices.validator';
+import { postDeviceStatsSettings } from '../services/rest/settings/devicestats';
+import { postDeviceStatsSettingsValidator } from '../services/rest/settings/devicestats.validator';
+import { postLogsSettings } from '../services/rest/settings/logs';
+import { postLogsSettingsValidator } from '../services/rest/settings/logs.validator';
 import {
   deleteAnsibleLogs,
   deleteContainerStats,
@@ -17,7 +17,7 @@ import {
   deleteLogs,
   deletePlaybooksModelAndResync,
   postRestartServer,
-} from '../services/settings/advanced';
+} from '../services/rest/settings/advanced';
 
 const router = express.Router();
 

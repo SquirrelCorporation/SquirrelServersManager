@@ -1,23 +1,21 @@
 import * as util from 'node:util';
-import pino from 'pino';
+import { Logger } from 'pino';
 import { Socket } from 'socket.io';
-import { PseudoTtyOptions } from 'ssh2';
+import { ClientChannel, PseudoTtyOptions } from 'ssh2';
 import _logger from '../../logger';
 import SSHConnectionInstance from './SSHConnectionInstance';
 
 export default class SSHTerminalInstance {
   private sshConnectionInstance: SSHConnectionInstance;
   private socket: Socket;
-  private logger: pino.Logger<never>;
+  private logger: Logger;
   private readonly ttyOptions: PseudoTtyOptions;
 
   constructor(deviceUuid: string, socket: Socket, ttyOptions: PseudoTtyOptions) {
     this.sshConnectionInstance = new SSHConnectionInstance(deviceUuid);
     this.socket = socket;
     this.logger = _logger.child(
-      {
-        module: `SSHTerminalInstance`,
-      },
+      { module: 'SSHTerminalInstance' },
       { msgPrefix: '[SSH_TERMINAL_INSTANCE] - ' },
     );
     this.ttyOptions = ttyOptions;
@@ -41,98 +39,124 @@ export default class SSHTerminalInstance {
   private bind() {
     this.logger.info('bind');
 
-    this.sshConnectionInstance.ssh.on('banner', (data) => {
-      // need to convert to cr/lf for proper formatting
-      this.socket.emit('ssh:data', data.replace(/\r?\n/g, '\r\n').toString());
-    });
+    this.sshConnectionInstance.ssh.on('banner', this.handleBanner.bind(this));
+    this.sshConnectionInstance.ssh.on('ready', this.handleReady.bind(this));
+    this.sshConnectionInstance.ssh.on('end', this.handleEnd.bind(this));
+    this.sshConnectionInstance.ssh.on('close', this.handleClose.bind(this));
+    this.sshConnectionInstance.ssh.on('error', this.handleConnectionError.bind(this));
 
-    this.sshConnectionInstance.ssh.on('ready', () => {
-      this.logger.info('SSH CONNECTION ESTABLISHED');
-      this.socket.emit('ssh:status', { status: 'OK', message: 'SSH CONNECTION ESTABLISHED' });
-      const { term, cols, rows } = this.ttyOptions;
-      this.sshConnectionInstance.ssh.shell({ term, cols, rows }, (err, stream) => {
+    this.sshConnectionInstance.ssh.on(
+      'keyboard-interactive',
+      this.handleKeyboardInteractive.bind(this),
+    );
+  }
+
+  private handleBanner(data: string) {
+    this.socket.emit('ssh:data', data.replace(/\r?\n/g, '\r\n'));
+  }
+
+  private handleReady() {
+    this.logger.info('SSH CONNECTION ESTABLISHED');
+    this.socket.emit('ssh:status', { status: 'OK', message: 'SSH CONNECTION ESTABLISHED' });
+
+    this.sshConnectionInstance.ssh.shell(
+      this.ttyOptions,
+      (err: Error | undefined, stream: ClientChannel) => {
         if (err) {
           this.logger.error(err);
           this.sshConnectionInstance.ssh.end();
           this.socket.disconnect(true);
           return;
         }
-        this.socket.once('disconnect', (reason) => {
-          this.logger.warn(`CLIENT SOCKET DISCONNECT: ${util.inspect(reason)}`);
-          this.socket.emit('ssh:status', {
-            status: 'DISCONNECT',
-            message: 'SSH CONNECTION DISCONNECTED',
-          });
-          this.sshConnectionInstance.ssh.end();
-        });
-        this.socket.on('error', (errMsg) => {
-          this.logger.error(errMsg);
-          this.sshConnectionInstance.ssh.end();
-          this.socket.disconnect(true);
-        });
 
-        this.socket.on('ssh:resize', (data) => {
-          this.ttyOptions.rows = data.rows;
-          this.ttyOptions.cols = data.cols;
-          stream.setWindow(
-            this.ttyOptions.rows as number,
-            this.ttyOptions.cols as number,
-            this.ttyOptions.height as number,
-            this.ttyOptions.width as number,
-          );
-          this.logger.info(`SOCKET RESIZE: ${JSON.stringify([data.rows, data.cols])}`);
-        });
-        this.socket.on('ssh:data', (data) => {
-          this.logger.info(`write on stream: ${data}`);
-          stream.write(data);
-        });
-        stream.on('data', (data) => {
-          this.logger.info(`received on stream: ${data.toString('utf-8')}`);
-          this.socket.emit('ssh:data', data.toString('utf-8'));
-        });
-        stream.on('close', (code, signal) => {
-          this.logger.warn(`STREAM CLOSE: ${util.inspect([code, signal])}`);
-          if (code !== 0 && typeof code !== 'undefined') {
-            this.logger.error('STREAM CLOSE', util.inspect({ message: [code, signal] }));
-          }
-          this.socket.disconnect(true);
-          this.sshConnectionInstance.ssh.end();
-        });
-        stream.stderr.on('data', (data) => {
-          this.logger.error(`STDERR: ${data}`);
-        });
-      });
-    });
-
-    // @ts-expect-error TODO: to investigate
-    this.sshConnectionInstance.ssh.on('end', (err) => {
-      if (err) {
-        this.logger.error(err);
-      }
-      this.logger.error('CONN END BY HOST');
-      this.socket.disconnect(true);
-    });
-    // @ts-expect-error TODO: to investigate
-    this.sshConnectionInstance.ssh.on('close', (err) => {
-      if (err) {
-        this.logger.error(err);
-      }
-      this.logger.error('CONN CLOSE');
-      this.socket.disconnect(true);
-    });
-    this.sshConnectionInstance.ssh.on('error', (err) => this.handleConnectionError(err));
-
-    this.sshConnectionInstance.ssh.on(
-      'keyboard-interactive',
-      (_name, _instructions, _instructionsLang, _prompts, finish) => {
-        this.logger.info('CONN keyboard-interactive');
-        // TODO: to handle
-        //finish([socket.request.session.userpassword]);
+        this.configureStream(stream);
       },
     );
   }
 
-  handleConnectionError(err: any) {
+  private configureStream(stream: ClientChannel) {
+    this.socket.once('disconnect', this.handleSocketDisconnect.bind(this));
+    this.socket.on('error', this.handleSocketError.bind(this));
+    this.socket.on('ssh:resize', this.handleResize.bind(this, stream));
+    this.socket.on('ssh:data', this.handleSocketData.bind(this, stream));
+
+    stream.on('data', this.handleStreamData.bind(this));
+    stream.on('close', this.handleStreamClose.bind(this));
+    stream.stderr.on('data', (data: Buffer) => this.logger.error(`STDERR: ${data}`));
+  }
+
+  private handleSocketDisconnect(reason: any) {
+    this.logger.warn(`CLIENT SOCKET DISCONNECT: ${util.inspect(reason)}`);
+    this.socket.emit('ssh:status', {
+      status: 'DISCONNECT',
+      message: 'SSH CONNECTION DISCONNECTED',
+    });
+    this.sshConnectionInstance.ssh.end();
+  }
+
+  private handleSocketError(err: Error) {
+    this.logger.error(err);
+    this.sshConnectionInstance.ssh.end();
+    this.socket.disconnect(true);
+  }
+
+  private handleResize(stream: ClientChannel, data: { rows: number; cols: number }) {
+    this.ttyOptions.rows = data.rows;
+    this.ttyOptions.cols = data.cols;
+    stream.setWindow(
+      this.ttyOptions.rows,
+      this.ttyOptions.cols,
+      this.ttyOptions.height as number,
+      this.ttyOptions.width as number,
+    );
+    this.logger.info(`SOCKET RESIZE: ${JSON.stringify([data.rows, data.cols])}`);
+  }
+
+  private handleSocketData(stream: ClientChannel, data: string) {
+    this.logger.info(`write on stream: ${data}`);
+    stream.write(data);
+  }
+
+  private handleStreamData(data: Buffer) {
+    this.logger.info(`received on stream: ${data.toString('utf-8')}`);
+    this.socket.emit('ssh:data', data.toString('utf-8'));
+  }
+
+  private handleStreamClose(code: number | null, signal: string | null) {
+    this.logger.warn(`STREAM CLOSE: ${util.inspect([code, signal])}`);
+    if (code !== 0 && code !== null) {
+      this.logger.error('STREAM CLOSE', util.inspect({ message: [code, signal] }));
+    }
+    this.socket.disconnect(true);
+    this.sshConnectionInstance.ssh.end();
+  }
+
+  private handleEnd() {
+    this.logger.error('CONN END BY HOST');
+    this.socket.disconnect(true);
+  }
+
+  private handleClose() {
+    this.logger.error('CONN CLOSE');
+    this.socket.disconnect(true);
+  }
+
+  private handleKeyboardInteractive(
+    _name: string,
+    _instructions: string,
+    _instructionsLang: string,
+    _prompts: any,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    finish: (responses: string[]) => void,
+  ) {
+    this.logger.info('CONN keyboard-interactive');
+    this.logger.info(`${_name} ${_instructions} ${_instructionsLang}`);
+    this.logger.info(_prompts);
+    // TODO: to handle
+    // finish([socket.request.session.userpassword]);
+  }
+
+  private handleConnectionError(err: any) {
     let msg = util.inspect(err);
     if (err?.level === 'client-authentication') {
       msg = `Authentication failure from=${this.socket.handshake.address}`;

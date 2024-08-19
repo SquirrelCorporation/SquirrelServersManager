@@ -1,5 +1,4 @@
 import Dockerode from 'dockerode';
-import { Config } from 'node-ssh';
 import { ConnectConfig } from 'ssh2';
 import { SSHType } from 'ssm-shared-lib/distribution/enums/ansible';
 import Device from '../../data/database/model/Device';
