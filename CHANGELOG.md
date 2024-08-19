@@ -15,6 +15,7 @@
 **Fixed bugs:**
 
 - \[BUG\] keepalived IP used instead of the normal one [\#163](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/163)
+- \[BUG\] Remove outdated comment and ensure server initialization [\#199](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/199) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Merged pull requests:**
 
