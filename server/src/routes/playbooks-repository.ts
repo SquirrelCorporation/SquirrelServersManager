@@ -10,35 +10,35 @@ import {
   getGitRepositories,
   syncToDatabaseRepository,
   updateGitRepository,
-} from '../services/playbooks-repository/git';
+} from '../services/rest/playbooks-repository/git';
 import {
   addGitRepositoryValidator,
   genericGitRepositoryActionValidator,
   updateGitRepositoryValidator,
-} from '../services/playbooks-repository/git.validator';
+} from '../services/rest/playbooks-repository/git.validator';
 import {
   addLocalRepository,
   deleteLocalRepository,
   getLocalRepositories,
   syncToDatabaseLocalRepository,
   updateLocalRepository,
-} from '../services/playbooks-repository/local';
+} from '../services/rest/playbooks-repository/local';
 import {
   addLocalRepositoryValidator,
   genericActionLocalRepositoryValidator,
   updateLocalRepositoryValidator,
-} from '../services/playbooks-repository/local.validator';
+} from '../services/rest/playbooks-repository/local.validator';
 import {
   addDirectoryToPlaybookRepositoryValidator,
   addPlaybookToRepositoryValidator,
   deleteAnyFromRepositoryValidator,
-} from '../services/playbooks-repository/platbooks-repository.validator';
+} from '../services/rest/playbooks-repository/platbooks-repository.validator';
 import {
   addDirectoryToPlaybookRepository,
   addPlaybookToRepository,
   deleteAnyFromRepository,
   getPlaybooksRepositories,
-} from '../services/playbooks-repository/playbooks-repository';
+} from '../services/rest/playbooks-repository/playbooks-repository';
 
 const router = express.Router();
 

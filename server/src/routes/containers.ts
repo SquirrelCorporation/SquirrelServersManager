@@ -5,35 +5,35 @@ import {
   postContainerAction,
   postCustomNameOfContainer,
   refreshAll,
-} from '../services/containers/containers';
+} from '../services/rest/containers/containers';
 import {
   postContainerActionValidator,
   postCustomNameOfContainerValidator,
-} from '../services/containers/containers.validator';
+} from '../services/rest/containers/containers.validator';
 import {
   getAveragedStats,
   getContainerStatByContainerId,
   getContainerStatsByContainerId,
   getNbContainersByStatus,
-} from '../services/containers/containerstats';
+} from '../services/rest/containers/containerstats';
 import {
   getContainerStatByContainerIdValidator,
   getContainerStatsByContainerIdValidator,
   getNbContainersByStatusValidator,
-} from '../services/containers/containerstats.validator';
+} from '../services/rest/containers/containerstats.validator';
 import {
   createCustomRegistry,
   getRegistries,
   removeRegistry,
   resetRegistry,
   updateRegistry,
-} from '../services/containers/registries';
+} from '../services/rest/containers/registries';
 import {
   createCustomRegistryValidator,
   removeRegistryValidator,
   resetRegistryValidator,
   updateRegistryValidator,
-} from '../services/containers/registries.validator';
+} from '../services/rest/containers/registries.validator';
 
 const router = express.Router();
 

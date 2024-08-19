@@ -101,7 +101,6 @@ describe('DockerComposeHelper', () => {
     expect(result).toContain(
       'services:\n  my-title:\n' +
         '    container_name: my-name\n' +
-        '    image: undefined\n' +
         '    ports:\n      - 8080:80\n',
     );
   });
@@ -119,7 +118,6 @@ describe('DockerComposeHelper', () => {
     expect(result).toContain(
       'services:\n  my-title:\n' +
         '    container_name: my-name\n' +
-        '    image: undefined\n' +
         '    volumes:\n      - /host-path:/container-path:rw\n',
     );
   });
@@ -137,7 +135,6 @@ describe('DockerComposeHelper', () => {
     expect(result).toContain(
       'services:\n  my-title:\n' +
         '    container_name: my-name\n' +
-        '    image: undefined\n' +
         '    volumes:\n      - my-name__container-path_0:/container-path:rw\n' +
         'volumes:\n  my-name__container-path_0:\n' +
         '    labels:\n      - "ssm.volume.description=Created by SSM "\n',
@@ -156,8 +153,6 @@ describe('DockerComposeHelper', () => {
     expect(result).toContain(
       'services:\n' +
         '  my-title:\n' +
-        '    container_name: undefined\n' +
-        '    image: undefined\n' +
         '    environment:\n' +
         '      - DRINODE=enabled\n' +
         '    deploy:\n' +

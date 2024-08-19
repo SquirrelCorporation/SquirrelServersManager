@@ -1,5 +1,5 @@
 import express from 'express';
-import { getPing } from '../services/ping/ping';
+import { getPing } from '../services/rest/ping/ping';
 
 const router = express.Router();
 

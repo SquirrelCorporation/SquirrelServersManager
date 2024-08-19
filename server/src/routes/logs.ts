@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
-import { getServerLogs } from '../services/logs/server';
-import { getTaskLogs } from '../services/logs/task';
+import { getServerLogs } from '../services/rest/logs/server';
+import { getTaskLogs } from '../services/rest/logs/task';
 
 const router = express.Router();
 

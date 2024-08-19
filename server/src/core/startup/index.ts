@@ -16,42 +16,52 @@ import { setAnsibleVersions } from '../system/ansible-versions';
 
 class Startup {
   private logger = PinoLogger.child({ module: 'Startup' }, { msgPrefix: '[STARTUP] - ' });
+  private static readonly MODULE_STARTUP = '[STARTUP]';
 
   async init() {
-    const version = await getFromCache(SettingsKeys.GeneralSettingsKeys.SCHEME_VERSION);
+    const schemeVersion = await this.initializeSchemeVersion();
+    await this.initializeModules();
+    if (this.isSchemeVersionDifferent(schemeVersion)) {
+      await this.updateScheme();
+    }
+  }
+
+  private async initializeSchemeVersion(): Promise<string | null> {
+    const schemeVersion = await getFromCache(SettingsKeys.GeneralSettingsKeys.SCHEME_VERSION);
     this.logger.info(`initialization`);
-    this.logger.info(`initialization - Scheme Version: ${version}`);
-    // Must be called first
-    void DeviceAuthUseCases.saveAllDeviceAuthSshKeys();
-    // Sync to prevent empty UI.
+    this.logger.info(`${Startup.MODULE_STARTUP} - Scheme Version: ${schemeVersion}`);
+    return schemeVersion;
+  }
+
+  private async initializeModules() {
+    await DeviceAuthUseCases.saveAllDeviceAuthSshKeys();
     await PlaybooksRepositoryEngine.init();
-    // the rest
     void NotificationComponent.init();
     void Crons.initScheduledJobs();
     void WatcherEngine.init();
     void AutomationEngine.init();
-
-    if (version !== SettingsKeys.DefaultValue.SCHEME_VERSION) {
-      await this.migrate();
-      await createADefaultLocalUserRepository();
-      this.logger.warn(`Scheme version differed, starting writing updates`);
-      await initRedisValues();
-      void setAnsibleVersions();
-      await PlaybooksRepositoryEngine.syncAllRegistered();
-      providerConf
-        .filter(({ persist }) => persist)
-        .map((e) => {
-          ContainerRegistryUseCases.addIfNotExists(e);
-        });
-    }
   }
 
-  private async migrate() {
-    try {
-      await PlaybookModel.syncIndexes();
-    } catch (error: any) {
-      this.logger.error(error);
-    }
+  private async updateScheme() {
+    this.logger.warn(`Scheme version differed, starting writing updates`);
+    await PlaybookModel.syncIndexes();
+    await createADefaultLocalUserRepository();
+    await initRedisValues();
+    void setAnsibleVersions();
+    await PlaybooksRepositoryEngine.syncAllRegistered();
+    this.registerPersistedProviders();
+  }
+
+  private isSchemeVersionDifferent(schemeVersion: string | null): boolean {
+    return schemeVersion !== SettingsKeys.DefaultValue.SCHEME_VERSION;
+  }
+
+  private registerPersistedProviders() {
+    providerConf
+      .filter(({ persist }) => persist)
+      .forEach((config) => {
+        void ContainerRegistryUseCases.addIfNotExists(config);
+      });
   }
 }
 
