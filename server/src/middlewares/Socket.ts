@@ -50,7 +50,7 @@ export default class Socket {
   };
 
   private authenticateSocketJWT = (req: Request, res: Response, next: NextFunction) => {
-    const isHandshake = req._query.sid === undefined;
+    const isHandshake = (req as Request & { _query: { sid: string } })._query.sid === undefined;
     if (isHandshake) {
       if (!req.headers?.cookie) {
         next();
