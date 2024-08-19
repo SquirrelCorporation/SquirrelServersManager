@@ -18,6 +18,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Refacto and clean [\#197](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/197) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Refactor imports and remove unused code [\#196](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/196) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump rc-menu from 9.14.1 to 9.15.1 in /client [\#194](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/194) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump lint-staged from 15.2.8 to 15.2.9 in /client [\#193](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/193) ([dependabot[bot]](https://github.com/apps/dependabot))
