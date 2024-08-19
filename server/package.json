@@ -13,7 +13,7 @@
   "version": "0.1.17",
   "author": "Squirrel Team",
   "dependencies": {
-    "@aws-sdk/client-ecr": "^3.624.0",
+    "@aws-sdk/client-ecr": "^3.632.0",
     "axios": "^1.7.4",
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",
