@@ -1,11 +1,11 @@
+import styles from '@/pages/Dashboard/Analysis.less';
 import ChartCard from '@/pages/Dashboard/ChartComponents/ChartCard';
-import { Skeleton, Tooltip, Typography } from 'antd';
-import { InfoCircleFilled } from '@ant-design/icons';
 import Field from '@/pages/Dashboard/ChartComponents/Field';
 import Trend from '@/pages/Dashboard/ChartComponents/Trend';
-import styles from '@/pages/Dashboard/Analysis.less';
-import React, { useEffect } from 'react';
 import { getDashboardSystemPerformance } from '@/services/rest/devicestat';
+import { InfoCircleFilled } from '@ant-design/icons';
+import { Tooltip, Typography } from 'antd';
+import React, { useEffect } from 'react';
 import { API } from 'ssm-shared-lib';
 
 const SystemPerformanceCard: React.FC = () => {

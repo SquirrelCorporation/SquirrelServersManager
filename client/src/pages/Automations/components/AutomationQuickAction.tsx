@@ -8,10 +8,10 @@ import {
   PlayCircleOutlined,
   UnorderedListOutlined,
 } from '@ant-design/icons';
+import { history } from '@umijs/max';
 import { Dropdown, MenuProps, message, Space } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
-import { history } from '@umijs/max';
 
 type AutomationQuickActionProps = {
   record: API.Automation;

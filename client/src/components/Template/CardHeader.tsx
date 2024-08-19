@@ -1,4 +1,3 @@
-import { GrommetIconsHost } from '@/components/Icons/CustomIcons';
 import { Avatar, Col, Row } from 'antd';
 import React, { ReactNode } from 'react';
 

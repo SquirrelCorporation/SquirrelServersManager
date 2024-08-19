@@ -1,9 +1,9 @@
-import { ProFormInstance } from '@ant-design/pro-components';
-import React, { useRef } from 'react';
-import { Space, message } from 'antd';
-import { ProForm } from '@ant-design/pro-form/lib';
 import SSHConnectionForm from '@/components/DeviceConfiguration/SSHConnectionForm';
 import { getDeviceAuth, putDeviceAuth } from '@/services/rest/deviceauth';
+import { ProFormInstance } from '@ant-design/pro-components';
+import { ProForm } from '@ant-design/pro-form/lib';
+import { message, Space } from 'antd';
+import React, { useRef } from 'react';
 import { API } from 'ssm-shared-lib';
 
 export type ConfigurationFormSSHProps = {

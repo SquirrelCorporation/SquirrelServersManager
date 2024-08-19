@@ -1,9 +1,9 @@
+import AvailabilityCard from '@/pages/Dashboard/Components/AvailabilityCard';
+import CombinedPowerCard from '@/pages/Dashboard/Components/CombinedPowerCard';
+import ServicesCard from '@/pages/Dashboard/Components/ServicesCard';
+import SystemPerformanceCard from '@/pages/Dashboard/Components/SystemPerformanceCard';
 import { Col, Row } from 'antd';
 import React from 'react';
-import SystemPerformanceCard from '@/pages/Dashboard/Components/SystemPerformanceCard';
-import CombinedPowerCard from '@/pages/Dashboard/Components/CombinedPowerCard';
-import AvailabilityCard from '@/pages/Dashboard/Components/AvailabilityCard';
-import ServicesCard from '@/pages/Dashboard/Components/ServicesCard';
 
 const topColResponsiveProps = {
   xs: 24,

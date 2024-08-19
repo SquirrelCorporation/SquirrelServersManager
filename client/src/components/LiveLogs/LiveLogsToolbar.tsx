@@ -1,4 +1,4 @@
-import { PauseCircleFilled, StopFilled, StopOutlined } from '@ant-design/icons';
+import { StopOutlined } from '@ant-design/icons';
 import { Button, DatePicker, DatePickerProps, Flex } from 'antd';
 import dayjs from 'dayjs';
 import React from 'react';

@@ -1,16 +1,21 @@
 import DeviceLogos from '@/components/DeviceComponents/DeviceLogos';
-import { GrommetIconsInstall } from '@/components/Icons/CustomIcons';
-import NewDeviceModal from '@/components/NewDeviceModal/NewDeviceModal';
-import Title, { PageContainerTitleColors } from '@/components/Template/Title';
-import PlaybookSelectionModal from '@/components/PlaybookSelection/PlaybookSelectionModal';
 import DeviceQuickActionReference, {
   Actions,
   Types,
 } from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionReference';
-import TerminalModal, { TerminalStateProps } from '@/components/TerminalModal';
+import OsSoftwareVersions from '@/components/DeviceComponents/OSSoftwaresVersions/OsSoftwareVersions';
+import { GrommetIconsInstall } from '@/components/Icons/CustomIcons';
+import NewDeviceModal from '@/components/NewDeviceModal/NewDeviceModal';
+import NewUnManagedDeviceModal from '@/components/NewDeviceModal/NewUnManagedDeviceModal';
+import TerminalModal, {
+  TerminalStateProps,
+} from '@/components/PlaybookExecutionModal';
+import PlaybookSelectionModal from '@/components/PlaybookSelection/PlaybookSelectionModal';
+import Title, { PageContainerTitleColors } from '@/components/Template/Title';
 import InventoryColumns from '@/pages/Admin/Inventory/InventoryColumns';
 import { deleteDevice, getDevices } from '@/services/rest/device';
 import { useParams } from '@@/exports';
+import { DatabaseOutlined, WarningOutlined } from '@ant-design/icons';
 import type {
   ActionType,
   ProDescriptionsItemProps,
@@ -33,12 +38,8 @@ import {
 } from 'antd';
 import React, { useRef, useState } from 'react';
 import { TerminalContextProvider } from 'react-terminal';
-import ConfigurationModal from './components/ConfigurationModal';
-import OsSoftwareVersions from '@/components/DeviceComponents/OSSoftwaresVersions/OsSoftwareVersions';
-import NewUnManagedDeviceModal from '@/components/NewDeviceModal/NewUnManagedDeviceModal';
 import { API } from 'ssm-shared-lib';
-import { DatabaseOutlined, WarningOutlined } from '@ant-design/icons';
-import { history } from '@umijs/max';
+import ConfigurationModal from './components/ConfigurationModal';
 
 const Inventory: React.FC = () => {
   const { id } = useParams();

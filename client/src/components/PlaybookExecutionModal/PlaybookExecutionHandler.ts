@@ -1,4 +1,4 @@
-import taskStatusTimeline from '@/components/TerminalModal/TaskStatusTimeline';
+import taskStatusTimeline from '@/components/PlaybookExecutionModal/TaskStatusTimeline';
 import { getExecLogs, getTaskStatuses } from '@/services/rest/playbooks';
 import { StepsProps } from 'antd';
 import React, { ReactNode } from 'react';
@@ -10,7 +10,7 @@ export type TaskStatusTimelineType = StepsProps & {
   title: string;
 };
 
-export default class TerminalHandler {
+export default class PlaybookExecutionHandler {
   private statusesSet;
   private logsSet;
   public setIsPollingEnabled: React.Dispatch<React.SetStateAction<boolean>>;
@@ -76,10 +76,10 @@ export default class TerminalHandler {
               if (this.statusChangedCallBack) {
                 this.statusChangedCallBack(
                   status.status,
-                  TerminalHandler.isFinalStatus(status.status),
+                  PlaybookExecutionHandler.isFinalStatus(status.status),
                 );
               }
-              if (TerminalHandler.isFinalStatus(status.status)) {
+              if (PlaybookExecutionHandler.isFinalStatus(status.status)) {
                 if (this.setHasReachedFinalStatus) {
                   this.setHasReachedFinalStatus(true);
                 }

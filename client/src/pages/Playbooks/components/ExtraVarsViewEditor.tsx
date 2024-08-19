@@ -1,20 +1,20 @@
-import React, { useEffect } from 'react';
-import { Button, Collapse, message, Tooltip } from 'antd';
-import { API } from 'ssm-shared-lib';
-import { PlusOutlined } from '@ant-design/icons';
-import { ProForm } from '@ant-design/pro-form/lib';
-import {
-  ProFormCheckbox,
-  ProFormSelect,
-  ProFormText,
-  RequestOptionsType,
-} from '@ant-design/pro-components';
 import {
   deletePlaybookExtraVar,
   getPlaybooks,
   postExtraVarValue,
   postPlaybookExtraVar,
 } from '@/services/rest/playbooks';
+import { PlusOutlined } from '@ant-design/icons';
+import {
+  ProFormCheckbox,
+  ProFormSelect,
+  ProFormText,
+  RequestOptionsType,
+} from '@ant-design/pro-components';
+import { ProForm } from '@ant-design/pro-form/lib';
+import { Button, Collapse, message, Tooltip } from 'antd';
+import React, { useEffect } from 'react';
+import { API } from 'ssm-shared-lib';
 
 export type ExtraVarsViewEditionProps = {
   playbook: API.PlaybookFile;

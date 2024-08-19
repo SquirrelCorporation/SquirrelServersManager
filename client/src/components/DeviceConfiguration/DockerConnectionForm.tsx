@@ -22,10 +22,9 @@ import {
 } from '@ant-design/pro-components';
 import { Card, Flex, message, Space, Switch, Tooltip } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { API } from 'ssm-shared-lib';
 import Cron from 'react-js-cron';
 import 'react-js-cron/dist/styles.css';
-import { Validation } from 'ssm-shared-lib';
+import { API, Validation } from 'ssm-shared-lib';
 
 const connectionTypes = [
   {

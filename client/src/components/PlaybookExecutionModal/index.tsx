@@ -1,6 +1,6 @@
 import TerminalCoreModal, {
-  TerminalCoreModalHandles,
-} from '@/components/TerminalModal/TerminalCoreModal';
+  PlaybookExecutionTerminalModalHandles,
+} from '@/components/PlaybookExecutionModal/PlaybookExecutionTerminalModal';
 import {
   executePlaybook,
   executePlaybookByQuickRef,
@@ -27,8 +27,8 @@ export type TerminalModalProps = {
 const TerminalModal = (props: TerminalModalProps) => {
   const [execId, setExecId] = React.useState('');
   const [isPollingEnabled, setIsPollingEnabled] = useState(false);
-  const ref: RefObject<TerminalCoreModalHandles> =
-    React.createRef<TerminalCoreModalHandles>();
+  const ref: RefObject<PlaybookExecutionTerminalModalHandles> =
+    React.createRef<PlaybookExecutionTerminalModalHandles>();
 
   const startTerminal = async () => {
     ref.current?.resetTerminal();

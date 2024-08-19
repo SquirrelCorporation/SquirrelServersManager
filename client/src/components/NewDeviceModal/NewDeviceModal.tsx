@@ -1,9 +1,15 @@
+import CheckDeviceConnection from '@/components/DeviceConfiguration/CheckDeviceConnection';
+import SSHConnectionForm from '@/components/DeviceConfiguration/SSHConnectionForm';
 import {
   GrommetIconsInstall,
   StreamlineComputerConnection,
   TablerPlugConnected,
 } from '@/components/Icons/CustomIcons';
-import CheckDeviceConnection from '@/components/DeviceConfiguration/CheckDeviceConnection';
+import {
+  postCheckAnsibleConnection,
+  postCheckDockerConnection,
+  putDevice,
+} from '@/services/rest/device';
 import { DownloadOutlined, InfoCircleFilled } from '@ant-design/icons';
 import {
   ProForm,
@@ -13,25 +19,19 @@ import {
 } from '@ant-design/pro-components';
 import { DotLottiePlayer, PlayMode } from '@dotlottie/react-player';
 import {
+  Avatar,
   Button,
+  Card,
+  Col,
   Flex,
   Input,
-  Modal,
-  Typography,
   message,
+  Modal,
   Row,
-  Col,
-  Avatar,
   Tooltip,
-  Card,
+  Typography,
 } from 'antd';
 import React, { useRef, useState } from 'react';
-import SSHConnectionForm from '@/components/DeviceConfiguration/SSHConnectionForm';
-import {
-  postCheckDockerConnection,
-  postCheckAnsibleConnection,
-  putDevice,
-} from '@/services/rest/device';
 
 export type NewDeviceModalProps = {
   isModalOpen: boolean;

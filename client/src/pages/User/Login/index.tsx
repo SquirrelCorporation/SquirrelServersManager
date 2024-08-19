@@ -1,18 +1,12 @@
-import { hasUser } from '@/services/rest/user';
-import { user } from '@/services/rest/user';
+// @ts-ignore
+import loginBackground from '@/pages/User/Login/assets/login-background.mp4';
+import { hasUser, user } from '@/services/rest/user';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import {
-  LoginFormPage,
-  ProConfigProvider,
-  ProFormCheckbox,
-  ProFormText,
-} from '@ant-design/pro-components';
+import { LoginFormPage, ProConfigProvider, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
 import { history, useModel } from '@umijs/max';
 import { Divider, message } from 'antd';
 import React from 'react';
 import { flushSync } from 'react-dom';
-// @ts-ignore
-import loginBackground from '@/pages/User/Login/assets/login-background.mp4';
 import { API } from 'ssm-shared-lib';
 
 const Login: React.FC = () => {
@@ -24,7 +18,6 @@ const Login: React.FC = () => {
         setInitialState((s: any) => ({
           ...s,
           currentUser: userInfo,
-          token: token,
         }));
       });
     }

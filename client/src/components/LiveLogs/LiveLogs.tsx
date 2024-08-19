@@ -3,14 +3,8 @@ import TerminalCore, {
 } from '@/components/Terminal/TerminalCore';
 import { socket } from '@/socket';
 import { useParams } from '@@/exports';
-import { LoadingOutlined } from '@ant-design/icons';
 import { message } from 'antd';
-import React, {
-  RefObject,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from 'react';
+import React, { RefObject, useEffect, useImperativeHandle } from 'react';
 
 export interface LiveLogsHandles {
   handleStop: () => void;

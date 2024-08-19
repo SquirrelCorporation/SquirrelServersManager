@@ -1,8 +1,8 @@
 import DeviceQuickActionDropDown from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionDropDown';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-components';
-import React from 'react';
 import { Col, Row, Typography } from 'antd';
+import React from 'react';
 import { API } from 'ssm-shared-lib';
 
 const InventoryColumns = (

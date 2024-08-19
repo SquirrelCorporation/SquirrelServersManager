@@ -1,5 +1,5 @@
-import { API } from 'ssm-shared-lib';
 import { request } from '@umijs/max';
+import { API } from 'ssm-shared-lib';
 
 export async function getAllNotifications(
   params?: API.PageParams,

@@ -14,10 +14,26 @@ import { API, SsmContainer } from 'ssm-shared-lib';
 
 const options = [
   { label: 'Stop', value: SsmContainer.Actions.STOP, icon: <StopOutlined /> },
-  { label: 'Restart', value: SsmContainer.Actions.RESTART, icon: <SwapOutlined /> },
-  { label: 'Start', value: SsmContainer.Actions.START, icon: <PlayCircleFilled /> },
-  { label: 'Kill', value: SsmContainer.Actions.KILL, icon: <CloseCircleOutlined /> },
-  { label: 'Pause', value: SsmContainer.Actions.PAUSE, icon: <PauseOutlined /> },
+  {
+    label: 'Restart',
+    value: SsmContainer.Actions.RESTART,
+    icon: <SwapOutlined />,
+  },
+  {
+    label: 'Start',
+    value: SsmContainer.Actions.START,
+    icon: <PlayCircleFilled />,
+  },
+  {
+    label: 'Kill',
+    value: SsmContainer.Actions.KILL,
+    icon: <CloseCircleOutlined />,
+  },
+  {
+    label: 'Pause',
+    value: SsmContainer.Actions.PAUSE,
+    icon: <PauseOutlined />,
+  },
 ];
 
 const DockerActionSubForm: React.FC = () => {

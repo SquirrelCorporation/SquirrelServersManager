@@ -4,7 +4,6 @@ import {
   EditOutlined,
   PauseOutlined,
   PlayCircleFilled,
-  StopFilled,
   StopOutlined,
   SwapOutlined,
 } from '@ant-design/icons';

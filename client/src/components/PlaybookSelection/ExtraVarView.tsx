@@ -1,7 +1,7 @@
-import React from 'react';
-import { Button, Space, Typography } from 'antd';
-import { API } from 'ssm-shared-lib';
 import { ProForm, ProFormText } from '@ant-design/pro-components';
+import { Button, Space, Typography } from 'antd';
+import React from 'react';
+import { API } from 'ssm-shared-lib';
 
 export type ExtraVarViewProps = {
   extraVar: API.ExtraVar;

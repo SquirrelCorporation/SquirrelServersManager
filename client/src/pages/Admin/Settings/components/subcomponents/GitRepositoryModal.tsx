@@ -10,7 +10,7 @@ import {
   syncToDatabaseGitRepository,
 } from '@/services/rest/playbooks-repositories';
 import { ModalForm, ProForm, ProFormText } from '@ant-design/pro-components';
-import { Avatar, Button, message, Dropdown, MenuProps } from 'antd';
+import { Avatar, Button, Dropdown, MenuProps, message } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 

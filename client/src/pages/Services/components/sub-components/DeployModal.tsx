@@ -1,6 +1,6 @@
 import TerminalCoreModal, {
-  TerminalCoreModalHandles,
-} from '@/components/TerminalModal/TerminalCoreModal';
+  PlaybookExecutionTerminalModalHandles,
+} from '@/components/PlaybookExecutionModal/PlaybookExecutionTerminalModal';
 import { postDeploy } from '@/services/rest/services';
 import { message } from 'antd';
 import React, { RefObject, useEffect, useState } from 'react';
@@ -19,8 +19,8 @@ const DeployModal: React.FC<DeployModalProps> = ({
 }) => {
   const [execId, setExecId] = React.useState('');
   const [isPollingEnabled, setIsPollingEnabled] = useState(false);
-  const ref: RefObject<TerminalCoreModalHandles> =
-    React.createRef<TerminalCoreModalHandles>();
+  const ref: RefObject<PlaybookExecutionTerminalModalHandles> =
+    React.createRef<PlaybookExecutionTerminalModalHandles>();
 
   const startTerminal = async () => {
     ref.current?.resetTerminal();

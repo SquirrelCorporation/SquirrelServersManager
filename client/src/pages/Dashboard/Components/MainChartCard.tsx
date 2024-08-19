@@ -1,4 +1,12 @@
+import {
+  getDashboardAveragedDevicesStats,
+  getDashboardDevicesStats,
+} from '@/services/rest/devicestat';
+import Devicestatus from '@/utils/devicestatus';
+import { getTimeDistance } from '@/utils/time';
 import { LoadingOutlined } from '@ant-design/icons';
+import { Line } from '@ant-design/plots';
+import { useModel } from '@umijs/max';
 import {
   Card,
   Col,
@@ -10,17 +18,9 @@ import {
   TabsProps,
   Typography,
 } from 'antd';
-import styles from '../Analysis.less';
-import { Line } from '@ant-design/plots';
 import React, { useEffect, useState } from 'react';
-import {
-  getDashboardAveragedDevicesStats,
-  getDashboardDevicesStats,
-} from '@/services/rest/devicestat';
-import { useModel } from '@umijs/max';
-import { getTimeDistance } from '@/utils/time';
-import Devicestatus from '@/utils/devicestatus';
 import { API } from 'ssm-shared-lib';
+import styles from '../Analysis.less';
 
 const { RangePicker } = DatePicker;
 

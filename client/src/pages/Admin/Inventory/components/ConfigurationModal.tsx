@@ -1,8 +1,8 @@
 import ConnectionTestTab from '@/pages/Admin/Inventory/components/ConnectionTestTab';
 import DockerConfigurationForm from '@/pages/Admin/Inventory/components/DockerConfigurationForm';
+import SSHConfigurationForm from '@/pages/Admin/Inventory/components/SSHConfigurationForm';
 import { Modal, Tabs, TabsProps } from 'antd';
 import React from 'react';
-import SSHConfigurationForm from '@/pages/Admin/Inventory/components/SSHConfigurationForm';
 import { API } from 'ssm-shared-lib';
 
 export type ConfigurationModalProps = {

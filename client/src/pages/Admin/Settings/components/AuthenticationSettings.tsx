@@ -1,24 +1,16 @@
 import { MynauiApi } from '@/components/Icons/CustomIcons';
 import Title, { SettingsSubTitleColors } from '@/components/Template/Title';
-import { postResetApiKey, postUserLogs } from '@/services/rest/usersettings';
+import { postResetApiKey } from '@/services/rest/usersettings';
 import { useModel } from '@@/exports';
-import {
-  InfoCircleFilled,
-  UnorderedListOutlined,
-  WarningOutlined,
-} from '@ant-design/icons';
+import { InfoCircleFilled, WarningOutlined } from '@ant-design/icons';
 import {
   Button,
   Card,
-  Col,
   Flex,
   Input,
-  InputNumber,
   message,
   Popconfirm,
   Popover,
-  Row,
-  Slider,
   Space,
   Typography,
 } from 'antd';

@@ -1,11 +1,11 @@
-import { Tooltip, Typography } from 'antd';
-import { InfoCircleFilled } from '@ant-design/icons';
-import Trend from '@/pages/Dashboard/ChartComponents/Trend';
 import styles from '@/pages/Dashboard/Analysis.less';
-import MiniProgress from '@/pages/Dashboard/ChartComponents/MiniProgress';
 import ChartCard from '@/pages/Dashboard/ChartComponents/ChartCard';
-import React, { useEffect } from 'react';
+import MiniProgress from '@/pages/Dashboard/ChartComponents/MiniProgress';
+import Trend from '@/pages/Dashboard/ChartComponents/Trend';
 import { getDashboardAvailabilityStat } from '@/services/rest/devicestat';
+import { InfoCircleFilled } from '@ant-design/icons';
+import { Tooltip, Typography } from 'antd';
+import React, { useEffect } from 'react';
 import { API } from 'ssm-shared-lib';
 
 const AvailabilityCard: React.FC = () => {

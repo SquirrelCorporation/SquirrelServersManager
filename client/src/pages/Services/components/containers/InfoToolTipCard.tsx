@@ -1,12 +1,9 @@
-import { CPULogo } from '@/components/DeviceComponents/CPULogo';
-import { OsLogo } from '@/components/DeviceComponents/OsLogo/OsLogo';
-import { StatusTagProps } from '@/pages/Services/components/containers/StatusTag';
 import {
   CloudSyncOutlined,
   DeploymentUnitOutlined,
   DesktopOutlined,
 } from '@ant-design/icons';
-import { Avatar, Card, Flex, Space, Tag } from 'antd';
+import { Card, Flex, Space, Tag } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 

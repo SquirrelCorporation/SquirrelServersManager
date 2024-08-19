@@ -11,7 +11,6 @@ import {
   CheckSquareOutlined,
   CloseOutlined,
   InfoCircleFilled,
-  SmileOutlined,
 } from '@ant-design/icons';
 import { ActionType, ProList } from '@ant-design/pro-components';
 import {

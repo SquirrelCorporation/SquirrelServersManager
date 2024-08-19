@@ -1,3 +1,4 @@
+import { outLogin } from '@/services/rest/user';
 import {
   LogoutOutlined,
   SettingOutlined,
@@ -11,7 +12,6 @@ import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
 import { flushSync } from 'react-dom';
 import HeaderDropdown from './HeaderDropDown';
-import { outLogin } from '@/services/rest/user';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
