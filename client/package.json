@@ -57,7 +57,7 @@
     "@antv/g2plot": "^2.4.32",
     "@dotlottie/react-player": "^1.6.19",
     "@monaco-editor/react": "^4.6.0",
-    "@umijs/max": "^4.3.11",
+    "@umijs/max": "^4.3.14",
     "@umijs/plugin-antd-dayjs": "^0.3.0",
     "@umijs/route-utils": "^4.0.1",
     "antd": "^5.20.0",
