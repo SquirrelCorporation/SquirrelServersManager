@@ -1,7 +1,7 @@
 import { Live24Filled } from '@/components/Icons/CustomIcons';
 import LiveLogs, { LiveLogsHandles } from '@/components/LiveLogs/LiveLogs';
 import LiveLogsToolbar from '@/components/LiveLogs/LiveLogsToolbar';
-import Title, { PageContainerTitleColors } from '@/components/Template/Title';
+import Title, { TitleColors } from '@/components/Template/Title';
 import { PageContainer } from '@ant-design/pro-components';
 import moment from 'moment';
 import React, { RefObject, useState } from 'react';
@@ -18,7 +18,7 @@ const Logs: React.FC = () => {
     <PageContainer
       title={
         <Title.MainTitle
-          backgroundColor={PageContainerTitleColors.CONTAINER_LOGS}
+          backgroundColor={TitleColors.CONTAINER_LOGS}
           title={'Live Logs'}
           icon={<Live24Filled />}
         />

@@ -11,7 +11,7 @@ import TerminalModal, {
   TerminalStateProps,
 } from '@/components/PlaybookExecutionModal';
 import PlaybookSelectionModal from '@/components/PlaybookSelection/PlaybookSelectionModal';
-import Title, { PageContainerTitleColors } from '@/components/Template/Title';
+import Title, { TitleColors } from '@/components/Template/Title';
 import InventoryColumns from '@/pages/Admin/Inventory/InventoryColumns';
 import { deleteDevice, getDevices } from '@/services/rest/device';
 import { useParams } from '@@/exports';
@@ -129,7 +129,7 @@ const Inventory: React.FC = () => {
         title: (
           <Title.MainTitle
             title={'Inventory'}
-            backgroundColor={PageContainerTitleColors.INVENTORY}
+            backgroundColor={TitleColors.INVENTORY}
             icon={<DatabaseOutlined />}
           />
         ),

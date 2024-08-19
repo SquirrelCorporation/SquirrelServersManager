@@ -3,7 +3,7 @@ import {
   MaterialSymbolsDashboard,
   PajamasLog,
 } from '@/components/Icons/CustomIcons';
-import Title, { SettingsSubTitleColors } from '@/components/Template/Title';
+import Title, { TitleColors } from '@/components/Template/Title';
 import {
   deleteAnsibleLogs,
   deleteContainerStats,
@@ -25,7 +25,7 @@ const AdvancedSettings: React.FC = () => {
         title={
           <Title.SubTitle
             title={'Logs'}
-            backgroundColor={SettingsSubTitleColors.LOGS_RETENTION}
+            backgroundColor={TitleColors.LOGS_RETENTION}
             icon={<PajamasLog />}
           />
         }
@@ -77,7 +77,7 @@ const AdvancedSettings: React.FC = () => {
         title={
           <Title.SubTitle
             title={'Statistics'}
-            backgroundColor={SettingsSubTitleColors.DASHBOARD}
+            backgroundColor={TitleColors.DASHBOARD}
             icon={<MaterialSymbolsDashboard />}
           />
         }
@@ -132,7 +132,7 @@ const AdvancedSettings: React.FC = () => {
         title={
           <Title.SubTitle
             title={'Server'}
-            backgroundColor={SettingsSubTitleColors.SERVER}
+            backgroundColor={TitleColors.SERVER}
             icon={<IonServer />}
           />
         }
@@ -164,7 +164,7 @@ const AdvancedSettings: React.FC = () => {
         title={
           <Title.SubTitle
             title={'Debug'}
-            backgroundColor={SettingsSubTitleColors.DEBUG}
+            backgroundColor={TitleColors.DEBUG}
             icon={<BugFilled />}
           />
         }

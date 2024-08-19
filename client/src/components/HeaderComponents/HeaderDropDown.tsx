@@ -1,8 +1,8 @@
+import React from 'react';
+import classNames from 'classnames';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { Dropdown } from 'antd';
 import type { DropDownProps } from 'antd/es/dropdown';
-import classNames from 'classnames';
-import React from 'react';
 
 export type HeaderDropdownProps = {
   overlayClassName?: string;
@@ -16,18 +16,20 @@ export type HeaderDropdownProps = {
 } & Omit<DropDownProps, 'overlay'>;
 
 const HeaderDropdown: React.FC<HeaderDropdownProps> = ({
-  overlayClassName: cls,
+  overlayClassName,
   ...restProps
 }) => {
-  const className = useEmotionCss(({ token }) => {
-    return {
-      [`@media screen and (max-width: ${token.screenXS}px)`]: {
-        width: '100%',
-      },
-    };
-  });
+  const className = useEmotionCss(({ token }) => ({
+    [`@media screen and (max-width: ${token.screenXS}px)`]: {
+      width: '100%',
+    },
+  }));
+
   return (
-    <Dropdown overlayClassName={classNames(className, cls)} {...restProps} />
+    <Dropdown
+      overlayClassName={classNames(className, overlayClassName)}
+      {...restProps}
+    />
   );
 };
 

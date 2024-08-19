@@ -1,4 +1,4 @@
-import Title, { PageContainerTitleColors } from '@/components/Template/Title';
+import Title, { TitleColors } from '@/components/Template/Title';
 import AutomationsColumns from '@/pages/Automations/AutomationsColumns';
 import AutomationEditionDrawer from '@/pages/Automations/components/Drawer/AutomationEditionDrawer';
 import CronColumns from '@/pages/Automations/CronsColumns';
@@ -72,7 +72,7 @@ const Automations: React.FC = () => {
         title: (
           <Title.MainTitle
             title={'Automations'}
-            backgroundColor={PageContainerTitleColors.CRONS}
+            backgroundColor={TitleColors.CRONS}
             icon={<InteractionOutlined />}
           />
         ),

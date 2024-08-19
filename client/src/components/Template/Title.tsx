@@ -1,7 +1,7 @@
 import { Avatar, Col, Row, Typography } from 'antd';
 import React, { ReactNode } from 'react';
 
-export enum PageContainerTitleColors {
+export enum TitleColors {
   CRONS = '#142312',
   INVENTORY = '#9f0f2e',
   LOGS = '#21561b',
@@ -9,11 +9,8 @@ export enum PageContainerTitleColors {
   DEVICES = '#5e9a35',
   PLAYBOOKS = '#554dce',
   CONTAINER_LOGS = '#4942ae',
-}
-
-export enum SettingsSubTitleColors {
   LOGS_RETENTION = '#7c4275',
-  DEVICES = '#ab6e43',
+  SETTINGS_DEVICES = '#ab6e43',
   DASHBOARD = '#b0412a',
   DANGER_ZONE = '#f51b36',
   USER_LOGS = '#6d26a8',
@@ -26,53 +23,44 @@ export enum SettingsSubTitleColors {
 
 export type PageContainerTitleProps = {
   title: string;
-  backgroundColor: PageContainerTitleColors | SettingsSubTitleColors;
+  backgroundColor: TitleColors;
   icon: ReactNode;
-  level?: 1 | 5 | 4 | 2 | 3 | undefined;
+  level?: 1 | 2 | 3 | 4 | 5;
+  isMain?: boolean;
 };
 
-const MainTitle: React.FC<PageContainerTitleProps> = (
-  props: PageContainerTitleProps,
-) => (
+const avatarStyle = (backgroundColor: string) => ({ backgroundColor });
+const colStyle = { marginLeft: 5, marginTop: 'auto', marginBottom: 'auto' };
+
+const PageContainerTitleRow: React.FC<PageContainerTitleProps> = ({
+  title,
+  backgroundColor,
+  icon,
+  level,
+  isMain,
+}) => (
   <Row>
     <Col>
-      <Avatar
-        style={{ backgroundColor: props.backgroundColor }}
-        shape="square"
-        icon={props.icon}
-      />
+      <Avatar style={avatarStyle(backgroundColor)} shape="square" icon={icon} />
     </Col>
-    <Col style={{ marginLeft: 5, marginTop: 'auto', marginBottom: 'auto' }}>
-      <Typography.Title
-        style={{
-          marginLeft: 5,
-          marginTop: 'auto',
-          marginBottom: 'auto',
-        }}
-        level={props.level || 4}
-      >
-        {' '}
-        {props.title}
-      </Typography.Title>
+    <Col style={colStyle}>
+      {isMain ? (
+        <Typography.Title level={level || 4} style={{ margin: 0 }}>
+          {title}
+        </Typography.Title>
+      ) : (
+        title
+      )}
     </Col>
   </Row>
 );
 
-const SubTitle: React.FC<PageContainerTitleProps> = (
-  props: PageContainerTitleProps,
-) => (
-  <Row>
-    <Col>
-      <Avatar
-        style={{ backgroundColor: props.backgroundColor }}
-        shape="square"
-        icon={props.icon}
-      />
-    </Col>
-    <Col style={{ marginLeft: 5, marginTop: 'auto', marginBottom: 'auto' }}>
-      {props.title}
-    </Col>
-  </Row>
+const MainTitle: React.FC<PageContainerTitleProps> = (props) => (
+  <PageContainerTitleRow {...props} isMain />
+);
+
+const SubTitle: React.FC<PageContainerTitleProps> = (props) => (
+  <PageContainerTitleRow {...props} />
 );
 
 export default {

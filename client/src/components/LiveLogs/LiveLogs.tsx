@@ -1,10 +1,10 @@
+import React, { useImperativeHandle, useEffect, useRef } from 'react';
+import { message } from 'antd';
+import { useParams } from '@@/exports';
 import TerminalCore, {
   TerminalCoreHandles,
 } from '@/components/Terminal/TerminalCore';
 import { socket } from '@/socket';
-import { useParams } from '@@/exports';
-import { message } from 'antd';
-import React, { RefObject, useEffect, useImperativeHandle } from 'react';
 
 export interface LiveLogsHandles {
   handleStop: () => void;
@@ -15,17 +15,17 @@ export interface LiveLogsProps {
   from: number;
 }
 
+const ROWS = Math.ceil(document.body.clientHeight / 16);
+const COLS = Math.ceil(document.body.clientWidth / 8);
+
 const LiveLogs = React.forwardRef<LiveLogsHandles, LiveLogsProps>(
   ({ from }, ref) => {
-    const rows = Math.ceil(document.body.clientHeight / 16);
-    const cols = Math.ceil(document.body.clientWidth / 8);
     const { id } = useParams();
-    const terminalRef: RefObject<TerminalCoreHandles> =
-      React.createRef<TerminalCoreHandles>();
+    const terminalRef = useRef<TerminalCoreHandles>(null);
 
     const onNewLogs = (value: any) => {
       if (value) {
-        terminalRef?.current?.onDataIn(value.data);
+        terminalRef.current?.onDataIn(value.data);
       }
     };
 
@@ -35,36 +35,35 @@ const LiveLogs = React.forwardRef<LiveLogsHandles, LiveLogsProps>(
     };
 
     const resetTerminalContent = () => {
-      terminalRef?.current?.resetTerminalContent();
+      terminalRef.current?.resetTerminalContent();
     };
 
-    useImperativeHandle(ref, () => ({
-      handleStop,
-      resetTerminalContent,
-    }));
+    const handleConnectionError = (errorMessage: string) => {
+      void message.error({
+        content: `Socket failed to connect ${errorMessage}`,
+        duration: 6,
+      });
+    };
 
-    useEffect(() => {
+    const startSocketConnection = () => {
       socket.connect();
       resetTerminalContent();
       socket
-        .emitWithAck('logs:getLogs', { containerId: id, from: from })
-        .then((e) => {
-          if (e.status === 'OK') {
+        .emitWithAck('logs:getLogs', { containerId: id, from })
+        .then((response) => {
+          if (response.status === 'OK') {
             socket.on('logs:newLogs', onNewLogs);
           } else {
-            void message.error({
-              content: `Socket failed to connect (${e.status} - ${e.error})`,
-              duration: 6,
-            });
+            handleConnectionError(`(${response.status} - ${response.error})`);
           }
         })
-        .catch((e) => {
-          void message.error({
-            content: `Socket failed to connect ${e.message}`,
-            duration: 6,
-          });
-        });
+        .catch((e) => handleConnectionError(e.message));
+    };
 
+    useImperativeHandle(ref, () => ({ handleStop, resetTerminalContent }));
+
+    useEffect(() => {
+      startSocketConnection();
       return () => {
         socket.emit('logs:closing');
         socket.off('logs:newLogs', onNewLogs);
@@ -75,8 +74,8 @@ const LiveLogs = React.forwardRef<LiveLogsHandles, LiveLogsProps>(
     return (
       <div style={{ height: '800px', marginTop: 10 }}>
         <TerminalCore
-          rows={rows}
-          cols={cols}
+          rows={ROWS}
+          cols={COLS}
           ref={terminalRef}
           disableStdin={true}
           convertEol={true}

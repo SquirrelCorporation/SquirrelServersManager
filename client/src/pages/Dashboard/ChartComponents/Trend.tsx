@@ -7,7 +7,15 @@ import classNames from 'classnames';
 import React from 'react';
 import styles from './Trend.less';
 
-const Trend: React.FC<any> = ({
+interface TrendProps extends React.HTMLAttributes<HTMLDivElement> {
+  colorful?: boolean;
+  reverseColor?: boolean;
+  flag?: 'up' | 'down' | 'eq';
+  className?: string;
+  children: React.ReactNode;
+}
+
+const Trend: React.FC<TrendProps> = ({
   colorful = true,
   reverseColor = true,
   flag,
@@ -23,6 +31,7 @@ const Trend: React.FC<any> = ({
     },
     className,
   );
+
   return (
     <div
       {...rest}
@@ -41,4 +50,4 @@ const Trend: React.FC<any> = ({
   );
 };
 
-export default Trend;
+export default React.memo(Trend);

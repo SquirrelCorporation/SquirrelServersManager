@@ -12,6 +12,22 @@
   }
 }
 
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rankingItem {
+  animation: fadeInUp 0.5s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
 .rankingList {
   margin: 25px 0 0;
   padding: 0;

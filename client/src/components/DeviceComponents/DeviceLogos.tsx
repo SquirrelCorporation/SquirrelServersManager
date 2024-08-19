@@ -8,22 +8,20 @@ type DeviceLogosProps = {
   device?: API.DeviceItem;
 };
 
-const DeviceLogos: React.FC<DeviceLogosProps> = (props: DeviceLogosProps) => (
-  <>
-    {props?.device?.osLogoFile && (
-      <Avatar
-        src={
-          <img
-            src={OsLogo(props.device?.osLogoFile)}
-            alt={props.device?.osLogoFile}
-          />
-        }
-      />
-    )}
-    {props?.device?.cpuBrand && (
-      <CPULogo cpuBrand={props.device.cpuBrand} osArch={props.device.osArch} />
-    )}
-  </>
-);
+const DeviceLogos: React.FC<DeviceLogosProps> = ({ device }) => {
+  const osLogoSrc = device?.osLogoFile ? OsLogo(device.osLogoFile) : null;
+  const hasCpuLogo = device?.cpuBrand !== undefined;
+
+  return (
+    <>
+      {osLogoSrc && (
+        <Avatar src={<img src={osLogoSrc} alt={device?.osLogoFile} />} />
+      )}
+      {hasCpuLogo && (
+        <CPULogo cpuBrand={device.cpuBrand} osArch={device.osArch} />
+      )}
+    </>
+  );
+};
 
 export default DeviceLogos;

@@ -68,7 +68,6 @@
     "monaco-editor-webpack-plugin": "^7.1.0",
     "monaco-languageserver-types": "^0.4.0",
     "monaco-yaml": "^5.2.2",
-    "querystring": "^0.2.1",
     "rc-banner-anim": "^2.4.5",
     "rc-menu": "^9.15.1",
     "rc-queue-anim": "^2.0.0",
@@ -84,7 +83,8 @@
     "umi-presets-pro": "^2.0.3",
     "socket.io-client": "^4.7.5",
     "xterm": "^5.3.0",
-    "@xterm/addon-fit": "^0.10.0"
+    "@xterm/addon-fit": "^0.10.0",
+    "framer-motion":"^11.3.28"
   },
   "devDependencies": {
     "@ant-design/plots": "^2.2.8",

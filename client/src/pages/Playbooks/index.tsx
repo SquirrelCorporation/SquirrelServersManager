@@ -1,4 +1,4 @@
-import Title, { PageContainerTitleColors } from '@/components/Template/Title';
+import Title, { TitleColors } from '@/components/Template/Title';
 import DirectoryTreeView from '@/pages/Playbooks/components/DirectoryTreeView';
 import ExtraVarsViewEditor from '@/pages/Playbooks/components/ExtraVarsViewEditor';
 import FloatingButtonsBar from '@/pages/Playbooks/components/FloatingButtonsBar';
@@ -293,7 +293,7 @@ const Index: React.FC = () => {
         title: (
           <Title.MainTitle
             title={'Playbooks'}
-            backgroundColor={PageContainerTitleColors.PLAYBOOKS}
+            backgroundColor={TitleColors.PLAYBOOKS}
             icon={<PlaySquareOutlined />}
           />
         ),

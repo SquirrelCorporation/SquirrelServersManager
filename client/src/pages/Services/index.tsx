@@ -5,7 +5,7 @@ import {
   PromptTemplate,
   Templatetoolkit,
 } from '@/components/Icons/CustomIcons';
-import Title, { PageContainerTitleColors } from '@/components/Template/Title';
+import Title, { TitleColors } from '@/components/Template/Title';
 import Containers from '@/pages/Services/components/Containers';
 import Images from '@/pages/Services/components/Images';
 import Networks from '@/pages/Services/components/Networks';
@@ -72,7 +72,7 @@ const Index: React.FC = () => {
         title: (
           <Title.MainTitle
             title={'Services'}
-            backgroundColor={PageContainerTitleColors.PLAYBOOKS}
+            backgroundColor={TitleColors.PLAYBOOKS}
             icon={<AppstoreOutlined />}
           />
         ),
