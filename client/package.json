@@ -60,7 +60,7 @@
     "@umijs/max": "^4.3.11",
     "@umijs/plugin-antd-dayjs": "^0.3.0",
     "@umijs/route-utils": "^4.0.1",
-    "antd": "^5.20.0",
+    "antd": "^5.20.1",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.12",
     "lodash": "^4.17.21",
