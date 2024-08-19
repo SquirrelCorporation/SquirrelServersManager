@@ -70,7 +70,7 @@
     "monaco-yaml": "^5.2.2",
     "querystring": "^0.2.1",
     "rc-banner-anim": "^2.4.5",
-    "rc-menu": "^9.14.1",
+    "rc-menu": "^9.15.1",
     "rc-queue-anim": "^2.0.0",
     "rc-tween-one": "^3.0.6",
     "react": "^18.3.1",
