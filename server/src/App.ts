@@ -11,7 +11,7 @@ import routes from './routes';
 
 class AppWrapper {
   protected readonly app = express();
-  private server?: http.Server;
+  private server!: http.Server;
   private socket!: Socket;
 
   constructor() {
