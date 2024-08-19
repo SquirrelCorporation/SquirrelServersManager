@@ -3,7 +3,6 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 import passport from 'passport';
 import pinoHttp from 'pino-http';
-import { Server } from 'socket.io';
 import { SECRET } from './config';
 import logger, { httpLoggerOptions } from './logger';
 import { errorHandler } from './middlewares/ErrorHandler';

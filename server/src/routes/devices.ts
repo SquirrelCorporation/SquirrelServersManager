@@ -6,54 +6,54 @@ import {
   deleteDevice,
   getDevices,
   updateDockerWatcher,
-} from '../services/devices/device';
+} from '../services/rest/devices/device';
 import {
   addDeviceAutoValidator,
   addDeviceValidator,
   deleteDeviceValidator,
-} from '../services/devices/device.validator';
+} from '../services/rest/devices/device.validator';
 import {
   addOrUpdateDeviceAuth,
   getDeviceAuth,
   updateDockerAuth,
-} from '../services/devices/deviceauth';
+} from '../services/rest/devices/deviceauth';
 import {
   addOrUpdateDeviceAuthValidator,
   getDeviceAuthValidator,
   updateDockerAuthValidator,
-} from '../services/devices/deviceauth.validator';
+} from '../services/rest/devices/deviceauth.validator';
 import {
   getDeviceStatByDeviceUuid,
   getDeviceStatsByDeviceUuid,
   updateDeviceAndAddDeviceStat,
-} from '../services/devices/devicestats';
+} from '../services/rest/devices/devicestats';
 import {
   getDeviceStatByDeviceUuidValidator,
   getDeviceStatsByDeviceUuidValidator,
   updateDeviceAndAddDeviceStatValidator,
-} from '../services/devices/devicestats.validator';
+} from '../services/rest/devices/devicestats.validator';
 import {
   getDashboardAvailabilityStats,
   getDashboardAveragedStats,
   getDashboardPerformanceStats,
   getDashboardStat,
-} from '../services/devices/devicestatsdashboard';
+} from '../services/rest/devices/devicestatsdashboard';
 import {
   getDashboardAveragedStatsValidator,
   getDashboardStatValidator,
-} from '../services/devices/devicestatsdashboard.validator';
+} from '../services/rest/devices/devicestatsdashboard.validator';
 import {
   getCheckDeviceAnsibleConnection,
   getCheckDeviceDockerConnection,
   postCheckAnsibleConnection,
   postCheckDockerConnection,
-} from '../services/devices/check-connection';
+} from '../services/rest/devices/check-connection';
 import {
   getCheckDeviceAnsibleConnectionValidator,
   getCheckDeviceDockerConnectionValidator,
   postCheckAnsibleConnectionValidator,
   postCheckDockerConnectionValidator,
-} from '../services/devices/check-connection.validator';
+} from '../services/rest/devices/check-connection.validator';
 
 const router = express.Router();
 

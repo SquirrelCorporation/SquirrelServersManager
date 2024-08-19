@@ -7,13 +7,13 @@ import {
   manualAutomationExecution,
   postAutomation,
   putAutomation,
-} from '../services/automations/automations';
+} from '../services/rest/automations/automations';
 import {
   deleteAutomationValidator,
   manualAutomationExecutionValidator,
   postAutomationValidator,
   putAutomationValidator,
-} from '../services/automations/automations.validator';
+} from '../services/rest/automations/automations.validator';
 
 const router = express.Router();
 

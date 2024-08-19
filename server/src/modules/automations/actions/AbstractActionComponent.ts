@@ -1,8 +1,8 @@
 import pino from 'pino';
 import { Automations } from 'ssm-shared-lib';
 import AutomationRepo from '../../../data/database/repository/AutomationRepo';
-import EventManager from '../../../helpers/events/EventManager';
-import Events from '../../../helpers/events/events';
+import EventManager from '../../../core/events/EventManager';
+import Events from '../../../core/events/events';
 import logger from '../../../logger';
 
 abstract class AbstractActionComponent extends EventManager {

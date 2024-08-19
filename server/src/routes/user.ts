@@ -1,11 +1,11 @@
 import express from 'express';
 import passport from 'passport';
-import { login, logout } from '../services/user/login';
-import { loginValidator } from '../services/user/login.validator';
-import { resetUserApiKey, setUserLoglevel } from '../services/user/settings';
-import { setUserLoglevelValidator } from '../services/user/settings.validator';
-import { createFirstUser, getCurrentUser, hasUser } from '../services/user/user';
-import { createFirstUserValidator } from '../services/user/user.validator';
+import { login, logout } from '../services/rest/user/login';
+import { loginValidator } from '../services/rest/user/login.validator';
+import { resetUserApiKey, setUserLoglevel } from '../services/rest/user/settings';
+import { setUserLoglevelValidator } from '../services/rest/user/settings.validator';
+import { createFirstUser, getCurrentUser, hasUser } from '../services/rest/user/user';
+import { createFirstUserValidator } from '../services/rest/user/user.validator';
 
 const router = express.Router();
 

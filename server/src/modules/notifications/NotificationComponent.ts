@@ -1,7 +1,7 @@
 import InAppNotification from '../../data/database/model/InAppNotification';
 import InAppNotificationRepo from '../../data/database/repository/InAppNotificationRepo';
-import EventManager, { Payload } from '../../helpers/events/EventManager';
-import Events from '../../helpers/events/events';
+import EventManager, { Payload } from '../../core/events/EventManager';
+import Events from '../../core/events/events';
 import pinoLogger from '../../logger';
 
 class NotificationComponent extends EventManager {
@@ -9,6 +9,7 @@ class NotificationComponent extends EventManager {
     { module: `Notification` },
     { msgPrefix: '[NOTIFICATION-COMPONENT] - ' },
   );
+
   private eventsToListen = [
     Events.AUTOMATION_FAILED,
     Events.DOCKER_STAT_FAILED,
@@ -21,15 +22,20 @@ class NotificationComponent extends EventManager {
 
   async init() {
     this.childLogger.info('init');
-    this.eventsToListen.map((e) => {
-      this.on(e, (playload: Payload) => this.onNotification(e, playload));
+    this.subscribeToEvents();
+  }
+
+  private subscribeToEvents() {
+    this.eventsToListen.forEach((event) => {
+      this.on(event, (payload: Payload) => this.handleNotificationEvent(event, payload));
     });
   }
 
-  private async onNotification(event: string, playload: Payload) {
+  private async handleNotificationEvent(event: string, payload: Payload) {
     try {
-      const { message, severity, module, moduleId } = playload;
+      const { message, severity, module, moduleId } = payload;
       this.childLogger.info('Notification received');
+
       await InAppNotificationRepo.create({
         event,
         message,
@@ -37,10 +43,8 @@ class NotificationComponent extends EventManager {
         module,
         moduleId,
       } as InAppNotification);
-    } catch (e) {
-      if (this?.childLogger) {
-        this.childLogger.error(e);
-      }
+    } catch (error) {
+      this.childLogger?.error(error);
     }
   }
 }
