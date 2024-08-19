@@ -1,5 +1,5 @@
 import { Live24Filled } from '@/components/Icons/CustomIcons';
-import Title, { PageContainerTitleColors } from '@/components/Template/Title';
+import Title, { TitleColors } from '@/components/Template/Title';
 import TerminalCore, {
   TerminalCoreHandles,
 } from '@/components/Terminal/TerminalCore';
@@ -74,7 +74,7 @@ const DeviceSSHTerminal = () => {
     <PageContainer
       title={
         <Title.MainTitle
-          backgroundColor={PageContainerTitleColors.CONTAINER_LOGS}
+          backgroundColor={TitleColors.CONTAINER_LOGS}
           title={'SSH'}
           icon={<Live24Filled />}
         />

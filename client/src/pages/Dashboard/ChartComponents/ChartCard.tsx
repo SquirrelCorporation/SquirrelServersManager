@@ -1,29 +1,19 @@
 import { Skeleton, Typography } from 'antd';
 import classNames from 'classnames';
-import React from 'react';
+import React, { useMemo } from 'react';
 import styles from './ChartCard.less';
 
 const renderTotal = (total: any) => {
-  let totalDom;
-  switch (typeof total) {
-    case 'undefined':
-      totalDom = null;
-      break;
-    case 'function':
-      totalDom = (
-        <div className={styles.total}>
-          <Typography.Title level={3}>{total()}</Typography.Title>
-        </div>
-      );
-      break;
-    default:
-      totalDom = (
-        <div className={styles.total}>
-          <Typography.Title level={3}>{total}</Typography.Title>
-        </div>
-      );
+  if (total === undefined) {
+    return null;
   }
-  return totalDom;
+  return (
+    <div className={styles.total}>
+      <Typography.Title level={3}>
+        {typeof total === 'function' ? total() : total}
+      </Typography.Title>
+    </div>
+  );
 };
 
 const ChartCard: React.FC<any> = ({
@@ -36,9 +26,12 @@ const ChartCard: React.FC<any> = ({
   children,
   loading,
 }) => {
+  const totalDom = useMemo(() => renderTotal(total), [total]);
+
   if (loading) {
     return <Skeleton active className={styles.chartCard} />;
   }
+
   return (
     <div className={styles.chartCard}>
       <div
@@ -52,7 +45,7 @@ const ChartCard: React.FC<any> = ({
             <span className={styles.title}>{title}</span>
             <span className={styles.action}>{action}</span>
           </div>
-          {renderTotal(total)}
+          {totalDom}
         </div>
       </div>
       {children && (
@@ -60,7 +53,9 @@ const ChartCard: React.FC<any> = ({
           className={styles.content}
           style={{ height: contentHeight || 'auto' }}
         >
-          <div className={contentHeight && styles.contentFixed}>{children}</div>
+          <div className={contentHeight ? styles.contentFixed : ''}>
+            {children}
+          </div>
         </div>
       )}
       {footer && (
@@ -75,4 +70,5 @@ const ChartCard: React.FC<any> = ({
     </div>
   );
 };
-export default ChartCard;
+
+export default React.memo(ChartCard);

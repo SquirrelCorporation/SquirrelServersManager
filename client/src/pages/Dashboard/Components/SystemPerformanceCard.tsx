@@ -5,76 +5,106 @@ import Trend from '@/pages/Dashboard/ChartComponents/Trend';
 import { getDashboardSystemPerformance } from '@/services/rest/devicestat';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { Tooltip, Typography } from 'antd';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { API } from 'ssm-shared-lib';
 
 const SystemPerformanceCard: React.FC = () => {
-  const [loading, setLoading] = React.useState(false);
-  const [performancesStat, setPerformancesStat] =
-    React.useState<API.PerformanceStat>({
+  const [loading, setLoading] = useState(false);
+  const [performancesStat, setPerformancesStat] = useState<API.PerformanceStat>(
+    {
       currentCpu: 0,
       currentMem: 0,
       previousCpu: 0,
       previousMem: 0,
       danger: false,
       message: '',
-    });
+    },
+  );
 
-  const asyncFetch = async () => {
+  const asyncFetch = useCallback(async () => {
     setLoading(true);
-    await getDashboardSystemPerformance()
-      .then((response) => {
-        setPerformancesStat(response.data);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+    try {
+      const response = await getDashboardSystemPerformance();
+      setPerformancesStat(response.data);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    asyncFetch();
-  }, []);
+    void asyncFetch();
+  }, [asyncFetch]);
+
+  const title = useMemo(
+    () => <Typography.Title level={5}>System Performance</Typography.Title>,
+    [],
+  );
+
+  const action = useMemo(
+    () => (
+      <Tooltip title="System performance settings can be defined in settings">
+        <InfoCircleFilled style={{ color: 'white' }} />
+      </Tooltip>
+    ),
+    [],
+  );
+
+  const total = useMemo(
+    () => (
+      <Typography.Title
+        level={2}
+        type={performancesStat.danger ? 'danger' : undefined}
+      >
+        {performancesStat.message}
+      </Typography.Title>
+    ),
+    [performancesStat],
+  );
+
+  const footer = useMemo(
+    () => (
+      <Field
+        label={<Typography.Text>Current Avg. CPU/Mem:</Typography.Text>}
+        value={
+          <Typography.Text>
+            {performancesStat.currentCpu.toFixed(2)}%/
+            {performancesStat.currentMem.toFixed(2)}%
+          </Typography.Text>
+        }
+      />
+    ),
+    [performancesStat],
+  );
+
+  const cpuTrendFlag = useMemo(
+    () =>
+      performancesStat.previousCpu - performancesStat.currentCpu > 0
+        ? 'up'
+        : 'down',
+    [performancesStat],
+  );
+
+  const memTrendFlag = useMemo(
+    () =>
+      performancesStat.previousMem - performancesStat.currentMem > 0
+        ? 'up'
+        : 'down',
+    [performancesStat],
+  );
 
   return (
     <ChartCard
       bordered={false}
-      title={<Typography.Title level={5}>System Performance</Typography.Title>}
-      action={
-        <Tooltip
-          title={'System performance settings can be defined in settings'}
-        >
-          <InfoCircleFilled style={{ color: 'white' }} />
-        </Tooltip>
-      }
+      title={title}
+      action={action}
       loading={loading}
-      total={() => (
-        <Typography.Title
-          level={2}
-          type={performancesStat?.danger ? 'danger' : undefined}
-        >
-          {performancesStat?.message}
-        </Typography.Title>
-      )}
-      footer={
-        <Field
-          label={<Typography.Text>Current Avg. CPU/Mem:</Typography.Text>}
-          value={
-            <Typography.Text>
-              {performancesStat?.currentCpu?.toFixed(2)}%/
-              {performancesStat?.currentMem?.toFixed(2)}%
-            </Typography.Text>
-          }
-        />
-      }
+      total={total}
+      footer={footer}
       contentHeight={80}
     >
       <Trend
         reverseColor={false}
-        flag={
-          performancesStat?.previousCpu - performancesStat?.currentCpu > 0
-            ? 'up'
-            : 'down'
-        }
+        flag={cpuTrendFlag}
         style={{ marginRight: 16 }}
       >
         <Typography.Text>Weekly CPU Variation</Typography.Text>
@@ -87,13 +117,7 @@ const SystemPerformanceCard: React.FC = () => {
           </Typography.Text>
         </span>
       </Trend>
-      <Trend
-        flag={
-          performancesStat.previousMem - performancesStat.currentMem > 0
-            ? 'up'
-            : 'down'
-        }
-      >
+      <Trend flag={memTrendFlag}>
         <Typography.Text>Weekly MEM Variation</Typography.Text>
         <span className={styles.trendText}>
           <Typography.Text>
@@ -108,4 +132,4 @@ const SystemPerformanceCard: React.FC = () => {
   );
 };
 
-export default SystemPerformanceCard;
+export default React.memo(SystemPerformanceCard);

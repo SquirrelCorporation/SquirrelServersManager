@@ -1,4 +1,4 @@
-import Title, { PageContainerTitleColors } from '@/components/Template/Title';
+import Title, { TitleColors } from '@/components/Template/Title';
 import ServerLogsColumns from '@/pages/Admin/Logs/ServerLogsColums';
 import TaskLogsColumns from '@/pages/Admin/Logs/TaskLogsColumns';
 import { getServerLogs, getTasksLogs } from '@/services/rest/logs';
@@ -79,7 +79,7 @@ const Index: React.FC = () => {
         title: (
           <Title.MainTitle
             title={'Logs'}
-            backgroundColor={PageContainerTitleColors.LOGS}
+            backgroundColor={TitleColors.LOGS}
             icon={<UnorderedListOutlined />}
           />
         ),

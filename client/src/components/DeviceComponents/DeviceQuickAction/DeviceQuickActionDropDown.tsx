@@ -2,8 +2,8 @@ import DeviceQuickActionReference, {
   Actions,
   Types,
 } from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionReference';
+import { TerminalStateProps } from '@/components/PlaybookExecutionModal';
 import PlaybookSelectionModal from '@/components/PlaybookSelection/PlaybookSelectionModal';
-import { TerminalStateProps } from '@/components/TerminalModal';
 import { DownOutlined } from '@ant-design/icons';
 import { history } from '@umijs/max';
 import { Dropdown, MenuProps, Space } from 'antd';

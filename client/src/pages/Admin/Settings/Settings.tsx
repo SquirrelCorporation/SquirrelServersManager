@@ -1,4 +1,4 @@
-import Title, { PageContainerTitleColors } from '@/components/Template/Title';
+import Title, { TitleColors } from '@/components/Template/Title';
 import AdvancedSettings from '@/pages/Admin/Settings/components/AdvancedSettings';
 import AuthenticationSettings from '@/pages/Admin/Settings/components/AuthenticationSettings';
 import GeneralSettings from '@/pages/Admin/Settings/components/GeneralSettings';
@@ -72,7 +72,7 @@ const Settings: React.FC = () => {
         title: (
           <Title.MainTitle
             title={'Settings'}
-            backgroundColor={PageContainerTitleColors.SETTINGS}
+            backgroundColor={TitleColors.SETTINGS}
             icon={<SettingOutlined />}
           />
         ),

@@ -1,5 +1,5 @@
 import { MynauiApi } from '@/components/Icons/CustomIcons';
-import Title, { SettingsSubTitleColors } from '@/components/Template/Title';
+import Title, { TitleColors } from '@/components/Template/Title';
 import { postResetApiKey } from '@/services/rest/usersettings';
 import { useModel } from '@@/exports';
 import { InfoCircleFilled, WarningOutlined } from '@ant-design/icons';
@@ -35,7 +35,7 @@ const AuthenticationSettings: React.FC = () => {
         title={
           <Title.SubTitle
             title={'API'}
-            backgroundColor={SettingsSubTitleColors.API}
+            backgroundColor={TitleColors.API}
             icon={<MynauiApi />}
           />
         }

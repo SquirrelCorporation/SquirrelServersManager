@@ -5,7 +5,7 @@ import {
   PromptTemplate,
   Templatetoolkit,
 } from '@/components/Icons/CustomIcons';
-import Title, { PageContainerTitleColors } from '@/components/Template/Title';
+import Title, { TitleColors } from '@/components/Template/Title';
 import Containers from '@/pages/Services/components/Containers';
 import Images from '@/pages/Services/components/Images';
 import Networks from '@/pages/Services/components/Networks';
@@ -15,7 +15,6 @@ import { AppstoreOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { Menu, MenuProps } from 'antd';
 import React, { useState } from 'react';
-import { TerminalContextProvider } from 'react-terminal';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -68,31 +67,29 @@ const Index: React.FC = () => {
     },
   ];
   return (
-    <TerminalContextProvider>
-      <PageContainer
-        header={{
-          title: (
-            <Title.MainTitle
-              title={'Services'}
-              backgroundColor={PageContainerTitleColors.PLAYBOOKS}
-              icon={<AppstoreOutlined />}
-            />
-          ),
-        }}
-      >
-        <Menu
-          onClick={onClick}
-          selectedKeys={[current]}
-          mode="horizontal"
-          items={items}
-        />
-        {current === 'containers' && <Containers />}
-        {current === 'templates' && <Templates />}
-        {current === 'networks' && <Networks />}
-        {current === 'volumes' && <Volumes />}
-        {current === 'images' && <Images />}
-      </PageContainer>
-    </TerminalContextProvider>
+    <PageContainer
+      header={{
+        title: (
+          <Title.MainTitle
+            title={'Services'}
+            backgroundColor={TitleColors.PLAYBOOKS}
+            icon={<AppstoreOutlined />}
+          />
+        ),
+      }}
+    >
+      <Menu
+        onClick={onClick}
+        selectedKeys={[current]}
+        mode="horizontal"
+        items={items}
+      />
+      {current === 'containers' && <Containers />}
+      {current === 'templates' && <Templates />}
+      {current === 'networks' && <Networks />}
+      {current === 'volumes' && <Volumes />}
+      {current === 'images' && <Images />}
+    </PageContainer>
   );
 };
 

@@ -1,5 +1,42 @@
 @import '@/utils/utils.less';
 
+// Media queries breakpoints
+// @screen-xs and @screen-xs-min is not used in Grid
+// smallest break point is @screen-md
+@screen-xs: 480px;
+@screen-xs-min: @screen-xs;
+// 👆 Extra small screen / phone
+
+// 👇 Small screen / tablet
+@screen-sm: 576px;
+@screen-sm-min: @screen-sm;
+
+// Medium screen / desktop
+@screen-md: 768px;
+@screen-md-min: @screen-md;
+
+// Large screen / wide desktop
+@screen-lg: 992px;
+@screen-lg-min: @screen-lg;
+
+// Extra large screen / full hd
+@screen-xl: 1200px;
+@screen-xl-min: @screen-xl;
+
+// Extra extra large screen / large desktop
+@screen-xxl: 1600px;
+@screen-xxl-min: @screen-xxl;
+
+// provide a maximum
+@screen-xs-max: (@screen-sm-min - 1px);
+@screen-sm-max: (@screen-md-min - 1px);
+@screen-md-max: (@screen-lg-min - 1px);
+@screen-lg-max: (@screen-xl-min - 1px);
+@screen-xl-max: (@screen-xxl-min - 1px);
+
+.listItemCarousel {
+}
+
 .carouselCustom {
   color: red;
     ~ .slick-dots li button {
@@ -87,6 +124,9 @@
 }
 
 @media screen and (max-width: @screen-xs) {
+  .listItemCarousel {
+    display: none;
+  }
   .standardList {
     :global {
       .ant-list-item-content {
@@ -103,6 +143,7 @@
       & > div {
         margin-left: 0;
       }
+
     }
     .listCard {
       :global {
@@ -115,6 +156,9 @@
 }
 
 @media screen and (max-width: @screen-sm) {
+  .listItemCarousel {
+    display: none;
+  }
   .standardList {
     .extraContentSearch {
       width: 100%;
@@ -130,6 +174,9 @@
 }
 
 @media screen and (max-width: @screen-md) {
+  .listItemCarousel {
+    display: none;
+  }
   .standardList {
     .listContent {
       & > div {

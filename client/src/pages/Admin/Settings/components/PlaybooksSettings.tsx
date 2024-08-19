@@ -2,7 +2,7 @@ import {
   SimpleIconsGit,
   StreamlineLocalStorageFolderSolid,
 } from '@/components/Icons/CustomIcons';
-import Title, { SettingsSubTitleColors } from '@/components/Template/Title';
+import Title, { TitleColors } from '@/components/Template/Title';
 import GitRepositoryModal from '@/pages/Admin/Settings/components/subcomponents/GitRepositoryModal';
 import LocalRepositoryModal from '@/pages/Admin/Settings/components/subcomponents/LocalRepositoryModal';
 import {
@@ -102,7 +102,7 @@ const PlaybookSettings: React.FC = () => {
         title={
           <Title.SubTitle
             title={'User Level Logs'}
-            backgroundColor={SettingsSubTitleColors.USER_LOGS}
+            backgroundColor={TitleColors.USER_LOGS}
             icon={<UnorderedListOutlined />}
           />
         }
@@ -160,7 +160,7 @@ const PlaybookSettings: React.FC = () => {
         title={
           <Title.SubTitle
             title={'Local Playbook Repositories'}
-            backgroundColor={SettingsSubTitleColors.LOCAL}
+            backgroundColor={TitleColors.LOCAL}
             icon={<StreamlineLocalStorageFolderSolid />}
           />
         }
@@ -248,7 +248,7 @@ const PlaybookSettings: React.FC = () => {
         title={
           <Title.SubTitle
             title={'Remote Playbook Repositories (GIT)'}
-            backgroundColor={SettingsSubTitleColors.GIT}
+            backgroundColor={TitleColors.GIT}
             icon={<SimpleIconsGit />}
           />
         }

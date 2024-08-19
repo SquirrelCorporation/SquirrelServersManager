@@ -3,7 +3,7 @@ import {
   MynauiDangerTriangle,
   PajamasLog,
 } from '@/components/Icons/CustomIcons';
-import Title, { SettingsSubTitleColors } from '@/components/Template/Title';
+import Title, { TitleColors } from '@/components/Template/Title';
 import SystemPerformanceCard from '@/pages/Dashboard/Components/SystemPerformanceCard';
 import {
   postContainerStatsSettings,
@@ -198,7 +198,7 @@ const GeneralSettings: React.FC = () => {
         title={
           <Title.SubTitle
             title={'Logs & Statistics Retention'}
-            backgroundColor={SettingsSubTitleColors.LOGS_RETENTION}
+            backgroundColor={TitleColors.LOGS_RETENTION}
             icon={<PajamasLog />}
           />
         }
@@ -301,7 +301,7 @@ const GeneralSettings: React.FC = () => {
         title={
           <Title.SubTitle
             title={'Devices'}
-            backgroundColor={SettingsSubTitleColors.DEVICES}
+            backgroundColor={TitleColors.DEVICES}
             icon={<TableOutlined />}
           />
         }
@@ -367,7 +367,7 @@ const GeneralSettings: React.FC = () => {
         title={
           <Title.SubTitle
             title={'Dashboard'}
-            backgroundColor={SettingsSubTitleColors.DASHBOARD}
+            backgroundColor={TitleColors.DASHBOARD}
             icon={<MaterialSymbolsDashboard />}
           />
         }
@@ -449,7 +449,7 @@ const GeneralSettings: React.FC = () => {
         title={
           <Title.SubTitle
             title={'Danger Zone'}
-            backgroundColor={SettingsSubTitleColors.DANGER_ZONE}
+            backgroundColor={TitleColors.DANGER_ZONE}
             icon={<MynauiDangerTriangle />}
           />
         }

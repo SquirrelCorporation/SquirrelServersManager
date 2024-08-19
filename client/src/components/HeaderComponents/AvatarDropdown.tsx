@@ -7,9 +7,8 @@ import {
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { history, useModel } from '@umijs/max';
 import { Spin, Typography } from 'antd';
-import { stringify } from 'querystring';
 import type { MenuInfo } from 'rc-menu/lib/interface';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { flushSync } from 'react-dom';
 import HeaderDropdown from './HeaderDropDown';
 
@@ -18,9 +17,12 @@ export type GlobalHeaderRightProps = {
   children?: React.ReactNode;
 };
 
-export const AvatarName = () => {
+export const AvatarName: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
+
+  const userName = useMemo(() => currentUser?.name, [currentUser?.name]);
+
   return (
     <Typography.Title
       level={5}
@@ -31,48 +33,51 @@ export const AvatarName = () => {
         fontSize: '14px',
       }}
     >
-      {currentUser?.name}
+      {userName}
     </Typography.Title>
   );
 };
+
+const Loading: React.FC<{ className: string }> = ({ className }) => (
+  <span className={className}>
+    <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
+  </span>
+);
 
 export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
   menu,
   children,
 }) => {
+  const { initialState, setInitialState } = useModel('@@initialState');
+
+  const actionClassName = useEmotionCss(({ token }) => ({
+    display: 'flex',
+    height: '48px',
+    marginLeft: 'auto',
+    overflow: 'hidden',
+    alignItems: 'center',
+    padding: '0 8px',
+    cursor: 'pointer',
+    borderRadius: token.borderRadius,
+    '&:hover': {
+      backgroundColor: token.colorBgTextHover,
+    },
+  }));
+
   const loginOut = async () => {
     await outLogin();
     const { search, pathname } = window.location;
     const urlParams = new URL(window.location.href).searchParams;
     const redirect = urlParams.get('redirect');
-    // Note: There may be security issues, please note
+
     if (window.location.pathname !== '/user/login' && !redirect) {
       history.replace({
         pathname: '/user/login',
         // @ts-ignore
-        search: stringify({
-          redirect: pathname + search,
-        }),
+        search: stringify({ redirect: pathname + search }),
       });
     }
   };
-
-  const actionClassName = useEmotionCss(({ token }) => {
-    return {
-      display: 'flex',
-      height: '48px',
-      marginLeft: 'auto',
-      overflow: 'hidden',
-      alignItems: 'center',
-      padding: '0 8px',
-      cursor: 'pointer',
-      borderRadius: token.borderRadius,
-      '&:hover': {
-        backgroundColor: token.colorBgTextHover,
-      },
-    };
-  });
-  const { initialState, setInitialState } = useModel('@@initialState');
 
   const onMenuClick = useCallback(
     (event: MenuInfo) => {
@@ -93,52 +98,29 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
     [setInitialState],
   );
 
-  const loading = (
-    <span className={actionClassName}>
-      <Spin
-        size="small"
-        style={{
-          marginLeft: 8,
-          marginRight: 8,
-        }}
-      />
-    </span>
+  const menuItems = useMemo(
+    () => [
+      ...(menu
+        ? [
+            { key: 'center', icon: <UserOutlined />, label: '个人中心' },
+            { key: 'settings', icon: <SettingOutlined />, label: 'Settings' },
+            { type: 'divider' as const },
+          ]
+        : []),
+      { key: 'logout', icon: <LogoutOutlined />, label: 'Logout' },
+    ],
+    [menu],
   );
 
-  if (!initialState) {
-    return loading;
+  const loadingComponent = <Loading className={actionClassName} />;
+
+  if (
+    !initialState ||
+    !initialState.currentUser ||
+    !initialState.currentUser.name
+  ) {
+    return loadingComponent;
   }
-
-  const { currentUser } = initialState;
-
-  if (!currentUser || !currentUser.name) {
-    return loading;
-  }
-
-  const menuItems = [
-    ...(menu
-      ? [
-          {
-            key: 'center',
-            icon: <UserOutlined />,
-            label: '个人中心',
-          },
-          {
-            key: 'settings',
-            icon: <SettingOutlined />,
-            label: 'Settings',
-          },
-          {
-            type: 'divider' as const,
-          },
-        ]
-      : []),
-    {
-      key: 'logout',
-      icon: <LogoutOutlined />,
-      label: 'Logout',
-    },
-  ];
 
   return (
     <HeaderDropdown

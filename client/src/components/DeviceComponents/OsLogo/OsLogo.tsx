@@ -29,72 +29,40 @@ import freebsd from './img/freebsd.jpeg';
 import openbsd from './img/openbsd_logo_icon_248311.png';
 import reactos from './img/reactos.png';
 
+const osLogoMap: { [key: string]: string } = {
+  apple: darwin,
+  darwin: darwin,
+  windows: windows,
+  arch: arch,
+  centos: centos,
+  coreos: coreos,
+  debian: debian,
+  deepin: deepin,
+  elementary: elementary,
+  fedora: fedora,
+  gentoo: gentoo,
+  mageia: mageia,
+  mandriva: mandriva,
+  manjaro: manjaro,
+  mint: mint,
+  mx: mx,
+  openbsd: openbsd,
+  freebsd: freebsd,
+  pclinuxos: pclinuxos,
+  puppy: puppy,
+  raspbian: raspbian,
+  reactos: reactos,
+  slackware: slackware,
+  redhat: redhat,
+  steam: generic,
+  suse: suse,
+  mate: mate,
+  xubuntu: xubuntu,
+  lubuntu: lubuntu,
+  ubuntu: ubuntu,
+  tails: tails,
+};
+
 export const OsLogo = (logoFile: string | undefined): string => {
-  switch (logoFile) {
-    case 'apple':
-    case 'darwin':
-      return darwin;
-    case 'windows':
-      return windows;
-    case 'arch':
-      return arch;
-    case 'centos':
-      return centos;
-    case 'coreos':
-      return coreos;
-    case 'debian':
-      return debian;
-    case 'deepin':
-      return deepin;
-    case 'elementary':
-      return elementary;
-    case 'fedora':
-      return fedora;
-    case 'gentoo':
-      return gentoo;
-    case 'mageia':
-      return mageia;
-    case 'mandriva':
-      return mandriva;
-    case 'manjaro':
-      return manjaro;
-    case 'mint':
-      return mint;
-    case 'mx':
-      return mx;
-    case 'openbsd':
-      return openbsd;
-    case 'freebsd':
-      return freebsd;
-    case 'pclinuxos':
-      return pclinuxos;
-    case 'puppy':
-      return puppy;
-    case 'raspbian':
-      return raspbian;
-    case 'reactos':
-      return reactos;
-    case 'slackware':
-      return slackware;
-    case 'redhat':
-      return redhat;
-    case 'steam':
-      return generic;
-    case 'suse':
-      return suse;
-    case 'mate':
-      return mate;
-    case 'xubuntu':
-      return xubuntu;
-    case 'lubuntu':
-      return lubuntu;
-    case 'ubuntu':
-      return ubuntu;
-    case 'solaris':
-      return '';
-    case 'tails':
-      return tails;
-    default:
-      return generic;
-  }
+  return osLogoMap[logoFile ?? ''] || generic;
 };
