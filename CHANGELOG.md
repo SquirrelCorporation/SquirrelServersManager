@@ -18,6 +18,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Chore optimization [\#198](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/198) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refacto and clean [\#197](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/197) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Refactor imports and remove unused code [\#196](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/196) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump rc-menu from 9.14.1 to 9.15.1 in /client [\#194](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/194) ([dependabot[bot]](https://github.com/apps/dependabot))
