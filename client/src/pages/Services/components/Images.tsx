@@ -9,9 +9,9 @@ import {
   RequestOptionsType,
 } from '@ant-design/pro-components';
 import { Button, Tag, Tooltip } from 'antd';
+import moment from 'moment';
 import React, { useRef } from 'react';
 import { API } from 'ssm-shared-lib';
-import moment from 'moment';
 
 const Images: React.FC = () => {
   const actionRef = useRef<ActionType>();

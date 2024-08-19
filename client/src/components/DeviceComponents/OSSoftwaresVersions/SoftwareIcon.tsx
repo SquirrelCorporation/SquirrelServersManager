@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   CibNpm,
   DeviconPlainBash,
@@ -32,6 +31,7 @@ import {
   VscodeIconsFileTypeTsconfig,
   WhhPerlalt,
 } from '@/components/DeviceComponents/OSSoftwaresVersions/SoftwareIcons';
+import React from 'react';
 
 type SoftwareIconType = {
   name: string;

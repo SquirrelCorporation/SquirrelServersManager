@@ -7,7 +7,7 @@ import { socket } from '@/socket';
 import { useParams } from '@@/exports';
 import { PageContainer } from '@ant-design/pro-components';
 import { message } from 'antd';
-import React, { memo, RefObject, useEffect, useState } from 'react';
+import React, { RefObject, useEffect } from 'react';
 
 const DeviceSSHTerminal = () => {
   const { id } = useParams();
@@ -29,6 +29,7 @@ const DeviceSSHTerminal = () => {
     if (ref.current) {
       socket.connect();
       const onDataIn = ref.current?.onDataIn;
+      ref.current?.onDataIn('Connecting...', true);
       socket
         .emitWithAck('ssh:start', {
           deviceUuid: id,
@@ -49,7 +50,7 @@ const DeviceSSHTerminal = () => {
                 duration: 6,
               });
               if (value.status !== 'OK') {
-                onDataIn('Error');
+                onDataIn(`${value.status} - ${value.message}`);
               }
             });
           }

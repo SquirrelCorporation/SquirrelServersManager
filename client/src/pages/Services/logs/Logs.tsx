@@ -3,9 +3,9 @@ import LiveLogs, { LiveLogsHandles } from '@/components/LiveLogs/LiveLogs';
 import LiveLogsToolbar from '@/components/LiveLogs/LiveLogsToolbar';
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
 import { PageContainer } from '@ant-design/pro-components';
+import moment from 'moment';
 import React, { RefObject, useState } from 'react';
 import { TerminalContextProvider } from 'react-terminal';
-import moment from 'moment';
 
 const Logs: React.FC = () => {
   const ref: RefObject<LiveLogsHandles> = React.createRef<LiveLogsHandles>();

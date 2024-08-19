@@ -2,11 +2,11 @@ import ExtraVarView from '@/components/PlaybookSelection/ExtraVarView';
 import { getDevices } from '@/services/rest/device';
 import { getPlaybooks } from '@/services/rest/playbooks';
 import { CheckCircleFilled, FileOutlined, LockFilled } from '@ant-design/icons';
-import { CaptFieldRef, ProFormSelect } from '@ant-design/pro-components';
+import { ProFormSelect } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
 import { Collapse, Space } from 'antd';
 import { FormInstance } from 'antd/lib';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { API } from 'ssm-shared-lib';
 
 type PlaybookActionSubFormProps = {

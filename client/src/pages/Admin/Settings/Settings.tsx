@@ -1,10 +1,10 @@
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
 import AdvancedSettings from '@/pages/Admin/Settings/components/AdvancedSettings';
-import PlaybookSettings from '@/pages/Admin/Settings/components/PlaybooksSettings';
-import RegistrySettings from '@/pages/Admin/Settings/components/RegistrySettings';
 import AuthenticationSettings from '@/pages/Admin/Settings/components/AuthenticationSettings';
 import GeneralSettings from '@/pages/Admin/Settings/components/GeneralSettings';
 import Information from '@/pages/Admin/Settings/components/Information';
+import PlaybookSettings from '@/pages/Admin/Settings/components/PlaybooksSettings';
+import RegistrySettings from '@/pages/Admin/Settings/components/RegistrySettings';
 import { InfoCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import React from 'react';

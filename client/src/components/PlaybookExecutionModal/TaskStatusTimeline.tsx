@@ -1,5 +1,4 @@
 import { TaskStatusTimelineType } from '@/components/TerminalModal/TerminalHandler';
-import { StepsProps } from 'antd';
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
@@ -7,6 +6,7 @@ import {
   QuestionOutlined,
   VerticalAlignBottomOutlined,
 } from '@ant-design/icons';
+import { StepsProps } from 'antd';
 import React, { ReactNode } from 'react';
 import { API } from 'ssm-shared-lib';
 

@@ -1,5 +1,6 @@
 import HeaderDropdown from '@/components/HeaderComponents/HeaderDropDown';
 import { ElNetwork } from '@/components/Icons/CustomIcons';
+import Devicestatus from '@/utils/devicestatus';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { useModel } from '@umijs/max';
 import {
@@ -11,7 +12,6 @@ import {
   Typography,
 } from 'antd';
 import React from 'react';
-import Devicestatus from '@/utils/devicestatus';
 
 export const DevicesHeaderWidget: React.FC = () => {
   const [open, setOpen] = React.useState(false);

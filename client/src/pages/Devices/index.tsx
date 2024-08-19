@@ -1,17 +1,19 @@
 import DeviceQuickActionDropDown from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionDropDown';
 import { OsLogo } from '@/components/DeviceComponents/OsLogo/OsLogo';
 import { CarbonBatchJob } from '@/components/Icons/CustomIcons';
+import TerminalModal, {
+  TerminalStateProps,
+} from '@/components/PlaybookExecutionModal';
 import Title, { PageContainerTitleColors } from '@/components/Template/Title';
-import TerminalModal, { TerminalStateProps } from '@/components/TerminalModal';
 import ListContent from '@/pages/Devices/components/ListComponent';
 import { getDevices } from '@/services/rest/device';
-import { Link } from '@umijs/max';
 import {
   AppstoreOutlined,
   ControlOutlined,
   TableOutlined,
 } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
+import { Link } from '@umijs/max';
 import { Avatar, Button, Card, List, Tooltip } from 'antd';
 import React, { memo, useEffect, useState } from 'react';
 import { TerminalContextProvider } from 'react-terminal';

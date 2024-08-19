@@ -1,11 +1,11 @@
-import { Tooltip, Typography } from 'antd';
-import { InfoCircleFilled } from '@ant-design/icons';
-import Field from '@/pages/Dashboard/ChartComponents/Field';
-import { Bar } from '@ant-design/plots';
 import ChartCard from '@/pages/Dashboard/ChartComponents/ChartCard';
-import React from 'react';
-import { useModel } from '@umijs/max';
+import Field from '@/pages/Dashboard/ChartComponents/Field';
 import Devicestatus from '@/utils/devicestatus';
+import { InfoCircleFilled } from '@ant-design/icons';
+import { Bar } from '@ant-design/plots';
+import { useModel } from '@umijs/max';
+import { Tooltip, Typography } from 'antd';
+import React from 'react';
 import { API } from 'ssm-shared-lib';
 
 const CombinedPowerCard: React.FC = () => {

@@ -1,3 +1,4 @@
+import ExtraVarView from '@/components/PlaybookSelection/ExtraVarView';
 import { getPlaybooks } from '@/services/rest/playbooks';
 import { RightSquareOutlined } from '@ant-design/icons';
 import {
@@ -10,7 +11,6 @@ import {
 import { Collapse, Form, message } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
-import ExtraVarView from '@/components/PlaybookSelection/ExtraVarView';
 
 export type PlaybookSelectionModalProps = {
   isModalOpen: boolean;

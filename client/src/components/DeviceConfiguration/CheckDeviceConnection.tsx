@@ -1,4 +1,4 @@
-import TerminalHandler from '@/components/TerminalModal/TerminalHandler';
+import TerminalHandler from '@/components/PlaybookExecutionModal/PlaybookExecutionHandler';
 import {
   CheckCircleOutlined,
   CloseOutlined,

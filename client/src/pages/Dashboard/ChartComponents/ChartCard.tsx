@@ -1,7 +1,7 @@
-import styles from './ChartCard.less';
-import classNames from 'classnames';
 import { Skeleton, Typography } from 'antd';
+import classNames from 'classnames';
 import React from 'react';
+import styles from './ChartCard.less';
 
 const renderTotal = (total: any) => {
   let totalDom;

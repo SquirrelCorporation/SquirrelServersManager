@@ -1,11 +1,11 @@
+import SSHConnectionForm from '@/components/DeviceConfiguration/SSHConnectionForm';
 import { GrommetIconsInstall } from '@/components/Icons/CustomIcons';
-import React from 'react';
-import { Col, message, Modal, Result, Row, Typography } from 'antd';
-import { DotLottiePlayer, PlayMode } from '@dotlottie/react-player';
+import { putDevice } from '@/services/rest/device';
 import { ProCard } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
-import SSHConnectionForm from '@/components/DeviceConfiguration/SSHConnectionForm';
-import { putDevice } from '@/services/rest/device';
+import { DotLottiePlayer, PlayMode } from '@dotlottie/react-player';
+import { Col, message, Modal, Result, Row, Typography } from 'antd';
+import React from 'react';
 
 export type NewUnManagedDeviceModalProps = {
   isModalOpen: boolean;
@@ -59,18 +59,21 @@ const NewUnManagedDeviceModal: React.FC<NewUnManagedDeviceModalProps> = (
                   formRef={formRef}
                   onFinish={async (values) => {
                     if (values) {
-                      await putDevice(values.deviceIp,
+                      await putDevice(
+                        values.deviceIp,
                         {
-                        authType: values.authType,
-                        sshPort: values.sshPort,
-                        sshUser: values.sshUser,
-                        sshPwd: values.sshPwd,
-                        sshKey: values.sshKey,
-                        becomeUser: values.becomeUser,
-                        becomeMethod: values.becomeMethod,
-                        becomePass: values.becomePass,
-                        strictHostChecking: values.strictHostChecking,
-                      }, true).then((res) => {
+                          authType: values.authType,
+                          sshPort: values.sshPort,
+                          sshUser: values.sshUser,
+                          sshPwd: values.sshPwd,
+                          sshKey: values.sshKey,
+                          becomeUser: values.becomeUser,
+                          becomeMethod: values.becomeMethod,
+                          becomePass: values.becomePass,
+                          strictHostChecking: values.strictHostChecking,
+                        },
+                        true,
+                      ).then((res) => {
                         setDeviceUuid(res.data.device.uuid);
                       });
                     } else {

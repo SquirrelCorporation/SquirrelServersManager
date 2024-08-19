@@ -4,6 +4,16 @@ import {
   PajamasLog,
 } from '@/components/Icons/CustomIcons';
 import Title, { SettingsSubTitleColors } from '@/components/Template/Title';
+import SystemPerformanceCard from '@/pages/Dashboard/Components/SystemPerformanceCard';
+import {
+  postContainerStatsSettings,
+  postDashboardSetting,
+  postDeviceSetting,
+  postDeviceStatsSettings,
+  postLogsSetting,
+  postResetSettings,
+} from '@/services/rest/settings';
+import { useModel } from '@@/exports';
 import {
   InfoCircleFilled,
   TableOutlined,
@@ -24,16 +34,6 @@ import {
   Typography,
 } from 'antd';
 import React, { useState } from 'react';
-import { useModel } from '@@/exports';
-import {
-  postContainerStatsSettings,
-  postDashboardSetting,
-  postDeviceSetting,
-  postDeviceStatsSettings,
-  postLogsSetting,
-  postResetSettings,
-} from '@/services/rest/settings';
-import SystemPerformanceCard from '@/pages/Dashboard/Components/SystemPerformanceCard';
 import { SettingsKeys } from 'ssm-shared-lib';
 
 const GeneralSettings: React.FC = () => {

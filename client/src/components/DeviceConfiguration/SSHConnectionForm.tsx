@@ -20,7 +20,7 @@ import {
 } from '@ant-design/pro-components';
 import { Avatar, Card, Col, Flex, Row, Space, Switch, Tooltip } from 'antd';
 import React from 'react';
-import { Validation, SsmAnsible } from 'ssm-shared-lib';
+import { SsmAnsible, Validation } from 'ssm-shared-lib';
 
 const connectionTypes = [
   {

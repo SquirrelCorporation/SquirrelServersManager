@@ -8,6 +8,7 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
+import { history } from '@umijs/max';
 import { message, Modal, Typography } from 'antd';
 import { Header } from 'antd/es/layout/layout';
 import BannerAnim, { Element } from 'rc-banner-anim';
@@ -15,7 +16,6 @@ import QueueAnim from 'rc-queue-anim';
 import { TweenOneGroup } from 'rc-tween-one';
 import React from 'react';
 import Confetti from 'react-confetti';
-import { history } from '@umijs/max';
 
 const loginPath = '/user/login';
 

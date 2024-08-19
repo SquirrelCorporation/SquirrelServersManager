@@ -1,9 +1,9 @@
+import TerminalHandler, {
+  TaskStatusTimelineType,
+} from '@/components/PlaybookExecutionModal/PlaybookExecutionHandler';
 import TerminalCore, {
   TerminalCoreHandles,
 } from '@/components/Terminal/TerminalCore';
-import TerminalHandler, {
-  TaskStatusTimelineType,
-} from '@/components/TerminalModal/TerminalHandler';
 import { ClockCircleOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import {
   DotLottieCommonPlayer,
@@ -19,12 +19,12 @@ import React, {
 } from 'react';
 import { API } from 'ssm-shared-lib';
 
-export interface TerminalCoreModalHandles {
+export interface PlaybookExecutionTerminalModalHandles {
   resetTerminal: () => void;
   resetScreen: () => void;
 }
 
-type TerminalCoreModalProps = {
+type PlaybookExecutionTerminalModalProps = {
   execId: string;
   startTerminal: () => Promise<void>;
   isOpen: boolean;
@@ -42,9 +42,9 @@ const modalStyles = {
 
 const POLLING_INTERVAL_MS = 3000;
 
-const TerminalCoreModal = React.forwardRef<
-  TerminalCoreModalHandles,
-  TerminalCoreModalProps
+const PlaybookExecutionTerminalModal = React.forwardRef<
+  PlaybookExecutionTerminalModalHandles,
+  PlaybookExecutionTerminalModalProps
 >(
   (
     {
@@ -224,4 +224,4 @@ const TerminalCoreModal = React.forwardRef<
     );
   },
 );
-export default TerminalCoreModal;
+export default PlaybookExecutionTerminalModal;

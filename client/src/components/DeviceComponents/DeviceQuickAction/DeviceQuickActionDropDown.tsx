@@ -1,14 +1,14 @@
-import { TerminalStateProps } from '@/components/TerminalModal';
-import { DownOutlined } from '@ant-design/icons';
-import { history } from '@umijs/max';
-import { Dropdown, MenuProps, Space } from 'antd';
-import React, { Dispatch, ReactNode, SetStateAction } from 'react';
 import DeviceQuickActionReference, {
   Actions,
   Types,
 } from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionReference';
 import PlaybookSelectionModal from '@/components/PlaybookSelection/PlaybookSelectionModal';
+import { TerminalStateProps } from '@/components/TerminalModal';
+import { DownOutlined } from '@ant-design/icons';
+import { history } from '@umijs/max';
+import { Dropdown, MenuProps, Space } from 'antd';
 import { ItemType } from 'rc-menu/es/interface';
+import React, { Dispatch, ReactNode, SetStateAction } from 'react';
 import { API } from 'ssm-shared-lib';
 
 export type QuickActionProps = {

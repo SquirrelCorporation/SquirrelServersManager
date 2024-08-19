@@ -1,4 +1,3 @@
-import { Bridge, GrommetIconsHost } from '@/components/Icons/CustomIcons';
 import { getDevices } from '@/services/rest/device';
 import { getVolumes } from '@/services/rest/services';
 import { PlusOutlined } from '@ant-design/icons';

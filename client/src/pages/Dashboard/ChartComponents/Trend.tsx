@@ -1,4 +1,3 @@
-import styles from './Trend.less';
 import {
   CaretDownFilled,
   CaretRightOutlined,
@@ -6,6 +5,7 @@ import {
 } from '@ant-design/icons';
 import classNames from 'classnames';
 import React from 'react';
+import styles from './Trend.less';
 
 const Trend: React.FC<any> = ({
   colorful = true,

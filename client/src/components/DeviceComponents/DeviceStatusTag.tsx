@@ -1,5 +1,5 @@
-import { Tag } from 'antd';
 import DeviceStatus from '@/utils/devicestatus';
+import { Tag } from 'antd';
 
 export type DeviceStatusTagType = {
   status: number;
