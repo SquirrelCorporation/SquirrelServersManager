@@ -25,6 +25,7 @@
 - Bump @typescript-eslint/eslint-plugin from 8.0.1 to 8.1.0 in /server [\#190](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/190) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @stylistic/eslint-plugin from 2.6.1 to 2.6.4 in /server [\#189](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/189) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump mongoose from 8.5.2 to 8.5.3 in /server [\#188](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/188) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @aws-sdk/client-ecr from 3.624.0 to 3.632.0 in /server [\#187](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/187) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump elliptic from 6.5.5 to 6.5.7 in /client in the npm\_and\_yarn group [\#185](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/185) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump axios from 1.7.3 to 1.7.4 in /server in the npm\_and\_yarn group [\#182](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/182) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @aws-sdk/client-ecr from 3.623.0 to 3.624.0 in /server [\#175](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/175) ([dependabot[bot]](https://github.com/apps/dependabot))
