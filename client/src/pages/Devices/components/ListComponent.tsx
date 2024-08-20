@@ -26,8 +26,12 @@ const ListContent: React.FC<API.DeviceItem> = React.memo((props) => {
           <Carousel
             style={{ width: 300, height: 70, zIndex: 1000 }}
             dotPosition="right"
-            lazyLoad="progressive"
+            lazyLoad="ondemand"
             speed={300}
+            slidesToShow={1}
+            slidesToScroll={1}
+            infinite={false}
+            adaptiveHeight={true}
           >
             <div style={{ width: 300, height: 70, zIndex: 1000 }} key="1">
               <div
