@@ -24,11 +24,13 @@ const AutomationTriggerInnerCard: React.FC<AutomationTriggerInnerCardProps> = (
 
   const [cronValue, setCronValue] = React.useState('0 * * * *');
   useEffect(() => {
-    props.formRef?.setFieldValue?.('cronValue', cronValue);
+    if (props.formRef?.getFieldValue('cronValue') !== cronValue) {
+      props.formRef?.setFieldValue?.('cronValue', cronValue);
+    }
   }, [cronValue, props.formRef]);
 
   useEffect(() => {
-    if (newCronValue) {
+    if (newCronValue && newCronValue !== cronValue) {
       setCronValue(newCronValue);
     }
   }, [newCronValue]);
