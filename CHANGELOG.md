@@ -16,6 +16,7 @@
 
 - \[BUG\] Settings a template in automation will trigger an infinite loop 🐛  [\#184](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/184)
 - \[BUG\] keepalived IP used instead of the normal one [\#163](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/163)
+- \[BUG\] Update Carousel lazyLoad and behavior settings [\#201](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/201) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Fix cron value synchronization in AutomationTriggerInnerCard [\#200](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/200) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Remove outdated comment and ensure server initialization [\#199](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/199) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
