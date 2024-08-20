@@ -300,8 +300,8 @@ const Index: React.FC = () => {
       }}
     >
       <Spin spinning={isLoading} fullscreen />
-      <Row wrap={false} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-        <Col span={6}>
+      <Row wrap gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 16]}>
+        <Col xs={24} md={6}>
           <DirectoryTreeView
             onSelect={onSelect}
             playbookRepositories={playbookRepositories}
@@ -316,8 +316,8 @@ const Index: React.FC = () => {
             }}
           />
         </Col>
-        <Col span={18}>
-          {(selectedFile && (
+        <Col xs={24} md={18}>
+          {selectedFile ? (
             <>
               <FloatingButtonsBar
                 onClickSavePlaybook={onClickSavePlaybook}
@@ -336,7 +336,7 @@ const Index: React.FC = () => {
                 onMount={editorDidMount}
               />
             </>
-          )) || (
+          ) : (
             <Result title="Select a playbook to edit">
               <div className="desc">
                 <Paragraph style={{ textAlign: 'center' }}>

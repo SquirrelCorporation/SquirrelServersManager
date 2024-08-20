@@ -64,6 +64,7 @@ const GeneralSettings: React.FC = () => {
   const [deviceStatsRetentionInDays, setDeviceStatsRetentionInDays] = useState<
     number | null
   >(currentUser?.settings.stats.deviceStatsRetention);
+
   const onChangeMaxCpu = async (newValue: number | null) => {
     if (newValue) {
       await postDashboardSetting(
@@ -126,6 +127,7 @@ const GeneralSettings: React.FC = () => {
       });
     }
   };
+
   const onChangeServerLogsRetention = async (newValue: number | null) => {
     if (newValue) {
       await postLogsSetting(
@@ -191,6 +193,7 @@ const GeneralSettings: React.FC = () => {
       });
     }
   };
+
   return (
     <Card>
       <Card
@@ -203,97 +206,89 @@ const GeneralSettings: React.FC = () => {
           />
         }
       >
-        <Flex vertical gap={32} style={{ width: '50%' }}>
-          <Space direction="horizontal" size="middle">
-            <Typography>
-              {' '}
-              <Popover content={'Keep servers logs for X days'}>
-                <InfoCircleFilled />
-              </Popover>{' '}
-              Server logs retention days
-            </Typography>{' '}
-            <InputNumber
-              min={1}
-              max={60}
-              defaultValue={
-                typeof serverLogsRetentionInDays === 'number'
-                  ? serverLogsRetentionInDays
-                  : 0
-              }
-              suffix="day(s)"
-              style={{ width: 'auto' }}
-              onChange={onChangeServerLogsRetention}
-            />
-            <Space.Compact style={{ width: '100%' }} />
-          </Space>
-          <Space direction="horizontal" size="middle">
-            <Typography>
-              {' '}
-              <Popover
-                content={
-                  'Purge the Ansible task & statuses logs after X seconds'
-                }
-              >
-                <InfoCircleFilled />
-              </Popover>{' '}
-              Ansible tasks & statuses retention in seconds
-            </Typography>{' '}
-            <InputNumber
-              min={1}
-              max={7 * 60 * 24}
-              defaultValue={
-                typeof ansibleCleanUpInSeconds === 'number'
-                  ? ansibleCleanUpInSeconds
-                  : 0
-              }
-              suffix="second(s)"
-              style={{ width: 'auto' }}
-              onChange={onChangeAnsibleCleanUp}
-            />
-            <Space.Compact style={{ width: '100%' }} />
-          </Space>
-          <Space direction="horizontal" size="middle">
-            <Typography>
-              {' '}
-              <Popover content={'Delete device statistics after X days'}>
-                <InfoCircleFilled />
-              </Popover>{' '}
-              Device statistics retention days
-            </Typography>{' '}
-            <InputNumber
-              min={1}
-              defaultValue={
-                typeof deviceStatsRetentionInDays === 'number'
-                  ? deviceStatsRetentionInDays
-                  : 0
-              }
-              suffix="day(s)"
-              style={{ width: 'auto' }}
-              onChange={onChangeDeviceStatsRetention}
-            />
-            <Space.Compact style={{ width: '100%' }} />
-          </Space>
-          <Space direction="horizontal" size="middle">
-            <Typography>
-              {' '}
-              <Popover content={'Delete container statistics after X days'}>
-                <InfoCircleFilled />
-              </Popover>{' '}
-              Container statistics retention days
-            </Typography>{' '}
-            <InputNumber
-              min={1}
-              defaultValue={
-                typeof containerStatsRetentionInDays === 'number'
-                  ? containerStatsRetentionInDays
-                  : 0
-              }
-              suffix="day(s)"
-              style={{ width: 'auto' }}
-              onChange={onChangeContainerStatsRetention}
-            />
-            <Space.Compact style={{ width: '100%' }} />
-          </Space>
+        <Flex vertical gap={32} style={{ width: '100%' }}>
+          <Row justify="space-between" align="middle" gutter={[16, 16]}>
+            <Col xs={24} sm={8}>
+              <Typography.Text>
+                <Popover content={'Keep servers logs for X days'}>
+                  <InfoCircleFilled />
+                </Popover>{' '}
+                Server logs retention days
+              </Typography.Text>
+            </Col>
+            <Col xs={24} sm={8}>
+              <InputNumber
+                min={1}
+                max={60}
+                defaultValue={serverLogsRetentionInDays || 0}
+                suffix="day(s)"
+                style={{ width: '100%' }}
+                onChange={onChangeServerLogsRetention}
+              />
+            </Col>
+          </Row>
+          <Row justify="space-between" align="middle" gutter={[16, 16]}>
+            <Col xs={24} sm={8}>
+              <Typography.Text>
+                <Popover
+                  content={
+                    'Purge the Ansible task & statuses logs after X seconds'
+                  }
+                >
+                  <InfoCircleFilled />
+                </Popover>{' '}
+                Ansible tasks & statuses retention in seconds
+              </Typography.Text>
+            </Col>
+            <Col xs={24} sm={8}>
+              <InputNumber
+                min={1}
+                max={7 * 60 * 24}
+                defaultValue={ansibleCleanUpInSeconds || 0}
+                suffix="second(s)"
+                style={{ width: '100%' }}
+                onChange={onChangeAnsibleCleanUp}
+              />
+            </Col>
+          </Row>
+          <Row justify="space-between" align="middle" gutter={[16, 16]}>
+            <Col xs={24} sm={8}>
+              <Typography.Text>
+                <Popover content={'Delete device statistics after X days'}>
+                  <InfoCircleFilled />
+                </Popover>{' '}
+                Device statistics retention days
+              </Typography.Text>
+            </Col>
+            <Col xs={24} sm={8}>
+              <InputNumber
+                min={1}
+                defaultValue={deviceStatsRetentionInDays || 0}
+                suffix="day(s)"
+                style={{ width: '100%' }}
+                onChange={onChangeDeviceStatsRetention}
+              />
+            </Col>
+          </Row>
+          <Row justify="space-between" align="middle" gutter={[16, 16]}>
+            <Col xs={24} sm={8}>
+              <Typography.Text>
+                <Popover content={'Delete container statistics after X days'}>
+                  <InfoCircleFilled />
+                </Popover>{' '}
+                Container statistics retention days
+              </Typography.Text>
+            </Col>
+            <Col xs={24} sm={8}>
+              <InputNumber
+                min={1}
+                defaultValue={containerStatsRetentionInDays || 0}
+                suffix="day(s)"
+                style={{ width: '100%' }}
+                onChange={onChangeContainerStatsRetention}
+              />
+            </Col>
+          </Row>
         </Flex>
       </Card>
       <Card
@@ -307,59 +302,55 @@ const GeneralSettings: React.FC = () => {
         }
         style={{ marginTop: 16 }}
       >
-        <Flex vertical gap={32} style={{ width: '50%' }}>
-          <Space direction="horizontal" size="middle">
-            <Typography>
-              {' '}
-              <Popover
-                content={
-                  'Set the status of a device to offline after X minutes'
-                }
-              >
-                <InfoCircleFilled />
-              </Popover>{' '}
-              Consider device offline after
-            </Typography>{' '}
-            <InputNumber
-              min={1}
-              max={60}
-              defaultValue={
-                typeof considerDeviceOnlineInMinutes === 'number'
-                  ? considerDeviceOnlineInMinutes
-                  : 0
-              }
-              suffix="minute(s)"
-              style={{ width: 'auto' }}
-              onChange={onChangeConsiderDeviceOnline}
-            />
-            <Space.Compact style={{ width: 'auto' }} />
-          </Space>
-          <Space direction="horizontal" size="middle">
-            <Typography>
-              {' '}
-              <Popover
-                content={
-                  'Allow a device stat to be saved only when the latest is older than the settings, regardless of the frequency of the agent'
-                }
-              >
-                <InfoCircleFilled />
-              </Popover>{' '}
-              Register device stats every
-            </Typography>{' '}
-            <InputNumber
-              min={1}
-              max={600}
-              defaultValue={
-                typeof registerDeviceStatEveryXSeconds === 'number'
-                  ? registerDeviceStatEveryXSeconds
-                  : 0
-              }
-              suffix="second(s)"
-              style={{ width: 'auto' }}
-              onChange={onChangeRegisterDeviceStatEvery}
-            />
-            <Space.Compact style={{ width: 'auto' }} />
-          </Space>
+        <Flex vertical gap={32} style={{ width: '100%' }}>
+          <Row justify="space-between" align="middle" gutter={[16, 16]}>
+            <Col xs={24} sm={8}>
+              <Typography.Text>
+                <Popover
+                  content={
+                    'Set the status of a device to offline after X minutes'
+                  }
+                >
+                  <InfoCircleFilled />
+                </Popover>{' '}
+                Consider device offline after
+              </Typography.Text>
+            </Col>
+            <Col xs={24} sm={8}>
+              <InputNumber
+                min={1}
+                max={60}
+                defaultValue={considerDeviceOnlineInMinutes || 0}
+                suffix="minute(s)"
+                style={{ width: '100%' }}
+                onChange={onChangeConsiderDeviceOnline}
+              />
+            </Col>
+          </Row>
+          <Row justify="space-between" align="middle" gutter={[16, 16]}>
+            <Col xs={24} sm={8}>
+              <Typography.Text>
+                <Popover
+                  content={
+                    'Allow a device stat to be saved only when the latest is older than the settings, regardless of the frequency of the agent'
+                  }
+                >
+                  <InfoCircleFilled />
+                </Popover>{' '}
+                Register device stats every
+              </Typography.Text>
+            </Col>
+            <Col xs={24} sm={8}>
+              <InputNumber
+                min={1}
+                max={600}
+                defaultValue={registerDeviceStatEveryXSeconds || 0}
+                suffix="second(s)"
+                style={{ width: '100%' }}
+                onChange={onChangeRegisterDeviceStatEvery}
+              />
+            </Col>
+          </Row>
         </Flex>
       </Card>
       <Card
@@ -373,75 +364,65 @@ const GeneralSettings: React.FC = () => {
         }
         style={{ marginTop: 16 }}
       >
-        <Flex vertical gap={32} style={{ width: '50%' }}>
-          <Space direction="horizontal" size="middle">
-            <Typography>
-              <Popover content={<SystemPerformanceCard />}>
-                <InfoCircleFilled />
-              </Popover>{' '}
-              System is healthy when average CPU percentage is bellow{' '}
-            </Typography>{' '}
-            <Row>
-              <Col span={12}>
-                <Slider
-                  min={1}
-                  max={100}
-                  onChange={(newValue) => setDashboardMaxCpuInPercent(newValue)}
-                  onChangeComplete={onChangeMaxCpu}
-                  value={
-                    typeof dashboardMaxCpuInPercent === 'number'
-                      ? dashboardMaxCpuInPercent
-                      : 0
-                  }
-                />
-              </Col>
-              <Col span={4}>
-                <InputNumber
-                  min={1}
-                  max={100}
-                  style={{ margin: '0 16px' }}
-                  value={dashboardMaxCpuInPercent}
-                  onChange={onChangeMaxCpu}
-                  suffix="%"
-                />
-              </Col>
-            </Row>
-            <Space.Compact style={{ width: '100%' }} />
-          </Space>
-          <Space direction="horizontal" size="middle">
-            <Typography>
-              <Popover content={<SystemPerformanceCard />}>
-                <InfoCircleFilled />
-              </Popover>{' '}
-              System is healthy when average free memory above{' '}
-            </Typography>{' '}
-            <Row>
-              <Col span={12}>
-                <Slider
-                  min={1}
-                  max={100}
-                  onChange={(newValue) => setDashboardMinMemInPercent(newValue)}
-                  onChangeComplete={onChangeMinMem}
-                  value={
-                    typeof dashboardMinMemInPercent === 'number'
-                      ? dashboardMinMemInPercent
-                      : 0
-                  }
-                />
-              </Col>
-              <Col span={4}>
-                <InputNumber
-                  min={1}
-                  max={100}
-                  style={{ margin: '0 16px' }}
-                  value={dashboardMinMemInPercent}
-                  suffix="%"
-                  onChange={onChangeMinMem}
-                />
-              </Col>
-            </Row>
-            <Space.Compact style={{ width: '100%' }} />
-          </Space>
+        <Flex vertical gap={32} style={{ width: '100%' }}>
+          <Row justify="space-between" align="middle" gutter={[16, 16]}>
+            <Col xs={24} sm={12} md={8}>
+              <Typography.Text>
+                <Popover content={<SystemPerformanceCard />}>
+                  <InfoCircleFilled />
+                </Popover>{' '}
+                System is healthy when average CPU percentage is bellow{' '}
+              </Typography.Text>
+            </Col>
+            <Col xs={24} sm={12} md={8}>
+              <Slider
+                min={1}
+                max={100}
+                onChange={(newValue) => setDashboardMaxCpuInPercent(newValue)}
+                onChangeComplete={onChangeMaxCpu}
+                value={dashboardMaxCpuInPercent || 0}
+              />
+            </Col>
+            <Col xs={24} sm={12} md={4}>
+              <InputNumber
+                min={1}
+                max={100}
+                value={dashboardMaxCpuInPercent}
+                onChange={onChangeMaxCpu}
+                suffix={'%'}
+                style={{ width: '100%' }}
+              />
+            </Col>
+          </Row>
+          <Row justify="space-between" align="middle" gutter={[16, 16]}>
+            <Col xs={24} sm={12} md={8}>
+              <Typography.Text>
+                <Popover content={<SystemPerformanceCard />}>
+                  <InfoCircleFilled />
+                </Popover>{' '}
+                System is healthy when average free memory above{' '}
+              </Typography.Text>
+            </Col>
+            <Col xs={24} sm={12} md={8}>
+              <Slider
+                min={1}
+                max={100}
+                onChange={(newValue) => setDashboardMinMemInPercent(newValue)}
+                onChangeComplete={onChangeMinMem}
+                value={dashboardMinMemInPercent || 0}
+              />
+            </Col>
+            <Col xs={24} sm={12} md={4}>
+              <InputNumber
+                min={1}
+                max={100}
+                style={{ width: '100%' }}
+                value={dashboardMinMemInPercent}
+                suffix="%"
+                onChange={onChangeMinMem}
+              />
+            </Col>
+          </Row>
         </Flex>
       </Card>
       <Card
@@ -455,31 +436,23 @@ const GeneralSettings: React.FC = () => {
         }
         style={{ marginTop: 16 }}
       >
-        <Flex vertical gap={32} style={{ width: '50%' }}>
-          <Space direction="horizontal" size="middle">
-            <Space.Compact style={{ width: 'auto' }} />
-            <Popconfirm
-              title="Reset general settings"
-              description="Are you sure to reset all the general settings back to default?"
-              onConfirm={confirmReset}
-              okText="Yes"
-              cancelText="No"
-              icon={<WarningOutlined style={{ color: 'red' }} />}
-            >
-              <Typography>
-                <Popover
-                  content={'This will reset all your settings to default'}
-                >
-                  <InfoCircleFilled />
-                </Popover>{' '}
-                Reset settings to default{' '}
-                <Button style={{ marginLeft: 10 }} danger>
-                  Reset
+        <Flex vertical gap={32} style={{ width: '100%' }}>
+          <Row justify="center" align="middle" gutter={[16, 16]}>
+            <Col xs={24} sm={12} md={6}>
+              <Popconfirm
+                title="Reset general settings"
+                description="Are you sure to reset all the general settings back to default?"
+                onConfirm={confirmReset}
+                okText="Yes"
+                cancelText="No"
+                icon={<WarningOutlined style={{ color: 'red' }} />}
+              >
+                <Button danger block>
+                  <InfoCircleFilled /> Reset settings to default
                 </Button>
-              </Typography>
-            </Popconfirm>
-            <Space.Compact style={{ width: '100%' }} />
-          </Space>
+              </Popconfirm>
+            </Col>
+          </Row>
         </Flex>
       </Card>
     </Card>
