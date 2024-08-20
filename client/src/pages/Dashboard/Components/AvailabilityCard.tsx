@@ -61,7 +61,7 @@ const AvailabilityCard: React.FC = () => {
                   ? 'eq'
                   : 'up'
                 : 'down'
-              : ''
+              : undefined
           }
           style={{ marginRight: 16 }}
         >
@@ -98,7 +98,7 @@ const AvailabilityCard: React.FC = () => {
       footer={footer}
       contentHeight={80}
     >
-      <MiniProgress percent={percent} />
+      <MiniProgress percent={percent as number} />
     </ChartCard>
   );
 };

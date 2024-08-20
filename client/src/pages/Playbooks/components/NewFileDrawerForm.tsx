@@ -8,7 +8,7 @@ import {
   ProFormText,
   ProFormTreeSelect,
 } from '@ant-design/pro-components';
-import { Button, Card, Select, TreeSelectProps, Typography } from 'antd';
+import { Button, Select, TreeSelectProps, Typography } from 'antd';
 import { AddCircleOutline } from 'antd-mobile-icons';
 import React, { useEffect } from 'react';
 import { API } from 'ssm-shared-lib';
@@ -20,7 +20,6 @@ export type NewFileModalFormProps = {
     fullPath: string,
     mode: 'playbook' | 'directory',
   ) => Promise<boolean>;
-  setSelectedNode: any;
 };
 const { Option } = Select;
 
@@ -84,7 +83,6 @@ const NewFileDrawerForm: React.FC<NewFileModalFormProps> = (props) => {
       }
       drawerProps={{
         destroyOnClose: true,
-        onClose: () => props.setSelectedNode([]),
       }}
       onFinish={async (values) => {
         setLoading(true);

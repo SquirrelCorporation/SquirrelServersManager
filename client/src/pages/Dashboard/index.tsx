@@ -1,15 +1,15 @@
 import MainChartCard from '@/pages/Dashboard/Components/MainChartCard';
-import Dashboard from '@/pages/Dashboard/Dashboard';
+import DashboardTop from '@/pages/Dashboard/Components/DashboardTop';
 import { PageContainer } from '@ant-design/pro-components';
 import React from 'react';
 
-const Welcome: React.FC = () => {
+const Index: React.FC = () => {
   return (
     <PageContainer header={{ title: undefined }}>
-      <Dashboard />
+      <DashboardTop />
       <MainChartCard />
     </PageContainer>
   );
 };
 
-export default Welcome;
+export default Index;

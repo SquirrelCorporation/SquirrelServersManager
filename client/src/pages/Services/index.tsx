@@ -2,7 +2,6 @@ import {
   ContainerImage,
   ContainerVolumeSolid,
   ElNetwork,
-  PromptTemplate,
   Templatetoolkit,
 } from '@/components/Icons/CustomIcons';
 import Title, { TitleColors } from '@/components/Template/Title';
@@ -13,57 +12,40 @@ import Templates from '@/pages/Services/components/Templates';
 import Volumes from '@/pages/Services/components/Volumes';
 import { AppstoreOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { Menu, MenuProps } from 'antd';
-import React, { useState } from 'react';
-
-type MenuItem = Required<MenuProps>['items'][number];
+import { TabsProps } from 'antd';
+import React from 'react';
 
 const Index: React.FC = () => {
-  const [current, setCurrent] = useState('containers');
-  const onClick: MenuProps['onClick'] = (e) => {
-    setCurrent(e.key);
-  };
-  const items: MenuItem[] = [
+  const items: TabsProps['items'] = [
     {
       label: 'Containers',
       key: 'containers',
       icon: <AppstoreOutlined />,
+      children: <Containers />,
     },
     {
-      label: 'Templates',
-      key: 'templates',
+      label: 'Store',
+      key: 'templates-main',
       icon: <Templatetoolkit />,
-      onTitleClick: () => {
-        setCurrent('templates');
-      },
-      children: [
-        {
-          icon: <Templatetoolkit />,
-          label: 'Store',
-          key: 'templates',
-        },
-        {
-          icon: <PromptTemplate />,
-          label: 'Custom templates',
-          key: 'custom-templates',
-          disabled: true,
-        },
-      ],
+      children: <Templates />,
     },
     {
       label: 'Images',
       key: 'images',
       icon: <ContainerImage />,
+      children: <Images />,
     },
     {
       label: 'Volumes',
       key: 'volumes',
       icon: <ContainerVolumeSolid />,
+      children: <Volumes />,
     },
     {
       label: 'Networks',
       key: 'networks',
       icon: <ElNetwork />,
+      children: <Networks />,
     },
   ];
   return (
@@ -77,19 +59,8 @@ const Index: React.FC = () => {
           />
         ),
       }}
-    >
-      <Menu
-        onClick={onClick}
-        selectedKeys={[current]}
-        mode="horizontal"
-        items={items}
-      />
-      {current === 'containers' && <Containers />}
-      {current === 'templates' && <Templates />}
-      {current === 'networks' && <Networks />}
-      {current === 'volumes' && <Volumes />}
-      {current === 'images' && <Images />}
-    </PageContainer>
+      tabList={items}
+    />
   );
 };
 

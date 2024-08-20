@@ -1,16 +1,18 @@
+import { CarbonIbmEventAutomation } from '@/components/Icons/CustomIcons';
 import Title, { TitleColors } from '@/components/Template/Title';
 import AutomationsColumns from '@/pages/Automations/AutomationsColumns';
 import AutomationEditionDrawer from '@/pages/Automations/components/Drawer/AutomationEditionDrawer';
 import CronColumns from '@/pages/Automations/CronsColumns';
 import { getAutomations } from '@/services/rest/automations';
 import { getCrons } from '@/services/rest/cron';
-import { InteractionOutlined } from '@ant-design/icons';
+import { InteractionOutlined, LockFilled } from '@ant-design/icons';
 import {
   ActionType,
   PageContainer,
   ProTable,
 } from '@ant-design/pro-components';
 import '@umijs/max';
+import { Tabs, TabsProps } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -20,15 +22,16 @@ const Automations: React.FC = () => {
   >();
   const actionRef = React.useRef<ActionType | undefined>(null);
   const [drawerOpened, setDrawerOpened] = React.useState(false);
-
   const reload = () => {
     actionRef.current?.reload();
   };
 
-  const automationsTabItem = [
+  const automationsTabItem: TabsProps['items'] = [
     {
       key: '1',
-      label: <div>Automations</div>,
+      label: 'Automations',
+      icon: <CarbonIbmEventAutomation />,
+      animated: true,
       children: (
         <>
           <ProTable<API.Automation>
@@ -54,7 +57,9 @@ const Automations: React.FC = () => {
     },
     {
       key: '2',
-      label: <div>System Automations</div>,
+      label: 'System Automations',
+      icon: <LockFilled />,
+      animated: true,
       children: (
         <ProTable<API.Cron>
           rowKey="name"
