@@ -188,7 +188,7 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
           footer={() => (
             <>
               <Button disabled={!hasReachedFinalStatus} onClick={startTerminal}>
-                Restart
+                Retry
               </Button>
               <Button
                 disabled={!hasReachedFinalStatus}
