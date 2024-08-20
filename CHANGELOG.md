@@ -26,6 +26,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Chore small improvements [\#205](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/205) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor updateStatus query to use strict equality. [\#204](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/204) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor components and update UI interactions [\#202](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/202) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Chore optimization [\#198](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/198) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
