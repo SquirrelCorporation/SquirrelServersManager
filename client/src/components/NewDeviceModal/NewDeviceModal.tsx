@@ -32,6 +32,7 @@ import {
   Typography,
 } from 'antd';
 import React, { useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 
 export type NewDeviceModalProps = {
   isModalOpen: boolean;
@@ -70,6 +71,12 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
 
   const handleCancel = () => {
     props.setIsModalOpen(false);
+  };
+
+  // Define animation variants for steps
+  const stepVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: { opacity: 1, x: 0 },
   };
 
   return (
@@ -133,6 +140,17 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                     setLoading(false);
                   });
               }}
+              stepFormRender={(dom) => (
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                  variants={stepVariants}
+                  transition={{ duration: 0.5 }}
+                >
+                  {dom}
+                </motion.div>
+              )}
               submitter={{
                 render: ({ form, onSubmit, step, onPre }) => {
                   return [

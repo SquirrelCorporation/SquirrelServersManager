@@ -94,6 +94,7 @@ const DeviceListPage = memo(() => {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -100 }}
           transition={{ duration: 0.5, delay }}
+          style={{ borderBlockEnd: '1px solid rgba(246, 217, 158, 0.12)' }}
         >
           <List.Item
             actions={[

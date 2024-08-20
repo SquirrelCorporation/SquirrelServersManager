@@ -12,6 +12,7 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 // @ts-ignore
 import { history, RunTimeLayoutConfig } from '@umijs/max';
+import { Alert, Modal } from 'antd';
 import { API } from 'ssm-shared-lib';
 import defaultSettings from '../config/defaultSettings';
 import Logo from '../public/logo.svg';
@@ -20,7 +21,7 @@ import { errorConfig } from './requestErrorConfig';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 const onboardingPath = '/user/onboarding';
-
+import { version } from '../package.json';
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
@@ -108,22 +109,21 @@ export const layout: RunTimeLayoutConfig = ({
     //  loading
     childrenRender: (children: any) => {
       // if (initialState?.loading) return <PageLoading />;
+      const versionMismatch =
+        version != initialState?.currentUser?.settings?.server.version;
       return (
         <>
+          {initialState?.currentUser?.settings?.server.version &&
+            versionMismatch && (
+              <Alert
+                style={{ marginTop: 20, marginLeft: 20, marginRight: 20 }}
+                message="Version Mismatch"
+                description={`The server version (${initialState?.currentUser?.settings?.server.version}) does not match the client version (${version}). You may need to retry a docker compose pull to update SSM.`}
+                type="warning"
+                showIcon
+              />
+            )}
           {children}
-          {isDev && (
-            <SettingDrawer
-              disableUrlParams
-              enableDarkTheme
-              settings={initialState?.settings}
-              onSettingChange={(settings) => {
-                setInitialState((preInitialState: any) => ({
-                  ...preInitialState,
-                  settings,
-                }));
-              }}
-            />
-          )}
         </>
       );
     },
