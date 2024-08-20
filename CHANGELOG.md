@@ -20,8 +20,13 @@
 - \[BUG\] Fix cron value synchronization in AutomationTriggerInnerCard [\#200](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/200) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Remove outdated comment and ensure server initialization [\#199](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/199) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
+**Closed issues:**
+
+- Fix code scanning alert - Database query built from user-controlled sources [\#203](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/203)
+
 **Merged pull requests:**
 
+- \[CHORE\] Refactor updateStatus query to use strict equality. [\#204](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/204) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor components and update UI interactions [\#202](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/202) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Chore optimization [\#198](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/198) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refacto and clean [\#197](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/197) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
