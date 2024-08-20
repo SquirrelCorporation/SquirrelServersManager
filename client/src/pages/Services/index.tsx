@@ -12,10 +12,13 @@ import Templates from '@/pages/Services/components/Templates';
 import Volumes from '@/pages/Services/components/Volumes';
 import { AppstoreOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { TabsProps } from 'antd';
-import React from 'react';
+import { Tabs, TabsProps } from 'antd';
+import React, { useEffect } from 'react';
+import { history, useLocation } from '@umijs/max';
 
 const Index: React.FC = () => {
+  const location = useLocation();
+
   const items: TabsProps['items'] = [
     {
       label: 'Containers',
@@ -25,7 +28,7 @@ const Index: React.FC = () => {
     },
     {
       label: 'Store',
-      key: 'templates-main',
+      key: 'store',
       icon: <Templatetoolkit />,
       children: <Templates />,
     },
@@ -48,6 +51,20 @@ const Index: React.FC = () => {
       children: <Networks />,
     },
   ];
+
+  // Function to handle tab change
+  const handleTabChange = (key: string) => {
+    history.replace(`#${key}`);
+  };
+
+  // Sync active tab with the hash in the URL
+  useEffect(() => {
+    const hash = location.hash.replace('#', '');
+    if (!items.some((item) => item.key === hash)) return;
+    // Sync the initially selected tab with the hash in the URL
+    handleTabChange(hash);
+  }, [location.hash]);
+
   return (
     <PageContainer
       header={{
@@ -60,6 +77,8 @@ const Index: React.FC = () => {
         ),
       }}
       tabList={items}
+      onTabChange={handleTabChange}
+      tabActiveKey={location.hash.replace('#', '') || items[0].key}
     />
   );
 };
