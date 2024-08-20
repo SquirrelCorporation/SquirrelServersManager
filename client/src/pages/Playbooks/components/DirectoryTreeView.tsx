@@ -1,11 +1,12 @@
+import React, { Key } from 'react';
+import { AppstoreOutlined } from '@ant-design/icons';
+import { Button, Card, Tree, Typography } from 'antd';
+import { motion } from 'framer-motion';
 import GalaxyStoreModal from '@/pages/Playbooks/components/GalaxyStoreModal';
 import CreateFileInRepositoryModalForm from '@/pages/Playbooks/components/CreateFileInRepositoryModalForm';
 import NewFileDrawerForm from '@/pages/Playbooks/components/NewFileDrawerForm';
 import PlaybookDropdownMenu from '@/pages/Playbooks/components/PlaybookDropdownMenu';
 import { ClientPlaybooksTrees } from '@/pages/Playbooks/components/TreeComponent';
-import { AppstoreOutlined } from '@ant-design/icons';
-import { Button, Card, Tree, Typography } from 'antd';
-import React, { Key } from 'react';
 import { API, DirectoryTree as SSMDirectoryTree } from 'ssm-shared-lib';
 
 const { DirectoryTree } = Tree;
@@ -59,7 +60,6 @@ type DirectoryTreeViewProps = {
 
 const DirectoryTreeView: React.FC<DirectoryTreeViewProps> = (props) => {
   const [storeModal, setStoreModal] = React.useState(false);
-  const [selectedPath, setSelectedPath] = React.useState([]);
   const {
     onSelect,
     selectedFile,
@@ -68,99 +68,112 @@ const DirectoryTreeView: React.FC<DirectoryTreeViewProps> = (props) => {
     playbookRepositories,
     setNewRepositoryFileModal,
   } = props;
-  // @ts-ignore
+
+  // Define animation variants
+  const variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   return (
-    <Card
-      title="List of playbooks"
-      bordered={false}
-      style={{ width: '300px', minHeight: '90vh' }}
-      extra={[
-        <Button
-          key="store"
-          icon={<AppstoreOutlined />}
-          onClick={() => setStoreModal(true)}
-        >
-          Store
-        </Button>,
-      ]}
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={variants}
+      transition={{ duration: 0.5 }}
     >
-      <GalaxyStoreModal open={storeModal} setOpen={setStoreModal} />
-      <DirectoryTree
-        multiple
-        onSelect={onSelect}
-        treeData={playbookRepositories}
-        selectedKeys={[selectedFile?.path as React.Key]}
-        titleRender={(node) => {
-          if (node.nodeType === SSMDirectoryTree.CONSTANTS.DIRECTORY) {
-            return (
-              <PlaybookDropdownMenu
-                type={SSMDirectoryTree.CONSTANTS.DIRECTORY}
-                path={
-                  node.rootNode ? node.playbookRepository.basePath : node.key
-                }
-                playbookRepository={{
-                  uuid: node.playbookRepository.uuid,
-                  name: node.playbookRepository.name,
-                  basePath: node.playbookRepository.basePath,
-                }}
-                callbacks={props.callbacks}
-                remoteRootNode={node.remoteRootNode}
-                cannotDelete={!node.custom || node.rootNode}
-              >
-                <Typography.Text
-                  style={{ maxWidth: 150 - 10 * node.depth }}
-                  ellipsis={{ tooltip: true }}
+      <Card
+        title="List of playbooks"
+        bordered={false}
+        style={{ width: '300px', minHeight: '90vh' }}
+        extra={[
+          <Button
+            key="store"
+            icon={<AppstoreOutlined />}
+            onClick={() => setStoreModal(true)}
+          >
+            Store
+          </Button>,
+        ]}
+      >
+        <GalaxyStoreModal open={storeModal} setOpen={setStoreModal} />
+        <DirectoryTree
+          multiple
+          onSelect={onSelect}
+          treeData={playbookRepositories}
+          selectedKeys={[selectedFile?.path as React.Key]}
+          titleRender={(node) => {
+            if (node.nodeType === SSMDirectoryTree.CONSTANTS.DIRECTORY) {
+              return (
+                <PlaybookDropdownMenu
+                  type={SSMDirectoryTree.CONSTANTS.DIRECTORY}
+                  path={
+                    node.rootNode ? node.playbookRepository.basePath : node.key
+                  }
+                  playbookRepository={{
+                    uuid: node.playbookRepository.uuid,
+                    name: node.playbookRepository.name,
+                    basePath: node.playbookRepository.basePath,
+                  }}
+                  callbacks={props.callbacks}
+                  remoteRootNode={node.remoteRootNode}
+                  cannotDelete={!node.custom || node.rootNode}
                 >
-                  {node._name}
-                </Typography.Text>
-              </PlaybookDropdownMenu>
-            );
-          } else {
-            return (
-              <PlaybookDropdownMenu
-                type={SSMDirectoryTree.CONSTANTS.FILE}
-                path={node.key}
-                playbookRepository={{
-                  uuid: node.playbookRepository.uuid,
-                  name: node.playbookRepository.name,
-                  basePath: node.playbookRepository.basePath,
-                }}
-                callbacks={props.callbacks}
-                cannotDelete={!node.custom}
-              >
-                <Typography.Text
-                  style={{ maxWidth: 150 - 10 * node.depth }}
-                  ellipsis={{ tooltip: true }}
+                  <Typography.Text
+                    style={{ maxWidth: 150 - 10 * node.depth }}
+                    ellipsis={{ tooltip: true }}
+                  >
+                    {node._name}
+                  </Typography.Text>
+                </PlaybookDropdownMenu>
+              );
+            } else {
+              return (
+                <PlaybookDropdownMenu
+                  type={SSMDirectoryTree.CONSTANTS.FILE}
+                  path={node.key}
+                  playbookRepository={{
+                    uuid: node.playbookRepository.uuid,
+                    name: node.playbookRepository.name,
+                    basePath: node.playbookRepository.basePath,
+                  }}
+                  callbacks={props.callbacks}
+                  cannotDelete={!node.custom}
                 >
-                  {node._name}
-                </Typography.Text>
-              </PlaybookDropdownMenu>
-            );
+                  <Typography.Text
+                    style={{ maxWidth: 150 - 10 * node.depth }}
+                    ellipsis={{ tooltip: true }}
+                  >
+                    {node._name}
+                  </Typography.Text>
+                </PlaybookDropdownMenu>
+              );
+            }
+          }}
+        />
+        <NewFileDrawerForm submitNewFile={createNewFile} />
+        <CreateFileInRepositoryModalForm
+          opened={newRepositoryFileModal.opened}
+          // @ts-expect-error partial type
+          mode={newRepositoryFileModal.mode}
+          playbooksRepositoryUuid={
+            newRepositoryFileModal.playbookRepositoryUuid
           }
-        }}
-      />
-      <NewFileDrawerForm
-        submitNewFile={createNewFile}
-        setSelectedNode={setSelectedPath}
-      />
-      <CreateFileInRepositoryModalForm
-        opened={newRepositoryFileModal.opened}
-        // @ts-expect-error partial type
-        mode={newRepositoryFileModal.mode}
-        playbooksRepositoryUuid={newRepositoryFileModal.playbookRepositoryUuid}
-        playbooksRepositoryName={newRepositoryFileModal.playbookRepositoryName}
-        basedPath={newRepositoryFileModal.playbookRepositoryBasePath}
-        setModalOpened={() =>
-          setNewRepositoryFileModal({
-            ...newRepositoryFileModal,
-            opened: false,
-          })
-        }
-        path={newRepositoryFileModal.path}
-        submitNewFile={createNewFile}
-      />
-    </Card>
+          playbooksRepositoryName={
+            newRepositoryFileModal.playbookRepositoryName
+          }
+          basedPath={newRepositoryFileModal.playbookRepositoryBasePath}
+          setModalOpened={() =>
+            setNewRepositoryFileModal({
+              ...newRepositoryFileModal,
+              opened: false,
+            })
+          }
+          path={newRepositoryFileModal.path}
+          submitNewFile={createNewFile}
+        />
+      </Card>
+    </motion.div>
   );
 };
 

@@ -15,7 +15,7 @@ export default [
     path: '/',
     name: 'Dashboard',
     icon: 'FundOutlined',
-    component: './Welcome',
+    component: './Dashboard',
   },
   {
     path: '/manage',

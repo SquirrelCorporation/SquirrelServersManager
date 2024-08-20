@@ -60,7 +60,6 @@ const Containers: React.FC = () => {
         itemCardProps={{
           ghost: false,
         }}
-        headerTitle="Containers"
         request={getContainers}
         toolBarRender={() => {
           return [
