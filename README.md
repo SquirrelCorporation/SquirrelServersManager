@@ -32,7 +32,7 @@ docker compose up -f docker-compose.dev.yml up
 |       <img src="https://squirrelserversmanager.io/home/security.svg" alt="security" width="100" height="100">          | **Security**                           | :white_circle: We do our best to ensure your secrets and authentication info are well kept with Ansible Vault and Bcrypt                                                     | 
 | <img src="https://squirrelserversmanager.io/home/advanced-settings.svg" alt="advancedsettings" width="100" height="100">| **Advanced configuration**             | :white_circle: Even though SSM is made to be userfriendly and easy to use as possible, because every setup is different, you can set up advanced options fitting your needs. | 
 | <img src="https://squirrelserversmanager.io/home/integration-general.svg" alt="integration" width="100" height="100">    | **Integrations** (Coming soon)         | :white_circle: Be able to trigger automations from others tools, as well as call other services                                                                              | 
-|      <img src="https://squirrelserversmanager.io/home/library-filled.svg" alt="library" width="100" height="100">      | **Collections** (Coming soon)          | :white_circle: Install on your devices in one click from a collection of open source services                                                                                | 
+|      <img src="https://squirrelserversmanager.io/home/library-filled.svg" alt="library" width="100" height="100">      | **Collections**        | :white_circle: Install on your devices in one click from a collection of open source services                                                                                | 
 
 
 ## Screenshots
