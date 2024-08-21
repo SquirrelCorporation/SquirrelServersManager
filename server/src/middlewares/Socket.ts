@@ -5,6 +5,7 @@ import pino from 'pino';
 import { Server, Socket as _Socket } from 'socket.io';
 import * as jwt from 'jsonwebtoken';
 import { parse } from 'cookie';
+import { SsmEvents } from 'ssm-shared-lib';
 import { SECRET } from '../config';
 import UserRepo from '../data/database/repository/UserRepo';
 import _logger from '../logger';
@@ -45,8 +46,8 @@ export default class Socket {
 
   private registerSocketEvents = async (socket: SSMSocket) => {
     const io = this.io;
-    socket.on('logs:getLogs', getContainerLogs({ io, socket }));
-    socket.on('ssh:start', startSSHSession({ io, socket }));
+    socket.on(SsmEvents.Logs.GET_LOGS, getContainerLogs({ io, socket }));
+    socket.on(SsmEvents.SSH.START_SESSION, startSSHSession({ io, socket }));
   };
 
   private authenticateSocketJWT = (req: Request, res: Response, next: NextFunction) => {

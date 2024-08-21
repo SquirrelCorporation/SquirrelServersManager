@@ -24,5 +24,5 @@ export function registerSshSession(
   stopAndRemoveExistingSession(deviceUuid);
   const newSession = new SSHTerminalInstance(deviceUuid, socket, ttyOptions);
   sshSessions[deviceUuid] = newSession;
-  newSession.start();
+  void newSession.start();
 }
