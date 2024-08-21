@@ -44,7 +44,7 @@ SSM is currently in active development and not usable for production yet. We enc
 :::
 
 <div>
-<iframe width="560" height="315" style="margin-left: auto; margin-right: auto" src="https://www.youtube.com/embed/8w_9QKz47uc?si=n1ySaHKivEmvz6wx" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="560" height="315" style="margin-left: auto; margin-right: auto" src="https://www.youtube.com/embed/zxWa21ypFCk?si=yYzLr5i6p8ncNr_K" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div>
 
 <style>
