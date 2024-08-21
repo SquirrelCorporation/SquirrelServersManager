@@ -67,6 +67,9 @@ function getAuth(deviceAuth: Partial<DeviceAuth>): Auth {
     case SsmAnsible.SSHType.KeyBased:
       auth.ansible_ssh_private_key_file = `/tmp/${deviceAuth.device?.uuid}.key`;
       if (deviceAuth.sshKeyPass) {
+        if (deviceAuth.sshConnection !== SsmAnsible.SSHConnection.PARAMIKO) {
+          throw new Error('Ssh key is not supported for non-paramiko connection');
+        }
         auth.ansible_paramiko_pass = { __ansible_vault: deviceAuth.sshKeyPass };
       }
       break;
@@ -93,7 +96,9 @@ interface ConnectionVars {
 function getInventoryConnectionVars(deviceAuth: Partial<DeviceAuth>): ConnectionVars {
   // See https://docs.ansible.com/ansible/latest/collections/ansible/builtin/paramiko_ssh_connection.html
   const vars: ConnectionVars = {
-    ansible_connection: 'paramiko',
+    ansible_connection: !deviceAuth.sshConnection
+      ? SsmAnsible.SSHConnection.PARAMIKO
+      : deviceAuth.sshConnection,
     ansible_become_method: deviceAuth.becomeMethod,
     ansible_become_user: deviceAuth.becomeUser,
     ansible_become_pass: { __ansible_vault: deviceAuth.becomePass },

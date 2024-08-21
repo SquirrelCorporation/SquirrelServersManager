@@ -9,6 +9,11 @@ export const postCheckAnsibleConnectionValidator = [
     .withMessage('Ip is required in body')
     .isIP()
     .withMessage('IP is invalid'),
+  body('sshConnection')
+    .exists()
+    .withMessage('sshConnection in body is required')
+    .isIn(Object.values(SsmAnsible.SSHConnection))
+    .withMessage('sshConnection is not in enum value SSHConnection'),
   body('authType')
     .exists()
     .withMessage('authType in body is required')

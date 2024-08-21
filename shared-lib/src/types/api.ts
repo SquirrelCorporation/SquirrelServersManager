@@ -1,4 +1,4 @@
-import { SSHType } from '../enums/ansible';
+import { SSHConnection, SSHType } from '../enums/ansible';
 import { PlaybooksRepositoryType } from '../enums/playbooks';
 import { AutomationChain } from '../form/automation';
 import { ExtendedTreeNode } from './tree';
@@ -388,6 +388,7 @@ export type DeviceAuth = {
   sshUser?: string;
   sshPwd?: string;
   sshKey?: string;
+  sshConnection?: SSHConnection;
   customDockerSSH?: boolean;
   dockerCustomAuthType?: SSHType;
   dockerCustomSshUser?: string;
@@ -408,6 +409,7 @@ export type DeviceAuthParams = {
   sshPwd?: string;
   sshUser?: string;
   sshKeyPass?: string;
+  sshConnection?: SSHConnection;
   becomeMethod?: string;
   becomePass?: string;
   becomeUser?: string;
