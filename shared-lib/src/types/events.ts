@@ -12,6 +12,12 @@ export enum SSH {
   CLOSED = 'ssh:closed',
 }
 
+export enum Update {
+  CONTAINER_CHANGE = 'container:change',
+  NOTIFICATION_CHANGE = 'notification:change',
+  DEVICE_CHANGE = 'device:change'
+}
+
 export enum Common {
   DISCONNECT = 'disconnect',
   ERROR = 'error'

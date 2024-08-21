@@ -83,4 +83,8 @@ export default class Socket {
       });
     });
   }
+
+  public getIo() {
+    return this.io;
+  }
 }

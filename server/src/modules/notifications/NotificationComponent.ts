@@ -43,6 +43,7 @@ class NotificationComponent extends EventManager {
         module,
         moduleId,
       } as InAppNotification);
+      this.emit(Events.UPDATED_NOTIFICATIONS, 'Updated Notification');
     } catch (error) {
       this.childLogger?.error(error);
     }

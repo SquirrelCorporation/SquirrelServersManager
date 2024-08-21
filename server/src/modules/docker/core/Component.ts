@@ -1,6 +1,7 @@
 import Joi, { AlternativesSchema } from 'joi';
 import _joi from 'joi';
 import pino from 'pino';
+import EventManager from '../../../core/events/EventManager';
 import logger from '../../../logger';
 import type { SSMServicesTypes } from '../../../types/typings.d.ts';
 
@@ -16,7 +17,7 @@ abstract class Component<
     | SSMServicesTypes.ConfigurationTriggerSchema
     | SSMServicesTypes.ConfigurationWatcherSchema
     | SSMServicesTypes.ConfigurationAuthenticationSchema,
-> {
+> extends EventManager {
   public _id: string;
   public joi: Joi.Root;
   public type: string;
@@ -29,6 +30,7 @@ abstract class Component<
    * Constructor.
    */
   constructor() {
+    super();
     this._id = 'unknown';
     this.joi = _joi;
     this.kind = Kind.UNKNOWN;
@@ -80,7 +82,7 @@ abstract class Component<
    * Deregistger the component (do nothing by default).
    * @returns {Promise<void>}
    */
-  /* eslint-disable-next-line */
+
   async deregisterComponent() {
     // Do nothing by default
   }
@@ -113,7 +115,7 @@ abstract class Component<
    * Init the component.
    * Can be overridden by the component implementation class
    */
-  /* eslint-disable-next-line */
+
   async init() {}
 
   /**

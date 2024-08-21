@@ -4,17 +4,23 @@ import express from 'express';
 import passport from 'passport';
 import pinoHttp from 'pino-http';
 import { SECRET } from './config';
+import EventManager from './core/events/EventManager';
+import Events from './core/events/events';
 import logger, { httpLoggerOptions } from './logger';
 import { errorHandler } from './middlewares/ErrorHandler';
 import Socket from './middlewares/Socket';
+import RealTime from './modules/real-time/RealTime';
 import routes from './routes';
 
-class AppWrapper {
+class AppWrapper extends EventManager {
   protected readonly app = express();
   private server!: http.Server;
   private socket!: Socket;
+  private readonly refs: any = [];
 
   constructor() {
+    super();
+    this.refs.push(RealTime);
     this.setup();
   }
 
@@ -45,6 +51,7 @@ class AppWrapper {
     🚀 Server ready at: http://localhost:3000`),
     );
     this.socket = new Socket(this.server);
+    this.emit(Events.APP_STARTED, 'App started');
   }
 
   public stopServer(callback: () => any) {
