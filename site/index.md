@@ -44,7 +44,7 @@ SSM is currently in active development and not usable for production yet. We enc
 :::
 
 <div>
-<iframe width="560" height="315" style="margin-left: auto; margin-right: auto" src="https://www.youtube.com/embed/zxWa21ypFCk?si=yYzLr5i6p8ncNr_K" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe width="560" height="315" style="margin-left: auto; margin-right: auto" src="https://www.youtube.com/embed/zxWa21ypFCk?si=PXVOJZ31wwxLqUOv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div>
 
 <style>
@@ -102,7 +102,7 @@ SSM is currently in active development and not usable for production yet. We enc
 |         ![security](/home/security.svg)          | **Security**                           | :white_circle: We do our best to ensure your secrets and authentication info are well kept with Ansible Vault and Bcrypt                                                     | 
 | ![advancedsettings](/home/advanced-settings.svg) | **Advanced configuration**             | :white_circle: Even though SSM is made to be userfriendly and easy to use as possible, because every setup is different, you can set up advanced options fitting your needs. | 
 |  ![integration](/home/integration-general.svg)   | **Integrations** (Coming soon)         | :white_circle: Be able to trigger automations from others tools, as well as call other services                                                                              | 
-|      ![libraries](/home/library-filled.svg)      | **Collections** (Coming soon)          | :white_circle: Install on your devices in one click from a collection of open source services                                                                                | 
+|      ![libraries](/home/library-filled.svg)      | **Collections**                        | :white_circle: Install on your devices in one click from a collection of open source services                                                                                | 
 
 ## Screenshots
 ### Dashboard
