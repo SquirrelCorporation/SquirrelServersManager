@@ -9,6 +9,7 @@
 - \[FEAT\] Advanced features for container management, 'à la ' very know container management soft 🔥 [\#178](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/178)
 - \[FEAT\] Add the ability to show container logs, in real time 🔥  [\#93](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/93)
 - \[FEAT\] SSH Connection terminal from SSM 🔥  [\#91](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/91)
+- \[FEAT\] Add real-time updates for containers and notifications [\#208](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/208) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Feat socket real time logs / SSH Connect [\#181](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/181) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Enhanced features for services [\#177](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/177) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
@@ -23,6 +24,7 @@
 **Closed issues:**
 
 - Fix code scanning alert - Database query built from user-controlled sources [\#203](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/203)
+- \[FEAT\] Better update of Services data on container 🔥  [\#92](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/92)
 
 **Merged pull requests:**
 
