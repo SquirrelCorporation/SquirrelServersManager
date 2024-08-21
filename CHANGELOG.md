@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.17...HEAD)
+
+**Merged pull requests:**
+
+- Update README and index for Collections feature availability [\#212](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/212) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 ## [v0.1.17](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.17) (2024-08-21)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.17-alpha.7...v0.1.17)
@@ -15,9 +23,9 @@
 
 **Fixed bugs:**
 
+- \[BUG\] keepalived IP used instead of the normal one [\#163](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/163)
 - \[BUG\] Settings a template in automation will trigger an infinite loop 🐛  [\#184](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/184)
 - \[BUG\] No Playbook starts on a certain host [\#164](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/164)
-- \[BUG\] keepalived IP used instead of the normal one [\#163](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/163)
 - \[BUG\] Update Carousel lazyLoad and behavior settings [\#201](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/201) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Fix cron value synchronization in AutomationTriggerInnerCard [\#200](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/200) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Remove outdated comment and ensure server initialization [\#199](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/199) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
@@ -25,20 +33,12 @@
 **Closed issues:**
 
 - Fix code scanning alert - Database query built from user-controlled sources [\#203](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/203)
-- \[FEAT\] Better update of Services data on container 🔥  [\#92](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/92)
 - \[CHORE\] Provide a pre-build container for NGINX 🧹 [\#102](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/102)
+- \[FEAT\] Better update of Services data on container 🔥  [\#92](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/92)
 
 **Merged pull requests:**
 
-- \[BUG\] Add SSH connection method configuration [\#209](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/209) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Standardize event names using SsmEvents enum [\#207](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/207) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Refactor layout and improve responsiveness [\#206](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/206) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Chore small improvements [\#205](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/205) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor updateStatus query to use strict equality. [\#204](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/204) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Refactor components and update UI interactions [\#202](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/202) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Chore optimization [\#198](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/198) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Refacto and clean [\#197](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/197) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- Refactor imports and remove unused code [\#196](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/196) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump rc-menu from 9.14.1 to 9.15.1 in /client [\#194](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/194) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump lint-staged from 15.2.8 to 15.2.9 in /client [\#193](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/193) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump antd from 5.20.0 to 5.20.1 in /client [\#192](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/192) ([dependabot[bot]](https://github.com/apps/dependabot))
@@ -56,6 +56,14 @@
 - Bump @umijs/lint from 4.3.11 to 4.3.12 in /client [\#170](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/170) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump eslint-plugin-jest from 28.7.0 to 28.8.0 in /client [\#167](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/167) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 22.5.1-alpine to 22.6.0-alpine in /client [\#166](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/166) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[BUG\] Add SSH connection method configuration [\#209](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/209) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Standardize event names using SsmEvents enum [\#207](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/207) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Refactor layout and improve responsiveness [\#206](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/206) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Chore small improvements [\#205](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/205) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Refactor components and update UI interactions [\#202](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/202) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Chore optimization [\#198](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/198) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Refacto and clean [\#197](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/197) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Refactor imports and remove unused code [\#196](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/196) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update Node.js version in client Dockerfile [\#154](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/154) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update package versions to 0.1.17 [\#149](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/149) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor container deletion and enable code splitting [\#148](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/148) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
@@ -85,7 +93,6 @@
 - Bump lint-staged from 15.2.7 to 15.2.8 in /client [\#158](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/158) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump eslint-plugin-jest from 28.6.0 to 28.7.0 in /client [\#157](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/157) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump antd from 5.19.4 to 5.20.0 in /client [\#156](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/156) ([dependabot[bot]](https://github.com/apps/dependabot))
-- \[CHORE\] Update package versions to 0.1.17 [\#149](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/149) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.17-alpha.3](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.17-alpha.3) (2024-08-05)
 
@@ -98,10 +105,6 @@
 ## [v0.1.17-alpha1](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.17-alpha1) (2024-08-04)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.16...v0.1.17-alpha1)
-
-**Merged pull requests:**
-
-- \[CHORE\] Update Node.js version in client Dockerfile [\#154](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/154) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.16](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.16) (2024-08-02)
 
@@ -129,16 +132,12 @@
 
 - No need for custom nginx image [\#150](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/150)
 - Cannot run any playbook due to a `ValueError("Invalid padding bytes.")` [\#110](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/110)
-- \[CHORE\] Provide a pre-build container for NGINX 🧹 [\#102](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/102)
 - \[Question\] Is RAM percentage displayed on dashboard based on available or free RAM [\#100](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/100)
 
 **Merged pull requests:**
 
 - \[CHORE\] Reorder Dockerfile COPY commands for consistency [\#151](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/151) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Refactor container deletion and enable code splitting [\#148](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/148) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Update container status handling for unreachable state [\#147](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/147) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Switch proxy service to use prebuilt Docker image [\#146](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/146) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Update package dependencies [\#145](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/145) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump the npm\_and\_yarn group in /server with 3 updates [\#144](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/144) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump pino-pretty from 11.2.1 to 11.2.2 in /server [\#143](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/143) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump pino from 9.3.1 to 9.3.2 in /server [\#142](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/142) ([dependabot[bot]](https://github.com/apps/dependabot))
