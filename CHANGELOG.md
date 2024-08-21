@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+## [v0.1.17](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.17) (2024-08-21)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.17-alpha.7...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.17-alpha.7...v0.1.17)
 
 **Implemented enhancements:**
 
@@ -26,6 +26,7 @@
 
 - Fix code scanning alert - Database query built from user-controlled sources [\#203](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/203)
 - \[FEAT\] Better update of Services data on container 🔥  [\#92](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/92)
+- \[CHORE\] Provide a pre-build container for NGINX 🧹 [\#102](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/102)
 
 **Merged pull requests:**
 
@@ -55,6 +56,11 @@
 - Bump @umijs/lint from 4.3.11 to 4.3.12 in /client [\#170](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/170) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump eslint-plugin-jest from 28.7.0 to 28.8.0 in /client [\#167](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/167) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 22.5.1-alpine to 22.6.0-alpine in /client [\#166](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/166) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[CHORE\] Update Node.js version in client Dockerfile [\#154](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/154) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update package versions to 0.1.17 [\#149](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/149) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Refactor container deletion and enable code splitting [\#148](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/148) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update container status handling for unreachable state [\#147](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/147) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update package dependencies [\#145](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/145) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.17-alpha.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.17-alpha.7) (2024-08-06)
 
