@@ -13,7 +13,7 @@ const Information: React.FC = () => {
         <Descriptions.Item label="Version">{version}</Descriptions.Item>
       </Descriptions>
       <Descriptions title="Server Information">
-        <Descriptions.Item label="Server Version">
+        <Descriptions.Item label="Version">
           {currentUser?.settings?.server.version}
         </Descriptions.Item>
       </Descriptions>
