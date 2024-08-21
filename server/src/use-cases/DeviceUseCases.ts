@@ -1,8 +1,6 @@
 import DockerModem from 'docker-modem';
 import Dockerode from 'dockerode';
 import { API, SettingsKeys, SsmAnsible, SsmStatus } from 'ssm-shared-lib';
-import SSHCredentialsHelper from '../helpers/ssh/SSHCredentialsHelper';
-import { InternalError } from '../middlewares/api/ApiError';
 import { setToCache } from '../data/cache';
 import Device, { DeviceModel } from '../data/database/model/Device';
 import DeviceAuth from '../data/database/model/DeviceAuth';
@@ -12,7 +10,9 @@ import DeviceDownTimeEventRepo from '../data/database/repository/DeviceDownTimeE
 import DeviceRepo from '../data/database/repository/DeviceRepo';
 import DeviceStatRepo from '../data/database/repository/DeviceStatRepo';
 import PlaybookRepo from '../data/database/repository/PlaybookRepo';
+import SSHCredentialsHelper from '../helpers/ssh/SSHCredentialsHelper';
 import PinoLogger from '../logger';
+import { InternalError } from '../middlewares/api/ApiError';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../modules/ansible-vault/ansible-vault';
 import Inventory from '../modules/ansible/utils/InventoryTransformer';
 import { getCustomAgent } from '../modules/docker/core/CustomAgent';
@@ -81,6 +81,7 @@ async function updateDeviceFromJson(deviceInfo: API.DeviceInfo, device: Device) 
     device.status = SsmStatus.DeviceStatus.ONLINE;
   }
   device.raspberry = deviceInfo.system?.raspberry;
+  device.agentLogPath = deviceInfo.logPath;
   await DeviceRepo.update(device);
   return device;
 }

@@ -540,6 +540,7 @@ export type DeviceInfo = {
   system?: SystemInfo;
   cpu?: CPUInfo;
   agentVersion?: string;
+  logPath?: string;
 };
 
 export type ExtraVar = {
