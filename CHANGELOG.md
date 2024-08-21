@@ -26,6 +26,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Standardize event names using SsmEvents enum [\#207](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/207) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor layout and improve responsiveness [\#206](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/206) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Chore small improvements [\#205](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/205) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor updateStatus query to use strict equality. [\#204](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/204) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
