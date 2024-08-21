@@ -143,6 +143,4 @@ const schema = new Schema<Container>(
   },
 );
 
-schema.post('save', () => {});
-
 export const ContainerModel = model<Container>(DOCUMENT_NAME, schema, COLLECTION_NAME);

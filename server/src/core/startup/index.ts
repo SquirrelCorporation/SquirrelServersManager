@@ -10,7 +10,6 @@ import providerConf from '../../modules/docker/registries/providers/provider.con
 import NotificationComponent from '../../modules/notifications/NotificationComponent';
 import { createADefaultLocalUserRepository } from '../../modules/playbooks-repository/default-repositories';
 import PlaybooksRepositoryEngine from '../../modules/playbooks-repository/PlaybooksRepositoryEngine';
-import RealTime from '../../modules/real-time/RealTime';
 import ContainerRegistryUseCases from '../../use-cases/ContainerRegistryUseCases';
 import DeviceAuthUseCases from '../../use-cases/DeviceAuthUseCases';
 import { setAnsibleVersions } from '../system/ansible-versions';
