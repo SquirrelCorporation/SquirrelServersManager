@@ -45,6 +45,7 @@ export const getDeviceAuth = asyncHandler(async (req, res) => {
       sshPwd: redactSensitiveInfos(deviceAuth.sshPwd),
       sshPort: deviceAuth.sshPort,
       becomeMethod: deviceAuth.becomeMethod,
+      sshConnection: deviceAuth.sshConnection,
       becomePass: redactSensitiveInfos(deviceAuth.becomePass),
       becomeUser: deviceAuth.becomeUser,
       sshKeyPass: redactSensitiveInfos(deviceAuth.sshKeyPass),
@@ -75,6 +76,7 @@ export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {
     sshUser,
     sshPwd,
     sshPort,
+    sshConnection,
     becomeMethod,
     becomePass,
     becomeUser,
@@ -90,6 +92,7 @@ export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {
     device: device,
     authType: authType,
     sshUser: sshUser,
+    sshConnection: sshConnection,
     sshPwd: sshPwd
       ? await preWriteSensitiveInfos(sshPwd, optionalExistingDeviceAuth?.sshPwd)
       : undefined,

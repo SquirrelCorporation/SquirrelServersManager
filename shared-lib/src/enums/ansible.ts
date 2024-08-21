@@ -8,6 +8,11 @@ export enum SSHType {
   KeyBased = 'keyBased',
 }
 
+export enum SSHConnection {
+  BUILTIN = 'ssh',
+  PARAMIKO = 'paramiko',
+}
+
 export enum AnsibleBecomeMethod {
   SUDO = 'sudo',
   SU = 'su',

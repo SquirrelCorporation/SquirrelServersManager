@@ -109,11 +109,27 @@ const SSHConnectionForm: React.FC<SSHConnectionFormProps> = (props) => {
             fieldProps={{ precision: 0 }}
           />
           {showAdvanced && (
-            <ProFormSwitch
-              name={'strictHostChecking'}
-              label={'Strict Host Checking'}
-              initialValue={true}
-            />
+            <>
+              <ProFormSwitch
+                name={'strictHostChecking'}
+                label={'Strict Host Checking'}
+                initialValue={true}
+              />
+              <ProFormSelect
+                name={'sshConnection'}
+                label={'Connection Method'}
+                initialValue={SsmAnsible.SSHConnection.PARAMIKO}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                options={Object.values(SsmAnsible.SSHConnection).map((e) => ({
+                  value: e,
+                  label: e,
+                }))}
+              />
+            </>
           )}
         </ProForm.Group>
       </Card>
@@ -321,48 +337,71 @@ const SSHConnectionForm: React.FC<SSHConnectionFormProps> = (props) => {
                       placeholder="root"
                       rules={[{ required: true }]}
                     />
-                    <ProFormText.Password
-                      name="sshKeyPass"
-                      label="SSH Key Passphrase"
-                      width="xs"
-                      placeholder="passphrase"
-                      rules={[{ required: false }]}
-                      fieldProps={{
-                        iconRender: (visible) =>
-                          typeof props.formRef?.current?.getFieldValue ===
-                            'function' &&
-                          props.formRef?.current?.getFieldValue(
-                            'sshKeyPass',
-                          ) !== 'REDACTED' ? (
-                            visible ? (
-                              <EyeTwoTone />
-                            ) : (
-                              <EyeInvisibleOutlined />
-                            )
-                          ) : undefined,
-                        onFocus: () => {
-                          if (
-                            props.formRef?.current?.getFieldValue(
-                              'sshKeyPass',
-                            ) === 'REDACTED'
-                          ) {
-                            props.formRef?.current?.setFieldValue(
-                              'sshKeyPass',
-                              '',
-                            );
-                          }
-                        },
-                        onBlur: () => {
-                          if (
-                            props.formRef?.current?.getFieldValue(
-                              'sshKeyPass',
-                            ) === ''
-                          ) {
-                            props.formRef?.current?.resetFields(['sshKeyPass']);
-                          }
-                        },
-                      }}
-                    />
+                    <ProFormDependency name={['sshConnection']}>
+                      {({ sshConnection }) => (
+                        <ProFormText.Password
+                          name="sshKeyPass"
+                          label="SSH Key Passphrase"
+                          width="xs"
+                          placeholder="passphrase"
+                          rules={[
+                            { required: false },
+                            {
+                              validator(_, value) {
+                                if (
+                                  sshConnection ===
+                                    SsmAnsible.SSHConnection.BUILTIN &&
+                                  value &&
+                                  value !== ''
+                                ) {
+                                  return Promise.reject(
+                                    'You must choose paramiko as an SSH connection method in advanced to use a SSH key paswword',
+                                  );
+                                }
+                                return Promise.resolve();
+                              },
+                            },
+                          ]}
+                          fieldProps={{
+                            iconRender: (visible) =>
+                              typeof props.formRef?.current?.getFieldValue ===
+                                'function' &&
+                              props.formRef?.current?.getFieldValue(
+                                'sshKeyPass',
+                              ) !== 'REDACTED' ? (
+                                visible ? (
+                                  <EyeTwoTone />
+                                ) : (
+                                  <EyeInvisibleOutlined />
+                                )
+                              ) : undefined,
+                            onFocus: () => {
+                              if (
+                                props.formRef?.current?.getFieldValue(
+                                  'sshKeyPass',
+                                ) === 'REDACTED'
+                              ) {
+                                props.formRef?.current?.setFieldValue(
+                                  'sshKeyPass',
+                                  '',
+                                );
+                              }
+                            },
+                            onBlur: () => {
+                              if (
+                                props.formRef?.current?.getFieldValue(
+                                  'sshKeyPass',
+                                ) === ''
+                              ) {
+                                props.formRef?.current?.resetFields([
+                                  'sshKeyPass',
+                                ]);
+                              }
+                            },
+                          }}
+                        />
+                      )}
+                    </ProFormDependency>
                     <ProFormTextArea
                       name="sshKey"
                       label="SSH Private Key"
