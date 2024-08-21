@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import { DateTime } from 'luxon';
+import { SsmEvents } from 'ssm-shared-lib';
 import ContainerRepo from '../../data/database/repository/ContainerRepo';
 import PinoLogger from '../../logger';
 import { SSMSocket, SSMSocketServer } from '../../middlewares/Socket';
@@ -13,10 +14,6 @@ const containerSchema = Joi.object({
 });
 
 const logger = PinoLogger.child({ module: 'SocketService' }, { msgPrefix: '[CONTAINER_LOGS] - ' });
-
-const EVENT_LOGS_NEW = 'logs:newLogs';
-const EVENT_LOGS_CLOSING = 'logs:closing';
-const EVENT_DISCONNECT = 'disconnect';
 
 export function getContainerLogs({ socket }: { io: SSMSocketServer; socket: SSMSocket }) {
   return async (payload: any, callback: (response: { status: string; error?: string }) => void) => {
@@ -49,15 +46,16 @@ export function getContainerLogs({ socket }: { io: SSMSocketServer; socket: SSMS
 
       const from = parseInt(value.from);
       logger.info(`Getting container (${container.id}) logs from ${from}`);
-      const getContainerLogsCallback = (data: string) => socket.emit(EVENT_LOGS_NEW, { data });
+      const getContainerLogsCallback = (data: string) =>
+        socket.emit(SsmEvents.Logs.NEW_LOGS, { data });
 
       const closingCallback = registeredComponent.getContainerLiveLogs(
         container.id,
         from,
         getContainerLogsCallback,
       );
-      socket.on(EVENT_LOGS_CLOSING, closingCallback);
-      socket.on(EVENT_DISCONNECT, closingCallback);
+      socket.on(SsmEvents.Logs.CLOSED, closingCallback);
+      socket.on(SsmEvents.Common.DISCONNECT, closingCallback);
 
       callback({ status: 'OK' });
     } catch (err: any) {

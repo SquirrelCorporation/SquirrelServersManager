@@ -8,6 +8,7 @@ import { useParams } from '@@/exports';
 import { PageContainer } from '@ant-design/pro-components';
 import { message } from 'antd';
 import React, { RefObject, useEffect } from 'react';
+import { SsmEvents } from 'ssm-shared-lib';
 
 // Extracting constants for better readability
 const ROW_HEIGHT = 16;
@@ -21,11 +22,11 @@ const DeviceSSHTerminal = () => {
     React.createRef<TerminalCoreHandles>();
 
   const handleDataOut = (value: string) => {
-    socket.emit('ssh:data', value);
+    socket.emit(SsmEvents.SSH.NEW_DATA, value);
   };
 
   const handleResize = (newRows: number, newCols: number) => {
-    socket.emit('ssh:resize', { cols: newCols, rows: newRows });
+    socket.emit(SsmEvents.SSH.SCREEN_RESIZE, { cols: newCols, rows: newRows });
   };
 
   const setupSocket = (
@@ -34,7 +35,7 @@ const DeviceSSHTerminal = () => {
     socket.connect();
     onDataIn('Connecting...', true);
     socket
-      .emitWithAck('ssh:start', { deviceUuid: id, rows, cols })
+      .emitWithAck(SsmEvents.SSH.START_SESSION, { deviceUuid: id, rows, cols })
       .then((response) => {
         if (response.status !== 'OK') {
           void message.error({
@@ -42,8 +43,8 @@ const DeviceSSHTerminal = () => {
             duration: 6,
           });
         } else {
-          socket.on('ssh:data', onDataIn);
-          socket.on('ssh:status', (value) => {
+          socket.on(SsmEvents.SSH.NEW_DATA, onDataIn);
+          socket.on(SsmEvents.SSH.STATUS, (value) => {
             void message.info({
               content: `${value.status} - ${value.message}`,
               duration: 6,
@@ -65,8 +66,8 @@ const DeviceSSHTerminal = () => {
   const cleanupSocket = (
     onDataIn: (value: string, newLine?: boolean) => void,
   ) => {
-    socket.emit('logs:closing');
-    socket.off('ssh:data', onDataIn);
+    socket.emit(SsmEvents.SSH.CLOSED);
+    socket.off(SsmEvents.SSH.NEW_DATA, onDataIn);
     socket.disconnect();
   };
 
