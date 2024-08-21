@@ -16,6 +16,7 @@
 **Fixed bugs:**
 
 - \[BUG\] Settings a template in automation will trigger an infinite loop 🐛  [\#184](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/184)
+- \[BUG\] No Playbook starts on a certain host [\#164](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/164)
 - \[BUG\] keepalived IP used instead of the normal one [\#163](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/163)
 - \[BUG\] Update Carousel lazyLoad and behavior settings [\#201](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/201) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Fix cron value synchronization in AutomationTriggerInnerCard [\#200](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/200) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
@@ -28,6 +29,7 @@
 
 **Merged pull requests:**
 
+- \[BUG\] Add SSH connection method configuration [\#209](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/209) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Standardize event names using SsmEvents enum [\#207](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/207) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor layout and improve responsiveness [\#206](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/206) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Chore small improvements [\#205](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/205) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
