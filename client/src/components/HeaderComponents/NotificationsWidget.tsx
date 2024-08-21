@@ -7,6 +7,7 @@ import {
   getAllNotifications,
   markAsAllSeen,
 } from '@/services/rest/notifications';
+import { socket } from '@/socket';
 import {
   CheckSquareOutlined,
   CloseOutlined,
@@ -24,7 +25,7 @@ import {
 } from 'antd';
 import moment from 'moment';
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, SsmEvents } from 'ssm-shared-lib';
 
 const customizeRenderEmpty = () => (
   <div style={{ textAlign: 'center' }}>
@@ -161,6 +162,16 @@ const NotificationsWidget: React.FC = () => {
     (newOpen: boolean) => setOpen(newOpen),
     [],
   );
+
+  useEffect(() => {
+    socket.connect();
+    socket.on(SsmEvents.Update.NOTIFICATION_CHANGE, fetchNotifs);
+
+    return () => {
+      socket.off(SsmEvents.Update.NOTIFICATION_CHANGE, fetchNotifs);
+      socket.disconnect();
+    };
+  }, []);
 
   return (
     <ConfigProvider renderEmpty={customizeRenderEmpty}>

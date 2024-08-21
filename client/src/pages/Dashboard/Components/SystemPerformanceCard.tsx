@@ -67,8 +67,8 @@ const SystemPerformanceCard: React.FC = () => {
         label={<Typography.Text>Current Avg. CPU/Mem:</Typography.Text>}
         value={
           <Typography.Text>
-            {performancesStat.currentCpu.toFixed(2)}%/
-            {performancesStat.currentMem.toFixed(2)}%
+            {(performancesStat.currentCpu || NaN).toFixed(2)}%/
+            {(performancesStat.currentMem || NaN).toFixed(2)}%
           </Typography.Text>
         }
       />

@@ -1,5 +1,6 @@
 import debounce from 'debounce';
 import Dockerode from 'dockerode';
+import Events from '../../../../../core/events/events';
 import ContainerRepo from '../../../../../data/database/repository/ContainerRepo';
 import type { SSMServicesTypes } from '../../../../../types/typings';
 import Component from '../../../core/Component';
@@ -84,6 +85,7 @@ export default class DockerListener extends Component<SSMServicesTypes.Configura
             this.childLogger.info(
               `[${fullName(containerFound)}] Status changed from ${oldStatus} to ${newStatus}`,
             );
+            this.emit(Events.UPDATED_CONTAINERS, 'Updated containers');
           }
         }
       } catch {
