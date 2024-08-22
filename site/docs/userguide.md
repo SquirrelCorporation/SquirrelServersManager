@@ -1,6 +1,7 @@
 # User Guide
 
-Follow those simple steps to understand the basics of SSM interface
+Follow these simple steps to understand the basics of the SSM interface:
+
 1. [First time using SSM](/docs/first-time)
 2. [Adding a device](/docs/add-device)
 3. [Playbooks](/docs/playbooks/playbooks)

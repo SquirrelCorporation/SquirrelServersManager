@@ -4,10 +4,11 @@
 See [Requirements](/docs/requirements)
 :::
 
-## Use pre-build images
+## Use pre-built images
 
-SSM has published version of the client and server image according to release tag [here](https://github.com/orgs/SquirrelCorporation/packages?repo_name=SquirrelServersManager).
-The `docker-compose.yml` file use those pre-build image. To use them, you can set up the following Docker Compose file:
+SSM has published versions of the client and server images according to release tags [here](https://github.com/orgs/SquirrelCorporation/packages?repo_name=SquirrelServersManager).
+The `docker-compose.yml` file uses these pre-built images. To use them, you can set up the following Docker Compose file:
+
 ### Docker-compose file
 ```dockerfile
 version: '3.8'
@@ -72,14 +73,14 @@ DB_PORT=27017
 REDIS_HOST=redis
 REDIS_PORT=6379
 ```
-Replace the value of "SECRET", "SALT", "VAULT_PWD"
+Replace the values of "SECRET", "SALT", and "VAULT_PWD"
 
-⚠ **SALT value MUST be alphanumerical string of exactly 16 chars**
+⚠ **SALT value MUST be an alphanumeric string of exactly 16 characters**
 
-Open a browser and open:
+Open a browser and navigate to:
 [http://localhost:8000](http://localhost:8000) or [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
-### To update SSM, simply
+### To update SSM, simply run:
 ```shell
 docker-compose pull
 docker-compose up
@@ -89,13 +90,14 @@ or
 docker compose pull
 docker compose up
 ```
-## Build the project by yourself
 
-### 1. Clone the main repo
+## Build the project yourself
+
+### 1. Clone the main repository
 ```shell
 git clone https://github.com/SquirrelCorporation/SquirrelServersManager
 ```
-### 2. CD to the directory:
+### 2. Navigate to the project directory:
 ```shell
 cd ./SquirrelServersManager
 ```
@@ -103,7 +105,7 @@ cd ./SquirrelServersManager
 ```shell
 vim .env
 ```
-### 4. Replace the value of "SECRET", "SALT", "VAULT_PWD"
+### 4. Replace the values of "SECRET", "SALT", and "VAULT_PWD"
 ```
 SECRET=REPLACE_ME
 ```
@@ -111,7 +113,7 @@ and
 ```
 SALT=1234567890123456
 ```
-⚠ **SALT value MUST be alphanumerical string of exactly 16 chars**
+⚠ **SALT value MUST be an alphanumeric string of exactly 16 characters**
 
 and
 ```
@@ -126,17 +128,17 @@ or
 ```shell
 docker-compose -f docker-compose.prod.yml  up
 ```
-depending of your docker version (see [Requirements](/docs/requirements))
+depending on your Docker version (see [Requirements](/docs/requirements))
 
-Docker will create a volume directory *.data.prod* in the directory for persistent data saves
+Docker will create a volume directory *.data.prod* in the directory for persistent data storage
 
-### 6. Open a browser and open:
+### 6. Open a browser and navigate to:
 
 [http://localhost:8000](http://localhost:8000) or [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 ### Updating SSM
 
-In SSM cloned directory:
+In the SSM cloned directory:
 
 ```shell
 git pull
