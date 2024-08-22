@@ -10,7 +10,7 @@ services:
       - server
   server:
     restart: unless-stopped
-    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-demo:master"
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-server-demo:master"
   client:
     restart: unless-stopped
     depends_on:
