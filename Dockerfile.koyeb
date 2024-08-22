@@ -1,0 +1,4 @@
+FROM koyeb/docker-compose
+COPY . /app
+RUN rm docker-compose.yml
+RUN mv docker-compose.demo.prod.yml docker-compose.yml
