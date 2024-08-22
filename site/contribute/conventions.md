@@ -40,7 +40,7 @@ const MAX_LOGIN_ATTEMPTS = 5;
 
 ## Async/Await
 
-- Apply async/await syntax for handling promises, as it structures asynchronous code to behave like synchronous code.
+- Use async/await syntax for handling promises, as it structures asynchronous code to behave like synchronous code.
 
 ## Code Formatting
 
@@ -50,6 +50,6 @@ const MAX_LOGIN_ATTEMPTS = 5;
 
 ## Git Commit Messages
 
-- Write commit messages in the present tense (i.e., "add feature" instead of "added feature").
+- Write commit messages in the present tense (e.g., "Add feature" instead of "Added feature").
 
-While these guidelines help create consistency, they may not cover every scenario. Thus, use your best judgment where necessary.
+While these guidelines help create consistency, they may not cover every scenario. Use your best judgment where necessary.
