@@ -49,6 +49,10 @@ export default defineConfig({
         text: 'About',
         link: '/about.md'
       },
+      {
+        text:'Demo',
+        link: 'https://molecular-sibylla-squirrelserversmanager-1b05c91d.koyeb.app/'
+      },
       { text: 'Documentation', link: '/docs/' },
       { text: 'Contribute', link: '/contribute/' },
       {

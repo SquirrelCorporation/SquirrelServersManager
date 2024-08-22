@@ -15,6 +15,9 @@ hero:
       text: Why SSM
       link: /about
     - theme: alt
+      text: Demo
+      link: https://molecular-sibylla-squirrelserversmanager-1b05c91d.koyeb.app/
+    - theme: alt
       text: Contribute
       link: /contribute/
 
