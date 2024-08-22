@@ -1,12 +1,12 @@
-
 # Docker
 
-## Containers labels
+## Container Labels
 
-SSM is including part of the code of WhatsUpDocker, so it supports, for the moment, the exact same labels on containers: 
+SSM includes part of the code from WhatsUpDocker, so it currently supports the same labels on containers:
+
 ## Labels
 
-To fine-tune the behaviour of WUD _per container_, you can add labels on them.
+To fine-tune the behavior of WUD _per container_, you can add labels to them.
 
 | Label               |    Required    | Description                                        | Supported values                                                                                                                                                            | Default value when missing                                                            |
 |---------------------|:--------------:|----------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|

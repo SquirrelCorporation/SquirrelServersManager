@@ -6,8 +6,8 @@ SSM supports the following registries:
 - CUSTOM (Self-hosted Registry)
 - ECR (Amazon Elastic Container Registry)
 - GCR (Google Container Registry)
-- GHCR (Github Container Registry)
-- GITLAB (Gitlab Container Registry)
+- GHCR (GitHub Container Registry)
+- GITLAB (GitLab Container Registry)
 - HUB (Docker Hub)
 - LSCR (LinuxServer Container Registry)
 - Quay
@@ -18,18 +18,18 @@ ECR, GHCR, GCR, HUB, QUAY
 :::
 
 ## Configuring a registry
-### 1. Go to settings, "Registries" tag
+### 1. Go to settings, "Registries" tab
 ![registries1](/registries/registries-1.png)
-### 2. Select a predefined integration or custom integrations (see bellow)
+### 2. Select a predefined integration or custom integration (see below)
 
 ## ACR (Azure Container Registry)
 
-The `acr`registry lets you configure [ACR](https://azure.microsoft.com/services/container-registry/) integration.
+The `acr` registry lets you configure [ACR](https://azure.microsoft.com/services/container-registry/) integration.
 
 ### Variables
 
 | Name           | Required     | Description                 | Supported values                                                                                                                  | Default value when missing |
-|----------------|:------------:| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- | 
+|----------------|:------------:| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `clientid`     | :red_circle: | Service Principal Client ID | See [Service Principal Auth](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-auth-service-principal) |                            |
 | `clientsecret` | :red_circle: | Service Principal Secret    | See [Service Principal Auth](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-auth-service-principal) |                            |
 
@@ -51,7 +51,7 @@ Follow the [official Azure documentation](https://docs.microsoft.com/azure/activ
 ![image](/registries/acr/acr_02.png)
 
 #### Click to Add a role assignment
-Select the `AcrPull` role and assign to your Service Principal
+Select the `AcrPull` role and assign it to your Service Principal
 ![image](/registries/acr/acr_03.png)
 
 ## CUSTOM (Self-hosted Docker Registry)
@@ -61,7 +61,7 @@ The `custom` registry lets you configure a self-hosted [Docker Registry](https:/
 ### Variables
 
 | Env var    | Required       | Description                                                     | Supported values                    | Default value when missing |
-|------------|:--------------:| --------------------------------------------------------------- |-------------------------------------| -------------------------- | 
+|------------|:--------------:| --------------------------------------------------------------- |-------------------------------------| -------------------------- |
 | `url`      | :red_circle:   | Registry URL (e.g. http://localhost:5000)                       |                                     |                            |
 | `login`    | :white_circle: | Login (when htpasswd auth is enabled on the registry)           | password must be defined            |                            |
 | `password` | :white_circle: | Password (when htpasswd auth is enabled on the registry)        | login must be defined               |                            |
@@ -88,7 +88,7 @@ The `ecr` registry lets you configure [ECR](https://aws.amazon.com/ecr/) integra
 ### Variables
 
 | Env var           | Required     | Description                   | Supported values                                                                                  | Default value when missing |
-|-------------------|:------------:| ----------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------- | 
+|-------------------|:------------:| ----------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------- |
 | `region`          | :red_circle: | A valid AWS Region Code       | [AWS Region list](https://docs.aws.amazon.com/general/latest/gr/rande.html#regional-endpoints)    |                            |
 | `accesskey`       | :red_circle: | A valid AWS Access Key Id     | [Standard AWS Credentials](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html) |                            |
 | `secretaccesskey` | :red_circle: | A valid AWS Secret Access Key | [Standard AWS Credentials](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html) |                            |
@@ -118,7 +118,7 @@ The `forgejo` registry lets you configure a self-hosted [Forgejo](https://forgej
 ### Variables
 
 | Env var    |    Required    | Description                                                     | Supported values                    | Default value when missing |
-|------------|:--------------:|-----------------------------------------------------------------|-------------------------------------|----------------------------| 
+|------------|:--------------:|-----------------------------------------------------------------|-------------------------------------|----------------------------|
 | `url`      |  :red_circle:  | Registry URL (e.g. https://forgejo.acme.com)                      |                                     |                            |
 | `login`    | :red_circle:   | Gitea username                                                  | password must be defined            |                            |
 | `password` |  :red_circle:  | Gitea password                                                  | login must be defined               |                            |
@@ -139,7 +139,7 @@ The `gcr` registry lets you configure [GCR](https://cloud.google.com/container-r
 ### Variables
 
 | Env var       |    Required    | Description                                                       | Supported values                                                                                                     | Default value when missing |
-|---------------|:--------------:|-------------------------------------------------------------------| -------------------------------------------------------------------------------------------------------------------- | -------------------------- | 
+|---------------|:--------------:|-------------------------------------------------------------------| -------------------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `clientemail` | :white_circle: | Service Account Client Email (required for private images access) | See [Service Account credentials](https://cloud.google.com/container-registry/docs/advanced-authentication#json-key) |                            |
 | `privatekey`  | :white_circle: | Service Account Private Key (required for private images access)  | See [Service Account credentials](https://cloud.google.com/container-registry/docs/advanced-authentication#json-key) |                            |
 
@@ -165,18 +165,19 @@ The `gcr` registry lets you configure [GCR](https://cloud.google.com/container-r
 
 #### 6. Download the keyfile JSON file and store it securely
 
-#### 7. Open the JSON file, get the client_email and private_key values and configure SSM with them.
+#### 7. Open the JSON file, get the client_email and private_key values and configure SSM with them
 
-## GHCR (Github Container Registry)
+## GHCR (GitHub Container Registry)
 
 The `ghcr` registry lets you configure [GHCR](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-docker-registry) integration.
 
 ### Variables
 
 | Env var    | Required       | Description     | Supported values                         | Default value when missing |
-|------------|:--------------:| --------------- | ---------------------------------------- | -------------------------- | 
-| `username` | :white_circle: | Github username |                                          |                            |
-| `token`    | :white_circle: | Github token    | Github password or Github Personal Token |                            |
+|------------|:--------------:| --------------- | ---------------------------------------- | -------------------------- |
+| `username` | :white_circle: | GitHub username |                                          |                            |
+| `token`    | :white_circle: | GitHub token    | GitHub password or GitHub Personal Token |                            |
+
 ### Examples
 
 #### Configure to access private images (credentials needed)
@@ -186,8 +187,8 @@ The `ghcr` registry lets you configure [GHCR](https://docs.github.com/en/package
 
 <!-- tabs:end -->
 
-### How to create a Github Personal Token
-#### Go to your Github settings and open the Personal Access Token tab
+### How to create a GitHub Personal Token
+#### Go to your GitHub settings and open the Personal Access Token tab
 [Click here](https://github.com/settings/tokens)
 
 #### Click on `Generate new token`
@@ -204,7 +205,7 @@ The `gitea` registry lets you configure a self-hosted [Gitea](https://gitea.com)
 ### Variables
 
 | Env var    |    Required    | Description                                                     | Supported values                    | Default value when missing |
-|------------|:--------------:|-----------------------------------------------------------------|-------------------------------------|----------------------------| 
+|------------|:--------------:|-----------------------------------------------------------------|-------------------------------------|----------------------------|
 | `url`      |  :red_circle:  | Registry URL (e.g. https://gitea.acme.com)                      |                                     |                            |
 | `login`    | :red_circle:   | Gitea username                                                  | password must be defined            |                            |
 | `password` |  :red_circle:  | Gitea password                                                  | login must be defined               |                            |
@@ -216,17 +217,17 @@ The `gitea` registry lets you configure a self-hosted [Gitea](https://gitea.com)
 ![image](/registries/gitea/gitea.png)
 <!-- tabs:end -->
 
-## Gitlab (Gitlab Container Registry)
+## GitLab (GitLab Container Registry)
 
-The `gitlab` registry lets you configure [GITLAB](https://docs.gitlab.com/ee/user/packages/container_registry/) integration.
+The `gitlab` registry lets you configure [GitLab](https://docs.gitlab.com/ee/user/packages/container_registry/) integration.
 
 ### Variables
 
 | Env var   |   Required   | Description                    | Supported values                         | Default value when missing  |
-|-----------|:------------:|--------------------------------| ---------------------------------------- |-----------------------------| 
-| `url`     | :red_circle: | Gitlab Registry base url       |                                          | https://registry.gitlab.com |
-| `authurl` | :red_circle: | Gitlab Authentication base url |                                          | https://gitlab.com          |
-| `token`   | :red_circle: | Gitlab Personal Access Token   |                                          |                             |
+|-----------|:------------:|--------------------------------| ---------------------------------------- |-----------------------------|
+| `url`     | :red_circle: | GitLab Registry base URL       |                                          | https://registry.gitlab.com |
+| `authurl` | :red_circle: | GitLab Authentication base URL |                                          | https://gitlab.com          |
+| `token`   | :red_circle: | GitLab Personal Access Token   |                                          |                             |
 
 ### Examples
 
@@ -236,14 +237,14 @@ The `gitlab` registry lets you configure [GITLAB](https://docs.gitlab.com/ee/use
 ![image](/registries/gitlab/gitlab-1.png)
 <!-- tabs:end -->
 
-#### Configure to access images from self hosted gitlab instance
+#### Configure to access images from self-hosted GitLab instance
 
 <!-- tabs:start -->
 ![image](/registries/gitlab/gitlab-2.png)
 <!-- tabs:end -->
 
-### How to create a Gitlab Personal Access Token
-#### Go to your Gitlab settings and open the Personal Access Token page
+### How to create a GitLab Personal Access Token
+#### Go to your GitLab settings and open the Personal Access Token page
 [Click here](https://gitlab.com/-/profile/personal_access_tokens)
 
 #### Enter the details of the token to be created
@@ -253,7 +254,7 @@ Choose an expiration time & appropriate scopes (`read_registry` is only needed f
 #### Copy the token & use it as the `token` value
 ![image](/registries/gitlab/gitlab_02.png)
 
-## HUB (Docker Hub incl private repositories)
+## HUB (Docker Hub including private repositories)
 
 The `hub` registry lets you configure [Docker Hub](https://hub.docker.com/) integration.
 
@@ -268,10 +269,10 @@ Don't forget to configure authentication if you're using [Docker Hub Private Rep
 ### Variables
 
 | Env var    | Required       | Description                                                  | Supported values                 | Default value when missing |
-|------------|:--------------:|--------------------------------------------------------------|----------------------------------| -------------------------- | 
+|------------|:--------------:|--------------------------------------------------------------|----------------------------------| -------------------------- |
 | `login`    | :white_circle: | A valid Docker Hub Login                                     | token must be defined            |                            |
 | `password` | :white_circle: | A valid Docker Hub Token                                     | login must be defined            |                            |
-| `token`    | :white_circle: | A valid Docker Hub Token (deprecated; replaced by `password` | login must be defined            |                            |
+| `token`    | :white_circle: | A valid Docker Hub Token (deprecated; replaced by `password`) | login must be defined            |                            |
 | `auth`     | :white_circle: | A valid Docker Hub Base64 Auth String                        | login/token  must not be defined |                            |
 
 ### Examples
@@ -317,9 +318,9 @@ The `lscr` registry lets you configure [LSCR](https://fleet.linuxserver.io/) int
 ### Variables
 
 | Env var    |   Required    | Description     | Supported values                         | Default value when missing |
-|------------|:-------------:|-----------------|------------------------------------------|----------------------------| 
-| `username` | :red_circle:  | Github username    |  |                            |
-| `token`    | :red_circle:  | Github token    | Github password or Github Personal Token |                            |
+|------------|:-------------:|-----------------|------------------------------------------|----------------------------|
+| `username` | :red_circle:  | GitHub username |                                          |                            |
+| `token`    | :red_circle:  | GitHub token    | GitHub password or GitHub Personal Token |                            |
 
 ### Examples
 
@@ -327,8 +328,8 @@ The `lscr` registry lets you configure [LSCR](https://fleet.linuxserver.io/) int
 ![image](/registries/lscr/lscr.png)
 <!-- tabs:end -->
 
-### How to create a Github Personal Token
-#### Go to your Github settings and open the Personal Access Token tab
+### How to create a GitHub Personal Token
+#### Go to your GitHub settings and open the Personal Access Token tab
 [Click here](https://github.com/settings/tokens)
 
 #### Click on `Generate new token`
@@ -340,12 +341,12 @@ Choose an expiration time & appropriate scopes (`read:packages` is only needed f
 
 ## Quay
 
-The `quay` registry lets you configure [QUAY](https://quay.io/) integration.
+The `quay` registry lets you configure [Quay](https://quay.io/) integration.
 
 ### Variables
 
 | Env var     | Required        | Description    | Supported values | Default value when missing |
-|-------------|:--------------:| -------------- | ---------------- | -------------------------- | 
+|-------------|:--------------:| -------------- | ---------------- | -------------------------- |
 | `namespace` | :white_circle: | Quay namespace |                  |                            |
 | `account`   | :white_circle: | Quay account   |                  |                            |
 | `token`     | :white_circle: | Quay token     |                  |                            |
@@ -366,7 +367,7 @@ Choose a name & create it
 ![image](/registries/quay/quay_01.png)
 
 #### Copy the part before the `+` sign and set it as the `namespace` env var
-#### Copy the part after  the `+` sign and set it as the `account` env var
+#### Copy the part after the `+` sign and set it as the `account` env var
 #### Copy the token value and set it as the `token` env var
 ![image](/registries/quay/quay_02.png)
 
@@ -377,7 +378,6 @@ To delete a custom registry, simply click on "Delete" on the tile of your custom
 ![image](/registries/registries-2.png)
 ![image](/registries/registries-3.png)
 
-### Reseting a default registry
+### Resetting a default registry
 To reset a default registry, simply click on "Reset" on the tile of your custom registry
 ![image](/registries/registries-4.png)
-
