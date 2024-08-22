@@ -1,0 +1,191 @@
+ [
+    {
+      "_id": "6682bb8fd1b6418a7eeb6bbb",
+      "uuid": "00000000-0000-0000-0000-000000000000",
+      "createdAt": "2024-07-01T14:22:07.321Z",
+      "default": true,
+      "directory": "/server/src/ansible/00000000-0000-0000-0000-000000000000",
+      "enabled": true,
+      "name": "ssm-core",
+      "type": "local",
+      "updatedAt": "2024-08-21T14:25:57.030Z",
+      "tree": {
+        "path": "/server/src/ansible/00000000-0000-0000-0000-000000000000",
+        "name": "00000000-0000-0000-0000-000000000000",
+        "children": [
+          {
+            "path": "/server/src/ansible/00000000-0000-0000-0000-000000000000/agent",
+            "name": "agent",
+            "children": [
+              {
+                "path": "/server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_checkDeviceBeforeAdd.yml",
+                "name": "_checkDeviceBeforeAdd.yml",
+                "type": "file",
+                "extension": ".yml"
+              },
+              {
+                "path": "/server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_installAgent.yml",
+                "name": "_installAgent.yml",
+                "type": "file",
+                "extension": ".yml"
+              },
+              {
+                "path": "/server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_reinstallAgent.yml",
+                "name": "_reinstallAgent.yml",
+                "type": "file",
+                "extension": ".yml"
+              },
+              {
+                "path": "/server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_restartAgent.yml",
+                "name": "_restartAgent.yml",
+                "type": "file",
+                "extension": ".yml"
+              },
+              {
+                "path": "/server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_retrieveAgentLogs.yml",
+                "name": "_retrieveAgentLogs.yml",
+                "type": "file",
+                "extension": ".yml"
+              },
+              {
+                "path": "/server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_uninstallAgent.yml",
+                "name": "_uninstallAgent.yml",
+                "type": "file",
+                "extension": ".yml"
+              },
+              {
+                "path": "/server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_updateAgent.yml",
+                "name": "_updateAgent.yml",
+                "type": "file",
+                "extension": ".yml"
+              }
+            ],
+            "type": "directory"
+          },
+          {
+            "path": "/server/src/ansible/00000000-0000-0000-0000-000000000000/device",
+            "name": "device",
+            "children": [
+              {
+                "path": "/server/src/ansible/00000000-0000-0000-0000-000000000000/device/_ping.yml",
+                "name": "_ping.yml",
+                "type": "file",
+                "extension": ".yml"
+              },
+              {
+                "path": "/server/src/ansible/00000000-0000-0000-0000-000000000000/device/_reboot.yml",
+                "name": "_reboot.yml",
+                "type": "file",
+                "extension": ".yml"
+              },
+              {
+                "path": "/server/src/ansible/00000000-0000-0000-0000-000000000000/device/_upgrade.yml",
+                "name": "_upgrade.yml",
+                "type": "file",
+                "extension": ".yml"
+              }
+            ],
+            "type": "directory"
+          },
+          {
+            "path": "/server/src/ansible/00000000-0000-0000-0000-000000000000/docker",
+            "name": "docker",
+            "children": [
+              {
+                "path": "/server/src/ansible/00000000-0000-0000-0000-000000000000/docker/_dockerCompose.yml",
+                "name": "_dockerCompose.yml",
+                "type": "file",
+                "extension": ".yml"
+              }
+            ],
+            "type": "directory"
+          }
+        ],
+        "type": "directory"
+      }
+    },
+    {
+      "_id": "6682bb8fd1b6418a7eeb6bbd",
+      "uuid": "00000000-0000-0000-0000-000000000001",
+      "createdAt": "2024-07-01T14:22:07.441Z",
+      "default": true,
+      "directory": "/server/src/ansible/00000000-0000-0000-0000-000000000001",
+      "enabled": true,
+      "name": "ssm-tools",
+      "type": "local",
+      "updatedAt": "2024-08-21T14:25:57.054Z",
+      "tree": {
+        "path": "/server/src/ansible/00000000-0000-0000-0000-000000000001",
+        "name": "00000000-0000-0000-0000-000000000001",
+        "children": [
+          {
+            "path": "/server/src/ansible/00000000-0000-0000-0000-000000000001/factScan.yml",
+            "name": "factScan.yml",
+            "type": "file",
+            "extension": ".yml"
+          },
+          {
+            "path": "/server/src/ansible/00000000-0000-0000-0000-000000000001/pingSsmApiUrl.yml",
+            "name": "pingSsmApiUrl.yml",
+            "type": "file",
+            "extension": ".yml"
+          }
+        ],
+        "type": "directory"
+      }
+    },
+    {
+      "_id": "6682bc1202fbf4bf04ce224f",
+      "uuid": "5da864f9-36a9-4a13-92c4-f3e3baacc85f",
+      "type": "local",
+      "default": false,
+      "name": "perso",
+      "directory": "/playbooks/5da864f9-36a9-4a13-92c4-f3e3baacc85f",
+      "enabled": true,
+      "createdAt": "2024-07-01T14:24:18.572Z",
+      "updatedAt": "2024-08-19T14:25:42.001Z",
+      "tree": {
+        "path": "/playbooks/5da864f9-36a9-4a13-92c4-f3e3baacc85f",
+        "name": "5da864f9-36a9-4a13-92c4-f3e3baacc85f",
+        "children": [
+          {
+            "path": "/playbooks/5da864f9-36a9-4a13-92c4-f3e3baacc85f/test",
+            "name": "test",
+            "children": [
+              {
+                "path": "/playbooks/5da864f9-36a9-4a13-92c4-f3e3baacc85f/test/mytest.yml",
+                "name": "mytest.yml",
+                "type": "file",
+                "extension": ".yml"
+              }
+            ],
+            "type": "directory"
+          },
+          {
+            "path": "/playbooks/5da864f9-36a9-4a13-92c4-f3e3baacc85f/test.yml",
+            "name": "test.yml",
+            "type": "file",
+            "extension": ".yml"
+          }
+        ],
+        "type": "directory"
+      }
+    },
+    {
+      "_id": "66880d0698b757d5889e5567",
+      "uuid": "00000000-0000-0000-0000-000000000002",
+      "createdAt": "2024-07-05T15:11:02.793Z",
+      "default": false,
+      "directory": "/playbooks/00000000-0000-0000-0000-000000000002",
+      "enabled": true,
+      "name": "facos86",
+      "type": "local",
+      "updatedAt": "2024-08-19T14:25:42.003Z",
+      "tree": {
+        "path": "/playbooks/00000000-0000-0000-0000-000000000002",
+        "name": "00000000-0000-0000-0000-000000000002",
+        "children": [],
+        "type": "directory"
+      }
+    }
+  ]

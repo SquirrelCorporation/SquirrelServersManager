@@ -1,0 +1,18 @@
+ [
+   {
+     "_id": "6682bb8fd1b6418a7eeb6bbb",
+     "uuid": "00000000-0000-0000-0000-000000000005",
+     "createdAt": "2024-07-01T14:22:07.321Z",
+     "default": true,
+     "directory": "/server/src/ansible/00000000-0000-0000-0000-000000000005",
+     "enabled": true,
+     "name": "my-repo-git",
+     "type": "git",
+     "updatedAt": "2024-08-21T14:25:57.030Z",
+     "tree": {
+       "path": "/server/src/ansible/00000000-0000-0000-0000-000000000005",
+       "name": "00000000-0000-0000-0000-000000000005",
+       "children": []
+     }
+   }
+  ]

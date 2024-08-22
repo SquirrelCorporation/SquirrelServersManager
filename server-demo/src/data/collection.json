@@ -1,0 +1,2057 @@
+[
+    {
+      "repository": {
+        "pulp_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/",
+        "pulp_created": "2023-05-08T20:13:23.300541Z",
+        "versions_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/",
+        "pulp_labels": {
+          "pipeline": "approved"
+        },
+        "latest_version_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/21315/",
+        "name": "published",
+        "description": "Certified content repository",
+        "retain_repo_versions": 1,
+        "remote": "/api/pulp/api/v3/remotes/ansible/collection/4c94e81d-15da-4711-9756-663cb32d742d/"
+      },
+      "collection_version": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/collection_versions/018a07a2-0c29-7f40-a1bd-3946b13f2731/",
+        "namespace": "snagoor",
+        "name": "aap_common",
+        "version": "1.0.5",
+        "requires_ansible": ">=2.10",
+        "pulp_created": "2023-08-18T07:53:08.203887Z",
+        "contents": [
+          {
+            "name": "common",
+            "description": "your role description",
+            "content_type": "role"
+          },
+          {
+            "name": "haproxy",
+            "description": "HAProxy Setup for AAP2 Cluster installations",
+            "content_type": "role"
+          }
+        ],
+        "dependencies": {},
+        "description": "Common roles to setup AAP2",
+        "tags": [
+          {
+            "name": "common"
+          }
+        ]
+      },
+      "repository_version": "latest",
+      "namespace_metadata": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/namespaces/018d1a18-8074-7519-80e0-a8eaf376cc43/",
+        "name": "snagoor",
+        "company": "",
+        "description": "",
+        "avatar_url": "https://galaxy.ansible.com/api/pulp/api/v3/content/ansible/namespaces/018d1a18-8074-7519-80e0-a8eaf376cc43/avatar/"
+      },
+      "is_highest": true,
+      "is_deprecated": false,
+      "is_signed": false
+    },
+    {
+      "repository": {
+        "pulp_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/",
+        "pulp_created": "2023-05-08T20:13:23.300541Z",
+        "versions_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/",
+        "pulp_labels": {
+          "pipeline": "approved"
+        },
+        "latest_version_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/21315/",
+        "name": "published",
+        "description": "Certified content repository",
+        "retain_repo_versions": 1,
+        "remote": "/api/pulp/api/v3/remotes/ansible/collection/4c94e81d-15da-4711-9756-663cb32d742d/"
+      },
+      "collection_version": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/collection_versions/01909890-c9f9-7d7d-a455-2e2c29887787/",
+        "namespace": "infra",
+        "name": "aap_utilities",
+        "version": "2.5.2",
+        "requires_ansible": ">=2.17.0",
+        "pulp_created": "2024-07-09T17:35:44.140085Z",
+        "contents": [
+          {
+            "name": "aap_restore",
+            "description": "Role to restore the Ansible Automation Platform",
+            "content_type": "role"
+          },
+          {
+            "name": "kerberos",
+            "description": "An Ansible role to configure Ansible Controller nodes to manage Windows systems.",
+            "content_type": "role"
+          },
+          {
+            "name": "aap_setup_download",
+            "description": "download the latest setup tarball for a version of AAP",
+            "content_type": "role"
+          },
+          {
+            "name": "aap_ocp_install",
+            "description": "Installs Ansible Automation Platform (AAP) on OpenShift Container Platform (OCP)",
+            "content_type": "role"
+          },
+          {
+            "name": "aap_backup",
+            "description": "Role to backup the Ansible Automation Platform",
+            "content_type": "role"
+          },
+          {
+            "name": "git_ssh_setup",
+            "description": "Role to install a minimal Git over SSH server",
+            "content_type": "role"
+          },
+          {
+            "name": "aap_remove",
+            "description": "Role to remove the Ansible Automation Platform",
+            "content_type": "role"
+          },
+          {
+            "name": "aap_certs",
+            "description": "Role to install Ansible AAP Certificates",
+            "content_type": "role"
+          },
+          {
+            "name": "aap_setup_prepare",
+            "description": "Prepare installation of AAP, OS requirements, unpack tarball, write inventory",
+            "content_type": "role"
+          },
+          {
+            "name": "aap_setup_install",
+            "description": "Trigger installation of AAP given a prepared setup and inventory",
+            "content_type": "role"
+          }
+        ],
+        "dependencies": {
+          "ansible.posix": ">=1.0.0",
+          "kubernetes.core": ">=2.2.0"
+        },
+        "description": "A collection of utility roles for usage with Ansible Automation Platform",
+        "tags": [
+          {
+            "name": "collection"
+          },
+          {
+            "name": "aap"
+          },
+          {
+            "name": "utilities"
+          },
+          {
+            "name": "tower_utils"
+          },
+          {
+            "name": "ansible_automation_platform"
+          },
+          {
+            "name": "aap_utils"
+          },
+          {
+            "name": "utils"
+          },
+          {
+            "name": "tower_utilities"
+          },
+          {
+            "name": "aap_utilities"
+          },
+          {
+            "name": "tower"
+          },
+          {
+            "name": "infrastructure"
+          }
+        ]
+      },
+      "repository_version": "latest",
+      "namespace_metadata": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/namespaces/018d1a03-7459-7ab9-b3bb-b3d7b64ef0d5/",
+        "name": "infra",
+        "company": "",
+        "description": "",
+        "avatar_url": "https://galaxy.ansible.com/api/pulp/api/v3/content/ansible/namespaces/018d1a03-7459-7ab9-b3bb-b3d7b64ef0d5/avatar/"
+      },
+      "is_highest": true,
+      "is_deprecated": false,
+      "is_signed": false
+    },
+    {
+      "repository": {
+        "pulp_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/",
+        "pulp_created": "2023-05-08T20:13:23.300541Z",
+        "versions_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/",
+        "pulp_labels": {
+          "pipeline": "approved"
+        },
+        "latest_version_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/21315/",
+        "name": "published",
+        "description": "Certified content repository",
+        "retain_repo_versions": 1,
+        "remote": "/api/pulp/api/v3/remotes/ansible/collection/4c94e81d-15da-4711-9756-663cb32d742d/"
+      },
+      "collection_version": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/collection_versions/ec904ccb-16c2-49c8-b062-900349d78b74/",
+        "namespace": "abdfou01",
+        "name": "abdfou01_mycollection",
+        "version": "0.0.1",
+        "requires_ansible": ">=2.9,<2.11",
+        "pulp_created": "2023-05-08T20:26:20.839965Z",
+        "contents": [
+          {
+            "name": "wordpress",
+            "description": "your role description",
+            "content_type": "role"
+          }
+        ],
+        "dependencies": {},
+        "description": "your collection description",
+        "tags": []
+      },
+      "repository_version": "latest",
+      "namespace_metadata": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/namespaces/018d19f8-8e9c-74dc-82a8-ae992cb955fb/",
+        "name": "abdfou01",
+        "company": "",
+        "description": "",
+        "avatar_url": "https://galaxy.ansible.com/api/pulp/api/v3/content/ansible/namespaces/018d19f8-8e9c-74dc-82a8-ae992cb955fb/avatar/"
+      },
+      "is_highest": true,
+      "is_deprecated": false,
+      "is_signed": false
+    },
+    {
+      "repository": {
+        "pulp_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/",
+        "pulp_created": "2023-05-08T20:13:23.300541Z",
+        "versions_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/",
+        "pulp_labels": {
+          "pipeline": "approved"
+        },
+        "latest_version_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/21315/",
+        "name": "published",
+        "description": "Certified content repository",
+        "retain_repo_versions": 1,
+        "remote": "/api/pulp/api/v3/remotes/ansible/collection/4c94e81d-15da-4711-9756-663cb32d742d/"
+      },
+      "collection_version": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/collection_versions/c7e6aa01-6629-4e48-b0ea-cde3a4b53fc0/",
+        "namespace": "huaweidatacom",
+        "name": "ac",
+        "version": "1.0.0",
+        "requires_ansible": ">=2.9.10",
+        "pulp_created": "2023-05-09T03:53:27.506694Z",
+        "contents": [
+          {
+            "name": "ac_endport",
+            "description": "Manages EndPort on HUAWEI iMaster NCE-Fabric Controller.",
+            "content_type": "module"
+          },
+          {
+            "name": "ac_logicinterface",
+            "description": "Manages LogicInterface on HUAWEI iMaster NCE-Fabric Controller.",
+            "content_type": "module"
+          },
+          {
+            "name": "ac_logicnetwork",
+            "description": "Manages LogicNetwork on HUAWEI iMaster NCE-Fabric Controller.",
+            "content_type": "module"
+          },
+          {
+            "name": "ac_logicport",
+            "description": "Manages LogicPort on HUAWEI iMaster NCE-Fabric Controller.",
+            "content_type": "module"
+          },
+          {
+            "name": "ac_logicrouter",
+            "description": "Manages LogicRouter on HUAWEI iMaster NCE-Fabric Controller.",
+            "content_type": "module"
+          },
+          {
+            "name": "ac_logicsubnet",
+            "description": "Manages LogicSubnet on HUAWEI iMaster NCE-Fabric Controller.",
+            "content_type": "module"
+          },
+          {
+            "name": "ac_logicswitch",
+            "description": "Manages LogicSwitch on HUAWEI iMaster NCE-Fabric Controller.",
+            "content_type": "module"
+          },
+          {
+            "name": "ac_tenant",
+            "description": "Manages Tenant on HUAWEI iMaster NCE-Fabric Controller.",
+            "content_type": "module"
+          },
+          {
+            "name": "ac_token",
+            "description": "Get Token from HUAWEI iMaster NCE-Fabric Controller.",
+            "content_type": "module"
+          }
+        ],
+        "dependencies": {},
+        "description": "your collection description",
+        "tags": []
+      },
+      "repository_version": "latest",
+      "namespace_metadata": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/namespaces/018d1a03-15fc-7821-bb23-d0f00a964724/",
+        "name": "huaweidatacom",
+        "company": "",
+        "description": "",
+        "avatar_url": "https://galaxy.ansible.com/api/pulp/api/v3/content/ansible/namespaces/018d1a03-15fc-7821-bb23-d0f00a964724/avatar/"
+      },
+      "is_highest": true,
+      "is_deprecated": false,
+      "is_signed": false
+    },
+    {
+      "repository": {
+        "pulp_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/",
+        "pulp_created": "2023-05-08T20:13:23.300541Z",
+        "versions_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/",
+        "pulp_labels": {
+          "pipeline": "approved"
+        },
+        "latest_version_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/21315/",
+        "name": "published",
+        "description": "Certified content repository",
+        "retain_repo_versions": 1,
+        "remote": "/api/pulp/api/v3/remotes/ansible/collection/4c94e81d-15da-4711-9756-663cb32d742d/"
+      },
+      "collection_version": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/collection_versions/01900284-4ea0-7aff-935f-76137e8ce5f5/",
+        "namespace": "sivel",
+        "name": "acd",
+        "version": "10.0.1",
+        "requires_ansible": ">=2.17.0",
+        "pulp_created": "2024-06-10T14:19:03.713974Z",
+        "contents": [],
+        "dependencies": {
+          "awx.awx": "24.3.1",
+          "frr.frr": "2.0.2",
+          "cisco.aci": "2.9.0",
+          "cisco.asa": "5.0.1",
+          "cisco.ios": "8.0.0",
+          "cisco.ise": "2.9.1",
+          "cisco.mso": "2.6.0",
+          "cisco.ucs": "1.10.0",
+          "inspur.sm": "2.3.0",
+          "splunk.es": "3.0.0",
+          "vyos.vyos": "4.1.0",
+          "amazon.aws": "8.0.0",
+          "arista.eos": "9.0.0",
+          "cisco.dnac": "6.13.3",
+          "cisco.nxos": "8.0.0",
+          "ibm.qradar": "3.0.0",
+          "wti.remote": "1.0.5",
+          "cisco.iosxr": "9.0.0",
+          "ovirt.ovirt": "3.2.0",
+          "vultr.cloud": "1.12.1",
+          "cisco.meraki": "2.18.1",
+          "cloud.common": "3.0.0",
+          "cyberark.pas": "1.0.25",
+          "google.cloud": "1.3.0",
+          "inspur.ispim": "2.2.2",
+          "microsoft.ad": "1.5.0",
+          "netapp.ontap": "22.11.0",
+          "ansible.posix": "1.5.4",
+          "ansible.utils": "4.1.0",
+          "community.aws": "8.0.0",
+          "community.dns": "3.0.0",
+          "community.okd": "3.0.1",
+          "dellemc.unity": "2.0.0",
+          "netbox.netbox": "3.18.0",
+          "community.sops": "1.6.7",
+          "hetzner.hcloud": "3.1.1",
+          "sensu.sensu_go": "1.14.0",
+          "ansible.windows": "2.3.0",
+          "community.mysql": "3.9.0",
+          "cyberark.conjur": "1.2.2",
+          "grafana.grafana": "5.2.0",
+          "kaytus.ksmanage": "1.2.2",
+          "kubernetes.core": "3.1.0",
+          "openstack.cloud": "2.2.0",
+          "check_point.mgmt": "5.2.3",
+          "cisco.intersight": "2.0.9",
+          "community.crypto": "2.20.0",
+          "community.docker": "3.10.3",
+          "community.hrobot": "2.0.0",
+          "community.vmware": "4.4.0",
+          "community.zabbix": "2.4.0",
+          "fortinet.fortios": "2.3.6",
+          "ansible.netcommon": "6.1.2",
+          "community.general": "9.0.1",
+          "community.grafana": "1.9.1",
+          "community.libvirt": "1.3.0",
+          "community.mongodb": "1.7.4",
+          "community.network": "5.0.2",
+          "community.windows": "2.2.0",
+          "containers.podman": "1.13.0",
+          "dellemc.powerflex": "2.4.0",
+          "ngine_io.exoscale": "1.1.0",
+          "azure.azcollection": "2.3.0",
+          "community.ciscosmb": "1.0.9",
+          "community.proxysql": "1.5.1",
+          "community.rabbitmq": "1.3.0",
+          "community.routeros": "2.15.0",
+          "community.sap_libs": "1.4.2",
+          "dellemc.openmanage": "9.2.0",
+          "lowlydba.sqlserver": "2.3.2",
+          "netapp.storagegrid": "21.12.0",
+          "theforeman.foreman": "4.0.0",
+          "vmware.vmware_rest": "3.0.1",
+          "cloudscale_ch.cloud": "2.3.1",
+          "infinidat.infinibox": "1.4.5",
+          "netapp.cloudmanager": "21.22.1",
+          "ngine_io.cloudstack": "2.3.0",
+          "community.postgresql": "3.4.1",
+          "chocolatey.chocolatey": "1.5.1",
+          "community.hashi_vault": "6.2.0",
+          "f5networks.f5_modules": "1.28.0",
+          "fortinet.fortimanager": "2.5.0",
+          "infoblox.nios_modules": "1.6.1",
+          "junipernetworks.junos": "8.0.0",
+          "community.digitalocean": "1.26.0",
+          "ibm.storage_virtualize": "2.3.1",
+          "purestorage.flasharray": "1.28.0",
+          "purestorage.flashblade": "1.17.0",
+          "ibm.spectrum_virtualize": "2.0.0",
+          "openvswitch.openvswitch": "2.1.1",
+          "dellemc.enterprise_sonic": "2.4.0",
+          "netapp_eseries.santricity": "1.4.0",
+          "telekom_mms.icinga_director": "2.1.2",
+          "t_systems_mms.icinga_director": "2.0.1",
+          "community.library_inventory_filtering_v1": "1.0.1"
+        },
+        "description": "The sivel.acd collection is used to install all of the collections which were in the Ansible-2.9 release",
+        "tags": [
+          {
+            "name": "kitchensink"
+          },
+          {
+            "name": "ansible"
+          },
+          {
+            "name": "acd"
+          }
+        ]
+      },
+      "repository_version": "latest",
+      "namespace_metadata": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/namespaces/018ba659-a96b-7627-9f84-10aba5d67937/",
+        "name": "sivel",
+        "company": "@ansible @RedHatOfficial",
+        "description": "sivel",
+        "avatar_url": null
+      },
+      "is_highest": true,
+      "is_deprecated": false,
+      "is_signed": false
+    },
+    {
+      "repository": {
+        "pulp_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/",
+        "pulp_created": "2023-05-08T20:13:23.300541Z",
+        "versions_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/",
+        "pulp_labels": {
+          "pipeline": "approved"
+        },
+        "latest_version_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/21315/",
+        "name": "published",
+        "description": "Certified content repository",
+        "retain_repo_versions": 1,
+        "remote": "/api/pulp/api/v3/remotes/ansible/collection/4c94e81d-15da-4711-9756-663cb32d742d/"
+      },
+      "collection_version": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/collection_versions/d3f9cae8-8218-4cc1-817d-800e2b296818/",
+        "namespace": "carrieraccessit",
+        "name": "aci",
+        "version": "1.3.0",
+        "requires_ansible": ">=2.9.10",
+        "pulp_created": "2023-05-08T22:37:42.105929Z",
+        "contents": [
+          {
+            "name": "aci_l3out_extepg_to_subject_label",
+            "description": null,
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_extepg_to_contract",
+            "description": null,
+            "content_type": "module"
+          },
+          {
+            "name": "aci_contract_subject_to_label",
+            "description": null,
+            "content_type": "module"
+          },
+          {
+            "name": "aci_esg_selector",
+            "description": null,
+            "content_type": "module"
+          },
+          {
+            "name": "aci_esg",
+            "description": null,
+            "content_type": "module"
+          },
+          {
+            "name": "aci_esg_to_contract",
+            "description": null,
+            "content_type": "module"
+          },
+          {
+            "name": "aci_epg",
+            "description": null,
+            "content_type": "module"
+          },
+          {
+            "name": "aci",
+            "description": null,
+            "content_type": "module_utils"
+          },
+          {
+            "name": "aci",
+            "description": null,
+            "content_type": "doc_fragments"
+          }
+        ],
+        "dependencies": {
+          "cisco.aci": ">=1.0.0"
+        },
+        "description": "",
+        "tags": [
+          {
+            "name": "collection"
+          },
+          {
+            "name": "esg"
+          },
+          {
+            "name": "cisco"
+          },
+          {
+            "name": "demo"
+          }
+        ]
+      },
+      "repository_version": "latest",
+      "namespace_metadata": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/namespaces/018d19fb-e8ff-7762-915d-517b4e9eb085/",
+        "name": "carrieraccessit",
+        "company": "",
+        "description": "",
+        "avatar_url": "https://galaxy.ansible.com/api/pulp/api/v3/content/ansible/namespaces/018d19fb-e8ff-7762-915d-517b4e9eb085/avatar/"
+      },
+      "is_highest": true,
+      "is_deprecated": false,
+      "is_signed": false
+    },
+    {
+      "repository": {
+        "pulp_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/",
+        "pulp_created": "2023-05-08T20:13:23.300541Z",
+        "versions_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/",
+        "pulp_labels": {
+          "pipeline": "approved"
+        },
+        "latest_version_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/21315/",
+        "name": "published",
+        "description": "Certified content repository",
+        "retain_repo_versions": 1,
+        "remote": "/api/pulp/api/v3/remotes/ansible/collection/4c94e81d-15da-4711-9756-663cb32d742d/"
+      },
+      "collection_version": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/collection_versions/0190aa73-56bc-7d8e-b7f2-673880663d03/",
+        "namespace": "cisco",
+        "name": "aci",
+        "version": "2.10.1",
+        "requires_ansible": ">=2.15.0",
+        "pulp_created": "2024-07-13T04:56:43.966914Z",
+        "contents": [
+          {
+            "name": "aci_fabric_pod_policy_group",
+            "description": "Manage Fabric Pod Policy Groups (fabric:PodPGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_esg_contract_master",
+            "description": "Manage ESG contract master relationships (fv:RsSecInherited)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_floating_svi",
+            "description": "Manage Layer 3 Outside (L3Out) interfaces (l3ext:VirtualLIfP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_bgp_peer",
+            "description": "Manage Layer 3 Outside (L3Out) BGP Peers (bgp:PeerP and bgp:InfraPeerP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_bgp_timers_policy",
+            "description": "Manage BGP timers policy (bgp:CtxPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l2out",
+            "description": "Manage Layer2 Out (L2Out) objects (l2ext:Out)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_hsrp_group",
+            "description": "Manage HSRP group (hsrp:GroupP) of the HSRP interface profile (hsrp:IfP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_subject_label",
+            "description": "Manage Subject Labels (vz:ConsSubjLbl and vz:ProvSubjLbl)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_bfd",
+            "description": "Manage BFD Interface policies (bfd:IfPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_vlan_pool",
+            "description": "Manage VLAN pools (fvns:VlanInstP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_cloud_external_epg",
+            "description": "Manage Cloud External EPG (cloud:ExtEPg)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_domain_to_encap_pool",
+            "description": "Bind Domain to Encap Pools (infra:RsVlanNs)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_tenant_span_src_group_to_dst_group",
+            "description": "Bind SPAN source groups to destination groups (span:SpanLbl)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_cloud_epg",
+            "description": "Manage Cloud EPG (cloud:EPg)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_vmm_vswitch_policy",
+            "description": "Manage vSwitch policy for VMware virtual domains profiles (vmm:VSwitchPolicyCont)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_access_spine_interface_profile_to_spine_switch_profile",
+            "description": "Bind Fabric Access Spine Interface Profiles to Fabric Acces Spine Switch Profiles (infra:RsSpAccPortP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_pod",
+            "description": "Manage Fabric Pod Setup Policy (fabric:SetupP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_switch_policy_group",
+            "description": "Manage Fabric Switch Policy Group objects (fabric:LeNodePGrp and fabric:SpNodePGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_logical_interface_profile_ospf_policy",
+            "description": "Manage Layer 3 Outside (L3Out) OSPF interface profile (ospf:IfP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_system_banner",
+            "description": "Manages Alias and Banners (aaa:PreLoginBanner)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_contract_export",
+            "description": "Manage contract interfaces (vz:CPIf)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_domain_to_vlan_pool",
+            "description": "Bind Domain to VLAN Pools (infra:RsVlanNs)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_hsrp_interface_profile",
+            "description": "Manages Layer 3 Outside (L3Out) HSRP interface profile (hsrp:IfP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_extsubnet",
+            "description": "Manage External Subnet objects (l3ext:Subnet)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_key_policy",
+            "description": "Manage Key Policy (fv:KeyPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_logical_interface_profile",
+            "description": "Manage Layer 3 Outside (L3Out) logical interface profiles (l3ext:LIfP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_static_routes",
+            "description": "Manage Static routes object (ip:RouteP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_pim",
+            "description": "Manage Protocol-Independent Multicast (PIM) interface policies (pim:IfPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_epg",
+            "description": "Manage End Point Groups (EPG) objects (fv:AEPg)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_match_as_path_regex_term",
+            "description": "Manage Match Regular Expression AS-Path Term (rtctrl:MatchAsPathRegexTerm)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_span_src_group",
+            "description": "Manage Fabric SPAN source groups (span:SrcGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_cloud_subnet",
+            "description": "Manage Cloud Subnet (cloud:Subnet)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_aep_to_domain",
+            "description": "Bind AEPs to Physical or Virtual Domains (infra:RsDomP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_aaa_security_default_settings",
+            "description": "Manage AAA Key Rings (pki:Ep)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_cloud_bgp_asn",
+            "description": "Manage Cloud APIC BGP Autonomous System Profile (cloud:BgpAsP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_aaa_user_certificate",
+            "description": "Manage AAA user certificates (aaa:UserCert)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_pod_remote_pool",
+            "description": "Manage Fabric Pod Remote Pool (fabric:ExtSetupP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_config_export_policy",
+            "description": "Manage Configuration Export Policy (config:ExportP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_netflow_record_policy",
+            "description": "Manage Netflow Record Policy (netflow:RecordPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_firmware_group_node",
+            "description": "Manage firmware group nodes (fabric:NodeBlk)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_filter",
+            "description": "Manages top level filter objects (vz:Filter)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_switch_block",
+            "description": "Manage switch blocks (fabric:NodeBlk)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_esg",
+            "description": "Manage Endpoint Security Groups (ESGs) objects (fv:ESg)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_aep_to_epg",
+            "description": "Bind EPG to AEP (infra:RsFuncToEpg)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_config_snapshot",
+            "description": "Manage Config Snapshots (config:Snapshot and config:ExportP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_cloud_aws_provider",
+            "description": "Manage Cloud AWS Provider (cloud:AwsProvider)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_epg_to_contract_master",
+            "description": "Manage End Point Group (EPG) contract master relationships (fv:RsSecInherited)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_management_access_https_cipher",
+            "description": "Manage Fabric Management Access HTTPS SSL Cipher Configuration (comm:Cipher)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_lldp",
+            "description": "Manage LLDP interface policies (lldp:IfPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_system_endpoint_controls",
+            "description": "Manage System Endpoint Controls (ep:IpAgingP, ep:ControlP, and ep:LoopProtectP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_access_spine_switch_selector",
+            "description": "Manage Fabric Access Policy Spine Switch Port Selectors (infra:SpineS)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_vmm_uplink_container",
+            "description": "Manage VMM uplink containers (vmm:UplinkPCont)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_port_security",
+            "description": "Manage port security (l2:PortSecurityPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_tenant_span_src_group",
+            "description": "Manage SPAN source groups (span:SrcGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_vmm_controller",
+            "description": "Manage VMM Controller for virtual domains profiles (vmm:CtrlrP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_vmm_uplink",
+            "description": "Manage VMM uplinks (vmm:UplinkP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_netflow_monitor_policy",
+            "description": "Manage Netflow Monitor Policy (netflow:MonitorPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_pim_route_map_policy",
+            "description": "Manage Protocol-Independent Multicast (PIM) Route Map Policy (pim:RouteMapPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_static_binding_to_epg",
+            "description": "Bind static paths to EPGs (fv:RsPathAtt)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_contract_subject",
+            "description": "Manage initial Contract Subjects (vz:Subj)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_bfd_multihop_node_policy",
+            "description": "Manage BFD Multihop Node policies (bfd:MhNodePol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_access_spine_interface_selector",
+            "description": "Manage Fabric Access Policy Spine Interface Port Selectors (infra:SHPortS)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_match_community_factor",
+            "description": "Manage Match Community Factor (rtctrl:MatchCommFactor)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_interface_policy_group",
+            "description": "Manage Fabric Interface Policy Groups (fabric:LePortPGrp and fabric:SpPortPGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_aaa_key_ring",
+            "description": "Manage AAA Key Rings (pki:KeyRing)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_floating_svi_path_secondary_ip",
+            "description": "Manages Layer 3 Outside (L3Out) Floating SVI Path Attribute's Secondary IP addresses (l3ext:Ip)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_interface_secondary_ip",
+            "description": "Manage Layer 3 Outside (L3Out) interface secondary IP addresses (l3ext:Ip)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_hsrp",
+            "description": "Manage HSRP interface policies (hsrp:IfPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_qos_custom_policy",
+            "description": "Manage QoS Custom Policy (qos:CustomPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_l2",
+            "description": "Manage Layer 2 interface policies (l2:IfPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_cloud_provider",
+            "description": "Query Cloud Provider information (cloud:ProvP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_syslog_group",
+            "description": "Manage Syslog groups (syslog:Group, syslog:Console, syslog:File and syslog:Prof)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_filter_entry",
+            "description": "Manage filter entries (vz:Entry)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_system_connectivity_preference",
+            "description": "APIC Connectivity Preferences (mgmt:ConnectivityPrefs)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_vrf",
+            "description": "Manage contexts or VRFs (fv:Ctx)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_leaf_profile",
+            "description": "Manage fabric interface policy leaf profiles (infra:AccPortP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_cloud_ap",
+            "description": "Manage Cloud Application Profile (AP) (cloud:App)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out",
+            "description": "Manage Layer 3 Outside (L3Out) objects (l3ext:Out)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_fc",
+            "description": "Manage Fibre Channel interface policies (fc:IfPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_external_connection_profile",
+            "description": "Manage Fabric External Connection Profiles (fv:FabricExtConnP).",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_link_level",
+            "description": "Manage Link Level interface policies (fabric:HIfPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_switch_policy_vpc_protection_group",
+            "description": "Manage switch policy explicit vPC protection groups (fabric:ExplicitGEp and fabric:NodePEp).",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_tenant_span_src_group_src",
+            "description": "Manage SPAN source group sources (span:Src)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_tenant_action_rule_profile",
+            "description": "Manage action rule profiles (rtctrl:AttrP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_keychain_policy",
+            "description": "Manage KeyChain Policy (fv:KeyChainPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_netflow_monitor_to_exporter",
+            "description": "Manage Netflow Monitor to Exporter (netflow:RsMonitorToExporter)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_pod_profile",
+            "description": "Manage Fabric Pod Profile (fabric:PodP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_leaf_breakout_port_group",
+            "description": "Manage fabric interface policy leaf breakout port group (infra:BrkoutPortGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_management_access",
+            "description": "Manage Fabric Management Access (comm:Pol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_mcp",
+            "description": "Manage MCP interface policies (mcp:IfPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_span_src_group_src_node",
+            "description": "Manage Fabric SPAN source nodes (span:RsSrcToNode)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_storm_control",
+            "description": "Manage Storm Control interface policies (stormctrl:IfPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_hsrp_secondary_vip",
+            "description": "Manage HSRP Secondary Virtual IP of a HSRP group (hsrp:SecVip)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_maintenance_policy",
+            "description": "Manage firmware maintenance policies (maint:MaintP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_action_rule_set_as_path",
+            "description": "Manage the AS Path action rules (rtctrl:SetASPath)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_floating_svi_secondary_ip",
+            "description": "Manages Layer 3 Outside (L3Out) Floating SVI Secondary IP addresses (l3ext:Ip)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_netflow_exporter_policy",
+            "description": "Manage Netflow Exporter Policy (netflow:ExporterPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_leaf_fc_policy_group",
+            "description": "Manage Fibre Channel (FC) interface policy groups (infra:FcAccBndlGrp and infra:FcAccPortGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_access_span_filter_group_entry",
+            "description": "Manage Access SPAN filter group entries (span:FilterEntry)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_cloud_vpn_gateway",
+            "description": "Manage cloudRouterP in Cloud Context Profile (cloud:RouterP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_cloud_cidr",
+            "description": "Manage CIDR under Cloud Context Profile (cloud:Cidr)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_esg_tag_selector",
+            "description": "Manage ESG Tag Selectors (fv:TagSelector)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_ap",
+            "description": "Manage top level Application Profile (AP) objects (fv:Ap)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_tenant_span_dst_group",
+            "description": "Manage SPAN destination groups (span:DestGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_bfd_multihop",
+            "description": "Manage BFD Multihop Interface policies (bfd:MhIfPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_match_community_regex_term",
+            "description": "Manage Match Regular Expression Community Term (rtctrl:MatchCommRegexTerm)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_route_control_profile",
+            "description": "Manage Route Control Profile (rtctrl:Profile)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_epg_useg_attribute_simple_statement",
+            "description": "Manage EPG useg Attributes Simple Statements (fv:DnsAttr, fv:IdGroupAttr, fv:IpAttr, fv:MacAttr, and fv:VmAttr)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_to_sr_mpls_infra_l3out",
+            "description": "Manage Layer 3 Outside (L3Out) to SR-MPLS Infra L3Outs objects (l3ext:ConsLbl)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_access_span_src_group_src",
+            "description": "Manage Access SPAN sources (span:Src)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_span_dst_group",
+            "description": "Manage Fabric SPAN destination groups (span:DestGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_taboo_contract",
+            "description": "Manage taboo contracts (vz:BrCP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_span_src_group_src_path",
+            "description": "Manage Fabric SPAN source paths (span:RsSrcToPathEp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_contract",
+            "description": "Manage contract resources (vz:BrCP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_node",
+            "description": "Manage Fabric Node Members (fabric:NodeIdentP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_eigrp",
+            "description": "Manage EIGRP interface policies (eigrp:IfPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_dhcp_option_policy",
+            "description": "Manage DHCP Option Policy (dhcp:OptionPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_access_spine_switch_profile",
+            "description": "Manage Fabric Access Spine Switch Profiles (infra:SpineP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_epg_to_contract_interface",
+            "description": "Bind EPGs to Consumed Contracts Interface (fv:RsConsIf)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_firmware_group",
+            "description": "Manage firmware groups (firmware:FwGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_firmware_policy",
+            "description": "Manage firmware policies (firmware:FwP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_aaa_custom_privilege",
+            "description": "Manage AAA RBAC Custom Privileges (aaa:RbacClassPriv)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_bgp_rr_asn",
+            "description": "Manage BGP Route Reflector ASN (bgp:AsP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_bgp_route_summarization_policy",
+            "description": "Manage BGP route summarization policy (bgp:RtSummPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_ospf",
+            "description": "Manage OSPF interface policies (ospf:IfPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_dns_provider",
+            "description": "Manage DNS Provider objects (dns:Prov)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_snmp_user",
+            "description": "Manage SNMP v3 Users (snmp:UserP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_static_routes_nexthop",
+            "description": "Manage nexthops for static routes (ip:NexthopP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_epg_to_contract",
+            "description": "Bind EPGs to Contracts (fv:RsCons, fv:RsProv, fv:RsProtBy, fv:RsConsIf, and fv:RsIntraEpg)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_epg_subnet",
+            "description": "Manage EPG Subnets (fv:Subnet)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_node_mgmt_epg",
+            "description": "In band or Out of band management EPGs (mgmt:OoB and mgmt:InB)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_vrf_multicast",
+            "description": "Manage VRF Multicast objects (pim:CtxP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_bgp_protocol_profile",
+            "description": "Manage BGP Protocol Profile (bgp:ProtP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_cloud_region",
+            "description": "Manage Cloud Providers Region (cloud:Region)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_encap_pool_range",
+            "description": "Manage encap ranges assigned to pools (fvns:EncapBlk and fvns:VsanEncapBlk)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_access_span_dst_group",
+            "description": "Manage Access SPAN destination groups (span:DestGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_dns_profile",
+            "description": "Manage DNS Profile objects (dns:Profile)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_vzany_to_contract",
+            "description": "Attach contracts to vzAny (vz:RsAnyToProv, vz:RsAnyToCons, and vz:RsAnyToConsIf)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_switch_policy_leaf_profile",
+            "description": "Manage switch policy leaf profiles (infra:NodeP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_contract_subject_to_service_graph",
+            "description": "Bind contract subject to service graph (vz:RsSubjGraphAtt)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_syslog_remote_dest",
+            "description": "Manage Syslog Remote Destinations (syslog:RemoteDest)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_vlan_pool_encap_block",
+            "description": "Manage encap blocks assigned to VLAN pools (fvns:EncapBlk)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_system",
+            "description": "Query the ACI system information (top:System)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_config",
+            "description": "Manage Interface Configuration of Access (infra:PortConfig) and Fabric (fabric:PortConfig) Ports is only supported for ACI 5.2(7)+",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_pim_route_map_entry",
+            "description": "Manage Protocol-Independent Multicast (PIM) Route Map Entry (pim:RouteMapEntry)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_logical_node_profile",
+            "description": "Manage Layer 3 Outside (L3Out) logical node profiles (l3ext:LNodeP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_maintenance_group_node",
+            "description": "Manage maintenance group nodes (fabric:NodeBlk)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_leaf_profile_fex_policy_group",
+            "description": "Manage leaf interface profiles fex policy group (infra:FexBndlGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_cloud_epg_selector",
+            "description": "Manage Cloud Endpoint Selector (cloud:EPSelector)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_snmp_policy",
+            "description": "Manage Syslog groups (snmp:Pol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_floating_svi_path",
+            "description": "Manage Layer 3 Outside (L3Out) Floating SVI Path Attributes (l3ext:RsDynPathAtt)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_file_remote_path",
+            "description": "Manage Import/Export File Remote Paths (file:RemotePath)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_action_rule_additional_communities",
+            "description": "Manage Action Rules based on Additional Communities (rtctrl:SetAddComm)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_maintenance_group",
+            "description": "This creates an ACI maintenance group (maint:MaintGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_bulk_static_binding_to_epg",
+            "description": "Bind static paths to EPGs (fv:RsPathAtt)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_tag",
+            "description": "Tagging of ACI objects (tag:Annotation, tag:Inst, and tag:Tag)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_leaf_profile",
+            "description": "Manage fabric leaf profiles (fabric:LeafP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_selector_to_switch_policy_leaf_profile",
+            "description": "Bind interface selector profiles to switch policy leaf profiles (infra:RsAccPortP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_access_sub_port_block_to_access_port",
+            "description": "Manage sub port blocks of Fabric interface policy leaf profile interface selectors (infra:HPortS and infra:SubPortBlk)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_match_route_destination",
+            "description": "Manage Match action rule term based on the Route Destination (rtctrl:MatchRtDest)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_span_src_group_src",
+            "description": "Manage Fabric SPAN sources (span:Src)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_aaa_certificate_authority",
+            "description": "Manage AAA Certificate Authorities (pki:TP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_bd_to_netflow_monitor_policy",
+            "description": "Bind Bridge Domain to Netflow Monitor Policy (fv:RsBDToNetflowMonitorPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_bd_subnet",
+            "description": "Manage Subnets (fv:Subnet)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_bfd_multihop_interface_profile",
+            "description": "Manage BFD Multihop Interface profiles (bfd:MhIfP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_cloud_zone",
+            "description": "Manage Cloud Availability Zone (cloud:Zone)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_encap_pool",
+            "description": "Manage encap pools (fvns:VlanInstP, fvns:VxlanInstP, and fvns:VsanInstP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_bgp_rr_node",
+            "description": "Manage BGP Route Reflector objects (bgp:RRNodePEp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_pod_connectivity_profile",
+            "description": "Manage Fabric External Pod Connectivity Profiles (fv:PodConnP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_contract_subject_to_filter",
+            "description": "Bind Contract Subjects to Filters (vz:RsSubjFiltAtt)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_dns_domain",
+            "description": "Manage DNS Provider objects (dns:Domain)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_wide_settings",
+            "description": "Manage Fabric Wide Settings (infra:SetPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_aaa_user_domain",
+            "description": "Manage AAA user domains (aaa:UserDomain)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_action_rule_set_as_path_asn",
+            "description": "Manage the AS Path ASN (rtctrl:SetASPathASN)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_domain",
+            "description": "Manage physical, virtual, bridged, routed or FC domain profiles (phys:DomP, vmm:DomP, l2ext:DomP, l3ext:DomP, and fc:DomP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_match_community_term",
+            "description": "Manage Match Community Term (rtctrl:MatchCommTerm)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_access_port_to_interface_policy_leaf_profile",
+            "description": "Manage Fabric interface policy leaf profile interface selectors (infra:HPortS, infra:RsAccBaseGrp, and infra:PortBlk)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_interface",
+            "description": "Manage Layer 3 Outside (L3Out) interfaces (l3ext:RsPathL3OutAtt)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_spine_switch_assoc",
+            "description": "Manage spine switch bindings to profiles and policy groups (fabric:SpineS and fabric:RsSpNodePGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_cdp",
+            "description": "Manage CDP interface policies (cdp:IfPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_extepg_to_contract",
+            "description": "Bind Contracts to External End Point Groups (EPGs) (fv:RsCons, fv:RsProv, fv:RsProtBy, fv:RsConsIf, and fv:RsIntraEpg)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_aaa_role",
+            "description": "Manage AAA roles (aaa:Role)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_config_rollback",
+            "description": "Provides rollback and rollback preview functionality (config:ImportP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_snmp_client_group",
+            "description": "Manage SNMP client groups (snmp:ClientGrpP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_tenant_ep_retention_policy",
+            "description": "Manage End Point (EP) retention protocol policies (fv:EpRetPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_access_spine_interface_profile",
+            "description": "Manage fabric interface policy spine profiles (infra:SpAccPortP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_aaa_domain",
+            "description": "Manage AAA domains (aaa:Domain)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_access_port_block_to_access_port",
+            "description": "Manage Port blocks of Fabric Access Leaf/Spine Interface Port Selectors (infra:PortBlk)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_ntp_server",
+            "description": "Manage NTP servers (datetime:NtpProv)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_bd_to_l3out",
+            "description": "Bind Bridge Domain to L3 Out (fv:RsBDToOut)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_bgp_address_family_context_policy",
+            "description": "Manage BGP address family context policy (bgp:CtxAfPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_rest",
+            "description": "Direct access to the Cisco APIC REST API",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_access_switch_policy_group",
+            "description": "Manage Access Switch Policy Groups (infra:AccNodePGrp and infra:SpineAccNodePGrp).",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_pod_selector",
+            "description": "Manage Fabric Pod Selectors (fabric:PodS)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_logical_interface_vpc_member",
+            "description": "Manage Member Node objects (l3ext:Member)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_snmp_community_policy",
+            "description": "Manage SNMP community policies (snmp:CommunityP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_tenant",
+            "description": "Manage tenants (fv:Tenant)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_snmp_client",
+            "description": "Manage SNMP clients (snmp:ClientP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_qos_dot1p_class",
+            "description": "Manage QoS Dot1P Class (qos:Dot1PClass)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_epg_useg_attribute_block_statement",
+            "description": "Manage EPG useg Attributes Block Statements (fv:SCrtrn)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_route_control_context",
+            "description": "Manage Route Control Context (rtctrl:CtxP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_qos_dscp_class",
+            "description": "Manage QoS DSCP Class (qos:DscpClass)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l2out_extepg_to_contract",
+            "description": "Bind Contracts to L2 External End Point Groups (EPGs) (fv:RsCons and fv:RsProv)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l2out_logical_interface_profile",
+            "description": "Manage Layer 2 Outside (L2Out) interface profiles (l2ext:LIfP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_logical_node",
+            "description": "Manage Layer 3 Outside (L3Out) logical node profile nodes (l3ext:RsNodeL3OutAtt)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_spanning_tree",
+            "description": "Manage spanning tree interface policies (stp:IfPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_eigrp_interface_profile",
+            "description": "Manage Layer 3 Outside (L3Out) EIGRP interface profile (eigrp:IfP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_leaf_policy_group",
+            "description": "Manage fabric interface policy leaf policy groups (infra:AccBndlGrp and infra:AccPortGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_aaa_user",
+            "description": "Manage AAA users (aaa:User)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_ntp_policy",
+            "description": "Manage NTP policies (datetime:Pol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_scheduler",
+            "description": "This module creates ACI schedulers (trig:SchedP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_aep",
+            "description": "Manage attachable Access Entity Profile (AEP) objects (infra:AttEntityP and infra:ProvAcc)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_extepg",
+            "description": "Manage External Network Instance Profile (ExtEpg) objects (l3ext:InstP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_external_routing_profile",
+            "description": "Manage Fabric External Routing Profiles (l3ext:FabricExtRoutingP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_bgp_best_path_policy",
+            "description": "Manage BGP Best Path policy (bgp:BestPathCtrlPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_leaf_switch_assoc",
+            "description": "Manage leaf switch bindings to profiles and policy groups (fabric:LeafS and fabric:RsLeNodePGrp).",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_access_span_src_group",
+            "description": "Manage Access SPAN source groups (span:SrcGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_bgp_peer_prefix_policy",
+            "description": "Manage BGP peer prefix policy (bgp:PeerPfxPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_cloud_external_epg_selector",
+            "description": "Manage Cloud Endpoint Selector for External EPGs (cloud:ExtEPSelector)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_esg_to_contract",
+            "description": "Bind ESGs to Contracts (fv:RsCons, fv:RsProv, fv:RsConsIf, and fv:RsIntraEpg)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_spine_profile",
+            "description": "Manage fabric spine profiles (fabric:SpineP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_node_block",
+            "description": "Manage Node Block (infra:NodeBlk)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_esg_epg_selector",
+            "description": "Manage ESG - EPG Selectors (fv:EPgSelector)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_aaa_user_role",
+            "description": "Manage AAA user roles (aaa:UserRole)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_dhcp_relay",
+            "description": "Manage DHCP relay policies (dhcp:RelayP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_dhcp_relay_label",
+            "description": "Manage Layer 3 Outside (L3Out) DHCP Relay Label (dhcp:Lbl)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_aaa_ssh_auth",
+            "description": "Manage AAA SSH auth objects (aaa:SshAuth)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_epg_monitoring_policy",
+            "description": "Manage monitoring policies (mon:EPGPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_port_channel",
+            "description": "Manage port channel interface policies (lacp:LagPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_access_span_filter_group",
+            "description": "Manage Access SPAN filter groups (span:FilterGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l2out_extepg",
+            "description": "Manage External Network Instance (L2Out External EPG) objects (l2ext:InstP).",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_description",
+            "description": "Setting and removing description on physical interfaces (infra:HPathS, infra:RsHPathAtt, infra:SHPathS, and infra:RsSHPathAtt)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_route_tag_policy",
+            "description": "Manage route tag policies (l3ext:RouteTagPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_epg_to_domain",
+            "description": "Bind EPGs to Domains (fv:RsDomAtt)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_node_control",
+            "description": "Manage Fabric Node Controls (fabric:NodeControl)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_policy_spine_policy_group",
+            "description": "Manage spine access interface policy groups (infra:SpAccPortGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l2out_logical_node_profile",
+            "description": "Manage Layer 2 Outside (L2Out) logical node profiles (l2ext:LNodeP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_cloud_ctx_profile",
+            "description": "Manage Cloud Context Profile (cloud:CtxProfile)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_static_node_mgmt_address",
+            "description": "In band or Out of band management IP address (mgmt:RsOoBStNode and mgmt:RsInBStNode)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_access_span_src_group_src_path",
+            "description": "Manage Access SPAN source paths (span:RsSrcToPathEp)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_fabric_pod_external_tep",
+            "description": "Manage Fabric Pod External TEP (fabric:ExtRoutablePodSubnet)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_dhcp_option",
+            "description": "Manage DHCP Option (dhcp:Option)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_dhcp_relay_provider",
+            "description": "Manage DHCP relay policy providers (dhcp:RsProv)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_bd",
+            "description": "Manage Bridge Domains (BD) objects (fv:BD)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_vrf_leak_internal_subnet",
+            "description": "Manage VRF leaking of subnets (leak:InternalSubnet)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_esg_ip_subnet_selector",
+            "description": "Manage ESG IP Subnet selector (fv:EPSelector)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_syslog_source",
+            "description": "Manage Syslog Source objects (syslog:Src)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_bd_dhcp_label",
+            "description": "Manage DHCP Labels (dhcp:Lbl)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_igmp_interface_policy",
+            "description": "Manage IGMP Interface Policies (igmp:IfPol)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_vmm_credential",
+            "description": "Manage virtual domain credential profiles (vmm:UsrAccP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_interface_blacklist",
+            "description": "Enabling or Disabling physical interfaces (fabric:RsOosPath)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_system_global_aes_passphrase_encryption",
+            "description": "Manage Global AES Passphrase Encryption Settings (pki:ExportEncryptionKey)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_match_rule",
+            "description": "Manage Match Rule (rtctrl:SubjP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l3out_bfd_interface_profile",
+            "description": "Manage L3Out BFD Interface profiles (bfd:IfP)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_l2out_logical_interface_path",
+            "description": "Manage Layer 2 Outside (L2Out) logical interface path (l2ext:RsPathL2OutAtt)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_firmware_source",
+            "description": "Manage firmware image sources (firmware:OSource)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_bd_rogue_exception_mac",
+            "description": "Manage Rogue Exception MAC (fv:RogueExceptionMac)",
+            "content_type": "module"
+          },
+          {
+            "name": "aci_switch_leaf_selector",
+            "description": "Bind leaf selectors to switch policy leaf profiles (infra:LeafS, infra:NodeBlk, and infra:RsAccNodePGrp)",
+            "content_type": "module"
+          },
+          {
+            "name": "annotation_unsupported",
+            "description": null,
+            "content_type": "module_utils"
+          },
+          {
+            "name": "constants",
+            "description": null,
+            "content_type": "module_utils"
+          },
+          {
+            "name": "aci",
+            "description": null,
+            "content_type": "module_utils"
+          },
+          {
+            "name": "annotation",
+            "description": null,
+            "content_type": "doc_fragments"
+          },
+          {
+            "name": "owner",
+            "description": null,
+            "content_type": "doc_fragments"
+          },
+          {
+            "name": "aci",
+            "description": null,
+            "content_type": "doc_fragments"
+          },
+          {
+            "name": "listify",
+            "description": null,
+            "content_type": "filter"
+          },
+          {
+            "name": "aci",
+            "description": "Ansible ACI HTTPAPI Plugin.",
+            "content_type": "httpapi"
+          },
+          {
+            "name": "interface_range",
+            "description": "query interfaces from a range or comma separated list of ranges",
+            "content_type": "lookup"
+          }
+        ],
+        "dependencies": {
+          "ansible.netcommon": "*"
+        },
+        "description": "Ansible Modules for Cisco ACI",
+        "tags": [
+          {
+            "name": "collection"
+          },
+          {
+            "name": "sdn"
+          },
+          {
+            "name": "cisco"
+          },
+          {
+            "name": "cloud"
+          },
+          {
+            "name": "aci"
+          },
+          {
+            "name": "networking"
+          }
+        ]
+      },
+      "repository_version": "latest",
+      "namespace_metadata": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/namespaces/018d19fc-6d80-7c19-8b76-e632452b624d/",
+        "name": "cisco",
+        "company": "",
+        "description": "",
+        "avatar_url": "https://galaxy.ansible.com/api/pulp/api/v3/content/ansible/namespaces/018d19fc-6d80-7c19-8b76-e632452b624d/avatar/"
+      },
+      "is_highest": true,
+      "is_deprecated": false,
+      "is_signed": false
+    },
+    {
+      "repository": {
+        "pulp_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/",
+        "pulp_created": "2023-05-08T20:13:23.300541Z",
+        "versions_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/",
+        "pulp_labels": {
+          "pipeline": "approved"
+        },
+        "latest_version_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/21315/",
+        "name": "published",
+        "description": "Certified content repository",
+        "retain_repo_versions": 1,
+        "remote": "/api/pulp/api/v3/remotes/ansible/collection/4c94e81d-15da-4711-9756-663cb32d742d/"
+      },
+      "collection_version": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/collection_versions/9101173e-08e8-418a-8a95-7a2fd505e3e6/",
+        "namespace": "zjpeterson",
+        "name": "aci",
+        "version": "0.3.1",
+        "requires_ansible": null,
+        "pulp_created": "2023-05-09T16:20:05.806264Z",
+        "contents": [],
+        "dependencies": {
+          "awx.awx": ">=11.0.0",
+          "cisco.aci": ">=0.0.5"
+        },
+        "description": "Ansible collection for use with Cisco ACI, focused on the use of Ansible Tower",
+        "tags": [
+          {
+            "name": "collection"
+          },
+          {
+            "name": "inventory"
+          },
+          {
+            "name": "sdn"
+          },
+          {
+            "name": "cisco"
+          },
+          {
+            "name": "aci"
+          },
+          {
+            "name": "networking"
+          }
+        ]
+      },
+      "repository_version": "latest",
+      "namespace_metadata": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/namespaces/018d1a1c-71c8-7efb-84f9-be5b01f653c4/",
+        "name": "zjpeterson",
+        "company": "",
+        "description": "",
+        "avatar_url": "https://galaxy.ansible.com/api/pulp/api/v3/content/ansible/namespaces/018d1a1c-71c8-7efb-84f9-be5b01f653c4/avatar/"
+      },
+      "is_highest": true,
+      "is_deprecated": false,
+      "is_signed": false
+    },
+    {
+      "repository": {
+        "pulp_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/",
+        "pulp_created": "2023-05-08T20:13:23.300541Z",
+        "versions_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/",
+        "pulp_labels": {
+          "pipeline": "approved"
+        },
+        "latest_version_href": "/api/pulp/api/v3/repositories/ansible/ansible/4927dbd1-9892-4d8f-ab5f-152ac797b427/versions/21315/",
+        "name": "published",
+        "description": "Certified content repository",
+        "retain_repo_versions": 1,
+        "remote": "/api/pulp/api/v3/remotes/ansible/collection/4c94e81d-15da-4711-9756-663cb32d742d/"
+      },
+      "collection_version": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/collection_versions/11095369-2dd1-4a66-b5d6-c1636f23f86d/",
+        "namespace": "lonemtntech",
+        "name": "aci_fabric_manager",
+        "version": "1.0.5",
+        "requires_ansible": null,
+        "pulp_created": "2023-05-09T06:41:41.107997Z",
+        "contents": [],
+        "dependencies": {
+          "cisco.aci": ">=0.0.6"
+        },
+        "description": "provide interface to manage fabric policies in aci",
+        "tags": [
+          {
+            "name": "cisco"
+          },
+          {
+            "name": "aci"
+          },
+          {
+            "name": "networking"
+          }
+        ]
+      },
+      "repository_version": "latest",
+      "namespace_metadata": {
+        "pulp_href": "/api/pulp/api/v3/content/ansible/namespaces/018d1a06-95d4-7e5e-994b-77d60f223314/",
+        "name": "lonemtntech",
+        "company": "",
+        "description": "",
+        "avatar_url": "https://galaxy.ansible.com/api/pulp/api/v3/content/ansible/namespaces/018d1a06-95d4-7e5e-994b-77d60f223314/avatar/"
+      },
+      "is_highest": true,
+      "is_deprecated": false,
+      "is_signed": false
+    }
+  ]

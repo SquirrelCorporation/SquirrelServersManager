@@ -1,0 +1,13 @@
+ {
+    "authType": "userPwd",
+    "sshUser": "root",
+    "sshPwd": "REDACTED",
+    "sshPort": 22,
+    "becomeMethod": "sudo",
+    "becomePass": "REDACTED",
+    "customDockerSSH": false,
+    "customDockerForcev6": false,
+    "customDockerForcev4": false,
+    "customDockerAgentForward": false,
+    "customDockerTryKeyboard": false
+  }

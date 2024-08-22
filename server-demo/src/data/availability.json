@@ -1,0 +1,78 @@
+{
+    "availability": 0.9999991056932033,
+    "lastMonth": 1,
+    "byDevice": [
+      {
+        "uuid": "7b00bb5d-539c-43e7-951e-65b87ac1be96",
+        "uptime": 1853947140,
+        "downtime": 2764,
+        "availability": "0.999999"
+      },
+      {
+        "uuid": "a2c374c1-7b96-4510-a672-9f81c02ed48e",
+        "uptime": 1853947067,
+        "downtime": 2837,
+        "availability": "0.999998"
+      },
+      {
+        "uuid": "5946407a-959b-4e36-abb1-59fd68a33530",
+        "uptime": 1853949904,
+        "downtime": 0,
+        "availability": "1.000000"
+      },
+      {
+        "uuid": "28cdd900-aa51-4ae0-8aaf-b164ea858376",
+        "uptime": 1853949904,
+        "downtime": 0,
+        "availability": "1.000000"
+      },
+      {
+        "uuid": "aa45313f-fee4-45d0-8490-8d2de5df11a5",
+        "uptime": 1853949904,
+        "downtime": 0,
+        "availability": "1.000000"
+      },
+      {
+        "uuid": "ab285757-a721-44d1-b6ea-65c910dee76e",
+        "uptime": 1853949904,
+        "downtime": 0,
+        "availability": "1.000000"
+      },
+      {
+        "uuid": "370bc7f0-4f40-4405-a07d-5d870f5c7990",
+        "uptime": 1853949904,
+        "downtime": 0,
+        "availability": "1.000000"
+      },
+      {
+        "uuid": "f4fa7320-8b05-4406-a293-690db83cb641",
+        "uptime": 1853949904,
+        "downtime": 0,
+        "availability": "1.000000"
+      },
+      {
+        "uuid": "ea8f5ebb-2e09-4d30-b837-cf502cda2d5e",
+        "uptime": 1853949904,
+        "downtime": 0,
+        "availability": "1.000000"
+      },
+      {
+        "uuid": "f0bfcd21-64d0-43b7-b0d3-9c5a2bc8007b",
+        "uptime": 1853935609,
+        "downtime": 14295,
+        "availability": "0.999992"
+      },
+      {
+        "uuid": "fda51a3a-a1f8-4e65-9c74-b892d26278ac",
+        "uptime": 1853949904,
+        "downtime": 0,
+        "availability": "1.000000"
+      },
+      {
+        "uuid": "104d24f1-239f-46e5-8e30-e78210972a79",
+        "uptime": 1853949904,
+        "downtime": 0,
+        "availability": "1.000000"
+      }
+    ]
+}

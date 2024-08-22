@@ -1,0 +1,162 @@
+[
+    {
+      "_id": "66c74fb43d1897ce339f9ff3",
+      "ident": "132030b2-9a12-48c4-8182-aad1cb7179aa",
+      "status": "successful",
+      "cmd": "playbook /server/src/ansible/00000000-0000-0000-0000-000000000000/device/_ping.yml",
+      "createdAt": "2024-08-22T14:48:20.046Z",
+      "updatedAt": "2024-08-22T14:48:25.540Z"
+    },
+    {
+      "_id": "66c69ccc3d1897ce339e2829",
+      "ident": "f7a9c389-97c1-416b-9e33-4b66915c93cd",
+      "status": "failed",
+      "cmd": "playbook /playbooks/5da864f9-36a9-4a13-92c4-f3e3baacc85f/test.yml",
+      "createdAt": "2024-08-22T02:05:00.656Z",
+      "updatedAt": "2024-08-22T02:05:01.494Z"
+    },
+    {
+      "_id": "66c69ba03d1897ce339e24d5",
+      "ident": "ea85dbc0-91eb-42b9-a7d8-ece5b0b42cdd",
+      "status": "failed",
+      "cmd": "playbook /playbooks/5da864f9-36a9-4a13-92c4-f3e3baacc85f/test.yml",
+      "createdAt": "2024-08-22T02:00:00.607Z",
+      "updatedAt": "2024-08-22T02:00:01.493Z"
+    },
+    {
+      "_id": "66c5fea93d1897ce339ce469",
+      "ident": "56eb5d91-482e-46d2-bab2-2fe74e81f85b",
+      "status": "failed",
+      "cmd": "playbook /playbooks/5da864f9-36a9-4a13-92c4-f3e3baacc85f/test.yml",
+      "createdAt": "2024-08-21T14:50:17.699Z",
+      "updatedAt": "2024-08-21T14:50:18.470Z"
+    },
+    {
+      "_id": "66c5fe793d1897ce339ce046",
+      "ident": "4d526c4c-1fda-446b-862e-811ede5ee632",
+      "status": "successful",
+      "cmd": "playbook /server/src/ansible/00000000-0000-0000-0000-000000000000/device/_ping.yml",
+      "createdAt": "2024-08-21T14:49:29.074Z",
+      "updatedAt": "2024-08-21T14:49:32.411Z"
+    },
+    {
+      "_id": "66c5fe203d1897ce339cddfb",
+      "ident": "aeb193d5-fcd0-489f-8735-cac276682230",
+      "status": "failed",
+      "cmd": "playbook /server/src/ansible/00000000-0000-0000-0000-000000000000/docker/_dockerCompose.yml",
+      "createdAt": "2024-08-21T14:48:00.771Z",
+      "updatedAt": "2024-08-21T14:48:02.444Z"
+    },
+    {
+      "_id": "66c5fcb83d1897ce339cd552",
+      "ident": "f8c20028-5b3b-4109-baf4-bc17d9f88618",
+      "status": "failed",
+      "cmd": "playbook /server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_reinstallAgent.yml",
+      "createdAt": "2024-08-21T14:42:00.459Z",
+      "updatedAt": "2024-08-21T14:42:04.950Z"
+    },
+    {
+      "_id": "66c5fa7a3d1897ce339cccfc",
+      "ident": "823efe17-0f0f-4556-89f6-ef8efb0df71a",
+      "status": "failed",
+      "cmd": "playbook /server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_reinstallAgent.yml",
+      "createdAt": "2024-08-21T14:32:26.650Z",
+      "updatedAt": "2024-08-21T14:32:31.269Z"
+    },
+    {
+      "_id": "66c5f97a3d1897ce339cc66f",
+      "ident": "0638ce4c-12c1-4d60-bc2f-3a99b4499eed",
+      "status": "failed",
+      "cmd": "playbook /server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_reinstallAgent.yml",
+      "createdAt": "2024-08-21T14:28:10.138Z",
+      "updatedAt": "2024-08-21T14:28:14.608Z"
+    },
+    {
+      "_id": "66c5f94b3d1897ce339cc20c",
+      "ident": "a52ae3d7-cbb4-4088-bf88-e5802a109de5",
+      "status": "failed",
+      "cmd": "playbook /server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_reinstallAgent.yml",
+      "createdAt": "2024-08-21T14:27:23.925Z",
+      "updatedAt": "2024-08-21T14:27:27.937Z"
+    },
+    {
+      "_id": "66c5f93d3d1897ce339cbdd7",
+      "ident": "7cb86090-9275-4b40-ab18-bc67822f186e",
+      "status": "successful",
+      "cmd": "playbook /server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_checkDeviceBeforeAdd.yml",
+      "createdAt": "2024-08-21T14:27:09.110Z",
+      "updatedAt": "2024-08-21T14:27:13.978Z"
+    },
+    {
+      "_id": "66c5c253b75f9df8a79139f5",
+      "ident": "fa149c9b-7186-476e-82bb-541469059b71",
+      "status": "failed",
+      "cmd": "playbook /server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_checkDeviceBeforeAdd.yml",
+      "createdAt": "2024-08-21T10:32:51.084Z",
+      "updatedAt": "2024-08-21T12:32:52.693Z"
+    },
+    {
+      "_id": "66c3610064858c654f4c7729",
+      "ident": "fbc35871-59f7-4ba6-acdb-134561f252be",
+      "status": "successful",
+      "cmd": "playbook /server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_installAgent.yml",
+      "createdAt": "2024-08-19T15:13:04.304Z",
+      "updatedAt": "2024-08-19T15:14:07.393Z"
+    },
+    {
+      "_id": "66c360f364858c654f4c7352",
+      "ident": "142e4a27-959a-4f7c-bd50-3e7288ea7715",
+      "status": "successful",
+      "cmd": "playbook /server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_checkDeviceBeforeAdd.yml",
+      "createdAt": "2024-08-19T15:12:51.149Z",
+      "updatedAt": "2024-08-19T15:12:57.347Z"
+    },
+    {
+      "_id": "66c35fbd64858c654f4c7082",
+      "ident": "7940791e-6025-41fb-95f3-3d70db5baac7",
+      "status": "failed",
+      "cmd": "playbook /server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_checkDeviceBeforeAdd.yml",
+      "createdAt": "2024-08-19T15:07:41.682Z",
+      "updatedAt": "2024-08-19T15:07:46.645Z"
+    },
+    {
+      "_id": "66c35e6064858c654f4c6d6f",
+      "ident": "82863ba1-7701-4faa-92de-7c6d93e76a62",
+      "status": "failed",
+      "cmd": "playbook /server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_checkDeviceBeforeAdd.yml",
+      "createdAt": "2024-08-19T15:01:52.684Z",
+      "updatedAt": "2024-08-19T15:01:56.867Z"
+    },
+    {
+      "_id": "66c356b164858c654f4c4998",
+      "ident": "0b97792d-fc26-46f1-9c1a-b505f66ddead",
+      "status": "successful",
+      "cmd": "playbook /server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_installAgent.yml",
+      "createdAt": "2024-08-19T14:29:05.584Z",
+      "updatedAt": "2024-08-19T14:30:23.486Z"
+    },
+    {
+      "_id": "66c356a364858c654f4c45c1",
+      "ident": "78a9bbad-72c4-4831-9581-cf81a8ffa748",
+      "status": "successful",
+      "cmd": "playbook /server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_checkDeviceBeforeAdd.yml",
+      "createdAt": "2024-08-19T14:28:51.262Z",
+      "updatedAt": "2024-08-19T14:28:58.212Z"
+    },
+    {
+      "_id": "66ad07e006119818b94a95e3",
+      "ident": "9c411026-bfe7-4cd9-80c4-3182fc157b4d",
+      "status": "failed",
+      "cmd": "playbook /server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_reinstallAgent.yml",
+      "createdAt": "2024-08-02T16:22:56.720Z",
+      "updatedAt": "2024-08-02T16:23:00.198Z"
+    },
+    {
+      "_id": "66ad069606119818b94a9162",
+      "ident": "3c452b05-2009-4d8f-b0b3-ac13dd84d776",
+      "status": "failed",
+      "cmd": "playbook /server/src/ansible/00000000-0000-0000-0000-000000000000/agent/_reinstallAgent.yml",
+      "createdAt": "2024-08-02T16:17:26.450Z",
+      "updatedAt": "2024-08-02T16:17:29.260Z"
+    }
+  ]

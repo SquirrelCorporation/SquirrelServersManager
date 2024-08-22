@@ -1,0 +1,43 @@
+ [
+    {
+      "_id": "66c5fe613d1897ce339ce028",
+      "name": "Execute custom playbook",
+      "automationChains": {
+        "trigger": "cron",
+        "cronValue": "0 * * * *",
+        "actions": [
+          {
+            "action": "PLAYBOOK",
+            "playbook": "de2847c7-3ad0-4d03-8846-981b7015fcf0",
+            "actionDevices": [
+              "a2c374c1-7b96-4510-a672-9f81c02ed48e"
+            ],
+            "extraVarsForcedValues": []
+          }
+        ]
+      },
+      "enabled": true,
+      "uuid": "d3e6a684-9ffe-4645-a3a3-9a03d5ee7ee6",
+      "lastExecutionStatus": "failed",
+      "lastExecutionTime": "2024-08-22T02:05:05.665Z"
+    },
+    {
+      "_id": "66c73dd93d1897ce339f79e5",
+      "name": "Restart Frigate every day",
+      "automationChains": {
+        "trigger": "cron",
+        "cronValue": "0 0 * * *",
+        "actions": [
+          {
+            "action": "DOCKER",
+            "dockerAction": "restart",
+            "dockerContainers": [
+              "085338aba1555361c516ebe187acf3ac6c97bfc755b96df4de7c38175f99158f"
+            ]
+          }
+        ]
+      },
+      "enabled": true,
+      "uuid": "e6c20d79-28ea-4b21-a652-539427837dba"
+    }
+  ]

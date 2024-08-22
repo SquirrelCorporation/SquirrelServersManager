@@ -1,5 +1,4 @@
 import { API, SettingsKeys } from 'ssm-shared-lib';
-import InAppNotificationRepo from '../../../data/database/repository/InAppNotificationRepo';
 import { AuthFailureError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import { getAnsibleRunnerVersion, getAnsibleVersion } from '../../../core/system/ansible-versions';

@@ -30,7 +30,6 @@ export const login = asyncHandler(async (req, res, next) => {
 
   const token = jwt.sign(JSON.stringify(payload), SECRET);
   new SuccessResponse('Login success', {
-    token: token,
     currentAuthority: user.role,
   } as API.LoginInfo).send(
     res.cookie('jwt', token, {

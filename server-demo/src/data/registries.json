@@ -1,0 +1,279 @@
+{
+    "registries": [
+      {
+        "_id": "6659a00a625500cd0532318a",
+        "name": "ecr",
+        "authScheme": [
+          {
+            "name": "accesskeyid",
+            "type": "string"
+          },
+          {
+            "name": "secretaccesskey",
+            "type": "string"
+          },
+          {
+            "name": "region",
+            "type": "string"
+          }
+        ],
+        "provider": "ecr",
+        "authSet": false,
+        "canAuth": true,
+        "canAnonymous": true,
+        "fullName": "AWS Elastic Container Registry",
+        "__v": 0
+      },
+      {
+        "_id": "6659a00a625500cd0532318e",
+        "name": "gcr",
+        "authScheme": [
+          {
+            "name": "clientemail",
+            "type": "string"
+          },
+          {
+            "name": "privatekey",
+            "type": "string"
+          }
+        ],
+        "provider": "gcr",
+        "authSet": false,
+        "canAuth": true,
+        "canAnonymous": true,
+        "fullName": "Google Container Registry",
+        "__v": 0
+      },
+      {
+        "_id": "6659a00a625500cd05323190",
+        "name": "hotio",
+        "provider": "hotio",
+        "authSet": false,
+        "canAuth": false,
+        "canAnonymous": true,
+        "__v": 0
+      },
+      {
+        "_id": "6659a00a625500cd05323192",
+        "name": "hub",
+        "authScheme": [
+          {
+            "name": "login",
+            "type": "string"
+          },
+          {
+            "name": "Connection type",
+            "type": "choice",
+            "values": [
+              [
+                {
+                  "name": "password",
+                  "type": "string"
+                }
+              ],
+              [
+                {
+                  "name": "token",
+                  "type": "string"
+                }
+              ],
+              [
+                {
+                  "name": "auth",
+                  "type": "string"
+                }
+              ]
+            ]
+          }
+        ],
+        "provider": "hub",
+        "authSet": false,
+        "canAuth": true,
+        "canAnonymous": true,
+        "fullName": "Docker Hub",
+        "__v": 0
+      },
+      {
+        "_id": "6659a00a625500cd05323194",
+        "name": "quay",
+        "authScheme": [
+          {
+            "name": "namespace",
+            "type": "string"
+          },
+          {
+            "name": "account",
+            "type": "string"
+          },
+          {
+            "name": "token",
+            "type": "string"
+          }
+        ],
+        "provider": "quay",
+        "authSet": false,
+        "canAuth": true,
+        "canAnonymous": true,
+        "fullName": "Red Hat Quay.io",
+        "__v": 0
+      },
+      {
+        "_id": "6659a00a625500cd05323196",
+        "name": "acr",
+        "authScheme": [
+          {
+            "name": "clientid",
+            "type": "string"
+          },
+          {
+            "name": "clientsecret",
+            "type": "string"
+          }
+        ],
+        "provider": "acr",
+        "authSet": false,
+        "canAuth": true,
+        "canAnonymous": false,
+        "fullName": "Azure Container Registry",
+        "__v": 0
+      },
+      {
+        "_id": "6659a00a625500cd05323198",
+        "name": "gitea",
+        "authScheme": [
+          {
+            "name": "login",
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ],
+        "provider": "gitea",
+        "authSet": false,
+        "canAuth": true,
+        "canAnonymous": false,
+        "__v": 0
+      },
+      {
+        "_id": "6659a00a625500cd0532319a",
+        "name": "forjejo",
+        "authScheme": [
+          {
+            "name": "login",
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          }
+        ],
+        "provider": "forjejo",
+        "authSet": false,
+        "canAuth": true,
+        "canAnonymous": false,
+        "__v": 0
+      },
+      {
+        "_id": "6659a00a625500cd0532319c",
+        "name": "lscr",
+        "authScheme": [
+          {
+            "name": "token",
+            "type": "string"
+          }
+        ],
+        "provider": "lscr",
+        "authSet": false,
+        "canAuth": true,
+        "canAnonymous": false,
+        "fullName": "Linux Server Container Registry",
+        "__v": 0
+      },
+      {
+        "_id": "6659a00a625500cd0532319e",
+        "name": "gitlab",
+        "authScheme": [
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "authurl",
+            "type": "string"
+          },
+          {
+            "name": "token",
+            "type": "string"
+          }
+        ],
+        "provider": "gitlab",
+        "authSet": false,
+        "canAuth": true,
+        "canAnonymous": false,
+        "__v": 0
+      },
+      {
+        "_id": "6659a00a625500cd0532318c",
+        "name": "ghcr",
+        "authScheme": [
+          {
+            "name": "token",
+            "type": "string"
+          }
+        ],
+        "provider": "ghcr",
+        "authSet": false,
+        "canAuth": true,
+        "canAnonymous": true,
+        "fullName": "Github Container Registry",
+        "__v": 0
+      },
+      {
+        "_id": "6682bb909ac0c9a3685a96b8",
+        "name": "forgejo",
+        "authScheme": [
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "Connection Type",
+            "type": "choice",
+            "values": [
+              [
+                {
+                  "name": "login",
+                  "type": "string"
+                },
+                {
+                  "name": "password",
+                  "type": "string"
+                }
+              ],
+              [
+                {
+                  "name": "auth",
+                  "type": "string"
+                }
+              ]
+            ]
+          }
+        ],
+        "provider": "forgejo",
+        "authSet": false,
+        "canAuth": true,
+        "canAnonymous": false,
+        "__v": 0
+      }
+    ]
+  }

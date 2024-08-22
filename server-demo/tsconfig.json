@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "sourceMap": true,
+    "outDir": "dist",
+    "strict": true,
+    "lib": ["esnext"],
+    "esModuleInterop": true,
+    "moduleResolution": "node16",
+    "module": "Node16",
+    "downlevelIteration": true,
+    "resolveJsonModule": true,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "typeRoots": [
+      "./src/types",
+      "./node_modules/@types/"
+    ]
+  },
+  "include": ["./**/*.d.ts","src//*.ts", "src//*.json",
+    "../.env", ".eslintrc.json", "typings.d.ts"]
+}

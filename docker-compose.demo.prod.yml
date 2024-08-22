@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  proxy-demo:
+    restart: unless-stopped
+    build:
+      context: ./proxy
+    ports:
+      - "8000:8000"
+    depends_on:
+      - client
+      - server
+  server-demo:
+    restart: unless-stopped
+    build:
+      context: ./server-demo
+      target: production
+    env_file: .env
+    environment:
+      NODE_ENV: production
+  client-demo:
+    restart: unless-stopped
+    depends_on:
+      - server-demo
+    build:
+      context: ./client
+      additional_contexts:
+        - shared-lib=./shared-lib
+      target: production
