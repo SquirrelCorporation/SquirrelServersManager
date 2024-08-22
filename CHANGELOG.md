@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- Feat demo [\#215](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/215) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Chore update site doc [\#213](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/213) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Update README and index for Collections feature availability [\#212](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/212) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
