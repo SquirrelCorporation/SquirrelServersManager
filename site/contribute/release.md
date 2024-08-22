@@ -11,7 +11,7 @@ Before initiating a new release, ensure you have pulled the latest changes from 
 git pull origin master
 
 # Run your tests to ensure everything works as expected
-npm  test
+npm test
 ```
 
 ## Creating a Git Tag

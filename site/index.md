@@ -106,16 +106,16 @@ SSM is currently in active development and not yet ready for production. We enco
 
 ## Screenshots
 ### Dashboard
-![dashboard](/dashboard.png)
+![dashboard](/home/dashboard.png)
 ### Devices
-![devices](/devices.png)
+![devices](/home/devices.png)
 ### Services
-![services](/services.png)
+![services](/home/services.png)
 ### Deploy
-![store](/store.png)
+![store](/home/store.png)
 ### Playbook editor
-![playbook](/playbook.png)
+![playbook](/home/playbook.png)
 ### Device Info
-![deviceinfo](/device-info.png)
+![deviceinfo](/home/device-info.png)
 ### Add a new device
-![new-device](/new-device.png)
+![new-device](/home/new-device.png)
