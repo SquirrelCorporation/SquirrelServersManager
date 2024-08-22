@@ -36,7 +36,7 @@ docker compose up -f docker-compose.dev.yml up
 
 
 ## Screenshots
-![dashboard](./site/public/dashboard.png)
-![devices](./site/public/devices.png)
-![inventory](./site/public/inventory.png)
-![services](./site/public/services.png)
+![dashboard](./site/public/home/dashboard.png)
+![devices](./site/public/home/devices.png)
+![inventory](./site/public/home/inventory.png)
+![services](./site/public/home/services.png)
