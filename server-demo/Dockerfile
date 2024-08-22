@@ -17,7 +17,7 @@ WORKDIR /server-demo
 RUN npm ci --verbose --no-audit
 COPY . .
 RUN npm run build
-CMD ["node", "./dist/src/index.js"]
+CMD ["node", "./dist/index.js"]
 
 FROM base AS dev
 ENV NODE_ENV=development
