@@ -9,7 +9,7 @@ services:
     depends_on:
       - client
       - server
-  server-demo:
+  server:
     restart: unless-stopped
     build:
       context: ./server-demo
@@ -17,10 +17,10 @@ services:
     env_file: .env
     environment:
       NODE_ENV: production
-  client-demo:
+  client:
     restart: unless-stopped
     depends_on:
-      - server-demo
+      - server
     build:
       context: ./client
       additional_contexts:
