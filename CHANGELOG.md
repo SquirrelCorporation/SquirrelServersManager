@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/demo-v1...HEAD)
+
+**Merged pull requests:**
+
+- Create docker-publish-demo-2.yml [\#216](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/216) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 ## [demo-v1](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/demo-v1) (2024-08-22)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.17...demo-v1)
