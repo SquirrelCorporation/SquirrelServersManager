@@ -10,12 +10,7 @@ services:
       - server
   server:
     restart: unless-stopped
-    build:
-      context: ./server-demo
-      target: production
-    env_file: .env
-    environment:
-      NODE_ENV: production
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-demo:master"
   client:
     restart: unless-stopped
     depends_on:
