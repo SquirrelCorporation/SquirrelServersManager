@@ -48,7 +48,7 @@ abstract class EventManager {
     this.addUniqueListener(event, listener);
   }
 
-  emit(event: string, payload: Payload) {
+  emit(event: string, payload?: Payload | string) {
     this.logger.debug(`emit: ${event}`, payload);
     eventEmitter.emit(event, payload);
   }

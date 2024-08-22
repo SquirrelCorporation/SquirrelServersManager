@@ -53,6 +53,9 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
   };
 
   const items = DeviceQuickActionReference.map((e, index) => {
+    if (!props.target && e.action === Actions.CONNECT) {
+      return;
+    }
     if (e.onAdvancedMenu && props.advancedMenu === true) {
       if (e.type === Types.DIVIDER) return { type: 'divider' };
       return {
@@ -83,7 +86,7 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
     props.setTerminal({
       isOpen: true,
       command: playbook,
-      target: props.target ? [props.target] : undefined,
+      target: target,
       extraVars: extraVars,
       playbookName: playbookName,
     });

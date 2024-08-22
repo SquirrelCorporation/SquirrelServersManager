@@ -1,7 +1,6 @@
 import { Schema, model } from 'mongoose';
+import { API, SsmStatus } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
-import { SsmStatus } from 'ssm-shared-lib';
-import { API } from 'ssm-shared-lib';
 
 export const DOCUMENT_NAME = 'Device';
 export const COLLECTION_NAME = 'devices';
@@ -44,6 +43,7 @@ export default interface Device {
   raspberry?: API.RaspberryRevisionData;
   createdAt?: Date;
   updatedAt?: Date;
+  agentLogPath?: string;
 }
 
 const schema = new Schema<Device>(
@@ -189,6 +189,10 @@ const schema = new Schema<Device>(
       type: Schema.Types.Boolean,
       required: true,
       default: true,
+    },
+    agentLogPath: {
+      type: Schema.Types.String,
+      required: false,
     },
   },
   {

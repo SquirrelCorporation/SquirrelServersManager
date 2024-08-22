@@ -19,7 +19,7 @@ export const getContainers = asyncHandler(async (req, res) => {
       sorter: any;
       filter: any;
     };
-  logger.error(JSON.stringify(params));
+
   const containers = (await ContainerRepo.findAll()) as API.Container[];
 
   // Use the separated services

@@ -13,22 +13,23 @@ import {
 } from '@ant-design/pro-components';
 import '@umijs/max';
 import { Tabs, TabsProps } from 'antd';
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { API } from 'ssm-shared-lib';
+import { history, useLocation } from '@umijs/max';
 
 const Automations: React.FC = () => {
-  const [currentRow, setCurrentRow] = React.useState<
-    API.Automation | undefined
-  >();
-  const actionRef = React.useRef<ActionType | undefined>(null);
-  const [drawerOpened, setDrawerOpened] = React.useState(false);
+  const [currentRow, setCurrentRow] = useState<API.Automation | undefined>();
+  const actionRef = useRef<ActionType | undefined>(null);
+  const [drawerOpened, setDrawerOpened] = useState(false);
+  const location = useLocation();
+
   const reload = () => {
     actionRef.current?.reload();
   };
 
-  const automationsTabItem: TabsProps['items'] = [
+  const automationsTabItems: TabsProps['items'] = [
     {
-      key: '1',
+      key: 'automations',
       label: 'Automations',
       icon: <CarbonIbmEventAutomation />,
       animated: true,
@@ -56,7 +57,7 @@ const Automations: React.FC = () => {
       ),
     },
     {
-      key: '2',
+      key: 'system-automations',
       label: 'System Automations',
       icon: <LockFilled />,
       animated: true,
@@ -71,6 +72,20 @@ const Automations: React.FC = () => {
       ),
     },
   ];
+
+  // Function to handle tab change
+  const handleTabChange = (key: string) => {
+    history.replace(`#${key}`);
+  };
+
+  // Sync active tab with the hash in the URL
+  useEffect(() => {
+    const hash = location.hash.replace('#', '');
+    if (!automationsTabItems.some((item) => item.key === hash)) return;
+    // Sync the initially selected tab with the hash in the URL
+    handleTabChange(hash);
+  }, [location.hash]);
+
   return (
     <PageContainer
       header={{
@@ -82,8 +97,13 @@ const Automations: React.FC = () => {
           />
         ),
       }}
-      tabList={automationsTabItem}
+      tabList={automationsTabItems}
+      onTabChange={handleTabChange}
+      tabActiveKey={
+        location.hash.replace('#', '') || automationsTabItems[0].key
+      }
     />
   );
 };
+
 export default Automations;

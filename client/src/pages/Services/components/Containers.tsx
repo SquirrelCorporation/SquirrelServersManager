@@ -1,12 +1,13 @@
 import ContainerMetas from '@/pages/Services/components/containers/ContainerMetas';
 import EditContainerNameModal from '@/pages/Services/components/containers/EditContainerNameModal';
 import { getContainers, postRefreshAll } from '@/services/rest/containers';
+import { socket } from '@/socket';
 import { ReloadOutlined } from '@ant-design/icons';
 import { ActionType, ProList } from '@ant-design/pro-components';
 import { useSearchParams } from '@umijs/max';
 import { Button, Form } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, SsmEvents } from 'ssm-shared-lib';
 
 const Containers: React.FC = () => {
   const actionRef = useRef<ActionType>();
@@ -31,16 +32,30 @@ const Containers: React.FC = () => {
     }
   }, [searchDeviceUuid]);
 
+  const reload = () => {
+    actionRef?.current?.reload();
+  };
+
   const handleRefreshAll = () => {
     setRefreshAllIsLoading(true);
     postRefreshAll()
       .then(() => {
-        actionRef?.current?.reload();
+        reload();
       })
       .finally(() => {
         setRefreshAllIsLoading(false);
       });
   };
+
+  useEffect(() => {
+    socket.connect();
+    socket.on(SsmEvents.Update.CONTAINER_CHANGE, reload);
+
+    return () => {
+      socket.off(SsmEvents.Update.CONTAINER_CHANGE, reload);
+      socket.disconnect();
+    };
+  }, []);
 
   return (
     <>

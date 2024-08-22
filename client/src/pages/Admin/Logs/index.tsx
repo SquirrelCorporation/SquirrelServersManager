@@ -10,12 +10,15 @@ import {
 } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
 import { useSearchParams } from '@umijs/max';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Tabs, TabsProps } from 'antd';
 import { API } from 'ssm-shared-lib';
+import { history, useLocation } from '@umijs/max';
 
 const Index: React.FC = () => {
   const [form] = ProForm.useForm<any>();
   const [searchParams] = useSearchParams();
+  const location = useLocation();
 
   const [columnsStateMap, setColumnsStateMap] = useState<
     Record<string, ColumnsState>
@@ -27,15 +30,17 @@ const Index: React.FC = () => {
       show: false,
     },
   });
+
   if (searchParams.get('module')) {
     form.setFieldsValue({ module: searchParams.get('module') });
   }
   if (searchParams.get('moduleId')) {
     form.setFieldsValue({ moduleId: searchParams.get('moduleId') });
   }
-  const logsTabItem = [
+
+  const logsTabItems: TabsProps['items'] = [
     {
-      key: '1',
+      key: 'server-logs',
       label: <div>Server Logs</div>,
       children: (
         <ProTable<API.ServerLog>
@@ -56,7 +61,7 @@ const Index: React.FC = () => {
       ),
     },
     {
-      key: '2',
+      key: 'task-logs',
       label: <div>Task Logs</div>,
       children: (
         <ProTable<API.Task>
@@ -73,6 +78,19 @@ const Index: React.FC = () => {
     },
   ];
 
+  // Function to handle tab change
+  const handleTabChange = (key: string) => {
+    history.replace(`#${key}`);
+  };
+
+  // Sync active tab with the hash in the URL
+  useEffect(() => {
+    const hash = location.hash.replace('#', '');
+    if (!logsTabItems.some((item) => item.key === hash)) return;
+    // Sync the initially selected tab with the hash in the URL
+    handleTabChange(hash);
+  }, [location.hash]);
+
   return (
     <PageContainer
       header={{
@@ -84,7 +102,9 @@ const Index: React.FC = () => {
           />
         ),
       }}
-      tabList={logsTabItem}
+      tabList={logsTabItems}
+      onTabChange={handleTabChange}
+      tabActiveKey={location.hash.replace('#', '') || logsTabItems[0].key}
     />
   );
 };

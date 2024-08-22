@@ -1,4 +1,4 @@
-import React, { Key } from 'react';
+import React, { Key, useState, useEffect } from 'react';
 import { AppstoreOutlined } from '@ant-design/icons';
 import { Button, Card, Tree, Typography } from 'antd';
 import { motion } from 'framer-motion';
@@ -59,7 +59,9 @@ type DirectoryTreeViewProps = {
 };
 
 const DirectoryTreeView: React.FC<DirectoryTreeViewProps> = (props) => {
-  const [storeModal, setStoreModal] = React.useState(false);
+  const [storeModal, setStoreModal] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const {
     onSelect,
     selectedFile,
@@ -75,10 +77,15 @@ const DirectoryTreeView: React.FC<DirectoryTreeViewProps> = (props) => {
     visible: { opacity: 1, y: 0 },
   };
 
+  useEffect(() => {
+    // Simulate loading of DirectoryTreeView
+    setIsLoaded(true);
+  }, []);
+
   return (
     <motion.div
       initial="hidden"
-      animate="visible"
+      animate={isLoaded ? 'visible' : 'hidden'}
       variants={variants}
       transition={{ duration: 0.5 }}
     >

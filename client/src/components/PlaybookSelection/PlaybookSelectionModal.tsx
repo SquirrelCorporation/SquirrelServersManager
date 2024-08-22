@@ -123,6 +123,7 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
           values.playbook.value,
           listOfPlaybooks?.find((e) => values.playbook.value === e.uuid)
             ?.name as string,
+          props.itemSelected,
           overrideExtraVars
             ?.filter((e: { value?: string; overrideVar: string }) => e.value)
             .map((e: { overrideVar: string; value: string }) => {

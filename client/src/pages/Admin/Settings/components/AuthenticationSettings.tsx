@@ -6,13 +6,14 @@ import { InfoCircleFilled, WarningOutlined } from '@ant-design/icons';
 import {
   Button,
   Card,
-  Flex,
   Input,
   message,
   Popconfirm,
   Popover,
-  Space,
   Typography,
+  Row,
+  Col,
+  Flex,
 } from 'antd';
 import React, { useState } from 'react';
 
@@ -41,20 +42,26 @@ const AuthenticationSettings: React.FC = () => {
         }
         style={{ marginTop: 16 }}
       >
-        <Flex vertical gap={32} style={{ width: '50%' }}>
-          <Space direction="horizontal" size="middle">
-            <Typography>
-              {' '}
-              <Popover
-                content={
-                  'The API key is used for programmatic access such as agent or direct REST API'
-                }
-              >
-                <InfoCircleFilled />
-              </Popover>{' '}
-              API KEY
-            </Typography>
-            <Space.Compact style={{ width: '100%' }}>
+        <Flex vertical gap={32} style={{ width: '100%' }}>
+          <Row
+            justify="space-between"
+            align="middle"
+            gutter={[16, 16]}
+            style={{ width: '100%' }}
+          >
+            <Col xs={24} md={4}>
+              <Typography.Text>
+                <Popover
+                  content={
+                    'The API key is used for programmatic access such as agent or direct REST API'
+                  }
+                >
+                  <InfoCircleFilled />
+                </Popover>{' '}
+                API KEY
+              </Typography.Text>
+            </Col>
+            <Col xs={24} md={4}>
               <Button
                 type={'primary'}
                 onClick={async () => {
@@ -78,17 +85,22 @@ const AuthenticationSettings: React.FC = () => {
                     });
                   }
                 }}
+                block
               >
                 Copy
               </Button>
-              <Input style={{ width: '350px' }} value={apiKey} disabled />
+            </Col>
+            <Col xs={24} md={12}>
+              <Input value={apiKey} disabled style={{ width: '100%' }} />
+            </Col>
+            <Col xs={24} md={4}>
               <Popconfirm
                 title="Reset your API key"
                 description={
                   <>
                     Are you sure to delete your API key? <br />
                     This will potentially disable all your agents running on
-                    others devices
+                    other devices
                   </>
                 }
                 icon={<WarningOutlined style={{ color: 'red' }} />}
@@ -96,10 +108,12 @@ const AuthenticationSettings: React.FC = () => {
                 okText="Yes"
                 cancelText="No"
               >
-                <Button danger>Reset</Button>
+                <Button danger block>
+                  Reset
+                </Button>
               </Popconfirm>
-            </Space.Compact>
-          </Space>
+            </Col>
+          </Row>
         </Flex>
       </Card>
     </Card>

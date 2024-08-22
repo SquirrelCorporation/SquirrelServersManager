@@ -13,6 +13,7 @@ export default interface DeviceAuth {
   sshKey?: string;
   sshKeyPass?: string;
   sshPort?: number;
+  sshConnection?: SsmAnsible.SSHConnection;
   becomePass?: string;
   becomeMethod?: string;
   becomeExe?: string;
@@ -66,6 +67,11 @@ const schema = new Schema<DeviceAuth>(
     sshKeyPass: {
       type: Schema.Types.String,
       required: false,
+    },
+    sshConnection: {
+      type: Schema.Types.String,
+      default: SsmAnsible.SSHConnection.PARAMIKO,
+      enum: SsmAnsible.SSHConnection,
     },
     becomePass: {
       type: Schema.Types.String,

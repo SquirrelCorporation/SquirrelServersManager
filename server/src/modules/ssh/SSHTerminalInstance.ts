@@ -2,6 +2,7 @@ import * as util from 'node:util';
 import { Logger } from 'pino';
 import { Socket } from 'socket.io';
 import { ClientChannel, PseudoTtyOptions } from 'ssh2';
+import { SsmEvents } from 'ssm-shared-lib';
 import _logger from '../../logger';
 import SSHConnectionInstance from './SSHConnectionInstance';
 
@@ -52,12 +53,12 @@ export default class SSHTerminalInstance {
   }
 
   private handleBanner(data: string) {
-    this.socket.emit('ssh:data', data.replace(/\r?\n/g, '\r\n'));
+    this.socket.emit(SsmEvents.SSH.NEW_DATA, data.replace(/\r?\n/g, '\r\n'));
   }
 
   private handleReady() {
     this.logger.info('SSH CONNECTION ESTABLISHED');
-    this.socket.emit('ssh:status', { status: 'OK', message: 'SSH CONNECTION ESTABLISHED' });
+    this.socket.emit(SsmEvents.SSH.STATUS, { status: 'OK', message: 'SSH CONNECTION ESTABLISHED' });
 
     this.sshConnectionInstance.ssh.shell(
       this.ttyOptions,
@@ -75,10 +76,10 @@ export default class SSHTerminalInstance {
   }
 
   private configureStream(stream: ClientChannel) {
-    this.socket.once('disconnect', this.handleSocketDisconnect.bind(this));
-    this.socket.on('error', this.handleSocketError.bind(this));
-    this.socket.on('ssh:resize', this.handleResize.bind(this, stream));
-    this.socket.on('ssh:data', this.handleSocketData.bind(this, stream));
+    this.socket.once(SsmEvents.Common.DISCONNECT, this.handleSocketDisconnect.bind(this));
+    this.socket.on(SsmEvents.Common.ERROR, this.handleSocketError.bind(this));
+    this.socket.on(SsmEvents.SSH.SCREEN_RESIZE, this.handleResize.bind(this, stream));
+    this.socket.on(SsmEvents.SSH.NEW_DATA, this.handleSocketData.bind(this, stream));
 
     stream.on('data', this.handleStreamData.bind(this));
     stream.on('close', this.handleStreamClose.bind(this));
@@ -87,7 +88,7 @@ export default class SSHTerminalInstance {
 
   private handleSocketDisconnect(reason: any) {
     this.logger.warn(`CLIENT SOCKET DISCONNECT: ${util.inspect(reason)}`);
-    this.socket.emit('ssh:status', {
+    this.socket.emit(SsmEvents.SSH.STATUS, {
       status: 'DISCONNECT',
       message: 'SSH CONNECTION DISCONNECTED',
     });
@@ -119,7 +120,7 @@ export default class SSHTerminalInstance {
 
   private handleStreamData(data: Buffer) {
     this.logger.info(`received on stream: ${data.toString('utf-8')}`);
-    this.socket.emit('ssh:data', data.toString('utf-8'));
+    this.socket.emit(SsmEvents.SSH.NEW_DATA, data.toString('utf-8'));
   }
 
   private handleStreamClose(code: number | null, signal: string | null) {
@@ -167,7 +168,7 @@ export default class SSHTerminalInstance {
     if (err?.level === 'client-timeout') {
       msg = `Connection Timeout`;
     }
-    this.socket.emit('ssh:status', {
+    this.socket.emit(SsmEvents.SSH.STATUS, {
       status: 'DISCONNECT',
       message: msg,
     });

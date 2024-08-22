@@ -5,6 +5,7 @@ import TerminalCore, {
   TerminalCoreHandles,
 } from '@/components/Terminal/TerminalCore';
 import { socket } from '@/socket';
+import { SsmEvents } from 'ssm-shared-lib';
 
 export interface LiveLogsHandles {
   handleStop: () => void;
@@ -30,7 +31,7 @@ const LiveLogs = React.forwardRef<LiveLogsHandles, LiveLogsProps>(
     };
 
     const handleStop = () => {
-      socket.off('logs:newLogs', onNewLogs);
+      socket.off(SsmEvents.Logs.NEW_LOGS, onNewLogs);
       socket.disconnect();
     };
 
@@ -49,10 +50,10 @@ const LiveLogs = React.forwardRef<LiveLogsHandles, LiveLogsProps>(
       socket.connect();
       resetTerminalContent();
       socket
-        .emitWithAck('logs:getLogs', { containerId: id, from })
+        .emitWithAck(SsmEvents.Logs.GET_LOGS, { containerId: id, from })
         .then((response) => {
           if (response.status === 'OK') {
-            socket.on('logs:newLogs', onNewLogs);
+            socket.on(SsmEvents.Logs.NEW_LOGS, onNewLogs);
           } else {
             handleConnectionError(`(${response.status} - ${response.error})`);
           }
@@ -65,8 +66,8 @@ const LiveLogs = React.forwardRef<LiveLogsHandles, LiveLogsProps>(
     useEffect(() => {
       startSocketConnection();
       return () => {
-        socket.emit('logs:closing');
-        socket.off('logs:newLogs', onNewLogs);
+        socket.emit(SsmEvents.Logs.CLOSED);
+        socket.off(SsmEvents.Logs.NEW_LOGS, onNewLogs);
         socket.disconnect();
       };
     }, [from, id]);

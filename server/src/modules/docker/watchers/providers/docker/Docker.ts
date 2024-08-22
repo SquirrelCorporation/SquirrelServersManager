@@ -4,6 +4,7 @@ import Dockerode, { ContainerInfo } from 'dockerode';
 import CronJob from 'node-cron';
 import parse from 'parse-docker-image-name';
 import { SsmStatus } from 'ssm-shared-lib';
+import Events from '../../../../../core/events/events';
 import Container from '../../../../../data/database/model/Container';
 import ContainerRepo from '../../../../../data/database/repository/ContainerRepo';
 import ContainerStatsRepo from '../../../../../data/database/repository/ContainerStatsRepo';
@@ -170,7 +171,7 @@ export default class Docker extends DockerLogs {
    * @returns {Promise<*[]>}
    */
   async watchContainersFromCron(): Promise<any[]> {
-    logger.info(`Cron started (${this.configuration.cron})`);
+    this.childLogger.info(`Cron started (${this.configuration.cron})`);
 
     // Get container reports
     const containerReports = await this.watch();
@@ -190,6 +191,7 @@ export default class Docker extends DockerLogs {
 
     const stats = `${containerReportsCount} containers watched, ${containerErrorsCount} errors, ${containerUpdatesCount} available updates`;
     this.childLogger.info(`Cron finished (${stats})`);
+    this.emit(Events.UPDATED_CONTAINERS, 'Updated containers');
     return containerReports;
   }
 
@@ -551,6 +553,7 @@ export default class Docker extends DockerLogs {
           );
         }
       }
+      this.emit(Events.UPDATED_CONTAINERS, 'Updated containers');
     } catch (error: any) {
       this.childLogger.error(error);
     }

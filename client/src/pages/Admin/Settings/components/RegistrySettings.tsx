@@ -12,7 +12,16 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
-import { Avatar, Button, Card, message, Popconfirm, Tag, Tooltip } from 'antd';
+import {
+  Avatar,
+  Button,
+  Card,
+  message,
+  Popconfirm,
+  Tag,
+  Tooltip,
+  Typography,
+} from 'antd';
 import { AddCircleOutline, DeleteOutline } from 'antd-mobile-icons';
 import React, { useEffect, useState } from 'react';
 import { API } from 'ssm-shared-lib';
@@ -153,15 +162,12 @@ const RegistrySettings: React.FC = () => {
         }}
         headerTitle="Registries"
         dataSource={registries.map((item: API.ContainerRegistry) => ({
-          title:
-            item.name === 'custom'
-              ? 'Add a new custom provider'
-              : item.name?.toUpperCase(),
+          title: item.name?.toUpperCase(),
           name: item.name,
           authScheme: item.authScheme,
           provider: item.provider,
           canAnonymous: item.canAnonymous,
-          subTitle: <>{item.fullName}</>,
+          subTitle: item.fullName,
           canAuth: item.canAuth,
           authSet: item.authSet,
           actions: [

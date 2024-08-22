@@ -67,6 +67,7 @@ const NewUnManagedDeviceModal: React.FC<NewUnManagedDeviceModalProps> = (
                           sshUser: values.sshUser,
                           sshPwd: values.sshPwd,
                           sshKey: values.sshKey,
+                          sshConnection: values.sshConnection,
                           becomeUser: values.becomeUser,
                           becomeMethod: values.becomeMethod,
                           becomePass: values.becomePass,

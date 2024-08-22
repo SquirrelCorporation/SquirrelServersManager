@@ -1,4 +1,5 @@
 import { SsmAnsible } from 'ssm-shared-lib';
+import { SSHConnection } from 'ssm-shared-lib/distribution/enums/ansible';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import Device from '../../../../data/database/model/Device';
 import DeviceAuth from '../../../../data/database/model/DeviceAuth';
@@ -34,6 +35,7 @@ describe('SSHCredentialsHelper', () => {
       sshKey: 'sshkey',
       // @ts-expect-error partial type
       authType: '',
+      sshConnection: SSHConnection.PARAMIKO,
       sshKeyPass: undefined,
       sshPwd: undefined,
       customDockerSSH: undefined,

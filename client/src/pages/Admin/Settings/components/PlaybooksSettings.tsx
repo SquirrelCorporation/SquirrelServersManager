@@ -49,6 +49,7 @@ const PlaybookSettings: React.FC = () => {
   const [localRepositories, setLocalRepositories] = useState<
     API.LocalRepository[]
   >([]);
+
   const asyncFetch = async () => {
     await getGitRepositories().then((list) => {
       if (list?.data) {
@@ -61,6 +62,7 @@ const PlaybookSettings: React.FC = () => {
       }
     });
   };
+
   useEffect(() => {
     void asyncFetch();
   }, []);
@@ -71,7 +73,7 @@ const PlaybookSettings: React.FC = () => {
   const [selectedLocalRecord, setSelectedLocalRecord] = useState<any>();
 
   const onChange = async (newValue: number | null) => {
-    if (newValue) {
+    if (newValue !== null) {
       await postUserLogs({ terminal: newValue }).then(() => {
         setInputValue(newValue);
         message.success({
@@ -81,6 +83,7 @@ const PlaybookSettings: React.FC = () => {
       });
     }
   };
+
   return (
     <Card>
       <GitRepositoryModal
@@ -107,52 +110,52 @@ const PlaybookSettings: React.FC = () => {
           />
         }
       >
-        <Flex vertical gap={32} style={{ width: '50%' }}>
-          <Space direction="horizontal" size="middle">
-            <Typography>
-              <Popover
-                content={
-                  <>
-                    The verbosity level of Ansible output, as described{' '}
-                    <a
-                      target={'_blank'}
-                      href={
-                        'https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html#cmdoption-ansible-playbook-v'
-                      }
-                      rel="noreferrer"
-                    >
-                      {' '}
-                      here
-                    </a>
-                  </>
-                }
-              >
-                <InfoCircleFilled />
-              </Popover>{' '}
-              Log level of terminal
-            </Typography>{' '}
-            <Row>
-              <Col span={12}>
-                <Slider
-                  min={1}
-                  max={5}
-                  onChange={(newValue) => setInputValue(newValue)}
-                  onChangeComplete={onChange}
-                  value={typeof inputValue === 'number' ? inputValue : 0}
-                />
-              </Col>
-              <Col span={4}>
-                <InputNumber
-                  min={1}
-                  max={5}
-                  style={{ margin: '0 16px' }}
-                  value={inputValue}
-                  onChange={onChange}
-                />
-              </Col>
-            </Row>
-            <Space.Compact style={{ width: '100%' }} />
-          </Space>
+        <Flex vertical gap={32} style={{ width: '100%' }}>
+          <Row justify="space-between" align="middle" gutter={[16, 16]}>
+            <Col xs={24} sm={12} md={8}>
+              <Typography.Text>
+                <Popover
+                  content={
+                    <>
+                      The verbosity level of Ansible output, as described{' '}
+                      <a
+                        target={'_blank'}
+                        href={
+                          'https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html#cmdoption-ansible-playbook-v'
+                        }
+                        rel="noreferrer"
+                      >
+                        {' '}
+                        here
+                      </a>
+                    </>
+                  }
+                >
+                  <InfoCircleFilled />
+                </Popover>{' '}
+                Log level of terminal
+              </Typography.Text>
+            </Col>
+            <Col xs={24} sm={12} md={8}>
+              <Slider
+                min={1}
+                max={5}
+                onChange={(value) => setInputValue(value)}
+                onAfterChange={onChange}
+                value={typeof inputValue === 'number' ? inputValue : 0}
+                style={{ width: '100%' }}
+              />
+            </Col>
+            <Col xs={24} sm={12} md={4}>
+              <InputNumber
+                min={1}
+                max={5}
+                style={{ width: '100%' }}
+                value={inputValue}
+                onChange={onChange}
+              />
+            </Col>
+          </Row>
         </Flex>
       </Card>
       <Card
@@ -166,9 +169,8 @@ const PlaybookSettings: React.FC = () => {
         }
         style={{ marginTop: 16 }}
         extra={
-          <>
+          <Space>
             <Button
-              style={{ marginRight: 15 }}
               type={'primary'}
               icon={<AddCircleOutline />}
               onClick={() => {
@@ -181,7 +183,7 @@ const PlaybookSettings: React.FC = () => {
             <Tooltip title={'Add a local repository'}>
               <InfoCircleFilled />
             </Tooltip>
-          </>
+          </Space>
         }
       >
         <ProList<API.LocalRepository>
@@ -254,9 +256,8 @@ const PlaybookSettings: React.FC = () => {
         }
         style={{ marginTop: 16 }}
         extra={
-          <>
+          <Space>
             <Button
-              style={{ marginRight: 15 }}
               type={'primary'}
               icon={<AddCircleOutline />}
               onClick={() => {
@@ -267,11 +268,11 @@ const PlaybookSettings: React.FC = () => {
               Add a new remote repository
             </Button>
             <Tooltip
-              title={'Add & update your Git repositories for synchronisation'}
+              title={'Add & update your Git repositories for synchronization'}
             >
               <InfoCircleFilled />
             </Tooltip>
-          </>
+          </Space>
         }
       >
         <ProList<API.GitRepository>
