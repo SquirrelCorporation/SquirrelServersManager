@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
   push:
     # Publish semver tags as releases.
-    tags: [ 'v*.*.*', 'demo' ]
+    tags: [ 'v*.*.*', 'demo-v*' ]
 
 env:
   # Use docker.io for Docker Hub if empty
