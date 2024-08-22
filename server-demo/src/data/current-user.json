@@ -10,52 +10,55 @@
     "totalMem": 80,
     "overview": [
       {
-        "status": 0,
+        "status": 1,
+        "name": "pve-server-1",
         "uuid": "53ecdc77-9454-4fa2-a494-bd43fbbb7e8e"
       },
       {
-        "status": 0,
+        "status": 1,
+        "name" : "pve-server-2",
         "uuid": "e5c93e1f-765d-4711-b97a-a2bed23a3c9c"
       },
       {
-        "name": "192.168.0.61",
-        "status": 3,
+        "name": "ubuntu-server-1",
+        "status": 1,
         "uuid": "c825dee8-653f-4cfd-a28d-fbfbe1c15cf5"
       },
       {
-        "status": 0,
+        "status": 1,
+        "name": "ubuntu-server-2",
         "uuid": "22e3decb-8964-4736-96fe-06b146333509"
       },
       {
-        "name": "192.168.0.5",
-        "status": 3,
+        "name": "ubuntu-server-3",
+        "status": 1,
         "uuid": "bb601b68-ffc4-4cba-afb9-be33b14ad2a5"
       },
       {
-        "name": "192.168.0.4",
-        "status": 3,
-        "uuid": "95f95dfe-c2ff-47f0-9b68-646e6daaf1a2"
-      },
-      {
-        "name": "MacBook-Pro-3.local",
-        "status": 1,
+        "name": "raspberrypi-1",
+        "status": 2,
         "uuid": "ee8b2780-2637-4b78-9d67-db0c54949c13",
         "cpu": 2.4,
         "mem": 16384
       },
       {
-        "name": "MacBook-Pro.local",
-        "status": 2,
+        "name": "raspberrypi-2",
+        "status": 1,
         "uuid": "e0969ee4-a739-4c1c-bbd1-eae43d6d1f39",
         "cpu": 3.4,
         "mem": 32768
       },
       {
-        "name": "MacBook-Pro-2.local",
-        "status": 2,
+        "name": "raspberrypi-3",
+        "status": 1,
         "uuid": "e0969ee4-a739-4c1c-bbd1-eae4316d1f39",
         "cpu": 3.4,
         "mem": 32768
+      },
+      {
+        "name": "192.168.0.1",
+        "status": 3,
+        "uuid": "95f95dfe-c2ff-47f0-9b68-646e6daaf1a2"
       }
     ]
   },

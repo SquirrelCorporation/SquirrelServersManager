@@ -1,0 +1,446 @@
+ [
+    {
+      "categories": [
+        "Finance"
+      ],
+      "description": "Actual is a local-first personal finance tool. It is 100% free and open-source. It has a synchronization element so that all your changes can move between devices without any heavy lifting.",
+      "logo": "https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager-Templates/main/apps/images/actual.png",
+      "name": "actual-server",
+      "platform": "linux",
+      "image": "actualbudget/actual-server:latest",
+      "restart_policy": "unless-stopped",
+      "title": "Actual-Server",
+      "ports": [
+        {
+          "host": "5006",
+          "container": "5006",
+          "protocol": "tcp"
+        }
+      ],
+      "volumes": [
+        {
+          "bind": "/home/docker/actual",
+          "container": "/data"
+        }
+      ],
+      "type": 3
+    },
+    {
+      "categories": [
+        "Tools"
+      ],
+      "description": "AdGuard Home is a network-wide software for blocking ads & tracking. After you set it up, it’ll cover ALL your home devices, and you don’t need any client-side software for that. With the rise of Internet-Of-Things and connected devices, it becomes more and more important to be able to control your whole network.",
+      "env": [
+        {
+          "default": "1000",
+          "label": "PUID",
+          "name": "PUID"
+        },
+        {
+          "default": "100",
+          "label": "PGID",
+          "name": "PGID"
+        },
+        {
+          "label": "CONTEXT_PATH",
+          "name": "CONTEXT_PATH",
+          "set": "adguard home"
+        }
+      ],
+      "note": "DNS-over-HTTPS: [80:80/TCP] [443:443/TCP] [443:443/UDP] [3000:3000/TCP] [DEFAULT]. DNS: [53:53/TCP] [53:53/UDP]. Admin Panel: [3000:3000/TCP]. DHCP: [67:67/UDP] [68:68/TCP] [68:68/UDP]. DNS-over-TLS: [853:853/TCP]. DNS-over-QUIC: [784:784/UDP] [853:853/UDP] [8853:8853/UDP]. DNSCrypt: [5443:5443/TCP] [5443:5443/UDP]",
+      "image": "adguard/adguardhome:latest",
+      "logo": "https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager-Templates/main/apps/images/adguard.png",
+      "name": "adguard",
+      "platform": "linux",
+      "ports": [
+        {
+          "host": "53",
+          "container": "53",
+          "protocol": "tcp"
+        },
+        {
+          "host": "53",
+          "container": "53",
+          "protocol": "udp"
+        },
+        {
+          "host": "67",
+          "container": "67",
+          "protocol": "udp"
+        },
+        {
+          "host": "68",
+          "container": "68",
+          "protocol": "tcp"
+        },
+        {
+          "host": "68",
+          "container": "68",
+          "protocol": "udp"
+        },
+        {
+          "host": "80",
+          "container": "80",
+          "protocol": "tcp"
+        },
+        {
+          "host": "443",
+          "container": "443",
+          "protocol": "tcp"
+        },
+        {
+          "host": "853",
+          "container": "853",
+          "protocol": "tcp"
+        },
+        {
+          "host": "3000",
+          "container": "3000",
+          "protocol": "tcp"
+        }
+      ],
+      "restart_policy": "unless-stopped",
+      "title": "Adguard",
+      "type": 1,
+      "volumes": [
+        {
+          "bind": "/home/docker/Files/AppData/Adguard/Workdir",
+          "container": "/opt/adguardhome/work"
+        },
+        {
+          "bind": "/home/docker/Files/AppData/Adguard/Conf",
+          "container": "/opt/adguardhome/conf"
+        }
+      ]
+    },
+    {
+      "categories": [
+        "Media"
+      ],
+      "description": "Airsonic is a free, web-based media streamer, providing ubiqutious access to your music. Use it to share your music with friends, or to listen to your own music while at work. You can stream to multiple players simultaneously, for instance to one player in your kitchen and another in your living room.",
+      "env": [
+        {
+          "label": "PUID",
+          "name": "PUID",
+          "set": "1000"
+        },
+        {
+          "label": "PGID",
+          "name": "PGID",
+          "set": "1000"
+        },
+        {
+          "label": "CONTEXT_PATH",
+          "name": "CONTEXT_PATH",
+          "set": "airsonic"
+        },
+        {
+          "label": "JAVA_OPTS",
+          "name": "JAVA_OPTS",
+          "set": "-Xms256m -Xmx512m"
+        },
+        {
+          "label": "TZ",
+          "name": "TZ",
+          "set": "America/Chicago"
+        }
+      ],
+      "image": "linuxserver/airsonic:latest",
+      "logo": "https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager-Templates/main/apps/images/airsonic.png",
+      "platform": "linux",
+      "ports": [
+        {
+          "host": "4040",
+          "container": "4040",
+          "protocol": "tcp"
+        }
+      ],
+      "name": "airsonic",
+      "title": "Airsonic",
+      "type": 1,
+      "volumes": [
+        {
+          "container": "/music"
+        },
+        {
+          "container": "/playlists"
+        },
+        {
+          "container": "/podcasts"
+        },
+        {
+          "container": "/media"
+        },
+        {
+          "container": "/config"
+        }
+      ]
+    },
+    {
+      "type": 1,
+      "title": "Apprise-api",
+      "name": "apprise-api",
+      "note": "",
+      "description": "Apprise-api takes advantage of Apprise through your network with a user-friendly API. * Send notifications to more then 65+ services. * An incredibly lightweight gateway to Apprise. * A production ready micro-service at your disposal. Apprise API was designed to easily fit into existing (and new) eco-systems that are looking for a simple notification solution.",
+      "categories": [
+        "Tools",
+        "Development"
+      ],
+      "platform": "linux",
+      "logo": "https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager-Templates/main/apps/images/apprise-api.png",
+      "image": "linuxserver/apprise-api:latest",
+      "env": [
+        {
+          "name": "PUID",
+          "label": "PUID",
+          "default": "1024",
+          "description": "for UserID"
+        },
+        {
+          "name": "PGID",
+          "label": "PGID",
+          "default": "100",
+          "description": "for GroupID"
+        },
+        {
+          "name": "TZ",
+          "label": "TZ",
+          "default": "Europe/Amsterdam",
+          "description": "specify a timezone to use, see this [list](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)."
+        }
+      ],
+      "ports": [
+        {
+          "host": "8000",
+          "container": "8000",
+          "protocol": "tcp"
+        }
+      ],
+      "volumes": [
+        {
+          "container": "/config",
+          "bind": "/home/docker/apprise-api"
+        }
+      ],
+      "restart_policy": "unless-stopped"
+    },
+    {
+      "categories": [
+        "Development"
+      ],
+      "description": "Appsmith (www.appsmith.com) is the first open-source low code tool that helps developers build dashboards and admin panels very quickly.",
+      "logo": "https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager-Templates/main/apps/images/appsmith-logo.png",
+      "name": "appsmith",
+      "platform": "linux",
+      "image": "appsmith/appsmith-ce",
+      "title": "Appsmith",
+      "ports": [
+        {
+          "host": "80",
+          "container": "80",
+          "protocol": "tcp"
+        },
+        {
+          "host": "443",
+          "container": "443",
+          "protocol": "tcp"
+        }
+      ],
+      "volumes": [
+        {
+          "bind": "/home/docker/appsmith",
+          "container": "/appsmith-stacks"
+        }
+      ],
+      "type": 3
+    },
+    {
+      "categories": [
+        "Other",
+        "Tools",
+        "Gaming"
+      ],
+      "description": "C# application with primary purpose of farming Steam cards from multiple accounts simultaneously.",
+      "env": [
+        {
+          "default": "1000",
+          "label": "PUID",
+          "name": "PUID"
+        },
+        {
+          "default": "1000",
+          "label": "PGID",
+          "name": "PGID"
+        }
+      ],
+      "image": "justarchi/archisteamfarm:latest",
+      "logo": "https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager-Templates/main/apps/images/archisteamfarm.png",
+      "name": "archisteamfarm",
+      "platform": "linux",
+      "ports": [
+        {
+          "host": "1242",
+          "container": "1242",
+          "protocol": "tcp"
+        }
+      ],
+      "restart_policy": "unless-stopped",
+      "title": "ArchiSteamFarm",
+      "type": 1,
+      "volumes": [
+        {
+          "bind": "/home/docker/archiSteamFarm/config",
+          "container": "/app/config"
+        },
+        {
+          "bind": "/home/docker/archiSteamFarm/plugins",
+          "container": "/app/plugins"
+        },
+        {
+          "bind": "/home/docker/archiSteamFarm/logs",
+          "container": "/app/logs"
+        }
+      ],
+      "note": ""
+    },
+    {
+      "categories": [
+        "Other",
+        "Tools"
+      ],
+      "description": "ArchiveBox is a powerful, self-hosted internet archiving solution to collect, save, and view sites you want to preserve offline.",
+      "env": [
+        {
+          "default": "*",
+          "label": "ALLOWED_HOSTS",
+          "name": "ALLOWED_HOSTS"
+        },
+        {
+          "default": "750m",
+          "label": "MEDIA_MAX_SIZE",
+          "name": "MEDIA_MAX_SIZE"
+        },
+        {
+          "default": "true",
+          "label": "PUBLIC_INDEX",
+          "name": "PUBLIC_INDEX"
+        },
+        {
+          "default": "true",
+          "label": "PUBLIC_SNAPSHOTS",
+          "name": "PUBLIC_SNAPSHOTS"
+        },
+        {
+          "default": "false",
+          "label": "PUBLIC_ADD_VIEW",
+          "name": "PUBLIC_ADD_VIEW"
+        }
+      ],
+      "image": "archivebox/archivebox:latest",
+      "logo": "https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager-Templates/main/apps/images/archivebox.png",
+      "name": "archivebox",
+      "note": "",
+      "platform": "linux",
+      "ports": [
+        {
+          "host": "8002",
+          "container": "8000",
+          "protocol": "tcp"
+        }
+      ],
+      "restart_policy": "unless-stopped",
+      "title": "Archivebox",
+      "type": 1,
+      "volumes": [
+        {
+          "bind": "/home/docker/archivebox",
+          "container": "/data"
+        }
+      ]
+    },
+    {
+      "type": 1,
+      "title": "Audacity",
+      "name": "audacity",
+      "note": "",
+      "description": "Audacity is an easy-to-use, multi-track audio editor and recorder. Developed by a group of volunteers as open source. (https://www.audacityteam.org/)",
+      "platform": "linux",
+      "categories": [
+        "Media"
+      ],
+      "logo": "https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager-Templates/main/apps/images/audacity.png",
+      "image": "linuxserver/audacity:latest",
+      "env": [
+        {
+          "name": "PUID",
+          "label": "PUID",
+          "default": "1024",
+          "description": "for UserID"
+        },
+        {
+          "name": "PGID",
+          "label": "PGID",
+          "default": "100",
+          "description": "for GroupID"
+        },
+        {
+          "name": "TZ",
+          "label": "TZ",
+          "default": "Europe/Amsterdam",
+          "description": "specify a timezone to use, see this [list](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)."
+        }
+      ],
+      "ports": [
+        {
+          "host": "3000",
+          "container": "3000",
+          "protocol": "tcp"
+        },
+        {
+          "host": "3001",
+          "container": "3001",
+          "protocol": "tcp"
+        }
+      ],
+      "volumes": [
+        {
+          "container": "/config",
+          "bind": "/home/docker/audacity/config"
+        }
+      ],
+      "restart_policy": "unless-stopped"
+    },
+    {
+      "categories": [
+        "Authentication"
+      ],
+      "description": "An open-source authentication and authorization server providing 2-factor authentication and single sign-on (SSO) for your applications via a web portal.",
+      "env": [
+        {
+          "label": "TZ",
+          "name": "TZ"
+        }
+      ],
+      "image": "authelia/authelia:latest",
+      "logo": "https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager-Templates/main/apps/images/authelia.png",
+      "name": "authelia",
+      "note": "Requires a configuration.yml file in order to work. Documentation is available <a href='https://docs.authelia.com/deployment/deployment-ha'>here</a>.",
+      "platform": "linux",
+      "ports": [
+        {
+          "host": "9091",
+          "container": "9091",
+          "protocol": "tcp"
+        }
+      ],
+      "restart_policy": "unless-stopped",
+      "title": "Authelia",
+      "type": 1,
+      "volumes": [
+        {
+          "bind": "/home/docker/authelia",
+          "container": "/etc/authelia/"
+        }
+      ]
+    }
+  ]

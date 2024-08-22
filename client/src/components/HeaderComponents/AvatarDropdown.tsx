@@ -74,7 +74,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
       history.replace({
         pathname: '/user/login',
         // @ts-ignore
-        search: stringify({ redirect: pathname + search }),
+        search: JSON.stringify({ redirect: pathname + search }),
       });
     }
   };

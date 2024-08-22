@@ -1,0 +1,40 @@
+{
+  "name": "ssm-server-demo",
+  "description": "SSM Server Demo - A simple way to manage all your servers",
+  "main": "index",
+  "license": "AGPL-3.0 license",
+  "scripts": {
+    "dev": "pwd && nodemon",
+    "start": "npm run build-shared && npm run build && cross-env NODE_ENV=production node dist/index.js",
+    "build": "tsc",
+    "test": "vitest --disable-console-intercept --reporter=basic ",
+    "coverage": "vitest run --coverage"
+  },
+  "version": "0.1.17",
+  "author": "Squirrel Team",
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "overrides": {
+    "minimatch": "5.1.2",
+    "glob": "8.1.0"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.1.1",
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.9.0",
+    "@types/express": "^4.17.21",
+    "@types/fs-extra": "^11.0.4",
+    "eslint": "^9.8.0",
+    "@typescript-eslint/eslint-plugin": "^8.1.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-import-x": "^3.1.0",
+    "@stylistic/eslint-plugin": "^2.6.4",
+    "@typescript-eslint/parser": "^8.0.1",
+    "globals": "^15.9.0",
+    "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}

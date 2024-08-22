@@ -1,0 +1,35 @@
+ [
+    {
+      "_id": "66c69cd13d1897ce339e2899",
+      "message": "The automation \"Update all devices\" failed",
+      "severity": "error",
+      "event": "AUTOMATION_FAILED",
+      "module": "AutomationAction",
+      "moduleId": "d3e6a684-9ffe-4645-a3a3-9a03d5ee7ee6",
+      "seen": false,
+      "createdAt": "2024-08-22T02:05:05.669Z",
+      "updatedAt": "2024-08-22T02:05:05.669Z"
+    },
+    {
+      "_id": "66c69ba53d1897ce339e25c5",
+      "message": "The automation \"Reboot important servers\" failed",
+      "severity": "error",
+      "event": "AUTOMATION_FAILED",
+      "module": "AutomationAction",
+      "moduleId": "d3e6a684-9ffe-4645-a3a3-9a03d5ee7ee6",
+      "seen": false,
+      "createdAt": "2024-08-22T02:00:05.618Z",
+      "updatedAt": "2024-08-22T02:00:05.618Z"
+    },
+    {
+      "_id": "66c5feae3d1897ce339ce4b8",
+      "message": "The automation \"Restart Docker\" failed",
+      "severity": "error",
+      "event": "AUTOMATION_FAILED",
+      "module": "AutomationAction",
+      "moduleId": "d3e6a684-9ffe-4645-a3a3-9a03d5ee7ee6",
+      "seen": false,
+      "createdAt": "2024-08-21T14:50:22.712Z",
+      "updatedAt": "2024-08-21T14:50:22.712Z"
+    }
+  ]

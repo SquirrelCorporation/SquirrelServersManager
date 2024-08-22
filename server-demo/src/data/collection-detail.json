@@ -1,0 +1,492 @@
+ {
+    "pulp_href": "/api/pulp/api/v3/content/ansible/collection_versions/018a07a2-0c29-7f40-a1bd-3946b13f2731/",
+    "artifact": "/api/pulp/api/v3/artifacts/018a07a2-3527-727e-a606-f464e111fb85/",
+    "pulp_created": "2023-08-18T07:53:08.203887Z",
+    "sha256": "8206b9a94d9099085bfac5659e592f4f431403afee0171f2427d9eb12fcbd111",
+    "md5": null,
+    "sha1": null,
+    "sha224": "b0252a5e02299376ecfc3ef7370919e5a955cd1879e1afba5e081895",
+    "sha384": "accf410b92d3fd40a1508962dea9be7720f1b93528b271797eb891e8305a7558f879b3acf89b4aee4644378e945e11fe",
+    "sha512": "a1d9eda86fe3b036254f4e1fbdafe177f76ada7a432e9c03b3686ab267cec8ffdaa27f25e5ae1789da9d239bf7714cfc03c7651a35f9f0b144cefb57da817016",
+    "id": "018a07a2-0c29-7f40-a1bd-3946b13f2731",
+    "authors": [
+      "Nagoor Shaik <nagoor.s@gmail.com>"
+    ],
+    "contents": [
+      {
+        "name": "common",
+        "description": "your role description",
+        "content_type": "role"
+      },
+      {
+        "name": "haproxy",
+        "description": "HAProxy Setup for AAP2 Cluster installations",
+        "content_type": "role"
+      }
+    ],
+    "dependencies": {},
+    "description": "Common roles to setup AAP2",
+    "docs_blob": {
+      "contents": [
+        {
+          "doc_strings": {},
+          "readme_file": "README.md",
+          "readme_html": "<h1>Role Name</h1>\n<p>A brief description of the role goes here.</p>\n<h2>Requirements</h2>\n<p>Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.</p>\n<h2>Role Variables</h2>\n<p>A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.</p>\n<h2>Dependencies</h2>\n<p>A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.</p>\n<h2>Example Playbook</h2>\n<p>Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:</p>\n<pre><code>- hosts: servers\n  roles:\n     - { role: username.rolename, x: 42 }\n</code></pre>\n<h2>License</h2>\n<p>BSD</p>\n<h2>Author Information</h2>\n<p>An optional section for the role authors to include contact information, or a website (HTML is not allowed).</p>",
+          "content_name": "common",
+          "content_type": "role"
+        },
+        {
+          "doc_strings": {},
+          "readme_file": "README.md",
+          "readme_html": "<h1>Role Name</h1>\n<p>A brief description of the role goes here.</p>\n<h2>Requirements</h2>\n<p>Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.</p>\n<h2>Role Variables</h2>\n<p>A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.</p>\n<h2>Dependencies</h2>\n<p>A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.</p>\n<h2>Example Playbook</h2>\n<p>Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:</p>\n<pre><code>- hosts: servers\n  roles:\n     - { role: username.rolename, x: 42 }\n</code></pre>\n<h2>License</h2>\n<p>BSD</p>\n<h2>Author Information</h2>\n<p>An optional section for the role authors to include contact information, or a website (HTML is not allowed).</p>",
+          "content_name": "haproxy",
+          "content_type": "role"
+        }
+      ],
+      "collection_readme": {
+        "html": "<h1>Ansible Collection - snagoor.aap_common</h1>\n<p>Documentation for the collection.</p>",
+        "name": "README.md"
+      },
+      "documentation_files": []
+    },
+    "manifest": {
+      "format": 1,
+      "collection_info": {
+        "name": "aap_common",
+        "issues": "https://github.com/snagoor/aap_common/issue/tracker",
+        "authors": [
+          "Nagoor Shaik <nagoor.s@gmail.com>"
+        ],
+        "license": [
+          "GPL-2.0-or-later"
+        ],
+        "version": "1.0.5",
+        "homepage": "https://github.com/snagoor/aap_common",
+        "namespace": "snagoor",
+        "repository": "https://github.com/snagoor/aap_common",
+        "description": "Common roles to setup AAP2",
+        "dependencies": {},
+        "documentation": "https://github.com/snagoor/aap_common"
+      },
+      "file_manifest_file": {
+        "name": "FILES.json",
+        "ftype": "file",
+        "format": 1,
+        "chksum_type": "sha256",
+        "chksum_sha256": "eb7aac8182d44b0c99b76a9fbe80ffcee06bff917e0ca5b0033c52a7415ed5cc"
+      }
+    },
+    "files": {
+      "files": [
+        {
+          "name": ".",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "plugins",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "plugins/README.md",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "c8e91383ed2e19a696e2c055fbbd1cf526bc54d4fe590619ee0896b21bf0183e"
+        },
+        {
+          "name": "meta",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "meta/runtime.yml",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "d2d3455939d7f07e335dd5aae8273fd0e79e80428e69d1579a2026093276ad80"
+        },
+        {
+          "name": "roles",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/common",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/common/vars",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/common/vars/main.yml",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "97dd4c5b482ce2438d99cb277ac1d783481a5fc0b545bfbb338d567ea3547cca"
+        },
+        {
+          "name": "roles/common/tasks",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/common/tasks/main.yml",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "670066c90f33b02fa6be07171a66f4ae0cce8ace00384c061bb40dd28cc35aba"
+        },
+        {
+          "name": "roles/common/tests",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/common/tests/test.yml",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "b5113f63af8292dd79c89bd0d22c143e971dfd2a5ea4e2165c9081edca4b91bc"
+        },
+        {
+          "name": "roles/common/tests/inventory",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "e02233819b1a09844410549191813f7cc7ba360f21298578f4ba1727a27d87fc"
+        },
+        {
+          "name": "roles/common/meta",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/common/meta/runtime.yml",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "94d6b49778d101cca4b6cdfc026e86ba673af5cb029165c3dd170f3123b62286"
+        },
+        {
+          "name": "roles/common/meta/main.yml",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "e82c60136cb1895d61432dd52c83d4c6e8ad4c654a697ac2d5b5e4a288866d87"
+        },
+        {
+          "name": "roles/common/README.md",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "cc751d75266f757a38189f15d54e548dc87706f14a39756995c27b49eaca8a07"
+        },
+        {
+          "name": "roles/common/defaults",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/common/defaults/main.yml",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "e19a64bf923408b8f029bff113196bf11bc8d06d6b8bdfb5fab8474d7bfdd4ae"
+        },
+        {
+          "name": "roles/common/snagoor-common-1.0.1.tar.gz",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "b59017402e21c1cf6a6e9877c966ee4cf50fb6a959e1f6ec557a024de0b6190c"
+        },
+        {
+          "name": "roles/common/files",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/common/templates",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/common/templates/hosts.j2",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "dc93bfdcd4ead0962969762826e18836b97de0af12cae7ec9ca5a0f6d9739291"
+        },
+        {
+          "name": "roles/common/.vscode",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/common/.vscode/settings.json",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "e45cf614a213663a7dc101c11975386da230f03469b964989a8fc16cd73323d0"
+        },
+        {
+          "name": "roles/common/handlers",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/common/handlers/main.yml",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "3d6f41e851123c923ee9cca83228f89bc6d40d82b24d97a2267dd8f88613d331"
+        },
+        {
+          "name": "roles/common/galaxy.yml",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "f0a9a1c4486e5617491f6f3fbdce2dead987e1eeed8cf8d6804f6f05b744d025"
+        },
+        {
+          "name": "roles/haproxy",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/haproxy/vars",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/haproxy/vars/main.yml",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "39fad12f04653751d06d9de87763ace6180cf5046ea78929869801aa048ac511"
+        },
+        {
+          "name": "roles/haproxy/tasks",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/haproxy/tasks/main.yml",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "c43965a47e10c3c6a1d7df987ba009ca8c2741c99b48c688b75cf023bea07db4"
+        },
+        {
+          "name": "roles/haproxy/snagoor-haproxy-1.0.0.tar.gz",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "92ff3eb1dbca8b8f7e16524a0ed0b5bd57fa2e5464d5ec56dc1d5de7420e08fe"
+        },
+        {
+          "name": "roles/haproxy/tests",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/haproxy/tests/test.yml",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "0171e4684e6a0259b56b2feac1c382f153537de21a662a4c4c12f4467ad508d1"
+        },
+        {
+          "name": "roles/haproxy/tests/inventory",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "e02233819b1a09844410549191813f7cc7ba360f21298578f4ba1727a27d87fc"
+        },
+        {
+          "name": "roles/haproxy/meta",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/haproxy/meta/runtime.yml",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "94d6b49778d101cca4b6cdfc026e86ba673af5cb029165c3dd170f3123b62286"
+        },
+        {
+          "name": "roles/haproxy/meta/main.yml",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "ad1a2e7315f25b962526f69acd62b983a89dc5e9f61dc8752bd7eac4a92a52f3"
+        },
+        {
+          "name": "roles/haproxy/README.md",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "cc751d75266f757a38189f15d54e548dc87706f14a39756995c27b49eaca8a07"
+        },
+        {
+          "name": "roles/haproxy/defaults",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/haproxy/defaults/main.yml",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "57cf119c2d8ecb2fe86e742336ab78f29ca4ec923c9c05406859b534e61cf623"
+        },
+        {
+          "name": "roles/haproxy/files",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/haproxy/templates",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/haproxy/templates/haproxy.cfg.j2",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "c41f4b962c38f7aa65d9338c0222620536aaee651971ad0bc97cc86f2b7aae26"
+        },
+        {
+          "name": "roles/haproxy/.vscode",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/haproxy/.vscode/settings.json",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "e45cf614a213663a7dc101c11975386da230f03469b964989a8fc16cd73323d0"
+        },
+        {
+          "name": "roles/haproxy/handlers",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "roles/haproxy/handlers/main.yml",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "c6a8d5db9a5f88d9da67ed935df2a2cd7804433cad294dd3dc9c0531b9fda97b"
+        },
+        {
+          "name": "roles/haproxy/galaxy.yml",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "d671c697a0bc4378d84cd667559788e46bb7bd36bd8fabdbf2c3e785c6724f6d"
+        },
+        {
+          "name": "docs",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": "README.md",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "6bd0f4170f055e66989860ce0d33f84d973ade2a791a9c9962bcd90a1eb5b011"
+        },
+        {
+          "name": ".vscode",
+          "ftype": "dir",
+          "format": 1,
+          "chksum_type": null,
+          "chksum_sha256": null
+        },
+        {
+          "name": ".vscode/settings.json",
+          "ftype": "file",
+          "format": 1,
+          "chksum_type": "sha256",
+          "chksum_sha256": "e45cf614a213663a7dc101c11975386da230f03469b964989a8fc16cd73323d0"
+        }
+      ],
+      "format": 1
+    },
+    "documentation": "https://github.com/snagoor/aap_common",
+    "homepage": "https://github.com/snagoor/aap_common",
+    "issues": "https://github.com/snagoor/aap_common/issue/tracker",
+    "license": [
+      "GPL-2.0-or-later"
+    ],
+    "name": "aap_common",
+    "namespace": "snagoor",
+    "origin_repository": "https://github.com/snagoor/aap_common",
+    "tags": [
+      {
+        "name": "common"
+      }
+    ],
+    "version": "1.0.5",
+    "requires_ansible": ">=2.10"
+  }

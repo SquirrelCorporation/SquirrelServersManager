@@ -1,0 +1,18 @@
+{
+  "watch" : [
+    "src",
+    ".env"
+  ],
+  "ext":"js,ts,json",
+  "verbose": true,
+  "ignore": [
+    "src/logs/*",
+    "src/**/*.{spec,test}.ts",
+    "src/**/ansible/artifacts/*",
+    "src/**/ansible/inventory/*.json",
+    "src/tests/helpers/directory-tree/test_data/*"
+  ],
+  "exec": "ts-node --transpile-only src/index.ts"
+
+}
+

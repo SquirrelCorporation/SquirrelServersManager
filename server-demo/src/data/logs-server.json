@@ -1,0 +1,538 @@
+[
+    {
+      "_id": "66c75112060f3b54dd1dd5be",
+      "level": 30,
+      "time": "2024-08-22T14:54:10.633Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "REST",
+      "req": {
+        "id": 29397,
+        "method": "POST",
+        "url": "/devices/dashboard/stats/cpu?from=2023-12-31T23:00:00.000Z&to=2024-12-31T22:59:59.000Z",
+        "query": {
+          "from": "2023-12-31T23:00:00.000Z",
+          "to": "2024-12-31T22:59:59.000Z"
+        },
+        "params": {},
+        "headers": {
+          "x-forwarded-for": "192.168.0.187",
+          "host": "server:3000",
+          "connection": "close",
+          "content-length": "442",
+          "accept": "application/json, text/plain, */*",
+          "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36",
+          "content-type": "application/json",
+          "origin": "http://192.168.0.229:8000",
+          "referer": "http://192.168.0.229:8000/",
+          "accept-encoding": "gzip, deflate",
+          "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7"
+        },
+        "remoteAddress": "::ffff:172.19.0.6",
+        "remotePort": 45092
+      },
+      "res": {
+        "statusCode": 200,
+        "headers": {
+          "x-powered-by": "Express",
+          "content-type": "application/json; charset=utf-8",
+          "content-length": "430934",
+          "etag": "W/\"69356-4B2G+2wOf7uYACforsbJsjipCgg\""
+        }
+      },
+      "responseTime": 686,
+      "msg": "[REST] - POST completed /devices/dashboard/stats/cpu?from=2023-12-31T23:00:00.000Z&to=2024-12-31T22:59:59.000Z"
+    },
+    {
+      "_id": "66c75112060f3b54dd1dd5b7",
+      "level": 30,
+      "time": "2024-08-22T14:54:10.468Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "REST",
+      "req": {
+        "id": 29392,
+        "method": "GET",
+        "url": "/devices/dashboard/stats/performances",
+        "query": {},
+        "params": {},
+        "headers": {
+          "x-forwarded-for": "192.168.0.187",
+          "host": "server:3000",
+          "connection": "close",
+          "accept": "application/json, text/plain, */*",
+          "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36",
+          "referer": "http://192.168.0.229:8000/",
+          "accept-encoding": "gzip, deflate",
+          "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7"
+        },
+        "remoteAddress": "::ffff:172.19.0.6",
+        "remotePort": 45036
+      },
+      "res": {
+        "statusCode": 200,
+        "headers": {
+          "x-powered-by": "Express",
+          "content-type": "application/json; charset=utf-8",
+          "content-length": "230",
+          "etag": "W/\"e6-5w4M3S0n7e+psiztidmMO+RmEBc\""
+        }
+      },
+      "responseTime": 556,
+      "msg": "[REST] - GET completed /devices/dashboard/stats/performances"
+    },
+    {
+      "_id": "66c75112060f3b54dd1dd5b5",
+      "level": 30,
+      "time": "2024-08-22T14:54:10.390Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "REST",
+      "req": {
+        "id": 29398,
+        "method": "POST",
+        "url": "/devices/dashboard/stats/averaged/cpu?from=2023-12-31T23:00:00.000Z&to=2024-12-31T22:59:59.000Z",
+        "query": {
+          "from": "2023-12-31T23:00:00.000Z",
+          "to": "2024-12-31T22:59:59.000Z"
+        },
+        "params": {},
+        "headers": {
+          "x-forwarded-for": "192.168.0.187",
+          "host": "server:3000",
+          "connection": "close",
+          "content-length": "442",
+          "accept": "application/json, text/plain, */*",
+          "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36",
+          "content-type": "application/json",
+          "origin": "http://192.168.0.229:8000",
+          "referer": "http://192.168.0.229:8000/",
+          "accept-encoding": "gzip, deflate",
+          "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7"
+        },
+        "remoteAddress": "::ffff:172.19.0.6",
+        "remotePort": 45096
+      },
+      "res": {
+        "statusCode": 200,
+        "headers": {
+          "x-powered-by": "Express",
+          "content-type": "application/json; charset=utf-8",
+          "content-length": "727",
+          "etag": "W/\"2d7-FJr165QJF4QyeDbM6V471Ktr0fI\""
+        }
+      },
+      "responseTime": 439,
+      "msg": "[REST] - POST completed /devices/dashboard/stats/averaged/cpu?from=2023-12-31T23:00:00.000Z&to=2024-12-31T22:59:59.000Z"
+    },
+    {
+      "_id": "66c75112060f3b54dd1dd5b3",
+      "level": 30,
+      "time": "2024-08-22T14:54:10.388Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "DeviceStatsUseCases",
+      "msg": "[DEVICE_STATS] - getStatByType - type: cpu"
+    },
+    {
+      "_id": "66c75112060f3b54dd1dd5b0",
+      "level": 30,
+      "time": "2024-08-22T14:54:10.308Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "REST",
+      "req": {
+        "id": 29394,
+        "method": "GET",
+        "url": "/containers/stats/averaged",
+        "query": {},
+        "params": {},
+        "headers": {
+          "x-forwarded-for": "192.168.0.187",
+          "host": "server:3000",
+          "connection": "close",
+          "accept": "application/json, text/plain, */*",
+          "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36",
+          "referer": "http://192.168.0.229:8000/",
+          "accept-encoding": "gzip, deflate",
+          "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7"
+        },
+        "remoteAddress": "::ffff:172.19.0.6",
+        "remotePort": 45056
+      },
+      "res": {
+        "statusCode": 200,
+        "headers": {
+          "x-powered-by": "Express",
+          "content-type": "application/json; charset=utf-8",
+          "content-length": "19444",
+          "etag": "W/\"4bf4-x4AL15sv/UscBiseomvWfwMphuY\""
+        }
+      },
+      "responseTime": 378,
+      "msg": "[REST] - GET completed /containers/stats/averaged"
+    },
+    {
+      "_id": "66c75112060f3b54dd1dd5ad",
+      "level": 30,
+      "time": "2024-08-22T14:54:10.236Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "DeviceStatsUseCases",
+      "msg": "[DEVICE_STATS] - getStatByType - type: cpu"
+    },
+    {
+      "_id": "66c75112060f3b54dd1dd5a8",
+      "level": 30,
+      "time": "2024-08-22T14:54:10.084Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "DeviceStatsUseCases",
+      "msg": "[DEVICE_STATS] - getStatByType - type: memFree"
+    },
+    {
+      "_id": "66c75111060f3b54dd1dd5a5",
+      "level": 30,
+      "time": "2024-08-22T14:54:09.982Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "REST",
+      "req": {
+        "id": 29396,
+        "method": "GET",
+        "url": "/devices/dashboard/stats/availability",
+        "query": {},
+        "params": {},
+        "headers": {
+          "x-forwarded-for": "192.168.0.187",
+          "host": "server:3000",
+          "connection": "close",
+          "accept": "application/json, text/plain, */*",
+          "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36",
+          "referer": "http://192.168.0.229:8000/",
+          "accept-encoding": "gzip, deflate",
+          "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7"
+        },
+        "remoteAddress": "::ffff:172.19.0.6",
+        "remotePort": 45084
+      },
+      "res": {
+        "statusCode": 200,
+        "headers": {
+          "x-powered-by": "Express",
+          "content-type": "application/json; charset=utf-8",
+          "content-length": "1425",
+          "etag": "W/\"591-BfW9XBB/eFkiG5WFlgVVH/kI5tI\""
+        }
+      },
+      "responseTime": 39,
+      "msg": "[REST] - GET completed /devices/dashboard/stats/availability"
+    },
+    {
+      "_id": "66c75111060f3b54dd1dd5a1",
+      "level": 30,
+      "time": "2024-08-22T14:54:09.975Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "DeviceDownTimeUseCases",
+      "msg": "[DEVICE_DOWN_TIME] - getDevicesAvailability From:Mon Jul 01 2024 00:00:00 GMT+0000 (Coordinated Universal Time) - To:Wed Jul 31 2024 23:59:59 GMT+0000 (Coordinated Universal Time)"
+    },
+    {
+      "0": {
+        "uuid": "7b00bb5d-539c-43e7-951e-65b87ac1be96",
+        "uptime": 1868047187,
+        "downtime": 2764,
+        "availability": "0.999999"
+      },
+      "1": {
+        "uuid": "a2c374c1-7b96-4510-a672-9f81c02ed48e",
+        "uptime": 1868047114,
+        "downtime": 2837,
+        "availability": "0.999998"
+      },
+      "2": {
+        "uuid": "5946407a-959b-4e36-abb1-59fd68a33530",
+        "uptime": 1868049951,
+        "downtime": 0,
+        "availability": "1.000000"
+      },
+      "3": {
+        "uuid": "28cdd900-aa51-4ae0-8aaf-b164ea858376",
+        "uptime": 1868049951,
+        "downtime": 0,
+        "availability": "1.000000"
+      },
+      "4": {
+        "uuid": "aa45313f-fee4-45d0-8490-8d2de5df11a5",
+        "uptime": 1868049951,
+        "downtime": 0,
+        "availability": "1.000000"
+      },
+      "5": {
+        "uuid": "ab285757-a721-44d1-b6ea-65c910dee76e",
+        "uptime": 1868049951,
+        "downtime": 0,
+        "availability": "1.000000"
+      },
+      "6": {
+        "uuid": "370bc7f0-4f40-4405-a07d-5d870f5c7990",
+        "uptime": 1868049951,
+        "downtime": 0,
+        "availability": "1.000000"
+      },
+      "7": {
+        "uuid": "f4fa7320-8b05-4406-a293-690db83cb641",
+        "uptime": 1868049951,
+        "downtime": 0,
+        "availability": "1.000000"
+      },
+      "8": {
+        "uuid": "ea8f5ebb-2e09-4d30-b837-cf502cda2d5e",
+        "uptime": 1868049951,
+        "downtime": 0,
+        "availability": "1.000000"
+      },
+      "9": {
+        "uuid": "f0bfcd21-64d0-43b7-b0d3-9c5a2bc8007b",
+        "uptime": 1868035656,
+        "downtime": 14295,
+        "availability": "0.999992"
+      },
+      "10": {
+        "uuid": "fda51a3a-a1f8-4e65-9c74-b892d26278ac",
+        "uptime": 1868049951,
+        "downtime": 0,
+        "availability": "1.000000"
+      },
+      "11": {
+        "uuid": "104d24f1-239f-46e5-8e30-e78210972a79",
+        "uptime": 1868049951,
+        "downtime": 0,
+        "availability": "1.000000"
+      },
+      "_id": "66c75111060f3b54dd1dd59f",
+      "level": 30,
+      "time": "2024-08-22T14:54:09.974Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "DeviceDownTimeUseCases"
+    },
+    {
+      "_id": "66c75111060f3b54dd1dd59c",
+      "level": 30,
+      "time": "2024-08-22T14:54:09.961Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "DeviceStatsUseCases",
+      "msg": "[DEVICE_STATS] - findSingleAveragedStatByDevicesAndType - type: cpu, from: Sun Dec 31 2023 23:59:59 GMT+0000 (Coordinated Universal Time), to: Tue Dec 31 2024 23:59:59 GMT+0000 (Coordinated Universal Time), nb devices: 11"
+    },
+    {
+      "_id": "66c75111060f3b54dd1dd599",
+      "level": 30,
+      "time": "2024-08-22T14:54:09.957Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "DeviceStatsUseCases",
+      "msg": "[DEVICE_STATS] - findStatsByDevicesAndType - type: cpu, from: Sun Dec 31 2023 23:59:59 GMT+0000 (Coordinated Universal Time), nb devices: 11"
+    },
+    {
+      "_id": "66c75111060f3b54dd1dd593",
+      "level": 30,
+      "time": "2024-08-22T14:54:09.951Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "DeviceDownTimeUseCases",
+      "msg": "[DEVICE_DOWN_TIME] - getDevicesAvailabilitySumUpCurrentMonthLastMonth"
+    },
+    {
+      "_id": "66c75111060f3b54dd1dd595",
+      "level": 30,
+      "time": "2024-08-22T14:54:09.951Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "DeviceDownTimeUseCases",
+      "msg": "[DEVICE_DOWN_TIME] - getDevicesAvailability From:Thu Aug 01 2024 00:00:00 GMT+0000 (Coordinated Universal Time) - To:Thu Aug 22 2024 14:54:09 GMT+0000 (Coordinated Universal Time)"
+    },
+    {
+      "_id": "66c75111060f3b54dd1dd597",
+      "level": 30,
+      "time": "2024-08-22T14:54:09.951Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "REST",
+      "req": {
+        "id": 29398,
+        "method": "POST",
+        "url": "/devices/dashboard/stats/averaged/cpu?from=2023-12-31T23:00:00.000Z&to=2024-12-31T22:59:59.000Z",
+        "query": {
+          "from": "2023-12-31T23:00:00.000Z",
+          "to": "2024-12-31T22:59:59.000Z"
+        },
+        "params": {},
+        "headers": {
+          "x-forwarded-for": "192.168.0.187",
+          "host": "server:3000",
+          "connection": "close",
+          "content-length": "442",
+          "accept": "application/json, text/plain, */*",
+          "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36",
+          "content-type": "application/json",
+          "origin": "http://192.168.0.229:8000",
+          "referer": "http://192.168.0.229:8000/",
+          "accept-encoding": "gzip, deflate",
+          "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7"
+        },
+        "remoteAddress": "::ffff:172.19.0.6",
+        "remotePort": 45096
+      },
+      "msg": "[REST] - request received: POST - /devices/dashboard/stats/averaged/cpu?from=2023-12-31T23:00:00.000Z&to=2024-12-31T22:59:59.000Z"
+    },
+    {
+      "_id": "66c75111060f3b54dd1dd591",
+      "level": 30,
+      "time": "2024-08-22T14:54:09.947Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "REST",
+      "req": {
+        "id": 29397,
+        "method": "POST",
+        "url": "/devices/dashboard/stats/cpu?from=2023-12-31T23:00:00.000Z&to=2024-12-31T22:59:59.000Z",
+        "query": {
+          "from": "2023-12-31T23:00:00.000Z",
+          "to": "2024-12-31T22:59:59.000Z"
+        },
+        "params": {},
+        "headers": {
+          "x-forwarded-for": "192.168.0.187",
+          "host": "server:3000",
+          "connection": "close",
+          "content-length": "442",
+          "accept": "application/json, text/plain, */*",
+          "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36",
+          "content-type": "application/json",
+          "origin": "http://192.168.0.229:8000",
+          "referer": "http://192.168.0.229:8000/",
+          "accept-encoding": "gzip, deflate",
+          "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7"
+        },
+        "remoteAddress": "::ffff:172.19.0.6",
+        "remotePort": 45092
+      },
+      "msg": "[REST] - request received: POST - /devices/dashboard/stats/cpu?from=2023-12-31T23:00:00.000Z&to=2024-12-31T22:59:59.000Z"
+    },
+    {
+      "_id": "66c75111060f3b54dd1dd58f",
+      "level": 30,
+      "time": "2024-08-22T14:54:09.943Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "REST",
+      "req": {
+        "id": 29396,
+        "method": "GET",
+        "url": "/devices/dashboard/stats/availability",
+        "query": {},
+        "params": {},
+        "headers": {
+          "x-forwarded-for": "192.168.0.187",
+          "host": "server:3000",
+          "connection": "close",
+          "accept": "application/json, text/plain, */*",
+          "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36",
+          "referer": "http://192.168.0.229:8000/",
+          "accept-encoding": "gzip, deflate",
+          "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7"
+             },
+        "remoteAddress": "::ffff:172.19.0.6",
+        "remotePort": 45084
+      },
+      "msg": "[REST] - request received: GET - /devices/dashboard/stats/availability"
+    },
+    {
+      "_id": "66c75111060f3b54dd1dd58d",
+      "level": 30,
+      "time": "2024-08-22T14:54:09.935Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "REST",
+      "req": {
+        "id": 29395,
+        "method": "GET",
+        "url": "/containers/stats/count/all",
+        "query": {},
+        "params": {},
+        "headers": {
+          "x-forwarded-for": "192.168.0.187",
+          "host": "server:3000",
+          "connection": "close",
+          "accept": "application/json, text/plain, */*",
+          "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36",
+          "referer": "http://192.168.0.229:8000/",
+          "accept-encoding": "gzip, deflate",
+          "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7"
+        },
+        "remoteAddress": "::ffff:172.19.0.6",
+        "remotePort": 45070
+      },
+      "msg": "[REST] - request received: GET - /containers/stats/count/all"
+    },
+    {
+      "_id": "66c75111060f3b54dd1dd58b",
+      "level": 30,
+      "time": "2024-08-22T14:54:09.930Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "REST",
+      "req": {
+        "id": 29394,
+        "method": "GET",
+        "url": "/containers/stats/averaged",
+        "query": {},
+        "params": {},
+        "headers": {
+          "x-forwarded-for": "192.168.0.187",
+          "host": "server:3000",
+          "connection": "close",
+          "accept": "application/json, text/plain, */*",
+          "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36",
+          "referer": "http://192.168.0.229:8000/",
+          "accept-encoding": "gzip, deflate",
+          "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7"
+         },
+        "remoteAddress": "::ffff:172.19.0.6",
+        "remotePort": 45056
+      },
+      "msg": "[REST] - request received: GET - /containers/stats/averaged"
+    },
+    {
+      "_id": "66c75111060f3b54dd1dd588",
+      "level": 30,
+      "time": "2024-08-22T14:54:09.925Z",
+      "pid": 1,
+      "hostname": "2b5ab3eba5d6",
+      "module": "REST",
+      "req": {
+        "id": 29393,
+        "method": "GET",
+        "url": "/containers/stats/count/running",
+        "query": {},
+        "params": {},
+        "headers": {
+          "x-forwarded-for": "192.168.0.187",
+          "host": "server:3000",
+          "connection": "close",
+          "accept": "application/json, text/plain, */*",
+          "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36",
+          "referer": "http://192.168.0.229:8000/",
+          "accept-encoding": "gzip, deflate",
+          "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+          "cookie": "jwt=eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImZhY29zODZAZ21haWwuY29tIiwiZXhwaXJhdGlvbiI6MTcyNDQyNDg0OTEzMn0.tmnFzYYwSTnQbBlBX8u18nS3IHRRLlXCSb1Bmvz48aA",
+          "if-none-match": "W/\"38-UUdK78WVUjbKvLZJAYvcQOILBQg\""
+        },
+        "remoteAddress": "::ffff:172.19.0.6",
+        "remotePort": 45052
+      },
+      "msg": "[REST] - request received: GET - /containers/stats/count/running"
+    }
+  ]

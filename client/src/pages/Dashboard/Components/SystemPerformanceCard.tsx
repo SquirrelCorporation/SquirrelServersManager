@@ -5,7 +5,7 @@ import Trend from '@/pages/Dashboard/ChartComponents/Trend';
 import { getDashboardSystemPerformance } from '@/services/rest/devicestat';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { Tooltip, Typography } from 'antd';
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { API } from 'ssm-shared-lib';
 
 const SystemPerformanceCard: React.FC = () => {
@@ -53,9 +53,9 @@ const SystemPerformanceCard: React.FC = () => {
     () => (
       <Typography.Title
         level={2}
-        type={performancesStat.danger ? 'danger' : undefined}
+        type={performancesStat?.danger ? 'danger' : undefined}
       >
-        {performancesStat.message}
+        {performancesStat?.message}
       </Typography.Title>
     ),
     [performancesStat],
@@ -67,8 +67,8 @@ const SystemPerformanceCard: React.FC = () => {
         label={<Typography.Text>Current Avg. CPU/Mem:</Typography.Text>}
         value={
           <Typography.Text>
-            {(performancesStat.currentCpu || NaN).toFixed(2)}%/
-            {(performancesStat.currentMem || NaN).toFixed(2)}%
+            {(performancesStat?.currentCpu || NaN).toFixed(2)}%/
+            {(performancesStat?.currentMem || NaN).toFixed(2)}%
           </Typography.Text>
         }
       />
@@ -78,7 +78,7 @@ const SystemPerformanceCard: React.FC = () => {
 
   const cpuTrendFlag = useMemo(
     () =>
-      performancesStat.previousCpu - performancesStat.currentCpu > 0
+      performancesStat?.previousCpu - performancesStat?.currentCpu > 0
         ? 'up'
         : 'down',
     [performancesStat],
@@ -86,7 +86,7 @@ const SystemPerformanceCard: React.FC = () => {
 
   const memTrendFlag = useMemo(
     () =>
-      performancesStat.previousMem - performancesStat.currentMem > 0
+      performancesStat?.previousMem - performancesStat?.currentMem > 0
         ? 'up'
         : 'down',
     [performancesStat],
@@ -111,7 +111,7 @@ const SystemPerformanceCard: React.FC = () => {
         <span className={styles.trendText}>
           <Typography.Text>
             {(
-              performancesStat.previousCpu - performancesStat.currentCpu
+              performancesStat?.previousCpu - performancesStat?.currentCpu
             ).toFixed(2)}
             %
           </Typography.Text>
@@ -122,7 +122,7 @@ const SystemPerformanceCard: React.FC = () => {
         <span className={styles.trendText}>
           <Typography.Text>
             {(
-              performancesStat.previousMem - performancesStat.currentMem
+              performancesStat?.previousMem - performancesStat?.currentMem
             ).toFixed(2)}
             %
           </Typography.Text>
