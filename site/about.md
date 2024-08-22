@@ -1,7 +1,6 @@
 # About Squirrel Servers Manager
 
 ## TL;DR
-
 Squirrel Servers Manager is a backend and frontend tool written in TypeScript, powered by Ansible and Docker, to manage all your servers in one place. It focuses on UI/UX and ease of use.
 
 :::info ℹ️ Some examples of what you can do with it:
@@ -23,7 +22,7 @@ SSM blends the automation powerhouse of Ansible with the portable setup of Docke
 
 Forget the days of command line complexities. SSM's simplified dashboard places the full potential of Ansible and Docker at your fingertips. Effortlessly navigate from deployment to monitoring via clicks, not code.
 
-Born from a love for open source, we've crafted this toolkit to be community-backed and user-focused. It's the ideal pick for developers and IT teams who crave simplicity without sacrificing power.
+Born from a love for open source, we've crafted this toolkit to be community-backed and user-focused. It's the ideal choice for developers and IT teams who crave simplicity without sacrificing power.
 
 Rediscover Ansible and Docker as they unite under one intuitive, open-source interface.
 
@@ -41,7 +40,7 @@ Consider all your devices as nuts. A squirrel loves to gather them all in some h
 
 Check out the [Roadmap](https://github.com/SquirrelCorporation/SquirrelServersManager/wiki) on GitHub.
 
-## Join Us(Me)!
+## Join Us (Me)!
 
 SSM is still in its early stages. I have a lot of ground to cover, and I won't be able to do this without help from community contributors. I am also actively looking for more team members with long-term commitment.
 
