@@ -1,14 +1,15 @@
+# Troubleshooting
+
 ### Agent installation failed
-If SSM is not able to install through Ansible the agent, you should consider a manual installation of the agent
+If SSM is unable to install the agent through Ansible, you should consider a manual installation of the agent.
 See [Manual install](/docs/manual-install-agent)
 
 ### SSM does not retrieve services (Docker containers)
-In some cases, SSM will not be able to retrieve the docker containers from the host.
-1. Check that the Docker CLI is available with the SSH user you provided. [~Official Docker Linux Post Install](https://docs.docker.com/engine/install/linux-postinstall/)
-2. Check that the Docker path sock is right
+In some cases, SSM may not be able to retrieve the Docker containers from the host.
+1. Check that the Docker CLI is available with the SSH user you provided. See the [Official Docker Linux Post-Install](https://docs.docker.com/engine/install/linux-postinstall/) guide.
+2. Verify that the Docker socket path is correct.
 
-If the problem remained, use the another authentication method.
+If the problem persists, try using another authentication method.
 
-### SSM show "socket hangup" in Docker module logs
-This warning/error is most probably coming from your host docker installation. See the previous point.
-
+### SSM shows "socket hangup" in Docker module logs
+This warning/error is most likely coming from your host Docker installation. Refer to the previous point for potential solutions.
