@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- Chore update site doc [\#213](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/213) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Update README and index for Collections feature availability [\#212](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/212) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.17](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.17) (2024-08-21)
