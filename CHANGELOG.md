@@ -6,6 +6,8 @@
 
 **Merged pull requests:**
 
+- \[DOC\] Add useful links document and update site config [\#219](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/219) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Update documentation and fix typos [\#217](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/217) ([rtuszik](https://github.com/rtuszik))
 - Create docker-publish-demo-2.yml [\#216](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/216) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [demo-v1](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/demo-v1) (2024-08-22)
