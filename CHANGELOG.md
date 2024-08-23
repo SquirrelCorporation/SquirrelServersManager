@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Update dependencies and Docker base images [\#221](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/221) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Update README features following contributions to main page fixes [\#220](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/220) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Add useful links document and update site config [\#219](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/219) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Update documentation and fix typos [\#217](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/217) ([rtuszik](https://github.com/rtuszik))
