@@ -24,7 +24,7 @@ First, start by creating your own 'fork' of our repository.
 git clone https://github.com/SquirrelCorporation/SquirrelServersManager.git
 
 # Go to your local repository
-cd SquirrelCorporation
+cd SquirrelServersManager
 
 # Ensure you are in the 'main' branch
 git checkout main
