@@ -38,5 +38,8 @@ docker compose up -f docker-compose.dev.yml up
 ## Screenshots
 ![dashboard](./site/public/home/dashboard.png)
 ![devices](./site/public/home/devices.png)
-![inventory](./site/public/home/inventory.png)
 ![services](./site/public/home/services.png)
+![store](./site/public/home/store.png)
+![playbook](./site/public/home/playbook.png)
+![deviceinfo](./site/public/home/device-info.png)
+![new-device](./site/public/home/new-device.png)
