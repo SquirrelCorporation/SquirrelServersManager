@@ -4,6 +4,11 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/demo-v1...HEAD)
 
+**Fixed bugs:**
+
+- \[BUG\] Buggy Automation editor when setting template 🐛 [\#222](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/222)
+- \[BUG\] Set initial cronValue from formRef [\#223](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/223) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Merged pull requests:**
 
 - \[CHORE\] Update dependencies and Docker base images [\#221](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/221) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
