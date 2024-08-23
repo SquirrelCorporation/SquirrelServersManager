@@ -67,6 +67,10 @@ export default defineConfig({
             link: 'https://github.com/orgs/SquirrelCorporation/projects/2/views/1'
           },
           {
+            text: 'Useful links',
+            link: '/useful-links.md'
+          },
+          {
             items: [
               {
                 text: 'Twitter',
