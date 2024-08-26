@@ -150,14 +150,23 @@ export default defineConfig({
           ]
         },
         {
-          text: 'Technical Guide', link: '/docs/technical-guide.md', items: [
-            { text: 'Ansible', link: '/docs/ansible.md' },
-            { text: 'Docker', link: '/docs/docker.md' },
-            {
-              text: 'Manually installing the agent', link: '/docs/manual-install-agent.md'
+          text: 'Technical Guide', items: [
+            { text: 'SSH/Connection' , link: '/docs/technical-guide/ssh.md'},
+            { text: 'Ansible', items: [
+                { text: 'Principles', link: '/docs/technical-guide/ansible.md'},
+                { text: 'SSH/Connection', link: '/docs/technical-guide/ansible.md'},
+              ]
+            },
+            { text: 'Docker/Containers Management', items: [
+                { text: 'Principles', link: '/docs/technical-guide/ansible.md'},
+                { text: 'SSH/Connection', link: '/docs/technical-guide/ansible.md'},
+                { text: 'Labels', link: '/docs/technical-guide/containers-labelling.md'}
+              ]
+            },{
+              text: 'Manually installing the agent', link: '/docs/technical-guide/manual-install-agent.md'
             },
             {
-              text: 'Troubleshoot', link: '/docs/troubleshoot.md'
+              text: 'Troubleshoot', link: '/docs/technical-guide/troubleshoot.md'
             }
           ]
         },

@@ -1,6 +1,4 @@
-# Docker
-
-## Container Labels
+# Container Labels
 
 SSM includes part of the code from WhatsUpDocker, so it currently supports the same labels on containers:
 
