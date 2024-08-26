@@ -9,8 +9,16 @@
 - \[BUG\] Buggy Automation editor when setting template 🐛 [\#222](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/222)
 - \[BUG\] Set initial cronValue from formRef [\#223](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/223) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
+**Closed issues:**
+
+- \[FEATURE\] Manage a remote device [\#214](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/214)
+- \[BUG\] Unable to create or setup an admin account [\#138](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/138)
+
 **Merged pull requests:**
 
+- Bump @eslint/js from 9.9.0 to 9.9.1 in /server [\#229](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/229) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump axios from 1.7.4 to 1.7.5 in /server [\#228](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/228) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump mongoose from 8.5.3 to 8.5.4 in /server [\#226](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/226) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Update dependencies and Docker base images [\#221](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/221) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Update README features following contributions to main page fixes [\#220](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/220) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Add useful links document and update site config [\#219](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/219) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
