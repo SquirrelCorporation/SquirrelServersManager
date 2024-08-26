@@ -18,6 +18,7 @@
 
 - Bump framer-motion from 11.3.29 to 11.3.30 in /client [\#234](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/234) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @eslint/js from 9.9.0 to 9.9.1 in /client [\#233](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/233) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @umijs/max from 4.3.15 to 4.3.16 in /client [\#231](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/231) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @eslint/js from 9.9.0 to 9.9.1 in /server [\#229](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/229) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump axios from 1.7.4 to 1.7.5 in /server [\#228](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/228) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump mongoose from 8.5.3 to 8.5.4 in /server [\#226](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/226) ([dependabot[bot]](https://github.com/apps/dependabot))
