@@ -50,7 +50,8 @@
     "shelljs": "^0.8.5",
     "ssm-shared-lib": "file:../shared-lib/",
     "yaml": "^2.5.0",
-    "socket.io": "^4.7.5"
+    "socket.io": "^4.7.5",
+    "multer": "^1.4.5-lts.1"
   },
   "overrides": {
     "minimatch": "5.1.2",
@@ -80,6 +81,7 @@
     "@types/shelljs": "^0.8.15",
     "@types/supertest": "^6.0.2",
     "@types/uuid": "^10.0.0",
+    "@types/multer": "^1.4.12",
     "@typescript-eslint/eslint-plugin": "^8.2.0",
     "@vitest/coverage-v8": "^2.0.5",
     "eslint": "^9.9.0",

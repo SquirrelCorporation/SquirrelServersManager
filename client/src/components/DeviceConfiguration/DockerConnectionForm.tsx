@@ -1,10 +1,12 @@
 import {
   EosIconsCronjob,
   OuiMlCreateAdvancedJob,
+  SafetyCertificateFill,
   UilDocker,
 } from '@/components/Icons/CustomIcons';
 import { CardHeader } from '@/components/Template/CardHeader';
 import { updateDeviceDockerWatcher } from '@/services/rest/device';
+import { deleteDockerCert } from '@/services/rest/deviceauth';
 import {
   EyeInvisibleOutlined,
   EyeTwoTone,
@@ -19,8 +21,11 @@ import {
   ProFormSwitch,
   ProFormText,
   ProFormTextArea,
+  ProFormUploadButton,
 } from '@ant-design/pro-components';
 import { Card, Flex, message, Space, Switch, Tooltip } from 'antd';
+import { RcFile } from 'antd/lib/upload/interface';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Cron from 'react-js-cron';
 import 'react-js-cron/dist/styles.css';
@@ -134,6 +139,44 @@ export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
       handleOnChangeDockerWatcherCron();
     }
   }, [dockerWatcherCron, dockerStatsCron]);
+
+  const handleUpload = (type: string) => (options: any) => {
+    const { onSuccess, onError, file } = options;
+    const formData = new FormData();
+
+    if (!file) {
+      onError?.(new Error('No file provided.'));
+      return;
+    }
+
+    formData.append('uploaded_file', file as RcFile); // Ensure it matches 'uploaded_file'
+
+    axios
+      .post(`/api/devices/${props.device.uuid}/auth/upload/${type}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((response) => {
+        onSuccess?.(response.data);
+      })
+      .catch((error) => {
+        void message.error({ content: error.message });
+        onError?.(error as any);
+      });
+  };
+
+  const deleteCertFromServer = async (type: 'ca' | 'cert' | 'key') => {
+    await deleteDockerCert(props.device.uuid as string, type).then(() => {
+      message.warning({ content: `${type} deleted.` });
+    });
+  };
+
+  const handleDeleteCert =
+    (type: 'ca' | 'cert' | 'key') => async (): Promise<boolean | void> => {
+      await deleteCertFromServer(type);
+    };
+
   return (
     <>
       <Card
@@ -175,10 +218,6 @@ export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
           <ProFormSwitch
             checkedChildren={'Watch Containers'}
             unCheckedChildren={'Containers not watched'}
-            style={{
-              marginTop: 'auto',
-              marginBottom: 'auto',
-            }}
             fieldProps={{
               value: dockerWatcher,
               onChange: handleOnChangeDockerWatcher,
@@ -246,8 +285,65 @@ export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
             disabled={!showAdvanced}
             rules={[{ required: false }]}
           />
-          {showAdvanced && (
-            <>
+        </ProForm.Group>
+        {showAdvanced && (
+          <>
+            <ProForm.Group
+              labelLayout={'inline'}
+              title={'TLS (HTTPS) Docker Socket Authentication:'}
+              collapsible
+              defaultCollapsed={false}
+              titleStyle={{ marginBottom: 5, padding: 0 }}
+            >
+              <ProFormUploadButton
+                title={'Upload CA'}
+                name="ca"
+                initialValue={[
+                  {
+                    uid: '-2',
+                    name: 'zzz.png',
+                    status: 'error',
+                  },
+                ]}
+                max={1}
+                fieldProps={{
+                  onRemove: handleDeleteCert('ca'),
+                  customRequest: handleUpload('ca'),
+                  iconRender: () => <SafetyCertificateFill />,
+                  accept: '.crt,.pem,.key',
+                }}
+              />
+              <ProFormUploadButton
+                title="Upload Cert"
+                name="cert"
+                max={1}
+                fieldProps={{
+                  name: 'uploaded_file',
+                  onRemove: handleDeleteCert('cert'),
+                  iconRender: () => <SafetyCertificateFill />,
+                  customRequest: handleUpload('cert'),
+                  accept: '.crt,.pem,.key',
+                }}
+              />
+              <ProFormUploadButton
+                title="Upload Key"
+                name="key"
+                max={1}
+                fieldProps={{
+                  name: 'uploaded_file',
+                  onRemove: handleDeleteCert('key'),
+                  customRequest: handleUpload('key'),
+                  iconRender: () => <SafetyCertificateFill />,
+                  accept: '.crt,.pem,.key',
+                }}
+              />
+            </ProForm.Group>
+            <ProForm.Group
+              title={'Custom Docker Authentication:'}
+              titleStyle={{ marginBottom: 5, padding: 0 }}
+              collapsible
+              defaultCollapsed={true}
+            >
               <ProFormSwitch
                 name={'customDockerSSH'}
                 label={
@@ -275,14 +371,16 @@ export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
                   }
                 }}
               </ProFormDependency>
-            </>
-          )}
-        </ProForm.Group>
+            </ProForm.Group>
+          </>
+        )}
         {showAdvanced && (
           <ProForm.Group>
-            <ProFormDependency name={['dockerCustomAuthType']}>
-              {({ dockerCustomAuthType }) => {
-                if (dockerCustomAuthType === 'userPwd')
+            <ProFormDependency
+              name={['dockerCustomAuthType', 'customDockerSSH']}
+            >
+              {({ dockerCustomAuthType, customDockerSSH }) => {
+                if (customDockerSSH && dockerCustomAuthType === 'userPwd')
                   return (
                     <ProForm.Group>
                       <ProFormText
@@ -338,7 +436,7 @@ export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
                       />
                     </ProForm.Group>
                   );
-                if (dockerCustomAuthType === 'keyBased')
+                if (customDockerSSH && dockerCustomAuthType === 'keyBased')
                   return (
                     <ProForm.Group>
                       <ProFormText
