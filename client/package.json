@@ -57,7 +57,7 @@
     "@antv/g2plot": "^2.4.32",
     "@dotlottie/react-player": "^1.6.19",
     "@monaco-editor/react": "^4.6.0",
-    "@umijs/max": "^4.3.15",
+    "@umijs/max": "^4.3.16",
     "@umijs/plugin-antd-dayjs": "^0.3.0",
     "@umijs/route-utils": "^4.0.1",
     "antd": "^5.20.2",
@@ -84,13 +84,13 @@
     "socket.io-client": "^4.7.5",
     "xterm": "^5.3.0",
     "@xterm/addon-fit": "^0.10.0",
-    "framer-motion":"^11.3.29"
+    "framer-motion":"^11.3.30"
   },
   "devDependencies": {
     "@ant-design/plots": "^2.2.8",
     "@ant-design/pro-cli": "^3.2.1",
     "@eslint/eslintrc": "^3.1.0",
-    "@eslint/js": "^9.9.0",
+    "@eslint/js": "^9.9.1",
     "@testing-library/react": "^16.0.0",
     "@types/classnames": "^2.3.1",
     "@types/express": "^4.17.21",

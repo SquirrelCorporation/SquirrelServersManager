@@ -14,7 +14,7 @@
   "author": "Squirrel Team",
   "dependencies": {
     "@aws-sdk/client-ecr": "^3.637.0",
-    "axios": "^1.7.4",
+    "axios": "^1.7.5",
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.6",
@@ -31,7 +31,7 @@
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "luxon": "^3.5.0",
-    "mongoose": "^8.5.3",
+    "mongoose": "^8.5.4",
     "node-cron": "^3.0.3",
     "node-ssh": "^13.2.0",
     "parse-docker-image-name": "^3.0.0",
@@ -60,7 +60,7 @@
   "devDependencies": {
     "@eslint/compat": "^1.1.1",
     "@eslint/eslintrc": "^3.1.0",
-    "@eslint/js": "^9.9.0",
+    "@eslint/js": "^9.9.1",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.7",
     "@types/dockerode": "^3.3.31",
