@@ -1,9 +1,11 @@
 import {
+  ConfigurationSolid,
   IonServer,
   MaterialSymbolsDashboard,
   PajamasLog,
 } from '@/components/Icons/CustomIcons';
 import Title, { TitleColors } from '@/components/Template/Title';
+import AnsibleConfiguration from '@/pages/Admin/Settings/components/subcomponents/AnsibleConfiguration';
 import {
   deleteAnsibleLogs,
   deleteContainerStats,
@@ -226,6 +228,19 @@ const AdvancedSettings: React.FC = () => {
             </Button>
           </Col>
         </Row>
+      </Card>
+      <Card
+        type="inner"
+        style={{ marginTop: 16 }}
+        title={
+          <Title.SubTitle
+            title={'Ansible Configuration (ansible.cfg)'}
+            backgroundColor={TitleColors.ANSIBLE_CONF}
+            icon={<ConfigurationSolid />}
+          />
+        }
+      >
+        <AnsibleConfiguration />
       </Card>
     </Card>
   );
