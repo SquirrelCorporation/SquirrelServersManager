@@ -103,7 +103,7 @@
     "@types/react-helmet": "^6.1.11",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@umijs/fabric": "^4.0.1",
-    "@umijs/lint": "^4.3.13",
+    "@umijs/lint": "^4.3.16",
     "antd-pro-merge-less": "^3.0.11",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
