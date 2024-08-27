@@ -1,8 +1,9 @@
 import { API } from 'ssm-shared-lib';
 import { describe, expect, test } from 'vitest';
 import User from '../../../../data/database/model/User';
-import type { Playbooks } from '../../../../types/typings';
+import { ANSIBLE_CONFIG_FILE } from '../../../../helpers/ansible/AnsibleConfigurationHelper';
 import AnsibleCmd from '../../../../modules/ansible/AnsibleCmd'; // note: replace with actual file path
+import type { Playbooks } from '../../../../types/typings';
 
 describe('helper functions', () => {
   // sanitizing inventory
@@ -99,7 +100,7 @@ describe('buildAnsibleCmd() function', () => {
 
     const result = AnsibleCmd.buildAnsibleCmd(playbook, uuid, inventory, user, extraVars);
     const expectedStart =
-      "sudo SSM_API_KEY=testKey python3 ssm-ansible-run.py --playbook testPlaybook --ident 'testUuid'";
+      "sudo SSM_API_KEY=testKey ANSIBLE_CONFIG=/ansible-config/ansible.cfg python3 ssm-ansible-run.py --playbook testPlaybook --ident 'testUuid'";
     expect(result.startsWith(expectedStart)).toEqual(true);
   });
 
@@ -112,6 +113,7 @@ describe('buildAnsibleCmd() function', () => {
     const ansibleCmdPartsWithoutInventory = [
       'sudo',
       `SSM_API_KEY=${user.apiKey}`,
+      `ANSIBLE_CONFIG=${ANSIBLE_CONFIG_FILE}`,
       'python3',
       'ssm-ansible-run.py',
       `--playbook ${playbook}`,
@@ -134,6 +136,7 @@ describe('buildAnsibleCmd() function', () => {
     const ansibleCmdPartsWithoutExtraVars = [
       'sudo',
       `SSM_API_KEY=${user.apiKey}`,
+      `ANSIBLE_CONFIG=${ANSIBLE_CONFIG_FILE}`,
       'python3',
       'ssm-ansible-run.py',
       `--playbook ${playbook}`,
