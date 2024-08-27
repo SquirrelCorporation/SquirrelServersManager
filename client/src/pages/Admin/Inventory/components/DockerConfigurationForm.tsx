@@ -1,4 +1,4 @@
-import { DockerConnectionForm } from '@/components/DeviceConfiguration/DockerConnectionForm';
+import { DockerConfigurationFormElements } from '@/components/DeviceConfiguration/DockerConfigurationFormElements';
 import { getDeviceAuth, putDeviceDockerAuth } from '@/services/rest/deviceauth';
 import { ProFormInstance } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
@@ -93,7 +93,10 @@ const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
           }
         }}
       >
-        <DockerConnectionForm device={props.device} formRef={formRef} />
+        <DockerConfigurationFormElements
+          device={props.device}
+          formRef={formRef}
+        />
       </ProForm>
     </>
   );

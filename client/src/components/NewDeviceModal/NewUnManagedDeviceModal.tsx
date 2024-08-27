@@ -1,4 +1,4 @@
-import SSHConnectionForm from '@/components/DeviceConfiguration/SSHConnectionForm';
+import SSHConnectionFormElements from '@/components/DeviceConfiguration/SSHConnectionFormElements';
 import { GrommetIconsInstall } from '@/components/Icons/CustomIcons';
 import { putDevice } from '@/services/rest/device';
 import { ProCard } from '@ant-design/pro-components';
@@ -85,7 +85,7 @@ const NewUnManagedDeviceModal: React.FC<NewUnManagedDeviceModalProps> = (
                     }
                   }}
                 >
-                  <SSHConnectionForm formRef={formRef} />
+                  <SSHConnectionFormElements formRef={formRef} />
                 </ProForm>
               )) || (
                 <Result
