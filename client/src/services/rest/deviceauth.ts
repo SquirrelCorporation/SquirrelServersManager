@@ -36,3 +36,17 @@ export async function putDeviceDockerAuth(
     ...(options || {}),
   });
 }
+
+export async function deleteDockerCert(
+  deviceId: string,
+  type: 'ca' | 'cert' | 'key',
+  options?: { [key: string]: any },
+) {
+  return request<API.SimpleResult>(
+    `/api/devices/${deviceId}/auth/upload/${type}`,
+    {
+      method: 'DELETE',
+      ...(options || {}),
+    },
+  );
+}

@@ -1,5 +1,18 @@
 import express from 'express';
 import passport from 'passport';
+import upload from '../middlewares/Upload';
+import {
+  getCheckDeviceAnsibleConnection,
+  getCheckDeviceDockerConnection,
+  postCheckAnsibleConnection,
+  postCheckDockerConnection,
+} from '../services/rest/devices/check-connection';
+import {
+  getCheckDeviceAnsibleConnectionValidator,
+  getCheckDeviceDockerConnectionValidator,
+  postCheckAnsibleConnectionValidator,
+  postCheckDockerConnectionValidator,
+} from '../services/rest/devices/check-connection.validator';
 import {
   addDevice,
   addDeviceAuto,
@@ -14,8 +27,10 @@ import {
 } from '../services/rest/devices/device.validator';
 import {
   addOrUpdateDeviceAuth,
+  deleteDockerAuthCerts,
   getDeviceAuth,
   updateDockerAuth,
+  uploadDockerAuthCerts,
 } from '../services/rest/devices/deviceauth';
 import {
   addOrUpdateDeviceAuthValidator,
@@ -42,18 +57,6 @@ import {
   getDashboardAveragedStatsValidator,
   getDashboardStatValidator,
 } from '../services/rest/devices/devicestatsdashboard.validator';
-import {
-  getCheckDeviceAnsibleConnection,
-  getCheckDeviceDockerConnection,
-  postCheckAnsibleConnection,
-  postCheckDockerConnection,
-} from '../services/rest/devices/check-connection';
-import {
-  getCheckDeviceAnsibleConnectionValidator,
-  getCheckDeviceDockerConnectionValidator,
-  postCheckAnsibleConnectionValidator,
-  postCheckDockerConnectionValidator,
-} from '../services/rest/devices/check-connection.validator';
 
 const router = express.Router();
 
@@ -85,6 +88,12 @@ router
   .route(`/:uuid/auth`)
   .get(getDeviceAuthValidator, getDeviceAuth)
   .post(addOrUpdateDeviceAuthValidator, addOrUpdateDeviceAuth);
+
+router
+  .route('/:uuid/auth/upload/:type')
+  .post(upload.single('uploaded_file'), uploadDockerAuthCerts)
+  .delete(deleteDockerAuthCerts);
+
 router.route('/:uuid/docker').post(updateDockerAuthValidator, updateDockerAuth);
 router.route('/:uuid/docker-watcher').post(updateDockerWatcher);
 router

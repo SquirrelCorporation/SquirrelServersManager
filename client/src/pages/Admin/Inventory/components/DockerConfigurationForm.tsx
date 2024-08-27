@@ -80,6 +80,9 @@ const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
                 customDockerAgentForward: res.data.customDockerAgentForward,
                 customDockerTryKeyboard: res.data.customDockerTryKeyboard,
                 customDockerSocket: res.data.customDockerSocket,
+                dockerCa: res.data.dockerCa,
+                dockerCert: res.data.dockerCert,
+                dockerKey: res.data.dockerKey,
               };
             });
           } else {

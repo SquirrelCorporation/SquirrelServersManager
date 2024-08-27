@@ -1354,3 +1354,44 @@ const Live24FilledSvg: React.FC<React.SVGProps<SVGSVGElement>> = React.memo(
 export const Live24Filled = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={Live24FilledSvg} {...props} />
 );
+
+const SafetyCertificateFillSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <g fill="none" fillRule="evenodd">
+      <path d="M24 0v24H0V0h24ZM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018Zm.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01l-.184-.092Z" />
+      <path
+        fill="currentColor"
+        d="M11.298 2.195a2 2 0 0 1 1.232-.055l.172.055l7 2.625a2 2 0 0 1 1.291 1.708l.007.165v5.363a9 9 0 0 1-4.709 7.911l-.266.139l-3.354 1.677a1.5 1.5 0 0 1-1.198.062l-.144-.062l-3.354-1.677a9 9 0 0 1-4.97-7.75l-.005-.3V6.693a2 2 0 0 1 1.145-1.808l.153-.065l7-2.625Zm4.135 6.434l-4.598 4.598l-1.768-1.768a1 1 0 0 0-1.414 1.415l2.404 2.404a1.1 1.1 0 0 0 1.556 0l5.234-5.235a1 1 0 1 0-1.414-1.414Z"
+      />
+    </g>
+  </svg>
+);
+
+export const SafetyCertificateFill = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={SafetyCertificateFillSvg} {...props} />;
+
+const ConfigurationSolidSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 2048 2048"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M1755 512h-475V37l475 475zm-795 520q38 0 71 14t59 40t39 59t15 71q0 38-14 71t-40 59t-59 39t-71 15q-38 0-71-14t-59-40t-39-59t-15-71q0-38 14-71t40-59t59-39t71-15zm832-392v1408H128V0h1024v640h640zm-509 632q2-14 3-28t1-28q0-14-1-28t-3-28l185-76l-55-134l-185 77q-33-46-79-79l77-185l-134-55l-76 185q-14-2-28-3t-28-1q-14 0-28 1t-28 3l-76-185l-134 55l77 185q-46 33-79 79l-185-77l-55 134l185 76q-2 14-3 28t-2 28q0 14 1 28t4 28l-185 76l55 134l185-77q33 46 79 79l-77 185l134 55l76-185q14 2 28 3t28 2q14 0 28-1t28-4l76 185l134-55l-77-185q46-33 79-79l185 77l55-134l-185-76z"
+    />
+  </svg>
+);
+
+export const ConfigurationSolid = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={ConfigurationSolidSvg} {...props} />;

@@ -35,6 +35,9 @@ export default interface DeviceAuth {
   customDockerSocket?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  dockerKey?: Buffer | null;
+  dockerCert?: Buffer | null;
+  dockerCa?: Buffer | null;
 }
 
 const schema = new Schema<DeviceAuth>(
@@ -152,6 +155,18 @@ const schema = new Schema<DeviceAuth>(
     },
     customDockerSocket: {
       type: Schema.Types.String,
+      required: false,
+    },
+    dockerCa: {
+      type: Schema.Types.Buffer,
+      required: false,
+    },
+    dockerCert: {
+      type: Schema.Types.Buffer,
+      required: false,
+    },
+    dockerKey: {
+      type: Schema.Types.Buffer,
       required: false,
     },
   },

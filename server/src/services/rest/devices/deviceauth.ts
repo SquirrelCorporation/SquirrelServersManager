@@ -1,9 +1,10 @@
 import { API } from 'ssm-shared-lib';
-import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
-import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import DeviceAuth from '../../../data/database/model/DeviceAuth';
 import DeviceAuthRepo from '../../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../../data/database/repository/DeviceRepo';
+import logger from '../../../logger';
+import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
+import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import asyncHandler from '../../../middlewares/AsyncHandler';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../../modules/ansible-vault/ansible-vault';
 import WatcherEngine from '../../../modules/docker/core/WatcherEngine';
@@ -60,11 +61,15 @@ export const getDeviceAuth = asyncHandler(async (req, res) => {
       customDockerAgentForward: deviceAuth.customDockerAgentForward,
       customDockerTryKeyboard: deviceAuth.customDockerTryKeyboard,
       customDockerSocket: deviceAuth.customDockerSocket,
+      dockerCa: deviceAuth.dockerCa ? 'MY_CA.pem' : undefined,
+      dockerCert: deviceAuth.dockerCert ? 'MY_CERT.cert' : undefined,
+      dockerKey: deviceAuth.dockerKey ? 'MY_KEY.key' : undefined,
     } as API.DeviceAuth;
     new SuccessResponse('Get device auth successful', deviceAuthDecrypted as API.DeviceAuth).send(
       res,
     );
   } catch (error: any) {
+    logger.error(error);
     throw new InternalError(error.message);
   }
 });
@@ -172,4 +177,73 @@ export const updateDockerAuth = asyncHandler(async (req, res) => {
   new SuccessResponse('Update docker auth successful', {
     dockerCustomAuthType: deviceAuth?.dockerCustomAuthType,
   }).send(res);
+});
+
+export const uploadDockerAuthCerts = asyncHandler(async (req, res) => {
+  const { uuid, type } = req.params;
+  const device = await DeviceRepo.findOneByUuid(uuid);
+
+  if (!device) {
+    throw new NotFoundError('Device ID not found');
+  }
+
+  const optionalExistingDeviceAuth = await DeviceAuthRepo.findOneByDevice(device);
+
+  if (!optionalExistingDeviceAuth) {
+    throw new NotFoundError('Device Auth not found');
+  }
+
+  const file = req.file;
+  if (!file) {
+    throw new Error('File not provided');
+  }
+  switch (type) {
+    case 'ca':
+      optionalExistingDeviceAuth.dockerCa = file.buffer; // Assign buffer content
+      await DeviceAuthRepo.update(optionalExistingDeviceAuth);
+      break;
+    case 'key':
+      optionalExistingDeviceAuth.dockerKey = file.buffer; // Assign buffer content
+      await DeviceAuthRepo.update(optionalExistingDeviceAuth);
+      break;
+    case 'cert':
+      optionalExistingDeviceAuth.dockerCert = file.buffer; // Assign buffer content
+      await DeviceAuthRepo.update(optionalExistingDeviceAuth);
+      break;
+    default:
+      throw new Error('Invalid upload type');
+  }
+
+  new SuccessResponse('Uploaded file').send(res);
+});
+
+export const deleteDockerAuthCerts = asyncHandler(async (req, res) => {
+  const { uuid, type } = req.params;
+  const device = await DeviceRepo.findOneByUuid(uuid);
+
+  if (!device) {
+    throw new NotFoundError('Device ID not found');
+  }
+
+  const optionalExistingDeviceAuth = await DeviceAuthRepo.findOneByDevice(device);
+
+  if (!optionalExistingDeviceAuth) {
+    throw new NotFoundError('Device Auth not found');
+  }
+
+  switch (type) {
+    case 'ca':
+      await DeviceAuthRepo.deleteCa(optionalExistingDeviceAuth);
+      break;
+    case 'key':
+      await DeviceAuthRepo.deleteKey(optionalExistingDeviceAuth);
+      break;
+    case 'cert':
+      await DeviceAuthRepo.deleteCert(optionalExistingDeviceAuth);
+      break;
+    default:
+      throw new Error('Invalid delete type');
+  }
+
+  new SuccessResponse('Deleted file').send(res);
 });

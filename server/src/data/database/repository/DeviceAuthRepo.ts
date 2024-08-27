@@ -1,5 +1,5 @@
-import DeviceAuth, { DeviceAuthModel } from '../model/DeviceAuth';
 import Device from '../model/Device';
+import DeviceAuth, { DeviceAuthModel } from '../model/DeviceAuth';
 
 async function updateOrCreateIfNotExist(deviceAuth: DeviceAuth): Promise<DeviceAuth> {
   const _deviceAuth = await DeviceAuthModel.findOneAndUpdate(
@@ -54,6 +54,18 @@ async function deleteByDevice(device: Device) {
   await DeviceAuthModel.deleteOne({ device: device }).exec();
 }
 
+async function deleteCa(deviceAuth: DeviceAuth) {
+  await DeviceAuthModel.updateOne(deviceAuth, { $unset: { dockerCa: 1 } }).exec();
+}
+
+async function deleteCert(deviceAuth: DeviceAuth) {
+  await DeviceAuthModel.updateOne(deviceAuth, { $unset: { dockerCert: 1 } }).exec();
+}
+
+async function deleteKey(deviceAuth: DeviceAuth) {
+  await DeviceAuthModel.updateOne(deviceAuth, { $unset: { dockerKey: 1 } }).exec();
+}
+
 export default {
   updateOrCreateIfNotExist,
   findOneByDevice,
@@ -63,4 +75,7 @@ export default {
   deleteByDevice,
   update,
   findAllPopWithSshKey,
+  deleteCa,
+  deleteCert,
+  deleteKey,
 };
