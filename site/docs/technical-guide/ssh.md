@@ -40,4 +40,4 @@ Access the advanced connection options with the `Show advanced` switch at the bo
   - `This option is not yet fully implemented.`
 
 - **Connection method:**
-  - See [Ansible connection](/docs/technical-guide/ansible/ansible-connection.md)
+  - See [Ansible connection](/docs/technical-guide/ansible-connection.md)
