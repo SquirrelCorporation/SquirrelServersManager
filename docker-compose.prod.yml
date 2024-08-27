@@ -44,7 +44,6 @@ services:
     env_file: .env
     environment:
       NODE_ENV: production
-      ANSIBLE_CONFIG: /config/ansible-ansible.cfg
   client:
     restart: unless-stopped
     depends_on:

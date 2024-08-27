@@ -1,7 +1,7 @@
 import fs from 'fs';
 import FileSystemManager from '../../modules/shell/managers/FileSystemManager';
 
-const CONFIG_FILE = '/ansible-config/ansible.cfg';
+export const ANSIBLE_CONFIG_FILE = '/ansible-config/ansible.cfg';
 
 interface ConfigEntry {
   value: string;
@@ -16,14 +16,14 @@ interface Config {
 }
 
 export const copyAnsibleCfgFileIfDoesntExist = () => {
-  if (!FileSystemManager.test('-f', CONFIG_FILE)) {
-    const res = FileSystemManager.copyFile('/server/src/ansible/default-ansible.cfg', CONFIG_FILE);
+  if (!FileSystemManager.test('-f', ANSIBLE_CONFIG_FILE)) {
+    FileSystemManager.copyFile('/server/src/ansible/default-ansible.cfg', ANSIBLE_CONFIG_FILE);
   }
 };
 
 // Utility function to read the configuration file
 export const readConfig = (): Config => {
-  const configContent = fs.readFileSync(CONFIG_FILE, 'utf-8');
+  const configContent = fs.readFileSync(ANSIBLE_CONFIG_FILE, 'utf-8');
   const lines = configContent.split('\n');
   const config: Config = {};
   let currentSection: string | null = null;
@@ -79,5 +79,5 @@ export const writeConfig = (config: Config) => {
     newLines.push(''); // Add a blank line after each section for readability
   });
 
-  fs.writeFileSync(CONFIG_FILE, newLines.join('\n'), 'utf-8');
+  fs.writeFileSync(ANSIBLE_CONFIG_FILE, newLines.join('\n'), 'utf-8');
 };

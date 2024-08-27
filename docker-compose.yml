@@ -36,7 +36,6 @@ services:
     env_file: .env
     environment:
       NODE_ENV: production
-      ANSIBLE_CONFIG: /ansible-config/ansible.cfg
     volumes:
       - ./.data.prod/playbooks:/playbooks
       - ./.data.prod/config:/ansible-config
