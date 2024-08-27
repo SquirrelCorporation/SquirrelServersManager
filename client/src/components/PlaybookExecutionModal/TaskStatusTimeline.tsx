@@ -1,4 +1,4 @@
-import { TaskStatusTimelineType } from '@/components/TerminalModal/TerminalHandler';
+import { TaskStatusTimelineType } from '@/components/PlaybookExecutionModal/PlaybookExecutionHandler';
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,

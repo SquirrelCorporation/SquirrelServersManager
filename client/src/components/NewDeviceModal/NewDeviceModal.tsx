@@ -1,5 +1,5 @@
 import CheckDeviceConnection from '@/components/DeviceConfiguration/CheckDeviceConnection';
-import SSHConnectionForm from '@/components/DeviceConfiguration/SSHConnectionForm';
+import SSHConnectionFormElements from '@/components/DeviceConfiguration/SSHConnectionFormElements';
 import {
   GrommetIconsInstall,
   StreamlineComputerConnection,
@@ -31,8 +31,8 @@ import {
   Tooltip,
   Typography,
 } from 'antd';
-import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import React, { useRef, useState } from 'react';
 
 export type NewDeviceModalProps = {
   isModalOpen: boolean;
@@ -247,7 +247,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                 title="SSH"
                 style={{ alignItems: 'start' }}
               >
-                <SSHConnectionForm formRef={formRef} />
+                <SSHConnectionFormElements formRef={formRef} />
               </StepsForm.StepForm>
               <StepsForm.StepForm
                 name="checkbox"

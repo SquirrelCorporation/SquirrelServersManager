@@ -1,4 +1,4 @@
-import SSHConnectionForm from '@/components/DeviceConfiguration/SSHConnectionForm';
+import SSHConnectionFormElements from '@/components/DeviceConfiguration/SSHConnectionFormElements';
 import { getDeviceAuth, putDeviceAuth } from '@/services/rest/deviceauth';
 import { ProFormInstance } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
@@ -88,7 +88,10 @@ const SSHConfigurationForm: React.FC<ConfigurationFormSSHProps> = (props) => {
           }
         }}
       >
-        <SSHConnectionForm deviceIp={props.values.ip} formRef={formRef} />
+        <SSHConnectionFormElements
+          deviceIp={props.values.ip}
+          formRef={formRef}
+        />
       </ProForm>
     </>
   );
