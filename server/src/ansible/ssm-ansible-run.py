@@ -93,12 +93,6 @@ def execute():
         json_mode=True,
         #ignore_logging=False,
         verbosity=args.log_level,
-        #cmdline='--vault-password-file ssm-ansible-vault-password.py',
        )
     sys.stdout.write(runner_obj.config.ident)
 execute()
-
-# -> Working with specific_host
-#sudo python3 ssm-ansible-run.py --playbook _reboot.yml --specific-host '{"all":{"children":"4697a14e-2936-4cf4-ad4f-af94428e2740"},"4697a14e-2936-4cf4-ad4f-af94428e2740":{"hosts":"192.168.0.187","vars":{"ansible_connection":"ssh","ansible_become":"yes","ansible_become_method":"sudo","ansible_user":"root","ansible_ssh_pass":"root"}}}'
-#sudo python3 ssm-ansible-run.py --playbook _reboot.yml --specific-host '{"all":{"host4697a14e29364cf4ad4faf94428e2740":"device4697a14e29364cf4ad4faf94428e2740"},"device4697a14e29364cf4ad4faf94428e2740":{"hosts":"192.168.0.187","vars":{"ansible_connection":"ssh","ansible_become":"yes","ansible_become_method":"sudo","ansible_ssh_extra_args":"'\''-o StrictHostKeyChecking=no''\''","ansible_user":"root","ansible_ssh_pass":"root"}}}'
-#sudo python3 ssm-ansible-run.py --playbook _reboot.yml --specific-host '{"all":{"children":"4697a14e-2936-4cf4-ad4f-af94428e2740"},"4697a14e-2936-4cf4-ad4f-af94428e2740":{"hosts":"192.168.0.187","vars":{"ansible_connection":"ssh","ansible_become":"yes","ansible_become_method":"sudo","ansible_user":"root","ansible_ssh_pass":"root"}},"4697a14e-2936-4cf4-ad4f-af94428e2740":{"hosts":"192.168.0.187","vars":{"ansible_connection":"ssh","ansible_become":"yes","ansible_become_method":"sudo","ansible_user":"root","ansible_ssh_pass":"root"}}}'

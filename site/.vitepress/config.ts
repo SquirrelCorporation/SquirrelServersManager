@@ -154,12 +154,13 @@ export default defineConfig({
             { text: 'SSH/Connection' , link: '/docs/technical-guide/ssh.md'},
             { text: 'Ansible', items: [
                 { text: 'Principles', link: '/docs/technical-guide/ansible.md'},
-                { text: 'SSH/Connection', link: '/docs/technical-guide/ansible.md'},
+                { text: 'SSH/Connection', link: '/docs/technical-guide/ansible-connection.md'},
+                { text: 'Configuration', link: '/docs/technical-guide/ansible-configuration.md'},
               ]
             },
             { text: 'Docker/Containers Management', items: [
-                { text: 'Principles', link: '/docs/technical-guide/ansible.md'},
-                { text: 'SSH/Connection', link: '/docs/technical-guide/ansible.md'},
+                { text: 'Principles', link: '/docs/technical-guide/docker.md'},
+                { text: 'SSH/Connection', link: '/docs/technical-guide/docker-connection.md'},
                 { text: 'Labels', link: '/docs/technical-guide/containers-labelling.md'}
               ]
             },{
