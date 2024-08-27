@@ -6,7 +6,7 @@ import asyncHandler from "../utils/AsyncHandler";
 const router = express.Router();
 
 router.get(
-  "/ansible/confif",
+  "/ansible/config",
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got Ansible Conf", ansibleConf).send(res);
   }),
