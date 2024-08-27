@@ -25,7 +25,7 @@ The SSH (OpenSSH) does **NOT** support using an SSH key with a passphrase.
 :::
 
 ### Changing the connection method
-`Inventory`/`<device>`/`Configuration` => SSH tab ; `Show advanced` on;
+`Inventory`/`<device>`/`Configuration` => "SSH" tab ; `Show advanced` on;
 
 ![connection-method](/technical-guide/troubleshoot/connection-method.png)
 
@@ -50,6 +50,6 @@ SSM supports the following methods:
 - `dzdo`: Used in environments where Centrify's Direct Authorize is available.
 
 ### Changing the connection method
-`Inventory`/`<device>`/`Configuration` => SSH tab ; `Show advanced` on;
+`Inventory`/`<device>`/`Configuration` => "SSH" tab ; `Show advanced` on;
 
 ![become-method](/technical-guide/ansible/become-method.png)
