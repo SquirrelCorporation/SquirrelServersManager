@@ -1,4 +1,5 @@
 import express from "express";
+import ansible from "./ansible";
 import automations from "./automations";
 import containers from "./containers";
 import devices from "./devices";
@@ -17,5 +18,6 @@ router.use("/", services);
 router.use("/", automations);
 router.use("/", playbooks);
 router.use("/", logs);
+router.use("/", ansible);
 
 export default router;

@@ -1,0 +1,995 @@
+{
+  "defaults": {
+    "action_warnings": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) By default Ansible will issue a warning when received from a task action (module or action plugin)\nThese warnings can be silenced by adjusting this setting to False."
+    },
+    "cowsay_enabled_stencils": {
+      "value": "bud-frogs, bunny, cheese, daemon, default, dragon, elephant-in-snake, elephant, eyes, hellokitty, kitty, luke-koala, meow, milk, moofasa, moose, ren, sheep, small, stegosaurus, stimpy, supermilker, three-eyes, turkey, turtle, tux, udder, vader-koala, vader, www",
+      "deactivated": true,
+      "description": "(list) Accept list of cowsay templates that are 'safe' to use, set to empty list if you want to enable all installed templates."
+    },
+    "cowpath": {
+      "value": "",
+      "deactivated": true,
+      "description": "(string) Specify a custom cowsay path or swap in your cowsay implementation of choice"
+    },
+    "cow_selection": {
+      "value": "default",
+      "deactivated": true,
+      "description": "(string) This allows you to chose a specific cowsay stencil for the banners or use 'random' to cycle through them."
+    },
+    "force_color": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) This option forces color mode even when running without a TTY or the \"nocolor\" setting is True."
+    },
+    "home": {
+      "value": "~/.ansible",
+      "deactivated": true,
+      "description": "(path) The default root path for Ansible config files on the controller."
+    },
+    "nocolor": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) This setting allows suppressing colorizing output, which is used to give a better indication of failure and status information."
+    },
+    "nocows": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) If you have cowsay installed but want to avoid the 'cows' (why????), use this."
+    },
+    "any_errors_fatal": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) Sets the default value for the any_errors_fatal keyword, if True, Task failures will be considered fatal errors."
+    },
+    "become_password_file": {
+      "value": "",
+      "deactivated": true,
+      "description": "(path) The password file to use for the become plugin. --become-password-file.\nIf executable, it will be run and the resulting stdout will be used as the password."
+    },
+    "become_plugins": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/become:/usr/share/ansible/plugins/become\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Become Plugins."
+    },
+    "fact_caching": {
+      "value": "memory",
+      "deactivated": true,
+      "description": "(string) Chooses which cache plugin to use, the default 'memory' is ephemeral."
+    },
+    "fact_caching_connection": {
+      "value": "",
+      "deactivated": true,
+      "description": "(string) Defines connection or path information for the cache plugin"
+    },
+    "fact_caching_prefix": {
+      "value": "ansible_facts",
+      "deactivated": true,
+      "description": "(string) Prefix to use for cache plugin files/tables"
+    },
+    "fact_caching_timeout": {
+      "value": "86400",
+      "deactivated": true,
+      "description": "(integer) Expiration timeout for the cache plugin data"
+    },
+    "callbacks_enabled": {
+      "value": "",
+      "deactivated": true,
+      "description": "(list) List of enabled callbacks, not all callbacks need enabling, but many of those shipped with Ansible do as we don't want them activated by default."
+    },
+    "collections_on_ansible_version_mismatch": {
+      "value": "warning",
+      "deactivated": true,
+      "description": "(string) When a collection is loaded that does not support the running Ansible version (with the collection metadata key `requires_ansible`)."
+    },
+    "collections_path": {
+      "value": "{{ ANSIBLE_HOME ~ \"/collections:/usr/share/ansible/collections\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for collections content. Collections must be in nested *subdirectories*, not directly in these directories. For example, if ``COLLECTIONS_PATHS`` includes ``'{{ ANSIBLE_HOME ~ \"/collections\" }}'``, and you want to add ``my.collection`` to that directory, it must be saved as ``'{{ ANSIBLE_HOME} ~ \"/collections/ansible_collections/my/collection\" }}'``."
+    },
+    "collections_scan_sys_path": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(boolean) A boolean to enable or disable scanning the sys.path for installed collections"
+    },
+    "connection_password_file": {
+      "value": "",
+      "deactivated": true,
+      "description": "(path) The password file to use for the connection plugin. --connection-password-file."
+    },
+    "action_plugins": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/action:/usr/share/ansible/plugins/action\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Action Plugins."
+    },
+    "allow_unsafe_lookups": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) When enabled, this option allows lookup plugins (whether used in variables as ``{{lookup('foo')}}`` or as a loop as with_foo) to return data that is not marked 'unsafe'.\nBy default, such data is marked as unsafe to prevent the templating engine from evaluating any jinja2 templating language, as this could represent a security risk. This option is provided to allow for backward compatibility, however users should first consider adding allow_unsafe=True to any lookups which may be expected to contain data which may be run through the templating engine late"
+    },
+    "ask_pass": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) This controls whether an Ansible playbook should prompt for a login password. If using SSH keys for authentication, you probably do not need to change this setting."
+    },
+    "ask_vault_pass": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) This controls whether an Ansible playbook should prompt for a vault password."
+    },
+    "cache_plugins": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/cache:/usr/share/ansible/plugins/cache\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Cache Plugins."
+    },
+    "callback_plugins": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/callback:/usr/share/ansible/plugins/callback\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Callback Plugins."
+    },
+    "cliconf_plugins": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/cliconf:/usr/share/ansible/plugins/cliconf\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Cliconf Plugins."
+    },
+    "connection_plugins": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/connection:/usr/share/ansible/plugins/connection\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Connection Plugins."
+    },
+    "debug": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) Toggles debug output in Ansible. This is *very* verbose and can hinder multiprocessing.  Debug output can also include secret information despite no_log settings being enabled, which means debug mode should not be used in production."
+    },
+    "executable": {
+      "value": "/bin/sh",
+      "deactivated": true,
+      "description": "(string) This indicates the command to use to spawn a shell under for Ansible's execution needs on a target. Users may need to change this in rare instances when shell usage is constrained, but in most cases it may be left as is."
+    },
+    "fact_path": {
+      "value": "",
+      "deactivated": true,
+      "description": "(string) This option allows you to globally configure a custom path for 'local_facts' for the implied :ref:`ansible_collections.ansible.builtin.setup_module` task when using fact gathering.\nIf not set, it will fallback to the default from the ``ansible.builtin.setup`` module: ``/etc/ansible/facts.d``.\nThis does **not** affect  user defined tasks that use the ``ansible.builtin.setup`` module.\nThe real action being created by the implicit task is currently    ``ansible.legacy.gather_facts`` module, which then calls the configured fact modules, by default this will be ``ansible.builtin.setup`` for POSIX systems but other platforms might have different defaults."
+    },
+    "filter_plugins": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/filter:/usr/share/ansible/plugins/filter\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Jinja2 Filter Plugins."
+    },
+    "force_handlers": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) This option controls if notified handlers run on a host even if a failure occurs on that host.\nWhen false, the handlers will not run if a failure has occurred on a host.\nThis can also be set per play or on the command line. See Handlers and Failure for more details."
+    },
+    "forks": {
+      "value": "5",
+      "deactivated": true,
+      "description": "(integer) Maximum number of forks Ansible will use to execute tasks on target hosts."
+    },
+    "gathering": {
+      "value": "implicit",
+      "deactivated": true,
+      "description": "(string) This setting controls the default policy of fact gathering (facts discovered about remote systems).\nThis option can be useful for those wishing to save fact gathering time. Both 'smart' and 'explicit' will use the cache plugin."
+    },
+    "gather_subset": {
+      "value": "",
+      "deactivated": true,
+      "description": "(list) Set the `gather_subset` option for the :ref:`ansible_collections.ansible.builtin.setup_module` task in the implicit fact gathering. See the module documentation for specifics.\nIt does **not** apply to user defined ``ansible.builtin.setup`` tasks."
+    },
+    "gather_timeout": {
+      "value": "",
+      "deactivated": true,
+      "description": "(integer) Set the timeout in seconds for the implicit fact gathering, see the module documentation for specifics.\nIt does **not** apply to user defined :ref:`ansible_collections.ansible.builtin.setup_module` tasks."
+    },
+    "hash_behaviour": {
+      "value": "replace",
+      "deactivated": true,
+      "description": "(string) This setting controls how duplicate definitions of dictionary variables (aka hash, map, associative array) are handled in Ansible.\nThis does not affect variables whose values are scalars (integers, strings) or arrays.\n**WARNING**, changing this setting is not recommended as this is fragile and makes your content (plays, roles, collections) non portable, leading to continual confusion and misuse. Don't change this setting unless you think you have an absolute need for it.\nWe recommend avoiding reusing variable names and relying on the ``combine`` filter and ``vars`` and ``varnames`` lookups to create merged versions of the individual variables. In our experience this is rarely really needed and a sign that too much complexity has been introduced into the data structures and plays.\nFor some uses you can also look into custom vars_plugins to merge on input, even substituting the default ``host_group_vars`` that is in charge of parsing the ``host_vars/`` and ``group_vars/`` directories. Most users of this setting are only interested in inventory scope, but the setting itself affects all sources and makes debugging even harder.\nAll playbooks and roles in the official examples repos assume the default for this setting.\nChanging the setting to ``merge`` applies across variable sources, but many sources will internally still overwrite the variables. For example ``include_vars`` will dedupe variables internally before updating Ansible, with 'last defined' overwriting previous definitions in same file.\nThe Ansible project recommends you **avoid ``merge`` for new projects.**\nIt is the intention of the Ansible developers to eventually deprecate and remove this setting, but it is being kept as some users do heavily rely on it. New projects should **avoid 'merge'**."
+    },
+    "inventory": {
+      "value": "/etc/ansible/hosts",
+      "deactivated": true,
+      "description": "(pathlist) Comma separated list of Ansible inventory sources"
+    },
+    "httpapi_plugins": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/httpapi:/usr/share/ansible/plugins/httpapi\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for HttpApi Plugins."
+    },
+    "internal_poll_interval": {
+      "value": "0.001",
+      "deactivated": true,
+      "description": "(float) This sets the interval (in seconds) of Ansible internal processes polling each other. Lower values improve performance with large playbooks at the expense of extra CPU load. Higher values are more suitable for Ansible usage in automation scenarios, when UI responsiveness is not required but CPU usage might be a concern.\nThe default corresponds to the value hardcoded in Ansible <= 2.1"
+    },
+    "inventory_plugins": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/inventory:/usr/share/ansible/plugins/inventory\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Inventory Plugins."
+    },
+    "jinja2_extensions": {
+      "value": "[]",
+      "deactivated": true,
+      "description": "(string) This is a developer-specific feature that allows enabling additional Jinja2 extensions.\nSee the Jinja2 documentation for details. If you do not know what these do, you probably don't need to change this setting :)"
+    },
+    "jinja2_native": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) This option preserves variable types during template operations."
+    },
+    "keep_remote_files": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) Enables/disables the cleaning up of the temporary files Ansible used to execute the tasks on the remote.\nIf this option is enabled it will disable ``ANSIBLE_PIPELINING``."
+    },
+    "bin_ansible_callbacks": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) Controls whether callback plugins are loaded when running /usr/bin/ansible. This may be used to log activity from the command line, send notifications, and so on. Callback plugins are always loaded for ``ansible-playbook``."
+    },
+    "local_tmp": {
+      "value": "{{ ANSIBLE_HOME ~ \"/tmp\" }}",
+      "deactivated": true,
+      "description": "(tmppath) Temporary directory for Ansible to use on the controller."
+    },
+    "log_filter": {
+      "value": "",
+      "deactivated": true,
+      "description": "(list) List of logger names to filter out of the log file"
+    },
+    "log_path": {
+      "value": "",
+      "deactivated": true,
+      "description": "(path) File to which Ansible will log on the controller. When empty logging is disabled."
+    },
+    "lookup_plugins": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/lookup:/usr/share/ansible/plugins/lookup\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Lookup Plugins."
+    },
+    "ansible_managed": {
+      "value": "Ansible managed",
+      "deactivated": true,
+      "description": "(string) Sets the macro for the 'ansible_managed' variable available for :ref:`ansible_collections.ansible.builtin.template_module` and :ref:`ansible_collections.ansible.windows.win_template_module`.  This is only relevant for those two modules."
+    },
+    "module_args": {
+      "value": "",
+      "deactivated": true,
+      "description": "(string) This sets the default arguments to pass to the ``ansible`` adhoc binary if no ``-a`` is specified."
+    },
+    "module_compression": {
+      "value": "ZIP_DEFLATED",
+      "deactivated": true,
+      "description": "(string) Compression scheme to use when transferring Python modules to the target."
+    },
+    "module_name": {
+      "value": "command",
+      "deactivated": true,
+      "description": "(string) Module to use with the ``ansible`` AdHoc command, if none is specified via ``-m``."
+    },
+    "library": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/modules:/usr/share/ansible/plugins/modules\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Modules."
+    },
+    "module_utils": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/module_utils:/usr/share/ansible/plugins/module_utils\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Module utils files, which are shared by modules."
+    },
+    "netconf_plugins": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/netconf:/usr/share/ansible/plugins/netconf\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Netconf Plugins."
+    },
+    "no_log": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) Toggle Ansible's display and logging of task details, mainly used to avoid security disclosures."
+    },
+    "no_target_syslog": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) Toggle Ansible logging to syslog on the target when it executes tasks. On Windows hosts this will disable a newer style PowerShell modules from writing to the event log."
+    },
+    "null_representation": {
+      "value": "",
+      "deactivated": true,
+      "description": "(raw) What templating should return as a 'null' value. When not set it will let Jinja2 decide."
+    },
+    "poll_interval": {
+      "value": "15",
+      "deactivated": true,
+      "description": "(integer) For asynchronous tasks in Ansible (covered in Asynchronous Actions and Polling), this is how often to check back on the status of those tasks when an explicit poll interval is not supplied. The default is a reasonably moderate 15 seconds which is a tradeoff between checking in frequently and providing a quick turnaround when something may have completed."
+    },
+    "private_key_file": {
+      "value": "",
+      "deactivated": true,
+      "description": "(path) Option for connections using a certificate or key file to authenticate, rather than an agent or passwords, you can set the default value here to avoid re-specifying --private-key with every invocation."
+    },
+    "private_role_vars": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) By default, imported roles publish their variables to the play and other roles, this setting can avoid that.\nThis was introduced as a way to reset role variables to default values if a role is used more than once in a playbook.\nIncluded roles only make their variables public at execution, unlike imported roles which happen at playbook compile time."
+    },
+    "remote_port": {
+      "value": "",
+      "deactivated": true,
+      "description": "(integer) Port to use in remote connections, when blank it will use the connection plugin default."
+    },
+    "remote_user": {
+      "value": "",
+      "deactivated": true,
+      "description": "(string) Sets the login user for the target machines\nWhen blank it uses the connection plugin's default, normally the user currently executing Ansible."
+    },
+    "roles_path": {
+      "value": "{{ ANSIBLE_HOME ~ \"/roles:/usr/share/ansible/roles:/etc/ansible/roles\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Roles."
+    },
+    "stdout_callback": {
+      "value": "default",
+      "deactivated": true,
+      "description": "(string) Set the main callback used to display Ansible output. You can only have one at a time.\nYou can have many other callbacks, but just one can be in charge of stdout.\nSee :ref:`callback_plugins` for a list of available options."
+    },
+    "strategy": {
+      "value": "linear",
+      "deactivated": true,
+      "description": "(string) Set the default strategy used for plays."
+    },
+    "strategy_plugins": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/strategy:/usr/share/ansible/plugins/strategy\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Strategy Plugins."
+    },
+    "su": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) Toggle the use of \"su\" for tasks."
+    },
+    "syslog_facility": {
+      "value": "LOG_USER",
+      "deactivated": true,
+      "description": "(string) Syslog facility to use when Ansible logs to the remote target"
+    },
+    "terminal_plugins": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/terminal:/usr/share/ansible/plugins/terminal\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Terminal Plugins."
+    },
+    "test_plugins": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/test:/usr/share/ansible/plugins/test\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Jinja2 Test Plugins."
+    },
+    "timeout": {
+      "value": "10",
+      "deactivated": true,
+      "description": "(integer) This is the default timeout for connection plugins to use."
+    },
+    "transport": {
+      "value": "paramiko",
+      "deactivated": true,
+      "description": "(string) Can be any connection plugin available to your ansible installation.\nThere is also a (DEPRECATED) special 'smart' option, that will toggle between 'ssh' and 'paramiko' depending on controller OS and ssh versions."
+    },
+    "error_on_undefined_vars": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(boolean) When True, this causes ansible templating to fail steps that reference variable names that are likely typoed.\nOtherwise, any '{{ template_expression }}' that contains undefined variables will be rendered in a template or ansible action line exactly as written."
+    },
+    "vars_plugins": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/vars:/usr/share/ansible/plugins/vars\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Vars Plugins."
+    },
+    "vault_encrypt_identity": {
+      "value": "",
+      "deactivated": true,
+      "description": "(string) The vault_id to use for encrypting by default. If multiple vault_ids are provided, this specifies which to use for encryption. The --encrypt-vault-id cli option overrides the configured value."
+    },
+    "vault_identity": {
+      "value": "default",
+      "deactivated": true,
+      "description": "(string) The label to use for the default vault id label in cases where a vault id label is not provided"
+    },
+    "vault_identity_list": {
+      "value": "",
+      "deactivated": true,
+      "description": "(list) A list of vault-ids to use by default. Equivalent to multiple --vault-id args. Vault-ids are tried in order."
+    },
+    "vault_id_match": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(string) If true, decrypting vaults with a vault id will only try the password from the matching vault-id"
+    },
+    "vault_password_file": {
+      "value": "",
+      "deactivated": true,
+      "description": "(path) The vault password file to use. Equivalent to --vault-password-file or --vault-id\nIf executable, it will be run and the resulting stdout will be used as the password."
+    },
+    "verbosity": {
+      "value": "0",
+      "deactivated": true,
+      "description": "(integer) Sets the default verbosity, equivalent to the number of ``-v`` passed in the command line."
+    },
+    "deprecation_warnings": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(boolean) Toggle to control the showing of deprecation warnings"
+    },
+    "devel_warning": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(boolean) Toggle to control showing warnings related to running devel"
+    },
+    "display_args_to_stdout": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) Normally ``ansible-playbook`` will print a header for each task that is run. These headers will contain the name: field from the task if you specified one. If you didn't then ``ansible-playbook`` uses the task's action to help you tell which task is presently running. Sometimes you run many of the same action and so you want more information about the task to differentiate it from others of the same action. If you set this variable to True in the config then ``ansible-playbook`` will also include the task's arguments in the header.\nThis setting defaults to False because there is a chance that you have sensitive values in your parameters and you do not want those to be printed.\nIf you set this to True you should be sure that you have secured your environment's stdout (no one can shoulder surf your screen and you aren't saving stdout to an insecure file) or made sure that all of your playbooks explicitly added the ``no_log: True`` parameter to tasks which have sensitive values See How do I keep secret data in my playbook? for more information."
+    },
+    "display_skipped_hosts": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(boolean) Toggle to control displaying skipped task/host entries in a task in the default callback"
+    },
+    "docsite_root_url": {
+      "value": "https://docs.ansible.com/ansible-core/",
+      "deactivated": true,
+      "description": "(string) Root docsite URL used to generate docs URLs in warning/error text; must be an absolute URL with valid scheme and trailing slash."
+    },
+    "doc_fragment_plugins": {
+      "value": "{{ ANSIBLE_HOME ~ \"/plugins/doc_fragments:/usr/share/ansible/plugins/doc_fragments\" }}",
+      "deactivated": true,
+      "description": "(pathspec) Colon separated paths in which Ansible will search for Documentation Fragments Plugins."
+    },
+    "duplicate_dict_key": {
+      "value": "warn",
+      "deactivated": true,
+      "description": "(string) By default Ansible will issue a warning when a duplicate dict key is encountered in YAML.\nThese warnings can be silenced by adjusting this setting to False."
+    },
+    "enable_task_debugger": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) Whether or not to enable the task debugger, this previously was done as a strategy plugin.\nNow all strategy plugins can inherit this behavior. The debugger defaults to activating when\na task is failed on unreachable. Use the debugger keyword for more flexibility."
+    },
+    "error_on_missing_handler": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(boolean) Toggle to allow missing handlers to become a warning instead of an error when notifying."
+    },
+    "facts_modules": {
+      "value": "smart",
+      "deactivated": true,
+      "description": "(list) Which modules to run during a play's fact gathering stage, using the default of 'smart' will try to figure it out based on connection type.\nIf adding your own modules but you still want to use the default Ansible facts, you will want to include 'setup' or corresponding network module to the list (if you add 'smart', Ansible will also figure it out).\nThis does not affect explicit calls to the 'setup' module, but does always affect the 'gather_facts' action (implicit or explicit)."
+    },
+    "host_key_checking": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(boolean) Set this to \"False\" if you want to avoid host key checking by the underlying tools Ansible uses to connect to the host"
+    },
+    "inject_facts_as_vars": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(boolean) Facts are available inside the `ansible_facts` variable, this setting also pushes them as their own vars in the main namespace.\nUnlike inside the `ansible_facts` dictionary, these will have an `ansible_` prefix."
+    },
+    "interpreter_python": {
+      "value": "auto",
+      "deactivated": true,
+      "description": "(string) Path to the Python interpreter to be used for module execution on remote targets, or an automatic discovery mode. Supported discovery modes are ``auto`` (the default), ``auto_silent``, ``auto_legacy``, and ``auto_legacy_silent``. All discovery modes employ a lookup table to use the included system Python (on distributions known to include one), falling back to a fixed ordered list of well-known Python interpreter locations if a platform-specific default is not available. The fallback behavior will issue a warning that the interpreter should be set explicitly (since interpreters installed later may change which one is used). This warning behavior can be disabled by setting ``auto_silent`` or ``auto_legacy_silent``. The value of ``auto_legacy`` provides all the same behavior, but for backwards-compatibility with older Ansible releases that always defaulted to ``/usr/bin/python``, will use that interpreter if present."
+    },
+    "invalid_task_attribute_failed": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(boolean) If 'false', invalid attributes for a task will result in warnings instead of errors"
+    },
+    "jinja2_native_warning": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(boolean) Toggle to control showing warnings related to running a Jinja version older than required for jinja2_native"
+    },
+    "localhost_warning": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(boolean) By default Ansible will issue a warning when there are no hosts in the inventory.\nThese warnings can be silenced by adjusting this setting to False."
+    },
+    "max_diff_size": {
+      "value": "104448",
+      "deactivated": true,
+      "description": "(int) Maximum size of files to be considered for diff display"
+    },
+    "module_ignore_exts": {
+      "value": "{{(REJECT_EXTS + ('.yaml', '.yml', '.ini'))}}",
+      "deactivated": true,
+      "description": "(list) List of extensions to ignore when looking for modules to load\nThis is for rejecting script and binary module fallback extensions"
+    },
+    "module_strict_utf8_response": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(bool) Enables whether module responses are evaluated for containing non UTF-8 data\nDisabling this may result in unexpected behavior\nOnly ansible-core should evaluate this configuration"
+    },
+    "network_group_modules": {
+      "value": "eos, nxos, ios, iosxr, junos, enos, ce, vyos, sros, dellos9, dellos10, dellos6, asa, aruba, aireos, bigip, ironware, onyx, netconf, exos, voss, slxos",
+      "deactivated": true,
+      "description": "(list) TODO: write it"
+    },
+    "old_plugin_cache_clear": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) Previously Ansible would only clear some of the plugin loading caches when loading new roles, this led to some behaviours in which a plugin loaded in previous plays would be unexpectedly 'sticky'. This setting allows to return to that behaviour."
+    },
+    "playbook_dir": {
+      "value": "",
+      "deactivated": true,
+      "description": "(path) A number of non-playbook CLIs have a ``--playbook-dir`` argument; this sets the default value for it."
+    },
+    "playbook_vars_root": {
+      "value": "top",
+      "deactivated": true,
+      "description": "(string) This sets which playbook dirs will be used as a root to process vars plugins, which includes finding host_vars/group_vars"
+    },
+    "plugin_filters_cfg": {
+      "value": "",
+      "deactivated": true,
+      "description": "(path) A path to configuration for filtering which plugins installed on the system are allowed to be used.\nSee :ref:`plugin_filtering_config` for details of the filter file's format.\nThe default is /etc/ansible/plugin_filters.yml"
+    },
+    "python_module_rlimit_nofile": {
+      "value": "0",
+      "deactivated": true,
+      "description": "(string) Attempts to set RLIMIT_NOFILE soft limit to the specified value when executing Python modules (can speed up subprocess usage on Python 2.x. See https://bugs.python.org/issue11284). The value will be limited by the existing hard limit. Default value of 0 does not attempt to adjust existing system-defined limits."
+    },
+    "retry_files_enabled": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(bool) This controls whether a failed Ansible playbook should create a .retry file."
+    },
+    "retry_files_save_path": {
+      "value": "",
+      "deactivated": true,
+      "description": "(path) This sets the path in which Ansible will save .retry files when a playbook fails and retry files are enabled.\nThis file will be overwritten after each run with the list of failed hosts from all plays."
+    },
+    "run_vars_plugins": {
+      "value": "demand",
+      "deactivated": true,
+      "description": "(str) This setting can be used to optimize vars_plugin usage depending on user's inventory size and play selection."
+    },
+    "show_custom_stats": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(bool) This adds the custom stats set via the set_stats plugin to the default output"
+    },
+    "string_conversion_action": {
+      "value": "warn",
+      "deactivated": true,
+      "description": "(string) Action to take when a module parameter value is converted to a string (this does not affect variables). For string parameters, values such as '1.00', \"['a', 'b',]\", and 'yes', 'y', etc. will be converted by the YAML parser unless fully quoted.\nValid options are 'error', 'warn', and 'ignore'.\nSince 2.8, this option defaults to 'warn' but will change to 'error' in 2.12."
+    },
+    "system_warnings": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(boolean) Allows disabling of warnings related to potential issues on the system running ansible itself (not on the managed hosts)\nThese may include warnings about 3rd party packages or other conditions that should be resolved if possible."
+    },
+    "task_debugger_ignore_errors": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(boolean) This option defines whether the task debugger will be invoked on a failed task when ignore_errors=True is specified.\nTrue specifies that the debugger will honor ignore_errors, False will not honor ignore_errors."
+    },
+    "task_timeout": {
+      "value": "0",
+      "deactivated": true,
+      "description": "(integer) Set the maximum time (in seconds) that a task can run for.\nIf set to 0 (the default) there is no timeout."
+    },
+    "force_valid_group_names": {
+      "value": "never",
+      "deactivated": true,
+      "description": "(string) Make ansible transform invalid characters in group names supplied by inventory sources."
+    },
+    "use_persistent_connections": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) Toggles the use of persistence for connections."
+    },
+    "validate_action_group_metadata": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(bool) A toggle to disable validating a collection's 'metadata' entry for a module_defaults action group. Metadata containing unexpected fields or value types will produce a warning when this is True."
+    },
+    "vars_plugins_enabled": {
+      "value": "host_group_vars",
+      "deactivated": true,
+      "description": "(list) Accept list for variable plugins that require it."
+    },
+    "precedence": {
+      "value": "all_inventory, groups_inventory, all_plugins_inventory, all_plugins_play, groups_plugins_inventory, groups_plugins_play",
+      "deactivated": true,
+      "description": "(list) Allows to change the group variable precedence merge order."
+    },
+    "vault_encrypt_salt": {
+      "value": "",
+      "deactivated": true,
+      "description": "(string) The salt to use for the vault encryption. If it is not provided, a random salt will be used."
+    },
+    "verbose_to_stderr": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(bool) Force 'verbose' option to use stderr instead of stdout"
+    },
+    "win_async_startup_timeout": {
+      "value": "5",
+      "deactivated": true,
+      "description": "(integer) For asynchronous tasks in Ansible (covered in Asynchronous Actions and Polling), this is how long, in seconds, to wait for the task spawned by Ansible to connect back to the named pipe used on Windows systems. The default is 5 seconds. This can be too low on slower systems, or systems under heavy load.\nThis is not the total time an async command can run for, but is a separate timeout to wait for an async command to start. The task will only start to be timed against its async_timeout once it has connected to the pipe, so the overall maximum duration the task can take will be extended by the amount specified here."
+    },
+    "yaml_valid_extensions": {
+      "value": ".yml, .yaml, .json",
+      "deactivated": true,
+      "description": "(list) Check all of these extensions when looking for 'variable' files which should be YAML or JSON or vaulted versions of these.\nThis affects vars_files, include_vars, inventory and vars plugins among others."
+    }
+  },
+  "privilege_escalation": {
+    "agnostic_become_prompt": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(boolean) Display an agnostic become prompt instead of displaying a prompt containing the command line supplied become method"
+    },
+    "become_allow_same_user": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) This setting controls if become is skipped when remote user and become user are the same. I.E root sudo to root.\nIf executable, it will be run and the resulting stdout will be used as the password."
+    },
+    "become": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) Toggles the use of privilege escalation, allowing you to 'become' another user after login."
+    },
+    "become_ask_pass": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) Toggle to prompt for privilege escalation password."
+    },
+    "become_exe": {
+      "value": "",
+      "deactivated": true,
+      "description": "(string) executable to use for privilege escalation, otherwise Ansible will depend on PATH"
+    },
+    "become_flags": {
+      "value": "",
+      "deactivated": true,
+      "description": "(string) Flags to pass to the privilege escalation executable."
+    },
+    "become_method": {
+      "value": "sudo",
+      "deactivated": true,
+      "description": "(string) Privilege escalation method to use when `become` is enabled."
+    },
+    "become_user": {
+      "value": "root",
+      "deactivated": true,
+      "description": "(string) The user your login/remote user 'becomes' when using privilege escalation, most systems will use 'root' when no user is specified."
+    }
+  },
+  "persistent_connection": {
+    "ansible_connection_path": {
+      "value": "",
+      "deactivated": true,
+      "description": "(path) Specify where to look for the ansible-connection script. This location will be checked before searching $PATH.\nIf null, ansible will start with the same directory as the ansible script."
+    },
+    "command_timeout": {
+      "value": "30",
+      "deactivated": true,
+      "description": "(int) This controls the amount of time to wait for response from remote device before timing out persistent connection."
+    },
+    "connect_retry_timeout": {
+      "value": "15",
+      "deactivated": true,
+      "description": "(integer) This controls the retry timeout for persistent connection to connect to the local domain socket."
+    },
+    "connect_timeout": {
+      "value": "30",
+      "deactivated": true,
+      "description": "(integer) This controls how long the persistent connection will remain idle before it is destroyed."
+    },
+    "control_path_dir": {
+      "value": "{{ ANSIBLE_HOME ~ \"/pc\" }}",
+      "deactivated": true,
+      "description": "(path) Path to socket to be used by the connection persistence system."
+    }
+  },
+  "connection": {
+    "pipelining": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(boolean) This is a global option, each connection plugin can override either by having more specific options or not supporting pipelining at all.\nPipelining, if supported by the connection plugin, reduces the number of network operations required to execute a module on the remote server, by executing many Ansible modules without actual file transfer.\nIt can result in a very significant performance improvement when enabled.\nHowever this conflicts with privilege escalation (become). For example, when using 'sudo:' operations you must first disable 'requiretty' in /etc/sudoers on all managed hosts, which is why it is disabled by default.\nThis setting will be disabled if ``ANSIBLE_KEEP_REMOTE_FILES`` is enabled."
+    }
+  },
+  "colors": {
+    "changed": {
+      "value": "yellow",
+      "deactivated": true,
+      "description": "(string) Defines the color to use on 'Changed' task status"
+    },
+    "console_prompt": {
+      "value": "white",
+      "deactivated": true,
+      "description": "(string) Defines the default color to use for ansible-console"
+    },
+    "debug": {
+      "value": "dark gray",
+      "deactivated": true,
+      "description": "(string) Defines the color to use when emitting debug messages"
+    },
+    "deprecate": {
+      "value": "purple",
+      "deactivated": true,
+      "description": "(string) Defines the color to use when emitting deprecation messages"
+    },
+    "diff_add": {
+      "value": "green",
+      "deactivated": true,
+      "description": "(string) Defines the color to use when showing added lines in diffs"
+    },
+    "diff_lines": {
+      "value": "cyan",
+      "deactivated": true,
+      "description": "(string) Defines the color to use when showing diffs"
+    },
+    "diff_remove": {
+      "value": "red",
+      "deactivated": true,
+      "description": "(string) Defines the color to use when showing removed lines in diffs"
+    },
+    "error": {
+      "value": "red",
+      "deactivated": true,
+      "description": "(string) Defines the color to use when emitting error messages"
+    },
+    "highlight": {
+      "value": "white",
+      "deactivated": true,
+      "description": "(string) Defines the color to use for highlighting"
+    },
+    "ok": {
+      "value": "green",
+      "deactivated": true,
+      "description": "(string) Defines the color to use when showing 'OK' task status"
+    },
+    "skip": {
+      "value": "cyan",
+      "deactivated": true,
+      "description": "(string) Defines the color to use when showing 'Skipped' task status"
+    },
+    "unreachable": {
+      "value": "bright red",
+      "deactivated": true,
+      "description": "(string) Defines the color to use on 'Unreachable' status"
+    },
+    "verbose": {
+      "value": "blue",
+      "deactivated": true,
+      "description": "(string) Defines the color to use when emitting verbose messages. i.e those that show with '-v's."
+    },
+    "warn": {
+      "value": "bright purple",
+      "deactivated": true,
+      "description": "(string) Defines the color to use when emitting warning messages"
+    }
+  },
+  "selinux": {
+    "libvirt_lxc_noseclabel": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) This setting causes libvirt to connect to lxc containers by passing --noseclabel to virsh. This is necessary when running on systems which do not have SELinux."
+    },
+    "special_context_filesystems": {
+      "value": "fuse, nfs, vboxsf, ramfs, 9p, vfat",
+      "deactivated": true,
+      "description": "(list) Some filesystems do not support safe operations and/or return inconsistent errors, this setting makes Ansible 'tolerate' those in the list w/o causing fatal errors.\nData corruption may occur and writes are not always verified when a filesystem is in the list."
+    }
+  },
+  "diff": {
+    "always": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(bool) Configuration toggle to tell modules to show differences when in 'changed' status, equivalent to ``--diff``."
+    },
+    "context": {
+      "value": "3",
+      "deactivated": true,
+      "description": "(integer) How many lines of context to show when displaying the differences between files."
+    }
+  },
+  "galaxy": {
+    "cache_dir": {
+      "value": "{{ ANSIBLE_HOME ~ \"/galaxy_cache\" }}",
+      "deactivated": true,
+      "description": "(path) The directory that stores cached responses from a Galaxy server.\nThis is only used by the ``ansible-galaxy collection install`` and ``download`` commands.\nCache files inside this dir will be ignored if they are world writable."
+    },
+    "collections_path_warning": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(bool) whether ``ansible-galaxy collection install`` should warn about ``--collections-path`` missing from configured :ref:`collections_paths`"
+    },
+    "collection_skeleton": {
+      "value": "",
+      "deactivated": true,
+      "description": "(path) Collection skeleton directory to use as a template for the ``init`` action in ``ansible-galaxy collection``, same as ``--collection-skeleton``."
+    },
+    "collection_skeleton_ignore": {
+      "value": "^.git$, ^.*/.git_keep$",
+      "deactivated": true,
+      "description": "(list) patterns of files to ignore inside a Galaxy collection skeleton directory"
+    },
+    "disable_gpg_verify": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(bool) Disable GPG signature verification during collection installation."
+    },
+    "display_progress": {
+      "value": "",
+      "deactivated": true,
+      "description": "(bool) Some steps in ``ansible-galaxy`` display a progress wheel which can cause issues on certain displays or when outputting the stdout to a file.\nThis config option controls whether the display wheel is shown or not.\nThe default is to show the display wheel if stdout has a tty."
+    },
+    "gpg_keyring": {
+      "value": "",
+      "deactivated": true,
+      "description": "(path) Configure the keyring used for GPG signature verification during collection installation and verification."
+    },
+    "ignore_certs": {
+      "value": "",
+      "deactivated": true,
+      "description": "(boolean) If set to yes, ansible-galaxy will not validate TLS certificates. This can be useful for testing against a server with a self-signed certificate."
+    },
+    "ignore_signature_status_codes": {
+      "value": "",
+      "deactivated": true,
+      "description": "(list) A list of GPG status codes to ignore during GPG signature verification. See L(https://github.com/gpg/gnupg/blob/master/doc/DETAILS#general-status-codes) for status code descriptions.\nIf fewer signatures successfully verify the collection than `GALAXY_REQUIRED_VALID_SIGNATURE_COUNT`, signature verification will fail even if all error codes are ignored."
+    },
+    "required_valid_signature_count": {
+      "value": "1",
+      "deactivated": true,
+      "description": "(str) The number of signatures that must be successful during GPG signature verification while installing or verifying collections.\nThis should be a positive integer or all to indicate all signatures must successfully validate the collection.\nPrepend + to the value to fail if no valid signatures are found for the collection."
+    },
+    "role_skeleton": {
+      "value": "",
+      "deactivated": true,
+      "description": "(path) Role skeleton directory to use as a template for the ``init`` action in ``ansible-galaxy``/``ansible-galaxy role``, same as ``--role-skeleton``."
+    },
+    "role_skeleton_ignore": {
+      "value": "^.git$, ^.*/.git_keep$",
+      "deactivated": true,
+      "description": "(list) patterns of files to ignore inside a Galaxy role or collection skeleton directory"
+    },
+    "server": {
+      "value": "https://galaxy.ansible.com",
+      "deactivated": true,
+      "description": "(string) URL to prepend when roles don't specify the full URI, assume they are referencing this server as the source."
+    },
+    "server_list": {
+      "value": "",
+      "deactivated": true,
+      "description": "(list) A list of Galaxy servers to use when installing a collection.\nThe value corresponds to the config ini header ``[galaxy_server.{{item}}]`` which defines the server details.\nSee :ref:`galaxy_server_config` for more details on how to define a Galaxy server.\nThe order of servers in this list is used to as the order in which a collection is resolved.\nSetting this config option will ignore the :ref:`galaxy_server` config option."
+    },
+    "server_timeout": {
+      "value": "60",
+      "deactivated": true,
+      "description": "(int) The default timeout for Galaxy API calls. Galaxy servers that don't configure a specific timeout will fall back to this value."
+    },
+    "token_path": {
+      "value": "{{ ANSIBLE_HOME ~ \"/galaxy_token\" }}",
+      "deactivated": true,
+      "description": "(path) Local path to galaxy access token file"
+    }
+  },
+  "inventory": {
+    "host_pattern_mismatch": {
+      "value": "warning",
+      "deactivated": true,
+      "description": "(string) This setting changes the behaviour of mismatched host patterns, it allows you to force a fatal error, a warning or just ignore it"
+    },
+    "any_unparsed_is_failed": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) If 'true', it is a fatal error when any given inventory source cannot be successfully parsed by any available inventory plugin; otherwise, this situation only attracts a warning."
+    },
+    "cache": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(bool) Toggle to turn on inventory caching.\nThis setting has been moved to the individual inventory plugins as a plugin option :ref:`inventory_plugins`.\nThe existing configuration settings are still accepted with the inventory plugin adding additional options from inventory configuration.\nThis message will be removed in 2.16."
+    },
+    "cache_plugin": {
+      "value": "",
+      "deactivated": true,
+      "description": "(string) The plugin for caching inventory.\nThis setting has been moved to the individual inventory plugins as a plugin option :ref:`inventory_plugins`.\nThe existing configuration settings are still accepted with the inventory plugin adding additional options from inventory and fact cache configuration.\nThis message will be removed in 2.16."
+    },
+    "cache_connection": {
+      "value": "",
+      "deactivated": true,
+      "description": "(string) The inventory cache connection.\nThis setting has been moved to the individual inventory plugins as a plugin option :ref:`inventory_plugins`.\nThe existing configuration settings are still accepted with the inventory plugin adding additional options from inventory and fact cache configuration.\nThis message will be removed in 2.16."
+    },
+    "cache_prefix": {
+      "value": "ansible_inventory_",
+      "deactivated": true,
+      "description": "(string) The table prefix for the cache plugin.\nThis setting has been moved to the individual inventory plugins as a plugin option :ref:`inventory_plugins`.\nThe existing configuration settings are still accepted with the inventory plugin adding additional options from inventory and fact cache configuration.\nThis message will be removed in 2.16."
+    },
+    "cache_timeout": {
+      "value": "3600",
+      "deactivated": true,
+      "description": "(string) Expiration timeout for the inventory cache plugin data.\nThis setting has been moved to the individual inventory plugins as a plugin option :ref:`inventory_plugins`.\nThe existing configuration settings are still accepted with the inventory plugin adding additional options from inventory and fact cache configuration.\nThis message will be removed in 2.16."
+    },
+    "enable_plugins": {
+      "value": "host_list, script, auto, yaml, ini, toml",
+      "deactivated": true,
+      "description": "(list) List of enabled inventory plugins, it also determines the order in which they are used."
+    },
+    "export": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(bool) Controls if ansible-inventory will accurately reflect Ansible's view into inventory or its optimized for exporting."
+    },
+    "ignore_extensions": {
+      "value": "{{(REJECT_EXTS + ('.orig', '.ini', '.cfg', '.retry'))}}",
+      "deactivated": true,
+      "description": "(list) List of extensions to ignore when using a directory as an inventory source"
+    },
+    "ignore_patterns": {
+      "value": "",
+      "deactivated": true,
+      "description": "(list) List of patterns to ignore when using a directory as an inventory source"
+    },
+    "unparsed_is_failed": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(bool) If 'true' it is a fatal error if every single potential inventory source fails to parse, otherwise this situation will only attract a warning."
+    },
+    "inventory_unparsed_warning": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(boolean) By default Ansible will issue a warning when no inventory was loaded and notes that it will use an implicit localhost-only inventory.\nThese warnings can be silenced by adjusting this setting to False."
+    }
+  },
+  "ssh_connection": {
+    "ssh_args": {
+      "value": "-o ControlMaster=no",
+      "deactivated": true,
+      "description": ""
+    }
+  },
+  "netconf_connection": {
+    "ssh_config": {
+      "value": "",
+      "deactivated": true,
+      "description": "(string) This variable is used to enable bastion/jump host with netconf connection. If set to True the bastion/jump host ssh settings should be present in ~/.ssh/config file, alternatively it can be set to custom ssh configuration file path to read the bastion/jump host settings."
+    }
+  },
+  "paramiko_connection": {
+    "host_key_auto_add": {
+      "value": "False",
+      "deactivated": true,
+      "description": "(boolean) TODO: write it"
+    },
+    "look_for_keys": {
+      "value": "True",
+      "deactivated": true,
+      "description": "(boolean) TODO: write it"
+    }
+  },
+  "jinja2": {
+    "dont_type_filters": {
+      "value": "string, to_json, to_nice_json, to_yaml, to_nice_yaml, ppretty, json",
+      "deactivated": true,
+      "description": "(list) This list of filters avoids 'type conversion' when templating variables\nUseful when you want to avoid conversion into lists or dictionaries for JSON strings, for example."
+    }
+  },
+  "tags": {
+    "run": {
+      "value": "",
+      "deactivated": true,
+      "description": "(list) default list of tags to run in your plays, Skip Tags has precedence."
+    },
+    "skip": {
+      "value": "",
+      "deactivated": true,
+      "description": "(list) default list of tags to skip in your plays, has precedence over Run Tags"
+    }
+  }
+}
