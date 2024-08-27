@@ -21,6 +21,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Add endpoint for fetching Ansible configuration [\#238](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/238) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add ANSIBLE\_CONFIG to AnsibleCmd test cases [\#237](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/237) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump micromatch from 4.0.7 to 4.0.8 in /client in the npm\_and\_yarn group [\#235](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/235) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump framer-motion from 11.3.29 to 11.3.30 in /client [\#234](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/234) ([dependabot[bot]](https://github.com/apps/dependabot))
