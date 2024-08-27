@@ -1,28 +1,28 @@
-import React, {
-  Suspense,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import { Link } from '@umijs/max';
-import { PageContainer } from '@ant-design/pro-components';
-import { Avatar, Button, Card, List, Tooltip } from 'antd';
+import { OsLogo as OriginalOsLogo } from '@/components/DeviceComponents/OsLogo/OsLogo';
+import { CarbonBatchJob } from '@/components/Icons/CustomIcons';
+import { TerminalStateProps } from '@/components/PlaybookExecutionModal';
+import Title, { TitleColors } from '@/components/Template/Title';
+import { getDevices } from '@/services/rest/device';
 import {
   AppstoreOutlined,
   ControlOutlined,
   TableOutlined,
 } from '@ant-design/icons';
-import { API } from 'ssm-shared-lib';
+import { PageContainer } from '@ant-design/pro-components';
+import { Link } from '@umijs/max';
+import { Avatar, Button, Card, List, Tooltip } from 'antd';
+import { AnimatePresence, motion } from 'framer-motion';
 import { debounce } from 'lodash';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, {
+  memo,
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { API, SsmStatus } from 'ssm-shared-lib';
 import styles from './Devices.less';
-import { OsLogo as OriginalOsLogo } from '@/components/DeviceComponents/OsLogo/OsLogo';
-import Title, { TitleColors } from '@/components/Template/Title';
-import { CarbonBatchJob } from '@/components/Icons/CustomIcons';
-import { TerminalStateProps } from '@/components/PlaybookExecutionModal';
-import { getDevices } from '@/services/rest/device';
 
 const DeviceQuickActionDropDown = React.lazy(
   () =>
@@ -46,6 +46,21 @@ const initialTerminalState: TerminalStateProps = {
   command: undefined,
   target: undefined,
   playbookName: undefined,
+};
+
+const shineAnimation = {
+  initial: {
+    backgroundPosition: '200% 0',
+  },
+  animate: {
+    backgroundPosition: ['200% 0', '-200% 0', '200% 0'],
+    transition: {
+      duration: 4, // Total duration, including delay effect
+      ease: 'linear',
+      repeat: Infinity,
+      times: [0, 0.5, 1], // [start, midpoint, end]
+    },
+  },
 };
 
 const DeviceListPage = memo(() => {
@@ -126,7 +141,26 @@ const DeviceListPage = memo(() => {
             ]}
           >
             <List.Item.Meta
-              avatar={<Avatar src={OsLogo(item.osLogoFile)} size="large" />}
+              avatar={
+                item.status === SsmStatus.DeviceStatus.ONLINE ? (
+                  <motion.div
+                    style={{
+                      display: 'inline-block',
+                      background:
+                        'linear-gradient(90deg, rgba(0,255,0,0) 0%, rgba(0,255,0,0.2) 50%, rgba(0,255,0,0) 100%)',
+                      backgroundSize: '200% 200%',
+                      borderRadius: '50%',
+                    }}
+                    initial="initial"
+                    animate="animate"
+                    variants={shineAnimation}
+                  >
+                    <Avatar src={OsLogo(item.osLogoFile)} size="large" />
+                  </motion.div>
+                ) : (
+                  <Avatar src={OsLogo(item.osLogoFile)} size="large" />
+                )
+              }
               title={item.hostname}
               description={item.ip}
             />
