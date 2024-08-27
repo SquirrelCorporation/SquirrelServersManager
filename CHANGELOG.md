@@ -21,6 +21,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Refactor Docker configuration forms and centralize SSH elements [\#240](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/240) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Doc update doc [\#239](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/239) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add endpoint for fetching Ansible configuration [\#238](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/238) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add ANSIBLE\_CONFIG to AnsibleCmd test cases [\#237](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/237) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
