@@ -1,6 +1,7 @@
 import fs from 'fs';
+import FileSystemManager from '../../modules/shell/managers/FileSystemManager';
 
-const CONFIG_FILE = '/server/src/ansible/ansible.cfg';
+const CONFIG_FILE = '/ansible-config/ansible.cfg';
 
 interface ConfigEntry {
   value: string;
@@ -13,6 +14,12 @@ interface Config {
     [key: string]: ConfigEntry;
   };
 }
+
+export const copyAnsibleCfgFileIfDoesntExist = () => {
+  if (!FileSystemManager.test('-f', CONFIG_FILE)) {
+    const res = FileSystemManager.copyFile('/server/src/ansible/default-ansible.cfg', CONFIG_FILE);
+  }
+};
 
 // Utility function to read the configuration file
 export const readConfig = (): Config => {

@@ -1,4 +1,4 @@
-import { readConfig, writeConfig } from '../helpers/ansible/ConfigurationHelper';
+import { readConfig, writeConfig } from '../helpers/ansible/AnsibleConfigurationHelper';
 import PinoLogger from '../logger';
 import { ForbiddenError, InternalError, NotFoundError } from '../middlewares/api/ApiError';
 

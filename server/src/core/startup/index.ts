@@ -2,6 +2,7 @@ import { SettingsKeys } from 'ssm-shared-lib';
 import { getFromCache } from '../../data/cache';
 import initRedisValues from '../../data/cache/defaults';
 import { PlaybookModel } from '../../data/database/model/Playbook';
+import { copyAnsibleCfgFileIfDoesntExist } from '../../helpers/ansible/AnsibleConfigurationHelper';
 import PinoLogger from '../../logger';
 import AutomationEngine from '../../modules/automations/AutomationEngine';
 import Crons from '../../modules/crons';
@@ -50,6 +51,7 @@ class Startup {
     void setAnsibleVersions();
     await PlaybooksRepositoryEngine.syncAllRegistered();
     this.registerPersistedProviders();
+    copyAnsibleCfgFileIfDoesntExist();
   }
 
   private isSchemeVersionDifferent(schemeVersion: string | null): boolean {
