@@ -15,8 +15,7 @@ version: '3.8'
 services:
   proxy:
     restart: unless-stopped
-    build:
-      context: ./proxy
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-proxy:latest"
     ports:
       - "8000:8000"
     depends_on:
@@ -52,6 +51,7 @@ services:
       NODE_ENV: production
     volumes:
       - ./.data.prod/playbooks:/playbooks
+      - ./.data.prod/config:/ansible-config
   client:
     image: "ghcr.io/squirrelcorporation/squirrelserversmanager-client:latest"
     restart: unless-stopped
