@@ -6,6 +6,7 @@
 
 **Implemented enhancements:**
 
+- \[FEATURE\] Compatibility for docker environments with a TLS Configuration [\#218](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/218)
 - \[FEAT\] Feat ansible configuration mgt [\#236](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/236) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Fixed bugs:**
@@ -20,6 +21,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Add ANSIBLE\_CONFIG to AnsibleCmd test cases [\#237](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/237) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump micromatch from 4.0.7 to 4.0.8 in /client in the npm\_and\_yarn group [\#235](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/235) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump framer-motion from 11.3.29 to 11.3.30 in /client [\#234](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/234) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @eslint/js from 9.9.0 to 9.9.1 in /client [\#233](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/233) ([dependabot[bot]](https://github.com/apps/dependabot))
