@@ -1,6 +1,6 @@
 import { readConfig, writeConfig } from '../helpers/ansible/ConfigurationHelper';
 import PinoLogger from '../logger';
-import { InternalError, NotFoundError } from '../middlewares/api/ApiError';
+import { ForbiddenError, InternalError, NotFoundError } from '../middlewares/api/ApiError';
 
 const logger = PinoLogger.child(
   { module: 'AnsibleConfigurationUseCases' },
@@ -18,6 +18,9 @@ export const writeAnsibleConfiguration = (
   deactivated: boolean,
   description: string,
 ) => {
+  if (section === '__proto__' || section === 'constructor' || section === 'prototype') {
+    throw new ForbiddenError();
+  }
   try {
     const config = readConfig();
 
@@ -33,8 +36,10 @@ export const writeAnsibleConfiguration = (
 };
 
 export const deleteAnsibleConfiguration = (section: string, key: string) => {
+  if (section === '__proto__' || section === 'constructor' || section === 'prototype') {
+    throw new ForbiddenError();
+  }
   const config = readConfig();
-
   if (config[section] && config[section][key] !== undefined) {
     try {
       delete config[section][key];
@@ -61,6 +66,9 @@ export const updateAnsibleConfiguration = (
   deactivated: boolean,
   description: string,
 ) => {
+  if (section === '__proto__' || section === 'constructor' || section === 'prototype') {
+    throw new ForbiddenError();
+  }
   const config = readConfig();
 
   try {
