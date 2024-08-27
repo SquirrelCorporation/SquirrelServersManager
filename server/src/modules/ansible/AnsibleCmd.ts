@@ -1,5 +1,6 @@
 import { API } from 'ssm-shared-lib';
 import User from '../../data/database/model/User';
+import { ANSIBLE_CONFIG_FILE } from '../../helpers/ansible/AnsibleConfigurationHelper';
 import { Playbooks } from '../../types/typings';
 import ExtraVarsTransformer from './utils/ExtraVarsTransformer';
 
@@ -8,6 +9,7 @@ class AnsibleCommandBuilder {
   static readonly python = 'python3';
   static readonly ansibleRunner = 'ssm-ansible-run.py';
   static readonly ssmApiKeyEnv = 'SSM_API_KEY';
+  static readonly ansibleConfigKeyEnv = 'ANSIBLE_CONFIG';
 
   sanitizeInventory(inventoryTargets: Playbooks.All & Playbooks.HostGroups) {
     return "'" + JSON.stringify(inventoryTargets).replaceAll('\\\\', '\\') + "'";
@@ -37,7 +39,7 @@ class AnsibleCommandBuilder {
     const extraVarsCmd = this.getExtraVars(extraVars);
     const ident = `--ident '${uuid}'`;
 
-    return `${AnsibleCommandBuilder.sudo} ${AnsibleCommandBuilder.ssmApiKeyEnv}=${user.apiKey} ${AnsibleCommandBuilder.python} ${AnsibleCommandBuilder.ansibleRunner} --playbook ${playbook} ${ident} ${inventoryTargetsCmd} ${logLevel} ${extraVarsCmd}`;
+    return `${AnsibleCommandBuilder.sudo} ${AnsibleCommandBuilder.ssmApiKeyEnv}=${user.apiKey} ${AnsibleCommandBuilder.ansibleConfigKeyEnv}=${ANSIBLE_CONFIG_FILE} ${AnsibleCommandBuilder.python} ${AnsibleCommandBuilder.ansibleRunner} --playbook ${playbook} ${ident} ${inventoryTargetsCmd} ${logLevel} ${extraVarsCmd}`;
   }
 }
 

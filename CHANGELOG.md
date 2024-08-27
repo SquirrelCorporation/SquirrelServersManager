@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/demo-v1...HEAD)
 
+**Implemented enhancements:**
+
+- \[FEAT\] Feat ansible configuration mgt [\#236](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/236) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Fixed bugs:**
 
 - \[BUG\] Buggy Automation editor when setting template 🐛 [\#222](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/222)

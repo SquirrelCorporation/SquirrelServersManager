@@ -758,3 +758,9 @@ export type ContainerImage = {
   labels: { [p: string]: string };
   containers: number;
 }
+
+export type AnsibleConfig = {
+  [key: string]: {
+    [subKey: string]: string | { value: string; deactivated?: boolean; description?: string };
+  };
+};

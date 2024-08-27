@@ -1,9 +1,9 @@
 import path from 'path';
 import fs from 'fs-extra';
-import { ShellString } from 'shelljs';
+import { ShellString, TestOptions } from 'shelljs';
 import logger from '../../../logger';
-import shellWrapper from '../ShellWrapper';
 import { AbstractShellCommander } from '../AbstractShellCommander';
+import shellWrapper from '../ShellWrapper';
 
 class FileSystemManager extends AbstractShellCommander {
   constructor() {
@@ -23,6 +23,14 @@ class FileSystemManager extends AbstractShellCommander {
 
   writeFile(content: string, path: string): void {
     this.executeCommand(shellWrapper.to, content, path);
+  }
+
+  copyFile(origin: string, dest: string) {
+    return this.executeCommand(shellWrapper.cp, origin, dest);
+  }
+
+  test(options: TestOptions, path: string) {
+    return this.executeCommand(shellWrapper.test, options, path);
   }
 
   protected checkPath(userPath: string, rootPath?: string) {

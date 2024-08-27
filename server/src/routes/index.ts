@@ -1,16 +1,17 @@
 import express from 'express';
-import containers from './containers';
-import ping from './ping';
-import devices from './devices';
 import admin from './admin';
-import playbooks from './playbooks';
-import logs from './logs';
-import user from './user';
-import settings from './settings';
-import playbooksRepository from './playbooks-repository';
+import ansible from './ansible';
 import automations from './automations';
+import containers from './containers';
+import devices from './devices';
+import logs from './logs';
 import notifications from './notifications';
+import ping from './ping';
+import playbooks from './playbooks';
+import playbooksRepository from './playbooks-repository';
 import services from './services';
+import settings from './settings';
+import user from './user';
 
 const router = express.Router();
 
@@ -27,5 +28,6 @@ router.use('/playbooks-repository', playbooksRepository);
 router.use('/automations', automations);
 router.use('/notifications', notifications);
 router.use('/services', services);
+router.use('/ansible', ansible);
 
 export default router;

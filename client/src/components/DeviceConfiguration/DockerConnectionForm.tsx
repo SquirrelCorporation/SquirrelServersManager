@@ -297,14 +297,22 @@ export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
             >
               <ProFormUploadButton
                 title={'Upload CA'}
-                name="ca"
-                initialValue={[
-                  {
-                    uid: '-2',
-                    name: 'zzz.png',
-                    status: 'error',
-                  },
-                ]}
+                name="_dockerCa"
+                initialValue={
+                  props.formRef?.current?.getFieldValue('dockerCa')
+                    ? [
+                        {
+                          uid: props.formRef?.current?.getFieldValue(
+                            'dockerCa',
+                          ),
+                          name: props.formRef?.current?.getFieldValue(
+                            'dockerCa',
+                          ),
+                          status: 'success',
+                        },
+                      ]
+                    : []
+                }
                 max={1}
                 fieldProps={{
                   onRemove: handleDeleteCert('ca'),
@@ -315,7 +323,22 @@ export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
               />
               <ProFormUploadButton
                 title="Upload Cert"
-                name="cert"
+                name="_dockerCert"
+                initialValue={
+                  props.formRef?.current?.getFieldValue('dockerCert')
+                    ? [
+                        {
+                          uid: props.formRef?.current?.getFieldValue(
+                            'dockerCert',
+                          ),
+                          name: props.formRef?.current?.getFieldValue(
+                            'dockerCert',
+                          ),
+                          status: 'success',
+                        },
+                      ]
+                    : []
+                }
                 max={1}
                 fieldProps={{
                   name: 'uploaded_file',
@@ -327,7 +350,22 @@ export const DockerConnectionForm = (props: ConfigurationFormDockerProps) => {
               />
               <ProFormUploadButton
                 title="Upload Key"
-                name="key"
+                name="_dockerKey"
+                initialValue={
+                  props.formRef?.current?.getFieldValue('dockerKey')
+                    ? [
+                        {
+                          uid: props.formRef?.current?.getFieldValue(
+                            'dockerKey',
+                          ),
+                          name: props.formRef?.current?.getFieldValue(
+                            'dockerKey',
+                          ),
+                          status: 'success',
+                        },
+                      ]
+                    : []
+                }
                 max={1}
                 fieldProps={{
                   name: 'uploaded_file',

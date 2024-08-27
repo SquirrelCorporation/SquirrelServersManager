@@ -15,7 +15,7 @@ export enum AnsibleReservedExtraVarsKeys {
 }
 
 export enum DefaultValue {
-  SCHEME_VERSION = '9',
+  SCHEME_VERSION = '10',
   SERVER_LOG_RETENTION_IN_DAYS = '30',
   CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES = '3',
   CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER = '10',

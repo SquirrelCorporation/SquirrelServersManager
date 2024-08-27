@@ -47,6 +47,7 @@ services:
     volumes:
       - ./server/src:/server/src
       - ./.data.dev/playbooks:/playbooks
+      - ./.data.dev/config:/ansible-config
     environment:
       NODE_ENV: development
       DEBUG: nodejs-docker-express:*

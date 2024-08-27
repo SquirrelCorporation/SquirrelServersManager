@@ -2,6 +2,7 @@ import { API } from 'ssm-shared-lib';
 import DeviceAuth from '../../../data/database/model/DeviceAuth';
 import DeviceAuthRepo from '../../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../../data/database/repository/DeviceRepo';
+import logger from '../../../logger';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import asyncHandler from '../../../middlewares/AsyncHandler';
@@ -60,11 +61,15 @@ export const getDeviceAuth = asyncHandler(async (req, res) => {
       customDockerAgentForward: deviceAuth.customDockerAgentForward,
       customDockerTryKeyboard: deviceAuth.customDockerTryKeyboard,
       customDockerSocket: deviceAuth.customDockerSocket,
+      dockerCa: deviceAuth.dockerCa ? 'MY_CA.pem' : undefined,
+      dockerCert: deviceAuth.dockerCert ? 'MY_CERT.cert' : undefined,
+      dockerKey: deviceAuth.dockerKey ? 'MY_KEY.key' : undefined,
     } as API.DeviceAuth;
     new SuccessResponse('Get device auth successful', deviceAuthDecrypted as API.DeviceAuth).send(
       res,
     );
   } catch (error: any) {
+    logger.error(error);
     throw new InternalError(error.message);
   }
 });
@@ -192,7 +197,6 @@ export const uploadDockerAuthCerts = asyncHandler(async (req, res) => {
   if (!file) {
     throw new Error('File not provided');
   }
-
   switch (type) {
     case 'ca':
       optionalExistingDeviceAuth.dockerCa = file.buffer; // Assign buffer content
