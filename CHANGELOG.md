@@ -21,6 +21,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Refactor device list fetching logic in Devices page [\#242](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/242) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update OS logos and enhance pagination [\#241](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/241) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor Docker configuration forms and centralize SSH elements [\#240](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/240) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Doc update doc [\#239](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/239) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
