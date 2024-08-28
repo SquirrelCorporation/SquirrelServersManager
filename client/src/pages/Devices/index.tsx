@@ -8,19 +8,11 @@ import {
   ControlOutlined,
   TableOutlined,
 } from '@ant-design/icons';
-import { PageContainer } from '@ant-design/pro-components';
+import { PageContainer, ProList } from '@ant-design/pro-components';
 import { Link } from '@umijs/max';
 import { Avatar, Button, Card, List, Tooltip } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
-import { debounce } from 'lodash';
-import React, {
-  memo,
-  Suspense,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { memo, Suspense, useCallback, useMemo, useState } from 'react';
 import { API, SsmStatus } from 'ssm-shared-lib';
 import styles from './Devices.less';
 
@@ -64,32 +56,12 @@ const shineAnimation = {
 };
 
 const DeviceListPage = memo(() => {
-  const [deviceList, setDeviceList] = useState<API.DeviceList>({});
-  const [loading, setLoading] = useState(false);
   const [terminal, setTerminal] =
     useState<TerminalStateProps>(initialTerminalState);
 
   const openOrCloseTerminalModal = useCallback((open: boolean) => {
     setTerminal((prevState) => ({ ...prevState, isOpen: open }));
   }, []);
-
-  const debouncedFetchDeviceList = useMemo(
-    () =>
-      debounce(async () => {
-        setLoading(true);
-        try {
-          const data = await getDevices();
-          setDeviceList(data);
-        } finally {
-          setLoading(false);
-        }
-      }, 300),
-    [],
-  );
-
-  useEffect(() => {
-    debouncedFetchDeviceList();
-  }, [debouncedFetchDeviceList]);
 
   const onDropDownClicked = useCallback((key: string) => {
     switch (
@@ -209,17 +181,15 @@ const DeviceListPage = memo(() => {
           }
         >
           <AnimatePresence>
-            <List
-              size="large"
+            <ProList
               rowKey="uuid"
-              loading={loading}
               pagination={{
                 pageSize: 10,
                 showQuickJumper: true,
-                size: 'small',
                 responsive: true,
               }}
-              dataSource={deviceList?.data}
+              request={getDevices}
+              debounceTime={300}
               renderItem={renderListItem}
             />
           </AnimatePresence>
