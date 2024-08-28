@@ -50,17 +50,17 @@
     "immer": "^10.1.1"
   },
   "dependencies": {
-    "@ant-design/charts": "^2.1.2",
+    "@ant-design/charts": "^2.2.1",
     "@ant-design/icons": "^5.4.0",
     "@ant-design/pro-components": "^2.7.15",
     "@ant-design/use-emotion-css": "1.0.4",
     "@antv/g2plot": "^2.4.32",
     "@dotlottie/react-player": "^1.6.19",
     "@monaco-editor/react": "^4.6.0",
-    "@umijs/max": "^4.3.16",
+    "@umijs/max": "^4.3.17",
     "@umijs/plugin-antd-dayjs": "^0.3.0",
     "@umijs/route-utils": "^4.0.1",
-    "antd": "^5.20.2",
+    "antd": "^5.20.3",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.13",
     "lodash": "^4.17.21",
@@ -87,7 +87,7 @@
     "framer-motion":"^11.3.30"
   },
   "devDependencies": {
-    "@ant-design/plots": "^2.2.8",
+    "@ant-design/plots": "^2.3.1",
     "@ant-design/pro-cli": "^3.2.1",
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.9.1",
@@ -103,7 +103,7 @@
     "@types/react-helmet": "^6.1.11",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@umijs/fabric": "^4.0.1",
-    "@umijs/lint": "^4.3.13",
+    "@umijs/lint": "^4.3.17",
     "antd-pro-merge-less": "^3.0.11",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
