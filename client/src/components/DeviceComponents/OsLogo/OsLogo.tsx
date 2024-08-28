@@ -1,3 +1,4 @@
+import darwin from './img/128_apple-dark.png';
 import arch from './img/128_arch.png';
 import centos from './img/128_centos_blue.png';
 import debian from './img/128_debian.png';
@@ -24,7 +25,6 @@ import ubuntu from './img/128_ubuntu.png';
 import mate from './img/128_ubuntu_mate.png';
 import windows from './img/128_windows.png';
 import xubuntu from './img/128_xubuntu.png';
-import darwin from './img/apple.png';
 import freebsd from './img/freebsd.jpeg';
 import openbsd from './img/openbsd_logo_icon_248311.png';
 import reactos from './img/reactos.png';
