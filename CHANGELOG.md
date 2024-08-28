@@ -21,6 +21,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Chore add common playbooks [\#246](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/246) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor device list fetching logic in Devices page [\#242](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/242) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update OS logos and enhance pagination [\#241](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/241) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor Docker configuration forms and centralize SSH elements [\#240](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/240) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
