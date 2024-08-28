@@ -1,6 +1,6 @@
 ---
 - name: Update Synology NAS
-  hosts: synology
+  hosts: all
   become: true
   gather_facts: false
 

@@ -1,6 +1,6 @@
 ---
 - name: Update TrueNAS
-  hosts: truenas
+  hosts: all
   become: true
   gather_facts: false
 

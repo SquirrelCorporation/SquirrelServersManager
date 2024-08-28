@@ -1,6 +1,6 @@
 ---
 - name: Update Asustor NAS
-  hosts: asustor
+  hosts: all
   become: true
   gather_facts: false
 

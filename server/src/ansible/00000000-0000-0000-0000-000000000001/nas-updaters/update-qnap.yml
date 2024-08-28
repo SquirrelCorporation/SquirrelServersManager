@@ -1,6 +1,6 @@
 ---
 - name: Update QNAP NAS
-  hosts: qnap
+  hosts: all
   become: true
   gather_facts: false
 

@@ -1,7 +1,7 @@
 ---
 - name: Change FQDN of a device
   hosts: all
-  become: yes
+  become: true
   vars:
     new_fqdn: "new.hostname.example.com"
 
