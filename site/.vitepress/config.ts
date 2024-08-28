@@ -27,6 +27,10 @@ export default defineConfig({
     ],
     [
       'script',
+      { defer: '', 'data-url': 'https://devhunt.org/tool/squirrel-servers-manager', src: 'https://cdn.jsdelivr.net/gh/sidiDev/devhunt-banner/indexV0.js' }
+    ],
+    [
+      'script',
       {},
       `window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
