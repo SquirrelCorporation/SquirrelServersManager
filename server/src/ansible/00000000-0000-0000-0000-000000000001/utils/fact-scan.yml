@@ -1,0 +1,16 @@
+---
+- name: Scan host for facts
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Collect package facts
+      ansible.builtin.package_facts:
+
+    - name: Collect service facts
+      ansible.builtin.service_facts:
+
+    - name: Debug gathered facts
+      ansible.builtin.debug:
+        var: ansible_facts

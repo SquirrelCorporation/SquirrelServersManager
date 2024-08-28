@@ -1,0 +1,84 @@
+---
+- name: Configure iptables for standard security
+  hosts: all
+  become: true
+  gather_facts: true
+
+  vars:
+    # Define allowed ports
+    allowed_tcp_ports:
+      - 22  # SSH
+      - 80  # HTTP
+      - 443 # HTTPS
+
+    allowed_udp_ports: []
+
+  tasks:
+    - name: Ensure iptables package is installed
+      ansible.builtin.package:
+        name: iptables
+        state: present
+
+    - name: Set default policies to DROP
+      ansible.builtin.command: iptables -P INPUT DROP
+      ignore_errors: true
+
+    - name: Set default policies to DROP
+      ansible.builtin.command: iptables -P FORWARD DROP
+      ignore_errors: true
+
+    - name: Set default policies to DROP
+      ansible.builtin.command: iptables -P OUTPUT DROP
+      ignore_errors: true
+
+    - name: Allow loopback traffic
+      ansible.builtin.command: iptables -A INPUT -i lo -j ACCEPT
+      ignore_errors: true
+
+    - name: Allow established outgoing connections
+      ansible.builtin.command: iptables -A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+      ignore_errors: true
+
+    - name: Allow established incoming connections
+      ansible.builtin.command: iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+      ignore_errors: true
+
+    - name: Allow incoming SSH
+      ansible.builtin.command: iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+      ignore_errors: true
+
+    - name: Allow incoming HTTP
+      ansible.builtin.command: iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+      ignore_errors: true
+
+    - name: Allow incoming HTTPS
+      ansible.builtin.command: iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+      ignore_errors: true
+
+    - name: Allow outgoing traffic on specific ports
+      ansible.builtin.shell: |
+        for PORT in {{ allowed_tcp_ports | join(' ') }};
+        do
+          iptables -A OUTPUT -p tcp --dport $PORT -j ACCEPT
+        done
+      ignore_errors: true
+
+    - name: Allow incoming traffic on specific UDP ports
+      ansible.builtin.shell: |
+        for PORT in {{ allowed_udp_ports | join(' ') }};
+        do
+          iptables -A INPUT -p udp --dport $PORT -j ACCEPT
+        done
+      when: allowed_udp_ports | length > 0
+      ignore_errors: true
+
+    - name: Save iptables rules
+      ansible.builtin.command: service iptables save
+      ignore_errors: true
+
+    - name: Ensure iptables service is enabled and started
+      ansible.builtin.service:
+        name: iptables
+        state: started
+        enabled: true
+      ignore_errors: true

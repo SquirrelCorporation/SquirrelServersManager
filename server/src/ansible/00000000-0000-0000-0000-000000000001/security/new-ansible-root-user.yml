@@ -1,0 +1,70 @@
+---
+- name: Create an admin user for Ansible
+  hosts: all
+  become: true
+  gather_facts: true
+
+  vars:
+    admin_user: "ansibleadmin"  # Change this to your desired admin username
+    admin_password: "{{ 'your_password' | password_hash('sha512') }}"  # Change 'your_password' to your desired password
+    ssh_public_key: "ssh-rsa AAAAB3NzaC1yc2EAAAABIw...."  # Replace with your SSH public key
+
+  tasks:
+    - name: Ensure the admin user is present
+      ansible.builtin.user:
+        name: "{{ admin_user }}"
+        password: "{{ admin_password }}"
+        shell: /bin/bash
+        create_home: true
+
+    - name: Add the user to the sudo group
+      ansible.builtin.user:
+        name: "{{ admin_user }}"
+        groups: sudo
+        append: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Add the user to the wheel group
+      ansible.builtin.user:
+        name: "{{ admin_user }}"
+        groups: wheel
+        append: yes
+      when: ansible_os_family == "RedHat"
+
+    - name: Allow passwordless sudo for the admin user (Debian-based)
+      ansible.builtin.lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%{{ admin_user }} ALL='
+        line: '%{{ admin_user }} ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+      when: ansible_os_family == "Debian"
+
+    - name: Allow passwordless sudo for the admin user (RHEL-based)
+      ansible.builtin.copy:
+        dest: /etc/sudoers.d/{{ admin_user }}
+        content: '{{ admin_user }} ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+      when: ansible_os_family == "RedHat"
+
+    - name: Create SSH directory for the admin user
+      ansible.builtin.file:
+        path: "/home/{{ admin_user }}/.ssh"
+        state: directory
+        mode: '0700'
+        owner: "{{ admin_user }}"
+        group: "{{ admin_user }}"
+
+    - name: Add the SSH public key to the authorized_keys file
+      ansible.builtin.copy:
+        dest: "/home/{{ admin_user }}/.ssh/authorized_keys"
+        content: "{{ ssh_public_key }}"
+        mode: '0600'
+        owner: "{{ admin_user }}"
+        group: "{{ admin_user }}"
+
+    - name: Ensure the /etc/sudoers.d directory exists
+      ansible.builtin.file:
+        path: /etc/sudoers.d
+        state: directory
+        mode: '0755'

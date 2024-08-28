@@ -1,0 +1,23 @@
+---
+- name: Update QNAP NAS
+  hosts: all
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Check for firmware updates
+      ansible.builtin.shell: /sbin/firmware_update -c
+      register: check_updates
+      ignore_errors: true
+
+    - name: Output firmware update availability
+      ansible.builtin.debug:
+        msg: "Firmware update check result:\n{{ check_updates.stdout }}"
+
+    - name: Perform firmware update
+      ansible.builtin.shell: /sbin/firmware_update -U
+      ignore_errors: true
+
+    - name: Reboot QNAP NAS
+      ansible.builtin.shell: reboot
+      ignore_errors: true

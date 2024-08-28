@@ -1,0 +1,115 @@
+---
+- name: Generate and configure TLS for Docker Socket
+  hosts: all
+  become: true
+  gather_facts: true
+
+  vars:
+    docker_cert_path: /etc/docker/certs.d
+    certs_path: /etc/ssl/docker_certs
+    ca_subject: "/C=US/ST=State/L=City/O=Org/CN=ca"
+    server_subject: "/C=US/ST=State/L=City/O=Org/CN=server"
+    client_subject: "/C=US/ST=State/L=City/O=Org/CN=client"
+    ca_password: "password"  # Change to a secure password
+    ca_file: "{{ certs_path }}/ca.pem"
+    server_key_file: "{{ certs_path }}/server-key.pem"
+    server_cert_file: "{{ certs_path }}/server-cert.pem"
+
+  tasks:
+    - name: Ensure OpenSSL is installed
+      ansible.builtin.package:
+        name: openssl
+        state: present
+
+    - name: Ensure directory for certificates exists
+      ansible.builtin.file:
+        path: "{{ certs_path }}"
+        state: directory
+        mode: '0755'
+
+    - name: Generate CA key
+      ansible.builtin.command: >
+        openssl genpkey -algorithm RSA -out {{ certs_path }}/ca-key.pem -aes256 -pass pass:{{ ca_password }}
+      args:
+        creates: "{{ certs_path }}/ca-key.pem"
+
+    - name: Generate CA certificate
+      ansible.builtin.command: >
+        openssl req -new -x509 -days 365 -key {{ certs_path }}/ca-key.pem -sha256 -out "{{ ca_file }}" -passin pass:{{ ca_password }} -subj "{{ ca_subject }}"
+      args:
+        creates: "{{ ca_file }}"
+
+    - name: Generate server key
+      ansible.builtin.command: >
+        openssl genpkey -algorithm RSA -out {{ server_key_file }}
+      args:
+        creates: "{{ server_key_file }}"
+
+    - name: Generate server CSR
+      ansible.builtin.command: >
+        openssl req -new -key {{ server_key_file }} -out {{ certs_path }}/server.csr -subj "{{ server_subject }}"
+      args:
+        creates: "{{ certs_path }}/server.csr"
+
+    - name: Generate server certificate
+      ansible.builtin.command: >
+        openssl x509 -req -days 365 -in {{ certs_path }}/server.csr -CA "{{ ca_file }}" -CAkey {{ certs_path }}/ca-key.pem -CAcreateserial -out "{{ server_cert_file }}" -passin pass:{{ ca_password }} -sha256
+      args:
+        creates: "{{ server_cert_file }}"
+
+    - name: Copy CA certificate to Docker cert path
+      ansible.builtin.copy:
+        src: "{{ ca_file }}"
+        dest: "{{ docker_cert_path }}/ca.pem"
+        mode: '0644'
+
+    - name: Copy server certificate to Docker cert path
+      ansible.builtin.copy:
+        src: "{{ server_cert_file }}"
+        dest: "{{ docker_cert_path }}/server-cert.pem"
+        mode: '0644'
+
+    - name: Copy server key to Docker cert path
+      ansible.builtin.copy:
+        src: "{{ server_key_file }}"
+        dest: "{{ docker_cert_path }}/server-key.pem"
+        mode: '0600'
+
+    - name: Ensure directory for Docker certificates exists
+      ansible.builtin.file:
+        path: "{{ docker_cert_path }}"
+        state: directory
+        mode: '0755'
+
+    - name: Configure Docker daemon to use TLS
+      ansible.builtin.lineinfile:
+        path: /etc/docker/daemon.json
+        create: yes
+        line: |
+          {
+            "hosts": ["tcp://0.0.0.0:2376", "unix:///var/run/docker.sock"],
+            "tls": true,
+            "tlsverify": true,
+            "tlscacert": "{{ docker_cert_path }}/ca.pem",
+            "tlscert": "{{ docker_cert_path }}/server-cert.pem",
+            "tlskey": "{{ docker_cert_path }}/server-key.pem"
+          }
+        state: present
+        mode: '0644'
+
+    - name: Restart Docker service
+      ansible.builtin.service:
+        name: docker
+        state: restarted
+
+    - name: Output CA certificate
+      ansible.builtin.debug:
+        msg: "CA Certificate:\n{{ lookup('file', ca_file) }}"
+
+    - name: Output Server certificate
+      ansible.builtin.debug:
+        msg: "Server Certificate:\n{{ lookup('file', server_cert_file) }}"
+
+    - name: Output Server key
+      ansible.builtin.debug:
+        msg: "Server Key:\n{{ lookup('file', server_key_file) }}"

@@ -1,0 +1,23 @@
+---
+- name: Update Asustor NAS
+  hosts: all
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Check for available updates
+      ansible.builtin.shell: /usr/sbin/aus -a
+      register: check_updates
+      ignore_errors: true
+
+    - name: Output available updates
+      ansible.builtin.debug:
+        msg: "Available updates:\n{{ check_updates.stdout }}"
+
+    - name: Apply updates
+      ansible.builtin.shell: /usr/sbin/aus -i
+      ignore_errors: true
+
+    - name: Reboot Asustor NAS
+      ansible.builtin.shell: shutdown -r now
+      ignore_errors: true

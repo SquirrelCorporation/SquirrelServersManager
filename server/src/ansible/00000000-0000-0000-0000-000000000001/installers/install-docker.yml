@@ -1,0 +1,95 @@
+---
+- name: Install Docker on Linux
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Install required packages for Docker (Debian-based)
+      ansible.builtin.apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg-agent
+          - software-properties-common
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Add Docker's official GPG key (Debian-based)
+      ansible.builtin.command: curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+      when: ansible_os_family == "Debian"
+
+    - name: Set up the Docker repository (Debian-based)
+      ansible.builtin.apt_repository:
+        repo: deb [arch={{ ansible_architecture }}] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Install required packages for Docker (RHEL-based)
+      ansible.builtin.yum:
+        name:
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Add Docker's official repository (RHEL-based)
+      ansible.builtin.command: |
+        yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+      when: ansible_os_family == "RedHat"
+
+    - name: Ensure old versions of Docker are not installed (Debian-based)
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: absent
+      loop:
+        - docker
+        - docker-engine
+        - docker.io
+        - containerd
+        - runc
+      when: ansible_os_family == "Debian"
+
+    - name: Ensure old versions of Docker are not installed (RHEL-based)
+      ansible.builtin.yum:
+        name: "{{ item }}"
+        state: absent
+      loop:
+        - docker
+        - docker-common
+        - docker-selinux
+        - docker-engine
+      when: ansible_os_family == "RedHat"
+
+    - name: Install Docker CE (Debian-based)
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Install Docker CE (RHEL-based)
+      ansible.builtin.yum:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Start and enable Docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add user to Docker group
+      ansible.builtin.user:
+        name: "{{ ansible_user_id }}"
+        groups: docker
+        append: yes
