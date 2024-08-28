@@ -17,6 +17,8 @@ export default defineConfig({
     ['meta', { property: 'og:locale', content: 'en' }],
     ['meta', { property: 'og:title', content: 'SSM | Squirrel Servers Manager' }],
     ['meta', { property: 'og:image', content: 'https://squirrelserversmanager.io/acorn.png' }],
+    ['meta', { property: 'og:description', content: 'A user-friendly, UI/UX focused server & configuration management tool, powered by Ansible & Docker' }],
+    ['meta', { property: 'description', content: 'A user-friendly, UI/UX focused server & configuration management tool, powered by Ansible & Docker' }],
     ['meta', { property: 'og:site_name', content: 'SquirrelServersManager' }],
     ['meta', { property: 'og:url', content: 'https://squirrelserversmanager.io' }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],

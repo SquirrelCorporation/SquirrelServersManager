@@ -38,7 +38,7 @@ Consider all your devices as nuts. A squirrel loves to gather them all in some h
 
 ## Roadmap
 
-Check out the [Roadmap](https://github.com/SquirrelCorporation/SquirrelServersManager/wiki) on GitHub.
+Check out the [Roadmap](https://github.com/orgs/SquirrelCorporation/projects/2) on GitHub.
 
 ## Join Us (Me)!
 
