@@ -213,7 +213,12 @@ const DeviceListPage = memo(() => {
               size="large"
               rowKey="uuid"
               loading={loading}
-              pagination={{ pageSize: 10, showQuickJumper: true }}
+              pagination={{
+                pageSize: 10,
+                showQuickJumper: true,
+                size: 'small',
+                responsive: true,
+              }}
               dataSource={deviceList?.data}
               renderItem={renderListItem}
             />
