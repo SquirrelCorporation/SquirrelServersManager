@@ -1,0 +1,19 @@
+---
+- name: Update TrueNAS
+  hosts: truenas
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Update system packages
+      ansible.builtin.shell: pkg update && pkg upgrade -y
+      register: update_packages
+      ignore_errors: true
+
+    - name: Output package update results
+      ansible.builtin.debug:
+        msg: "Package update result:\n{{ update_packages.stdout }}"
+
+    - name: Reboot TrueNAS
+      ansible.builtin.shell: shutdown -r now
+      ignore_errors: true

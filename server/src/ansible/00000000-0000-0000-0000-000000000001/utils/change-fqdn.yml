@@ -1,0 +1,28 @@
+---
+- name: Change FQDN of a device
+  hosts: all
+  become: yes
+  vars:
+    new_fqdn: "new.hostname.example.com"
+
+  tasks:
+    - name: Set hostname
+      hostname:
+        name: "{{ new_fqdn.split('.')[0] }}"
+
+    - name: Ensure hostname is in /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        line: "127.0.1.1 {{ new_fqdn }} {{ new_fqdn.split('.')[0] }}"
+        state: present
+        create: yes
+
+    - name: Ensure FQDN is set in /etc/hostname
+      copy:
+        content: "{{ new_fqdn.split('.')[0] }}\n"
+        dest: /etc/hostname
+
+    - name: Reboot the device to apply the new hostname (optional)
+      reboot:
+        msg: "Reboot initiated by Ansible for hostname change."
+        when: not ansible_check_mode

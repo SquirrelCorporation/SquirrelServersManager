@@ -1,0 +1,23 @@
+---
+- name: Update Synology NAS
+  hosts: synology
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Check for available Synology package updates
+      ansible.builtin.shell: /usr/sbin/synopkg upgrade
+      register: check_updates
+      ignore_errors: true
+
+    - name: Show available package updates (if any)
+      ansible.builtin.debug:
+        msg: "Available package updates:\n{{ check_updates.stdout }}"
+
+    - name: Update Synology DSM
+      ansible.builtin.shell: synoupgrade --start
+      ignore_errors: true
+
+    - name: Reboot Synology NAS
+      ansible.builtin.shell: shutdown -r now
+      ignore_errors: true
