@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   proxy:
     restart: unless-stopped
@@ -11,6 +12,9 @@ services:
       - mongo
       - server
       - redis
+    networks:
+      - default  # Attaches to the default network
+
   mongo:
     env_file:
       - ./.env.dev
@@ -22,6 +26,9 @@ services:
     command: --quiet
     ports:
       - "${DB_PORT}:27017"
+    networks:
+      - default  # Attaches to the default network
+
   redis:
     container_name: cache-ssm
     image: redis
@@ -29,6 +36,9 @@ services:
     volumes:
       - ./.data.dev/cache:/data
     command: --save 60 1
+    networks:
+      - default  # Attaches to the default network
+
   server:
     restart: unless-stopped
     external_links:
@@ -51,6 +61,9 @@ services:
     environment:
       NODE_ENV: development
       DEBUG: nodejs-docker-express:*
+    networks:
+      - default  # Attaches to the default network
+
   client:
     restart: unless-stopped
     environment:
@@ -66,3 +79,25 @@ services:
       - ./client/src:/client/src
       - ./client/config:/client/config
       - ./client/public:/client/public
+    networks:
+      - default  # Attaches to the default network
+
+  discovery:
+    build:
+      context: ./discovery
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+      - redis
+      - server
+      - client
+    networks:
+      - default  # Attaches to the default network for communication with other services
+      - discovery-network  # Attaches to the custom network for discovery tasks
+
+networks:
+  discovery-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.enable_multicast: "true"

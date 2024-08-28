@@ -8,6 +8,7 @@ import AutomationEngine from '../../modules/automations/AutomationEngine';
 import Crons from '../../modules/crons';
 import WatcherEngine from '../../modules/docker/core/WatcherEngine';
 import providerConf from '../../modules/docker/registries/providers/provider.conf';
+import { discoverServers } from '../../modules/mdns/Mdns';
 import NotificationComponent from '../../modules/notifications/NotificationComponent';
 import { createADefaultLocalUserRepository } from '../../modules/playbooks-repository/default-repositories';
 import PlaybooksRepositoryEngine from '../../modules/playbooks-repository/PlaybooksRepositoryEngine';
@@ -35,6 +36,8 @@ class Startup {
   }
 
   private async initializeModules() {
+    void discoverServers();
+    return;
     await DeviceAuthUseCases.saveAllDeviceAuthSshKeys();
     await PlaybooksRepositoryEngine.init();
     void NotificationComponent.init();
