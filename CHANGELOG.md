@@ -21,6 +21,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Remove unused dependencies and update TypeScript related packages [\#247](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/247) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Chore add common playbooks [\#246](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/246) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor device list fetching logic in Devices page [\#242](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/242) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update OS logos and enhance pagination [\#241](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/241) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
