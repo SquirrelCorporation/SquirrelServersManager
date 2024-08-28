@@ -21,6 +21,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Add meta description tags and update roadmap link [\#249](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/249) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump webpack from 5.90.3 to 5.94.0 in /client in the npm\_and\_yarn group [\#248](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/248) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Remove unused dependencies and update TypeScript related packages [\#247](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/247) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Chore add common playbooks [\#246](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/246) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
