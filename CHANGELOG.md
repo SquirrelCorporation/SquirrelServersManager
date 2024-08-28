@@ -21,6 +21,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Update OS logos and enhance pagination [\#241](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/241) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor Docker configuration forms and centralize SSH elements [\#240](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/240) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Doc update doc [\#239](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/239) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add endpoint for fetching Ansible configuration [\#238](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/238) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
