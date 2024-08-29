@@ -764,3 +764,10 @@ export type AnsibleConfig = {
     [subKey: string]: string | { value: string; deactivated?: boolean; description?: string };
   };
 };
+
+export type SmartFailure = {
+  id: string,
+  message: string,
+  cause: string,
+  resolution: string,
+}

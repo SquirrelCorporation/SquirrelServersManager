@@ -70,3 +70,16 @@ export async function deleteAnsibleConfig(
     ...(options || {}),
   });
 }
+
+export async function getAnsibleSmartFailure(
+  params?: any,
+  options?: Record<string, any>,
+): Promise<API.Response<API.SmartFailure>> {
+  return request<API.Response<API.SmartFailure>>(`/api/ansible/smart-failure`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}

@@ -1,15 +1,17 @@
+import { Smart } from '@/components/Icons/CustomIcons';
 import TerminalHandler, {
   TaskStatusTimelineType,
 } from '@/components/PlaybookExecutionModal/PlaybookExecutionHandler';
 import TerminalCore, {
   TerminalCoreHandles,
 } from '@/components/Terminal/TerminalCore';
+import { getAnsibleSmartFailure } from '@/services/rest/ansible';
 import { ClockCircleOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import {
   DotLottieCommonPlayer,
   DotLottiePlayer,
 } from '@dotlottie/react-player';
-import { Button, Col, Modal, Row, Steps } from 'antd';
+import { Button, Col, Modal, notification, Row, Steps, Typography } from 'antd';
 import React, {
   LegacyRef,
   useEffect,
@@ -70,6 +72,7 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
     const [hasReachedFinalStatus, setHasReachedFinalStatus] = useState(false);
     const terminalRef = useRef<TerminalCoreHandles>(null);
     const lottieRef = useRef<DotLottieCommonPlayer>();
+    const [api, contextHolder] = notification.useNotification();
 
     useEffect(() => {
       if (hasReachedFinalStatus) {
@@ -106,8 +109,32 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
       }
     };
 
+    const isFinalStatusFailed = async () => {
+      if (savedStatuses?.find((status) => status._status === 'failed')) {
+        const res = await getAnsibleSmartFailure({ execId: execId });
+        if (res.data) {
+          api.open({
+            key: 'notification-failed',
+            message: 'The playbook execution failed',
+            duration: 0,
+            description: (
+              <>
+                <Typography.Paragraph>
+                  <b>Probable cause</b>: {res.data.cause}
+                  <br />
+                  <b>Probable Resolution</b>: {res.data.resolution}
+                </Typography.Paragraph>
+              </>
+            ),
+            icon: <Smart />,
+          });
+        }
+      }
+    };
+
     useEffect(() => {
       convertRunningStatusToFinish();
+      isFinalStatusFailed();
     }, [savedStatuses]);
 
     useEffect(() => {
@@ -159,6 +186,7 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
 
     return (
       <>
+        {contextHolder}
         <Modal
           open={isOpen}
           title={
@@ -187,7 +215,13 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
           width={1000}
           footer={() => (
             <>
-              <Button disabled={!hasReachedFinalStatus} onClick={startTerminal}>
+              <Button
+                disabled={!hasReachedFinalStatus}
+                onClick={() => {
+                  void startTerminal();
+                  api.destroy('notification-failed');
+                }}
+              >
                 Retry
               </Button>
               <Button

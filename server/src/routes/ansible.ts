@@ -5,6 +5,8 @@ import {
   deleteConfValidator,
   postConfValidator,
 } from '../services/rest/ansible/configuration.validator';
+import { getSmartFailure } from '../services/rest/ansible/smart-failure';
+import { getSmartFailureValidator } from '../services/rest/ansible/smart-failure.validator';
 
 const router = express.Router();
 
@@ -17,4 +19,5 @@ router
   .put(postConfValidator, putConf)
   .delete(deleteConfValidator, deleteConf);
 
+router.route('/smart-failure').get(getSmartFailureValidator, getSmartFailure);
 export default router;
