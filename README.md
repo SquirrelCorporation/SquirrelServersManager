@@ -1,5 +1,5 @@
 # Squirrel Servers Manager
-[Website](https://squirrelserversmanager.io) - [Documentation](https://squirrelserversmanager.io/docs) - [Demo](https://squirrelserversmanager.io/docs) 
+[Website](https://squirrelserversmanager.io) - [Documentation](https://squirrelserversmanager.io/docs) - [Demo](https://demo.squirrelserversmanager.io) 
 <img src="./client/public/logo.svg" align="right"
      alt="SSM by Emmanuel Costa" width="120" height="178">
 
