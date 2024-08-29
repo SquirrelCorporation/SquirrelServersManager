@@ -122,12 +122,7 @@ class SmartFailure {
             logger.debug(`Pattern matched: ${trimmedLine}`);
 
             // Check for duplicate entries using pattern id
-            const existingEntry = smartFailures.find(
-              (failure) =>
-                failure.message === trimmedLine &&
-                failure.cause === cause &&
-                failure.resolution === resolution,
-            );
+            const existingEntry = smartFailures.find((failure) => failure.id === id);
 
             if (!existingEntry) {
               smartFailures.push({
