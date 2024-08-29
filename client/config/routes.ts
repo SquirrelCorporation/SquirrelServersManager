@@ -35,10 +35,10 @@ export default [
         component: './Playbooks',
       },
       {
-        name: 'Services',
+        name: 'Containers',
         icon: 'AppstoreOutlined',
-        path: '/manage/services',
-        component: './Services',
+        path: '/manage/containers',
+        component: './Containers',
       },
       {
         path: '/manage/automations',
@@ -86,8 +86,8 @@ export default [
     component: './Playbooks',
   },
   {
-    path: '/manage/services/logs/:id',
-    component: './Services/logs/Logs',
+    path: '/manage/containers/logs/:id',
+    component: './Containers/logs/Logs',
   },
   {
     path: '/manage/devices/ssh/:id',

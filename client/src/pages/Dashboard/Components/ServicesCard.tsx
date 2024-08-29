@@ -7,10 +7,10 @@ import {
 import { Tiny } from '@ant-design/charts';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { Tooltip, Typography } from 'antd';
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { API, SsmStatus } from 'ssm-shared-lib';
 
-const ServicesCard: React.FC = () => {
+const ContainersCard: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [nbRunning, setNbRunning] = useState(0);
   const [nbTotal, setNbTotal] = useState(0);
@@ -86,7 +86,7 @@ const ServicesCard: React.FC = () => {
     <ChartCard
       bordered={false}
       loading={loading}
-      title={<Typography.Title level={5}>Services</Typography.Title>}
+      title={<Typography.Title level={5}>Containers</Typography.Title>}
       action={
         <Tooltip title="The containers running on your devices and the averaged usage statistics">
           <InfoCircleFilled style={{ color: 'white' }} />
@@ -106,4 +106,4 @@ const ServicesCard: React.FC = () => {
   );
 };
 
-export default React.memo(ServicesCard);
+export default React.memo(ContainersCard);

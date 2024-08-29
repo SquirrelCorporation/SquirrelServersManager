@@ -1,5 +1,5 @@
-import ContainerMetas from '@/pages/Services/components/containers/ContainerMetas';
-import EditContainerNameModal from '@/pages/Services/components/containers/EditContainerNameModal';
+import ContainerMetas from '@/pages/Containers/components/containers/ContainerMetas';
+import EditContainerNameModal from '@/pages/Containers/components/containers/EditContainerNameModal';
 import { getContainers, postRefreshAll } from '@/services/rest/containers';
 import { socket } from '@/socket';
 import { ReloadOutlined } from '@ant-design/icons';

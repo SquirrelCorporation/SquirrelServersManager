@@ -5,16 +5,16 @@ import {
   Templatetoolkit,
 } from '@/components/Icons/CustomIcons';
 import Title, { TitleColors } from '@/components/Template/Title';
-import Containers from '@/pages/Services/components/Containers';
-import Images from '@/pages/Services/components/Images';
-import Networks from '@/pages/Services/components/Networks';
-import Templates from '@/pages/Services/components/Templates';
-import Volumes from '@/pages/Services/components/Volumes';
+import Containers from '@/pages/Containers/components/Containers';
+import Images from '@/pages/Containers/components/Images';
+import Networks from '@/pages/Containers/components/Networks';
+import Templates from '@/pages/Containers/components/Templates';
+import Volumes from '@/pages/Containers/components/Volumes';
 import { AppstoreOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
-import { Tabs, TabsProps } from 'antd';
-import React, { useEffect } from 'react';
 import { history, useLocation } from '@umijs/max';
+import { TabsProps } from 'antd';
+import React, { useEffect } from 'react';
 
 const Index: React.FC = () => {
   const location = useLocation();
@@ -70,7 +70,7 @@ const Index: React.FC = () => {
       header={{
         title: (
           <Title.MainTitle
-            title={'Services'}
+            title={'Containers'}
             backgroundColor={TitleColors.PLAYBOOKS}
             icon={<AppstoreOutlined />}
           />

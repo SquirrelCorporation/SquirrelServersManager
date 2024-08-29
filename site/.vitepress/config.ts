@@ -139,8 +139,8 @@ export default defineConfig({
               ]
             },
             {
-              text: 'Services', items: [{text: 'Overview', link: '/docs/services/services.md'},
-                {text: 'Deploy', link: '/docs/services/deploy.md'}]
+              text: 'Containers', items: [{text: 'Overview', link: '/docs/containers/containers.md'},
+                {text: 'Deploy', link: '/docs/containers/deploy.md'}]
             },
             {
               text: 'Automations',  items: [{text: 'Overview',link: '/docs/automations/automations.md'}]

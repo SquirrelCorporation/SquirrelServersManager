@@ -1,6 +1,7 @@
 import { parse } from 'url';
 import { API } from 'ssm-shared-lib';
 import PlaybookRepo from '../../../data/database/repository/PlaybookRepo';
+import templatesRaw from '../../../data/static/templates.json';
 import DockerComposeHelper from '../../../helpers/docker/DockerComposeHelper';
 import { filterByFields, filterByQueryParams } from '../../../helpers/query/FilterHelper';
 import { paginate } from '../../../helpers/query/PaginationHelper';
@@ -8,7 +9,6 @@ import { sortByFields } from '../../../helpers/query/SorterHelper';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import asyncHandler from '../../../middlewares/AsyncHandler';
-import templatesRaw from '../../../data/static/templates.json';
 import PlaybookUseCases from '../../../use-cases/PlaybookUseCases';
 
 export const getTemplates = asyncHandler(async (req, res) => {

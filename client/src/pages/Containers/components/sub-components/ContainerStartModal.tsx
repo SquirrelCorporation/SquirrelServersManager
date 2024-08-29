@@ -1,11 +1,11 @@
 import { Deploy, Target } from '@/components/Icons/CustomIcons';
-import DeployModal from '@/pages/Services/components/sub-components/DeployModal';
-import ProCardEnvironmentConfiguration from '@/pages/Services/components/sub-components/template-configuration-forms/ProCardEnvironmentConfiguration';
-import ProCardExtrasConfiguration from '@/pages/Services/components/sub-components/template-configuration-forms/ProCardExtrasConfiguration';
-import ProCardGeneralConfiguration from '@/pages/Services/components/sub-components/template-configuration-forms/ProCardGeneralConfiguration';
-import ProCardLabelsConfiguration from '@/pages/Services/components/sub-components/template-configuration-forms/ProCardLabelsConfiguration';
-import ProCardPortsConfiguration from '@/pages/Services/components/sub-components/template-configuration-forms/ProCardPortsConfiguration';
-import ProCardVolumesConfiguration from '@/pages/Services/components/sub-components/template-configuration-forms/ProCardVolumesConfiguration';
+import DeployModal from '@/pages/Containers/components/sub-components/DeployModal';
+import ProCardEnvironmentConfiguration from '@/pages/Containers/components/sub-components/template-configuration-forms/ProCardEnvironmentConfiguration';
+import ProCardExtrasConfiguration from '@/pages/Containers/components/sub-components/template-configuration-forms/ProCardExtrasConfiguration';
+import ProCardGeneralConfiguration from '@/pages/Containers/components/sub-components/template-configuration-forms/ProCardGeneralConfiguration';
+import ProCardLabelsConfiguration from '@/pages/Containers/components/sub-components/template-configuration-forms/ProCardLabelsConfiguration';
+import ProCardPortsConfiguration from '@/pages/Containers/components/sub-components/template-configuration-forms/ProCardPortsConfiguration';
+import ProCardVolumesConfiguration from '@/pages/Containers/components/sub-components/template-configuration-forms/ProCardVolumesConfiguration';
 import { getDevices } from '@/services/rest/device';
 import { CheckCircleFilled } from '@ant-design/icons';
 import {

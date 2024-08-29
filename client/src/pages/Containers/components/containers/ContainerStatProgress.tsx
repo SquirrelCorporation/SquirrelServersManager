@@ -1,4 +1,4 @@
-import ContainerStatsDetail from '@/pages/Services/components/containers/ContainerStatsDetail';
+import ContainerStatsDetail from '@/pages/Containers/components/containers/ContainerStatsDetail';
 import { getContainerStat } from '@/services/rest/containers';
 import { Popover, Progress } from 'antd';
 import React from 'react';

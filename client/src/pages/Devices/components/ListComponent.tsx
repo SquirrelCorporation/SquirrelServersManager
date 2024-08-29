@@ -1,14 +1,14 @@
-import React, { useMemo } from 'react';
-import { Carousel, Col, Row, Typography } from 'antd';
 import { DeviceStatType } from '@/components/Charts/DeviceStatType';
 import TinyLineDeviceGraph from '@/components/Charts/TinyLineDeviceGraph';
 import TinyRingProgressDeviceGraph from '@/components/Charts/TinyRingProgressDeviceGraph';
 import TinyRingProgressDeviceIndicator from '@/components/Charts/TinyRingProgressDeviceIndicator';
 import DeviceStatusTag from '@/components/DeviceComponents/DeviceStatusTag';
 import { WhhCpu, WhhRam } from '@/components/Icons/CustomIcons';
-import DeviceStatus from '@/utils/devicestatus';
-import { API } from 'ssm-shared-lib';
 import styles from '@/pages/Devices/Devices.less';
+import DeviceStatus from '@/utils/devicestatus';
+import { Carousel, Col, Row, Typography } from 'antd';
+import React, { useMemo } from 'react';
+import { API } from 'ssm-shared-lib';
 
 const { Text } = Typography;
 
@@ -57,7 +57,7 @@ const ListContent: React.FC<API.DeviceItem> = React.memo((props) => {
                   </Col>
                   <Col span={6}>
                     <TinyRingProgressDeviceIndicator
-                      type={DeviceStatType.SERVICES}
+                      type={DeviceStatType.CONTAINERS}
                       deviceUuid={props.uuid}
                     />
                   </Col>

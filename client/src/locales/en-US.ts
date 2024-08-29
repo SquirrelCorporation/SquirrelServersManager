@@ -4,7 +4,7 @@ export default {
   'menu.Dashboard': 'Dashboard',
   'menu.Manage.Devices': 'Devices',
   'menu.Manage.Playbooks': 'Playbooks',
-  'menu.Manage.Services': 'Services',
+  'menu.Manage.Services': 'Containers',
   'menu.Configuration': 'Configuration',
   'menu.Configuration.Inventory': 'Inventory',
   'menu.Configuration.Logs': 'Logs',

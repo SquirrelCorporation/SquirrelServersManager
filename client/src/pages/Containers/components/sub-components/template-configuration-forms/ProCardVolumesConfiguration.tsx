@@ -1,5 +1,4 @@
 import { VolumeBinding } from '@/components/Icons/CustomIcons';
-import { Template } from '@/pages/Services/components/sub-components/ContainerStartModal';
 import {
   ProCard,
   ProForm,
@@ -9,8 +8,9 @@ import {
 } from '@ant-design/pro-components';
 import { Space } from 'antd';
 import React from 'react';
+import { API } from 'ssm-shared-lib';
 
-const ProCardVolumesConfiguration: React.FC<{ template: Template }> = (
+const ProCardVolumesConfiguration: React.FC<{ template: API.Template }> = (
   props,
 ) => {
   return (
