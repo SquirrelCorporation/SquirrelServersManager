@@ -9,7 +9,8 @@ NOTE:
 This is a Alpha version, It may not work on your system. I am currently looking for testers and contributors.
 Absolutely no warranties. 
 
-See https://squirrelserversmanager.io/docs/quickstart
+See [QuickStart](https://squirrelserversmanager.io/docs/quickstart)
+
 **Edit the .env file before anything**
 
 ## Production
@@ -21,6 +22,9 @@ docker compose up
 ```console
 docker compose up -f docker-compose.dev.yml up 
 ```
+
+## Troubleshoot
+See [Troubleshoot](https://squirrelserversmanager.io/docs/technical-guide/troubleshoot)
 
 ## Main features:
 
