@@ -22,6 +22,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Rename 'Services' to 'Containers' [\#252](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/252) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Update troubleshooting guide and demo link [\#250](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/250) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add meta description tags and update roadmap link [\#249](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/249) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump webpack from 5.90.3 to 5.94.0 in /client in the npm\_and\_yarn group [\#248](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/248) ([dependabot[bot]](https://github.com/apps/dependabot))
