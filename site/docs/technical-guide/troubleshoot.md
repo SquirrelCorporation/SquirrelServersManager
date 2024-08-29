@@ -37,7 +37,7 @@ In some cases, SSM may not be able to retrieve Docker containers from the host.
 If the problem persists, try using another authentication method.
 
 ## SSM Shows "Socket Hangup" in Docker Module Logs
-This warning/error is most likely coming from your host's Docker installation. Refer to the [previous point](http://localhost:5173/docs/technical-guide/troubleshoot#ssm-does-not-retrieve-services-docker-containers) for potential solutions.
+This warning/error is most likely coming from your host's Docker installation. Refer to the [previous point](#ssm-does-not-retrieve-services-docker-containers) for potential solutions.
 
 ## The Device's IP Has Automatically Changed to Its LAN IP / The IP Changed to VLAN's One
 To permanently fix the IP on a device:
