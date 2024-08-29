@@ -1,5 +1,4 @@
 import { Label } from '@/components/Icons/CustomIcons';
-import { Template } from '@/pages/Services/components/sub-components/ContainerStartModal';
 import {
   ProCard,
   ProForm,
@@ -8,8 +7,9 @@ import {
 } from '@ant-design/pro-components';
 import { Space } from 'antd';
 import React from 'react';
+import { API } from 'ssm-shared-lib';
 
-const ProCardLabelsConfiguration: React.FC<{ template: Template }> = (
+const ProCardLabelsConfiguration: React.FC<{ template: API.Template }> = (
   props,
 ) => {
   return (

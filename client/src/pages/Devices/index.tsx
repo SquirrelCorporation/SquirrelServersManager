@@ -87,12 +87,12 @@ const DeviceListPage = memo(() => {
             actions={[
               <Link
                 to={{
-                  pathname: `/manage/services`,
+                  pathname: `/manage/containers`,
                   search: `deviceUuid=${item.uuid}`,
                 }}
-                key={`services-${item.uuid}`}
+                key={`containers-${item.uuid}`}
               >
-                <Tooltip title="Services">
+                <Tooltip title="See containers">
                   <AppstoreOutlined />
                 </Tooltip>
               </Link>,

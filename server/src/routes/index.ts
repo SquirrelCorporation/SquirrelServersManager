@@ -9,7 +9,6 @@ import notifications from './notifications';
 import ping from './ping';
 import playbooks from './playbooks';
 import playbooksRepository from './playbooks-repository';
-import services from './services';
 import settings from './settings';
 import user from './user';
 
@@ -27,7 +26,6 @@ router.use('/containers', containers);
 router.use('/playbooks-repository', playbooksRepository);
 router.use('/automations', automations);
 router.use('/notifications', notifications);
-router.use('/services', services);
 router.use('/ansible', ansible);
 
 export default router;

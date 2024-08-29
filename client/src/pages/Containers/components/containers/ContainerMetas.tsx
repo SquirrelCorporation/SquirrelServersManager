@@ -3,11 +3,11 @@ import ServiceQuickActionReference, {
   ServiceQuickActionReferenceActions,
   ServiceQuickActionReferenceTypes,
 } from '@/components/ServiceComponents/ServiceQuickAction/ServiceQuickActionReference';
-import ContainerAvatar from '@/pages/Services/components/containers/ContainerAvatar';
-import ContainerStatProgress from '@/pages/Services/components/containers/ContainerStatProgress';
-import InfoToolTipCard from '@/pages/Services/components/containers/InfoToolTipCard';
-import StatusTag from '@/pages/Services/components/containers/StatusTag';
-import UpdateAvailableTag from '@/pages/Services/components/containers/UpdateAvailableTag';
+import ContainerAvatar from '@/pages/Containers/components/containers/ContainerAvatar';
+import ContainerStatProgress from '@/pages/Containers/components/containers/ContainerStatProgress';
+import InfoToolTipCard from '@/pages/Containers/components/containers/InfoToolTipCard';
+import StatusTag from '@/pages/Containers/components/containers/StatusTag';
+import UpdateAvailableTag from '@/pages/Containers/components/containers/UpdateAvailableTag';
 import { postContainerAction } from '@/services/rest/containers';
 import { getDevices } from '@/services/rest/device';
 import { InfoCircleOutlined } from '@ant-design/icons';

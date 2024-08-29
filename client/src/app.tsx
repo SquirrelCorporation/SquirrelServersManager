@@ -9,19 +9,19 @@ import { HealthWidget } from '@/components/HeaderComponents/HealthWidget';
 import NotificationsWidget from '@/components/HeaderComponents/NotificationsWidget';
 import { currentUser as queryCurrentUser, hasUser } from '@/services/rest/user';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
-import { SettingDrawer } from '@ant-design/pro-components';
 // @ts-ignore
 import { history, RunTimeLayoutConfig } from '@umijs/max';
-import { Alert, Modal } from 'antd';
+import { Alert } from 'antd';
 import { API } from 'ssm-shared-lib';
 import defaultSettings from '../config/defaultSettings';
+import { version } from '../package.json';
 import Logo from '../public/logo.svg';
 import { errorConfig } from './requestErrorConfig';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 const onboardingPath = '/user/onboarding';
-import { version } from '../package.json';
+
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */

@@ -5,7 +5,7 @@ export async function getTemplates(
   params?: any,
   options?: Record<string, any>,
 ): Promise<API.Response<API.Template[]>> {
-  return request<API.Response<API.Template[]>>('/api/services/templates', {
+  return request<API.Response<API.Template[]>>('/api/containers/templates', {
     method: 'GET',
     params: {
       ...params,
@@ -19,7 +19,7 @@ export async function getNetworks(
   options?: Record<string, any>,
 ): Promise<API.Response<API.ContainerNetwork[]>> {
   return request<API.Response<API.ContainerNetwork[]>>(
-    '/api/services/networks',
+    '/api/containers/networks',
     {
       method: 'GET',
       params: {
@@ -34,20 +34,23 @@ export async function getVolumes(
   params?: any,
   options?: Record<string, any>,
 ): Promise<API.Response<API.ContainerVolume[]>> {
-  return request<API.Response<API.ContainerVolume[]>>('/api/services/volumes', {
-    method: 'GET',
-    params: {
-      ...params,
+  return request<API.Response<API.ContainerVolume[]>>(
+    '/api/containers/volumes',
+    {
+      method: 'GET',
+      params: {
+        ...params,
+      },
+      ...(options || {}),
     },
-    ...(options || {}),
-  });
+  );
 }
 
 export async function getImages(
   params?: any,
   options?: Record<string, any>,
 ): Promise<API.Response<API.ContainerImage[]>> {
-  return request<API.Response<API.ContainerImage[]>>('/api/services/images', {
+  return request<API.Response<API.ContainerImage[]>>('/api/containers/images', {
     method: 'GET',
     params: {
       ...params,
@@ -61,7 +64,7 @@ export async function postDeploy(
   params?: any,
   options?: Record<string, any>,
 ): Promise<API.Response<API.ExecId>> {
-  return request<API.Response<API.ExecId>>('/api/services/deploy', {
+  return request<API.Response<API.ExecId>>('/api/containers/deploy', {
     method: 'POST',
     data: { template: template },
     params: {

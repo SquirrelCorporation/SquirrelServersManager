@@ -21,6 +21,8 @@ import {
   getContainerStatsByContainerIdValidator,
   getNbContainersByStatusValidator,
 } from '../services/rest/containers/containerstats.validator';
+import { getImages } from '../services/rest/containers/images';
+import { getNetworks } from '../services/rest/containers/networks';
 import {
   createCustomRegistry,
   getRegistries,
@@ -34,11 +36,18 @@ import {
   resetRegistryValidator,
   updateRegistryValidator,
 } from '../services/rest/containers/registries.validator';
+import { deploy, getTemplates } from '../services/rest/containers/templates';
+import { getVolumes } from '../services/rest/containers/volumes';
 
 const router = express.Router();
 
 router.use(passport.authenticate('jwt', { session: false }));
 router.route('/registries/').get(getRegistries);
+router.post('/deploy', deploy);
+router.get(`/templates`, getTemplates);
+router.get('/networks', getNetworks);
+router.get('/volumes', getVolumes);
+router.get('/images', getImages);
 router
   .route('/registries/:name/')
   .post(updateRegistryValidator, updateRegistry)

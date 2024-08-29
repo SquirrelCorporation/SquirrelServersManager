@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { message, Skeleton } from 'antd';
-import { Tiny } from '@ant-design/plots';
 import { DeviceStatType } from '@/components/Charts/DeviceStatType';
 import { getDeviceStat } from '@/services/rest/devicestat';
+import { Tiny } from '@ant-design/plots';
+import { message, Skeleton } from 'antd';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 export type TinyRingProps = {
   deviceUuid: string;
@@ -60,7 +60,7 @@ const TinyRingProgressDeviceIndicator: React.FC<TinyRingProps> = ({
         {
           type: 'text',
           style: {
-            text: 'Services',
+            text: 'Containers',
             x: '48%',
             y: '60%',
             textAlign: 'center',
