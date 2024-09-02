@@ -25,8 +25,8 @@ async function create(containerRegistry: Partial<ContainerRegistry>) {
   return createdObject.toObject();
 }
 
-async function deleteOne(containerRegistry: ContainerRegistry) {
-  await ContainerRegistryModel.deleteOne(containerRegistry);
+async function deleteOne(registry: ContainerRegistry) {
+  await ContainerRegistryModel.deleteOne({ _id: registry._id });
 }
 
 export default {
