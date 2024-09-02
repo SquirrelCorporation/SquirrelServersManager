@@ -88,7 +88,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-import-x": "^4.1.1",
-    "@stylistic/eslint-plugin": "^2.6.4",
+    "@stylistic/eslint-plugin": "^2.7.2",
     "@typescript-eslint/parser": "^8.3.0",
     "globals": "^15.9.0",
     "mongodb-memory-server": "^10.0.0",
