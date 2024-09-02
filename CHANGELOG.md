@@ -22,6 +22,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Update Mongoose and improve database operations [\#262](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/262) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @stylistic/eslint-plugin from 2.6.4 to 2.7.2 in /server [\#261](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/261) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump axios from 1.7.5 to 1.7.7 in /server [\#259](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/259) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump eslint-plugin-import-x from 4.1.0 to 4.1.1 in /server [\#258](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/258) ([dependabot[bot]](https://github.com/apps/dependabot))
