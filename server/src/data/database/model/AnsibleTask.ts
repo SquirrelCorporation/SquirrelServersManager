@@ -7,7 +7,7 @@ export default interface AnsibleTask {
   ident: string;
   status?: string;
   cmd?: string;
-  createdAt: string;
+  createdAt?: string;
 }
 
 const schema = new Schema<AnsibleTask>(
