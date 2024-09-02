@@ -55,15 +55,24 @@ async function deleteByDevice(device: Device) {
 }
 
 async function deleteCa(deviceAuth: DeviceAuth) {
-  await DeviceAuthModel.updateOne(deviceAuth, { $unset: { dockerCa: 1 } }).exec();
+  await DeviceAuthModel.updateOne(
+    { device: deviceAuth.device },
+    { $unset: { dockerCa: 1 } },
+  ).exec();
 }
 
 async function deleteCert(deviceAuth: DeviceAuth) {
-  await DeviceAuthModel.updateOne(deviceAuth, { $unset: { dockerCert: 1 } }).exec();
+  await DeviceAuthModel.updateOne(
+    { device: deviceAuth.device },
+    { $unset: { dockerCert: 1 } },
+  ).exec();
 }
 
 async function deleteKey(deviceAuth: DeviceAuth) {
-  await DeviceAuthModel.updateOne(deviceAuth, { $unset: { dockerKey: 1 } }).exec();
+  await DeviceAuthModel.updateOne(
+    { device: deviceAuth.device },
+    { $unset: { dockerKey: 1 } },
+  ).exec();
 }
 
 export default {
