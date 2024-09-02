@@ -22,6 +22,9 @@
 
 **Merged pull requests:**
 
+- Bump @types/react from 18.3.4 to 18.3.5 in /client [\#256](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/256) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @umijs/lint from 4.3.17 to 4.3.18 in /client [\#254](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/254) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump framer-motion from 11.3.30 to 11.3.31 in /client [\#253](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/253) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Rename 'Services' to 'Containers' [\#252](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/252) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Update troubleshooting guide and demo link [\#250](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/250) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add meta description tags and update roadmap link [\#249](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/249) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
