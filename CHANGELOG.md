@@ -15,6 +15,7 @@
 **Fixed bugs:**
 
 - \[BUG\] Buggy Automation editor when setting template 🐛 [\#222](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/222)
+- \[BUG\]\[CHORE\] Add default values for SSH connection and host checking [\#265](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/265) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Set initial cronValue from formRef [\#223](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/223) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Closed issues:**
