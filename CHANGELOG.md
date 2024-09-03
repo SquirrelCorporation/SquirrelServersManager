@@ -6,7 +6,9 @@
 
 **Implemented enhancements:**
 
+- \[CHORE\] Refacto ExtraVars 🧹 [\#263](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/263)
 - \[FEATURE\] Compatibility for docker environments with a TLS Configuration [\#218](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/218)
+- \[FEAT\] Introducing variable types for playbook [\#264](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/264) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Add Ansible SmartFailure detection and handling [\#251](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/251) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Feat ansible configuration mgt [\#236](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/236) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
