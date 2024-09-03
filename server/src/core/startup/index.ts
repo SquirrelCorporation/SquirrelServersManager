@@ -22,7 +22,7 @@ class Startup {
   async init() {
     const schemeVersion = await this.initializeSchemeVersion();
     await this.initializeModules();
-    if (true || this.isSchemeVersionDifferent(schemeVersion)) {
+    if (this.isSchemeVersionDifferent(schemeVersion)) {
       await this.updateScheme();
     }
   }
