@@ -1,15 +1,5 @@
 import express from 'express';
 import passport from 'passport';
-import { postContainerStatsSettings } from '../services/rest/settings/containerstats';
-import { postContainerStatsSettingsValidator } from '../services/rest/settings/containerstats.validator';
-import { postDashboardSettings } from '../services/rest/settings/dashboard';
-import { postDashboardSettingsValidator } from '../services/rest/settings/dashboard.validator';
-import { postDevicesSettings } from '../services/rest/settings/devices';
-import { postDevicesSettingsValidator } from '../services/rest/settings/devices.validator';
-import { postDeviceStatsSettings } from '../services/rest/settings/devicestats';
-import { postDeviceStatsSettingsValidator } from '../services/rest/settings/devicestats.validator';
-import { postLogsSettings } from '../services/rest/settings/logs';
-import { postLogsSettingsValidator } from '../services/rest/settings/logs.validator';
 import {
   deleteAnsibleLogs,
   deleteContainerStats,
@@ -17,7 +7,17 @@ import {
   deleteLogs,
   deletePlaybooksModelAndResync,
   postRestartServer,
-} from '../services/rest/settings/advanced';
+} from '../controllers/rest/settings/advanced';
+import { postContainerStatsSettings } from '../controllers/rest/settings/containerstats';
+import { postContainerStatsSettingsValidator } from '../controllers/rest/settings/containerstats.validator';
+import { postDashboardSettings } from '../controllers/rest/settings/dashboard';
+import { postDashboardSettingsValidator } from '../controllers/rest/settings/dashboard.validator';
+import { postDevicesSettings } from '../controllers/rest/settings/devices';
+import { postDevicesSettingsValidator } from '../controllers/rest/settings/devices.validator';
+import { postDeviceStatsSettings } from '../controllers/rest/settings/devicestats';
+import { postDeviceStatsSettingsValidator } from '../controllers/rest/settings/devicestats.validator';
+import { postLogsSettings } from '../controllers/rest/settings/logs';
+import { postLogsSettingsValidator } from '../controllers/rest/settings/logs.validator';
 
 const router = express.Router();
 

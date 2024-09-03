@@ -110,6 +110,9 @@ export function recursiveTreeTransform(
         });
       } else {
         if (child && !onlyDirectories) {
+          console.log(
+            JSON.stringify((child as DirectoryTree.ExtendedTreeNode).extraVars),
+          );
           newTree.push({
             key: child.path,
             _name: child.name,
@@ -130,6 +133,10 @@ export function recursiveTreeTransform(
       }
     }
   } else if (!onlyDirectories) {
+    console.log(
+      JSON.stringify((node as DirectoryTree.ExtendedTreeNode).extraVars),
+    );
+
     newTree.push({
       key: node.path,
       _name: node.name,

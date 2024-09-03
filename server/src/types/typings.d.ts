@@ -1,4 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
+import { SsmAnsible } from 'ssm-shared-lib';
 import Container from '../data/database/model/Container';
 
 export declare namespace Playbooks {
@@ -41,7 +42,9 @@ export declare namespace Playbooks {
 
   type PlaybookConfigurationFile = {
     playableInBatch: boolean;
-    extraVars?: [{ extraVar: string; required: boolean }];
+    extraVars?: [
+      { extraVar: string; required: boolean; type: SsmAnsible.ExtraVarsType; deletable: boolean },
+    ];
     uniqueQuickRef?: string;
   };
 }

@@ -2,7 +2,7 @@ import { API } from 'ssm-shared-lib';
 import User from '../../data/database/model/User';
 import { ANSIBLE_CONFIG_FILE } from '../../helpers/ansible/AnsibleConfigurationHelper';
 import { Playbooks } from '../../types/typings';
-import ExtraVarsTransformer from './utils/ExtraVarsTransformer';
+import ExtraVarsTransformer from './extravars/ExtraVarsTransformer';
 
 class AnsibleCommandBuilder {
   static readonly sudo = 'sudo';

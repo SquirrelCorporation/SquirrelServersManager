@@ -2,7 +2,12 @@
 import loginBackground from '@/pages/User/Login/assets/login-background.mp4';
 import { hasUser, user } from '@/services/rest/user';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { LoginFormPage, ProConfigProvider, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
+import {
+  LoginFormPage,
+  ProConfigProvider,
+  ProFormCheckbox,
+  ProFormText,
+} from '@ant-design/pro-components';
 import { history, useModel } from '@umijs/max';
 import { Divider, message } from 'antd';
 import React from 'react';

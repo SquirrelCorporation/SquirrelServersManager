@@ -1,53 +1,196 @@
 import {
+  CheckmarkUnderlineCircle24Regular,
+  SelectiveTool,
+} from '@/components/Icons/CustomIcons';
+import ExtraVarIcon, {
+  getExtraVarTooltipTitle,
+} from '@/components/PlaybookSelection/ExtraVarIcon';
+import CreateNewVarForm from '@/pages/Playbooks/components/CreateNewVarForm';
+import {
   deletePlaybookExtraVar,
-  getPlaybooks,
-  postExtraVarValue,
-  postPlaybookExtraVar,
+  postExtraVarSharedValue,
 } from '@/services/rest/playbooks';
 import { PlusOutlined } from '@ant-design/icons';
-import {
-  ProFormCheckbox,
-  ProFormSelect,
-  ProFormText,
-  RequestOptionsType,
-} from '@ant-design/pro-components';
+import { ProFormInstance, ProFormText } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
-import { Button, Collapse, message, Tooltip } from 'antd';
-import React, { useEffect } from 'react';
-import { API } from 'ssm-shared-lib';
+import {
+  Avatar,
+  Button,
+  Col,
+  Collapse,
+  Divider,
+  message,
+  Row,
+  Tag,
+  Tooltip,
+} from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { API, SsmAnsible } from 'ssm-shared-lib';
 
 export type ExtraVarsViewEditionProps = {
   playbook: API.PlaybookFile;
 };
 
-const ExtraVarsViewEditor: React.FC<ExtraVarsViewEditionProps> = (
-  extraVarViewEditorProps,
-) => {
-  const [currentExtraVars, setCurrentExtraVars] = React.useState(
-    extraVarViewEditorProps.playbook?.extraVars || [],
+const ExtraVarsViewEditor: React.FC<ExtraVarsViewEditionProps> = ({
+  playbook,
+}) => {
+  const [currentExtraVars, setCurrentExtraVars] = useState(
+    playbook?.extraVars || [],
   );
-  const [isOpened, setIsOpened] = React.useState(false);
-  const [showCreateNewVarForm, setShowCreateNewVarForm] = React.useState(false);
-  const onChange = (key: string | string[]) => {
-    setIsOpened(key !== undefined && key[0] != undefined);
-  };
-  const handleRemove = async (extraVarName: string) => {
-    await deletePlaybookExtraVar(
-      extraVarViewEditorProps.playbook.uuid,
-      extraVarName,
-    );
-    setCurrentExtraVars(
-      currentExtraVars?.filter((e) => e.extraVar !== extraVarName),
-    );
-  };
+  const [isOpened, setIsOpened] = useState(false);
+  const [showCreateNewVarForm, setShowCreateNewVarForm] = useState(false);
+  const formRef = useRef<ProFormInstance>();
+
   useEffect(() => {
-    setCurrentExtraVars(extraVarViewEditorProps.playbook?.extraVars || []);
+    if (!isOpened) {
+      setShowCreateNewVarForm(false);
+    }
+  }, [isOpened]);
+
+  useEffect(() => {
+    setCurrentExtraVars(playbook?.extraVars || []);
     setIsOpened(false);
-  }, [extraVarViewEditorProps.playbook]);
+  }, [playbook]);
+
+  const onChange = (key: string | string[]) => {
+    setIsOpened(key !== undefined && key[0] !== undefined);
+  };
+
+  const handleRemove = async (extraVarName: string) => {
+    await deletePlaybookExtraVar(playbook.uuid, extraVarName);
+    setCurrentExtraVars(
+      currentExtraVars.filter((e) => e.extraVar !== extraVarName),
+    );
+  };
+
+  const renderExtraVarTag = (extraVar: API.ExtraVar) => (
+    <Tooltip
+      title={getExtraVarTooltipTitle(extraVar.type as SsmAnsible.ExtraVarsType)}
+    >
+      <Tag
+        bordered
+        icon={
+          <ExtraVarIcon
+            extraVarType={extraVar.type as SsmAnsible.ExtraVarsType}
+            style={{ fontSize: 15 }}
+          />
+        }
+        style={{ width: 120, textAlign: 'center' }}
+      >
+        {extraVar.type} VAR
+      </Tag>
+    </Tooltip>
+  );
+
+  const renderAvatarIcon = (required: boolean) => (
+    <Tooltip title={required ? 'Required variable' : 'Optional variable'}>
+      <Avatar
+        src={
+          required ? (
+            <CheckmarkUnderlineCircle24Regular
+              style={{ fontSize: 28, color: 'rgba(255, 255, 255, 0.85)' }}
+            />
+          ) : (
+            <SelectiveTool
+              style={{ fontSize: 28, color: 'rgba(255, 255, 255, 0.85)' }}
+            />
+          )
+        }
+      />
+    </Tooltip>
+  );
+
+  const getInitialValue = (type: string): string => {
+    if (type === SsmAnsible.ExtraVarsType.CONTEXT) return 'AUTO';
+    if (type === SsmAnsible.ExtraVarsType.MANUAL) return 'MANUAL';
+    return '';
+  };
+
+  const renderActionButtons = (extraVar: API.ExtraVar) => (
+    <Button.Group>
+      <Button
+        key="submit"
+        danger
+        disabled={extraVar.type !== SsmAnsible.ExtraVarsType.SHARED}
+        onClick={() => formRef.current?.submit()}
+      >
+        Overwrite
+      </Button>
+      <Button
+        key="delete"
+        danger
+        disabled={!extraVar.deletable}
+        onClick={() => handleRemove(extraVar.extraVar)}
+        style={{ marginLeft: '10px' }}
+      >
+        Delete
+      </Button>
+    </Button.Group>
+  );
+
+  const renderExtraVarRow = (extraVar: API.ExtraVar) => (
+    <React.Fragment key={`row-${extraVar.extraVar}`}>
+      <Row gutter={[16, 16]}>
+        <Col span={24}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <ProForm
+              key={`create-new-var-${extraVar.extraVar}`}
+              style={{ marginTop: 10 }}
+              layout="inline"
+              grid
+              formRef={formRef}
+              onFinish={async (formData) => {
+                await postExtraVarSharedValue({
+                  extraVar: formData.extraVarName,
+                  value: formData.extraVarValue,
+                });
+                message.success({
+                  content: 'Value updated',
+                  duration: 6,
+                });
+              }}
+              submitter={{
+                resetButtonProps: { style: { display: 'none' } },
+                submitButtonProps: { style: { display: 'none' } },
+              }}
+            >
+              <ProForm.Group>
+                <ProForm.Item>{renderExtraVarTag(extraVar)}</ProForm.Item>
+                <ProFormText
+                  style={{ flex: 1 }}
+                  disabled
+                  initialValue={extraVar.extraVar}
+                  name="extraVarName"
+                />
+                <ProFormText
+                  style={{ flex: 1 }}
+                  disabled={
+                    extraVar.type === SsmAnsible.ExtraVarsType.CONTEXT ||
+                    extraVar.type === SsmAnsible.ExtraVarsType.MANUAL
+                  }
+                  name="extraVarValue"
+                  initialValue={
+                    extraVar.value ||
+                    getInitialValue(extraVar.type as SsmAnsible.ExtraVarsType)
+                  }
+                />
+                <ProForm.Item>
+                  {renderAvatarIcon(extraVar.required as boolean)}
+                </ProForm.Item>
+                <ProForm.Item>{renderActionButtons(extraVar)}</ProForm.Item>
+              </ProForm.Group>
+            </ProForm>
+          </div>
+        </Col>
+      </Row>
+      <Divider style={{ marginTop: 15, marginBottom: 2 }} />
+    </React.Fragment>
+  );
+
   return (
     <>
       <Collapse
-        key={extraVarViewEditorProps.playbook.path}
+        key={playbook.path}
         bordered={false}
         style={{ width: '100%', marginBottom: 10 }}
         size="small"
@@ -57,10 +200,9 @@ const ExtraVarsViewEditor: React.FC<ExtraVarsViewEditionProps> = (
             key: '1',
             label: 'Configuration',
             extra: isOpened && (
-              <Tooltip title={'Add ExtraVar'}>
+              <Tooltip title="Add a variable">
                 <Button
                   onClick={(event) => {
-                    // If you don't want click extra trigger collapse, you can prevent this:
                     event.stopPropagation();
                     setShowCreateNewVarForm(true);
                   }}
@@ -72,207 +214,14 @@ const ExtraVarsViewEditor: React.FC<ExtraVarsViewEditionProps> = (
             ),
             children: (
               <>
-                {currentExtraVars?.map((extraVar) => (
-                  <ProForm
-                    key={`create-new-var`}
-                    style={{ marginTop: 10 }}
-                    layout={'inline'}
-                    onFinish={async (formData) => {
-                      await postExtraVarValue(
-                        formData.extraVarName,
-                        formData.extraVarValue,
-                      );
-                      message.success({
-                        content: 'Value updated',
-                        duration: 6,
-                      });
-                    }}
-                    submitter={{
-                      // Configure the button text
-                      searchConfig: {
-                        resetText: 'reset',
-                        submitText: 'save',
-                      },
-                      submitButtonProps: {},
-                      // Fully customize the entire area
-                      render: (props) => {
-                        return [
-                          <Button
-                            type={'primary'}
-                            key="submit"
-                            disabled={!extraVar.canBeOverride}
-                            onClick={() => props.form?.submit?.()}
-                          >
-                            Save
-                          </Button>,
-                          <Button
-                            key="delete"
-                            type="primary"
-                            danger
-                            onClick={() => handleRemove(extraVar.extraVar)}
-                          >
-                            Delete
-                          </Button>,
-                        ];
-                      },
-                    }}
-                  >
-                    <ProForm.Group>
-                      <ProFormText
-                        disabled
-                        initialValue={extraVar.extraVar}
-                        name={`extraVarName`}
-                      />
-
-                      <ProFormText
-                        disabled={!extraVar.canBeOverride}
-                        name={`extraVarValue`}
-                        initialValue={
-                          extraVar.value ||
-                          (extraVar.canBeOverride ? '' : 'COMPUTED AT RUN')
-                        }
-                      />
-                    </ProForm.Group>
-                  </ProForm>
-                ))}
+                {currentExtraVars.map(renderExtraVarRow)}
                 {showCreateNewVarForm && (
-                  <ProForm
-                    key={`create-new-var`}
-                    style={{ marginTop: 10 }}
-                    onFinish={async (formData) => {
-                      const newExtraVar = {
-                        extraVar: formData.extraVarName.value,
-                        value: formData.extraVarValue,
-                        canBeOverride:
-                          (formData.extraVarOps &&
-                            formData.extraVarOps[0] === 'Authorize override') ||
-                          true,
-                      };
-                      await postPlaybookExtraVar(
-                        extraVarViewEditorProps.playbook?.uuid,
-                        newExtraVar,
-                      );
-                      setShowCreateNewVarForm(false);
-                      setCurrentExtraVars([...currentExtraVars, newExtraVar]);
-                      return true;
-                    }}
-                    submitter={{
-                      // Configure the button text
-                      searchConfig: {
-                        resetText: 'reset',
-                        submitText: 'create',
-                      },
-                      submitButtonProps: {},
-                      // Fully customize the entire area
-                      render: (props) => {
-                        return [
-                          <Button
-                            key="rest"
-                            onClick={() => props.form?.resetFields()}
-                          >
-                            Reset
-                          </Button>,
-                          <Button
-                            type={'primary'}
-                            key="submit"
-                            onClick={() => props.form?.submit?.()}
-                          >
-                            Submit
-                          </Button>,
-                          <Button
-                            key="delete"
-                            type="primary"
-                            danger
-                            onClick={() => setShowCreateNewVarForm(false)}
-                          >
-                            Delete
-                          </Button>,
-                        ];
-                      },
-                    }}
-                  >
-                    <ProForm.Group>
-                      <ProFormSelect.SearchSelect
-                        name={'extraVarName'}
-                        label="Select or create a var"
-                        placeholder="Name"
-                        fieldProps={{
-                          labelInValue: true,
-                          style: {
-                            minWidth: 240,
-                          },
-                          mode: undefined,
-                        }}
-                        onChange={() => {}}
-                        rules={[
-                          {
-                            required: true,
-                            message: 'Please enter or select a var name',
-                          },
-                          {
-                            validator(_, value) {
-                              if (
-                                currentExtraVars?.findIndex(
-                                  (e) => e.extraVar === value.value,
-                                ) === -1
-                              ) {
-                                return Promise.resolve();
-                              }
-                              return Promise.reject('Var name already exists');
-                            },
-                          },
-                        ]}
-                        debounceTime={300}
-                        request={async ({ keyWords = '' }) => {
-                          return (await getPlaybooks()
-                            .then((e) => {
-                              const result = e.data
-                                ?.filter(({ extraVars }) => {
-                                  return extraVars?.filter((extraVar) => {
-                                    return extraVar.extraVar?.includes(
-                                      keyWords,
-                                    );
-                                  });
-                                })
-                                .map((f) => {
-                                  return f?.extraVars?.map((g) => {
-                                    return {
-                                      label: g.extraVar,
-                                      value: g.extraVar,
-                                    };
-                                  });
-                                })
-                                .flat();
-                              if (keyWords !== '') {
-                                result?.push({
-                                  // @ts-ignore
-                                  label: <i> {keyWords} </i>,
-                                  value: keyWords,
-                                });
-                              }
-                              return result;
-                            })
-                            .catch((error) => {
-                              message.error({
-                                content: `Error retrieving playbooks list (${error.message})`,
-                                duration: 6,
-                              });
-                              return [];
-                            })) as RequestOptionsType[];
-                        }}
-                      />
-                      <ProFormText
-                        name={'extraVarValue'}
-                        label="Set the value"
-                        placeholder="Value"
-                        rules={[{ required: true }]}
-                      />
-                      <ProFormCheckbox.Group
-                        name="extraVarOps"
-                        options={['Authorize override']}
-                      />
-                    </ProForm.Group>
-                  </ProForm>
+                  <CreateNewVarForm
+                    extraVarViewEditorProps={{ playbook }}
+                    setShowCreateNewVarForm={setShowCreateNewVarForm}
+                    setCurrentExtraVars={setCurrentExtraVars}
+                    currentExtraVars={currentExtraVars}
+                  />
                 )}
               </>
             ),

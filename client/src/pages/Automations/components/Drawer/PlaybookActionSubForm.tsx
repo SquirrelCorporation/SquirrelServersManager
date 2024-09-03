@@ -34,51 +34,23 @@ const PlaybookActionSubForm: React.FC<PlaybookActionSubFormProps> = (props) => {
             return { overrideVar: e.extraVar };
           }),
         );
-        const reservedVars =
-          (selectedPlaybook.extraVars &&
-            selectedPlaybook.extraVars.length > 0 &&
-            selectedPlaybook.extraVars.filter((e) => e.extraVar.startsWith('_'))
-              .length > 0 &&
-            selectedPlaybook.extraVars.filter((e) =>
-              e.extraVar.startsWith('_'),
-            )) ||
-          undefined;
-        const customVars =
-          (selectedPlaybook.extraVars &&
-            selectedPlaybook.extraVars.length > 0 &&
-            selectedPlaybook.extraVars.filter(
-              (e) => !e.extraVar.startsWith('_'),
-            ).length > 0 &&
-            selectedPlaybook.extraVars.filter(
-              (e) => !e.extraVar.startsWith('_'),
-            )) ||
-          undefined;
         setSelectedPlaybookExtraVars([
           {
-            key: 'reserved-vars',
-            label: 'Reserved ExtraVars',
+            key: 'variables',
+            label: 'Variables',
             children:
-              reservedVars?.map((e) => (
-                <ExtraVarView
-                  key={e.extraVar}
-                  extraVar={e}
-                  setOverrideExtraVars={props.setOverrideExtraVars}
-                  overrideExtraVars={props.overrideExtraVars}
-                />
-              )) || 'NONE',
-          },
-          {
-            key: 'custom-vars',
-            label: 'ExtraVars',
-            children:
-              customVars?.map((e) => (
-                <ExtraVarView
-                  key={e.extraVar}
-                  extraVar={e}
-                  setOverrideExtraVars={props.setOverrideExtraVars}
-                  overrideExtraVars={props.overrideExtraVars}
-                />
-              )) || 'NONE',
+              (selectedPlaybook.extraVars &&
+                selectedPlaybook.extraVars.length > 0 &&
+                selectedPlaybook.extraVars?.map((e) => (
+                  <ExtraVarView
+                    key={e.extraVar}
+                    extraVar={e}
+                    setOverrideExtraVars={props.setOverrideExtraVars}
+                    overrideExtraVars={props.overrideExtraVars}
+                    smallView
+                  />
+                ))) ||
+              'NONE',
           },
         ]);
       } else {
@@ -105,7 +77,8 @@ const PlaybookActionSubForm: React.FC<PlaybookActionSubFormProps> = (props) => {
           optionRender: (option) => (
             <Space>
               <span role="img" aria-label={option.data.label as string}>
-                {(option.data.label as string).startsWith('_') ? (
+                {typeof option.data.label === 'string' &&
+                option.data.label?.startsWith('_') ? (
                   <LockFilled />
                 ) : (
                   <FileOutlined />

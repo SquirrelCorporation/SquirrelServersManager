@@ -1,6 +1,6 @@
 import { Automations, SsmContainer } from 'ssm-shared-lib';
 import ContainerRepo from '../../../data/database/repository/ContainerRepo';
-import ContainerUseCases from '../../../use-cases/ContainerUseCases';
+import ContainerUseCases from '../../../services/ContainerUseCases';
 import AbstractActionComponent from './AbstractActionComponent';
 
 class DockerActionComponent extends AbstractActionComponent {
@@ -15,7 +15,7 @@ class DockerActionComponent extends AbstractActionComponent {
   ) {
     super(automationUuid, automationName, Automations.Actions.DOCKER);
     if (!containerIds || !dockerAction) {
-      throw new Error('Empty parameters')
+      throw new Error('Empty parameters');
     }
     this.containerIds = containerIds;
     this.dockerAction = dockerAction;

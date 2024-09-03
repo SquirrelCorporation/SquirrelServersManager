@@ -1,6 +1,16 @@
-export enum SSMReservedExtraVars {
-  MASTER_NODE_URL = '_ssm_masterNodeUrl',
+export enum ExtraVarsType {
+  CONTEXT = 'CONTEXT', // Depends on execution context
+  SHARED = 'SHARED', // Pulled from cache injected automatically when defined in JSON, shared across playbooks
+  MANUAL = 'MANUAL', // Defined manually at the execution of the playbook,
+}
+
+export enum DefaultContextExtraVarsList {
   DEVICE_ID = '_ssm_deviceId',
+  DEVICE_IP = '_ssm_deviceIP',
+}
+
+export enum DefaultSharedExtraVarsList {
+  MASTER_NODE_URL = '_ssm_masterNodeUrl'
 }
 
 export enum SSHType {

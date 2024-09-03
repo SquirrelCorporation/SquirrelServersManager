@@ -10,35 +10,35 @@ import {
   getGitRepositories,
   syncToDatabaseRepository,
   updateGitRepository,
-} from '../services/rest/playbooks-repository/git';
+} from '../controllers/rest/playbooks-repository/git';
 import {
   addGitRepositoryValidator,
   genericGitRepositoryActionValidator,
   updateGitRepositoryValidator,
-} from '../services/rest/playbooks-repository/git.validator';
+} from '../controllers/rest/playbooks-repository/git.validator';
 import {
   addLocalRepository,
   deleteLocalRepository,
   getLocalRepositories,
   syncToDatabaseLocalRepository,
   updateLocalRepository,
-} from '../services/rest/playbooks-repository/local';
+} from '../controllers/rest/playbooks-repository/local';
 import {
   addLocalRepositoryValidator,
   genericActionLocalRepositoryValidator,
   updateLocalRepositoryValidator,
-} from '../services/rest/playbooks-repository/local.validator';
+} from '../controllers/rest/playbooks-repository/local.validator';
 import {
   addDirectoryToPlaybookRepositoryValidator,
   addPlaybookToRepositoryValidator,
   deleteAnyFromRepositoryValidator,
-} from '../services/rest/playbooks-repository/platbooks-repository.validator';
+} from '../controllers/rest/playbooks-repository/platbooks-repository.validator';
 import {
   addDirectoryToPlaybookRepository,
   addPlaybookToRepository,
   deleteAnyFromRepository,
   getPlaybooksRepositories,
-} from '../services/rest/playbooks-repository/playbooks-repository';
+} from '../controllers/rest/playbooks-repository/playbooks-repository';
 
 const router = express.Router();
 

@@ -1,4 +1,4 @@
-import { SSHConnection, SSHType } from '../enums/ansible';
+import { ExtraVarsType, SSHConnection, SSHType } from '../enums/ansible';
 import { PlaybooksRepositoryType } from '../enums/playbooks';
 import { AutomationChain } from '../form/automation';
 import { ExtendedTreeNode } from './tree';
@@ -340,6 +340,7 @@ export type PlaybookFile = {
   path: string;
   custom?: boolean;
   extraVars?: ExtraVars;
+  playableInBatch?: boolean;
 };
 
 export type PlaybooksRepository = {
@@ -547,8 +548,8 @@ export type ExtraVar = {
   extraVar: string;
   value?: string;
   required?: boolean;
-  canBeOverride?: boolean;
-  local?: boolean;
+  type?: ExtraVarsType;
+  deletable?: boolean;
 };
 
 export type Image = {

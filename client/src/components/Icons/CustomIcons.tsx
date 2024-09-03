@@ -1414,3 +1414,114 @@ const SmartSvg = (props: any) => (
 export const Smart = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={SmartSvg} {...props} />
 );
+
+const ArrowsDoubleSeNwSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      d="m3 10l11 11m0-4v4h-4m4-18h-4v4m11 7L10 3"
+    />
+  </svg>
+);
+
+export const ArrowsDoubleSeNw = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ArrowsDoubleSeNwSvg} {...props} />
+);
+
+const ObservedLightningSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 32 32"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="m15.67 24l-1.736-1l2.287-4h-3.889l3.993-7l1.737 1l-2.284 4h3.89l-3.998 7z"
+    />
+    <path
+      fill="currentColor"
+      d="M4 18A12 12 0 1 0 16 6h-4V1L6 7l6 6V8h4A10 10 0 1 1 6 18Z"
+    />
+  </svg>
+);
+
+export const ObservedLightning = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ObservedLightningSvg} {...props} />
+);
+
+const InputSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 15 15"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M6.5 1a.5.5 0 0 0 0 1c.627 0 .957.2 1.156.478C7.878 2.79 8 3.288 8 4v7c0 .712-.122 1.21-.344 1.522c-.199.278-.53.478-1.156.478a.5.5 0 0 0 0 1c.873 0 1.543-.3 1.97-.897l.03-.044l.03.044c.427.597 1.097.897 1.97.897a.5.5 0 0 0 0-1c-.627 0-.957-.2-1.156-.478C9.122 12.21 9 11.712 9 11V4c0-.712.122-1.21.344-1.522C9.543 2.2 9.874 2 10.5 2a.5.5 0 0 0 0-1c-.873 0-1.543.3-1.97.897l-.03.044l-.03-.044C8.042 1.3 7.372 1 6.5 1ZM14 5h-3V4h3a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-3v-1h3V5ZM6 4v1H1v5h5v1H1a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h5Z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+
+export const InputIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={InputSvg} {...props} />
+);
+
+const CheckmarkUnderlineCircle24RegularSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="m10.75 11.44l4.47-4.47a.75.75 0 0 1 1.133.976l-.073.084l-5 5a.75.75 0 0 1-.976.073l-.084-.073l-2.5-2.5a.75.75 0 0 1 .976-1.133l.084.073zM8.5 15a.75.75 0 0 0 0 1.5h6.75a.75.75 0 0 0 0-1.5zM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12m10-8.5a8.5 8.5 0 1 0 0 17a8.5 8.5 0 0 0 0-17"
+    />
+  </svg>
+);
+
+export const CheckmarkUnderlineCircle24Regular = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={CheckmarkUnderlineCircle24RegularSvg} {...props} />;
+
+const SelectiveToolSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.5"
+    >
+      <path fill="currentColor" d="M12 13a1 1 0 1 0 0-2a1 1 0 0 0 0 2Z" />
+      <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10Z" />
+    </g>
+  </svg>
+);
+
+export const SelectiveTool = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={SelectiveToolSvg} {...props} />
+);

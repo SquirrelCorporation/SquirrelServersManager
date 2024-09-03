@@ -1,12 +1,12 @@
 import express from 'express';
 import passport from 'passport';
-import { deleteConf, getConf, postConf, putConf } from '../services/rest/ansible/configuration';
+import { deleteConf, getConf, postConf, putConf } from '../controllers/rest/ansible/configuration';
 import {
   deleteConfValidator,
   postConfValidator,
-} from '../services/rest/ansible/configuration.validator';
-import { getSmartFailure } from '../services/rest/ansible/smart-failure';
-import { getSmartFailureValidator } from '../services/rest/ansible/smart-failure.validator';
+} from '../controllers/rest/ansible/configuration.validator';
+import { getSmartFailure } from '../controllers/rest/ansible/smart-failure';
+import { getSmartFailureValidator } from '../controllers/rest/ansible/smart-failure.validator';
 
 const router = express.Router();
 

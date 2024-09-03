@@ -1,5 +1,5 @@
-import { describe, expect, test, vi } from 'vitest';
 import { DirectoryTree } from 'ssm-shared-lib';
+import { describe, expect, test, vi } from 'vitest';
 import {
   recursiveTreeCompletion,
   recursivelyFlattenTree,
@@ -135,7 +135,9 @@ describe('recursiveTreeCompletion', () => {
   vi.mock('../../../../modules/ansible/utils/ExtraVars', async (importOriginal) => {
     return {
       default: {
-        ...(await importOriginal<typeof import('../../../../modules/ansible/utils/ExtraVars')>()),
+        ...(await importOriginal<
+          typeof import('../../../../modules/ansible/extravars/ExtraVars')
+        >()),
         findValueOfExtraVars: async () => {
           return undefined;
         },

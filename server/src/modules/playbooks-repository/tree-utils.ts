@@ -1,7 +1,7 @@
 import { DirectoryTree } from 'ssm-shared-lib';
 import PlaybookRepo from '../../data/database/repository/PlaybookRepo';
 import logger from '../../logger';
-import ExtraVars from '../ansible/utils/ExtraVars';
+import ExtraVars from '../ansible/extravars/ExtraVars';
 import { FILE_PATTERN } from './PlaybooksRepositoryComponent';
 
 export function recursivelyFlattenTree(

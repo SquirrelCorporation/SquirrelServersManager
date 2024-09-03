@@ -1,7 +1,13 @@
 import { Playbooks } from 'ssm-shared-lib';
 import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
 import UserRepo from '../../data/database/repository/UserRepo';
+import PinoLogger from '../../logger';
 import Shell from '../shell';
+
+const logger = PinoLogger.child(
+  { module: 'PlaybooksRepositoryEngine' },
+  { msgPrefix: '[PLAYBOOK_REPOSITORY_ENGINE] - ' },
+);
 
 const corePlaybooksRepository = {
   name: 'ssm-core',
@@ -39,6 +45,8 @@ export async function createADefaultLocalUserRepository() {
     await PlaybooksRepositoryRepo.updateOrCreate(userPlaybooksRepository);
     try {
       Shell.FileSystemManager.createDirectory(userPlaybooksRepository.directory);
-    } catch (error: any) {}
+    } catch (error: any) {
+      logger.error(error);
+    }
   }
 }

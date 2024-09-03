@@ -5,39 +5,39 @@ import {
   postContainerAction,
   postCustomNameOfContainer,
   refreshAll,
-} from '../services/rest/containers/containers';
+} from '../controllers/rest/containers/containers';
 import {
   postContainerActionValidator,
   postCustomNameOfContainerValidator,
-} from '../services/rest/containers/containers.validator';
+} from '../controllers/rest/containers/containers.validator';
 import {
   getAveragedStats,
   getContainerStatByContainerId,
   getContainerStatsByContainerId,
   getNbContainersByStatus,
-} from '../services/rest/containers/containerstats';
+} from '../controllers/rest/containers/containerstats';
 import {
   getContainerStatByContainerIdValidator,
   getContainerStatsByContainerIdValidator,
   getNbContainersByStatusValidator,
-} from '../services/rest/containers/containerstats.validator';
-import { getImages } from '../services/rest/containers/images';
-import { getNetworks } from '../services/rest/containers/networks';
+} from '../controllers/rest/containers/containerstats.validator';
+import { getImages } from '../controllers/rest/containers/images';
+import { getNetworks } from '../controllers/rest/containers/networks';
 import {
   createCustomRegistry,
   getRegistries,
   removeRegistry,
   resetRegistry,
   updateRegistry,
-} from '../services/rest/containers/registries';
+} from '../controllers/rest/containers/registries';
 import {
   createCustomRegistryValidator,
   removeRegistryValidator,
   resetRegistryValidator,
   updateRegistryValidator,
-} from '../services/rest/containers/registries.validator';
-import { deploy, getTemplates } from '../services/rest/containers/templates';
-import { getVolumes } from '../services/rest/containers/volumes';
+} from '../controllers/rest/containers/registries.validator';
+import { deploy, getTemplates } from '../controllers/rest/containers/templates';
+import { getVolumes } from '../controllers/rest/containers/volumes';
 
 const router = express.Router();
 

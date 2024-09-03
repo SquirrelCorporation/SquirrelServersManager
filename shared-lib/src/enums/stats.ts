@@ -7,5 +7,5 @@ export enum DeviceStatsType {
   CPU = 'cpu',
   MEM_USED = 'memUsed',
   MEM_FREE = 'memFree',
-  SERVICES = 'services'
+  CONTAINERS = 'containers'
 }

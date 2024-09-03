@@ -2,8 +2,8 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import Playbook from '../../../../data/database/model/Playbook';
 import PlaybookRepo from '../../../../data/database/repository/PlaybookRepo';
 import UserRepo from '../../../../data/database/repository/UserRepo';
-import PlaybookUseCases from '../../../../use-cases/PlaybookUseCases';
 import PlaybookActionComponent from '../../../../modules/automations/actions/PlaybookActionComponent';
+import PlaybookUseCases from '../../../../services/PlaybookUseCases';
 
 const automationUuid = 'test-uuid';
 const automationName = 'test-name';
@@ -35,9 +35,9 @@ vi.mock('../../../../data/database/repository/UserRepo', async (importOriginal) 
     },
   };
 });
-vi.mock('../../../../use-cases/PlaybookUseCases', async (importOriginal) => {
+vi.mock('../../../../services/PlaybookUseCases', async (importOriginal) => {
   return {
-    ...(await importOriginal<typeof import('../../../../use-cases/PlaybookUseCases')>()),
+    ...(await importOriginal<typeof import('../../../../services/PlaybookUseCases')>()),
     default: {
       executePlaybook: async (uuid: string) => {
         if (uuid === 'error') {

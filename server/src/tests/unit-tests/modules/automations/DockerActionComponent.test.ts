@@ -1,10 +1,10 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { SsmContainer } from 'ssm-shared-lib';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import Automation from '../../../../data/database/model/Automation';
 import Container from '../../../../data/database/model/Container';
 import ContainerRepo from '../../../../data/database/repository/ContainerRepo';
-import ContainerUseCases from '../../../../use-cases/ContainerUseCases';
 import DockerActionComponent from '../../../../modules/automations/actions/DockerActionComponent';
+import ContainerUseCases from '../../../../services/ContainerUseCases';
 
 const automationUuid = 'test-uuid';
 const automationName = 'test-name';
@@ -42,9 +42,9 @@ vi.mock('../../../../data/database/repository/AutomationRepo', async (importOrig
     },
   };
 });
-vi.mock('../../../../use-cases/ContainerUseCases', async (importOriginal) => {
+vi.mock('../../../../services/ContainerUseCases', async (importOriginal) => {
   return {
-    ...(await importOriginal<typeof import('../../../../use-cases/ContainerUseCases')>()),
+    ...(await importOriginal<typeof import('../../../../services/ContainerUseCases')>()),
     default: {
       performAction: (container: Container, action: SsmContainer.Actions) => {
         if (action === SsmContainer.Actions.PAUSE) {

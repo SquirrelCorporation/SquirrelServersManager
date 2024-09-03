@@ -3,7 +3,7 @@ import User from '../../../data/database/model/User';
 import AnsibleTaskStatusRepo from '../../../data/database/repository/AnsibleTaskStatusRepo';
 import PlaybookRepo from '../../../data/database/repository/PlaybookRepo';
 import UserRepo from '../../../data/database/repository/UserRepo';
-import PlaybookUseCases from '../../../use-cases/PlaybookUseCases';
+import PlaybookUseCases from '../../../services/PlaybookUseCases';
 import AbstractActionComponent from './AbstractActionComponent';
 
 class PlaybookActionComponent extends AbstractActionComponent {
@@ -85,8 +85,16 @@ class PlaybookActionComponent extends AbstractActionComponent {
       }
     } catch (error: any) {
       this.childLogger.error(error);
-      await this.onError();
+      await this.onErrorSafely(); // Use a safe method to handle errors
       return;
+    }
+  }
+
+  private async onErrorSafely() {
+    try {
+      await this.onError();
+    } catch (innerError) {
+      this.childLogger.error('Error during onError handling:', innerError);
     }
   }
 }
