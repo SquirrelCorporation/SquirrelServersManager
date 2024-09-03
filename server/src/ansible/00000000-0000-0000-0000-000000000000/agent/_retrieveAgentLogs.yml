@@ -1,0 +1,37 @@
+- name: Optionally read logs from a specified path
+  hosts: all
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: Check if the log path is provided
+      ansible.builtin.debug:
+        msg: "Log path: {{ _ssm_agentLogPath }}"
+      when: _ssm_agentLogPath is defined and _ssm_agentLogPath != ""
+
+    - name: Verify the log file exists
+      ansible.builtin.stat:
+        path: "{{ _ssm_agentLogPath }}"
+      register: log_file
+      when: _ssm_agentLogPath is defined and _ssm_agentLogPath != ""
+
+    - name: Read the log file
+      ansible.builtin.shell: "cat {{ _ssm_agentLogPath }}"
+      register: log_content
+      when:
+        - _ssm_agentLogPath is defined and _ssm_agentLogPath != ""
+        - log_file.stat.exists
+        - log_file.stat.isfile
+
+    - name: Print the log content
+      ansible.builtin.debug:
+        msg: "{{ log_content.stdout }}"
+      when:
+        - _ssm_agentLogPath is defined and _ssm_agentLogPath != ""
+        - log_file.stat.exists
+        - log_file.stat.isfile
+
+    - name: Log path not defined or invalid
+      ansible.builtin.debug:
+        msg: "The log path is either not defined or points to an invalid file."
+      when: _ssm_agentLogPath is not defined or _ssm_agentLogPath == ""

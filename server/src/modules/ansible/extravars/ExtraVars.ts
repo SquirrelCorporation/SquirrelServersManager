@@ -81,6 +81,8 @@ class ExtraVars {
         return targets[0];
       case SsmAnsible.DefaultContextExtraVarsList.DEVICE_IP:
         return device.ip;
+      case SsmAnsible.DefaultContextExtraVarsList.AGENT_LOG_PATH:
+        return device.agentLogPath;
     }
     this.logger.error(`Context variable not found: '${extraVar.extraVar}'`);
   }
