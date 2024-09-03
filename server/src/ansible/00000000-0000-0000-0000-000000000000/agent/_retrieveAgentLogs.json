@@ -1,4 +1,12 @@
 {
   "playableInBatch": false,
-  "uniqueQuickRef": "retrieveAgentLogs"
+  "uniqueQuickRef": "retrieveAgentLogs",
+  "extraVars": [
+    {
+      "extraVar": "_ssm_agentLogPath",
+      "required": false,
+      "type": "CONTEXT",
+      "deletable": false
+    }
+  ]
 }

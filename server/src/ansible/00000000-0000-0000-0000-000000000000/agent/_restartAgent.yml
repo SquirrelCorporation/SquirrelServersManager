@@ -6,24 +6,31 @@
     base_path: /opt/squirrelserversmanager
 
   tasks:
-    - name: Stop PM2 Agent if running
-      command: pm2 stop agent
-      ignore_errors: yes
-
-    - name: Delete PM2 Agent if present
-      command: pm2 delete agent
-      ignore_errors: yes
+    - name: Manage PM2 Agent
+      block:
+        - name: Stop and Delete PM2 Agent if present
+          command: "pm2 {{ item }} agent"
+          ignore_errors: true
+          with_items:
+            - stop
+            - delete
 
     - name: Start PM2 Agent
-      command:
-        chdir: "{{ base_path }}"
-        cmd: pm2 start -f "./build/agent.js"
+      block:
+        - name: Start PM2 Agent
+          command: pm2 start -f "./build/agent.js"
+          args:
+            chdir: "{{ base_path }}"
 
-    - name: Install PM2 on startup
-      command: pm2 startup
+        - name: Install PM2 on startup
+          command: pm2 startup
 
-    - name: Save Agent on startup
-      command: pm2 save
+        - name: Save Agent on startup
+          command: pm2 save
 
-    - name: Save Agent on startup
-      command: pm2 update
+        - name: Update PM2
+          command: pm2 update
+
+    - name: Task completion summary
+      debug:
+        msg: "Agent restart process completed on {{ inventory_hostname }}"

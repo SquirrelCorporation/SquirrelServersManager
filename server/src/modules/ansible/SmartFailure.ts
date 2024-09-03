@@ -91,6 +91,47 @@ const failurePatterns: FailurePattern[] = [
     resolution:
       'Check the configuration and parameters of the redirect module used in the playbook.',
   },
+  {
+    id: 'docker_connection_failed',
+    pattern: /Failed to connect to Docker daemon/i,
+    cause:
+      'Ansible failed to connect to the Docker daemon, which could be due to the Docker service not running or permission issues.',
+    resolution:
+      'Ensure the Docker service is running on the host.\n' +
+      '1. Verify Docker daemon is active using: `sudo systemctl status docker`\n' +
+      '2. Check if the user has the necessary permissions to interact with Docker. Users usually need to be added to the "docker" group: `sudo usermod -aG docker $USER`\n' +
+      '3. Restart the Docker service: `sudo systemctl restart docker`',
+  },
+  {
+    id: 'container_not_found',
+    pattern: /No such container/i,
+    cause: 'The specified Docker container does not exist on the host.',
+    resolution:
+      'Verify that the container name or ID is correct and that the container is running.\n' +
+      '1. List all containers to confirm: `docker ps -a`\n' +
+      '2. Ensure the container name or ID used in the playbook matches one of the listed containers.',
+  },
+  {
+    id: 'image_pull_failed',
+    pattern: /Failed to pull image/i,
+    cause: 'Ansible failed to pull the specified Docker image from the registry.',
+    resolution:
+      'Check the Docker image name and tag for correctness.\n' +
+      '1. Ensure the image name and tag are correct and available in the registry: `docker pull <image_name>:<tag>`\n' +
+      '2. Verify that you have the necessary permissions to pull from the registry (e.g., docker login).\n' +
+      '3. Check your network connection to ensure it can reach the Docker registry.',
+  },
+  {
+    id: 'docker_execution_failed',
+    pattern: /Failed to execute command in container/i,
+    cause:
+      'Ansible could not execute a command inside the Docker container due to various possible issues.',
+    resolution:
+      'Check the command and container’s state.\n' +
+      '1. Ensure the container is running: `docker ps`\n' +
+      '2. Verify the command is valid within the container’s environment.\n' +
+      '3. Check the container logs for additional error details: `docker logs <container_id>`',
+  },
 ];
 
 class SmartFailure {
