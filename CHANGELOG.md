@@ -15,6 +15,8 @@
 **Fixed bugs:**
 
 - \[BUG\] Buggy Automation editor when setting template 🐛 [\#222](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/222)
+- \[BUG\] Uninstalling the agent still left files behind [\#46](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/46)
+- \[BUG\] Add support for agent log path management in Ansible tasks [\#266](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/266) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\]\[CHORE\] Add default values for SSH connection and host checking [\#265](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/265) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Set initial cronValue from formRef [\#223](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/223) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
