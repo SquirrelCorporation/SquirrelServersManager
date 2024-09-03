@@ -1,6 +1,6 @@
 import express from 'express';
 import passport from 'passport';
-import { getCrons } from '../services/rest/admin/cron';
+import { getCrons } from '../controllers/rest/admin/cron';
 
 const router = express.Router();
 

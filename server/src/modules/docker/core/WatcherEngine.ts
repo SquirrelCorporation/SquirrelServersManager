@@ -1,7 +1,8 @@
 import Device from '../../../data/database/model/Device';
 import PinoLogger from '../../../logger';
-import ContainerRegistryUseCases from '../../../use-cases/ContainerRegistryUseCases';
-import DeviceUseCases from '../../../use-cases/DeviceUseCases';
+import ContainerRegistryUseCases from '../../../services/ContainerRegistryUseCases';
+import DeviceUseCases from '../../../services/DeviceUseCases';
+import { SSMServicesTypes } from '../../../types/typings';
 import Custom from '../registries/providers/custom/Custom';
 import Ecr from '../registries/providers/ecr/Ecr';
 import Forgejo from '../registries/providers/forgejo/Forgejo';
@@ -14,7 +15,6 @@ import Lscr from '../registries/providers/lscr/Lscr';
 import providerConf from '../registries/providers/provider.conf';
 import Quay from '../registries/providers/quay/Quay';
 import Registry from '../registries/Registry';
-import { SSMServicesTypes } from '../../../types/typings';
 import Docker from '../watchers/providers/docker/Docker';
 import Component, { Kind } from './Component';
 

@@ -1,8 +1,8 @@
-import ServiceQuickActionDropDown from '@/components/ServiceComponents/ServiceQuickAction/ServiceQuickActionDropDown';
+import ServiceQuickActionDropDown from '@/components/ContainerComponents/ContainerQuickAction/ContainerQuickActionDropDown';
 import ServiceQuickActionReference, {
   ServiceQuickActionReferenceActions,
   ServiceQuickActionReferenceTypes,
-} from '@/components/ServiceComponents/ServiceQuickAction/ServiceQuickActionReference';
+} from '@/components/ContainerComponents/ContainerQuickAction/ContainerQuickActionReference';
 import ContainerAvatar from '@/pages/Containers/components/containers/ContainerAvatar';
 import ContainerStatProgress from '@/pages/Containers/components/containers/ContainerStatProgress';
 import InfoToolTipCard from '@/pages/Containers/components/containers/InfoToolTipCard';

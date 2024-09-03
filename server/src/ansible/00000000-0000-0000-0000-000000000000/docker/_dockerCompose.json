@@ -5,12 +5,14 @@
     {
       "extraVar": "project",
       "required": true,
-      "canBeOverride": true
+      "type": "CONTEXT",
+      "deletable": false
     },
     {
       "extraVar": "definition",
       "required": true,
-      "canBeOverride": true
+      "type": "CONTEXT",
+      "deletable": false
     }
   ]
 }

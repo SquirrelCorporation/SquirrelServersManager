@@ -1,61 +1,156 @@
+import { InputIcon } from '@/components/Icons/CustomIcons';
+import ExtraVarIcon, {
+  getExtraVarTooltipTitle,
+} from '@/components/PlaybookSelection/ExtraVarIcon';
+import {
+  ArrowUpOutlined,
+  LockOutlined,
+  UnlockOutlined,
+} from '@ant-design/icons';
 import { ProForm, ProFormText } from '@ant-design/pro-components';
-import { Button, Space, Typography } from 'antd';
+import { Button, Popconfirm, PopconfirmProps, Space, Tag, Tooltip } from 'antd';
 import React from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, SsmAnsible } from 'ssm-shared-lib';
 
-export type ExtraVarViewProps = {
+type ExtraVarViewProps = {
   extraVar: API.ExtraVar;
   setOverrideExtraVars: any;
   overrideExtraVars: any;
   smallView?: boolean;
 };
 
-const ExtraVarView: React.FC<ExtraVarViewProps> = (props) => {
+const isButtonDisabled = (
+  type?: SsmAnsible.ExtraVarsType,
+  extraVarValue?: string,
+) =>
+  type !== SsmAnsible.ExtraVarsType.SHARED ||
+  (type === SsmAnsible.ExtraVarsType.SHARED &&
+    (extraVarValue === undefined ||
+      extraVarValue === '' ||
+      extraVarValue === 'AUTO'));
+
+const ExtraVarView: React.FC<ExtraVarViewProps> = ({
+  extraVar,
+  setOverrideExtraVars,
+  overrideExtraVars,
+  smallView = false,
+}) => {
+  const [currentValue, setCurrentValue] = React.useState(
+    extraVar.value ||
+      (extraVar.type !== SsmAnsible.ExtraVarsType.MANUAL ? 'AUTO' : ''),
+  );
+
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    props.setOverrideExtraVars((prevState: any[]) =>
-      prevState.map((e) => {
-        if (e.overrideVar === props.extraVar.extraVar) {
-          return {
-            overrideVar: e.overrideVar,
-            value: event.target.value,
-          };
-        } else {
-          return e;
-        }
-      }),
+    setOverrideExtraVars((prevState: any[]) =>
+      prevState.map((e) =>
+        e.overrideVar === extraVar.extraVar
+          ? { ...e, value: event.target.value }
+          : e,
+      ),
     );
+    setCurrentValue(event.target.value);
   };
+
+  const getPlaceholder = () => {
+    if (extraVar.type === SsmAnsible.ExtraVarsType.MANUAL) {
+      return extraVar.required ? 'Please enter' : '(Optional)';
+    }
+    return 'AUTO';
+  };
+
+  const confirm: PopconfirmProps['onConfirm'] = (e) => {
+    console.log(e);
+  };
+
+  const OverwriteButton = ({ extraVarValue }: { extraVarValue?: string }) => (
+    <Popconfirm
+      title="Overwrite the variable"
+      description="Are you sure to overwrite this variable?"
+      onConfirm={confirm}
+      okText="Yes"
+      cancelText="No"
+    >
+      <Button
+        disabled={isButtonDisabled(extraVar.type, extraVarValue)}
+        style={{ marginTop: 0 }}
+        icon={<ArrowUpOutlined />}
+        danger
+      >
+        Overwrite
+      </Button>
+    </Popconfirm>
+  );
+
   return (
-    <Space direction="horizontal" align={'center'}>
-      <ProFormText disabled fieldProps={{ value: props.extraVar.extraVar }} />
+    <Space direction="horizontal" align="center" key={extraVar.extraVar}>
+      <ProForm.Item
+        style={{ width: smallView ? undefined : 140 }}
+        key={`${extraVar.extraVar}-form-item`}
+      >
+        <Tooltip
+          title={getExtraVarTooltipTitle(
+            extraVar.type as SsmAnsible.ExtraVarsType,
+            true,
+          )}
+        >
+          <Tag
+            bordered={true}
+            icon={
+              <ExtraVarIcon
+                extraVarType={extraVar.type as SsmAnsible.ExtraVarsType}
+              />
+            }
+          >
+            {!smallView && <>{extraVar.type} VAR</>}
+          </Tag>
+        </Tooltip>
+      </ProForm.Item>
       <ProFormText
-        disabled={!props.extraVar.canBeOverride}
-        placeholder={
-          !props.extraVar.canBeOverride ? 'COMPUTED' : 'Please enter'
-        }
+        name={['extraVars', extraVar.extraVar]}
+        disabled
+        fieldProps={{ value: extraVar.extraVar }}
+        rules={[{ required: false }]}
+      />
+      <ProFormText
+        name={['extraVars', extraVar.extraVar, 'value']}
+        disabled={extraVar.type === SsmAnsible.ExtraVarsType.CONTEXT}
+        placeholder={getPlaceholder()}
+        rules={[
+          {
+            required:
+              extraVar.type === SsmAnsible.ExtraVarsType.MANUAL &&
+              extraVar.required,
+          },
+        ]}
         fieldProps={{
           onChange: handleChange,
+          value: currentValue,
+          prefix:
+            extraVar.type === SsmAnsible.ExtraVarsType.CONTEXT ? (
+              <LockOutlined />
+            ) : extraVar.type === SsmAnsible.ExtraVarsType.SHARED ? (
+              <UnlockOutlined />
+            ) : (
+              <InputIcon />
+            ),
           defaultValue:
-            props.extraVar.value ||
-            (!props.extraVar.canBeOverride ? '' : 'COMPUTED'),
+            extraVar.value ||
+            (extraVar.type !== SsmAnsible.ExtraVarsType.MANUAL ? 'AUTO' : ''),
         }}
       />
-      <ProForm.Item>
-        <Button
-          disabled={!props.extraVar.canBeOverride}
-          style={{ marginTop: 0 }}
-        >
-          <Typography.Text
-            ellipsis
-            style={props.smallView ? { width: 50 } : {}}
-          >
-            {' '}
-            Save for future execution
-          </Typography.Text>
-        </Button>
-      </ProForm.Item>
+      {!smallView && (
+        <ProForm.Item>
+          {extraVar.type === SsmAnsible.ExtraVarsType.SHARED ? (
+            <Tooltip title="Overwrite the value in the database. It will modify the value for all the playbooks.">
+              <OverwriteButton extraVarValue={currentValue} />
+            </Tooltip>
+          ) : (
+            <OverwriteButton extraVarValue={currentValue} />
+          )}
+        </ProForm.Item>
+      )}
     </Space>
   );
 };

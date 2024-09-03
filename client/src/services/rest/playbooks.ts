@@ -99,13 +99,20 @@ export async function deletePlaybookExtraVar(
   );
 }
 
-export async function postExtraVarValue(extraVar: string, value: string) {
+export async function postExtraVarSharedValue(
+  data: { extraVar: string; value: string },
+  params?: any,
+  options?: Record<string, any>,
+) {
   return request<API.PlaybookOpResponse>(
-    `/api/playbooks/extravars/${extraVar}`,
+    `/api/playbooks/extravars/${data.extraVar}`,
     {
-      data: { value: value },
+      data: { value: data.value },
       method: 'POST',
-      ...{},
+      params: {
+        ...params,
+      },
+      ...(options || {}),
     },
   );
 }

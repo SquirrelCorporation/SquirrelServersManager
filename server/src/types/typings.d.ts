@@ -41,7 +41,7 @@ export declare namespace Playbooks {
 
   type PlaybookConfigurationFile = {
     playableInBatch: boolean;
-    extraVars?: [{ extraVar: string; required: boolean }];
+    extraVars?: [{ extraVar: string; required: boolean; type: string; deletable: boolean }];
     uniqueQuickRef?: string;
   };
 }

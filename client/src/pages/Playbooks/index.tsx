@@ -156,9 +156,11 @@ const Index: React.FC = () => {
       }
     });
   };
+
   useEffect(() => {
     void asyncFetch();
   }, []);
+
   useEffect(() => {
     void asyncFetchPlaybookContent();
   }, [selectedFile]);

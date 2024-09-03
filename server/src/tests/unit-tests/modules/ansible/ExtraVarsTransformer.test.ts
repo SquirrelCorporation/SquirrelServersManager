@@ -1,6 +1,6 @@
-import { describe, expect, test } from 'vitest';
 import { API } from 'ssm-shared-lib';
-import ExtraVarsTransformer from '../../../../modules/ansible/utils/ExtraVarsTransformer';
+import { describe, expect, test } from 'vitest';
+import ExtraVarsTransformer from '../../../../modules/ansible/extravars/ExtraVarsTransformer';
 
 describe('transformExtraVars function', () => {
   test('should transform list of extraVars into object correctly', () => {

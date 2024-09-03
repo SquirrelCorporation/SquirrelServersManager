@@ -5,27 +5,27 @@ import {
   execPlaybookByQuickRef,
   getLogs,
   getStatus,
-} from '../services/rest/playbooks/execution';
+} from '../controllers/rest/playbooks/execution';
 import {
   execPlaybookByQuickRefValidator,
   execPlaybookValidator,
   getLogsValidator,
   getStatusValidator,
-} from '../services/rest/playbooks/execution.validator';
-import { addOrUpdateExtraVarValue } from '../services/rest/playbooks/extravar';
-import { addOrUpdateExtraVarValueValidator } from '../services/rest/playbooks/extravar.validator';
+} from '../controllers/rest/playbooks/execution.validator';
+import { setSharedExtraVarValue } from '../controllers/rest/playbooks/extravar';
+import { addOrUpdateExtraVarValueValidator } from '../controllers/rest/playbooks/extravar.validator';
 import {
   getAnsibleGalaxyCollection,
   getAnsibleGalaxyCollections,
   postInstallAnsibleGalaxyCollection,
-} from '../services/rest/playbooks/galaxy';
+} from '../controllers/rest/playbooks/galaxy';
 import {
-  getAnsibleGalaxyCollectionValidator,
   getAnsibleGalaxyCollectionsValidator,
+  getAnsibleGalaxyCollectionValidator,
   postInstallAnsibleGalaxyCollectionValidator,
-} from '../services/rest/playbooks/galaxy.validator';
-import { addTaskEvent, addTaskStatus } from '../services/rest/playbooks/hook';
-import { getInventory } from '../services/rest/playbooks/inventory';
+} from '../controllers/rest/playbooks/galaxy.validator';
+import { addTaskEvent, addTaskStatus } from '../controllers/rest/playbooks/hook';
+import { getInventory } from '../controllers/rest/playbooks/inventory';
 import {
   addExtraVarToPlaybook,
   deleteExtraVarFromPlaybook,
@@ -33,15 +33,15 @@ import {
   editPlaybook,
   getPlaybook,
   getPlaybooks,
-} from '../services/rest/playbooks/playbook';
+} from '../controllers/rest/playbooks/playbook';
 import {
   addExtraVarToPlaybookValidator,
   deleteExtraVarFromPlaybookValidator,
   deletePlaybookValidator,
   editPlaybookValidator,
   getPlaybookValidator,
-} from '../services/rest/playbooks/playbook.validator';
-import { getVaultPwd } from '../services/rest/playbooks/vault';
+} from '../controllers/rest/playbooks/playbook.validator';
+import { getVaultPwd } from '../controllers/rest/playbooks/vault';
 
 const router = express.Router();
 
@@ -76,7 +76,7 @@ router.get(`/exec/:id/status`, getStatusValidator, getStatus);
 router.post(`/exec/quick-ref/:quickRef`, execPlaybookByQuickRefValidator, execPlaybookByQuickRef);
 router.post(`/exec/:uuid`, execPlaybookValidator, execPlaybook);
 
-router.post(`/extravars/:varname`, addOrUpdateExtraVarValueValidator, addOrUpdateExtraVarValue);
+router.post(`/extravars/:varname`, addOrUpdateExtraVarValueValidator, setSharedExtraVarValue);
 
 router.post(`/:uuid/extravars`, addExtraVarToPlaybookValidator, addExtraVarToPlaybook);
 router.delete(

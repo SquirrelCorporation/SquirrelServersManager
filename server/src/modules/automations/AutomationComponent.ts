@@ -10,8 +10,8 @@ import CronTriggerComponent from './triggers/CronTriggerComponent';
 class AutomationComponent {
   public uuid: string;
   public name: string;
-  public trigger: TriggerComponent | undefined;
-  public actions: AbstractActionComponent[] | undefined;
+  public trigger?: TriggerComponent;
+  public actions: AbstractActionComponent[];
   public childLogger: pino.Logger<never>;
   public automationChain: Automations.AutomationChain;
 
@@ -79,14 +79,16 @@ class AutomationComponent {
 
   deregister() {
     this.trigger?.deregister();
-    delete this.trigger;
-    if (this.actions) {
-      for (const i in this.actions) {
-        delete this.actions[i];
-      }
+    this.trigger = undefined; // Explicitly set to undefined
+
+    if (this.actions.length > 0) {
+      this.actions.forEach((_, index) => (this.actions[index] = undefined!));
     } else {
       this.childLogger.error('No actions found');
     }
+
+    // Alternatively, reset the array to an empty array
+    this.actions = [];
   }
 }
 

@@ -1,4 +1,5 @@
-import { Schema, model } from 'mongoose';
+import { model, Schema } from 'mongoose';
+import { SsmAnsible } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
 import PlaybooksRepository from './PlaybooksRepository';
 
@@ -10,7 +11,7 @@ export default interface Playbook {
   uuid?: string;
   name: string;
   path: string;
-  extraVars?: [{ extraVar: string; required: boolean }];
+  extraVars?: [{ extraVar: string; required: boolean; type: SsmAnsible.ExtraVarsType }];
   playableInBatch?: boolean;
   playbooksRepository?: PlaybooksRepository;
   uniqueQuickRef?: string;

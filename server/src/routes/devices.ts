@@ -1,62 +1,62 @@
 import express from 'express';
 import passport from 'passport';
-import upload from '../middlewares/Upload';
 import {
   getCheckDeviceAnsibleConnection,
   getCheckDeviceDockerConnection,
   postCheckAnsibleConnection,
   postCheckDockerConnection,
-} from '../services/rest/devices/check-connection';
+} from '../controllers/rest/devices/check-connection';
 import {
   getCheckDeviceAnsibleConnectionValidator,
   getCheckDeviceDockerConnectionValidator,
   postCheckAnsibleConnectionValidator,
   postCheckDockerConnectionValidator,
-} from '../services/rest/devices/check-connection.validator';
+} from '../controllers/rest/devices/check-connection.validator';
 import {
   addDevice,
   addDeviceAuto,
   deleteDevice,
   getDevices,
   updateDockerWatcher,
-} from '../services/rest/devices/device';
+} from '../controllers/rest/devices/device';
 import {
   addDeviceAutoValidator,
   addDeviceValidator,
   deleteDeviceValidator,
-} from '../services/rest/devices/device.validator';
+} from '../controllers/rest/devices/device.validator';
 import {
   addOrUpdateDeviceAuth,
   deleteDockerAuthCerts,
   getDeviceAuth,
   updateDockerAuth,
   uploadDockerAuthCerts,
-} from '../services/rest/devices/deviceauth';
+} from '../controllers/rest/devices/deviceauth';
 import {
   addOrUpdateDeviceAuthValidator,
   getDeviceAuthValidator,
   updateDockerAuthValidator,
-} from '../services/rest/devices/deviceauth.validator';
+} from '../controllers/rest/devices/deviceauth.validator';
 import {
   getDeviceStatByDeviceUuid,
   getDeviceStatsByDeviceUuid,
   updateDeviceAndAddDeviceStat,
-} from '../services/rest/devices/devicestats';
+} from '../controllers/rest/devices/devicestats';
 import {
   getDeviceStatByDeviceUuidValidator,
   getDeviceStatsByDeviceUuidValidator,
   updateDeviceAndAddDeviceStatValidator,
-} from '../services/rest/devices/devicestats.validator';
+} from '../controllers/rest/devices/devicestats.validator';
 import {
   getDashboardAvailabilityStats,
   getDashboardAveragedStats,
   getDashboardPerformanceStats,
   getDashboardStat,
-} from '../services/rest/devices/devicestatsdashboard';
+} from '../controllers/rest/devices/devicestatsdashboard';
 import {
   getDashboardAveragedStatsValidator,
   getDashboardStatValidator,
-} from '../services/rest/devices/devicestatsdashboard.validator';
+} from '../controllers/rest/devices/devicestatsdashboard.validator';
+import upload from '../middlewares/Upload';
 
 const router = express.Router();
 

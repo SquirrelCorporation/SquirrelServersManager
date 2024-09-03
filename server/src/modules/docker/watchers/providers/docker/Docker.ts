@@ -12,7 +12,7 @@ import DeviceAuthRepo from '../../../../../data/database/repository/DeviceAuthRe
 import DeviceRepo from '../../../../../data/database/repository/DeviceRepo';
 import SSHCredentialsHelper from '../../../../../helpers/ssh/SSHCredentialsHelper';
 import logger from '../../../../../logger';
-import DeviceUseCases from '../../../../../use-cases/DeviceUseCases';
+import DeviceUseCases from '../../../../../services/DeviceUseCases';
 import Component from '../../../core/Component';
 import { getCustomAgent } from '../../../core/CustomAgent';
 import { Label } from '../../../utils/label';
@@ -541,7 +541,7 @@ export default class Docker extends DockerLogs {
         this.childLogger.info(`[CRON] - watchContainerStats ${container.id}`);
         try {
           const dockerContainer = this.dockerApi.getContainer(container.id);
-          this.childLogger.info(
+          this.childLogger.debug(
             `[CRON] - watchContainerStats getContainer - ${dockerContainer.id}`,
           );
           const dockerStats = await dockerContainer.stats({ stream: false });

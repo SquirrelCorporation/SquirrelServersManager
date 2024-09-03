@@ -5,7 +5,8 @@
     {
       "extraVar": "_ssm_masterNodeUrl",
       "required": true,
-      "canBeOverride": true
+      "type": "SHARED",
+      "deletable": false
     }
   ]
 }

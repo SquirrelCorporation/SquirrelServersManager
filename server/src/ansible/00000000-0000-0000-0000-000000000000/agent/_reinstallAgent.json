@@ -5,12 +5,14 @@
     {
       "extraVar": "_ssm_masterNodeUrl",
       "required": true,
-      "canBeOverride": true
+      "type": "SHARED",
+      "deletable": false
     },
     {
       "extraVar": "_ssm_deviceId",
       "required": true,
-      "canBeOverride": false
+      "type": "CONTEXT",
+      "deletable": false
     }
   ]
 }

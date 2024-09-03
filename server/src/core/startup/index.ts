@@ -1,5 +1,5 @@
 import { SettingsKeys } from 'ssm-shared-lib';
-import { getFromCache } from '../../data/cache';
+import { getFromCache, setToCache } from '../../data/cache';
 import initRedisValues from '../../data/cache/defaults';
 import { PlaybookModel } from '../../data/database/model/Playbook';
 import { copyAnsibleCfgFileIfDoesntExist } from '../../helpers/ansible/AnsibleConfigurationHelper';
@@ -11,8 +11,8 @@ import providerConf from '../../modules/docker/registries/providers/provider.con
 import NotificationComponent from '../../modules/notifications/NotificationComponent';
 import { createADefaultLocalUserRepository } from '../../modules/playbooks-repository/default-repositories';
 import PlaybooksRepositoryEngine from '../../modules/playbooks-repository/PlaybooksRepositoryEngine';
-import ContainerRegistryUseCases from '../../use-cases/ContainerRegistryUseCases';
-import DeviceAuthUseCases from '../../use-cases/DeviceAuthUseCases';
+import ContainerRegistryUseCases from '../../services/ContainerRegistryUseCases';
+import DeviceAuthUseCases from '../../services/DeviceAuthUseCases';
 import { setAnsibleVersions } from '../system/ansible-versions';
 
 class Startup {
@@ -22,7 +22,7 @@ class Startup {
   async init() {
     const schemeVersion = await this.initializeSchemeVersion();
     await this.initializeModules();
-    if (this.isSchemeVersionDifferent(schemeVersion)) {
+    if (true || this.isSchemeVersionDifferent(schemeVersion)) {
       await this.updateScheme();
     }
   }
@@ -52,6 +52,7 @@ class Startup {
     await PlaybooksRepositoryEngine.syncAllRegistered();
     this.registerPersistedProviders();
     copyAnsibleCfgFileIfDoesntExist();
+    await setToCache('_ssm_masterNodeUrl', (await getFromCache('ansible-master-node-url')) || '');
   }
 
   private isSchemeVersionDifferent(schemeVersion: string | null): boolean {
