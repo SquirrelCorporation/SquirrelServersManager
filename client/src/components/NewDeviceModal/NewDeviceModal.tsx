@@ -33,6 +33,7 @@ import {
 } from 'antd';
 import { motion } from 'framer-motion';
 import React, { useRef, useState } from 'react';
+import { SsmAnsible } from 'ssm-shared-lib';
 
 export type NewDeviceModalProps = {
   isModalOpen: boolean;
@@ -122,11 +123,12 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                     sshUser: values.sshUser,
                     sshPwd: values.sshPwd,
                     sshKey: values.sshKey,
-                    sshConnection: values.sshConnection,
+                    sshConnection:
+                      values.sshConnection ?? SsmAnsible.SSHConnection.PARAMIKO,
                     becomeUser: values.becomeUser,
                     becomeMethod: values.becomeMethod,
                     becomePass: values.becomePass,
-                    strictHostChecking: values.strictHostChecking,
+                    strictHostChecking: values.strictHostChecking ?? true,
                   },
                   false,
                   values.controlNodeURL,
@@ -177,8 +179,9 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                       loading={loading}
                       type="primary"
                       onClick={() => {
-                        if (step === 0)
-                          setSshConnection(form?.getFieldsValue());
+                        if (step === 0) {
+                          setSshConnection(form?.getFieldsValue(true));
+                        }
                         if (step === 1) {
                           setControlNodeConnectionString(
                             form?.getFieldsValue(),
@@ -194,12 +197,14 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                               sshUser: sshConnection.sshUser,
                               sshPwd: sshConnection.sshPwd,
                               sshKey: sshConnection.sshKey,
-                              sshConnection: sshConnection.sshConnection,
+                              sshConnection:
+                                sshConnection.sshConnection ??
+                                SsmAnsible.SSHConnection.PARAMIKO,
                               becomeUser: sshConnection.becomeUser,
                               becomeMethod: sshConnection.becomeMethod,
                               becomePass: sshConnection.becomePass,
                               strictHostChecking:
-                                sshConnection.strictHostChecking,
+                                sshConnection.strictHostChecking ?? true,
                             },
                             form?.getFieldsValue().controlNodeURL,
                           ).then((e) => {
@@ -217,7 +222,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                               becomeMethod: sshConnection.becomeMethod,
                               becomePass: sshConnection.becomePass,
                               strictHostChecking:
-                                sshConnection.strictHostChecking,
+                                sshConnection.strictHostChecking ?? true,
                             },
                             form?.getFieldsValue().controlNodeURL,
                           ).then((e) => {
