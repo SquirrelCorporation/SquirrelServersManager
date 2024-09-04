@@ -36,3 +36,8 @@ export enum AnsibleBecomeMethod {
   MACHINECTL = 'machinectl',
 }
 
+export enum ExecutionMode {
+  APPLY = "apply",
+  CHECK = 'check',
+  CHECK_AND_DIFF = 'check-diff'
+}

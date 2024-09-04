@@ -1,3 +1,8 @@
+import {
+  Diff,
+  InterfaceEditPencilChangeEditModifyPencilWriteWriting,
+  TriangleFlag,
+} from '@/components/Icons/CustomIcons';
 import ExtraVarView from '@/components/PlaybookSelection/ExtraVarView';
 import { getPlaybooks } from '@/services/rest/playbooks';
 import { RightSquareOutlined } from '@ant-design/icons';
@@ -8,7 +13,16 @@ import {
   ProFormSelect,
   RequestOptionsType,
 } from '@ant-design/pro-components';
-import { Collapse, Form, message, Typography } from 'antd';
+import {
+  Collapse,
+  Form,
+  message,
+  Select,
+  Space,
+  Tag,
+  Tooltip,
+  Typography,
+} from 'antd';
 import React, { useEffect } from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 
@@ -21,6 +35,7 @@ export type PlaybookSelectionModalProps = {
     playbookName: string,
     target: API.DeviceItem[] | undefined,
     extraVars?: API.ExtraVars,
+    mode?: SsmAnsible.ExecutionMode,
   ) => void;
 };
 
@@ -36,6 +51,7 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
   const [selectedPlaybook, setSelectedPlaybook] = React.useState<
     API.PlaybookFile | undefined
   >();
+  const [mode, setMode] = React.useState(SsmAnsible.ExecutionMode.APPLY);
 
   useEffect(() => {
     if (selectedPlaybook) {
@@ -84,6 +100,23 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
     );
   };
 
+  const options = [
+    {
+      value: 'apply',
+      label: 'Apply',
+      icon: <InterfaceEditPencilChangeEditModifyPencilWriteWriting />,
+    },
+    { value: 'check', label: 'Check', icon: <TriangleFlag /> },
+    {
+      value: 'check-diff',
+      label: 'Check & Diff',
+      icon: (
+        <>
+          <TriangleFlag /> <Diff />{' '}
+        </>
+      ),
+    },
+  ];
   return (
     <ModalForm
       title="Playbook"
@@ -118,9 +151,63 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
                 value: values.extraVars[key],
               }))
             : undefined,
+          mode,
         );
         props.setIsModalOpen(false);
         return true;
+      }}
+      submitter={{
+        render: (_, dom) => [
+          <Tooltip
+            placement={'left'}
+            mouseEnterDelay={3}
+            title={
+              <>
+                <Typography.Title level={5} style={{ textAlign: 'center' }}>
+                  {' '}
+                  Mode
+                </Typography.Title>
+                <Typography.Paragraph>
+                  <Tag>Apply</Tag>is the default, it will effectively execute
+                  the change of your device.
+                </Typography.Paragraph>
+                <Typography.Paragraph>
+                  <Tag>Check</Tag>(aka &quot;dry-run&quot;) option runs the
+                  playbook in check mode. It goes through all the tasks and
+                  shows what would change but{' '}
+                  <Typography.Text strong>
+                    does not actually perform any changes.
+                  </Typography.Text>
+                </Typography.Paragraph>
+                <Typography.Paragraph>
+                  Adding the <Tag>Diff</Tag>option with &quot;check&quot; can
+                  show you the differences that would be made to files. This is
+                  particularly useful when working with configuration files
+                </Typography.Paragraph>
+              </>
+            }
+            key={'execution-mode'}
+          >
+            <Select
+              key={'mode'}
+              defaultValue="apply"
+              options={options}
+              onChange={(value) => setMode(value as SsmAnsible.ExecutionMode)}
+              labelRender={(values: any) => (
+                <Space>
+                  <span role="img" aria-label={values.label as string}>
+                    {
+                      options.find((option) => option.value === values.value)
+                        ?.icon
+                    }{' '}
+                  </span>
+                  {values.label}
+                </Space>
+              )}
+            />
+          </Tooltip>,
+          ...dom,
+        ],
       }}
     >
       <ProForm.Group style={{ textAlign: 'center' }}>
@@ -182,7 +269,7 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
           />
         )}
       </ProForm.Group>
-      <ProForm.Group style={{ textAlign: 'center' }}>
+      <ProForm.Group>
         <ProFormDependency name={['playbook']}>
           {({ playbook }) => (
             <span style={{ marginTop: 10 }}>

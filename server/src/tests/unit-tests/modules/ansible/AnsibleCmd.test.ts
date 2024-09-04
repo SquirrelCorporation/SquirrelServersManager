@@ -1,4 +1,4 @@
-import { API } from 'ssm-shared-lib';
+import { API, SsmAnsible } from 'ssm-shared-lib';
 import { describe, expect, test } from 'vitest';
 import User from '../../../../data/database/model/User';
 import { ANSIBLE_CONFIG_FILE } from '../../../../helpers/ansible/AnsibleConfigurationHelper';
@@ -104,13 +104,19 @@ describe('buildAnsibleCmd() function', () => {
     expect(result.startsWith(expectedStart)).toEqual(true);
   });
 
-  test('should exclude inventory targets when not provided', () => {
+  test('should include both --check and --diff flags when mode is CHECK_AND_DIFF', () => {
     const playbook = 'testPlaybook';
     const uuid = 'testUuid';
-    // @ts-expect-error partial type
-    const result = AnsibleCmd.buildAnsibleCmd(playbook, uuid, {}, user, extraVars);
+    const result = AnsibleCmd.buildAnsibleCmd(
+      playbook,
+      uuid,
+      inventory,
+      user,
+      undefined,
+      SsmAnsible.ExecutionMode.CHECK_AND_DIFF,
+    ).trim();
 
-    const ansibleCmdPartsWithoutInventory = [
+    const ansibleCmdPartsWithDiffCheck = [
       'sudo',
       `SSM_API_KEY=${user.apiKey}`,
       `ANSIBLE_CONFIG=${ANSIBLE_CONFIG_FILE}`,
@@ -118,22 +124,59 @@ describe('buildAnsibleCmd() function', () => {
       'ssm-ansible-run.py',
       `--playbook ${playbook}`,
       `--ident '${uuid}'`,
-      "--specific-host '{}'",
+      `--specific-host '${JSON.stringify(inventory)}'`,
       '--log-level 1',
-      `${AnsibleCmd.getExtraVars(extraVars)}`,
+      '--check --diff',
     ];
 
-    const expectedCmd = ansibleCmdPartsWithoutInventory.join(' ');
+    const expectedCmd = ansibleCmdPartsWithDiffCheck.join(' ').trim();
 
     expect(result).toEqual(expectedCmd);
   });
 
-  test('should include extra vars when not provided', () => {
+  test('should include --check flag when mode is CHECK', () => {
     const playbook = 'testPlaybook';
     const uuid = 'testUuid';
-    const result = AnsibleCmd.buildAnsibleCmd(playbook, uuid, inventory, user).trim();
+    const result = AnsibleCmd.buildAnsibleCmd(
+      playbook,
+      uuid,
+      inventory,
+      user,
+      undefined,
+      SsmAnsible.ExecutionMode.CHECK,
+    ).trim();
 
-    const ansibleCmdPartsWithoutExtraVars = [
+    const ansibleCmdPartsWithCheck = [
+      'sudo',
+      `SSM_API_KEY=${user.apiKey}`,
+      `ANSIBLE_CONFIG=${ANSIBLE_CONFIG_FILE}`,
+      'python3',
+      'ssm-ansible-run.py',
+      `--playbook ${playbook}`,
+      `--ident '${uuid}'`,
+      `--specific-host '${JSON.stringify(inventory)}'`,
+      '--log-level 1',
+      '--check',
+    ];
+
+    const expectedCmd = ansibleCmdPartsWithCheck.join(' ').trim();
+
+    expect(result).toEqual(expectedCmd);
+  });
+
+  test('should omit --check and --diff flags when mode is APPLY', () => {
+    const playbook = 'testPlaybook';
+    const uuid = 'testUuid';
+    const result = AnsibleCmd.buildAnsibleCmd(
+      playbook,
+      uuid,
+      inventory,
+      user,
+      undefined,
+      SsmAnsible.ExecutionMode.APPLY,
+    ).trim();
+
+    const ansibleCmdPartsWithApply = [
       'sudo',
       `SSM_API_KEY=${user.apiKey}`,
       `ANSIBLE_CONFIG=${ANSIBLE_CONFIG_FILE}`,
@@ -145,7 +188,7 @@ describe('buildAnsibleCmd() function', () => {
       '--log-level 1',
     ];
 
-    const expectedCmd = ansibleCmdPartsWithoutExtraVars.join(' ').trim();
+    const expectedCmd = ansibleCmdPartsWithApply.join(' ').trim();
 
     expect(result).toEqual(expectedCmd);
   });

@@ -9,7 +9,7 @@ import { history } from '@umijs/max';
 import { Dropdown, MenuProps, Space } from 'antd';
 import { ItemType } from 'rc-menu/es/interface';
 import React, { Dispatch, ReactNode, SetStateAction } from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, SsmAnsible } from 'ssm-shared-lib';
 
 export type QuickActionProps = {
   onDropDownClicked: any;
@@ -82,6 +82,7 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
     playbookName: string,
     target: API.DeviceItem[] | undefined,
     extraVars?: API.ExtraVars,
+    mode?: SsmAnsible.ExecutionMode,
   ) => {
     props.setTerminal({
       isOpen: true,
@@ -89,6 +90,7 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
       target: target,
       extraVars: extraVars,
       playbookName: playbookName,
+      mode: mode,
     });
   };
 

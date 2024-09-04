@@ -28,6 +28,7 @@ async function executePlaybook(
   user: User,
   target: string[] | undefined,
   extraVarsForcedValues?: API.ExtraVars,
+  mode: SsmAnsible.ExecutionMode = SsmAnsible.ExecutionMode.APPLY,
 ) {
   const substitutedExtraVars: API.ExtraVars | undefined = await completeExtraVar(
     playbook,
@@ -39,6 +40,7 @@ async function executePlaybook(
     user,
     target,
     substitutedExtraVars,
+    mode,
   );
 }
 
