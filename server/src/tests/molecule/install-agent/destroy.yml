@@ -1,0 +1,10 @@
+---
+- name: Destroy
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  tasks:
+    - name: Destroy docker container
+      community.docker.docker_container:
+        name: instance
+        state: absent

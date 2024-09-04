@@ -1,7 +1,7 @@
 - name: Perform system upgrade and cleanup with conditional reboot
   hosts: all
-  gather_facts: yes
-  become: yes
+  gather_facts: true
+  become: true
 
   tasks:
     - name: Perform a dist-upgrade.
@@ -33,5 +33,5 @@
 
     - name: Remove dependencies that are no longer required.
       ansible.builtin.package:
-        autoremove: yes
+        autoremove: true
       when: ansible_distribution in ["Debian", "Ubuntu", "CentOS", "RedHat"]
