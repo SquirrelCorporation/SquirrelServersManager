@@ -1355,7 +1355,7 @@ export const Live24Filled = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={Live24FilledSvg} {...props} />
 );
 
-const SafetyCertificateFillSvg = (props: any) => (
+const SafetyCertificateFillSvg = React.memo((props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -1371,13 +1371,13 @@ const SafetyCertificateFillSvg = (props: any) => (
       />
     </g>
   </svg>
-);
+));
 
 export const SafetyCertificateFill = (
   props: Partial<CustomIconComponentProps>,
 ) => <Icon component={SafetyCertificateFillSvg} {...props} />;
 
-const ConfigurationSolidSvg = (props: any) => (
+const ConfigurationSolidSvg = React.memo((props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -1390,13 +1390,13 @@ const ConfigurationSolidSvg = (props: any) => (
       d="M1755 512h-475V37l475 475zm-795 520q38 0 71 14t59 40t39 59t15 71q0 38-14 71t-40 59t-59 39t-71 15q-38 0-71-14t-59-40t-39-59t-15-71q0-38 14-71t40-59t59-39t71-15zm832-392v1408H128V0h1024v640h640zm-509 632q2-14 3-28t1-28q0-14-1-28t-3-28l185-76l-55-134l-185 77q-33-46-79-79l77-185l-134-55l-76 185q-14-2-28-3t-28-1q-14 0-28 1t-28 3l-76-185l-134 55l77 185q-46 33-79 79l-185-77l-55 134l185 76q-2 14-3 28t-2 28q0 14 1 28t4 28l-185 76l55 134l185-77q33 46 79 79l-77 185l134 55l76-185q14 2 28 3t28 2q14 0 28-1t28-4l76 185l134-55l-77-185q46-33 79-79l185 77l55-134l-185-76z"
     />
   </svg>
-);
+));
 
 export const ConfigurationSolid = (
   props: Partial<CustomIconComponentProps>,
 ) => <Icon component={ConfigurationSolidSvg} {...props} />;
 
-const SmartSvg = (props: any) => (
+const SmartSvg = React.memo((props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -1409,13 +1409,13 @@ const SmartSvg = (props: any) => (
       d="M256.3 19.95c-41 0-74.1 32.7-74.1 73.27c0 22.98 8 33.78 16.8 47.78c5.9 9.3 12 20.1 15.5 35.6h83c3.5-15.9 9.6-26.8 15.5-36.2c8.9-14.1 16.8-24.7 16.8-47.18c0-40.57-32.8-73.27-73.5-73.27zm-142.1 7.7L81 35.4l81.2 40.25l-48-48zm283.6 0l-48 48L431 35.4l-33.2-7.75zM210.5 79.2l45.5 22.7l45.5-22.7l-20.8 83l-17.4-4.4l11.2-45l-18.5 9.3l-18.5-9.3l11.2 45l-17.4 4.4l-20.8-83zM64 96.03v32.07l96-16.1l-96-15.97zm384 0L352 112l96 16V96.03zM334.2 144.3l39.9 63.3l24.1-15.3l-64-48zm-156.4.1l-64 48l24.1 15.3l39.9-63.3zM216 191v16h80v-16h-80zm34.4 28.3c-13.7 0-26.9.5-35.7 1c-68.2 10.7-82.9 105.4-66.7 191.6h23.6l-1-105.4l18.6-.2c-1.4 63.7 1.6 126.6 5.5 189.7h51.4V390.3h18.7V496h50.4c4.5-65 5.9-131.5 6.5-189.7l18.7.2l-1.1 105.4h24.6c18.3-88.5-4.8-178.9-67.1-190.6c-9.4-1.4-24.9-2-40.6-2h-5.8z"
     />
   </svg>
-);
+));
 
 export const Smart = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={SmartSvg} {...props} />
 );
 
-const ArrowsDoubleSeNwSvg = (props: any) => (
+const ArrowsDoubleSeNwSvg = React.memo((props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -1432,13 +1432,13 @@ const ArrowsDoubleSeNwSvg = (props: any) => (
       d="m3 10l11 11m0-4v4h-4m4-18h-4v4m11 7L10 3"
     />
   </svg>
-);
+));
 
 export const ArrowsDoubleSeNw = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={ArrowsDoubleSeNwSvg} {...props} />
 );
 
-const ObservedLightningSvg = (props: any) => (
+const ObservedLightningSvg = React.memo((props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -1455,13 +1455,13 @@ const ObservedLightningSvg = (props: any) => (
       d="M4 18A12 12 0 1 0 16 6h-4V1L6 7l6 6V8h4A10 10 0 1 1 6 18Z"
     />
   </svg>
-);
+));
 
 export const ObservedLightning = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={ObservedLightningSvg} {...props} />
 );
 
-const InputSvg = (props: any) => (
+const InputSvg = React.memo((props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -1476,13 +1476,13 @@ const InputSvg = (props: any) => (
       clipRule="evenodd"
     />
   </svg>
-);
+));
 
 export const InputIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={InputSvg} {...props} />
 );
 
-const CheckmarkUnderlineCircle24RegularSvg = (props: any) => (
+const CheckmarkUnderlineCircle24RegularSvg = React.memo((props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -1495,13 +1495,13 @@ const CheckmarkUnderlineCircle24RegularSvg = (props: any) => (
       d="m10.75 11.44l4.47-4.47a.75.75 0 0 1 1.133.976l-.073.084l-5 5a.75.75 0 0 1-.976.073l-.084-.073l-2.5-2.5a.75.75 0 0 1 .976-1.133l.084.073zM8.5 15a.75.75 0 0 0 0 1.5h6.75a.75.75 0 0 0 0-1.5zM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12m10-8.5a8.5 8.5 0 1 0 0 17a8.5 8.5 0 0 0 0-17"
     />
   </svg>
-);
+));
 
 export const CheckmarkUnderlineCircle24Regular = (
   props: Partial<CustomIconComponentProps>,
 ) => <Icon component={CheckmarkUnderlineCircle24RegularSvg} {...props} />;
 
-const SelectiveToolSvg = (props: any) => (
+const SelectiveToolSvg = React.memo((props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -1520,8 +1520,82 @@ const SelectiveToolSvg = (props: any) => (
       <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10Z" />
     </g>
   </svg>
-);
+));
 
 export const SelectiveTool = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={SelectiveToolSvg} {...props} />
+);
+
+const TriangleFlagSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 14 14"
+    {...props}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M2.5.5v13m0-13l9 4.5l-9 4.5"
+    />
+  </svg>
+));
+
+export const TriangleFlag = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={TriangleFlagSvg} {...props} />
+);
+
+const InterfaceEditPencilChangeEditModifyPencilWriteWritingSvg = React.memo(
+  (props) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 14 14"
+      {...props}
+    >
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M5 12.24L.5 13.5L1.76 9L10 .8a1 1 0 0 1 1.43 0l1.77 1.78a1 1 0 0 1 0 1.42Z"
+      />
+    </svg>
+  ),
+);
+
+export const InterfaceEditPencilChangeEditModifyPencilWriteWriting = (
+  props: Partial<CustomIconComponentProps>,
+) => (
+  <Icon
+    component={InterfaceEditPencilChangeEditModifyPencilWriteWritingSvg}
+    {...props}
+  />
+);
+
+export const DiffSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      d="M12 3v14m-7-7h14M5 21h14"
+    />
+  </svg>
+));
+
+export const Diff = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={DiffSvg} {...props} />
 );

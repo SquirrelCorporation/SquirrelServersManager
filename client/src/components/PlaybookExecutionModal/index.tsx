@@ -7,7 +7,7 @@ import {
 } from '@/services/rest/playbooks';
 import { message } from 'antd';
 import React, { RefObject, useEffect, useState } from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, SsmAnsible } from 'ssm-shared-lib';
 
 export type TerminalStateProps = {
   isOpen: boolean;
@@ -16,6 +16,7 @@ export type TerminalStateProps = {
   quickRef?: string;
   target?: API.DeviceItem[];
   extraVars?: API.ExtraVars;
+  mode?: SsmAnsible.ExecutionMode;
 };
 
 export type TerminalModalProps = {
@@ -47,11 +48,13 @@ const TerminalModal = (props: TerminalModalProps) => {
             props.terminalProps.command as string,
             props.terminalProps.target?.map((e) => e.uuid),
             props.terminalProps.extraVars,
+            props.terminalProps.mode,
           )
         : await executePlaybookByQuickRef(
             props.terminalProps.quickRef,
             props.terminalProps.target?.map((e) => e.uuid),
             props.terminalProps.extraVars,
+            props.terminalProps.mode,
           );
       setExecId(res.data.execId);
       message.loading({

@@ -61,6 +61,8 @@ def parse_args():
     arg_parser.add_argument("--log-level",  help="Verbosity", type=int, required=False, default=None)
     arg_parser.add_argument("--extra-vars",  help="Extra vars", required=False, default=None)
     arg_parser.add_argument("--debug",  help="Debug", required=False, default=False)
+    arg_parser.add_argument("--check", help="Run in check (dry-run) mode", action='store_true')
+    arg_parser.add_argument("--diff", help="Show diffs", action='store_true')
     group = arg_parser.add_mutually_exclusive_group(required=False)
     group.add_argument("--specific-host", help="Specify a host manually in json", default=None)
     group.add_argument("--host-pattern", help="Specify a host pattern in inventory", default="all")
@@ -78,21 +80,31 @@ def execute():
     if args.specific_host is not None:
         specific_host = json.loads(args.specific_host)
 
-    thread_obj, runner_obj = ansible_runner.run_async(
-        ident=args.ident,
-        private_data_dir='./',
-        project_dir='./',
-        playbook=args.playbook,
-        host_pattern=args.host_pattern,
-        event_handler=event_handler,
-        status_handler=status_handler,
-        rotate_artifacts=10,
-        inventory=specific_host,
-        extravars=extra_vars,
-        debug=debug,
-        json_mode=True,
-        #ignore_logging=False,
-        verbosity=args.log_level,
-       )
+    runner_args = {
+        'ident': args.ident,
+        'private_data_dir': './',
+        'project_dir': './',
+        'playbook': args.playbook,
+        'host_pattern': args.host_pattern,
+        'event_handler': event_handler,
+        'status_handler': status_handler,
+        'rotate_artifacts': 10,
+        'inventory': specific_host,
+        'extravars': extra_vars,
+        'debug': debug,
+        'json_mode': True,
+        'verbosity': args.log_level
+    }
+    # Add additional arguments for dry-run and diff if specified
+    if args.check:
+        runner_args['cmdline'] = '--check'
+    if args.diff:
+        if 'cmdline' in runner_args:
+            runner_args['cmdline'] += ' --diff'
+        else:
+            runner_args['cmdline'] = '--diff'
+
+    thread_obj, runner_obj = ansible_runner.run_async(**runner_args)
     sys.stdout.write(runner_obj.config.ident)
+
 execute()

@@ -23,6 +23,7 @@ export const execPlaybook = asyncHandler(async (req, res) => {
       req.user,
       req.body.target,
       req.body.extraVars as API.ExtraVars,
+      req.body.mode,
     );
     new SuccessResponse('Execution succeeded', { execId: execId } as API.ExecId).send(res);
   } catch (error: any) {
@@ -46,6 +47,7 @@ export const execPlaybookByQuickRef = asyncHandler(async (req, res) => {
       req.user,
       req.body.target,
       req.body.extraVars as API.ExtraVars,
+      req.body.mode,
     );
     new SuccessResponse('Execution succeeded', { execId: execId } as API.ExecId).send(res);
   } catch (error: any) {

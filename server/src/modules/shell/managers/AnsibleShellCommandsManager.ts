@@ -1,6 +1,6 @@
 import shell from 'shelljs';
+import { API, SsmAnsible } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
-import { API } from 'ssm-shared-lib';
 import User from '../../../data/database/model/User';
 import AnsibleTaskRepo from '../../../data/database/repository/AnsibleTaskRepo';
 import DeviceAuthRepo from '../../../data/database/repository/DeviceAuthRepo';
@@ -29,6 +29,7 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
     user: User,
     target?: string[],
     extraVars?: API.ExtraVars,
+    mode: SsmAnsible.ExecutionMode = SsmAnsible.ExecutionMode.APPLY,
   ) {
     this.logger.info('executePlaybook - Starting...');
 
@@ -44,7 +45,13 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
       }
       inventoryTargets = Inventory.inventoryBuilderForTarget(devicesAuth);
     }
-    return await this.executePlaybookOnInventory(playbookPath, user, inventoryTargets, extraVars);
+    return await this.executePlaybookOnInventory(
+      playbookPath,
+      user,
+      inventoryTargets,
+      extraVars,
+      mode,
+    );
   }
 
   async executePlaybookOnInventory(
@@ -52,13 +59,21 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
     user: User,
     inventoryTargets?: Playbooks.All & Playbooks.HostGroups,
     extraVars?: API.ExtraVars,
+    mode: SsmAnsible.ExecutionMode = SsmAnsible.ExecutionMode.APPLY,
   ) {
     shell.cd(this.ANSIBLE_PATH);
     shell.rm('/server/src/playbooks/inventory/hosts');
     shell.rm('/server/src/playbooks/env/_extravars');
     const uuid = uuidv4();
     const result = await new Promise<string | null>((resolve) => {
-      const cmd = ansibleCmd.buildAnsibleCmd(playbookPath, uuid, inventoryTargets, user, extraVars);
+      const cmd = ansibleCmd.buildAnsibleCmd(
+        playbookPath,
+        uuid,
+        inventoryTargets,
+        user,
+        extraVars,
+        mode,
+      );
       this.logger.info(`executePlaybook - Executing ${cmd}`);
       const child = shell.exec(cmd, {
         async: true,

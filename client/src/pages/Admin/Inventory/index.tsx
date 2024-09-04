@@ -37,7 +37,7 @@ import {
   Row,
 } from 'antd';
 import React, { useRef, useState } from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, SsmAnsible } from 'ssm-shared-lib';
 import ConfigurationModal from './components/ConfigurationModal';
 
 const Inventory: React.FC = () => {
@@ -54,6 +54,7 @@ const Inventory: React.FC = () => {
     isOpen: false,
     command: undefined,
     playbookName: undefined,
+    mode: SsmAnsible.ExecutionMode.APPLY,
   });
   const [addNewDeviceModalIsOpen, setAddNewDeviceModalIsOpen] = useState(false);
   const [
@@ -72,12 +73,14 @@ const Inventory: React.FC = () => {
     playbook: string,
     playbookName: string,
     target?: API.DeviceItem[],
+    mode?: SsmAnsible.ExecutionMode,
   ) => {
     setTerminal({
       isOpen: true,
       command: playbook,
       target: target,
       playbookName: playbookName,
+      mode: mode,
     });
   };
 

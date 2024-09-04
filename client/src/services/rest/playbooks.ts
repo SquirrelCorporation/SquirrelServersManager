@@ -1,5 +1,5 @@
 import { request } from '@umijs/max';
-import { API } from 'ssm-shared-lib';
+import { API, SsmAnsible } from 'ssm-shared-lib';
 
 export async function getPlaybooks(
   options?: Record<string, any>,
@@ -29,11 +29,17 @@ export async function executePlaybook(
   playbook: string,
   target: string[] | undefined,
   extraVars?: API.ExtraVars,
+  mode: SsmAnsible.ExecutionMode = SsmAnsible.ExecutionMode.APPLY,
   options?: Record<string, any>,
 ) {
   return request<API.Exec>(`/api/playbooks/exec/${playbook}`, {
     method: 'POST',
-    data: { playbook: playbook, target: target, extraVars: extraVars },
+    data: {
+      playbook: playbook,
+      target: target,
+      extraVars: extraVars,
+      mode: mode,
+    },
     ...(options || {}),
   });
 }
@@ -42,11 +48,17 @@ export async function executePlaybookByQuickRef(
   quickRef: string,
   target: string[] | undefined,
   extraVars?: API.ExtraVars,
+  mode: SsmAnsible.ExecutionMode = SsmAnsible.ExecutionMode.APPLY,
   options?: Record<string, any>,
 ) {
   return request<API.Exec>(`/api/playbooks/exec/quick-ref/${quickRef}`, {
     method: 'POST',
-    data: { quickRef: quickRef, target: target, extraVars: extraVars },
+    data: {
+      quickRef: quickRef,
+      target: target,
+      extraVars: extraVars,
+      mode: mode,
+    },
     ...(options || {}),
   });
 }
