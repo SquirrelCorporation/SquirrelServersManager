@@ -35,6 +35,7 @@ export const login = asyncHandler(async (req, res, next) => {
     res.cookie('jwt', token, {
       httpOnly: true,
       secure: false, //--> SET TO TRUE ON PRODUCTION
+      sameSite: 'none',
     }),
   );
 });

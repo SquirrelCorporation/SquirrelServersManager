@@ -16,7 +16,7 @@ import { API } from 'ssm-shared-lib';
 import defaultSettings from '../config/defaultSettings';
 import { version } from '../package.json';
 import Logo from '../public/logo.svg';
-import { errorConfig } from './requestErrorConfig';
+import { ssmRequestConfig } from './requestErrorConfig';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -135,5 +135,5 @@ export const layout: RunTimeLayoutConfig = ({
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const request = {
-  ...errorConfig,
+  ...ssmRequestConfig,
 };

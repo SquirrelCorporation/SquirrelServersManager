@@ -1,5 +1,6 @@
 ﻿import type { RequestConfig } from '@umijs/max';
 import { message, notification } from 'antd';
+import axios from 'axios';
 
 enum ErrorShowType {
   SILENT = 0,
@@ -17,10 +18,12 @@ interface ResponseStructure {
   showType?: ErrorShowType;
 }
 
+axios.defaults.withCredentials = true;
+
 /**
  * @doc https://umijs.org/docs/max/request#配置
  */
-export const errorConfig: RequestConfig = {
+export const ssmRequestConfig: RequestConfig = {
   errorConfig: {
     errorThrower: (res: any) => {
       const { success, data, errorCode, errorMessage, showType } =
@@ -77,7 +80,20 @@ export const errorConfig: RequestConfig = {
       }
     },
   },
-
+  requestInterceptors: [
+    (url: string, options: any) => {
+      // You can modify the request configurations here
+      return {
+        url: 'http://127.0.0.1:3000' + url,
+        options: {
+          ...options,
+          headers: {
+            ...options.headers,
+          },
+        },
+      };
+    },
+  ],
   responseInterceptors: [
     (response: any) => {
       const { data } = response as unknown as ResponseStructure;

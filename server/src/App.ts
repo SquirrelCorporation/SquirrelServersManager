@@ -1,5 +1,6 @@
 import http from 'http';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import express from 'express';
 import passport from 'passport';
 import pinoHttp from 'pino-http';
@@ -37,10 +38,18 @@ class AppWrapper extends EventManager {
     }
     this.app.use(cookieParser());
     this.app.use(passport.initialize());
+    // Use the CORS middleware
+    this.app.use(
+      cors({
+        origin: 'http://127.0.0.1:8000', // or your frontend URL
+        credentials: true,
+      }),
+    );
+    this.app.options('*', cors());
   }
 
   public setupRoutes() {
-    this.app.use('/', routes);
+    this.app.use('/api', routes);
     this.app.use(errorHandler);
   }
 
