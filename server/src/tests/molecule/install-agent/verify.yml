@@ -1,0 +1,87 @@
+---
+- name: Verify
+  hosts: instance
+  vars:
+    base_path: /opt/squirrelserversmanager
+    nvm_dir: "/root/.nvm"
+  tasks:
+    - name: Check node version
+      shell: . {{ nvm_dir }}/nvm.sh && node --version
+      register: node_version
+      args:
+        executable: /bin/bash
+
+    - name: Display Node.js version
+      debug:
+        msg: "Node.js version is {{ node_version.stdout }}"
+
+    - name: Check npm version
+      shell: . {{ nvm_dir }}/nvm.sh && npm --version
+      register: npm_version
+      args:
+        executable: /bin/bash
+
+    - name: Display NPM version
+      debug:
+        msg: "NPM version is {{ npm_version.stdout }}"
+
+    - name: Check PM2 is installed
+      shell: . {{ nvm_dir }}/nvm.sh && pm2 --version
+      register: pm2_version
+      args:
+        executable: /bin/bash
+
+    - name: Display PM2 version
+      debug:
+        msg: "PM2 version is {{ pm2_version.stdout }}"
+
+    - name: Check git is installed
+      shell: git --version
+      register: git_version
+      args:
+        executable: /bin/bash
+
+    - name: Display Git version
+      debug:
+        msg: "Git version is {{ git_version.stdout }}"
+
+    - name: Check API_URL_MASTER in .env file
+      shell: grep "API_URL_MASTER" /opt/squirrelserversmanager/.env
+      register: env_check
+
+    - name: Display .env content
+      debug:
+        msg: ".env file contains: {{ env_check.stdout }}"
+
+    - name: Assert API_URL_MASTER equals _ssm_masterNodeUrl
+      assert:
+        that:
+          - "'API_URL_MASTER={{ _ssm_masterNodeUrl }}' in env_check.stdout"
+          -
+    - name: Check hostid.txt file
+      shell: cat /opt/squirrelserversmanager/hostid.txt
+      register: hostid_check
+
+    - name: Display hostid.txt content
+      debug:
+        msg: "hostid.txt contents: {{ hostid_check.stdout }}"
+
+    - name: Assert hostid.txt content equals _ssm_deviceId
+      assert:
+        that:
+          - "hostid_check.stdout == '{{ _ssm_deviceId }}'"
+
+    - name: Check PM2 agent is running
+      shell: . {{ nvm_dir }}/nvm.sh && pm2 list
+      register: pm2_list
+      args:
+        executable: /bin/bash
+
+    - name: Display PM2 processes
+      debug:
+        msg: "PM2 processes: {{ pm2_list.stdout }}"
+
+    - name: Assert PM2 agent is running
+      assert:
+        that:
+          - "'agent' in pm2_list.stdout"

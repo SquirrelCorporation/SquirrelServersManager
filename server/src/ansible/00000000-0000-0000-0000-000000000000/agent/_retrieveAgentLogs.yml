@@ -1,7 +1,7 @@
 - name: Optionally read logs from a specified path
   hosts: all
-  become: yes
-  gather_facts: no
+  become: true
+  gather_facts: false
 
   tasks:
     - name: Check if the log path is provided

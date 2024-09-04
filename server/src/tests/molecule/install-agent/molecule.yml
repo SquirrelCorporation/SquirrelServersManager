@@ -1,0 +1,37 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+
+driver:
+  name: docker
+
+platforms:
+  - name: instance
+    image: python:3.11-bookworm
+
+scenario:
+  test_sequence:
+    - destroy
+    - create
+    - prepare
+    - converge
+    # - idempotence
+    - verify
+
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        _ssm_deviceId: 'device-id'
+        _ssm_masterNodeUrl: 'https://127.0.0.1'
+
+verifier:
+  name: ansible
+
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
