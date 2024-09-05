@@ -29,6 +29,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Update eslint and related dependencies [\#272](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/272) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Remove deprecated mock files and scripts [\#271](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/271) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add Molecule tests for install-agent [\#269](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/269) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update Mongoose and improve database operations [\#262](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/262) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
