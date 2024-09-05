@@ -8,12 +8,12 @@
         {
           "extraVar": "project",
           "required": true,
-          "canBeOverride": true
+          "type": "MANUAL"
         },
         {
           "extraVar": "definition",
           "required": true,
-          "canBeOverride": true
+          "type": "MANUAL"
         }
       ],
       "name": "_dockerCompose.yml",
@@ -136,7 +136,7 @@
         {
           "extraVar": "_ssm_masterNodeUrl",
           "required": true,
-          "canBeOverride": true
+          "type": "SHARED"
         }
       ],
       "name": "pingSsmApiUrl.yml",
@@ -437,12 +437,12 @@
         {
           "extraVar": "_ssm_masterNodeUrl",
           "required": true,
-          "canBeOverride": true
+          "type": "SHARED"
         },
         {
           "extraVar": "_ssm_deviceId",
           "required": true,
-          "canBeOverride": false
+          "type": "CONTEXT"
         }
       ],
       "name": "_reinstallAgent.yml",
@@ -799,12 +799,12 @@
         {
           "extraVar": "_ssm_masterNodeUrl",
           "required": true,
-          "canBeOverride": true
+          "type": "SHARED"
         },
         {
           "extraVar": "_ssm_deviceId",
           "required": true,
-          "canBeOverride": false
+          "type": "CONTEXT"
         }
       ],
       "name": "_updateAgent.yml",
@@ -927,12 +927,12 @@
         {
           "extraVar": "_ssm_masterNodeUrl",
           "required": true,
-          "canBeOverride": true
+          "type": "SHARED"
         },
         {
           "extraVar": "_ssm_deviceId",
           "required": true,
-          "canBeOverride": false
+          "type": "CONTEXT"
         }
       ],
       "name": "_installAgent.yml",
@@ -1406,7 +1406,7 @@
         {
           "extraVar": "_ssm_masterNodeUrl",
           "required": true,
-          "canBeOverride": true
+          "type": "SHARED"
         }
       ],
       "name": "_checkDeviceBeforeAdd.yml",
@@ -1529,7 +1529,7 @@
         {
           "extraVar": "_ssm_masterNodeUrl",
           "required": true,
-          "canBeOverride": true
+          "type": "SHARED"
         }
       ],
       "playableInBatch": false,
@@ -1571,12 +1571,12 @@
         {
           "extraVar": "_ssm_masterNodeUrl",
           "required": true,
-          "canBeOverride": true
+          "type": "SHARED"
         },
         {
           "extraVar": "_ssm_deviceId",
           "required": true,
-          "canBeOverride": false
+          "type": "CONTEXT"
         }
       ],
       "playableInBatch": false,
@@ -1627,12 +1627,12 @@
         {
           "extraVar": "_ssm_masterNodeUrl",
           "required": true,
-          "canBeOverride": true
+          "type": "SHARED"
         },
         {
           "extraVar": "_ssm_deviceId",
           "required": true,
-          "canBeOverride": false
+          "type": "CONTEXT"
         }
       ],
       "playableInBatch": false,
