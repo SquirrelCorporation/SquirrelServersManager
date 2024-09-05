@@ -29,6 +29,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Remove deprecated mock files and scripts [\#271](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/271) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add Molecule tests for install-agent [\#269](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/269) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update Mongoose and improve database operations [\#262](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/262) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @stylistic/eslint-plugin from 2.6.4 to 2.7.2 in /server [\#261](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/261) ([dependabot[bot]](https://github.com/apps/dependabot))
