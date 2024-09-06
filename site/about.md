@@ -1,4 +1,5 @@
 <script setup>
+// @intellij-keep
 import Diagram from './components/Diagram.vue';
 </script>
 
