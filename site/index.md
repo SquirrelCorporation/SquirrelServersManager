@@ -41,14 +41,6 @@ features:
 
 ---
 
-:::warning 🚧 Work in Progress
-SSM is currently in active development and not yet ready for production. We encourage you to learn about [why we are building it](/about.md) and welcome community contributions. If you are interested in getting involved, check out the [Contribution Guide](/contribute/)!
-:::
-
-<div>
-<iframe width="560" height="315" style="margin-left: auto; margin-right: auto" src="https://www.youtube.com/embed/zxWa21ypFCk?si=PXVOJZ31wwxLqUOv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-</div>
-
 <style>
 :root {
   --vp-home-hero-name-color: transparent;
@@ -83,6 +75,12 @@ SSM is currently in active development and not yet ready for production. We enco
 
 &nbsp;
 :::
+
+---
+
+<div>
+<iframe width="560" height="315" style="margin-left: auto; margin-right: auto" src="https://www.youtube.com/embed/zxWa21ypFCk?si=PXVOJZ31wwxLqUOv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
 
 ## Experience the immense power encapsulated within these tools, now presented through a user-friendly interface.
 
@@ -122,3 +120,8 @@ SSM is currently in active development and not yet ready for production. We enco
 ![deviceinfo](/home/device-info.png)
 ### Add a new device
 ![new-device](/home/new-device.png)
+
+
+:::warning 🚧 Work in Progress
+SSM is currently in active development and not yet ready for production. We encourage you to learn about [why we are building it](/about.md) and welcome community contributions. If you are interested in getting involved, check out the [Contribution Guide](/contribute/)!
+:::
