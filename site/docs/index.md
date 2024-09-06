@@ -1,5 +1,5 @@
 <script setup>
-import Diagram from './components/Diagram.vue';
+import Diagram from './../components/Diagram.vue';
 </script>
 
 # Overview
