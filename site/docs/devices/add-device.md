@@ -1,5 +1,16 @@
 # Adding a device
 
+## 🌰 In a Nutshell
+
+:::info Sum-up
+1. **Navigate to Inventory**: Install agent on new device.
+2. **Enter SSH Info**: Port, IP, sudo method, login type.
+3. **Verify Master Node URL**: Ensure it is correct and reachable.
+4. **Run Connection Tests**: Ansible and Docker checks.
+5. **Confirm Details**: Click "Confirm & Install Agent".
+6. **Monitor Installation**: Track Ansible's progress.
+:::
+
 ## 1. Inventory
 To add a new device, first navigate to the Inventory panel in the Configuration Section on the lefthand Sidebar menu and click "Install Agent on New Device".
 ![adddevice1](/add-device/add-device-1.png)

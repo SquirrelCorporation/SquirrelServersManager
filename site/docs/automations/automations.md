@@ -1,7 +1,9 @@
 # Automations
 
-:::info ℹ️ What is it?
-Automations allow you to schedule playbook or Docker action **executions**.
+## 🌰 In a Nutshell
+
+:::info ℹ️ Sum-up
+Automations allow you to schedule playbook or Docker action **executions** based on cron scheduled.
 :::
 
 ## Principles
@@ -9,11 +11,11 @@ Automations are formed by two elements:
 - A `trigger` (currently only cron-based)
 - An `action`
 
-### Trigger
+### [Trigger]
 The trigger is the "**when**" your automations will launch, and how often.
 The only trigger available at this time is "Cron", a time-based trigger that will periodically start according to your settings.
 
-### Action
+### [Action]
 The action is the "**what**" your automations will do.
 Two actions are currently available:
 

@@ -112,23 +112,24 @@ export default defineConfig({
             {
               text: 'Devices', items: [
                 {
-                  text: 'Adding a device', link: '/docs/add-device.md'
+                  text: 'Adding a device', link: '/docs/devices/add-device.md'
                 },
                 {
-                  text: 'Adding an unmanaged device (agentless mode)', link: '/docs/add-unamanaged.md'
+                  text: 'Adding an unmanaged device (agentless mode)', link: '/docs/devices/add-unamanaged.md'
                 },
                 {
-                  text: 'Deleting a device', link: '/docs/delete-device.md'
+                  text: 'Deleting a device', link: '/docs/devices/delete-device.md'
                 },
                 {
-                  text: 'Device configuration', link: '/docs/device-configuration.md'
+                  text: 'Device configuration', link: '/docs/devices/device-configuration.md'
                 }
               ]
             },
             {
               text: 'Playbooks', items: [
                 { text: 'Overview', link: '/docs/playbooks/playbooks.md' },
-                { text: 'Executing a playbook', link: '/docs/exec-playbook.md' },
+                { text: 'Variables', link: '/docs/playbooks/playbooks-variables.md' },
+                { text: 'Executing a playbook', link: '/docs/playbooks/exec-playbook.md' },
                 ]
             },
             {
@@ -147,8 +148,8 @@ export default defineConfig({
             },
             {
               text: 'Settings', items: [
-                { text: 'Overview', link: '/docs/settings.md' },
-                { text: 'Configuring a Registry', link: '/docs/registry.md' }]
+                { text: 'Overview', link: '/docs/settings/settings.md' },
+                { text: 'Configuring a Registry', link: '/docs/settings/registry.md' }]
             }
           ]
         },

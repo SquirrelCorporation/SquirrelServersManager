@@ -1,22 +1,30 @@
+<script setup>
+import Diagram from './components/Diagram.vue'
+
+</script>
+
 # About Squirrel Servers Manager
 
-## TL;DR
-Squirrel Servers Manager is a backend and frontend tool written in TypeScript, powered by Ansible and Docker, to manage all your servers in one place. It focuses on UI/UX and ease of use.
+## <span style="display: flex; align-items: center;"><img src="/about/tldraw.svg" alt="tldr" style="margin-right: 8px;" /> TL;DR</span>
+Squirrel Servers Manager (SSM) is a <b>configuration & container manager</b>, powered by Ansible and Docker, **to manage all your servers in one place**! It focuses on UI/UX and ease of use.
 
 :::info ℹ️ Some examples of what you can do with it:
 - Apply system updates to single or multiple servers
 - Reboot servers
 - Automate updates
 - Monitor server CPU, memory, disk usage, and software versions
-- View running Docker services
+- View & manage running Docker services
 - Create and run Ansible playbooks
-  :::
-
-:::warning 🚧 Work in Progress
-SSM is currently in active development and not yet ready for production. I am open-sourcing it (I am working on it alone right now) to start collaborating with community contributors.
+- Connect through SSH to your devices
+- ...
 :::
 
-## Welcome to SSM!
+## <span style="display: flex; align-items: center;"><img src="/about/square-star.svg" alt="tldr" style="margin-right: 8px;" />Showcase</span>
+
+<Swiper/>
+See SSM in action with this [demo](https://demo.squirrelserversmanager.io).
+
+## <span style="display: flex; align-items: center;"><img src="/about/squarelike.svg" alt="tldr" style="margin-right: 8px;" />Welcome to SSM!</span>
 
 SSM blends the automation powerhouse of Ansible with the portable setup of Docker in a clean and engaging interface.
 
@@ -28,23 +36,35 @@ Rediscover Ansible and Docker as they unite under one intuitive, open-source int
 
 Welcome to simplicity and power in perfect harmony.
 
-## Why build SSM?
+![simple](/about/simple.gif)
+
+## <span style="display: flex; align-items: center;"><img src="/about/ecosystem.svg" alt="tldr" style="margin-right: 8px;" />Ecosystem</span>
+
+<Diagram/>
+
+## <span style="display: flex; align-items: center;"><img src="/about/goal.svg" alt="tldr" style="margin-right: 8px;" /> Why build SSM?</span>
 
 I couldn't find any tools for my homelab that allowed me to manage my 5 Raspberry Pis and 3 Ubuntu servers with a nice UI. So, I decided to code it!
 
-## Why Squirrel?
+## <span style="display: flex; align-items: center;"><img src="/about/squirrel.svg" height="30px" width="30px" alt="tldr" style="margin-right: 8px;" />Why Squirrel?</span>
 
-Consider all your devices as nuts. A squirrel loves to gather them all in some hole in a tree. That's what we are doing here! Also, squirrels are cute!
+Consider all your devices as nuts 🌰🌰🌰. A squirrel 🐿 loves to gather them all in some hole in a tree. That's what we are doing here! Also, squirrels are cute!
 
-## Roadmap
+## <span style="display: flex; align-items: center;"><img src="/about/arrow-roadmap-solid.svg" alt="tldr" style="margin-right: 8px;" />Roadmap</span>
 
 Check out the [Roadmap](https://github.com/orgs/SquirrelCorporation/projects/2) on GitHub.
 
-## Join Us (Me)!
+## <span style="display: flex; align-items: center;"><img src="/about/handshake-outline-rounded.svg" alt="tldr" style="margin-right: 8px;" /> Join Us (Me)!</span>
 
 SSM is still in its early stages. I have a lot of ground to cover, and I won't be able to do this without help from community contributors. I am also actively looking for more team members with long-term commitment.
 
-### Useful Links
+## Useful Links
 
 - [GitHub](https://github.com/SquirrelCorporation/SquirrelServersManager/)
 - [Contribution Guide](/contribute/)
+
+##
+
+:::warning 🚧 Work in Progress
+SSM is currently in active development and not yet ready for production. I am open-sourcing it (I am working on it alone right now) to start collaborating with community contributors.
+:::
