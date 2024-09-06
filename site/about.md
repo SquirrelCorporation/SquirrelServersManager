@@ -1,6 +1,8 @@
 <script setup>
 // @intellij-keep
 import Diagram from './components/Diagram.vue';
+// @intellij-keep
+import Swiper from './components/Swiper.vue';
 </script>
 
 # About Squirrel Servers Manager
