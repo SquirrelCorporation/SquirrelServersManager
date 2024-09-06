@@ -13,7 +13,7 @@ The "General Settings" tab allows you to change the behavior of SSM globally.
 ## Container Registries
 
 The "Container Registries" tab allows you to configure several registries so you can watch for container updates on private repositories such as GCR, GHCR, ECR, etc.
-[See more here on how to configure a registry](/docs/registry)
+[See more here on how to configure a registry](/docs/settings/registry)
 
 ![settings-1](/settings-2.png)
 

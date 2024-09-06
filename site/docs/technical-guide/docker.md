@@ -35,5 +35,5 @@ SSM is designed to handle these version strings, ensuring they can be parsed cor
 
 ### Registries
 :::warning Private Registries
-Please note that SSM will **only** retrieve container updates from **public repositories** by default. If your containers are from private repositories, you must set up private access. See [Configuring a Registry](/docs/registry.md) for more information.
+Please note that SSM will **only** retrieve container updates from **public repositories** by default. If your containers are from private repositories, you must set up private access. See [Configuring a Registry](/docs/settings/registry.md) for more information.
 ::: 
