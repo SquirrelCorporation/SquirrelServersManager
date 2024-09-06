@@ -29,6 +29,7 @@
 
 **Merged pull requests:**
 
+- Update playbooks.json and add Ansible smart failure endpoint [\#273](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/273) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update eslint and related dependencies [\#272](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/272) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Remove deprecated mock files and scripts [\#271](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/271) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add Molecule tests for install-agent [\#269](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/269) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))

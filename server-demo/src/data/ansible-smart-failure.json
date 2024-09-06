@@ -1,0 +1,6 @@
+{
+  "id": "unreachable",
+  "message": "fatal: [192.168.0.69]: UNREACHABLE! => {",
+  "cause": "The device may be down or unreachable.",
+  "resolution": "Check the device network connectivity and ensure you entered the right IP."
+}
