@@ -29,6 +29,7 @@
 
 **Merged pull requests:**
 
+- Move WIP warning and video iframe in index.md [\#275](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/275) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Add new Swiper and Diagram components, update docs and assets [\#274](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/274) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Update playbooks.json and add Ansible smart failure endpoint [\#273](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/273) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update eslint and related dependencies [\#272](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/272) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
