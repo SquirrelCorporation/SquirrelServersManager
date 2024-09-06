@@ -26,4 +26,4 @@ Enter your email & password here and click "Login".
 
 You will be redirected to the dashboard page.
 
-→ See next [how to add a new device](/docs/add-device)
+→ See next [how to add a new device](/docs/devices/add-device)

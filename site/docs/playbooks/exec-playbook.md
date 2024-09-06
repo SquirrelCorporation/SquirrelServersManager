@@ -2,6 +2,15 @@
 
 As a core feature of SSM, executing a playbook can be done from multiple locations across the interface.
 
+## 🌰 In a Nutshell
+
+:::info Sum-up
+- **Devices Panel**: Apply playbook to all devices with "Apply to All" or to individual devices via drop-down.
+- **Inventory Panel**: Select one or multiple devices and execute playbooks with customizable options.
+- **Playbook Modal**: Override variables before execution; choose `Apply`, `Check`, or `Check and Diff` modes to control modifications.
+- **Execution Logs**: Monitor execution progress and logs in the terminal modal for real-time feedback.
+::: 
+
 ## 1.A. Executing a playbook from the Devices panel
 
 From the Devices panel, you can apply a playbook **to all your devices** using the "Apply to All" button in the top right corner.
@@ -25,11 +34,18 @@ You can select one or more devices and choose a playbook to execute.
 
 Before executing your playbook, you can choose to override the variables contained in the playbook.
 
-[See official documentation](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html)
+[See  Variables](/docs/playbooks/playbooks-variables.md)
 
 ![execplaybook5](/exec-playbook-5.png)
+Without clicking on "Overwrite", the value will be used only for this execution.
 
-Without clicking on "save for future execution", the value will be used only for this execution.
+[See official documentation](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html)
+
+### Playbook execution mode
+
+- <b>By default</b>, SSM will `Apply` the playbook, i.e. the modification will be written on the target. 
+- Alternatively, you can use `Check` to see what changes would be made without applying them, 
+  - or `Check and Diff` to both check for potential changes and see the diffs without applying the modifications.
 
 ## 3. Following your playbook execution
 

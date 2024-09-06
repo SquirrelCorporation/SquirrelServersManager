@@ -13,7 +13,7 @@ SSM supports the following registries:
 - Quay
 
 :::info ℹ️ Default registries
-By default, the following registries will be available using anonymous access:
+By default, the following registries will be available <b>using anonymous access</b>:
 ECR, GHCR, GCR, HUB, QUAY
 :::
 

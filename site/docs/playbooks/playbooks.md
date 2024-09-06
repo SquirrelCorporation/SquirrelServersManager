@@ -1,11 +1,22 @@
 # Playbooks
 
+## 🌰 In a Nutshell
+
+:::info Sum-up
+- **Create Directory/Playbook**: Right-click parent directory title in the playbooks directory tree view.
+- **Edit Playbooks**: Click on a playbook file to open the editor.
+- **Save Changes**: Manually click the save button; no auto-save.
+- **Sync Remote Repos**: Right-click root node for additional commit and sync options.
+- **Playbooks Architecture**: Local (folder icon) and remote (git icon) repositories.
+- **Default Playbooks**: Stored in `ssm-core` and `ssm-tools`. `_` prefixed playbooks in `ssm-core` cannot be deleted.
+:::
+![playbookspage](/playbooks/playbooks.png)
+
+##
 :::info Ansible playbooks
 "Ansible Playbooks are lists of tasks that automatically execute for your specified inventory or groups of hosts. One or more Ansible tasks can be combined to make a play—an ordered grouping of tasks mapped to specific hosts—and tasks are executed in the order in which they are written."
 [Reference](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html)
 :::
-
-![playbookspage](/playbooks/playbooks.png)
 
 ## Creating a directory or an empty playbook
 
@@ -61,13 +72,3 @@ These playbooks are stored in two default repositories: `ssm-core` and `ssm-tool
 
 `ssm-core` playbooks start with '_' characters and cannot be deleted.
 
-## Configuration of playbooks: ExtraVar
-
-You can add and share ExtraVars across playbooks.
-When a playbook is opened, click on the configuration tab above it, then click on the (+) icon on the top right side.
-![playbooks2](/playbooks-2.png)
-
-Enter a new name or select the name of an existing Extra var. Your custom var value is saved globally and can be re-used in other playbooks
-![playbooks3](/playbooks-3.png)
-
-To understand more about variables, see the [official Ansible documentation](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html)
