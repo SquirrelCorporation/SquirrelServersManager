@@ -5,7 +5,7 @@ export default defineConfig({
   title: 'Squirrel Servers Manager',
   description:
     'A user friendly, UI/UX focus server & configuration management tool',
-
+  appearance: 'force-dark',
   lastUpdated: true,
   cleanUrls: true,
 
