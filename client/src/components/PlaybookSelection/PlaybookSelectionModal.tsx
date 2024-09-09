@@ -14,11 +14,12 @@ import {
   RequestOptionsType,
 } from '@ant-design/pro-components';
 import {
+  Button,
   Collapse,
+  Dropdown,
   Form,
+  MenuProps,
   message,
-  Select,
-  Space,
   Tag,
   Tooltip,
   Typography,
@@ -100,15 +101,15 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
     );
   };
 
-  const options = [
+  const items = [
     {
-      value: 'apply',
+      key: 'apply',
       label: 'Apply',
       icon: <InterfaceEditPencilChangeEditModifyPencilWriteWriting />,
     },
-    { value: 'check', label: 'Check', icon: <TriangleFlag /> },
+    { key: 'check', label: 'Check', icon: <TriangleFlag /> },
     {
-      value: 'check-diff',
+      key: 'check-diff',
       label: 'Check & Diff',
       icon: (
         <>
@@ -117,6 +118,11 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
       ),
     },
   ];
+
+  const onMenuClick: MenuProps['onClick'] = (e) => {
+    setMode(e.key as SsmAnsible.ExecutionMode);
+  };
+
   return (
     <ModalForm
       title="Playbook"
@@ -157,7 +163,10 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
         return true;
       }}
       submitter={{
-        render: (_, dom) => [
+        render: ({ submit, reset }) => [
+          <Button key="reset" onClick={() => reset()}>
+            Reset
+          </Button>,
           <Tooltip
             placement={'left'}
             mouseEnterDelay={3}
@@ -188,25 +197,15 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
             }
             key={'execution-mode'}
           >
-            <Select
+            <Dropdown.Button
               key={'mode'}
-              defaultValue="apply"
-              options={options}
-              onChange={(value) => setMode(value as SsmAnsible.ExecutionMode)}
-              labelRender={(values: any) => (
-                <Space>
-                  <span role="img" aria-label={values.label as string}>
-                    {
-                      options.find((option) => option.value === values.value)
-                        ?.icon
-                    }{' '}
-                  </span>
-                  {values.label}
-                </Space>
-              )}
-            />
+              type={'primary'}
+              onClick={submit}
+              menu={{ items, onClick: onMenuClick }}
+            >
+              {items?.find((e) => e?.key === mode)?.label}
+            </Dropdown.Button>
           </Tooltip>,
-          ...dom,
         ],
       }}
     >
