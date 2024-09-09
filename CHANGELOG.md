@@ -29,6 +29,10 @@
 
 **Merged pull requests:**
 
+- Bump framer-motion from 11.5.3 to 11.5.4 in /client [\#283](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/283) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @ant-design/plots from 2.3.1 to 2.3.2 in /client [\#280](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/280) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint from 9.9.1 to 9.10.0 in /server [\#278](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/278) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 22.7.0-alpine to 22.8.0-alpine in /client [\#276](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/276) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Move WIP warning and video iframe in index.md [\#275](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/275) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Add new Swiper and Diagram components, update docs and assets [\#274](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/274) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Update playbooks.json and add Ansible smart failure endpoint [\#273](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/273) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
