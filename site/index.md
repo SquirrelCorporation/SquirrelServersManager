@@ -63,6 +63,8 @@ features:
 }
 </style>
 
+--- 
+
 :::tip Stay informed
 <div style="text-align:center">
 <form name="contact" netlify>
