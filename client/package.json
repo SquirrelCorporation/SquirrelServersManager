@@ -85,7 +85,7 @@
     "framer-motion": "^11.5.3"
   },
   "devDependencies": {
-    "@ant-design/plots": "^2.3.1",
+    "@ant-design/plots": "^2.3.2",
     "@ant-design/pro-cli": "^3.2.1",
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.9.1",
