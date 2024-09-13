@@ -64,17 +64,23 @@ export async function executePlaybookByQuickRef(
 }
 
 export async function getExecLogs(execId: string) {
-  return request<API.ExecLogs>(`/api/playbooks/exec/${execId}/logs/`, {
-    method: 'GET',
-    ...{},
-  });
+  return request<API.Response<API.ExecLogs>>(
+    `/api/playbooks/exec/${execId}/logs/`,
+    {
+      method: 'GET',
+      ...{},
+    },
+  );
 }
 
 export async function getTaskStatuses(execId: string) {
-  return request<API.ExecStatuses>(`/api/playbooks/exec/${execId}/status/`, {
-    method: 'GET',
-    ...{},
-  });
+  return request<API.Response<API.ExecStatuses>>(
+    `/api/playbooks/exec/${execId}/status/`,
+    {
+      method: 'GET',
+      ...{},
+    },
+  );
 }
 
 export async function deletePlaybook(playbookUuid: string) {

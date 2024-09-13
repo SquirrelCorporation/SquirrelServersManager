@@ -54,7 +54,7 @@ export const deploy = asyncHandler(async (req, res) => {
       { extraVar: 'definition', value: templateToYaml },
       { extraVar: 'project', value: template.name },
     ] as API.ExtraVars);
-    new SuccessResponse('Execution succeeded', { execId: execId } as API.ExecId).send(res);
+    new SuccessResponse('Execution in progress', { execId: execId } as API.ExecId).send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }

@@ -1,0 +1,12 @@
+{
+  "playableInBatch": true,
+  "uniqueQuickRef": "createDockerVolume",
+  "extraVars": [
+    {
+      "extraVar": "name",
+      "required": true,
+      "type": "MANUAL",
+      "deletable": false
+    }
+  ]
+}

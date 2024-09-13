@@ -1,12 +1,13 @@
 import { Deploy, Target } from '@/components/Icons/CustomIcons';
-import DeployModal from '@/pages/Containers/components/sub-components/DeployModal';
-import ProCardEnvironmentConfiguration from '@/pages/Containers/components/sub-components/template-configuration-forms/ProCardEnvironmentConfiguration';
-import ProCardExtrasConfiguration from '@/pages/Containers/components/sub-components/template-configuration-forms/ProCardExtrasConfiguration';
-import ProCardGeneralConfiguration from '@/pages/Containers/components/sub-components/template-configuration-forms/ProCardGeneralConfiguration';
-import ProCardLabelsConfiguration from '@/pages/Containers/components/sub-components/template-configuration-forms/ProCardLabelsConfiguration';
-import ProCardPortsConfiguration from '@/pages/Containers/components/sub-components/template-configuration-forms/ProCardPortsConfiguration';
-import ProCardVolumesConfiguration from '@/pages/Containers/components/sub-components/template-configuration-forms/ProCardVolumesConfiguration';
+import ProCardEnvironmentConfiguration from '@/pages/Containers/components/sub-components/deploy-configuration-forms/ProCardEnvironmentConfiguration';
+import ProCardExtrasConfiguration from '@/pages/Containers/components/sub-components/deploy-configuration-forms/ProCardExtrasConfiguration';
+import ProCardGeneralConfiguration from '@/pages/Containers/components/sub-components/deploy-configuration-forms/ProCardGeneralConfiguration';
+import ProCardLabelsConfiguration from '@/pages/Containers/components/sub-components/deploy-configuration-forms/ProCardLabelsConfiguration';
+import ProCardPortsConfiguration from '@/pages/Containers/components/sub-components/deploy-configuration-forms/ProCardPortsConfiguration';
+import ProCardVolumesConfiguration from '@/pages/Containers/components/sub-components/deploy-configuration-forms/ProCardVolumesConfiguration';
+import DockerOpsModal from '@/pages/Containers/components/sub-components/DockerOpsModal';
 import { getDevices } from '@/services/rest/device';
+import { postDeploy } from '@/services/rest/services';
 import { CheckCircleFilled } from '@ant-design/icons';
 import {
   ModalForm,
@@ -37,10 +38,12 @@ const ContainerStartModal: React.FC<ContainerStartModalProps> = (
 
   return (
     <>
-      <DeployModal
+      <DockerOpsModal
         data={data as API.Template & API.Targets}
         setIsOpen={setDeployModalOpened}
         isOpen={deployModalOpened}
+        call={postDeploy}
+        displayName={'deploy'}
       />
       <ModalForm<API.Template & API.Targets>
         title={

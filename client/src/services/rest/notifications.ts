@@ -5,7 +5,7 @@ export async function getAllNotifications(
   params?: API.PageParams,
   options?: Record<string, any>,
 ) {
-  return request<API.Response<API.InAppNotification>>(`/api/notifications`, {
+  return request<API.Response<API.InAppNotification[]>>(`/api/notifications`, {
     method: 'GET',
     params: {
       ...params,

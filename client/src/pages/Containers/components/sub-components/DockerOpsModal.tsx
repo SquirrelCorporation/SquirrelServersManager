@@ -1,21 +1,23 @@
 import TerminalCoreModal, {
   PlaybookExecutionTerminalModalHandles,
 } from '@/components/PlaybookExecutionModal/PlaybookExecutionTerminalModal';
-import { postDeploy } from '@/services/rest/services';
 import { message } from 'antd';
 import React, { RefObject, useEffect, useState } from 'react';
-import { API } from 'ssm-shared-lib';
 
-export type DeployModalProps = {
-  data: API.Template & API.Targets;
+export type DockerOpsModalProps = {
+  data: any;
+  call: (_: any) => Promise<any>;
   setIsOpen: (open: boolean) => void;
   isOpen: boolean;
+  displayName: string;
 };
 
-const DeployModal: React.FC<DeployModalProps> = ({
+const DockerOpsModal: React.FC<DockerOpsModalProps> = ({
   data,
+  call,
   setIsOpen,
   isOpen,
+  displayName,
 }) => {
   const [execId, setExecId] = React.useState('');
   const [isPollingEnabled, setIsPollingEnabled] = useState(false);
@@ -26,14 +28,14 @@ const DeployModal: React.FC<DeployModalProps> = ({
     ref.current?.resetTerminal();
     ref.current?.resetScreen();
     try {
-      const res = await postDeploy(data);
+      const res = await call(data);
       setExecId(res.data.execId);
       message.loading({
         content: `Playbook is running with id "${res.data.execId}"`,
         duration: 8,
       });
       setIsPollingEnabled(true);
-    } catch (error: any) {
+    } catch {
       message.error({
         type: 'error',
         content: 'Error running playbook',
@@ -55,7 +57,7 @@ const DeployModal: React.FC<DeployModalProps> = ({
         execId={execId}
         startTerminal={startTerminal}
         isOpen={isOpen}
-        displayName={'Unknown'}
+        displayName={displayName}
         setIsOpen={setIsOpen}
         isPollingEnabled={isPollingEnabled}
         setIsPollingEnabled={setIsPollingEnabled}
@@ -64,4 +66,4 @@ const DeployModal: React.FC<DeployModalProps> = ({
   );
 };
 
-export default DeployModal;
+export default DockerOpsModal;

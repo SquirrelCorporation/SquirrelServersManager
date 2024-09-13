@@ -5,13 +5,13 @@
     {
       "extraVar": "project",
       "required": true,
-      "type": "CONTEXT",
+      "type": "MANUAL",
       "deletable": false
     },
     {
       "extraVar": "definition",
       "required": true,
-      "type": "CONTEXT",
+      "type": "MANUAL",
       "deletable": false
     }
   ]

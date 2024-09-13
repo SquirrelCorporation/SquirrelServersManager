@@ -772,3 +772,32 @@ export type SmartFailure = {
   cause: string,
   resolution: string,
 }
+
+export type CreateNetworkConfig = {
+  name: string,
+  network: string,
+  v4_subnet: string,
+  v4_gateway: string,
+  v4_range: string,
+  v6_subnet?: string;
+  v6_gateway?: string;
+  v6_range?: string;
+  v4_excludedIps?: string[],
+  v6_excludedIps?: string[],
+  labels?: [{name: string, value: string}]
+}
+
+export type CreateNetwork = {
+  target: string,
+  config: CreateNetworkConfig
+}
+
+export type CreateNetworkVolumeConfig = {
+  name: string,
+}
+
+
+export type CreateVolume = {
+  target: string,
+  config: CreateNetworkVolumeConfig
+}

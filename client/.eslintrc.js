@@ -5,6 +5,11 @@ module.exports = {
     page: true,
     REACT_APP_ENV: true,
   },
+  parserOptions: {
+    project: './tsconfig.test.json',
+    tsconfigRootDir: __dirname,
+    sourceType: 'module',
+  },
   // ...
   rules: {
     '@typescript-eslint/no-parameter-properties': 'off',
@@ -12,5 +17,7 @@ module.exports = {
     '@typescript-eslint/switch-exhaustiveness-check': 'off',
     '@typescript-eslint/no-throw-literal': 'off',
     '@typescript-eslint/consistent-indexed-object-style': 'off',
+    '@typescript-eslint/ban-types': 'off',
+    '@typescript-eslint/type-annotation-spacing': 'off',
   },
 };
