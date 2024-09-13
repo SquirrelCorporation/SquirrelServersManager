@@ -9,6 +9,8 @@
 - \[FEAT\] Add dry run for Ansible playbook [\#268](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/268)
 - \[CHORE\] Refacto ExtraVars 🧹 [\#263](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/263)
 - \[FEATURE\] Compatibility for docker environments with a TLS Configuration [\#218](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/218)
+- \[FEAT\] Enhanced services: Create Network, Volumes & deploy single image 🔥 [\#179](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/179)
+- \[FEAT\] Create docker network & volume [\#287](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/287) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] add dry run for ansible playbook [\#270](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/270) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Introducing variable types for playbook [\#264](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/264) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Add Ansible SmartFailure detection and handling [\#251](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/251) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
