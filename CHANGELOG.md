@@ -1,5 +1,42 @@
 # Changelog
 
+## [v0.1.18](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.18) (2024-09-13)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.18-beta.1...v0.1.18)
+
+**Implemented enhancements:**
+
+- \[FEAT\] Add dry run for Ansible playbook [\#268](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/268)
+- \[CHORE\] Refacto ExtraVars 🧹 [\#263](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/263)
+- \[FEATURE\] Compatibility for docker environments with a TLS Configuration [\#218](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/218)
+- \[FEAT\] Enhanced services: Create Network, Volumes & deploy single image 🔥 [\#179](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/179)
+- \[FEAT\] Create docker network & volume [\#287](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/287) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[FEAT\] Add Ansible SmartFailure detection and handling [\#251](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/251) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[FEAT\] Feat ansible configuration mgt [\#236](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/236) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Fixed bugs:**
+
+- \[BUG\] Buggy Automation editor when setting template 🐛 [\#222](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/222)
+- \[BUG\] Uninstalling the agent still left files behind [\#46](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/46)
+- \[BUG\] Add support for agent log path management in Ansible tasks [\#266](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/266) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\]\[CHORE\] Add default values for SSH connection and host checking [\#265](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/265) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Merged pull requests:**
+
+- \[CHORE\] Enhance PlaybookSelectionModal with Dropdown button [\#284](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/284) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[DOC\] Add new Swiper and Diagram components, update docs and assets [\#274](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/274) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update eslint and related dependencies [\#272](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/272) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Remove deprecated mock files and scripts [\#271](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/271) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Add Molecule tests for install-agent [\#269](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/269) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update Mongoose and improve database operations [\#262](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/262) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Add meta description tags and update roadmap link [\#249](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/249) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Remove unused dependencies and update TypeScript related packages [\#247](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/247) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Chore add common playbooks [\#246](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/246) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update OS logos and enhance pagination [\#241](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/241) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Refactor Docker configuration forms and centralize SSH elements [\#240](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/240) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Add ANSIBLE\_CONFIG to AnsibleCmd test cases [\#237](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/237) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update dependencies and Docker base images [\#221](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/221) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 ## [v0.1.18-beta.1](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.18-beta.1) (2024-09-13)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/demo-v1...v0.1.18-beta.1)
