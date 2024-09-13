@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+## [v0.1.18-beta.1](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.18-beta.1) (2024-09-13)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/demo-v1...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/demo-v1...v0.1.18-beta.1)
 
 **Implemented enhancements:**
 
