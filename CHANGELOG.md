@@ -31,6 +31,7 @@
 
 **Merged pull requests:**
 
+- Bump the npm\_and\_yarn group across 1 directory with 5 updates [\#288](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/288) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Enhance PlaybookSelectionModal with Dropdown button [\#284](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/284) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump framer-motion from 11.5.3 to 11.5.4 in /client [\#283](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/283) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @ant-design/plots from 2.3.1 to 2.3.2 in /client [\#280](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/280) ([dependabot[bot]](https://github.com/apps/dependabot))
