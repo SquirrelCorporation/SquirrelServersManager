@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import logger from '../../logger';
 import binascii from './binascii';
 import pkcs7 from './pkcs7';
 import { DerivedKey, Unpacked } from './types';
@@ -44,9 +43,12 @@ export default class Vault {
    * @param {Buffer} ciphertext
    * @returns {Buffer}
    */
-  private _hmac(key: crypto.BinaryLike | crypto.KeyObject, ciphertext: crypto.BinaryLike): Buffer {
-    const hmac = crypto.createHmac(DIGEST, key);
-    hmac.update(ciphertext);
+  private _hmac(
+    key: Buffer | crypto.BinaryLike | crypto.KeyObject,
+    ciphertext: Buffer | crypto.BinaryLike,
+  ): Buffer {
+    const hmac = crypto.createHmac(DIGEST, key as crypto.BinaryLike);
+    hmac.update(ciphertext as crypto.BinaryLike);
     return hmac.digest();
   }
 
@@ -55,12 +57,12 @@ export default class Vault {
    * @param {Buffer} salt
    * @returns {Promise<DerivedKey>}
    */
-  private async _derivedKey(salt: crypto.BinaryLike): Promise<DerivedKey> {
+  private async _derivedKey(salt: Buffer | Uint8Array | crypto.BinaryLike): Promise<DerivedKey> {
     if (!this.password) {
       throw new Error('No password');
     }
     const derivedKey = await new Promise<Buffer>((resolve, reject) => {
-      pbkdf2(this.password, salt, 10000, 80, DIGEST, (err, key) => {
+      pbkdf2(this.password, salt as crypto.BinaryLike, 10000, 80, DIGEST, (err, key) => {
         if (err) {
           reject(err);
         } else {
@@ -76,12 +78,18 @@ export default class Vault {
    * @param {Buffer} salt
    * @returns {DerivedKey}
    */
-  private _derivedKeySync(salt: crypto.BinaryLike): DerivedKey {
+  private _derivedKeySync(salt: Buffer | crypto.BinaryLike): DerivedKey {
     if (!this.password) {
       throw new Error('No password');
     }
 
-    const derivedKey = crypto.pbkdf2Sync(this.password, salt, 10000, 80, DIGEST);
+    const derivedKey = crypto.pbkdf2Sync(
+      this.password,
+      salt as crypto.BinaryLike,
+      10000,
+      80,
+      DIGEST,
+    );
     return this._deriveKey(derivedKey);
   }
 
@@ -137,11 +145,15 @@ export default class Vault {
    */
   private _cipher(secret: string, id: string, salt: Buffer, derivedKey: DerivedKey) {
     const { key, hmacKey, iv } = derivedKey;
+    // @ts-expect-error error type, fix later
     const cipherF = crypto.createCipheriv(CIPHER, key, iv);
     const finalInput = Buffer.concat([
+      // @ts-expect-error error type, fix later
       Buffer.from(secret, 'utf-8'),
+      // @ts-expect-error error type, fix later
       pkcs7.pad(Buffer.from(secret, 'utf-8').length, 16),
     ]);
+    // @ts-expect-error error type, fix later
     const ciphertext = Buffer.concat([cipherF.update(finalInput), cipherF.final()]);
 
     const hmac = this._hmac(hmacKey, ciphertext);
@@ -159,12 +171,13 @@ export default class Vault {
     const { hmac, ciphertext } = unpacked;
     const { key, hmacKey, iv } = derivedKey;
     const hmacComp = this._hmac(hmacKey, ciphertext);
+    // @ts-expect-error error type, fix later
     if (Buffer.compare(hmacComp, hmac) !== 0) {
       throw new Error('Integrity check failed');
     }
-
+    // @ts-expect-error error type, fix later
     const cipherF = crypto.createDecipheriv(CIPHER, key, iv);
-
+    // @ts-expect-error error type, fix later
     const buffer = pkcs7.unpad(Buffer.concat([cipherF.update(ciphertext), cipherF.final()]), 16);
 
     return buffer.toString();

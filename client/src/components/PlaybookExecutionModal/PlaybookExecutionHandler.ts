@@ -11,8 +11,8 @@ export type TaskStatusTimelineType = StepsProps & {
 };
 
 export default class PlaybookExecutionHandler {
-  private statusesSet;
-  private logsSet;
+  private statusesSet: Set<string>;
+  private logsSet: Set<string>;
   public setIsPollingEnabled: React.Dispatch<React.SetStateAction<boolean>>;
   public setSavedStatuses:
     | React.Dispatch<React.SetStateAction<TaskStatusTimelineType[]>>
@@ -51,20 +51,16 @@ export default class PlaybookExecutionHandler {
   };
 
   pollingCallback = async (execId: string) => {
-    await getTaskStatuses(execId)
-      .then((statuses) => {
-        // Sort statuses
-        if (statuses && statuses.data.execStatuses) {
-          statuses.data.execStatuses.sort(
-            (a: API.ExecStatus, b: API.ExecStatus) => {
-              return (
-                new Date(a.createdAt).getTime() -
-                new Date(b.createdAt).getTime()
-              );
-            },
-          );
-          statuses.data.execStatuses.forEach((status: API.ExecStatus) => {
-            // Check if a new statuses appeared
+    try {
+      const statuses = await getTaskStatuses(execId);
+      if (statuses?.data?.execStatuses) {
+        statuses.data.execStatuses.sort(
+          (a: API.ExecStatus, b: API.ExecStatus) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+        );
+
+        for (const status of statuses.data.execStatuses) {
+          try {
             if (!this.statusesSet.has(status.status)) {
               this.statusesSet.add(status.status);
               if (this.setSavedStatuses) {
@@ -88,37 +84,36 @@ export default class PlaybookExecutionHandler {
                 }, 5000);
               }
             }
-          });
+          } catch (error) {
+            console.error('Error processing status:', error, status);
+          }
         }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      }
+    } catch (error) {
+      console.error('Failed to fetch task statuses:', error);
+    }
 
     if (this.execLogsCallBack) {
-      await getExecLogs(execId)
-        .then((logs) => {
-          if (logs && logs.data.execLogs) {
-            logs.data.execLogs.sort((a: API.ExecLog, b: API.ExecLog) => {
-              return (
-                new Date(a.createdAt).getTime() -
-                new Date(b.createdAt).getTime()
-              );
-            });
-            logs.data.execLogs.forEach((execLog: API.ExecLog) => {
-              if (!this.logsSet.has(execLog.logRunnerId)) {
-                this.logsSet.add(execLog.logRunnerId);
-                if (execLog.stdout) {
-                  // @ts-expect-error
-                  this.execLogsCallBack(execLog);
-                }
+      try {
+        const logs = await getExecLogs(execId);
+        if (logs?.data?.execLogs) {
+          logs.data.execLogs.sort(
+            (a: API.ExecLog, b: API.ExecLog) =>
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+          );
+
+          for (const execLog of logs.data.execLogs) {
+            if (!this.logsSet.has(execLog.logRunnerId)) {
+              this.logsSet.add(execLog.logRunnerId);
+              if (execLog.stdout) {
+                this.execLogsCallBack(execLog);
               }
-            });
+            }
           }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        }
+      } catch (error) {
+        console.error('Failed to fetch exec logs:', error);
+      }
     }
   };
 }

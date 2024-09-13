@@ -1,0 +1,74 @@
+---
+- name: Create Docker Network
+  hosts: all
+  become: true
+  vars:
+    network_config:
+      name: "{{ name }}"
+      network: "{{ network }}"
+      v4_subnet: "{{ v4_subnet }}"
+      v4_gateway: "{{ v4_gateway }}"
+      v4_range: "{{ v4_range }}"
+      v4_excludedIps: "{{ v4_excludedIps | default([]) }}"
+      v6_subnet: "{{ v6_subnet | default('') }}"
+      v6_gateway: "{{ v6_gateway | default('') }}"
+      v6_range: "{{ v6_range | default('') }}"
+      v6_excludedIps: "{{ v6_excludedIps | default([]) }}"
+      labels: "{{ labels | default([]) }}"
+      attachable: "{{ attachable | default(false) }}"
+      isolated: "{{ isolated | default(false) }}"
+
+  tasks:
+    - name: Initialize network labels as an empty dictionary
+      set_fact:
+        network_labels: { }
+
+    - name: Set network labels
+      set_fact:
+        network_labels: "{{ network_labels | combine({ item.name: item.value }) }}"
+      loop: "{{ network_config.labels }}"
+      when: network_config.labels | length > 0
+
+    - name: Transform v4_excludedIps to aux_addresses
+      set_fact:
+        aux_addresses_v4: "{{ aux_addresses_v4 | default({}) | combine({ item.name: item.value }) }}"
+      loop: "{{ network_config.v4_excludedIps }}"
+      when: network_config.v4_excludedIps | length > 0
+
+    - name: Set IPv4 IPAM configuration
+      set_fact:
+        ipam_v4_config:
+          - subnet: "{{ network_config.v4_subnet }}"
+            gateway: "{{ network_config.v4_gateway }}"
+            iprange: "{{ network_config.v4_range }}"
+            aux_addresses: "{{ aux_addresses_v4 | default({}) }}"
+
+    - name: Combine IPAM configurations
+      set_fact:
+        ipam_config: "{{ ipam_v4_config }}"
+
+    - name: Transform v6_excludedIps to aux_addresses (if available)
+      set_fact:
+        aux_addresses_v6: "{{ aux_addresses_v6 | default({}) | combine({ item.name: item.value }) }}"
+      loop: "{{ network_config.v6_excludedIps }}"
+      when: network_config.v6_excludedIps | length > 0
+
+    - name: Set and append IPv6 IPAM configuration (if available)
+      set_fact:
+        ipam_config: "{{ ipam_config + [{'subnet': network_config.v6_subnet, 'gateway': network_config.v6_gateway, 'iprange': network_config.v6_range, 'aux_addresses': aux_addresses_v6 | default({})}] }}"
+      when: network_config.v6_subnet and network_config.v6_gateway and network_config.v6_range
+
+    - name: Setup network options
+      set_fact:
+        network_options: "{{ network_options | default({}) }}"
+        network_options_with_isolated: "{{ network_options | combine({'internal': True}) }}"
+      when: network_config.isolated
+
+    - name: Create a Docker network
+      community.docker.docker_network:
+        name: "{{ network_config.name }}"
+        driver: "{{ network_config.network }}"
+        ipam_config: "{{ ipam_config }}"
+        labels: "{{ network_labels }}"
+        attachable: "{{ network_config.attachable }}"
+        internal: "{{ network_config.isolated }}"

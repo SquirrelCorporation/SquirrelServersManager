@@ -30,6 +30,24 @@ export async function getNetworks(
   );
 }
 
+export async function postNetwork(
+  data: API.CreateNetwork,
+  params?: any,
+  options?: Record<string, any>,
+): Promise<API.Response<API.ContainerNetwork[]>> {
+  return request<API.Response<API.ContainerNetwork[]>>(
+    '/api/containers/networks',
+    {
+      method: 'POST',
+      data,
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    },
+  );
+}
+
 export async function getVolumes(
   params?: any,
   options?: Record<string, any>,
@@ -38,6 +56,24 @@ export async function getVolumes(
     '/api/containers/volumes',
     {
       method: 'GET',
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    },
+  );
+}
+
+export async function postVolume(
+  data: API.CreateVolume,
+  params?: any,
+  options?: Record<string, any>,
+): Promise<API.Response<API.ContainerNetwork[]>> {
+  return request<API.Response<API.ContainerNetwork[]>>(
+    '/api/containers/volumes',
+    {
+      method: 'POST',
+      data,
       params: {
         ...params,
       },

@@ -1,6 +1,6 @@
+import CreateVolumeModal from '@/pages/Containers/components/sub-components/CreateVolumeModal';
 import { getDevices } from '@/services/rest/device';
 import { getVolumes } from '@/services/rest/services';
-import { PlusOutlined } from '@ant-design/icons';
 import {
   ActionType,
   ProColumns,
@@ -8,7 +8,7 @@ import {
   ProTable,
   RequestOptionsType,
 } from '@ant-design/pro-components';
-import { Button, Tag, Tooltip } from 'antd';
+import { Tag, Tooltip } from 'antd';
 import React, { useRef } from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -78,19 +78,7 @@ const Volumes: React.FC = () => {
         defaultPageSize: 20,
         showSizeChanger: true,
       }}
-      toolBarRender={() => [
-        <Button
-          key="button"
-          disabled
-          icon={<PlusOutlined />}
-          onClick={() => {
-            actionRef.current?.reload();
-          }}
-          type="primary"
-        >
-          Add a volume
-        </Button>,
-      ]}
+      toolBarRender={() => [<CreateVolumeModal key={'create-volume'} />]}
     />
   );
 };

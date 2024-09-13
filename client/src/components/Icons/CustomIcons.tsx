@@ -1599,3 +1599,66 @@ export const DiffSvg = React.memo((props) => (
 export const Diff = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={DiffSvg} {...props} />
 );
+
+const VlanSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 32 32"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M30 17v-2H17v-4h2a2.002 2.002 0 0 0 2-2V4a2.002 2.002 0 0 0-2-2h-6a2.002 2.002 0 0 0-2 2v5a2.002 2.002 0 0 0 2 2h2v4H2v2h6v4H6a2.002 2.002 0 0 0-2 2v5a2.002 2.002 0 0 0 2 2h6a2.002 2.002 0 0 0 2-2v-5a2.002 2.002 0 0 0-2-2h-2v-4h12v4h-2a2.002 2.002 0 0 0-2 2v5a2.002 2.002 0 0 0 2 2h6a2.002 2.002 0 0 0 2-2v-5a2.002 2.002 0 0 0-2-2h-2v-4ZM13 4h6v5h-6Zm-1 24H6v-5h6Zm14 0h-6v-5h6Z"
+    />
+  </svg>
+);
+
+export const Vlan = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={VlanSvg} {...props} />
+);
+
+const NetworkOverlaySvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 32 32"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M22 23h-8.17l2.58-2.59L15 19l-5 5l5 5l1.41-1.41L13.83 25H22v-2zM11 13h8.17l-2.58-2.59L18 9l5 5l-5 5l-1.41-1.41L19.17 15H11v-2z"
+    />
+    <path
+      fill="currentColor"
+      d="M24.5 25H24v-2h.5a5.496 5.496 0 0 0 .377-10.98l-.837-.056l-.09-.834a7.998 7.998 0 0 0-15.9 0l-.09.834l-.837.057A5.496 5.496 0 0 0 7.5 23H8v2h-.5a7.496 7.496 0 0 1-1.322-14.876a10 10 0 0 1 19.644 0A7.496 7.496 0 0 1 24.5 25Z"
+    />
+  </svg>
+);
+
+export const NetworkOverlay = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={NetworkOverlaySvg} {...props} />
+);
+
+const LabelsSvg = (props: any) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 16 16"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M6.427.512A1.75 1.75 0 0 1 7.664 0H13v3h3v5.335c0 .465-.185.91-.513 1.239L9.573 15.48a1.75 1.75 0 0 1-2.473 0l-2.293-2.293l-1.293-1.293l-3-3a1.75 1.75 0 0 1 0-2.475L6.428.512ZM11.5 1.5V3h-.836a1.75 1.75 0 0 0-1.237.512L3.514 9.419c-.06.06-.115.123-.165.19L1.574 7.833a.25.25 0 0 1 0-.353l5.913-5.907a.25.25 0 0 1 .177-.073H11.5ZM5.866 12.126l-1.292-1.293a.25.25 0 0 1 0-.353l5.913-5.907a.25.25 0 0 1 .177-.073H14.5v3.835a.25.25 0 0 1-.073.177L8.513 14.42a.25.25 0 0 1-.353 0l-2.294-2.293ZM12 8a1 1 0 1 0 0-2a1 1 0 0 0 0 2Z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+
+export const Labels = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={LabelsSvg} {...props} />
+);

@@ -1,0 +1,66 @@
+{
+  "playableInBatch": true,
+  "uniqueQuickRef": "createDockerNetwork",
+  "extraVars": [
+    {
+      "extraVar": "name",
+      "required": true,
+      "type": "MANUAL",
+      "deletable": false
+    },
+    {
+      "extraVar": "network",
+      "required": true,
+      "type": "MANUAL",
+      "deletable": false
+    },
+    {
+      "extraVar": "v4_subnet",
+      "required": true,
+      "type": "MANUAL",
+      "deletable": false
+    },
+    {
+      "extraVar": "v4_gateway",
+      "required": true,
+      "type": "MANUAL",
+      "deletable": false
+    },
+    {
+      "extraVar": "v4_range",
+      "required": true,
+      "type": "MANUAL",
+      "deletable": false
+    },
+    {
+      "extraVar": "v4_excludedIps",
+      "required": false,
+      "type": "MANUAL",
+      "deletable": false
+    },
+    {
+      "extraVar": "v6_excludedIps",
+      "required": false,
+      "type": "MANUAL",
+      "deletable": false
+    },
+    {
+      "extraVar": "labels",
+      "required": false,
+      "type": "MANUAL",
+      "deletable": false
+    },
+    {
+      "extraVar": "attachable",
+      "required": false,
+      "type": "MANUAL",
+      "deletable": false
+    },
+    {
+      "extraVar": "isolated",
+      "required": false,
+      "type": "MANUAL",
+      "deletable": false
+    }
+  ]
+}

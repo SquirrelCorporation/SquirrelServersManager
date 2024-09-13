@@ -134,7 +134,7 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
 
     useEffect(() => {
       convertRunningStatusToFinish();
-      isFinalStatusFailed();
+      void isFinalStatusFailed();
     }, [savedStatuses]);
 
     useEffect(() => {

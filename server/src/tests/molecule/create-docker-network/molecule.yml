@@ -1,0 +1,49 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+
+driver:
+  name: docker
+
+platforms:
+  - name: instance
+    image: python:3.11-bookworm
+    privileged: true
+
+scenario:
+  test_sequence:
+    - destroy
+    - create
+    - prepare
+    - converge
+    # - idempotence
+    - verify
+
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        name: "test_network"
+        network: "bridge"
+        v4_subnet: "192.168.0.0/24"
+        v4_gateway: "192.168.0.1"
+        v4_range: "192.168.0.0/25"
+        v4_excludedIps: [ ]
+        v6_subnet: ""
+        v6_gateway: ""
+        v6_range: ""
+        v6_excludedIps: [ ]
+        labels:
+          - { name: "test", value: "test" }
+        attachable: true
+
+verifier:
+  name: ansible
+
+lint: |
+  set -e
+  yamllint .
+  ansible-lint

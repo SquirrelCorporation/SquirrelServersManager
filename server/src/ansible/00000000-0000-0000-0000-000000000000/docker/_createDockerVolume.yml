@@ -1,0 +1,13 @@
+---
+- name: Create Docker Volume
+  hosts: all
+  become: true
+  vars:
+    network_config:
+      name: "{{ name }}"
+  tasks:
+    - name: Create a Docker volume
+      community.docker.docker_volume:
+        name: "{{ name }}"
+        driver: local
+        state: present

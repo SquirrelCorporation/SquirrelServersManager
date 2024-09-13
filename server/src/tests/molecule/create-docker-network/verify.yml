@@ -1,0 +1,27 @@
+---
+- name: Verify Docker Network Creation
+  hosts: all
+  tasks:
+    - name: Debug Docker network information
+      community.docker.docker_network_info:
+        name: test_network
+      register: result
+
+    - name: Print Docker network information
+      debug:
+        var: result
+
+    - name: Check if Docker network key exists
+      assert:
+        that:
+          - "'network' in result"
+
+    - name: Check if Docker network exists
+      assert:
+        that:
+          - "result.network is defined"
+
+    - name: Assert Docker network has correct subnet
+      assert:
+        that:
+          - "result.network.IPAM.Config[0].Subnet == '192.168.0.0/24'"

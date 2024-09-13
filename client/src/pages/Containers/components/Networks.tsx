@@ -1,7 +1,7 @@
 import { Bridge, GrommetIconsHost } from '@/components/Icons/CustomIcons';
+import CreateNetworkModal from '@/pages/Containers/components/sub-components/CreateNetworkModal';
 import { getDevices } from '@/services/rest/device';
 import { getNetworks } from '@/services/rest/services';
-import { PlusOutlined } from '@ant-design/icons';
 import {
   ActionType,
   ProColumns,
@@ -9,7 +9,7 @@ import {
   ProTable,
   RequestOptionsType,
 } from '@ant-design/pro-components';
-import { Avatar, Button, Tag, Tooltip } from 'antd';
+import { Avatar, Tag, Tooltip } from 'antd';
 import React, { useRef } from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -106,19 +106,7 @@ const Networks: React.FC = () => {
         defaultPageSize: 20,
         showSizeChanger: true,
       }}
-      toolBarRender={() => [
-        <Button
-          key="button"
-          disabled
-          icon={<PlusOutlined />}
-          onClick={() => {
-            actionRef.current?.reload();
-          }}
-          type="primary"
-        >
-          Add a network
-        </Button>,
-      ]}
+      toolBarRender={() => [<CreateNetworkModal key={'create-network'} />]}
     />
   );
 };
