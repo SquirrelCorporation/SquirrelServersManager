@@ -10,7 +10,7 @@
     "test": "vitest --disable-console-intercept --reporter=basic ",
     "coverage": "vitest run --coverage"
   },
-  "version": "0.1.17",
+  "version": "0.1.18",
   "author": "Squirrel Team",
   "dependencies": {
     "@aws-sdk/client-ecr": "^3.650.0",
