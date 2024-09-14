@@ -15,9 +15,10 @@
               "extraVars": [
                 {
                   "extraVar": "_ssm_masterNodeUrl",
-                  "value": "http://192.168.0.229:8000",
                   "required": true,
-                  "canBeOverride": true
+                  "type": "SHARED",
+                  "deletable": false,
+                  "value": "http://127.0.0.1:8000"
                 }
               ],
               "custom": false
@@ -31,14 +32,16 @@
               "extraVars": [
                 {
                   "extraVar": "_ssm_masterNodeUrl",
-                  "value": "http://192.168.0.229:8000",
                   "required": true,
-                  "canBeOverride": true
+                  "type": "SHARED",
+                  "deletable": false,
+                  "value": "http://127.0.0.1:8000"
                 },
                 {
                   "extraVar": "_ssm_deviceId",
                   "required": true,
-                  "canBeOverride": false
+                  "type": "CONTEXT",
+                  "deletable": false
                 }
               ],
               "custom": false
@@ -52,14 +55,16 @@
               "extraVars": [
                 {
                   "extraVar": "_ssm_masterNodeUrl",
-                  "value": "http://192.168.0.229:8000",
                   "required": true,
-                  "canBeOverride": true
+                  "type": "SHARED",
+                  "deletable": false,
+                  "value": "http://127.0.0.1:8000"
                 },
                 {
                   "extraVar": "_ssm_deviceId",
                   "required": true,
-                  "canBeOverride": false
+                  "type": "CONTEXT",
+                  "deletable": false
                 }
               ],
               "custom": false
@@ -100,14 +105,16 @@
               "extraVars": [
                 {
                   "extraVar": "_ssm_masterNodeUrl",
-                  "value": "http://192.168.0.229:8000",
                   "required": true,
-                  "canBeOverride": true
+                  "type": "SHARED",
+                  "deletable": false,
+                  "value": "http://127.0.0.1:8000"
                 },
                 {
                   "extraVar": "_ssm_deviceId",
                   "required": true,
-                  "canBeOverride": false
+                  "type": "CONTEXT",
+                  "deletable": false
                 }
               ],
               "custom": false
@@ -163,12 +170,14 @@
                 {
                   "extraVar": "project",
                   "required": true,
-                  "canBeOverride": true
+                  "type": "MANUAL",
+                  "deletable": false
                 },
                 {
                   "extraVar": "definition",
                   "required": true,
-                  "canBeOverride": true
+                  "type": "MANUAL",
+                  "deletable": false
                 }
               ],
               "custom": false
@@ -203,9 +212,10 @@
           "extraVars": [
             {
               "extraVar": "_ssm_masterNodeUrl",
-              "value": "http://192.168.0.229:8000",
               "required": true,
-              "canBeOverride": true
+              "type": "SHARED",
+              "deletable": false,
+              "value": "http://127.0.0.1:8000"
             }
           ],
           "custom": true
