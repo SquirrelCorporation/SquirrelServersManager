@@ -9,28 +9,28 @@ import asyncHandler from "../utils/AsyncHandler";
 const router = express.Router();
 
 router.get(
-  "/services/templates",
+  "/containers/templates",
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got templates", templates).send(res);
   }),
 );
 
 router.get(
-  "/services/images",
+  "/containers/images",
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got images", images).send(res);
   }),
 );
 
 router.get(
-  "/services/volumes",
+  "/containers/volumes",
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got volumes", volumes).send(res);
   }),
 );
 
 router.get(
-  "/services/networks",
+  "/containers/networks",
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got networks", networks).send(res);
   }),
