@@ -1,5 +1,20 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.18...HEAD)
+
+**Fixed bugs:**
+
+- \[BUG\] Adding all LXCs and VMs very high CPU load [\#165](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/165)
+
+**Merged pull requests:**
+
+- Bump @types/jest from 29.5.12 to 29.5.13 in /client [\#292](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/292) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint-plugin-react from 7.36.0 to 7.36.1 in /client [\#291](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/291) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @vitest/coverage-v8 from 2.0.5 to 2.1.1 in /server [\#290](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/290) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @aws-sdk/client-ecr from 3.650.0 to 3.651.1 in /server [\#289](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/289) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v0.1.18](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.18) (2024-09-13)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.18-beta.1...v0.1.18)
@@ -43,22 +58,11 @@
 
 **Implemented enhancements:**
 
-- \[FEAT\] Add dry run for Ansible playbook [\#268](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/268)
-- \[CHORE\] Refacto ExtraVars 🧹 [\#263](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/263)
-- \[FEATURE\] Compatibility for docker environments with a TLS Configuration [\#218](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/218)
-- \[FEAT\] Enhanced services: Create Network, Volumes & deploy single image 🔥 [\#179](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/179)
-- \[FEAT\] Create docker network & volume [\#287](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/287) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] add dry run for ansible playbook [\#270](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/270) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Introducing variable types for playbook [\#264](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/264) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[FEAT\] Add Ansible SmartFailure detection and handling [\#251](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/251) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[FEAT\] Feat ansible configuration mgt [\#236](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/236) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Fixed bugs:**
 
-- \[BUG\] Buggy Automation editor when setting template 🐛 [\#222](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/222)
-- \[BUG\] Uninstalling the agent still left files behind [\#46](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/46)
-- \[BUG\] Add support for agent log path management in Ansible tasks [\#266](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/266) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[BUG\]\[CHORE\] Add default values for SSH connection and host checking [\#265](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/265) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Set initial cronValue from formRef [\#223](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/223) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Closed issues:**
@@ -69,19 +73,13 @@
 **Merged pull requests:**
 
 - Bump the npm\_and\_yarn group across 1 directory with 5 updates [\#288](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/288) ([dependabot[bot]](https://github.com/apps/dependabot))
-- \[CHORE\] Enhance PlaybookSelectionModal with Dropdown button [\#284](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/284) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump framer-motion from 11.5.3 to 11.5.4 in /client [\#283](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/283) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @ant-design/plots from 2.3.1 to 2.3.2 in /client [\#280](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/280) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 22.7.0-alpine to 22.8.0-alpine in /server [\#279](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/279) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump eslint from 9.9.1 to 9.10.0 in /server [\#278](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/278) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 22.7.0-alpine to 22.8.0-alpine in /client [\#276](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/276) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Move WIP warning and video iframe in index.md [\#275](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/275) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[DOC\] Add new Swiper and Diagram components, update docs and assets [\#274](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/274) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Update playbooks.json and add Ansible smart failure endpoint [\#273](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/273) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Update eslint and related dependencies [\#272](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/272) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Remove deprecated mock files and scripts [\#271](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/271) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Add Molecule tests for install-agent [\#269](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/269) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Update Mongoose and improve database operations [\#262](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/262) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @stylistic/eslint-plugin from 2.6.4 to 2.7.2 in /server [\#261](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/261) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump axios from 1.7.5 to 1.7.7 in /server [\#259](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/259) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump eslint-plugin-import-x from 4.1.0 to 4.1.1 in /server [\#258](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/258) ([dependabot[bot]](https://github.com/apps/dependabot))
@@ -91,16 +89,10 @@
 - Bump framer-motion from 11.3.30 to 11.3.31 in /client [\#253](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/253) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Rename 'Services' to 'Containers' [\#252](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/252) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Update troubleshooting guide and demo link [\#250](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/250) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Add meta description tags and update roadmap link [\#249](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/249) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump webpack from 5.90.3 to 5.94.0 in /client in the npm\_and\_yarn group [\#248](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/248) ([dependabot[bot]](https://github.com/apps/dependabot))
-- \[CHORE\] Remove unused dependencies and update TypeScript related packages [\#247](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/247) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Chore add common playbooks [\#246](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/246) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor device list fetching logic in Devices page [\#242](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/242) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Update OS logos and enhance pagination [\#241](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/241) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Refactor Docker configuration forms and centralize SSH elements [\#240](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/240) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Doc update doc [\#239](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/239) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add endpoint for fetching Ansible configuration [\#238](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/238) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Add ANSIBLE\_CONFIG to AnsibleCmd test cases [\#237](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/237) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump micromatch from 4.0.7 to 4.0.8 in /client in the npm\_and\_yarn group [\#235](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/235) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump framer-motion from 11.3.29 to 11.3.30 in /client [\#234](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/234) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @eslint/js from 9.9.0 to 9.9.1 in /client [\#233](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/233) ([dependabot[bot]](https://github.com/apps/dependabot))
@@ -109,7 +101,6 @@
 - Bump axios from 1.7.4 to 1.7.5 in /server [\#228](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/228) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump eslint from 9.9.0 to 9.9.1 in /server [\#227](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/227) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump mongoose from 8.5.3 to 8.5.4 in /server [\#226](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/226) ([dependabot[bot]](https://github.com/apps/dependabot))
-- \[CHORE\] Update dependencies and Docker base images [\#221](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/221) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Update README features following contributions to main page fixes [\#220](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/220) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Add useful links document and update site config [\#219](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/219) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Update documentation and fix typos [\#217](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/217) ([rtuszik](https://github.com/rtuszik))
