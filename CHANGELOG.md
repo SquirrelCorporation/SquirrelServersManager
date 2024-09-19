@@ -7,6 +7,7 @@
 **Fixed bugs:**
 
 - \[BUG\] Adding all LXCs and VMs very high CPU load [\#165](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/165)
+- \[BUG\] Refactor Ansible keys usage in cache settings [\#297](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/297) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Merged pull requests:**
 
