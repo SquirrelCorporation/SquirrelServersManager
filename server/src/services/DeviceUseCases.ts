@@ -1,6 +1,6 @@
 import DockerModem from 'docker-modem';
 import Dockerode from 'dockerode';
-import { API, SettingsKeys, SsmAnsible, SsmStatus } from 'ssm-shared-lib';
+import { API, SsmAnsible, SsmStatus } from 'ssm-shared-lib';
 import { setToCache } from '../data/cache';
 import Device, { DeviceModel } from '../data/database/model/Device';
 import DeviceAuth from '../data/database/model/DeviceAuth';
@@ -142,7 +142,7 @@ async function checkAnsibleConnection(
   sshKeyPass?: string,
 ) {
   if (masterNodeUrl) {
-    await setToCache(SettingsKeys.AnsibleReservedExtraVarsKeys.MASTER_NODE_URL, masterNodeUrl);
+    await setToCache(SsmAnsible.DefaultSharedExtraVarsList.MASTER_NODE_URL, masterNodeUrl);
   }
   if (sshKey) {
     await Shell.SshPrivateKeyFileManager.saveSshKey(sshKey, 'tmp');
