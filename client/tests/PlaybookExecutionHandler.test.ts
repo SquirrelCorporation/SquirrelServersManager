@@ -1,37 +1,42 @@
-import { getExecLogs, getTaskStatuses } from '@/services/rest/playbooks';
 import { API } from 'ssm-shared-lib';
+import {
+  beforeEach,
+  describe,
+  expect,
+  it,
+  Mock,
+  MockedFunction,
+  vi,
+} from 'vitest';
 import PlaybookExecutionHandler, {
   TaskStatusTimelineType,
 } from '../src/components/PlaybookExecutionModal/PlaybookExecutionHandler';
 import mockTransformToTaskStatusTimeline from '../src/components/PlaybookExecutionModal/TaskStatusTimeline';
 import {
+  getExecLogs,
   getExecLogs as mockGetExecLogs,
+  getTaskStatuses,
   getTaskStatuses as mockGetTaskStatuses,
 } from '../src/services/rest/playbooks';
 
 // Mock the external dependencies
-jest.mock('../src/services/rest/playbooks', () => ({
-  getExecLogs: jest.fn(),
-  getTaskStatuses: jest.fn(),
+vi.mock('../src/services/rest/playbooks', () => ({
+  getExecLogs: vi.fn(),
+  getTaskStatuses: vi.fn(),
 }));
 
-jest.mock(
-  '../src/components/PlaybookExecutionModal/TaskStatusTimeline',
-  () => ({
-    __esModule: true,
-    default: jest.fn(),
-  }),
-);
+vi.mock('../src/components/PlaybookExecutionModal/TaskStatusTimeline', () => ({
+  __esModule: true,
+  default: vi.fn(),
+}));
 
 // Cast the mock functions appropriately
-const mockedGetExecLogs = mockGetExecLogs as jest.MockedFunction<
-  typeof getExecLogs
->;
-const mockedGetTaskStatuses = mockGetTaskStatuses as jest.MockedFunction<
+const mockedGetExecLogs = mockGetExecLogs as MockedFunction<typeof getExecLogs>;
+const mockedGetTaskStatuses = mockGetTaskStatuses as MockedFunction<
   typeof getTaskStatuses
 >;
 const mockedTransformToTaskStatusTimeline =
-  mockTransformToTaskStatusTimeline as unknown as jest.MockedFunction<
+  mockTransformToTaskStatusTimeline as unknown as MockedFunction<
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (execStatus: API.ExecStatus) => TaskStatusTimelineType
   >;
@@ -56,19 +61,19 @@ const createExecLog = (
 });
 
 describe('PlaybookExecutionHandler', () => {
-  let setIsPollingEnabled: jest.Mock;
-  let setSavedStatuses: jest.Mock;
-  let setHasReachedFinalStatus: jest.Mock;
-  let execLogsCallBack: jest.Mock;
-  let statusChangedCallBack: jest.Mock;
+  let setIsPollingEnabled: Mock;
+  let setSavedStatuses: Mock;
+  let setHasReachedFinalStatus: Mock;
+  let execLogsCallBack: Mock;
+  let statusChangedCallBack: Mock;
 
   beforeEach(() => {
     // Reinitialize mocks before each test
-    setIsPollingEnabled = jest.fn();
-    setSavedStatuses = jest.fn();
-    setHasReachedFinalStatus = jest.fn();
-    execLogsCallBack = jest.fn();
-    statusChangedCallBack = jest.fn();
+    setIsPollingEnabled = vi.fn();
+    setSavedStatuses = vi.fn();
+    setHasReachedFinalStatus = vi.fn();
+    execLogsCallBack = vi.fn();
+    statusChangedCallBack = vi.fn();
 
     mockedGetExecLogs.mockClear();
     mockedGetTaskStatuses.mockClear();

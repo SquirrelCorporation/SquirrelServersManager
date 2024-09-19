@@ -8,6 +8,7 @@ import Title, { TitleColors } from '@/components/Template/Title';
 import Containers from '@/pages/Containers/components/Containers';
 import Images from '@/pages/Containers/components/Images';
 import Networks from '@/pages/Containers/components/Networks';
+import Stacks from '@/pages/Containers/components/Stacks';
 import Templates from '@/pages/Containers/components/Templates';
 import Volumes from '@/pages/Containers/components/Volumes';
 import { AppstoreOutlined } from '@ant-design/icons';
@@ -31,6 +32,12 @@ const Index: React.FC = () => {
       key: 'store',
       icon: <Templatetoolkit />,
       children: <Templates />,
+    },
+    {
+      label: 'Stacks',
+      key: 'stacks',
+      icon: <Templatetoolkit />,
+      children: <Stacks />,
     },
     {
       label: 'Images',

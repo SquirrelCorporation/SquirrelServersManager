@@ -6,7 +6,6 @@ module.exports = {
     REACT_APP_ENV: true,
   },
   parserOptions: {
-    project: './tsconfig.test.json',
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },

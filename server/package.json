@@ -13,7 +13,7 @@
   "version": "0.1.18",
   "author": "Squirrel Team",
   "dependencies": {
-    "@aws-sdk/client-ecr": "^3.651.1",
+    "@aws-sdk/client-ecr": "^3.654.0",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",
@@ -31,7 +31,7 @@
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "luxon": "^3.5.0",
-    "mongoose": "^8.6.2",
+    "mongoose": "^8.6.3",
     "node-cron": "^3.0.3",
     "node-ssh": "^13.2.0",
     "parse-docker-image-name": "^3.0.0",
@@ -67,7 +67,7 @@
     "@types/dockerode-compose": "^1.4.1",
     "@types/express": "^4.17.21",
     "@types/fs-extra": "^11.0.4",
-    "@types/jsonwebtoken": "^9.0.6",
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/lodash": "^4.17.7",
     "@types/luxon": "^3.4.2",
     "@types/node-cron": "^3.0.11",
@@ -82,14 +82,14 @@
     "@types/supertest": "^6.0.2",
     "@types/uuid": "^10.0.0",
     "@types/multer": "^1.4.12",
-    "@typescript-eslint/eslint-plugin": "^8.5.0",
+    "@typescript-eslint/eslint-plugin": "^8.6.0",
     "@vitest/coverage-v8": "^2.1.1",
     "eslint": "^9.10.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-import-x": "^4.2.1",
     "@stylistic/eslint-plugin": "^2.8.0",
-    "@typescript-eslint/parser": "^8.5.0",
+    "@typescript-eslint/parser": "^8.6.0",
     "globals": "^15.9.0",
     "mongodb-memory-server": "^10.0.0",
     "node-mocks-http": "^1.16.0",
@@ -97,6 +97,6 @@
     "supertest": "^7.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2",
-    "vitest": "^2.0.5"
+    "vitest": "^2.1.1"
   }
 }

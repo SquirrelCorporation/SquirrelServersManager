@@ -1,45 +1,45 @@
+import { fireEvent, render } from '@testing-library/react';
+import React from 'react';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import TerminalCore, {
   TerminalCoreHandles,
-} from '@/components/Terminal/TerminalCore';
-import { fireEvent, render } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import React from 'react';
+} from '../src/components/Terminal/TerminalCore';
 
 // Mock fitAddon and xterm Terminal
-const mockFit = jest.fn();
+const mockFit = vi.fn();
 const mockTerminalInstance = {
-  open: jest.fn(),
-  loadAddon: jest.fn(),
-  writeln: jest.fn(),
-  write: jest.fn(),
-  clear: jest.fn(),
-  onData: jest.fn(),
-  focus: jest.fn(),
+  open: vi.fn(),
+  loadAddon: vi.fn(),
+  writeln: vi.fn(),
+  write: vi.fn(),
+  clear: vi.fn(),
+  onData: vi.fn(),
+  focus: vi.fn(),
 };
 
-jest.mock('@xterm/addon-fit', () => {
+vi.mock('@xterm/addon-fit', () => {
   return {
-    FitAddon: jest.fn().mockImplementation(() => ({
+    FitAddon: vi.fn().mockImplementation(() => ({
       fit: mockFit,
     })),
   };
 });
 
-jest.mock('xterm', () => {
+vi.mock('xterm', () => {
   return {
-    Terminal: jest.fn().mockImplementation(() => mockTerminalInstance),
+    Terminal: vi.fn().mockImplementation(() => mockTerminalInstance),
   };
 });
 
 describe('TerminalCore Component', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test('should render the terminal component', () => {
     const { container } = render(<TerminalCore />);
     const terminalElement = container.querySelector('div');
-    expect(terminalElement).toBeInTheDocument();
+    expect(terminalElement).not.to.be.null;
   });
 
   test('should call terminal methods on resize', () => {

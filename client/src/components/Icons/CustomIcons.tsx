@@ -1600,7 +1600,7 @@ export const Diff = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={DiffSvg} {...props} />
 );
 
-const VlanSvg = (props: any) => (
+const VlanSvg = React.memo((props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -1613,13 +1613,13 @@ const VlanSvg = (props: any) => (
       d="M30 17v-2H17v-4h2a2.002 2.002 0 0 0 2-2V4a2.002 2.002 0 0 0-2-2h-6a2.002 2.002 0 0 0-2 2v5a2.002 2.002 0 0 0 2 2h2v4H2v2h6v4H6a2.002 2.002 0 0 0-2 2v5a2.002 2.002 0 0 0 2 2h6a2.002 2.002 0 0 0 2-2v-5a2.002 2.002 0 0 0-2-2h-2v-4h12v4h-2a2.002 2.002 0 0 0-2 2v5a2.002 2.002 0 0 0 2 2h6a2.002 2.002 0 0 0 2-2v-5a2.002 2.002 0 0 0-2-2h-2v-4ZM13 4h6v5h-6Zm-1 24H6v-5h6Zm14 0h-6v-5h6Z"
     />
   </svg>
-);
+));
 
 export const Vlan = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={VlanSvg} {...props} />
 );
 
-const NetworkOverlaySvg = (props: any) => (
+const NetworkOverlaySvg = React.memo((props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -1636,13 +1636,13 @@ const NetworkOverlaySvg = (props: any) => (
       d="M24.5 25H24v-2h.5a5.496 5.496 0 0 0 .377-10.98l-.837-.056l-.09-.834a7.998 7.998 0 0 0-15.9 0l-.09.834l-.837.057A5.496 5.496 0 0 0 7.5 23H8v2h-.5a7.496 7.496 0 0 1-1.322-14.876a10 10 0 0 1 19.644 0A7.496 7.496 0 0 1 24.5 25Z"
     />
   </svg>
-);
+));
 
 export const NetworkOverlay = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={NetworkOverlaySvg} {...props} />
 );
 
-const LabelsSvg = (props: any) => (
+const LabelsSvg = React.memo((props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="1em"
@@ -1657,8 +1657,411 @@ const LabelsSvg = (props: any) => (
       clipRule="evenodd"
     />
   </svg>
-);
+));
 
 export const Labels = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={LabelsSvg} {...props} />
+);
+
+const NametagSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M12 6a1 1 0 1 1-1 1a1 1 0 0 1 1-1zm-6 8h12v3H6zm14-8h-4V3H8v3H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zM10 5h4v5h-4zm10 14H4v-9h4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2h4z"
+    />
+  </svg>
+));
+
+export const Nametag = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={NametagSvg} {...props} />
+);
+
+const VersionSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 32 32"
+    {...props}
+  >
+    <path fill="currentColor" d="M16 2v2h10v15h2V4a2.002 2.002 0 0 0-2-2Z" />
+    <path fill="currentColor" d="M11 7v2h10v15h2V9a2.002 2.002 0 0 0-2-2Z" />
+    <path
+      fill="currentColor"
+      d="M6 12h10a2.002 2.002 0 0 1 2 2v14a2.002 2.002 0 0 1-2 2H6a2.002 2.002 0 0 1-2-2V14a2.002 2.002 0 0 1 2-2Zm10 2l-10-.001V28h10Z"
+    />
+  </svg>
+));
+
+export const Version = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={VersionSvg} {...props} />
+);
+
+const ServicesSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      d="M6 9a3 3 0 1 0 0-6a3 3 0 0 0 0 6Zm0-6V0m0 12V9M0 6h3m6 0h3M2 2l2 2m4 4l2 2m0-8L8 4M4 8l-2 2m16 2a3 3 0 1 0 0-6a3 3 0 0 0 0 6Zm0-6V3m0 12v-3m-6-3h3m6 0h3M14 5l2 2m4 4l2 2m0-8l-2 2m-4 4l-2 2m-5 8a3 3 0 1 0 0-6a3 3 0 0 0 0 6Zm0-6v-3m0 12v-3m-6-3h3m6 0h3M5 14l2 2m4 4l2 2m0-8l-2 2m-4 4l-2 2"
+    />
+  </svg>
+));
+
+export const Services = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ServicesSvg} {...props} />
+);
+
+const AnnotationSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-3l-4 4Z"
+    />
+  </svg>
+));
+
+export const Annotation = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={AnnotationSvg} {...props} />
+);
+
+const LinkAltSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <g fill="currentColor" fillRule="evenodd" clipRule="evenodd">
+      <path d="m5.251 9.663l-1.587-1.41a1 1 0 1 0-1.328 1.494l1.405 1.25l.068-.062c.503-.446.982-.873 1.442-1.272m2.295 4.642c.363.29.709.55 1.04.777c1.117.763 2.185 1.228 3.414 1.228c1.23 0 2.297-.465 3.413-1.228c1.081-.739 2.306-1.828 3.843-3.194l.052-.046l2.356-2.095a1 1 0 0 0-1.328-1.494l-2.357 2.094c-1.6 1.423-2.731 2.426-3.694 3.084c-.94.642-1.613.88-2.285.88c-.672 0-1.345-.238-2.285-.88c-.203-.14-.414-.294-.636-.465c-.446.378-.949.82-1.533 1.339" />
+      <path d="M16.455 9.695c-.364-.29-.71-.55-1.042-.777C14.297 8.155 13.23 7.689 12 7.689c-1.229 0-2.297.466-3.413 1.229c-1.081.738-2.306 1.828-3.843 3.193l-.052.047l-2.356 2.094a1 1 0 1 0 1.328 1.495l2.357-2.094c1.6-1.423 2.731-2.426 3.694-3.084c.94-.642 1.613-.88 2.285-.88c.672 0 1.345.238 2.285.88c.203.14.414.294.636.464c.446-.377.949-.82 1.534-1.338m3.804 3.308l-.068.061c-.503.447-.982.873-1.442 1.273l1.587 1.41a1 1 0 0 0 1.328-1.495z" />
+    </g>
+  </svg>
+));
+
+export const LinkAlt = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={LinkAltSvg} {...props} />
+);
+
+const BuildSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 2048 2048"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M640 1280H384v-256h256v256zm1280-512v1152H128V768h128v640h1536V768h128zM896 1536H640v256h256v-256zm512 0h-256v256h256v-256zm-512-512h256v256H896v-256zm768 256h-256v-256h256v256zM960 922L659 621l90-90l147 146V0h128v677l147-146l90 90l-301 301z"
+    />
+  </svg>
+));
+
+export const Build = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={BuildSvg} {...props} />
+);
+
+const ConfigSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 48 48"
+    {...props}
+  >
+    <g fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="4">
+      <path d="m24 4l-6 6h-8v8l-6 6l6 6v8h8l6 6l6-6h8v-8l6-6l-6-6v-8h-8l-6-6Z" />
+      <path d="M24 30a6 6 0 1 0 0-12a6 6 0 0 0 0 12Z" />
+    </g>
+  </svg>
+));
+
+export const Config = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ConfigSvg} {...props} />
+);
+
+const CommandLineSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.5"
+      d="m6.75 7.5l3 2.25l-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0 0 21 18V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v12a2.25 2.25 0 0 0 2.25 2.25Z"
+    />
+  </svg>
+));
+
+export const CommandLine = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={CommandLineSvg} {...props} />
+);
+
+const TitleSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path fill="currentColor" d="M10.5 20V7H5V4h14v3h-5.5v13h-3Z" />
+  </svg>
+));
+
+export const Title = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={TitleSvg} {...props} />
+);
+
+const ColumnDependencySvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 32 32"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M30 10V2h-8v3h-5a2.002 2.002 0 0 0-2 2v8h-5v-3H2v8h8v-3h5v8a2.002 2.002 0 0 0 2 2h5v3h8v-8h-8v3h-5v-8h5v3h8v-8h-8v3h-5V7h5v3ZM8 18H4v-4h4Zm16 6h4v4h-4Zm0-10h4v4h-4Zm0-10h4v4h-4Z"
+    />
+  </svg>
+));
+
+export const ColumnDependency = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ColumnDependencySvg} {...props} />
+);
+
+const DnsOutlineSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M7.5 6q-.625 0-1.063.438T6 7.5q0 .625.438 1.063T7.5 9q.625 0 1.063-.438T9 7.5q0-.625-.438-1.063T7.5 6Zm0 10q-.625 0-1.063.438T6 17.5q0 .625.438 1.063T7.5 19q.625 0 1.063-.438T9 17.5q0-.625-.438-1.063T7.5 16ZM4 3h16q.425 0 .713.288T21 4v7q0 .425-.288.713T20 12H4q-.425 0-.713-.288T3 11V4q0-.425.288-.713T4 3Zm1 2v5h14V5H5Zm-1 8h16q.425 0 .713.288T21 14v7q0 .425-.288.713T20 22H4q-.425 0-.713-.288T3 21v-7q0-.425.288-.713T4 13Zm1 2v5h14v-5H5ZM5 5v5v-5Zm0 10v5v-5Z"
+    />
+  </svg>
+));
+
+export const DnsOutline = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={DnsOutlineSvg} {...props} />
+);
+
+const EntranceAlt1Svg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 15 15"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M6.554 9.639a.5.5 0 0 0 .707.707l2.667-2.677a.25.25 0 0 0 0-.354L7.261 4.639a.5.5 0 0 0-.707.707L8.2 7H1.5a.5.5 0 0 0 0 1h6.7ZM12 1H5.5a.5.5 0 0 0 0 1h6a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5H5.25a.5.5 0 0 0 0 1H12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"
+    />
+  </svg>
+));
+
+export const EntranceAlt1 = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EntranceAlt1Svg} {...props} />
+);
+
+export const ServerEnvironmentSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 16 16"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M6 3h4v1H6V3zm0 6h4v1H6V9zm0 2h4v1H6v-1zm9.14 5H.86l1.25-5H4V2a.95.95 0 0 1 .078-.383c.052-.12.123-.226.211-.32a.922.922 0 0 1 .32-.219A1.01 1.01 0 0 1 5 1h6a.95.95 0 0 1 .383.078c.12.052.226.123.32.211a.922.922 0 0 1 .219.32c.052.125.078.256.078.391v9h1.89l1.25 5zM5 13h6V2H5v11zm8.86 2l-.75-3H12v2H4v-2H2.89l-.75 3h11.72z"
+    />
+  </svg>
+));
+
+export const ServerEnvironment = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ServerEnvironmentSvg} {...props} />
+);
+
+const FileSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <g fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="2">
+      <path
+        strokeLinecap="round"
+        d="M4 4v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.342a2 2 0 0 0-.602-1.43l-4.44-4.342A2 2 0 0 0 13.56 2H6a2 2 0 0 0-2 2Zm5 9h6m-6 4h3"
+      />
+      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+    </g>
+  </svg>
+));
+
+export const File = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={FileSvg} {...props} />
+);
+
+const OpenSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 20 20"
+    {...props}
+  >
+    <g fill="currentColor">
+      <path d="M10.707 10.707a1 1 0 0 1-1.414-1.414l6-6a1 1 0 1 1 1.414 1.414l-6 6Z" />
+      <path d="M15 15v-3.5a1 1 0 1 1 2 0V16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4.5a1 1 0 0 1 0 2H5v10h10Zm2-7a1 1 0 1 1-2 0V4a1 1 0 1 1 2 0v4Z" />
+      <path d="M12 5a1 1 0 1 1 0-2h4a1 1 0 1 1 0 2h-4Z" />
+    </g>
+  </svg>
+));
+
+export const Open = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={OpenSvg} {...props} />
+);
+
+const ExternalTFVCSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 2048 2048"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M256 1792h384v128H128V128h1792v512h-128V256H256v1536zm1600-640q-60 0-109-34t-71-90l-147 49q7 35 7 75q0 66-21 128t-64 113l255 291q42-20 86-20q40 0 75 15t61 41t41 61t15 75q0 40-15 75t-41 61t-61 41t-75 15q-40 0-75-15t-61-41t-41-61t-15-75q0-29 8-57t25-51l-251-288q-50 37-108 56t-122 20h-17q-9 0-17-1l-54 160q41 26 64 69t24 92q0 40-15 75t-41 61t-61 41t-75 15q-40 0-75-15t-61-41t-41-61t-15-75q0-44 16-79t44-61t65-38t80-14l50-150q-57-20-104-56t-80-84t-52-104t-19-118q0-79 30-149t82-122t122-83t150-30q55 0 107 15t97 44t81 69t61 90l168-56q6-35 23-64t42-52t57-34t68-12q40 0 75 15t61 41t41 61t15 75q0 40-15 75t-41 61t-61 41t-75 15zm-704 192q40 0 75-15t61-41t41-61t15-75q0-40-15-75t-41-61t-61-41t-75-15q-40 0-75 15t-61 41t-41 61t-15 75q0 40 15 75t41 61t61 41t75 15z"
+    />
+  </svg>
+));
+
+export const ExternalTFVC = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ExternalTFVCSvg} {...props} />
+);
+
+const HealthRecognitionSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      d="M4 8V6a2 2 0 0 1 2-2h2M4 16v2a2 2 0 0 0 2 2h2m8-16h2a2 2 0 0 1 2 2v2m-4 12h2a2 2 0 0 0 2-2v-2M8.603 9.61a2.04 2.04 0 0 1 2.912 0L12 10l.5-.396a2.035 2.035 0 0 1 2.897.007a2.104 2.104 0 0 1 0 2.949L12 16l-3.397-3.44a2.104 2.104 0 0 1 0-2.95z"
+    />
+  </svg>
+));
+
+export const HealthRecognition = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={HealthRecognitionSvg} {...props} />
+);
+
+const CrownSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 1664 1472"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M1472 1216H192q-24 0-44 38.5t-20 89.5t20 89.5t44 38.5h1280q24 0 44-38.5t20-89.5t-20-89.5t-44-38.5zM128 128q-53 0-90.5 37.5T0 256t37.5 90.5T128 384l80 703h1248l80-703q53 0 90.5-37.5T1664 256t-37.5-90.5T1536 128t-90.5 37.5T1408 256q0 56 41 94q-153 183-207 236.5t-90 53.5q-34 0-83-66.5T899 301q28-17 44.5-46t16.5-63q0-53-37.5-90.5T832 64t-90.5 37.5T704 192q0 34 16.5 63t44.5 46Q644 507 595 573.5T512 640q-36 0-90-53.5T215 350q41-38 41-94q0-53-37.5-90.5T128 128z"
+    />
+  </svg>
+));
+
+export const Crown = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={CrownSvg} {...props} />
+);
+
+const RestartSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+    >
+      <path d="M12 3a9 9 0 1 1-5.657 2" />
+      <path d="M3 4.5h4v4" />
+    </g>
+  </svg>
+));
+
+export const Restart = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={RestartSvg} {...props} />
+);
+
+const UserSecretSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 32 32"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M13.063 4c-.876 0-1.645.45-2.188 1.031c-.543.582-.934 1.309-1.281 2.094c-.531 1.21-.91 2.555-1.25 3.813c-1.086.316-2.008.71-2.75 1.187C4.727 12.684 4 13.457 4 14.5c0 .906.555 1.633 1.25 2.156c.594.446 1.324.817 2.188 1.125c.05.23.125.465.218.688c-.843.476-2.18 1.398-3.468 3.156l-.594.844l.844.593l3.28 2.25L6.376 28h19.25l-1.344-2.688l3.282-2.25l.843-.593l-.593-.844c-1.29-1.758-2.625-2.68-3.47-3.156a3.93 3.93 0 0 0 .22-.688c.863-.308 1.593-.68 2.187-1.125c.695-.523 1.25-1.25 1.25-2.156c0-1.043-.727-1.816-1.594-2.375c-.742-.477-1.664-.871-2.75-1.188c-.375-1.304-.789-2.671-1.312-3.874c-.34-.778-.715-1.493-1.25-2.063c-.535-.57-1.297-1-2.157-1c-.582 0-1.023.16-1.5.281c-.476.121-.957.219-1.437.219c-.96 0-1.766-.5-2.938-.5zm0 2c.207 0 1.437.5 2.937.5c.75 0 1.418-.152 1.938-.281c.519-.13.914-.219 1-.219c.23 0 .402.074.687.375c.285.3.621.844.906 1.5c.543 1.242.957 2.938 1.407 4.5c0-.004.054-.047-.094.031c-.25.137-.774.313-1.407.406c-1.269.192-3 .188-4.437.188c-1.43 0-3.164-.02-4.438-.219c-.636-.097-1.152-.27-1.406-.406c-.078-.043-.105-.027-.125-.031v-.031c.004-.008-.004-.024 0-.032l.031-.031a1.01 1.01 0 0 0 .126-.438v-.03c.359-1.329.761-2.735 1.25-3.845c.292-.667.609-1.21.906-1.53c.297-.321.5-.407.719-.407zm-4.876 7.094c.227.469.626.844 1.032 1.062c.61.324 1.308.477 2.062.594c1.508.234 3.274.25 4.719.25c1.438 0 3.207.008 4.719-.219c.758-.113 1.449-.261 2.062-.594c.41-.222.809-.617 1.032-1.093c.617.219 1.136.453 1.5.687c.582.375.687.653.687.719c0 .059-.05.25-.469.563c-.418.312-1.136.675-2.062.968c-1.852.59-4.516.969-7.469.969c-2.953 0-5.617-.379-7.469-.969c-.926-.293-1.644-.656-2.062-.968C6.05 14.75 6 14.559 6 14.5c0-.066.078-.316.656-.688c.364-.234.899-.488 1.532-.718zm2.594 5.469c.328.054.653.144 1 .187c.13.879.813 1.652 1.906 1.719c.844.05 1.793-.348 1.876-1.469h.875c.082 1.121 1.03 1.52 1.875 1.469c1.093-.067 1.777-.84 1.906-1.719c.347-.043.672-.133 1-.188l-.094.625c-.309 1.645-1.043 3.168-1.969 4.22C18.23 24.456 17.145 25.015 16 25c-1.176-.016-2.238-.582-3.156-1.625c-.918-1.043-1.64-2.535-1.969-4.188zM23 20c.371.219 1.348.86 2.469 2.094l-3.032 2.093l-.718.47l.375.78l.281.563h-3.156a7.547 7.547 0 0 0 1.437-1.281c1.102-1.25 1.84-2.887 2.25-4.657c.035-.019.063-.042.094-.062zm-14.031.031c.039.024.086.04.125.063c.43 1.746 1.164 3.363 2.25 4.593c.449.512.972.95 1.531 1.313h-3.25l.281-.563l.375-.78l-.719-.47l-3.03-2.093c1.058-1.168 2.023-1.813 2.437-2.063z"
+    />
+  </svg>
+));
+
+export const UserSecret = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={UserSecretSvg} {...props} />
 );
