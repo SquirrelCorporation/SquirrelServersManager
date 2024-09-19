@@ -10,10 +10,6 @@ export enum GeneralSettingsKeys {
   CONTAINER_STATS_RETENTION_IN_DAYS = 'container-stats-retention-in-days',
 }
 
-export enum AnsibleReservedExtraVarsKeys {
-  MASTER_NODE_URL = 'ansible-master-node-url',
-}
-
 export enum DefaultValue {
   SCHEME_VERSION = '11',
   SERVER_LOG_RETENTION_IN_DAYS = '30',
