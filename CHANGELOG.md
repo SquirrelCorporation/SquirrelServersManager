@@ -11,6 +11,7 @@
 **Merged pull requests:**
 
 - Bump @ant-design/icons from 5.4.0 to 5.5.1 in /client [\#309](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/309) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 22.8.0-alpine to 22.9.0-alpine in /client [\#304](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/304) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [v0.1.19](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.19) (2024-09-19)
 
