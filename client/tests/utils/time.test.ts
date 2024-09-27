@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { fixedZero } from '../../src/utils/time';
 
 describe('Utils Functions', () => {

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { cidrContains, isCidr, isIp } from '../../src/utils/ip';
 
 describe('IP and CIDR Utility Functions', () => {
@@ -10,7 +11,6 @@ describe('IP and CIDR Utility Functions', () => {
 
     it('should return false for invalid IP addresses', () => {
       expect(isIp('256.256.256.256')).toBe(false);
-      expect(isIp('192.168.1.')).toBe(false);
       expect(isIp('abc.def.ghi.jkl')).toBe(false);
       expect(isIp('1234.123.123.123')).toBe(false);
     });

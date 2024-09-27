@@ -36,12 +36,39 @@ import {
   resetRegistryValidator,
   updateRegistryValidator,
 } from '../controllers/rest/containers/registries.validator';
+import {
+  deleteCustomStack,
+  getCustomStacks,
+  patchCustomStack,
+  postCustomStack,
+  postCustomStackDryRun,
+  postDeployCustomStack,
+  postTransformCustomStack,
+} from '../controllers/rest/containers/stacks';
+import {
+  deleteCustomStackValidator,
+  patchCustomStackValidator,
+  postCustomStackValidator,
+  postDeployCustomStackValidator,
+} from '../controllers/rest/containers/stacks.validator';
 import { deploy, getTemplates } from '../controllers/rest/containers/templates';
 import { getVolumes, postVolume } from '../controllers/rest/containers/volumes';
 
 const router = express.Router();
 
 router.use(passport.authenticate('jwt', { session: false }));
+router.route('/custom-stacks').get(getCustomStacks);
+router.route('/custom-stacks/transform').post(postTransformCustomStack);
+router.route('/custom-stacks/dry-run').post(postCustomStackDryRun);
+router
+  .route('/custom-stacks/deploy/:uuid')
+  .post(postDeployCustomStackValidator, postDeployCustomStack);
+
+router.route('/custom-stacks/:name').post(postCustomStackValidator, postCustomStack);
+router
+  .route('/custom-stacks/:uuid')
+  .patch(patchCustomStackValidator, patchCustomStack)
+  .delete(deleteCustomStackValidator, deleteCustomStack);
 router.route('/registries/').get(getRegistries);
 router.post('/deploy', deploy);
 router.get(`/templates`, getTemplates);

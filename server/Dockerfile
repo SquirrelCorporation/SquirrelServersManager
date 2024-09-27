@@ -5,6 +5,7 @@ LABEL org.opencontainers.image.licenses="GNU AFFERO GENERAL PUBLIC LICENSE"
 
 WORKDIR /server
 RUN apk update && apk add ansible nmap sudo openssh sshpass py3-pip expect gcompat libcurl
+RUN apk add docker docker-cli-compose
 RUN npm install -g npm@latest
 RUN rm -f /usr/lib/python3.12/EXTERNALLY-MANAGED
 RUN pip install ansible-runner \
