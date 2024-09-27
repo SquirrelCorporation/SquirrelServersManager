@@ -20,15 +20,13 @@ import { Avatar, Divider, Input, Space, Tag } from 'antd';
 import React, { useRef } from 'react';
 import { API } from 'ssm-shared-lib';
 
-type ContainerStartModalProps = {
+type DeployModalProps = {
   open: boolean;
   setOpen: any;
   template: API.Template;
 };
 
-const ContainerStartModal: React.FC<ContainerStartModalProps> = (
-  props: ContainerStartModalProps,
-) => {
+const DeployModal: React.FC<DeployModalProps> = (props: DeployModalProps) => {
   const [form] = ProForm.useForm<API.Template & API.Targets>();
   const actionRef = useRef();
   const [deployModalOpened, setDeployModalOpened] = React.useState(false);
@@ -117,7 +115,7 @@ const ContainerStartModal: React.FC<ContainerStartModalProps> = (
               editable: false,
               span: 2,
               renderFormItem: () => {
-                return <Input placeholder="输入 Success 切换分值" />;
+                return <Input placeholder="Description" />;
               },
             },
           ]}
@@ -167,4 +165,4 @@ const ContainerStartModal: React.FC<ContainerStartModalProps> = (
   );
 };
 
-export default ContainerStartModal;
+export default DeployModal;

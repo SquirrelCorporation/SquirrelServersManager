@@ -29,12 +29,6 @@ export default [
         component: './Devices',
       },
       {
-        name: 'Playbooks',
-        icon: 'PlaySquareOutlined',
-        path: '/manage/playbooks',
-        component: './Playbooks',
-      },
-      {
         name: 'Containers',
         icon: 'AppstoreOutlined',
         path: '/manage/containers',
@@ -45,6 +39,26 @@ export default [
         name: 'Automations',
         icon: 'interaction',
         component: './Automations/Automations',
+      },
+    ],
+  },
+  {
+    path: '/stack',
+    name: 'Stack',
+    icon: 'BuildOutlined',
+    access: 'canAdmin',
+    routes: [
+      {
+        name: 'Playbooks',
+        icon: 'PlaySquareOutlined',
+        path: '/stack/playbooks',
+        component: './Playbooks',
+      },
+      {
+        name: 'Container Stacks',
+        icon: 'ApartmentOutlined',
+        path: '/stack/compose',
+        component: './ComposeEditor',
       },
     ],
   },
