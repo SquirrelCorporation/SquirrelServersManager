@@ -4,13 +4,21 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.19...HEAD)
 
+**Implemented enhancements:**
+
+- \[FEAT\] Custom stack mgr 🔥 [\#180](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/180)
+
 **Closed issues:**
 
 - \[BUG\]  Encounter "Response status: 500 - ExtraVar value not found !" while trying to add a new server.  [\#296](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/296)
 
 **Merged pull requests:**
 
+- 180 feat custom stack mgr [\#310](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/310) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @ant-design/icons from 5.4.0 to 5.5.1 in /client [\#309](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/309) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @types/react from 18.3.5 to 18.3.8 in /client [\#307](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/307) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump antd from 5.20.6 to 5.21.0 in /client [\#306](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/306) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump framer-motion from 11.5.4 to 11.5.6 in /client [\#305](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/305) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 22.8.0-alpine to 22.9.0-alpine in /client [\#304](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/304) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [v0.1.19](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.19) (2024-09-19)
