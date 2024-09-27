@@ -92,7 +92,7 @@
     "@stylistic/eslint-plugin": "^2.8.0",
     "@typescript-eslint/parser": "^8.6.0",
     "globals": "^15.9.0",
-    "mongodb-memory-server": "^10.0.0",
+    "mongodb-memory-server": "^10.0.1",
     "node-mocks-http": "^1.16.0",
     "prettier": "^3.3.3",
     "supertest": "^7.0.0",
