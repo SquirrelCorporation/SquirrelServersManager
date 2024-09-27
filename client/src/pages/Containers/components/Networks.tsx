@@ -3,18 +3,16 @@ import CreateNetworkModal from '@/pages/Containers/components/sub-components/Cre
 import { getDevices } from '@/services/rest/device';
 import { getNetworks } from '@/services/rest/services';
 import {
-  ActionType,
   ProColumns,
   ProFormSelect,
   ProTable,
   RequestOptionsType,
 } from '@ant-design/pro-components';
 import { Avatar, Tag, Tooltip } from 'antd';
-import React, { useRef } from 'react';
+import React from 'react';
 import { API } from 'ssm-shared-lib';
 
 const Networks: React.FC = () => {
-  const actionRef = useRef<ActionType>();
   const columns: ProColumns<API.ContainerNetwork>[] = [
     {
       title: 'Name',

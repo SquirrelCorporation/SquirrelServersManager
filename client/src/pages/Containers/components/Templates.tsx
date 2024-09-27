@@ -1,5 +1,5 @@
 import { Deploy } from '@/components/Icons/CustomIcons';
-import ContainerStartModal from '@/pages/Containers/components/sub-components/ContainerStartModal';
+import DeployModal from '@/pages/Containers/components/sub-components/DeployModal';
 import { getTemplates } from '@/services/rest/services';
 import { ProList } from '@ant-design/pro-components';
 import { Avatar, Tag, Typography } from 'antd';
@@ -15,7 +15,7 @@ const Templates: React.FC = () => {
 
   return (
     <>
-      <ContainerStartModal
+      <DeployModal
         template={selectedRow as unknown as API.Template}
         open={containerStartModalOpen}
         setOpen={setContainerStartModalOpen}

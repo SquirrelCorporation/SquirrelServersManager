@@ -11,7 +11,7 @@ import Networks from '@/pages/Containers/components/Networks';
 import Stacks from '@/pages/Containers/components/Stacks';
 import Templates from '@/pages/Containers/components/Templates';
 import Volumes from '@/pages/Containers/components/Volumes';
-import { AppstoreOutlined } from '@ant-design/icons';
+import { ApartmentOutlined, AppstoreOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import { history, useLocation } from '@umijs/max';
 import { TabsProps } from 'antd';
@@ -36,7 +36,7 @@ const Index: React.FC = () => {
     {
       label: 'Stacks',
       key: 'stacks',
-      icon: <Templatetoolkit />,
+      icon: <ApartmentOutlined />,
       children: <Stacks />,
     },
     {

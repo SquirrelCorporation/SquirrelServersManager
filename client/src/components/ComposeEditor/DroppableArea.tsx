@@ -4,16 +4,23 @@ import React, { ReactNode } from 'react';
 
 type DroppableAreaProps = {
   id: string;
+  index?: number;
+  group?: string;
   allowedDraggables: string[];
   children: ReactNode;
 };
 
 const DroppableArea: React.FC<DroppableAreaProps> = ({
   id,
+  index,
+  group,
   allowedDraggables,
   children,
 }) => {
-  const { isOver, setNodeRef, active } = useDroppable({ id });
+  const { isOver, setNodeRef, active } = useDroppable({
+    data: { index: index, group: group },
+    id,
+  });
 
   let backgroundColor;
   if (isOver) {
@@ -26,6 +33,7 @@ const DroppableArea: React.FC<DroppableAreaProps> = ({
   const style = {
     backgroundColor,
     borderRadius: '8px',
+    width: '100%',
   };
 
   return (

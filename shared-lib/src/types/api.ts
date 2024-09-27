@@ -801,3 +801,28 @@ export type CreateVolume = {
   target: string,
   config: CreateNetworkVolumeConfig
 }
+
+export type ContainerCustomStack = {
+  uuid: string;
+  json: object;
+  yaml: string;
+  name: string;
+  rawStackValue: object;
+  lockJson: boolean;
+  icon: string;
+  iconColor: string;
+  iconBackgroundColor: string;
+}
+
+export type ContainerTransformCustomStack = {
+  yaml: string;
+}
+
+export type ContainerCustomStackValidation = {
+  validating: boolean;
+  message?: string;
+}
+
+export type DeployContainerCustomStacks = {
+  targets: string;
+}

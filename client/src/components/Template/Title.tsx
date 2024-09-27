@@ -20,6 +20,7 @@ export enum TitleColors {
   LOCAL = '#4b4a4a',
   DEBUG = '#b614b6',
   ANSIBLE_CONF = '#c1660e',
+  COMPOSE = '#8e7418',
 }
 
 export type PageContainerTitleProps = {

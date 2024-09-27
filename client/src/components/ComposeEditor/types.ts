@@ -1,18 +1,24 @@
-import { ReactNode } from 'react';
-
 export type MenuElementType = {
   name: string;
-  icon: ReactNode;
+  index?: number;
   id: string;
   children?: MenuElementType[];
-  color: string;
   fieldType?: string;
   listItemType?: string;
-  fields?: { name: string; id: string; fieldType: string }[];
+  fields?: Field[];
   selectOptions?: string[];
-  multiple?: boolean;
+  isTemplate?: boolean;
+  category?: string;
+  value?: any;
+  originalId?: string;
+  path?: string;
 };
 
-export interface ExtendedMenuElementType extends MenuElementType {
-  inUse?: boolean;
-}
+export type Field = {
+  name: string;
+  id: string;
+  fieldType: string;
+  listItemType?: string;
+  fields?: Field[];
+  value?: any;
+};

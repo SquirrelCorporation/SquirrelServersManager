@@ -1,5 +1,4 @@
 import { PortInput } from '@/components/Icons/CustomIcons';
-import { Template } from '@/pages/Containers/components/sub-components/ContainerStartModal';
 import {
   ProCard,
   ProForm,
@@ -9,8 +8,11 @@ import {
 } from '@ant-design/pro-components';
 import { Space } from 'antd';
 import React from 'react';
+import { API } from 'ssm-shared-lib';
 
-const ProCardPortsConfiguration: React.FC<{ template: Template }> = (props) => {
+const ProCardPortsConfiguration: React.FC<{ template: API.Template }> = (
+  props,
+) => {
   return (
     <ProCard
       title={
