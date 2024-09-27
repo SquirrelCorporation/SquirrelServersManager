@@ -14,6 +14,7 @@
 
 **Merged pull requests:**
 
+- Update npm dependencies and package-lock versions [\#316](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/316) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump mongoose from 8.6.3 to 8.6.4 in /server [\#312](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/312) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump vite from 5.4.2 to 5.4.8 in /site in the npm\_and\_yarn group across 1 directory [\#311](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/311) ([dependabot[bot]](https://github.com/apps/dependabot))
 - 180 feat custom stack mgr [\#310](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/310) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
