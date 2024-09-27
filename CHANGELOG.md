@@ -14,12 +14,18 @@
 
 **Merged pull requests:**
 
+- Bump mongoose from 8.6.3 to 8.6.4 in /server [\#312](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/312) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vite from 5.4.2 to 5.4.8 in /site in the npm\_and\_yarn group across 1 directory [\#311](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/311) ([dependabot[bot]](https://github.com/apps/dependabot))
 - 180 feat custom stack mgr [\#310](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/310) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @ant-design/icons from 5.4.0 to 5.5.1 in /client [\#309](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/309) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @types/react from 18.3.5 to 18.3.8 in /client [\#307](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/307) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump antd from 5.20.6 to 5.21.0 in /client [\#306](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/306) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump framer-motion from 11.5.4 to 11.5.6 in /client [\#305](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/305) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 22.8.0-alpine to 22.9.0-alpine in /client [\#304](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/304) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump mongoose from 8.6.2 to 8.6.3 in /server [\#302](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/302) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump mongodb-memory-server from 10.0.0 to 10.0.1 in /server [\#301](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/301) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 22.8.0-alpine to 22.9.0-alpine in /server [\#299](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/299) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vite from 5.4.5 to 5.4.6 in /server in the npm\_and\_yarn group [\#295](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/295) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [v0.1.19](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.19) (2024-09-19)
 
