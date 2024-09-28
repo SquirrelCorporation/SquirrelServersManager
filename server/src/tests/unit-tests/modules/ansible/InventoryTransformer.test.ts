@@ -69,6 +69,33 @@ describe('test InventoryTransformer', () => {
     expect(result).toEqual(expectedResult);
   });
 
+  test('inventoryBuilderForTargetAutomatic', () => {
+    const deviceAuth = {
+      device: { uuid: '1234-5678-9102', ip: '192.168.1.2' },
+      authType: SsmAnsible.SSHType.Automatic,
+      becomeMethod: 'sudo',
+      becomePass: 'qwerty',
+      sshUser: 'admin',
+    };
+    // @ts-expect-error partial type
+    const result = InventoryTransformer.inventoryBuilderForTarget([deviceAuth]);
+    const expectedResult = {
+      all: {},
+      device123456789102: {
+        hosts: '192.168.1.2',
+        vars: {
+          ansible_connection: 'ssh',
+          ansible_become_method: 'sudo',
+          ansible_become_pass: { __ansible_vault: 'qwerty' },
+          ansible_ssh_host_key_checking: false,
+          ansible_user: 'admin',
+        },
+      },
+    };
+
+    expect(result).toEqual(expectedResult);
+  });
+
   test('inventoryBuilderForTargetWithSshKey', () => {
     const deviceAuth = {
       device: { uuid: '1234-5678-9102', ip: '192.168.1.2' },
@@ -254,6 +281,52 @@ describe('test InventoryTransformer', () => {
           ansible_ssh_host_key_checking: false,
           ansible_user: 'root',
           ansible_ssh_pass: { __ansible_vault: undefined },
+        },
+      },
+    };
+
+    expect(result).toEqual(expectedResult);
+  });
+
+  test('inventoryBuilderForTarget with multiple mixed devicesAuth', () => {
+    const deviceAuth1 = {
+      device: { uuid: '1234-5678-9105', ip: '192.168.1.4' },
+      authType: SsmAnsible.SSHType.UserPassword,
+      becomeMethod: 'sudo',
+      becomePass: 'password1',
+      sshUser: 'root',
+    };
+
+    const deviceAuth2 = {
+      device: { uuid: '2234-5678-9106', ip: '192.168.1.5' },
+      authType: SsmAnsible.SSHType.Automatic,
+      becomeMethod: 'sudo',
+      becomePass: 'password2',
+      sshUser: 'root',
+    };
+    // @ts-expect-error partial type
+    const result = InventoryTransformer.inventoryBuilderForTarget([deviceAuth1, deviceAuth2]);
+    const expectedResult = {
+      all: {},
+      device123456789105: {
+        hosts: '192.168.1.4',
+        vars: {
+          ansible_connection: 'paramiko',
+          ansible_become_method: 'sudo',
+          ansible_become_pass: { __ansible_vault: 'password1' },
+          ansible_ssh_host_key_checking: false,
+          ansible_user: 'root',
+          ansible_ssh_pass: { __ansible_vault: undefined },
+        },
+      },
+      device223456789106: {
+        hosts: '192.168.1.5',
+        vars: {
+          ansible_connection: 'ssh',
+          ansible_become_method: 'sudo',
+          ansible_become_pass: { __ansible_vault: 'password2' },
+          ansible_ssh_host_key_checking: false,
+          ansible_user: 'root',
         },
       },
     };

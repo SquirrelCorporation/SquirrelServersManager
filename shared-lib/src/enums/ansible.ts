@@ -17,6 +17,7 @@ export enum DefaultSharedExtraVarsList {
 export enum SSHType {
   UserPassword = 'userPwd',
   KeyBased = 'keyBased',
+  Automatic = 'automatic',
 }
 
 export enum SSHConnection {

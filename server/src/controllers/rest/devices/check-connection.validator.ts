@@ -13,11 +13,18 @@ export const postCheckAnsibleConnectionValidator = [
     .exists()
     .withMessage('sshConnection in body is required')
     .isIn(Object.values(SsmAnsible.SSHConnection))
-    .withMessage('sshConnection is not in enum value SSHConnection'),
+    .withMessage('sshConnection is not in enum value SSHConnection')
+    .if(body('authType').equals(SsmAnsible.SSHType.Automatic))
+    .isIn([SsmAnsible.SSHConnection.BUILTIN])
+    .withMessage('sshConnection must be ssh with automatic authentication'),
   body('authType')
     .exists()
     .withMessage('authType in body is required')
-    .isIn([SsmAnsible.SSHType.UserPassword, SsmAnsible.SSHType.KeyBased])
+    .isIn([
+      SsmAnsible.SSHType.UserPassword,
+      SsmAnsible.SSHType.KeyBased,
+      SsmAnsible.SSHType.Automatic,
+    ])
     .withMessage('authType is not in enum value SSHType'),
   body('sshPort').exists().notEmpty().isNumeric().withMessage('sshPort is not a number'),
   body('unManaged').optional().isBoolean().withMessage('unManaged is not a boolean'),
@@ -32,7 +39,7 @@ export const postCheckAnsibleConnectionValidator = [
     .notEmpty()
     .isString(),
   body('sshUser')
-    .if(body('authType').equals(SsmAnsible.SSHType.UserPassword))
+    .if(body('authType').isIn([SsmAnsible.SSHType.UserPassword, SsmAnsible.SSHType.Automatic]))
     .exists()
     .notEmpty()
     .isString(),
@@ -54,7 +61,11 @@ export const postCheckDockerConnectionValidator = [
   body('authType')
     .exists()
     .withMessage('authType in body is required')
-    .isIn([SsmAnsible.SSHType.UserPassword, SsmAnsible.SSHType.KeyBased])
+    .isIn([
+      SsmAnsible.SSHType.UserPassword,
+      SsmAnsible.SSHType.KeyBased,
+      SsmAnsible.SSHType.Automatic,
+    ])
     .withMessage('authType is not in enum value SSHType'),
   body('sshPort').exists().notEmpty().isNumeric().withMessage('sshPort is not a number'),
   body('sshKey')
@@ -63,7 +74,7 @@ export const postCheckDockerConnectionValidator = [
     .notEmpty()
     .isString(),
   body('sshUser')
-    .if(body('authType').equals(SsmAnsible.SSHType.UserPassword))
+    .if(body('authType').isIn([SsmAnsible.SSHType.UserPassword, SsmAnsible.SSHType.Automatic]))
     .exists()
     .notEmpty()
     .isString(),

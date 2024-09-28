@@ -21,8 +21,9 @@ export type AuthenticationCardProps = {
 };
 
 const connectionTypes = [
-  { value: 'userPwd', label: 'User/Password' },
-  { value: 'keyBased', label: 'Keys' },
+  { value: SsmAnsible.SSHType.UserPassword.valueOf(), label: 'User/Password' },
+  { value: SsmAnsible.SSHType.KeyBased.valueOf(), label: 'Keys' },
+  { value: SsmAnsible.SSHType.Automatic.valueOf(), label: 'Automatic' },
 ];
 
 const AuthenticationCard: React.FC<AuthenticationCardProps> = ({ formRef }) => (
@@ -56,16 +57,36 @@ const AuthenticationCard: React.FC<AuthenticationCardProps> = ({ formRef }) => (
     }
   >
     <ProForm.Group>
-      <ProFormSelect
-        label="SSH Connection Type"
-        name="authType"
-        rules={[{ required: true }]}
-        width="sm"
-        options={connectionTypes}
-      />
+      <ProFormDependency name={['sshConnection']}>
+        {({ sshConnection }) => (
+          <ProFormSelect
+            label="SSH Connection Type"
+            name="authType"
+            rules={[
+              { required: true },
+              {
+                validator(_, value) {
+                  if (
+                    (!sshConnection ||
+                      sshConnection === SsmAnsible.SSHConnection.PARAMIKO) &&
+                    value == SsmAnsible.SSHType.Automatic
+                  ) {
+                    return Promise.reject(
+                      'You must use regular SSH for automatic authentication',
+                    );
+                  }
+                  return Promise.resolve();
+                },
+              },
+            ]}
+            width="sm"
+            options={connectionTypes}
+          />
+        )}
+      </ProFormDependency>
       <ProFormDependency name={['authType']}>
         {({ authType }) => {
-          if (authType === 'userPwd') {
+          if (authType === SsmAnsible.SSHType.UserPassword.valueOf()) {
             return (
               <ProForm.Group>
                 <ProFormText
@@ -109,7 +130,20 @@ const AuthenticationCard: React.FC<AuthenticationCardProps> = ({ formRef }) => (
               </ProForm.Group>
             );
           }
-          if (authType === 'keyBased') {
+          if (authType === SsmAnsible.SSHType.Automatic.valueOf()) {
+            return (
+              <ProForm.Group>
+                <ProFormText
+                  name="sshUser"
+                  label="SSH User Name"
+                  width="xs"
+                  placeholder="root"
+                  rules={[{ required: true }]}
+                />
+              </ProForm.Group>
+            );
+          }
+          if (authType === SsmAnsible.SSHType.KeyBased.valueOf()) {
             return (
               <ProForm.Group>
                 <ProFormText
