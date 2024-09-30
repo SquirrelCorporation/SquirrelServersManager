@@ -23,6 +23,7 @@
 
 **Merged pull requests:**
 
+- \[DOC\] Add Apps section and Vuetify support [\#329](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/329) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @types/react from 18.3.9 to 18.3.10 in /client [\#322](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/322) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump eslint-plugin-import-x from 4.3.0 to 4.3.1 in /server [\#320](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/320) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[FEAT\] Add ability to use automatic SSH authentication [\#318](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/318) ([btajuddin](https://github.com/btajuddin))
