@@ -100,6 +100,30 @@ describe('SSHCredentialsHelper', () => {
     expect(vault.vaultDecrypt).toHaveBeenCalledTimes(1);
   });
 
+  test('should handle automatic SSHType for default Docker SSH', async () => {
+    deviceAuth.authType = SsmAnsible.SSHType.Automatic;
+
+    const result = await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
+
+    expect(result).toMatchObject({
+      protocol: 'ssh',
+      port: 22,
+      username: 'apiuser',
+      host: '0.0.0.0',
+      _deviceUuid: 'x',
+      sshOptions: {
+        tryKeyboard: true,
+        forceIPv4: undefined,
+        forceIPv6: undefined,
+        host: '0.0.0.0',
+        port: 22,
+        username: 'apiuser',
+      },
+    });
+
+    expect(vault.vaultDecrypt).toHaveBeenCalledTimes(0);
+  });
+
   test('should handle key-based SSHType for custom Docker SSH', async () => {
     deviceAuth.authType = SsmAnsible.SSHType.UserPassword;
     deviceAuth.sshPwd = 'sshpwd';
@@ -160,5 +184,33 @@ describe('SSHCredentialsHelper', () => {
     });
 
     expect(vault.vaultDecrypt).toHaveBeenCalledTimes(1);
+  });
+
+  test('should handle automatic SSHType for custom Docker SSH', async () => {
+    deviceAuth.authType = SsmAnsible.SSHType.UserPassword;
+    deviceAuth.sshPwd = 'sshpwd';
+    deviceAuth.customDockerSSH = true;
+    deviceAuth.dockerCustomAuthType = SsmAnsible.SSHType.Automatic;
+    deviceAuth.dockerCustomSshUser = '$customUser';
+
+    const result = await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
+
+    expect(result).toMatchObject({
+      protocol: 'ssh',
+      port: 22,
+      username: 'apiuser',
+      host: '0.0.0.0',
+      _deviceUuid: 'x',
+      sshOptions: {
+        tryKeyboard: true,
+        forceIPv4: undefined,
+        forceIPv6: undefined,
+        host: '0.0.0.0',
+        port: 22,
+        username: '$customUser',
+      },
+    });
+
+    expect(vault.vaultDecrypt).toHaveBeenCalledTimes(0);
   });
 });

@@ -37,7 +37,7 @@ export const addOrUpdateDeviceAuthValidator = [
     .notEmpty()
     .isString(),
   body('sshUser')
-    .if(body('authType').equals(SsmAnsible.SSHType.UserPassword))
+    .if(body('authType').isIn([SsmAnsible.SSHType.UserPassword, SsmAnsible.SSHType.Automatic]))
     .exists()
     .notEmpty()
     .isString(),
@@ -51,6 +51,10 @@ export const addOrUpdateDeviceAuthValidator = [
     .notEmpty()
     .isIn(Object.values(SsmAnsible.AnsibleBecomeMethod))
     .withMessage('becomeMethod is not supported'),
+  body('sshConnection')
+    .if(body('authType').equals(SsmAnsible.SSHType.Automatic))
+    .isIn([SsmAnsible.SSHConnection.BUILTIN, undefined])
+    .withMessage('sshConnection must be "ssh" for automatic authentication'),
   validator,
 ];
 

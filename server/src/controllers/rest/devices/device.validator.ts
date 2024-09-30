@@ -12,8 +12,12 @@ export const addDeviceValidator = [
   body('authType')
     .exists()
     .withMessage('authType in body is required')
-    .isIn([SsmAnsible.SSHType.UserPassword, SsmAnsible.SSHType.KeyBased])
+    .isIn(Object.values(SsmAnsible.SSHType))
     .withMessage('authType is not in enum value SSHType'),
+  body('sshConnection')
+    .if(body('authType').equals(SsmAnsible.SSHType.Automatic))
+    .isIn([SsmAnsible.SSHConnection.BUILTIN, undefined])
+    .withMessage('sshConnection must be "ssh" for automatic authentication'),
   body('sshPort').exists().notEmpty().isNumeric().withMessage('sshPort is not a number'),
   body('unManaged').optional().isBoolean().withMessage('unManaged is not a boolean'),
   body('masterNodeUrl')
@@ -27,7 +31,7 @@ export const addDeviceValidator = [
     .notEmpty()
     .isString(),
   body('sshUser')
-    .if(body('authType').equals(SsmAnsible.SSHType.UserPassword))
+    .if(body('authType').isIn([SsmAnsible.SSHType.UserPassword, SsmAnsible.SSHType.Automatic]))
     .exists()
     .notEmpty()
     .isString(),

@@ -75,17 +75,25 @@ class SSHCredentialsHelper {
     sshKeyPass?: string,
   ): Promise<ConnectConfig> {
     let sshCredentials: ConnectConfig = {};
-    if (authType === SSHType.KeyBased) {
-      sshCredentials = {
-        username: sshUsername,
-        privateKey: sshKey ? await vaultDecrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
-        passphrase: sshKeyPass ? await vaultDecrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
-      };
-    } else if (authType === SSHType.UserPassword) {
-      sshCredentials = {
-        username: sshUsername,
-        password: sshPwd ? await vaultDecrypt(sshPwd, DEFAULT_VAULT_ID) : undefined,
-      };
+    switch (authType) {
+      case SSHType.Automatic:
+        sshCredentials = {
+          username: sshUsername,
+        };
+        break;
+      case SSHType.KeyBased:
+        sshCredentials = {
+          username: sshUsername,
+          privateKey: sshKey ? await vaultDecrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
+          passphrase: sshKeyPass ? await vaultDecrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
+        };
+        break;
+      case SSHType.UserPassword:
+        sshCredentials = {
+          username: sshUsername,
+          password: sshPwd ? await vaultDecrypt(sshPwd, DEFAULT_VAULT_ID) : undefined,
+        };
+        break;
     }
     return sshCredentials;
   }
