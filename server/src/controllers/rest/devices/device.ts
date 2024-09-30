@@ -152,3 +152,12 @@ export const updateDockerWatcher = asyncHandler(async (req, res) => {
     dockerStatsCron: dockerStatsCron,
   }).send(res);
 });
+
+export const getAllDevices = asyncHandler(async (req, res) => {
+  const devices = await DeviceRepo.findAll();
+  if (!devices) {
+    return new SuccessResponse('Get Devices successful', []).send(res);
+  }
+
+  new SuccessResponse('Get Devices successful', devices).send(res);
+});

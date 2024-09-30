@@ -1,6 +1,6 @@
 import { Bridge, GrommetIconsHost } from '@/components/Icons/CustomIcons';
 import CreateNetworkModal from '@/pages/Containers/components/sub-components/CreateNetworkModal';
-import { getDevices } from '@/services/rest/device';
+import { getAllDevices } from '@/services/rest/device';
 import { getNetworks } from '@/services/rest/services';
 import {
   ProColumns,
@@ -26,7 +26,7 @@ const Networks: React.FC = () => {
       renderFormItem: () => (
         <ProFormSelect
           request={async () => {
-            return await getDevices().then((e: API.DeviceList) => {
+            return await getAllDevices().then((e: API.DeviceList) => {
               return e.data?.map((f: API.DeviceItem) => {
                 return {
                   label: `${f.fqdn} (${f.ip})`,

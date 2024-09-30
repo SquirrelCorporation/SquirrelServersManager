@@ -9,7 +9,7 @@ import InfoToolTipCard from '@/pages/Containers/components/containers/InfoToolTi
 import StatusTag from '@/pages/Containers/components/containers/StatusTag';
 import UpdateAvailableTag from '@/pages/Containers/components/containers/UpdateAvailableTag';
 import { postContainerAction } from '@/services/rest/containers';
-import { getDevices } from '@/services/rest/device';
+import { getAllDevices } from '@/services/rest/device';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import {
   ProFieldValueType,
@@ -133,7 +133,7 @@ const ContainerMetas = (props: ContainerMetasProps) => {
       renderFormItem: () => (
         <ProFormSelect
           request={async () => {
-            return await getDevices().then((e: API.DeviceList) => {
+            return await getAllDevices().then((e: API.DeviceList) => {
               return e.data?.map((f: API.DeviceItem) => {
                 return {
                   label: `${f.fqdn} (${f.ip})`,

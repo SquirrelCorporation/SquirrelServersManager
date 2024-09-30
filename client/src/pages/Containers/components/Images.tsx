@@ -1,4 +1,4 @@
-import { getDevices } from '@/services/rest/device';
+import { getAllDevices } from '@/services/rest/device';
 import { getImages } from '@/services/rest/services';
 import { PlusOutlined } from '@ant-design/icons';
 import {
@@ -49,7 +49,7 @@ const Images: React.FC = () => {
       renderFormItem: () => (
         <ProFormSelect
           request={async () => {
-            return await getDevices().then((e: API.DeviceList) => {
+            return await getAllDevices().then((e: API.DeviceList) => {
               return e.data?.map((f: API.DeviceItem) => {
                 return {
                   label: `${f.fqdn} (${f.ip})`,

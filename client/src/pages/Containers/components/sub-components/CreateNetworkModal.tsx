@@ -8,7 +8,7 @@ import {
   Vlan,
 } from '@/components/Icons/CustomIcons';
 import DockerOpsModal from '@/pages/Containers/components/sub-components/DockerOpsModal';
-import { getDevices } from '@/services/rest/device';
+import { getAllDevices } from '@/services/rest/device';
 import { postNetwork } from '@/services/rest/services';
 import { cidrContains, isCidr, isIp, isNetworkBaseAddress } from '@/utils/ip';
 import {
@@ -583,7 +583,7 @@ const CreateNetworkModal = () => {
           }}
           placeholder={'Please select a target'}
           request={async () => {
-            return getDevices().then((e) => {
+            return getAllDevices().then((e) => {
               return e?.data?.map((device: API.DeviceItem) => ({
                 label: `${device.fqdn} (${device.ip})`,
                 value: device.uuid,
