@@ -8,12 +8,20 @@
 
 - \[FEAT\] Custom stack mgr 🔥 [\#180](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/180)
 
+**Fixed bugs:**
+
+- \[BUG\] Only 10 hosts available for automation [\#319](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/319)
+- \[BUG\] Add getAllDevices API endpoint and update client calls [\#323](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/323) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Closed issues:**
 
 - \[BUG\]  Encounter "Response status: 500 - ExtraVar value not found !" while trying to add a new server.  [\#296](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/296)
 
 **Merged pull requests:**
 
+- Bump @types/react from 18.3.9 to 18.3.10 in /client [\#322](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/322) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint-plugin-import-x from 4.3.0 to 4.3.1 in /server [\#320](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/320) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[FEAT\] Add ability to use automatic SSH authentication [\#318](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/318) ([btajuddin](https://github.com/btajuddin))
 - Update npm dependencies and package-lock versions [\#316](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/316) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump rollup from 4.21.0 to 4.22.5 in /site in the npm\_and\_yarn group across 1 directory [\#315](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/315) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump vite from 5.4.5 to 5.4.8 in /server in the npm\_and\_yarn group across 1 directory [\#313](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/313) ([dependabot[bot]](https://github.com/apps/dependabot))
