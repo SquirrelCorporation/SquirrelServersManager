@@ -8,7 +8,11 @@ export default defineConfig({
   appearance: 'force-dark',
   lastUpdated: true,
   cleanUrls: true,
-
+  vite: {
+    ssr: {
+      noExternal: [/^vuetify/],
+    },
+  },
   /* prettier-ignore */
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
