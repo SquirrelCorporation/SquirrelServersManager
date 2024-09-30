@@ -55,6 +55,10 @@ export default defineConfig({
         text:'Demo',
         link: 'https://demo.squirrelserversmanager.io/'
       },
+      {
+        text: 'Apps',
+        link: '/apps/'
+      },
       { text: 'Documentation', link: '/docs/' },
       { text: 'Contribute', link: '/contribute/' },
       {
