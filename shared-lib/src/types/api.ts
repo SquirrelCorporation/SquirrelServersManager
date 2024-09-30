@@ -588,6 +588,10 @@ export type ContainerInspectResult = {
   link?: string;
 }
 
+export type ContainerPort = {
+   IP: string; PrivatePort: number; PublicPort: number; Type: string;
+}
+
 export type Container = {
   device?: DeviceItem;
   id?: string;
@@ -599,6 +603,7 @@ export type Container = {
   image?: Image;
   updateKind?: ContainerUpdate;
   result?: ContainerInspectResult;
+  ports?: ContainerPort[];
 }
 
 

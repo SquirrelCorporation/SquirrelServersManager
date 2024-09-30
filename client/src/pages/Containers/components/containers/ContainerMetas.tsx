@@ -3,6 +3,7 @@ import ServiceQuickActionReference, {
   ServiceQuickActionReferenceActions,
   ServiceQuickActionReferenceTypes,
 } from '@/components/ContainerComponents/ContainerQuickAction/ContainerQuickActionReference';
+import { ExternalLink } from '@/components/Icons/CustomIcons';
 import ContainerAvatar from '@/pages/Containers/components/containers/ContainerAvatar';
 import ContainerStatProgress from '@/pages/Containers/components/containers/ContainerStatProgress';
 import InfoToolTipCard from '@/pages/Containers/components/containers/InfoToolTipCard';
@@ -183,6 +184,22 @@ const ContainerMetas = (props: ContainerMetasProps) => {
       cardActionProps: 'extra',
       search: false,
       render: (text, row) => [
+        <>
+          {row.ports && row.ports.length > 0 && (
+            <Tooltip
+              key={`url-${row.id}`}
+              title={`http://${row.device?.ip}:${row.ports[0].PublicPort}`}
+            >
+              <a
+                href={`http://${row.device?.ip}:${row.ports[0].PublicPort}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <ExternalLink style={{ color: 'rgb(22, 104, 220)' }} />
+              </a>
+            </Tooltip>
+          )}
+        </>,
         <Tooltip
           key={`info-${row.id}`}
           color={'transparent'}
