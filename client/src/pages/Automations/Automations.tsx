@@ -12,10 +12,10 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import '@umijs/max';
-import { Tabs, TabsProps } from 'antd';
-import React, { useEffect, useState, useRef } from 'react';
-import { API } from 'ssm-shared-lib';
 import { history, useLocation } from '@umijs/max';
+import { TabsProps } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { API } from 'ssm-shared-lib';
 
 const Automations: React.FC = () => {
   const [currentRow, setCurrentRow] = useState<API.Automation | undefined>();

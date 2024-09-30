@@ -16,11 +16,12 @@ export enum ServiceQuickActionReferenceTypes {
   SUBMENU = 'submenu',
 }
 
-export type ServiceQuickActionReferenceType = {
+export type ContainerQuickActionReferenceType = {
   type: ServiceQuickActionReferenceTypes;
   action?: ServiceQuickActionReferenceActions | SsmContainer.Actions;
-  label?: React.JSX.Element;
-  children?: ServiceQuickActionReferenceType[];
+  label?: React.ReactNode;
+  icon?: React.ReactNode;
+  children?: ContainerQuickActionReferenceType[];
 };
 
 export enum ServiceQuickActionReferenceActions {
@@ -28,69 +29,48 @@ export enum ServiceQuickActionReferenceActions {
   LIVE_LOGS = 'logs',
 }
 
-const ContainerQuickActionReference: ServiceQuickActionReferenceType[] = [
+const ContainerQuickActionReference: ContainerQuickActionReferenceType[] = [
   {
     type: ServiceQuickActionReferenceTypes.ACTION,
     action: ServiceQuickActionReferenceActions.LIVE_LOGS,
-    label: (
-      <>
-        <Live24Filled /> Live Logs
-      </>
-    ),
+    icon: <Live24Filled />,
+    label: 'Live Logs',
   },
   {
     type: ServiceQuickActionReferenceTypes.ACTION,
     action: ServiceQuickActionReferenceActions.RENAME,
-    label: (
-      <>
-        <EditOutlined /> Rename
-      </>
-    ),
+    icon: <EditOutlined />,
+    label: 'Rename',
   },
   {
     type: ServiceQuickActionReferenceTypes.ACTION,
     action: SsmContainer.Actions.STOP,
-    label: (
-      <>
-        <StopOutlined /> Stop
-      </>
-    ),
+    icon: <StopOutlined />,
+    label: 'Stop',
   },
   {
     type: ServiceQuickActionReferenceTypes.ACTION,
     action: SsmContainer.Actions.START,
-    label: (
-      <>
-        <PlayCircleFilled /> Start
-      </>
-    ),
+    icon: <PlayCircleFilled />,
+    label: 'Start',
   },
   {
     type: ServiceQuickActionReferenceTypes.ACTION,
     action: SsmContainer.Actions.RESTART,
-    label: (
-      <>
-        <SwapOutlined /> Restart
-      </>
-    ),
+    icon: <SwapOutlined />,
+    label: 'Restart',
   },
   {
     type: ServiceQuickActionReferenceTypes.ACTION,
     action: SsmContainer.Actions.PAUSE,
-    label: (
-      <>
-        <PauseOutlined /> Pause
-      </>
-    ),
+    icon: <PauseOutlined />,
+    label: 'Pause',
   },
   {
     type: ServiceQuickActionReferenceTypes.ACTION,
     action: SsmContainer.Actions.KILL,
-    label: (
-      <>
-        <CloseCircleOutlined /> Kill
-      </>
-    ),
+    icon: <CloseCircleOutlined />,
+    label: 'Kill',
   },
 ];
 
