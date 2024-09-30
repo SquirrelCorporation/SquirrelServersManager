@@ -20,6 +20,7 @@ export default interface Container {
   transformTags?: string;
   linkTemplate?: string;
   command?: string;
+  ports?: { IP: string; PrivatePort: number; PublicPort: number; Type: string }[];
   networkSettings?: {
     Networks: {
       [p: string]: {
@@ -126,6 +127,9 @@ const schema = new Schema<Container>(
       type: Object,
     },
     updateKind: {
+      type: Object,
+    },
+    ports: {
       type: Object,
     },
     customName: {

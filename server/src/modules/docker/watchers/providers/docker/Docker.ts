@@ -469,6 +469,7 @@ export default class Docker extends DockerLogs {
         },
         command: container.Command,
         networkSettings: container.NetworkSettings,
+        ports: container.Ports,
         mounts: container.Mounts,
       });
     } catch (error: any) {
