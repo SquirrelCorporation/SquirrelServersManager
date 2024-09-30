@@ -7,6 +7,7 @@
 **Implemented enhancements:**
 
 - \[FEAT\] Custom stack mgr 🔥 [\#180](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/180)
+- \[FEAT\] Add container ports handling and display link in UI [\#328](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/328) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Fixed bugs:**
 
@@ -17,6 +18,7 @@
 
 **Closed issues:**
 
+- \[FEAT\] See open ports of containers, update UI to go to that ip/port 🔥 [\#327](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/327)
 - \[BUG\]  Encounter "Response status: 500 - ExtraVar value not found !" while trying to add a new server.  [\#296](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/296)
 
 **Merged pull requests:**
