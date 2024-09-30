@@ -1,5 +1,5 @@
 import CreateVolumeModal from '@/pages/Containers/components/sub-components/CreateVolumeModal';
-import { getDevices } from '@/services/rest/device';
+import { getAllDevices } from '@/services/rest/device';
 import { getVolumes } from '@/services/rest/services';
 import {
   ActionType,
@@ -27,7 +27,7 @@ const Volumes: React.FC = () => {
       renderFormItem: () => (
         <ProFormSelect
           request={async () => {
-            return await getDevices().then((e: API.DeviceList) => {
+            return await getAllDevices().then((e: API.DeviceList) => {
               return e.data?.map((f: API.DeviceItem) => {
                 return {
                   label: `${f.fqdn} (${f.ip})`,

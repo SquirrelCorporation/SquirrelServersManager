@@ -1,5 +1,5 @@
 import ExtraVarView from '@/components/PlaybookSelection/ExtraVarView';
-import { getDevices } from '@/services/rest/device';
+import { getAllDevices } from '@/services/rest/device';
 import { getPlaybooks } from '@/services/rest/playbooks';
 import { CheckCircleFilled, FileOutlined, LockFilled } from '@ant-design/icons';
 import { ProFormSelect } from '@ant-design/pro-components';
@@ -126,7 +126,7 @@ const PlaybookActionSubForm: React.FC<PlaybookActionSubFormProps> = (props) => {
           { required: true, message: 'Please select at least one device!' },
         ]}
         request={async () => {
-          return getDevices().then((response) => {
+          return getAllDevices().then((response) => {
             return response.data.map((e: API.DeviceItem) => {
               return { label: `${e.fqdn} (${e.ip})`, value: e.uuid };
             });

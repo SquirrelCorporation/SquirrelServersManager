@@ -16,6 +16,7 @@ import {
   addDevice,
   addDeviceAuto,
   deleteDevice,
+  getAllDevices,
   getDevices,
   updateDockerWatcher,
 } from '../controllers/rest/devices/device';
@@ -104,6 +105,7 @@ router
   .get(getCheckDeviceDockerConnectionValidator, getCheckDeviceDockerConnection);
 
 router.route('/').put(addDeviceValidator, addDevice).get(getDevices);
+router.route('/all').get(getAllDevices);
 router.delete(`/:uuid`, deleteDeviceValidator, deleteDevice);
 router.get(`/:uuid/stats/:type/`, getDeviceStatsByDeviceUuidValidator, getDeviceStatsByDeviceUuid);
 router.get(`/:uuid/stat/:type/`, getDeviceStatByDeviceUuidValidator, getDeviceStatByDeviceUuid);

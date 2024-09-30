@@ -1,6 +1,6 @@
 import { ContainerVolumeSolid, Target } from '@/components/Icons/CustomIcons';
 import DockerOpsModal from '@/pages/Containers/components/sub-components/DockerOpsModal';
-import { getDevices } from '@/services/rest/device';
+import { getAllDevices } from '@/services/rest/device';
 import { postVolume } from '@/services/rest/services';
 import { CheckCircleFilled, PlusOutlined } from '@ant-design/icons';
 import {
@@ -76,7 +76,7 @@ const CreateVolumeModal = () => {
           }}
           placeholder={'Please select a target'}
           request={async () => {
-            return getDevices().then((e) => {
+            return getAllDevices().then((e) => {
               return e?.data?.map((device: API.DeviceItem) => ({
                 label: `${device.fqdn} (${device.ip})`,
                 value: device.uuid,

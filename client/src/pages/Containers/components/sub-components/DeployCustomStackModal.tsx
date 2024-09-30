@@ -2,7 +2,7 @@ import { StackIcon } from '@/components/ComposeEditor/StackIconSelector';
 import { Target } from '@/components/Icons/CustomIcons';
 import DockerOpsModal from '@/pages/Containers/components/sub-components/DockerOpsModal';
 import { postDeployContainerCustomStack } from '@/services/rest/containers';
-import { getDevices } from '@/services/rest/device';
+import { getAllDevices } from '@/services/rest/device';
 import { CheckCircleFilled, RocketOutlined } from '@ant-design/icons';
 import {
   ModalForm,
@@ -96,7 +96,7 @@ const DeployCustomStackModal: React.FC<DeployCustomStackModalProps> = ({
           }}
           placeholder={'Please select a target'}
           request={async () => {
-            return getDevices().then((e) => {
+            return getAllDevices().then((e) => {
               return e?.data?.map((device: API.DeviceItem) => ({
                 label: `${device.fqdn} (${device.ip})`,
                 value: device.uuid,

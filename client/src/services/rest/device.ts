@@ -16,6 +16,19 @@ export async function getDevices(
   });
 }
 
+export async function getAllDevices(
+  params?: API.PageParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.DeviceList>('/api/devices/all', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 export async function putDevice(
   ip: string,
   deviceAuth: API.DeviceAuthParams,
