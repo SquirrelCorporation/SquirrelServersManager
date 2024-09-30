@@ -11,6 +11,7 @@
 **Fixed bugs:**
 
 - \[BUG\] Only 10 hosts available for automation [\#319](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/319)
+- \[BUG\] \*\*Refactor quick action components to include icons\*\* [\#325](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/325) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Add getAllDevices API endpoint and update client calls [\#323](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/323) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Closed issues:**
