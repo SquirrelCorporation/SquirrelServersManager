@@ -48,7 +48,7 @@ const ContainerMetas = (props: ContainerMetasProps) => {
         ServiceQuickActionReferenceActions.LIVE_LOGS
       ) {
         history.push({
-          pathname: `/manage/services/logs/${props.selectedRecord?.id}`,
+          pathname: `/manage/containers/logs/${props.selectedRecord?.id}`,
         });
       }
       if (
