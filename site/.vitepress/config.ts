@@ -8,7 +8,11 @@ export default defineConfig({
   appearance: 'force-dark',
   lastUpdated: true,
   cleanUrls: true,
-
+  vite: {
+    ssr: {
+      noExternal: [/^vuetify/],
+    },
+  },
   /* prettier-ignore */
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
@@ -54,6 +58,10 @@ export default defineConfig({
       {
         text:'Demo',
         link: 'https://demo.squirrelserversmanager.io/'
+      },
+      {
+        text: 'Apps',
+        link: '/apps/'
       },
       { text: 'Documentation', link: '/docs/' },
       { text: 'Contribute', link: '/contribute/' },
