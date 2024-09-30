@@ -59,6 +59,7 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
     if (e.onAdvancedMenu && props.advancedMenu === true) {
       if (e.type === Types.DIVIDER) return { type: 'divider' };
       return {
+        icon: e.icon,
         label: e.label,
         key: `${index}`,
         children: e.children?.map((f, submenuIndex) => {
@@ -68,6 +69,7 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
     } else if (!e.onAdvancedMenu) {
       if (e.type === Types.DIVIDER) return { type: 'divider' };
       return {
+        icon: e.icon,
         label: e.label,
         key: `${index}`,
         children: e.children?.map((f, submenuIndex) => {

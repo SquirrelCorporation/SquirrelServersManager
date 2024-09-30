@@ -20,27 +20,18 @@ type AutomationQuickActionProps = {
 
 const items = [
   {
-    label: (
-      <>
-        <PlayCircleOutlined /> Execute
-      </>
-    ),
+    label: 'Execute',
+    icon: <PlayCircleOutlined />,
     key: '1',
   },
   {
-    label: (
-      <>
-        <UnorderedListOutlined /> Show execution logs
-      </>
-    ),
+    label: 'Show execution logs',
+    icon: <UnorderedListOutlined />,
     key: 2,
   },
   {
-    label: (
-      <>
-        <DeleteOutlined /> Delete
-      </>
-    ),
+    label: 'Delete',
+    icon: <DeleteOutlined />,
     key: '3',
   },
 ];

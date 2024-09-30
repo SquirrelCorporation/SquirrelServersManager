@@ -23,9 +23,10 @@ export type QuickActionReferenceType = {
   type: Types;
   action?: string;
   playbookQuickRef?: string;
-  label?: React.JSX.Element;
+  label?: React.ReactNode;
   onAdvancedMenu: boolean;
   children?: QuickActionReferenceType[];
+  icon?: React.ReactNode;
 };
 
 export enum Actions {
@@ -36,31 +37,22 @@ export enum Actions {
 const DeviceQuickActionReference: QuickActionReferenceType[] = [
   {
     type: Types.PLAYBOOK_SELECTION,
-    label: (
-      <>
-        <PlayCircleOutlined /> Execute a playbook
-      </>
-    ),
+    icon: <PlayCircleOutlined />,
+    label: 'Execute a playbook',
     onAdvancedMenu: false,
   },
   {
     type: Types.PLAYBOOK,
     playbookQuickRef: 'reboot',
-    label: (
-      <>
-        <ReloadOutlined /> Reboot
-      </>
-    ),
+    icon: <ReloadOutlined />,
+    label: 'Reboot',
     onAdvancedMenu: false,
   },
   {
     type: Types.ACTION,
     action: Actions.CONNECT,
-    label: (
-      <>
-        <LoginOutlined /> Connect
-      </>
-    ),
+    icon: <LoginOutlined />,
+    label: 'Connect',
     onAdvancedMenu: false,
   },
   {
@@ -70,11 +62,8 @@ const DeviceQuickActionReference: QuickActionReferenceType[] = [
   {
     type: Types.PLAYBOOK,
     playbookQuickRef: 'ping',
-    label: (
-      <>
-        <ShakeOutlined /> Ping
-      </>
-    ),
+    icon: <ShakeOutlined />,
+    label: 'Ping',
     onAdvancedMenu: false,
   },
   {
@@ -85,41 +74,29 @@ const DeviceQuickActionReference: QuickActionReferenceType[] = [
     type: Types.PLAYBOOK,
     playbookQuickRef: 'updateAgent',
     onAdvancedMenu: true,
-    label: (
-      <>
-        <ToTopOutlined /> Update Agent
-      </>
-    ),
+    icon: <ToTopOutlined />,
+    label: 'Update Agent',
   },
   {
     type: Types.PLAYBOOK,
     playbookQuickRef: 'reinstallAgent',
     onAdvancedMenu: true,
-    label: (
-      <>
-        <DownloadOutlined /> Reinstall Agent
-      </>
-    ),
+    icon: <DownloadOutlined />,
+    label: 'Reinstall Agent',
   },
   {
     type: Types.PLAYBOOK,
     playbookQuickRef: 'restartAgent',
     onAdvancedMenu: true,
-    label: (
-      <>
-        <ThunderboltOutlined /> Restart Agent
-      </>
-    ),
+    icon: <ThunderboltOutlined />,
+    label: 'Restart Agent',
   },
   {
     type: Types.PLAYBOOK,
     onAdvancedMenu: true,
     playbookQuickRef: 'retrieveAgentLogs',
-    label: (
-      <>
-        <BugOutlined /> Retrieve Agent Logs
-      </>
-    ),
+    icon: <BugOutlined />,
+    label: 'Retrieve Agent Logs',
   },
   {
     onAdvancedMenu: true,
@@ -129,21 +106,15 @@ const DeviceQuickActionReference: QuickActionReferenceType[] = [
     type: Types.PLAYBOOK,
     playbookQuickRef: 'uninstallAgent',
     onAdvancedMenu: true,
-    label: (
-      <>
-        <DeleteOutlined /> Uninstall Agent
-      </>
-    ),
+    icon: <DeleteOutlined />,
+    label: 'Uninstall Agent',
   },
   {
     type: Types.ACTION,
     action: Actions.DELETE,
     onAdvancedMenu: true,
-    label: (
-      <>
-        <DeleteOutlined /> Delete device
-      </>
-    ),
+    icon: <DeleteOutlined />,
+    label: 'Delete device',
   },
 ];
 

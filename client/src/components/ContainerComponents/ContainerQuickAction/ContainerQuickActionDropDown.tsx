@@ -30,6 +30,7 @@ const ContainerQuickActionDropDown: React.FC<ServiceQuickActionProps> = (
       return { type: 'divider' };
     return {
       label: e.label,
+      icon: e.icon,
       key: `${index}`,
       children: e.children?.map((f, submenuIndex) => {
         return { label: f.label, key: `${index}-${submenuIndex}` };
