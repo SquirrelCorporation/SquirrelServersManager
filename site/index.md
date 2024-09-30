@@ -1,6 +1,8 @@
 ---
 layout: home
 
+title: 'Squirrel Servers Manager'
+   
 hero:
   name: 'Squirrel Servers Manager (SSM)'
   text: 'A user-friendly, UI/UX focused server & configuration management tool'
