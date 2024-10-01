@@ -76,7 +76,7 @@ class SSHCredentialsHelper {
   ): Promise<ConnectConfig> {
     let sshCredentials: ConnectConfig = {};
     switch (authType) {
-      case SSHType.Automatic:
+      case SSHType.PasswordLess:
         sshCredentials = {
           username: sshUsername,
         };

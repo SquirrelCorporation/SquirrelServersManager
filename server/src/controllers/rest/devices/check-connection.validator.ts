@@ -14,16 +14,16 @@ export const postCheckAnsibleConnectionValidator = [
     .withMessage('sshConnection in body is required')
     .isIn(Object.values(SsmAnsible.SSHConnection))
     .withMessage('sshConnection is not in enum value SSHConnection')
-    .if(body('authType').equals(SsmAnsible.SSHType.Automatic))
+    .if(body('authType').equals(SsmAnsible.SSHType.PasswordLess))
     .isIn([SsmAnsible.SSHConnection.BUILTIN])
-    .withMessage('sshConnection must be ssh with automatic authentication'),
+    .withMessage('sshConnection must be ssh with passwordless authentication'),
   body('authType')
     .exists()
     .withMessage('authType in body is required')
     .isIn([
       SsmAnsible.SSHType.UserPassword,
       SsmAnsible.SSHType.KeyBased,
-      SsmAnsible.SSHType.Automatic,
+      SsmAnsible.SSHType.PasswordLess,
     ])
     .withMessage('authType is not in enum value SSHType'),
   body('sshPort').exists().notEmpty().isNumeric().withMessage('sshPort is not a number'),
@@ -39,7 +39,7 @@ export const postCheckAnsibleConnectionValidator = [
     .notEmpty()
     .isString(),
   body('sshUser')
-    .if(body('authType').isIn([SsmAnsible.SSHType.UserPassword, SsmAnsible.SSHType.Automatic]))
+    .if(body('authType').isIn([SsmAnsible.SSHType.UserPassword, SsmAnsible.SSHType.PasswordLess]))
     .exists()
     .notEmpty()
     .isString(),
@@ -64,7 +64,7 @@ export const postCheckDockerConnectionValidator = [
     .isIn([
       SsmAnsible.SSHType.UserPassword,
       SsmAnsible.SSHType.KeyBased,
-      SsmAnsible.SSHType.Automatic,
+      SsmAnsible.SSHType.PasswordLess,
     ])
     .withMessage('authType is not in enum value SSHType'),
   body('sshPort').exists().notEmpty().isNumeric().withMessage('sshPort is not a number'),
@@ -74,7 +74,7 @@ export const postCheckDockerConnectionValidator = [
     .notEmpty()
     .isString(),
   body('sshUser')
-    .if(body('authType').isIn([SsmAnsible.SSHType.UserPassword, SsmAnsible.SSHType.Automatic]))
+    .if(body('authType').isIn([SsmAnsible.SSHType.UserPassword, SsmAnsible.SSHType.PasswordLess]))
     .exists()
     .notEmpty()
     .isString(),

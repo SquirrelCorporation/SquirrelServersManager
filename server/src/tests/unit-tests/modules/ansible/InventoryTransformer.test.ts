@@ -1,5 +1,5 @@
-import { describe, expect, test } from 'vitest';
 import { SsmAnsible } from 'ssm-shared-lib';
+import { describe, expect, test } from 'vitest';
 import InventoryTransformer from '../../../../modules/ansible/utils/InventoryTransformer'; // replace with actual file path
 
 describe('test InventoryTransformer', () => {
@@ -69,10 +69,10 @@ describe('test InventoryTransformer', () => {
     expect(result).toEqual(expectedResult);
   });
 
-  test('inventoryBuilderForTargetAutomatic', () => {
+  test('inventoryBuilderForTargetPasswordless', () => {
     const deviceAuth = {
       device: { uuid: '1234-5678-9102', ip: '192.168.1.2' },
-      authType: SsmAnsible.SSHType.Automatic,
+      authType: SsmAnsible.SSHType.PasswordLess,
       becomeMethod: 'sudo',
       becomePass: 'qwerty',
       sshUser: 'admin',
