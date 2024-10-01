@@ -76,8 +76,8 @@ function getAuth(deviceAuth: Partial<DeviceAuth>): Auth {
     case SsmAnsible.SSHType.UserPassword:
       auth.ansible_ssh_pass = { __ansible_vault: deviceAuth.sshPwd };
       break;
-    case SsmAnsible.SSHType.Automatic:
-      // We don't need secrets for automatic authentication
+    case SsmAnsible.SSHType.PasswordLess:
+      // We don't need secrets for passwordless authentication
       break;
     default:
       throw new Error('Unknown device Auth type');
@@ -100,7 +100,7 @@ function getInventoryConnectionVars(deviceAuth: Partial<DeviceAuth>): Connection
   // See https://docs.ansible.com/ansible/latest/collections/ansible/builtin/paramiko_ssh_connection.html
   let connection = deviceAuth.sshConnection;
   if (!connection) {
-    if (deviceAuth.authType === SsmAnsible.SSHType.Automatic) {
+    if (deviceAuth.authType === SsmAnsible.SSHType.PasswordLess) {
       // Paramiko does not work without a password or key
       connection = SsmAnsible.SSHConnection.BUILTIN;
     } else {

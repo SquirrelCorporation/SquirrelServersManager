@@ -100,8 +100,8 @@ describe('SSHCredentialsHelper', () => {
     expect(vault.vaultDecrypt).toHaveBeenCalledTimes(1);
   });
 
-  test('should handle automatic SSHType for default Docker SSH', async () => {
-    deviceAuth.authType = SsmAnsible.SSHType.Automatic;
+  test('should handle passwordless SSHType for default Docker SSH', async () => {
+    deviceAuth.authType = SsmAnsible.SSHType.PasswordLess;
 
     const result = await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
 
@@ -186,11 +186,11 @@ describe('SSHCredentialsHelper', () => {
     expect(vault.vaultDecrypt).toHaveBeenCalledTimes(1);
   });
 
-  test('should handle automatic SSHType for custom Docker SSH', async () => {
+  test('should handle passwordless SSHType for custom Docker SSH', async () => {
     deviceAuth.authType = SsmAnsible.SSHType.UserPassword;
     deviceAuth.sshPwd = 'sshpwd';
     deviceAuth.customDockerSSH = true;
-    deviceAuth.dockerCustomAuthType = SsmAnsible.SSHType.Automatic;
+    deviceAuth.dockerCustomAuthType = SsmAnsible.SSHType.PasswordLess;
     deviceAuth.dockerCustomSshUser = '$customUser';
 
     const result = await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);

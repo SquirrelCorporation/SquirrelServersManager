@@ -23,7 +23,7 @@ export type AuthenticationCardProps = {
 const connectionTypes = [
   { value: SsmAnsible.SSHType.UserPassword.valueOf(), label: 'User/Password' },
   { value: SsmAnsible.SSHType.KeyBased.valueOf(), label: 'Keys' },
-  { value: SsmAnsible.SSHType.Automatic.valueOf(), label: 'Automatic' },
+  { value: SsmAnsible.SSHType.PasswordLess.valueOf(), label: 'PasswordLess' },
 ];
 
 const AuthenticationCard: React.FC<AuthenticationCardProps> = ({ formRef }) => (
@@ -69,10 +69,10 @@ const AuthenticationCard: React.FC<AuthenticationCardProps> = ({ formRef }) => (
                   if (
                     (!sshConnection ||
                       sshConnection === SsmAnsible.SSHConnection.PARAMIKO) &&
-                    value == SsmAnsible.SSHType.Automatic
+                    value == SsmAnsible.SSHType.PasswordLess
                   ) {
                     return Promise.reject(
-                      'You must use regular SSH for automatic authentication',
+                      'You must use regular SSH for passwordless authentication',
                     );
                   }
                   return Promise.resolve();
@@ -130,7 +130,7 @@ const AuthenticationCard: React.FC<AuthenticationCardProps> = ({ formRef }) => (
               </ProForm.Group>
             );
           }
-          if (authType === SsmAnsible.SSHType.Automatic.valueOf()) {
+          if (authType === SsmAnsible.SSHType.PasswordLess.valueOf()) {
             return (
               <ProForm.Group>
                 <ProFormText
