@@ -190,7 +190,7 @@ describe('SSHCredentialsHelper', () => {
     deviceAuth.authType = SsmAnsible.SSHType.UserPassword;
     deviceAuth.sshPwd = 'sshpwd';
     deviceAuth.customDockerSSH = true;
-    deviceAuth.dockerCustomAuthType = SsmAnsible.SSHType.Automatic;
+    deviceAuth.dockerCustomAuthType = SsmAnsible.SSHType.PasswordLess;
     deviceAuth.dockerCustomSshUser = '$customUser';
 
     const result = await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
