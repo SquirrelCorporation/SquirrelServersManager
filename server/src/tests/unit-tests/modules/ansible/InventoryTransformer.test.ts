@@ -299,7 +299,7 @@ describe('test InventoryTransformer', () => {
 
     const deviceAuth2 = {
       device: { uuid: '2234-5678-9106', ip: '192.168.1.5' },
-      authType: SsmAnsible.SSHType.Automatic,
+      authType: SsmAnsible.SSHType.PasswordLess,
       becomeMethod: 'sudo',
       becomePass: 'password2',
       sshUser: 'root',
