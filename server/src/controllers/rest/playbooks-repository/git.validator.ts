@@ -8,6 +8,10 @@ export const addGitRepositoryValidator = [
   body('email').exists().isEmail().withMessage('Email is incorrect'),
   body('userName').exists().isString().withMessage('userName is incorrect'),
   body('remoteUrl').exists().isURL().withMessage('remoteUrl is incorrect'),
+  body('directoryExclusionList')
+    .optional()
+    .isArray()
+    .withMessage('Directory exclusion list is incorrect'),
   validator,
 ];
 
@@ -19,6 +23,10 @@ export const updateGitRepositoryValidator = [
   body('email').exists().isEmail().withMessage('Email is incorrect'),
   body('userName').exists().isString().withMessage('userName is incorrect'),
   body('remoteUrl').exists().isURL().withMessage('remoteUrl is incorrect'),
+  body('directoryExclusionList')
+    .optional()
+    .isArray()
+    .withMessage('Directory exclusion list is incorrect'),
   validator,
 ];
 

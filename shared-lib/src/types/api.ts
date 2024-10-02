@@ -349,25 +349,7 @@ export type PlaybooksRepository = {
   path: string;
   type: PlaybooksRepositoryType;
   children?: ExtendedTreeNode[];
-};
-
-export type PlaybooksRepositories = {
-  success?: boolean;
-  data?: PlaybooksRepository[];
-};
-
-export type PlaybookContent = {
-  success?: boolean;
-  data?: string;
-};
-
-export type PlaybookOpResponse = {
-  success?: boolean;
-};
-
-export type ServerLogs = {
-  data?: ServerLog[];
-  success?: boolean;
+  directoryExclusionList?: string[];
 };
 
 export type ServerLog = {
@@ -633,9 +615,7 @@ export type ContainerRegistry = {
   canAnonymous: boolean;
 }
 
-export type GitRepository = {
-  uuid?: string;
-  name: string;
+export type GitRepository = PlaybooksRepository & {
   email: string;
   branch: string;
   userName: string;
@@ -643,9 +623,7 @@ export type GitRepository = {
   default: boolean;
 }
 
-export type LocalRepository = {
-  uuid: string;
-  name: string;
+export type LocalRepository = PlaybooksRepository & {
   directory: string;
   enabled: boolean;
   default: boolean;

@@ -11,14 +11,14 @@ export async function getPlaybooks(
 }
 
 export async function readPlaybookContent(playbookUuid: string) {
-  return request<API.PlaybookContent>(`/api/playbooks/${playbookUuid}`, {
+  return request<API.Response<string>>(`/api/playbooks/${playbookUuid}`, {
     method: 'GET',
     ...{},
   });
 }
 
 export async function patchPlaybook(playbookUuid: string, content: string) {
-  return request<API.PlaybookOpResponse>(`/api/playbooks/${playbookUuid}/`, {
+  return request<API.SimpleResult>(`/api/playbooks/${playbookUuid}/`, {
     method: 'PATCH',
     data: { content: content },
     ...{},
@@ -84,7 +84,7 @@ export async function getTaskStatuses(execId: string) {
 }
 
 export async function deletePlaybook(playbookUuid: string) {
-  return request<API.PlaybookOpResponse>(`/api/playbooks/${playbookUuid}/`, {
+  return request<API.SimpleResult>(`/api/playbooks/${playbookUuid}/`, {
     method: 'DELETE',
     ...{},
   });
@@ -94,21 +94,18 @@ export async function postPlaybookExtraVar(
   playbookUuid: string,
   extraVar: API.ExtraVar,
 ) {
-  return request<API.PlaybookOpResponse>(
-    `/api/playbooks/${playbookUuid}/extravars`,
-    {
-      data: { extraVar: extraVar },
-      method: 'POST',
-      ...{},
-    },
-  );
+  return request<API.SimpleResult>(`/api/playbooks/${playbookUuid}/extravars`, {
+    data: { extraVar: extraVar },
+    method: 'POST',
+    ...{},
+  });
 }
 
 export async function deletePlaybookExtraVar(
   playbookUuid: string,
   extraVar: string,
 ) {
-  return request<API.PlaybookOpResponse>(
+  return request<API.SimpleResult>(
     `/api/playbooks/${playbookUuid}/extravars/${extraVar}`,
     {
       method: 'DELETE',
@@ -122,7 +119,7 @@ export async function postExtraVarSharedValue(
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.PlaybookOpResponse>(
+  return request<API.SimpleResult>(
     `/api/playbooks/extravars/${data.extraVar}`,
     {
       data: { value: data.value },
