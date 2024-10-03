@@ -7,6 +7,8 @@
 **Implemented enhancements:**
 
 - \[FEAT\] Custom stack mgr 🔥 [\#180](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/180)
+- \[FEAT\] Playbooks with roles for NVM, Node js install 🔥  [\#117](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/117)
+- 117 feat playbooks with roles for nvm node js install [\#331](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/331) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Add container ports handling and display link in UI [\#328](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/328) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Fixed bugs:**
@@ -25,6 +27,7 @@
 
 - \[CHORE\] Rename SSHType.Automatic to SSHType.PasswordLess [\#330](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/330) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Add Apps section and Vuetify support [\#329](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/329) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump rollup from 4.21.3 to 4.22.5 in /server in the npm\_and\_yarn group [\#324](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/324) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @types/react from 18.3.9 to 18.3.10 in /client [\#322](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/322) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump eslint-plugin-import-x from 4.3.0 to 4.3.1 in /server [\#320](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/320) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[FEAT\] Add ability to use automatic SSH authentication [\#318](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/318) ([btajuddin](https://github.com/btajuddin))
