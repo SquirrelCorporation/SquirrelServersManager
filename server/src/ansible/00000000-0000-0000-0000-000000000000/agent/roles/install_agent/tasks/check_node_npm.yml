@@ -1,0 +1,13 @@
+- name: Check if NodeJS, npm, and NVM.sh are installed
+  block:
+    - name: Check if NodeJS is installed
+      command: which node
+      register: node_check
+      ignore_errors: true
+      changed_when: false
+
+    - name: Check if npm is installed
+      command: which npm
+      register: npm_check
+      ignore_errors: true
+      changed_when: false

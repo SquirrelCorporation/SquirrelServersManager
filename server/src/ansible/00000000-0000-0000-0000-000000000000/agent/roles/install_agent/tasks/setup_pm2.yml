@@ -1,0 +1,33 @@
+- name: Check if PM2 is installed
+  shell: . {{ nvm_dir }}/nvm.sh && npm list -g pm2
+  register: pm2_check
+  ignore_errors: true
+  changed_when: false
+  args:
+    executable: /bin/bash
+
+- name: Install "PM2" node.js package globally
+  shell: . {{ nvm_dir }}/nvm.sh && npm install -g pm2
+  args:
+    executable: /bin/bash
+  when: pm2_check.rc != 0
+
+- name: Install PM2 LogRotate
+  shell: . {{ nvm_dir }}/nvm.sh && pm2 install pm2-logrotate
+  args:
+    executable: /bin/bash
+
+- name: Install PM2 on startup
+  shell: . {{ nvm_dir }}/nvm.sh && pm2 startup
+  args:
+    executable: /bin/bash
+
+- name: Save Agent on startup
+  shell: . {{ nvm_dir }}/nvm.sh && pm2 save
+  args:
+    executable: /bin/bash
+
+- name: Update PM2
+  shell: . {{ nvm_dir }}/nvm.sh && pm2 update
+  args:
+    executable: /bin/bash

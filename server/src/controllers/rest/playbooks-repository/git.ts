@@ -17,6 +17,7 @@ export const addGitRepository = asyncHandler(async (req, res) => {
     email,
     userName,
     remoteUrl,
+    directoryExclusionList,
   }: {
     name: string;
     accessToken: string;
@@ -24,6 +25,7 @@ export const addGitRepository = asyncHandler(async (req, res) => {
     email: string;
     userName: string;
     remoteUrl: string;
+    directoryExclusionList?: string[];
   } = req.body;
   await GitRepositoryUseCases.addGitRepository(
     name,
@@ -32,6 +34,7 @@ export const addGitRepository = asyncHandler(async (req, res) => {
     email,
     userName,
     remoteUrl,
+    directoryExclusionList,
   );
   return new SuccessResponse('Added playbooks git repository').send(res);
 });
@@ -56,6 +59,7 @@ export const updateGitRepository = asyncHandler(async (req, res) => {
     email,
     gitUserName,
     remoteUrl,
+    directoryExclusionList,
   }: {
     name: string;
     accessToken: string;
@@ -63,6 +67,7 @@ export const updateGitRepository = asyncHandler(async (req, res) => {
     email: string;
     gitUserName: string;
     remoteUrl: string;
+    directoryExclusionList?: string[];
   } = req.body;
 
   await GitRepositoryUseCases.updateGitRepository(
@@ -73,6 +78,7 @@ export const updateGitRepository = asyncHandler(async (req, res) => {
     email,
     gitUserName,
     remoteUrl,
+    directoryExclusionList,
   );
   return new SuccessResponse('Updated playbooks git repository').send(res);
 });

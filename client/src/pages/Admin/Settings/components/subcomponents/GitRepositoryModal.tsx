@@ -1,4 +1,5 @@
 import { SimpleIconsGit } from '@/components/Icons/CustomIcons';
+import DirectoryExclusionForm from '@/pages/Admin/Settings/components/subcomponents/DirectoryExclusionForm';
 import {
   commitAndSyncGitRepository,
   deleteGitRepository,
@@ -228,6 +229,9 @@ const GitRepositoryModal: React.FC<GitRepositoryModalProps> = (props) => {
           label={'Access Token'}
           rules={[{ required: true }]}
         />
+      </ProForm.Group>
+      <ProForm.Group>
+        <DirectoryExclusionForm selectedRecord={props.selectedRecord} />
       </ProForm.Group>
     </ModalForm>
   );

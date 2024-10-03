@@ -1,0 +1,63 @@
+- name: Check out agent
+  ansible.builtin.git:
+    force: true
+    repo: 'https://github.com/SquirrelCorporation/SquirrelServersManager-Agent.git'
+    dest: "{{ base_path }}"
+  register: git_checkout
+  timeout: 600
+
+- name: Stop PM2 Agent if running
+  shell: . {{ nvm_dir }}/nvm.sh && pm2 stop agent
+  ignore_errors: true
+  args:
+    executable: /bin/bash
+
+- name: Delete PM2 Agent if present
+  shell: . {{ nvm_dir }}/nvm.sh && pm2 delete agent
+  ignore_errors: true
+  args:
+    executable: /bin/bash
+
+- name: Clean directory
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ base_path }}/ssm-agent"
+    - "{{ base_path }}/agent.blob"
+    - "{{ base_path }}/build"
+    - "{{ base_path }}/hostid.txt"
+
+- name: Write Node Url in .env file
+  copy:
+    content: "API_URL_MASTER={{ _ssm_masterNodeUrl }}"
+    dest: "{{ base_path }}/.env"
+
+- name: Write HostId in hostid.txt file
+  copy:
+    content: "{{ _ssm_deviceId }}"
+    dest: "{{ base_path }}/hostid.txt"
+
+- name: NPM install
+  shell: . {{ nvm_dir }}/nvm.sh && npm install
+  args:
+    chdir: "{{ base_path }}"
+    executable: /bin/bash
+  register: npm_install
+  failed_when: npm_install.rc != 0
+
+- name: NPM run build
+  shell: . {{ nvm_dir }}/nvm.sh && npm run build
+  args:
+    chdir: "{{ base_path }}"
+    executable: /bin/bash
+  register: npm_build
+  failed_when: npm_build.rc != 0
+
+- name: Start PM2 Agent
+  shell: . {{ nvm_dir }}/nvm.sh && pm2 start -f "./build/agent.js"
+  args:
+    chdir: "{{ base_path }}"
+    executable: /bin/bash
+  register: pm2_start
+  failed_when: pm2_start.rc != 0
