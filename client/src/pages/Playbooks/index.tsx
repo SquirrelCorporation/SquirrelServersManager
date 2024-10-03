@@ -177,7 +177,6 @@ const Index: React.FC = () => {
         custom: playbook.custom,
       });
     }
-    console.log('Trigger Select', keys, info);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-shadow

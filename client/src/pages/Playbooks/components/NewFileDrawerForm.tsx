@@ -32,6 +32,7 @@ const NewFileDrawerForm: React.FC<NewFileModalFormProps> = (props) => {
   const [selectedPlaybook, setSelectedPlaybook] = React.useState<
     API.PlaybooksRepository | undefined
   >();
+  const [visible, setVisible] = React.useState<boolean>(false);
 
   useEffect(() => {
     setLoading(true);
@@ -65,9 +66,6 @@ const NewFileDrawerForm: React.FC<NewFileModalFormProps> = (props) => {
       autoFocusFirstInput
       loading={loading}
       resize={{
-        onResize() {
-          console.log('resize!');
-        },
         maxWidth: window.innerWidth * 0.8,
         minWidth: 300,
       }}
@@ -93,7 +91,10 @@ const NewFileDrawerForm: React.FC<NewFileModalFormProps> = (props) => {
             `${values.repository}/${values.name}`,
             fileType as 'playbook' | 'directory',
           )
-          .finally(() => {
+          .finally(async () => {
+            await getPlaybooksRepositories().then((res) => {
+              setRepositories(res.data);
+            });
             setLoading(false);
           });
         return true;
