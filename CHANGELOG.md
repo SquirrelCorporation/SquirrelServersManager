@@ -13,7 +13,9 @@
 
 **Fixed bugs:**
 
+- \[BUG\] Unable to create sub-directory or playbook after creating new directory in Playbook tab [\#336](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/336)
 - \[BUG\] Only 10 hosts available for automation [\#319](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/319)
+- \[BUG\] Fix update problem of NewFileDrawerForm, bump libs [\#337](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/337) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Update log path for container management [\#326](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/326) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] \*\*Refactor quick action components to include icons\*\* [\#325](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/325) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Add getAllDevices API endpoint and update client calls [\#323](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/323) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
