@@ -90,7 +90,8 @@ export const getDevices = async (req, res) => {
     };
   const devices = await DeviceRepo.findAll();
   if (!devices) {
-    return new SuccessResponse('Get Devices successful', []).send(res);
+    new SuccessResponse('Get Devices successful', []).send(res);
+    return;
   }
 
   // Use the separated services
@@ -155,7 +156,8 @@ export const updateDockerWatcher = async (req, res) => {
 export const getAllDevices = async (req, res) => {
   const devices = await DeviceRepo.findAll();
   if (!devices) {
-    return new SuccessResponse('Get Devices successful', []).send(res);
+    new SuccessResponse('Get Devices successful', []).send(res);
+    return;
   }
 
   new SuccessResponse('Get Devices successful', devices).send(res);

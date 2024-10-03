@@ -8,7 +8,7 @@ import AutomationUseCases from '../../../services/AutomationUseCases';
 
 export const getAllAutomations = async (req, res) => {
   const automations = await AutomationRepo.findAll();
-  return new SuccessResponse('Got all automations', automations).send(res);
+  new SuccessResponse('Got all automations', automations).send(res);
 };
 
 export const putAutomation = async (req, res) => {
@@ -18,7 +18,7 @@ export const putAutomation = async (req, res) => {
     name: name,
     automationChains: rawChain,
   });
-  return new SuccessResponse('Automation created successfully.', automation).send(res);
+  new SuccessResponse('Automation created successfully.', automation).send(res);
 };
 
 export const postAutomation = async (req, res) => {
@@ -31,7 +31,7 @@ export const postAutomation = async (req, res) => {
   automation.name = name;
   automation.automationChains = rawChain;
   await AutomationRepo.update(automation);
-  return new SuccessResponse('Automation updated successfully.', automation).send(res);
+  new SuccessResponse('Automation updated successfully.', automation).send(res);
 };
 
 export const deleteAutomation = async (req, res) => {
@@ -41,7 +41,7 @@ export const deleteAutomation = async (req, res) => {
     throw new NotFoundError(`Automation uuid ${uuid} not found`);
   }
   await AutomationUseCases.deleteAutomation(automation);
-  return new SuccessResponse('Deleted automation', uuid).send(res);
+  new SuccessResponse('Deleted automation', uuid).send(res);
 };
 
 export const manualAutomationExecution = async (req, res) => {
@@ -51,7 +51,7 @@ export const manualAutomationExecution = async (req, res) => {
     throw new NotFoundError(`Automation uuid ${uuid} not found`);
   }
   await AutomationUseCases.executeAutomation(automation);
-  return new SuccessResponse('Manual automation executed.', automation).send(res);
+  new SuccessResponse('Manual automation executed.', automation).send(res);
 };
 
 export const getTemplate = async (req, res) => {
@@ -98,5 +98,5 @@ export const getTemplate = async (req, res) => {
     },
   ];
   const selectedTemplate = templates[parseInt(templateId)];
-  return new SuccessResponse('Got template', selectedTemplate).send(res);
+  new SuccessResponse('Got template', selectedTemplate).send(res);
 };

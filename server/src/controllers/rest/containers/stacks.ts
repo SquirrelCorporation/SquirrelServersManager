@@ -108,7 +108,8 @@ export const patchCustomStack = async (req, res) => {
       iconColor,
       iconBackgroundColor,
     });
-    return new SuccessResponse('Put Custom Stack', stack).send(res);
+    new SuccessResponse('Put Custom Stack', stack).send(res);
+    return;
   } else {
     const stack = await ContainerCustomStackRepo.updateOrCreate({
       ...customStack,

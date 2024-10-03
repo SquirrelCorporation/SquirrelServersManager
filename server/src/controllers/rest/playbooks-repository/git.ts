@@ -35,7 +35,7 @@ export const addGitRepository = async (req, res) => {
     remoteUrl,
     directoryExclusionList,
   );
-  return new SuccessResponse('Added playbooks git repository').send(res);
+  new SuccessResponse('Added playbooks git repository').send(res);
 };
 
 export const getGitRepositories = async (req, res) => {
@@ -46,7 +46,7 @@ export const getGitRepositories = async (req, res) => {
     ...repo,
     accessToken: 'REDACTED',
   }));
-  return new SuccessResponse('Got playbooks git repositories', encryptedRepositories).send(res);
+  new SuccessResponse('Got playbooks git repositories', encryptedRepositories).send(res);
 };
 
 export const updateGitRepository = async (req, res) => {
@@ -79,7 +79,7 @@ export const updateGitRepository = async (req, res) => {
     remoteUrl,
     directoryExclusionList,
   );
-  return new SuccessResponse('Updated playbooks git repository').send(res);
+  new SuccessResponse('Updated playbooks git repository').send(res);
 };
 
 export const deleteGitRepository = async (req, res) => {
@@ -90,7 +90,7 @@ export const deleteGitRepository = async (req, res) => {
     throw new NotFoundError();
   }
   await PlaybooksRepositoryUseCases.deleteRepository(repository);
-  return new SuccessResponse('Deleted playbooks-repository repository').send(res);
+  new SuccessResponse('Deleted playbooks-repository repository').send(res);
 };
 
 export const forcePullRepository = async (req, res) => {
@@ -104,7 +104,7 @@ export const forcePullRepository = async (req, res) => {
   }
   await repository.forcePull();
   await repository.syncToDatabase();
-  return new SuccessResponse('Forced pull playbooks git repository').send(res);
+  new SuccessResponse('Forced pull playbooks git repository').send(res);
 };
 
 export const forceCloneRepository = async (req, res) => {
@@ -118,7 +118,7 @@ export const forceCloneRepository = async (req, res) => {
 
   await repository.clone();
   await repository.syncToDatabase();
-  return new SuccessResponse('Forced cloned playbooks git repository').send(res);
+  new SuccessResponse('Forced cloned playbooks git repository').send(res);
 };
 
 export const commitAndSyncRepository = async (req, res) => {
@@ -131,7 +131,7 @@ export const commitAndSyncRepository = async (req, res) => {
   }
 
   await repository.commitAndSync();
-  return new SuccessResponse('Commit And Synced playbooks git repository').send(res);
+  new SuccessResponse('Commit And Synced playbooks git repository').send(res);
 };
 
 export const syncToDatabaseRepository = async (req, res) => {
@@ -144,7 +144,7 @@ export const syncToDatabaseRepository = async (req, res) => {
   }
 
   await repository.syncToDatabase();
-  return new SuccessResponse('Synced to database playbooks git repository').send(res);
+  new SuccessResponse('Synced to database playbooks git repository').send(res);
 };
 
 export const forceRegister = async (req, res) => {
@@ -155,5 +155,5 @@ export const forceRegister = async (req, res) => {
   }
 
   await PlaybooksRepositoryEngine.registerRepository(repository);
-  return new SuccessResponse('Synced to database playbooks git repository').send(res);
+  new SuccessResponse('Synced to database playbooks git repository').send(res);
 };

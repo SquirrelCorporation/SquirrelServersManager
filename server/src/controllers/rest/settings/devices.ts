@@ -14,17 +14,20 @@ export const postDevicesSettings = async (req, res) => {
           SettingsKeys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
           value,
         );
-        return new SuccessResponse(`${key} successfully updated`).send(res);
+        new SuccessResponse(`${key} successfully updated`).send(res);
+        return;
       case SettingsKeys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS:
         await setToCache(
           SettingsKeys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
           value,
         );
-        return new SuccessResponse(`${key} successfully updated`).send(res);
+        new SuccessResponse(`${key} successfully updated`).send(res);
+        return;
       default:
-        return res.status(404).send({
+        res.status(404).send({
           success: false,
         });
+        return;
     }
   } catch (error: any) {
     throw new InternalError(error.message);

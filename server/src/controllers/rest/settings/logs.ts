@@ -14,10 +14,12 @@ export const postLogsSettings = async (req, res) => {
           SettingsKeys.GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
           value,
         );
-        return new SuccessResponse(`${key} successfully updated`).send(res);
+        new SuccessResponse(`${key} successfully updated`).send(res);
+        return;
       case SettingsKeys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS:
         await setToCache(SettingsKeys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS, value);
-        return new SuccessResponse(`${key} successfully updated`).send(res);
+        new SuccessResponse(`${key} successfully updated`).send(res);
+        return;
       default:
         return res.status(404).send({
           success: false,

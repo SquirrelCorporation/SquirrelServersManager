@@ -11,9 +11,10 @@ export const postContainerStatsSettings = async (req, res) => {
     switch (key) {
       case SettingsKeys.GeneralSettingsKeys.CONTAINER_STATS_RETENTION_IN_DAYS:
         await setToCache(SettingsKeys.GeneralSettingsKeys.CONTAINER_STATS_RETENTION_IN_DAYS, value);
-        return new SuccessResponse(`${key} successfully updated`).send(res);
+        new SuccessResponse(`${key} successfully updated`).send(res);
+        return;
       default:
-        return new NotFoundError();
+        throw new NotFoundError();
     }
   } catch (error: any) {
     throw new InternalError(error.message);

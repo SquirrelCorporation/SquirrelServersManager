@@ -11,7 +11,8 @@ export const postDeviceStatsSettings = async (req, res) => {
     switch (key) {
       case SettingsKeys.GeneralSettingsKeys.DEVICE_STATS_RETENTION_IN_DAYS:
         await setToCache(SettingsKeys.GeneralSettingsKeys.DEVICE_STATS_RETENTION_IN_DAYS, value);
-        return new SuccessResponse(`${key} successfully updated`).send(res);
+        new SuccessResponse(`${key} successfully updated`).send(res);
+        return;
       default:
         return res.status(404).send({
           success: false,

@@ -13,7 +13,7 @@ export const getLocalRepositories = async (req, res) => {
   const repositories = await PlaybooksRepositoryRepo.findAllWithType(
     Playbooks.PlaybooksRepositoryType.LOCAL,
   );
-  return new SuccessResponse('Got playbooks local repositories', repositories).send(res);
+  new SuccessResponse('Got playbooks local repositories', repositories).send(res);
 };
 
 export const updateLocalRepository = async (req, res) => {
@@ -27,7 +27,7 @@ export const updateLocalRepository = async (req, res) => {
     directoryExclusionList?: string[];
   } = req.body;
   await LocalRepositoryUseCases.updateLocalRepository(uuid, name, directoryExclusionList);
-  return new SuccessResponse('Updated playbooks local repository').send(res);
+  new SuccessResponse('Updated playbooks local repository').send(res);
 };
 
 export const deleteLocalRepository = async (req, res) => {
@@ -38,7 +38,7 @@ export const deleteLocalRepository = async (req, res) => {
     throw new NotFoundError();
   }
   await PlaybooksRepositoryUseCases.deleteRepository(repository);
-  return new SuccessResponse('Deleted playbooks local repository').send(res);
+  new SuccessResponse('Deleted playbooks local repository').send(res);
 };
 
 export const addLocalRepository = async (req, res) => {
@@ -51,7 +51,7 @@ export const addLocalRepository = async (req, res) => {
     directoryExclusionList?: string[];
   } = req.body;
   await LocalRepositoryUseCases.addLocalRepository(name, directoryExclusionList);
-  return new SuccessResponse('Added playbooks local repository').send(res);
+  new SuccessResponse('Added playbooks local repository').send(res);
 };
 
 export const syncToDatabaseLocalRepository = async (req, res) => {
@@ -64,5 +64,5 @@ export const syncToDatabaseLocalRepository = async (req, res) => {
     throw new NotFoundError();
   }
   await repository.syncToDatabase();
-  return new SuccessResponse('Synced to database playbooks local repository').send(res);
+  new SuccessResponse('Synced to database playbooks local repository').send(res);
 };
