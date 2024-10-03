@@ -2,21 +2,20 @@ import { DateTime } from 'luxon';
 import DeviceRepo from '../../../data/database/repository/DeviceRepo';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 import DashboardUseCase from '../../../services/DashboardUseCase';
 import DeviceDownTimeUseCases from '../../../services/DeviceDownTimeUseCases';
 import DeviceStatsUseCases from '../../../services/DeviceStatsUseCases';
 
-export const getDashboardPerformanceStats = asyncHandler(async (req, res) => {
+export const getDashboardPerformanceStats = async (req, res) => {
   try {
     const result = await DashboardUseCase.getSystemPerformance();
     new SuccessResponse('Get dashboard performance stats', result).send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const getDashboardAvailabilityStats = asyncHandler(async (req, res) => {
+export const getDashboardAvailabilityStats = async (req, res) => {
   const { availability, lastMonth, byDevice } =
     await DeviceDownTimeUseCases.getDevicesAvailabilitySumUpCurrentMonthLastMonth();
   try {
@@ -28,9 +27,9 @@ export const getDashboardAvailabilityStats = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const getDashboardAveragedStats = asyncHandler(async (req, res) => {
+export const getDashboardAveragedStats = async (req, res) => {
   const { from, to } = req.query;
   const { devices } = req.body;
   const { type } = req.params;
@@ -56,9 +55,9 @@ export const getDashboardAveragedStats = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const getDashboardStat = asyncHandler(async (req, res) => {
+export const getDashboardStat = async (req, res) => {
   const { from, to } = req.query;
   const { devices } = req.body;
   const { type } = req.params;
@@ -84,4 +83,4 @@ export const getDashboardStat = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};

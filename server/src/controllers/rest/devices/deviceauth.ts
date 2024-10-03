@@ -5,7 +5,6 @@ import DeviceRepo from '../../../data/database/repository/DeviceRepo';
 import logger from '../../../logger';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../../modules/ansible-vault/ansible-vault';
 import WatcherEngine from '../../../modules/docker/core/WatcherEngine';
 import Shell from '../../../modules/shell';
@@ -27,7 +26,7 @@ const preWriteSensitiveInfos = async (newKey: string, originalKey?: string) => {
   }
 };
 
-export const getDeviceAuth = asyncHandler(async (req, res) => {
+export const getDeviceAuth = async (req, res) => {
   const { uuid } = req.params;
 
   const device = await DeviceRepo.findOneByUuid(uuid);
@@ -72,9 +71,9 @@ export const getDeviceAuth = asyncHandler(async (req, res) => {
     logger.error(error);
     throw new InternalError(error.message);
   }
-});
+};
 
-export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {
+export const addOrUpdateDeviceAuth = async (req, res) => {
   const {
     authType,
     sshKey,
@@ -122,9 +121,9 @@ export const addOrUpdateDeviceAuth = asyncHandler(async (req, res) => {
   new SuccessResponse('Add or update device auth successful', { type: deviceAuth.authType }).send(
     res,
   );
-});
+};
 
-export const updateDockerAuth = asyncHandler(async (req, res) => {
+export const updateDockerAuth = async (req, res) => {
   const {
     customDockerSSH,
     dockerCustomAuthType,
@@ -177,9 +176,9 @@ export const updateDockerAuth = asyncHandler(async (req, res) => {
   new SuccessResponse('Update docker auth successful', {
     dockerCustomAuthType: deviceAuth?.dockerCustomAuthType,
   }).send(res);
-});
+};
 
-export const uploadDockerAuthCerts = asyncHandler(async (req, res) => {
+export const uploadDockerAuthCerts = async (req, res) => {
   const { uuid, type } = req.params;
   const device = await DeviceRepo.findOneByUuid(uuid);
 
@@ -215,9 +214,9 @@ export const uploadDockerAuthCerts = asyncHandler(async (req, res) => {
   }
 
   new SuccessResponse('Uploaded file').send(res);
-});
+};
 
-export const deleteDockerAuthCerts = asyncHandler(async (req, res) => {
+export const deleteDockerAuthCerts = async (req, res) => {
   const { uuid, type } = req.params;
   const device = await DeviceRepo.findOneByUuid(uuid);
 
@@ -246,4 +245,4 @@ export const deleteDockerAuthCerts = asyncHandler(async (req, res) => {
   }
 
   new SuccessResponse('Deleted file').send(res);
-});
+};

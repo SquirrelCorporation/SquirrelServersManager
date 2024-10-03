@@ -1,17 +1,16 @@
+import ContainerRegistryRepo from '../../../data/database/repository/ContainerRegistryRepo';
 import { BadRequestError, ForbiddenError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import ContainerRegistryRepo from '../../../data/database/repository/ContainerRegistryRepo';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 import ContainerRegistryUseCases from '../../../services/ContainerRegistryUseCases';
 
-export const getRegistries = asyncHandler(async (req, res) => {
+export const getRegistries = async (req, res) => {
   const registries = await ContainerRegistryRepo.findAll();
   new SuccessResponse('Get registries', {
     registries: registries,
   }).send(res);
-});
+};
 
-export const updateRegistry = asyncHandler(async (req, res) => {
+export const updateRegistry = async (req, res) => {
   const { name } = req.params;
   const containerRegistry = await ContainerRegistryRepo.findOneByName(name);
   if (!containerRegistry) {
@@ -19,9 +18,9 @@ export const updateRegistry = asyncHandler(async (req, res) => {
   }
   await ContainerRegistryUseCases.updateRegistryAuth(containerRegistry, req.body.auth);
   new SuccessResponse('Get registries', {}).send(res);
-});
+};
 
-export const createCustomRegistry = asyncHandler(async (req, res) => {
+export const createCustomRegistry = async (req, res) => {
   const { name } = req.params;
   const containerRegistry = await ContainerRegistryRepo.findOneByName(name);
   if (containerRegistry) {
@@ -29,9 +28,9 @@ export const createCustomRegistry = asyncHandler(async (req, res) => {
   }
   await ContainerRegistryUseCases.createCustomRegistry(name, req.body.auth, req.body.authScheme);
   new SuccessResponse('Get registries', {}).send(res);
-});
+};
 
-export const resetRegistry = asyncHandler(async (req, res) => {
+export const resetRegistry = async (req, res) => {
   const { name } = req.params;
   const containerRegistry = await ContainerRegistryRepo.findOneByName(name);
   if (!containerRegistry) {
@@ -39,9 +38,9 @@ export const resetRegistry = asyncHandler(async (req, res) => {
   }
   await ContainerRegistryUseCases.removeRegistryAuth(containerRegistry);
   new SuccessResponse('Reset registry', {}).send(res);
-});
+};
 
-export const removeRegistry = asyncHandler(async (req, res) => {
+export const removeRegistry = async (req, res) => {
   const { name } = req.params;
   const containerRegistry = await ContainerRegistryRepo.findOneByName(name);
   if (!containerRegistry) {
@@ -52,4 +51,4 @@ export const removeRegistry = asyncHandler(async (req, res) => {
   }
   await ContainerRegistryRepo.deleteOne(containerRegistry);
   new SuccessResponse('Remove registry', {}).send(res);
-});
+};

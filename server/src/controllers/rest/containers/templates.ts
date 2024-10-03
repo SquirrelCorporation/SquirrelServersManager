@@ -8,10 +8,9 @@ import { paginate } from '../../../helpers/query/PaginationHelper';
 import { sortByFields } from '../../../helpers/query/SorterHelper';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 import PlaybookUseCases from '../../../services/PlaybookUseCases';
 
-export const getTemplates = asyncHandler(async (req, res) => {
+export const getTemplates = async (req, res) => {
   const realUrl = req.url;
   const { current = 1, pageSize = 10 } = req.query;
   const params = parse(realUrl, true).query as unknown as API.PageParams &
@@ -37,9 +36,9 @@ export const getTemplates = asyncHandler(async (req, res) => {
     pageSize,
     current: parseInt(`${params.current}`, 10) || 1,
   }).send(res);
-});
+};
 
-export const deploy = asyncHandler(async (req, res) => {
+export const deploy = async (req, res) => {
   const { template }: { template: API.Template & API.Targets } = req.body;
   const templateToYaml = DockerComposeHelper.fromJsonTemplateToYml(template);
   const playbook = await PlaybookRepo.findOneByUniqueQuickReference('deploy');
@@ -58,4 +57,4 @@ export const deploy = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};

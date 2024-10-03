@@ -5,9 +5,8 @@ import { filterByFields, filterByQueryParams } from '../../../helpers/query/Filt
 import { paginate } from '../../../helpers/query/PaginationHelper';
 import { sortByFields } from '../../../helpers/query/SorterHelper';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 
-export const getServerLogs = asyncHandler(async (req, res) => {
+export const getServerLogs = async (req, res) => {
   const realUrl = req.url;
   const { current = 1, pageSize = 10 } = req.query;
   const params = parse(realUrl, true).query as unknown as API.PageParams &
@@ -38,4 +37,4 @@ export const getServerLogs = asyncHandler(async (req, res) => {
     pageSize,
     current: parseInt(`${params.current}`, 10) || 1,
   }).send(res);
-});
+};

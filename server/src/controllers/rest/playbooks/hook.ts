@@ -4,9 +4,8 @@ import AnsibleTaskRepo from '../../../data/database/repository/AnsibleTaskRepo';
 import AnsibleTaskStatusRepo from '../../../data/database/repository/AnsibleTaskStatusRepo';
 import { BadRequestError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 
-export const addTaskStatus = asyncHandler(async (req, res) => {
+export const addTaskStatus = async (req, res) => {
   if (!req.body.runner_ident || !req.body.status) {
     throw new BadRequestError('Missing task status or id');
   }
@@ -22,9 +21,9 @@ export const addTaskStatus = asyncHandler(async (req, res) => {
   } else {
     throw new NotFoundError('Task not found');
   }
-});
+};
 
-export const addTaskEvent = asyncHandler(async (req, res) => {
+export const addTaskEvent = async (req, res) => {
   if (!req.body.runner_ident) {
     throw new BadRequestError('Missing task id');
   }
@@ -41,4 +40,4 @@ export const addTaskEvent = asyncHandler(async (req, res) => {
   };
   await AnsibleLogsRepo.create(ansibleLog);
   new SuccessResponse('Added task event').send(res);
-});
+};

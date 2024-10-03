@@ -4,25 +4,24 @@ import AutomationRepo from '../../../data/database/repository/AutomationRepo';
 import PlaybookRepo from '../../../data/database/repository/PlaybookRepo';
 import { NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 import AutomationUseCases from '../../../services/AutomationUseCases';
 
-export const getAllAutomations = asyncHandler(async (req, res) => {
+export const getAllAutomations = async (req, res) => {
   const automations = await AutomationRepo.findAll();
-  return new SuccessResponse('Got all automations', automations).send(res);
-});
+  new SuccessResponse('Got all automations', automations).send(res);
+};
 
-export const putAutomation = asyncHandler(async (req, res) => {
+export const putAutomation = async (req, res) => {
   const { rawChain } = req.body;
   const { name } = req.params;
   const automation = await AutomationUseCases.createAutomation({
     name: name,
     automationChains: rawChain,
   });
-  return new SuccessResponse('Automation created successfully.', automation).send(res);
-});
+  new SuccessResponse('Automation created successfully.', automation).send(res);
+};
 
-export const postAutomation = asyncHandler(async (req, res) => {
+export const postAutomation = async (req, res) => {
   const { rawChain, name } = req.body;
   const { uuid } = req.params;
   const automation = await AutomationRepo.findByUuid(uuid);
@@ -32,30 +31,30 @@ export const postAutomation = asyncHandler(async (req, res) => {
   automation.name = name;
   automation.automationChains = rawChain;
   await AutomationRepo.update(automation);
-  return new SuccessResponse('Automation updated successfully.', automation).send(res);
-});
+  new SuccessResponse('Automation updated successfully.', automation).send(res);
+};
 
-export const deleteAutomation = asyncHandler(async (req, res) => {
+export const deleteAutomation = async (req, res) => {
   const { uuid } = req.params;
   const automation = await AutomationRepo.findByUuid(uuid);
   if (!automation) {
     throw new NotFoundError(`Automation uuid ${uuid} not found`);
   }
   await AutomationUseCases.deleteAutomation(automation);
-  return new SuccessResponse('Deleted automation', uuid).send(res);
-});
+  new SuccessResponse('Deleted automation', uuid).send(res);
+};
 
-export const manualAutomationExecution = asyncHandler(async (req, res) => {
+export const manualAutomationExecution = async (req, res) => {
   const { uuid } = req.params;
   const automation = await AutomationRepo.findByUuid(uuid);
   if (!automation) {
     throw new NotFoundError(`Automation uuid ${uuid} not found`);
   }
   await AutomationUseCases.executeAutomation(automation);
-  return new SuccessResponse('Manual automation executed.', automation).send(res);
-});
+  new SuccessResponse('Manual automation executed.', automation).send(res);
+};
 
-export const getTemplate = asyncHandler(async (req, res) => {
+export const getTemplate = async (req, res) => {
   const { templateId } = req.params;
   const playbooks = (await PlaybookRepo.findAll()) as Playbook[];
   const templates: Partial<Automations.AutomationChain>[] = [
@@ -99,5 +98,5 @@ export const getTemplate = asyncHandler(async (req, res) => {
     },
   ];
   const selectedTemplate = templates[parseInt(templateId)];
-  return new SuccessResponse('Got template', selectedTemplate).send(res);
-});
+  new SuccessResponse('Got template', selectedTemplate).send(res);
+};

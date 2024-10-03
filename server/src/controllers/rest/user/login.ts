@@ -4,9 +4,8 @@ import { SECRET, SESSION_DURATION } from '../../../config';
 import UserRepo from '../../../data/database/repository/UserRepo';
 import { AuthFailureError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 
-export const login = asyncHandler(async (req, res, next) => {
+export const login = async (req, res, next) => {
   const { password, username } = req.body;
   if (!password || !username) {
     res.status(401).send({
@@ -37,9 +36,9 @@ export const login = asyncHandler(async (req, res, next) => {
       secure: false, //--> SET TO TRUE ON PRODUCTION
     }),
   );
-});
+};
 
-export const logout = asyncHandler(async (req, res, next) => {
+export const logout = async (req, res, next) => {
   if (req.cookies['jwt']) {
     new SuccessResponse('Logout success').send(res.clearCookie('jwt'));
   } else {
@@ -47,4 +46,4 @@ export const logout = asyncHandler(async (req, res, next) => {
       error: 'Invalid jwt',
     });
   }
-});
+};

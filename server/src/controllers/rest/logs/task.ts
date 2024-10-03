@@ -6,9 +6,8 @@ import { paginate } from '../../../helpers/query/PaginationHelper';
 import { sortByFields } from '../../../helpers/query/SorterHelper';
 import logger from '../../../logger';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 
-export const getTaskLogs = asyncHandler(async (req, res) => {
+export const getTaskLogs = async (req, res) => {
   logger.info(`[CONTROLLER] - GET - /logs/tasks`);
   const realUrl = req.url;
   const { current = 1, pageSize = 10 } = req.query;
@@ -40,4 +39,4 @@ export const getTaskLogs = asyncHandler(async (req, res) => {
     pageSize,
     current: parseInt(`${params.current}`, 10) || 1,
   }).send(res);
-});
+};

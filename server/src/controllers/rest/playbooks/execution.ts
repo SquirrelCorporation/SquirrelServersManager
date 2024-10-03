@@ -4,10 +4,9 @@ import AnsibleTaskStatusRepo from '../../../data/database/repository/AnsibleTask
 import PlaybookRepo from '../../../data/database/repository/PlaybookRepo';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 import PlaybookUseCases from '../../../services/PlaybookUseCases';
 
-export const execPlaybook = asyncHandler(async (req, res) => {
+export const execPlaybook = async (req, res) => {
   const { uuid } = req.params;
 
   const playbook = await PlaybookRepo.findOneByUuid(uuid);
@@ -29,9 +28,9 @@ export const execPlaybook = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const execPlaybookByQuickRef = asyncHandler(async (req, res) => {
+export const execPlaybookByQuickRef = async (req, res) => {
   const { quickRef } = req.params;
 
   const playbook = await PlaybookRepo.findOneByUniqueQuickReference(quickRef);
@@ -53,17 +52,17 @@ export const execPlaybookByQuickRef = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const getLogs = asyncHandler(async (req, res) => {
+export const getLogs = async (req, res) => {
   const execLogs = await AnsibleLogsRepo.findAllByIdent(req.params.id);
   new SuccessResponse('Execution logs', {
     execId: req.params.id,
     execLogs: execLogs,
   } as API.ExecLogs).send(res);
-});
+};
 
-export const getStatus = asyncHandler(async (req, res) => {
+export const getStatus = async (req, res) => {
   if (!req.params.id) {
     res.status(400).send({
       success: false,
@@ -75,4 +74,4 @@ export const getStatus = asyncHandler(async (req, res) => {
     execId: req.params.id,
     execStatuses: taskStatuses,
   } as API.ExecStatuses).send(res);
-});
+};

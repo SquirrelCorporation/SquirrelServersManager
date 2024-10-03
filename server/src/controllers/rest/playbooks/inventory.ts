@@ -3,10 +3,9 @@ import DeviceAuthRepo from '../../../data/database/repository/DeviceAuthRepo';
 import logger from '../../../logger';
 import { NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 import InventoryTransformer from '../../../modules/ansible/utils/InventoryTransformer';
 
-export const getInventory = asyncHandler(async (req, res) => {
+export const getInventory = async (req, res) => {
   logger.info(`[CONTROLLER] - GET - /ansible/inventory`);
   let devicesAuth: DeviceAuth[] | null = [];
   if (req.body.target) {
@@ -23,4 +22,4 @@ export const getInventory = asyncHandler(async (req, res) => {
   } else {
     throw new NotFoundError('No devices auth found');
   }
-});
+};

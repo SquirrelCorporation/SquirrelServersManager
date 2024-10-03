@@ -7,10 +7,9 @@ import { paginate } from '../../../helpers/query/PaginationHelper';
 import { sortByFields } from '../../../helpers/query/SorterHelper';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 import PlaybookUseCases from '../../../services/PlaybookUseCases';
 
-export const getVolumes = asyncHandler(async (req, res) => {
+export const getVolumes = async (req, res) => {
   const realUrl = req.url;
   const { current = 1, pageSize = 10 } = req.query;
   const params = parse(realUrl, true).query as unknown as API.PageParams &
@@ -36,9 +35,9 @@ export const getVolumes = asyncHandler(async (req, res) => {
     pageSize,
     current: parseInt(`${params.current}`, 10) || 1,
   }).send(res);
-});
+};
 
-export const postVolume = asyncHandler(async (req, res) => {
+export const postVolume = async (req, res) => {
   const { config, target }: API.CreateNetwork = req.body;
   const playbook = await PlaybookRepo.findOneByUniqueQuickReference('createDockerVolume');
   if (!playbook) {
@@ -69,4 +68,4 @@ export const postVolume = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};

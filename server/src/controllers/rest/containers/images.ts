@@ -1,13 +1,12 @@
-import { API } from 'ssm-shared-lib';
 import { parse } from 'url';
+import { API } from 'ssm-shared-lib';
 import ContainerImageRepo from '../../../data/database/repository/ContainerImageRepo';
 import { filterByFields, filterByQueryParams } from '../../../helpers/query/FilterHelper';
 import { paginate } from '../../../helpers/query/PaginationHelper';
 import { sortByFields } from '../../../helpers/query/SorterHelper';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 
-export const getImages = asyncHandler(async (req, res) => {
+export const getImages = async (req, res) => {
   const realUrl = req.url;
   const { current = 1, pageSize = 10 } = req.query;
   const params = parse(realUrl, true).query as unknown as API.PageParams &
@@ -33,4 +32,4 @@ export const getImages = asyncHandler(async (req, res) => {
     pageSize,
     current: parseInt(`${params.current}`, 10) || 1,
   }).send(res);
-});
+};

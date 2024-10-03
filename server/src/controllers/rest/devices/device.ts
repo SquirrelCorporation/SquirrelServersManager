@@ -10,13 +10,12 @@ import { paginate } from '../../../helpers/query/PaginationHelper';
 import { sortByFields } from '../../../helpers/query/SorterHelper';
 import { BadRequestError, ForbiddenError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../../modules/ansible-vault/ansible-vault';
 import WatcherEngine from '../../../modules/docker/core/WatcherEngine';
 import Shell from '../../../modules/shell';
 import DeviceUseCases from '../../../services/DeviceUseCases';
 
-export const addDevice = asyncHandler(async (req, res) => {
+export const addDevice = async (req, res) => {
   const {
     masterNodeUrl,
     ip,
@@ -62,9 +61,9 @@ export const addDevice = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new BadRequestError(`The ip likely already exists ${error.message}`);
   }
-});
+};
 
-export const addDeviceAuto = asyncHandler(async (req, res) => {
+export const addDeviceAuto = async (req, res) => {
   const { ip } = req.body;
 
   const device = await DeviceRepo.findOneByIp(ip);
@@ -79,9 +78,9 @@ export const addDeviceAuto = asyncHandler(async (req, res) => {
     ip: ip,
   } as Device);
   new SuccessResponse('Add device auto successful', { id: createdDevice.uuid }).send(res);
-});
+};
 
-export const getDevices = asyncHandler(async (req, res) => {
+export const getDevices = async (req, res) => {
   const realUrl = req.url;
   const { current = 1, pageSize = 10 } = req.query;
   const params = parse(realUrl, true).query as unknown as API.PageParams &
@@ -91,7 +90,8 @@ export const getDevices = asyncHandler(async (req, res) => {
     };
   const devices = await DeviceRepo.findAll();
   if (!devices) {
-    return new SuccessResponse('Get Devices successful', []).send(res);
+    new SuccessResponse('Get Devices successful', []).send(res);
+    return;
   }
 
   // Use the separated services
@@ -109,9 +109,9 @@ export const getDevices = asyncHandler(async (req, res) => {
     pageSize,
     current: parseInt(`${params.current}`, 10) || 1,
   }).send(res);
-});
+};
 
-export const deleteDevice = asyncHandler(async (req, res) => {
+export const deleteDevice = async (req, res) => {
   const { uuid } = req.params;
   const device = await DeviceRepo.findOneByUuid(uuid);
 
@@ -120,10 +120,10 @@ export const deleteDevice = asyncHandler(async (req, res) => {
   }
   await DeviceUseCases.deleteDevice(device);
   new SuccessResponse('Delete device successful').send(res);
-});
+};
 
 //TODO validation
-export const updateDockerWatcher = asyncHandler(async (req, res) => {
+export const updateDockerWatcher = async (req, res) => {
   const {
     dockerWatcher,
     dockerWatcherCron,
@@ -151,13 +151,14 @@ export const updateDockerWatcher = asyncHandler(async (req, res) => {
     dockerEventsWatcher: dockerEventsWatcher,
     dockerStatsCron: dockerStatsCron,
   }).send(res);
-});
+};
 
-export const getAllDevices = asyncHandler(async (req, res) => {
+export const getAllDevices = async (req, res) => {
   const devices = await DeviceRepo.findAll();
   if (!devices) {
-    return new SuccessResponse('Get Devices successful', []).send(res);
+    new SuccessResponse('Get Devices successful', []).send(res);
+    return;
   }
 
   new SuccessResponse('Get Devices successful', devices).send(res);
-});
+};

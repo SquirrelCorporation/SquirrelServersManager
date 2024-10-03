@@ -2,9 +2,8 @@ import { SettingsKeys } from 'ssm-shared-lib';
 import { setToCache } from '../../../data/cache';
 import { InternalError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 
-export const postDashboardSettings = asyncHandler(async (req, res) => {
+export const postDashboardSettings = async (req, res) => {
   const { key } = req.params;
   const { value } = req.body;
 
@@ -15,13 +14,15 @@ export const postDashboardSettings = asyncHandler(async (req, res) => {
           SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
           value,
         );
-        return new SuccessResponse(`${key} successfully updated`).send(res);
+        new SuccessResponse(`${key} successfully updated`).send(res);
+        return;
       case SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER:
         await setToCache(
           SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
           value,
         );
-        return new SuccessResponse(`${key} successfully updated`).send(res);
+        new SuccessResponse(`${key} successfully updated`).send(res);
+        return;
       default:
         return res.status(404).send({
           success: false,
@@ -30,4 +31,4 @@ export const postDashboardSettings = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};

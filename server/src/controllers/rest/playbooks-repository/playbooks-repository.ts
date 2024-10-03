@@ -1,19 +1,18 @@
 import PlaybooksRepositoryRepo from '../../../data/database/repository/PlaybooksRepositoryRepo';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 import PlaybooksRepositoryUseCases from '../../../services/PlaybooksRepositoryUseCases';
 
-export const getPlaybooksRepositories = asyncHandler(async (req, res) => {
+export const getPlaybooksRepositories = async (req, res) => {
   try {
     const listOfPlaybooksToSelect = await PlaybooksRepositoryUseCases.getAllPlaybooksRepositories();
     new SuccessResponse('Get playbooks successful', listOfPlaybooksToSelect).send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const addDirectoryToPlaybookRepository = asyncHandler(async (req, res) => {
+export const addDirectoryToPlaybookRepository = async (req, res) => {
   const { uuid } = req.params;
   const { fullPath } = req.body;
 
@@ -30,9 +29,9 @@ export const addDirectoryToPlaybookRepository = asyncHandler(async (req, res) =>
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const addPlaybookToRepository = asyncHandler(async (req, res) => {
+export const addPlaybookToRepository = async (req, res) => {
   const { uuid, playbookName } = req.params;
   const { fullPath } = req.body;
 
@@ -50,9 +49,9 @@ export const addPlaybookToRepository = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const deleteAnyFromRepository = asyncHandler(async (req, res) => {
+export const deleteAnyFromRepository = async (req, res) => {
   const { uuid } = req.params;
   const { fullPath } = req.body;
 
@@ -66,4 +65,4 @@ export const deleteAnyFromRepository = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};

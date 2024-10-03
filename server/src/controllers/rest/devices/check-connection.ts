@@ -2,10 +2,9 @@ import DeviceAuthRepo from '../../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../../data/database/repository/DeviceRepo';
 import { ForbiddenError, InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 import DeviceUseCases from '../../../services/DeviceUseCases';
 
-export const postCheckAnsibleConnection = asyncHandler(async (req, res) => {
+export const postCheckAnsibleConnection = async (req, res) => {
   const {
     masterNodeUrl,
     ip,
@@ -41,9 +40,9 @@ export const postCheckAnsibleConnection = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const postCheckDockerConnection = asyncHandler(async (req, res) => {
+export const postCheckDockerConnection = async (req, res) => {
   const { ip, authType, sshKey, sshUser, sshPwd, sshPort, becomeMethod, becomePass, sshKeyPass } =
     req.body;
   if (!req.user) {
@@ -68,9 +67,9 @@ export const postCheckDockerConnection = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const getCheckDeviceDockerConnection = asyncHandler(async (req, res) => {
+export const getCheckDeviceDockerConnection = async (req, res) => {
   const { uuid } = req.params;
   const device = await DeviceRepo.findOneByUuid(uuid);
   if (!device) {
@@ -89,9 +88,9 @@ export const getCheckDeviceDockerConnection = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const getCheckDeviceAnsibleConnection = asyncHandler(async (req, res) => {
+export const getCheckDeviceAnsibleConnection = async (req, res) => {
   const { uuid } = req.params;
   const device = await DeviceRepo.findOneByUuid(uuid);
   if (!device) {
@@ -110,4 +109,4 @@ export const getCheckDeviceAnsibleConnection = asyncHandler(async (req, res) => 
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};

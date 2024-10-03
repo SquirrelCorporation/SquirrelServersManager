@@ -1,10 +1,9 @@
 import ContainerRepo from '../../../data/database/repository/ContainerRepo';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 import ContainerStatsUseCases from '../../../services/ContainerStatsUseCases';
 
-export const getContainerStatByContainerId = asyncHandler(async (req, res) => {
+export const getContainerStatByContainerId = async (req, res) => {
   const { id, type } = req.params;
 
   const container = await ContainerRepo.findContainerById(id);
@@ -20,9 +19,9 @@ export const getContainerStatByContainerId = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const getContainerStatsByContainerId = asyncHandler(async (req, res) => {
+export const getContainerStatsByContainerId = async (req, res) => {
   const { id, type } = req.params;
   const { from = 24 } = req.query;
 
@@ -40,9 +39,9 @@ export const getContainerStatsByContainerId = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const getNbContainersByStatus = asyncHandler(async (req, res) => {
+export const getNbContainersByStatus = async (req, res) => {
   const { status } = req.params;
   try {
     if (status === 'all') {
@@ -55,13 +54,13 @@ export const getNbContainersByStatus = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const getAveragedStats = asyncHandler(async (req, res) => {
+export const getAveragedStats = async (req, res) => {
   try {
     const stats = await ContainerStatsUseCases.getCpUAndMemAveragedStats();
     new SuccessResponse('Get averaged stats', stats).send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
