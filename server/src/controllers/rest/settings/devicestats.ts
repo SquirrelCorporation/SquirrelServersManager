@@ -2,9 +2,8 @@ import { SettingsKeys } from 'ssm-shared-lib';
 import { setToCache } from '../../../data/cache';
 import { InternalError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 
-export const postDeviceStatsSettings = asyncHandler(async (req, res) => {
+export const postDeviceStatsSettings = async (req, res) => {
   const { key } = req.params;
   const { value } = req.body;
 
@@ -21,4 +20,4 @@ export const postDeviceStatsSettings = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};

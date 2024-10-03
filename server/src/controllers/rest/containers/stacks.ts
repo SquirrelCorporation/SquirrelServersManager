@@ -10,12 +10,11 @@ import { sortByFields } from '../../../helpers/query/SorterHelper';
 import logger from '../../../logger';
 import { BadRequestError, InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 import DockerComposeCommandManager from '../../../modules/shell/managers/DockerComposeCommandManager';
 import FileSystemManager from '../../../modules/shell/managers/FileSystemManager';
 import PlaybookUseCases from '../../../services/PlaybookUseCases';
 
-export const getCustomStacks = asyncHandler(async (req, res) => {
+export const getCustomStacks = async (req, res) => {
   const realUrl = req.url;
   const { current = 1, pageSize = 10 } = req.query;
   const params = parse(realUrl, true).query as unknown as API.PageParams &
@@ -38,9 +37,9 @@ export const getCustomStacks = asyncHandler(async (req, res) => {
     pageSize,
     current: parseInt(`${params.current}`, 10) || 1,
   }).send(res);
-});
+};
 
-export const postTransformCustomStack = asyncHandler(async (req, res) => {
+export const postTransformCustomStack = async (req, res) => {
   const { content } = req.body;
   try {
     const json = JSON.parse(content);
@@ -50,9 +49,9 @@ export const postTransformCustomStack = asyncHandler(async (req, res) => {
     logger.error(error);
     throw new BadRequestError('Invalid JSON');
   }
-});
+};
 
-export const postCustomStack = asyncHandler(async (req, res) => {
+export const postCustomStack = async (req, res) => {
   const { name } = req.params;
   const { json, rawStackValue, yaml, lockJson, icon, iconColor, iconBackgroundColor } = req.body;
   const customStack = await ContainerCustomStackRepo.findByName(name);
@@ -87,9 +86,9 @@ export const postCustomStack = asyncHandler(async (req, res) => {
     });
     new SuccessResponse('Post Custom Stack', stack).send(res);
   }
-});
+};
 
-export const patchCustomStack = asyncHandler(async (req, res) => {
+export const patchCustomStack = async (req, res) => {
   const { uuid } = req.params;
   const { json, yaml, rawStackValue, lockJson, icon, iconColor, iconBackgroundColor } = req.body;
   const customStack = await ContainerCustomStackRepo.findByUuid(uuid);
@@ -123,9 +122,9 @@ export const patchCustomStack = asyncHandler(async (req, res) => {
     });
     new SuccessResponse('Put Custom Stack', stack).send(res);
   }
-});
+};
 
-export const deleteCustomStack = asyncHandler(async (req, res) => {
+export const deleteCustomStack = async (req, res) => {
   const { uuid } = req.params;
 
   const customStack = await ContainerCustomStackRepo.findByUuid(uuid);
@@ -135,9 +134,9 @@ export const deleteCustomStack = asyncHandler(async (req, res) => {
 
   await ContainerCustomStackRepo.deleteOne(customStack.uuid as string);
   new SuccessResponse('Deleted Custom Stack').send(res);
-});
+};
 
-export const postCustomStackDryRun = asyncHandler(async (req, res) => {
+export const postCustomStackDryRun = async (req, res) => {
   const { json, yaml } = req.body;
   const path = `/tmp/${uuidv4()}`;
   const fullFilePath = `${path}/docker-compose.yml`;
@@ -159,9 +158,9 @@ export const postCustomStackDryRun = asyncHandler(async (req, res) => {
   } else {
     new SuccessResponse('Post Dry Run Stack', { validating: true }).send(res);
   }
-});
+};
 
-export const postDeployCustomStack = asyncHandler(async (req, res) => {
+export const postDeployCustomStack = async (req, res) => {
   const { uuid } = req.params;
   const { target } = req.body;
 
@@ -185,4 +184,4 @@ export const postDeployCustomStack = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};

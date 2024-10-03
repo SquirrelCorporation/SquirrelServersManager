@@ -1,12 +1,11 @@
+import { parse } from 'url';
 import axios from 'axios';
 import { API } from 'ssm-shared-lib';
-import { parse } from 'url';
 import { InternalError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 import Shell from '../../../modules/shell';
 
-export const getAnsibleGalaxyCollections = asyncHandler(async (req, res) => {
+export const getAnsibleGalaxyCollections = async (req, res) => {
   const realUrl = req.url;
   const { current = 1, pageSize = 9 } = req.query;
   const params = parse(realUrl, true).query as unknown as API.PageParams & {
@@ -26,9 +25,9 @@ export const getAnsibleGalaxyCollections = asyncHandler(async (req, res) => {
     pageSize,
     current: parseInt(`${params.current}`, 10) || 1,
   }).send(res);
-});
+};
 
-export const getAnsibleGalaxyCollection = asyncHandler(async (req, res) => {
+export const getAnsibleGalaxyCollection = async (req, res) => {
   const realUrl = req.url;
   const params = parse(realUrl, true).query as unknown as API.PageParams & {
     sorter: any;
@@ -45,9 +44,9 @@ export const getAnsibleGalaxyCollection = asyncHandler(async (req, res) => {
     'Get Ansible Galaxy Collection successful',
     response.data?.results ? response.data.results[0] : undefined,
   ).send(res);
-});
+};
 
-export const postInstallAnsibleGalaxyCollection = asyncHandler(async (req, res) => {
+export const postInstallAnsibleGalaxyCollection = async (req, res) => {
   const { name, namespace } = req.body;
   try {
     await Shell.AnsibleShellCommandsManager.installAnsibleGalaxyCollection(name, namespace);
@@ -55,4 +54,4 @@ export const postInstallAnsibleGalaxyCollection = asyncHandler(async (req, res) 
     throw new InternalError(error.message);
   }
   new SuccessResponse('Install Ansible Galaxy Collection successful').send(res);
-});
+};

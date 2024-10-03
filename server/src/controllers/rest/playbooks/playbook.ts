@@ -1,21 +1,20 @@
 import PlaybookRepo from '../../../data/database/repository/PlaybookRepo';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 import Shell from '../../../modules/shell';
 import PlaybooksRepositoryUseCases from '../../../services/PlaybooksRepositoryUseCases';
 import PlaybookUseCases from '../../../services/PlaybookUseCases';
 
-export const getPlaybooks = asyncHandler(async (req, res) => {
+export const getPlaybooks = async (req, res) => {
   try {
     const playbooks = await PlaybookRepo.findAllWithActiveRepositories();
     new SuccessResponse('Got Playbooks successfully', playbooks).send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const getPlaybook = asyncHandler(async (req, res) => {
+export const getPlaybook = async (req, res) => {
   const { uuid } = req.params;
 
   const playbook = await PlaybookRepo.findOneByUuid(uuid);
@@ -28,9 +27,9 @@ export const getPlaybook = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const editPlaybook = asyncHandler(async (req, res) => {
+export const editPlaybook = async (req, res) => {
   const { uuid } = req.params;
 
   const playbook = await PlaybookRepo.findOneByUuid(uuid);
@@ -43,9 +42,9 @@ export const editPlaybook = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const addExtraVarToPlaybook = asyncHandler(async (req, res) => {
+export const addExtraVarToPlaybook = async (req, res) => {
   const { uuid } = req.params;
 
   const playbook = await PlaybookRepo.findOneByUuid(uuid);
@@ -58,9 +57,9 @@ export const addExtraVarToPlaybook = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const deleteExtraVarFromPlaybook = asyncHandler(async (req, res) => {
+export const deleteExtraVarFromPlaybook = async (req, res) => {
   const { uuid, varname } = req.params;
 
   const playbook = await PlaybookRepo.findOneByUuid(uuid);
@@ -73,9 +72,9 @@ export const deleteExtraVarFromPlaybook = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};
 
-export const deletePlaybook = asyncHandler(async (req, res) => {
+export const deletePlaybook = async (req, res) => {
   const { uuid } = req.params;
 
   const playbook = await PlaybookRepo.findOneByUuid(uuid);
@@ -88,4 +87,4 @@ export const deletePlaybook = asyncHandler(async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
-});
+};

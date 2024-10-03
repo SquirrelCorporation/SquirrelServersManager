@@ -6,12 +6,11 @@ import { Role } from '../../../data/database/model/User';
 import UserRepo from '../../../data/database/repository/UserRepo';
 import { AuthFailureError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import asyncHandler from '../../../middlewares/AsyncHandler';
 import { createADefaultLocalUserRepository } from '../../../modules/playbooks-repository/default-repositories';
 import DashboardUseCase from '../../../services/DashboardUseCase';
 import DeviceUseCases from '../../../services/DeviceUseCases';
 
-export const getCurrentUser = asyncHandler(async (req, res) => {
+export const getCurrentUser = async (req, res) => {
   const { online, offline, totalCpu, totalMem, overview } =
     await DeviceUseCases.getDevicesOverview();
   const considerDeviceOffline = await getIntConfFromCache(
@@ -88,9 +87,9 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
       },
     },
   } as API.CurrentUser).send(res);
-});
+};
 
-export const createFirstUser = asyncHandler(async (req, res) => {
+export const createFirstUser = async (req, res) => {
   const { email, password, name, avatar } = req.body;
   const hasUser = (await UserRepo.count()) > 0;
   if (hasUser) {
@@ -106,9 +105,9 @@ export const createFirstUser = asyncHandler(async (req, res) => {
   });
   await createADefaultLocalUserRepository();
   new SuccessResponse('Create first user').send(res);
-});
+};
 
-export const hasUser = asyncHandler(async (req, res) => {
+export const hasUser = async (req, res) => {
   const hasUser = (await UserRepo.count()) > 0;
   new SuccessResponse('Has user', { hasUsers: hasUser }).send(res);
-});
+};
