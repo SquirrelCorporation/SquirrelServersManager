@@ -25,6 +25,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Chore update express 5 [\#335](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/335) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Rename SSHType.Automatic to SSHType.PasswordLess [\#330](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/330) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Add Apps section and Vuetify support [\#329](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/329) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump rollup from 4.21.3 to 4.22.5 in /server in the npm\_and\_yarn group [\#324](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/324) ([dependabot[bot]](https://github.com/apps/dependabot))
