@@ -11,7 +11,7 @@ const logger = PinoLogger.child(
   { msgPrefix: '[LOCAL_REPOSITORY] - ' },
 );
 
-async function addLocalRepository(name: string) {
+async function addLocalRepository(name: string, directoryExclusionList?: string[]) {
   const uuid = uuidv4();
   const localRepository = await PlaybooksRepositoryEngine.registerRepository({
     uuid,
@@ -19,6 +19,7 @@ async function addLocalRepository(name: string) {
     name,
     enabled: true,
     directory: DIRECTORY_ROOT,
+    directoryExclusionList,
   });
   await PlaybooksRepositoryRepo.create({
     uuid,
@@ -26,6 +27,7 @@ async function addLocalRepository(name: string) {
     name,
     directory: localRepository.getDirectory(),
     enabled: true,
+    directoryExclusionList,
   });
   try {
     await localRepository.init();
@@ -35,13 +37,18 @@ async function addLocalRepository(name: string) {
   }
 }
 
-async function updateLocalRepository(uuid: string, name: string) {
+async function updateLocalRepository(
+  uuid: string,
+  name: string,
+  directoryExclusionList?: string[],
+) {
   const playbooksRepository = await PlaybooksRepositoryRepo.findByUuid(uuid);
   if (!playbooksRepository) {
     throw new NotFoundError();
   }
   await PlaybooksRepositoryEngine.deregisterRepository(uuid);
   playbooksRepository.name = name;
+  playbooksRepository.directoryExclusionList = directoryExclusionList;
   await PlaybooksRepositoryEngine.registerRepository(playbooksRepository);
   await PlaybooksRepositoryRepo.update(playbooksRepository);
 }

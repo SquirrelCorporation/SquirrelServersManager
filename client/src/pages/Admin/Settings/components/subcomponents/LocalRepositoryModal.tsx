@@ -1,4 +1,5 @@
 import { SimpleIconsGit } from '@/components/Icons/CustomIcons';
+import DirectoryExclusionForm from '@/pages/Admin/Settings/components/subcomponents/DirectoryExclusionForm';
 import {
   deleteLocalRepository,
   postLocalRepositories,
@@ -114,6 +115,7 @@ const LocalRepositoryModal: FC<LocalRepositoryModalProps> = (props) => {
             await postLocalRepositories({
               ...props.selectedRecord,
               name: values.name,
+              directoryExclusionList: values.directoryExclusionList,
             });
             props.setModalOpened(false);
             await props.asyncFetch();
@@ -156,6 +158,9 @@ const LocalRepositoryModal: FC<LocalRepositoryModalProps> = (props) => {
             },
           ]}
         />
+      </ProForm.Group>
+      <ProForm.Group>
+        <DirectoryExclusionForm selectedRecord={props.selectedRecord} />
       </ProForm.Group>
     </ModalForm>
   );

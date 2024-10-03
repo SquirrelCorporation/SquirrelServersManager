@@ -8,7 +8,20 @@ import PlaybookUseCases from '../../../services/PlaybookUseCases';
 export const getPlaybooks = async (req, res) => {
   try {
     const playbooks = await PlaybookRepo.findAllWithActiveRepositories();
-    new SuccessResponse('Got Playbooks successfully', playbooks).send(res);
+    const filteredPlaybooks = playbooks?.filter((playbook) => {
+      const { path, playbooksRepository } = playbook;
+      if (!playbooksRepository || !playbooksRepository.directoryExclusionList) {
+        return true;
+      }
+
+      const { directoryExclusionList } = playbooksRepository;
+
+      return !directoryExclusionList.some((exclusion) => {
+        const regex = new RegExp(`(^|/)${exclusion}($|/)`);
+        return regex.test(path);
+      });
+    });
+    new SuccessResponse('Got Playbooks successfully', filteredPlaybooks).send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }

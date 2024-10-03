@@ -10,6 +10,7 @@ async function addGitRepository(
   email: string,
   userName: string,
   remoteUrl: string,
+  directoryExclusionList?: string[],
 ) {
   const uuid = uuidv4();
   const gitRepository = await PlaybooksRepositoryEngine.registerRepository({
@@ -22,6 +23,7 @@ async function addGitRepository(
     accessToken,
     remoteUrl,
     enabled: true,
+    directoryExclusionList,
   });
   await PlaybooksRepositoryRepo.create({
     uuid,
@@ -34,6 +36,7 @@ async function addGitRepository(
     userName,
     directory: gitRepository.getDirectory(),
     enabled: true,
+    directoryExclusionList,
   });
   void gitRepository.clone();
   void gitRepository.syncToDatabase();
@@ -47,6 +50,7 @@ async function updateGitRepository(
   email: string,
   userName: string,
   remoteUrl: string,
+  directoryExclusionList?: string[],
 ) {
   await PlaybooksRepositoryEngine.deregisterRepository(uuid);
   const gitRepository = await PlaybooksRepositoryEngine.registerRepository({
@@ -59,6 +63,7 @@ async function updateGitRepository(
     accessToken,
     remoteUrl,
     enabled: true,
+    directoryExclusionList,
   });
   await PlaybooksRepositoryRepo.update({
     uuid,
@@ -71,6 +76,7 @@ async function updateGitRepository(
     userName,
     directory: gitRepository.getDirectory(),
     enabled: true,
+    directoryExclusionList,
   });
 }
 

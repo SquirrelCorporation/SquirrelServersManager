@@ -2,10 +2,13 @@ import { request } from '@umijs/max';
 import { API } from 'ssm-shared-lib';
 
 export async function getPlaybooksRepositories(): Promise<API.PlaybooksRepositories> {
-  return request<API.PlaybooksRepositories>('/api/playbooks-repository/', {
-    method: 'GET',
-    ...{},
-  });
+  return request<API.Response<API.PlaybooksRepository[]>>(
+    '/api/playbooks-repository/',
+    {
+      method: 'GET',
+      ...{},
+    },
+  );
 }
 
 export async function getGitRepositories(
@@ -259,7 +262,7 @@ export async function createDirectoryInRepository(
   directoryName: string,
   fullPath: string,
 ) {
-  return request<API.PlaybookOpResponse>(
+  return request<API.SimpleResult>(
     `/api/playbooks-repository/${playbooksRepositoryUuid}/directory/${directoryName}/`,
     {
       method: 'PUT',
@@ -273,7 +276,7 @@ export async function deleteAnyInRepository(
   playbooksRepositoryUuid: string,
   fullPath: string,
 ) {
-  return request<API.PlaybookOpResponse>(
+  return request<API.SimpleResult>(
     `/api/playbooks-repository/${playbooksRepositoryUuid}`,
     {
       method: 'DELETE',

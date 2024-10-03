@@ -18,6 +18,7 @@ export default interface PlaybooksRepository {
   enabled: boolean;
   default?: boolean;
   tree?: any;
+  directoryExclusionList?: string[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -73,6 +74,20 @@ const schema = new Schema<PlaybooksRepository>(
     },
     tree: {
       type: Object,
+    },
+    directoryExclusionList: {
+      type: Schema.Types.Array,
+      default: [
+        'production',
+        'staging',
+        'group_vars',
+        'host_vars',
+        'library',
+        'module_utils',
+        'filters_plugin',
+        'roles',
+        'inventories',
+      ],
     },
   },
   {

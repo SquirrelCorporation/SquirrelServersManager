@@ -21,10 +21,12 @@ export const updateLocalRepository = async (req, res) => {
   logger.info(`[CONTROLLER] - POST - /local/:uuid`);
   const {
     name,
+    directoryExclusionList,
   }: {
     name: string;
+    directoryExclusionList?: string[];
   } = req.body;
-  await LocalRepositoryUseCases.updateLocalRepository(uuid, name);
+  await LocalRepositoryUseCases.updateLocalRepository(uuid, name, directoryExclusionList);
   return new SuccessResponse('Updated playbooks local repository').send(res);
 };
 
@@ -43,10 +45,12 @@ export const addLocalRepository = async (req, res) => {
   logger.info(`[CONTROLLER] - PUT - /local/`);
   const {
     name,
+    directoryExclusionList,
   }: {
     name: string;
+    directoryExclusionList?: string[];
   } = req.body;
-  await LocalRepositoryUseCases.addLocalRepository(name);
+  await LocalRepositoryUseCases.addLocalRepository(name, directoryExclusionList);
   return new SuccessResponse('Added playbooks local repository').send(res);
 };
 

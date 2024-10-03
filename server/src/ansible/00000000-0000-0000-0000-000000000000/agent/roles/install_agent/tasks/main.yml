@@ -1,0 +1,19 @@
+- name: Install agent on targeted device
+  include_tasks: check_node_npm.yml
+
+- name: Install Node.js using NVM if not present
+  include_tasks: install_node.yml
+
+- name: Install Git if not present
+  include_tasks: install_git.yml
+
+- name: Setup and configure PM2
+  include_tasks: setup_pm2.yml
+
+- name: Setup the agent
+  include_tasks: setup_agent.yml
+
+- name: Report execution status
+  debug:
+    msg: "Agent installation completed successfully"
+  when: git_checkout.changed and npm_install.rc == 0 and npm_build.rc == 0 and pm2_start.rc == 0
