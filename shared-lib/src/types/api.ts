@@ -146,7 +146,7 @@ export type DeviceList = {
 };
 
 export type NewDevice = {
-  data: {device: DeviceItem};
+  data: { device: DeviceItem };
   success: boolean;
 };
 
@@ -186,7 +186,7 @@ export type VersionData = {
 export type RaspberryRevisionData = {
   manufacturer?: string;
   processor?: string;
- type?: string;
+  type?: string;
   revision?: string;
 };
 
@@ -239,7 +239,7 @@ export type Exec = {
 };
 
 export type ExecId = {
- execId: string;
+  execId: string;
 }
 
 export type ExecLog = {
@@ -571,7 +571,33 @@ export type ContainerInspectResult = {
 }
 
 export type ContainerPort = {
-   IP: string; PrivatePort: number; PublicPort: number; Type: string;
+  IP: string; PrivatePort: number; PublicPort: number; Type: string;
+}
+
+export type NetworkInfo = {
+  IPAMConfig?: any;
+  Links?: any;
+  Aliases?: any;
+  NetworkID: string;
+  EndpointID: string;
+  Gateway: string;
+  IPAddress: string;
+  IPPrefixLen: number;
+  IPv6Gateway: string;
+  GlobalIPv6Address: string;
+  GlobalIPv6PrefixLen: number;
+  MacAddress: string
+}
+
+export type Mounts = {
+  Name?: string | undefined;
+  Type: string;
+  Source: string;
+  Destination: string;
+  Driver?: string | undefined;
+  Mode: string;
+  RW: boolean;
+  Propagation: string
 }
 
 export type Container = {
@@ -581,10 +607,12 @@ export type Container = {
   customName?: string;
   watcher?: string;
   updateAvailable?: boolean;
-  status?:string;
+  status?: string;
   image?: Image;
   updateKind?: ContainerUpdate;
   result?: ContainerInspectResult;
+  networkSettings?: { [p: string]: NetworkInfo };
+  mounts?: Mounts[];
   ports?: ContainerPort[];
 }
 
@@ -691,7 +719,7 @@ export type Template = {
   ];
 };
 
-export type Targets = {targets: string[];}
+export type Targets = { targets: string[]; }
 
 export type ContainerNetwork = {
   _id?: any;
@@ -767,7 +795,7 @@ export type CreateNetworkConfig = {
   v6_range?: string;
   v4_excludedIps?: string[],
   v6_excludedIps?: string[],
-  labels?: [{name: string, value: string}]
+  labels?: [{ name: string, value: string }]
 }
 
 export type CreateNetwork = {

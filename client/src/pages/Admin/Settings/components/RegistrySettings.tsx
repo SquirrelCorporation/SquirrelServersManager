@@ -12,16 +12,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
-import {
-  Avatar,
-  Button,
-  Card,
-  message,
-  Popconfirm,
-  Tag,
-  Tooltip,
-  Typography,
-} from 'antd';
+import { Avatar, Button, Card, message, Popconfirm, Tag, Tooltip } from 'antd';
 import { AddCircleOutline, DeleteOutline } from 'antd-mobile-icons';
 import React, { useEffect, useState } from 'react';
 import { API } from 'ssm-shared-lib';
@@ -129,11 +120,7 @@ const RegistrySettings: React.FC = () => {
         grid={{ gutter: 16, xs: 1, sm: 2, md: 2, lg: 2, xl: 3, xxl: 3 }}
         onItem={(record) => {
           return {
-            onMouseEnter: () => {
-              console.log(record);
-            },
             onClick: () => {
-              console.log(record);
               if (record.canAuth) {
                 setSelectedRecord(record);
                 setModalOpened(true);

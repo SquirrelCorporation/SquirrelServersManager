@@ -141,9 +141,13 @@ const schema = new Schema<Container>(
     networkSettings: {
       type: Object,
     },
+    mounts: {
+      type: Object,
+    },
   },
   {
     versionKey: false,
+    timestamps: true,
   },
 );
 
