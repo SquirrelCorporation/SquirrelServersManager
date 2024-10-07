@@ -1,12 +1,15 @@
 import {
   ContainerImage,
+  Details,
   ElNetwork,
+  ExternalLink,
   Live24Filled,
   PortInput,
 } from '@/components/Icons/CustomIcons';
 import RegistryLogo from '@/components/RegistryComponents/RegistryLogo';
 import ContainerAvatar from '@/pages/Containers/components/containers/ContainerAvatar';
 import StatusTag from '@/pages/Containers/components/containers/StatusTag';
+import { postContainerAction } from '@/services/rest/containers';
 import {
   CloseCircleOutlined,
   InfoCircleOutlined,
@@ -16,19 +19,23 @@ import {
   SwapOutlined,
 } from '@ant-design/icons';
 import { ProDescriptions } from '@ant-design/pro-components';
+import { history } from '@umijs/max';
 import {
   Avatar,
+  Button,
   Col,
   Divider,
+  message,
   Modal,
   Row,
+  Space,
   Tag,
   Tooltip,
   Typography,
 } from 'antd';
 import moment from 'moment';
 import React from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, SsmContainer } from 'ssm-shared-lib';
 
 type ContainerDetailsModalProps = {
   selectedRecord?: API.Container;
@@ -44,15 +51,76 @@ const ContainerDetailsModal: React.FC<ContainerDetailsModalProps> = ({
   if (!selectedRecord) {
     return;
   }
+  const handleAction = async (action: SsmContainer.Actions) => {
+    await postContainerAction(selectedRecord?.id as string, action).then(() => {
+      message.info({
+        content: `Container : ${action}`,
+      });
+    });
+  };
+
   return (
     <Modal
       open={isOpen}
+      onOk={() => setOpenModal(false)}
       onCancel={() => setOpenModal(false)}
-      title={'Container Details'}
+      title={
+        <>
+          <Details /> Container Details
+        </>
+      }
       destroyOnClose
       width={800}
+      footer={(_, extra) => (
+        <>
+          <Button.Group style={{ marginRight: 15 }}>
+            <Button
+              icon={<Live24Filled />}
+              onClick={() => {
+                history.push({
+                  pathname: `/manage/containers/logs/${selectedRecord?.id}`,
+                });
+              }}
+            >
+              Live Logs
+            </Button>
+            <Button
+              icon={<StopOutlined />}
+              onClick={() => handleAction(SsmContainer.Actions.STOP)}
+            >
+              Stop
+            </Button>
+            <Button
+              icon={<PlayCircleFilled />}
+              onClick={() => handleAction(SsmContainer.Actions.START)}
+            >
+              Start
+            </Button>
+            <Button
+              icon={<SwapOutlined />}
+              onClick={() => handleAction(SsmContainer.Actions.RESTART)}
+            >
+              Restart
+            </Button>
+            <Button
+              icon={<PauseOutlined />}
+              onClick={() => handleAction(SsmContainer.Actions.PAUSE)}
+            >
+              Pause
+            </Button>
+            <Button
+              icon={<CloseCircleOutlined />}
+              onClick={() => handleAction(SsmContainer.Actions.KILL)}
+            >
+              Kill
+            </Button>
+          </Button.Group>
+          <extra.OkBtn />
+        </>
+      )}
     >
       <ProDescriptions<API.Container>
+        style={{ marginBottom: 30 }}
         column={2}
         // bordered
         request={async () => {
@@ -107,7 +175,6 @@ const ContainerDetailsModal: React.FC<ContainerDetailsModalProps> = ({
             ),
           },
           {
-            //title: 'Registry',
             key: 'registry',
             editable: false,
             span: 2,
@@ -123,7 +190,9 @@ const ContainerDetailsModal: React.FC<ContainerDetailsModalProps> = ({
                         backgroundColor: 'rgba(41,70,147,0.51)',
                       }}
                       src={
-                        <RegistryLogo provider={entity?.image?.registry.name} />
+                        <RegistryLogo
+                          provider={entity?.image?.registry.name as string}
+                        />
                       }
                     />
                   </Col>
@@ -166,10 +235,48 @@ const ContainerDetailsModal: React.FC<ContainerDetailsModalProps> = ({
             editable: false,
           },
           {
+            title: 'Update',
+            key: 'update',
+            editable: false,
+            span: 2,
+            render: (_, entity) => (
+              <>
+                {(entity.updateAvailable && (
+                  <Space size={'small'}>
+                    <Tag color="cyan">Update Available</Tag>
+                    <Typography.Text
+                      style={{ color: 'rgba(255, 255, 255, 0.45)' }}
+                    >
+                      Update Kind:
+                    </Typography.Text>
+                    <Tag>{entity.updateKind?.kind}</Tag>
+                    {entity.updateKind?.kind !== 'digest' && (
+                      <>
+                        <Typography.Text
+                          style={{ color: 'rgba(255, 255, 255, 0.45)' }}
+                        >
+                          Version:
+                        </Typography.Text>
+                        <Tag>{entity.updateKind?.localValue || 'Unknown'}</Tag>➔
+                        <Tag>{entity.updateKind?.remoteValue || 'Unknown'}</Tag>
+                        {entity.updateKind?.semverDiff ? (
+                          <Tag>{entity.updateKind?.semverDiff}</Tag>
+                        ) : (
+                          ''
+                        )}
+                      </>
+                    )}
+                  </Space>
+                )) ||
+                  'No'}
+              </>
+            ),
+          },
+          {
             key: 'ports-sep',
             span: 2,
             render: () => (
-              <Divider dashed style={{ marginTop: 0, marginBottom: 0 }}>
+              <Divider dashed style={{ marginTop: 5, marginBottom: 5 }}>
                 <PortInput style={{ marginRight: 4 }} />
                 <Typography.Text> Ports</Typography.Text>
               </Divider>
@@ -183,16 +290,21 @@ const ContainerDetailsModal: React.FC<ContainerDetailsModalProps> = ({
               entity?.ports
                 ?.filter((e) => e.IP === '0.0.0.0')
                 ?.map((e) => (
-                  <Tag key={`port-${e.PublicPort}-${e.PrivatePort}`}>
-                    {e.PublicPort}:{e.PrivatePort}
-                  </Tag>
+                  <a
+                    key={`port-${e.PublicPort}-${e.PrivatePort}`}
+                    href={`http://${entity?.device?.ip}:${e.PublicPort}`}
+                  >
+                    <Tag icon={<ExternalLink />}>
+                      {e.PublicPort}:{e.PrivatePort}
+                    </Tag>
+                  </a>
                 )) || 'None',
           },
           {
             key: 'networks-sep',
             span: 2,
             render: () => (
-              <Divider dashed style={{ marginTop: 0, marginBottom: 0 }}>
+              <Divider dashed style={{ marginTop: 5, marginBottom: 5 }}>
                 <ElNetwork style={{ marginRight: 4 }} />
                 <Typography.Text> Networks</Typography.Text>
               </Divider>
@@ -207,12 +319,13 @@ const ContainerDetailsModal: React.FC<ContainerDetailsModalProps> = ({
                 ? Object.keys(entity.networkSettings.Networks).map(
                     (e, index) => (
                       <>
-                        <Tag key={e}>{e}</Tag>
-                        IP:
+                        <Tag key={e}>{e}</Tag>(
                         {
-                          Object.values(entity.networkSettings.Networks)[index]
-                            ?.IPAddress
+                          Object.values(
+                            entity?.networkSettings?.Networks || [],
+                          )?.[index]?.IPAddress
                         }
+                        )
                       </>
                     ),
                   )
@@ -220,32 +333,7 @@ const ContainerDetailsModal: React.FC<ContainerDetailsModalProps> = ({
           },
         ]}
       />
-      <>
-        <a target="_blank" rel="noopener noreferrer" key="link">
-          <Live24Filled /> Live Logs
-        </a>
-        ,
-        <a target="_blank" rel="noopener noreferrer" key="warning">
-          <StopOutlined /> Stop
-        </a>
-        ,
-        <a target="_blank" rel="noopener noreferrer" key="view">
-          <PlayCircleFilled /> Start
-        </a>
-        ,
-        <a target="_blank" rel="noopener noreferrer" key="view">
-          <SwapOutlined /> Restart
-        </a>
-        ,
-        <a target="_blank" rel="noopener noreferrer" key="view">
-          <PauseOutlined /> Pause
-        </a>
-        ,
-        <a target="_blank" rel="noopener noreferrer" key="view">
-          <CloseCircleOutlined /> Kill
-        </a>
-        ,
-      </>
+      <Divider dashed />
     </Modal>
   );
 };

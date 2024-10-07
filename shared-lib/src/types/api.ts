@@ -614,6 +614,7 @@ export type Container = {
   networkSettings?: { [p: string]: NetworkInfo };
   mounts?: Mounts[];
   ports?: ContainerPort[];
+  updatedAt?: Date;
 }
 
 
