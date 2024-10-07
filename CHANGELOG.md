@@ -33,6 +33,7 @@
 - Bump eslint from 9.11.1 to 9.12.0 in /server [\#345](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/345) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump framer-motion from 11.10.0 to 11.11.1 in /client [\#344](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/344) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @eslint/js from 9.11.1 to 9.12.0 in /client [\#343](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/343) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint-plugin-react from 7.37.0 to 7.37.1 in /client [\#340](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/340) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Chore update express 5 [\#335](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/335) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Rename SSHType.Automatic to SSHType.PasswordLess [\#330](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/330) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Add Apps section and Vuetify support [\#329](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/329) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
