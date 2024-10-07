@@ -27,6 +27,12 @@
 
 **Merged pull requests:**
 
+- Bump @stylistic/eslint-plugin from 2.8.0 to 2.9.0 in /server [\#349](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/349) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @aws-sdk/client-ecr from 3.662.0 to 3.665.0 in /server [\#348](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/348) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @eslint/compat from 1.1.1 to 1.2.0 in /server [\#347](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/347) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint from 9.11.1 to 9.12.0 in /server [\#345](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/345) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump framer-motion from 11.10.0 to 11.11.1 in /client [\#344](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/344) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @eslint/js from 9.11.1 to 9.12.0 in /client [\#343](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/343) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Chore update express 5 [\#335](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/335) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Rename SSHType.Automatic to SSHType.PasswordLess [\#330](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/330) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Add Apps section and Vuetify support [\#329](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/329) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
