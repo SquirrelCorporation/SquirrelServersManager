@@ -13,7 +13,7 @@
   "version": "0.1.18",
   "author": "Squirrel Team",
   "dependencies": {
-    "@aws-sdk/client-ecr": "^3.662.0",
+    "@aws-sdk/client-ecr": "^3.665.0",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",
@@ -59,7 +59,7 @@
     "glob": "8.1.0"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.1.1",
+    "@eslint/compat": "^1.2.0",
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.11.1",
     "@types/bcrypt": "^5.0.2",
@@ -84,11 +84,11 @@
     "@types/multer": "^1.4.12",
     "@typescript-eslint/eslint-plugin": "^8.8.0",
     "@vitest/coverage-v8": "^2.1.2",
-    "eslint": "^9.11.1",
+    "eslint": "^9.12.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-import-x": "^4.3.1",
-    "@stylistic/eslint-plugin": "^2.8.0",
+    "@stylistic/eslint-plugin": "^2.9.0",
     "@typescript-eslint/parser": "^8.8.0",
     "globals": "^15.10.0",
     "mongodb-memory-server": "^10.0.1",
