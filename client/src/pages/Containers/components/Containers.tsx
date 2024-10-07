@@ -1,3 +1,4 @@
+import ContainerDetailsModal from '@/pages/Containers/components/containers/ContainerDetailsModal';
 import ContainerMetas from '@/pages/Containers/components/containers/ContainerMetas';
 import EditContainerNameModal from '@/pages/Containers/components/containers/EditContainerNameModal';
 import { getContainers, postRefreshAll } from '@/services/rest/containers';
@@ -22,6 +23,7 @@ const Containers: React.FC = () => {
   const [refreshAllIsLoading, setRefreshAllIsLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const searchDeviceUuid = searchParams.get('deviceUuid');
+  const [detailsModalOpened, setDetailsModalOpened] = useState(false);
 
   useEffect(() => {
     if (searchDeviceUuid) {
@@ -69,6 +71,11 @@ const Containers: React.FC = () => {
         selectedRecord={selectedRecord}
         actionRef={actionRef}
       />
+      <ContainerDetailsModal
+        setOpenModal={setDetailsModalOpened}
+        isOpen={detailsModalOpened}
+        selectedRecord={selectedRecord}
+      />
       <ProList<API.Container>
         size={'large'}
         ghost={false}
@@ -110,6 +117,7 @@ const Containers: React.FC = () => {
             },
             onClick: () => {
               setSelectedRecord(record);
+              setDetailsModalOpened(true);
             },
           };
         }}

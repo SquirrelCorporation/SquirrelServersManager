@@ -2424,3 +2424,22 @@ const ValidateSvg = React.memo((props) => (
 export const Validate = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={ValidateSvg} {...props} />
 );
+
+const DetailsSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 1025 1024"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M960.488 768h-448q-27 0-45.5-18.5t-18.5-45.5t18.5-45.5t45.5-18.5h448q27 0 45.5 18.5t18.5 45.5t-18.5 45.5t-45.5 18.5zm0-384h-448q-27 0-45.5-19t-18.5-45.5t18.5-45t45.5-18.5h448q27 0 45.5 18.5t18.5 45t-18.5 45.5t-45.5 19zm0-256h-448q-27 0-45.5-19t-18.5-45.5t18.5-45t45.5-18.5h448q27 0 45.5 18.5t18.5 45t-18.5 45.5t-45.5 19zm-640 896h-256q-27 0-45.5-18.5T.488 960V704q0-27 18.5-45.5t45.5-18.5h256q26 0 45 18.5t19 45.5v256q0 27-19 45.5t-45 18.5zm0-640h-256q-27 0-45.5-19t-18.5-45V64q0-27 18.5-45.5T64.488 0h256q26 0 45 18.5t19 45.5v256q0 26-19 45t-45 19zm192 512h448q27 0 45.5 18.5t18.5 45.5t-19 45.5t-45 18.5h-448q-27 0-45.5-18.5t-18.5-45.5t18.5-45.5t45.5-18.5z"
+    />
+  </svg>
+));
+
+export const Details = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={DetailsSvg} {...props} />
+);

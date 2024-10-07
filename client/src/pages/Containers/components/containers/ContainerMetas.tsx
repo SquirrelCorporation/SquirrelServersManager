@@ -119,6 +119,7 @@ const ContainerMetas = (props: ContainerMetasProps) => {
     },
     avatar: {
       search: false,
+      width: 50,
       render: (_, row) => {
         return <ContainerAvatar row={row} key={row.id} />;
       },
