@@ -1,0 +1,30 @@
+- name: Stop PM2 Agent if running
+  shell: . {{ node_agent_nvm_dir }}/nvm.sh && pm2 stop agent
+  ignore_errors: true
+  args:
+    chdir: "{{ node_agent_base_path }}"
+    executable: /bin/bash
+
+- name: Delete PM2 Agent if present
+  shell: . {{ node_agent_nvm_dir }}/nvm.sh && pm2 delete agent
+  ignore_errors: true
+  args:
+    chdir: "{{ node_agent_base_path }}"
+    executable: /bin/bash
+
+- name: Recursively remove Squirrel Servers Manager directory
+  ansible.builtin.file:
+    path: "{{ node_agent_base_path }}"
+    state: absent
+  timeout: 600
+
+- name: Delete the log directory
+  ansible.builtin.file:
+    path: "{{ agent_log_path }}"
+    state: absent
+  ignore_errors: true
+  when: agent_log_path is defined and agent_log_path | regex_search('/logs')
+
+- name: Task completion summary
+  debug:
+    msg: "Agent uninstallation completed on {{ inventory_hostname }}"

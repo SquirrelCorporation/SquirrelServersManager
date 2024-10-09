@@ -222,6 +222,8 @@ export type DeviceItem = {
   mem?: number;
   versions?: VersionData;
   raspberry?: RaspberryRevisionData;
+  agentType?: string;
+  agentVersion?: string;
   updatedAt?: string;
   createdAt?: string;
 };

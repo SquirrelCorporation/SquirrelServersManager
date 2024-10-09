@@ -13,7 +13,6 @@
   loop:
     - "{{ base_path }}/ssm-agent"
     - "{{ base_path }}/agent.blob"
-    - "{{ base_path }}/build"
     - "{{ base_path }}/hostid.txt"
 
 - name: Write Node Url in .env file

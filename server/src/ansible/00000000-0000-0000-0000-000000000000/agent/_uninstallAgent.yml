@@ -1,37 +1,34 @@
+---
+#  ,;;:;,
+#   ;;;;;
+#  ,:;;:;    ,'=.
+#  ;:;:;' .=" ,'_\
+#  ':;:;,/  ,__:=@
+#   ';;:;  =./)_
+#     `"=\_  )_"`
+#          ``'"`
+# Playbook Name: Uninstall Agent on Targeted Device
+# Description: This playbook uninstall the agent on the targeted device based on the specified installation method.
+# Module: SSM-CORE
+# Tags: logs, agent, docker, node
+
 - name: Uninstall agent on targeted device
   hosts: all
   become: true
   gather_facts: false
-  vars:
-    shell_script: undef
-    agent_log_path: "{{ _ssm_agentLogPath | default(omit) }}"
 
   tasks:
-    - name: Manage PM2 Agent
-      block:
-        - name: Stop PM2 Agent if running
-          command: pm2 stop agent
-          ignore_errors: true
+    - name: Validate installMethod variable
+      fail:
+        msg: "Invalid _ssm_installMethod value. Must be one of: 'node', 'node_enhanced_playbook', 'docker'."
+      when: _ssm_installMethod not in valid_install_methods
 
-        - name: Delete PM2 Agent if present
-          command: pm2 delete agent
-          ignore_errors: true
+    - name: Include role for node uninstall
+      include_role:
+        name: uninstall_agent_node
+      when: _ssm_installMethod == 'node' or _ssm_installMethod == 'node_enhanced_playbook'
 
-    - name: Remove Agent Directory
-      block:
-        - name: Recursively remove Squirrel Servers Manager directory
-          ansible.builtin.file:
-            path: /opt/squirrelserversmanager
-            state: absent
-          timeout: 600
-
-        - name: Delete the log directory
-          ansible.builtin.file:
-            path: "{{ agent_log_path }}"
-            state: absent
-          ignore_errors: true
-          when: agent_log_path is defined and agent_log_path | regex_search('/logs')
-
-    - name: Task completion summary
-      debug:
-        msg: "Agent uninstallation completed on {{ inventory_hostname }}"
+    - name: Include role for docker uninstall
+      include_role:
+        name: uninstall_agent_docker
+      when: _ssm_installMethod == 'docker'

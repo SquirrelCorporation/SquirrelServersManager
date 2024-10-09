@@ -1,5 +1,5 @@
 import { body, param } from 'express-validator';
-import { SsmAnsible } from 'ssm-shared-lib';
+import { SsmAgent, SsmAnsible } from 'ssm-shared-lib';
 import validator from '../../../middlewares/Validator';
 
 export const addDeviceValidator = [
@@ -40,6 +40,9 @@ export const addDeviceValidator = [
     .exists()
     .notEmpty()
     .isString(),
+  body('installMethod')
+    .isIn(Object.values(SsmAgent.InstallMethods))
+    .withMessage('installMethod is not in enum value InstallMethods'),
   validator,
 ];
 
@@ -50,6 +53,14 @@ export const addDeviceAutoValidator = [
     .withMessage('Ip is required in body')
     .isIP()
     .withMessage('IP is invalid'),
+  validator,
+];
+
+export const updateAgentInstallMethodValidator = [
+  param('uuid').exists().notEmpty().isUUID(),
+  body('installMethod')
+    .isIn(Object.values(SsmAgent.InstallMethods))
+    .withMessage('installMethod is not in enum value InstallMethods'),
   validator,
 ];
 

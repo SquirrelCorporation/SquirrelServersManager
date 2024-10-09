@@ -132,6 +132,12 @@ const failurePatterns: FailurePattern[] = [
       '2. Verify the command is valid within the container’s environment.\n' +
       '3. Check the container logs for additional error details: `docker logs <container_id>`',
   },
+  {
+    id: 'docker_container_config',
+    pattern: /ContainerConfig/i,
+    cause: 'Docker container configuration is invalid due to various possible issues.',
+    resolution: 'Check the docker container configuration.',
+  },
 ];
 
 class SmartFailure {
@@ -166,6 +172,7 @@ class SmartFailure {
             const existingEntry = smartFailures.find((failure) => failure.id === id);
 
             if (!existingEntry) {
+              logger.debug(`Adding SmartFailure entry : ${id}`);
               smartFailures.push({
                 id,
                 message: trimmedLine,
@@ -177,8 +184,7 @@ class SmartFailure {
         });
       });
     });
-
-    return smartFailures?.length > 1 ? smartFailures[0] : undefined;
+    return smartFailures?.length > 0 ? smartFailures[0] : undefined;
   }
 }
 

@@ -1,4 +1,0 @@
-- name: Ensure Docker Compose is installed
-  pip:
-    name: docker-compose
-    state: present

@@ -1,0 +1,12 @@
+- name: Stop Agent
+  include_role:
+    name: stop_agent_docker
+
+- name: Remove volume
+  include_role:
+    name: remove_agent_docker_volume
+
+- name: Recursively remove Squirrel Servers Manager directory
+  ansible.builtin.file:
+    path: "{{ docker_agent_docker_compose_dir }}"
+    state: absent

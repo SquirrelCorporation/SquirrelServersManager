@@ -1,0 +1,9 @@
+- name: Check if Docker volume exists
+  command: docker volume inspect ssm-agent-data
+  register: volume_check
+  ignore_errors: yes
+
+- name: Remove existing Docker volume if it exists
+  command: docker volume rm {{ docker_agent_docker_volume }}
+  when: volume_check.rc == 0
+  ignore_errors: yes

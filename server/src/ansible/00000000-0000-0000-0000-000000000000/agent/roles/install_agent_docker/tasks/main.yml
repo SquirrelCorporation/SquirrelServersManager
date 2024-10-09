@@ -1,10 +1,19 @@
----
-- name: Define variables
-  vars:
-    docker_compose_dir: /opt/ssm-agent
+- name: Setup agent files
+  include_role:
+    name: install_agent_docker_conf
 
-- include_tasks: install_docker.yml
-- include_tasks: install_docker_compose.yml
-- include_tasks: create_directories.yml
-- include_tasks: copy_files.yml
-- include_tasks: start_services.yml
+- name: Docker installation if needed
+  include_role:
+    name: install_docker
+
+- name: Setup Docker configuration file
+  include_role:
+    name: install_agent_docker_conf
+
+- name: Remove Docker volume if present
+  include_role:
+    name: remove_agent_docker_volume
+
+- name: Start Docker agent service
+  include_role:
+    name: start_agent_docker

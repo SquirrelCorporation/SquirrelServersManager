@@ -1,4 +1,19 @@
-- hosts: all
+---
+#  ,;;:;,
+#   ;;;;;
+#  ,:;;:;    ,'=.
+#  ;:;:;' .=" ,'_\
+#  ':;:;,/  ,__:=@
+#   ';;:;  =./)_
+#     `"=\_  )_"`
+#          ``'"`
+# Playbook Name: Check Device connectivity before adding
+# Description: This playbook checks that the device is reachable, and can communicate with SSM API.
+# Module: SSM-CORE
+# Tags: installation, agent, ping, connectivity
+
+- name: Check Device connectivity before adding
+  hosts: all
   tasks:
     - name: Test Connection
       ping:

@@ -1,186 +1,39 @@
+---
+#  ,;;:;,
+#   ;;;;;
+#  ,:;;:;    ,'=.
+#  ;:;:;' .=" ,'_\
+#  ':;:;,/  ,__:=@
+#   ';;:;  =./)_
+#     `"=\_  )_"`
+#          ``'"`
+# Playbook Name: Reinstall Agent on Targeted Device
+# Description: This playbook reinstall the agent on the targeted device based on the specified installation method.
+# Module: SSM-CORE
+# Tags: installation, agent, docker, node
+
 - name: Reinstall agent on targeted device
   hosts: all
   become: true
   gather_facts: false
-  vars:
-    base_path: /opt/squirrelserversmanager
-    nvm_dir: "/root/.nvm"
-
   tasks:
-    - name: Install agent on targeted device
-      ansible.builtin.debug:
-        msg: Host ID {{ _ssm_deviceId }} with API URL {{ _ssm_masterNodeUrl }}
 
-    - name: Check if NodeJS is installed
-      command: which node
-      register: node_check
-      ignore_errors: true
-      changed_when: false
+    - name: Validate installMethod variable
+      fail:
+        msg: "Invalid _ssm_installMethod value. Must be one of: 'node', 'node_enhanced_playbook', 'docker'."
+      when: _ssm_installMethod not in valid_install_methods
 
-    - name: Check if npm is installed
-      command: which npm
-      register: npm_check
-      ignore_errors: true
-      changed_when: false
+    - name: Include role for node installation
+      include_role:
+        name: install_agent_node
+      when: _ssm_installMethod == 'node'
 
-    - name: Install Node.js and npm using NVM
-      shell: >-
-        wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-        && export NVM_DIR="{{ nvm_dir }}"
-        && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-        && nvm install --lts
-        && nvm use --lts
-      args:
-        creates: "{{ nvm_dir }}/nvm.sh"
-      when: node_check.rc != 0 or npm_check.rc != 0
+    - name: Include role for node enhanced playbook installation
+      include_role:
+        name: install_agent_node_v2
+      when: _ssm_installMethod == 'node_enhanced_playbook'
 
-    - name: Add NVM to .bashrc
-      lineinfile:
-        path: "/root/.bashrc"
-        line: "{{ item }}"
-      loop:
-        - 'export NVM_DIR="{{ nvm_dir }}"'
-        - '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
-        - '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'
-      when: node_check.rc != 0 or npm_check.rc != 0
-
-    - name: Reload .bashrc
-      shell: source /root/.bashrc
-      args:
-        executable: /bin/bash
-      when: node_check.rc != 0 or npm_check.rc != 0
-
-    - name: Verify Node.js installation
-      shell: . {{ nvm_dir }}/nvm.sh && node --version
-      register: node_version
-      changed_when: false
-      args:
-        executable: /bin/bash
-
-    - name: Verify npm installation
-      shell: . {{ nvm_dir }}/nvm.sh && npm --version
-      register: npm_version
-      changed_when: false
-      args:
-        executable: /bin/bash
-
-    - name: Display Node.js and npm versions
-      debug:
-        msg:
-          - "Node.js version: {{ node_version.stdout }}"
-          - "npm version: {{ npm_version.stdout }}"
-
-    - name: Check if PM2 is installed
-      shell: . {{ nvm_dir }}/nvm.sh && npm list -g pm2
-      register: pm2_check
-      ignore_errors: true
-      changed_when: false
-      args:
-        executable: /bin/bash
-
-    - name: Install "PM2" node.js package globally
-      shell: . {{ nvm_dir }}/nvm.sh && npm install -g pm2
-      args:
-        executable: /bin/bash
-      when: pm2_check.rc != 0
-
-    - name: Install PM2 LogRotate
-      shell: . {{ nvm_dir }}/nvm.sh && pm2 install pm2-logrotate
-      args:
-        executable: /bin/bash
-
-    - name: Check if Git is installed
-      command: which git
-      register: git_check
-      ignore_errors: true
-      changed_when: false
-
-    - name: Install Git
-      package:
-        name: git
-        state: present
-      when: git_check.rc != 0
-
-    - name: Check out agent
-      ansible.builtin.git:
-        force: true
-        repo: 'https://github.com/SquirrelCorporation/SquirrelServersManager-Agent.git'
-        dest: "{{ base_path }}"
-      register: git_checkout
-      timeout: 600
-
-    - name: Stop PM2 Agent if running
-      shell: . {{ nvm_dir }}/nvm.sh && pm2 stop agent
-      ignore_errors: true
-      args:
-        executable: /bin/bash
-
-    - name: Delete PM2 Agent if present
-      shell: . {{ nvm_dir }}/nvm.sh && pm2 delete agent
-      ignore_errors: true
-      args:
-        executable: /bin/bash
-
-    - name: Clean directory
-      file:
-        path: "{{ item }}"
-        state: absent
-      loop:
-        - "{{ base_path }}/ssm-agent"
-        - "{{ base_path }}/agent.blob"
-        - "{{ base_path }}/build"
-        - "{{ base_path }}/hostid.txt"
-
-    - name: Write Node Url in .env file
-      copy:
-        content: "API_URL_MASTER={{ _ssm_masterNodeUrl }}"
-        dest: "{{ base_path }}/.env"
-
-    - name: Write HostId in hostid.txt file
-      copy:
-        content: "{{ _ssm_deviceId }}"
-        dest: "{{ base_path }}/hostid.txt"
-
-    - name: NPM install
-      shell: . {{ nvm_dir }}/nvm.sh && npm install
-      args:
-        chdir: "{{ base_path }}"
-        executable: /bin/bash
-      register: npm_install
-      failed_when: npm_install.rc != 0
-
-    - name: NPM run build
-      shell: . {{ nvm_dir }}/nvm.sh && npm run build
-      args:
-        chdir: "{{ base_path }}"
-        executable: /bin/bash
-      register: npm_build
-      failed_when: npm_build.rc != 0
-
-    - name: Start PM2 Agent
-      shell: . {{ nvm_dir }}/nvm.sh && pm2 start -f "./build/agent.js"
-      args:
-        chdir: "{{ base_path }}"
-        executable: /bin/bash
-      register: pm2_start
-      failed_when: pm2_start.rc != 0
-
-    - name: Install PM2 on startup
-      shell: . {{ nvm_dir }}/nvm.sh && pm2 startup
-      args:
-        executable: /bin/bash
-
-    - name: Save Agent on startup
-      shell: . {{ nvm_dir }}/nvm.sh && pm2 save
-      args:
-        executable: /bin/bash
-
-    - name: Update PM2
-      shell: . {{ nvm_dir }}/nvm.sh && pm2 update
-      args:
-        executable: /bin/bash
-
-    - name: Report execution status
-      debug:
-        msg: "Agent installation completed successfully"
-      when: git_checkout.changed and npm_install.rc == 0 and npm_build.rc == 0 and pm2_start.rc == 0
+    - name: Include role for docker installation
+      include_role:
+        name: install_agent_docker
+      when: _ssm_installMethod == 'docker'

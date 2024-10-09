@@ -1,12 +1,12 @@
 - name: Install Node.js and npm using NVM
   shell: >-
     wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-    && export NVM_DIR="{{ nvm_dir }}"
+    && export NVM_DIR="{{ node_agent_nvm_dir }}"
     && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     && nvm install --lts
     && nvm use --lts
   args:
-    creates: "{{ nvm_dir }}/nvm.sh"
+    creates: "{{ node_agent_nvm_dir }}/nvm.sh"
   when: node_check.rc != 0 or npm_check.rc != 0
 
 - name: Add NVM to .bashrc
@@ -14,7 +14,7 @@
     path: "/root/.bashrc"
     line: "{{ item }}"
   loop:
-    - 'export NVM_DIR="{{ nvm_dir }}"'
+    - 'export NVM_DIR="{{ node_agent_nvm_dir }}"'
     - '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
     - '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'
   when: node_check.rc != 0 or npm_check.rc != 0
@@ -26,14 +26,14 @@
   when: node_check.rc != 0 or npm_check.rc != 0
 
 - name: Verify Node.js installation
-  shell: . {{ nvm_dir }}/nvm.sh && node --version
+  shell: . {{ node_agent_nvm_dir }}/nvm.sh && node --version
   register: node_version
   changed_when: false
   args:
     executable: /bin/bash
 
 - name: Verify npm installation
-  shell: . {{ nvm_dir }}/nvm.sh && npm --version
+  shell: . {{ node_agent_nvm_dir }}/nvm.sh && npm --version
   register: npm_version
   changed_when: false
   args:

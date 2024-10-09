@@ -1,4 +1,4 @@
-import { API, SsmAnsible } from 'ssm-shared-lib';
+import { API, SsmAgent, SsmAnsible } from 'ssm-shared-lib';
 import { getFromCache } from '../../../data/cache';
 import DeviceRepo from '../../../data/database/repository/DeviceRepo';
 import pinoLogger from '../../../logger';
@@ -83,6 +83,8 @@ class ExtraVars {
         return device.ip;
       case SsmAnsible.DefaultContextExtraVarsList.AGENT_LOG_PATH:
         return device.agentLogPath;
+      case SsmAnsible.DefaultContextExtraVarsList.AGENT_TYPE:
+        return device.agentType || SsmAgent.InstallMethods.NODE;
     }
     this.logger.error(`Context variable not found: '${extraVar.extraVar}'`);
   }

@@ -28,6 +28,7 @@ export const addDevice = async (req, res) => {
     becomeMethod,
     becomePass,
     sshKeyPass,
+    installMethod,
   } = req.body;
   if (masterNodeUrl) {
     await setToCache(SsmAnsible.DefaultSharedExtraVarsList.MASTER_NODE_URL, masterNodeUrl);
@@ -39,6 +40,7 @@ export const addDevice = async (req, res) => {
       status: isUnManagedDevice
         ? SsmStatus.DeviceStatus.UNMANAGED
         : SsmStatus.DeviceStatus.REGISTERING,
+      agentType: installMethod,
     } as Device);
     await DeviceAuthRepo.updateOrCreateIfNotExist({
       device: createdDevice,
@@ -161,4 +163,15 @@ export const getAllDevices = async (req, res) => {
   }
 
   new SuccessResponse('Get Devices successful', devices).send(res);
+};
+
+export const updateAgentInstallMethod = async (req, res) => {
+  const { installMethod } = req.body;
+  const device = await DeviceRepo.findOneByUuid(req.params.uuid);
+
+  if (!device) {
+    throw new NotFoundError(`Device not found (${req.params.uuid})`);
+  }
+  const updateDevice = await DeviceRepo.update({ ...device, agentType: installMethod });
+  new SuccessResponse('Update agent install method successful', updateDevice).send(res);
 };

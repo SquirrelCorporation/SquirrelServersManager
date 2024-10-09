@@ -4,6 +4,7 @@ import {
   getCheckDeviceAnsibleConnection,
   getCheckDeviceDockerConnection,
 } from '@/services/rest/device';
+import { ProForm } from '@ant-design/pro-components';
 import { Avatar, Button, Card, Col, Row } from 'antd';
 import React, { useState } from 'react';
 import { API } from 'ssm-shared-lib';

@@ -1,3 +1,17 @@
+---
+#  ,;;:;,
+#   ;;;;;
+#  ,:;;:;    ,'=.
+#  ;:;:;' .=" ,'_\
+#  ':;:;,/  ,__:=@
+#   ';;:;  =./)_
+#     `"=\_  )_"`
+#          ``'"`
+# Playbook Name: Read logs from a specified path
+# Description: This playbook prints the logs of an agent.
+# Module: SSM-CORE
+# Tags: logs, agent, docker, node
+
 - name: Optionally read logs from a specified path
   hosts: all
   become: true

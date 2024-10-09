@@ -122,7 +122,7 @@ const Inventory: React.FC = () => {
       target: [target],
       isOpen: true,
       quickRef: 'installAgent',
-      extraVars: [{ extraVar: 'installMethod', value: installMethod }],
+      extraVars: [{ extraVar: '_ssm_installMethod', value: installMethod }],
     });
   };
 

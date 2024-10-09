@@ -1,11 +1,8 @@
+import AgentInstallMethod from '@/components/DeviceConfiguration/AgentInstallMethod';
 import { DownloadOutlined } from '@ant-design/icons';
 import React, { useRef, useState } from 'react';
 import { Button, Col, Modal, Row, message } from 'antd';
-import {
-  ProFormInstance,
-  ProFormRadio,
-  StepsForm,
-} from '@ant-design/pro-components';
+import { ProFormInstance, StepsForm } from '@ant-design/pro-components';
 import { motion } from 'framer-motion';
 import {
   GrommetIconsInstall,
@@ -83,6 +80,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
         },
         false,
         values.controlNodeURL,
+        values.installMethod,
       );
       formRef.current?.resetFields();
       props.setIsModalOpen(false);
@@ -177,7 +175,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
               </motion.div>
             )}
             submitter={{
-              render: ({ form, step, onPre }) => [
+              render: ({ form, onSubmit, step, onPre }) => [
                 step > 0 && (
                   <Button
                     key="pre"
@@ -199,7 +197,10 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                   key="next"
                   loading={loading}
                   type="primary"
-                  onClick={() => handleStepChange(step, form)}
+                  onClick={() => {
+                    handleStepChange(step, form);
+                    onSubmit?.();
+                  }}
                   icon={step < 4 ? undefined : <DownloadOutlined />}
                 >
                   {step < 4 ? 'Next' : 'Confirm & Install Agent'}
@@ -268,28 +269,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
               <StepFormCard
                 title="Install Method"
                 icon={<GrommetIconsInstall />}
-                content={
-                  <ProFormRadio.Group
-                    layout={'vertical'}
-                    initialValue={'node'}
-                    options={[
-                      {
-                        label: 'NodeJS Agent - Default (Recommended)',
-                        value: SsmAgent.InstallMethods.NODE,
-                      },
-                      {
-                        label:
-                          'NodeJS Agent - Enhanced Playbook (Experimental)',
-                        value: SsmAgent.InstallMethods.NODE_ENHANCED_PLAYBOOK,
-                      },
-                      {
-                        label: 'Dockerized Agent (Experimental)',
-                        value: SsmAgent.InstallMethods.DOCKER,
-                      },
-                    ]}
-                    name={'installMethod'}
-                  />
-                }
+                content={<AgentInstallMethod />}
               />
             </StepsForm.StepForm>
             <StepsForm.StepForm name="confirm" title="Confirm">

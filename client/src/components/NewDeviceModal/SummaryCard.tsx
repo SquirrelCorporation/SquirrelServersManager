@@ -43,7 +43,8 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
           <Col flex="auto">
             <Input
               value={
-                e.toLowerCase().indexOf('password') !== -1
+                e.toLowerCase().indexOf('pass') !== -1 ||
+                e.toLowerCase().indexOf('pwd') !== -1
                   ? '••••••'
                   : sshConnection[e]
               }

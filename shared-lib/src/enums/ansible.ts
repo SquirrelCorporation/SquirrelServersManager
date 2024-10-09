@@ -8,6 +8,7 @@ export enum DefaultContextExtraVarsList {
   DEVICE_ID = '_ssm_deviceId',
   DEVICE_IP = '_ssm_deviceIP',
   AGENT_LOG_PATH = '_ssm_agentLogPath',
+  AGENT_TYPE = '_ssm_installMethod'
 }
 
 export enum DefaultSharedExtraVarsList {

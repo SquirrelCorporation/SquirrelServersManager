@@ -1,4 +1,4 @@
 - name: Create Docker Compose directory
   file:
-    path: "{{ docker_compose_dir }}"
+    path: "{{ docker_agent_docker_compose_dir }}"
     state: directory
