@@ -82,6 +82,7 @@ async function updateDeviceFromJson(deviceInfo: API.DeviceInfo, device: Device) 
   }
   device.raspberry = deviceInfo.system?.raspberry;
   device.agentLogPath = deviceInfo.logPath;
+  device.agentType = deviceInfo.agentType;
   await DeviceRepo.update(device);
   return device;
 }

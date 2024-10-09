@@ -1,0 +1,12 @@
+- name: Check if PM2 is installed
+  shell:  "{{ mg_user_shell.command + ' \"npm list -g pm2\"' }}"
+  register: pm2_check
+  ignore_errors: true
+  changed_when: false
+
+- name: Install "PM2" node.js package globally
+  shell: "{{ mg_user_shell.command + ' \"npm install -g pm2\"' }}"
+  when: pm2_check.rc != 0
+
+- name: Install PM2 LogRotate
+  shell: "{{ mg_user_shell.command + ' \" pm2 install pm2-logrotate\"' }}"

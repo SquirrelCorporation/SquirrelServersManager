@@ -1,7 +1,7 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from '@umijs/max';
-import { API } from 'ssm-shared-lib';
+import { API, SsmAgent } from 'ssm-shared-lib';
 
 export async function getDevices(
   params?: API.PageParams,

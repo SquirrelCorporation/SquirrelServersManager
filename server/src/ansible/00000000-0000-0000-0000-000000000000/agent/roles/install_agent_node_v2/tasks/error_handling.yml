@@ -1,0 +1,9 @@
+- name: test to ensure symbiotic variables are declared | nvm_dir AND nvm_profile
+  ansible.builtin.fail:
+    msg: "If setting a custom nvm_dir directory e.g. /opt/nvm, nvm_dir MUST be used in combination with nvm_profile"
+  when: nvm_dir and nvm_profile == '.bashrc' and nvm_install != 'git'
+
+- name: test to ensure symbiotic variables are declared | nvm_dir AND nvm_install = git
+  ansible.builtin.fail:
+    msg: "If installing via GIT nvm_install: git MUST be used in combination with nvm_dir and include the full path e.g. nvm_dir: '$HOME/.nvm'"
+  when: not nvm_dir and nvm_install == 'git'

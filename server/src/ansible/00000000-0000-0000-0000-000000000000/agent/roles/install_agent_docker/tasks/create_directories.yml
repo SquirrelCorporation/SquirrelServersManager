@@ -1,0 +1,4 @@
+- name: Create Docker Compose directory
+  file:
+    path: "{{ docker_compose_dir }}"
+    state: directory

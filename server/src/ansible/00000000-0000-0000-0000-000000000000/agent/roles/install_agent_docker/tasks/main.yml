@@ -1,0 +1,10 @@
+---
+- name: Define variables
+  vars:
+    docker_compose_dir: /opt/ssm-agent
+
+- include_tasks: install_docker.yml
+- include_tasks: install_docker_compose.yml
+- include_tasks: create_directories.yml
+- include_tasks: copy_files.yml
+- include_tasks: start_services.yml

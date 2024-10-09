@@ -1,0 +1,19 @@
+- name: Check if Git is installed
+  command: which git
+  register: git_check
+  ignore_errors: true
+  changed_when: false
+
+- name: Install Git
+  package:
+    name: git
+    state: present
+  when: git_check.rc != 0
+
+- name: Check out agent
+  ansible.builtin.git:
+    force: true
+    repo: 'https://github.com/SquirrelCorporation/SquirrelServersManager-Agent.git'
+    dest: "{{ base_path }}"
+  register: git_checkout
+  timeout: 600

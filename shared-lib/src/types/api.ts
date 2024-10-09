@@ -524,6 +524,7 @@ export type DeviceInfo = {
   cpu?: CPUInfo;
   agentVersion?: string;
   logPath?: string;
+  agentType?: 'node' | 'docker';
 };
 
 export type ExtraVar = {

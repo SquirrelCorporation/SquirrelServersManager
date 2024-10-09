@@ -1,0 +1,4 @@
+- name: Report execution status
+  debug:
+    msg: "Agent installation completed successfully"
+  when: git_checkout.changed and npm_install.rc == 0 and npm_build.rc == 0 and pm2_start.rc == 0

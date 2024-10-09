@@ -1,0 +1,11 @@
+- name: Copy Docker Compose file
+  copy:
+    src: docker-compose.yml
+    dest: "{{ docker_compose_dir }}/docker-compose.yml"
+
+- name: Create .env file for Docker Compose
+  copy:
+    content: |
+      API_URL_MASTER={{ api_url_master }}
+      HOST_ID={{ host_id }}
+    dest: "{{ docker_compose_dir }}/.env"

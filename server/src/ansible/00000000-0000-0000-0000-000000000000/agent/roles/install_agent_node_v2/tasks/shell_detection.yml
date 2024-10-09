@@ -1,0 +1,67 @@
+- name: Determine shell in which we are running
+  block:
+    - name: set default found path
+      ansible.builtin.set_fact:
+        mg_found_path: ''
+
+    - name: test for shells
+      ansible.builtin.command: "which {{ item }}"
+      loop:
+        - bash
+        - dash
+        - zsh
+        - csh
+        - tcsh
+      register: mg_shell_path
+      when: item in nvm_profile
+      changed_when: "mg_shell_path.rc != 0"
+
+- name: set found path
+  ansible.builtin.set_fact:
+    mg_found_path: "{{ mg_shell_path.results | selectattr('stdout', 'defined') | map(attribute = 'stdout') | list | first }}"
+  when: mg_shell_path.results | selectattr('stdout', 'defined') | map(attribute = 'stdout') | list | length > 0
+
+- name: set bash command
+  ansible.builtin.set_fact:
+    mg_user_shell: { 'command': '{{ mg_found_path }} -ic', 'alias': 'bash' }
+  when: '"bash" in nvm_profile'
+
+- name: set dash command
+  ansible.builtin.set_fact:
+    mg_user_shell: { 'command': '{{ mg_found_path }} -ic', 'alias': 'dash' }
+  when: '"dash" in nvm_profile'
+
+- name: set zsh command
+  ansible.builtin.set_fact:
+    mg_user_shell: { 'command': '{{ mg_found_path }} -ic', 'alias': 'zsh' }
+  when: '"zsh" in nvm_profile'
+
+- name: set csh command
+  ansible.builtin.set_fact:
+    mg_user_shell: { 'command': '{{ mg_found_path }} -ic', 'alias': 'csh' }
+  when: "'csh' in nvm_profile and 'tcsh' not in nvm_profile"
+
+- name: set tcsh command
+  ansible.builtin.set_fact:
+    mg_user_shell: { 'command': '{{ mg_found_path }} -ic', 'alias': 'tcsh' }
+  when: "'tcsh' in nvm_profile"
+
+- name: "!WARNING! set unrecommended default for any other nvm_profile value !WARNING!"
+  ansible.builtin.set_fact:
+    mg_user_shell: { 'command': '/etc/bash -ic', 'alias': 'bash' }
+  when: (mg_shell_path is undefined) or (mg_found_path | length == 0)
+
+- name: does profile file exist
+  ansible.builtin.stat:
+    path: "{{ nvm_profile }}"
+  register: mg_profile_file
+
+- name: Create profile file if it does not exist
+  ansible.builtin.file:
+    group: "{{ ansible_become_user | default(ansible_user) }}"
+    owner: "{{ ansible_become_user | default(ansible_user) }}"
+    mode: 0777
+    path: "{{ nvm_profile }}"
+    state: touch
+  when: not mg_profile_file.stat.exists
+  become: true

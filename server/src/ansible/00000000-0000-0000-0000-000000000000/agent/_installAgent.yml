@@ -2,5 +2,23 @@
   hosts: all
   become: true
   gather_facts: false
-  roles:
-    - install_agent
+  tasks:
+    - name: Validate installMethod variable
+      fail:
+        msg: "Invalid installMethod value. Must be one of: 'node', 'node_enhanced_playbook', 'docker'."
+      when: installMethod not in ['node', 'node_enhanced_playbook', 'docker']
+
+    - name: Include role for node installation
+      include_role:
+        name: install_agent_node
+      when: _ssm_installMethod == 'node'
+
+    - name: Include role for node enhanced playbook installation
+      include_role:
+        name: install_agent_node_v2
+      when: _ssm_installMethod == 'install_agent_node_enhanced'
+
+    - name: Include role for docker installation
+      include_role:
+        name: install_agent_docker
+      when: _ssm_installMethod == 'docker'

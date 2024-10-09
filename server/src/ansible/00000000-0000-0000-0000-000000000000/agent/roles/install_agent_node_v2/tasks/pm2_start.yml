@@ -1,0 +1,43 @@
+- name: Stop PM2 Agent if running
+  shell: "{{ mg_user_shell.command + ' \" pm2 stop agent\"' }}"
+  ignore_errors: true
+
+- name: Delete PM2 Agent if present
+  shell: "{{ mg_user_shell.command + ' \" pm2 delete agent\"' }}"
+  ignore_errors: true
+
+- name: Clean directory
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ base_path }}/ssm-agent"
+    - "{{ base_path }}/agent.blob"
+    - "{{ base_path }}/build"
+    - "{{ base_path }}/hostid.txt"
+
+- name: Write Node Url in .env file
+  copy:
+    content: "API_URL_MASTER={{ _ssm_masterNodeUrl }}"
+    dest: "{{ base_path }}/.env"
+
+- name: Write HostId in hostid.txt file
+  copy:
+    content: "{{ _ssm_deviceId }}"
+    dest: "{{ base_path }}/hostid.txt"
+
+- name: Start PM2 Agent
+  shell: "{{ mg_user_shell.command + ' \"  pm2 start -f ./build/agent.js \"' }}"
+  args:
+    chdir: "{{ base_path }}"
+  register: pm2_start
+  failed_when: pm2_start.rc != 0
+
+- name: Install PM2 on startup
+  shell: "{{ mg_user_shell.command + ' \" pm2 startup\"' }}"
+
+- name: Save Agent on startup
+  shell: "{{ mg_user_shell.command + ' \"pm2 save\"' }}"
+
+- name: Update PM2
+  shell: "{{ mg_user_shell.command + ' \"pm2 update\"' }}"
