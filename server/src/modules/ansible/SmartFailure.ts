@@ -43,6 +43,20 @@ const failurePatterns: FailurePattern[] = [
     resolution: 'Increase the timeout setting or check network stability.',
   },
   {
+    id: 'curl_option',
+    pattern: /curl: option/i,
+    cause: 'Invalid or incorrect curl options used in the playbook.',
+    resolution:
+      'Check the curl options and correct any errors. Beware of using ansible "command" instead of "shell" for curl commands.',
+  },
+  {
+    id: 'signed_by_conflict',
+    pattern: /Conflicting values set for option Signed-By regarding/i,
+    cause: 'Conflicting values set for option Signed-By regarding repository',
+    resolution:
+      'Remove conflicting values set for option Signed-By regarding repository (e.g: Debian: /etc/apt/sources.list.d/)',
+  },
+  {
     id: 'disk_space',
     pattern: /disk space/i,
     cause: 'Insufficient disk space on the host.',

@@ -3,7 +3,7 @@ import {
   DeploymentUnitOutlined,
   DesktopOutlined,
 } from '@ant-design/icons';
-import { Card, Flex, Space, Tag } from 'antd';
+import { Card, Flex, Space, Tag, Typography } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -23,7 +23,13 @@ const InfoToolTipCard: React.FC<InfoToolTipCardProps> = (
     >
       <Flex vertical gap={0}>
         <Space direction="horizontal">
-          <DeploymentUnitOutlined /> {props.item.image?.name}{' '}
+          <DeploymentUnitOutlined />{' '}
+          <Typography.Text
+            style={{ maxWidth: 180 }}
+            ellipsis={{ tooltip: true }}
+          >
+            {props.item.image?.name}
+          </Typography.Text>{' '}
           {props.item.image?.tag?.value ? (
             <Tag>{props.item.image.tag.value}</Tag>
           ) : (

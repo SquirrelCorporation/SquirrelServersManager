@@ -15,7 +15,7 @@
 - name: Update agent on targeted device
   hosts: all
   become: true
-  gather_facts: false
+  gather_facts: true
   tasks:
 
     - name: Validate installMethod variable

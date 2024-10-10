@@ -3,6 +3,6 @@
     project_src: "{{ docker_agent_docker_compose_dir }}"
     state: present
     recreate: always
-    pull_policy: always
-    detached: true
+    pull: always
+    remove_orphans: yes
 
