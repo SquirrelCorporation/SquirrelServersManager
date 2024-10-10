@@ -1,0 +1,19 @@
+- name: Setup agent files
+  include_role:
+    name: install_agent_docker_conf
+
+- name: Docker installation if needed
+  include_role:
+    name: install_docker
+
+- name: Setup Docker configuration file
+  include_role:
+    name: install_agent_docker_conf
+
+- name: Remove Docker volume if present
+  include_role:
+    name: remove_agent_docker_volume
+
+- name: Start Docker agent service
+  include_role:
+    name: start_agent_docker

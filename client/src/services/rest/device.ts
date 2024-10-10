@@ -1,7 +1,7 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from '@umijs/max';
-import { API } from 'ssm-shared-lib';
+import { API, SsmAgent } from 'ssm-shared-lib';
 
 export async function getDevices(
   params?: API.PageParams,
@@ -34,6 +34,7 @@ export async function putDevice(
   deviceAuth: API.DeviceAuthParams,
   unManaged?: boolean,
   masterNodeUrl?: string,
+  installMethod?: SsmAgent.InstallMethods,
   options?: { [key: string]: any },
 ) {
   return request<API.NewDevice>('/api/devices', {
@@ -42,6 +43,7 @@ export async function putDevice(
       masterNodeUrl: masterNodeUrl,
       unManaged: unManaged,
       ...deviceAuth,
+      installMethod,
     },
     method: 'PUT',
     ...(options || {}),
@@ -124,6 +126,23 @@ export async function getCheckDeviceAnsibleConnection(
     `/api/devices/${uuid}/check-connection/ansible`,
     {
       method: 'GET',
+      ...(options || {}),
+    },
+  );
+}
+
+export async function updateAgentInstallMethod(
+  uuid: string,
+  installMethod: SsmAgent.InstallMethods,
+  options?: { [key: string]: any },
+) {
+  return request<API.SimpleResult>(
+    `/api/devices/${uuid}/agent-install-method`,
+    {
+      method: 'POST',
+      data: {
+        installMethod,
+      },
       ...(options || {}),
     },
   );

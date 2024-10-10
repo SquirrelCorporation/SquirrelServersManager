@@ -1,0 +1,79 @@
+- name: Check if NodeJS is installed
+  command: which node
+  register: node_check
+  ignore_errors: true
+  changed_when: false
+
+- name: Check if npm is installed
+  command: which npm
+  register: npm_check
+  ignore_errors: true
+  changed_when: false
+
+- name: Install NVM
+  block:
+    # wget (deault) or curl
+    - name: Installing via curl or wget
+      block:
+        - name: Check if wget or curl is installed
+          ansible.builtin.command: "which {{ nvm_install }}"
+          register: mg_cmd
+          changed_when: "mg_cmd.rc != 0"
+
+        - name: Determine if install type wget
+          ansible.builtin.set_fact:
+            run_command: 'wget -qO-'
+          when: "'/wget' in mg_cmd.stdout"
+
+        - name: Determine if install type curl
+          ansible.builtin.set_fact:
+            run_command: 'curl -o-'
+          when: "'/curl' in mg_cmd.stdout"
+
+        - name: Create nvm_dir if it does not exist
+          ansible.builtin.file:
+            group: "{{ ansible_become_user | default(ansible_user) }}"
+            owner: "{{ ansible_become_user | default(ansible_user) }}"
+            mode: 0775
+            path: "{{ nvm_dir }}"
+            state: directory
+          become: true
+          when: nvm_dir | length != 0
+
+        # There are some potential security concerns with piping the install.sh script to whatever shell alias is defined: Risk is Low but not absolute
+        # https://blog.dijit.sh//don-t-pipe-curl-to-bash
+        # https://news.ycombinator.com/item?id=12766049
+        # https://sandstorm.io/news/2015-09-24-is-curl-bash-insecure-pgp-verified-install
+        - name: Install NVM
+          ansible.builtin.shell: "{{ run_command }} https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | PROFILE={{ nvm_profile }} {{ mg_user_shell.alias }}"
+          register: mg_nvm_result
+          changed_when: "'already installed' not in mg_nvm_result.stdout"
+          failed_when:
+            - "'permission denied' in mg_nvm_result.stderr"
+
+        - name: Update profile permissions to lock it down after writing
+          ansible.builtin.file:
+            group: "{{ ansible_become_user | default(ansible_user) }}"
+            owner: "{{ ansible_become_user | default(ansible_user) }}"
+            mode: 0644
+            path: "{{ nvm_profile }}"
+          become: true
+          when: not mg_profile_file.stat.exists
+
+- name: Check NVM Version # noqa 305
+  ansible.builtin.shell: "{{ mg_user_shell.command + ' \"nvm --version\"' }}"
+  register: mg_nvm_version_response
+  changed_when: "mg_nvm_version_response.rc != 0"
+
+# Autocomplete
+- name: Add NVM autocomplete to nvm_profile
+  ansible.builtin.blockinfile:
+    block: |
+      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+    insertafter: "# This loads nvm"
+    marker_begin: "Installed nvm autocomplete via {{ role_repo }} START"
+    marker_end: "{{ role_repo }} END"
+    mode: 0644
+    path: "{{ nvm_profile }}"
+    state: present
+  when: autocomplete

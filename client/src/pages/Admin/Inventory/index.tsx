@@ -37,7 +37,7 @@ import {
   Row,
 } from 'antd';
 import React, { useRef, useState } from 'react';
-import { API, SsmAnsible } from 'ssm-shared-lib';
+import { API, SsmAnsible, SsmAgent } from 'ssm-shared-lib';
 import ConfigurationModal from './components/ConfigurationModal';
 
 const Inventory: React.FC = () => {
@@ -69,10 +69,12 @@ const Inventory: React.FC = () => {
   const openOrCloseTerminalModal = (open: boolean) => {
     setTerminal({ ...terminal, isOpen: open });
   };
+
   const onSelectPlaybook = (
     playbook: string,
     playbookName: string,
     target?: API.DeviceItem[],
+    _extraVars?: API.ExtraVars,
     mode?: SsmAnsible.ExecutionMode,
   ) => {
     setTerminal({
@@ -99,23 +101,31 @@ const Inventory: React.FC = () => {
     onDropDownClicked,
     setTerminal,
   );
+
   const onMenuClick: MenuProps['onClick'] = () => {
     setAddNewUnManagedDeviceModalIsOpen(true);
   };
+
   const items = [
     {
       key: '1',
       label: 'Register an unmanaged device (without agent)',
     },
   ];
-  const onAddNewDevice = (target: API.DeviceItem) => {
+
+  const onAddNewDevice = (
+    target: API.DeviceItem,
+    installMethod: SsmAgent.InstallMethods,
+  ) => {
     actionRef?.current?.reload();
     setTerminal({
       target: [target],
       isOpen: true,
       quickRef: 'installAgent',
+      extraVars: [{ extraVar: '_ssm_installMethod', value: installMethod }],
     });
   };
+
   const onDeleteNewDevice = async () => {
     if (currentRow) {
       await deleteDevice(currentRow?.uuid).then(() => {

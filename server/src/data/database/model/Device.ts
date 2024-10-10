@@ -44,6 +44,7 @@ export default interface Device {
   createdAt?: Date;
   updatedAt?: Date;
   agentLogPath?: string;
+  agentType?: 'node' | 'docker';
 }
 
 const schema = new Schema<Device>(
@@ -193,6 +194,11 @@ const schema = new Schema<Device>(
     agentLogPath: {
       type: Schema.Types.String,
       required: false,
+    },
+    agentType: {
+      type: Schema.Types.String,
+      required: false,
+      default: 'node',
     },
   },
   {

@@ -1,0 +1,16 @@
+- name: Install agent on targeted device
+  ansible.builtin.debug:
+    msg: Host ID {{ _ssm_deviceId }} with API URL {{ _ssm_masterNodeUrl }}
+
+- name: "Who is running this playbook?"
+  ansible.builtin.command: whoami
+  register: mg_nvm_whoami
+  changed_when: false
+
+- name: Set a fact with the user name running the playbook.
+  ansible.builtin.set_fact:
+    mg_login_user: "{{ mg_nvm_whoami.stdout }}"
+
+- name: Set full nvm_profile path | Default
+  ansible.builtin.set_fact:
+    nvm_profile: "$HOME/.bashrc"

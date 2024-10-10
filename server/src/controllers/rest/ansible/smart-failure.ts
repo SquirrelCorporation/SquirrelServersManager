@@ -3,8 +3,6 @@ import SmartFailures from '../../../modules/ansible/SmartFailure';
 
 export const getSmartFailure = async (req, res) => {
   const { execId } = req.query;
-  new SuccessResponse(
-    'May got Ansible SmartFailure',
-    await SmartFailures.parseAnsibleLogsAndMayGetSmartFailure(execId as string),
-  ).send(res);
+  const smartFailure = await SmartFailures.parseAnsibleLogsAndMayGetSmartFailure(execId as string);
+  new SuccessResponse('May got Ansible SmartFailure', smartFailure).send(res);
 };

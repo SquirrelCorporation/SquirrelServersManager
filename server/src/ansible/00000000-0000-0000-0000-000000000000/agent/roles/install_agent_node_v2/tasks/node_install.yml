@@ -1,0 +1,52 @@
+- name: LTS Check
+  ansible.builtin.set_fact:
+    nodejs_version: --lts
+    nodejs_alias: lts/*
+  when: "nodejs_version == 'lts'"
+
+# This scenario handles the first run/install of NVM because this will automatically
+# alias the specified version as default - This should handle most use cases
+- name: Install Node # noqa 305
+  ansible.builtin.shell: "{{ mg_user_shell.command + ' \"nvm install ' +  nodejs_version + '\"' }}"
+  register: mg_node_version_response
+  changed_when: "'already installed' not in mg_node_version_response.stderr"
+
+# Test is there is a default already set
+- name: Is there a default already set # noqa 305
+  ansible.builtin.shell: "{{ mg_user_shell.command + ' \"cat \\$(printenv NVM_DIR)/alias/default\"' }}"
+  register: mg_nvm_default_response
+  changed_when: "mg_nvm_default_response.rc != 0"
+
+# In the event there are multiple versions of Node being installed/used/upgraded
+# on the same machine we'll need to alias the default version accordingly
+- name: Set default version of Node if multiple versions exist # noqa 305
+  ansible.builtin.shell: "{{ mg_user_shell.command + ' \"nvm alias default ' +  nodejs_version + '\"' }}"
+  when:
+    - default | bool
+    - nodejs_version != '--lts'
+  changed_when: "'nodejs_version' not in mg_nvm_default_response.stdout"
+
+# Addresses an issue where the LTS version is set as a default. The version above
+# doesn't work because --lts is not an alias, according to nvm documentation it is lts/*
+- name: Set default version of Node LTS if multiple versions exist # noqa 305
+  ansible.builtin.shell: "{{ mg_user_shell.command + ' \"nvm alias default ' +  nodejs_alias + '\"' }}"
+  when:
+    - default | bool
+    - nodejs_version == '--lts'
+  changed_when: "'nodejs_version' not in mg_nvm_default_response.stdout"
+
+- name: Verify Node.js installation with NVM
+  shell: "{{ mg_user_shell.command + ' \" node --version\"' }}"
+  register: node_version
+  changed_when: false
+
+- name: Verify npm installation
+  shell: "{{ mg_user_shell.command + ' \" npm --version\"' }}"
+  register: npm_version
+  changed_when: false
+
+- name: Display Node.js and npm versions
+  debug:
+    msg:
+      - "Node.js version: {{ node_version.stdout }}"
+      - "npm version: {{ npm_version.stdout }}"

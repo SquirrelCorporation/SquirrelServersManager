@@ -1,0 +1,13 @@
+- name: NPM install
+  shell: "{{ mg_user_shell.command + ' \" npm install\"' }}"
+  args:
+    chdir: "{{ base_path }}"
+  register: npm_install
+  failed_when: npm_install.rc != 0
+
+- name: NPM run build
+  shell: "{{ mg_user_shell.command + ' \"  npm run build\"' }}"
+  args:
+    chdir: "{{ base_path }}"
+  register: npm_build
+  failed_when: npm_build.rc != 0

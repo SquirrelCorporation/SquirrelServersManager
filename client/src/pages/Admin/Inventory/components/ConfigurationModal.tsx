@@ -1,6 +1,9 @@
+import { ServerEnvironmentSvg } from '@/components/Icons/CustomIcons';
+import AgentConfigurationTab from '@/pages/Admin/Inventory/components/AgentConfigurationTab';
 import ConnectionTestTab from '@/pages/Admin/Inventory/components/ConnectionTestTab';
 import DockerConfigurationForm from '@/pages/Admin/Inventory/components/DockerConfigurationForm';
 import SSHConfigurationForm from '@/pages/Admin/Inventory/components/SSHConfigurationForm';
+import { DockerOutlined } from '@ant-design/icons';
 import { Modal, Tabs, TabsProps } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
@@ -28,6 +31,11 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
       label: 'Connection test',
       children: <ConnectionTestTab device={props.values} />,
     },
+    {
+      key: '4',
+      label: 'Agent',
+      children: <AgentConfigurationTab device={props.values} />,
+    },
   ];
 
   return (
@@ -35,7 +43,7 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
       style={{ padding: '32px 40px 48px' }}
       width={1000}
       destroyOnClose
-      title={`${props.values.hostname} (${props.values.ip})`}
+      title={`${props.values.hostname || 'Unknown device'} (${props.values.ip})`}
       open={props.updateModalOpen}
       onCancel={() => {
         props.handleUpdateModalOpen(false);

@@ -1,0 +1,7 @@
+- name: "Check Docker is installed"
+  include_tasks: check_docker.yml
+
+- name: "Install Docker if needed"
+  include_tasks: install_docker.yml
+  when:
+    - docker_check.rc != 0

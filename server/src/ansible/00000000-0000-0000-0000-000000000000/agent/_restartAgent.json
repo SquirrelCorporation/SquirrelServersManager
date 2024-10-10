@@ -1,4 +1,12 @@
 {
   "playableInBatch": true,
-  "uniqueQuickRef": "restartAgent"
+  "uniqueQuickRef": "restartAgent",
+  "extraVars": [
+    {
+      "extraVar": "_ssm_installMethod",
+      "required": true,
+      "type": "CONTEXT",
+      "deletable": false
+    }
+  ]
 }

@@ -1,0 +1,11 @@
+- name: Copy Docker Compose file
+  copy:
+    src: files/docker-compose.yml
+    dest: "{{ docker_agent_docker_compose_dir }}/docker-compose.yml"
+
+- name: Create .env file for Docker Compose
+  copy:
+    content: |
+      API_URL_MASTER={{ _ssm_masterNodeUrl }}
+      HOST_ID={{ _ssm_deviceId }}
+    dest: "{{ docker_agent_docker_compose_dir }}/.env"

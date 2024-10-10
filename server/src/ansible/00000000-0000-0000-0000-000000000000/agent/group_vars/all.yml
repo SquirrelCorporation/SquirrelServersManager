@@ -1,0 +1,14 @@
+# COMMON
+agent_log_path: "{{ _ssm_agentLogPath | default(omit) }}"
+valid_install_methods:
+  - node
+  - node_enhanced_playbook
+  - docker
+
+# NODE AGENT
+node_agent_base_path: /opt/squirrelserversmanager
+node_agent_nvm_dir: "/root/.nvm"
+
+# DOCKER AGENT
+docker_agent_docker_compose_dir: /opt/ssm-agent
+docker_agent_docker_volume: ssm-agent-data

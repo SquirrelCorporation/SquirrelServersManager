@@ -7,6 +7,12 @@
       "required": false,
       "type": "CONTEXT",
       "deletable": false
+    },
+    {
+      "extraVar": "_ssm_installMethod",
+      "required": true,
+      "type": "CONTEXT",
+      "deletable": false
     }
   ]
 }

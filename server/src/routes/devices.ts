@@ -18,12 +18,14 @@ import {
   deleteDevice,
   getAllDevices,
   getDevices,
+  updateAgentInstallMethod,
   updateDockerWatcher,
 } from '../controllers/rest/devices/device';
 import {
   addDeviceAutoValidator,
   addDeviceValidator,
   deleteDeviceValidator,
+  updateAgentInstallMethodValidator,
 } from '../controllers/rest/devices/device.validator';
 import {
   addOrUpdateDeviceAuth,
@@ -97,6 +99,9 @@ router
 
 router.route('/:uuid/docker').post(updateDockerAuthValidator, updateDockerAuth);
 router.route('/:uuid/docker-watcher').post(updateDockerWatcher);
+router
+  .route('/:uuid/agent-install-method')
+  .post(updateAgentInstallMethodValidator, updateAgentInstallMethod);
 router
   .route(`/:uuid/check-connection/ansible`)
   .get(getCheckDeviceAnsibleConnectionValidator, getCheckDeviceAnsibleConnection);

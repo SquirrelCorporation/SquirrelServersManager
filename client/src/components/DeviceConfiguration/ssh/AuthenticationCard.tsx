@@ -72,7 +72,7 @@ const AuthenticationCard: React.FC<AuthenticationCardProps> = ({ formRef }) => (
                     value == SsmAnsible.SSHType.PasswordLess
                   ) {
                     return Promise.reject(
-                      'You must use regular SSH for passwordless authentication',
+                      'You must use regular SSH for passwordless authentication (Advanced)',
                     );
                   }
                   return Promise.resolve();

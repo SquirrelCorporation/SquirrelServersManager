@@ -62,7 +62,7 @@ const TerminalModal = (props: TerminalModalProps) => {
         duration: 8,
       });
       setIsPollingEnabled(true);
-    } catch (error: any) {
+    } catch {
       message.error({
         type: 'error',
         content: 'Error running playbook',

@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  ssm_agent:
+    image: ghcr.io/squirrelcorporation/squirrelserversmanager-agent:docker
+    network_mode: host
+    privileged: true
+    pid: host
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - /proc:/proc
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ssm-agent-data:/data
+
+volumes:
+  ssm-agent-data:

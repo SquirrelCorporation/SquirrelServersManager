@@ -1,6 +1,39 @@
+---
+#  ,;;:;,
+#   ;;;;;
+#  ,:;;:;    ,'=.
+#  ;:;:;' .=" ,'_\
+#  ':;:;,/  ,__:=@
+#   ';;:;  =./)_
+#     `"=\_  )_"`
+#          ``'"`
+# Playbook Name: Install Agent on Targeted Device
+# Description: This playbook installs the agent on the targeted device based on the specified installation method.
+# Module: SSM-CORE
+# Tags: installation, agent, docker, node
+
 - name: Install agent on targeted device
   hosts: all
   become: true
   gather_facts: false
-  roles:
-    - install_agent
+  tasks:
+
+    - name: Validate installMethod variable
+      fail:
+        msg: "Invalid _ssm_installMethod value. Must be one of: 'node', 'node_enhanced_playbook', 'docker'."
+      when: _ssm_installMethod not in valid_install_methods
+
+    - name: Include role for node installation
+      include_role:
+        name: install_agent_node
+      when: _ssm_installMethod == 'node'
+
+    - name: Include role for node enhanced playbook installation
+      include_role:
+        name: install_agent_node_v2
+      when: _ssm_installMethod == 'node_enhanced_playbook'
+
+    - name: Include role for docker installation
+      include_role:
+        name: install_agent_docker
+      when: _ssm_installMethod == 'docker'

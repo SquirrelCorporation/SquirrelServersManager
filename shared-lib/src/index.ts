@@ -10,3 +10,4 @@ export * as Playbooks from './enums/playbooks'
 export * as SsmContainer from  './enums/container'
 export * as Automations from './form/automation';
 export * as SsmEvents from './types/events';
+export * as SsmAgent from './enums/agent';

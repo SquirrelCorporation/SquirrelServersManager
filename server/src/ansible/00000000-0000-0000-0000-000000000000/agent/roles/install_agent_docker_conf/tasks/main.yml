@@ -1,0 +1,7 @@
+
+- name: "Create directories on host"
+  include_tasks: create_directories.yml
+
+- name: "Copy files on host"
+  include_tasks: copy_files.yml
+

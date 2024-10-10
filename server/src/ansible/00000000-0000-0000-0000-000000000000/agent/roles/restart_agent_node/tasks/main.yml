@@ -1,0 +1,41 @@
+- name: Manage PM2 Agent
+  block:
+    - name: Stop and Delete PM2 Agent if present
+      shell: . {{ node_agent_nvm_dir }}/nvm.sh && pm2 {{ item }} agent
+      ignore_errors: true
+      with_items:
+        - stop
+        - delete
+      args:
+        chdir: "{{ node_agent_base_path }}"
+        executable: /bin/bash
+
+- name: Start PM2 Agent
+  block:
+    - name: Start PM2 Agent
+      shell: . {{ node_agent_nvm_dir }}/nvm.sh && pm2 start -f "./build/agent.js"
+      args:
+        chdir: "{{ node_agent_base_path }}"
+        executable: /bin/bash
+
+    - name: Install PM2 on startup
+      shell: . {{ node_agent_nvm_dir }}/nvm.sh && pm2 startup
+      args:
+        chdir: "{{ node_agent_base_path }}"
+        executable: /bin/bash
+
+    - name: Save Agent on startup
+      shell: . {{ node_agent_nvm_dir }}/nvm.sh && pm2 save
+      args:
+        chdir: "{{ node_agent_base_path }}"
+        executable: /bin/bash
+
+    - name: Update PM2
+      shell: . {{ node_agent_nvm_dir }}/nvm.sh && pm2 update
+      args:
+        chdir: "{{ node_agent_base_path }}"
+        executable: /bin/bash
+
+- name: Task completion summary
+  debug:
+    msg: "Agent restart process completed on {{ inventory_hostname }}"
