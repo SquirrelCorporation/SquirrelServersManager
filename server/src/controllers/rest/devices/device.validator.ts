@@ -41,6 +41,10 @@ export const addDeviceValidator = [
     .notEmpty()
     .isString(),
   body('installMethod')
+    .if(
+      (value, { req }) =>
+        !req.body.unManaged || req.body.unManaged.toString().toLowerCase() === 'false',
+    )
     .isIn(Object.values(SsmAgent.InstallMethods))
     .withMessage('installMethod is not in enum value InstallMethods'),
   validator,

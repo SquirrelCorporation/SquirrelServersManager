@@ -127,7 +127,7 @@ const DirectoryTreeView: React.FC<DirectoryTreeViewProps> = (props) => {
                   cannotDelete={!node.custom || node.rootNode}
                 >
                   <Typography.Text
-                    style={{ maxWidth: 150 - 10 * node.depth }}
+                    style={{ maxWidth: 155 - 18 * node.depth }}
                     ellipsis={{ tooltip: true }}
                   >
                     {node._name}
@@ -148,7 +148,7 @@ const DirectoryTreeView: React.FC<DirectoryTreeViewProps> = (props) => {
                   cannotDelete={!node.custom}
                 >
                   <Typography.Text
-                    style={{ maxWidth: 150 - 10 * node.depth }}
+                    style={{ maxWidth: 155 - 18 * node.depth }}
                     ellipsis={{ tooltip: true }}
                   >
                     {node._name}

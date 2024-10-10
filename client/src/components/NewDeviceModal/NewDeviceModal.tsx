@@ -1,8 +1,12 @@
 import AgentInstallMethod from '@/components/DeviceConfiguration/AgentInstallMethod';
 import { DownloadOutlined } from '@ant-design/icons';
 import React, { useRef, useState } from 'react';
-import { Button, Col, Modal, Row, message } from 'antd';
-import { ProFormInstance, StepsForm } from '@ant-design/pro-components';
+import { Button, Col, Modal, Row, message, Alert, Typography, Tag } from 'antd';
+import {
+  ProFormDependency,
+  ProFormInstance,
+  StepsForm,
+} from '@ant-design/pro-components';
 import { motion } from 'framer-motion';
 import {
   GrommetIconsInstall,
@@ -271,6 +275,47 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                 icon={<GrommetIconsInstall />}
                 content={<AgentInstallMethod />}
               />
+              <ProFormDependency name={['installMethod']}>
+                {({ installMethod }) => {
+                  switch (installMethod) {
+                    case SsmAgent.InstallMethods.NODE:
+                    case SsmAgent.InstallMethods.NODE_ENHANCED_PLAYBOOK:
+                      return (
+                        <Alert
+                          style={{ marginBottom: 10 }}
+                          type={'info'}
+                          showIcon
+                          message={
+                            <>
+                              <Typography.Text>
+                                SSM will install, if needed:{' '}
+                                <Tag>Node (NVM)</Tag>
+                                <Tag>NPM</Tag>
+                                <Tag>PM2</Tag>
+                              </Typography.Text>
+                            </>
+                          }
+                        />
+                      );
+                    case SsmAgent.InstallMethods.DOCKER:
+                      return (
+                        <Alert
+                          style={{ marginBottom: 10 }}
+                          type={'info'}
+                          showIcon
+                          message={
+                            <Typography.Text>
+                              SSM will install, if needed: <Tag>Docker</Tag>
+                              <Tag>Docker Compose</Tag>
+                            </Typography.Text>
+                          }
+                        />
+                      );
+                    default:
+                      return null;
+                  }
+                }}
+              </ProFormDependency>
             </StepsForm.StepForm>
             <StepsForm.StepForm name="confirm" title="Confirm">
               <SummaryCard
