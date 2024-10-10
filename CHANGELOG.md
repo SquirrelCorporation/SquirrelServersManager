@@ -7,6 +7,7 @@
 **Implemented enhancements:**
 
 - \[FEAT\] Networks, Volumes and Images could be pre-filled in deploy when a target is selected 🔥 [\#334](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/334)
+- \[FEATURE\] Update notification & tags for client/server/agent 🔥 [\#211](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/211)
 - \[FEAT\] Custom stack mgr 🔥 [\#180](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/180)
 - \[FEAT\] Playbooks with roles for NVM, Node js install 🔥  [\#117](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/117)
 - \[FEAT\] Update query handling and improve form components [\#357](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/357) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
@@ -19,7 +20,9 @@
 **Fixed bugs:**
 
 - \[BUG\] Unable to create sub-directory or playbook after creating new directory in Playbook tab [\#336](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/336)
+- \[CHORE\] Popover in Services/Containers info details is buggy 🧹 [\#333](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/333)
 - \[BUG\] Only 10 hosts available for automation [\#319](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/319)
+- \[BUG\] Filter out undefined names in context arrays [\#358](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/358) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\]\[BUG\]Refactor directory view, enhance Docker install [\#354](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/354) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Fix update problem of NewFileDrawerForm, bump libs [\#337](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/337) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Update log path for container management [\#326](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/326) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
