@@ -1,7 +1,7 @@
 import { API, SettingsKeys } from 'ssm-shared-lib';
 import { dependencies, version } from '../../../../package.json';
 import { getAnsibleRunnerVersion, getAnsibleVersion } from '../../../core/system/ansible-versions';
-import { getIntConfFromCache } from '../../../data/cache';
+import { getFromCache, getIntConfFromCache } from '../../../data/cache';
 import { Role } from '../../../data/database/model/User';
 import UserRepo from '../../../data/database/repository/UserRepo';
 import { AuthFailureError } from '../../../middlewares/api/ApiError';
@@ -37,6 +37,8 @@ export const getCurrentUser = async (req, res) => {
   const registerDeviceStatEvery = await getIntConfFromCache(
     SettingsKeys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
   );
+  const updateAvailable = await getFromCache(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE);
+
   const systemPerformance = await DashboardUseCase.getSystemPerformance();
 
   new SuccessResponse('Get current user', {
@@ -85,6 +87,7 @@ export const getCurrentUser = async (req, res) => {
         ansibleVersion: await getAnsibleVersion(),
         ansibleRunnerVersion: await getAnsibleRunnerVersion(),
       },
+      updateAvailable,
     },
   } as API.CurrentUser).send(res);
 };

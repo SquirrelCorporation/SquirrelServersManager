@@ -11,6 +11,7 @@ import providerConf from '../../modules/docker/registries/providers/provider.con
 import NotificationComponent from '../../modules/notifications/NotificationComponent';
 import { createADefaultLocalUserRepository } from '../../modules/playbooks-repository/default-repositories';
 import PlaybooksRepositoryEngine from '../../modules/playbooks-repository/PlaybooksRepositoryEngine';
+import UpdateChecker from '../../modules/update/UpdateChecker';
 import ContainerRegistryUseCases from '../../services/ContainerRegistryUseCases';
 import DeviceAuthUseCases from '../../services/DeviceAuthUseCases';
 import { setAnsibleVersions } from '../system/ansible-versions';
@@ -41,6 +42,7 @@ class Startup {
     void Crons.initScheduledJobs();
     void WatcherEngine.init();
     void AutomationEngine.init();
+    void UpdateChecker.checkVersion();
   }
 
   private async updateScheme() {

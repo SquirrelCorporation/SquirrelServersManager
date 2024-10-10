@@ -8,6 +8,7 @@ import CronRepo from '../../data/database/repository/CronRepo';
 import AnsibleTaskRepo from '../../data/database/repository/AnsibleTaskRepo';
 import LogsRepo from '../../data/database/repository/LogsRepo';
 import { getConfFromCache } from '../../data/cache';
+import UpdateChecker from '../update/UpdateChecker';
 
 const logger = PinoLogger.child({ module: 'Cron' }, { msgPrefix: '[CRON] - ' });
 
@@ -66,6 +67,13 @@ const CRONS: CronJobType[] = [
         SettingsKeys.GeneralSettingsKeys.CONTAINER_STATS_RETENTION_IN_DAYS,
       );
       await ContainerStatsRepo.deleteAllOld(parseInt(delay));
+    },
+  },
+  {
+    name: '_UpdateAvailable',
+    schedule: '*/30 * * * *',
+    fun: async () => {
+      void UpdateChecker.checkVersion();
     },
   },
 ];

@@ -7,6 +7,7 @@ import { DevicesHeaderWidget } from '@/components/HeaderComponents/DevicesHeader
 import DocumentationWidget from '@/components/HeaderComponents/DocumentationWidget';
 import { HealthWidget } from '@/components/HeaderComponents/HealthWidget';
 import NotificationsWidget from '@/components/HeaderComponents/NotificationsWidget';
+import UpdateAvailableWidget from '@/components/HeaderComponents/UpdateAvailableWidget';
 import { currentUser as queryCurrentUser, hasUser } from '@/services/rest/user';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 // @ts-ignore
@@ -83,6 +84,7 @@ export const layout: RunTimeLayoutConfig = ({
       <DevicesHeaderWidget key="online" />,
       <HealthWidget key="health" />,
       <NotificationsWidget key="notifications" />,
+      <UpdateAvailableWidget key={'update'} />,
     ],
     avatarProps: {
       src: initialState?.currentUser?.avatar,

@@ -48,6 +48,11 @@ const REDIS_DEFAULT_VALUES: { key: string; value: string; nx: boolean }[] = [
     value: SettingsKeys.DefaultValue.DEVICE_STATS_RETENTION_IN_DAYS,
     nx: true,
   },
+  {
+    key: SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE,
+    value: SettingsKeys.DefaultValue.UPDATE_AVAILABLE,
+    nx: true,
+  },
 ];
 
 async function initRedisValues(force?: boolean) {
