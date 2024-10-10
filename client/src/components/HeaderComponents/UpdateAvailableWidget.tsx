@@ -58,7 +58,7 @@ export const UpdateAvailableWidget: React.FC = React.memo(() => {
         <Avatar
           src={
             <UpdateLine
-              className="svg-small-anim-pulse"
+              className="svg-small-anim-rotate"
               style={{ color: 'rgba(255, 255, 255, 0.65)', fontSize: '20px' }}
             />
           }
