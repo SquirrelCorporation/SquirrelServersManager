@@ -61,6 +61,7 @@ export type DashboardSettings = {
 
 export type Settings = {
   apiKey: string;
+  updateAvailable?: string;
   device: {
     registerDeviceStatEvery: number;
     considerOffLineAfter: number;

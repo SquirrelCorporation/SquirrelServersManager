@@ -8,6 +8,7 @@ export enum GeneralSettingsKeys {
   REGISTER_DEVICE_STAT_EVERY_IN_SECONDS = 'device-stat-frequency-in-seconds',
   DEVICE_STATS_RETENTION_IN_DAYS = 'device-stats-retention-in-days',
   CONTAINER_STATS_RETENTION_IN_DAYS = 'container-stats-retention-in-days',
+  UPDATE_AVAILABLE = 'update-available',
 }
 
 export enum DefaultValue {
@@ -20,4 +21,5 @@ export enum DefaultValue {
   REGISTER_DEVICE_STAT_EVERY_IN_SECONDS = '60',
   DEVICE_STATS_RETENTION_IN_DAYS = '30',
   CONTAINER_STATS_RETENTION_IN_DAYS = '30',
+  UPDATE_AVAILABLE = '',
 }
