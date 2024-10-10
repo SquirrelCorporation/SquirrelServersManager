@@ -6,8 +6,11 @@
 
 **Implemented enhancements:**
 
+- \[FEAT\] Networks, Volumes and Images could be pre-filled in deploy when a target is selected 🔥 [\#334](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/334)
 - \[FEAT\] Custom stack mgr 🔥 [\#180](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/180)
 - \[FEAT\] Playbooks with roles for NVM, Node js install 🔥  [\#117](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/117)
+- \[FEAT\] Update query handling and improve form components [\#357](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/357) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[FEAT\] Feat update available widget [\#356](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/356) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Feat installation method [\#351](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/351) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Feat container details [\#350](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/350) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - 117 feat playbooks with roles for nvm node js install [\#331](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/331) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
