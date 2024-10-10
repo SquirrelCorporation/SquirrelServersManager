@@ -27,6 +27,7 @@ provisioner:
       all:
         _ssm_deviceId: 'device-id'
         _ssm_masterNodeUrl: 'https://127.0.0.1'
+        _ssm_installMethod: 'node'
 
 verifier:
   name: ansible
