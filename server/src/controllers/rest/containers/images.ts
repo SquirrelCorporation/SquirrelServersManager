@@ -8,7 +8,7 @@ import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 
 export const getImages = async (req, res) => {
   const realUrl = req.url;
-  const { current = 1, pageSize = 10 } = req.query;
+  const { current, pageSize } = req.query;
   const params = parse(realUrl, true).query as unknown as API.PageParams &
     API.ContainerVolume & {
       sorter: any;
@@ -24,8 +24,9 @@ export const getImages = async (req, res) => {
     ['id', 'parentId', 'deviceUuid'],
   );
   const totalBeforePaginate = dataSource?.length || 0;
-  dataSource = paginate(dataSource, current as number, pageSize as number);
-
+  if (current && pageSize) {
+    dataSource = paginate(dataSource, current as number, pageSize as number);
+  }
   new SuccessResponse('Got Images', dataSource, {
     total: totalBeforePaginate,
     success: true,

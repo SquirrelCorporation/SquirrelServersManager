@@ -1,4 +1,7 @@
-import { ContextSelect } from '@/components/ComposeEditor/ViewBuilderElements/SmartFields';
+import {
+  SmartSelect,
+  SmartSelectSingle,
+} from '@/components/ComposeEditor/ViewBuilderElements/SmartFields';
 import { PlusOutlined } from '@ant-design/icons';
 import { ProFormInstance } from '@ant-design/pro-components';
 import {
@@ -63,7 +66,7 @@ export const renderField = (
     case 'service-networks':
       return (
         <>
-          <ContextSelect
+          <SmartSelect
             id={field.id}
             name={[...namePath, field.id as string]}
             index={index}
@@ -72,6 +75,17 @@ export const renderField = (
             labelWithIcon={labelWithIcon}
           />
         </>
+      );
+    case 'image':
+      return (
+        <SmartSelectSingle
+          id={field.id}
+          name={[...namePath, field.id as string]}
+          index={index}
+          initialValue={field.value}
+          form={form}
+          labelWithIcon={labelWithIcon}
+        />
       );
   }
   switch (field.fieldType) {
