@@ -34,26 +34,32 @@ export const SmartSelect: React.FC<SmartFieldsProps> = ({
     switch (id) {
       case 'depends_on':
         if (values && values.services) {
-          const names = Object.values(values.services).map((service: any) => {
-            return { origin: 'This stack', value: service.name };
-          });
+          const names = Object.values(values.services)
+            ?.filter((e: any) => e.name)
+            .map((service: any) => {
+              return { origin: 'This stack', value: service.name };
+            });
           setContextNames(names);
         }
         return;
       case 'service-configs':
         if (values && values.configs) {
-          const names = Object.values(values.configs).map((config: any) => {
-            return { origin: 'This stack', value: config.name };
-          });
+          const names = Object.values(values.configs)
+            ?.filter((e: any) => e.name)
+            .map((config: any) => {
+              return { origin: 'This stack', value: config.name };
+            });
           setContextNames(names);
         }
         return;
       case 'service-networks':
         const names =
           values.networks && values.networks
-            ? Object.values(values.networks).map((network: any) => {
-                return { origin: 'This stack', value: network.name };
-              })
+            ? Object.values(values.networks)
+                ?.filter((e: any) => e.name)
+                .map((network: any) => {
+                  return { origin: 'This stack', value: network.name };
+                })
             : [];
         const networksData = await getNetworks();
         const uniqueNamesMap: Map<
