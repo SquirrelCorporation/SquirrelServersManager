@@ -30,6 +30,8 @@
 
 **Merged pull requests:**
 
+- Bump the npm\_and\_yarn group in /server with 5 updates [\#353](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/353) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump the npm\_and\_yarn group across 1 directory with 2 updates [\#352](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/352) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @stylistic/eslint-plugin from 2.8.0 to 2.9.0 in /server [\#349](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/349) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @aws-sdk/client-ecr from 3.662.0 to 3.665.0 in /server [\#348](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/348) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @eslint/compat from 1.1.1 to 1.2.0 in /server [\#347](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/347) ([dependabot[bot]](https://github.com/apps/dependabot))
