@@ -25,9 +25,7 @@
     "start:no-mock": "cross-env MOCK=none UMI_ENV=dev max dev",
     "start:pre": "cross-env REACT_APP_ENV=pre UMI_ENV=dev max dev",
     "start:test": "cross-env REACT_APP_ENV=test MOCK=none UMI_ENV=dev max dev",
-    "test": "cross-env TS_NODE_TRANSPILE_ONLY=yes jest --passWithNoTests",
-    "test:coverage": "npm run jest -- --coverage",
-    "test:update": "npm run jest -- -u",
+    "test": "vitest --disable-console-intercept --reporter=basic ",
     "tsc": "tsc --noEmit",
     "serve": "node production-server.js",
     "build-shared": "npm run build ../shared-lib"
@@ -126,7 +124,8 @@
     "swagger-ui-dist": "^5.17.14",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.2"
   },
   "engines": {
     "node": ">=20.0.0"
