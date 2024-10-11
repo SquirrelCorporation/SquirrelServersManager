@@ -55,6 +55,7 @@ jobs:
         run: |
           mkdir -p /home/runner/.cache/molecule/tests/default/inventory
           touch /home/runner/.cache/molecule/tests/default/inventory/ansible_inventory.yml
+          chmod 777 /home/runner/.cache/molecule/tests/default/inventory/ansible_inventory.yml
 
       - name: Run Molecule default scenario
         working-directory: server/src/tests/
