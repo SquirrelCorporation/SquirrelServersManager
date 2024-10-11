@@ -1,9 +1,10 @@
 ---
 dependency:
-  name: galaxy
-  options:
-    requirements-file: requirements.yml
-
+  - name: galaxy
+    options:
+      requirements-file: requirements.yml
+  - name: shell
+    command: "${MOLECULE_SCENARIO_DIRECTORY}/tools/install-dependencies"
 driver:
   name: docker
 
