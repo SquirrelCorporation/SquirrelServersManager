@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+## [v0.1.20](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.20) (2024-10-11)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.19...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.19...v0.1.20)
 
 **Implemented enhancements:**
 
@@ -22,6 +22,7 @@
 - \[BUG\] Unable to create sub-directory or playbook after creating new directory in Playbook tab [\#336](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/336)
 - \[CHORE\] Popover in Services/Containers info details is buggy 🧹 [\#333](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/333)
 - \[BUG\] Only 10 hosts available for automation [\#319](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/319)
+- \[BUG\] Adding all LXCs and VMs very high CPU load [\#165](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/165)
 - \[BUG\] Filter out undefined names in context arrays [\#358](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/358) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\]\[BUG\]Refactor directory view, enhance Docker install [\#354](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/354) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Fix update problem of NewFileDrawerForm, bump libs [\#337](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/337) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
