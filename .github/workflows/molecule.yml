@@ -47,7 +47,7 @@ jobs:
         uses: gofrolist/molecule-action@v2
         with:
           molecule_working_dir: SquirrelCorporation/SquirrelServersManager/server/src/tests/
-          molecule_command: test -s install-agent
+          molecule_command: test
 
         env:
           ANSIBLE_FORCE_COLOR: '1'
