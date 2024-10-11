@@ -52,7 +52,7 @@ class AnsibleCommandBuilder {
     const ident = `--ident '${uuid}'`;
     const dryRun = this.getDryRun(mode);
 
-    return `${AnsibleCommandBuilder.sudo} ${AnsibleCommandBuilder.ssmApiKeyEnv}=${user.apiKey} ${AnsibleCommandBuilder.ansibleConfigKeyEnv}=${ANSIBLE_CONFIG_FILE} ${AnsibleCommandBuilder.python} ${AnsibleCommandBuilder.ansibleRunner} --playbook ${playbook} ${ident} ${inventoryTargetsCmd} ${logLevel} ${dryRun} ${extraVarsCmd}`;
+    return `${AnsibleCommandBuilder.sudo} ${AnsibleCommandBuilder.ssmApiKeyEnv}=${user.apiKey} ${AnsibleCommandBuilder.ansibleConfigKeyEnv}=${ANSIBLE_CONFIG_FILE} ANSIBLE_FORCE_COLOR=1 ${AnsibleCommandBuilder.python} ${AnsibleCommandBuilder.ansibleRunner} --playbook ${playbook} ${ident} ${inventoryTargetsCmd} ${logLevel} ${dryRun} ${extraVarsCmd}`;
   }
 }
 
