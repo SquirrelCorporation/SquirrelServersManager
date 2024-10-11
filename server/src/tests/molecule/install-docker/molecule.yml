@@ -1,7 +1,7 @@
 ---
 dependency:
   name: shell
-  command: "${MOLECULE_SCENARIO_DIRECTORY}/tools/install-dependencies"
+  command: "${MOLECULE_SCENARIO_DIRECTORY}/tools/install-dependencies.sh"
 
 driver:
   name: docker
