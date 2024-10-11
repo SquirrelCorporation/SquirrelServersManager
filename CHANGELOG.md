@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- Add Dockerized Agent option and update installation methods [\#364](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/364) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Add custom stacks data and routes, update server version [\#363](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/363) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.20](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.20) (2024-10-11)
