@@ -41,4 +41,4 @@ jobs:
 
       - name: Run Molecule default scenario
         working-directory: server/src/tests/molecule
-        run: molecule test
+        run: molecule test -s default
