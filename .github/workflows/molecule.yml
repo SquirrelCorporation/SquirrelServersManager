@@ -40,6 +40,9 @@ jobs:
           pip install ansible molecule ansible-lint
           pip install -r requirements.txt
 
+      - name: Install Ansible Collections
+        run: ansible-galaxy collection install community.docker
+
       - name: Molecule
         uses: gofrolist/molecule-action@v2
         with:
