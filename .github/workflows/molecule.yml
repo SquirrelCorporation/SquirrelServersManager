@@ -36,7 +36,7 @@ jobs:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('server/src/tests/molecule/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-pip-${{ hashFiles('server/src/tests/molecule/requirements.txt') }}
 
       - name: Install Ansible and Molecule
         working-directory: server/src/tests/molecule
