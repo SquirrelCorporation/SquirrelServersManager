@@ -7,7 +7,9 @@ Squirrel Servers Manager is an all-in-one configuration and container management
 It is designed to provide a user-friendly alternative to well-known established tools, while being totally open-source and free.
 
 [![Publish Containers to Ghcr.io](https://github.com/SquirrelCorporation/SquirrelServersManager/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/SquirrelCorporation/SquirrelServersManager/actions/workflows/docker-publish.yml)
-[![Tests](https://github.com/SquirrelCorporation/SquirrelServersManager/actions/workflows/node.js.yml/badge.svg)](https://github.com/SquirrelCorporation/SquirrelServersManager/actions/workflows/node.js.yml)
+[![Tests - Client](https://github.com/SquirrelCorporation/SquirrelServersManager/actions/workflows/test-client.yml/badge.svg)](https://github.com/SquirrelCorporation/SquirrelServersManager/actions/workflows/test-client.yml)
+[![Tests - Server](https://github.com/SquirrelCorporation/SquirrelServersManager/actions/workflows/test-server.yml/badge.svg)](https://github.com/SquirrelCorporation/SquirrelServersManager/actions/workflows/test-server.yml)
+[![Tests - Playbooks](https://github.com/SquirrelCorporation/SquirrelServersManager/actions/workflows/test-playbooks.yml/badge.svg)](https://github.com/SquirrelCorporation/SquirrelServersManager/actions/workflows/test-playbooks.yml)
 
 <p align="center">
 	<img src="./site/public/home/dashboard.png" width="60%">
