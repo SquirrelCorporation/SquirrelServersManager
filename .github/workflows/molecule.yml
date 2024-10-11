@@ -31,14 +31,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-
-      - name: Cache pip dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('server/src/tests/molecule/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-${{ hashFiles('server/src/tests/molecule/requirements.txt') }}
+          cache: 'pip'
 
       - name: Install Ansible and Molecule
         working-directory: SquirrelCorporation/SquirrelServersManager/server/src/tests/molecule
@@ -50,7 +43,7 @@ jobs:
       - name: Molecule
         uses: gofrolist/molecule-action@v2
         with:
-          molecule-working-dir: SquirrelCorporation/SquirrelServersManager/server/src/tests/
+          molecule_working_dir: SquirrelCorporation/SquirrelServersManager/server/src/tests/
           molecule_command: test
         env:
           ANSIBLE_FORCE_COLOR: '1'
