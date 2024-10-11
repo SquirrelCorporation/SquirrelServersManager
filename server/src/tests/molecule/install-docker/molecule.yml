@@ -1,0 +1,19 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: instance-debian
+    image: debian:latest
+    command: sleep infinity
+    privileged: true
+    ulimits: nofile:1024:2048
+provisioner:
+  name: ansible
+  playbooks:
+    prepare: prepare.yml
+    converge: playbook.yml
+verifier:
+  name: testinfra
+  directory: ./tests

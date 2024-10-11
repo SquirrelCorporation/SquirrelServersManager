@@ -1,4 +1,17 @@
 ---
+#  ,;;:;,
+#   ;;;;;
+#  ,:;;:;    ,'=.
+#  ;:;:;' .=" ,'_\
+#  ':;:;,/  ,__:=@
+#   ';;:;  =./)_
+#     `"=\_  )_"`
+#          ``'"`
+# Playbook Name: Create a docker network
+# Description: This playbook creates a Docker network on the host by applying various parameters
+# Module: SSM-CORE
+# Tags: docker, networks, ip, docker
+
 - name: Create Docker Network
   hosts: all
   become: true

@@ -1,0 +1,9 @@
+---
+- name: Prepare
+  hosts: all
+  become: true
+  tasks:
+    - name: Ensure Python3 is installed
+      raw: test -e /usr/bin/python3 || (apt-get update && apt-get install -y python3 python3-pip)
+    - name: Ensure required preparation (You may add other preparation tasks here)
+      ansible.builtin.shell: echo "Preparation step complete"

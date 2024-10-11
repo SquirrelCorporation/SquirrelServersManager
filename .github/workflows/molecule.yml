@@ -1,0 +1,37 @@
+# .github/workflows/molecule.yml
+
+name: Molecule Tests
+
+on:
+  push:
+    paths:
+      - 'server/src/tests/molecule/**'
+      - 'server/src/ansible/**'
+    branches: [ master ]
+  pull_request:
+    paths:
+      - 'server/src/tests/molecule/**'
+      - 'server/src/ansible/**'
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Ansible and Molecule
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible molecule ansible-lint
+
+      - name: Run Molecule default scenario
+        run: cd server/src/tests/molecule && molecule test

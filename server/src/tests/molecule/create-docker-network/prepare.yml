@@ -7,14 +7,23 @@
       apt:
         update_cache: yes
 
+    - name: Install prerequisites
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - python3-pip
+        - python3-setuptools
+
     - name: Install Docker
       apt:
         name: docker.io
         state: present
 
-    - name: Install Docker SDK for Python
+    - name: Install Docker SDK for Python (with --break-system-packages)
       pip:
         name: docker
+        extra_args: --break-system-packages
 
     - name: Start Docker service
       service:

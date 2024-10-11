@@ -1,3 +1,17 @@
+---
+#  ,;;:;,
+#   ;;;;;
+#  ,:;;:;    ,'=.
+#  ;:;:;' .=" ,'_\
+#  ':;:;,/  ,__:=@
+#   ';;:;  =./)_
+#     `"=\_  )_"`
+#          ``'"`
+# Playbook Name: Start a Docker compose stack
+# Description: This playbook starts a docker compose stack
+# Module: SSM-CORE
+# Tags: docker, compose, stack, services
+
 - name: Docker Compose
   hosts: all
   gather_facts: false
