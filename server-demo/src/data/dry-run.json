@@ -1,0 +1,4 @@
+{
+  "validating": false,
+  "message": "env file /tmp/f81f4b0a-e234-42e5-b6cc-46e981f6af74/.env not found: stat /tmp/f81f4b0a-e234-42e5-b6cc-46e981f6af74/.env: no such file or directory\n"
+}

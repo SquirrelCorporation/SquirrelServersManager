@@ -1,6 +1,7 @@
 import express from "express";
 import containers from "../data/containers.json";
 import registries from "../data/registries.json";
+import stacks from '../data/custom-stacks.json'
 import { SuccessResponse } from "../utils/ApiResponse";
 import asyncHandler from "../utils/AsyncHandler";
 
@@ -17,6 +18,20 @@ router.get(
   "/containers/registries",
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got running containers", registries).send(res);
+  }),
+);
+
+router.get(
+  "/containers/custom-stacks/dry-run",
+  asyncHandler(async (req, res) => {
+    new SuccessResponse("Got custom stacks", stacks).send(res);
+  }),
+);
+
+router.get(
+  "/containers/custom-stacks",
+  asyncHandler(async (req, res) => {
+    new SuccessResponse("Got custom stacks", stacks).send(res);
   }),
 );
 

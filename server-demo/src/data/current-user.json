@@ -92,7 +92,7 @@
       "considerOffLineAfter": 3
     },
     "server": {
-      "version": "0.1.18",
+      "version": "0.1.20",
       "deps": {
         "@aws-sdk/client-ecr": "^3.632.0",
         "axios": "^1.7.4",
