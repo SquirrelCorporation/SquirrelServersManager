@@ -36,6 +36,7 @@
 
 **Merged pull requests:**
 
+- Add test sequence and debug step in Molecule configurations [\#361](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/361) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Rename job and refine Molecule test execution directory [\#360](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/360) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[TESTS\] Add Molecule tests and CI workflow integration [\#359](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/359) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump the npm\_and\_yarn group in /server with 5 updates [\#353](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/353) ([dependabot[bot]](https://github.com/apps/dependabot))
