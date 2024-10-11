@@ -34,6 +34,7 @@ jobs:
           pip install ansible molecule ansible-lint
 
       - name: Debug folder structure
+        working-directory: server/src/tests/molecule
         run: |
           echo "Listing directory contents:"
           ls -R
