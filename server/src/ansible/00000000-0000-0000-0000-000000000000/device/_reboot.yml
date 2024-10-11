@@ -1,5 +1,19 @@
+---
+#  ,;;:;,
+#   ;;;;;
+#  ,:;;:;    ,'=.
+#  ;:;:;' .=" ,'_\
+#  ':;:;,/  ,__:=@
+#   ';;:;  =./)_
+#     `"=\_  )_"`
+#          ``'"`
+# Playbook Name: Reboot
+# Description: This playbook reboots unconditionally a machine
+# Module: SSM-CORE
+# Tags: reboot, restart, host
+
 - hosts: all
   tasks:
-  - name: Unconditionally reboot the machine with all defaults
+  - name: Unconditionally reboot the machine
     ansible.builtin.reboot:
 

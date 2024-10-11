@@ -1,0 +1,70 @@
+---
+- name: Run all Molecule scenarios
+  hosts: all
+  connection: local
+  tasks:
+    - name: Print current working directory
+      command: pwd
+      register: pwd_output
+
+    - name: Display current directory
+      debug:
+        msg: "Current working directory is {{ pwd_output.stdout }}"
+
+    - name: Molecule destroy previous instances (default)
+      command: molecule destroy -s default
+      args:
+        chdir: ../../
+    - name: Molecule reset for default scenario
+      command: molecule reset -s default
+      args:
+        chdir: ../../
+
+
+    - name: Run "Install agent"
+      block:
+        - name: Run Molecule test for "install-agent"
+          command: molecule test -s install-agent
+          args:
+            chdir: ../../
+          register: result_install_agent
+
+        - name: Show result of "Install agent"
+          debug:
+            msg: "{{ result_install_agent.stdout }}"
+      always:
+        - name: Show stderr of "Install agent"
+          debug:
+            msg: "{{ result_install_agent.stderr }}"
+
+    - name: Run "Create docker network"
+      block:
+        - name: Run Molecule test for "create-docker-network"
+          command: molecule test -s create-docker-network
+          args:
+            chdir: ../../
+          register: result_create_docker_network
+
+        - name: Show result of "Create docker network"
+          debug:
+            msg: "{{ result_create_docker_network.stdout }}"
+      always:
+        - name: Show stderr of "Create docker network"
+          debug:
+            msg: "{{ result_create_docker_network.stderr }}"
+
+    - name: Run "Install docker"
+      block:
+        - name: Run Molecule test for "install-docker"
+          command: molecule test -s install-docker
+          args:
+            chdir: ../../
+          register: result_install_docker
+
+        - name: Show result of "Install docker"
+          debug:
+            msg: "{{ result_install_docker.stdout }}"
+      always:
+        - name: Show stderr of "Install docker"
+          debug:
+            msg: "{{ result_install_docker.stderr }}"

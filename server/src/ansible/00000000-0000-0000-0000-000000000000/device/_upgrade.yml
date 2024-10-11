@@ -1,3 +1,17 @@
+---
+#  ,;;:;,
+#   ;;;;;
+#  ,:;;:;    ,'=.
+#  ;:;:;' .=" ,'_\
+#  ':;:;,/  ,__:=@
+#   ';;:;  =./)_
+#     `"=\_  )_"`
+#          ``'"`
+# Playbook Name: Update a host OS packages
+# Description: This playbook updates the host packages using its standard package manager
+# Module: SSM-CORE
+# Tags: update, apt, packages
+
 - name: Perform system upgrade and cleanup with conditional reboot
   hosts: all
   gather_facts: true

@@ -1,3 +1,17 @@
+---
+#  ,;;:;,
+#   ;;;;;
+#  ,:;;:;    ,'=.
+#  ;:;:;' .=" ,'_\
+#  ':;:;,/  ,__:=@
+#   ';;:;  =./)_
+#     `"=\_  )_"`
+#          ``'"`
+# Playbook Name: Ansible Ping
+# Description: This playbook executes an Ansible ping on the host.
+# Module: SSM-CORE
+# Tags: ping, connectivity, ansible, ssh
+
 - hosts: all
   tasks:
     - name: Test Connection

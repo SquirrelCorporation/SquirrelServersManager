@@ -1,0 +1,5 @@
+molecule
+molecule-plugins
+ansible
+pytest
+pytest-testinfra

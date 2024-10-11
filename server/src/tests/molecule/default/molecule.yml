@@ -1,0 +1,11 @@
+---
+dependency:
+  name: galaxy
+platforms:
+  - name: instance
+    connection_options:
+      ansible_connection: local
+provisioner:
+  name: ansible
+  playbooks:
+    converge: run_all.yml

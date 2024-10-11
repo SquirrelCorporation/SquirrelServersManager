@@ -2,7 +2,7 @@
 <module type="WEB_MODULE" version="4">
   <component name="FacetManager">
     <facet type="Python" name="Python facet">
-      <configuration sdkName="Python 3.10 (SquirrelServersManager-Agent)" />
+      <configuration sdkName="Python 3.9 (SquirrelServersManager)" />
     </facet>
   </component>
   <component name="NewModuleRootManager">
@@ -10,10 +10,11 @@
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Python 3.10 (SquirrelServersManager-Agent) interpreter library" level="application" />
     <orderEntry type="module" module-name="SquirrelServersManager-Agent" />
+    <orderEntry type="library" name="Python 3.9 (SquirrelServersManager) interpreter library" level="application" />
   </component>
 </module>
