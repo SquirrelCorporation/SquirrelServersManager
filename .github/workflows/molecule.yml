@@ -48,5 +48,6 @@ jobs:
         with:
           molecule_working_dir: SquirrelCorporation/SquirrelServersManager/server/src/tests/
           molecule_command: test -s install-agent
+
         env:
           ANSIBLE_FORCE_COLOR: '1'

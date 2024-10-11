@@ -1,6 +1,7 @@
 ---
 dependency:
-  name: galaxy
+  name: shell
+  command: "${MOLECULE_SCENARIO_DIRECTORY}/tools/install-dependencies"
 platforms:
   - name: instance
     connection_options:
