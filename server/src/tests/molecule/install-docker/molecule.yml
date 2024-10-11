@@ -1,7 +1,7 @@
 ---
 dependency:
   name: shell
-  command: "${MOLECULE_SCENARIO_DIRECTORY}/tools/install-dependencies.sh"
+  command: "pip install pytest-testinfra"
 
 driver:
   name: docker
