@@ -24,6 +24,8 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
+        with:
+          path: "${{ github.repository }}"
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -44,18 +46,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install ansible molecule ansible-lint
           pip install -r requirements.txt
-
-      - name: Debug folder structure
-        working-directory: server/src/tests/molecule
-        run: |
-          echo "Listing directory contents:"
-          ls -R
-
-      - name: Ensure cache directory exists
-        run: |
-          mkdir -p /home/runner/.cache/molecule/tests/default/inventory
-          touch /home/runner/.cache/molecule/tests/default/inventory/ansible_inventory.yml
-          chmod 777 /home/runner/.cache/molecule/tests/default/inventory/ansible_inventory.yml
 
       - name: Molecule
         uses: gofrolist/molecule-action@v2
