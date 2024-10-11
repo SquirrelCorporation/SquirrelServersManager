@@ -57,6 +57,10 @@ jobs:
           touch /home/runner/.cache/molecule/tests/default/inventory/ansible_inventory.yml
           chmod 777 /home/runner/.cache/molecule/tests/default/inventory/ansible_inventory.yml
 
-      - name: Run Molecule default scenario
-        working-directory: server/src/tests/
-        run: molecule test
+      - name: Molecule
+        uses: gofrolist/molecule-action@v2
+        with:
+          molecule-working-dir: server/src/tests/
+          molecule_command: test
+        env:
+          ANSIBLE_FORCE_COLOR: '1'
