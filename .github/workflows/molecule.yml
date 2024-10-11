@@ -41,7 +41,7 @@ jobs:
             ${{ runner.os }}-pip-${{ hashFiles('server/src/tests/molecule/requirements.txt') }}
 
       - name: Install Ansible and Molecule
-        working-directory: server/src/tests/molecule
+        working-directory: SquirrelCorporation/SquirrelServersManager/server/src/tests/molecule
         run: |
           python -m pip install --upgrade pip
           pip install ansible molecule ansible-lint
@@ -50,7 +50,7 @@ jobs:
       - name: Molecule
         uses: gofrolist/molecule-action@v2
         with:
-          molecule-working-dir: server/src/tests/
+          molecule-working-dir: SquirrelCorporation/SquirrelServersManager/server/src/tests/
           molecule_command: test
         env:
           ANSIBLE_FORCE_COLOR: '1'
