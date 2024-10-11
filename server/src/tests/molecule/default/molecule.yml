@@ -1,7 +1,7 @@
 ---
 dependency:
-  name: shell
-  command: "${MOLECULE_SCENARIO_DIRECTORY}/tools/install-dependencies"
+  name: galaxy
+
 platforms:
   - name: instance
     connection_options:
@@ -12,6 +12,7 @@ provisioner:
     converge: run_all.yml
 scenario:
   test_sequence:
+    - dependency
     - destroy
     - create
     - prepare
