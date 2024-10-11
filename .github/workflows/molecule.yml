@@ -18,6 +18,8 @@ on:
 jobs:
   molecule-tests:
     runs-on: ubuntu-latest
+    env:
+      ANSIBLE_ASYNC_DIR: "/tmp/.ansible_async"
 
     steps:
       - name: Checkout source code
@@ -48,6 +50,10 @@ jobs:
         run: |
           echo "Listing directory contents:"
           ls -R
+
+      - name: Ensure cache directory exists
+        run: |
+          mkdir -p /home/runner/.cache/molecule/tests/default/inventory
 
       - name: Run Molecule default scenario
         working-directory: server/src/tests/
