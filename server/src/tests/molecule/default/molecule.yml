@@ -9,3 +9,11 @@ provisioner:
   name: ansible
   playbooks:
     converge: run_all.yml
+scenario:
+  test_sequence:
+    - destroy
+    - create
+    - prepare
+    - converge
+    # - idempotence
+    - verify

@@ -33,6 +33,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install ansible molecule ansible-lint
 
+      - name: Debug folder structure
+        run: |
+          echo "Listing directory contents:"
+          ls -R
+
       - name: Run Molecule default scenario
         working-directory: server/src/tests/molecule
         run: molecule test
