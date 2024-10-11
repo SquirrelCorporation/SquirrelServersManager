@@ -36,6 +36,7 @@
 
 **Merged pull requests:**
 
+- \[TESTS\] Add Molecule tests and CI workflow integration [\#359](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/359) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump the npm\_and\_yarn group in /server with 5 updates [\#353](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/353) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump the npm\_and\_yarn group across 1 directory with 2 updates [\#352](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/352) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @stylistic/eslint-plugin from 2.8.0 to 2.9.0 in /server [\#349](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/349) ([dependabot[bot]](https://github.com/apps/dependabot))
