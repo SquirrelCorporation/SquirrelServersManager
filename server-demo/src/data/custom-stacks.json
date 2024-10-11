@@ -1,0 +1,86 @@
+[
+  {
+    "_id": "67092de2ce0d195dece4bc31",
+    "uuid": "0a74c0c1-b7a6-4f69-aae7-6ad94313e3e1",
+    "createdAt": "2024-10-11T13:53:38.983Z",
+    "lockJson": true,
+    "name": "sleepy-brown",
+    "updatedAt": "2024-10-11T13:53:38.983Z",
+    "yaml": "services:\n  proxy:\n    restart: unless-stopped\n    build:\n      context: ./proxy\n    ports:\n      - \"8000:8000\"\n    depends_on:\n      - client\n      - mongo\n      - server\n      - redis\n  mongo:\n    container_name: mongo-ssm\n    image: mongo\n    restart: unless-stopped\n    volumes:\n      - ./.data.prod/db:/data/db\n    command: --quiet\n  redis:\n    container_name: cache-ssm\n    image: redis\n    restart: unless-stopped\n    volumes:\n      - ./.data.prod/cache:/data\n    command: --save 60 1\n  server:\n    restart: unless-stopped\n    external_links:\n      - mongo\n      - redis\n    depends_on:\n      - mongo\n      - redis\n    volumes:\n      - ./.data.prod/playbooks:/playbooks\n      - ./.data.prod/config:/ansible-config\n    build:\n      context: ./server\n      additional_contexts:\n        - shared-lib=./shared-lib\n      target: production\n    env_file: .env\n    environment:\n      NODE_ENV: production\n  client:\n    restart: unless-stopped\n    depends_on:\n      - server\n    build:\n      context: ./client\n      additional_contexts:\n        - shared-lib=./shared-lib\n      target: production\n"
+  },
+  {
+    "_id": "67092ee3ce0d195dece4be88",
+    "uuid": "9ec86a3b-8632-47f4-8ebe-9575b7c4920d",
+    "createdAt": "2024-10-11T13:57:55.579Z",
+    "icon": "file",
+    "iconBackgroundColor": "#000000",
+    "iconColor": "#ffffff",
+    "json": {
+      "name": "goofy-bartik",
+      "services": {
+        "oNFMn1jkvh": {
+          "name": "redis",
+          "ports": [
+            {
+              "published": 6379,
+              "target": 6379
+            }
+          ]
+        }
+      }
+    },
+    "lockJson": false,
+    "name": "goofy-bartik",
+    "rawStackValue": [
+      {
+        "id": "services",
+        "name": "Services",
+        "children": [
+          {
+            "name": "Services",
+            "id": "services",
+            "category": "services",
+            "isTemplate": true,
+            "children": [
+              {
+                "id": "image",
+                "name": "Image",
+                "fieldType": "text",
+                "value": "redis:latest"
+              },
+              {
+                "id": "ports",
+                "name": "Ports",
+                "fieldType": "list",
+                "listItemType": "group",
+                "fields": [
+                  {
+                    "id": "published",
+                    "name": "Published Port",
+                    "fieldType": "number",
+                    "value": [
+                      6379
+                    ]
+                  },
+                  {
+                    "id": "target",
+                    "name": "Target Port",
+                    "fieldType": "number",
+                    "value": [
+                      6379
+                    ]
+                  }
+                ]
+              }
+            ],
+            "originalId": "redis",
+            "path": "oNFMn1jkvh",
+            "index": 0
+          }
+        ]
+      }
+    ],
+    "updatedAt": "2024-10-11T13:57:55.579Z",
+    "yaml": "services:\n  redis:\n    ports:\n      - '6379:6379'\n"
+  }
+]
