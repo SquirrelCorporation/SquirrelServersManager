@@ -7,8 +7,9 @@
 2. **Enter SSH Info**: Port, IP, sudo method, login type.
 3. **Verify Master Node URL**: Ensure it is correct and reachable.
 4. **Run Connection Tests**: Ansible and Docker checks.
-5. **Confirm Details**: Click "Confirm & Install Agent".
-6. **Monitor Installation**: Track Ansible's progress.
+5. **Select Installation Method**: Directly on the host or dockerized
+6. **Confirm Details**: Click "Confirm & Install Agent".
+7. **Monitor Installation**: Track Ansible's progress.
 :::
 
 ## 1. Inventory
@@ -33,11 +34,19 @@ In the next step, SSM will attempt to ping itself through this URL.
 Ansible and Docker connections will automatically be initiated to test your previous inputs. Wait for the results and address any issues that may arise.
 If you need to use a different authentication method for Docker, you can later specify it in the Docker configuration (see [Device Configuration](/docs/devices/device-configuration)).
 
-## 5. Adding a device: Confirmation screen
+## 4. Installation Method
+![adddevice4](/add-device/add-device-7.png)
+| Method                                    | Description                                                                                                                            | Will install if needed        |
+|-------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------:|------------------------------|
+| Node Agent - Default                      | The default method, it will install directly on the host a PM2 backed Node.js agent                                                    | `NodeJS (NVM)`, `NPM`, `PM2`        |
+| Node Agent - Enhanced Playbook (Experimental) | Experimental method, it will install directly on the host a PM2 backed Node.js agent with an advanced playbook for various configurations and OS. Try this if you have difficulties with the first one | `NodeJS (NVM)`, `NPM`, `PM2`        |            
+| Dockerized Agent (Experimental)           | Experimental, a Dockerized version of the agent. As far as tests go, it works very well. Use only on Linux hosts (macOS not supported) | `Docker`, `Docker Compose`        |
+
+## 6. Adding a device: Confirmation screen
 ![adddevice4](/add-device/add-device-4.png)
 Verify that all information is correct and click on **"Confirm & Install agent"**.
 
-## 6. Behold! The magic of SSM
+## 7. Behold! The magic of SSM
 ![adddevice5](/add-device/add-device-5.png)
 Monitor the progress of Ansible installing the agent on your device.
 
