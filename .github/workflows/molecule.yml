@@ -48,5 +48,5 @@ jobs:
           ls -R
 
       - name: Run Molecule default scenario
-        working-directory: server/src/tests/molecule/default
-        run: ls -la && molecule test
+        working-directory: server/src/tests/
+        run: molecule test
