@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.20...HEAD)
+
+**Merged pull requests:**
+
+- \[DOC\] Add custom stacks data and routes, update server version [\#363](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/363) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 ## [v0.1.20](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.20) (2024-10-11)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.19...v0.1.20)
