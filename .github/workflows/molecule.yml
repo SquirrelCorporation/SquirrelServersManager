@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  molecule-tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -34,4 +34,5 @@ jobs:
           pip install ansible molecule ansible-lint
 
       - name: Run Molecule default scenario
-        run: cd server/src/tests/molecule && molecule test
+        working-directory: server/src/tests/molecule
+        run: molecule test
