@@ -112,6 +112,8 @@ features:
 ## Screenshots
 ### Dashboard
 ![dashboard](/home/dashboard.png)
+### Stacks
+![dashboard](/home/stacks.png)
 ### Devices
 ![devices](/home/devices.png)
 ### Services

@@ -9,7 +9,11 @@ To avoid any problems, use the **latest versions** of Node and NPM
 - Please be aware that MongoDB requires a CPU supporting AVX
 - The host of SSM needs port **:8000** opened for the agent to communicate with it.
 
+
+---
+
 ### Agent:
+#### Vanilla NodeJS Agent (Recommended):
 :::info ℹ️ Agent dependencies
 The following dependencies will be automatically installed when the agent is installed from the UI, thanks to the ad-hoc Ansible playbook
 :::
@@ -17,5 +21,10 @@ The following dependencies will be automatically installed when the agent is ins
 - **NodeJS >= 20.0.0**
 - **NPM >= 10.5.0**
 - **PM2 >= 5.3.1**
+
+#### Dockerized Agent (Experimental):
+If you don't want to install the agent directly on the host, you can try the Dockerized agent. It will simply spin up a privileged Docker container that gathers the system information for SSM.
+
+---
 
 Under the hood, the agent uses the package "[systeminformation](https://github.com/sebhildebrandt/systeminformation)". We encourage you to read the [known issues](https://systeminformation.io/issues.html) as some configurations may require additional packages to be installed (macOS, Windows, Linux), even though the playbook will attempt to do this for you.
