@@ -87,7 +87,7 @@
   "devDependencies": {
     "@ant-design/plots": "^2.3.2",
     "@ant-design/pro-cli": "^3.2.1",
-    "@babel/preset-env": "^7.25.7",
+    "@babel/preset-env": "^7.25.8",
     "@babel/preset-react": "^7.25.7",
     "@babel/preset-typescript": "^7.25.7",
     "@eslint/eslintrc": "^3.1.0",
