@@ -96,7 +96,7 @@ features:
 
 ❤️ Rediscover Ansible and Docker as they unite under one intuitive, open-source interface. Welcome to simplicity and power in perfect harmony.
 
-## Features
+## <span style="display: flex; align-items: center;"><img src="/home/overview.svg" alt="tldr" style="margin-right: 8px;" />Features</span>
 
 |                                            | Features                               | Description                                                                                                                            |
 |:------------------------------------------:|:---------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------|
@@ -109,24 +109,71 @@ features:
 | ![integration](/home/integration-general.svg)| **Integrations** (Coming soon)         | :white_circle: Trigger automations from other tools and call other services                                                            |
 | ![libraries](/home/library-filled.svg)     | **Collections**                        | :white_circle: Install open source services on your devices with one click                                                             |
 
-## Screenshots
-### Dashboard
-![dashboard](/home/dashboard.png)
-### Stacks
-![dashboard](/home/stacks.png)
-### Devices
-![devices](/home/devices.png)
-### Services
-![services](/home/services.png)
-### Deploy
-![store](/home/store.png)
-### Playbook editor
-![playbook](/home/playbook.png)
-### Device Info
-![deviceinfo](/home/device-info.png)
-### Add a new device
-![new-device](/home/new-device.png)
+## <span style="display: flex; align-items: center;"><img src="/about/square-star.svg" alt="tldr" style="margin-right: 8px;" />Showcase</span>
 
+<div style="text-align: center; display: flex; align-items: center;">
+  <hr style="flex: 1; border: none; height: 1px; background-color: black; margin: 0 10px;" />
+  <span>Dashboard</span>
+  <hr style="flex: 1; border: none; height: 1px; background-color: black; margin: 0 10px;" />
+</div>
+
+<img src="/home/dashboard.png" alt="dashboard" style="border-radius: 10px; border: 2px solid #000; margin-bottom: 35px; margin-top: 15px" />
+
+<div style="text-align: center; display: flex; align-items: center;">
+  <hr style="flex: 1; border: none; height: 1px; background-color: black; margin: 0 10px;" />
+  <span>Stacks</span>
+  <hr style="flex: 1; border: none; height: 1px; background-color: black; margin: 0 10px;" />
+</div>
+
+<img src="/home/stacks.png" alt="stacks" style="border-radius: 10px; border: 2px solid #000; margin-bottom: 35px; margin-top: 15px" />
+
+<div style="text-align: center; display: flex; align-items: center;">
+  <hr style="flex: 1; border: none; height: 1px; background-color: black; margin: 0 10px;" />
+  <span>Devices</span>
+  <hr style="flex: 1; border: none; height: 1px; background-color: black; margin: 0 10px;" />
+</div>
+
+<img src="/home/devices.png" alt="devices" style="border-radius: 10px; border: 2px solid #000; margin-bottom: 35px; margin-top: 15px" />
+
+<div style="text-align: center; display: flex; align-items: center;">
+  <hr style="flex: 1; border: none; height: 1px; background-color: black; margin: 0 10px;" />
+  <span>Services</span>
+  <hr style="flex: 1; border: none; height: 1px; background-color: black; margin: 0 10px;" />
+</div>
+
+<img src="/home/services.png" alt="services" style="border-radius: 10px; border: 2px solid #000; margin-bottom: 35px; margin-top: 15px" />
+
+<div style="text-align: center; display: flex; align-items: center;">
+  <hr style="flex: 1; border: none; height: 1px; background-color: black; margin: 0 10px;" />
+  <span>Deploy</span>
+  <hr style="flex: 1; border: none; height: 1px; background-color: black; margin: 0 10px;" />
+</div>
+
+<img src="/home/store.png" alt="store" style="border-radius: 10px; border: 2px solid #000; margin-bottom: 35px; margin-top: 15px" />
+
+<div style="text-align: center; display: flex; align-items: center;">
+  <hr style="flex: 1; border: none; height: 1px; background-color: black; margin: 0 10px;" />
+  <span>Playbook editor</span>
+  <hr style="flex: 1; border: none; height: 1px; background-color: black; margin: 0 10px;" />
+</div>
+
+<img src="/home/playbook.png" alt="playbook" style="border-radius: 10px; border: 2px solid #000; margin-bottom: 35px; margin-top: 15px" />
+
+<div style="text-align: center; display: flex; align-items: center;">
+  <hr style="flex: 1; border: none; height: 1px; background-color: black; margin: 0 10px;" />
+  <span>Device Info</span>
+  <hr style="flex: 1; border: none; height: 1px; background-color: black; margin: 0 10px;" />
+</div>
+
+<img src="/home/device-info.png" alt="device info" style="border-radius: 10px; border: 2px solid #000; margin-bottom: 35px; margin-top: 15px" />
+
+<div style="text-align: center; display: flex; align-items: center;">
+  <hr style="flex: 1; border: none; height: 1px; background-color: black; margin: 0 10px;" />
+  <span>Add a new device</span>
+  <hr style="flex: 1; border: none; height: 1px; background-color: black; margin: 0 10px;" />
+</div>
+
+<img src="/home/new-device.png" alt="new device" style="border-radius: 10px; border: 2px solid #000; margin-bottom: 35px; margin-top: 15px" />
 
 :::warning 🚧 Work in Progress
 SSM is currently in active development and not yet ready for production. We encourage you to learn about [why we are building it](/about.md) and welcome community contributions. If you are interested in getting involved, check out the [Contribution Guide](/contribute/)!
