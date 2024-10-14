@@ -247,6 +247,12 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                   },
                 ]}
               />
+              <Alert
+                message={
+                  'Ensure that the server running Squirrel Servers Manager has port *8000* opened and accessible from the device you wish to add.'
+                }
+                showIcon
+              />
             </StepsForm.StepForm>
             <StepsForm.StepForm
               name="test"

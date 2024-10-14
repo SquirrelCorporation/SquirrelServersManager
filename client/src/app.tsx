@@ -8,6 +8,7 @@ import DocumentationWidget from '@/components/HeaderComponents/DocumentationWidg
 import { HealthWidget } from '@/components/HeaderComponents/HealthWidget';
 import NotificationsWidget from '@/components/HeaderComponents/NotificationsWidget';
 import UpdateAvailableWidget from '@/components/HeaderComponents/UpdateAvailableWidget';
+import NoDeviceModal from '@/components/NoDevice/NoDeviceModal';
 import { currentUser as queryCurrentUser, hasUser } from '@/services/rest/user';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 // @ts-ignore
@@ -123,7 +124,12 @@ export const layout: RunTimeLayoutConfig = ({
                 description={`The server version (${initialState?.currentUser?.settings?.server.version}) does not match the client version (${version}). You may need to retry a docker compose pull to update SSM.`}
                 type="warning"
                 showIcon
+                banner
               />
+            )}
+          {initialState?.currentUser?.devices?.overview &&
+            initialState?.currentUser?.devices?.overview?.length === 0 && (
+              <NoDeviceModal />
             )}
           {children}
         </>

@@ -10,8 +10,7 @@ SSM has published versions of the client and server images according to release 
 The `docker-compose.yml` file uses these pre-built images. To use them, you can set up the following Docker Compose file:
 
 ### Docker-compose file
-```dockerfile
-version: '3.8'
+```yaml
 services:
   proxy:
     restart: unless-stopped
