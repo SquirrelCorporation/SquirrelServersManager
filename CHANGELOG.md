@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Update dependencies and add missing licenses [\#378](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/378) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @umijs/lint from 4.3.25 to 4.3.26 in /client [\#377](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/377) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[DOC\] Rename and update deploy docs, add env variables. [\#376](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/376) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @babel/preset-env from 7.25.7 to 7.25.8 in /client [\#374](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/374) ([dependabot[bot]](https://github.com/apps/dependabot))
