@@ -65,6 +65,10 @@ features:
 }
 </style>
 
+## Try it now!
+```shell
+curl https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager/refs/heads/master/getSSM.sh | bash
+```
 --- 
 
 :::tip Stay informed

@@ -33,19 +33,23 @@ It is designed to provide a user-friendly alternative to well-known established 
 ---
 
 ## 🏎️ QuickStart
+```shell
+curl https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager/refs/heads/master/getSSM.sh | bash
+```
 See [QuickStart](https://squirrelserversmanager.io/docs/quickstart)
 
-**Edit the `.env` file before anything.**
+
+For the others methods, **Edit the `.env` file before anything.**
 
 ---
 
 ## 🛳️ Production
-```console
+```shell
 docker compose up
 ```
 
 ## 🏗️ Development
-```console
+```shell
 docker compose -f docker-compose.dev.yml up
 ```
 
