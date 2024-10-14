@@ -6,11 +6,14 @@
 
 **Merged pull requests:**
 
+- Bump @umijs/lint from 4.3.25 to 4.3.26 in /client [\#377](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/377) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[DOC\] Rename and update deploy docs, add env variables. [\#376](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/376) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @babel/preset-env from 7.25.7 to 7.25.8 in /client [\#374](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/374) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @umijs/max from 4.3.24 to 4.3.25 in /client [\#373](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/373) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump framer-motion from 11.11.1 to 11.11.8 in /client [\#372](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/372) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @types/react-dom from 18.3.0 to 18.3.1 in /client [\#371](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/371) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @typescript-eslint/eslint-plugin from 8.8.0 to 8.8.1 in /server [\#370](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/370) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump globals from 15.10.0 to 15.11.0 in /server [\#369](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/369) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump mongoose from 8.7.0 to 8.7.1 in /server [\#368](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/368) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump mongodb-memory-server from 10.0.1 to 10.1.2 in /server [\#367](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/367) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @typescript-eslint/parser from 8.8.0 to 8.8.1 in /server [\#366](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/366) ([dependabot[bot]](https://github.com/apps/dependabot))
