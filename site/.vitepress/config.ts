@@ -149,7 +149,7 @@ export default defineConfig({
             },
             {
               text: 'Containers', items: [{text: 'Overview', link: '/docs/containers/containers.md'},
-                {text: 'Deploy', link: '/docs/containers/deploy.md'}]
+                {text: 'Deploy from the Store', link: '/docs/containers/deploy-store.md'}]
             },
             {
               text: 'Automations',  items: [{text: 'Overview',link: '/docs/automations/automations.md'}]
