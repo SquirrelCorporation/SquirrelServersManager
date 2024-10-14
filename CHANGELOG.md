@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Add no devices modal and update installation guides [\#379](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/379) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update dependencies and add missing licenses [\#378](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/378) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @umijs/lint from 4.3.25 to 4.3.26 in /client [\#377](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/377) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[DOC\] Rename and update deploy docs, add env variables. [\#376](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/376) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
@@ -32,11 +33,11 @@
 - \[FEAT\] Custom stack mgr 🔥 [\#180](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/180)
 - \[FEAT\] Playbooks with roles for NVM, Node js install 🔥  [\#117](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/117)
 - \[FEAT\] Update query handling and improve form components [\#357](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/357) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[FEAT\] Feat update available widget [\#356](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/356) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Feat installation method [\#351](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/351) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- Feat container details [\#350](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/350) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - 117 feat playbooks with roles for nvm node js install [\#331](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/331) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Add container ports handling and display link in UI [\#328](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/328) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[FEAT\] Feat update available widget [\#356](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/356) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Feat container details [\#350](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/350) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Fixed bugs:**
 
@@ -44,17 +45,17 @@
 - \[CHORE\] Popover in Services/Containers info details is buggy 🧹 [\#333](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/333)
 - \[BUG\] Only 10 hosts available for automation [\#319](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/319)
 - \[BUG\] Adding all LXCs and VMs very high CPU load [\#165](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/165)
+- \[BUG\] Add getAllDevices API endpoint and update client calls [\#323](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/323) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Filter out undefined names in context arrays [\#358](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/358) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\]\[BUG\]Refactor directory view, enhance Docker install [\#354](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/354) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Fix update problem of NewFileDrawerForm, bump libs [\#337](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/337) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Update log path for container management [\#326](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/326) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] \*\*Refactor quick action components to include icons\*\* [\#325](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/325) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[BUG\] Add getAllDevices API endpoint and update client calls [\#323](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/323) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Closed issues:**
 
-- \[FEAT\] See open ports of containers, update UI to go to that ip/port 🔥 [\#327](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/327)
 - \[BUG\]  Encounter "Response status: 500 - ExtraVar value not found !" while trying to add a new server.  [\#296](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/296)
+- \[FEAT\] See open ports of containers, update UI to go to that ip/port 🔥 [\#327](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/327)
 
 **Merged pull requests:**
 
@@ -70,19 +71,15 @@
 - Bump framer-motion from 11.10.0 to 11.11.1 in /client [\#344](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/344) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @eslint/js from 9.11.1 to 9.12.0 in /client [\#343](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/343) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump eslint-plugin-react from 7.37.0 to 7.37.1 in /client [\#340](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/340) ([dependabot[bot]](https://github.com/apps/dependabot))
-- \[CHORE\] Chore update express 5 [\#335](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/335) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Rename SSHType.Automatic to SSHType.PasswordLess [\#330](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/330) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Add Apps section and Vuetify support [\#329](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/329) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump rollup from 4.21.3 to 4.22.5 in /server in the npm\_and\_yarn group [\#324](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/324) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @types/react from 18.3.9 to 18.3.10 in /client [\#322](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/322) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump eslint-plugin-import-x from 4.3.0 to 4.3.1 in /server [\#320](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/320) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[FEAT\] Add ability to use automatic SSH authentication [\#318](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/318) ([btajuddin](https://github.com/btajuddin))
-- Update npm dependencies and package-lock versions [\#316](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/316) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump rollup from 4.21.0 to 4.22.5 in /site in the npm\_and\_yarn group across 1 directory [\#315](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/315) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump vite from 5.4.5 to 5.4.8 in /server in the npm\_and\_yarn group across 1 directory [\#313](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/313) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump mongoose from 8.6.3 to 8.6.4 in /server [\#312](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/312) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump vite from 5.4.2 to 5.4.8 in /site in the npm\_and\_yarn group across 1 directory [\#311](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/311) ([dependabot[bot]](https://github.com/apps/dependabot))
-- 180 feat custom stack mgr [\#310](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/310) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @ant-design/icons from 5.4.0 to 5.5.1 in /client [\#309](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/309) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @types/react from 18.3.5 to 18.3.8 in /client [\#307](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/307) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump antd from 5.20.6 to 5.21.0 in /client [\#306](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/306) ([dependabot[bot]](https://github.com/apps/dependabot))
@@ -92,6 +89,10 @@
 - Bump mongodb-memory-server from 10.0.0 to 10.0.1 in /server [\#301](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/301) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 22.8.0-alpine to 22.9.0-alpine in /server [\#299](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/299) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump vite from 5.4.5 to 5.4.6 in /server in the npm\_and\_yarn group [\#295](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/295) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[CHORE\] Chore update express 5 [\#335](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/335) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Rename SSHType.Automatic to SSHType.PasswordLess [\#330](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/330) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Update npm dependencies and package-lock versions [\#316](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/316) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- 180 feat custom stack mgr [\#310](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/310) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.19](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.19) (2024-09-19)
 
@@ -99,7 +100,6 @@
 
 **Fixed bugs:**
 
-- \[BUG\] Adding all LXCs and VMs very high CPU load [\#165](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/165)
 - \[BUG\] Refactor Ansible keys usage in cache settings [\#297](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/297) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Merged pull requests:**
