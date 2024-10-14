@@ -1,4 +1,4 @@
-# Deploy a Service
+# Deploy a Service from the Store
 
 ## Store
 In the `Store` section of the `Containers` page, you can easily deploy a container on any of your devices from a list of various self-hosted software options.

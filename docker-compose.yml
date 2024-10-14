@@ -32,9 +32,16 @@ services:
     depends_on:
       - mongo
       - redis
-    env_file: .env
     environment:
       NODE_ENV: production
+      SECRET: REPLACE_ME
+      SALT: 1234567890123456
+      VAULT_PWD: REPLACE_ME
+      DB_HOST: mongo
+      DB_NAME: ssm
+      DB_PORT: 27017
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     volumes:
       - ./.data.prod/playbooks:/playbooks
       - ./.data.prod/config:/ansible-config
