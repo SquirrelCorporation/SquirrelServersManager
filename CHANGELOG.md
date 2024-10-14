@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- \[DOC\] Add overview icon, update styles, expand user guide [\#380](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/380) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add no devices modal and update installation guides [\#379](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/379) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update dependencies and add missing licenses [\#378](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/378) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @umijs/lint from 4.3.25 to 4.3.26 in /client [\#377](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/377) ([dependabot[bot]](https://github.com/apps/dependabot))
