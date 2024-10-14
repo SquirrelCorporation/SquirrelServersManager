@@ -43,7 +43,7 @@
 
     - name: Reboot the server (if required - CentOS/RHEL-based systems).
       ansible.builtin.reboot:
-      when: needs_restarting.rc == 1
+      when: ansible_distribution in ["CentOS", "RedHat"] and needs_restarting.rc == 1
 
     - name: Remove dependencies that are no longer required.
       ansible.builtin.package:

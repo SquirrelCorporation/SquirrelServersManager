@@ -4,6 +4,12 @@
 See [Requirements](/docs/requirements)
 :::
 
+## Use the Script
+
+```shell
+curl https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager/refs/heads/master/getSSM.sh | bash
+```
+
 ## Use pre-built images
 
 SSM has published versions of the client and server images according to release tags [here](https://github.com/orgs/SquirrelCorporation/packages?repo_name=SquirrelServersManager).
