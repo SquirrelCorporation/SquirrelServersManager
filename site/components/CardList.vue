@@ -93,7 +93,7 @@ export default {
 
 <style scoped>
 .full-width-container {
-  width: 80% !important;
+  width: 90% !important;
   margin-right: 80px !important;
   margin-left: 80px !important;
   margin-top: 40px !important;
