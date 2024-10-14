@@ -86,7 +86,7 @@ const schema = new Schema<Device>(
     ip: {
       type: Schema.Types.String,
       required: false,
-      unique: true,
+      unique: false,
     },
     status: {
       type: Schema.Types.Number,

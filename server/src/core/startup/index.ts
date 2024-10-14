@@ -1,6 +1,7 @@
 import { SettingsKeys } from 'ssm-shared-lib';
 import { getFromCache, setToCache } from '../../data/cache';
 import initRedisValues from '../../data/cache/defaults';
+import { DeviceModel } from '../../data/database/model/Device';
 import { PlaybookModel } from '../../data/database/model/Playbook';
 import { copyAnsibleCfgFileIfDoesntExist } from '../../helpers/ansible/AnsibleConfigurationHelper';
 import PinoLogger from '../../logger';
@@ -48,6 +49,7 @@ class Startup {
   private async updateScheme() {
     this.logger.warn(`Scheme version differed, starting writing updates`);
     await PlaybookModel.syncIndexes();
+    await DeviceModel.syncIndexes();
     await createADefaultLocalUserRepository();
     await initRedisValues();
     void setAnsibleVersions();
