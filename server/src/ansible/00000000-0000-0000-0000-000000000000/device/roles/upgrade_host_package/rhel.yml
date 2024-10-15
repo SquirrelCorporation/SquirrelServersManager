@@ -1,0 +1,21 @@
+---
+# tasks/rhel.yml
+
+- name: Perform a dist-upgrade.
+  ansible.builtin.package:
+    name: "*"
+    state: latest
+
+- name: Check if a reboot is required.
+  ansible.builtin.command: /usr/bin/needs-restarting -r
+  register: needs_restarting
+  failed_when: needs_restarting.rc not in [0,1,123]
+  changed_when: needs_restarting.rc == 1
+
+- name: Reboot the server if required.
+  ansible.builtin.reboot:
+  when: needs_restarting.rc == 1
+
+- name: Remove dependencies that are no longer required.
+  ansible.builtin.package:
+    autoremove: true

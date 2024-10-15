@@ -1,0 +1,27 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: docker
+
+platforms:
+  - name: debian-latest
+    image: debian:latest
+    command: "sleep infinity"  # Keep container running for Molecule to work with
+  - name: rockylinux
+    image: rockylinux:9.3
+    command: "sleep infinity"  # Keep container running for Molecule to work with
+
+provisioner:
+  name: ansible
+  log: true
+
+scenario:
+  test_sequence:
+    - destroy
+    - create
+    - prepare
+    - converge
+    - verify
+    - destroy

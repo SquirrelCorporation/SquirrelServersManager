@@ -1,0 +1,15 @@
+# Dockerfile.j2
+
+FROM {{ item.image }}
+
+# For Debian-based systems
+{% if item.image.startswith('debian') or item.image.startswith('ubuntu') %}
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip sshpass sudo
+{% endif %}
+
+# For RHEL-based systems
+{% if item.image.startswith('centos') or item.image.startswith('rhel') or item.image.startswith('rockylinux') %}
+RUN yum update -y && \
+    yum install -y python3 python3-pip sshpass sudo
+{% endif %}
