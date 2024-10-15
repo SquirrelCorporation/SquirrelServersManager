@@ -1,0 +1,4 @@
+requests
+mock
+requests_unixsocket
+ansible-runner

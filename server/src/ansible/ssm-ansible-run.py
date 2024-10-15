@@ -103,6 +103,8 @@ def execute():
             runner_args['cmdline'] += ' --diff'
         else:
             runner_args['cmdline'] = '--diff'
+    if 'cmdline' in runner_args:
+      runner_args['cmdline'] += ' --vault-id ssm@ssm-ansible-vault-password-client.py'
 
     thread_obj, runner_obj = ansible_runner.run_async(**runner_args)
     sys.stdout.write(runner_obj.config.ident)
