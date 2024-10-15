@@ -4,6 +4,11 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.20...HEAD)
 
+**Fixed bugs:**
+
+- \[BUG\] some playbooks Fail to execute "Attempting to decrypt but no vault secrets found" [\#365](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/365)
+- \[BUGFIX\] Append --vault-id to ansible runner command [\#383](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/383) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Merged pull requests:**
 
 - \[CHORE\]\[DOC\] Refine upgrade trigger and enhance installation script [\#382](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/382) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
