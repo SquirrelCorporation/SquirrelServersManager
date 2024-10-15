@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- Update release.json [\#388](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/388) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update dependencies and add module mapping [\#387](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/387) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.21](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.21) (2024-10-15)
