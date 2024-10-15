@@ -68,3 +68,19 @@
         - name: Show stderr of "Install docker"
           debug:
             msg: "{{ result_install_docker.stderr }}"
+
+    - name: Run "Upgrade packages"
+      block:
+        - name: Run Molecule test for "upgrade-packages"
+          command: molecule test -s upgrade-packages
+          args:
+            chdir: ../../
+          register: result_upgrade_packages
+
+        - name: Show result of "Upgrade packages"
+          debug:
+            msg: "{{ result_upgrade_packages.stdout }}"
+      always:
+        - name: Show stderr of "Upgrade packages"
+          debug:
+            msg: "{{ result_upgrade_packages.stderr }}"

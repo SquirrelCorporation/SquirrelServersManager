@@ -1,0 +1,8 @@
+---
+# tasks/main.yml
+
+- include_tasks: debian.yml
+  when: ansible_distribution in ["Debian", "Ubuntu"]
+
+- include_tasks: rhel.yml
+  when: ansible_distribution in ["CentOS", "RedHat"]

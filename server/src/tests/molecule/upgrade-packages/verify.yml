@@ -1,0 +1,28 @@
+- name: Verify
+  hosts: all
+  tasks:
+    - name: Ensure no packages are pending for upgrade (Debian-based)
+      ansible.builtin.command: apt list --upgradable
+      register: apt_upgrade_check
+      changed_when: false
+      failed_when: "apt_upgrade_check.stdout | trim != '' and not apt_upgrade_check.stdout is search('Listing...')"
+      when: ansible_os_family == "Debian"
+
+    - name: Ensure no packages are pending for upgrade (RHEL-based)
+      ansible.builtin.command: yum check-update
+      register: yum_upgrade_check
+      changed_when: false
+      failed_when: >
+        yum_upgrade_check.stdout is search('^([a-zA-Z0-9_.+-]+)\s+([0-9][a-zA-Z0-9_:\-\.\+~]*)[^\r\n]*')
+        and not (yum_upgrade_check.stdout | trim is search('Last metadata expiration'))
+      when: ansible_os_family == "RedHat"
+
+    - name: Debug the result (Debian-based)
+      ansible.builtin.debug:
+        msg: "APT check output: {{ apt_upgrade_check.stdout }}"
+      when: ansible_os_family == "Debian"
+
+    - name: Debug the result (RHEL-based)
+      ansible.builtin.debug:
+        msg: "YUM check output: {{ yum_upgrade_check.stdout }}"
+      when: ansible_os_family == "RedHat"

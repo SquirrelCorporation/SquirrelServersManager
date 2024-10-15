@@ -18,34 +18,6 @@
   become: true
 
   tasks:
-    - name: Perform a dist-upgrade.
-      ansible.builtin.package:
-        name: "*"
-        state: latest
-
-    - name: Check if a reboot is required (Debian-based systems).
-      ansible.builtin.stat:
-        path: /var/run/reboot-required
-        get_checksum: no
-      register: reboot_required_file
-      when: ansible_distribution in ["Debian", "Ubuntu"]
-
-    - name: Check if a reboot is required (CentOS/RHEL-based systems).
-      ansible.builtin.command: /usr/bin/needs-restarting -r
-      register: needs_restarting
-      failed_when: needs_restarting.rc not in [0,1,123]
-      changed_when: needs_restarting.rc == 1
-      when: ansible_distribution in ["CentOS", "RedHat"]
-
-    - name: Reboot the server (if required - Debian-based systems).
-      ansible.builtin.reboot:
-      when: reboot_required_file.stat.exists
-
-    - name: Reboot the server (if required - CentOS/RHEL-based systems).
-      ansible.builtin.reboot:
-      when: ansible_distribution in ["CentOS", "RedHat"] and needs_restarting.rc == 1
-
-    - name: Remove dependencies that are no longer required.
-      ansible.builtin.package:
-        autoremove: true
-      when: ansible_distribution in ["Debian", "Ubuntu", "CentOS", "RedHat"]
+    - name: Perform an upgrade.
+      include_role:
+        name: upgrade_host_package
