@@ -46,4 +46,4 @@ jobs:
       run: npm test
     - name: Test Python
       working-directory: ./server
-      run: npm test:python
+      run: npm run test:python
