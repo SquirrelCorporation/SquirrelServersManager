@@ -8,7 +8,7 @@
     "start": "npm run build-shared && npm run build && cross-env NODE_ENV=production node dist/index.js",
     "build": "tsc",
     "test": "vitest --disable-console-intercept --reporter=basic ",
-    "test:python:install": "pip install -r ./src/ansible/requirements.txt",
+    "test:python:install": "pip install -r ./src/ansible/requirements.txt --break-system-packages",
     "test:python": "npm run test:python:install && npm run test:python:run",
     "test:python:run": "cd ./src/ansible && python3 -m unittest discover -s . -p \"*.py\"",
     "coverage": "vitest run --coverage"
