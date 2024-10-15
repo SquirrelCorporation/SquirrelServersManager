@@ -1,0 +1,3 @@
+requests
+mock
+requests_unixsocket
