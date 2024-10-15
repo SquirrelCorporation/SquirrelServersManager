@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+## [v0.1.21](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.21) (2024-10-15)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.20...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.20...v0.1.21)
 
 **Fixed bugs:**
 
@@ -12,10 +12,7 @@
 **Merged pull requests:**
 
 - \[TEST\] Refactor package upgrade logic and add Molecule tests [\#384](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/384) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\]\[DOC\] Refine upgrade trigger and enhance installation script [\#382](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/382) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Add overview icon, update styles, expand user guide [\#380](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/380) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Add no devices modal and update installation guides [\#379](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/379) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Update dependencies and add missing licenses [\#378](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/378) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @umijs/lint from 4.3.25 to 4.3.26 in /client [\#377](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/377) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[DOC\] Rename and update deploy docs, add env variables. [\#376](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/376) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @babel/preset-env from 7.25.7 to 7.25.8 in /client [\#374](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/374) ([dependabot[bot]](https://github.com/apps/dependabot))
@@ -29,6 +26,9 @@
 - Bump @typescript-eslint/parser from 8.8.0 to 8.8.1 in /server [\#366](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/366) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Add Dockerized Agent option and update installation methods [\#364](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/364) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Add custom stacks data and routes, update server version [\#363](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/363) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\]\[DOC\] Refine upgrade trigger and enhance installation script [\#382](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/382) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Add no devices modal and update installation guides [\#379](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/379) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update dependencies and add missing licenses [\#378](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/378) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.20](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.20) (2024-10-11)
 
@@ -508,15 +508,15 @@
 
 ## [v0.1.10](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.10) (2024-06-07)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.10)
-
-## [v0.1.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.8) (2024-06-06)
-
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.8)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.10)
 
 ## [v0.1.9](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.9) (2024-06-06)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.9)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.9)
+
+## [v0.1.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.8) (2024-06-06)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.8)
 
 ## [v0.1.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.7) (2024-06-06)
 
