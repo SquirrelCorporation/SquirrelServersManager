@@ -11,6 +11,7 @@
 
 **Merged pull requests:**
 
+- \[TEST\] Refactor package upgrade logic and add Molecule tests [\#384](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/384) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\]\[DOC\] Refine upgrade trigger and enhance installation script [\#382](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/382) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Add overview icon, update styles, expand user guide [\#380](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/380) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add no devices modal and update installation guides [\#379](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/379) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
