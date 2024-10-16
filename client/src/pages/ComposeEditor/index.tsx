@@ -1,6 +1,6 @@
 import FloatingButtonsBar from '@/components/ComposeEditor/FloatingButtonsBar';
 import { MenuElements } from '@/components/ComposeEditor/Menu/MenuElements';
-import StackBuilder from '@/components/ComposeEditor/StackBuilder';
+import DockerComposeStackBuilder from '@/components/ComposeEditor/DockerComposeStackBuilder';
 import {
   StackIcon,
   StackIconSelector,
@@ -325,10 +325,32 @@ const ComposeEditor = () => {
             style={{ width: '300px' }} // Adjust the width as needed
             placeholder={'Your saved stacks'}
             onChange={handleOnSelectStack}
+            fieldProps={{
+              optionRender: (option) => (
+                <Space>
+                  <span role="img" aria-label={option.data.label as string}>
+                    <StackIcon
+                      stackIcon={{
+                        icon: option.data.icon,
+                        iconColor: option.data.iconColor,
+                        iconBackgroundColor: option.data.iconBackgroundColor,
+                      }}
+                    />
+                  </span>
+                  {option.data.label}
+                </Space>
+              ),
+            }}
             request={async () =>
               await getCustomStacks().then((response) => {
                 return response.data.map((e) => {
-                  return { label: e.name, value: e.uuid };
+                  return {
+                    label: e.name,
+                    value: e.uuid,
+                    icon: e.icon,
+                    iconColor: e.iconColor,
+                    iconBackgroundColor: e.iconBackgroundColor,
+                  };
                 });
               })
             }
@@ -410,13 +432,14 @@ const ComposeEditor = () => {
                 variants={switchVariants}
                 transition={{ duration: 0.5 }}
               >
-                <StackBuilder
+                <DockerComposeStackBuilder
                   elementTypes={MenuElements}
                   formRef={form}
                   setCurrentStack={setCurrentStack}
                   currentStack={currentStack}
                   stackIcon={stackIcon}
                   setStackIcon={setStackIcon}
+                  onClickSaveStack={saveStack}
                 />
               </motion.div>
             )}

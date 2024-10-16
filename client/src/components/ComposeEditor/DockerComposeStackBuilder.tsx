@@ -25,15 +25,17 @@ export interface StackBuilderProps {
     iconBackgroundColor: string;
   };
   setStackIcon: any;
+  onClickSaveStack: () => void;
 }
 
-const StackBuilder: React.FC<StackBuilderProps> = ({
+const DockerComposeStackBuilder: React.FC<StackBuilderProps> = ({
   elementTypes,
   formRef,
   currentStack,
   setCurrentStack,
   stackIcon,
   setStackIcon,
+  onClickSaveStack,
 }) => {
   const [currentElement, setCurrentElement] = useState<
     MenuElementType | undefined
@@ -79,6 +81,7 @@ const StackBuilder: React.FC<StackBuilderProps> = ({
             formRef={formRef}
             setStackIcon={setStackIcon}
             stackIcon={stackIcon}
+            onClickSaveStack={onClickSaveStack}
           />
         </Col>
         <Col span={8}>
@@ -94,4 +97,4 @@ const StackBuilder: React.FC<StackBuilderProps> = ({
   );
 };
 
-export default StackBuilder;
+export default DockerComposeStackBuilder;

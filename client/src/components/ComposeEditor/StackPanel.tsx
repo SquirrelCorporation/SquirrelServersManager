@@ -31,6 +31,7 @@ type StackPanelProps = {
     iconBackgroundColor: string;
   };
   setStackIcon: any;
+  onClickSaveStack: () => void;
 };
 
 const StackPanel: React.FC<StackPanelProps> = ({
@@ -41,6 +42,7 @@ const StackPanel: React.FC<StackPanelProps> = ({
   formRef,
   stackIcon,
   setStackIcon,
+  onClickSaveStack,
 }) => {
   return (
     <Card>
@@ -55,11 +57,7 @@ const StackPanel: React.FC<StackPanelProps> = ({
                 <Button key="reset" onClick={() => formRef?.resetFields()}>
                   Reset
                 </Button>
-                <Button
-                  type="primary"
-                  key="submit"
-                  onClick={() => formRef?.submit?.()}
-                >
+                <Button type="primary" key="submit" onClick={onClickSaveStack}>
                   Save
                 </Button>
               </Space>
