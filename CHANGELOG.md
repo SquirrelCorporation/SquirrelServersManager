@@ -11,6 +11,7 @@
 
 **Merged pull requests:**
 
+- \[DOC\] Add GitHub Actions workflow and update curl commands [\#393](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/393) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Update release.json [\#388](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/388) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update dependencies and add module mapping [\#387](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/387) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
