@@ -14,7 +14,8 @@ const members = [
     links: [
       { icon: 'github', link: 'https://github.com/SquirrelCorporation' },
       { icon: 'twitter', link: 'https://twitter.com/SquirrelSrvrsMg' },
-      { icon: 'linkedin', link: 'https://www.linkedin.com/in/emmanuelcosta/'}
+      { icon: 'linkedin', link: 'https://www.linkedin.com/in/emmanuelcosta/'},
+      { icon: 'discord', link: 'https://discord.gg/cnQjsFCGKJ'}
     ]
   }
 ]

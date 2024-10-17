@@ -18,10 +18,10 @@ hero:
       link: /about
     - theme: alt
       text: Demo
-      link: https://molecular-sibylla-squirrelserversmanager-1b05c91d.koyeb.app/
+      link: https://demo.squirrelserversmanager.io
     - theme: alt
-      text: Contribute
-      link: /contribute/
+      text: Discord
+      link: https://discord.gg/cnQjsFCGKJ
 
 features:
   - title: All your servers in one place

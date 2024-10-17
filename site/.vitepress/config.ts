@@ -191,7 +191,8 @@ export default defineConfig({
 
     socialLinks: [
       { icon: 'x', link: 'https://twitter.com/SquirrelSrvrsMg' },
-      { icon: 'github', link: 'https://github.com/SquirrelCorporation/SquirrelServersManager' }
+      { icon: 'github', link: 'https://github.com/SquirrelCorporation/SquirrelServersManager' },
+      { icon: 'discord', link: 'https://discord.gg/cnQjsFCGKJ' }
     ],
 
     footer: {
