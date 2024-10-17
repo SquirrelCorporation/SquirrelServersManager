@@ -7,7 +7,7 @@ See [Requirements](/docs/requirements)
 ## Use the Script
 
 ```shell
-curl https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager/refs/heads/master/getSSM.sh | bash
+curl -sL https://getssm.io | bash 
 ```
 
 ## Use pre-built images

@@ -67,7 +67,7 @@ features:
 
 ## Try it now!
 ```shell
-curl https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager/refs/heads/master/getSSM.sh | bash
+ curl -sL https://getssm.io | bash 
 ```
 --- 
 
