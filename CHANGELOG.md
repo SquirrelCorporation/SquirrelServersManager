@@ -4,6 +4,11 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.21...HEAD)
 
+**Fixed bugs:**
+
+- \[BUG\] Fix save button on Docker Compose UI builder not working [\#391](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/391)
+- \[BUG\] Refactor StackBuilder to DockerComposeStackBuilder [\#392](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/392) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Merged pull requests:**
 
 - Update release.json [\#388](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/388) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
