@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import { afterAll, afterEach, beforeAll, expect, test, vi } from 'vitest';
-
-let mongod: any;
+import { afterAll, beforeAll, vi } from 'vitest';
 
 beforeAll(async () => {
   vi.mock('../../logger', async (importOriginal) => {
@@ -10,23 +8,17 @@ beforeAll(async () => {
       ...(await importOriginal<typeof import('../../logger')>()),
     };
   });
-  mongod = await MongoMemoryServer.create();
+
+  const mongod = await MongoMemoryServer.create();
   const uri = mongod.getUri();
-  await mongoose.connect(uri);
+  (global as any).__MONGOINSTANCE = mongod;
+  process.env.MONGO_URI = uri.slice(0, uri.lastIndexOf('/'));
+  const conn = await mongoose.connect(`${process.env.MONGO_URI}`);
+  await conn.connection?.db?.dropDatabase();
+  await mongoose.disconnect();
 }, 50000);
 
 afterAll(async () => {
-  await mongoose.connection.dropDatabase();
-  await mongoose.connection.close();
-  await (mongod as MongoMemoryServer).stop();
-});
-
-afterEach(async () => {
-  const collections = mongoose.connection.collections;
-
-  for (const key in collections) {
-    const collection = collections[key];
-
-    await collection.deleteMany();
-  }
-});
+  const instance: MongoMemoryServer = (global as any).__MONGOINSTANCE;
+  await instance.stop();
+}, 50000);

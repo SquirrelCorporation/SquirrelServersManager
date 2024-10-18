@@ -5,7 +5,7 @@ export default defineConfig({
     setupFiles: './vitest.setup.ts',
     env: {
       SECRET: 'test',
-      NODE_ENV: 'test'
-    }
+      NODE_ENV: 'test',
+    },
   },
 });
