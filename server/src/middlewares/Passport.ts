@@ -2,11 +2,12 @@ import { Request } from 'express';
 import passport from 'passport';
 import passportJWT from 'passport-jwt';
 import passportBearer from 'passport-http-bearer';
+import MockStrategy from 'passport-mock-strategy';
 import { SECRET } from '../config';
 import UserRepo from '../data/database/repository/UserRepo';
 
-const JWTStrategy = passportJWT.Strategy;
-const BearerStrategy = passportBearer.Strategy;
+const JWTStrategy = process.env.NODE_ENV === 'test' ? MockStrategy : passportJWT.Strategy;
+const BearerStrategy = process.env.NODE_ENV === 'test' ? MockStrategy : passportBearer.Strategy;
 
 export const cookieExtractor = (req: Request) => {
   let jwt = null;
@@ -25,7 +26,6 @@ passport.use(
     },
     (jwtPayload, done) => {
       const { expiration } = jwtPayload;
-
       if (Date.now() > expiration) {
         done('Unauthorized', false);
       }
