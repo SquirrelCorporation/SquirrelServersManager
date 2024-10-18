@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 
 export const DOCUMENT_NAME = 'User';
 export const COLLECTION_NAME = 'users';
-export const SALT_ROUNDS = 8;
+const SALT_ROUNDS = 8;
 
 export enum Role {
   ADMIN = 'admin',
