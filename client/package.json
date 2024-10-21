@@ -47,7 +47,7 @@
   "dependencies": {
     "@ant-design/charts": "^2.2.1",
     "@ant-design/icons": "^5.5.1",
-    "@ant-design/pro-components": "^2.7.19",
+    "@ant-design/pro-components": "^2.8.0",
     "@ant-design/use-emotion-css": "1.0.4",
     "@antv/g2plot": "^2.4.32",
     "@dotlottie/react-player": "^1.6.19",
