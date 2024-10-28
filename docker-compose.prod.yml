@@ -26,6 +26,12 @@ services:
     command: --save 60 1
   server:
     restart: unless-stopped
+    healthcheck:
+      test: curl --fail http://localhost:3000/ping || exit 1
+      interval: 40s
+      timeout: 30s
+      retries: 3
+      start_period: 60s
     external_links:
       - mongo
       - redis
