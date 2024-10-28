@@ -100,7 +100,7 @@ describe('buildAnsibleCmd() function', () => {
 
     const result = AnsibleCmd.buildAnsibleCmd(playbook, uuid, inventory, user, extraVars);
     const expectedStart =
-      "sudo SSM_API_KEY=testKey ANSIBLE_CONFIG=/ansible-config/ansible.cfg ANSIBLE_FORCE_COLOR=1 python3 ssm-ansible-run.py --playbook testPlaybook --ident 'testUuid'";
+      "sudo SSM_API_KEY=testKey ANSIBLE_CONFIG=/ansible-config/ansible.cfg ANSIBLE_FORCE_COLOR=1 python3 ssm-ansible-run.py --playbook 'testPlaybook' --ident 'testUuid'";
     expect(result.startsWith(expectedStart)).toEqual(true);
   });
 
@@ -123,7 +123,7 @@ describe('buildAnsibleCmd() function', () => {
       'ANSIBLE_FORCE_COLOR=1',
       'python3',
       'ssm-ansible-run.py',
-      `--playbook ${playbook}`,
+      `--playbook '${playbook}'`,
       `--ident '${uuid}'`,
       `--specific-host '${JSON.stringify(inventory)}'`,
       '--log-level 1',
@@ -154,7 +154,7 @@ describe('buildAnsibleCmd() function', () => {
       'ANSIBLE_FORCE_COLOR=1',
       'python3',
       'ssm-ansible-run.py',
-      `--playbook ${playbook}`,
+      `--playbook '${playbook}'`,
       `--ident '${uuid}'`,
       `--specific-host '${JSON.stringify(inventory)}'`,
       '--log-level 1',
@@ -185,7 +185,7 @@ describe('buildAnsibleCmd() function', () => {
       'ANSIBLE_FORCE_COLOR=1',
       'python3',
       'ssm-ansible-run.py',
-      `--playbook ${playbook}`,
+      `--playbook '${playbook}'`,
       `--ident '${uuid}'`,
       `--specific-host '${JSON.stringify(inventory)}'`,
       '--log-level 1',
