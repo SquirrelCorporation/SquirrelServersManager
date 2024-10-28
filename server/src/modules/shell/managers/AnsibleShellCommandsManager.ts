@@ -74,7 +74,7 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
         extraVars,
         mode,
       );
-      this.logger.info(`executePlaybook - Executing ${cmd}`);
+      this.logger.info(`executePlaybook - Executing "${cmd}"`);
       const child = shell.exec(cmd, {
         async: true,
       });
