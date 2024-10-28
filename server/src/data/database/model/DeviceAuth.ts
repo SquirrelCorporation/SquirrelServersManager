@@ -1,3 +1,4 @@
+import { Binary } from 'bson';
 import { Schema, model } from 'mongoose';
 import { SsmAnsible } from 'ssm-shared-lib';
 import Device from './Device';
@@ -35,9 +36,9 @@ export default interface DeviceAuth {
   customDockerSocket?: string;
   createdAt?: Date;
   updatedAt?: Date;
-  dockerKey?: Buffer | null;
-  dockerCert?: Buffer | null;
-  dockerCa?: Buffer | null;
+  dockerKey?: Buffer | Binary | null;
+  dockerCert?: Buffer | Binary | null;
+  dockerCa?: Buffer | Binary | null;
 }
 
 const schema = new Schema<DeviceAuth>(
