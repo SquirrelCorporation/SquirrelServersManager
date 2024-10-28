@@ -39,9 +39,9 @@ class SSHCredentialsHelper {
       //TODO: If device change ip, reset watchers
       host: device.ip,
       sshOptions: { ...baseSsh, ...sshCredentials },
-      ca: deviceAuth.dockerCa || undefined,
-      cert: deviceAuth.dockerCert || undefined,
-      key: deviceAuth.dockerKey || undefined,
+      ca: (deviceAuth.dockerCa as Buffer) || undefined,
+      cert: (deviceAuth.dockerCert as Buffer) || undefined,
+      key: (deviceAuth.dockerKey as Buffer) || undefined,
     };
 
     return options;
