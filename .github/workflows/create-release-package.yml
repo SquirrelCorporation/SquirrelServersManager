@@ -1,0 +1,54 @@
+name: Create Release Package
+
+on:
+  push:
+    tags: [ 'v*.*.*' ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install tar
+      run: sudo apt-get install tar
+
+    - name: Determine version from tag
+      id: get_version
+      run: |
+        VERSION=${GITHUB_REF#refs/tags/}
+        echo "version=$VERSION" >> $GITHUB_ENV
+
+    - name: Print version
+      run: echo "Version to be used: ${{ env.version }}"
+
+    - name: Clean up and create package
+      run: |
+        mkdir -p release_package
+        cp -r client release_package/
+        cp -r server release_package/
+        cp -r sharedlib release_package/
+        tar -czf SquirrelServersManager_${{ env.version }}.tar.gz -C release_package .
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: SquirrelServersManager_${{ env.version }}
+        path: SquirrelServersManager_${{ env.version }}.tar.gz
+
+    - name: Overwrite latest version
+      run: |
+        cp SquirrelServersManager_${{ env.version }}.tar.gz SquirrelServersManager_latest.tar.gz
+
+    - name: Upload latest artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: SquirrelServersManager_latest
+        path: SquirrelServersManager_latest.tar.gz
