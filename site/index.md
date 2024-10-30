@@ -66,8 +66,13 @@ features:
 </style>
 
 ## Try it now!
+⭐️ Docker
 ```shell
  curl -sL https://getssm.io | bash 
+```
+⭐️ Proxmox (Beta):
+```shell
+bash -c "$(wget -qLO - https://getssm.io/proxmox)"
 ```
 --- 
 
