@@ -1,13 +1,14 @@
 ---
 - name: Define variables
   set_fact:
-    base_path: {{ node_agent_base_path }}
-    nvm_dir:  {{ node_agent_nvm_dir }}
+    base_path: "{{ node_agent_base_path }}"
+    nvm_dir:  "{{ node_agent_nvm_dir }}"
     nvm_profile: "~/.bashrc"
     nvm_install: 'wget' # options are: wget, curl or git
     autocomplete: false
     nodejs_version: "lts"
     default: false
+    ansible_user: 'root'
 
 - include_tasks: debug.yml
 - include_tasks: error_handling.yml
