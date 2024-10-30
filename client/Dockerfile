@@ -3,17 +3,17 @@ LABEL org.opencontainers.image.source=https://github.com/SquirrelCorporation/Squ
 LABEL org.opencontainers.image.description="SSM Client"
 LABEL org.opencontainers.image.licenses="GNU AFFERO GENERAL PUBLIC LICENSE"
 
-WORKDIR /client
+WORKDIR /opt/squirrelserversmanager/client
 RUN npm install -g npm@latest
 RUN npm install -g @umijs/max
 RUN npm install -g typescript
 COPY ./package*.json .
 COPY ./tsconfig.json .
-RUN mkdir /shared-lib
-WORKDIR /shared-lib
+RUN mkdir /opt/squirrelserversmanager/shared-lib
+WORKDIR /opt/squirrelserversmanager/shared-lib
 COPY --from=shared-lib ./ ./
 RUN npm run build
-WORKDIR /client
+WORKDIR /opt/squirrelserversmanager/client
 EXPOSE 8000
 
 FROM base AS production

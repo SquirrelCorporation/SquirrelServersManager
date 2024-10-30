@@ -17,7 +17,10 @@ interface Config {
 
 export const copyAnsibleCfgFileIfDoesntExist = () => {
   if (!FileSystemManager.test('-f', ANSIBLE_CONFIG_FILE)) {
-    FileSystemManager.copyFile('/server/src/ansible/default-ansible.cfg', ANSIBLE_CONFIG_FILE);
+    FileSystemManager.copyFile(
+      '/opt/squirrelserversmanager/server/src/ansible/default-ansible.cfg',
+      ANSIBLE_CONFIG_FILE,
+    );
   }
 };
 

@@ -14,7 +14,7 @@ const corePlaybooksRepository = {
   uuid: '00000000-0000-0000-0000-000000000000',
   enabled: true,
   type: Playbooks.PlaybooksRepositoryType.LOCAL,
-  directory: '/server/src/ansible/00000000-0000-0000-0000-000000000000',
+  directory: '/opt/squirrelserversmanager/server/src/ansible/00000000-0000-0000-0000-000000000000',
   default: true,
 };
 
@@ -23,7 +23,7 @@ const toolsPlaybooksRepository = {
   uuid: '00000000-0000-0000-0000-000000000001',
   enabled: true,
   type: Playbooks.PlaybooksRepositoryType.LOCAL,
-  directory: '/server/src/ansible/00000000-0000-0000-0000-000000000001',
+  directory: '/opt/squirrelserversmanager/server/src/ansible/00000000-0000-0000-0000-000000000001',
   default: true,
 };
 

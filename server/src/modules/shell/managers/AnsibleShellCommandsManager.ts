@@ -18,7 +18,7 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
       'Ansible',
     );
   }
-  private readonly ANSIBLE_PATH = '/server/src/ansible/';
+  private readonly ANSIBLE_PATH = '/opt/squirrelserversmanager/server/src/ansible/';
 
   static timeout(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -62,8 +62,8 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
     mode: SsmAnsible.ExecutionMode = SsmAnsible.ExecutionMode.APPLY,
   ) {
     shell.cd(this.ANSIBLE_PATH);
-    shell.rm('/server/src/playbooks/inventory/hosts');
-    shell.rm('/server/src/playbooks/env/_extravars');
+    shell.rm('/opt/squirrelserversmanager/server/src/playbooks/inventory/hosts');
+    shell.rm('/opt/squirrelserversmanager/server/src/playbooks/env/_extravars');
     const uuid = uuidv4();
     const result = await new Promise<string | null>((resolve) => {
       const cmd = ansibleCmd.buildAnsibleCmd(

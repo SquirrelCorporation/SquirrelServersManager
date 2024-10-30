@@ -50,7 +50,7 @@ services:
     env_file:
       - ./.env.dev
     volumes:
-      - ./server/src:/server/src
+      - ./server/src:/opt/squirrelserversmanager/server/src
       - ./.data.dev/playbooks:/playbooks
       - ./.data.dev/config:/ansible-config
     environment:
@@ -68,6 +68,6 @@ services:
         - shared-lib=./shared-lib
       target: dev
     volumes:
-      - ./client/src:/client/src
-      - ./client/config:/client/config
-      - ./client/public:/client/public
+      - ./client/src:/opt/squirrelserversmanager/client/src
+      - ./client/config:/opt/squirrelserversmanager/client/config
+      - ./client/public:/opt/squirrelserversmanager/client/public

@@ -94,10 +94,10 @@ export function recursiveTreeTransform(
           custom:
             (child as DirectoryTree.ExtendedTreeNode).custom === undefined &&
             !child.path.includes(
-              '/server/src/ansible/00000000-0000-0000-0000-000000000000/agent',
+              '/opt/squirrelserversmanager/server/src/ansible/00000000-0000-0000-0000-000000000000/agent',
             ) &&
             !child.path.includes(
-              '/server/src/ansible/00000000-0000-0000-0000-000000000000/device',
+              '/opt/squirrelserversmanager/server/src/ansible/00000000-0000-0000-0000-000000000000/device',
             ),
           depth: depth,
           selectable: !!onlyDirectories,
