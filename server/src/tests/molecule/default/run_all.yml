@@ -37,6 +37,22 @@
           debug:
             msg: "{{ result_install_agent.stderr }}"
 
+    - name: Run "Install agent enhanced"
+      block:
+        - name: Run Molecule test for "install-agent-enhanced"
+          command: molecule test -s install-agent-enhanced
+          args:
+            chdir: ../../
+          register: result_install_agent_enhanced
+
+        - name: Show result of "Install agent enhanced"
+          debug:
+            msg: "{{ result_install_agent_enhanced.stdout }}"
+      always:
+        - name: Show stderr of "Install agent enhanced"
+          debug:
+            msg: "{{ result_install_agent_enhanced.stderr }}"
+
     - name: Run "Create docker network"
       block:
         - name: Run Molecule test for "create-docker-network"

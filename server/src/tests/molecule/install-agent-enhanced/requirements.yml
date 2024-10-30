@@ -1,0 +1,6 @@
+collections:
+  - name: community.docker
+    version: ">=3.10.2"
+  - name: community.general
+    version: ">=7.0.0"
+    source: https://galaxy.ansible.com
