@@ -4,13 +4,21 @@
 See [Requirements](/docs/requirements)
 :::
 
-## Use the Script
+## 🔥 Use the Script
 
+- **Docker**:
 ```shell
 curl -sL https://getssm.io | bash 
 ```
+<p style="text-align: right;"><a href="/docs/install/docker">Learn more about Docker install</a></p>
 
-## Use pre-built images
+- **Proxmox**:
+```shell
+bash -c "$(wget -qLO - https://getssm.io/proxmox)"
+```
+<p style="text-align: right;"><a href="/docs/install/proxmox">Learn more about Proxmox install</a></p>
+
+## Use pre-built Docker images
 
 SSM has published versions of the client and server images according to release tags [here](https://github.com/orgs/SquirrelCorporation/packages?repo_name=SquirrelServersManager).
 The `docker-compose.yml` file uses these pre-built images. To use them, you can set up the following Docker Compose file:
@@ -45,6 +53,12 @@ services:
   server:
     image: "ghcr.io/squirrelcorporation/squirrelserversmanager-server:latest"
     restart: unless-stopped
+    healthcheck:
+      test: curl --fail http://localhost:3000/ping || exit 1
+      interval: 40s
+      timeout: 30s
+      retries: 3
+      start_period: 60s
     external_links:
       - mongo
       - redis
@@ -96,68 +110,7 @@ docker compose pull
 docker compose up
 ```
 
-## Build the project yourself
-
-### 1. Clone the main repository
-```shell
-git clone https://github.com/SquirrelCorporation/SquirrelServersManager
-```
-### 2. Navigate to the project directory:
-```shell
-cd ./SquirrelServersManager
-```
-### 3. Open with your favorite editor
-```shell
-vim .env
-```
-### 4. Replace the values of "SECRET", "SALT", and "VAULT_PWD"
-```
-SECRET=REPLACE_ME
-```
-and
-```
-SALT=1234567890123456
-```
-⚠ **SALT value MUST be an alphanumeric string of exactly 16 characters**
-
-and
-```
-VAULT_PWD=REPLACE_ME
-```
-
-### 5. Open a terminal and execute:
-```shell
-docker compose -f docker-compose.prod.yml up
-```
-or
-```shell
-docker-compose -f docker-compose.prod.yml  up
-```
-depending on your Docker version (see [Requirements](/docs/requirements))
-
-Docker will create a volume directory *.data.prod* in the directory for persistent data storage
-
-### 6. Open a browser and navigate to:
-
-[http://localhost:8000](http://localhost:8000) or [http://127.0.0.1:8000](http://127.0.0.1:8000)
-
-
 ---
 
-### Updating SSM
-
-In the SSM cloned directory:
-
-```shell
-git pull
-```
-
-```shell
-docker-compose up
-```
-
-or
-
-```shell
-docker compose up --build
-```
+### Other install methods:
+To manually build the project your self, see this [section](/docs/technical-guide/manual-install-ssm)

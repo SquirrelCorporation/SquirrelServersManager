@@ -110,6 +110,12 @@ export default defineConfig({
               text: 'Requirements', link: '/docs/requirements.md'
             },
             {
+              text: 'Installing SSM', link: '/docs/install/install.md'
+            },
+            {
+              text: 'Updating SSM', link: '/docs/install/update.md'
+            },
+            {
               text: 'Development mode', link: '/docs/devmode.md'
             }
           ]
@@ -134,11 +140,16 @@ export default defineConfig({
               ]
             },
             {
-              text: 'Playbooks', items: [
+              text: 'Stacks - Playbooks', items: [
                 { text: 'Overview', link: '/docs/playbooks/playbooks.md' },
                 { text: 'Variables', link: '/docs/playbooks/playbooks-variables.md' },
                 { text: 'Executing a playbook', link: '/docs/playbooks/exec-playbook.md' },
                 ]
+            },
+            {
+              text: 'Stacks - Container', items: [
+                { text: 'Overview', link: '/docs/compose/editor.md' },
+              ]
             },
             {
               text: 'Playbooks Repositories', items: [
@@ -163,6 +174,12 @@ export default defineConfig({
         },
         {
           text: 'Technical Guide', items: [
+            {
+              text: 'Manually installing SSM', link: '/docs/technical-guide/manual-install-ssm.md'
+            },
+            {
+              text: 'Manually installing the agent', link: '/docs/technical-guide/manual-install-agent.md'
+            },
             { text: 'SSH/Connection' , link: '/docs/technical-guide/ssh.md'},
             { text: 'Ansible', items: [
                 { text: 'Principles', link: '/docs/technical-guide/ansible.md'},
@@ -175,8 +192,6 @@ export default defineConfig({
                 { text: 'SSH/Connection', link: '/docs/technical-guide/docker-connection.md'},
                 { text: 'Labels', link: '/docs/technical-guide/containers-labelling.md'}
               ]
-            },{
-              text: 'Manually installing the agent', link: '/docs/technical-guide/manual-install-agent.md'
             },
             {
               text: 'Troubleshoot', link: '/docs/technical-guide/troubleshoot.md'
