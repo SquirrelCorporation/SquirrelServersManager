@@ -27,7 +27,8 @@ jobs:
         echo "version=$VERSION" >> $GITHUB_ENV
 
     - name: Print version
-      run: echo "Version to be used: ${{ env.version }}"
+      run: |
+        echo "Version to be used: ${{ env.version }}"
 
     - name: Clean up and create package
       run: |
