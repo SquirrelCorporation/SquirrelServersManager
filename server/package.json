@@ -65,7 +65,7 @@
   "devDependencies": {
     "@eslint/compat": "^1.2.2",
     "@eslint/eslintrc": "^3.1.0",
-    "@eslint/js": "^9.13.0",
+    "@eslint/js": "^9.14.0",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.7",
     "@types/dockerode": "^3.3.31",
