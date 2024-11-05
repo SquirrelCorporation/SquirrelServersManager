@@ -1,6 +1,7 @@
-import { SettingsKeys } from 'ssm-shared-lib';
+import { Repositories, SettingsKeys } from 'ssm-shared-lib';
 import { getFromCache, setToCache } from '../../data/cache';
 import initRedisValues from '../../data/cache/defaults';
+import { ContainerCustomStackModel } from '../../data/database/model/ContainerCustomStack';
 import { DeviceModel } from '../../data/database/model/Device';
 import { PlaybookModel } from '../../data/database/model/Playbook';
 import { copyAnsibleCfgFileIfDoesntExist } from '../../helpers/ansible/AnsibleConfigurationHelper';
@@ -10,8 +11,9 @@ import Crons from '../../modules/crons';
 import WatcherEngine from '../../modules/docker/core/WatcherEngine';
 import providerConf from '../../modules/docker/registries/providers/provider.conf';
 import NotificationComponent from '../../modules/notifications/NotificationComponent';
-import { createADefaultLocalUserRepository } from '../../modules/playbooks-repository/default-repositories';
-import PlaybooksRepositoryEngine from '../../modules/playbooks-repository/PlaybooksRepositoryEngine';
+import ContainerCustomStacksRepositoryEngine from '../../modules/repository/ContainerCustomStacksRepositoryEngine';
+import { createADefaultLocalUserRepository } from '../../modules/repository/default-playbooks-repositories';
+import PlaybooksRepositoryEngine from '../../modules/repository/PlaybooksRepositoryEngine';
 import UpdateChecker from '../../modules/update/UpdateChecker';
 import ContainerRegistryUseCases from '../../services/ContainerRegistryUseCases';
 import DeviceAuthUseCases from '../../services/DeviceAuthUseCases';
@@ -44,6 +46,7 @@ class Startup {
     void WatcherEngine.init();
     void AutomationEngine.init();
     void UpdateChecker.checkVersion();
+    void ContainerCustomStacksRepositoryEngine.init();
   }
 
   private async updateScheme() {
@@ -57,6 +60,10 @@ class Startup {
     this.registerPersistedProviders();
     copyAnsibleCfgFileIfDoesntExist();
     await setToCache('_ssm_masterNodeUrl', (await getFromCache('ansible-master-node-url')) || '');
+    await ContainerCustomStackModel.updateMany(
+      { type: { $exists: false } },
+      { $set: { type: Repositories.RepositoryType.LOCAL } },
+    );
   }
 
   private isSchemeVersionDifferent(schemeVersion: string | null): boolean {

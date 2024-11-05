@@ -16,3 +16,5 @@ export const redisConf = {
 export const SECRET = process.env.SECRET || '';
 export const VAULT_PWD = process.env.VAULT_PWD || '';
 export const SESSION_DURATION = parseInt(process.env.SESSION_DURATION || '86400000');
+export const SSM_INSTALL_PATH = process.env.SSM_INSTALL_PATH || '/opt/squirrelserversmanager';
+export const SSM_DATA_PATH = process.env.SSM_DATA_PATH || '/data';

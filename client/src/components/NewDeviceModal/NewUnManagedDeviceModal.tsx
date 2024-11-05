@@ -10,6 +10,7 @@ import React from 'react';
 export type NewUnManagedDeviceModalProps = {
   isModalOpen: boolean;
   setIsModalOpen: any;
+  onAddNewUnmanagedDevice: () => void;
 };
 const { Text } = Typography;
 
@@ -20,6 +21,7 @@ const NewUnManagedDeviceModal: React.FC<NewUnManagedDeviceModalProps> = (
   const handleCancel = () => {
     setDeviceUuid(undefined);
     props.setIsModalOpen(false);
+    props.onAddNewUnmanagedDevice();
   };
   const formRef = React.useRef();
 

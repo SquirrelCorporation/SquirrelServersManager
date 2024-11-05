@@ -1,0 +1,31 @@
+name: Create PR to Release Branch
+
+on:
+  push:
+    tags: [ 'v*.*.*' ]
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Fetch all branches
+        run: git fetch --all
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          source-branch: master
+          destination-branch: release
+          commit-message: 'chore: Merge master into release branch'
+          title: '[CHORE] Create PR from master to release'
+          body: 'The workflow is triggered by publishing a new tag. This PR merges changes from master to release.'
+          branch: 'pr-branch'

@@ -1,7 +1,7 @@
 import { Callbacks } from '@/pages/Playbooks/components/DirectoryTreeView';
 import {
-  commitAndSyncGitRepository,
-  forcePullGitRepository,
+  commitAndSyncPlaybooksGitRepository,
+  forcePullPlaybooksGitRepository,
 } from '@/services/rest/playbooks-repositories';
 import {
   ArrowDownOutlined,
@@ -109,17 +109,19 @@ const PlaybookDropdownMenu: React.FC<PlaybookDropdownMenuType> = (props) => {
         setOpen(true);
         break;
       case '4':
-        await commitAndSyncGitRepository(props.playbookRepository.uuid).then(
-          () => {
-            message.info({
-              content: 'Commit & sync command sent',
-              duration: 6,
-            });
-          },
-        );
+        await commitAndSyncPlaybooksGitRepository(
+          props.playbookRepository.uuid,
+        ).then(() => {
+          message.info({
+            content: 'Commit & sync command sent',
+            duration: 6,
+          });
+        });
         break;
       case '5':
-        await forcePullGitRepository(props.playbookRepository.uuid).then(() => {
+        await forcePullPlaybooksGitRepository(
+          props.playbookRepository.uuid,
+        ).then(() => {
           message.info({ content: 'Force pull command sent', duration: 6 });
         });
         break;

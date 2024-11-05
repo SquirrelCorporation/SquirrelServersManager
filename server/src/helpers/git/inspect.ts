@@ -7,7 +7,7 @@ import fs from 'fs-extra';
 import { compact } from 'lodash';
 import { AssumeSyncError, CantSyncGitNotInitializedError } from './errors';
 import { GitStep, ILogger } from './interface';
-// eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { listRemotes } = require('isomorphic-git');
 
 const gitEscapeToEncodedUri = (str: string): string =>
@@ -25,7 +25,7 @@ export interface ModifiedFileList {
 }
 /**
  * Get modified files and modify type in a folder
- * @param {string} folderPath location to scan playbooks-repository modify state
+ * @param {string} folderPath location to scan git repository modify state
  */
 export async function getModifiedFileList(folderPath: string): Promise<ModifiedFileList[]> {
   const { stdout } = await GitProcess.exec(['status', '--porcelain'], folderPath);
@@ -73,10 +73,10 @@ export async function getModifiedFileList(folderPath: string): Promise<ModifiedF
 }
 
 /**
- * Inspect playbooks-repository's remote url from folder's .playbooks-repository config
- * @param dir folder path, playbooks-repository folder to inspect
+ * Inspect git repository's remote url from folder's .git config
+ * @param dir folder path, git repository folder to inspect
  * @param remoteName
- * @returns remote url, without `'.playbooks-repository'`
+ * @returns remote url, without `'.git'`
  * @example ```ts
  const githubRepoUrl = await getRemoteUrl(directory);
  const gitUrlWithOutCredential = getGitUrlWithOutCredential(githubRepoUrl);
@@ -120,12 +120,12 @@ if (await haveLocalChanges(dir)) {
 export async function haveLocalChanges(folderPath: string): Promise<boolean> {
   const { stdout } = await GitProcess.exec(['status', '--porcelain'], folderPath);
   const matchResult = stdout.match(/^(\?\?|[ACMR] |[ ACMR][DM])*/gm);
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+
   return !!matchResult?.some?.(Boolean);
 }
 
 /**
- * Get "master" or "main" from playbooks-repository repo
+ * Get "master" or "main" from git repository repo
  *
  * https://github.com/simonthum/git-sync/blob/31cc140df2751e09fae2941054d5b61c34e8b649/git-sync#L228-L232
  * @param folderPath
@@ -142,7 +142,7 @@ export async function getDefaultBranchName(folderPath: string): Promise<string |
   } catch {
     /**
      * Catch "Unable to find path to repository on disk."
-      at node_modules/dugite/lib/playbooks-repository-process.ts:226:29
+      at node_modules/dugite/lib/git-repository-process.ts:226:29
      */
     return undefined;
   }
@@ -235,7 +235,7 @@ export async function assumeSync(
  * @param folderPath repo path to check
  * @param logger
  * @returns gitState
- * // TODO: use template literal type to get exact type of playbooks-repository state
+ * // TODO: use template literal type to get exact type of git repository state
  */
 export async function getGitRepositoryState(folderPath: string, logger?: ILogger): Promise<string> {
   if (!(await hasGit(folderPath))) {
@@ -272,7 +272,7 @@ export async function getGitRepositoryState(folderPath: string, logger?: ILogger
       )?.isFile?.(),
     ]);
   let result = '';
-  /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+
   if (isRebaseI) {
     result += 'REBASE-i';
   } else if (isRebaseM) {
@@ -304,7 +304,7 @@ export async function getGitRepositoryState(folderPath: string, logger?: ILogger
       result += '|DIRTY';
     }
   } */
-  // previous above `playbooks-repository diff --no-ext-diff --quiet --exit-code` logic from playbooks-repository-sync script can only detect if an existed file changed, can't detect newly added file, so we use `haveLocalChanges` instead
+  // previous above `git diff --no-ext-diff --quiet --exit-code` logic from git-sync script can only detect if an existed file changed, can't detect newly added file, so we use `haveLocalChanges` instead
   if (await haveLocalChanges(folderPath)) {
     result += '|DIRTY';
   }
@@ -313,7 +313,7 @@ export async function getGitRepositoryState(folderPath: string, logger?: ILogger
 }
 
 /**
- * echo the playbooks-repository dir
+ * echo the git repository dir
  * @param dir repo path
  * @param logger
  */
@@ -337,10 +337,7 @@ export async function getGitDirectory(dir: string, logger?: ILogger): Promise<st
     throw new CantSyncGitNotInitializedError(dir);
   }
   if (stdout.startsWith('true')) {
-    const { stdout: stdout2 } = await GitProcess.exec(
-      ['rev-parse', '--playbooks-repository-dir', dir],
-      dir,
-    );
+    const { stdout: stdout2 } = await GitProcess.exec(['rev-parse', '--git-dir', dir], dir);
     const [gitPath2, gitPath1] = compact(stdout2.split('\n'));
     if (gitPath2 !== undefined && gitPath1 !== undefined) {
       return path.resolve(gitPath1, gitPath2);
@@ -350,9 +347,9 @@ export async function getGitDirectory(dir: string, logger?: ILogger): Promise<st
 }
 
 /**
- * Check if dir has `.playbooks-repository`.
- * @param dir folder that may contains a playbooks-repository
- * @param strict if is true, then dir should be the root of the playbooks-repository repo. Default is true
+ * Check if dir has `.git`.
+ * @param dir folder that may contain a git repository
+ * @param strict if is true, then dir should be the root of the git repo. Default is true
  * @returns
  */
 export async function hasGit(dir: string, strict = true): Promise<boolean> {

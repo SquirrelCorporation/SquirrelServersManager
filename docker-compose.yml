@@ -36,8 +36,7 @@ services:
     environment:
       NODE_ENV: production
     volumes:
-      - ./.data.prod/playbooks:/playbooks
-      - ./.data.prod/config:/ansible-config
+      - ./.data.prod:/data
   client:
     image: "ghcr.io/squirrelcorporation/squirrelserversmanager-client:latest"
     restart: unless-stopped

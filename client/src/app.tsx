@@ -1,3 +1,4 @@
+import AlertNotification from '@/components/Alert/AlertNotification';
 import Footer from '@/components/Footer';
 import {
   AvatarDropdown,
@@ -116,6 +117,7 @@ export const layout: RunTimeLayoutConfig = ({
         version != initialState?.currentUser?.settings?.server.version;
       return (
         <>
+          <AlertNotification />
           {initialState?.currentUser?.settings?.server.version &&
             versionMismatch && (
               <Alert

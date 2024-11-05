@@ -1,4 +1,4 @@
-import { Playbooks } from 'ssm-shared-lib';
+import { Repositories } from 'ssm-shared-lib';
 import PlaybooksRepository, { PlaybooksRepositoryModel } from '../model/PlaybooksRepository';
 
 async function update(
@@ -31,7 +31,7 @@ async function create(playbooksRepository: PlaybooksRepository): Promise<Playboo
 }
 
 async function findAllActiveWithType(
-  type: Playbooks.PlaybooksRepositoryType,
+  type: Repositories.RepositoryType,
 ): Promise<PlaybooksRepository[] | null> {
   return await PlaybooksRepositoryModel.find({ enabled: true, type: type }).lean().exec();
 }
@@ -41,7 +41,7 @@ async function findAllActive(): Promise<PlaybooksRepository[] | null> {
 }
 
 async function findAllWithType(
-  type: Playbooks.PlaybooksRepositoryType,
+  type: Repositories.RepositoryType,
 ): Promise<PlaybooksRepository[] | null> {
   return await PlaybooksRepositoryModel.find({ type: type }).lean().exec();
 }

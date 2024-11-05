@@ -1,11 +1,11 @@
-import { Playbooks } from 'ssm-shared-lib';
+import { Repositories } from 'ssm-shared-lib';
 import PlaybooksRepositoryRepo from '../../../data/database/repository/PlaybooksRepositoryRepo';
 import { NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../../modules/ansible-vault/ansible-vault';
-import GitRepositoryComponent from '../../../modules/playbooks-repository/git-repository/GitRepositoryComponent';
-import PlaybooksRepositoryEngine from '../../../modules/playbooks-repository/PlaybooksRepositoryEngine';
-import GitRepositoryUseCases from '../../../services/GitRepositoryUseCases';
+import GitPlaybooksRepositoryComponent from '../../../modules/repository/git-playbooks-repository/GitPlaybooksRepositoryComponent';
+import PlaybooksRepositoryEngine from '../../../modules/repository/PlaybooksRepositoryEngine';
+import GitRepositoryUseCases from '../../../services/GitPlaybooksRepositoryUseCases';
 import PlaybooksRepositoryUseCases from '../../../services/PlaybooksRepositoryUseCases';
 
 export const addGitRepository = async (req, res) => {
@@ -40,7 +40,7 @@ export const addGitRepository = async (req, res) => {
 
 export const getGitRepositories = async (req, res) => {
   const repositories = await PlaybooksRepositoryRepo.findAllWithType(
-    Playbooks.PlaybooksRepositoryType.GIT,
+    Repositories.RepositoryType.GIT,
   );
   const encryptedRepositories = repositories?.map((repo) => ({
     ...repo,
@@ -98,7 +98,7 @@ export const forcePullRepository = async (req, res) => {
 
   const repository = PlaybooksRepositoryEngine.getState().playbooksRepository[
     uuid
-  ] as GitRepositoryComponent;
+  ] as GitPlaybooksRepositoryComponent;
   if (!repository) {
     throw new NotFoundError();
   }
@@ -111,7 +111,7 @@ export const forceCloneRepository = async (req, res) => {
   const { uuid } = req.params;
   const repository = PlaybooksRepositoryEngine.getState().playbooksRepository[
     uuid
-  ] as GitRepositoryComponent;
+  ] as GitPlaybooksRepositoryComponent;
   if (!repository) {
     throw new NotFoundError();
   }
@@ -125,7 +125,7 @@ export const commitAndSyncRepository = async (req, res) => {
   const { uuid } = req.params;
   const repository = PlaybooksRepositoryEngine.getState().playbooksRepository[
     uuid
-  ] as GitRepositoryComponent;
+  ] as GitPlaybooksRepositoryComponent;
   if (!repository) {
     throw new NotFoundError();
   }
@@ -138,7 +138,7 @@ export const syncToDatabaseRepository = async (req, res) => {
   const { uuid } = req.params;
   const repository = PlaybooksRepositoryEngine.getState().playbooksRepository[
     uuid
-  ] as GitRepositoryComponent;
+  ] as GitPlaybooksRepositoryComponent;
   if (!repository) {
     throw new NotFoundError();
   }

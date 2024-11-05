@@ -1,7 +1,9 @@
 import { request } from '@umijs/max';
 import { API } from 'ssm-shared-lib';
 
-export async function getPlaybooksRepositories(): Promise<API.PlaybooksRepositories> {
+export async function getPlaybooksRepositories(): Promise<
+  API.Response<API.PlaybooksRepository[]>
+> {
   return request<API.Response<API.PlaybooksRepository[]>>(
     '/api/playbooks-repository/',
     {
@@ -11,11 +13,11 @@ export async function getPlaybooksRepositories(): Promise<API.PlaybooksRepositor
   );
 }
 
-export async function getGitRepositories(
+export async function getGitPlaybooksRepositories(
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.Response<API.GitRepository[]>>(
+  return request<API.Response<API.GitPlaybooksRepository[]>>(
     `/api/playbooks-repository/git/`,
     {
       method: 'GET',
@@ -27,11 +29,11 @@ export async function getGitRepositories(
   );
 }
 
-export async function getLocalRepositories(
+export async function getPlaybooksLocalRepositories(
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.Response<API.LocalRepository[]>>(
+  return request<API.Response<API.GitPlaybooksRepository[]>>(
     `/api/playbooks-repository/local/`,
     {
       method: 'GET',
@@ -43,13 +45,14 @@ export async function getLocalRepositories(
   );
 }
 
-export async function postLocalRepositories(
-  repository: Partial<API.LocalRepository>,
+export async function postPlaybooksLocalRepositories(
+  repositoryUuid: string,
+  repository: Partial<API.LocalPlaybooksRepository>,
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.Response<API.LocalRepository>>(
-    `/api/playbooks-repository/local/${repository.uuid}`,
+  return request<API.Response<API.LocalPlaybooksRepository>>(
+    `/api/playbooks-repository/local/${repositoryUuid}`,
     {
       data: { ...repository },
       method: 'POST',
@@ -61,12 +64,12 @@ export async function postLocalRepositories(
   );
 }
 
-export async function putLocalRepositories(
-  repository: API.LocalRepository,
+export async function putPlaybooksLocalRepositories(
+  repository: API.LocalPlaybooksRepository,
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.Response<API.LocalRepository>>(
+  return request<API.Response<API.LocalPlaybooksRepository>>(
     `/api/playbooks-repository/local/`,
     {
       data: { ...repository },
@@ -79,7 +82,7 @@ export async function putLocalRepositories(
   );
 }
 
-export async function deleteLocalRepository(
+export async function deletePlaybooksLocalRepository(
   uuid: string,
   params?: any,
   options?: Record<string, any>,
@@ -93,7 +96,7 @@ export async function deleteLocalRepository(
   });
 }
 
-export async function syncToDatabaseLocalRepository(
+export async function syncToDatabasePlaybooksLocalRepository(
   uuid: string,
   params?: any,
   options?: Record<string, any>,
@@ -110,13 +113,14 @@ export async function syncToDatabaseLocalRepository(
   );
 }
 
-export async function postGitRepository(
-  repository: API.GitRepository,
+export async function postPlaybooksGitRepository(
+  repositoryUuid: string,
+  repository: API.GitPlaybooksRepository,
   params?: any,
   options?: Record<string, any>,
 ) {
   return request<API.SimpleResult>(
-    `/api/playbooks-repository/git/${repository.uuid}`,
+    `/api/playbooks-repository/git/${repositoryUuid}`,
     {
       data: { ...repository },
       method: 'POST',
@@ -128,8 +132,8 @@ export async function postGitRepository(
   );
 }
 
-export async function putGitRepository(
-  repository: API.GitRepository,
+export async function putPlaybooksGitRepository(
+  repository: API.GitPlaybooksRepository,
   params?: any,
   options?: Record<string, any>,
 ) {
@@ -143,7 +147,7 @@ export async function putGitRepository(
   });
 }
 
-export async function deleteGitRepository(
+export async function deletePlaybooksGitRepository(
   uuid: string,
   params?: any,
   options?: Record<string, any>,
@@ -157,7 +161,7 @@ export async function deleteGitRepository(
   });
 }
 
-export async function syncToDatabaseGitRepository(
+export async function syncToDatabasePlaybooksGitRepository(
   uuid: string,
   params?: any,
   options?: Record<string, any>,
@@ -174,7 +178,7 @@ export async function syncToDatabaseGitRepository(
   );
 }
 
-export async function forcePullGitRepository(
+export async function forcePullPlaybooksGitRepository(
   uuid: string,
   params?: any,
   options?: Record<string, any>,
@@ -191,7 +195,7 @@ export async function forcePullGitRepository(
   );
 }
 
-export async function forceCloneGitRepository(
+export async function forceClonePlaybooksGitRepository(
   uuid: string,
   params?: any,
   options?: Record<string, any>,
@@ -208,7 +212,7 @@ export async function forceCloneGitRepository(
   );
 }
 
-export async function commitAndSyncGitRepository(
+export async function commitAndSyncPlaybooksGitRepository(
   uuid: string,
   params?: any,
   options?: Record<string, any>,
@@ -225,7 +229,7 @@ export async function commitAndSyncGitRepository(
   );
 }
 
-export async function forceRegisterGitRepository(
+export async function forceRegisterPlaybooksGitRepository(
   uuid: string,
   params?: any,
   options?: Record<string, any>,

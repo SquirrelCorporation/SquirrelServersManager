@@ -11,6 +11,7 @@ import playbooks from './playbooks';
 import playbooksRepository from './playbooks-repository';
 import settings from './settings';
 import user from './user';
+import containerRepository from './container-stacks-repository';
 
 const router = express.Router();
 
@@ -27,5 +28,6 @@ router.use('/playbooks-repository', playbooksRepository);
 router.use('/automations', automations);
 router.use('/notifications', notifications);
 router.use('/ansible', ansible);
+router.use('/container-repository', containerRepository);
 
 export default router;

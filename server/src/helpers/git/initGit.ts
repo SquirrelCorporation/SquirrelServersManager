@@ -14,7 +14,7 @@ export interface IInitGitOptionsSyncImmediately {
   logger?: ILogger;
   /** only required if syncImmediately is true, the storage service url we are sync to, for example your github repo url */
   remoteUrl: string;
-  /** should we sync after playbooks-repository init? */
+  /** should we sync after git repository init? */
   syncImmediately: true;
   /** user info used in the commit message */
   userInfo: IGitUserInfos;
@@ -24,7 +24,7 @@ export interface IInitGitOptionsNotSync {
   /**  folder path, can be relative */
   dir: string;
   logger?: ILogger;
-  /** should we sync after playbooks-repository init? */
+  /** should we sync after git repository init? */
   syncImmediately?: false;
   userInfo?: IGitUserInfosWithoutToken | IGitUserInfos;
 }
@@ -55,7 +55,7 @@ export async function initGit(options: IInitGitOptions): Promise<void> {
   logDebug(`Successfully Running git init in dir ${dir}`, GitStep.StartGitInitialization);
   await commitFiles(dir, gitUserName, email ?? defaultGitInfo.email);
 
-  // if we are config local note playbooks-repository, we are done here
+  // if we are config local note git repository, we are done here
   if (syncImmediately !== true) {
     logProgress(GitStep.GitRepositoryConfigurationFinished);
     return;

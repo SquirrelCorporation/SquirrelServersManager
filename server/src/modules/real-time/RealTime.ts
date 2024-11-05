@@ -19,6 +19,12 @@ const eventsToHandle = [
     logMessage: 'Notifications updated',
     debounceTime: 5000,
   },
+  {
+    event: Events.ALERT,
+    ssmEvent: SsmEvents.Alert.NEW_ALERT,
+    logMessage: 'Alert sent',
+    debounceTime: 5000,
+  },
   // Add any additional events here
 ];
 
@@ -38,10 +44,10 @@ class RealTimeEngine extends EventManager {
   }
 
   private createDebouncedEmitter(eventName: string, logMessage: string, debounceTime: number) {
-    return debounce(() => {
+    return debounce((payload: any) => {
       const io = App.getSocket().getIo();
-      this.childLogger.debug(`${logMessage}`);
-      io.emit(eventName);
+      this.childLogger.info(`${logMessage}`);
+      io.emit(eventName, payload);
     }, debounceTime);
   }
 
@@ -50,8 +56,11 @@ class RealTimeEngine extends EventManager {
       this.childLogger.info('init...');
 
       eventsToHandle.forEach(({ event, ssmEvent, logMessage, debounceTime }) => {
+        this.childLogger.debug(
+          `Registering event ${event} with ssmEvent ${ssmEvent} and debounceTime ${debounceTime}`,
+        );
         const debouncedEmitter = this.createDebouncedEmitter(ssmEvent, logMessage, debounceTime);
-        this.on(event, debouncedEmitter);
+        this.on(event, (payload: any) => debouncedEmitter(payload));
       });
     } catch (error: any) {
       this.childLogger.error(error);

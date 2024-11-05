@@ -1,5 +1,4 @@
 import { GitProcess } from 'dugite';
-import myLogger from '../../logger';
 import { credentialOff, credentialOn } from './credential';
 import { defaultGitInfo as defaultDefaultGitInfo } from './defaultGitInfo';
 import {
@@ -39,7 +38,7 @@ export interface ICommitAndSyncOptions {
   userInfo?: IGitUserInfos;
 }
 /**
- * `playbooks-repository add .` + `playbooks-repository commit` + `playbooks-repository rebase` or something that can sync bi-directional
+ * `git add .` + `git commit` + `git rebase` or something that can sync bi-directional
  */
 export async function commitAndSync(options: ICommitAndSyncOptions): Promise<void> {
   const {
@@ -194,7 +193,7 @@ export async function commitAndSync(options: ICommitAndSyncOptions): Promise<voi
       logProgress(GitStep.SynchronizationFinish);
     } else {
       switch (exitCode) {
-        // "message":"exitCode: 128, stderr of playbooks-repository push: fatal: unable to access 'https://github.com/tiddly-gittly/TiddlyWiki-Chinese-Tutorial.git/': LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443 \n"
+        // "message":"exitCode: 128, stderr of git push: fatal: unable to access 'https://github.com/tiddly-gittly/TiddlyWiki-Chinese-Tutorial.git/': LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443 \n"
         case 128: {
           throw new GitPullPushError(options, stderr ?? '');
         }
@@ -211,7 +210,7 @@ export async function commitAndSync(options: ICommitAndSyncOptions): Promise<voi
 }
 
 /**
- * Check for playbooks-repository repo state, if it is not clean, try fix it. If not init will throw error.
+ * Check for git repo state, if it is not clean, try fix it. If not init will throw error.
  * This method is used by commitAndSync and forcePull before they doing anything.
  */
 export async function syncPreflightCheck(configs: {
