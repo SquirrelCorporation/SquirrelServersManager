@@ -124,6 +124,11 @@ class ContainerCustomStacksRepositoryComponent extends EventManager {
       }),
     );
     this.childLogger.info(`Updating Stacks Repository ${containerStackRepository.name}`);
+    this.emit(Events.ALERT, {
+      severity: SsmAlert.AlertType.SUCCESS,
+      message: `Successfully updated repository "${containerStackRepository.name}" with ${containerStackPathsToSync.length} files`,
+      module: 'ContainerCustomStackRepository',
+    });
   }
 
   private async getContainerStackRepository() {
@@ -231,6 +236,11 @@ class ContainerCustomStacksRepositoryComponent extends EventManager {
           },
         },
       });
+      this.emit(Events.ALERT, {
+        severity: SsmAlert.AlertType.SUCCESS,
+        message: `Successfully commit and sync repository "${this.name}"`,
+        module: 'ContainerCustomStackRepository',
+      });
     } catch (error: any) {
       this.childLogger.error(error);
       await GitCustomStacksRepositoryUseCases.putRepositoryOnError(this.uuid, error);
@@ -259,6 +269,11 @@ class ContainerCustomStacksRepositoryComponent extends EventManager {
             });
           },
         },
+      });
+      this.emit(Events.ALERT, {
+        severity: SsmAlert.AlertType.SUCCESS,
+        message: `Successfully forcepull repository ${this.name}`,
+        module: 'ContainerCustomStackRepository',
       });
     } catch (error: any) {
       this.childLogger.error(error);

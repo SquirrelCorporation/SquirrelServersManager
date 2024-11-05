@@ -1,7 +1,9 @@
 import PlaybookRepo from '../../../data/database/repository/PlaybookRepo';
+import logger from '../../../logger';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import Shell from '../../../modules/shell';
+import FileSystemManager from '../../../modules/shell/managers/FileSystemManager';
 import PlaybooksRepositoryUseCases from '../../../services/PlaybooksRepositoryUseCases';
 import PlaybookUseCases from '../../../services/PlaybookUseCases';
 
@@ -34,9 +36,14 @@ export const getPlaybook = async (req, res) => {
   if (!playbook) {
     throw new NotFoundError(`Playbook ${uuid} not found`);
   }
+  if (!Shell.PlaybookFileManager.testExistence(playbook.path)) {
+    throw new NotFoundError(
+      `Playbook ${playbook.name} not found on filesystem.\n This likely due to a de-synchronisation between the database and the filesystem.\n Please run "Sync To Database" to fix this issue. (In Settings/Playbooks)`,
+    );
+  }
   try {
     const content = Shell.PlaybookFileManager.readPlaybook(playbook.path);
-    new SuccessResponse('Get Playbook successful', content).send(res);
+    new SuccessResponse('Got Playbook successfully', content).send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }
@@ -51,7 +58,7 @@ export const editPlaybook = async (req, res) => {
   }
   try {
     Shell.PlaybookFileManager.editPlaybook(req.body.content, playbook.path);
-    new SuccessResponse('Edit playbook successful').send(res);
+    new SuccessResponse('Playbook edited successfully').send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }
@@ -66,7 +73,7 @@ export const addExtraVarToPlaybook = async (req, res) => {
   }
   try {
     await PlaybookUseCases.addExtraVarToPlaybook(playbook, req.body.extraVar);
-    new SuccessResponse('Add extra var to playbook successful').send(res);
+    new SuccessResponse('Added an extra var to playbook successfully').send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }
@@ -81,7 +88,7 @@ export const deleteExtraVarFromPlaybook = async (req, res) => {
   }
   try {
     await PlaybookUseCases.deleteExtraVarFromPlaybook(playbook, varname);
-    new SuccessResponse('Delete extra var from playbook successful').send(res);
+    new SuccessResponse('Deleted extra var from playbook successfully').send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }
@@ -96,7 +103,7 @@ export const deletePlaybook = async (req, res) => {
   }
   try {
     await PlaybooksRepositoryUseCases.deletePlaybooksInRepository(playbook);
-    new SuccessResponse('Delete playbook successful').send(res);
+    new SuccessResponse('Playbook deleted successfully').send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }

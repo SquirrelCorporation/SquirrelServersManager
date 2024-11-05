@@ -6,7 +6,7 @@ type Listener = (...args: any[]) => void;
 
 export type Payload = {
   message: string;
-  severity: 'info' | 'warning' | 'error';
+  severity: 'info' | 'warning' | 'error' | 'success';
   module: string;
   moduleId?: string;
 };

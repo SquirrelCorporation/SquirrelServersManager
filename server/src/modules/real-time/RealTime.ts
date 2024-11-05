@@ -46,7 +46,7 @@ class RealTimeEngine extends EventManager {
   private createDebouncedEmitter(eventName: string, logMessage: string, debounceTime: number) {
     return debounce((payload: any) => {
       const io = App.getSocket().getIo();
-      this.childLogger.info(`${logMessage}`);
+      this.childLogger.debug(`${logMessage}`);
       io.emit(eventName, payload);
     }, debounceTime);
   }

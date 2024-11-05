@@ -179,6 +179,10 @@ const PlaybooksGitRepositoryModal: React.FC<
           await props.asyncFetch();
         } else {
           await putPlaybooksGitRepository(values);
+          message.loading({
+            content: 'Repository cloning & processing in process...',
+            duration: 6,
+          });
           props.setModalOpened(false);
           await props.asyncFetch();
         }

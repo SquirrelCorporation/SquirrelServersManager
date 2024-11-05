@@ -2,6 +2,7 @@ import pino from 'pino';
 import shell from 'shelljs';
 import { SSM_DATA_PATH } from '../../config';
 import EventManager from '../../core/events/EventManager';
+import Events from '../../core/events/events';
 import { NotFoundError } from '../../middlewares/api/ApiError';
 import Playbook from '../../data/database/model/Playbook';
 import PlaybooksRepository from '../../data/database/model/PlaybooksRepository';
@@ -91,6 +92,7 @@ abstract class PlaybooksRepositoryComponent extends EventManager {
     this.childLogger.info(
       `Updating Playbooks Repository ${playbooksRepository.name} - ${playbooksRepository._id}`,
     );
+    return playbooksToSync?.length;
   }
 
   private async getPlaybookRepository() {

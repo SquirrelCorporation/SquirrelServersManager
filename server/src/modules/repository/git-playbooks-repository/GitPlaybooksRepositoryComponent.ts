@@ -79,7 +79,12 @@ class GitPlaybooksRepositoryComponent
         },
       });
       if (syncAfter) {
-        await this.syncToDatabase();
+        const nbSync = await this.syncToDatabase();
+        this.emit(Events.ALERT, {
+          severity: SsmAlert.AlertType.SUCCESS,
+          message: `Successfully updated repository ${this.name} with ${nbSync} files`,
+          module: 'GitPlaybooksRepositoryComponent',
+        });
       }
     } catch (error: any) {
       this.childLogger.error(error);
@@ -109,6 +114,11 @@ class GitPlaybooksRepositoryComponent
           },
         },
       });
+      this.emit(Events.ALERT, {
+        severity: SsmAlert.AlertType.SUCCESS,
+        message: `Successfully commit and sync repository ${this.name}`,
+        module: 'GitPlaybooksRepositoryComponent',
+      });
     } catch (error: any) {
       this.childLogger.error(error);
       await GitPlaybooksRepositoryUseCases.putRepositoryOnError(this.uuid, error);
@@ -136,6 +146,11 @@ class GitPlaybooksRepositoryComponent
             });
           },
         },
+      });
+      this.emit(Events.ALERT, {
+        severity: SsmAlert.AlertType.SUCCESS,
+        message: `Successfully forcepull repository ${this.name}`,
+        module: 'GitPlaybooksRepositoryComponent',
       });
     } catch (error: any) {
       this.childLogger.error(error);

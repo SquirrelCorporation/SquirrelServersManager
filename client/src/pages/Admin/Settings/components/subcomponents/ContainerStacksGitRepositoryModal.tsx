@@ -181,6 +181,10 @@ const ContainerStacksGitRepositoryModal: React.FC<
           await props.asyncFetch();
         } else {
           await putContainerStacksGitRepository(values);
+          message.loading({
+            content: 'Repository cloning & processing in process...',
+            duration: 6,
+          });
           props.setModalOpened(false);
           await props.asyncFetch();
         }
