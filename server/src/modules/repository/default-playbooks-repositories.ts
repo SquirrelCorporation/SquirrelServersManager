@@ -1,4 +1,5 @@
-import { Playbooks } from 'ssm-shared-lib';
+import { Repositories } from 'ssm-shared-lib';
+import { SSM_DATA_PATH, SSM_INSTALL_PATH } from '../../config';
 import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
 import UserRepo from '../../data/database/repository/UserRepo';
 import PinoLogger from '../../logger';
@@ -13,8 +14,8 @@ const corePlaybooksRepository = {
   name: 'ssm-core',
   uuid: '00000000-0000-0000-0000-000000000000',
   enabled: true,
-  type: Playbooks.PlaybooksRepositoryType.LOCAL,
-  directory: '/opt/squirrelserversmanager/server/src/ansible/00000000-0000-0000-0000-000000000000',
+  type: Repositories.RepositoryType.LOCAL,
+  directory: `${SSM_INSTALL_PATH}/server/src/ansible/00000000-0000-0000-0000-000000000000`,
   default: true,
 };
 
@@ -22,8 +23,8 @@ const toolsPlaybooksRepository = {
   name: 'ssm-tools',
   uuid: '00000000-0000-0000-0000-000000000001',
   enabled: true,
-  type: Playbooks.PlaybooksRepositoryType.LOCAL,
-  directory: '/opt/squirrelserversmanager/server/src/ansible/00000000-0000-0000-0000-000000000001',
+  type: Repositories.RepositoryType.LOCAL,
+  directory: `${SSM_INSTALL_PATH}/server/src/ansible/00000000-0000-0000-0000-000000000001`,
   default: true,
 };
 
@@ -38,8 +39,8 @@ export async function createADefaultLocalUserRepository() {
     const userPlaybooksRepository = {
       name: user?.email.trim().split('@')[0] || 'user-default',
       enabled: true,
-      type: Playbooks.PlaybooksRepositoryType.LOCAL,
-      directory: '/playbooks/00000000-0000-0000-0000-000000000002',
+      type: Repositories.RepositoryType.LOCAL,
+      directory: `${SSM_DATA_PATH}/playbooks/00000000-0000-0000-0000-000000000002`,
       uuid: '00000000-0000-0000-0000-000000000002',
     };
     await PlaybooksRepositoryRepo.updateOrCreate(userPlaybooksRepository);

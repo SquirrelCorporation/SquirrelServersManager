@@ -39,8 +39,7 @@ services:
       - mongo
       - redis
     volumes:
-      - ./.data.prod/playbooks:/playbooks
-      - ./.data.prod/config:/ansible-config
+      - ./.data.prod:/data
     build:
       context: ./server
       additional_contexts:

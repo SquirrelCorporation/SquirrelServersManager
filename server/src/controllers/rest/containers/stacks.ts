@@ -1,4 +1,5 @@
 import { parse } from 'url';
+import { RepositoryType } from 'ssm-shared-lib/distribution/enums/repositories';
 import { API } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
 import ContainerCustomStackRepo from '../../../data/database/repository/ContainerCustomStackRepo';
@@ -16,7 +17,7 @@ import PlaybookUseCases from '../../../services/PlaybookUseCases';
 
 export const getCustomStacks = async (req, res) => {
   const realUrl = req.url;
-  const { current = 1, pageSize = 10 } = req.query;
+  const { current, pageSize } = req.query;
   const params = parse(realUrl, true).query as unknown as API.PageParams &
     API.ContainerCustomStack & {
       sorter: any;
@@ -29,8 +30,9 @@ export const getCustomStacks = async (req, res) => {
   dataSource = filterByFields(dataSource, params);
   dataSource = filterByQueryParams(dataSource, params, ['uuid', 'name']);
   const totalBeforePaginate = dataSource?.length || 0;
-  dataSource = paginate(dataSource, current as number, pageSize as number);
-
+  if (current && pageSize) {
+    dataSource = paginate(dataSource, current as number, pageSize as number);
+  }
   new SuccessResponse('Got Custom Stacks', dataSource, {
     total: totalBeforePaginate,
     success: true,
@@ -121,6 +123,9 @@ export const patchCustomStack = async (req, res) => {
       iconColor,
       iconBackgroundColor,
     });
+    if (stack.type === RepositoryType.GIT) {
+      FileSystemManager.writeFile(yaml, stack.path as string);
+    }
     new SuccessResponse('Put Custom Stack', stack).send(res);
   }
 };

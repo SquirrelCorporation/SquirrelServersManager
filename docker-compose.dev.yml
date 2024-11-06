@@ -51,8 +51,7 @@ services:
       - ./.env.dev
     volumes:
       - ./server/src:/opt/squirrelserversmanager/server/src
-      - ./.data.dev/playbooks:/playbooks
-      - ./.data.dev/config:/ansible-config
+      - ./.data.dev:/data
     environment:
       NODE_ENV: development
       DEBUG: nodejs-docker-express:*

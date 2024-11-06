@@ -1,5 +1,5 @@
 import { ExtraVarsType, SSHConnection, SSHType } from '../enums/ansible';
-import { PlaybooksRepositoryType } from '../enums/playbooks';
+import { RepositoryType } from '../enums/repositories';
 import { AutomationChain } from '../form/automation';
 import { ExtendedTreeNode } from './tree';
 
@@ -350,7 +350,7 @@ export type PlaybooksRepository = {
   name: string;
   uuid: string;
   path: string;
-  type: PlaybooksRepositoryType;
+  type: RepositoryType;
   children?: ExtendedTreeNode[];
   directoryExclusionList?: string[];
 };
@@ -648,7 +648,7 @@ export type ContainerRegistry = {
   canAnonymous: boolean;
 }
 
-export type GitRepository = PlaybooksRepository & {
+export type GitPlaybooksRepository = PlaybooksRepository & {
   email: string;
   branch: string;
   userName: string;
@@ -656,10 +656,23 @@ export type GitRepository = PlaybooksRepository & {
   default: boolean;
 }
 
-export type LocalRepository = PlaybooksRepository & {
+export type LocalPlaybooksRepository = PlaybooksRepository & {
   directory: string;
   enabled: boolean;
   default: boolean;
+}
+
+export type GitContainerStacksRepository = {
+  email: string;
+  branch: string;
+  userName: string;
+  remoteUrl: string;
+  default: boolean;
+  name: string;
+  uuid: string;
+  matchesList?: string[];
+  onError?: boolean;
+  onErrorMessage?: string;
 }
 
 export type ExtraVars = ExtraVar[];

@@ -1,10 +1,10 @@
-import { Playbooks } from 'ssm-shared-lib';
+import { Repositories } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
 import PlaybooksRepositoryRepo from '../data/database/repository/PlaybooksRepositoryRepo';
 import PinoLogger from '../logger';
 import { NotFoundError } from '../middlewares/api/ApiError';
-import { DIRECTORY_ROOT } from '../modules/playbooks-repository/PlaybooksRepositoryComponent';
-import PlaybooksRepositoryEngine from '../modules/playbooks-repository/PlaybooksRepositoryEngine';
+import { DIRECTORY_ROOT } from '../modules/repository/PlaybooksRepositoryComponent';
+import PlaybooksRepositoryEngine from '../modules/repository/PlaybooksRepositoryEngine';
 
 const logger = PinoLogger.child(
   { module: 'LocalRepositoryUseCases' },
@@ -15,7 +15,7 @@ async function addLocalRepository(name: string, directoryExclusionList?: string[
   const uuid = uuidv4();
   const localRepository = await PlaybooksRepositoryEngine.registerRepository({
     uuid,
-    type: Playbooks.PlaybooksRepositoryType.LOCAL,
+    type: Repositories.RepositoryType.LOCAL,
     name,
     enabled: true,
     directory: DIRECTORY_ROOT,
@@ -23,7 +23,7 @@ async function addLocalRepository(name: string, directoryExclusionList?: string[
   });
   await PlaybooksRepositoryRepo.create({
     uuid,
-    type: Playbooks.PlaybooksRepositoryType.LOCAL,
+    type: Repositories.RepositoryType.LOCAL,
     name,
     directory: localRepository.getDirectory(),
     enabled: true,

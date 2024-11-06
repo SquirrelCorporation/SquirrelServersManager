@@ -1,13 +1,14 @@
 import {
+  ErrorCircleSettings20Regular,
   SimpleIconsGit,
   StreamlineLocalStorageFolderSolid,
 } from '@/components/Icons/CustomIcons';
 import Title, { TitleColors } from '@/components/Template/Title';
-import GitRepositoryModal from '@/pages/Admin/Settings/components/subcomponents/GitRepositoryModal';
-import LocalRepositoryModal from '@/pages/Admin/Settings/components/subcomponents/LocalRepositoryModal';
+import PlaybooksGitRepositoryModal from '@/pages/Admin/Settings/components/subcomponents/PlaybooksGitRepositoryModal';
+import PlaybooksLocalRepositoryModal from '@/pages/Admin/Settings/components/subcomponents/PlaybooksLocalRepositoryModal';
 import {
-  getGitRepositories,
-  getLocalRepositories,
+  getGitPlaybooksRepositories,
+  getPlaybooksLocalRepositories,
 } from '@/services/rest/playbooks-repositories';
 import { postUserLogs } from '@/services/rest/usersettings';
 import { useModel } from '@@/exports';
@@ -43,20 +44,20 @@ const PlaybookSettings: React.FC = () => {
   const [inputValue, setInputValue] = useState<number | null>(
     currentUser?.settings.userSpecific.userLogsLevel.terminal,
   );
-  const [gitRepositories, setGitRepositories] = useState<API.GitRepository[]>(
-    [],
-  );
+  const [gitRepositories, setGitRepositories] = useState<
+    API.GitPlaybooksRepository[]
+  >([]);
   const [localRepositories, setLocalRepositories] = useState<
-    API.LocalRepository[]
+    API.LocalPlaybooksRepository[]
   >([]);
 
   const asyncFetch = async () => {
-    await getGitRepositories().then((list) => {
+    await getGitPlaybooksRepositories().then((list) => {
       if (list?.data) {
         setGitRepositories(list.data);
       }
     });
-    await getLocalRepositories().then((list) => {
+    await getPlaybooksLocalRepositories().then((list) => {
       if (list?.data) {
         setLocalRepositories(list.data);
       }
@@ -86,14 +87,14 @@ const PlaybookSettings: React.FC = () => {
 
   return (
     <Card>
-      <GitRepositoryModal
+      <PlaybooksGitRepositoryModal
         repositories={gitRepositories}
         setModalOpened={setGitModalOpened}
         modalOpened={gitModalOpened}
         asyncFetch={asyncFetch}
         selectedRecord={selectedGitRecord}
       />
-      <LocalRepositoryModal
+      <PlaybooksLocalRepositoryModal
         repositories={localRepositories}
         setModalOpened={setLocalModalOpened}
         modalOpened={localModalOpened}
@@ -186,7 +187,7 @@ const PlaybookSettings: React.FC = () => {
           </Space>
         }
       >
-        <ProList<API.LocalRepository>
+        <ProList<API.LocalPlaybooksRepository>
           ghost={true}
           itemCardProps={{
             ghost: true,
@@ -202,7 +203,7 @@ const PlaybookSettings: React.FC = () => {
           }
           rowSelection={false}
           grid={{ gutter: 0, xs: 1, sm: 2, md: 2, lg: 2, xl: 4, xxl: 4 }}
-          onItem={(record: API.LocalRepository) => {
+          onItem={(record: API.LocalPlaybooksRepository) => {
             return {
               onMouseEnter: () => {
                 console.log(record);
@@ -275,7 +276,7 @@ const PlaybookSettings: React.FC = () => {
           </Space>
         }
       >
-        <ProList<API.GitRepository>
+        <ProList<API.GitPlaybooksRepository>
           ghost={true}
           itemCardProps={{
             ghost: true,
@@ -291,7 +292,7 @@ const PlaybookSettings: React.FC = () => {
           }
           rowSelection={false}
           grid={{ gutter: 0, xs: 1, sm: 2, md: 2, lg: 2, xl: 4, xxl: 4 }}
-          onItem={(record: API.GitRepository) => {
+          onItem={(record: API.GitPlaybooksRepository) => {
             return {
               onMouseEnter: () => {
                 console.log(record);
@@ -322,6 +323,34 @@ const PlaybookSettings: React.FC = () => {
             },
             actions: {
               cardActionProps: 'extra',
+              render: (_, row) => {
+                if (row.onError) {
+                  return (
+                    <Popover
+                      overlayStyle={{
+                        width: '400px',
+                        height: '400px',
+                        overflowY: 'scroll',
+                      }}
+                      content={
+                        <Space direction="vertical" size={'small'}>
+                          <Typography.Text>
+                            This repository is on error:
+                          </Typography.Text>
+                          <Typography.Text code style={{ fontSize: 13 }}>
+                            {row.onErrorMessage}
+                          </Typography.Text>
+                        </Space>
+                      }
+                    >
+                      <ErrorCircleSettings20Regular
+                        style={{ color: 'red', fontSize: 30 }}
+                      />
+                    </Popover>
+                  );
+                }
+                return undefined;
+              },
             },
           }}
           dataSource={gitRepositories}

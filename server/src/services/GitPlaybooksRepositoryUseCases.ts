@@ -1,7 +1,7 @@
-import { Playbooks } from 'ssm-shared-lib';
+import { Repositories } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
 import PlaybooksRepositoryRepo from '../data/database/repository/PlaybooksRepositoryRepo';
-import PlaybooksRepositoryEngine from '../modules/playbooks-repository/PlaybooksRepositoryEngine';
+import PlaybooksRepositoryEngine from '../modules/repository/PlaybooksRepositoryEngine';
 
 async function addGitRepository(
   name: string,
@@ -15,7 +15,7 @@ async function addGitRepository(
   const uuid = uuidv4();
   const gitRepository = await PlaybooksRepositoryEngine.registerRepository({
     uuid,
-    type: Playbooks.PlaybooksRepositoryType.GIT,
+    type: Repositories.RepositoryType.GIT,
     name,
     branch,
     email,
@@ -27,7 +27,7 @@ async function addGitRepository(
   });
   await PlaybooksRepositoryRepo.create({
     uuid,
-    type: Playbooks.PlaybooksRepositoryType.GIT,
+    type: Repositories.RepositoryType.GIT,
     name,
     remoteUrl,
     accessToken,
@@ -38,8 +38,7 @@ async function addGitRepository(
     enabled: true,
     directoryExclusionList,
   });
-  void gitRepository.clone();
-  void gitRepository.syncToDatabase();
+  void gitRepository.clone(true);
 }
 
 async function updateGitRepository(
@@ -55,7 +54,7 @@ async function updateGitRepository(
   await PlaybooksRepositoryEngine.deregisterRepository(uuid);
   const gitRepository = await PlaybooksRepositoryEngine.registerRepository({
     uuid,
-    type: Playbooks.PlaybooksRepositoryType.GIT,
+    type: Repositories.RepositoryType.GIT,
     name,
     branch,
     email,
@@ -67,7 +66,7 @@ async function updateGitRepository(
   });
   await PlaybooksRepositoryRepo.update({
     uuid,
-    type: Playbooks.PlaybooksRepositoryType.GIT,
+    type: Repositories.RepositoryType.GIT,
     name,
     remoteUrl,
     accessToken,
@@ -80,7 +79,29 @@ async function updateGitRepository(
   });
 }
 
+async function putRepositoryOnError(repositoryUuid: string, error: any) {
+  const repository = await PlaybooksRepositoryRepo.findByUuid(repositoryUuid);
+  if (!repository) {
+    throw new Error(`Repository with Uuid: ${repositoryUuid} not found`);
+  }
+  repository.onError = true;
+  repository.onErrorMessage = `${error.message}`;
+  await PlaybooksRepositoryRepo.update(repository);
+}
+
+async function resetRepositoryError(repositoryUuid: string) {
+  const repository = await PlaybooksRepositoryRepo.findByUuid(repositoryUuid);
+  if (!repository) {
+    throw new Error(`Repository with Uuid: ${repositoryUuid} not found`);
+  }
+  repository.onError = false;
+  repository.onErrorMessage = undefined;
+  await PlaybooksRepositoryRepo.update(repository);
+}
+
 export default {
   addGitRepository,
   updateGitRepository,
+  putRepositoryOnError,
+  resetRepositoryError,
 };

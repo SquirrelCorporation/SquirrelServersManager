@@ -33,6 +33,10 @@ class FileSystemManager extends AbstractShellCommander {
     return this.executeCommand(shellWrapper.test, options, path);
   }
 
+  readFile(path: string): string {
+    return this.executeCommand(shellWrapper.cat, path).toString();
+  }
+
   protected checkPath(userPath: string, rootPath?: string) {
     if (rootPath) {
       const filePath = path.resolve(rootPath, userPath);

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import LocalRepositoryComponent from '../../../../modules/playbooks-repository/local-repository/LocalRepositoryComponent';
-import PlaybooksRepositoryComponent from '../../../../modules/playbooks-repository/PlaybooksRepositoryComponent';
+import LocalPlaybooksRepositoryComponent from '../../../../modules/repository/local-playbooks-repository/LocalPlaybooksRepositoryComponent';
+import PlaybooksRepositoryComponent from '../../../../modules/repository/PlaybooksRepositoryComponent';
 
 describe('PlaybooksRepositoryComponent', () => {
   let playbooksRepositoryComponent: PlaybooksRepositoryComponent;
@@ -11,7 +11,12 @@ describe('PlaybooksRepositoryComponent', () => {
         return { info: vi.fn(), warn: vi.fn(), error: vi.fn() };
       },
     };
-    playbooksRepositoryComponent = new LocalRepositoryComponent('uuid', logger, 'name', 'path');
+    playbooksRepositoryComponent = new LocalPlaybooksRepositoryComponent(
+      'uuid',
+      logger,
+      'name',
+      'path',
+    );
   });
 
   describe('fileBelongToRepository method', () => {

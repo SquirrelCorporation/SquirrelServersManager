@@ -1,4 +1,5 @@
 import ContainerCustomStack, { ContainerCustomStackModel } from '../model/ContainerCustomStack';
+import ContainerCustomStackRepository from '../model/ContainerCustomStackRepository';
 
 async function findAll() {
   return await ContainerCustomStackModel.find().lean().exec();
@@ -25,10 +26,26 @@ async function deleteOne(uuid: string) {
   await ContainerCustomStackModel.deleteOne({ uuid: uuid }).exec();
 }
 
+async function listAllByRepository(
+  containerCustomStackRepository: ContainerCustomStackRepository,
+): Promise<ContainerCustomStack[] | null> {
+  return await ContainerCustomStackModel.find({
+    containerCustomStackRepository: containerCustomStackRepository,
+  })
+    .lean()
+    .exec();
+}
+
+async function findOneByPath(path: string) {
+  return await ContainerCustomStackModel.findOne({ path: path }).lean().exec();
+}
+
 export default {
   findAll,
   updateOrCreate,
   deleteOne,
   findByName,
   findByUuid,
+  listAllByRepository,
+  findOneByPath,
 };

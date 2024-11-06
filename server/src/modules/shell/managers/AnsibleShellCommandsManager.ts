@@ -1,6 +1,7 @@
 import shell from 'shelljs';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
+import { SSM_INSTALL_PATH } from '../../../config';
 import User from '../../../data/database/model/User';
 import AnsibleTaskRepo from '../../../data/database/repository/AnsibleTaskRepo';
 import DeviceAuthRepo from '../../../data/database/repository/DeviceAuthRepo';
@@ -18,7 +19,7 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
       'Ansible',
     );
   }
-  private readonly ANSIBLE_PATH = '/opt/squirrelserversmanager/server/src/ansible/';
+  private readonly ANSIBLE_PATH = `${SSM_INSTALL_PATH}/server/src/ansible/`;
 
   static timeout(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -62,8 +63,8 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
     mode: SsmAnsible.ExecutionMode = SsmAnsible.ExecutionMode.APPLY,
   ) {
     shell.cd(this.ANSIBLE_PATH);
-    shell.rm('/opt/squirrelserversmanager/server/src/playbooks/inventory/hosts');
-    shell.rm('/opt/squirrelserversmanager/server/src/playbooks/env/_extravars');
+    shell.rm(`${SSM_INSTALL_PATH}/server/src/playbooks/inventory/hosts`);
+    shell.rm(`${SSM_INSTALL_PATH}/server/src/playbooks/env/_extravars`);
     const uuid = uuidv4();
     const result = await new Promise<string | null>((resolve) => {
       const cmd = ansibleCmd.buildAnsibleCmd(

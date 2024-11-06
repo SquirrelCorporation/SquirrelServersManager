@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import {
   recursiveTreeCompletion,
   recursivelyFlattenTree,
-} from '../../../../modules/playbooks-repository/tree-utils';
+} from '../../../../modules/repository/tree-utils';
 
 const mockTree: DirectoryTree.TreeNode = {
   path: '/root',

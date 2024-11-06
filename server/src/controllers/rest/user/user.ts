@@ -6,7 +6,7 @@ import { Role } from '../../../data/database/model/User';
 import UserRepo from '../../../data/database/repository/UserRepo';
 import { AuthFailureError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import { createADefaultLocalUserRepository } from '../../../modules/playbooks-repository/default-repositories';
+import { createADefaultLocalUserRepository } from '../../../modules/repository/default-playbooks-repositories';
 import DashboardUseCase from '../../../services/DashboardUseCase';
 import DeviceUseCases from '../../../services/DeviceUseCases';
 

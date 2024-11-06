@@ -1,12 +1,12 @@
-import { Playbooks } from 'ssm-shared-lib';
+import { Repositories } from 'ssm-shared-lib';
 import PlaybooksRepository from '../../data/database/model/PlaybooksRepository';
 import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
 import PinoLogger from '../../logger';
 import { DEFAULT_VAULT_ID, vaultDecrypt } from '../ansible-vault/ansible-vault';
-import GitRepositoryComponent from './git-repository/GitRepositoryComponent';
-import LocalRepositoryComponent from './local-repository/LocalRepositoryComponent';
+import GitPlaybooksRepositoryComponent from './git-playbooks-repository/GitPlaybooksRepositoryComponent';
+import LocalPlaybooksRepositoryComponent from './local-playbooks-repository/LocalPlaybooksRepositoryComponent';
 import { AbstractComponent } from './PlaybooksRepositoryComponent';
-import { saveSSMDefaultPlaybooksRepositories } from './default-repositories';
+import { saveSSMDefaultPlaybooksRepositories } from './default-playbooks-repositories';
 
 const logger = PinoLogger.child(
   { module: 'PlaybooksRepositoryEngine' },
@@ -38,7 +38,7 @@ async function registerGitRepository(playbookRepository: PlaybooksRepository) {
   if (!decryptedAccessToken) {
     throw new Error('Error decrypting access token');
   }
-  return new GitRepositoryComponent(
+  return new GitPlaybooksRepositoryComponent(
     uuid,
     logger,
     name,
@@ -55,7 +55,7 @@ async function registerLocalRepository(playbookRepository: PlaybooksRepository) 
   if (!playbookRepository.directory) {
     throw new Error('playbookRepository.directory is required');
   }
-  return new LocalRepositoryComponent(
+  return new LocalPlaybooksRepositoryComponent(
     playbookRepository.uuid,
     logger,
     playbookRepository.name,
@@ -69,11 +69,11 @@ async function registerRepository(playbookRepository: PlaybooksRepository) {
   );
 
   switch (playbookRepository.type) {
-    case Playbooks.PlaybooksRepositoryType.GIT:
+    case Repositories.RepositoryType.GIT:
       state.playbooksRepository[playbookRepository.uuid] =
         await registerGitRepository(playbookRepository);
       break;
-    case Playbooks.PlaybooksRepositoryType.LOCAL:
+    case Repositories.RepositoryType.LOCAL:
       state.playbooksRepository[playbookRepository.uuid] =
         await registerLocalRepository(playbookRepository);
       break;

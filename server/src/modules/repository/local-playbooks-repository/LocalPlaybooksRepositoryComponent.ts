@@ -1,12 +1,15 @@
 import PlaybooksRepositoryComponent, { AbstractComponent } from '../PlaybooksRepositoryComponent';
 import Shell from '../../shell';
 
-class LocalRepositoryComponent extends PlaybooksRepositoryComponent implements AbstractComponent {
+class LocalPlaybooksRepositoryComponent
+  extends PlaybooksRepositoryComponent
+  implements AbstractComponent
+{
   constructor(uuid: string, logger: any, name: string, rootPath: string) {
     super(uuid, name, rootPath);
     this.childLogger = logger.child(
-      { module: `LocalRepository`, moduleId: `${this.uuid}`, moduleName: `${this.name}` },
-      { msgPrefix: `[LOCAL_REPOSITORY] - ` },
+      { module: `PlaybooksLocalRepository`, moduleId: `${this.uuid}`, moduleName: `${this.name}` },
+      { msgPrefix: `[PLAYBOOKS_LOCAL_REPOSITORY] - ` },
     );
   }
 
@@ -19,4 +22,4 @@ class LocalRepositoryComponent extends PlaybooksRepositoryComponent implements A
   }
 }
 
-export default LocalRepositoryComponent;
+export default LocalPlaybooksRepositoryComponent;

@@ -173,7 +173,7 @@ export async function continueRebase(
     rebaseContinueStdError = rebaseContinueResult.stderr;
     const rebaseContinueStdOut = rebaseContinueResult.stdout;
     repositoryState = await getGitRepositoryState(dir, logger);
-    // if playbooks-repository add . + playbooks-repository commit failed or playbooks-repository rebase --continue failed
+    // if git add . + git commit failed or git rebase --continue failed
     if (commitExitCode !== 0 || rebaseContinueExitCode !== 0) {
       throw new CantSyncInSpecialGitStateAutoFixFailed(
         `rebaseContinueStdError when ${repositoryState}: ${rebaseContinueStdError}\ncommitStdError when ${repositoryState}: ${commitStdError}\n${rebaseContinueStdError}`,
@@ -186,7 +186,7 @@ export async function continueRebase(
 }
 
 /**
- * Simply calling playbooks-repository fetch.
+ * Simply calling git fetch.
  * @param dir
  * @param remoteName
  * @param branch if not provided, will fetch all branches
