@@ -30,7 +30,7 @@ services:
       - ./.data.prod/cache:/data
     command: --save 60 1
     labels:
-      wud.display.name: "SSM - Server"
+      wud.display.name: "SSM - Redis"
   server:
     restart: unless-stopped
     healthcheck:

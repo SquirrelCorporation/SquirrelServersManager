@@ -12,7 +12,8 @@ Let's deep dive into it:
 services:
   proxy:
     restart: unless-stopped
-    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-proxy:latest"
+    build:
+      context: ./proxy
     ports:
       - "8000:8000"
     depends_on:
@@ -42,28 +43,41 @@ services:
     labels:
       wud.display.name: "SSM - Redis"
   server:
-    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-server:latest"
     restart: unless-stopped
+    healthcheck:
+      test: curl --fail http://localhost:3000/ping || exit 1
+      interval: 40s
+      timeout: 30s
+      retries: 3
+      start_period: 60s
     external_links:
       - mongo
       - redis
     depends_on:
       - mongo
       - redis
+    volumes:
+      - ./.data.prod:/data
+    build:
+      context: ./server
+      additional_contexts:
+        - shared-lib=./shared-lib
+      target: production
     env_file: .env
     environment:
       NODE_ENV: production
-    volumes:
-      - ./.data.prod/playbooks:/playbooks
-      - ./.data.prod/config:/ansible-config
     labels:
       wud.display.name: "SSM - Server"
       wud.watch.digest: false
   client:
-    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-client:latest"
     restart: unless-stopped
     depends_on:
       - server
+    build:
+      context: ./client
+      additional_contexts:
+        - shared-lib=./shared-lib
+      target: production
     labels:
       wud.display.name: "SSM - Client"
       wud.watch.digest: false
