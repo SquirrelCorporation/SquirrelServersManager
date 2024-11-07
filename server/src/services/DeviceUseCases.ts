@@ -6,6 +6,8 @@ import { setToCache } from '../data/cache';
 import Device, { DeviceModel } from '../data/database/model/Device';
 import DeviceAuth from '../data/database/model/DeviceAuth';
 import User from '../data/database/model/User';
+import ContainerRepo from '../data/database/repository/ContainerRepo';
+import ContainerStatsRepo from '../data/database/repository/ContainerStatsRepo';
 import DeviceAuthRepo from '../data/database/repository/DeviceAuthRepo';
 import DeviceDownTimeEventRepo from '../data/database/repository/DeviceDownTimeEventRepo';
 import DeviceRepo from '../data/database/repository/DeviceRepo';
@@ -17,6 +19,7 @@ import { InternalError } from '../middlewares/api/ApiError';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../modules/ansible-vault/ansible-vault';
 import Inventory from '../modules/ansible/utils/InventoryTransformer';
 import { getCustomAgent } from '../modules/docker/core/CustomAgent';
+import WatcherEngine from '../modules/docker/core/WatcherEngine';
 import PlaybookUseCases from './PlaybookUseCases';
 
 const logger = PinoLogger.child({ module: 'DeviceUseCases' }, { msgPrefix: '[DEVICE] - ' });
@@ -93,6 +96,16 @@ async function deleteDevice(device: Device) {
   await DeviceAuthRepo.deleteByDevice(device);
   await DeviceDownTimeEventRepo.deleteManyByDevice(device);
   await DeviceRepo.deleteByUuid(device.uuid);
+  await WatcherEngine.registerWatcher(device);
+  const containers = await ContainerRepo.findContainersByDevice(device);
+  if (containers) {
+    await Promise.all(
+      containers.map(async (container) => {
+        await ContainerStatsRepo.deleteByContainer(container);
+      }),
+    );
+  }
+  await ContainerRepo.deleteByDevice(device);
 }
 
 async function updateDockerWatcher(

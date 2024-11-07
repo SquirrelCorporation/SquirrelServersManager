@@ -25,12 +25,20 @@ async function findContainerById(id: string): Promise<Container | null> {
   return await ContainerModel.findOne({ id: id }).lean().exec();
 }
 
+async function findContainersByDevice(device: Device): Promise<Container[] | null> {
+  return await ContainerModel.find({ device: device }).lean().exec();
+}
+
 async function findContainersByWatcher(watcher: string): Promise<Container[] | null> {
   return await ContainerModel.find({ watcher: watcher }).lean().exec();
 }
 
 async function deleteContainerById(id: string) {
   await ContainerModel.deleteOne({ id: id }).exec();
+}
+
+async function deleteByDevice(device: Device) {
+  await ContainerModel.deleteMany({ device: device }).exec();
 }
 
 async function createContainer(container: Container, device: Device) {
@@ -77,4 +85,6 @@ export default {
   countByStatus,
   count,
   updateStatusByWatcher,
+  deleteByDevice,
+  findContainersByDevice,
 };
