@@ -3,6 +3,7 @@ import path from 'path';
 import logger from '../../../logger';
 import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../ansible-vault/ansible-vault';
 import { AbstractShellCommander } from '../AbstractShellCommander';
+import shellWrapper from '../ShellWrapper';
 import FileSystemManager from './FileSystemManager';
 
 class SshPrivateKeyFileManager extends AbstractShellCommander {
@@ -22,6 +23,9 @@ class SshPrivateKeyFileManager extends AbstractShellCommander {
     const decryptedContent = await vaultDecrypt(sskVaultedKey, DEFAULT_VAULT_ID);
     const tmpKeyFilePath = this.getTmpKeyFilePath(this.getTmpKeyFileName(execUuid, deviceUuid));
     FileSystemManager.writeFile(decryptedContent as string, tmpKeyFilePath);
+    if (this.executeCommand(shellWrapper.chmod, '600', tmpKeyFilePath).code !== 0) {
+      throw new Error(`genAnsibleTemporaryPrivateKey - Error chmoding file ${tmpKeyFilePath}`);
+    }
     return tmpKeyFilePath;
   }
 
