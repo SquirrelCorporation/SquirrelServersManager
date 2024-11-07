@@ -6,6 +6,7 @@ import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import InventoryTransformer from '../../../modules/ansible/utils/InventoryTransformer';
 
 export const getInventory = async (req, res) => {
+  const { execUuid } = req.query;
   logger.info(`[CONTROLLER] - GET - /ansible/inventory`);
   let devicesAuth: DeviceAuth[] | null = [];
   if (req.body?.target) {
@@ -16,8 +17,7 @@ export const getInventory = async (req, res) => {
     devicesAuth = await DeviceAuthRepo.findAllPop();
   }
   if (devicesAuth) {
-    const inventory = await InventoryTransformer.inventoryBuilder(devicesAuth, 'all');
-    logger.info(JSON.stringify(inventory));
+    const inventory = await InventoryTransformer.inventoryBuilder(devicesAuth, execUuid);
     new SuccessResponse('Get inventory', inventory).send(res);
   } else {
     throw new NotFoundError('No devices auth found');

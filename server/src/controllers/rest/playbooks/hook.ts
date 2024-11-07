@@ -28,7 +28,7 @@ export const addTaskStatus = async (req, res) => {
         );
       } else {
         logger.warn('Removing temporary private keys');
-        sshPrivateKeyFileManager.removeAllAnsibleExecTemporaryPrivateKeys('all');
+        sshPrivateKeyFileManager.removeAllAnsibleExecTemporaryPrivateKeys(ident);
       }
     }
     new SuccessResponse('Added task status').send(res);

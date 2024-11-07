@@ -114,7 +114,7 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
       if (target) {
         target?.map((e) => SshPrivateKeyFileManager.removeAnsibleTemporaryPrivateKey(e, execUuid));
       } else {
-        SshPrivateKeyFileManager.removeAllAnsibleExecTemporaryPrivateKeys('all');
+        SshPrivateKeyFileManager.removeAllAnsibleExecTemporaryPrivateKeys(execUuid);
       }
       throw error;
     }
