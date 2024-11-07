@@ -11,6 +11,7 @@ import ansibleCmd from '../../ansible/AnsibleCmd';
 import AnsibleGalaxyCmd from '../../ansible/AnsibleGalaxyCmd';
 import Inventory from '../../ansible/utils/InventoryTransformer';
 import { AbstractShellCommander } from '../AbstractShellCommander';
+import SshPrivateKeyFileManager from './SshPrivateKeyFileManager';
 
 class AnsibleShellCommandsManager extends AbstractShellCommander {
   constructor() {
@@ -31,8 +32,10 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
     target?: string[],
     extraVars?: API.ExtraVars,
     mode: SsmAnsible.ExecutionMode = SsmAnsible.ExecutionMode.APPLY,
+    execUuid?: string,
   ) {
     this.logger.info('executePlaybook - Starting...');
+    execUuid = execUuid || uuidv4();
 
     let inventoryTargets: (Playbooks.All & Playbooks.HostGroups) | undefined;
     if (target) {
@@ -44,7 +47,7 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
           `Exec failed, no matching target (Device Authentication not found for target ${target})`,
         );
       }
-      inventoryTargets = Inventory.inventoryBuilderForTarget(devicesAuth);
+      inventoryTargets = await Inventory.inventoryBuilderForTarget(devicesAuth, execUuid);
     }
     return await this.executePlaybookOnInventory(
       playbookPath,
@@ -52,6 +55,8 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
       inventoryTargets,
       extraVars,
       mode,
+      target,
+      execUuid,
     );
   }
 
@@ -61,43 +66,57 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
     inventoryTargets?: Playbooks.All & Playbooks.HostGroups,
     extraVars?: API.ExtraVars,
     mode: SsmAnsible.ExecutionMode = SsmAnsible.ExecutionMode.APPLY,
+    target?: string[],
+    execUuid?: string,
   ) {
-    shell.cd(this.ANSIBLE_PATH);
-    shell.rm(`${SSM_INSTALL_PATH}/server/src/playbooks/inventory/hosts`);
-    shell.rm(`${SSM_INSTALL_PATH}/server/src/playbooks/env/_extravars`);
-    const uuid = uuidv4();
-    const result = await new Promise<string | null>((resolve) => {
-      const cmd = ansibleCmd.buildAnsibleCmd(
-        playbookPath,
-        uuid,
-        inventoryTargets,
-        user,
-        extraVars,
-        mode,
-      );
-      this.logger.info(`executePlaybook - Executing "${cmd}"`);
-      const child = shell.exec(cmd, {
-        async: true,
+    execUuid = execUuid || uuidv4();
+
+    try {
+      shell.cd(this.ANSIBLE_PATH);
+      shell.rm(`${SSM_INSTALL_PATH}/server/src/ansible/inventory/hosts.json`);
+      shell.rm(`${SSM_INSTALL_PATH}/server/src/ansible/env/extravars`);
+
+      const result = await new Promise<string | null>((resolve) => {
+        const cmd = ansibleCmd.buildAnsibleCmd(
+          playbookPath,
+          execUuid,
+          inventoryTargets,
+          user,
+          extraVars,
+          mode,
+        );
+        this.logger.info(`executePlaybook - Executing "${cmd}"`);
+        const child = shell.exec(cmd, {
+          async: true,
+        });
+        child.stdout?.on('data', function (data) {
+          resolve(data);
+        });
+        child.on('exit', function () {
+          resolve(null);
+        });
       });
-      child.stdout?.on('data', function (data) {
-        resolve(data);
-      });
-      child.on('exit', function () {
-        resolve(null);
-      });
-    });
-    this.logger.info('executePlaybook - launched');
-    if (result) {
-      this.logger.info(`executePlaybook - ExecId is ${uuid}`);
-      await AnsibleTaskRepo.create({
-        ident: uuid,
-        status: 'created',
-        cmd: `playbook ${playbookPath}`,
-      });
-      return result;
-    } else {
-      this.logger.error('executePlaybook - Result was not properly set');
-      throw new Error('Exec failed');
+      this.logger.info('executePlaybook - launched');
+      if (result) {
+        this.logger.info(`executePlaybook - ExecId is ${execUuid}`);
+        await AnsibleTaskRepo.create({
+          ident: execUuid,
+          status: 'created',
+          cmd: `playbook ${playbookPath}`,
+          target: target,
+        });
+        return result;
+      } else {
+        this.logger.error('executePlaybook - Result was not properly set');
+        throw new Error('Exec failed');
+      }
+    } catch (error: any) {
+      if (target) {
+        target?.map((e) => SshPrivateKeyFileManager.removeAnsibleTemporaryPrivateKey(e, execUuid));
+      } else {
+        SshPrivateKeyFileManager.removeAllAnsibleExecTemporaryPrivateKeys('all');
+      }
+      throw error;
     }
   }
 

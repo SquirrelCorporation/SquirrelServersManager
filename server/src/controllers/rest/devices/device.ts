@@ -12,7 +12,6 @@ import { BadRequestError, ForbiddenError, NotFoundError } from '../../../middlew
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../../modules/ansible-vault/ansible-vault';
 import WatcherEngine from '../../../modules/docker/core/WatcherEngine';
-import Shell from '../../../modules/shell';
 import DeviceUseCases from '../../../services/DeviceUseCases';
 
 export const addDevice = async (req, res) => {
@@ -53,9 +52,6 @@ export const addDevice = async (req, res) => {
       becomeMethod: becomeMethod,
       becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
     } as DeviceAuth);
-    if (sshKey) {
-      await Shell.SshPrivateKeyFileManager.saveSshKey(sshKey, createdDevice.uuid);
-    }
     void WatcherEngine.registerWatcher(createdDevice);
     new SuccessResponse('Add device successful', { device: createdDevice as API.DeviceItem }).send(
       res,

@@ -1,9 +1,25 @@
+import * as os from 'node:os';
+import path from 'path';
 import { SsmAnsible } from 'ssm-shared-lib';
-import { describe, expect, test } from 'vitest';
-import InventoryTransformer from '../../../../modules/ansible/utils/InventoryTransformer'; // replace with actual file path
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import InventoryTransformer from '../../../../modules/ansible/utils/InventoryTransformer';
+
+// Mock the vaultDecrypt function
+vi.mock('../../../../modules/ansible-vault/ansible-vault', async (importOriginal) => {
+  return {
+    ...(await importOriginal<typeof import('../../../../modules/ansible-vault/ansible-vault')>()),
+    vaultDecrypt: async (value: string, vault: string) => {
+      return value + '-decrypted';
+    },
+  };
+});
 
 describe('test InventoryTransformer', () => {
-  test('inventoryBuilder', () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
+  test('inventoryBuilder', async () => {
     const deviceAuth = {
       device: { uuid: '1234-5678-9101', ip: '192.168.1.1' },
       authType: SsmAnsible.SSHType.UserPassword,
@@ -13,7 +29,7 @@ describe('test InventoryTransformer', () => {
     };
 
     // @ts-expect-error partial type
-    const result = InventoryTransformer.inventoryBuilder([deviceAuth]);
+    const result = await InventoryTransformer.inventoryBuilder([deviceAuth], '');
     const expectedResult = {
       _meta: {
         hostvars: {
@@ -41,7 +57,7 @@ describe('test InventoryTransformer', () => {
     expect(result).toEqual(expectedResult);
   });
 
-  test('inventoryBuilderForTarget', () => {
+  test('inventoryBuilderForTarget', async () => {
     const deviceAuth = {
       device: { uuid: '1234-5678-9102', ip: '192.168.1.2' },
       authType: SsmAnsible.SSHType.UserPassword,
@@ -50,7 +66,7 @@ describe('test InventoryTransformer', () => {
       sshUser: 'admin',
     };
     // @ts-expect-error partial type
-    const result = InventoryTransformer.inventoryBuilderForTarget([deviceAuth]);
+    const result = await InventoryTransformer.inventoryBuilderForTarget([deviceAuth], '');
     const expectedResult = {
       all: {},
       device123456789102: {
@@ -69,7 +85,7 @@ describe('test InventoryTransformer', () => {
     expect(result).toEqual(expectedResult);
   });
 
-  test('inventoryBuilderForTargetPasswordless', () => {
+  test('inventoryBuilderForTargetPasswordless', async () => {
     const deviceAuth = {
       device: { uuid: '1234-5678-9102', ip: '192.168.1.2' },
       authType: SsmAnsible.SSHType.PasswordLess,
@@ -78,7 +94,7 @@ describe('test InventoryTransformer', () => {
       sshUser: 'admin',
     };
     // @ts-expect-error partial type
-    const result = InventoryTransformer.inventoryBuilderForTarget([deviceAuth]);
+    const result = await InventoryTransformer.inventoryBuilderForTarget([deviceAuth], '');
     const expectedResult = {
       all: {},
       device123456789102: {
@@ -96,7 +112,7 @@ describe('test InventoryTransformer', () => {
     expect(result).toEqual(expectedResult);
   });
 
-  test('inventoryBuilderForTargetWithSshKey', () => {
+  test('inventoryBuilderForTargetWithSshKey', async () => {
     const deviceAuth = {
       device: { uuid: '1234-5678-9102', ip: '192.168.1.2' },
       authType: SsmAnsible.SSHType.KeyBased,
@@ -112,7 +128,7 @@ describe('test InventoryTransformer', () => {
         'NrRFi9wrf+M7Q== test@test.local',
     };
     // @ts-expect-error partial type
-    const result = InventoryTransformer.inventoryBuilderForTarget([deviceAuth]);
+    const result = await InventoryTransformer.inventoryBuilderForTarget([deviceAuth], 'execId');
     const expectedResult = {
       all: {},
       device123456789102: {
@@ -123,7 +139,7 @@ describe('test InventoryTransformer', () => {
           ansible_become_pass: { __ansible_vault: 'qwerty' },
           ansible_ssh_host_key_checking: false,
           ansible_user: 'admin',
-          ansible_ssh_private_key_file: '/tmp/1234-5678-9102.key',
+          ansible_ssh_private_key_file: path.join(os.tmpdir(), 'execId_1234-5678-9102_dec.key'),
         },
       },
     };
@@ -131,7 +147,7 @@ describe('test InventoryTransformer', () => {
     expect(result).toEqual(expectedResult);
   });
 
-  test('inventoryBuilderForTargetWithSshKeyAndKeyPhrase', () => {
+  test('inventoryBuilderForTargetWithSshKeyAndKeyPhrase', async () => {
     const deviceAuth = {
       device: { uuid: '1234-5678-9102', ip: '192.168.1.2' },
       authType: SsmAnsible.SSHType.KeyBased,
@@ -149,7 +165,7 @@ describe('test InventoryTransformer', () => {
         'NrRFi9wrf+M7Q== test@test.local',
     };
     // @ts-expect-error partial type
-    const result = InventoryTransformer.inventoryBuilderForTarget([deviceAuth]);
+    const result = await InventoryTransformer.inventoryBuilderForTarget([deviceAuth], 'execId');
     const expectedResult = {
       all: {},
       device123456789102: {
@@ -161,7 +177,7 @@ describe('test InventoryTransformer', () => {
           ansible_paramiko_pass: { __ansible_vault: 'test' },
           ansible_user: 'admin',
           ansible_ssh_host_key_checking: false,
-          ansible_ssh_private_key_file: '/tmp/1234-5678-9102.key',
+          ansible_ssh_private_key_file: path.join(os.tmpdir(), 'execId_1234-5678-9102_dec.key'),
         },
       },
     };
@@ -169,8 +185,8 @@ describe('test InventoryTransformer', () => {
     expect(result).toEqual(expectedResult);
   });
 
-  test('inventoryBuilder with no devicesAuth', () => {
-    const result = InventoryTransformer.inventoryBuilder([]);
+  test('inventoryBuilder with no devicesAuth', async () => {
+    const result = await InventoryTransformer.inventoryBuilder([], '');
     const expectedResult = {
       _meta: { hostvars: {} },
       all: { children: [] },
@@ -179,7 +195,7 @@ describe('test InventoryTransformer', () => {
     expect(result).toEqual(expectedResult);
   });
 
-  test('inventoryBuilder for deviceAuth with strict host key checking', () => {
+  test('inventoryBuilder for deviceAuth with strict host key checking', async () => {
     const deviceAuth = {
       device: { uuid: '1234-5678-9103', ip: '192.168.1.3' },
       authType: SsmAnsible.SSHType.UserPassword,
@@ -188,7 +204,7 @@ describe('test InventoryTransformer', () => {
       becomePass: 'adminpassword',
     };
     // @ts-expect-error partial type
-    const result = InventoryTransformer.inventoryBuilder([deviceAuth]);
+    const result = await InventoryTransformer.inventoryBuilder([deviceAuth], '');
     const expectedResult = {
       _meta: {
         hostvars: {
@@ -216,13 +232,13 @@ describe('test InventoryTransformer', () => {
     expect(result).toEqual(expectedResult);
   });
 
-  test('inventoryBuilderForTarget for deviceAuth with undefined IP', () => {
+  test('inventoryBuilderForTarget for deviceAuth with undefined IP', async () => {
     const deviceAuth = {
       device: { uuid: '1234-5678-9104' },
       authType: SsmAnsible.SSHType.UserPassword,
     };
     // @ts-expect-error partial type
-    const result = InventoryTransformer.inventoryBuilderForTarget([deviceAuth]);
+    const result = await InventoryTransformer.inventoryBuilderForTarget([deviceAuth], '');
     const expectedResult = {
       all: {},
       device123456789104: {
@@ -241,7 +257,7 @@ describe('test InventoryTransformer', () => {
     expect(result).toEqual(expectedResult);
   });
 
-  test('inventoryBuilderForTarget with multiple devicesAuth', () => {
+  test('inventoryBuilderForTarget with multiple devicesAuth', async () => {
     const deviceAuth1 = {
       device: { uuid: '1234-5678-9105', ip: '192.168.1.4' },
       authType: SsmAnsible.SSHType.UserPassword,
@@ -258,7 +274,10 @@ describe('test InventoryTransformer', () => {
       sshUser: 'root',
     };
     // @ts-expect-error partial type
-    const result = InventoryTransformer.inventoryBuilderForTarget([deviceAuth1, deviceAuth2]);
+    const result = await InventoryTransformer.inventoryBuilderForTarget(
+      [deviceAuth1, deviceAuth2],
+      '',
+    );
     const expectedResult = {
       all: {},
       device123456789105: {
@@ -288,7 +307,7 @@ describe('test InventoryTransformer', () => {
     expect(result).toEqual(expectedResult);
   });
 
-  test('inventoryBuilderForTarget with multiple mixed devicesAuth', () => {
+  test('inventoryBuilderForTarget with multiple mixed devicesAuth', async () => {
     const deviceAuth1 = {
       device: { uuid: '1234-5678-9105', ip: '192.168.1.4' },
       authType: SsmAnsible.SSHType.UserPassword,
@@ -305,7 +324,10 @@ describe('test InventoryTransformer', () => {
       sshUser: 'root',
     };
     // @ts-expect-error partial type
-    const result = InventoryTransformer.inventoryBuilderForTarget([deviceAuth1, deviceAuth2]);
+    const result = await InventoryTransformer.inventoryBuilderForTarget(
+      [deviceAuth1, deviceAuth2],
+      '',
+    );
     const expectedResult = {
       all: {},
       device123456789105: {
@@ -334,17 +356,17 @@ describe('test InventoryTransformer', () => {
     expect(result).toEqual(expectedResult);
   });
 
-  test('inventoryBuilder error handling', () => {
-    expect(() => {
+  test('inventoryBuilder error handling', async () => {
+    await expect(
       // @ts-expect-error partial type
-      InventoryTransformer.inventoryBuilder(['not a DeviceAuth instance']);
-    }).toThrow(TypeError);
+      InventoryTransformer.inventoryBuilder(['not a DeviceAuth instance'], ''),
+    ).rejects.toThrow(TypeError);
   });
 
-  test('inventoryBuilderForTarget error handling', () => {
-    expect(() => {
+  test('inventoryBuilderForTarget error handling', async () => {
+    await expect(
       // @ts-expect-error partial type
-      InventoryTransformer.inventoryBuilderForTarget(['not a DeviceAuth instance']);
-    }).toThrow(TypeError);
+      InventoryTransformer.inventoryBuilderForTarget(['not a DeviceAuth instance'], ''),
+    ).rejects.toThrow(TypeError);
   });
 });

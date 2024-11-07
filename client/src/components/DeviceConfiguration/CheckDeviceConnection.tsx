@@ -14,7 +14,7 @@ import {
 import { Alert, Button, Popover, Steps, Typography } from 'antd';
 import { motion } from 'framer-motion';
 import React, { useEffect, useRef, useState } from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, SsmAnsible } from 'ssm-shared-lib';
 
 export type CheckDeviceConnectionProps = {
   execId?: string;
@@ -52,7 +52,11 @@ const CheckDeviceConnection: React.FC<CheckDeviceConnectionProps> = (props) => {
   const [count, setCount] = useState(0);
 
   const isFinalStatusFailed = async () => {
-    if (savedStatuses?.find((status) => status._status === 'failed')) {
+    if (
+      savedStatuses?.find(
+        (status) => status._status === SsmAnsible.AnsibleTaskStatus.FAILED,
+      )
+    ) {
       const res = await getAnsibleSmartFailure({ execId: execId });
       if (res.data) {
         setSmartFailure(res.data);

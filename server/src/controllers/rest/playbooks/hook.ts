@@ -2,8 +2,11 @@ import AnsibleLog from '../../../data/database/model/AnsibleLogs';
 import AnsibleLogsRepo from '../../../data/database/repository/AnsibleLogsRepo';
 import AnsibleTaskRepo from '../../../data/database/repository/AnsibleTaskRepo';
 import AnsibleTaskStatusRepo from '../../../data/database/repository/AnsibleTaskStatusRepo';
+import { isFinalStatus } from '../../../helpers/ansible/AnsibleTaskHelper';
+import logger from '../../../logger';
 import { BadRequestError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
+import sshPrivateKeyFileManager from '../../../modules/shell/managers/SshPrivateKeyFileManager';
 
 export const addTaskStatus = async (req, res) => {
   if (!req.body.runner_ident || !req.body.status) {
@@ -17,6 +20,17 @@ export const addTaskStatus = async (req, res) => {
       ident: ident,
       status: status,
     });
+    if (isFinalStatus(status)) {
+      if (ansibleTask.target && ansibleTask.target.length > 0) {
+        logger.warn('Removing temporary private key');
+        ansibleTask.target?.map((e) =>
+          sshPrivateKeyFileManager.removeAnsibleTemporaryPrivateKey(e, ident),
+        );
+      } else {
+        logger.warn('Removing temporary private keys');
+        sshPrivateKeyFileManager.removeAllAnsibleExecTemporaryPrivateKeys('all');
+      }
+    }
     new SuccessResponse('Added task status').send(res);
   } else {
     throw new NotFoundError('Task not found');

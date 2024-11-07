@@ -8,7 +8,7 @@ import InventoryTransformer from '../../../modules/ansible/utils/InventoryTransf
 export const getInventory = async (req, res) => {
   logger.info(`[CONTROLLER] - GET - /ansible/inventory`);
   let devicesAuth: DeviceAuth[] | null = [];
-  if (req.body.target) {
+  if (req.body?.target) {
     logger.info(`[CONTROLLER][ANSIBLE[Inventory] - Target is ${req.body.target}`);
     devicesAuth = await DeviceAuthRepo.findOneByDeviceUuid(req.body.target);
   } else {
@@ -16,9 +16,9 @@ export const getInventory = async (req, res) => {
     devicesAuth = await DeviceAuthRepo.findAllPop();
   }
   if (devicesAuth) {
-    new SuccessResponse('Get inventory', InventoryTransformer.inventoryBuilder(devicesAuth)).send(
-      res,
-    );
+    const inventory = await InventoryTransformer.inventoryBuilder(devicesAuth, 'all');
+    logger.info(JSON.stringify(inventory));
+    new SuccessResponse('Get inventory', inventory).send(res);
   } else {
     throw new NotFoundError('No devices auth found');
   }

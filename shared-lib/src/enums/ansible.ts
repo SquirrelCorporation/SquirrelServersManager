@@ -43,3 +43,12 @@ export enum ExecutionMode {
   CHECK = 'check',
   CHECK_AND_DIFF = 'check-diff'
 }
+
+export enum AnsibleTaskStatus {
+  STARTING = 'starting',
+  RUNNING = 'running',
+  SUCCESS = 'successful',
+  FAILED = 'failed',
+  TIMEOUT = 'timeout',
+  CANCELED = 'canceled',
+}
