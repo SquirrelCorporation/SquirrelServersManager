@@ -49,6 +49,7 @@ async function executePlaybookOnInventory(
   user: User,
   inventoryTargets?: Playbooks.All & Playbooks.HostGroups,
   extraVarsForcedValues?: API.ExtraVars,
+  execUuid?: string,
 ) {
   const substitutedExtraVars: API.ExtraVars | undefined = await completeExtraVar(
     playbook,
@@ -60,6 +61,9 @@ async function executePlaybookOnInventory(
     user,
     inventoryTargets,
     substitutedExtraVars,
+    undefined,
+    undefined,
+    execUuid,
   );
 }
 

@@ -141,6 +141,6 @@ describe('PlaybookExecutionHandler', () => {
   it('should identify final statuses correctly', () => {
     expect(PlaybookExecutionHandler.isFinalStatus('failed')).toBe(true);
     expect(PlaybookExecutionHandler.isFinalStatus('successful')).toBe(true);
-    expect(PlaybookExecutionHandler.isFinalStatus('pending')).toBe(false);
+    expect(PlaybookExecutionHandler.isFinalStatus('running')).toBe(false);
   });
 });

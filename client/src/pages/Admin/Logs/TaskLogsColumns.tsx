@@ -1,7 +1,7 @@
 import { ProColumns } from '@ant-design/pro-components';
 import { Tag } from 'antd';
 import React from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, SsmAnsible } from 'ssm-shared-lib';
 
 const TaskLogsColumns: ProColumns<API.Task>[] = [
   {
@@ -24,15 +24,17 @@ const TaskLogsColumns: ProColumns<API.Task>[] = [
       failed: { text: 'failed' },
       successful: { text: 'successful' },
       starting: { text: 'starting' },
+      timeout: { text: 'timeout' },
+      canceled: { text: 'canceled' },
     },
     render: (dom, entity) => {
       return (
         <Tag
           bordered={false}
           color={
-            entity.status === 'successful'
+            entity.status === SsmAnsible.AnsibleTaskStatus.SUCCESS
               ? 'success'
-              : entity.status === 'failed'
+              : entity.status === SsmAnsible.AnsibleTaskStatus.FAILED
                 ? 'error'
                 : 'default'
           }

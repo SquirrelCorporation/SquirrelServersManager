@@ -7,7 +7,6 @@ import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError'
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../../modules/ansible-vault/ansible-vault';
 import WatcherEngine from '../../../modules/docker/core/WatcherEngine';
-import Shell from '../../../modules/shell';
 
 const SENSITIVE_PLACEHOLDER = 'REDACTED';
 
@@ -113,9 +112,6 @@ export const addOrUpdateDeviceAuth = async (req, res) => {
       : undefined,
     becomeUser: becomeUser,
   } as DeviceAuth);
-  if (sshKey) {
-    await Shell.SshPrivateKeyFileManager.saveSshKey(sshKey, device.uuid);
-  }
   void WatcherEngine.deregisterWatchers();
   void WatcherEngine.registerWatchers();
   new SuccessResponse('Add or update device auth successful', { type: deviceAuth.authType }).send(

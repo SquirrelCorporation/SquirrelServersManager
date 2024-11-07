@@ -14,9 +14,9 @@ import NotificationComponent from '../../modules/notifications/NotificationCompo
 import ContainerCustomStacksRepositoryEngine from '../../modules/repository/ContainerCustomStacksRepositoryEngine';
 import { createADefaultLocalUserRepository } from '../../modules/repository/default-playbooks-repositories';
 import PlaybooksRepositoryEngine from '../../modules/repository/PlaybooksRepositoryEngine';
+import sshPrivateKeyFileManager from '../../modules/shell/managers/SshPrivateKeyFileManager';
 import UpdateChecker from '../../modules/update/UpdateChecker';
 import ContainerRegistryUseCases from '../../services/ContainerRegistryUseCases';
-import DeviceAuthUseCases from '../../services/DeviceAuthUseCases';
 import { setAnsibleVersions } from '../system/ansible-versions';
 
 class Startup {
@@ -39,8 +39,8 @@ class Startup {
   }
 
   private async initializeModules() {
-    await DeviceAuthUseCases.saveAllDeviceAuthSshKeys();
     await PlaybooksRepositoryEngine.init();
+    void sshPrivateKeyFileManager.removeAllAnsibleTemporaryPrivateKeys();
     void NotificationComponent.init();
     void Crons.initScheduledJobs();
     void WatcherEngine.init();

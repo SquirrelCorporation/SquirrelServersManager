@@ -1,5 +1,6 @@
 import DockerModem from 'docker-modem';
 import Dockerode from 'dockerode';
+import { uuidv4 } from 'mongodb-memory-server-core/lib/util/utils';
 import { API, SsmAnsible, SsmStatus } from 'ssm-shared-lib';
 import { setToCache } from '../data/cache';
 import Device, { DeviceModel } from '../data/database/model/Device';
@@ -16,7 +17,6 @@ import { InternalError } from '../middlewares/api/ApiError';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../modules/ansible-vault/ansible-vault';
 import Inventory from '../modules/ansible/utils/InventoryTransformer';
 import { getCustomAgent } from '../modules/docker/core/CustomAgent';
-import Shell from '../modules/shell';
 import PlaybookUseCases from './PlaybookUseCases';
 
 const logger = PinoLogger.child({ module: 'DeviceUseCases' }, { msgPrefix: '[DEVICE] - ' });
@@ -145,28 +145,29 @@ async function checkAnsibleConnection(
   if (masterNodeUrl) {
     await setToCache(SsmAnsible.DefaultSharedExtraVarsList.MASTER_NODE_URL, masterNodeUrl);
   }
-  if (sshKey) {
-    await Shell.SshPrivateKeyFileManager.saveSshKey(sshKey, 'tmp');
-  }
-  const mockedInventoryTarget = Inventory.inventoryBuilderForTarget([
-    {
-      device: {
-        _id: 'tmp',
-        ip,
-        uuid: 'tmp',
-        status: SsmStatus.DeviceStatus.REGISTERING,
+  const execUuid = uuidv4();
+  const mockedInventoryTarget = await Inventory.inventoryBuilderForTarget(
+    [
+      {
+        device: {
+          _id: 'tmp',
+          ip,
+          uuid: 'tmp',
+          status: SsmStatus.DeviceStatus.REGISTERING,
+        },
+        authType,
+        sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
+        sshUser,
+        sshPwd: sshPwd ? await vaultEncrypt(sshPwd, DEFAULT_VAULT_ID) : undefined,
+        sshPort: sshPort || 22,
+        becomeMethod,
+        sshConnection,
+        becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
+        sshKeyPass: sshKeyPass ? await vaultEncrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
       },
-      authType,
-      sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
-      sshUser,
-      sshPwd: sshPwd ? await vaultEncrypt(sshPwd, DEFAULT_VAULT_ID) : undefined,
-      sshPort: sshPort || 22,
-      becomeMethod,
-      sshConnection,
-      becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
-      sshKeyPass: sshKeyPass ? await vaultEncrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
-    },
-  ]);
+    ],
+    execUuid,
+  );
   const playbook = await PlaybookRepo.findOneByUniqueQuickReference('checkDeviceBeforeAdd');
   if (!playbook) {
     throw new InternalError('_checkDeviceBeforeAdd.yml not found.');

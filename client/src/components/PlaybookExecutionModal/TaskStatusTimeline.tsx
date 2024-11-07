@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import { StepsProps } from 'antd';
 import React, { ReactNode } from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, SsmAnsible } from 'ssm-shared-lib';
 
 const transformToTaskStatusTimeline = (
   execStatus: API.ExecStatus,
@@ -16,19 +16,23 @@ const transformToTaskStatusTimeline = (
   //  status?: 'wait' | 'process' | 'finish' | 'error';
   let status: StepsProps['status'] = undefined;
   let icon: ReactNode = <QuestionOutlined />;
-  if (execStatus.status === 'starting') {
+  if (execStatus.status === SsmAnsible.AnsibleTaskStatus.STARTING) {
     status = 'finish';
     icon = <VerticalAlignBottomOutlined />;
   }
-  if (execStatus.status === 'running') {
+  if (execStatus.status === SsmAnsible.AnsibleTaskStatus.RUNNING) {
     status = 'process';
     icon = <LoadingOutlined />;
   }
-  if (execStatus.status === 'failed') {
+  if (
+    execStatus.status === SsmAnsible.AnsibleTaskStatus.FAILED ||
+    execStatus.status === SsmAnsible.AnsibleTaskStatus.CANCELED ||
+    execStatus.status === SsmAnsible.AnsibleTaskStatus.TIMEOUT
+  ) {
     status = 'error';
     icon = <CloseCircleOutlined />;
   }
-  if (execStatus.status === 'successful') {
+  if (execStatus.status === SsmAnsible.AnsibleTaskStatus.SUCCESS) {
     status = 'finish';
     icon = <CheckCircleOutlined />;
   }

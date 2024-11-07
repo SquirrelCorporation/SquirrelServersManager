@@ -21,6 +21,10 @@ class FileSystemManager extends AbstractShellCommander {
     this.executeCommand(shellWrapper.rm, '-rf', directory);
   }
 
+  deleteFile(filePath: string): void {
+    this.executeCommand(shellWrapper.rm, '-f', filePath);
+  }
+
   writeFile(content: string, path: string): void {
     this.executeCommand(shellWrapper.to, content, path);
   }

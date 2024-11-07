@@ -2,7 +2,7 @@ import taskStatusTimeline from '@/components/PlaybookExecutionModal/TaskStatusTi
 import { getExecLogs, getTaskStatuses } from '@/services/rest/playbooks';
 import { StepsProps } from 'antd';
 import React, { ReactNode } from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, SsmAnsible } from 'ssm-shared-lib';
 
 export type TaskStatusTimelineType = StepsProps & {
   _status: string;
@@ -42,7 +42,12 @@ export default class PlaybookExecutionHandler {
   }
 
   static isFinalStatus = (status: string): boolean => {
-    return status === 'failed' || status === 'successful';
+    return (
+      status === SsmAnsible.AnsibleTaskStatus.FAILED ||
+      status === SsmAnsible.AnsibleTaskStatus.SUCCESS ||
+      status === SsmAnsible.AnsibleTaskStatus.CANCELED ||
+      status === SsmAnsible.AnsibleTaskStatus.TIMEOUT
+    );
   };
 
   resetTerminal = () => {

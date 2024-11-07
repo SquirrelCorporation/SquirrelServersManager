@@ -49,7 +49,7 @@ def parse_args():
 
 def load_inventory():
     headers = {'Accept': 'application/json', 'Authorization': "Bearer {}".format(os.getenv("SSM_API_KEY"))}
-    r = requests.get('http://localhost:3000/playbooks/inventory', headers=headers)
+    r = requests.get('http://localhost:3000/playbooks/inventory?execUuid={}'.format(os.getenv('SSM_EXEC_UUID')), headers=headers)
     return r.json()['data']
 
 

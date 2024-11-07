@@ -1,9 +1,7 @@
 import PlaybookRepo from '../../../data/database/repository/PlaybookRepo';
-import logger from '../../../logger';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import Shell from '../../../modules/shell';
-import FileSystemManager from '../../../modules/shell/managers/FileSystemManager';
 import PlaybooksRepositoryUseCases from '../../../services/PlaybooksRepositoryUseCases';
 import PlaybookUseCases from '../../../services/PlaybookUseCases';
 
