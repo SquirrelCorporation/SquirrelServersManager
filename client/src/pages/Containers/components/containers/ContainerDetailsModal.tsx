@@ -257,8 +257,28 @@ const ContainerDetailsModal: React.FC<ContainerDetailsModalProps> = ({
                         >
                           Version:
                         </Typography.Text>
-                        <Tag>{entity.updateKind?.localValue || 'Unknown'}</Tag>➔
-                        <Tag>{entity.updateKind?.remoteValue || 'Unknown'}</Tag>
+                        <Tag>
+                          {' '}
+                          <Typography.Text
+                            ellipsis={{
+                              tooltip: entity.updateKind?.localValue,
+                            }}
+                            style={{ maxWidth: 100, fontSize: 'inherit' }}
+                          >
+                            {entity.updateKind?.localValue || 'Unknown'}
+                          </Typography.Text>
+                        </Tag>
+                        ➔
+                        <Tag>
+                          <Typography.Text
+                            ellipsis={{
+                              tooltip: entity.updateKind?.remoteValue,
+                            }}
+                            style={{ maxWidth: 100, fontSize: 'inherit' }}
+                          >
+                            {entity.updateKind?.remoteValue || 'Unknown'}
+                          </Typography.Text>
+                        </Tag>
                         {entity.updateKind?.semverDiff ? (
                           <Tag>{entity.updateKind?.semverDiff}</Tag>
                         ) : (
