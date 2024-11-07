@@ -57,7 +57,7 @@ export const addDevice = async (req, res) => {
       res,
     );
   } catch (error: any) {
-    throw new BadRequestError(`The ip likely already exists ${error.message}`);
+    throw new BadRequestError(`Error during device creation: ${error.message}`);
   }
 };
 

@@ -1,9 +1,10 @@
 import type { SSMServicesTypes } from '../../../../types/typings';
+import { REGISTRIES } from '../../core/conf';
 
 const providerConf: SSMServicesTypes.RegistryAuthConfig[] = [
   {
-    name: 'custom',
-    provider: 'custom',
+    name: REGISTRIES.CUSTOM,
+    provider: REGISTRIES.CUSTOM,
     default: false,
     persist: false,
     config: { canAnonymous: true },
@@ -37,8 +38,8 @@ const providerConf: SSMServicesTypes.RegistryAuthConfig[] = [
     ],
   },
   {
-    name: 'ecr',
-    provider: 'ecr',
+    name: REGISTRIES.ECR,
+    provider: REGISTRIES.ECR,
     default: true,
     persist: true,
     fullName: 'AWS Elastic Container Registry',
@@ -59,8 +60,8 @@ const providerConf: SSMServicesTypes.RegistryAuthConfig[] = [
     ],
   },
   {
-    name: 'ghcr',
-    provider: 'ghcr',
+    name: REGISTRIES.GHCR,
+    provider: REGISTRIES.GHCR,
     default: true,
     persist: true,
     fullName: 'Github Container Registry',
@@ -77,8 +78,8 @@ const providerConf: SSMServicesTypes.RegistryAuthConfig[] = [
     ],
   },
   {
-    name: 'gcr',
-    provider: 'gcr',
+    name: REGISTRIES.GCR,
+    provider: REGISTRIES.GCR,
     default: true,
     persist: true,
     fullName: 'Google Container Registry',
@@ -95,8 +96,8 @@ const providerConf: SSMServicesTypes.RegistryAuthConfig[] = [
     ],
   },
   {
-    name: 'hub',
-    provider: 'hub',
+    name: REGISTRIES.HUB,
+    provider: REGISTRIES.HUB,
     fullName: 'Docker Hub',
     default: true,
     persist: true,
@@ -133,8 +134,8 @@ const providerConf: SSMServicesTypes.RegistryAuthConfig[] = [
     ],
   },
   {
-    name: 'quay',
-    provider: 'quay',
+    name: REGISTRIES.QUAY,
+    provider: REGISTRIES.QUAY,
     default: true,
     persist: true,
     fullName: 'Red Hat Quay.io',
@@ -155,8 +156,8 @@ const providerConf: SSMServicesTypes.RegistryAuthConfig[] = [
     ],
   },
   {
-    name: 'acr',
-    provider: 'acr',
+    name: REGISTRIES.ACR,
+    provider: REGISTRIES.ACR,
     default: false,
     persist: true,
     fullName: 'Azure Container Registry',
@@ -173,8 +174,8 @@ const providerConf: SSMServicesTypes.RegistryAuthConfig[] = [
     ],
   },
   {
-    name: 'gitea',
-    provider: 'gitea',
+    name: REGISTRIES.GITEA,
+    provider: REGISTRIES.GITEA,
     default: false,
     persist: true,
     config: { canAnonymous: false },
@@ -194,8 +195,8 @@ const providerConf: SSMServicesTypes.RegistryAuthConfig[] = [
     ],
   },
   {
-    name: 'forgejo',
-    provider: 'forgejo',
+    name: REGISTRIES.FORGEJO,
+    provider: REGISTRIES.FORGEJO,
     default: false,
     persist: true,
     config: { canAnonymous: false },
@@ -229,8 +230,8 @@ const providerConf: SSMServicesTypes.RegistryAuthConfig[] = [
     ],
   },
   {
-    name: 'lscr',
-    provider: 'lscr',
+    name: REGISTRIES.LSCR,
+    provider: REGISTRIES.LSCR,
     default: false,
     persist: true,
     fullName: 'Linux Server Container Registry',
@@ -247,8 +248,8 @@ const providerConf: SSMServicesTypes.RegistryAuthConfig[] = [
     ],
   },
   {
-    name: 'gitlab',
-    provider: 'gitlab',
+    name: REGISTRIES.GITLAB,
+    provider: REGISTRIES.GITLAB,
     default: false,
     persist: true,
     config: { canAnonymous: false },
