@@ -203,18 +203,19 @@ export function isUpdateAvailable(container: Container) {
   if (container.image === undefined || container.result === undefined) {
     return false;
   }
-  // Different tags?
+  // Compare digests if we have them
+  if (
+    container.image.digest.watch &&
+    container.image.digest.value !== undefined &&
+    container.result.digest !== undefined
+  ) {
+    return container.image.digest.value !== container.result.digest;
+  }
+
   const localTag = Tag.transformTag(container.transformTags, container.image.tag.value);
   const remoteTag = Tag.transformTag(container.transformTags, container.result.tag || '');
   let updateAvailable = localTag !== remoteTag;
 
-  // Compare digests?
-  if (container.image.digest.watch) {
-    // Digests can be compared
-    if (container.image.digest.value && container.result.digest) {
-      updateAvailable = updateAvailable || container.image.digest.value !== container.result.digest;
-    }
-  }
   // Fallback to image created date (especially for legacy v1 manifests)
   if (container.image.created && container.result.created) {
     const createdDate = new Date(container.image.created).getTime();

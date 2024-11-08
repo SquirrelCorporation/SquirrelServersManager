@@ -20,6 +20,9 @@ services:
       - mongo
       - server
       - redis
+    labels:
+      wud.display.name: "SSM - Proxy"
+      wud.watch.digest: false
   mongo:
     container_name: mongo-ssm
     image: mongo
@@ -27,6 +30,8 @@ services:
     volumes:
       - ./.data.prod/db:/data/db
     command: --quiet
+    labels:
+      wud.display.name: "SSM - MongoDB"
   redis:
     container_name: cache-ssm
     image: redis
@@ -34,15 +39,11 @@ services:
     volumes:
       - ./.data.prod/cache:/data
     command: --save 60 1
+    labels:
+      wud.display.name: "SSM - Redis"
   server:
     image: "ghcr.io/squirrelcorporation/squirrelserversmanager-server:latest"
     restart: unless-stopped
-    healthcheck:
-      test: curl --fail http://localhost:3000/ping || exit 1
-      interval: 40s
-      timeout: 30s
-      retries: 3
-      start_period: 60s
     external_links:
       - mongo
       - redis
@@ -55,11 +56,17 @@ services:
     volumes:
       - ./.data.prod/playbooks:/playbooks
       - ./.data.prod/config:/ansible-config
+    labels:
+      wud.display.name: "SSM - Server"
+      wud.watch.digest: false
   client:
     image: "ghcr.io/squirrelcorporation/squirrelserversmanager-client:latest"
     restart: unless-stopped
     depends_on:
       - server
+    labels:
+      wud.display.name: "SSM - Client"
+      wud.watch.digest: false
 ```
 
 - A local volume will be created under the directory `./.data.prod`, which will store:
