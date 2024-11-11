@@ -16,7 +16,7 @@
   "version": "0.1.21",
   "author": "Squirrel Team",
   "dependencies": {
-    "@aws-sdk/client-ecr": "^3.682.0",
+    "@aws-sdk/client-ecr": "^3.687.0",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",
