@@ -1,5 +1,6 @@
 import { request } from '@umijs/max';
 import { API } from 'ssm-shared-lib';
+import { BackupVolumeResponse } from 'ssm-shared-lib/distribution/types/api';
 
 export async function getTemplates(
   params?: any,
@@ -103,6 +104,40 @@ export async function postDeploy(
   return request<API.Response<API.ExecId>>('/api/containers/deploy', {
     method: 'POST',
     data: { template: template },
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+export async function postBackUpVolume(
+  uuid: string,
+  mode: string,
+  params?: any,
+  options?: Record<string, any>,
+): Promise<API.Response<API.BackupVolumeResponse>> {
+  return request<API.Response<API.BackupVolumeResponse>>(
+    `/api/containers/volumes/backup/${uuid}`,
+    {
+      method: 'POST',
+      data: { mode },
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    },
+  );
+}
+
+export async function getBackUpVolume(
+  params?: { fileName: string },
+  options?: Record<string, any>,
+) {
+  return request<any>(`/api/containers/volumes/backup`, {
+    method: 'GET',
+    responseType: 'blob',
+    parseResponse: false,
     params: {
       ...params,
     },

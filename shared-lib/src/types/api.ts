@@ -1,4 +1,5 @@
 import { ExtraVarsType, SSHConnection, SSHType } from '../enums/ansible';
+import { VolumeBackupMode } from '../enums/container';
 import { RepositoryType } from '../enums/repositories';
 import { AutomationChain } from '../form/automation';
 import { ExtendedTreeNode } from './tree';
@@ -77,6 +78,7 @@ export type Settings = {
     userLogsLevel: UserLogsLevel;
   };
   dashboard: DashboardSettings;
+  ssmDataPath: string;
 };
 
 export type StatsSettings = {
@@ -762,6 +764,7 @@ export type ContainerNetwork = {
 }
 
 export type ContainerVolume = {
+  uuid: string;
   name: string;
   device: DeviceItem;
   watcher: string;
@@ -821,6 +824,15 @@ export type CreateNetwork = {
   config: CreateNetworkConfig
 }
 
+export type BackupVolumeConfig = {
+  volumeUuid: string;
+}
+
+export type BackupVolume = {
+  target: string,
+  config: BackupVolumeConfig
+}
+
 export type CreateNetworkVolumeConfig = {
   name: string,
 }
@@ -855,3 +867,9 @@ export type ContainerCustomStackValidation = {
 export type DeployContainerCustomStacks = {
   targets: string;
 }
+
+export type BackupVolumeResponse = {
+  filePath: string;
+  fileName: string;
+  mode: VolumeBackupMode;
+};

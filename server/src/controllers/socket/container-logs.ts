@@ -5,6 +5,7 @@ import ContainerRepo from '../../data/database/repository/ContainerRepo';
 import PinoLogger from '../../logger';
 import { SSMSocket, SSMSocketServer } from '../../middlewares/Socket';
 import { Kind } from '../../modules/docker/core/Component';
+import { WATCHERS } from '../../modules/docker/core/conf';
 import WatcherEngine from '../../modules/docker/core/WatcherEngine';
 import Docker from '../../modules/docker/watchers/providers/docker/Docker';
 
@@ -90,6 +91,6 @@ function handleError(
 
 function findRegisteredComponent(watcher: string): Docker | undefined {
   return WatcherEngine.getStates().watcher[
-    WatcherEngine.buildId(Kind.WATCHER, 'docker', watcher)
+    WatcherEngine.buildId(Kind.WATCHER, WATCHERS.DOCKER, watcher)
   ] as Docker;
 }

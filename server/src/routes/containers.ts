@@ -52,7 +52,16 @@ import {
   postDeployCustomStackValidator,
 } from '../controllers/rest/containers/stacks.validator';
 import { deploy, getTemplates } from '../controllers/rest/containers/templates';
-import { getVolumes, postVolume } from '../controllers/rest/containers/volumes';
+import {
+  getBackupVolume,
+  getVolumes,
+  postBackupVolume,
+  postVolume,
+} from '../controllers/rest/containers/volumes';
+import {
+  getBackupVolumeValidator,
+  postBackupVolumeValidator,
+} from '../controllers/rest/containers/volumes.validator';
 
 const router = express.Router();
 
@@ -74,6 +83,8 @@ router.post('/deploy', deploy);
 router.get(`/templates`, getTemplates);
 router.route('/networks').get(getNetworks).post(postNetwork);
 router.route('/volumes').get(getVolumes).post(postVolume);
+router.route('/volumes/backup').get(getBackupVolumeValidator, getBackupVolume);
+router.route('/volumes/backup/:uuid').post(postBackupVolumeValidator, postBackupVolume);
 router.get('/images', getImages);
 router
   .route('/registries/:name/')

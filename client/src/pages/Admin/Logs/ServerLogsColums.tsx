@@ -16,6 +16,7 @@ const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
     dataIndex: 'time',
     key: 'time',
     valueType: 'dateTime',
+    width: '8%',
   },
   {
     title: 'Level',
@@ -31,6 +32,7 @@ const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
       50: { text: 'error', status: 'Error' },
       60: { text: 'fatal', status: 'Error' },
     },
+    width: '5%',
   },
   {
     title: 'PID',
@@ -38,6 +40,7 @@ const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
     key: 'pid',
     filters: true,
     onFilter: true,
+    width: '5%',
   },
   {
     title: 'Module',
@@ -45,11 +48,13 @@ const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
     key: 'module',
     filters: true,
     onFilter: true,
+    width: '10%',
   },
   {
     title: 'Message',
     dataIndex: 'msg',
     key: 'msg',
+    ellipsis: true,
     filters: true,
     onFilter: true,
   },
@@ -59,12 +64,14 @@ const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
     key: 'moduleId',
     filters: true,
     onFilter: true,
+    width: '10%',
   },
   {
     title: 'Req',
     dataIndex: 'req',
     key: 'req',
     hideInSearch: true,
+    width: '10%',
     render: (text, record) => (
       <>
         {record.req && (
@@ -88,6 +95,7 @@ const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
     dataIndex: 'res',
     key: 'res',
     hideInSearch: true,
+    width: '10%',
     render: (text, record) => (
       <>
         {record.res && (

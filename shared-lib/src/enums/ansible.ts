@@ -8,11 +8,12 @@ export enum DefaultContextExtraVarsList {
   DEVICE_ID = '_ssm_deviceId',
   DEVICE_IP = '_ssm_deviceIP',
   AGENT_LOG_PATH = '_ssm_agentLogPath',
-  AGENT_TYPE = '_ssm_installMethod'
+  AGENT_TYPE = '_ssm_installMethod',
+  API_KEY = '_ssm_ApiKey'
 }
 
 export enum DefaultSharedExtraVarsList {
-  MASTER_NODE_URL = '_ssm_masterNodeUrl'
+  MASTER_NODE_URL = '_ssm_masterNodeUrl',
 }
 
 export enum SSHType {

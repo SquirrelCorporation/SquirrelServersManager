@@ -1,3 +1,4 @@
+import { uuidv4 } from 'mongodb-memory-server-core/lib/util/utils';
 import { Schema, model } from 'mongoose';
 import Device from './Device';
 
@@ -5,6 +6,7 @@ export const DOCUMENT_NAME = 'ContainerVolume';
 export const COLLECTION_NAME = 'containervolumes';
 
 export default interface ContainerVolume {
+  uuid: string;
   name: string;
   device: Device;
   watcher: string;
@@ -18,6 +20,12 @@ export default interface ContainerVolume {
 }
 
 const schema = new Schema<ContainerVolume>({
+  uuid: {
+    type: Schema.Types.String,
+    default: uuidv4,
+    required: true,
+    unique: true,
+  },
   name: {
     type: Schema.Types.String,
   },

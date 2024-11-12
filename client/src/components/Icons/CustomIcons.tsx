@@ -2490,3 +2490,77 @@ const ErrorCircleSettings20RegularSvg = React.memo((props) => (
 export const ErrorCircleSettings20Regular = (
   props: Partial<CustomIconComponentProps>,
 ) => <Icon component={ErrorCircleSettings20RegularSvg} {...props} />;
+
+const BackupSolidSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 36 36"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="m18 19.84l6.38-6.35A1 1 0 1 0 23 12.08L19 16V4a1 1 0 1 0-2 0v12l-4-3.95a1 1 0 0 0-1.41 1.42Z"
+      className="clr-i-solid clr-i-solid-path-1"
+    />
+    <path
+      fill="currentColor"
+      d="m19.41 21.26l-.74.74h15.26c-.17-.57-.79-2.31-3.09-8.63A1.94 1.94 0 0 0 28.93 12h-2.38a3 3 0 0 1-.76 2.92Z"
+      className="clr-i-solid clr-i-solid-path-2"
+    />
+    <path
+      fill="currentColor"
+      d="m16.58 21.26l-6.38-6.35A3 3 0 0 1 9.44 12H7.07a1.92 1.92 0 0 0-1.9 1.32c-2.31 6.36-2.93 8.11-3.1 8.68h15.26Z"
+      className="clr-i-solid clr-i-solid-path-3"
+    />
+    <path
+      fill="currentColor"
+      d="M2 24v6a2 2 0 0 0 2 2h28a2 2 0 0 0 2-2v-6Zm28 4h-4v-2h4Z"
+      className="clr-i-solid clr-i-solid-path-4"
+    />
+    <path fill="none" d="M0 0h36v36H0z" />
+  </svg>
+));
+
+export const BackupSolid = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={BackupSolidSvg} {...props} />
+);
+
+const BrowserLtrSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 20 20"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M2 2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm2 1.5A1.5 1.5 0 1 1 2.5 5A1.5 1.5 0 0 1 4 3.5zM18 16H2V8h16z"
+    />
+  </svg>
+));
+
+export const BrowserLtr = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={BrowserLtrSvg} {...props} />
+);
+
+const FileSystemSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M14 13h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-3l-1-1h-2a1 1 0 0 0-1 1v1H8V7h2a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H7L6 1H4a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h2v13h7v1a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-3l-1-1h-2a1 1 0 0 0-1 1v1H8v-7h5v1a1 1 0 0 0 1 1Z"
+    />
+  </svg>
+));
+
+export const FileSystem = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={FileSystemSvg} {...props} />
+);

@@ -5,3 +5,12 @@ export enum Actions {
   KILL = 'kill',
   STOP = 'stop'
 }
+
+export enum VolumeActions {
+  BACKUP = 'backup'
+}
+
+export enum VolumeBackupMode {
+  FILE_SYSTEM = 'filesystem',
+  BROWSER = 'browser',
+}

@@ -140,6 +140,15 @@ const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
               ),
             };
             rawChain.actions.push(actionChain);
+          } else if (formData.action === Automations.Actions.DOCKER_VOLUME) {
+            const actionChain: Automations.ActionChainDockerVolume = {
+              action: Automations.Actions.DOCKER_VOLUME,
+              dockerVolumeAction: formData.dockerVolumeAction.value,
+              dockerVolumes: formData.dockerVolumes.map(
+                (e: { value: string }) => e.value,
+              ),
+            };
+            rawChain.actions.push(actionChain);
           } else {
             message.error({ content: 'Automation format is not correct' });
             return;

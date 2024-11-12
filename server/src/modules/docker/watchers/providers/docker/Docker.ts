@@ -403,7 +403,7 @@ export default class Docker extends DockerLogs {
         this.childLogger.info(
           `addImageDetailsToContainer - Container ${container.Image} already in store`,
         );
-        return { ...containerInStore, status: container.State };
+        return { ...containerInStore, status: container.State, labels: container?.Labels };
       }
       this.childLogger.info(`addImageDetailsToContainer - getImage: ${container.Image}`);
       const img = this.dockerApi.getImage(container.Image);
@@ -482,6 +482,7 @@ export default class Docker extends DockerLogs {
         networkSettings: container.NetworkSettings,
         ports: container.Ports,
         mounts: container.Mounts,
+        labels: container?.Labels,
       });
     } catch (error: any) {
       this.childLogger.error(

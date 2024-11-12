@@ -25,6 +25,12 @@ const eventsToHandle = [
     logMessage: 'Alert sent',
     debounceTime: 5000,
   },
+  {
+    event: Events.VOLUME_BACKUP,
+    ssmEvent: SsmEvents.VolumeBackup.PROGRESS,
+    logMessage: 'Volume backup progress',
+    debounceTime: 5000,
+  },
   // Add any additional events here
 ];
 

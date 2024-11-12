@@ -1,5 +1,6 @@
 import { API, SettingsKeys } from 'ssm-shared-lib';
 import { dependencies, version } from '../../../../package.json';
+import { SSM_DATA_PATH } from '../../../config';
 import { getAnsibleRunnerVersion, getAnsibleVersion } from '../../../core/system/ansible-versions';
 import { getFromCache, getIntConfFromCache } from '../../../data/cache';
 import { Role } from '../../../data/database/model/User';
@@ -88,6 +89,7 @@ export const getCurrentUser = async (req, res) => {
         ansibleRunnerVersion: await getAnsibleRunnerVersion(),
       },
       updateAvailable,
+      ssmDataPath: SSM_DATA_PATH,
     },
   } as API.CurrentUser).send(res);
 };

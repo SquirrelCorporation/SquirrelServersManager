@@ -3,6 +3,7 @@ import { Automations } from 'ssm-shared-lib';
 import logger from '../../logger';
 import AbstractActionComponent from './actions/AbstractActionComponent';
 import DockerActionComponent from './actions/DockerActionComponent';
+import DockerVolumeActionComponent from './actions/DockerVolumeActionComponent';
 import PlaybookActionComponent from './actions/PlaybookActionComponent';
 import TriggerComponent from './triggers/AbstractTriggerComponent';
 import CronTriggerComponent from './triggers/CronTriggerComponent';
@@ -54,6 +55,13 @@ class AutomationComponent {
             this.name,
             actionChain.playbook,
             actionChain.actionDevices,
+          );
+        case Automations.Actions.DOCKER_VOLUME:
+          return new DockerVolumeActionComponent(
+            this.uuid,
+            this.name,
+            actionChain.dockerVolumeAction,
+            actionChain.dockerVolumes,
           );
         default:
           throw new Error('Unknown action type');

@@ -6,8 +6,11 @@ import { setToCache } from '../data/cache';
 import Device, { DeviceModel } from '../data/database/model/Device';
 import DeviceAuth from '../data/database/model/DeviceAuth';
 import User from '../data/database/model/User';
+import ContainerImageRepo from '../data/database/repository/ContainerImageRepo';
+import ContainerNetworkRepo from '../data/database/repository/ContainerNetworkRepo';
 import ContainerRepo from '../data/database/repository/ContainerRepo';
 import ContainerStatsRepo from '../data/database/repository/ContainerStatsRepo';
+import ContainerVolumeRepo from '../data/database/repository/ContainerVolumeRepo';
 import DeviceAuthRepo from '../data/database/repository/DeviceAuthRepo';
 import DeviceDownTimeEventRepo from '../data/database/repository/DeviceDownTimeEventRepo';
 import DeviceRepo from '../data/database/repository/DeviceRepo';
@@ -105,6 +108,9 @@ async function deleteDevice(device: Device) {
       }),
     );
   }
+  await ContainerVolumeRepo.deleteByDevice(device);
+  await ContainerNetworkRepo.deleteByDevice(device);
+  await ContainerImageRepo.deleteByDevice(device);
   await ContainerRepo.deleteByDevice(device);
 }
 
