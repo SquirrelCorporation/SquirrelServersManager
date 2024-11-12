@@ -90,7 +90,7 @@ const CombinedPowerCard: React.FC = () => {
       }
       total={
         <Typography.Title level={3}>
-          {currentUser?.devices?.totalCpu?.toFixed(0)} GhZ /{' '}
+          {currentUser?.devices?.totalCpu?.toFixed(0)} GHz /{' '}
           {currentUser?.devices?.totalMem?.toFixed(0)} Gb
         </Typography.Title>
       }

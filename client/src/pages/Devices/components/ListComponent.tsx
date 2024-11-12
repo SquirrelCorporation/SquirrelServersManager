@@ -128,7 +128,7 @@ const ListContent: React.FC<API.DeviceItem> = React.memo((props) => {
       {props.status !== DeviceStatus.UNMANAGED && (
         <div className={styles.listContentItem} style={{ width: '80px' }}>
           <p style={{ minWidth: '80px' }}>
-            <WhhCpu /> {cpuSpeed} Ghz
+            <WhhCpu /> {cpuSpeed} GHz
           </p>
           <p style={{ minWidth: '80px' }}>
             <WhhRam /> {memSize} Gb
