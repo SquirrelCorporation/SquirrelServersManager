@@ -6,7 +6,7 @@ import { TerminalStateProps } from '@/components/PlaybookExecutionModal';
 import PlaybookSelectionModal from '@/components/PlaybookSelection/PlaybookSelectionModal';
 import { DownOutlined } from '@ant-design/icons';
 import { history } from '@umijs/max';
-import { Dropdown, MenuProps, Space } from 'antd';
+import { Dropdown, MenuProps, Popconfirm, Space } from 'antd';
 import { ItemType } from 'rc-menu/es/interface';
 import React, { Dispatch, ReactNode, SetStateAction } from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';
@@ -22,6 +22,10 @@ export type QuickActionProps = {
 const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
   const [playbookSelectionModalIsOpened, setPlaybookSelectionModalIsOpened] =
     React.useState(false);
+  const [showConfirmation, setShowConfirmation] = React.useState({
+    visible: false,
+    onConfirm: () => {},
+  });
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
     const idx = parseInt(key);
@@ -30,6 +34,7 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
         alert('Internal Error');
         return;
       }
+
       if (DeviceQuickActionReference[idx].action === Actions.CONNECT) {
         history.push({
           pathname: `/manage/devices/ssh/${props.target?.uuid}`,
@@ -37,6 +42,19 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
         return;
       }
       if (DeviceQuickActionReference[idx].type === Types.PLAYBOOK) {
+        if (DeviceQuickActionReference[idx].needConfirmation) {
+          setShowConfirmation({
+            visible: true,
+            onConfirm: () => {
+              props.setTerminal({
+                isOpen: true,
+                quickRef: DeviceQuickActionReference[idx].playbookQuickRef,
+                target: props.target ? [props.target] : undefined,
+              });
+            },
+          });
+          return;
+        }
         props.setTerminal({
           isOpen: true,
           quickRef: DeviceQuickActionReference[idx].playbookQuickRef,
@@ -103,6 +121,19 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
         setIsModalOpen={setPlaybookSelectionModalIsOpened}
         itemSelected={props.target ? [props.target] : undefined}
         callback={onSelectPlaybook}
+      />
+      <Popconfirm
+        title={'Are you sure you want to execute this action?'}
+        open={showConfirmation.visible}
+        onConfirm={() => {
+          showConfirmation.onConfirm();
+          setShowConfirmation({ visible: false, onConfirm: () => {} });
+        }}
+        onCancel={() =>
+          setShowConfirmation({ visible: false, onConfirm: () => {} })
+        }
+        okText="Yes"
+        cancelText="No"
       />
       <Dropdown menu={{ items, onClick }}>
         <a onClick={(e) => e.preventDefault()}>

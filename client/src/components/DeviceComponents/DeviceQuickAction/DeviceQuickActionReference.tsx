@@ -27,6 +27,7 @@ export type QuickActionReferenceType = {
   onAdvancedMenu: boolean;
   children?: QuickActionReferenceType[];
   icon?: React.ReactNode;
+  needConfirmation?: boolean;
 };
 
 export enum Actions {
@@ -47,6 +48,7 @@ const DeviceQuickActionReference: QuickActionReferenceType[] = [
     icon: <ReloadOutlined />,
     label: 'Reboot',
     onAdvancedMenu: false,
+    needConfirmation: true,
   },
   {
     type: Types.ACTION,
