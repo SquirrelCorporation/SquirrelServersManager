@@ -29,6 +29,18 @@ vi.mock('../../../../data/database/repository/DeviceRepo', async () => {
   };
 });
 
+vi.mock('../../../../data/database/repository/UserRepo', async () => {
+  const actual = await vi.importActual<any>('../../../../data/database/repository/UserRepo');
+  return {
+    default: {
+      ...actual,
+      findFirst: async () => {
+        return { apiKey: 'test' };
+      },
+    },
+  };
+});
+
 describe('test ExtraVars', () => {
   test('findValueOfExtraVars should return substituted variables', async () => {
     const extraVars: API.ExtraVars = [
