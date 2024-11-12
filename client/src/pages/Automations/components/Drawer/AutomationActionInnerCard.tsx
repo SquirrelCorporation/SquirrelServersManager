@@ -1,6 +1,10 @@
-import { TablerSquareNumber2Filled } from '@/components/Icons/CustomIcons';
+import {
+  ContainerVolumeSolid,
+  TablerSquareNumber2Filled,
+} from '@/components/Icons/CustomIcons';
 import AutomationActionTitle from '@/pages/Automations/components/Drawer/AutomationActionTitle';
 import DockerActionSubForm from '@/pages/Automations/components/Drawer/DockerActionSubForm';
+import DockerVolumeActionSubForm from '@/pages/Automations/components/Drawer/DockerVolumeActionSubForm';
 import PlaybookActionSubForm from '@/pages/Automations/components/Drawer/PlaybookActionSubForm';
 import {
   CheckCircleFilled,
@@ -23,6 +27,11 @@ const options = [
     label: 'Docker Action',
     value: Automations.Actions.DOCKER,
     icon: <DockerOutlined />,
+  },
+  {
+    label: 'Docker Volume Action',
+    value: Automations.Actions.DOCKER_VOLUME,
+    icon: <ContainerVolumeSolid />,
   },
 ];
 
@@ -90,6 +99,9 @@ const AutomationActionInnerCard: React.FC<AutomationActionProps> = (props) => {
           }
           if (action === Automations.Actions.DOCKER) {
             return <DockerActionSubForm />;
+          }
+          if (action === Automations.Actions.DOCKER_VOLUME) {
+            return <DockerVolumeActionSubForm />;
           }
         }}
       </ProFormDependency>

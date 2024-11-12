@@ -1,4 +1,5 @@
 import ContainerVolume, { ContainerVolumeModel } from '../model/ContainerVolume';
+import Device from '../model/Device';
 
 async function findAll() {
   return await ContainerVolumeModel.find().populate({ path: 'device' }).lean().exec();
@@ -24,10 +25,20 @@ async function deleteVolumeById(volume: ContainerVolume) {
   await ContainerVolumeModel.deleteOne({ name: volume.name, watcher: volume.watcher }).exec();
 }
 
+async function deleteByDevice(device: Device) {
+  await ContainerVolumeModel.deleteMany({ device: device }).exec();
+}
+
+async function findByUuid(uuid: string) {
+  return await ContainerVolumeModel.findOne({ uuid: uuid }).lean().exec();
+}
+
 export default {
   findAll,
   create,
   findVolumesByWatcher,
   deleteVolumeById,
   updateOrCreate,
+  deleteByDevice,
+  findByUuid,
 };

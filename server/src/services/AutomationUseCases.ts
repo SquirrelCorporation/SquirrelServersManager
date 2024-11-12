@@ -8,6 +8,12 @@ async function createAutomation(automation: Partial<Automation>) {
   return createdAutomation;
 }
 
+async function updateAutomation(automation: Automation) {
+  await AutomationEngine.deregisterComponent(automation);
+  await AutomationRepo.update(automation);
+  await AutomationEngine.registerComponent(automation);
+}
+
 async function executeAutomation(automation: Automation) {
   const registeredAutomationComponent = AutomationEngine.getStates().automation[automation.uuid];
   if (!registeredAutomationComponent) {
@@ -29,4 +35,5 @@ export default {
   createAutomation,
   executeAutomation,
   deleteAutomation,
+  updateAutomation,
 };

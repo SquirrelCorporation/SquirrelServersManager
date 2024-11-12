@@ -1,4 +1,5 @@
 import ContainerImage, { ContainerImageModel } from '../model/ContainerImage';
+import Device from '../model/Device';
 
 async function findAll() {
   return await ContainerImageModel.find().populate({ path: 'device' }).lean().exec();
@@ -16,9 +17,14 @@ async function deleteImageById(id: string) {
   await ContainerImageModel.deleteOne({ id: id }).exec();
 }
 
+async function deleteByDevice(device: Device) {
+  await ContainerImageModel.deleteMany({ device: device }).exec();
+}
+
 export default {
   findAll,
   create,
   findImagesByWatcher,
   deleteImageById,
+  deleteByDevice,
 };

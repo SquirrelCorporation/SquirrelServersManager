@@ -1,7 +1,9 @@
 import { API, SsmAgent, SsmAnsible } from 'ssm-shared-lib';
 import { getFromCache } from '../../../data/cache';
 import DeviceRepo from '../../../data/database/repository/DeviceRepo';
+import UserRepo from '../../../data/database/repository/UserRepo';
 import pinoLogger from '../../../logger';
+import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../ansible-vault/ansible-vault';
 
 class ExtraVars {
   private logger = pinoLogger.child(
@@ -73,6 +75,7 @@ class ExtraVars {
       throw new Error('Cannot use CONTEXT variable with multiple targets');
     }
     const device = await DeviceRepo.findOneByUuid(targets[0]);
+    const user = await UserRepo.findFirst();
     if (!device) {
       throw new Error('Targeted device not found');
     }
@@ -85,6 +88,8 @@ class ExtraVars {
         return device.agentLogPath;
       case SsmAnsible.DefaultContextExtraVarsList.AGENT_TYPE:
         return device.agentType || SsmAgent.InstallMethods.NODE;
+      case SsmAnsible.DefaultContextExtraVarsList.API_KEY:
+        return user?.apiKey;
     }
     this.logger.error(`Context variable not found: '${extraVar.extraVar}'`);
   }

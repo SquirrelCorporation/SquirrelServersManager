@@ -1,9 +1,10 @@
-import { Repositories, SettingsKeys } from 'ssm-shared-lib';
+import { Repositories, SettingsKeys, SsmAnsible } from 'ssm-shared-lib';
 import { getFromCache, setToCache } from '../../data/cache';
 import initRedisValues from '../../data/cache/defaults';
 import { ContainerCustomStackModel } from '../../data/database/model/ContainerCustomStack';
 import { DeviceModel } from '../../data/database/model/Device';
 import { PlaybookModel } from '../../data/database/model/Playbook';
+import UserRepo from '../../data/database/repository/UserRepo';
 import { copyAnsibleCfgFileIfDoesntExist } from '../../helpers/ansible/AnsibleConfigurationHelper';
 import PinoLogger from '../../logger';
 import AutomationEngine from '../../modules/automations/AutomationEngine';

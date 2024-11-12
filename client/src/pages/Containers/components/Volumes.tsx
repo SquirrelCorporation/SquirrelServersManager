@@ -1,19 +1,20 @@
+import ContainerBackUpVolumeModal from '@/pages/Containers/components/sub-components/ContainerBackUpVolumeModal';
 import CreateVolumeModal from '@/pages/Containers/components/sub-components/CreateVolumeModal';
 import { getAllDevices } from '@/services/rest/device';
 import { getVolumes } from '@/services/rest/services';
 import {
-  ActionType,
   ProColumns,
   ProFormSelect,
   ProTable,
   RequestOptionsType,
+  TableDropdown,
 } from '@ant-design/pro-components';
+import { history } from '@umijs/max';
 import { Tag, Tooltip } from 'antd';
-import React, { useRef } from 'react';
+import React from 'react';
 import { API } from 'ssm-shared-lib';
 
 const Volumes: React.FC = () => {
-  const actionRef = useRef<ActionType>();
   const columns: ProColumns<API.ContainerVolume>[] = [
     {
       title: 'Name',
@@ -62,6 +63,31 @@ const Volumes: React.FC = () => {
       dataIndex: 'mountPoint',
       ellipsis: true,
       search: false,
+    },
+    {
+      title: 'Action',
+      key: 'option',
+      valueType: 'option',
+      render: (dom, record) =>
+        record.device?.ip
+          ? [
+              <ContainerBackUpVolumeModal
+                key="backup"
+                volumeUuid={record.uuid}
+              />,
+              <TableDropdown
+                key="actionGroup"
+                menus={[{ key: 'backup-aut', name: 'New Backup Automation' }]}
+                onSelect={(key: string) => {
+                  if (key === 'backup-aut') {
+                    history.push({
+                      pathname: `/manage/automations`,
+                    });
+                  }
+                }}
+              />,
+            ]
+          : [],
     },
   ];
 

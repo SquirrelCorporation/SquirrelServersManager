@@ -26,3 +26,7 @@ export enum Common {
 export enum Alert {
   NEW_ALERT = 'alert:new',
 }
+
+export enum VolumeBackup {
+  PROGRESS = 'volume:backup:progress',
+}

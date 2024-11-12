@@ -1,5 +1,7 @@
+import * as os from 'node:os';
 import { parse } from 'url';
-import { API } from 'ssm-shared-lib';
+import { API, SsmContainer } from 'ssm-shared-lib';
+import { SSM_DATA_PATH } from '../../../config';
 import ContainerVolumeRepo from '../../../data/database/repository/ContainerVolumeRepo';
 import PlaybookRepo from '../../../data/database/repository/PlaybookRepo';
 import { filterByFields, filterByQueryParams } from '../../../helpers/query/FilterHelper';
@@ -7,6 +9,12 @@ import { paginate } from '../../../helpers/query/PaginationHelper';
 import { sortByFields } from '../../../helpers/query/SorterHelper';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
+import { Kind } from '../../../modules/docker/core/Component';
+import { WATCHERS } from '../../../modules/docker/core/conf';
+import WatcherEngine from '../../../modules/docker/core/WatcherEngine';
+import Docker from '../../../modules/docker/watchers/providers/docker/Docker';
+import FileSystemManager from '../../../modules/shell/managers/FileSystemManager';
+import ContainerVolumeUseCases from '../../../services/ContainerVolumeUseCases';
 import PlaybookUseCases from '../../../services/PlaybookUseCases';
 
 export const getVolumes = async (req, res) => {
@@ -69,4 +77,28 @@ export const postVolume = async (req, res) => {
   } catch (error: any) {
     throw new InternalError(error.message);
   }
+};
+
+export const postBackupVolume = async (req, res) => {
+  const { uuid } = req.params;
+  const { mode } = req.body;
+  const volume = await ContainerVolumeRepo.findByUuid(uuid);
+  if (!volume) {
+    throw new NotFoundError('Volume not found');
+  }
+  const { filePath, fileName } = await ContainerVolumeUseCases.backupVolume(volume, mode);
+  new SuccessResponse('Volume backed up', {
+    filePath: `${filePath}${fileName}`,
+    fileName,
+    mode,
+  }).send(res);
+};
+
+export const getBackupVolume = async (req, res) => {
+  const { fileName } = req.query;
+  const filePath = os.tmpdir() + '/';
+  if (!FileSystemManager.test('-f', `${filePath}${fileName}`)) {
+    throw new NotFoundError(`File not found ${filePath}${fileName}`);
+  }
+  res.download(`${filePath}${fileName}`);
 };

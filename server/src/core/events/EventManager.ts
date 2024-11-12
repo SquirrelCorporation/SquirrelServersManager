@@ -9,6 +9,7 @@ export type Payload = {
   severity: 'info' | 'warning' | 'error' | 'success';
   module: string;
   moduleId?: string;
+  success?: boolean;
 };
 
 interface EventListeners {
