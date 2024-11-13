@@ -79,6 +79,7 @@ export type Settings = {
   };
   dashboard: DashboardSettings;
   ssmDataPath: string;
+  masterNodeUrl: string;
 };
 
 export type StatsSettings = {

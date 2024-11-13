@@ -10,7 +10,7 @@ import {
   deletePlaybookExtraVar,
   postExtraVarSharedValue,
 } from '@/services/rest/playbooks';
-import { PlusOutlined } from '@ant-design/icons';
+import { LockOutlined, PlusOutlined, UnlockOutlined } from '@ant-design/icons';
 import { ProFormInstance, ProFormText } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
 import {
@@ -39,7 +39,6 @@ const ExtraVarsViewEditor: React.FC<ExtraVarsViewEditionProps> = ({
   );
   const [isOpened, setIsOpened] = useState(false);
   const [showCreateNewVarForm, setShowCreateNewVarForm] = useState(false);
-  const formRef = useRef<ProFormInstance>();
 
   useEffect(() => {
     if (!isOpened) {
@@ -106,7 +105,10 @@ const ExtraVarsViewEditor: React.FC<ExtraVarsViewEditionProps> = ({
     return '';
   };
 
-  const renderActionButtons = (extraVar: API.ExtraVar) => (
+  const renderActionButtons = (
+    extraVar: API.ExtraVar,
+    formRef: React.MutableRefObject<ProFormInstance | undefined>,
+  ) => (
     <Button.Group>
       <Button
         key="submit"
@@ -128,64 +130,83 @@ const ExtraVarsViewEditor: React.FC<ExtraVarsViewEditionProps> = ({
     </Button.Group>
   );
 
-  const renderExtraVarRow = (extraVar: API.ExtraVar) => (
-    <React.Fragment key={`row-${extraVar.extraVar}`}>
-      <Row gutter={[16, 16]}>
-        <Col span={24}>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <ProForm
-              key={`create-new-var-${extraVar.extraVar}`}
-              style={{ marginTop: 10 }}
-              layout="inline"
-              grid
-              formRef={formRef}
-              onFinish={async (formData) => {
-                await postExtraVarSharedValue({
-                  extraVar: formData.extraVarName,
-                  value: formData.extraVarValue,
-                });
-                message.success({
-                  content: 'Value updated',
-                  duration: 6,
-                });
-              }}
-              submitter={{
-                resetButtonProps: { style: { display: 'none' } },
-                submitButtonProps: { style: { display: 'none' } },
-              }}
-            >
-              <ProForm.Group>
-                <ProForm.Item>{renderExtraVarTag(extraVar)}</ProForm.Item>
-                <ProFormText
-                  style={{ flex: 1 }}
-                  disabled
-                  initialValue={extraVar.extraVar}
-                  name="extraVarName"
-                />
-                <ProFormText
-                  style={{ flex: 1 }}
-                  disabled={
-                    extraVar.type === SsmAnsible.ExtraVarsType.CONTEXT ||
-                    extraVar.type === SsmAnsible.ExtraVarsType.MANUAL
-                  }
-                  name="extraVarValue"
-                  initialValue={
-                    extraVar.value ||
-                    getInitialValue(extraVar.type as SsmAnsible.ExtraVarsType)
-                  }
-                />
-                <ProForm.Item>
-                  {renderAvatarIcon(extraVar.required as boolean)}
-                </ProForm.Item>
-                <ProForm.Item>{renderActionButtons(extraVar)}</ProForm.Item>
-              </ProForm.Group>
-            </ProForm>
-          </div>
-        </Col>
-      </Row>
-      <Divider style={{ marginTop: 15, marginBottom: 2 }} />
-    </React.Fragment>
-  );
+  const ExtraVarRow = ({ extraVar }: { extraVar: API.ExtraVar }) => {
+    const formRef = useRef<ProFormInstance>();
+    return (
+      <React.Fragment key={`row-${extraVar.extraVar}`}>
+        <Row gutter={[16, 16]}>
+          <Col span={24}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <ProForm
+                key={`create-new-var-${extraVar.extraVar}`}
+                style={{ marginTop: 10 }}
+                layout="inline"
+                grid
+                formRef={formRef}
+                onFinish={async (formData) => {
+                  await postExtraVarSharedValue({
+                    extraVar: formData.extraVarName,
+                    value: formData.extraVarValue,
+                  });
+                  message.success({
+                    content: 'Value updated',
+                    duration: 6,
+                  });
+                }}
+                submitter={{
+                  resetButtonProps: { style: { display: 'none' } },
+                  submitButtonProps: { style: { display: 'none' } },
+                }}
+              >
+                <ProForm.Group>
+                  <ProForm.Item>{renderExtraVarTag(extraVar)}</ProForm.Item>
+                  <ProFormText
+                    style={{ flex: 1 }}
+                    disabled
+                    initialValue={extraVar.extraVar}
+                    name="extraVarName"
+                  />
+                  <ProFormText
+                    style={{ flex: 1 }}
+                    fieldProps={{
+                      prefix:
+                        extraVar.type === SsmAnsible.ExtraVarsType.CONTEXT ||
+                        extraVar.type === SsmAnsible.ExtraVarsType.MANUAL ? (
+                          <LockOutlined />
+                        ) : (
+                          <UnlockOutlined />
+                        ),
+                    }}
+                    placeholder={
+                      extraVar.type === SsmAnsible.ExtraVarsType.SHARED
+                        ? 'AUTO'
+                        : ''
+                    }
+                    disabled={
+                      extraVar.type === SsmAnsible.ExtraVarsType.CONTEXT ||
+                      extraVar.type === SsmAnsible.ExtraVarsType.MANUAL
+                    }
+                    name="extraVarValue"
+                    initialValue={
+                      extraVar.value ||
+                      getInitialValue(extraVar.type as SsmAnsible.ExtraVarsType)
+                    }
+                  />
+                  <ProForm.Item>
+                    {renderAvatarIcon(extraVar.required as boolean)}
+                  </ProForm.Item>
+                  <ProForm.Item>
+                    {renderActionButtons(extraVar, formRef)}
+                  </ProForm.Item>
+                </ProForm.Group>
+              </ProForm>
+            </div>
+          </Col>
+        </Row>
+        <Divider style={{ marginTop: 15, marginBottom: 2 }} />
+      </React.Fragment>
+    );
+  };
 
   return (
     <>
@@ -214,7 +235,9 @@ const ExtraVarsViewEditor: React.FC<ExtraVarsViewEditionProps> = ({
             ),
             children: (
               <>
-                {currentExtraVars.map(renderExtraVarRow)}
+                {currentExtraVars.map((e) => (
+                  <ExtraVarRow key={e.extraVar} extraVar={e} />
+                ))}
                 {showCreateNewVarForm && (
                   <CreateNewVarForm
                     extraVarViewEditorProps={{ playbook }}

@@ -1,4 +1,4 @@
-import { API, SettingsKeys } from 'ssm-shared-lib';
+import { API, SettingsKeys, SsmAnsible } from 'ssm-shared-lib';
 import { dependencies, version } from '../../../../package.json';
 import { SSM_DATA_PATH } from '../../../config';
 import { getAnsibleRunnerVersion, getAnsibleVersion } from '../../../core/system/ansible-versions';
@@ -39,6 +39,7 @@ export const getCurrentUser = async (req, res) => {
     SettingsKeys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
   );
   const updateAvailable = await getFromCache(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE);
+  const masterNodeUrl = await getFromCache(SsmAnsible.DefaultSharedExtraVarsList.MASTER_NODE_URL);
 
   const systemPerformance = await DashboardUseCase.getSystemPerformance();
 
@@ -90,6 +91,7 @@ export const getCurrentUser = async (req, res) => {
       },
       updateAvailable,
       ssmDataPath: SSM_DATA_PATH,
+      masterNodeUrl,
     },
   } as API.CurrentUser).send(res);
 };
