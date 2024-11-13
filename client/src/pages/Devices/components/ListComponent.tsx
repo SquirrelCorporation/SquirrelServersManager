@@ -15,7 +15,7 @@ const { Text } = Typography;
 const ListContent: React.FC<API.DeviceItem> = React.memo((props) => {
   const cpuSpeed = useMemo(() => props.cpuSpeed?.toFixed(1), [props.cpuSpeed]);
   const memSize = useMemo(
-    () => (props.mem ? (props.mem / 1024).toFixed(0) : 'NaN'),
+    () => (props.mem ? Math.round(props.mem / 1024) : 'NaN'),
     [props.mem],
   );
 

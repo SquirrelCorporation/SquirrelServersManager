@@ -51,7 +51,7 @@ async function getDevicesOverview() {
     offline: offline,
     online: online,
     overview: overview,
-    totalCpu: totalCpu ? totalMem : NaN,
+    totalCpu: totalCpu ? totalCpu : NaN,
     totalMem: totalMem ? totalMem / 1024 : NaN,
   };
 }
