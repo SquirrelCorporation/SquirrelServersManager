@@ -13,6 +13,7 @@
 # Tags: reboot, restart, host
 
 - hosts: all
+  become: true
   tasks:
   - name: Unconditionally reboot the machine
     ansible.builtin.reboot:
