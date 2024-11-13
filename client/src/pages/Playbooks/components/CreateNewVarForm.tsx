@@ -253,15 +253,6 @@ const CreateNewVarForm: React.FC<CreateNewVarFormProps> = ({
                           SsmAnsible.ExtraVarsType.MANUAL ||
                         extraVarType.value === SsmAnsible.ExtraVarsType.CONTEXT
                       }
-                      rules={[
-                        {
-                          required:
-                            extraVarType?.value !==
-                              SsmAnsible.ExtraVarsType.MANUAL &&
-                            extraVarType?.value !==
-                              SsmAnsible.ExtraVarsType.SHARED,
-                        },
-                      ]}
                       placeholder={
                         !extraVarType
                           ? undefined

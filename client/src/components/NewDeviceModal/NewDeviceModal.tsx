@@ -1,5 +1,6 @@
 import AgentInstallMethod from '@/components/DeviceConfiguration/AgentInstallMethod';
 import { DownloadOutlined } from '@ant-design/icons';
+import { useModel } from '@umijs/max';
 import React, { useRef, useState } from 'react';
 import { Button, Col, Modal, Row, message, Alert, Typography, Tag } from 'antd';
 import {
@@ -44,6 +45,8 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
     useState();
   const [controlNodeConnectionString, setControlNodeConnectionString] =
     useState({});
+  const { initialState } = useModel('@@initialState');
+  const currentUser = initialState?.currentUser;
 
   const checkHostAPI = async (url: string) => {
     try {
@@ -243,7 +246,9 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                     label: 'Control Node URL',
                     placeholder: 'http://192.168.0.1',
                     rules: [{ required: true }],
-                    initialValue: `http://${document.location.hostname}:8000`,
+                    initialValue: currentUser?.settings.masterNodeUrl
+                      ? currentUser?.settings.masterNodeUrl
+                      : `http://${document.location.hostname}:8000`,
                   },
                 ]}
               />
