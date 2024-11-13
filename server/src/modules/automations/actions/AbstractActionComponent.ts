@@ -24,7 +24,7 @@ abstract class AbstractActionComponent extends EventManager {
         moduleName: `${automationName}`,
         type: type,
       },
-      { msgPrefix: '[ACTION-COMPONENT] - ' },
+      { msgPrefix: '[AUTOMATION_ACTION] - ' },
     );
   }
 

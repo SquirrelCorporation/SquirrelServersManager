@@ -12,7 +12,7 @@ export abstract class AbstractShellCommander {
     ...args: Parameters<T>
   ): ReturnType<T> {
     try {
-      this.logger.info(`${this.task} - Starting...`);
+      this.logger.debug(`${this.task} - Starting...`);
       return shellCmd(...args);
     } catch (error) {
       this.logger.error(`${this.task} - Failed`);

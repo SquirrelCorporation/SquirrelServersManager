@@ -25,7 +25,7 @@ abstract class EventManager {
 
   protected constructor() {
     this.eventListeners = {};
-    this.logger = log.child({ module: 'EventManager' }, { msgPrefix: '[EVENT-MANAGER] - ' });
+    this.logger = log.child({ module: 'EventManager' }, { msgPrefix: '[EVENT_MANAGER] - ' });
   }
 
   private initializeEventListener(event: string) {

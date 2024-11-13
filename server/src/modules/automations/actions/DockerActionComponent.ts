@@ -22,13 +22,13 @@ class DockerActionComponent extends AbstractActionComponent {
   }
 
   async executeAction() {
-    this.childLogger.info('Docker Action Component execute - started');
+    this.childLogger.info('Docker Action Component - executeAction - started');
     let success = true;
     for (const containerId of this.containerIds) {
-      this.childLogger.info(`Docker Action Component execute - ${containerId}`);
+      this.childLogger.info(`Docker Action Component - executeAction for: ${containerId}`);
       const container = await ContainerRepo.findContainerById(containerId);
       if (!container) {
-        this.childLogger.error(`Container not found for ${containerId}`);
+        this.childLogger.error(`Docker Volume Action - Container not found for ${containerId}`);
         success = false;
       } else {
         try {
@@ -39,7 +39,9 @@ class DockerActionComponent extends AbstractActionComponent {
         }
       }
     }
-    this.childLogger.info('Docker Action Component execute - ended');
+    this.childLogger.info(
+      `Docker Action Component - executeAction - ended with ${success ? 'success' : 'failure'}`,
+    );
     if (success) {
       await this.onSuccess();
     } else {

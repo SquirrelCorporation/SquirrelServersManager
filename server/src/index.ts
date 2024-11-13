@@ -7,7 +7,16 @@ import Crons from './modules/crons';
 import app from './App';
 
 const start = () => {
-  logger.info(`Starting server...`);
+  logger.info(`
+      ,;;:;,
+   ;;;;;
+  ,:;;:;    ,'=.
+  ;:;:;' .=" ,'_\\
+  ':;:;,/  ,__:=@
+   ';;:;  =./)_
+     \`"=\\_  )_"\`
+          \`\`'"\`
+Starting Squirrel Servers Manager server...`);
   connection().then(async () => {
     await Startup.init();
     app.setupRoutes();

@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
 import { db } from '../../config';
-import logger from '../../logger';
+import PinoLogger from '../../logger';
 
 export const dbURI = `mongodb://${db.host}:${db.port}/${db.name}`;
+const logger = PinoLogger.child({ module: 'Database' }, { msgPrefix: '[DATABASE] - ' });
 
 async function connectMongoDb() {
   // Build the connection string
@@ -15,7 +16,7 @@ async function connectMongoDb() {
     socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
   };
 
-  logger.info('[DATABASE] MongoDB - Connecting to ' + dbURI);
+  logger.info(`connectMongoDb - Connecting to ${dbURI}`);
 
   function setRunValidators(this: any) {
     this.setOptions({ runValidators: true });
@@ -33,34 +34,34 @@ async function connectMongoDb() {
     })
     .connect(dbURI, options)
     .then(() => {
-      logger.info('[DATABASE] Mongoose connection done');
+      logger.info('connectMongoDb - Connection successful');
     })
     .catch((e) => {
-      logger.error('[DATABASE] Mongoose connection error');
+      logger.error('connectMongoDb - Connection error');
       logger.error(e);
     });
 
   // CONNECTION EVENTS
   // When successfully connected
   mongoose.connection.on('connected', () => {
-    logger.debug('[DATABASE] Mongoose default connection open to ' + dbURI);
+    logger.debug(`Connection opened to ${dbURI}`);
   });
 
   // If the connection throws an error
   mongoose.connection.on('error', (err) => {
-    logger.error('[DATABASE] Mongoose default connection error: ' + err);
+    logger.error('Connection error: ' + err);
   });
 
   // When the connection is disconnected
   mongoose.connection.on('disconnected', () => {
-    logger.info('[DATABASE] Mongoose default connection disconnected');
+    logger.info('Connection disconnected');
   });
 
   // If the Node process ends, close the Mongoose connection
   process.on('SIGINT', () => {
     // @ts-ignore
     mongoose.connection.close(() => {
-      logger.info('[DATABASE] Mongoose default connection disconnected through app termination');
+      logger.info('Connection disconnected through app termination');
       process.exit(0);
     });
   });

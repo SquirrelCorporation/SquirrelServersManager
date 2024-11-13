@@ -11,7 +11,9 @@ export default class DockerVolumes extends DockerNetworks {
   dockerApi: Dockerode | undefined = undefined;
 
   public async watchVolumesFromCron() {
-    this.childLogger.info('watchDockerVolumesFromCron');
+    this.childLogger.info(
+      `watchDockerVolumesFromCron - (device: ${this.configuration.deviceUuid})`,
+    );
     try {
       const device = await DeviceRepo.findOneByUuid(this.configuration.deviceUuid);
       if (!device) {
@@ -86,9 +88,9 @@ export default class DockerVolumes extends DockerNetworks {
       if (!FileSystemManager.test('-d', backupPath)) {
         FileSystemManager.createDirectory(backupPath);
       }
-      this.childLogger.info(`backupVolume - Backup of volume ${volumeName} started`);
+      this.childLogger.info(`backupVolume - Backup of volume "${volumeName}" started...`);
       await this.dockerApi?.pull('alpine');
-      this.childLogger.info(`backupVolume - Create container`);
+      this.childLogger.debug(`backupVolume - Create container`);
       // Create a temporary container which will mount the volume
       const container = await this.dockerApi?.createContainer({
         Image: 'alpine',
@@ -101,11 +103,11 @@ export default class DockerVolumes extends DockerNetworks {
       if (!container) {
         throw new Error('Container for backup not created');
       }
-      this.childLogger.info(`backupVolume - Start container`);
+      this.childLogger.debug(`backupVolume - Start container`);
       // Start the container
       await container.start();
 
-      this.childLogger.info(`backupVolume - Wait for container`);
+      this.childLogger.debug(`backupVolume - Wait for container`);
       // Create a tar stream
       // Wait for the container to finish the tar command
       await container.wait();
@@ -121,7 +123,7 @@ export default class DockerVolumes extends DockerNetworks {
       const onTarballStreamEnd = async () => {
         await container
           .stop({ t: 0 })
-          .catch((err) => this.childLogger.warn('Container already stopped:', err));
+          .catch((err) => this.childLogger.warn(`Container already stopped: ${err?.message}`));
         await container.remove();
         this.childLogger.info(`Backup of volume ${volumeName} has been saved to ${backupPath}`);
       };

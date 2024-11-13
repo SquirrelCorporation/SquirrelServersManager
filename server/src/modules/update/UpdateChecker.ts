@@ -8,7 +8,7 @@ import { version } from '../../../package.json';
 class UpdateChecker {
   private childLogger = pinoLogger.child(
     { module: `UpdateChecker` },
-    { msgPrefix: '[UPDATE_CHECKER] - ' },
+    { msgPrefix: '[SSM_UPDATE_CHECKER] - ' },
   );
   private readonly RELEASE_URL =
     'https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager/refs/heads/master/release.json';
@@ -39,16 +39,18 @@ class UpdateChecker {
       const comparison = this.compareVersions(localVersion, remoteVersion);
 
       if (comparison === 0) {
-        this.childLogger.info('The versions are identical.');
+        this.childLogger.info(
+          'SSM remote and current versions are identical, no update available.',
+        );
         await setToCache(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE, '');
       } else if (comparison === 1) {
         this.childLogger.info(
-          `The local version (${localVersion}) is newer than the remote version (${remoteVersion}).`,
+          `The SSM local version (${localVersion}) is newer than the remote version (${remoteVersion}).`,
         );
         await setToCache(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE, '');
       } else if (comparison === -1) {
         this.childLogger.info(
-          `The local version ${localVersion} is older than the remote version (${remoteVersion}).`,
+          `The SSM local version ${localVersion} is older than the remote version (${remoteVersion}).`,
         );
         await setToCache(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE, remoteVersion);
       }

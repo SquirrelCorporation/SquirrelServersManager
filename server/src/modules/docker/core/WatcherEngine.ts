@@ -100,7 +100,7 @@ async function registerComponent(
   const providerLowercase = provider.toLowerCase();
   const nameLowercase = name.toLowerCase();
   try {
-    logger.info(`Registering "${provider}/${name}" component`);
+    logger.info(`Registering "${provider}/${name}" component...`);
     const component = getComponentClass(kind, provider);
     const componentRegistered = await component.register(
       _id,

@@ -34,17 +34,19 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
     mode: SsmAnsible.ExecutionMode = SsmAnsible.ExecutionMode.APPLY,
     execUuid?: string,
   ) {
-    this.logger.info('executePlaybook - Starting...');
+    this.logger.info(`executePlaybook - Starting... (playbook: ${playbookPath})`);
     execUuid = execUuid || uuidv4();
 
     let inventoryTargets: (Playbooks.All & Playbooks.HostGroups) | undefined;
     if (target) {
-      this.logger.info(`executePlaybook - called with target: ${target}`);
+      this.logger.info(
+        `executePlaybook - Called with specific device: ${target} - (playbook: ${playbookPath})`,
+      );
       const devicesAuth = await DeviceAuthRepo.findManyByDevicesUuid(target);
       if (!devicesAuth || devicesAuth.length === 0) {
-        this.logger.error(`executePlaybook - Target not found (Device Authentication not found)`);
+        this.logger.error(`executePlaybook - Device Authentication not found (device: ${target})`);
         throw new Error(
-          `Exec failed, no matching target (Device Authentication not found for target ${target})`,
+          `Exec failed, no matching target - (Device Authentication not found for device ${target})`,
         );
       }
       inventoryTargets = await Inventory.inventoryBuilderForTarget(devicesAuth, execUuid);

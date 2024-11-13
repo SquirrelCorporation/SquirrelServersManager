@@ -50,7 +50,7 @@ async function registerGitRepository(
 
 async function registerRepository(containerCustomStackRepository: ContainerCustomStackRepository) {
   logger.info(
-    `Registering ${containerCustomStackRepository.name}/${containerCustomStackRepository.uuid}`,
+    `Registering: ${containerCustomStackRepository.name}/${containerCustomStackRepository.uuid}`,
   );
   state.stackRepository[containerCustomStackRepository.uuid] = await registerGitRepository(
     containerCustomStackRepository,
@@ -62,7 +62,7 @@ async function registerRepository(containerCustomStackRepository: ContainerCusto
 
 async function registerRepositories() {
   const repos = await ContainerCustomStackRepositoryRepo.findAllActive();
-  logger.info(`Found ${repos?.length} active repositories`);
+  logger.info(`Found ${repos?.length} active repositories in database.`);
   const repositoriesToRegister: any = [];
   repos?.map((repo) => {
     repositoriesToRegister.push(registerRepository(repo));

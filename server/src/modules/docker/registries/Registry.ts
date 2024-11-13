@@ -29,7 +29,7 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
    * @param image the image
    * @returns {boolean}
    */
-  // eslint-disable-next-line no-unused-vars,class-methods-use-this,@typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   match(image: SSMServicesTypes.Image) {
     return false;
   }
@@ -39,7 +39,7 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
    * @param image
    * @returns {*}
    */
-  // eslint-disable-next-line class-methods-use-this
+
   normalizeImage(image: SSMServicesTypes.Image) {
     return image;
   }
@@ -50,7 +50,7 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
    * @param requestOptions
    * @returns {*}
    */
-  // eslint-disable-next-line class-methods-use-this
+
   async authenticate(
     image: SSMServicesTypes.Image,
     requestOptions: SSMServicesTypes.RequestOptionsType,
@@ -64,14 +64,14 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
    * @returns {*}
    */
   async getTags(image: SSMServicesTypes.Image) {
-    this.childLogger.info(`getTags: ${this.getId()} - Get ${image.name} tags`);
+    this.childLogger.info(`getTags- Get "${image.name}" tags`);
     const tags: string[] = [];
     let page;
     let hasNext = true;
     let link;
     while (hasNext) {
       const lastItem = page ? page.data.tags[page.data.tags.length - 1] : undefined;
-      // eslint-disable-next-line no-await-in-loop
+
       page = await this.getTagsPage(image, lastItem, link);
       const pageTags = page.data.tags ? page.data.tags : [];
       link = page.headers.link;
@@ -117,7 +117,7 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
     let manifestDigestFound: string | undefined = undefined;
     let manifestMediaType: string | undefined = undefined;
     this.childLogger.info(
-      `getImageManifestDigest - ${this.getId()} - Get ${image.name}:${tagOrDigest} manifest`,
+      `getImageManifestDigest - Get "${image.name}:${tagOrDigest}" manifest...`,
     );
     const responseManifests = (
       await this.callRegistry({
@@ -193,7 +193,7 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
           version: 1,
         };
         this.childLogger.debug(
-          `getImageManifestDigest - Manifest found with [digest=${manifestFound.digest}, created=${manifestFound.created}, version=${manifestFound.version}]`,
+          `getImageManifestDigest - Manifest found for image ${image.name} with [digest=${manifestFound.digest}, created=${manifestFound.created}, version=${manifestFound.version}]`,
         );
         return manifestFound;
       }
@@ -202,7 +202,7 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
           manifestMediaType === 'application/vnd.docker.distribution.manifest.v2+json') ||
         (manifestDigestFound && manifestMediaType === 'application/vnd.oci.image.manifest.v1+json')
       ) {
-        this.childLogger.info(
+        this.childLogger.debug(
           'getImageManifestDigest - Calling registries to get docker-content-digest header',
         );
         const responseManifest = await this.callRegistry({
@@ -217,8 +217,8 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
           digest: responseManifest.headers['docker-content-digest'],
           version: 2,
         };
-        this.childLogger.info(
-          `getImageManifestDigest - Manifest found with [digest=${manifestFound.digest}, version=${manifestFound.version}]`,
+        this.childLogger.debug(
+          `getImageManifestDigest - Manifest found for image ${image.name}  with [digest=${manifestFound.digest}, version=${manifestFound.version}]`,
         );
         return manifestFound;
       }
@@ -238,7 +238,9 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
       }
     }
     // Empty result...
-    throw new Error('getImageManifestDigest - Unexpected error; no manifest found');
+    throw new Error(
+      `getImageManifestDigest - Unexpected error; no manifest found for image for image "${image.name}"`,
+    );
   }
 
   async callRegistry({
@@ -264,12 +266,15 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
       const getRequestOptionsWithAuth = await this.authenticate(image, getRequestOptions);
       return await axios.request(getRequestOptionsWithAuth);
     } catch (error: any) {
-      this.childLogger.error(error);
-      throw error;
+      this.childLogger.error(
+        `Error calling registry ${url} with "${error?.message}" for image: "${image.name}" (${error?.stack})`,
+      );
+      throw new Error(
+        `Error calling registry ${url} with "${error?.message}" for image: "${image.name}"`,
+      );
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
   getImageFullName(image: SSMServicesTypes.Image, tagOrDigest: string) {
     // digests are separated with @ whereas tags are separated with :
     const tagOrDigestWithSeparator =
@@ -285,7 +290,7 @@ abstract class Registry extends Component<SSMServicesTypes.ConfigurationRegistry
    * Return {username, password } or undefined.
    * @returns {}
    */
-  // eslint-disable-next-line class-methods-use-this
+
   getAuthPull(): undefined | { username?: string; password?: string } {
     return undefined;
   }
