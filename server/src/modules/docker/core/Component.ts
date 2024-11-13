@@ -62,7 +62,7 @@ abstract class Component<
       { msgPrefix: `[${kind.toUpperCase()}][${type.toUpperCase()}] - ` },
     );
     this.childLogger.info(
-      `Register with configuration ${JSON.stringify(this.maskConfiguration())}`,
+      `Registering ${this.kind?.toLowerCase()} with configuration: ${JSON.stringify(this.maskConfiguration())}`,
     );
     await this.init();
     return this;

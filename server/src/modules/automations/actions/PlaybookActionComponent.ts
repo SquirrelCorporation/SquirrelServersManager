@@ -28,11 +28,13 @@ class PlaybookActionComponent extends AbstractActionComponent {
   }
 
   async executeAction() {
-    this.childLogger.info('Playbook Action Component execute - started');
+    this.childLogger.info('Playbook Action Component - executeAction - started');
     const user = (await UserRepo.findFirst()) as User;
     const playbook = await PlaybookRepo.findOneByUuid(this.playbookUuid);
     if (!playbook) {
-      this.childLogger.error(`Playbook ${this.playbookUuid} does not exist`);
+      this.childLogger.error(
+        `Playbook Action Component - Playbook ${this.playbookUuid} does not exist`,
+      );
       return;
     }
     try {
@@ -60,7 +62,9 @@ class PlaybookActionComponent extends AbstractActionComponent {
   };
 
   async waitForResult(execId: string, timeoutCount = 0) {
-    this.childLogger.info(`wait for result ${execId} - (try: ${timeoutCount}/100)`);
+    this.childLogger.info(
+      `Playbook Action Component - wait for result ${execId} - (try: ${timeoutCount}/100)`,
+    );
     try {
       if (timeoutCount > 100) {
         this.childLogger.error('Timeout reached for task');
@@ -69,13 +73,17 @@ class PlaybookActionComponent extends AbstractActionComponent {
       }
       const execStatuses = await AnsibleTaskStatusRepo.findAllByIdent(execId);
       if (!execStatuses || execStatuses.length === 0) {
-        this.childLogger.warn(`No execution statuses found (yet) for execId: ${execId}`);
+        this.childLogger.warn(
+          `Playbook Action Component - No execution statuses found (yet) for execId: ${execId}`,
+        );
         setTimeout(() => {
           this.waitForResult(execId, timeoutCount + 1);
         }, 5000);
       } else {
         const lastExecStatus = execStatuses[0];
-        this.childLogger.info(`Latest execution status ${lastExecStatus.status}`);
+        this.childLogger.info(
+          `Playbook Action Component - Latest execution status ${lastExecStatus.status}`,
+        );
         if (PlaybookActionComponent.isFinalStatus(lastExecStatus.status as string)) {
           if (lastExecStatus.status === SsmAnsible.AnsibleTaskStatus.SUCCESS) {
             await this.onSuccess();
@@ -99,7 +107,10 @@ class PlaybookActionComponent extends AbstractActionComponent {
     try {
       await this.onError();
     } catch (innerError) {
-      this.childLogger.error('Error during onError handling:', innerError);
+      this.childLogger.error(
+        'Playbook Action Component - Error during onError handling:',
+        innerError,
+      );
     }
   }
 }

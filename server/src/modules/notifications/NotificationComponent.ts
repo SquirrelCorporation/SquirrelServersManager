@@ -7,7 +7,7 @@ import pinoLogger from '../../logger';
 class NotificationComponent extends EventManager {
   private childLogger = pinoLogger.child(
     { module: `Notification` },
-    { msgPrefix: '[NOTIFICATION-COMPONENT] - ' },
+    { msgPrefix: '[NOTIFICATION] - ' },
   );
 
   private eventsToListen = [
@@ -21,7 +21,7 @@ class NotificationComponent extends EventManager {
   }
 
   async init() {
-    this.childLogger.info('init');
+    this.childLogger.info('Initialization....');
     this.subscribeToEvents();
   }
 
@@ -34,7 +34,7 @@ class NotificationComponent extends EventManager {
   private async handleNotificationEvent(event: string, payload: Payload) {
     try {
       const { message, severity, module, moduleId } = payload;
-      this.childLogger.info('Notification received');
+      this.childLogger.info(`handleNotificationEvent - Notification received - (event: ${event})`);
 
       await InAppNotificationRepo.create({
         event,

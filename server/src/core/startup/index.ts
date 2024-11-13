@@ -21,9 +21,9 @@ import { setAnsibleVersions } from '../system/ansible-versions';
 
 class Startup {
   private logger = PinoLogger.child({ module: 'Startup' }, { msgPrefix: '[STARTUP] - ' });
-  private static readonly MODULE_STARTUP = '[STARTUP]';
 
   async init() {
+    this.logger.info(`Initializing...`);
     const schemeVersion = await this.initializeSchemeVersion();
     await this.initializeModules();
     if (this.isSchemeVersionDifferent(schemeVersion)) {
@@ -33,8 +33,7 @@ class Startup {
 
   private async initializeSchemeVersion(): Promise<string | null> {
     const schemeVersion = await getFromCache(SettingsKeys.GeneralSettingsKeys.SCHEME_VERSION);
-    this.logger.info(`initialization`);
-    this.logger.info(`${Startup.MODULE_STARTUP} - Scheme Version: ${schemeVersion}`);
+    this.logger.info(`initializeSchemeVersion - Saved scheme version: ${schemeVersion}`);
     return schemeVersion;
   }
 
@@ -50,7 +49,7 @@ class Startup {
   }
 
   private async updateScheme() {
-    this.logger.warn(`Scheme version differed, starting writing updates`);
+    this.logger.warn(`updateScheme- Scheme version differed, starting applying updates...`);
     await PlaybookModel.syncIndexes();
     await DeviceModel.syncIndexes();
     await createADefaultLocalUserRepository();

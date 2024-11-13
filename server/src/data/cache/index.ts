@@ -6,18 +6,19 @@ let redisClient: RedisClientType;
 let isReady: boolean = false;
 
 export const dbURI = `redis://${redisConf.host}:${redisConf.port}`;
-const childLogger = logger.child({ module: 'redis' }, { msgPrefix: '[REDIS] - ' });
+const childLogger = logger.child({ module: 'Cache' }, { msgPrefix: '[CACHE] - ' });
 
 async function createRedisClient(): Promise<any> {
+  logger.info(`createRedisClient - Connecting to ${dbURI}`);
   const redisClient = createClient({
     url: dbURI,
   });
   redisClient
-    .on('error', (err) => childLogger.error('Redis Client Error', err))
-    .on('connect', () => childLogger.info('Successfully connected to Redis'))
+    .on('error', (err) => childLogger.error(`createRedisClient- Client error: ${err.message}`))
+    .on('connect', () => childLogger.info('createRedisClient - Successfully connected to cache'))
     .on('ready', () => {
       isReady = true;
-      childLogger.info(' Redis ready');
+      childLogger.info('createRedisClient - Cache ready');
     });
 
   await redisClient.connect();

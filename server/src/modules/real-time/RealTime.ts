@@ -59,7 +59,7 @@ class RealTimeEngine extends EventManager {
 
   public init() {
     try {
-      this.childLogger.info('init...');
+      this.childLogger.info('Init...');
 
       eventsToHandle.forEach(({ event, ssmEvent, logMessage, debounceTime }) => {
         this.childLogger.debug(

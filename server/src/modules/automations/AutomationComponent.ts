@@ -25,7 +25,7 @@ class AutomationComponent {
         moduleId: `${this.uuid}`,
         moduleName: `${name}`,
       },
-      { msgPrefix: '[AUTOMATION-COMPONENT] - ' },
+      { msgPrefix: '[AUTOMATION] - ' },
     );
     this.automationChain = automationChain;
     this.actions = [];
@@ -70,14 +70,14 @@ class AutomationComponent {
   }
 
   async onTrigger() {
-    this.childLogger.info('Triggered');
+    this.childLogger.info(`Automation "${this.name}" triggered...`);
     await this.synchronousExecution();
   }
 
   async synchronousExecution() {
     if (this.actions) {
       for (const action of this.actions) {
-        this.childLogger.info(`Execution a ${action.type} action`);
+        this.childLogger.info(`Executing a ${action.type} action...`);
         await action.executeAction();
       }
     } else {

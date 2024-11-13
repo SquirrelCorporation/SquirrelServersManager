@@ -22,10 +22,12 @@ class DockerVolumeActionComponent extends AbstractActionComponent {
   }
 
   async executeAction() {
-    this.childLogger.info('Docker Volume Action Component execute - started');
+    this.childLogger.info(
+      `Docker Volume Action - executeAction (${this.dockerVolumeAction}) - started...`,
+    );
     let success = true;
     for (const volumeUuid of this.volumeUuids) {
-      this.childLogger.info(`Docker Volume Action Component execute - ${volumeUuid}`);
+      this.childLogger.info(`Docker Volume Action - executeAction - for volume: ${volumeUuid}`);
       const volume = await ContainerVolumeRepo.findByUuid(volumeUuid);
       if (!volume) {
         this.childLogger.error(`Volume not found for ${volumeUuid}`);
@@ -45,7 +47,9 @@ class DockerVolumeActionComponent extends AbstractActionComponent {
         }
       }
     }
-    this.childLogger.info('Docker Volume Action Component execute - ended');
+    this.childLogger.info(
+      `Docker Volume Action - executeAction - ${this.dockerVolumeAction} ended with ${success ? 'success' : 'failure'}`,
+    );
     if (success) {
       await this.onSuccess();
     } else {

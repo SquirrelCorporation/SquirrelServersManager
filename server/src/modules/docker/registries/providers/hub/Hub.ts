@@ -52,7 +52,7 @@ export default class Hub extends Custom {
    * @param image the image
    * @returns {boolean}
    */
-  // eslint-disable-next-line class-methods-use-this
+
   match(image: SSMServicesTypes.Image) {
     return !image.registry.url || /^.*\.?docker.io$/.test(image.registry.url);
   }
@@ -62,7 +62,7 @@ export default class Hub extends Custom {
    * @param image
    * @returns {*}
    */
-  // eslint-disable-next-line class-methods-use-this
+
   normalizeImage(image: SSMServicesTypes.Image) {
     const imageNormalized = super.normalizeImage(image);
     imageNormalized.registry.name = 'hub';
@@ -80,7 +80,7 @@ export default class Hub extends Custom {
    * @param requestOptions
    * @returns {Promise<*>}
    */
-  // eslint-disable-next-line class-methods-use-this
+
   async authenticate(
     image: SSMServicesTypes.Image,
     requestOptions: SSMServicesTypes.RequestOptionsType,
@@ -109,7 +109,7 @@ export default class Hub extends Custom {
       if (requestOptionsWithAuth.headers) {
         requestOptionsWithAuth.headers.Authorization = `Bearer ${response.data.token}`;
       }
-      this.childLogger.info(`Authentication done - ${response.status}`);
+      this.childLogger.debug(`Authentication done - ${response.status}`);
       return requestOptionsWithAuth;
     } catch (e: any) {
       this.childLogger.error('Authentication failed');
@@ -117,7 +117,6 @@ export default class Hub extends Custom {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
   getImageFullName(image: SSMServicesTypes.Image, tagOrDigest: string) {
     let fullName = super.getImageFullName(image, tagOrDigest);
     fullName = fullName.replace(/registry-1.docker.io\//, '');

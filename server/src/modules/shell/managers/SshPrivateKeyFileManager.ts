@@ -8,7 +8,13 @@ import FileSystemManager from './FileSystemManager';
 
 class SshPrivateKeyFileManager extends AbstractShellCommander {
   constructor() {
-    super(logger.child({ module: 'SshPrivateKeyFileManager' }), 'SshPrivateKey');
+    super(
+      logger.child(
+        { module: 'SshPrivateKeyFileManager' },
+        { msgPrefix: '[SSH_PRIVATE_KEY_FILE_MANAGER - ' },
+      ),
+      'SshPrivateKey',
+    );
   }
 
   getTmpKeyFileName(execUuid: string, deviceUuid: string) {

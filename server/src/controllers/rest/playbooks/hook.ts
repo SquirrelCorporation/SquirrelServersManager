@@ -22,12 +22,10 @@ export const addTaskStatus = async (req, res) => {
     });
     if (isFinalStatus(status)) {
       if (ansibleTask.target && ansibleTask.target.length > 0) {
-        logger.warn('Removing temporary private key');
         ansibleTask.target?.map((e) =>
           sshPrivateKeyFileManager.removeAnsibleTemporaryPrivateKey(e, ident),
         );
       } else {
-        logger.warn('Removing temporary private keys');
         sshPrivateKeyFileManager.removeAllAnsibleExecTemporaryPrivateKeys(ident);
       }
     }

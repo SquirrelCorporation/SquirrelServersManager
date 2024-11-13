@@ -34,17 +34,17 @@ export const httpLoggerOptions = {
   },
   // Define a custom success message
   customSuccessMessage: function (req, res) {
-    return `${req.method} completed ${(req as typeof req & { originalUrl: string }).originalUrl}`;
+    return `Request completed: ${req.method} - ${(req as typeof req & { originalUrl: string }).originalUrl}`;
   },
 
   // Define a custom receive message
   customReceivedMessage: function (req, res) {
-    return `request received: ${req.method} - ${req.url}`;
+    return `Request received: ${req.method} - ${req.url}`;
   },
 
   // Define a custom error message
   customErrorMessage: function (req, res, err) {
-    return 'request errored with status code: ' + res.statusCode;
+    return `Request errored with status code: ${res.statusCode}`;
   },
 };
 

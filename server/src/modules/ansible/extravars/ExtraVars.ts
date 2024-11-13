@@ -26,7 +26,7 @@ class ExtraVars {
       if (!value && !emptySubstitute) {
         this.logger.error(`findValueOfExtraVars - ExtraVar not found : ${e.extraVar}`);
         if (e.required) {
-          throw new Error('ExtraVar value not found !');
+          throw new Error(`ExtraVar value not found ! (${e.extraVar})`);
         }
       } else {
         substitutedExtraVars.push({ ...e, value: value || undefined });
@@ -62,22 +62,22 @@ class ExtraVars {
 
   private getForcedValue(extraVar: API.ExtraVar, forcedValues?: API.ExtraVars) {
     const forcedValue = forcedValues?.find((e) => e.extraVar === extraVar.extraVar)?.value;
-    this.logger.debug(`forcedValue found ${forcedValue}`);
+    this.logger.debug(`forcedValue found: ${forcedValue}`);
     return forcedValue;
   }
 
   private async getContextExtraVarValue(extraVar: API.ExtraVar, targets?: string[]) {
-    this.logger.debug(`getContextExtraVarValue '${extraVar.extraVar}'`);
+    this.logger.debug(`getContextExtraVarValue - '${extraVar.extraVar}'`);
     if (!targets) {
       return;
     }
     if (targets.length > 1) {
-      throw new Error('Cannot use CONTEXT variable with multiple targets');
+      throw new Error(`Cannot use CONTEXT variable with multiple targets - '${extraVar.extraVar}'`);
     }
     const device = await DeviceRepo.findOneByUuid(targets[0]);
     const user = await UserRepo.findFirst();
     if (!device) {
-      throw new Error('Targeted device not found');
+      throw new Error(`Targeted device not found - (device: ${targets?.[0]})`);
     }
     switch (extraVar.extraVar) {
       case SsmAnsible.DefaultContextExtraVarsList.DEVICE_ID:
