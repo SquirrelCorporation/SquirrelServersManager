@@ -235,11 +235,12 @@ async function checkDockerConnection(
     );
     const agent = getCustomAgent(logger, {
       ...options.sshOptions,
+      timeout: 60000,
     });
     options.modem = new DockerModem({
       agent: agent,
     });
-    const dockerApi = new Dockerode(options);
+    const dockerApi = new Dockerode({ ...options, timeout: 60000 });
     await dockerApi.ping();
     await dockerApi.info();
     return {
