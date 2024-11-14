@@ -60,7 +60,10 @@ class Startup {
     await PlaybooksRepositoryEngine.syncAllRegistered();
     this.registerPersistedProviders();
     copyAnsibleCfgFileIfDoesntExist();
-    await setToCache('_ssm_masterNodeUrl', (await getFromCache('ansible-master-node-url')) || '');
+    const masterNodeUrl = await getFromCache('_ssm_masterNodeUrl');
+    if (!masterNodeUrl) {
+      await setToCache('_ssm_masterNodeUrl', (await getFromCache('ansible-master-node-url')) || '');
+    }
     await ContainerCustomStackModel.updateMany(
       { type: { $exists: false } },
       { $set: { type: Repositories.RepositoryType.LOCAL } },
