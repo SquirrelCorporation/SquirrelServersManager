@@ -19,7 +19,6 @@ const Volumes: React.FC = () => {
     {
       title: 'Name',
       dataIndex: 'name',
-      ellipsis: true,
     },
     {
       dataIndex: 'deviceUuid',
@@ -44,30 +43,52 @@ const Volumes: React.FC = () => {
       title: 'Device',
       dataIndex: ['device', 'ip'],
       search: false,
+      width: '10%',
       render: (text, record) => (
         <Tooltip title={record.device?.fqdn}>
-          <Tag>{record.device?.ip}</Tag>
+          <Tag
+            style={{
+              maxWidth: '100%',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {record.device?.ip}
+          </Tag>
         </Tooltip>
       ),
     },
     {
       title: 'Scope',
       dataIndex: 'scope',
+      width: '8%',
     },
     {
       title: 'Driver',
       dataIndex: 'driver',
+      width: '8%',
     },
     {
       title: 'Mount Point',
       dataIndex: 'mountPoint',
-      ellipsis: true,
       search: false,
+      width: '20%',
+      responsive: ['sm'],
+      ellipsis: true,
+    },
+    {
+      title: 'Mount Point',
+      dataIndex: 'mountPoint',
+      search: false,
+      width: '20%',
+      responsive: ['xs'],
     },
     {
       title: 'Action',
       key: 'option',
       valueType: 'option',
+      width: '15%',
       render: (dom, record) =>
         record.device?.ip
           ? [
@@ -95,7 +116,7 @@ const Volumes: React.FC = () => {
     <ProTable<API.ContainerVolume>
       columns={columns}
       request={getVolumes}
-      rowKey="name"
+      rowKey="uuid"
       search={{
         filterType: 'light',
       }}

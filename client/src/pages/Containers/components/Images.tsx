@@ -17,30 +17,58 @@ const Images: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const columns: ProColumns<API.ContainerImage>[] = [
     {
-      title: 'Id',
-      dataIndex: 'id',
-      ellipsis: true,
+      title: 'Tags',
+      width: '30%',
+      search: false,
+      render: (text, record) => (
+        <>
+          {record.repoTags?.map((e) => (
+            <Tag
+              key={e}
+              style={{
+                maxWidth: '100%',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {e}
+            </Tag>
+          ))}
+        </>
+      ),
     },
     {
       title: 'Device',
       dataIndex: ['device', 'ip'],
       search: false,
+      width: '10%',
       render: (text, record) => (
         <Tooltip title={record.device?.fqdn}>
-          <Tag>{record.device?.ip}</Tag>
+          <Tag
+            style={{
+              maxWidth: '100%',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {record.device?.ip}
+          </Tag>
         </Tooltip>
       ),
     },
     {
-      title: 'Tags',
-      width: '30%',
-      search: false,
-      render: (text, record) => <Tag>{record.repoTags?.map((e) => e)}</Tag>,
+      title: 'Id',
+      dataIndex: 'id',
+      width: '10%',
+      ellipsis: true,
+      responsive: ['sm'],
     },
     {
       title: 'Parent Id',
       dataIndex: 'parentId',
-      ellipsis: true,
+      responsive: ['sm'],
     },
     {
       dataIndex: 'deviceUuid',
@@ -69,6 +97,7 @@ const Images: React.FC = () => {
       title: 'Created',
       dataIndex: 'created',
       search: false,
+      responsive: ['sm'],
       render: (text, record) =>
         moment.unix(record.created).format('MM/DD/YYYY HH:mm'),
     },

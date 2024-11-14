@@ -7,17 +7,23 @@ const SWITCH_ALIGNMENT_STYLE = { marginLeft: 'auto' };
 const AdvancedSwitch: React.FC<{
   showAdvanced: boolean;
   toggleShowAdvanced: () => void;
-}> = ({ showAdvanced, toggleShowAdvanced }) => (
-  <Flex style={MARGIN_BOTTOM_STYLE}>
-    <Space direction="horizontal" size="middle" style={SWITCH_ALIGNMENT_STYLE}>
-      Show advanced
-      <Switch
-        size="small"
-        checked={showAdvanced}
-        onChange={toggleShowAdvanced}
-      />
-    </Space>
-  </Flex>
-);
+}> = ({ showAdvanced, toggleShowAdvanced }) => {
+  return (
+    <Flex style={MARGIN_BOTTOM_STYLE}>
+      <Space
+        direction="horizontal"
+        size="middle"
+        style={SWITCH_ALIGNMENT_STYLE}
+      >
+        Show advanced
+        <Switch
+          size="small"
+          checked={showAdvanced}
+          onChange={toggleShowAdvanced}
+        />
+      </Space>
+    </Flex>
+  );
+};
 
 export default AdvancedSwitch;

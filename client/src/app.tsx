@@ -21,7 +21,6 @@ import { version } from '../package.json';
 import Logo from '../public/logo.svg';
 import { errorConfig } from './requestErrorConfig';
 
-const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 const onboardingPath = '/user/onboarding';
 
