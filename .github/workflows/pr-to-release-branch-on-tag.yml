@@ -3,6 +3,7 @@ name: Create PR to Release Branch
 on:
   push:
     tags: [ 'v*.*.*' ]
+  workflow_dispatch:
 
 jobs:
   create-pr:
