@@ -1,7 +1,9 @@
 import { Repositories, SettingsKeys } from 'ssm-shared-lib';
+import { v4 as uuidv4 } from 'uuid';
 import { getFromCache, setToCache } from '../../data/cache';
 import initRedisValues from '../../data/cache/defaults';
 import { ContainerCustomStackModel } from '../../data/database/model/ContainerCustomStack';
+import { ContainerVolumeModel } from '../../data/database/model/ContainerVolume';
 import { DeviceModel } from '../../data/database/model/Device';
 import { PlaybookModel } from '../../data/database/model/Playbook';
 import { copyAnsibleCfgFileIfDoesntExist } from '../../helpers/ansible/AnsibleConfigurationHelper';
@@ -63,6 +65,11 @@ class Startup {
       { type: { $exists: false } },
       { $set: { type: Repositories.RepositoryType.LOCAL } },
     );
+    const containerVolumes = await ContainerVolumeModel.find({ uuid: { $exists: false } });
+    for (const volume of containerVolumes) {
+      volume.uuid = uuidv4();
+      await volume.save();
+    }
   }
 
   private isSchemeVersionDifferent(schemeVersion: string | null): boolean {
