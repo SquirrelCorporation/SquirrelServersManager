@@ -17,7 +17,7 @@ const Networks: React.FC = () => {
     {
       title: 'Name',
       dataIndex: 'name',
-      ellipsis: false,
+      width: '20%',
     },
     {
       dataIndex: 'deviceUuid',
@@ -42,9 +42,19 @@ const Networks: React.FC = () => {
       title: 'Device',
       dataIndex: ['device', 'ip'],
       search: false,
+      width: '10%',
       render: (text, record) => (
         <Tooltip title={record.device?.fqdn}>
-          <Tag>{record.device?.ip}</Tag>
+          <Tag
+            style={{
+              maxWidth: '100%',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {record.device?.ip}
+          </Tag>
         </Tooltip>
       ),
     },
@@ -58,10 +68,14 @@ const Networks: React.FC = () => {
       render: (text, record) => (
         <>
           {record.driver === 'host' && (
-            <Avatar shape={'square'} src={<GrommetIconsHost />} />
+            <Avatar
+              shape={'square'}
+              src={<GrommetIconsHost />}
+              size={{ xs: 1 }}
+            />
           )}
           {record.driver === 'bridge' && (
-            <Avatar shape={'square'} src={<Bridge />} />
+            <Avatar shape={'square'} src={<Bridge />} size={{ xs: 1 }} />
           )}{' '}
           {record.driver === 'null' ? '-' : record.driver}
         </>

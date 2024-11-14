@@ -114,7 +114,11 @@ const ListContent: React.FC<API.DeviceItem> = React.memo((props) => {
         </div>
       );
     }
-    return <div style={{ width: 300, height: 70, zIndex: 1000 }} />;
+    return (
+      <div className={styles.listItemCarousel}>
+        <div style={{ width: 300, height: 70, zIndex: 1000 }} />
+      </div>
+    );
   }, [props.status, props.uuid]);
 
   return (
@@ -125,7 +129,7 @@ const ListContent: React.FC<API.DeviceItem> = React.memo((props) => {
         </span>
         <p>{props.hostname}</p>
       </div>
-      {props.status !== DeviceStatus.UNMANAGED && (
+      {(props.status !== DeviceStatus.UNMANAGED && (
         <div className={styles.listContentItem} style={{ width: '80px' }}>
           <p style={{ minWidth: '80px' }}>
             <WhhCpu /> {cpuSpeed} GHz
@@ -134,6 +138,8 @@ const ListContent: React.FC<API.DeviceItem> = React.memo((props) => {
             <WhhRam /> {memSize} Gb
           </p>
         </div>
+      )) || (
+        <div className={styles.listContentItem} style={{ width: '80px' }} />
       )}
       <div className={styles.listContentItem}>{carouselContent}</div>
     </div>

@@ -6,7 +6,7 @@ import {
 } from '@ant-design/icons';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { history, useModel } from '@umijs/max';
-import { Spin, Typography } from 'antd';
+import { Grid, Spin, Typography } from 'antd';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback, useMemo } from 'react';
 import { flushSync } from 'react-dom';
@@ -17,11 +17,19 @@ export type GlobalHeaderRightProps = {
   children?: React.ReactNode;
 };
 
+const { useBreakpoint } = Grid;
+
 export const AvatarName: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
 
   const userName = useMemo(() => currentUser?.name, [currentUser?.name]);
+  const screens = useBreakpoint();
+
+  // Check if the screen is mobile
+  if (screens.xs) {
+    return null; // Don't render anything if the screen size is extra small (mobile)
+  }
 
   return (
     <Typography.Title

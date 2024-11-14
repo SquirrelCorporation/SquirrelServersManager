@@ -135,7 +135,7 @@ const ContainerDetailsModal: React.FC<ContainerDetailsModalProps> = ({
             render: () => (
               <Divider dashed style={{ marginTop: 5, marginBottom: 5 }}>
                 <ContainerAvatar row={selectedRecord} key={selectedRecord.id} />
-                <Typography.Title> {selectedRecord.name}</Typography.Title>
+                <Typography.Title>{selectedRecord.name}</Typography.Title>
               </Divider>
             ),
           },

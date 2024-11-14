@@ -2,7 +2,17 @@ import AgentInstallMethod from '@/components/DeviceConfiguration/AgentInstallMet
 import { DownloadOutlined } from '@ant-design/icons';
 import { useModel } from '@umijs/max';
 import React, { useRef, useState } from 'react';
-import { Button, Col, Modal, Row, message, Alert, Typography, Tag } from 'antd';
+import {
+  Button,
+  Col,
+  Modal,
+  Row,
+  message,
+  Alert,
+  Typography,
+  Tag,
+  Grid,
+} from 'antd';
 import {
   ProFormDependency,
   ProFormInstance,
@@ -34,6 +44,7 @@ export type NewDeviceModalProps = {
     installMethod: SsmAgent.InstallMethods,
   ) => void;
 };
+const { useBreakpoint } = Grid;
 
 const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
   const formRef = useRef<ProFormInstance>();
@@ -47,6 +58,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
     useState({});
   const { initialState } = useModel('@@initialState');
   const currentUser = initialState?.currentUser;
+  const screens = useBreakpoint();
 
   const checkHostAPI = async (url: string) => {
     try {
@@ -159,14 +171,16 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
       }
       open={props.isModalOpen}
       onCancel={handleCancel}
-      width={900}
+      width={1000}
       footer={(_, { CancelBtn }) => <CancelBtn />}
     >
       <Row style={{ alignItems: 'center' }} justify="center">
-        <Col span={8}>
-          <AnimationPlayer />
-        </Col>
-        <Col span={16}>
+        {!screens.xs && (
+          <Col span={8}>
+            <AnimationPlayer />
+          </Col>
+        )}
+        <Col span={!screens.xs ? 16 : 24}>
           <StepsForm
             formRef={formRef}
             onFinish={handleFinish}
@@ -221,14 +235,20 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
             <StepsForm.StepForm
               name="base"
               title="SSH"
-              style={{ alignItems: 'start' }}
+              style={{
+                alignItems: 'start',
+                maxWidth: screens.xs ? '80%' : '100%',
+              }}
             >
               <SSHConnectionFormElements formRef={formRef} />
             </StepsForm.StepForm>
             <StepsForm.StepForm
               name="checkbox"
               title="Node"
-              style={{ minHeight: '350px' }}
+              style={{
+                minHeight: '350px',
+                maxWidth: screens.xs ? '80%' : '100%',
+              }}
               onFinish={async (formData) => {
                 setLoading(true);
                 await checkHostAPI(formData.controlNodeURL);
@@ -262,7 +282,10 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
             <StepsForm.StepForm
               name="test"
               title="Test"
-              style={{ alignItems: 'start' }}
+              style={{
+                alignItems: 'start',
+                maxWidth: screens.xs ? '80%' : '100%',
+              }}
             >
               <StepFormCard
                 title="Test connections"
@@ -279,7 +302,10 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
             <StepsForm.StepForm
               name="installMethod"
               title="Install Method"
-              style={{ alignItems: 'start' }}
+              style={{
+                alignItems: 'start',
+                maxWidth: screens.xs ? '80%' : '100%',
+              }}
             >
               <StepFormCard
                 title="Install Method"
@@ -293,7 +319,9 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                     case SsmAgent.InstallMethods.NODE_ENHANCED_PLAYBOOK:
                       return (
                         <Alert
-                          style={{ marginBottom: 10 }}
+                          style={{
+                            marginBottom: 10,
+                          }}
                           type={'info'}
                           showIcon
                           message={
@@ -311,7 +339,9 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                     case SsmAgent.InstallMethods.DOCKER:
                       return (
                         <Alert
-                          style={{ marginBottom: 10 }}
+                          style={{
+                            marginBottom: 10,
+                          }}
                           type={'info'}
                           showIcon
                           message={
@@ -328,7 +358,11 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                 }}
               </ProFormDependency>
             </StepsForm.StepForm>
-            <StepsForm.StepForm name="confirm" title="Confirm">
+            <StepsForm.StepForm
+              name="confirm"
+              title="Confirm"
+              style={{ maxWidth: screens.xs ? '80%' : '100%' }}
+            >
               <SummaryCard
                 sshConnection={sshConnection}
                 controlNodeConnectionString={controlNodeConnectionString}

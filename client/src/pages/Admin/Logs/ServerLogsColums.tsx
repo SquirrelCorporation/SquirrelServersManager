@@ -41,6 +41,7 @@ const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
     filters: true,
     onFilter: true,
     width: '5%',
+    responsive: ['sm'],
   },
   {
     title: 'Module',
@@ -57,6 +58,15 @@ const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
     ellipsis: true,
     filters: true,
     onFilter: true,
+    responsive: ['sm'],
+  },
+  {
+    title: 'Message',
+    dataIndex: 'msg',
+    key: 'msg',
+    filters: true,
+    onFilter: true,
+    responsive: ['xs'],
   },
   {
     title: 'Module ID',
