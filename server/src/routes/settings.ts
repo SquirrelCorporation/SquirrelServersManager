@@ -16,6 +16,8 @@ import { postDevicesSettings } from '../controllers/rest/settings/devices';
 import { postDevicesSettingsValidator } from '../controllers/rest/settings/devices.validator';
 import { postDeviceStatsSettings } from '../controllers/rest/settings/devicestats';
 import { postDeviceStatsSettingsValidator } from '../controllers/rest/settings/devicestats.validator';
+import { postMasterNodeUrlValue } from '../controllers/rest/settings/keys';
+import { postMasterNodeUrlValueValidator } from '../controllers/rest/settings/keys.validator';
 import { postLogsSettings } from '../controllers/rest/settings/logs';
 import { postLogsSettingsValidator } from '../controllers/rest/settings/logs.validator';
 
@@ -27,6 +29,7 @@ router.post(`/dashboard/:key`, postDashboardSettingsValidator, postDashboardSett
 router.post(`/devices/:key`, postDevicesSettingsValidator, postDevicesSettings);
 router.post(`/logs/:key`, postLogsSettingsValidator, postLogsSettings);
 router.post(`/device-stats/:key`, postDeviceStatsSettingsValidator, postDeviceStatsSettings);
+router.post(`/keys/master-node-url`, postMasterNodeUrlValueValidator, postMasterNodeUrlValue);
 router.post(
   `/container-stats/:key`,
   postContainerStatsSettingsValidator,
