@@ -57,6 +57,7 @@ generate_random_string() {
 }
 
 # Generate the .env file with necessary environment variables
+if [ ! -f .env ]; then
 cat <<EOF > .env
 # SECRETS
 SECRET=$(generate_random_string 32)
@@ -69,9 +70,14 @@ DB_PORT=27017
 # REDIS
 REDIS_HOST=redis
 REDIS_PORT=6379
+#SSM CONFIG
+#SSM_INSTALL_PATH=/opt/squirrelserversmanager
+#SSM_DATA_PATH=/data
 EOF
-
 echo "✅ .env file has been generated with random secrets."
+else
+echo "✅ .env file already exists. Skipping generation."
+fi
 
 # Check if port 8000 is open
 PORT=8000
@@ -89,8 +95,10 @@ fi
 
 # Run docker-compose up -d
 if command -v docker compose > /dev/null 2>&1; then
+    docker compose pull
     docker compose up -d
 elif command -v docker-compose > /dev/null 2>&1; then
+    docker-compose pull
     docker-compose up -d
 else
     echo "❌ Error: Docker Compose command not found."
