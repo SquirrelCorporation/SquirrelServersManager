@@ -107,5 +107,6 @@ else
 fi
 
 echo " ✅ Docker containers have been started in detached mode."
+echo ""
+echo " ℹ️ Consult: https://squirrelserversmanager.io/docs/"
 echo " 🐿️ Squirrel Servers Manager is on http://localhost:8000"
-echo "Consult: https://squirrelserversmanager.io/docs/"
