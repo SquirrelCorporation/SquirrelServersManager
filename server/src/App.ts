@@ -31,7 +31,7 @@ class AppWrapper extends EventManager {
         ...httpLoggerOptions,
       }),
     );
-    this.app.use(express.json());
+    this.app.use(express.json({ limit: '50mb' }));
     if (!SECRET) {
       throw new Error('No secret defined');
     }
