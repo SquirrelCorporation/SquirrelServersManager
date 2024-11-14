@@ -1,5 +1,5 @@
-import { uuidv4 } from 'mongodb-memory-server-core/lib/util/utils';
 import { Schema, model } from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
 import Device from './Device';
 
 export const DOCUMENT_NAME = 'ContainerVolume';

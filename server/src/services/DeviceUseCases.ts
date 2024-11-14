@@ -1,7 +1,7 @@
 import DockerModem from 'docker-modem';
 import Dockerode from 'dockerode';
-import { uuidv4 } from 'mongodb-memory-server-core/lib/util/utils';
 import { API, SsmAnsible, SsmStatus } from 'ssm-shared-lib';
+import { v4 as uuidv4 } from 'uuid';
 import { setToCache } from '../data/cache';
 import Device, { DeviceModel } from '../data/database/model/Device';
 import DeviceAuth from '../data/database/model/DeviceAuth';
