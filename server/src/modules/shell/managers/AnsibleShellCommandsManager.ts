@@ -49,7 +49,7 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
           `Exec failed, no matching target - (Device Authentication not found for device ${target})`,
         );
       }
-      inventoryTargets = await Inventory.inventoryBuilderForTarget(devicesAuth, execUuid);
+      inventoryTargets = await Inventory.inventoryBuilderForTarget(devicesAuth, execUuid as string);
     }
     return await this.executePlaybookOnInventory(
       playbookPath,
@@ -81,7 +81,7 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
       const result = await new Promise<string | null>((resolve) => {
         const cmd = ansibleCmd.buildAnsibleCmd(
           playbookPath,
-          execUuid,
+          execUuid as string,
           inventoryTargets,
           user,
           extraVars,
@@ -102,7 +102,7 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
       if (result) {
         this.logger.info(`executePlaybook - ExecId is ${execUuid}`);
         await AnsibleTaskRepo.create({
-          ident: execUuid,
+          ident: execUuid as string,
           status: 'created',
           cmd: `playbook ${playbookPath}`,
           target: target,
@@ -114,9 +114,11 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
       }
     } catch (error: any) {
       if (target) {
-        target?.map((e) => SshPrivateKeyFileManager.removeAnsibleTemporaryPrivateKey(e, execUuid));
+        target?.map((e) =>
+          SshPrivateKeyFileManager.removeAnsibleTemporaryPrivateKey(e, execUuid as string),
+        );
       } else {
-        SshPrivateKeyFileManager.removeAllAnsibleExecTemporaryPrivateKeys(execUuid);
+        SshPrivateKeyFileManager.removeAllAnsibleExecTemporaryPrivateKeys(execUuid as string);
       }
       throw error;
     }
