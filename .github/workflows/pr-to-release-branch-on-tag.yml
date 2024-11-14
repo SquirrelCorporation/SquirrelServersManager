@@ -29,3 +29,4 @@ jobs:
           title: '[CHORE] Create PR from master to release'
           body: 'The workflow is triggered by publishing a new tag. This PR merges changes from master to release.'
           branch: 'pr-branch'
+          base: 'master'

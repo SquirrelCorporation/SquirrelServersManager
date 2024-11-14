@@ -44,6 +44,12 @@ services:
   server:
     image: "ghcr.io/squirrelcorporation/squirrelserversmanager-server:latest"
     restart: unless-stopped
+    healthcheck:
+      test: curl --fail http://localhost:3000/ping || exit 1
+      interval: 40s
+      timeout: 30s
+      retries: 3
+      start_period: 60s
     external_links:
       - mongo
       - redis
@@ -54,8 +60,7 @@ services:
     environment:
       NODE_ENV: production
     volumes:
-      - ./.data.prod/playbooks:/playbooks
-      - ./.data.prod/config:/ansible-config
+      - ./.data.prod:/data
     labels:
       wud.display.name: "SSM - Server"
       wud.watch.digest: false
