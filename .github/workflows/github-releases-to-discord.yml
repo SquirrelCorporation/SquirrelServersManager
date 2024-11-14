@@ -1,3 +1,5 @@
+name: Post on Discord on new release
+
 on:
   release:
     types: [published]
