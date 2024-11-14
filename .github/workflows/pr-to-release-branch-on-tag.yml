@@ -1,4 +1,4 @@
-name: Create PR to Release Branch
+name: '[RELEASE] Create PR to Release Branch'
 
 on:
   push:

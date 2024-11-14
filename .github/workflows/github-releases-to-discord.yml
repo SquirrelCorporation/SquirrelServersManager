@@ -1,4 +1,4 @@
-name: Post on Discord on new release
+name: '[RELEASE] Post on Discord on new release'
 
 on:
   release:

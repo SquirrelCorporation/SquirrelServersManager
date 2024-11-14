@@ -1,4 +1,4 @@
-name: Create Release Package
+name: '[RELEASE] Create Release Package'
 
 on:
   push:
