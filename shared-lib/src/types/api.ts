@@ -154,6 +154,15 @@ export type NewDevice = {
   success: boolean;
 };
 
+export type CheckAnsibleConnection = {
+  taskId: string;
+}
+
+export type CheckDockerConnection = {
+  connectionStatus: string;
+  errorMessage?: string;
+}
+
 export type VersionData = {
   kernel?: string;
   openssl?: string;
