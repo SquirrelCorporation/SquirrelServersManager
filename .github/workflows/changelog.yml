@@ -1,8 +1,6 @@
 name: '[CI] Changelog'
 
 on:
-  pull_request:
-    types: [closed]
   workflow_dispatch:
   release:
     types: [published]
