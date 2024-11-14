@@ -13,7 +13,7 @@
     "test:python:run": "cd ./src/ansible && python3 -m unittest discover -s . -p \"*.py\"",
     "coverage": "vitest run --coverage"
   },
-  "version": "0.1.21",
+  "version": "0.1.22",
   "author": "Squirrel Team",
   "dependencies": {
     "@aws-sdk/client-ecr": "^3.687.0",
