@@ -1,4 +1,4 @@
-import { FluentMdl2Health, UpdateLine } from '@/components/Icons/CustomIcons';
+import { UpdateLine } from '@/components/Icons/CustomIcons';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { useModel } from '@umijs/max';
 import { Avatar, Badge, Popover, Spin, Typography } from 'antd';
@@ -46,12 +46,20 @@ export const UpdateAvailableWidget: React.FC = React.memo(() => {
   return (
     <Popover
       content={
-        <Typography.Link
-          href="https://squirrelserversmanager.io/docs/quickstart#to-update-ssm-simply-run"
-          target="_blank"
-        >
-          A new version is available: {currentUser.settings.updateAvailable}
-        </Typography.Link>
+        <>
+          <Typography.Link
+            href="https://squirrelserversmanager.io/docs/quickstart#to-update-ssm-simply-run"
+            target="_blank"
+          >
+            A new version is available: {currentUser.settings.updateAvailable}
+          </Typography.Link>
+          <Typography.Link
+            href="https://github.com/SquirrelCorporation/SquirrelServersManager/blob/master/CHANGELOG.md"
+            target="_blank"
+          >
+            (CHANGELOG)
+          </Typography.Link>
+        </>
       }
     >
       <Badge dot={true} offset={[0, 10]}>
