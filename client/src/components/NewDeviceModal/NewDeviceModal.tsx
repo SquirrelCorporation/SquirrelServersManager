@@ -246,7 +246,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                     label: 'Control Node URL',
                     placeholder: 'http://192.168.0.1',
                     rules: [{ required: true }],
-                    initialValue: currentUser?.settings.masterNodeUrl
+                    initialValue: currentUser?.settings?.masterNodeUrl
                       ? currentUser?.settings.masterNodeUrl
                       : `http://${document.location.hostname}:8000`,
                   },

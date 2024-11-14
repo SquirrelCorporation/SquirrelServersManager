@@ -39,16 +39,18 @@ curl https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManage
 See [QuickStart](https://squirrelserversmanager.io/docs/quickstart)
 
 
-For the others methods, **Edit the `.env` file before anything.**
+For the others methods, **[Edit the `.env` file before anything](https://squirrelserversmanager.io/docs/quickstart#env-file).**
 
 ---
 
-## 🛳️ Production
+## 🛳️ Manual Install: Production
+Clone the project, [edit the `.env`](https://squirrelserversmanager.io/docs/quickstart#env-file) file and run:
 ```shell
 docker compose up
 ```
 
-## 🏗️ Development
+## 🏗️ Manual Install: Development
+Clone the project, [edit the `.env`](https://squirrelserversmanager.io/docs/quickstart#env-file) file and run:
 ```shell
 docker compose -f docker-compose.dev.yml up
 ```
