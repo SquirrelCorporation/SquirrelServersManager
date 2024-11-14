@@ -1,3 +1,4 @@
+import { API } from 'ssm-shared-lib';
 import DeviceAuthRepo from '../../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../../data/database/repository/DeviceRepo';
 import { ForbiddenError, InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
@@ -36,7 +37,9 @@ export const postCheckAnsibleConnection = async (req, res) => {
       becomePass,
       sshKeyPass,
     );
-    new SuccessResponse('Post CheckAnsibleConnection', { taskId: taskId }).send(res);
+    new SuccessResponse('Post CheckAnsibleConnection', {
+      taskId: taskId,
+    } as API.CheckAnsibleConnection).send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }
@@ -63,7 +66,7 @@ export const postCheckDockerConnection = async (req, res) => {
     new SuccessResponse('Post CheckDockerConnection', {
       connectionStatus: result.status,
       errorMessage: result.message,
-    }).send(res);
+    } as API.CheckDockerConnection).send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }
@@ -84,7 +87,7 @@ export const getCheckDeviceDockerConnection = async (req, res) => {
     new SuccessResponse('Post CheckDeviceDockerConnection', {
       connectionStatus: result.status,
       errorMessage: result.message,
-    }).send(res);
+    } as API.CheckDockerConnection).send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }
@@ -105,7 +108,9 @@ export const getCheckDeviceAnsibleConnection = async (req, res) => {
   }
   try {
     const { taskId } = await DeviceUseCases.checkDeviceAnsibleConnection(req.user, device);
-    new SuccessResponse('Post CheckDeviceAnsibleConnection', { taskId: taskId }).send(res);
+    new SuccessResponse('Post CheckDeviceAnsibleConnection', {
+      taskId: taskId,
+    } as API.CheckAnsibleConnection).send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }

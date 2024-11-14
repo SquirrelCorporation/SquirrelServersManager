@@ -8,7 +8,7 @@ export default class DockerNetworks extends DockerListener {
   dockerApi: Dockerode | undefined = undefined;
 
   public async watchNetworksFromCron() {
-    this.childLogger.info('watchNetworksFromCron');
+    this.childLogger.info(`watchNetworksFromCron - (device: ${this.configuration.deviceUuid})`);
     try {
       const device = await DeviceRepo.findOneByUuid(this.configuration.deviceUuid);
       if (!device) {
@@ -53,7 +53,7 @@ export default class DockerNetworks extends DockerListener {
     });
     if (networksToInsert) {
       this.childLogger.info(
-        `insertNewNetworks - got ${networksToInsert?.length} networks to insert`,
+        `insertNewNetworks - got ${networksToInsert?.length} networks to insert (device: ${this.configuration.deviceUuid})`,
       );
       await Promise.all(
         networksToInsert.map(async (network) => {

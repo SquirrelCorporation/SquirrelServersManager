@@ -1,5 +1,8 @@
 import pino from 'pino';
 import shell from 'shelljs';
+import { SSM_DATA_PATH } from '../../config';
+import EventManager from '../../core/events/EventManager';
+import Events from '../../core/events/events';
 import { NotFoundError } from '../../middlewares/api/ApiError';
 import Playbook from '../../data/database/model/Playbook';
 import PlaybooksRepository from '../../data/database/model/PlaybooksRepository';
@@ -10,10 +13,10 @@ import { Playbooks } from '../../types/typings';
 import Shell from '../shell';
 import { recursivelyFlattenTree } from './tree-utils';
 
-export const DIRECTORY_ROOT = '/playbooks';
+export const DIRECTORY_ROOT = `${SSM_DATA_PATH}/playbooks`;
 export const FILE_PATTERN = /\.yml$/;
 
-abstract class PlaybooksRepositoryComponent {
+abstract class PlaybooksRepositoryComponent extends EventManager {
   public name: string;
   public directory: string;
   public uuid: string;
@@ -21,6 +24,7 @@ abstract class PlaybooksRepositoryComponent {
   public rootPath: string;
 
   protected constructor(uuid: string, name: string, rootPath: string) {
+    super();
     this.rootPath = rootPath;
     const dir = `${rootPath}/${uuid}`;
     this.uuid = uuid;
@@ -88,6 +92,7 @@ abstract class PlaybooksRepositoryComponent {
     this.childLogger.info(
       `Updating Playbooks Repository ${playbooksRepository.name} - ${playbooksRepository._id}`,
     );
+    return playbooksToSync?.length;
   }
 
   private async getPlaybookRepository() {

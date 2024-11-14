@@ -34,7 +34,7 @@ export async function initGitWithBranch(
   options?: IGitInitOptions,
 ): Promise<void> {
   if (options?.bare === true) {
-    const bareGitPath = path.join(dir, '.playbooks-repository');
+    const bareGitPath = path.join(dir, '.git');
     await fs.mkdirp(bareGitPath);
     await GitProcess.exec(['init', `--initial-branch=${branch}`, '--bare'], bareGitPath);
   } else {
@@ -43,7 +43,7 @@ export async function initGitWithBranch(
 
   if (options?.initialCommit !== false) {
     await GitProcess.exec(
-      ['commit', `--allow-empty`, '-n', '-m', 'Initial commit when init a new playbooks-repository.'],
+      ['commit', `--allow-empty`, '-n', '-m', 'Initial commit when init a new git repository.'],
       dir,
     );
   }

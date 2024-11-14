@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
+import { Repositories } from 'ssm-shared-lib';
+import ContainerCustomStackRepository from './ContainerCustomStackRepository';
 
 export const DOCUMENT_NAME = 'ContainerCustomStack';
 export const COLLECTION_NAME = 'containercustomstacks';
@@ -10,10 +12,13 @@ export default interface ContainerCustomStack {
   iconColor?: string;
   iconBackgroundColor?: string;
   name: string;
-  json: any;
+  json?: any;
   yaml: string;
-  rawStackValue: any;
+  rawStackValue?: any;
   lockJson: boolean;
+  type: Repositories.RepositoryType;
+  path?: string;
+  containerCustomStackRepository?: ContainerCustomStackRepository;
 }
 
 const schema = new Schema<ContainerCustomStack>(
@@ -26,7 +31,6 @@ const schema = new Schema<ContainerCustomStack>(
     },
     name: {
       type: Schema.Types.String,
-      unique: true,
     },
     json: {
       type: Object,
@@ -49,6 +53,21 @@ const schema = new Schema<ContainerCustomStack>(
     },
     iconBackgroundColor: {
       type: Schema.Types.String,
+    },
+    path: {
+      type: Schema.Types.String,
+    },
+    type: {
+      type: Schema.Types.String,
+      required: true,
+      default: Repositories.RepositoryType.LOCAL,
+    },
+    containerCustomStackRepository: {
+      type: Schema.Types.ObjectId,
+      ref: 'ContainerCustomStackRepository',
+      required: false,
+      select: true,
+      index: true,
     },
   },
   {

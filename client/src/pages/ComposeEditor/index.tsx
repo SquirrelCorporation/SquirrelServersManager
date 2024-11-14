@@ -30,7 +30,7 @@ import {
 import { ProFormSelect } from '@ant-design/pro-form';
 import Editor, { Monaco } from '@monaco-editor/react';
 import { useSearchParams } from '@umijs/max';
-import type { InputRef } from 'antd';
+import { InputRef, Tag } from 'antd';
 import { Alert, Button, Col, message, notification, Row, Space } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
 import { editor } from 'monaco-editor';
@@ -329,6 +329,7 @@ const ComposeEditor = () => {
               optionRender: (option) => (
                 <Space>
                   <span role="img" aria-label={option.data.label as string}>
+                    <Tag>{option.data.type}</Tag>
                     <StackIcon
                       stackIcon={{
                         icon: option.data.icon,
@@ -350,6 +351,7 @@ const ComposeEditor = () => {
                     icon: e.icon,
                     iconColor: e.iconColor,
                     iconBackgroundColor: e.iconBackgroundColor,
+                    type: e.type,
                   };
                 });
               })

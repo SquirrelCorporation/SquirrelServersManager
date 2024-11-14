@@ -1,7 +1,4 @@
 // Filtering logic
-
-import logger from '../../logger';
-
 export function filterByFields<T>(data: T[], params: any): T[] {
   if (params.filter) {
     const filter = JSON.parse(params.filter as any) as {

@@ -2471,3 +2471,96 @@ const UpdateLineSvg = React.memo((props) => (
 export const UpdateLine = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={UpdateLineSvg} {...props} />
 );
+
+const ErrorCircleSettings20RegularSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 20 20"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M18 10a8 8 0 1 0-7.411 7.979a5.462 5.462 0 0 1-.383-.982a7 7 0 1 1 6.79-6.79c.343.096.671.224.983.382c.014-.195.021-.391.021-.589Zm-7.342 2.89a.75.75 0 1 0-.442 1.078c.11-.378.258-.739.442-1.079Zm-.166-6.48a.5.5 0 0 0-.992.09V11l.008.09A.5.5 0 0 0 10.5 11V6.5l-.008-.09Zm1.143 8.51a2 2 0 0 0 1.43-2.478l-.155-.557c.254-.195.529-.362.821-.497l.338.358a2 2 0 0 0 2.91.001l.324-.343c.298.14.578.314.835.518l-.126.422a2 2 0 0 0 1.456 2.519l.349.082a4.697 4.697 0 0 1 .01 1.017l-.46.118a2 2 0 0 0-1.431 2.478l.156.556c-.254.196-.53.363-.822.498l-.337-.358a2 2 0 0 0-2.91-.002l-.325.345a4.32 4.32 0 0 1-.835-.518l.127-.423a2 2 0 0 0-1.456-2.519l-.35-.083a4.715 4.715 0 0 1-.01-1.016l.461-.118Zm4.865.58a1 1 0 1 0-2 0a1 1 0 0 0 2 0Z"
+    />
+  </svg>
+));
+
+export const ErrorCircleSettings20Regular = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={ErrorCircleSettings20RegularSvg} {...props} />;
+
+const BackupSolidSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 36 36"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="m18 19.84l6.38-6.35A1 1 0 1 0 23 12.08L19 16V4a1 1 0 1 0-2 0v12l-4-3.95a1 1 0 0 0-1.41 1.42Z"
+      className="clr-i-solid clr-i-solid-path-1"
+    />
+    <path
+      fill="currentColor"
+      d="m19.41 21.26l-.74.74h15.26c-.17-.57-.79-2.31-3.09-8.63A1.94 1.94 0 0 0 28.93 12h-2.38a3 3 0 0 1-.76 2.92Z"
+      className="clr-i-solid clr-i-solid-path-2"
+    />
+    <path
+      fill="currentColor"
+      d="m16.58 21.26l-6.38-6.35A3 3 0 0 1 9.44 12H7.07a1.92 1.92 0 0 0-1.9 1.32c-2.31 6.36-2.93 8.11-3.1 8.68h15.26Z"
+      className="clr-i-solid clr-i-solid-path-3"
+    />
+    <path
+      fill="currentColor"
+      d="M2 24v6a2 2 0 0 0 2 2h28a2 2 0 0 0 2-2v-6Zm28 4h-4v-2h4Z"
+      className="clr-i-solid clr-i-solid-path-4"
+    />
+    <path fill="none" d="M0 0h36v36H0z" />
+  </svg>
+));
+
+export const BackupSolid = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={BackupSolidSvg} {...props} />
+);
+
+const BrowserLtrSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 20 20"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M2 2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm2 1.5A1.5 1.5 0 1 1 2.5 5A1.5 1.5 0 0 1 4 3.5zM18 16H2V8h16z"
+    />
+  </svg>
+));
+
+export const BrowserLtr = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={BrowserLtrSvg} {...props} />
+);
+
+const FileSystemSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M14 13h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-3l-1-1h-2a1 1 0 0 0-1 1v1H8V7h2a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H7L6 1H4a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h2v13h7v1a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-3l-1-1h-2a1 1 0 0 0-1 1v1H8v-7h5v1a1 1 0 0 0 1 1Z"
+    />
+  </svg>
+));
+
+export const FileSystem = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={FileSystemSvg} {...props} />
+);

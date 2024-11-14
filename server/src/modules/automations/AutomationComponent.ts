@@ -3,6 +3,7 @@ import { Automations } from 'ssm-shared-lib';
 import logger from '../../logger';
 import AbstractActionComponent from './actions/AbstractActionComponent';
 import DockerActionComponent from './actions/DockerActionComponent';
+import DockerVolumeActionComponent from './actions/DockerVolumeActionComponent';
 import PlaybookActionComponent from './actions/PlaybookActionComponent';
 import TriggerComponent from './triggers/AbstractTriggerComponent';
 import CronTriggerComponent from './triggers/CronTriggerComponent';
@@ -24,7 +25,7 @@ class AutomationComponent {
         moduleId: `${this.uuid}`,
         moduleName: `${name}`,
       },
-      { msgPrefix: '[AUTOMATION-COMPONENT] - ' },
+      { msgPrefix: '[AUTOMATION] - ' },
     );
     this.automationChain = automationChain;
     this.actions = [];
@@ -55,6 +56,13 @@ class AutomationComponent {
             actionChain.playbook,
             actionChain.actionDevices,
           );
+        case Automations.Actions.DOCKER_VOLUME:
+          return new DockerVolumeActionComponent(
+            this.uuid,
+            this.name,
+            actionChain.dockerVolumeAction,
+            actionChain.dockerVolumes,
+          );
         default:
           throw new Error('Unknown action type');
       }
@@ -62,14 +70,14 @@ class AutomationComponent {
   }
 
   async onTrigger() {
-    this.childLogger.info('Triggered');
+    this.childLogger.info(`Automation "${this.name}" triggered...`);
     await this.synchronousExecution();
   }
 
   async synchronousExecution() {
     if (this.actions) {
       for (const action of this.actions) {
-        this.childLogger.info(`Execution a ${action.type} action`);
+        this.childLogger.info(`Executing a ${action.type} action...`);
         await action.executeAction();
       }
     } else {

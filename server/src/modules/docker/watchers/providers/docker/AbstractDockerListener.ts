@@ -14,7 +14,9 @@ export default class DockerListener extends Component<SSMServicesTypes.Configura
    * @return {Promise<void>}
    */
   async listenDockerEvents(): Promise<void> {
-    this.childLogger.info('Listening to docker events');
+    this.childLogger.info(
+      `Listening to docker events - (device: ${this.configuration.deviceUuid})`,
+    );
     const options: {
       filters: {
         type?:
@@ -42,7 +44,9 @@ export default class DockerListener extends Component<SSMServicesTypes.Configura
     try {
       (this.dockerApi as Dockerode).getEvents(options, (err, stream) => {
         if (err) {
-          this.childLogger.warn(`Unable to listen to Docker events [${err.message}]`);
+          this.childLogger.warn(
+            `Unable to listen to Docker events [${err.message}] - (device: ${this.configuration.deviceUuid})`,
+          );
           this.childLogger.debug(err);
         } else {
           stream?.on('data', (chunk) => this.onDockerEvent(chunk));
@@ -59,11 +63,13 @@ export default class DockerListener extends Component<SSMServicesTypes.Configura
    * @return {Promise<void>}
    */
   async onDockerEvent(dockerEventChunk: any): Promise<void> {
-    this.childLogger.info('onDockerEvent');
+    this.childLogger.debug('onDockerEvent');
     const dockerEvent = JSON.parse(dockerEventChunk.toString());
     const action = dockerEvent.Action;
     const containerId = dockerEvent.id;
-    this.childLogger.info('onDockerEvent - action: ' + action);
+    this.childLogger.info(
+      `onDockerEvent (device: ${this.configuration.deviceUuid} - action received: ${action} - containerId: ${containerId})`,
+    );
 
     // If the container was created or destroyed => perform a watch
     if (action === 'destroy' || action === 'create') {
@@ -83,7 +89,7 @@ export default class DockerListener extends Component<SSMServicesTypes.Configura
           if (oldStatus !== newStatus) {
             await ContainerRepo.updateContainer(containerFound);
             this.childLogger.info(
-              `[${fullName(containerFound)}] Status changed from ${oldStatus} to ${newStatus}`,
+              `[${fullName(containerFound)}] Status changed from ${oldStatus} to ${newStatus} - (device: ${this.configuration.deviceUuid})`,
             );
             this.emit(Events.UPDATED_CONTAINERS, 'Updated containers');
           }

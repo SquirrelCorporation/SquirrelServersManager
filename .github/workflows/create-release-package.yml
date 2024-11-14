@@ -1,4 +1,4 @@
-name: Create Release Package
+name: '[RELEASE] Create Release Package'
 
 on:
   push:
@@ -35,7 +35,7 @@ jobs:
         mkdir -p release_package
         cp -r client release_package/
         cp -r server release_package/
-        cp -r sharedlib release_package/
+        cp -r shared-lib release_package/
         tar -czf SquirrelServersManager_${{ env.version }}.tar.gz -C release_package .
 
     - name: Upload artifact

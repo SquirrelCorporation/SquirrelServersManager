@@ -7,6 +7,7 @@ export default interface AnsibleTask {
   ident: string;
   status?: string;
   cmd?: string;
+  target?: string[];
   createdAt?: string;
 }
 
@@ -24,6 +25,9 @@ const schema = new Schema<AnsibleTask>(
     cmd: {
       type: Schema.Types.String,
       required: true,
+    },
+    target: {
+      type: Schema.Types.Array,
     },
   },
   {

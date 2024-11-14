@@ -1,26 +1,27 @@
 import { SimpleIconsGit } from '@/components/Icons/CustomIcons';
-import DirectoryExclusionForm from '@/pages/Admin/Settings/components/subcomponents/DirectoryExclusionForm';
+import DirectoryExclusionForm from '@/pages/Admin/Settings/components/subcomponents/forms/DirectoryExclusionForm';
+import GitForm from '@/pages/Admin/Settings/components/subcomponents/forms/GitForm';
 import {
-  commitAndSyncGitRepository,
-  deleteGitRepository,
-  forceCloneGitRepository,
-  forcePullGitRepository,
-  forceRegisterGitRepository,
-  postGitRepository,
-  putGitRepository,
-  syncToDatabaseGitRepository,
+  commitAndSyncPlaybooksGitRepository,
+  deletePlaybooksGitRepository,
+  forceClonePlaybooksGitRepository,
+  forcePullPlaybooksGitRepository,
+  forceRegisterPlaybooksGitRepository,
+  postPlaybooksGitRepository,
+  putPlaybooksGitRepository,
+  syncToDatabasePlaybooksGitRepository,
 } from '@/services/rest/playbooks-repositories';
-import { ModalForm, ProForm, ProFormText } from '@ant-design/pro-components';
+import { ModalForm, ProForm } from '@ant-design/pro-components';
 import { Avatar, Button, Dropdown, MenuProps, message } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
-type GitRepositoryModalProps = {
-  selectedRecord: Partial<API.GitRepository>;
+type PlaybooksGitRepositoryModalProps = {
+  selectedRecord: Partial<API.GitPlaybooksRepository>;
   modalOpened: boolean;
   setModalOpened: any;
   asyncFetch: () => Promise<void>;
-  repositories: API.GitRepository[];
+  repositories: API.GitPlaybooksRepository[];
 };
 
 const items = [
@@ -46,7 +47,9 @@ const items = [
   },
 ];
 
-const GitRepositoryModal: React.FC<GitRepositoryModalProps> = (props) => {
+const PlaybooksGitRepositoryModal: React.FC<
+  PlaybooksGitRepositoryModalProps
+> = (props) => {
   const onMenuClick: MenuProps['onClick'] = async (e) => {
     if (!props.selectedRecord.uuid) {
       message.error({
@@ -57,42 +60,50 @@ const GitRepositoryModal: React.FC<GitRepositoryModalProps> = (props) => {
     }
     switch (e.key) {
       case '1':
-        await forcePullGitRepository(props.selectedRecord.uuid).then(() => {
-          message.success({
-            content: 'Force pull command launched',
-            duration: 6,
-          });
-        });
+        await forcePullPlaybooksGitRepository(props.selectedRecord.uuid).then(
+          () => {
+            message.loading({
+              content: 'Force pull command launched',
+              duration: 6,
+            });
+          },
+        );
         return;
       case '2':
-        await commitAndSyncGitRepository(props.selectedRecord.uuid).then(() => {
-          message.success({
+        await commitAndSyncPlaybooksGitRepository(
+          props.selectedRecord.uuid,
+        ).then(() => {
+          message.loading({
             content: 'Commit and sync command launched',
             duration: 6,
           });
         });
         return;
       case '3':
-        await forceCloneGitRepository(props.selectedRecord.uuid).then(() => {
-          message.success({
-            content: 'Force clone command launched',
-            duration: 6,
-          });
-        });
-        return;
-      case '4':
-        await syncToDatabaseGitRepository(props.selectedRecord.uuid).then(
+        await forceClonePlaybooksGitRepository(props.selectedRecord.uuid).then(
           () => {
-            message.success({
-              content: 'Sync to database command launched',
+            message.loading({
+              content: 'Force clone command launched',
               duration: 6,
             });
           },
         );
         return;
+      case '4':
+        await syncToDatabasePlaybooksGitRepository(
+          props.selectedRecord.uuid,
+        ).then(() => {
+          message.loading({
+            content: 'Sync to database command launched',
+            duration: 6,
+          });
+        });
+        return;
       case '5':
-        await forceRegisterGitRepository(props.selectedRecord.uuid).then(() => {
-          message.success({
+        await forceRegisterPlaybooksGitRepository(
+          props.selectedRecord.uuid,
+        ).then(() => {
+          message.loading({
             content: 'Force register command launched',
             duration: 6,
           });
@@ -115,7 +126,7 @@ const GitRepositoryModal: React.FC<GitRepositoryModalProps> = (props) => {
           danger
           onClick={async () => {
             if (props.selectedRecord && props.selectedRecord.uuid) {
-              await deleteGitRepository(props.selectedRecord.uuid)
+              await deletePlaybooksGitRepository(props.selectedRecord.uuid)
                 .then(() =>
                   message.warning({
                     content: 'Repository deleted',
@@ -135,7 +146,7 @@ const GitRepositoryModal: React.FC<GitRepositoryModalProps> = (props) => {
     : [];
 
   return (
-    <ModalForm<API.GitRepository>
+    <ModalForm<API.GitPlaybooksRepository>
       title={
         <>
           <Avatar
@@ -160,11 +171,18 @@ const GitRepositoryModal: React.FC<GitRepositoryModalProps> = (props) => {
       }}
       onFinish={async (values) => {
         if (props.selectedRecord) {
-          await postGitRepository(values);
+          await postPlaybooksGitRepository(
+            props.selectedRecord.uuid as string,
+            values,
+          );
           props.setModalOpened(false);
           await props.asyncFetch();
         } else {
-          await putGitRepository(values);
+          await putPlaybooksGitRepository(values);
+          message.loading({
+            content: 'Repository cloning & processing in process...',
+            duration: 6,
+          });
           props.setModalOpened(false);
           await props.asyncFetch();
         }
@@ -175,61 +193,10 @@ const GitRepositoryModal: React.FC<GitRepositoryModalProps> = (props) => {
         },
       }}
     >
-      <ProForm.Group>
-        <ProFormText
-          width={'md'}
-          name={'name'}
-          label={'Name'}
-          initialValue={props.selectedRecord?.name}
-          rules={[
-            { required: true },
-            {
-              validator(_, value) {
-                if (
-                  props.repositories.find((e) => e.name === value) === undefined
-                ) {
-                  return Promise.resolve();
-                }
-                return Promise.reject('Name already exists');
-              },
-            },
-          ]}
-        />
-        <ProFormText
-          width={'md'}
-          name={'email'}
-          label={'Git Email'}
-          initialValue={props.selectedRecord?.email}
-          rules={[{ required: true }]}
-        />
-        <ProFormText
-          width={'md'}
-          name={'userName'}
-          label={'Git Username'}
-          initialValue={props.selectedRecord?.userName}
-          rules={[{ required: true }]}
-        />
-        <ProFormText
-          width={'md'}
-          name={'remoteUrl'}
-          label={'Remote Url'}
-          initialValue={props.selectedRecord?.remoteUrl}
-          rules={[{ required: true }]}
-        />
-        <ProFormText
-          width={'md'}
-          name={'branch'}
-          label={'Branch'}
-          initialValue={props.selectedRecord?.branch}
-          rules={[{ required: true }]}
-        />
-        <ProFormText.Password
-          width={'md'}
-          name={'accessToken'}
-          label={'Access Token'}
-          rules={[{ required: true }]}
-        />
-      </ProForm.Group>
+      <GitForm
+        selectedRecord={props.selectedRecord}
+        repositories={props.repositories}
+      />
       <ProForm.Group>
         <DirectoryExclusionForm selectedRecord={props.selectedRecord} />
       </ProForm.Group>
@@ -237,4 +204,4 @@ const GitRepositoryModal: React.FC<GitRepositoryModalProps> = (props) => {
   );
 };
 
-export default GitRepositoryModal;
+export default PlaybooksGitRepositoryModal;

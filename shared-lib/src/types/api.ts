@@ -1,5 +1,6 @@
 import { ExtraVarsType, SSHConnection, SSHType } from '../enums/ansible';
-import { PlaybooksRepositoryType } from '../enums/playbooks';
+import { VolumeBackupMode } from '../enums/container';
+import { RepositoryType } from '../enums/repositories';
 import { AutomationChain } from '../form/automation';
 import { ExtendedTreeNode } from './tree';
 
@@ -77,6 +78,8 @@ export type Settings = {
     userLogsLevel: UserLogsLevel;
   };
   dashboard: DashboardSettings;
+  ssmDataPath: string;
+  masterNodeUrl: string;
 };
 
 export type StatsSettings = {
@@ -150,6 +153,15 @@ export type NewDevice = {
   data: { device: DeviceItem };
   success: boolean;
 };
+
+export type CheckAnsibleConnection = {
+  taskId: string;
+}
+
+export type CheckDockerConnection = {
+  connectionStatus: string;
+  errorMessage?: string;
+}
 
 export type VersionData = {
   kernel?: string;
@@ -350,7 +362,7 @@ export type PlaybooksRepository = {
   name: string;
   uuid: string;
   path: string;
-  type: PlaybooksRepositoryType;
+  type: RepositoryType;
   children?: ExtendedTreeNode[];
   directoryExclusionList?: string[];
 };
@@ -648,7 +660,7 @@ export type ContainerRegistry = {
   canAnonymous: boolean;
 }
 
-export type GitRepository = PlaybooksRepository & {
+export type GitPlaybooksRepository = PlaybooksRepository & {
   email: string;
   branch: string;
   userName: string;
@@ -656,10 +668,23 @@ export type GitRepository = PlaybooksRepository & {
   default: boolean;
 }
 
-export type LocalRepository = PlaybooksRepository & {
+export type LocalPlaybooksRepository = PlaybooksRepository & {
   directory: string;
   enabled: boolean;
   default: boolean;
+}
+
+export type GitContainerStacksRepository = {
+  email: string;
+  branch: string;
+  userName: string;
+  remoteUrl: string;
+  default: boolean;
+  name: string;
+  uuid: string;
+  matchesList?: string[];
+  onError?: boolean;
+  onErrorMessage?: string;
 }
 
 export type ExtraVars = ExtraVar[];
@@ -749,6 +774,7 @@ export type ContainerNetwork = {
 }
 
 export type ContainerVolume = {
+  uuid: string;
   name: string;
   device: DeviceItem;
   watcher: string;
@@ -808,6 +834,15 @@ export type CreateNetwork = {
   config: CreateNetworkConfig
 }
 
+export type BackupVolumeConfig = {
+  volumeUuid: string;
+}
+
+export type BackupVolume = {
+  target: string,
+  config: BackupVolumeConfig
+}
+
 export type CreateNetworkVolumeConfig = {
   name: string,
 }
@@ -842,3 +877,9 @@ export type ContainerCustomStackValidation = {
 export type DeployContainerCustomStacks = {
   targets: string;
 }
+
+export type BackupVolumeResponse = {
+  filePath: string;
+  fileName: string;
+  mode: VolumeBackupMode;
+};

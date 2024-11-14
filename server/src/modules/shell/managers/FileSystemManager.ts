@@ -21,6 +21,10 @@ class FileSystemManager extends AbstractShellCommander {
     this.executeCommand(shellWrapper.rm, '-rf', directory);
   }
 
+  deleteFile(filePath: string): void {
+    this.executeCommand(shellWrapper.rm, '-f', filePath);
+  }
+
   writeFile(content: string, path: string): void {
     this.executeCommand(shellWrapper.to, content, path);
   }
@@ -31,6 +35,10 @@ class FileSystemManager extends AbstractShellCommander {
 
   test(options: TestOptions, path: string) {
     return this.executeCommand(shellWrapper.test, options, path);
+  }
+
+  readFile(path: string): string {
+    return this.executeCommand(shellWrapper.cat, path).toString();
   }
 
   protected checkPath(userPath: string, rootPath?: string) {

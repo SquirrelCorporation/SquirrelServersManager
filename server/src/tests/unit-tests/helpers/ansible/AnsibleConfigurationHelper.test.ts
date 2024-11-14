@@ -4,7 +4,7 @@ import { readConfig, writeConfig } from '../../../../helpers/ansible/AnsibleConf
 
 vi.mock('fs');
 
-const CONFIG_FILE = '/ansible-config/ansible.cfg';
+const CONFIG_FILE = '/data/config/ansible.cfg';
 
 const mockFsReadFileSync = vi.spyOn(fs, 'readFileSync');
 const mockFsWriteFileSync = vi.spyOn(fs, 'writeFileSync');

@@ -79,7 +79,7 @@ def execute():
         debug = True
     if args.specific_host is not None:
         specific_host = json.loads(args.specific_host)
-
+    os.environ['SSM_EXEC_UUID'] = args.ident
     runner_args = {
         'ident': args.ident,
         'private_data_dir': './',

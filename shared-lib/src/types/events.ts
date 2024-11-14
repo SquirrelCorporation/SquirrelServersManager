@@ -22,3 +22,11 @@ export enum Common {
   DISCONNECT = 'disconnect',
   ERROR = 'error'
 }
+
+export enum Alert {
+  NEW_ALERT = 'alert:new',
+}
+
+export enum VolumeBackup {
+  PROGRESS = 'volume:backup:progress',
+}

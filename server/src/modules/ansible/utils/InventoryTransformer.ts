@@ -2,12 +2,13 @@ import { SsmAnsible } from 'ssm-shared-lib';
 import DeviceAuth from '../../../data/database/model/DeviceAuth';
 import logger from '../../../logger';
 import { Playbooks } from '../../../types/typings';
+import SshPrivateKeyFileManager from '../../shell/managers/SshPrivateKeyFileManager';
 
 function generateDeviceKey(uuid: string) {
   return `device${uuid.replaceAll('-', '')}`;
 }
 
-function inventoryBuilder(devicesAuth: DeviceAuth[]) {
+async function inventoryBuilder(devicesAuth: DeviceAuth[], execUuid: string) {
   logger.info(`[TRANSFORMERS][INVENTORY] - Inventory for ${devicesAuth.length} device(s)`);
   // @ts-expect-error generic type
   const ansibleInventory: Playbooks.Hosts = {
@@ -15,7 +16,7 @@ function inventoryBuilder(devicesAuth: DeviceAuth[]) {
     all: { children: [] },
   };
 
-  devicesAuth.forEach((deviceAuth) => {
+  for (const deviceAuth of devicesAuth) {
     const { device } = deviceAuth;
     const deviceKey = generateDeviceKey(device.uuid);
 
@@ -26,30 +27,30 @@ function inventoryBuilder(devicesAuth: DeviceAuth[]) {
     ansibleInventory.all.children.push(deviceKey);
     ansibleInventory[deviceKey] = {
       hosts: device.ip ? [device.ip] : [],
-      vars: getInventoryConnectionVars(deviceAuth),
+      vars: await getInventoryConnectionVars(deviceAuth, execUuid),
     };
-  });
+  }
 
   logger.debug(ansibleInventory);
   return ansibleInventory;
 }
 
-function inventoryBuilderForTarget(devicesAuth: Partial<DeviceAuth>[]) {
+async function inventoryBuilderForTarget(devicesAuth: Partial<DeviceAuth>[], execUuid: string) {
   logger.info(`[TRANSFORMERS][INVENTORY] - Inventory for ${devicesAuth.length} device(s)`);
   const ansibleInventory: Playbooks.All & Playbooks.HostGroups = {
     // @ts-expect-error I cannot comprehend generic typescript type
     all: {},
   };
-  devicesAuth.forEach((e) => {
-    logger.info(`[TRANSFORMERS][INVENTORY] - Building inventory for ${e.device?.uuid}`);
+  for (const deviceAuth of devicesAuth) {
+    logger.info(`[TRANSFORMERS][INVENTORY] - Building inventory for ${deviceAuth.device?.uuid}`);
     ansibleInventory[
-      `device${e.device?.uuid.replaceAll('-', '')}` as keyof typeof ansibleInventory
+      `device${deviceAuth.device?.uuid.replaceAll('-', '')}` as keyof typeof ansibleInventory
     ] = {
       // @ts-expect-error I cannot comprehend generic typescript type
-      hosts: e.device.ip as string,
-      vars: getInventoryConnectionVars(e),
+      hosts: deviceAuth.device.ip as string,
+      vars: await getInventoryConnectionVars(deviceAuth, execUuid),
     };
-  });
+  }
   logger.debug(ansibleInventory);
   return ansibleInventory;
 }
@@ -60,12 +61,17 @@ interface Auth {
   ansible_ssh_pass?: { __ansible_vault: any };
 }
 
-function getAuth(deviceAuth: Partial<DeviceAuth>): Auth {
+async function getAuth(deviceAuth: Partial<DeviceAuth>, execUuid: string): Promise<Auth> {
   const auth: Auth = {};
 
   switch (deviceAuth.authType) {
     case SsmAnsible.SSHType.KeyBased:
-      auth.ansible_ssh_private_key_file = `/tmp/${deviceAuth.device?.uuid}.key`;
+      auth.ansible_ssh_private_key_file =
+        await SshPrivateKeyFileManager.genAnsibleTemporaryPrivateKey(
+          deviceAuth.sshKey as string,
+          deviceAuth.device?.uuid as string,
+          execUuid,
+        );
       if (deviceAuth.sshKeyPass) {
         if (deviceAuth.sshConnection !== SsmAnsible.SSHConnection.PARAMIKO) {
           throw new Error('Ssh key is not supported for non-paramiko connection');
@@ -96,7 +102,10 @@ interface ConnectionVars {
   ansible_ssh_port?: number;
 }
 
-function getInventoryConnectionVars(deviceAuth: Partial<DeviceAuth>): ConnectionVars {
+async function getInventoryConnectionVars(
+  deviceAuth: Partial<DeviceAuth>,
+  execUuid: string,
+): Promise<ConnectionVars> {
   // See https://docs.ansible.com/ansible/latest/collections/ansible/builtin/paramiko_ssh_connection.html
   let connection = deviceAuth.sshConnection;
   if (!connection) {
@@ -118,7 +127,7 @@ function getInventoryConnectionVars(deviceAuth: Partial<DeviceAuth>): Connection
     ansible_ssh_port: deviceAuth.sshPort,
   };
 
-  return { ...vars, ...getAuth(deviceAuth) };
+  return { ...vars, ...(await getAuth(deviceAuth, execUuid)) };
 }
 
 export default {

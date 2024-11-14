@@ -40,17 +40,17 @@ export const getCustomAgent = (childLogger: any, opt: any) => {
           .once('ready', () => {
             conn.exec('docker system dial-stdio', (err, stream) => {
               if (err) {
-                this.logger.error('Encountering an exec SSH error');
+                this.logger.error(`Encountering an exec SSH error - (host: ${opt.host})`);
                 this.logger.error(err);
                 handleError(err);
               }
               stream.addListener('error', (err) => {
-                this.logger.error('Encountering an stream SSH error');
+                this.logger.error(`Encountering an stream SSH error - (host: ${opt.host})`);
                 this.logger.error(err);
                 handleError(err);
               });
               stream.once('close', () => {
-                this.logger.warn('Stream closed');
+                this.logger.warn(`Stream closed - (host: ${opt.host})`);
                 conn.end();
                 this.destroy();
               });
@@ -58,17 +58,17 @@ export const getCustomAgent = (childLogger: any, opt: any) => {
             });
           })
           .on('error', (err) => {
-            this.logger.error(`Error connecting to ${opt.host}`);
-            this.logger.error(err);
+            this.logger.error(`Error connecting to ${opt.host} : ${err.message}`);
             fn(err);
           })
           .once('end', () => {
-            this.logger.warn('Agent destroy');
+            this.logger.warn(`Agent destroy for ${opt.host}`);
             conn.end();
             this.destroy();
           })
           .connect(opt);
       } catch (error: any) {
+        this.logger.error(`Error connecting to ${opt.host} : ${err.message}`);
         this.logger.error(error);
       }
     }

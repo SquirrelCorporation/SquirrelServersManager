@@ -1,24 +1,24 @@
+import ContainerBackUpVolumeModal from '@/pages/Containers/components/sub-components/ContainerBackUpVolumeModal';
 import CreateVolumeModal from '@/pages/Containers/components/sub-components/CreateVolumeModal';
 import { getAllDevices } from '@/services/rest/device';
 import { getVolumes } from '@/services/rest/services';
 import {
-  ActionType,
   ProColumns,
   ProFormSelect,
   ProTable,
   RequestOptionsType,
+  TableDropdown,
 } from '@ant-design/pro-components';
+import { history } from '@umijs/max';
 import { Tag, Tooltip } from 'antd';
-import React, { useRef } from 'react';
+import React from 'react';
 import { API } from 'ssm-shared-lib';
 
 const Volumes: React.FC = () => {
-  const actionRef = useRef<ActionType>();
   const columns: ProColumns<API.ContainerVolume>[] = [
     {
       title: 'Name',
       dataIndex: 'name',
-      ellipsis: true,
     },
     {
       dataIndex: 'deviceUuid',
@@ -43,25 +43,72 @@ const Volumes: React.FC = () => {
       title: 'Device',
       dataIndex: ['device', 'ip'],
       search: false,
+      width: '10%',
       render: (text, record) => (
         <Tooltip title={record.device?.fqdn}>
-          <Tag>{record.device?.ip}</Tag>
+          <Tag
+            style={{
+              maxWidth: '100%',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {record.device?.ip}
+          </Tag>
         </Tooltip>
       ),
     },
     {
       title: 'Scope',
       dataIndex: 'scope',
+      width: '8%',
     },
     {
       title: 'Driver',
       dataIndex: 'driver',
+      width: '8%',
     },
     {
       title: 'Mount Point',
       dataIndex: 'mountPoint',
-      ellipsis: true,
       search: false,
+      width: '20%',
+      responsive: ['sm'],
+      ellipsis: true,
+    },
+    {
+      title: 'Mount Point',
+      dataIndex: 'mountPoint',
+      search: false,
+      width: '20%',
+      responsive: ['xs'],
+    },
+    {
+      title: 'Action',
+      key: 'option',
+      valueType: 'option',
+      width: '15%',
+      render: (dom, record) =>
+        record.device?.ip
+          ? [
+              <ContainerBackUpVolumeModal
+                key="backup"
+                volumeUuid={record.uuid}
+              />,
+              <TableDropdown
+                key="actionGroup"
+                menus={[{ key: 'backup-aut', name: 'New Backup Automation' }]}
+                onSelect={(key: string) => {
+                  if (key === 'backup-aut') {
+                    history.push({
+                      pathname: `/manage/automations`,
+                    });
+                  }
+                }}
+              />,
+            ]
+          : [],
     },
   ];
 
@@ -69,7 +116,7 @@ const Volumes: React.FC = () => {
     <ProTable<API.ContainerVolume>
       columns={columns}
       request={getVolumes}
-      rowKey="name"
+      rowKey="uuid"
       search={{
         filterType: 'light',
       }}

@@ -8,7 +8,7 @@ async function deleteAllOld(ageInDays: number): Promise<void> {
 }
 
 async function findAll(): Promise<Logs[]> {
-  return await LogsModel.find().sort({ time: -1 }).lean().exec();
+  return await LogsModel.find().sort({ time: -1 }).limit(10000).lean().exec();
 }
 
 async function deleteAll(): Promise<void> {

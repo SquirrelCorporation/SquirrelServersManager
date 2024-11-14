@@ -8,7 +8,7 @@ import DeviceStatRepo from '../../../data/database/repository/DeviceStatRepo';
 import LogsRepo from '../../../data/database/repository/LogsRepo';
 import { restart } from '../../../index';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import PlaybooksRepositoryEngine from '../../../modules/playbooks-repository/PlaybooksRepositoryEngine';
+import PlaybooksRepositoryEngine from '../../../modules/repository/PlaybooksRepositoryEngine';
 
 export const postRestartServer = async (req, res) => {
   await restart();

@@ -126,6 +126,10 @@ const Inventory: React.FC = () => {
     });
   };
 
+  const onAddNewUnmanagedDevice = () => {
+    actionRef?.current?.reload();
+  };
+
   const onDeleteNewDevice = async () => {
     if (currentRow) {
       await deleteDevice(currentRow?.uuid).then(() => {
@@ -171,12 +175,13 @@ const Inventory: React.FC = () => {
       <NewUnManagedDeviceModal
         isModalOpen={addNewUnManagedDeviceModalIsOpen}
         setIsModalOpen={setAddNewUnManagedDeviceModalIsOpen}
+        onAddNewUnmanagedDevice={onAddNewUnmanagedDevice}
       />
 
       <ProTable<API.DeviceItem, API.PageParams>
         headerTitle="List of Devices"
         actionRef={actionRef}
-        rowKey="ip"
+        rowKey="uuid"
         search={{
           labelWidth: 120,
         }}

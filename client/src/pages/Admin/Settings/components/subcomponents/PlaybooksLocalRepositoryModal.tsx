@@ -1,10 +1,10 @@
 import { SimpleIconsGit } from '@/components/Icons/CustomIcons';
-import DirectoryExclusionForm from '@/pages/Admin/Settings/components/subcomponents/DirectoryExclusionForm';
+import DirectoryExclusionForm from '@/pages/Admin/Settings/components/subcomponents/forms/DirectoryExclusionForm';
 import {
-  deleteLocalRepository,
-  postLocalRepositories,
-  putLocalRepositories,
-  syncToDatabaseLocalRepository,
+  deletePlaybooksLocalRepository,
+  postPlaybooksLocalRepositories,
+  putPlaybooksLocalRepositories,
+  syncToDatabasePlaybooksLocalRepository,
 } from '@/services/rest/playbooks-repositories';
 import { ModalForm, ProForm, ProFormText } from '@ant-design/pro-components';
 import { Avatar, Button, Dropdown, MenuProps, message } from 'antd';
@@ -12,11 +12,11 @@ import React, { FC, useState } from 'react';
 import { API } from 'ssm-shared-lib';
 
 type LocalRepositoryModalProps = {
-  selectedRecord: Partial<API.LocalRepository>;
+  selectedRecord: Partial<API.LocalPlaybooksRepository>;
   modalOpened: boolean;
   setModalOpened: any;
   asyncFetch: () => Promise<void>;
-  repositories: API.LocalRepository[];
+  repositories: API.LocalPlaybooksRepository[];
 };
 
 const items = [
@@ -26,7 +26,9 @@ const items = [
   },
 ];
 
-const LocalRepositoryModal: FC<LocalRepositoryModalProps> = (props) => {
+const PlaybooksLocalRepositoryModal: FC<LocalRepositoryModalProps> = (
+  props,
+) => {
   const [loading, setLoading] = useState(false);
   const onMenuClick: MenuProps['onClick'] = async (e) => {
     if (!props.selectedRecord.uuid) {
@@ -38,14 +40,14 @@ const LocalRepositoryModal: FC<LocalRepositoryModalProps> = (props) => {
     }
     switch (e.key) {
       case '4':
-        await syncToDatabaseLocalRepository(props.selectedRecord.uuid).then(
-          () => {
-            message.success({
-              content: 'Sync to database command launched',
-              duration: 6,
-            });
-          },
-        );
+        await syncToDatabasePlaybooksLocalRepository(
+          props.selectedRecord.uuid,
+        ).then(() => {
+          message.success({
+            content: 'Sync to database command launched',
+            duration: 6,
+          });
+        });
         return;
     }
   };
@@ -66,7 +68,7 @@ const LocalRepositoryModal: FC<LocalRepositoryModalProps> = (props) => {
           onClick={async () => {
             setLoading(true);
             if (props.selectedRecord && props.selectedRecord.uuid) {
-              await deleteLocalRepository(props.selectedRecord.uuid)
+              await deletePlaybooksLocalRepository(props.selectedRecord.uuid)
                 .then(() =>
                   message.warning({
                     content: 'Repository deleted',
@@ -86,7 +88,7 @@ const LocalRepositoryModal: FC<LocalRepositoryModalProps> = (props) => {
       ]
     : [];
   return (
-    <ModalForm<API.LocalRepository>
+    <ModalForm<API.LocalPlaybooksRepository>
       title={
         <>
           <Avatar
@@ -112,15 +114,18 @@ const LocalRepositoryModal: FC<LocalRepositoryModalProps> = (props) => {
       onFinish={async (values) => {
         if (!props.selectedRecord?.default) {
           if (props.selectedRecord) {
-            await postLocalRepositories({
-              ...props.selectedRecord,
-              name: values.name,
-              directoryExclusionList: values.directoryExclusionList,
-            });
+            await postPlaybooksLocalRepositories(
+              props.selectedRecord.uuid as string,
+              {
+                ...props.selectedRecord,
+                name: values.name,
+                directoryExclusionList: values.directoryExclusionList,
+              },
+            );
             props.setModalOpened(false);
             await props.asyncFetch();
           } else {
-            await putLocalRepositories(values);
+            await putPlaybooksLocalRepositories(values);
             props.setModalOpened(false);
             await props.asyncFetch();
           }
@@ -166,4 +171,4 @@ const LocalRepositoryModal: FC<LocalRepositoryModalProps> = (props) => {
   );
 };
 
-export default LocalRepositoryModal;
+export default PlaybooksLocalRepositoryModal;

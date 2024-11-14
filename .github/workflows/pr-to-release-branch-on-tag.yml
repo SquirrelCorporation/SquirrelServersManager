@@ -1,0 +1,27 @@
+name: '[RELEASE] Create PR to Release Branch'
+
+on:
+  push:
+    tags: [ 'v*.*.*' ]
+  workflow_dispatch:
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release
+      - name: Reset promotion branch
+        run: |
+          git fetch origin master:master
+          git reset --hard master
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: Merge master into release branch'
+          title: '[CHORE] Create PR from master to release'
+          body: 'The workflow is triggered by publishing a new tag. This PR merges changes from master to release.'
+          branch: 'master-to-release'

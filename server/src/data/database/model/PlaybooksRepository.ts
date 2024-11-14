@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { Playbooks } from 'ssm-shared-lib';
+import { Repositories } from 'ssm-shared-lib';
 
 export const DOCUMENT_NAME = 'PlaybooksRepository';
 export const COLLECTION_NAME = 'playbooksrepository';
@@ -7,7 +7,7 @@ export const COLLECTION_NAME = 'playbooksrepository';
 export default interface PlaybooksRepository {
   _id?: string;
   uuid: string;
-  type: Playbooks.PlaybooksRepositoryType;
+  type: Repositories.RepositoryType;
   name: string;
   accessToken?: string;
   branch?: string;
@@ -19,6 +19,8 @@ export default interface PlaybooksRepository {
   default?: boolean;
   tree?: any;
   directoryExclusionList?: string[];
+  onError?: boolean;
+  onErrorMessage?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -88,6 +90,14 @@ const schema = new Schema<PlaybooksRepository>(
         'roles',
         'inventories',
       ],
+    },
+    onError: {
+      type: Schema.Types.Boolean,
+      default: false,
+    },
+    onErrorMessage: {
+      type: Schema.Types.String,
+      required: false,
     },
   },
   {

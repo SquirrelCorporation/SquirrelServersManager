@@ -109,3 +109,37 @@ export async function postDeploy(
     ...(options || {}),
   });
 }
+
+export async function postBackUpVolume(
+  uuid: string,
+  mode: string,
+  params?: any,
+  options?: Record<string, any>,
+): Promise<API.Response<API.BackupVolumeResponse>> {
+  return request<API.Response<API.BackupVolumeResponse>>(
+    `/api/containers/volumes/backup/${uuid}`,
+    {
+      method: 'POST',
+      data: { mode },
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    },
+  );
+}
+
+export async function getBackUpVolume(
+  params?: { fileName: string },
+  options?: Record<string, any>,
+) {
+  return request<any>(`/api/containers/volumes/backup`, {
+    method: 'GET',
+    responseType: 'blob',
+    parseResponse: false,
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}

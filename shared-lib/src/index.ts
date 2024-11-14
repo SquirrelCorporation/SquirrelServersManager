@@ -6,8 +6,9 @@ export * as SsmAnsible from './enums/ansible';
 export * as Validation from './validation/index';
 export * as StatsType from './enums/stats';
 export * as DirectoryTree from './types/tree'
-export * as Playbooks from './enums/playbooks'
+export * as Repositories from './enums/repositories'
 export * as SsmContainer from  './enums/container'
 export * as Automations from './form/automation';
 export * as SsmEvents from './types/events';
 export * as SsmAgent from './enums/agent';
+export * as SsmAlert from './enums/alert';

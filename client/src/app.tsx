@@ -1,3 +1,4 @@
+import AlertNotification from '@/components/Alert/AlertNotification';
 import Footer from '@/components/Footer';
 import {
   AvatarDropdown,
@@ -20,10 +21,30 @@ import { version } from '../package.json';
 import Logo from '../public/logo.svg';
 import { errorConfig } from './requestErrorConfig';
 
-const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 const onboardingPath = '/user/onboarding';
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const fetchUserWithRetry = async () => {
+  for (let i = 0; i < 3; i++) {
+    try {
+      const e = await hasUser();
+      if (e.data?.hasUsers) {
+        history.push(loginPath);
+      } else {
+        history.push(onboardingPath);
+      }
+      return;
+    } catch (error) {
+      console.log(error);
+      if (i < 2) {
+        // delay only if it's not the last retry attempt
+        await sleep(5000); // wait for 1 second before next retry
+      }
+    }
+  }
+};
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
@@ -39,18 +60,8 @@ export async function getInitialState(): Promise<{
         skipErrorHandler: true,
       });
       return msg.data;
-    } catch (error) {
-      await hasUser()
-        .then((e) => {
-          if (e.data?.hasUsers) {
-            history.push(loginPath);
-          } else {
-            history.push(onboardingPath);
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+    } catch {
+      await fetchUserWithRetry();
     }
     return undefined;
   };
@@ -116,6 +127,7 @@ export const layout: RunTimeLayoutConfig = ({
         version != initialState?.currentUser?.settings?.server.version;
       return (
         <>
+          <AlertNotification />
           {initialState?.currentUser?.settings?.server.version &&
             versionMismatch && (
               <Alert

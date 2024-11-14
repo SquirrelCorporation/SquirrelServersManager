@@ -3,6 +3,7 @@ import PinoLogger from '../../../logger';
 import ContainerRegistryUseCases from '../../../services/ContainerRegistryUseCases';
 import DeviceUseCases from '../../../services/DeviceUseCases';
 import { SSMServicesTypes } from '../../../types/typings';
+import Acr from '../registries/providers/acr/Acr';
 import Custom from '../registries/providers/custom/Custom';
 import Ecr from '../registries/providers/ecr/Ecr';
 import Forgejo from '../registries/providers/forgejo/Forgejo';
@@ -17,8 +18,10 @@ import Quay from '../registries/providers/quay/Quay';
 import Registry from '../registries/Registry';
 import Docker from '../watchers/providers/docker/Docker';
 import Component, { Kind } from './Component';
+import { REGISTRIES, WATCHERS } from './conf';
 
 const logger = PinoLogger.child({ module: 'WatcherEngine' }, { msgPrefix: '[WATCHER_ENGINE] - ' });
+
 /**
  * Registry state.
  */
@@ -49,28 +52,30 @@ function getComponentClass(
   provider: string,
 ): Component<SSMServicesTypes.ConfigurationSchema> {
   switch (`${kind}/${provider}`) {
-    case 'watcher/docker':
+    case `${Kind.WATCHER}/${WATCHERS.DOCKER}`:
       return new Docker();
-    case 'registry/hub':
+    case `${Kind.REGISTRY}/${REGISTRIES.HUB}`:
       return new Hub();
-    case 'registry/custom':
+    case `${Kind.REGISTRY}/${REGISTRIES.CUSTOM}`:
       return new Custom();
-    case 'registry/gcr':
+    case `${Kind.REGISTRY}/${REGISTRIES.GCR}`:
       return new Gcr();
-    case 'registry/ghcr':
+    case `${Kind.REGISTRY}/${REGISTRIES.GHCR}`:
       return new Ghcr();
-    case 'registry/quay':
+    case `${Kind.REGISTRY}/${REGISTRIES.QUAY}`:
       return new Quay();
-    case 'registry/ecr':
+    case `${Kind.REGISTRY}/${REGISTRIES.ECR}`:
       return new Ecr();
-    case 'registry/gitea':
+    case `${Kind.REGISTRY}/${REGISTRIES.GITEA}`:
       return new Gitea();
-    case 'registry/forgejo':
+    case `${Kind.REGISTRY}/${REGISTRIES.FORGEJO}`:
       return new Forgejo();
-    case 'registry/lscr':
+    case `${Kind.REGISTRY}/${REGISTRIES.LSCR}`:
       return new Lscr();
-    case 'registry/gitlab':
+    case `${Kind.REGISTRY}/${REGISTRIES.GITLAB}`:
       return new Gitlab();
+    case `${Kind.REGISTRY}/${REGISTRIES.ACR}`:
+      return new Acr();
     default:
       throw new Error(`Unknown kind/provider: ${kind}/${provider}`);
   }
@@ -95,7 +100,7 @@ async function registerComponent(
   const providerLowercase = provider.toLowerCase();
   const nameLowercase = name.toLowerCase();
   try {
-    logger.info(`Registering "${provider}/${name}" component`);
+    logger.info(`Registering "${provider}/${name}" component...`);
     const component = getComponentClass(kind, provider);
     const componentRegistered = await component.register(
       _id,
@@ -132,14 +137,20 @@ async function registerWatchers(): Promise<any> {
     const watchersToRegister: any = [];
     devicesToWatch?.map((device) => {
       watchersToRegister.push(
-        registerComponent(device._id, Kind.WATCHER, 'docker', `docker-${device.uuid}`, {
-          cron: device.dockerWatcherCron as string,
-          watchbydefault: true,
-          deviceUuid: device.uuid,
-          watchstats: device.dockerStatsWatcher,
-          cronstats: device.dockerStatsCron as string,
-          watchevents: device.dockerEventsWatcher,
-        }),
+        registerComponent(
+          device._id,
+          Kind.WATCHER,
+          WATCHERS.DOCKER,
+          `${WATCHERS.DOCKER}-${device.uuid}`,
+          {
+            cron: device.dockerWatcherCron as string,
+            watchbydefault: true,
+            deviceUuid: device.uuid,
+            watchstats: device.dockerStatsWatcher,
+            cronstats: device.dockerStatsCron as string,
+            watchevents: device.dockerEventsWatcher,
+          },
+        ),
       );
     });
     await Promise.all(watchersToRegister);
@@ -155,14 +166,20 @@ async function registerWatchers(): Promise<any> {
  */
 async function registerWatcher(device: Device): Promise<any> {
   try {
-    await registerComponent(device._id, Kind.WATCHER, 'device', `docker-${device.uuid}`, {
-      cron: device.dockerWatcherCron as string,
-      watchbydefault: true,
-      deviceUuid: device.uuid,
-      watchstats: device.dockerStatsWatcher,
-      cronstats: device.dockerStatsCron as string,
-      watchevents: device.dockerEventsWatcher,
-    });
+    await registerComponent(
+      device._id,
+      Kind.WATCHER,
+      WATCHERS.DOCKER,
+      `${WATCHERS.DOCKER}-${device.uuid}`,
+      {
+        cron: device.dockerWatcherCron as string,
+        watchbydefault: true,
+        deviceUuid: device.uuid,
+        watchstats: device.dockerStatsWatcher,
+        cronstats: device.dockerStatsCron as string,
+        watchevents: device.dockerEventsWatcher,
+      },
+    );
   } catch (e: any) {
     logger.warn(`Some watchers failed to register (${e.message})`);
     logger.debug(e);

@@ -30,7 +30,7 @@ export const postAutomation = async (req, res) => {
   }
   automation.name = name;
   automation.automationChains = rawChain;
-  await AutomationRepo.update(automation);
+  await AutomationUseCases.updateAutomation(automation);
   new SuccessResponse('Automation updated successfully.', automation).send(res);
 };
 

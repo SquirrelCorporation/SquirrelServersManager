@@ -30,6 +30,8 @@ apk add libcurl
 apk add gcompat
 apk add curl
 apk add newt
+$STD apk add docker
+$STD apk add docker-cli-compose
 ```
 
 Verify the installations:
@@ -121,6 +123,12 @@ Clone the repository:
 git clone https://github.com/SquirrelCorporation/SquirrelServersManager.git /opt/squirrelserversmanager
 ```
 
+Install deps:
+```sh
+rm -f /usr/lib/python3.12/EXTERNALLY-MANAGED
+pip install ansible-runner ansible-runner-http
+```
+
 Generate secrets and create the environment file:
 
 ```sh
@@ -139,6 +147,9 @@ DB_PORT=27017
 # REDIS
 REDIS_HOST=127.0.0.1
 REDIS_PORT=6379
+# SSM CONFIG
+SSM_INSTALL_PATH=/opt/squirrelserversmanager
+SSM_DATA_PATH=/opt/squirrelserversmanager/data
 EOF
 ```
 

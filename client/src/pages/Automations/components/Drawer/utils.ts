@@ -25,5 +25,14 @@ export function transformAutomationChain(
     )?.dockerContainers?.map((container) => ({
       value: container,
     })),
+    dockerVolumes: (
+      automation.actions[0] as Automations.ActionChainDockerVolume
+    )?.dockerVolumes?.map((volume) => ({
+      value: volume,
+    })),
+    dockerVolumeAction: {
+      value: (automation.actions[0] as Automations.ActionChainDockerVolume)
+        ?.dockerVolumeAction,
+    },
   };
 }

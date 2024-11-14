@@ -50,7 +50,7 @@ export class GitPullPushError extends Error {
         userInfo: {
           ...configuration.userInfo,
           accessToken: truncate((configuration?.userInfo as IGitUserInfos)?.accessToken, {
-            length: 24,
+            length: 6,
           }),
         },
       },
@@ -59,7 +59,7 @@ export class GitPullPushError extends Error {
 }
 
 export class CantSyncGitNotInitializedError extends Error {
-  /** the directory that should have a playbooks-repository repo */
+  /** the directory that should have a git repo */
   directory: string;
   constructor(directory: string) {
     super(directory);

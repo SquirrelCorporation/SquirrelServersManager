@@ -4,9 +4,9 @@ import Playbook, { PlaybookModel } from '../data/database/model/Playbook';
 import PlaybooksRepository from '../data/database/model/PlaybooksRepository';
 import PlaybooksRepositoryRepo from '../data/database/repository/PlaybooksRepositoryRepo';
 import PinoLogger from '../logger';
-import PlaybooksRepositoryComponent from '../modules/playbooks-repository/PlaybooksRepositoryComponent';
-import PlaybooksRepositoryEngine from '../modules/playbooks-repository/PlaybooksRepositoryEngine';
-import { recursiveTreeCompletion } from '../modules/playbooks-repository/tree-utils';
+import PlaybooksRepositoryComponent from '../modules/repository/PlaybooksRepositoryComponent';
+import PlaybooksRepositoryEngine from '../modules/repository/PlaybooksRepositoryEngine';
+import { recursiveTreeCompletion } from '../modules/repository/tree-utils';
 import Shell from '../modules/shell';
 
 const logger = PinoLogger.child(

@@ -19,7 +19,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, SsmAnsible } from 'ssm-shared-lib';
 
 export interface PlaybookExecutionTerminalModalHandles {
   resetTerminal: () => void;
@@ -110,7 +110,11 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
     };
 
     const isFinalStatusFailed = async () => {
-      if (savedStatuses?.find((status) => status._status === 'failed')) {
+      if (
+        savedStatuses?.find(
+          (status) => status._status === SsmAnsible.AnsibleTaskStatus.FAILED,
+        )
+      ) {
         const res = await getAnsibleSmartFailure({ execId: execId });
         if (res.data) {
           api.open({

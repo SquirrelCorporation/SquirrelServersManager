@@ -16,16 +16,16 @@ export default class SSHTerminalInstance {
     this.sshConnectionInstance = new SSHConnectionInstance(deviceUuid);
     this.socket = socket;
     this.logger = _logger.child(
-      { module: 'SSHTerminalInstance' },
+      { module: 'SSHTerminalInstance', moduleId: deviceUuid },
       { msgPrefix: '[SSH_TERMINAL_INSTANCE] - ' },
     );
     this.ttyOptions = ttyOptions;
   }
 
   async start() {
-    this.logger.info('Starting SSHTerminalInstance');
+    this.logger.info(`Starting SSHTerminalInstance...`);
     this.bind();
-    this.logger.info('await connect');
+    this.logger.debug('Await connect...');
     await this.sshConnectionInstance.connect();
   }
 
@@ -38,8 +38,7 @@ export default class SSHTerminalInstance {
   }
 
   private bind() {
-    this.logger.info('bind');
-
+    this.logger.debug('bind');
     this.sshConnectionInstance.ssh.on('banner', this.handleBanner.bind(this));
     this.sshConnectionInstance.ssh.on('ready', this.handleReady.bind(this));
     this.sshConnectionInstance.ssh.on('end', this.handleEnd.bind(this));
@@ -57,7 +56,7 @@ export default class SSHTerminalInstance {
   }
 
   private handleReady() {
-    this.logger.info('SSH CONNECTION ESTABLISHED');
+    this.logger.info('SSH connection established');
     this.socket.emit(SsmEvents.SSH.STATUS, { status: 'OK', message: 'SSH CONNECTION ESTABLISHED' });
 
     this.sshConnectionInstance.ssh.shell(
@@ -87,7 +86,7 @@ export default class SSHTerminalInstance {
   }
 
   private handleSocketDisconnect(reason: any) {
-    this.logger.warn(`CLIENT SOCKET DISCONNECT: ${util.inspect(reason)}`);
+    this.logger.warn(`Client socket disconnect: ${util.inspect(reason)}`);
     this.socket.emit(SsmEvents.SSH.STATUS, {
       status: 'DISCONNECT',
       message: 'SSH CONNECTION DISCONNECTED',
@@ -110,35 +109,35 @@ export default class SSHTerminalInstance {
       this.ttyOptions.height as number,
       this.ttyOptions.width as number,
     );
-    this.logger.info(`SOCKET RESIZE: ${JSON.stringify([data.rows, data.cols])}`);
+    this.logger.info(`Socket resize: ${JSON.stringify([data.rows, data.cols])}`);
   }
 
   private handleSocketData(stream: ClientChannel, data: string) {
-    this.logger.info(`write on stream: ${data}`);
+    this.logger.debug(`Write on stream: ${data}`);
     stream.write(data);
   }
 
   private handleStreamData(data: Buffer) {
-    this.logger.info(`received on stream: ${data.toString('utf-8')}`);
+    this.logger.debug(`Received on stream: ${data.toString('utf-8')}`);
     this.socket.emit(SsmEvents.SSH.NEW_DATA, data.toString('utf-8'));
   }
 
   private handleStreamClose(code: number | null, signal: string | null) {
-    this.logger.warn(`STREAM CLOSE: ${util.inspect([code, signal])}`);
+    this.logger.warn(`Stream closed: ${util.inspect([code, signal])}`);
     if (code !== 0 && code !== null) {
-      this.logger.error('STREAM CLOSE', util.inspect({ message: [code, signal] }));
+      this.logger.error('Stream closed', util.inspect({ message: [code, signal] }));
     }
     this.socket.disconnect(true);
     this.sshConnectionInstance.ssh.end();
   }
 
   private handleEnd() {
-    this.logger.error('CONN END BY HOST');
+    this.logger.error('Connection ended by host');
     this.socket.disconnect(true);
   }
 
   private handleClose() {
-    this.logger.error('CONN CLOSE');
+    this.logger.error('Connection closed');
     this.socket.disconnect(true);
   }
 

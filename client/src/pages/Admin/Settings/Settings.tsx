@@ -1,6 +1,7 @@
 import Title, { TitleColors } from '@/components/Template/Title';
 import AdvancedSettings from '@/pages/Admin/Settings/components/AdvancedSettings';
 import AuthenticationSettings from '@/pages/Admin/Settings/components/AuthenticationSettings';
+import ContainerStacksSettings from '@/pages/Admin/Settings/components/ContainerStacksSettings';
 import GeneralSettings from '@/pages/Admin/Settings/components/GeneralSettings';
 import Information from '@/pages/Admin/Settings/components/Information';
 import PlaybookSettings from '@/pages/Admin/Settings/components/PlaybooksSettings';
@@ -41,6 +42,15 @@ const Settings: React.FC = () => {
         </div>
       ),
       children: <PlaybookSettings />,
+    },
+    {
+      key: 'container-stacks',
+      label: (
+        <div>
+          <SettingOutlined /> Container Stacks
+        </div>
+      ),
+      children: <ContainerStacksSettings />,
     },
     {
       key: 'container-registries',

@@ -1,7 +1,9 @@
 import { API, SsmAgent, SsmAnsible } from 'ssm-shared-lib';
 import { getFromCache } from '../../../data/cache';
 import DeviceRepo from '../../../data/database/repository/DeviceRepo';
+import UserRepo from '../../../data/database/repository/UserRepo';
 import pinoLogger from '../../../logger';
+import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../ansible-vault/ansible-vault';
 
 class ExtraVars {
   private logger = pinoLogger.child(
@@ -24,7 +26,7 @@ class ExtraVars {
       if (!value && !emptySubstitute) {
         this.logger.error(`findValueOfExtraVars - ExtraVar not found : ${e.extraVar}`);
         if (e.required) {
-          throw new Error('ExtraVar value not found !');
+          throw new Error(`ExtraVar value not found ! (${e.extraVar})`);
         }
       } else {
         substitutedExtraVars.push({ ...e, value: value || undefined });
@@ -60,21 +62,22 @@ class ExtraVars {
 
   private getForcedValue(extraVar: API.ExtraVar, forcedValues?: API.ExtraVars) {
     const forcedValue = forcedValues?.find((e) => e.extraVar === extraVar.extraVar)?.value;
-    this.logger.debug(`forcedValue found ${forcedValue}`);
+    this.logger.debug(`forcedValue found: ${forcedValue}`);
     return forcedValue;
   }
 
   private async getContextExtraVarValue(extraVar: API.ExtraVar, targets?: string[]) {
-    this.logger.debug(`getContextExtraVarValue '${extraVar.extraVar}'`);
+    this.logger.debug(`getContextExtraVarValue - '${extraVar.extraVar}'`);
     if (!targets) {
       return;
     }
     if (targets.length > 1) {
-      throw new Error('Cannot use CONTEXT variable with multiple targets');
+      throw new Error(`Cannot use CONTEXT variable with multiple targets - '${extraVar.extraVar}'`);
     }
     const device = await DeviceRepo.findOneByUuid(targets[0]);
+    const user = await UserRepo.findFirst();
     if (!device) {
-      throw new Error('Targeted device not found');
+      throw new Error(`Targeted device not found - (device: ${targets?.[0]})`);
     }
     switch (extraVar.extraVar) {
       case SsmAnsible.DefaultContextExtraVarsList.DEVICE_ID:
@@ -85,6 +88,8 @@ class ExtraVars {
         return device.agentLogPath;
       case SsmAnsible.DefaultContextExtraVarsList.AGENT_TYPE:
         return device.agentType || SsmAgent.InstallMethods.NODE;
+      case SsmAnsible.DefaultContextExtraVarsList.API_KEY:
+        return user?.apiKey;
     }
     this.logger.error(`Context variable not found: '${extraVar.extraVar}'`);
   }

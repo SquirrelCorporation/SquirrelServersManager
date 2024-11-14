@@ -1,6 +1,6 @@
 # .github/workflows/molecule.yml
 
-name: Tests - Playbooks
+name: '[CI] Tests - Playbooks'
 
 on:
   push:

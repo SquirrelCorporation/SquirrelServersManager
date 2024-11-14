@@ -1,10 +1,16 @@
 import DockerModem from 'docker-modem';
 import Dockerode from 'dockerode';
 import { API, SsmAnsible, SsmStatus } from 'ssm-shared-lib';
+import { v4 as uuidv4 } from 'uuid';
 import { setToCache } from '../data/cache';
 import Device, { DeviceModel } from '../data/database/model/Device';
 import DeviceAuth from '../data/database/model/DeviceAuth';
 import User from '../data/database/model/User';
+import ContainerImageRepo from '../data/database/repository/ContainerImageRepo';
+import ContainerNetworkRepo from '../data/database/repository/ContainerNetworkRepo';
+import ContainerRepo from '../data/database/repository/ContainerRepo';
+import ContainerStatsRepo from '../data/database/repository/ContainerStatsRepo';
+import ContainerVolumeRepo from '../data/database/repository/ContainerVolumeRepo';
 import DeviceAuthRepo from '../data/database/repository/DeviceAuthRepo';
 import DeviceDownTimeEventRepo from '../data/database/repository/DeviceDownTimeEventRepo';
 import DeviceRepo from '../data/database/repository/DeviceRepo';
@@ -16,7 +22,7 @@ import { InternalError } from '../middlewares/api/ApiError';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../modules/ansible-vault/ansible-vault';
 import Inventory from '../modules/ansible/utils/InventoryTransformer';
 import { getCustomAgent } from '../modules/docker/core/CustomAgent';
-import Shell from '../modules/shell';
+import WatcherEngine from '../modules/docker/core/WatcherEngine';
 import PlaybookUseCases from './PlaybookUseCases';
 
 const logger = PinoLogger.child({ module: 'DeviceUseCases' }, { msgPrefix: '[DEVICE] - ' });
@@ -45,7 +51,7 @@ async function getDevicesOverview() {
     offline: offline,
     online: online,
     overview: overview,
-    totalCpu: totalCpu ? totalMem : NaN,
+    totalCpu: totalCpu ? totalCpu : NaN,
     totalMem: totalMem ? totalMem / 1024 : NaN,
   };
 }
@@ -93,6 +99,19 @@ async function deleteDevice(device: Device) {
   await DeviceAuthRepo.deleteByDevice(device);
   await DeviceDownTimeEventRepo.deleteManyByDevice(device);
   await DeviceRepo.deleteByUuid(device.uuid);
+  await WatcherEngine.registerWatcher(device);
+  const containers = await ContainerRepo.findContainersByDevice(device);
+  if (containers) {
+    await Promise.all(
+      containers.map(async (container) => {
+        await ContainerStatsRepo.deleteByContainer(container);
+      }),
+    );
+  }
+  await ContainerVolumeRepo.deleteByDevice(device);
+  await ContainerNetworkRepo.deleteByDevice(device);
+  await ContainerImageRepo.deleteByDevice(device);
+  await ContainerRepo.deleteByDevice(device);
 }
 
 async function updateDockerWatcher(
@@ -145,28 +164,29 @@ async function checkAnsibleConnection(
   if (masterNodeUrl) {
     await setToCache(SsmAnsible.DefaultSharedExtraVarsList.MASTER_NODE_URL, masterNodeUrl);
   }
-  if (sshKey) {
-    await Shell.SshPrivateKeyFileManager.saveSshKey(sshKey, 'tmp');
-  }
-  const mockedInventoryTarget = Inventory.inventoryBuilderForTarget([
-    {
-      device: {
-        _id: 'tmp',
-        ip,
-        uuid: 'tmp',
-        status: SsmStatus.DeviceStatus.REGISTERING,
+  const execUuid = uuidv4();
+  const mockedInventoryTarget = await Inventory.inventoryBuilderForTarget(
+    [
+      {
+        device: {
+          _id: 'tmp',
+          ip,
+          uuid: 'tmp',
+          status: SsmStatus.DeviceStatus.REGISTERING,
+        },
+        authType,
+        sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
+        sshUser,
+        sshPwd: sshPwd ? await vaultEncrypt(sshPwd, DEFAULT_VAULT_ID) : undefined,
+        sshPort: sshPort || 22,
+        becomeMethod,
+        sshConnection,
+        becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
+        sshKeyPass: sshKeyPass ? await vaultEncrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
       },
-      authType,
-      sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
-      sshUser,
-      sshPwd: sshPwd ? await vaultEncrypt(sshPwd, DEFAULT_VAULT_ID) : undefined,
-      sshPort: sshPort || 22,
-      becomeMethod,
-      sshConnection,
-      becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
-      sshKeyPass: sshKeyPass ? await vaultEncrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
-    },
-  ]);
+    ],
+    execUuid,
+  );
   const playbook = await PlaybookRepo.findOneByUniqueQuickReference('checkDeviceBeforeAdd');
   if (!playbook) {
     throw new InternalError('_checkDeviceBeforeAdd.yml not found.');
@@ -215,11 +235,12 @@ async function checkDockerConnection(
     );
     const agent = getCustomAgent(logger, {
       ...options.sshOptions,
+      timeout: 60000,
     });
     options.modem = new DockerModem({
       agent: agent,
     });
-    const dockerApi = new Dockerode(options);
+    const dockerApi = new Dockerode({ ...options, timeout: 60000 });
     await dockerApi.ping();
     await dockerApi.info();
     return {

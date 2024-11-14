@@ -1,7 +1,7 @@
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import request from 'supertest';
 import mongoose from 'mongoose';
-import { UsersModel } from '../../../../../data/database/model/User'; // Adjust the path to your User model
+import { UsersModel } from '../../../../../data/database/model/User';
 import app from '../../server';
 
 const requestUserCreation = async (user: object) => {

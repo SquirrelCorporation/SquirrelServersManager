@@ -11,7 +11,7 @@ import {
 import { ProForm } from '@ant-design/pro-form/lib';
 import { useSearchParams } from '@umijs/max';
 import React, { useState, useEffect } from 'react';
-import { Tabs, TabsProps } from 'antd';
+import { TabsProps } from 'antd';
 import { API } from 'ssm-shared-lib';
 import { history, useLocation } from '@umijs/max';
 

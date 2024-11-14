@@ -67,6 +67,9 @@ export default interface Container {
     remoteValue?: string;
     semverDiff?: 'major' | 'minor' | 'patch' | 'prerelease' | 'unknown';
   };
+  labels?: {
+    [p: string]: string;
+  };
   resultChanged?: any;
 }
 
@@ -142,6 +145,9 @@ const schema = new Schema<Container>(
       type: Object,
     },
     mounts: {
+      type: Object,
+    },
+    labels: {
       type: Object,
     },
   },

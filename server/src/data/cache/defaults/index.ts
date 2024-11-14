@@ -1,6 +1,8 @@
 import { SettingsKeys } from 'ssm-shared-lib';
-import logger from '../../../logger';
+import pinoLogger from '../../../logger';
 import { setToCache } from '../index';
+
+const logger = pinoLogger.child({ module: 'Cache' }, { msgPrefix: '[CACHE] - ' });
 
 const REDIS_DEFAULT_VALUES: { key: string; value: string; nx: boolean }[] = [
   {
@@ -57,9 +59,7 @@ const REDIS_DEFAULT_VALUES: { key: string; value: string; nx: boolean }[] = [
 
 async function initRedisValues(force?: boolean) {
   for (const value of REDIS_DEFAULT_VALUES) {
-    logger.info(
-      `[REDIS] - initRedisValues - Setting default configuration ${value.key} to ${value.value}`,
-    );
+    logger.info(`initRedisValues - Setting default configuration ${value.key} to ${value.value}`);
     await setToCache(value.key, value.value, {
       NX: force ? false : value.nx,
     });

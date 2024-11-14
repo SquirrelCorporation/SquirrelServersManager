@@ -7,7 +7,7 @@ import {
   API,
   DirectoryTree,
   DirectoryTree as DT,
-  Playbooks,
+  Repositories,
 } from 'ssm-shared-lib';
 
 export type ClientPlaybooksTrees = {
@@ -33,7 +33,7 @@ export function buildTree(
 ): ClientPlaybooksTrees {
   return {
     _name: rootNode.name,
-    remoteRootNode: rootNode.type === Playbooks.PlaybooksRepositoryType.GIT,
+    remoteRootNode: rootNode.type === Repositories.RepositoryType.GIT,
     depth: 0,
     rootNode: true,
     playbookRepository: {
@@ -44,7 +44,7 @@ export function buildTree(
     key: rootNode.name,
     nodeType: DT.CONSTANTS.DIRECTORY,
     icon:
-      rootNode.type === Playbooks.PlaybooksRepositoryType.LOCAL ? (
+      rootNode.type === Repositories.RepositoryType.LOCAL ? (
         <StreamlineLocalStorageFolderSolid />
       ) : (
         <SimpleIconsGit />

@@ -19,10 +19,11 @@ The only trigger available at this time is "Cron", a time-based trigger that wil
 The action is the "**what**" your automations will do.
 Two actions are currently available:
 
-|         Action         | Description                                                  |
-|:----------------------:|:-------------------------------------------------------------|
-|        **Playbook**        | Execute any playbooks registered in SSM                      |
-|     **Docker Action**      | Run a Docker action such as `restart` for a specific container |
+|          Action          | Description                                                       |
+|:------------------------:|:------------------------------------------------------------------|
+|       **Playbook**       | Execute any playbooks registered in SSM                           |
+|    **Docker Action**     | Run a Docker action such as `restart` for a specific container    |
+| **Docker Volume Action** | Run a Docker Volume action such as `backup` for a specific volume |
 
 ## Adding a new automation
 ![add-automation](/automations/add-automation.gif)

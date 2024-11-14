@@ -1,3 +1,7 @@
+import { SsmAlert } from 'ssm-shared-lib';
+import Events from '../../../core/events/events';
+import logger from '../../../logger';
+import GitPlaybooksRepositoryUseCases from '../../../services/GitPlaybooksRepositoryUseCases';
 import PlaybooksRepositoryComponent, {
   AbstractComponent,
   DIRECTORY_ROOT,
@@ -13,7 +17,10 @@ import {
   forcePull,
 } from '../../../helpers/git';
 
-class GitRepositoryComponent extends PlaybooksRepositoryComponent implements AbstractComponent {
+class GitPlaybooksRepositoryComponent
+  extends PlaybooksRepositoryComponent
+  implements AbstractComponent
+{
   private readonly options: IInitGitOptionsSyncImmediately;
 
   constructor(
@@ -43,20 +50,24 @@ class GitRepositoryComponent extends PlaybooksRepositoryComponent implements Abs
     };
 
     this.childLogger = logger.child(
-      { module: `GitRepository`, moduleId: `${this.uuid}`, moduleName: `${this.name}` },
-      { msgPrefix: `[GIT_REPOSITORY] - ` },
+      { module: `PlaybooksGitRepository`, moduleId: `${this.uuid}`, moduleName: `${this.name}` },
+      { msgPrefix: `[PLAYBOOKS_GIT_REPOSITORY] - ` },
     );
   }
 
-  async clone() {
+  async clone(syncAfter = false) {
     this.childLogger.info('Clone starting...');
     try {
-      void Shell.FileSystemManager.createDirectory(this.directory, DIRECTORY_ROOT);
+      try {
+        void Shell.FileSystemManager.createDirectory(this.directory, DIRECTORY_ROOT);
+      } catch (error: any) {
+        logger.warn(error);
+      }
       await clone({
         ...this.options,
         logger: {
           debug: (message: string, context: ILoggerContext): unknown =>
-            this.childLogger.info(message, { callerFunction: 'clone', ...context }),
+            this.childLogger.debug(message, { callerFunction: 'clone', ...context }),
           warn: (message: string, context: ILoggerContext): unknown =>
             this.childLogger.warn(message, { callerFunction: 'clone', ...context }),
           info: (message: GitStep, context: ILoggerContext): void => {
@@ -67,8 +78,22 @@ class GitRepositoryComponent extends PlaybooksRepositoryComponent implements Abs
           },
         },
       });
-    } catch (error) {
+      if (syncAfter) {
+        const nbSync = await this.syncToDatabase();
+        this.emit(Events.ALERT, {
+          severity: SsmAlert.AlertType.SUCCESS,
+          message: `Successfully updated repository ${this.name} with ${nbSync} files`,
+          module: 'GitPlaybooksRepositoryComponent',
+        });
+      }
+    } catch (error: any) {
       this.childLogger.error(error);
+      await GitPlaybooksRepositoryUseCases.putRepositoryOnError(this.uuid, error);
+      this.emit(Events.ALERT, {
+        severity: SsmAlert.AlertType.ERROR,
+        message: `Error during clone: ${error.message}`,
+        module: 'GitPlaybooksRepositoryComponent',
+      });
     }
   }
 
@@ -89,8 +114,19 @@ class GitRepositoryComponent extends PlaybooksRepositoryComponent implements Abs
           },
         },
       });
-    } catch (error) {
+      this.emit(Events.ALERT, {
+        severity: SsmAlert.AlertType.SUCCESS,
+        message: `Successfully commit and sync repository ${this.name}`,
+        module: 'GitPlaybooksRepositoryComponent',
+      });
+    } catch (error: any) {
       this.childLogger.error(error);
+      await GitPlaybooksRepositoryUseCases.putRepositoryOnError(this.uuid, error);
+      this.emit(Events.ALERT, {
+        severity: SsmAlert.AlertType.ERROR,
+        message: `Error during commit and sync: ${error.message}`,
+        module: 'GitPlaybooksRepositoryComponent',
+      });
     }
   }
 
@@ -111,8 +147,19 @@ class GitRepositoryComponent extends PlaybooksRepositoryComponent implements Abs
           },
         },
       });
-    } catch (error) {
+      this.emit(Events.ALERT, {
+        severity: SsmAlert.AlertType.SUCCESS,
+        message: `Successfully forcepull repository ${this.name}`,
+        module: 'GitPlaybooksRepositoryComponent',
+      });
+    } catch (error: any) {
       this.childLogger.error(error);
+      await GitPlaybooksRepositoryUseCases.putRepositoryOnError(this.uuid, error);
+      this.emit(Events.ALERT, {
+        severity: SsmAlert.AlertType.ERROR,
+        message: `Error during forcePull: ${error.message}`,
+        module: 'GitPlaybooksRepositoryComponent',
+      });
     }
   }
 
@@ -125,4 +172,4 @@ class GitRepositoryComponent extends PlaybooksRepositoryComponent implements Abs
   }
 }
 
-export default GitRepositoryComponent;
+export default GitPlaybooksRepositoryComponent;
