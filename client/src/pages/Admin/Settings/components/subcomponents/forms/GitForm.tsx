@@ -1,6 +1,11 @@
-import { ProForm, ProFormText } from '@ant-design/pro-components';
+import { capitalizeFirstLetter } from '@/utils/strings';
+import {
+  ProForm,
+  ProFormSelect,
+  ProFormText,
+} from '@ant-design/pro-components';
 import React from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, SsmGit } from 'ssm-shared-lib';
 
 export type GitFormProps = {
   selectedRecord: Partial<
@@ -32,6 +37,17 @@ const GitForm: React.FC<GitFormProps> = ({ selectedRecord, repositories }) => (
           },
         },
       ]}
+    />
+    <ProFormSelect
+      width={'md'}
+      name={'gitService'}
+      label={'Git Service'}
+      options={Object.values(SsmGit.Services).map((e) => ({
+        label: capitalizeFirstLetter(e),
+        value: e,
+      }))}
+      rules={[{ required: true }]}
+      initialValue={selectedRecord?.gitService || SsmGit.Services.Github}
     />
     <ProFormText
       width={'md'}

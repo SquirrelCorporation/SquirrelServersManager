@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { Repositories } from 'ssm-shared-lib';
+import { Repositories, SsmGit } from 'ssm-shared-lib';
 
 export const DOCUMENT_NAME = 'PlaybooksRepository';
 export const COLLECTION_NAME = 'playbooksrepository';
@@ -21,6 +21,7 @@ export default interface PlaybooksRepository {
   directoryExclusionList?: string[];
   onError?: boolean;
   onErrorMessage?: string;
+  gitService: SsmGit.Services;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -98,6 +99,10 @@ const schema = new Schema<PlaybooksRepository>(
     onErrorMessage: {
       type: Schema.Types.String,
       required: false,
+    },
+    gitService: {
+      type: Schema.Types.String,
+      required: true,
     },
   },
   {

@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import { SsmGit } from 'ssm-shared-lib';
 import ContainerCustomStackRepository from '../data/database/model/ContainerCustomStackRepository';
 import ContainerCustomStackRepositoryRepo from '../data/database/repository/ContainerCustomStackRepositoryRepo';
 import { InternalError } from '../middlewares/api/ApiError';
@@ -13,6 +14,7 @@ async function addGitRepository(
   email: string,
   userName: string,
   remoteUrl: string,
+  gitService: SsmGit.Services,
   matchesList?: string[],
 ) {
   const uuid = uuidv4();
@@ -26,6 +28,7 @@ async function addGitRepository(
     remoteUrl,
     enabled: true,
     matchesList,
+    gitService,
   });
   await ContainerCustomStackRepositoryRepo.create({
     uuid,
@@ -37,6 +40,7 @@ async function addGitRepository(
     userName,
     enabled: true,
     matchesList,
+    gitService,
   });
   void gitRepository.clone(true);
 }
@@ -49,6 +53,7 @@ async function updateGitRepository(
   email: string,
   userName: string,
   remoteUrl: string,
+  gitService: SsmGit.Services,
   matchesList?: string[],
 ) {
   await ContainerCustomStacksRepositoryEngine.deregisterRepository(uuid);
@@ -62,6 +67,7 @@ async function updateGitRepository(
     remoteUrl,
     enabled: true,
     matchesList,
+    gitService,
   });
   await ContainerCustomStackRepositoryRepo.update({
     uuid,
@@ -73,6 +79,7 @@ async function updateGitRepository(
     userName,
     enabled: true,
     matchesList,
+    gitService,
   });
 }
 

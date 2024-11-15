@@ -30,7 +30,8 @@ export function getState(): stateType {
 }
 
 async function registerGitRepository(playbookRepository: PlaybooksRepository) {
-  const { uuid, name, branch, email, userName, accessToken, remoteUrl } = playbookRepository;
+  const { uuid, name, branch, email, userName, accessToken, remoteUrl, gitService } =
+    playbookRepository;
   if (!accessToken) {
     throw new Error('accessToken is required');
   }
@@ -48,6 +49,7 @@ async function registerGitRepository(playbookRepository: PlaybooksRepository) {
     userName,
     decryptedAccessToken,
     remoteUrl,
+    gitService,
   );
 }
 

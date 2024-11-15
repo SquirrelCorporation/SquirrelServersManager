@@ -1,4 +1,4 @@
-import { Repositories } from 'ssm-shared-lib';
+import { API, Repositories } from 'ssm-shared-lib';
 import PlaybooksRepositoryRepo from '../../../data/database/repository/PlaybooksRepositoryRepo';
 import { NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
@@ -17,22 +17,16 @@ export const addGitRepository = async (req, res) => {
     userName,
     remoteUrl,
     directoryExclusionList,
-  }: {
-    name: string;
-    accessToken: string;
-    branch: string;
-    email: string;
-    userName: string;
-    remoteUrl: string;
-    directoryExclusionList?: string[];
-  } = req.body;
+    gitService,
+  }: API.GitPlaybooksRepository = req.body;
   await GitRepositoryUseCases.addGitRepository(
     name,
-    await vaultEncrypt(accessToken, DEFAULT_VAULT_ID),
+    await vaultEncrypt(accessToken as string, DEFAULT_VAULT_ID),
     branch,
     email,
     userName,
     remoteUrl,
+    gitService,
     directoryExclusionList,
   );
   new SuccessResponse('Added playbooks git repository').send(res);
@@ -56,27 +50,21 @@ export const updateGitRepository = async (req, res) => {
     accessToken,
     branch,
     email,
-    gitUserName,
+    userName,
     remoteUrl,
     directoryExclusionList,
-  }: {
-    name: string;
-    accessToken: string;
-    branch: string;
-    email: string;
-    gitUserName: string;
-    remoteUrl: string;
-    directoryExclusionList?: string[];
-  } = req.body;
+    gitService,
+  }: API.GitPlaybooksRepository = req.body;
 
   await GitRepositoryUseCases.updateGitRepository(
     uuid,
     name,
-    await vaultEncrypt(accessToken, DEFAULT_VAULT_ID),
+    await vaultEncrypt(accessToken as string, DEFAULT_VAULT_ID),
     branch,
     email,
-    gitUserName,
+    userName,
     remoteUrl,
+    gitService,
     directoryExclusionList,
   );
   new SuccessResponse('Updated playbooks git repository').send(res);

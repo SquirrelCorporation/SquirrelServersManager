@@ -51,7 +51,7 @@ export async function commitAndSync(options: ICommitAndSyncOptions): Promise<voi
     filesToIgnore,
     commitOnly,
   } = options;
-  const { gitUserName, email, branch } = userInfo ?? defaultGitInfo;
+  const { gitUserName, email, branch, gitService } = userInfo ?? defaultGitInfo;
   const { accessToken } = userInfo ?? {};
 
   const defaultBranchName = (await getDefaultBranchName(dir)) ?? branch;
@@ -120,7 +120,7 @@ export async function commitAndSync(options: ICommitAndSyncOptions): Promise<voi
   if (remoteUrl === '' || remoteUrl === undefined) {
     throw new SyncParameterMissingError('remoteUrl');
   }
-  await credentialOn(dir, remoteUrl, gitUserName, accessToken, remoteName);
+  await credentialOn(dir, remoteUrl, gitUserName, accessToken, remoteName, gitService);
   logProgress(GitStep.FetchingData);
   try {
     await fetchRemote(dir, remoteName, defaultBranchName);

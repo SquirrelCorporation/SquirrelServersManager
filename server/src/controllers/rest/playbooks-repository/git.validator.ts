@@ -1,4 +1,5 @@
 import { body, param } from 'express-validator';
+import { SsmGit } from 'ssm-shared-lib';
 import validator from '../../../middlewares/Validator';
 
 export const addGitRepositoryValidator = [
@@ -12,6 +13,10 @@ export const addGitRepositoryValidator = [
     .optional()
     .isArray()
     .withMessage('Directory exclusion list is incorrect'),
+  body('gitService')
+    .exists()
+    .isIn(Object.values(SsmGit.Services))
+    .withMessage('Git service is required'),
   validator,
 ];
 
@@ -27,6 +32,10 @@ export const updateGitRepositoryValidator = [
     .optional()
     .isArray()
     .withMessage('Directory exclusion list is incorrect'),
+  body('gitService')
+    .exists()
+    .isIn(Object.values(SsmGit.Services))
+    .withMessage('Git service is required'),
   validator,
 ];
 

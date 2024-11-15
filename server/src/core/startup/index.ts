@@ -1,11 +1,13 @@
-import { Repositories, SettingsKeys } from 'ssm-shared-lib';
+import { Repositories, SettingsKeys, SsmGit } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
 import { getFromCache, setToCache } from '../../data/cache';
 import initRedisValues from '../../data/cache/defaults';
 import { ContainerCustomStackModel } from '../../data/database/model/ContainerCustomStack';
+import { ContainerCustomStacksRepositoryModel } from '../../data/database/model/ContainerCustomStackRepository';
 import { ContainerVolumeModel } from '../../data/database/model/ContainerVolume';
 import { DeviceModel } from '../../data/database/model/Device';
 import { PlaybookModel } from '../../data/database/model/Playbook';
+import { PlaybooksRepositoryModel } from '../../data/database/model/PlaybooksRepository';
 import { copyAnsibleCfgFileIfDoesntExist } from '../../helpers/ansible/AnsibleConfigurationHelper';
 import PinoLogger from '../../logger';
 import AutomationEngine from '../../modules/automations/AutomationEngine';
@@ -27,10 +29,10 @@ class Startup {
   async init() {
     this.logger.info(`Initializing...`);
     const schemeVersion = await this.initializeSchemeVersion();
-    await this.initializeModules();
     if (this.isSchemeVersionDifferent(schemeVersion)) {
       await this.updateScheme();
     }
+    await this.initializeModules();
   }
 
   private async initializeSchemeVersion(): Promise<string | null> {
@@ -51,27 +53,122 @@ class Startup {
   }
 
   private async updateScheme() {
-    this.logger.warn(`updateScheme- Scheme version differed, starting applying updates...`);
-    await PlaybookModel.syncIndexes();
-    await DeviceModel.syncIndexes();
-    await createADefaultLocalUserRepository();
-    await initRedisValues();
-    void setAnsibleVersions();
-    await PlaybooksRepositoryEngine.syncAllRegistered();
-    this.registerPersistedProviders();
-    copyAnsibleCfgFileIfDoesntExist();
-    const masterNodeUrl = await getFromCache('_ssm_masterNodeUrl');
-    if (!masterNodeUrl) {
-      await setToCache('_ssm_masterNodeUrl', (await getFromCache('ansible-master-node-url')) || '');
+    this.logger.warn('updateScheme - Scheme version differed, starting applying updates...');
+    try {
+      await PlaybookModel.syncIndexes();
+      this.logger.info('PlaybookModel indexes synchronized successfully.');
+    } catch (error: any) {
+      this.logger.error(`Error synchronizing PlaybookModel indexes: ${error.message}`);
     }
-    await ContainerCustomStackModel.updateMany(
-      { type: { $exists: false } },
-      { $set: { type: Repositories.RepositoryType.LOCAL } },
-    );
-    const containerVolumes = await ContainerVolumeModel.find({ uuid: { $exists: false } });
-    for (const volume of containerVolumes) {
-      volume.uuid = uuidv4();
-      await volume.save();
+
+    try {
+      await DeviceModel.syncIndexes();
+      this.logger.info('DeviceModel indexes synchronized successfully.');
+    } catch (error: any) {
+      this.logger.error(`Error synchronizing DeviceModel indexes: ${error.message}`);
+    }
+
+    try {
+      await createADefaultLocalUserRepository();
+      this.logger.info('Created default local user repository successfully.');
+    } catch (error: any) {
+      this.logger.error(`Error creating default local user repository: ${error.message}`);
+    }
+
+    try {
+      await initRedisValues();
+      this.logger.info('Initialized Redis values successfully.');
+    } catch (error: any) {
+      this.logger.error(`Error initializing Redis values: ${error.message}`);
+    }
+
+    try {
+      void setAnsibleVersions(); // Setting versions asynchronously without waiting
+      this.logger.info('Ansible versions set successfully.');
+    } catch (error: any) {
+      this.logger.error(`Error setting Ansible versions: ${error.message}`);
+    }
+
+    try {
+      await PlaybooksRepositoryEngine.syncAllRegistered();
+      this.logger.info('All registered playbooks synced successfully.');
+    } catch (error: any) {
+      this.logger.error(`Error syncing all registered playbooks: ${error.message}`);
+    }
+
+    try {
+      this.registerPersistedProviders();
+      this.logger.info('Persisted providers registered successfully.');
+    } catch (error: any) {
+      this.logger.error(`Error registering persisted providers: ${error.message}`);
+    }
+
+    try {
+      copyAnsibleCfgFileIfDoesntExist();
+      this.logger.info("Ansible configuration file copied if it didn't exist.");
+    } catch (error: any) {
+      this.logger.error(`Error copying Ansible configuration file: ${error.message}`);
+    }
+
+    try {
+      const masterNodeUrl = await getFromCache('_ssm_masterNodeUrl');
+      if (!masterNodeUrl) {
+        await setToCache(
+          '_ssm_masterNodeUrl',
+          (await getFromCache('ansible-master-node-url')) || '',
+        );
+        this.logger.info('Master Node URL set in cache successfully.');
+      }
+    } catch (error: any) {
+      this.logger.error(`Error managing master node URL in cache: ${error.message}`);
+    }
+
+    try {
+      await ContainerCustomStackModel.updateMany(
+        { type: { $exists: false } },
+        { $set: { type: Repositories.RepositoryType.LOCAL } },
+      );
+      this.logger.info('Container custom stack models updated successfully.');
+    } catch (error: any) {
+      this.logger.error(`Error updating container custom stack models: ${error.message}`);
+    }
+
+    try {
+      const containerVolumes = await ContainerVolumeModel.find({ uuid: { $exists: false } });
+      for (const volume of containerVolumes) {
+        volume.uuid = uuidv4();
+        await volume.save();
+      }
+      this.logger.info('Container volumes updated successfully.');
+    } catch (error: any) {
+      this.logger.error(`Error updating container volumes: ${error.message}`);
+    }
+
+    try {
+      const containerCustomStackRepositories = await ContainerCustomStacksRepositoryModel.find({
+        gitService: { $exists: false },
+      });
+      for (const repo of containerCustomStackRepositories) {
+        repo.gitService = SsmGit.Services.Github;
+        await repo.save();
+      }
+      this.logger.info('Container custom stack repositories updated successfully.');
+    } catch (error: any) {
+      this.logger.error(`Error updating container custom stack repositories: ${error.message}`);
+    }
+
+    try {
+      const playbookGitRepositories = await PlaybooksRepositoryModel.find({
+        gitService: { $exists: false },
+        type: Repositories.RepositoryType.GIT,
+      });
+      for (const repo of playbookGitRepositories) {
+        repo.gitService = SsmGit.Services.Github;
+        await repo.save();
+      }
+      this.logger.info('Playbook Git repositories updated successfully.');
+    } catch (error: any) {
+      this.logger.error(`Error updating playbook Git repositories: ${error.message}`);
     }
   }
 
