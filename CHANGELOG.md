@@ -6,10 +6,12 @@
 
 **Implemented enhancements:**
 
+- \[FEAT\] Add support for multiple Git services [\#483](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/483) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Add advanced diagnostic checks for device connections [\#482](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/482) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Merged pull requests:**
 
+- \[CHORE\] Update versions for client, shared-lib, and server [\#484](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/484) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Increase JSON request size limit to 50mb [\#480](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/480) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Prevent duplicate cache setting for masterNodeUrl [\#479](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/479) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
