@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import { Logger } from 'pino';
 import log from '../../logger';
+import Events from './events';
 
 type Listener = (...args: any[]) => void;
 
@@ -10,6 +11,7 @@ export type Payload = {
   module: string;
   moduleId?: string;
   success?: boolean;
+  data?: any;
 };
 
 interface EventListeners {
@@ -20,7 +22,7 @@ const eventEmitter = new EventEmitter();
 
 abstract class EventManager {
   protected readonly eventListeners: EventListeners;
-  protected currentEvent?: string;
+  protected currentEvent?: Events;
   private readonly logger: Logger<never>;
 
   protected constructor() {
@@ -28,20 +30,20 @@ abstract class EventManager {
     this.logger = log.child({ module: 'EventManager' }, { msgPrefix: '[EVENT_MANAGER] - ' });
   }
 
-  private initializeEventListener(event: string) {
+  private initializeEventListener(event: Events) {
     if (!this.eventListeners[event]) {
       this.eventListeners[event] = [];
     }
   }
 
-  private addUniqueListener(event: string, listener: Listener) {
+  private addUniqueListener(event: Events, listener: Listener) {
     if (!this.eventListeners[event].includes(listener)) {
       this.eventListeners[event].push(listener);
       eventEmitter.on(event, listener);
     }
   }
 
-  on(event: string, listener: Listener) {
+  on(event: Events, listener: Listener) {
     this.logger.debug(`on: ${event}`);
     this.currentEvent = event;
 
@@ -49,7 +51,7 @@ abstract class EventManager {
     this.addUniqueListener(event, listener);
   }
 
-  emit(event: string, payload?: Payload | string) {
+  emit(event: Events, payload?: Payload | string) {
     this.logger.debug(`emit: ${event}`, payload);
     eventEmitter.emit(event, payload);
   }

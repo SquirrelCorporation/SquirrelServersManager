@@ -5,12 +5,14 @@ import {
   getCheckDeviceDockerConnection,
   postCheckAnsibleConnection,
   postCheckDockerConnection,
+  postDiagnostic,
 } from '../controllers/rest/devices/check-connection';
 import {
   getCheckDeviceAnsibleConnectionValidator,
   getCheckDeviceDockerConnectionValidator,
   postCheckAnsibleConnectionValidator,
   postCheckDockerConnectionValidator,
+  postDiagnosticValidator,
 } from '../controllers/rest/devices/check-connection.validator';
 import {
   addDevice,
@@ -67,7 +69,6 @@ router.post(`/:uuid`, updateDeviceAndAddDeviceStatValidator, updateDeviceAndAddD
 router.post('/', addDeviceAutoValidator, addDeviceAuto);
 
 router.use(passport.authenticate('jwt', { session: false }));
-
 router.post(
   '/check-connection/ansible',
   postCheckAnsibleConnectionValidator,
@@ -108,6 +109,7 @@ router
 router
   .route(`/:uuid/check-connection/docker`)
   .get(getCheckDeviceDockerConnectionValidator, getCheckDeviceDockerConnection);
+router.post('/:uuid/check-connection/diagnostic', postDiagnosticValidator, postDiagnostic);
 
 router.route('/').put(addDeviceValidator, addDevice).get(getDevices);
 router.route('/all').get(getAllDevices);

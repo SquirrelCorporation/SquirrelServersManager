@@ -64,8 +64,7 @@ const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
     title: 'Message',
     dataIndex: 'msg',
     key: 'msg',
-    filters: true,
-    onFilter: true,
+    hideInSearch: true,
     responsive: ['xs'],
   },
   {

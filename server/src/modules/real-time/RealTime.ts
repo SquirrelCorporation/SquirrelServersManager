@@ -17,21 +17,22 @@ const eventsToHandle = [
     event: Events.UPDATED_NOTIFICATIONS,
     ssmEvent: SsmEvents.Update.NOTIFICATION_CHANGE,
     logMessage: 'Notifications updated',
-    debounceTime: 5000,
   },
   {
     event: Events.ALERT,
     ssmEvent: SsmEvents.Alert.NEW_ALERT,
     logMessage: 'Alert sent',
-    debounceTime: 5000,
   },
   {
     event: Events.VOLUME_BACKUP,
     ssmEvent: SsmEvents.VolumeBackup.PROGRESS,
     logMessage: 'Volume backup progress',
-    debounceTime: 5000,
   },
-  // Add any additional events here
+  {
+    event: Events.DIAGNOSTIC_CHECK,
+    ssmEvent: SsmEvents.Diagnostic.PROGRESS,
+    logMessage: 'Device Diagnostic progress',
+  },
 ];
 
 class RealTimeEngine extends EventManager {
@@ -57,6 +58,14 @@ class RealTimeEngine extends EventManager {
     }, debounceTime);
   }
 
+  private createEmitter(eventName: string, logMessage: string) {
+    return (payload: any) => {
+      const io = App.getSocket().getIo();
+      this.childLogger.debug(`${logMessage}`);
+      io.emit(eventName, payload);
+    };
+  }
+
   public init() {
     try {
       this.childLogger.info('Init...');
@@ -65,8 +74,12 @@ class RealTimeEngine extends EventManager {
         this.childLogger.debug(
           `Registering event ${event} with ssmEvent ${ssmEvent} and debounceTime ${debounceTime}`,
         );
-        const debouncedEmitter = this.createDebouncedEmitter(ssmEvent, logMessage, debounceTime);
-        this.on(event, (payload: any) => debouncedEmitter(payload));
+        const emitter =
+          debounceTime !== undefined
+            ? this.createDebouncedEmitter(ssmEvent, logMessage, debounceTime)
+            : this.createEmitter(ssmEvent, logMessage);
+
+        this.on(event, (payload: any) => emitter(payload));
       });
     } catch (error: any) {
       this.childLogger.error(error);
