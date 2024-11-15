@@ -105,3 +105,13 @@ export const getCheckDeviceAnsibleConnectionValidator = [
     .withMessage('Uuid is not valid'),
   validator,
 ];
+
+export const postDiagnosticValidator = [
+  param('uuid')
+    .exists()
+    .notEmpty()
+    .withMessage('Uuid is required')
+    .isUUID()
+    .withMessage('Uuid is not valid'),
+  validator,
+];

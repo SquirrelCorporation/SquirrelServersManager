@@ -30,3 +30,7 @@ export enum Alert {
 export enum VolumeBackup {
   PROGRESS = 'volume:backup:progress',
 }
+
+export enum Diagnostic {
+  PROGRESS = 'diagnostic:progress'
+}

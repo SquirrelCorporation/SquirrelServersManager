@@ -12,3 +12,4 @@ export * as Automations from './form/automation';
 export * as SsmEvents from './types/events';
 export * as SsmAgent from './enums/agent';
 export * as SsmAlert from './enums/alert';
+export * as SsmDeviceDiagnostic from './enums/diagnostic'

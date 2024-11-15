@@ -4,16 +4,17 @@ import {
   getCheckDeviceAnsibleConnection,
   getCheckDeviceDockerConnection,
 } from '@/services/rest/device';
-import { ProForm } from '@ant-design/pro-components';
 import { Avatar, Button, Card, Col, Row } from 'antd';
 import React, { useState } from 'react';
 import { API } from 'ssm-shared-lib';
 
-export type ConnectionTestTabProps = {
+type ConnectionTestTabProps = {
   device: Partial<API.DeviceItem>;
 };
 
-const ConnectionTestTab: React.FC<ConnectionTestTabProps> = (props) => {
+const ExistingDeviceConnectionTest: React.FC<ConnectionTestTabProps> = ({
+  device,
+}) => {
   const [execId, setExecId] = useState<string | undefined>();
   const [dockerConnectionStatus, setDockerConnectionStatus] = useState<
     string | undefined
@@ -22,17 +23,17 @@ const ConnectionTestTab: React.FC<ConnectionTestTabProps> = (props) => {
     useState<string | undefined>();
   const [testStarted, setTestStarted] = useState(false);
   const asyncFetch = async () => {
-    if (!props.device.uuid) {
+    if (!device.uuid) {
       return;
     }
     setExecId(undefined);
     setDockerConnectionErrorMessage(undefined);
     setDockerConnectionStatus('running...');
     setTestStarted(true);
-    await getCheckDeviceAnsibleConnection(props.device.uuid).then((e) => {
+    await getCheckDeviceAnsibleConnection(device.uuid).then((e) => {
       setExecId(e.data.taskId);
     });
-    await getCheckDeviceDockerConnection(props.device.uuid).then((e) => {
+    await getCheckDeviceDockerConnection(device.uuid).then((e) => {
       setDockerConnectionStatus(e.data.connectionStatus);
       setDockerConnectionErrorMessage(e.data.errorMessage);
     });
@@ -80,4 +81,4 @@ const ConnectionTestTab: React.FC<ConnectionTestTabProps> = (props) => {
   );
 };
 
-export default ConnectionTestTab;
+export default ExistingDeviceConnectionTest;

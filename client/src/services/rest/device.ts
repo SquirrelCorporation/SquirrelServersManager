@@ -147,3 +147,16 @@ export async function updateAgentInstallMethod(
     },
   );
 }
+
+export async function postDeviceDiagnostic(
+  uuid: string,
+  options?: { [key: string]: any },
+) {
+  return request<API.SimpleResult>(
+    `/api/devices/${uuid}/check-connection/diagnostic`,
+    {
+      method: 'POST',
+      ...(options || {}),
+    },
+  );
+}

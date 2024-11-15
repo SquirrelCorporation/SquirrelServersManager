@@ -1,6 +1,6 @@
 import { ServerEnvironmentSvg } from '@/components/Icons/CustomIcons';
 import AgentConfigurationTab from '@/pages/Admin/Inventory/components/AgentConfigurationTab';
-import ConnectionTestTab from '@/pages/Admin/Inventory/components/ConnectionTestTab';
+import DiagnosticTab from '@/pages/Admin/Inventory/components/DiagnosticTab';
 import DockerConfigurationForm from '@/pages/Admin/Inventory/components/DockerConfigurationForm';
 import SSHConfigurationForm from '@/pages/Admin/Inventory/components/SSHConfigurationForm';
 import { DockerOutlined } from '@ant-design/icons';
@@ -28,8 +28,8 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
     },
     {
       key: '3',
-      label: 'Connection test',
-      children: <ConnectionTestTab device={props.values} />,
+      label: 'Diagnostic',
+      children: <DiagnosticTab device={props.values} />,
     },
     {
       key: '4',

@@ -34,7 +34,7 @@ export const httpLoggerOptions = {
   },
   // Define a custom success message
   customSuccessMessage: function (req, res) {
-    return `Request completed: ${req.method} - ${(req as typeof req & { originalUrl: string }).originalUrl}`;
+    return `Request completed (${res.statusCode}): ${req.method} - ${(req as typeof req & { originalUrl: string }).originalUrl}`;
   },
 
   // Define a custom receive message

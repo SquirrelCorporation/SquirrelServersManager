@@ -3,6 +3,7 @@ import DeviceAuthRepo from '../../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../../data/database/repository/DeviceRepo';
 import { ForbiddenError, InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
+import Diagnostic from '../../../modules/diagnostic/Diagnostic';
 import DeviceUseCases from '../../../services/DeviceUseCases';
 
 export const postCheckAnsibleConnection = async (req, res) => {
@@ -111,6 +112,24 @@ export const getCheckDeviceAnsibleConnection = async (req, res) => {
     new SuccessResponse('Post CheckDeviceAnsibleConnection', {
       taskId: taskId,
     } as API.CheckAnsibleConnection).send(res);
+  } catch (error: any) {
+    throw new InternalError(error.message);
+  }
+};
+
+export const postDiagnostic = async (req, res) => {
+  const { uuid } = req.params;
+  const device = await DeviceRepo.findOneByUuid(uuid);
+  if (!device) {
+    throw new NotFoundError('Device ID not found');
+  }
+  const deviceAuth = await DeviceAuthRepo.findOneByDevice(device);
+  if (!deviceAuth) {
+    throw new NotFoundError('Device Auth not found');
+  }
+  try {
+    void Diagnostic.run(device, deviceAuth);
+    new SuccessResponse('Get Device Diagnostic').send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }
