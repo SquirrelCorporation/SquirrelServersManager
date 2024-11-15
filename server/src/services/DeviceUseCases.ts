@@ -259,17 +259,19 @@ async function checkDeviceDockerConnection(device: Device, deviceAuth: DeviceAut
     const options = await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
     const agent = getCustomAgent(logger, {
       ...options.sshOptions,
+      timeout: 60000,
     });
     options.modem = new DockerModem({
       agent: agent,
     });
-    const dockerApi = new Dockerode(options);
+    const dockerApi = new Dockerode({ ...options, timeout: 60000 });
     await dockerApi.ping();
     await dockerApi.info();
     return {
       status: 'successful',
     };
   } catch (error: any) {
+    logger.error(error);
     return {
       status: 'failed',
       message: error.message,
