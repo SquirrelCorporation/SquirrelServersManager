@@ -48,8 +48,7 @@ jobs:
       run: |
         cp SquirrelServersManager_${{ env.version }}.tar.gz SquirrelServersManager_latest.tar.gz
 
-    - name: Upload latest artifact
-      uses: actions/upload-artifact@v3
+    - name: Release
+      uses: softprops/action-gh-release@v2
       with:
-        name: SquirrelServersManager_latest
-        path: SquirrelServersManager_latest.tar.gz
+        files: SquirrelServersManager_latest.tar.gz
