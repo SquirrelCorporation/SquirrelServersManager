@@ -2564,3 +2564,24 @@ const FileSystemSvg = React.memo((props) => (
 export const FileSystem = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={FileSystemSvg} {...props} />
 );
+
+const MedicalSearchDiagnosisSolidSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 14 14"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M6.25 1.5a4.75 4.75 0 1 0 0 9.5a4.75 4.75 0 0 0 0-9.5M0 6.25a6.25 6.25 0 1 1 11.32 3.656l2.387 2.387a1 1 0 0 1-1.414 1.414L9.906 11.32A6.25 6.25 0 0 1 0 6.25m5.438-3.22a.5.5 0 0 0-.5.5v1.406H3.53a.5.5 0 0 0-.5.5v1.625a.5.5 0 0 0 .5.5h1.406V8.97a.5.5 0 0 0 .5.5h1.625a.5.5 0 0 0 .5-.5V7.562H8.97a.5.5 0 0 0 .5-.5V5.437a.5.5 0 0 0-.5-.5H7.563V3.531a.5.5 0 0 0-.5-.5H5.438Z"
+      clipRule="evenodd"
+    />
+  </svg>
+));
+
+export const MedicalSearchDiagnosisSolid = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={MedicalSearchDiagnosisSolidSvg} {...props} />;
