@@ -21,7 +21,7 @@ export default interface PlaybooksRepository {
   directoryExclusionList?: string[];
   onError?: boolean;
   onErrorMessage?: string;
-  gitService: SsmGit.Services;
+  gitService?: SsmGit.Services;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -102,7 +102,7 @@ const schema = new Schema<PlaybooksRepository>(
     },
     gitService: {
       type: Schema.Types.String,
-      required: true,
+      required: false,
     },
   },
   {
