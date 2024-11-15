@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.22...HEAD)
 
+**Implemented enhancements:**
+
+- \[FEAT\] Add advanced diagnostic checks for device connections [\#482](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/482) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Merged pull requests:**
 
 - \[CHORE\] Increase JSON request size limit to 50mb [\#480](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/480) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
