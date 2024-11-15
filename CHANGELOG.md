@@ -11,6 +11,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Set default directory exclusions for tags [\#485](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/485) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update versions for client, shared-lib, and server [\#484](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/484) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Increase JSON request size limit to 50mb [\#480](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/480) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Prevent duplicate cache setting for masterNodeUrl [\#479](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/479) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
