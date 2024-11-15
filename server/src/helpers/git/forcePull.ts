@@ -29,7 +29,7 @@ export interface IForcePullOptions {
  */
 export async function forcePull(options: IForcePullOptions) {
   const { dir, logger, defaultGitInfo = defaultDefaultGitInfo, userInfo, remoteUrl } = options;
-  const { gitUserName, branch } = userInfo ?? defaultGitInfo;
+  const { gitUserName, branch, gitService } = userInfo ?? defaultGitInfo;
   const { accessToken } = userInfo ?? {};
   const defaultBranchName = (await getDefaultBranchName(dir)) ?? branch;
   const remoteName = await getRemoteName(dir, branch);
@@ -70,7 +70,7 @@ export async function forcePull(options: IForcePullOptions) {
     userInfo,
   });
   logProgress(GitStep.StartConfiguringGithubRemoteRepository);
-  await credentialOn(dir, remoteUrl, gitUserName, accessToken, remoteName);
+  await credentialOn(dir, remoteUrl, gitUserName, accessToken, remoteName, gitService);
   try {
     logProgress(GitStep.StartFetchingFromGithubRemote);
     await fetchRemote(dir, defaultGitInfo.remote, defaultGitInfo.branch);

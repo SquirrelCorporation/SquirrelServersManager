@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import { SsmGit } from 'ssm-shared-lib';
 
 export const DOCUMENT_NAME = 'ContainerCustomStackRepository';
 export const COLLECTION_NAME = 'containercustomstackssrepository';
@@ -18,6 +19,7 @@ export default interface ContainerCustomStackRepository {
   updatedAt?: Date;
   onError?: boolean;
   onErrorMessage?: string;
+  gitService: SsmGit.Services;
 }
 
 const schema = new Schema<ContainerCustomStackRepository>(
@@ -66,6 +68,10 @@ const schema = new Schema<ContainerCustomStackRepository>(
     onErrorMessage: {
       type: Schema.Types.String,
       required: false,
+    },
+    gitService: {
+      type: Schema.Types.String,
+      required: true,
     },
   },
   {

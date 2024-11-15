@@ -1,9 +1,12 @@
+import { SsmGit } from 'ssm-shared-lib';
+
 export interface IGitUserInfosWithoutToken {
   branch: string;
   /** Git commit message email */
   email: string | null | undefined;
   /** Github Login: username , this is also used to filter user's repo when searching repo */
   gitUserName: string;
+  gitService: SsmGit.Services;
 }
 
 export interface IGitUserInfos extends IGitUserInfosWithoutToken {

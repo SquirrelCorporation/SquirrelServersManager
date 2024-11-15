@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { API } from 'ssm-shared-lib';
 
 type DirectoryExclusionFormProps = {
-  selectedRecord: Partial<API.LocalRepository>;
+  selectedRecord: Partial<API.LocalPlaybooksRepository>;
 };
 
 const DirectoryExclusionForm: React.FC<DirectoryExclusionFormProps> = (

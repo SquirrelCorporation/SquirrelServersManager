@@ -1,7 +1,7 @@
 import pino from 'pino';
 import shell from 'shelljs';
 import { RepositoryType } from 'ssm-shared-lib/distribution/enums/repositories';
-import { SsmAlert } from 'ssm-shared-lib';
+import { SsmAlert, SsmGit } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
 import { SSM_DATA_PATH } from '../../config';
 import EventManager from '../../core/events/EventManager';
@@ -43,6 +43,7 @@ class ContainerCustomStacksRepositoryComponent extends EventManager {
     gitUserName: string,
     accessToken: string,
     remoteUrl: string,
+    gitService: SsmGit.Services,
   ) {
     super();
     const dir = `${DIRECTORY_ROOT}/${uuid}`;
@@ -62,6 +63,7 @@ class ContainerCustomStacksRepositoryComponent extends EventManager {
       gitUserName: gitUserName,
       branch: branch,
       accessToken: accessToken,
+      gitService: gitService,
     };
     this.options = {
       dir: this.directory,

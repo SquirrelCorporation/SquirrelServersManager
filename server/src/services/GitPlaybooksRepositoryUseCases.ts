@@ -1,4 +1,4 @@
-import { Repositories } from 'ssm-shared-lib';
+import { Repositories, SsmGit } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
 import PlaybooksRepositoryRepo from '../data/database/repository/PlaybooksRepositoryRepo';
 import PlaybooksRepositoryEngine from '../modules/repository/PlaybooksRepositoryEngine';
@@ -10,6 +10,7 @@ async function addGitRepository(
   email: string,
   userName: string,
   remoteUrl: string,
+  gitService: SsmGit.Services,
   directoryExclusionList?: string[],
 ) {
   const uuid = uuidv4();
@@ -24,6 +25,7 @@ async function addGitRepository(
     remoteUrl,
     enabled: true,
     directoryExclusionList,
+    gitService,
   });
   await PlaybooksRepositoryRepo.create({
     uuid,
@@ -37,6 +39,7 @@ async function addGitRepository(
     directory: gitRepository.getDirectory(),
     enabled: true,
     directoryExclusionList,
+    gitService,
   });
   void gitRepository.clone(true);
 }
@@ -49,6 +52,7 @@ async function updateGitRepository(
   email: string,
   userName: string,
   remoteUrl: string,
+  gitService: SsmGit.Services,
   directoryExclusionList?: string[],
 ) {
   await PlaybooksRepositoryEngine.deregisterRepository(uuid);
@@ -63,6 +67,7 @@ async function updateGitRepository(
     remoteUrl,
     enabled: true,
     directoryExclusionList,
+    gitService,
   });
   await PlaybooksRepositoryRepo.update({
     uuid,
@@ -76,6 +81,7 @@ async function updateGitRepository(
     directory: gitRepository.getDirectory(),
     enabled: true,
     directoryExclusionList,
+    gitService,
   });
 }
 

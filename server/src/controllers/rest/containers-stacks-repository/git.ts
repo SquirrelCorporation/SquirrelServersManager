@@ -1,3 +1,4 @@
+import { API } from 'ssm-shared-lib';
 import ContainerCustomStackRepositoryRepo from '../../../data/database/repository/ContainerCustomStackRepositoryRepo';
 import { NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
@@ -15,22 +16,16 @@ export const addGitRepository = async (req, res) => {
     userName,
     remoteUrl,
     matchesList,
-  }: {
-    name: string;
-    accessToken: string;
-    branch: string;
-    email: string;
-    userName: string;
-    remoteUrl: string;
-    matchesList?: string[];
-  } = req.body;
+    gitService,
+  }: API.GitContainerStacksRepository = req.body;
   await GitRepositoryUseCases.addGitRepository(
     name,
-    await vaultEncrypt(accessToken, DEFAULT_VAULT_ID),
+    await vaultEncrypt(accessToken as string, DEFAULT_VAULT_ID),
     branch,
     email,
     userName,
     remoteUrl,
+    gitService,
     matchesList,
   );
   new SuccessResponse('Added container stacks git repository').send(res);
@@ -52,26 +47,20 @@ export const updateGitRepository = async (req, res) => {
     accessToken,
     branch,
     email,
-    gitUserName,
+    userName,
     remoteUrl,
     matchesList,
-  }: {
-    name: string;
-    accessToken: string;
-    branch: string;
-    email: string;
-    gitUserName: string;
-    remoteUrl: string;
-    matchesList?: string[];
-  } = req.body;
+    gitService,
+  }: API.GitContainerStacksRepository = req.body;
   await GitRepositoryUseCases.updateGitRepository(
     uuid,
     name,
-    await vaultEncrypt(accessToken, DEFAULT_VAULT_ID),
+    await vaultEncrypt(accessToken as string, DEFAULT_VAULT_ID),
     branch,
     email,
-    gitUserName,
+    userName,
     remoteUrl,
+    gitService,
     matchesList,
   );
   new SuccessResponse('Updated container stacks git repository').send(res);

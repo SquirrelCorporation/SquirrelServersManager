@@ -1,10 +1,8 @@
-# Remote Playbooks Repositories
+# Remote Stacks Repositories
 
-Remote playbooks repositories are Git repositories that will be cloned to your filesystem as separate folders.
+Remote stacks repositories are Git repositories that will be cloned to your filesystem as separate folders.
 
 ## Adding a new remote repository
-
-![add-file](/playbooks/add-remote.gif)
 
 To add a Git playbooks repository, you must provide the following information:
 - The `Name` of the repo that will be displayed in the Playbooks page
@@ -13,10 +11,10 @@ To add a Git playbooks repository, you must provide the following information:
 - The `Git username` associated with the access token
 - The `Branch` to checkout and push changes to (e.g., `master` or `main`)
 - The `Access Token` associated with the user
+- `Match files`: SSM will only import files matching the given patterns
 
-- `Exclude Directories from Execution List`: All files locates withing those paths will be excluded for the list of playbooks you can execute in SSM. It can be usefull to exclude folders containing roles, vars, etc...
 
-![add-file](/playbooks/add-remote-options.png)
+![add-file](/compose/add-remote-options-2.png)
 
 ## Synchronization
 
