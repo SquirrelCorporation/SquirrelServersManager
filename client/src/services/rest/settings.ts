@@ -124,3 +124,15 @@ export async function postDeviceStatsSettings(
     ...(options || {}),
   });
 }
+
+export async function postMasterNodeUrlValue(
+  value: string,
+  options?: Record<string, any>,
+) {
+  return request<API.SimpleResult>(`/api/settings/keys/master-node-url`, {
+    method: 'POST',
+    ...{},
+    data: { value: value },
+    ...(options || {}),
+  });
+}

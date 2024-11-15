@@ -2,18 +2,100 @@
 
 ## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.21...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.22...HEAD)
 
-**Fixed bugs:**
+**Implemented enhancements:**
 
-- \[BUG\] Fix save button on Docker Compose UI builder not working [\#391](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/391)
-- \[BUG\] Refactor StackBuilder to DockerComposeStackBuilder [\#392](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/392) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[FEAT\] Add support for multiple Git services [\#483](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/483) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[FEAT\] Add advanced diagnostic checks for device connections [\#482](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/482) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Merged pull requests:**
 
+- \[CHORE\] Set default directory exclusions for tags [\#485](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/485) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update versions for client, shared-lib, and server [\#484](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/484) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Increase JSON request size limit to 50mb [\#480](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/480) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Prevent duplicate cache setting for masterNodeUrl [\#479](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/479) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+## [v0.1.22](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.22) (2024-11-14)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.21...v0.1.22)
+
+**Implemented enhancements:**
+
+- \[FEATURE\] Provide a confirmation before reboot. [\#458](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/458)
+- \[FEAT\] Git repository supports for docker compose stacks 🔥 [\#390](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/390)
+- \[FEAT\] Export Volumes 🔥 [\#332](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/332)
+- \[FEAT\] Add volume backup functionality [\#460](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/460) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\] enhance SSH key handling [\#442](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/442) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Try to improve responsiveness [\#474](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/474) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Fixed bugs:**
+
+- \[BUG\] `Combined Power` wrong value [\#457](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/457)
+- \[BUG\] Container detection and deployment [\#440](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/440)
+- \[BUG\] Unable to execute playbook from remote get repository \(request errored with status code: 500\) [\#396](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/396)
+- \[BUG\] Fix save button on Docker Compose UI builder not working [\#391](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/391)
+- \[BUG/CHORE\] Add masterNodeUrl and refactor ExtraVars components [\#468](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/468) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\] Fix CPU and memory calculations, integrate DeviceUseCases tests [\#466](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/466) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\] Add enhanced agent installation tests using Molecule [\#425](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/425) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\] Refactor StackBuilder to DockerComposeStackBuilder [\#392](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/392) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Add retry logic to user fetching process [\#475](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/475) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\] Fix typo in CPU speed unit [\#464](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/464) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- 441 bug container image tags [\#444](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/444) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\] Fix containers not being sync right after device add [\#443](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/443) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\] Wrap playbook variable with single quotes in command [\#421](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/421) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Closed issues:**
+
+- \[BUG\] Cannot reboot [\#459](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/459)
+- I may not have tested all the functionality, but I would like to give feedback on the interface. [\#445](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/445)
+- \[BUG\] Container image tags [\#441](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/441)
+- \[FEAT\] Persist API URL option after first time add of agent 🔥 [\#424](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/424)
+- \[FEATURE\] Filter git playbooks [\#339](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/339)
+- \[BUG\] sendDeviceInfoToApi 401 error [\#338](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/338)
+- \[FEATURE\] Agent in docker [\#298](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/298)
+- \[CHORE\] Use Roles for Ansible Playbook 🧹 [\#286](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/286)
+- \[FEATURE\]  - Docker Compose without a NginX Reverse Proxy [\#139](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/139)
+
+**Merged pull requests:**
+
+- \[CHORE\] Add type exports and fix response types for connection checks [\#473](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/473) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[DOC\] Add Docker Volume Action and Proxy-Free Install Guide [\#469](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/469) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Add confirmation prompt for critical quick actions [\#463](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/463) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump @typescript-eslint/eslint-plugin from 8.13.0 to 8.14.0 in /server [\#462](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/462) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @typescript-eslint/parser from 8.12.2 to 8.14.0 in /server [\#461](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/461) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump rc-menu from 9.15.1 to 9.16.0 in /client [\#455](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/455) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @ant-design/charts from 2.2.1 to 2.2.3 in /client [\#454](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/454) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @umijs/max from 4.3.29 to 4.3.31 in /client [\#453](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/453) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @eslint/js from 9.13.0 to 9.14.0 in /client [\#452](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/452) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint-plugin-jest from 28.8.3 to 28.9.0 in /client [\#451](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/451) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump globals from 15.11.0 to 15.12.0 in /server [\#450](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/450) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @typescript-eslint/eslint-plugin from 8.12.2 to 8.13.0 in /server [\#449](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/449) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @aws-sdk/client-ecr from 3.682.0 to 3.687.0 in /server [\#448](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/448) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump mongoose from 8.8.0 to 8.8.1 in /server [\#447](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/447) ([dependabot[bot]](https://github.com/apps/dependabot))
+- 390 feat git repository supports for docker compose stacks [\#439](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/439) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump @umijs/max from 4.3.28 to 4.3.29 in /client [\#438](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/438) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint-plugin-react-hooks from 4.6.2 to 5.0.0 in /client [\#437](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/437) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[CHORE\] Add Dockerless installation guide and update dependencies [\#429](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/429) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update dependencies to latest versions [\#428](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/428) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[DOC\] Add images and enhance Docker Compose editor documentation [\#427](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/427) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[DOC\] Add Proxmox install guide and update related docs [\#426](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/426) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update file paths and remove redundant dev dependencies [\#423](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/423) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump elliptic from 6.5.7 to 6.6.0 in /client in the npm\_and\_yarn group [\#420](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/420) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[CHORE\] Upgrade dependencies in package-lock.json [\#418](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/418) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump node from 22.9.0-alpine to 23.1.0-alpine in /server [\#417](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/417) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 22.9.0-alpine to 23.1.0-alpine in /client [\#413](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/413) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[TEST\] Add integration tests and mock strategy for Passport [\#395](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/395) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Add GitHub Actions workflow and update curl commands [\#393](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/393) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Update release.json [\#388](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/388) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Add UUIDs to ContainerVolume entries missing them [\#477](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/477) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Add timeout configuration for Docker API [\#476](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/476) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Enable privilege escalation for device reboot task [\#472](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/472) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update dependencies in package-lock.json files [\#471](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/471) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Enhance logging and error messages with device context [\#470](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/470) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Add unit tests for SshPrivateKeyFileManager [\#467](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/467) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Remove unused imports and enable Ansible task profiling [\#465](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/465) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Add health checks to server in Docker Compose files [\#419](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/419) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update dependencies and add module mapping [\#387](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/387) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.21](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.21) (2024-10-15)
@@ -153,6 +235,10 @@
 - \[BUG\] Uninstalling the agent still left files behind [\#46](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/46)
 - \[BUG\] Add support for agent log path management in Ansible tasks [\#266](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/266) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\]\[CHORE\] Add default values for SSH connection and host checking [\#265](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/265) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Closed issues:**
+
+- \[CHORE\] Add testing for ansible playbooks with molecule [\#267](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/267)
 
 **Merged pull requests:**
 

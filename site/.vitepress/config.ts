@@ -149,6 +149,7 @@ export default defineConfig({
             {
               text: 'Stacks - Container', items: [
                 { text: 'Overview', link: '/docs/compose/editor.md' },
+                { text: 'Remote Container Stacks Repositories', link: '/docs/compose/remote-stacks.md' }
               ]
             },
             {

@@ -24,7 +24,7 @@ export const getServerLogs = async (req, res) => {
     'time',
     'pid',
     'level',
-    'message',
+    'msg',
     'module',
     'moduleId',
     'moduleName',

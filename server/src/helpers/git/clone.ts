@@ -19,7 +19,7 @@ export async function clone(options: {
   userInfo?: IGitUserInfos;
 }): Promise<void> {
   const { dir, remoteUrl, userInfo, logger, defaultGitInfo = defaultDefaultGitInfo } = options;
-  const { gitUserName, branch } = userInfo ?? defaultGitInfo;
+  const { gitUserName, branch, gitService } = userInfo ?? defaultGitInfo;
   const { accessToken } = userInfo ?? {};
 
   if (accessToken === '' || accessToken === undefined) {
@@ -61,7 +61,7 @@ export async function clone(options: {
   const remoteName = await getRemoteName(dir, branch);
   logDebug(`Successfully Running git init for clone in dir ${dir}`, GitStep.PrepareClone);
   logProgress(GitStep.StartConfiguringGithubRemoteRepository);
-  await credentialOn(dir, remoteUrl, gitUserName, accessToken, remoteName);
+  await credentialOn(dir, remoteUrl, gitUserName, accessToken, remoteName, gitService);
   try {
     logProgress(GitStep.StartFetchingFromGithubRemote);
     const { stderr: pullStdError, exitCode } = await GitProcess.exec(

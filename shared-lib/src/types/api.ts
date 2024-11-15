@@ -1,5 +1,6 @@
 import { ExtraVarsType, SSHConnection, SSHType } from '../enums/ansible';
 import { VolumeBackupMode } from '../enums/container';
+import { Services } from '../enums/git';
 import { RepositoryType } from '../enums/repositories';
 import { AutomationChain } from '../form/automation';
 import { ExtendedTreeNode } from './tree';
@@ -666,6 +667,8 @@ export type GitPlaybooksRepository = PlaybooksRepository & {
   userName: string;
   remoteUrl: string;
   default: boolean;
+  gitService: Services;
+  accessToken?: string;
 }
 
 export type LocalPlaybooksRepository = PlaybooksRepository & {
@@ -685,6 +688,8 @@ export type GitContainerStacksRepository = {
   matchesList?: string[];
   onError?: boolean;
   onErrorMessage?: string;
+  gitService: Services;
+  accessToken?: string;
 }
 
 export type ExtraVars = ExtraVar[];

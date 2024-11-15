@@ -4,14 +4,24 @@ import React, { useState } from 'react';
 import { API } from 'ssm-shared-lib';
 
 type DirectoryExclusionFormProps = {
-  selectedRecord: Partial<API.LocalRepository>;
+  selectedRecord: Partial<API.LocalPlaybooksRepository>;
 };
 
 const DirectoryExclusionForm: React.FC<DirectoryExclusionFormProps> = (
   props,
 ) => {
   const [tags, setTags] = useState(
-    props.selectedRecord?.directoryExclusionList || [],
+    props.selectedRecord?.directoryExclusionList || [
+      'production',
+      'staging',
+      'group_vars',
+      'host_vars',
+      'library',
+      'module_utils',
+      'filters_plugin',
+      'roles',
+      'inventories',
+    ],
   );
 
   const validateTag = (tag: string): boolean => {

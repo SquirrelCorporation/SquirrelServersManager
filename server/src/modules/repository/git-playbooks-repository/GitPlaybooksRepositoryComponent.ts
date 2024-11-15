@@ -1,4 +1,4 @@
-import { SsmAlert } from 'ssm-shared-lib';
+import { SsmAlert, SsmGit } from 'ssm-shared-lib';
 import Events from '../../../core/events/events';
 import logger from '../../../logger';
 import GitPlaybooksRepositoryUseCases from '../../../services/GitPlaybooksRepositoryUseCases';
@@ -32,6 +32,7 @@ class GitPlaybooksRepositoryComponent
     gitUserName: string,
     accessToken: string,
     remoteUrl: string,
+    gitService: SsmGit.Services,
   ) {
     super(uuid, name, DIRECTORY_ROOT);
     this.uuid = uuid;
@@ -41,6 +42,7 @@ class GitPlaybooksRepositoryComponent
       gitUserName: gitUserName,
       branch: branch,
       accessToken: accessToken,
+      gitService: gitService,
     };
     this.options = {
       dir: this.directory,
@@ -67,7 +69,7 @@ class GitPlaybooksRepositoryComponent
         ...this.options,
         logger: {
           debug: (message: string, context: ILoggerContext): unknown =>
-            this.childLogger.debug(message, { callerFunction: 'clone', ...context }),
+            this.childLogger.info(message, { callerFunction: 'clone', ...context }),
           warn: (message: string, context: ILoggerContext): unknown =>
             this.childLogger.warn(message, { callerFunction: 'clone', ...context }),
           info: (message: GitStep, context: ILoggerContext): void => {

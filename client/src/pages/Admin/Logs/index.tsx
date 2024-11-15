@@ -37,6 +37,9 @@ const Index: React.FC = () => {
   if (searchParams.get('moduleId')) {
     form.setFieldsValue({ moduleId: searchParams.get('moduleId') });
   }
+  if (searchParams.get('msg')) {
+    form.setFieldsValue({ msg: searchParams.get('msg') });
+  }
 
   const logsTabItems: TabsProps['items'] = [
     {

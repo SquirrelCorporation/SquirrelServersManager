@@ -1,4 +1,5 @@
 import { body, param } from 'express-validator';
+import { SsmGit } from 'ssm-shared-lib';
 import validator from '../../../middlewares/Validator';
 
 export const addGitRepositoryValidator = [
@@ -9,6 +10,10 @@ export const addGitRepositoryValidator = [
   body('userName').exists().isString().withMessage('userName is incorrect'),
   body('remoteUrl').exists().isURL().withMessage('remoteUrl is incorrect'),
   body('matchesList').exists().isArray().withMessage('matchesList is incorrect'),
+  body('gitService')
+    .exists()
+    .isIn(Object.values(SsmGit.Services))
+    .withMessage('Git service is required'),
   validator,
 ];
 
@@ -21,6 +26,10 @@ export const updateGitRepositoryValidator = [
   body('userName').exists().isString().withMessage('userName is incorrect'),
   body('remoteUrl').exists().isURL().withMessage('remoteUrl is incorrect'),
   body('matchesList').exists().isArray().withMessage('matchesListis incorrect'),
+  body('gitService')
+    .exists()
+    .isIn(Object.values(SsmGit.Services))
+    .withMessage('Git service is required'),
   validator,
 ];
 

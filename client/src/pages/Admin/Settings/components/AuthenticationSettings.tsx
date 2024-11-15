@@ -1,5 +1,6 @@
-import { MynauiApi } from '@/components/Icons/CustomIcons';
+import { LinkAlt, MynauiApi } from '@/components/Icons/CustomIcons';
 import Title, { TitleColors } from '@/components/Template/Title';
+import { postMasterNodeUrlValue } from '@/services/rest/settings';
 import { postResetApiKey } from '@/services/rest/usersettings';
 import { useModel } from '@@/exports';
 import { InfoCircleFilled, WarningOutlined } from '@ant-design/icons';
@@ -14,13 +15,18 @@ import {
   Row,
   Col,
   Flex,
+  InputRef,
 } from 'antd';
 import React, { useState } from 'react';
 
 const AuthenticationSettings: React.FC = () => {
   const { initialState } = useModel('@@initialState');
+  const nodeUrlRef = React.useRef<InputRef | null>(null);
   const { currentUser } = initialState || {};
   const [apiKey, setApiKey] = useState(currentUser?.settings.apiKey);
+  const [masterNodeUrl, setMasterNodeUrl] = useState(
+    currentUser?.settings.masterNodeUrl,
+  );
 
   const onClickResetApiKey = async () => {
     await postResetApiKey().then((res) => {
@@ -29,8 +35,62 @@ const AuthenticationSettings: React.FC = () => {
     });
   };
 
+  const onClickUpdateSsmUrl = async () => {
+    await postMasterNodeUrlValue(
+      nodeUrlRef?.current?.input?.value as string,
+    ).then((res) => {
+      setMasterNodeUrl(res.data.value);
+      message.success({ content: 'SSM URL successfully saved', duration: 6 });
+    });
+  };
+
   return (
     <Card>
+      <Card
+        type="inner"
+        title={
+          <Title.SubTitle
+            title={'SSM URL'}
+            backgroundColor={TitleColors.HOST_URL}
+            icon={<LinkAlt />}
+          />
+        }
+        style={{ marginTop: 16 }}
+      >
+        <Flex vertical gap={32} style={{ width: '100%' }}>
+          <Row
+            justify="space-between"
+            align="middle"
+            gutter={[16, 16]}
+            style={{ width: '100%' }}
+          >
+            <Col xs={24} md={4}>
+              <Typography.Text>
+                <Popover
+                  content={
+                    'The SSM URL is used for programmatic access such as agent or direct REST API'
+                  }
+                >
+                  <InfoCircleFilled />
+                </Popover>{' '}
+                SSM URL
+              </Typography.Text>
+            </Col>
+            <Col xs={24} md={16}>
+              <Input
+                ref={nodeUrlRef}
+                defaultValue={masterNodeUrl}
+                style={{ width: '100%' }}
+              />
+            </Col>
+            <Col xs={24} md={4}>
+              <Button danger block onClick={onClickUpdateSsmUrl}>
+                Overwrite
+              </Button>
+            </Col>
+          </Row>
+        </Flex>
+      </Card>
       <Card
         type="inner"
         title={
