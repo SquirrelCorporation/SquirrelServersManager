@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.23...HEAD)
+
+**Fixed bugs:**
+
+- \[BUG\] Update versions and improve error handling [\#489](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/489) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 ## [v0.1.23](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.23) (2024-11-15)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.22...v0.1.23)
