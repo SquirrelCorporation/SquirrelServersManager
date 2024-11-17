@@ -5,6 +5,7 @@ import { getAnsibleRunnerVersion, getAnsibleVersion } from '../../../core/system
 import { getFromCache, getIntConfFromCache } from '../../../data/cache';
 import { Role } from '../../../data/database/model/User';
 import UserRepo from '../../../data/database/repository/UserRepo';
+import logger from '../../../logger';
 import { AuthFailureError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import { createADefaultLocalUserRepository } from '../../../modules/repository/default-playbooks-repositories';
@@ -110,7 +111,11 @@ export const createFirstUser = async (req, res) => {
     role: Role.ADMIN,
     avatar: avatar || '/avatars/squirrel.svg',
   });
-  await createADefaultLocalUserRepository();
+  try {
+    await createADefaultLocalUserRepository();
+  } catch (error: any) {
+    logger.error(error);
+  }
   new SuccessResponse('Create first user').send(res);
 };
 
