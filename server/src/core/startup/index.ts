@@ -43,6 +43,7 @@ class Startup {
 
   private async initializeModules() {
     await PlaybooksRepositoryEngine.init();
+    void PlaybooksRepositoryEngine.syncAllRegistered();
     void sshPrivateKeyFileManager.removeAllAnsibleTemporaryPrivateKeys();
     void NotificationComponent.init();
     void Crons.initScheduledJobs();
@@ -87,13 +88,6 @@ class Startup {
       this.logger.info('Ansible versions set successfully.');
     } catch (error: any) {
       this.logger.error(`Error setting Ansible versions: ${error.message}`);
-    }
-
-    try {
-      await PlaybooksRepositoryEngine.syncAllRegistered();
-      this.logger.info('All registered playbooks synced successfully.');
-    } catch (error: any) {
-      this.logger.error(`Error syncing all registered playbooks: ${error.message}`);
     }
 
     try {
