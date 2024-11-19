@@ -186,7 +186,7 @@ const ContainerMetas = (props: ContainerMetasProps) => {
       search: false,
       render: (text, row) => [
         <>
-          {row.ports && row.ports.length > 0 && (
+          {row.ports && row.ports.length > 0 && row.ports[0].PublicPort && (
             <Tooltip
               key={`url-${row.id}`}
               title={`http://${row.device?.ip}:${row.ports[0].PublicPort}`}
