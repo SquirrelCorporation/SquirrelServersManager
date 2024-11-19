@@ -1,5 +1,26 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.24...HEAD)
+
+**Closed issues:**
+
+- \[BUG\] Response status: 500 - \_checkDeviceBeforeAdd.yml not found. [\#488](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/488)
+
+**Merged pull requests:**
+
+- Bump framer-motion from 11.11.15 to 11.11.17 in /client [\#499](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/499) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump antd from 5.22.0 to 5.22.1 in /client [\#498](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/498) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @eslint/eslintrc from 3.1.0 to 3.2.0 in /client [\#497](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/497) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @umijs/lint from 4.3.31 to 4.3.34 in /client [\#496](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/496) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @eslint/js from 9.14.0 to 9.15.0 in /server [\#495](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/495) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @eslint/compat from 1.2.2 to 1.2.3 in /server [\#492](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/492) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump cross-spawn from 7.0.3 to 7.0.5 in /client in the npm\_and\_yarn group [\#491](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/491) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[CHORE\] Create PR from master to release [\#490](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/490) ([github-actions[bot]](https://github.com/apps/github-actions))
+- \[CHORE\] Create PR from master to release [\#486](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/486) ([github-actions[bot]](https://github.com/apps/github-actions))
+- \[CHORE\] Create PR from master to release [\#478](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/478) ([github-actions[bot]](https://github.com/apps/github-actions))
+
 ## [v0.1.24](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.24) (2024-11-17)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.23...v0.1.24)
