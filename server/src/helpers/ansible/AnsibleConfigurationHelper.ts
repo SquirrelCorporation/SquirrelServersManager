@@ -2,7 +2,8 @@ import fs from 'fs';
 import { SSM_DATA_PATH, SSM_INSTALL_PATH } from '../../config';
 import FileSystemManager from '../../modules/shell/managers/FileSystemManager';
 
-export const ANSIBLE_CONFIG_FILE = `${SSM_DATA_PATH}/config/ansible.cfg`;
+export const ANSIBLE_CONFIG_PATH = `${SSM_DATA_PATH}/config`;
+export const ANSIBLE_CONFIG_FILE = `${ANSIBLE_CONFIG_PATH}/ansible.cfg`;
 
 interface ConfigEntry {
   value: string;
@@ -18,6 +19,7 @@ interface Config {
 
 export const copyAnsibleCfgFileIfDoesntExist = () => {
   if (!FileSystemManager.test('-f', ANSIBLE_CONFIG_FILE)) {
+    FileSystemManager.createDirectory(ANSIBLE_CONFIG_PATH);
     FileSystemManager.copyFile(
       `${SSM_INSTALL_PATH}/server/src/ansible/default-ansible.cfg`,
       ANSIBLE_CONFIG_FILE,
