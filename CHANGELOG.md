@@ -4,20 +4,42 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.24...HEAD)
 
+**Fixed bugs:**
+
+- \[BUG\] Refactor Ansible configuration path handling [\#515](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/515) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Closed issues:**
 
 - \[BUG\] Response status: 500 - \_checkDeviceBeforeAdd.yml not found. [\#488](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/488)
 
 **Merged pull requests:**
 
+- \[CHORE\] Add reload functionality after container actions [\#516](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/516) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump @aws-sdk/client-ecr from 3.687.0 to 3.693.0 in /server [\#514](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/514) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @typescript-eslint/parser from 8.14.0 to 8.15.0 in /server [\#513](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/513) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump express from 5.0.0 to 5.0.1 in /client [\#512](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/512) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump cross-spawn from 6.0.5 to 6.0.6 in /client in the npm\_and\_yarn group [\#511](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/511) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @umijs/max from 4.3.31 to 4.3.34 in /client [\#510](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/510) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @vitest/coverage-v8 from 2.1.4 to 2.1.5 in /server [\#509](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/509) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @typescript-eslint/eslint-plugin from 8.14.0 to 8.15.0 in /server [\#508](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/508) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.1.0-alpine to 23.2.0-alpine in /server [\#506](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/506) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @vue-flow/background from 1.3.1 to 1.3.2 in /site [\#505](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/505) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump swiper from 11.1.14 to 11.1.15 in /site [\#504](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/504) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @eslint/js from 9.14.0 to 9.15.0 in /client [\#503](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/503) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @vue-flow/core from 1.41.4 to 1.41.5 in /site [\#502](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/502) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump nginx from 1.27.1 to 1.27.2 in /proxy [\#501](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/501) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.1.0-alpine to 23.2.0-alpine in /client [\#500](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/500) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump framer-motion from 11.11.15 to 11.11.17 in /client [\#499](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/499) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump antd from 5.22.0 to 5.22.1 in /client [\#498](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/498) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @eslint/eslintrc from 3.1.0 to 3.2.0 in /client [\#497](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/497) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @umijs/lint from 4.3.31 to 4.3.34 in /client [\#496](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/496) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @eslint/js from 9.14.0 to 9.15.0 in /server [\#495](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/495) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @eslint/eslintrc from 3.1.0 to 3.2.0 in /server [\#494](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/494) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint from 9.14.0 to 9.15.0 in /server [\#493](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/493) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @eslint/compat from 1.2.2 to 1.2.3 in /server [\#492](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/492) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump cross-spawn from 7.0.3 to 7.0.5 in /client in the npm\_and\_yarn group [\#491](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/491) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Create PR from master to release [\#490](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/490) ([github-actions[bot]](https://github.com/apps/github-actions))
+- Bump @eslint/plugin-kit from 0.2.0 to 0.2.3 in /server in the npm\_and\_yarn group [\#487](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/487) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Create PR from master to release [\#486](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/486) ([github-actions[bot]](https://github.com/apps/github-actions))
 - \[CHORE\] Create PR from master to release [\#478](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/478) ([github-actions[bot]](https://github.com/apps/github-actions))
 
