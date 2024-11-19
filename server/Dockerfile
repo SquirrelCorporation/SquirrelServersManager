@@ -1,4 +1,4 @@
-FROM node:23.1.0-alpine AS base
+FROM node:23.2.0-alpine AS base
 LABEL org.opencontainers.image.source=https://github.com/SquirrelCorporation/SquirrelServersManager
 LABEL org.opencontainers.image.description="SSM Server"
 LABEL org.opencontainers.image.licenses="GNU AFFERO GENERAL PUBLIC LICENSE"
