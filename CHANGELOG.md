@@ -6,6 +6,7 @@
 
 **Fixed bugs:**
 
+- \[BUG\] Prevent incorrect URL if public port of container not available [\#517](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/517) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Refactor Ansible configuration path handling [\#515](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/515) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Closed issues:**
