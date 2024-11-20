@@ -17,10 +17,9 @@ export default class DockerLogs extends DockerImages {
     if (!container) {
       throw new Error(`Container not found for ${containerId}`);
     }
-
+    this.childLogger.info(`Fetching logs for container ${containerId}`);
     const logStream = this.createLogStream(callback);
     this.fetchLogs(container, from, logStream, containerId);
-
     return () => {
       logStream.end();
     };
@@ -52,6 +51,9 @@ export default class DockerLogs extends DockerImages {
         if (!logStreamResult) {
           throw new Error(`Stream is null for requested containerId ${containerId}`);
         }
+        logStream.push(
+          `✅ Connected to container: ${container.id} on ${this.configuration.host}!\n`,
+        );
         const dockerModem = (this.dockerApi as Dockerode).modem;
         dockerModem.demuxStream(logStreamResult, logStream, logStream);
         logStreamResult.on('end', () => {

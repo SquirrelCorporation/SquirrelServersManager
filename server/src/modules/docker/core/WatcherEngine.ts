@@ -149,6 +149,7 @@ async function registerWatchers(): Promise<any> {
             watchstats: device.dockerStatsWatcher,
             cronstats: device.dockerStatsCron as string,
             watchevents: device.dockerEventsWatcher,
+            host: device.ip as string,
           },
         ),
       );
@@ -178,6 +179,7 @@ async function registerWatcher(device: Device): Promise<any> {
         watchstats: device.dockerStatsWatcher,
         cronstats: device.dockerStatsCron as string,
         watchevents: device.dockerEventsWatcher,
+        host: device.ip as string,
       },
     );
   } catch (e: any) {
@@ -235,8 +237,10 @@ async function deregisterComponent(
 ): Promise<any> {
   try {
     await component.deregister();
-  } catch (e) {
-    throw new Error(`Error when de-registering component ${component.getId()}`);
+  } catch (e: any) {
+    throw new Error(
+      `Error when de-registering component ${component.getId()} (error: ${e.message})`,
+    );
   } finally {
     let components: Registry[] | Docker[] | undefined = undefined;
 

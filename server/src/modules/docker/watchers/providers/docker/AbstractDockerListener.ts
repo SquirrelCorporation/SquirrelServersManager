@@ -15,7 +15,7 @@ export default class DockerListener extends Component<SSMServicesTypes.Configura
    */
   async listenDockerEvents(): Promise<void> {
     this.childLogger.info(
-      `Listening to docker events - (device: ${this.configuration.deviceUuid})`,
+      `Listening to docker events - (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
     );
     const options: {
       filters: {
@@ -45,7 +45,7 @@ export default class DockerListener extends Component<SSMServicesTypes.Configura
       (this.dockerApi as Dockerode).getEvents(options, (err, stream) => {
         if (err) {
           this.childLogger.warn(
-            `Unable to listen to Docker events [${err.message}] - (device: ${this.configuration.deviceUuid})`,
+            `Unable to listen to Docker events [${err.message}] - (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
           );
           this.childLogger.debug(err);
         } else {
@@ -68,7 +68,7 @@ export default class DockerListener extends Component<SSMServicesTypes.Configura
     const action = dockerEvent.Action;
     const containerId = dockerEvent.id;
     this.childLogger.info(
-      `onDockerEvent (device: ${this.configuration.deviceUuid} - action received: ${action} - containerId: ${containerId})`,
+      `onDockerEvent (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host}, action received: "${action}", containerId: ${containerId})`,
     );
 
     // If the container was created or destroyed => perform a watch
@@ -89,7 +89,7 @@ export default class DockerListener extends Component<SSMServicesTypes.Configura
           if (oldStatus !== newStatus) {
             await ContainerRepo.updateContainer(containerFound);
             this.childLogger.info(
-              `[${fullName(containerFound)}] Status changed from ${oldStatus} to ${newStatus} - (device: ${this.configuration.deviceUuid})`,
+              `[${fullName(containerFound)}] Status changed from ${oldStatus} to ${newStatus} - (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
             );
             this.emit(Events.UPDATED_CONTAINERS, 'Updated containers');
           }
