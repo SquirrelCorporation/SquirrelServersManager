@@ -15,6 +15,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Add host property to improve logging and error messages [\#518](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/518) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add reload functionality after container actions [\#516](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/516) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @aws-sdk/client-ecr from 3.687.0 to 3.693.0 in /server [\#514](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/514) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @typescript-eslint/parser from 8.14.0 to 8.15.0 in /server [\#513](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/513) ([dependabot[bot]](https://github.com/apps/dependabot))
