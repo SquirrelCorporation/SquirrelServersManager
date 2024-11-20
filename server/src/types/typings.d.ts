@@ -142,6 +142,7 @@ export declare namespace SSMServicesTypes {
     watchall?: boolean;
     watchevents?: boolean;
     deviceUuid: string;
+    host: string;
   };
 
   export type ConfigurationTriggerSchema = {
