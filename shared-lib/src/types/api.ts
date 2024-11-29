@@ -520,11 +520,11 @@ export type MemInfo = {
 };
 
 export type DriveInfo = {
-  storageTotalGb?: string;
-  storageUsedGb?: string;
-  storageFreeGb?: string;
-  storageUsedPercentage?: string;
-  storageFreePercentage?: string;
+  storageTotalGb?: number;
+  storageUsedGb?: number;
+  storageFreeGb?: number;
+  storageUsedPercentage?: number;
+  storageFreePercentage?: number;
 };
 
 export type DeviceInfo = {

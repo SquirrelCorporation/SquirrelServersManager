@@ -94,6 +94,20 @@ async function getStatsByDevicesAndType(
         from,
         to,
       );
+    case StatsType.DeviceStatsType.DISK_USED:
+      return await DeviceStatRepo.findStatsByDevicesAndType(
+        devices,
+        '$storageUsedPercentage',
+        from,
+        to,
+      );
+    case StatsType.DeviceStatsType.DISK_FREE:
+      return await DeviceStatRepo.findStatsByDevicesAndType(
+        devices,
+        '$storageFreePercentage',
+        from,
+        to,
+      );
     default:
       throw new Error('Unknown Type');
   }
@@ -103,7 +117,7 @@ async function getSingleAveragedStatsByDevicesAndType(
   devices: Device[],
   from: Date,
   to: Date,
-  type?: string,
+  type?: StatsType.DeviceStatsType,
 ): Promise<[{ value: string; name: string }] | null> {
   logger.info(
     `findSingleAveragedStatByDevicesAndType - type: ${type}, from: ${from}, to: ${to}, nb devices: ${devices.length}`,
@@ -127,6 +141,20 @@ async function getSingleAveragedStatsByDevicesAndType(
       return await DeviceStatRepo.findSingleAveragedStatByDevicesAndType(
         devices,
         '$memFreePercentage',
+        from,
+        to,
+      );
+    case StatsType.DeviceStatsType.DISK_USED:
+      return await DeviceStatRepo.findSingleAveragedStatByDevicesAndType(
+        devices,
+        '$storageUsedPercentage',
+        from,
+        to,
+      );
+    case StatsType.DeviceStatsType.DISK_FREE:
+      return await DeviceStatRepo.findSingleAveragedStatByDevicesAndType(
+        devices,
+        '$storageFreePercentage',
         from,
         to,
       );
