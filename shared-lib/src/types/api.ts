@@ -669,6 +669,8 @@ export type GitPlaybooksRepository = PlaybooksRepository & {
   default: boolean;
   gitService: Services;
   accessToken?: string;
+  onError?: boolean;
+  onErrorMessage?: string;
 }
 
 export type LocalPlaybooksRepository = PlaybooksRepository & {
