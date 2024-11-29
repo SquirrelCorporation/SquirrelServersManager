@@ -15,6 +15,21 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Add type check before calling watchCronDebounced fun to preve… [\#533](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/533) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump @typescript-eslint/eslint-plugin from 8.15.0 to 8.16.0 in /client [\#532](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/532) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.2.0-alpine to 23.3.0-alpine in /client [\#531](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/531) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.2.0-alpine to 23.3.0-alpine in /server [\#530](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/530) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump typescript from 5.6.3 to 5.7.2 in /shared-lib [\#529](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/529) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @types/dockerode from 3.3.31 to 3.3.32 in /server [\#528](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/528) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump mongoose from 8.8.1 to 8.8.2 in /server [\#527](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/527) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @stylistic/eslint-plugin from 2.10.1 to 2.11.0 in /server [\#526](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/526) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @aws-sdk/client-ecr from 3.693.0 to 3.699.0 in /server [\#525](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/525) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint-plugin-import-x from 4.4.2 to 4.4.3 in /server [\#524](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/524) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @umijs/max from 4.3.34 to 4.3.35 in /client [\#523](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/523) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @ant-design/pro-components from 2.8.1 to 2.8.2 in /client [\#522](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/522) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @dnd-kit/core from 6.1.0 to 6.2.0 in /client [\#521](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/521) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @typescript-eslint/eslint-plugin from 8.5.0 to 8.15.0 in /client [\#520](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/520) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @umijs/lint from 4.3.34 to 4.3.35 in /client [\#519](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/519) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Add host property to improve logging and error messages [\#518](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/518) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add reload functionality after container actions [\#516](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/516) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @aws-sdk/client-ecr from 3.687.0 to 3.693.0 in /server [\#514](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/514) ([dependabot[bot]](https://github.com/apps/dependabot))
