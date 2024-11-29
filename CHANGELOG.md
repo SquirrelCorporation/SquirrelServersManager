@@ -10,6 +10,7 @@
 
 **Fixed bugs:**
 
+- \[BUG\] Remove unnecessary popover styling and extend error handling [\#536](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/536) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Don't display the agent tab when the device is UNMANAGED [\#535](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/535) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Prevent incorrect URL if public port of container not available [\#517](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/517) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Refactor Ansible configuration path handling [\#515](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/515) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
