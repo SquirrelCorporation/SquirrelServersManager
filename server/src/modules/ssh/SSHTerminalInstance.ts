@@ -58,6 +58,10 @@ export default class SSHTerminalInstance {
   private handleReady() {
     this.logger.info('SSH connection established');
     this.socket.emit(SsmEvents.SSH.STATUS, { status: 'OK', message: 'SSH CONNECTION ESTABLISHED' });
+    this.socket.emit(
+      SsmEvents.SSH.NEW_DATA,
+      `✅ Connected to device: ${this.sshConnectionInstance.deviceUuid} on ${this.sshConnectionInstance.host}!\r\n`,
+    );
 
     this.sshConnectionInstance.ssh.shell(
       this.ttyOptions,

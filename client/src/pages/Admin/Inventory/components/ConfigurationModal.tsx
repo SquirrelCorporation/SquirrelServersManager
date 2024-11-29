@@ -1,40 +1,40 @@
-import { ServerEnvironmentSvg } from '@/components/Icons/CustomIcons';
 import AgentConfigurationTab from '@/pages/Admin/Inventory/components/AgentConfigurationTab';
 import DiagnosticTab from '@/pages/Admin/Inventory/components/DiagnosticTab';
 import DockerConfigurationForm from '@/pages/Admin/Inventory/components/DockerConfigurationForm';
 import SSHConfigurationForm from '@/pages/Admin/Inventory/components/SSHConfigurationForm';
-import { DockerOutlined } from '@ant-design/icons';
 import { Modal, Tabs, TabsProps } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
+import { SsmStatus } from 'ssm-shared-lib';
 
 export type ConfigurationModalProps = {
   updateModalOpen: boolean;
   handleUpdateModalOpen: any;
-  values: Partial<API.DeviceItem>;
+  device: Partial<API.DeviceItem>;
 };
 
 const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
+  const { updateModalOpen, handleUpdateModalOpen, device } = props;
   const items: TabsProps['items'] = [
     {
-      key: '1',
+      key: 'ssh',
       label: 'SSH',
-      children: <SSHConfigurationForm values={props.values} />,
+      children: <SSHConfigurationForm values={device} />,
     },
     {
-      key: '2',
+      key: 'docker',
       label: 'Docker',
-      children: <DockerConfigurationForm device={props.values} />,
+      children: <DockerConfigurationForm device={device} />,
     },
     {
-      key: '3',
+      key: 'diagnostic',
       label: 'Diagnostic',
-      children: <DiagnosticTab device={props.values} />,
+      children: <DiagnosticTab device={device} />,
     },
     {
-      key: '4',
+      key: 'agent',
       label: 'Agent',
-      children: <AgentConfigurationTab device={props.values} />,
+      children: <AgentConfigurationTab device={device} />,
     },
   ];
 
@@ -43,10 +43,10 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
       style={{ padding: '32px 40px 48px' }}
       width={1000}
       destroyOnClose
-      title={`${props.values.hostname || 'Unknown device'} (${props.values.ip})`}
-      open={props.updateModalOpen}
+      title={`${device.hostname || 'Unknown device'} (${device.ip})`}
+      open={updateModalOpen}
       onCancel={() => {
-        props.handleUpdateModalOpen(false);
+        handleUpdateModalOpen(false);
       }}
       footer={() => <div />}
     >
@@ -55,7 +55,11 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
           console.log(key);
         }}
         type="card"
-        items={items}
+        items={
+          device.status === SsmStatus.DeviceStatus.UNMANAGED
+            ? items.filter((e) => e.key !== 'agent')
+            : items
+        }
       />
     </Modal>
   );

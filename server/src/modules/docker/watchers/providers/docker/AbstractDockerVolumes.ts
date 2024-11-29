@@ -12,12 +12,14 @@ export default class DockerVolumes extends DockerNetworks {
 
   public async watchVolumesFromCron() {
     this.childLogger.info(
-      `watchDockerVolumesFromCron - (device: ${this.configuration.deviceUuid})`,
+      `watchDockerVolumesFromCron - (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
     );
     try {
       const device = await DeviceRepo.findOneByUuid(this.configuration.deviceUuid);
       if (!device) {
-        throw new Error(`Device not found: ${this.configuration.deviceUuid}`);
+        throw new Error(
+          `DeviceID not found: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host}`,
+        );
       }
       const rawCurrentVolumes = await this.dockerApi?.listVolumes();
 

@@ -255,7 +255,7 @@ const Inventory: React.FC = () => {
       <ConfigurationModal
         handleUpdateModalOpen={handleConfigurationModalOpen}
         updateModalOpen={configurationModalOpen}
-        values={currentRow || {}}
+        device={currentRow || {}}
       />
 
       <Drawer

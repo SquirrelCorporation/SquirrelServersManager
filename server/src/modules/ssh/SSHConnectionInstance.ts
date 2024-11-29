@@ -6,7 +6,8 @@ import { NotFoundError } from '../../middlewares/api/ApiError';
 
 export default class SSHConnectionInstance {
   public ssh = new ssh.Client();
-  private readonly deviceUuid: string;
+  public readonly deviceUuid: string;
+  public host!: string;
 
   constructor(deviceUuid: string) {
     this.deviceUuid = deviceUuid;
@@ -28,6 +29,7 @@ export default class SSHConnectionInstance {
     if (!deviceAuth) {
       throw new NotFoundError(`Device Auth $${this.deviceUuid} not found`);
     }
+    this.host = device.ip as string;
     return { device, deviceAuth };
   }
 }

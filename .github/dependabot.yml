@@ -17,6 +17,14 @@ updates:
     directory: "/agent" # Location of package manifests
     schedule:
       interval: "weekly"
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "/shared-lib" # Location of package manifests
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "/site" # Location of package manifests
+    schedule:
+      interval: "weekly"
   # Enable version updates for Docker
   - package-ecosystem: "docker"
     # Look for a `Dockerfile` in the `root` directory
@@ -27,6 +35,12 @@ updates:
   - package-ecosystem: "docker"
     # Look for a `Dockerfile` in the `root` directory
     directory: "/server"
+    # Check for updates once a week
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "docker"
+    # Look for a `Dockerfile` in the `root` directory
+    directory: "/proxy"
     # Check for updates once a week
     schedule:
       interval: "weekly"

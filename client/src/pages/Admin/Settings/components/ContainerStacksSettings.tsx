@@ -130,11 +130,6 @@ const ContainerStacksSettings: React.FC = () => {
                 if (row.onError) {
                   return (
                     <Popover
-                      overlayStyle={{
-                        width: '400px',
-                        height: '400px',
-                        overflowY: 'scroll',
-                      }}
                       content={
                         <Space direction="vertical" size={'small'}>
                           <Typography.Text>

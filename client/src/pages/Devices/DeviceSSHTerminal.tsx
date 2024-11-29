@@ -33,7 +33,7 @@ const DeviceSSHTerminal = () => {
     onDataIn: (value: string, newLine?: boolean) => void,
   ) => {
     socket.connect();
-    onDataIn('Connecting...', true);
+    onDataIn('🛜 Connecting...', true);
     socket
       .emitWithAck(SsmEvents.SSH.START_SESSION, { deviceUuid: id, rows, cols })
       .then((response) => {

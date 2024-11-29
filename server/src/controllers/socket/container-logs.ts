@@ -59,6 +59,7 @@ export function getContainerLogs({ socket }: { io: SSMSocketServer; socket: SSMS
       socket.on(SsmEvents.Common.DISCONNECT, closingCallback);
 
       callback({ status: 'OK' });
+      getContainerLogsCallback(`🛜 Connecting...\n`);
     } catch (err: any) {
       logger.error(err);
       handleError(err.message, 'Internal Error', callback);

@@ -75,7 +75,7 @@ export default class Docker extends DockerLogs {
       });
 
       this.childLogger.info(
-        `Cron scheduled (cron: "${this.configuration.cron}", device: ${this.configuration.deviceUuid})`,
+        `Cron scheduled (cron: "${this.configuration.cron}", device: ${this.configuration.host})`,
       );
       this.watchCron = CronJob.schedule(this.configuration.cron, () => {
         this.watchContainersFromCron();
@@ -120,11 +120,15 @@ export default class Docker extends DockerLogs {
   async initWatcher() {
     const device = await DeviceRepo.findOneByUuid(this.configuration.deviceUuid);
     if (!device) {
-      throw new Error(`Device not found: ${this.configuration.deviceUuid}`);
+      throw new Error(
+        `DeviceID not found: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host}`,
+      );
     }
     const deviceAuth = await DeviceAuthRepo.findOneByDevice(device);
     if (!deviceAuth) {
-      throw new Error(`DeviceAuth not found for device ${this.configuration.deviceUuid}`);
+      throw new Error(
+        `DeviceAuth not found for deviceID ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host}`,
+      );
     }
     const options = await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
     this.childLogger.debug(options);
@@ -174,7 +178,7 @@ export default class Docker extends DockerLogs {
    */
   async watchContainersFromCron(): Promise<any[]> {
     this.childLogger.info(
-      `watchContainersFromCron - Cron started (cron: "${this.configuration.cron}", device: ${this.configuration.deviceUuid})`,
+      `watchContainersFromCron - Cron started (cron: "${this.configuration.cron}", deviceID: ${this.configuration.deviceUuid})`,
     );
 
     // Get container reports
@@ -195,7 +199,7 @@ export default class Docker extends DockerLogs {
 
     const stats = `${containerReportsCount} containers watched, ${containerErrorsCount} errors, ${containerUpdatesCount} available updates`;
     this.childLogger.info(
-      `watchContainersFromCron - Cron finished: ${stats} (device: ${this.configuration.deviceUuid})`,
+      `watchContainersFromCron - Cron finished: ${stats} (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
     );
     this.emit(Events.UPDATED_CONTAINERS, 'Updated containers');
     return containerReports;
@@ -268,7 +272,7 @@ export default class Docker extends DockerLogs {
         containers = await this.dockerApi.listContainers(listContainersOptions);
       } catch (e: any) {
         this.childLogger.error(
-          `listContainers - error: ${e.message} - (device: ${this.configuration.deviceUuid})`,
+          `listContainers - error: ${e.message} - (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
         );
         await ContainerRepo.updateStatusByWatcher(this.name, SsmStatus.ContainerStatus.UNREACHABLE);
         return [];
@@ -281,7 +285,7 @@ export default class Docker extends DockerLogs {
         `getContainers - filteredContainers: ${JSON.stringify(filteredContainers)}`,
       );
       this.childLogger.info(
-        `getContainers - getImageDetails for ${filteredContainers?.length} containers... (device: ${this.configuration.deviceUuid})`,
+        `getContainers - getImageDetails for ${filteredContainers?.length} containers... (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
       );
       const containerPromises = filteredContainers.map((container: ContainerInfo) =>
         this.addImageDetailsToContainer(
@@ -296,7 +300,7 @@ export default class Docker extends DockerLogs {
       );
       const containersWithImage = await Promise.all(containerPromises);
       this.childLogger.info(
-        `getContainers - getImageDetails - ended - (device: ${this.configuration.deviceUuid})`,
+        `getContainers - getImageDetails - ended - (deviceIP: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
       );
       // Return containers to process
       const containersToReturn = containersWithImage.filter(
@@ -309,13 +313,13 @@ export default class Docker extends DockerLogs {
         pruneOldContainers(containersToReturn, containersFromTheStore);
       } catch (e: any) {
         this.childLogger.warn(
-          `Error when trying to prune the old containers (message: ${e.message}, device: ${this.configuration.deviceUuid})`,
+          `Error when trying to prune the old containers (message: ${e.message}, deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
         );
       }
       return containersToReturn;
     } catch (error: any) {
       this.childLogger.error(
-        `getContainers - error: ${error.message} (device: ${this.configuration.deviceUuid})`,
+        `getContainers - error: ${error.message} (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
       );
       this.childLogger.error(error);
       return [];
@@ -526,7 +530,9 @@ export default class Docker extends DockerLogs {
     };
     const device = await DeviceRepo.findOneByUuid(this.configuration.deviceUuid);
     if (!device) {
-      throw new Error(`Device not found: ${this.configuration.deviceUuid}`);
+      throw new Error(
+        `DeviceID not found: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host}`,
+      );
     }
     // Find container in db & compare
     const containerInDb = await ContainerRepo.findContainerById(containerWithResult.id);
@@ -563,22 +569,22 @@ export default class Docker extends DockerLogs {
 
   async watchContainerStats() {
     this.childLogger.info(
-      `watchContainerStats ${this.name} - (device: ${this.configuration.deviceUuid})`,
+      `watchContainerStats ${this.name} - (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
     );
     try {
       const containers = await ContainerRepo.findContainersByWatcher(this.name);
       if (!containers) {
         this.childLogger.warn(
-          `watchContainerStats - No container to watch - (device: ${this.configuration.deviceUuid})`,
+          `watchContainerStats - No container to watch - (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
         );
         return;
       }
       this.childLogger.info(
-        `watchContainerStats - Found ${containers.length} container(s) to watch... (device: ${this.configuration.deviceUuid})`,
+        `watchContainerStats - Found ${containers.length} container(s) to watch... (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
       );
       for (const container of containers) {
         this.childLogger.info(
-          `watchContainerStats ${container.id} - (device: ${this.configuration.deviceUuid})`,
+          `watchContainerStats ${container.id} - (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
         );
         try {
           const dockerContainer = this.dockerApi.getContainer(container.id);
@@ -588,7 +594,7 @@ export default class Docker extends DockerLogs {
         } catch (error: any) {
           this.childLogger.error(error);
           this.childLogger.error(
-            `[CRON] - Error retrieving stats for ${container.name}/${container.id}} - (device: ${this.configuration.deviceUuid})`,
+            `[CRON] - Error retrieving stats for ${container.name}/${container.id}} - (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
           );
         }
       }
@@ -616,7 +622,7 @@ export default class Docker extends DockerLogs {
 
   async killContainer(container: Container) {
     this.childLogger.warn(
-      `killContainer ${container.id} (device: ${this.configuration.deviceUuid})`,
+      `killContainer "${container.id}" (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
     );
     await this.dockerApi.getContainer(container.id).kill();
   }
