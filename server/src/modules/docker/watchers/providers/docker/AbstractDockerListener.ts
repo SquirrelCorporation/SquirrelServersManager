@@ -73,7 +73,9 @@ export default class DockerListener extends Component<SSMServicesTypes.Configura
 
     // If the container was created or destroyed => perform a watch
     if (action === 'destroy' || action === 'create') {
-      await this.watchCronDebounced();
+      if (this.watchCronDebounced && typeof this.watchCronDebounced === 'function') {
+        await this.watchCronDebounced();
+      }
     } else {
       // Update container state in db if so
       try {
