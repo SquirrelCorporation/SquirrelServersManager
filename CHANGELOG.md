@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.24...HEAD)
 
+**Implemented enhancements:**
+
+- \[FEAT\] Add disk usage to Dashboard 🔥 [\#481](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/481)
+
 **Fixed bugs:**
 
 - \[BUG\] Prevent incorrect URL if public port of container not available [\#517](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/517) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
@@ -15,6 +19,7 @@
 
 **Merged pull requests:**
 
+- \[FEAT\] Add disk usage stats handling in Dashboard [\#534](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/534) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add type check before calling watchCronDebounced fun to preve… [\#533](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/533) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @typescript-eslint/eslint-plugin from 8.15.0 to 8.16.0 in /client [\#532](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/532) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 23.2.0-alpine to 23.3.0-alpine in /client [\#531](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/531) ([dependabot[bot]](https://github.com/apps/dependabot))
