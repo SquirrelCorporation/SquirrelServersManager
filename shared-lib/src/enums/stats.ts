@@ -7,5 +7,7 @@ export enum DeviceStatsType {
   CPU = 'cpu',
   MEM_USED = 'memUsed',
   MEM_FREE = 'memFree',
-  CONTAINERS = 'containers'
+  CONTAINERS = 'containers',
+  DISK_USED = 'diskUsed',
+  DISK_FREE = 'diskFree'
 }

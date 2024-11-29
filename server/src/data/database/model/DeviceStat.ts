@@ -6,11 +6,11 @@ export const COLLECTION_NAME = 'devicestats';
 
 export default interface DeviceStat {
   device: Device;
-  storageTotalGb?: string;
-  storageUsedGb?: string;
-  storageFreeGb?: string;
-  storageUsedPercentage?: string;
-  storageFreePercentage?: string;
+  storageTotalGb?: number;
+  storageUsedGb?: number;
+  storageFreeGb?: number;
+  storageUsedPercentage?: number;
+  storageFreePercentage?: number;
   cpuUsage?: number;
   memTotalMb?: number;
   memTotalUsedMb?: number;
@@ -31,23 +31,23 @@ const schema = new Schema<DeviceStat>(
       index: true,
     },
     storageTotalGb: {
-      type: Schema.Types.String,
+      type: Schema.Types.Number,
       required: false,
     },
     storageUsedGb: {
-      type: Schema.Types.String,
+      type: Schema.Types.Number,
       required: false,
     },
     storageFreeGb: {
-      type: Schema.Types.String,
+      type: Schema.Types.Number,
       required: false,
     },
     storageUsedPercentage: {
-      type: Schema.Types.String,
+      type: Schema.Types.Number,
       required: false,
     },
     storageFreePercentage: {
-      type: Schema.Types.String,
+      type: Schema.Types.Number,
       required: false,
     },
     cpuUsage: {
