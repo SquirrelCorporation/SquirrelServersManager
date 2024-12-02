@@ -104,6 +104,6 @@
     "vitest": "^2.1.6",
     "@types/js-yaml": "^4.0.9",
     "@types/express": "^5.0.0",
-    "memfs": "^4.14.0"
+    "memfs": "^4.14.1"
   }
 }
