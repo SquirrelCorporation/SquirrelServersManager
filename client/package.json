@@ -1,6 +1,6 @@
 {
   "name": "ssm-client",
-  "version": "0.1.25",
+  "version": "0.1.26",
   "private": true,
   "description": "SSM Client - A simple way to manage all your servers",
   "author": "Squirrel Team",
