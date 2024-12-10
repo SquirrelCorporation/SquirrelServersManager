@@ -8,11 +8,15 @@ export default class DockerNetworks extends DockerListener {
   dockerApi: Dockerode | undefined = undefined;
 
   public async watchNetworksFromCron() {
-    this.childLogger.info(`watchNetworksFromCron - (device: ${this.configuration.deviceUuid})`);
+    this.childLogger.info(
+      `watchNetworksFromCron - (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
+    );
     try {
       const device = await DeviceRepo.findOneByUuid(this.configuration.deviceUuid);
       if (!device) {
-        throw new Error(`Device not found: ${this.configuration.deviceUuid}`);
+        throw new Error(
+          `DeviceID not found: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host}`,
+        );
       }
       const rawCurrentNetworks = await this.dockerApi?.listNetworks();
       const currentNetworks = rawCurrentNetworks?.map((rawCurrentNetwork) => {
@@ -53,7 +57,7 @@ export default class DockerNetworks extends DockerListener {
     });
     if (networksToInsert) {
       this.childLogger.info(
-        `insertNewNetworks - got ${networksToInsert?.length} networks to insert (device: ${this.configuration.deviceUuid})`,
+        `insertNewNetworks - got ${networksToInsert?.length} networks to insert (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
       );
       await Promise.all(
         networksToInsert.map(async (network) => {

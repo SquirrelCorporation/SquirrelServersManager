@@ -31,6 +31,7 @@ type ContainerMetasProps = {
   setIsEditContainerCustomNameModalOpened: React.Dispatch<
     React.SetStateAction<boolean>
   >;
+  reload: () => void;
 };
 const ContainerMetas = (props: ContainerMetasProps) => {
   const handleQuickAction = async (idx: number) => {
@@ -57,13 +58,19 @@ const ContainerMetas = (props: ContainerMetasProps) => {
           ServiceQuickActionReference[idx].action as SsmContainer.Actions,
         )
       ) {
+        message.loading({
+          content: `Container: ${ServiceQuickActionReference[idx].action} in progress... The page will be automatically refreshed.`,
+          duration: 6,
+        });
         await postContainerAction(
           props.selectedRecord?.id as string,
           ServiceQuickActionReference[idx].action as SsmContainer.Actions,
         ).then(() => {
-          message.info({
-            content: `Container : ${ServiceQuickActionReference[idx].action}`,
+          message.success({
+            content: `Container: ${ServiceQuickActionReference[idx].action}`,
+            duration: 6,
           });
+          return props.reload();
         });
       }
     }
@@ -186,7 +193,7 @@ const ContainerMetas = (props: ContainerMetasProps) => {
       search: false,
       render: (text, row) => [
         <>
-          {row.ports && row.ports.length > 0 && (
+          {row.ports && row.ports.length > 0 && row.ports[0].PublicPort && (
             <Tooltip
               key={`url-${row.id}`}
               title={`http://${row.device?.ip}:${row.ports[0].PublicPort}`}

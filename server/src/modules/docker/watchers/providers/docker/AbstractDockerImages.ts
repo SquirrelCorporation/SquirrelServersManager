@@ -8,11 +8,15 @@ export default class DockerImages extends DockerVolumes {
   dockerApi: Dockerode | undefined = undefined;
 
   public async watchImagesFromCron() {
-    this.childLogger.info(`watchImagesFromCron - (device: ${this.configuration.deviceUuid})`);
+    this.childLogger.info(
+      `watchImagesFromCron - (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
+    );
     try {
       const device = await DeviceRepo.findOneByUuid(this.configuration.deviceUuid);
       if (!device) {
-        throw new Error(`Device not found: ${this.configuration.deviceUuid}`);
+        throw new Error(
+          `DeviceID not found: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host}`,
+        );
       }
       const rawCurrentImages = await this.dockerApi?.listImages();
 
@@ -48,7 +52,7 @@ export default class DockerImages extends DockerVolumes {
     });
     if (imagesToInsert) {
       this.childLogger.info(
-        `insertNewImage - got ${imagesToInsert?.length} images to insert (device: ${this.configuration.deviceUuid})`,
+        `insertNewImage - got ${imagesToInsert?.length} images to insert (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
       );
       await Promise.all(
         imagesToInsert.map(async (image) => {

@@ -520,11 +520,11 @@ export type MemInfo = {
 };
 
 export type DriveInfo = {
-  storageTotalGb?: string;
-  storageUsedGb?: string;
-  storageFreeGb?: string;
-  storageUsedPercentage?: string;
-  storageFreePercentage?: string;
+  storageTotalGb?: number;
+  storageUsedGb?: number;
+  storageFreeGb?: number;
+  storageUsedPercentage?: number;
+  storageFreePercentage?: number;
 };
 
 export type DeviceInfo = {
@@ -669,6 +669,8 @@ export type GitPlaybooksRepository = PlaybooksRepository & {
   default: boolean;
   gitService: Services;
   accessToken?: string;
+  onError?: boolean;
+  onErrorMessage?: string;
 }
 
 export type LocalPlaybooksRepository = PlaybooksRepository & {

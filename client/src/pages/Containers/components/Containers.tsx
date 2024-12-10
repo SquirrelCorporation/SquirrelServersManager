@@ -122,6 +122,7 @@ const Containers: React.FC = () => {
           };
         }}
         metas={ContainerMetas({
+          reload: reload,
           selectedRecord: selectedRecord,
           setSelectedRecord: setSelectedRecord,
           setIsEditContainerCustomNameModalOpened:
