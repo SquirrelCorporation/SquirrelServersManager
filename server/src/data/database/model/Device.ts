@@ -68,7 +68,7 @@ const schema = new Schema<Device>(
     dockerWatcherCron: {
       type: Schema.Types.String,
       required: true,
-      default: '0 * * * *',
+      default: '0 */4 * * *',
     },
     dockerStatsCron: {
       type: Schema.Types.String,
