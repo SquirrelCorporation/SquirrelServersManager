@@ -865,6 +865,7 @@ export type ContainerCustomStack = {
   json: object;
   yaml: string;
   name: string;
+  type: string;
   rawStackValue: object;
   lockJson: boolean;
   icon: string;
