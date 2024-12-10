@@ -4,8 +4,30 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.25...HEAD)
 
+**Fixed bugs:**
+
+- Invalid Project Name Error in Deploy Custom Stack Compose [\#555](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/555)
+- \[BUG\] Improve stack naming and validation logic. [\#561](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/561) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Closed issues:**
+
+- \[BUG\] Ratelimited by docker seems like container update cron task is responsible [\#546](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/546)
+
 **Merged pull requests:**
 
+- \[CHORE\] Update package-lock.json with dependency version bumps [\#560](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/560) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump nanoid from 3.3.7 to 3.3.8 in /site in the npm\_and\_yarn group [\#557](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/557) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump the npm\_and\_yarn group across 1 directory with 2 updates [\#556](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/556) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump memfs from 4.14.0 to 4.15.0 in /server [\#554](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/554) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @typescript-eslint/eslint-plugin from 8.16.0 to 8.17.0 in /server [\#553](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/553) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vuetify from 3.7.4 to 3.7.5 in /site [\#552](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/552) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @vue-flow/core from 1.41.5 to 1.41.6 in /site [\#550](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/550) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @typescript-eslint/eslint-plugin from 8.16.0 to 8.17.0 in /client [\#549](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/549) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vitest from 2.1.6 to 2.1.8 in /client [\#548](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/548) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump antd from 5.22.2 to 5.22.3 in /client [\#547](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/547) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump nginx from 1.27.2 to 1.27.3 in /proxy [\#545](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/545) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @eslint/js from 9.15.0 to 9.16.0 in /client [\#544](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/544) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint from 9.15.0 to 9.16.0 in /server [\#542](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/542) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Update release.json to 0.1.24 [\#538](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/538) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.25](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.25) (2024-11-29)
