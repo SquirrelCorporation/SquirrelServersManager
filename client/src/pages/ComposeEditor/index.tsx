@@ -397,7 +397,13 @@ const ComposeEditor = () => {
                 <ProFormText
                   name={'name'}
                   placeholder={'Name'}
-                  rules={[{ required: true, message: 'Please enter a name' }]}
+                  rules={[
+                    { required: true, message: 'Please enter a name' },
+                    {
+                      pattern: /^(?!.*[:\/\\_.]).*$/,
+                      message: 'Characters not allowed',
+                    },
+                  ]}
                   fieldProps={{
                     ref: nameRef,
                     defaultValue:

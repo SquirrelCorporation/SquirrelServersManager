@@ -10,6 +10,7 @@ import ContainerCustomStack from '../../data/database/model/ContainerCustomStack
 import ContainerCustomStackRepository from '../../data/database/model/ContainerCustomStackRepository';
 import ContainerCustomStackRepo from '../../data/database/repository/ContainerCustomStackRepo';
 import ContainerStacksRepositoryRepo from '../../data/database/repository/ContainerCustomStackRepositoryRepo';
+import { extractTopLevelName } from '../../helpers/docker/utils';
 import { FileInfo, getMatchingFiles } from '../../helpers/files/recursive-find';
 import logger from '../../logger';
 import { NotFoundError } from '../../middlewares/api/ApiError';
@@ -152,11 +153,18 @@ class ContainerCustomStacksRepositoryComponent extends EventManager {
       `Processing stack ${JSON.stringify(foundStack)} - In database: ${stackFoundInDatabase ? 'true' : 'false'}`,
     );
     const stackContent = FileSystemManager.readFile(foundStack.fullPath as string);
+    const embeddedProjectName = extractTopLevelName(stackContent);
     const stackData: ContainerCustomStack = {
       path: foundStack.fullPath,
       name:
         stackFoundInDatabase?.name ||
-        foundStack.fullPath.split(`${this.uuid}/`)[1].replaceAll('/', '_').toLowerCase(),
+        embeddedProjectName ||
+        foundStack.fullPath
+          .split(`${this.uuid}/`)[1]
+          .replaceAll('/', '-')
+          .replaceAll(':', '-')
+          .replaceAll('.', '-')
+          .toLowerCase(),
       containerCustomStackRepository: containerCustomStackRepository,
       uuid: stackFoundInDatabase?.uuid || uuidv4(),
       lockJson: true,
