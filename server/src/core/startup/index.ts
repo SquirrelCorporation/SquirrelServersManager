@@ -19,6 +19,7 @@ import ContainerCustomStacksRepositoryEngine from '../../modules/repository/Cont
 import { createADefaultLocalUserRepository } from '../../modules/repository/default-playbooks-repositories';
 import PlaybooksRepositoryEngine from '../../modules/repository/PlaybooksRepositoryEngine';
 import sshPrivateKeyFileManager from '../../modules/shell/managers/SshPrivateKeyFileManager';
+import Telemetry from '../../modules/telemetry';
 import UpdateChecker from '../../modules/update/UpdateChecker';
 import ContainerRegistryUseCases from '../../services/ContainerRegistryUseCases';
 import { setAnsibleVersions } from '../system/ansible-versions';
@@ -51,10 +52,21 @@ class Startup {
     void AutomationEngine.init();
     void UpdateChecker.checkVersion();
     void ContainerCustomStacksRepositoryEngine.init();
+    void Telemetry.init();
   }
 
   private async updateScheme() {
     this.logger.warn('updateScheme - Scheme version differed, starting applying updates...');
+
+    try {
+      const installId = await getFromCache(SettingsKeys.GeneralSettingsKeys.INSTALL_ID);
+      if (!installId) {
+        await setToCache(SettingsKeys.GeneralSettingsKeys.INSTALL_ID, uuidv4());
+      }
+    } catch (error: any) {
+      this.logger.error(`Error settings installId: ${error.message}`);
+    }
+
     try {
       await PlaybookModel.syncIndexes();
       this.logger.info('PlaybookModel indexes synchronized successfully.');
