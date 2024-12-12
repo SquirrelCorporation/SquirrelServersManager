@@ -16,7 +16,7 @@ class Telemetry {
 
   public capture(eventName: string) {
     if (TELEMETRY_ENABLED) {
-      this.client.capture({ distinctId: this._id, event: eventName });
+      this.client?.capture({ distinctId: this._id, event: eventName });
     }
   }
 
@@ -27,15 +27,15 @@ class Telemetry {
     }
     if (installId) {
       this._id = installId;
-      this.client.identify({ distinctId: this._id });
+      this.client?.identify({ distinctId: this._id });
     }
     if (!TELEMETRY_ENABLED) {
-      await this.client.optOut();
+      await this.client?.optOut();
     }
   }
 
   public async shutdown() {
-    await this.client.shutdown();
+    await this.client?.shutdown();
   }
 }
 
