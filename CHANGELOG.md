@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.25...HEAD)
 
+**Implemented enhancements:**
+
+- \[FEAT\] Add telemetry support for anonymized usage tracking [\#563](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/563) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Fixed bugs:**
 
 - Invalid Project Name Error in Deploy Custom Stack Compose [\#555](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/555)
