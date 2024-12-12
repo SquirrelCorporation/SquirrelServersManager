@@ -6,7 +6,7 @@ import logger from '../../../logger';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../../modules/ansible-vault/ansible-vault';
-import WatcherEngine from '../../../modules/docker/core/WatcherEngine';
+import WatcherEngine from '../../../modules/containers/core/WatcherEngine';
 
 const SENSITIVE_PLACEHOLDER = 'REDACTED';
 

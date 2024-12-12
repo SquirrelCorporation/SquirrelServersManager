@@ -21,8 +21,8 @@ import PinoLogger from '../logger';
 import { InternalError } from '../middlewares/api/ApiError';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../modules/ansible-vault/ansible-vault';
 import Inventory from '../modules/ansible/utils/InventoryTransformer';
-import { getCustomAgent } from '../modules/docker/core/CustomAgent';
-import WatcherEngine from '../modules/docker/core/WatcherEngine';
+import { getCustomAgent } from '../modules/containers/core/CustomAgent';
+import WatcherEngine from '../modules/containers/core/WatcherEngine';
 import PlaybookUseCases from './PlaybookUseCases';
 
 const logger = PinoLogger.child({ module: 'DeviceUseCases' }, { msgPrefix: '[DEVICE] - ' });

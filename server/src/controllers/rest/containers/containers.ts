@@ -6,7 +6,7 @@ import { paginate } from '../../../helpers/query/PaginationHelper';
 import { sortByFields } from '../../../helpers/query/SorterHelper';
 import { BadRequestError, InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import WatcherEngine from '../../../modules/docker/core/WatcherEngine';
+import WatcherEngine from '../../../modules/containers/core/WatcherEngine';
 import ContainerUseCases from '../../../services/ContainerUseCases';
 
 export const getContainers = async (req, res) => {

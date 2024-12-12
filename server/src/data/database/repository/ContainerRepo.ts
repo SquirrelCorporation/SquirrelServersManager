@@ -3,7 +3,7 @@ import {
   addLinkProperty,
   getKindProperty,
   isUpdateAvailable,
-} from '../../../modules/docker/utils/utils';
+} from '../../../modules/containers/utils/utils';
 import Container, { ContainerModel } from '../model/Container';
 import Device from '../model/Device';
 

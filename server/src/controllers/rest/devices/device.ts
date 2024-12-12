@@ -11,7 +11,7 @@ import { sortByFields } from '../../../helpers/query/SorterHelper';
 import { BadRequestError, ForbiddenError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../../modules/ansible-vault/ansible-vault';
-import WatcherEngine from '../../../modules/docker/core/WatcherEngine';
+import WatcherEngine from '../../../modules/containers/core/WatcherEngine';
 import DeviceUseCases from '../../../services/DeviceUseCases';
 
 export const addDevice = async (req, res) => {

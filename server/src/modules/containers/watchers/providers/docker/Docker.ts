@@ -168,7 +168,7 @@ export default class Docker extends DockerLogs {
     }
     if (this.listenDockerEventsTimeout) {
       clearTimeout(this.listenDockerEventsTimeout);
-      delete this.watchCronDebounced;
+      delete this.listenDockerEventsTimeout;
     }
   }
 

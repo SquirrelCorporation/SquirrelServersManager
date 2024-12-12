@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import * as utils from '../../../../modules/docker/utils/utils';
-import * as WatcherEngine from '../../../../modules/docker/core/WatcherEngine';
-import Acr from '../../../../modules/docker/registries/providers/acr/Acr';
-import Ecr from '../../../../modules/docker/registries/providers/ecr/Ecr';
-import Gcr from '../../../../modules/docker/registries/providers/gcr/Gcr';
-import Hub from '../../../../modules/docker/registries/providers/hub/Hub';
+import * as utils from '../../../../modules/containers/utils/utils';
+import * as WatcherEngine from '../../../../modules/containers/core/WatcherEngine';
+import Acr from '../../../../modules/containers/registries/providers/acr/Acr';
+import Ecr from '../../../../modules/containers/registries/providers/ecr/Ecr';
+import Gcr from '../../../../modules/containers/registries/providers/gcr/Gcr';
+import Hub from '../../../../modules/containers/registries/providers/hub/Hub';
 import sampleCoercedSemver from './samples/coercedSemver.json';
 import sampleSemver from './samples/semver.json';
 
@@ -31,9 +31,11 @@ describe('testing utils', () => {
   });
 
   vi.spyOn(WatcherEngine, 'getRegistries');
-  vi.mock('../../../../modules/docker/core/WatcherEngine', async (importOriginal) => {
+  vi.mock('../../../../modules/containers/core/WatcherEngine', async (importOriginal) => {
     return {
-      ...(await importOriginal<typeof import('../../../../modules/docker/core/WatcherEngine')>()),
+      ...(await importOriginal<
+        typeof import('../../../../modules/containers/core/WatcherEngine')
+      >()),
       // this will only affect "getRegistries" outside of the original module
       getRegistries: () => getRegistries(),
     };
