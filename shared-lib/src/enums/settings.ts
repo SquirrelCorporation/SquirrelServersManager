@@ -9,10 +9,11 @@ export enum GeneralSettingsKeys {
   DEVICE_STATS_RETENTION_IN_DAYS = 'device-stats-retention-in-days',
   CONTAINER_STATS_RETENTION_IN_DAYS = 'container-stats-retention-in-days',
   UPDATE_AVAILABLE = 'update-available',
+  INSTALL_ID = 'install-id',
 }
 
 export enum DefaultValue {
-  SCHEME_VERSION = '17',
+  SCHEME_VERSION = '18',
   SERVER_LOG_RETENTION_IN_DAYS = '30',
   CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES = '3',
   CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER = '10',

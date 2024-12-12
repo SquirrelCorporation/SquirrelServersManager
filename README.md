@@ -71,6 +71,13 @@ See [Troubleshoot](https://squirrelserversmanager.io/docs/technical-guide/troubl
 ![New Device](./site/public/home/new-device.png)
 
 ---
+## Disabling Anonymized Telemetry
+
+By default, SSM automatically reports anonymized basic usage statistics. This helps us understand how SSM is used and track its overall usage and growth. This data does not include any sensitive information. To disable anonymized telemetry, follow these steps:
+
+Set `TELEMETRY_ENABLED` to `false` in your `.env` file.
+
+---
 
 **Note:**
 This is an Alpha version. It may not work on your system. We are looking for testers and contributors.

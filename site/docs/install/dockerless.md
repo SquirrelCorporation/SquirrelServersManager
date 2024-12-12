@@ -150,6 +150,8 @@ REDIS_PORT=6379
 # SSM CONFIG
 SSM_INSTALL_PATH=/opt/squirrelserversmanager
 SSM_DATA_PATH=/opt/squirrelserversmanager/data
+# TELEMETRY
+TELEMETRY_ENABLED=true
 EOF
 ```
 

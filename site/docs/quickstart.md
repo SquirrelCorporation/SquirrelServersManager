@@ -103,6 +103,8 @@ DB_PORT=27017
 #REDIS
 REDIS_HOST=redis
 REDIS_PORT=6379
+#TELEMETRY
+TELEMETRY_ENABLED=true
 ```
 Replace the values of "SECRET", "SALT", and "VAULT_PWD"
 
@@ -126,3 +128,10 @@ docker compose up
 
 ### Other install methods:
 To manually build the project your self, see this [section](/docs/technical-guide/manual-install-ssm)
+
+---
+### Disabling Anonymized Telemetry
+
+By default, SSM automatically reports anonymized basic usage statistics. This helps us understand how SSM is used and track its overall usage and growth. This data does not include any sensitive information. To disable anonymized telemetry, follow these steps:
+
+Set `TELEMETRY_ENABLED` to `false` in your `.env` file.
