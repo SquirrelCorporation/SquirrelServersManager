@@ -17,11 +17,13 @@
 
 - \[CHORE\] Update default cron interval for dockerWatcherCron [\#562](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/562) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update package-lock.json with dependency version bumps [\#560](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/560) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump nanoid from 3.3.7 to 3.3.8 in /client in the npm\_and\_yarn group [\#558](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/558) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump nanoid from 3.3.7 to 3.3.8 in /site in the npm\_and\_yarn group [\#557](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/557) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump the npm\_and\_yarn group across 1 directory with 2 updates [\#556](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/556) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump memfs from 4.14.0 to 4.15.0 in /server [\#554](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/554) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @typescript-eslint/eslint-plugin from 8.16.0 to 8.17.0 in /server [\#553](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/553) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump vuetify from 3.7.4 to 3.7.5 in /site [\#552](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/552) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump axios from 1.7.8 to 1.7.9 in /site [\#551](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/551) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @vue-flow/core from 1.41.5 to 1.41.6 in /site [\#550](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/550) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @typescript-eslint/eslint-plugin from 8.16.0 to 8.17.0 in /client [\#549](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/549) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump vitest from 2.1.6 to 2.1.8 in /client [\#548](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/548) ([dependabot[bot]](https://github.com/apps/dependabot))
