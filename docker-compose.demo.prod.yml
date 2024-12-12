@@ -7,6 +7,9 @@ services:
     depends_on:
       - client
       - server
+    environment:
+      SERVER_NAME: server  # The Docker service name for the server
+      CLIENT_NAME: client  # The Docker service name for the client
   server:
     restart: unless-stopped
     image: "ghcr.io/squirrelcorporation/squirrelserversmanager-server-demo:master"

@@ -13,6 +13,9 @@ services:
     labels:
       wud.display.name: "SSM - Proxy"
       wud.watch.digest: false
+    environment:
+      SERVER_NAME: server  # The Docker service name for the server
+      CLIENT_NAME: client  # The Docker service name for the client
   mongo:
     env_file:
       - ./.env.dev
