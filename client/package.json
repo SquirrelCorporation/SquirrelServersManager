@@ -45,7 +45,7 @@
     "immer": "^10.1.1"
   },
   "dependencies": {
-    "@ant-design/charts": "^2.2.4",
+    "@ant-design/charts": "^2.2.5",
     "@ant-design/icons": "^5.5.2",
     "@ant-design/pro-components": "^2.8.2",
     "@ant-design/use-emotion-css": "1.0.4",
