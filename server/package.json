@@ -97,7 +97,7 @@
     "@typescript-eslint/parser": "^8.18.0",
     "globals": "^15.13.0",
     "mongodb-memory-server": "^10.1.2",
-    "node-mocks-http": "^1.16.1",
+    "node-mocks-http": "^1.16.2",
     "prettier": "^3.4.2",
     "supertest": "^7.0.0",
     "ts-node": "^10.9.2",
