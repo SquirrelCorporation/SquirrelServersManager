@@ -56,7 +56,7 @@
     "@umijs/plugin-antd-dayjs": "^0.3.0",
     "@umijs/route-utils": "^4.0.1",
     "@xterm/addon-fit": "^0.10.0",
-    "antd": "^5.22.4",
+    "antd": "^5.22.5",
     "buffer": "^6.0.3",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.13",
