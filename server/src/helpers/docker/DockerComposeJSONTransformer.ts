@@ -38,13 +38,16 @@ export const transformToDockerCompose = (input: any) => {
       services[value.name] = {
         image: value.image,
         ports: value.ports?.map((port: any) => `${port.published}:${port.target}`),
-        volumes: value.volumes?.map((volume: any) => `${volume.source}:${volume.target}`),
+        volumes: value['service-volumes']?.map(
+          (volume: any) => `${volume.source}:${volume.target}`,
+        ),
         environment: value.environment?.map((env: any) => `${env.name}=${env.value}`),
         build: value.build
           ? { context: value.build.context, dockerfile: value.build.dockerfile }
           : undefined,
         container_name: value.container_name,
         depends_on: value.depends_on,
+        configs: value['service-configs'],
         deploy: value.deploy,
         dns: value.dns,
         entrypoint: value.entrypoint,
