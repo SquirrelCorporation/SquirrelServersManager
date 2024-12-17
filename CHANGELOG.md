@@ -21,6 +21,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Update dependencies to latest versions [\#579](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/579) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update default cron interval for dockerWatcherCron [\#562](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/562) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update package-lock.json with dependency version bumps [\#560](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/560) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump nanoid from 3.3.7 to 3.3.8 in /client in the npm\_and\_yarn group [\#558](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/558) ([dependabot[bot]](https://github.com/apps/dependabot))
