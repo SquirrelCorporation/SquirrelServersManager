@@ -10,7 +10,9 @@
 
 **Fixed bugs:**
 
+- \[BUG\] Container Stack Bugs [\#577](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/577)
 - Invalid Project Name Error in Deploy Custom Stack Compose [\#555](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/555)
+- \[BUG\] Refactor UI state and update Docker transformer logic [\#578](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/578) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Improve stack naming and validation logic. [\#561](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/561) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Closed issues:**
