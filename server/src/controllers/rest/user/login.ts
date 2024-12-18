@@ -4,9 +4,11 @@ import { SECRET, SESSION_DURATION } from '../../../config';
 import UserRepo from '../../../data/database/repository/UserRepo';
 import { AuthFailureError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
+import Telemetry from '../../../modules/telemetry';
 
 export const login = async (req, res, next) => {
   const { password, username } = req.body;
+  Telemetry.capture('user login');
   if (!password || !username) {
     res.status(401).send({
       data: {

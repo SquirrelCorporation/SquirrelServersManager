@@ -9,6 +9,7 @@ import logger from '../../../logger';
 import { AuthFailureError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import { createADefaultLocalUserRepository } from '../../../modules/repository/default-playbooks-repositories';
+import Telemetry from '../../../modules/telemetry';
 import DashboardUseCase from '../../../services/DashboardUseCase';
 import DeviceUseCases from '../../../services/DeviceUseCases';
 
@@ -99,6 +100,7 @@ export const getCurrentUser = async (req, res) => {
 
 export const createFirstUser = async (req, res) => {
   const { email, password, name, avatar } = req.body;
+  Telemetry.capture('user signed up');
   const hasUser = (await UserRepo.count()) > 0;
   if (hasUser) {
     throw new AuthFailureError('Your instance already has a user, you must first connect');

@@ -24,7 +24,7 @@ describe('transformToDockerCompose', () => {
               target: 3306,
             },
           ],
-          volumes: [
+          'service-volumes': [
             {
               source: '/var/lib/mysql',
               target: '/var/lib/mysql',

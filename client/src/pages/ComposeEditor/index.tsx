@@ -74,7 +74,7 @@ const ComposeEditor = () => {
   const [currentStack, setCurrentStack] = React.useState<
     MenuElementType[] | undefined
   >();
-  const [lockUI, setLockUI] = React.useState(false);
+  const [uiEditionDisabled, setUiEditionDisabled] = React.useState(false);
   const editorRef = React.useRef(null);
   const [form] = ProForm.useForm();
   const nameRef = React.useRef<InputRef | null>(null);
@@ -128,7 +128,7 @@ const ComposeEditor = () => {
       setCurrentSavedStack(undefined);
       setDownloadedContent(undefined);
       setCodeEditorMode(false);
-      setLockUI(false);
+      setUiEditionDisabled(false);
       setCurrentStack(undefined);
       setSavedForm(undefined);
     }
@@ -145,15 +145,15 @@ const ComposeEditor = () => {
 
   const handleOnChangeEditorContent = async (value?: string) => {
     if (downloadedContent !== value && !currentSavedStack?.lockJson) {
-      setLockUI(true);
+      setUiEditionDisabled(true);
     } else {
-      setLockUI(false);
+      setUiEditionDisabled(false);
     }
   };
 
   const handleChangeEditionMode = async () => {
     if (!codeEditorMode) {
-      setLockUI(false);
+      setUiEditionDisabled(false);
       setSavedForm(form.getFieldsValue());
       await postTransformContainerCustomStack(
         JSON.stringify(form.getFieldsValue()),
@@ -176,7 +176,7 @@ const ComposeEditor = () => {
     setDownloadedContent(undefined);
     setSavedForm(undefined);
     setCurrentStack(undefined);
-    setLockUI(false);
+    setUiEditionDisabled(false);
     setCodeEditorMode(false);
   };
 
@@ -198,7 +198,7 @@ const ComposeEditor = () => {
           values,
           currentStack,
           undefined,
-          lockUI,
+          uiEditionDisabled,
           stackIcon?.icon,
           stackIcon?.iconColor,
           stackIcon?.iconBackgroundColor,
@@ -225,14 +225,14 @@ const ComposeEditor = () => {
       }
       const stackName =
         nameRef.current.input.value || nameRef.current.input.defaultValue;
-      if (lockUI || currentSavedStack?.lockJson) {
+      if (uiEditionDisabled || currentSavedStack?.lockJson) {
         await saveCall(
           currentSavedStack ? currentSavedStack.uuid : stackName,
           undefined,
           undefined,
           // @ts-ignore
           editorRef?.current?.getValue(),
-          lockUI,
+          true,
         ).then((response) => {
           setCurrentSavedStack(response.data);
           message.success({
@@ -366,7 +366,7 @@ const ComposeEditor = () => {
             <Button
               type="primary"
               icon={<SwapOutlined />}
-              disabled={currentSavedStack?.lockJson || lockUI}
+              disabled={currentSavedStack?.lockJson || uiEditionDisabled}
               onClick={handleChangeEditionMode}
             >
               Switch to {codeEditorMode ? 'UI Builder' : 'Code Editor'}
@@ -376,7 +376,7 @@ const ComposeEditor = () => {
       </Row>
       <Row>
         <Col span={24}>
-          {lockUI && (
+          {uiEditionDisabled && (
             <Alert
               message="Editing the stack manually will disable the ability to edit it with the UI mode"
               type="warning"
