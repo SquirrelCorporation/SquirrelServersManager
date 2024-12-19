@@ -1,9 +1,10 @@
 import Dockerode from 'dockerode';
 import { ConnectConfig } from 'ssh2';
-import { SSHType } from 'ssm-shared-lib/distribution/enums/ansible';
+import { SsmAnsible, SsmProxmox } from 'ssm-shared-lib';
 import Device from '../../data/database/model/Device';
 import DeviceAuth from '../../data/database/model/DeviceAuth';
 import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../modules/ansible-vault/ansible-vault';
+import { ProxmoxEngineOptions } from '../proxmox-api';
 
 class SSHCredentialsHelper {
   async getSShConnection(device: Device, deviceAuth: DeviceAuth) {
@@ -47,9 +48,32 @@ class SSHCredentialsHelper {
     return options;
   }
 
+  async getProxmoxConnectionOptions(
+    device: Device,
+    deviceAuth: DeviceAuth,
+  ): Promise<ProxmoxEngineOptions> {
+    if (deviceAuth.proxmoxAuth?.method === SsmProxmox.ConnectionMethod.USER_PWD) {
+      return {
+        host: device.ip as string,
+        port: deviceAuth.proxmoxAuth.port,
+        username: deviceAuth.proxmoxAuth.userPwd?.userName,
+        password: deviceAuth.proxmoxAuth.userPwd?.password as string,
+      };
+    }
+    if (deviceAuth.proxmoxAuth?.method === SsmProxmox.ConnectionMethod.TOKENS) {
+      return {
+        host: device.ip as string,
+        port: deviceAuth.proxmoxAuth.port,
+        tokenID: deviceAuth.proxmoxAuth.token?.tokenId as string,
+        tokenSecret: deviceAuth.proxmoxAuth.token?.tokenSecret as string,
+      };
+    }
+    throw new Error(`Unsupported Proxmox connection method: ${deviceAuth.proxmoxAuth?.method}`);
+  }
+
   private async handleSSHCredentials(deviceAuth: DeviceAuth): Promise<ConnectConfig> {
     return this.determineSSHCredentials(
-      deviceAuth.authType as SSHType,
+      deviceAuth.authType as SsmAnsible.SSHType,
       deviceAuth.sshUser as string,
       deviceAuth.sshPwd,
       deviceAuth.sshKey,
@@ -59,7 +83,7 @@ class SSHCredentialsHelper {
 
   private async handleCustomSSHCredentials(deviceAuth: DeviceAuth): Promise<ConnectConfig> {
     return this.determineSSHCredentials(
-      deviceAuth.dockerCustomAuthType as SSHType,
+      deviceAuth.dockerCustomAuthType as SsmAnsible.SSHType,
       deviceAuth.dockerCustomSshUser as string,
       deviceAuth.dockerCustomSshPwd,
       deviceAuth.dockerCustomSshKey,
@@ -68,7 +92,7 @@ class SSHCredentialsHelper {
   }
 
   private async determineSSHCredentials(
-    authType: SSHType,
+    authType: SsmAnsible.SSHType,
     sshUsername: string,
     sshPwd?: string,
     sshKey?: string,
@@ -76,19 +100,19 @@ class SSHCredentialsHelper {
   ): Promise<ConnectConfig> {
     let sshCredentials: ConnectConfig = {};
     switch (authType) {
-      case SSHType.PasswordLess:
+      case SsmAnsible.SSHType.PasswordLess:
         sshCredentials = {
           username: sshUsername,
         };
         break;
-      case SSHType.KeyBased:
+      case SsmAnsible.SSHType.KeyBased:
         sshCredentials = {
           username: sshUsername,
           privateKey: sshKey ? await vaultDecrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
           passphrase: sshKeyPass ? await vaultDecrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
         };
         break;
-      case SSHType.UserPassword:
+      case SsmAnsible.SSHType.UserPassword:
         sshCredentials = {
           username: sshUsername,
           password: sshPwd ? await vaultDecrypt(sshPwd, DEFAULT_VAULT_ID) : undefined,

@@ -9,6 +9,16 @@ export default interface Device {
   _id: string;
   uuid: string;
   disabled?: boolean;
+  capabilities: {
+    containers: {
+      docker: {
+        enabled: boolean;
+      };
+      proxmox: {
+        enabled: boolean;
+      };
+    };
+  };
   dockerWatcher?: boolean;
   dockerWatcherCron?: string;
   dockerStatsWatcher?: boolean;
@@ -54,6 +64,24 @@ const schema = new Schema<Device>(
       required: true,
       unique: true,
       default: uuidv4,
+    },
+    capabilities: {
+      containers: {
+        docker: {
+          enabled: {
+            type: Schema.Types.Boolean,
+            required: true,
+            default: true,
+          },
+        },
+        proxmox: {
+          enabled: {
+            type: Schema.Types.Boolean,
+            required: true,
+            default: false,
+          },
+        },
+      },
     },
     disabled: {
       type: Schema.Types.Boolean,
