@@ -1,11 +1,11 @@
 import { randomUUID } from 'node:crypto';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import Container from '../../../../data/database/model/Container';
-import Acr from '../../../../modules/docker/registries/providers/acr/Acr';
-import Ecr from '../../../../modules/docker/registries/providers/ecr/Ecr';
-import Gcr from '../../../../modules/docker/registries/providers/gcr/Gcr';
-import Hub from '../../../../modules/docker/registries/providers/hub/Hub';
-import Docker from '../../../../modules/docker/watchers/providers/docker/Docker';
+import Acr from '../../../../modules/containers/registries/providers/acr/Acr';
+import Ecr from '../../../../modules/containers/registries/providers/ecr/Ecr';
+import Gcr from '../../../../modules/containers/registries/providers/gcr/Gcr';
+import Hub from '../../../../modules/containers/registries/providers/hub/Hub';
+import Docker from '../../../../modules/containers/watchers/providers/docker/Docker';
 import sampleSemver from './samples/semver.json';
 
 let docker: Docker;

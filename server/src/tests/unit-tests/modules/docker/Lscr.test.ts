@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import Lscr from '../../../../modules/docker/registries/providers/lscr/Lscr';
+import Lscr from '../../../../modules/containers/registries/providers/lscr/Lscr';
 
 describe('testing Lscr Registry', () => {
   const lscr = new Lscr();

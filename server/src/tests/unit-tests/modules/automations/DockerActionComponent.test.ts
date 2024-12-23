@@ -46,7 +46,7 @@ vi.mock('../../../../services/ContainerUseCases', async (importOriginal) => {
   return {
     ...(await importOriginal<typeof import('../../../../services/ContainerUseCases')>()),
     default: {
-      performAction: (container: Container, action: SsmContainer.Actions) => {
+      performDockerAction: (container: Container, action: SsmContainer.Actions) => {
         if (action === SsmContainer.Actions.PAUSE) {
           return;
         }
@@ -60,7 +60,7 @@ describe('DockerActionComponent', () => {
   beforeEach(async () => {
     vi.resetAllMocks();
     vi.spyOn(ContainerRepo, 'findContainerById');
-    vi.spyOn(ContainerUseCases, 'performAction');
+    vi.spyOn(ContainerUseCases, 'performDockerAction');
   });
   afterEach(() => {
     vi.restoreAllMocks();
@@ -78,8 +78,8 @@ describe('DockerActionComponent', () => {
     await dockerActionComponent.executeAction();
 
     expect(ContainerRepo.findContainerById).toHaveBeenCalledWith('container1');
-    expect(ContainerUseCases.performAction).toHaveBeenCalledTimes(2); // Assuming you have two containers
-    expect(ContainerUseCases.performAction).toHaveBeenCalledWith(fakeContainer, dockerAction);
+    expect(ContainerUseCases.performDockerAction).toHaveBeenCalledTimes(2); // Assuming you have two containers
+    expect(ContainerUseCases.performDockerAction).toHaveBeenCalledWith(fakeContainer, dockerAction);
   });
 
   test('executeAction handles no containers provided', async () => {
@@ -92,7 +92,7 @@ describe('DockerActionComponent', () => {
 
     // No action should be performed when no containers are provided
     await dockerActionComponent.executeAction();
-    expect(ContainerUseCases.performAction).not.toHaveBeenCalled();
+    expect(ContainerUseCases.performDockerAction).not.toHaveBeenCalled();
   });
 
   test('executeAction handles failed container retrieval', async () => {
@@ -105,7 +105,7 @@ describe('DockerActionComponent', () => {
 
     // An error should be thrown if the container can't be retrieved
     expect(dockerActionComponent.executeAction()).resolves.toBeUndefined();
-    expect(ContainerUseCases.performAction).not.toHaveBeenCalled();
+    expect(ContainerUseCases.performDockerAction).not.toHaveBeenCalled();
   });
 
   test('executeAction handles failed performAction execution', async () => {

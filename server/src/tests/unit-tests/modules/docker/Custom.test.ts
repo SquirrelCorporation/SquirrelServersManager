@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import Custom from '../../../../modules/docker/registries/providers/custom/Custom';
+import Custom from '../../../../modules/containers/registries/providers/custom/Custom';
 
 describe('testing Custom Registry', () => {
   const custom = new Custom();
