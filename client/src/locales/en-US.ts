@@ -9,4 +9,7 @@ export default {
   'menu.Configuration.Inventory': 'Inventory',
   'menu.Configuration.Logs': 'Logs',
   'menu.Configuration.Settings': 'Settings',
+  'menu.Stack': 'Stack',
+  'menu.Stack.Playbooks': 'Playbooks',
+  'menu.Stack.Container Stacks': 'Container Stacks',
 };

@@ -1,4 +1,5 @@
 import { ObjectId } from 'bson';
+import { SsmContainer } from 'ssm-shared-lib';
 import ProxmoxContainer, { ProxmoxContainerModel } from '../model/ProxmoxContainer';
 import Device from '../model/Device';
 
@@ -13,6 +14,11 @@ async function findAll(): Promise<ProxmoxContainer[] | null> {
       },
     },
     { $unwind: '$device' },
+    {
+      $addFields: {
+        displayType: SsmContainer.ContainerTypes.PROXMOX, // Add the static field `type` with value `'docker'`
+      },
+    },
   ]).exec();
 }
 

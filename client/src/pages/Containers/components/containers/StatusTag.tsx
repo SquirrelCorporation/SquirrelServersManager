@@ -19,6 +19,8 @@ const StatusTag: React.FC<StatusTagProps> = (props: StatusTagProps) => {
           <Tag icon={<ExclamationCircleOutlined />} color="error" />
         </Tooltip>
       );
+    case SsmStatus.ContainerStatus.STOPPED:
+      return <Tag color="default">Stopped</Tag>;
     default:
       return <Tag>{props.status}</Tag>;
   }

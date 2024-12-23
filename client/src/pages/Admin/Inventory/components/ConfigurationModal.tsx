@@ -1,7 +1,7 @@
-import AgentConfigurationTab from '@/pages/Admin/Inventory/components/AgentConfigurationTab';
-import DiagnosticTab from '@/pages/Admin/Inventory/components/DiagnosticTab';
-import DockerConfigurationForm from '@/pages/Admin/Inventory/components/DockerConfigurationForm';
-import SSHConfigurationForm from '@/pages/Admin/Inventory/components/SSHConfigurationForm';
+import AgentConfigurationTab from '@/pages/Admin/Inventory/components/tabs/AgentConfigurationTab';
+import ContainersConfigurationTab from '@/pages/Admin/Inventory/components/tabs/ContainersConfigurationTab';
+import DiagnosticTab from '@/pages/Admin/Inventory/components/tabs/DiagnosticTab';
+import SSHConfigurationFormTab from '@/pages/Admin/Inventory/components/tabs/SSHConfigurationFormTab';
 import { Modal, Tabs, TabsProps } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
@@ -19,12 +19,12 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
     {
       key: 'ssh',
       label: 'SSH',
-      children: <SSHConfigurationForm values={device} />,
+      children: <SSHConfigurationFormTab values={device} />,
     },
     {
-      key: 'docker',
-      label: 'Docker',
-      children: <DockerConfigurationForm device={device} />,
+      key: 'containers',
+      label: 'Containers',
+      children: <ContainersConfigurationTab device={device} />,
     },
     {
       key: 'diagnostic',

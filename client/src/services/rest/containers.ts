@@ -135,14 +135,32 @@ export async function getContainerStat(
   );
 }
 
-export async function postContainerAction(
+export async function postDockerContainerAction(
   containerId: string,
   action: SsmContainer.Actions,
   params?: any,
   options?: Record<string, any>,
 ): Promise<API.Response<any>> {
   return request<API.Response<any>>(
-    `/api/containers/${containerId}/action/${action}`,
+    `/api/containers/${containerId}/docker/action/${action}`,
+    {
+      method: 'POST',
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    },
+  );
+}
+
+export async function postProxmoxContainerAction(
+  containerId: string,
+  action: SsmContainer.Actions,
+  params?: any,
+  options?: Record<string, any>,
+): Promise<API.Response<any>> {
+  return request<API.Response<any>>(
+    `/api/containers/${containerId}/proxmox/action/${action}`,
     {
       method: 'POST',
       params: {

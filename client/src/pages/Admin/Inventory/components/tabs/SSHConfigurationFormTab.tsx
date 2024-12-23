@@ -10,7 +10,9 @@ export type ConfigurationFormSSHProps = {
   values: Partial<API.DeviceItem>;
 };
 
-const SSHConfigurationForm: React.FC<ConfigurationFormSSHProps> = (props) => {
+const SSHConfigurationFormTab: React.FC<ConfigurationFormSSHProps> = (
+  props,
+) => {
   const formRef = useRef<ProFormInstance | undefined>();
   return (
     <>
@@ -18,6 +20,7 @@ const SSHConfigurationForm: React.FC<ConfigurationFormSSHProps> = (props) => {
         layout="horizontal"
         formRef={formRef}
         submitter={{
+          searchConfig: { submitText: 'Save' },
           // eslint-disable-next-line @typescript-eslint/no-shadow
           render: (props, doms) => {
             return (
@@ -97,4 +100,4 @@ const SSHConfigurationForm: React.FC<ConfigurationFormSSHProps> = (props) => {
   );
 };
 
-export default SSHConfigurationForm;
+export default SSHConfigurationFormTab;

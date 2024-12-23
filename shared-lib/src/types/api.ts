@@ -1,9 +1,11 @@
 import { ExtraVarsType, SSHConnection, SSHType } from '../enums/ansible';
-import { VolumeBackupMode } from '../enums/container';
+import { ContainerTypes, VolumeBackupMode } from '../enums/container';
 import { Services } from '../enums/git';
 import { RepositoryType } from '../enums/repositories';
 import { AutomationChain } from '../form/automation';
+import { ProxmoxModel } from '../namespace/proxmox';
 import { ExtendedTreeNode } from './tree';
+import * as SsmProxmox from '../enums/proxmox'
 
 export type Response<T> = {
   success: boolean;
@@ -204,8 +206,28 @@ export type RaspberryRevisionData = {
   revision?: string;
 };
 
+export type DeviceCapabilities = {
+  containers: {
+    docker: {
+      enabled : boolean;
+    },
+    proxmox: {
+      enabled : boolean;
+    },
+    lxd: {
+      enabled : boolean;
+    }
+  }
+};
+
+export type ProxmoxConfiguration = {
+  watcherCron?: string;
+}
+
 export type DeviceItem = {
   uuid: string;
+  capabilities: DeviceCapabilities;
+  proxmoxConfiguration: ProxmoxConfiguration;
   disabled?: boolean;
   dockerWatcher?: boolean;
   dockerWatcherCron?: string;
@@ -381,6 +403,21 @@ export type DeviceAuthResponse = {
   data: DeviceAuth;
 };
 
+export type ProxmoxAuth = {
+  remoteConnectionMethod?: SsmProxmox.RemoteConnectionMethod;
+  connectionMethod?: SsmProxmox.ConnectionMethod;
+  ignoreSslErrors?: boolean;
+  port?: number;
+  userPwd?: {
+    username?: string;
+    password?: string;
+  };
+  tokens?: {
+    tokenId?: string;
+    tokenSecret?: string;
+  };
+}
+
 export type DeviceAuth = {
   authType: string;
   sshPort: number;
@@ -399,6 +436,7 @@ export type DeviceAuth = {
   customDockerAgentForward?: boolean;
   customDockerTryKeyboard?: boolean;
   customDockerSocket?: string;
+  proxmoxAuth?: ProxmoxAuth;
 };
 
 export type DeviceAuthParams = {
@@ -617,22 +655,38 @@ export type Mounts = {
   Propagation: string
 }
 
-export type Container = {
-  device?: DeviceItem;
-  id?: string;
-  name?: string;
-  customName?: string;
-  watcher?: string;
+export type DockerContainer = {
   updateAvailable?: boolean;
-  status?: string;
   image?: Image;
   updateKind?: ContainerUpdate;
   result?: ContainerInspectResult;
   networkSettings?: { [p: string]: NetworkInfo };
   mounts?: Mounts[];
   ports?: ContainerPort[];
-  updatedAt?: Date;
 }
+
+export type ProxmoxContainer = {
+  uuid?: string;
+  node?: string;
+  type?: SsmProxmox.ContainerType;
+  config?: ProxmoxModel.nodesLxcConfigVmConfig | ProxmoxModel.nodesQemuConfigVmConfig;
+  interfaces?: ProxmoxModel.nodesLxcInterfacesIp[];
+}
+
+type CommonContainerFields = {
+  device?: DeviceItem;
+  displayType?: ContainerTypes;
+  id?: string;
+  name?: string;
+  customName?: string;
+  watcher?: string;
+  status?: string;
+  updatedAt?: Date;
+};
+
+export type Container =
+  | (DockerContainer & { displayType: ContainerTypes.DOCKER } & CommonContainerFields)
+  | (ProxmoxContainer & { displayType: ContainerTypes.PROXMOX } & CommonContainerFields);
 
 
 export type ContainerResult = {

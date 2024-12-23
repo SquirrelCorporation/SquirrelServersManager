@@ -1,8 +1,12 @@
 import { DockerConfigurationFormElements } from '@/components/DeviceConfiguration/DockerConfigurationFormElements';
-import { getDeviceAuth, putDeviceDockerAuth } from '@/services/rest/deviceauth';
+import {
+  getDeviceAuth,
+  postCheckDeviceProxmoxAuth,
+  putDeviceDockerAuth,
+} from '@/services/rest/deviceauth';
 import { ProFormInstance } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
-import { message, Space } from 'antd';
+import { Button, message, Space } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -14,12 +18,14 @@ const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
   props,
 ) => {
   const formRef = React.useRef<ProFormInstance | undefined>();
+
   return (
     <>
       <ProForm
         layout="horizontal"
         formRef={formRef}
         submitter={{
+          searchConfig: { submitText: 'Save' },
           // eslint-disable-next-line @typescript-eslint/no-shadow
           render: (props, doms) => {
             return (

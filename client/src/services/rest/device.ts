@@ -85,7 +85,7 @@ export async function deleteDevice(
   });
 }
 
-export async function updateDeviceDockerWatcher(
+export async function updateDeviceDockerConfiguration(
   uuid: string,
   dockerOptions: {
     dockerWatcher: boolean;
@@ -96,11 +96,23 @@ export async function updateDeviceDockerWatcher(
   },
   options?: { [key: string]: any },
 ) {
-  return request<API.SimpleResult>(`/api/devices/${uuid}/docker-watcher`, {
+  return request<API.SimpleResult>(`/api/devices/${uuid}/conf/docker`, {
     method: 'POST',
     data: {
       ...dockerOptions,
     },
+    ...(options || {}),
+  });
+}
+
+export async function updateDeviceProxmoxConfiguration(
+  uuid: string,
+  proxmoxConfiguration: API.ProxmoxConfiguration,
+  options?: { [key: string]: any },
+) {
+  return request<API.SimpleResult>(`/api/devices/${uuid}/conf/proxmox`, {
+    method: 'POST',
+    data: proxmoxConfiguration,
     ...(options || {}),
   });
 }
@@ -110,7 +122,7 @@ export async function getCheckDeviceDockerConnection(
   options?: { [key: string]: any },
 ) {
   return request<API.SimpleResult>(
-    `/api/devices/${uuid}/check-connection/docker`,
+    `/api/devices/${uuid}/auth/docker/test-connection`,
     {
       method: 'GET',
       ...(options || {}),
@@ -123,7 +135,7 @@ export async function getCheckDeviceAnsibleConnection(
   options?: { [key: string]: any },
 ) {
   return request<API.SimpleResult>(
-    `/api/devices/${uuid}/check-connection/ansible`,
+    `/api/devices/${uuid}/auth/ansible/test-connection`,
     {
       method: 'GET',
       ...(options || {}),
@@ -152,11 +164,24 @@ export async function postDeviceDiagnostic(
   uuid: string,
   options?: { [key: string]: any },
 ) {
-  return request<API.SimpleResult>(
-    `/api/devices/${uuid}/check-connection/diagnostic`,
-    {
-      method: 'POST',
-      ...(options || {}),
+  return request<API.SimpleResult>(`/api/devices/${uuid}/auth/diagnostic`, {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+
+export async function postDeviceCapabilities(
+  uuid: string,
+  capabilities: API.DeviceCapabilities,
+  params?: API.PageParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.DeviceList>(`/api/devices/${uuid}/capabilities`, {
+    method: 'POST',
+    data: { capabilities },
+    params: {
+      ...params,
     },
-  );
+    ...(options || {}),
+  });
 }

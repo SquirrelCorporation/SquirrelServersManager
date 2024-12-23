@@ -1,5 +1,6 @@
 export enum WATCHERS {
   DOCKER = 'docker',
+  PROXMOX = 'proxmox',
 }
 export enum REGISTRIES {
   HUB = 'hub',

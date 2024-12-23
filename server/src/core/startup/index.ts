@@ -43,15 +43,15 @@ class Startup {
   }
 
   private async initializeModules() {
-    await PlaybooksRepositoryEngine.init();
-    void PlaybooksRepositoryEngine.syncAllRegistered();
+    //  await PlaybooksRepositoryEngine.init();
+    // void PlaybooksRepositoryEngine.syncAllRegistered();
     void sshPrivateKeyFileManager.removeAllAnsibleTemporaryPrivateKeys();
     void NotificationComponent.init();
     void Crons.initScheduledJobs();
     void WatcherEngine.init();
-    void AutomationEngine.init();
-    void UpdateChecker.checkVersion();
-    void ContainerCustomStacksRepositoryEngine.init();
+    //void AutomationEngine.init();
+    // void UpdateChecker.checkVersion();
+    // void ContainerCustomStacksRepositoryEngine.init();
     void Telemetry.init();
   }
 

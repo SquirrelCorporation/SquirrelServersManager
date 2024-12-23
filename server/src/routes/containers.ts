@@ -2,13 +2,15 @@ import express from 'express';
 import passport from 'passport';
 import {
   getContainers,
-  postContainerAction,
   postCustomNameOfContainer,
+  postDockerContainerAction,
+  postProxmoxContainerAction,
   refreshAll,
 } from '../controllers/rest/containers/containers';
 import {
-  postContainerActionValidator,
   postCustomNameOfContainerValidator,
+  postDockerContainerActionValidator,
+  postProxmoxDockerContainerActionValidator,
 } from '../controllers/rest/containers/containers.validator';
 import {
   getAveragedStats,
@@ -109,6 +111,11 @@ router.get(
   getContainerStatsByContainerIdValidator,
   getContainerStatsByContainerId,
 );
-router.route('/:id/action/:action').post(postContainerActionValidator, postContainerAction);
+router
+  .route('/:id/docker/action/:action')
+  .post(postDockerContainerActionValidator, postDockerContainerAction);
+router
+  .route('/:uuid/proxmox/action/:action')
+  .post(postProxmoxDockerContainerActionValidator, postProxmoxContainerAction);
 
 export default router;

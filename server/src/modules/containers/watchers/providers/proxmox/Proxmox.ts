@@ -1,16 +1,19 @@
-import { URL as NodeURL } from 'url';
+import debounce from 'debounce';
 import CronJob from 'node-cron';
-import { ProxmoxModel, SsmProxmox } from 'ssm-shared-lib';
-import ssh from 'ssh2';
-import { Dispatcher, RequestInit, Response, request } from 'undici';
+import { ProxmoxModel, SsmContainer, SsmProxmox } from 'ssm-shared-lib';
+import Device from '../../../../../data/database/model/Device';
+import DeviceAuth from '../../../../../data/database/model/DeviceAuth';
 import ProxmoxContainer from '../../../../../data/database/model/ProxmoxContainer';
 import DeviceAuthRepo from '../../../../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../../../../data/database/repository/DeviceRepo';
 import ProxmoxContainerRepo from '../../../../../data/database/repository/ProxmoxContainerRepo';
+import { proxmoxApi } from '../../../../../helpers/proxmox-api';
+import { createSshFetch } from '../../../../../helpers/ssh/axios-ssh';
 import SSHCredentialsHelper from '../../../../../helpers/ssh/SSHCredentialsHelper';
 import type { SSMServicesTypes } from '../../../../../types/typings';
 import Component from '../../../core/Component';
-import { proxmoxApi } from '../../../../../helpers/proxmox-api';
+
+const DEBOUNCED_WATCH_CRON_MS = 5000;
 
 export default class Proxmox extends Component<SSMServicesTypes.ConfigurationWatcherSchema> {
   watchCron!: CronJob.ScheduledTask | undefined;
@@ -22,14 +25,13 @@ export default class Proxmox extends Component<SSMServicesTypes.ConfigurationWat
   getConfigurationSchema() {
     return this.joi.object().keys({
       // TODO: move the default somewhere else
-      host: this.joi.string(),
-      port: this.joi.number().port(),
-      username: this.joi.string(),
-      password: this.joi.string(),
       cron: this.joi.string().default('0 * * * *'),
+      deviceUuid: this.joi.string().required(),
       watchstats: this.joi.boolean().default(true),
       cronstats: this.joi.string().default('*/1 * * * *'),
-      deviceUuid: this.joi.string().required(),
+      watchbydefault: this.joi.boolean().default(true),
+      watchevents: this.joi.boolean().default(true),
+      host: this.joi.string(),
     });
   }
 
@@ -39,90 +41,56 @@ export default class Proxmox extends Component<SSMServicesTypes.ConfigurationWat
     this.watchCron = CronJob.schedule(this.configuration.cron, () => {
       this.watchContainersFromCron();
     });
+
+    this.watchCronDebounced = debounce(() => {
+      this.watchContainersFromCron();
+    }, DEBOUNCED_WATCH_CRON_MS);
+
+    this.watchCron.start();
+    void this.watchContainersFromCron();
+  }
+
+  static async getProxmoxConnectOptions(device: Device, deviceAuth: DeviceAuth) {
+    const options = await SSHCredentialsHelper.getProxmoxConnectionOptions(device, deviceAuth);
+
+    if (deviceAuth?.proxmoxAuth?.remoteConnectionMethod === SsmProxmox.RemoteConnectionMethod.SSH) {
+      const sshCredentials = await SSHCredentialsHelper.getSShConnection(device, deviceAuth);
+      // Add a custom fetch function for SSH
+      options.fetch = createSshFetch(sshCredentials, options.ignoreSslErrors);
+      options.host = '127.0.0.1';
+    }
+    return options;
+  }
+
+  static async testProxmoxConnection(device: Device, deviceAuth: DeviceAuth) {
+    const options = await Proxmox.getProxmoxConnectOptions(device, deviceAuth);
+    const api = proxmoxApi(options);
+    return await api.nodes.$get();
   }
 
   async initWatcher() {
-    const device = await DeviceRepo.findOneByUuid(this.configuration.deviceUuid);
-    if (!device) {
-      throw new Error(
-        `DeviceID not found: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host}`,
+    try {
+      const device = await DeviceRepo.findOneByUuid(this.configuration.deviceUuid);
+      if (!device) {
+        throw new Error(
+          `DeviceID not found: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host}`,
+        );
+      }
+      const deviceAuth = await DeviceAuthRepo.findOneByDevice(device);
+      if (!deviceAuth) {
+        throw new Error(
+          `DeviceAuth not found for deviceID ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host}`,
+        );
+      }
+      const options = await Proxmox.getProxmoxConnectOptions(device, deviceAuth);
+      this.childLogger.info(
+        `initWatcher - Connection method: ${deviceAuth?.proxmoxAuth?.remoteConnectionMethod}`,
       );
+      this.childLogger.debug(options);
+      this.proxmoxApi = proxmoxApi(options);
+    } catch (error: any) {
+      this.childLogger.error(error);
     }
-    const deviceAuth = await DeviceAuthRepo.findOneByDevice(device);
-    if (!deviceAuth) {
-      throw new Error(
-        `DeviceAuth not found for deviceID ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host}`,
-      );
-    }
-    const options = await SSHCredentialsHelper.getProxmoxConnectionOptions(device, deviceAuth);
-    if (deviceAuth?.proxmoxAuth?.remoteMethod === SsmProxmox.RemoteConnectionMethod.SSH) {
-      const sshCredentials = await SSHCredentialsHelper.getSShConnection(device, deviceAuth);
-
-      // Add a custom fetch function for SSH
-      options.fetch = async (url: string | NodeURL, fetchOptions?: RequestInit) => {
-        return new Promise((resolve, reject) => {
-          const client = new ssh.Client();
-
-          client
-            .on('ready', () => {
-              client.forwardOut(
-                '127.0.0.1',
-                0,
-                sshCredentials.host as string,
-                sshCredentials.port || 443,
-                (err, stream) => {
-                  if (err) {
-                    client.end();
-                    reject(err);
-                    return;
-                  }
-
-                  try {
-                    const parsedUrl = new NodeURL(url.toString());
-
-                    // Create a custom dispatcher to handle the stream
-                    const dispatcher: Dispatcher = {
-                      connect: (_opts, callback) => {
-                        callback(null, stream); // Pass the SSH tunnel stream
-                      },
-                      destroy: async () => {
-                        client.end();
-                      }, // Ensure the client is cleaned up
-                    };
-
-                    // Create the request using undici.request
-                    request(parsedUrl.toString(), {
-                      method: fetchOptions?.method || 'GET',
-                      headers: fetchOptions?.headers,
-                      body: fetchOptions?.body,
-                      dispatcher, // Use custom dispatcher
-                    })
-                      .then((response) => {
-                        resolve(
-                          new Response(response.body, {
-                            status: response.statusCode,
-                            headers: response.headers,
-                          }),
-                        );
-                      })
-                      .catch((requestErr) => {
-                        reject(requestErr);
-                      });
-                  } catch (parseErr) {
-                    reject(parseErr);
-                  }
-                },
-              );
-            })
-            .on('error', (sshErr) => {
-              reject(sshErr);
-            })
-            .connect(sshCredentials);
-        });
-      };
-    }
-    this.childLogger.debug(options);
-    this.proxmoxApi = proxmoxApi(options);
   }
 
   /**
@@ -176,8 +144,16 @@ export default class Proxmox extends Component<SSMServicesTypes.ConfigurationWat
 
   async getContainers(): Promise<Partial<ProxmoxContainer[]>> {
     try {
+      this.childLogger.info('getContainers - starting...');
+      const device = await DeviceRepo.findOneByUuid(this.configuration.deviceUuid);
+      if (!device) {
+        throw new Error(
+          `DeviceID not found: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host}`,
+        );
+      }
       const containers: Partial<ProxmoxContainer[]> = [];
       const nodes = await this.proxmoxApi.nodes.$get();
+      this.childLogger.info(`getContainers - got ${nodes?.length} nodes: ${JSON.stringify(nodes)}`);
       // iterate cluster nodes
       for (const node of nodes) {
         const theNode = this.proxmoxApi.nodes.$(node.node);
@@ -187,14 +163,16 @@ export default class Proxmox extends Component<SSMServicesTypes.ConfigurationWat
           const config = await theNode.qemu.$(qemu.vmid).config.$get();
           const status = await theNode.qemu.$(qemu.vmid).status.current.$get();
           const container = {
+            device,
             id: `${qemu.vmid}`,
             type: SsmProxmox.ContainerType.QEMU,
             name: config.name || config.nameserver || 'unknown',
-            status: status.status,
+            status: status.status?.toLowerCase(),
             watcher: this.name,
             config: config,
+            node: node.node,
           };
-          this.childLogger.info(`getContainers - container: ${JSON.stringify(container)}`);
+          this.childLogger.debug(`getContainers - container: ${JSON.stringify(container)}`);
           containers.push(container);
         }
         const lxcs = await theNode.lxc.$get();
@@ -203,15 +181,21 @@ export default class Proxmox extends Component<SSMServicesTypes.ConfigurationWat
           // do some suff.
           const config = await theNode.lxc.$(lxc.vmid).config.$get();
           const status = await theNode.lxc.$(lxc.vmid).status.current.$get();
+          const interfaces = await theNode.lxc.$(lxc.vmid).interfaces.$get();
+          const name = lxc.name && lxc.name !== 'unknown' ? lxc.name : config.hostname || 'unknown';
           const container = {
-            id: `${this.configuration.deviceUuid}-${lxc.vmid}`,
+            device,
+            id: `${lxc.vmid}`,
             type: SsmProxmox.ContainerType.LXC,
-            name: config.name || config.nameserver || 'unknown',
-            status: status.status,
+            name,
+            status: status.status?.toLowerCase(),
             watcher: this.name,
             config: config,
-          };
-          this.childLogger.info(`getContainers - container: ${JSON.stringify(container)}`);
+            node: node.node,
+            interfaces,
+            hostname: config.hostname,
+          } as ProxmoxContainer;
+          this.childLogger.debug(`getContainers - container: ${JSON.stringify(container)}`);
           containers.push(container);
         }
       }
@@ -234,6 +218,27 @@ export default class Proxmox extends Component<SSMServicesTypes.ConfigurationWat
     }
     if (this.watchCronTimeout) {
       clearTimeout(this.watchCronTimeout);
+    }
+  }
+
+  async changeContainerStatus(container: ProxmoxContainer, action: SsmContainer.Actions) {
+    const containerStatus =
+      container.type === SsmProxmox.ContainerType.LXC
+        ? this.proxmoxApi.nodes.$(container.node).lxc.$(parseInt(container.id)).status
+        : this.proxmoxApi.nodes.$(container.node).lxc.$(parseInt(container.id)).status;
+    switch (action) {
+      case SsmContainer.Actions.STOP:
+        return await containerStatus.stop.$post();
+      case SsmContainer.Actions.START:
+        return await containerStatus.start.$post();
+      case SsmContainer.Actions.RESTART:
+        return await containerStatus.reboot.$post();
+      case SsmContainer.Actions.PAUSE:
+        return await containerStatus.suspend.$post();
+      case SsmContainer.Actions.KILL:
+        return await containerStatus.shutdown.$post();
+      default:
+        throw new Error(`Unknown action: ${action}`);
     }
   }
 }

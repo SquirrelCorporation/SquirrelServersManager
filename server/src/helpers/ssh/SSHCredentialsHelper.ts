@@ -51,24 +51,34 @@ class SSHCredentialsHelper {
   async getProxmoxConnectionOptions(
     device: Device,
     deviceAuth: DeviceAuth,
-  ): Promise<ProxmoxEngineOptions> {
-    if (deviceAuth.proxmoxAuth?.method === SsmProxmox.ConnectionMethod.USER_PWD) {
+  ): Promise<ProxmoxEngineOptions & { ignoreSslErrors: boolean }> {
+    if (deviceAuth.proxmoxAuth?.connectionMethod === SsmProxmox.ConnectionMethod.USER_PWD) {
       return {
+        ignoreSslErrors: !!deviceAuth.proxmoxAuth.ignoreSslErrors,
         host: device.ip as string,
         port: deviceAuth.proxmoxAuth.port,
-        username: deviceAuth.proxmoxAuth.userPwd?.userName,
-        password: deviceAuth.proxmoxAuth.userPwd?.password as string,
+        username: deviceAuth.proxmoxAuth.userPwd?.username,
+        password: (await vaultDecrypt(
+          deviceAuth.proxmoxAuth.userPwd?.password as string,
+          DEFAULT_VAULT_ID,
+        )) as string,
       };
     }
-    if (deviceAuth.proxmoxAuth?.method === SsmProxmox.ConnectionMethod.TOKENS) {
+    if (deviceAuth.proxmoxAuth?.connectionMethod === SsmProxmox.ConnectionMethod.TOKENS) {
       return {
+        ignoreSslErrors: !!deviceAuth.proxmoxAuth.ignoreSslErrors,
         host: device.ip as string,
         port: deviceAuth.proxmoxAuth.port,
-        tokenID: deviceAuth.proxmoxAuth.token?.tokenId as string,
-        tokenSecret: deviceAuth.proxmoxAuth.token?.tokenSecret as string,
+        tokenID: deviceAuth.proxmoxAuth.tokens?.tokenId as string,
+        tokenSecret: (await vaultDecrypt(
+          deviceAuth.proxmoxAuth.tokens?.tokenSecret as string,
+          DEFAULT_VAULT_ID,
+        )) as string,
       };
     }
-    throw new Error(`Unsupported Proxmox connection method: ${deviceAuth.proxmoxAuth?.method}`);
+    throw new Error(
+      `Unsupported Proxmox connection method: ${deviceAuth.proxmoxAuth?.connectionMethod}`,
+    );
   }
 
   private async handleSSHCredentials(deviceAuth: DeviceAuth): Promise<ConnectConfig> {

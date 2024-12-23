@@ -1,16 +1,18 @@
-import ServiceQuickActionDropDown from '@/components/ContainerComponents/ContainerQuickAction/ContainerQuickActionDropDown';
+import ContainerQuickActionDropDown from '@/components/ContainerComponents/ContainerQuickAction/ContainerQuickActionDropDown';
 import ServiceQuickActionReference, {
   ServiceQuickActionReferenceActions,
   ServiceQuickActionReferenceTypes,
 } from '@/components/ContainerComponents/ContainerQuickAction/ContainerQuickActionReference';
 import { ExternalLink } from '@/components/Icons/CustomIcons';
+import ContainerTypeIcon from '@/pages/Containers/components/containers/container-details/ContainerTypeIcon';
 import ContainerAvatar from '@/pages/Containers/components/containers/ContainerAvatar';
 import ContainerStatProgress from '@/pages/Containers/components/containers/ContainerStatProgress';
 import InfoToolTipCard from '@/pages/Containers/components/containers/InfoToolTipCard';
 import StatusTag from '@/pages/Containers/components/containers/StatusTag';
 import UpdateAvailableTag from '@/pages/Containers/components/containers/UpdateAvailableTag';
-import { postContainerAction } from '@/services/rest/containers';
+import { postDockerContainerAction } from '@/services/rest/containers';
 import { getAllDevices } from '@/services/rest/device';
+import { capitalizeFirstLetter } from '@/utils/strings';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import {
   ProFieldValueType,
@@ -62,7 +64,7 @@ const ContainerMetas = (props: ContainerMetasProps) => {
           content: `Container: ${ServiceQuickActionReference[idx].action} in progress... The page will be automatically refreshed.`,
           duration: 6,
         });
-        await postContainerAction(
+        await postDockerContainerAction(
           props.selectedRecord?.id as string,
           ServiceQuickActionReference[idx].action as SsmContainer.Actions,
         ).then(() => {
@@ -98,7 +100,9 @@ const ContainerMetas = (props: ContainerMetasProps) => {
         return (
           <>
             <StatusTag status={row.status} />
-            <UpdateAvailableTag updateAvailable={row.updateAvailable} />
+            {row.displayType === SsmContainer.ContainerTypes.DOCKER && (
+              <UpdateAvailableTag updateAvailable={row.updateAvailable} />
+            )}
           </>
         );
       },
@@ -121,6 +125,9 @@ const ContainerMetas = (props: ContainerMetasProps) => {
         },
         unreachable: {
           text: 'unreachable',
+        },
+        stopped: {
+          text: 'stopped',
         },
       },
     },
@@ -169,7 +176,9 @@ const ContainerMetas = (props: ContainerMetasProps) => {
               }}
             >
               <>
-                On{' '}
+                <Popover content={capitalizeFirstLetter(row.displayType)}>
+                  <ContainerTypeIcon displayType={row.displayType} />
+                </Popover>
                 <Popover
                   content={
                     <>{row.device?.fqdn} (click to filter on this device)</>
@@ -179,9 +188,11 @@ const ContainerMetas = (props: ContainerMetasProps) => {
                     <Tag color="black">{row.device?.ip}</Tag>
                   </a>
                 </Popover>
-                <Flex gap="middle">
-                  <ContainerStatProgress containerId={row.id} />
-                </Flex>
+                {row.displayType === SsmContainer.ContainerTypes.DOCKER && (
+                  <Flex gap="middle">
+                    <ContainerStatProgress containerId={row.id} />
+                  </Flex>
+                )}
               </>
             </div>
           </div>
@@ -192,36 +203,47 @@ const ContainerMetas = (props: ContainerMetasProps) => {
       cardActionProps: 'extra',
       search: false,
       render: (text, row) => [
-        <>
-          {row.ports && row.ports.length > 0 && row.ports[0].PublicPort && (
-            <Tooltip
-              key={`url-${row.id}`}
-              title={`http://${row.device?.ip}:${row.ports[0].PublicPort}`}
-            >
-              <a
-                href={`http://${row.device?.ip}:${row.ports[0].PublicPort}`}
-                target="_blank"
-                rel="noreferrer"
+        row.displayType === SsmContainer.ContainerTypes.DOCKER
+          ? ((
+              <>
+                {row.ports &&
+                  row.ports.length > 0 &&
+                  row.ports[0].PublicPort && (
+                    <Tooltip
+                      key={`url-${row.id}`}
+                      title={`http://${row.device?.ip}:${row.ports[0].PublicPort}`}
+                    >
+                      <a
+                        href={`http://${row.device?.ip}:${row.ports[0].PublicPort}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <ExternalLink style={{ color: 'rgb(22, 104, 220)' }} />
+                      </a>
+                    </Tooltip>
+                  )}
+              </>
+            ),
+            (
+              <Tooltip
+                key={`info-${row.id}`}
+                color={'transparent'}
+                title={<InfoToolTipCard item={row} />}
               >
-                <ExternalLink style={{ color: 'rgb(22, 104, 220)' }} />
-              </a>
-            </Tooltip>
-          )}
-        </>,
-        <Tooltip
-          key={`info-${row.id}`}
-          color={'transparent'}
-          title={<InfoToolTipCard item={row} />}
-        >
-          <InfoCircleOutlined style={{ color: 'rgb(22, 104, 220)' }} />
-        </Tooltip>,
+                <InfoCircleOutlined style={{ color: 'rgb(22, 104, 220)' }} />
+              </Tooltip>
+            ))
+          : [],
         <a
           key={`quickAction-${row.id}`}
           onClick={() => {
             props.setSelectedRecord(row);
           }}
         >
-          <ServiceQuickActionDropDown onDropDownClicked={handleQuickAction} />
+          <ContainerQuickActionDropDown
+            onDropDownClicked={handleQuickAction}
+            container={row}
+          />
         </a>,
       ],
     },

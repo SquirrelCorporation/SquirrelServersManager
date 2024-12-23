@@ -16,8 +16,11 @@ export default interface ProxmoxContainer {
   displayIcon?: string;
   status: string;
   watcher: string;
+  node: string;
+  hostname?: string;
   type: SsmProxmox.ContainerType;
   config: ProxmoxModel.nodesLxcConfigVmConfig | ProxmoxModel.nodesQemuConfigVmConfig;
+  interfaces?: ProxmoxModel.nodesLxcInterfacesIp[];
 }
 
 const schema = new Schema<ProxmoxContainer>(
@@ -35,10 +38,19 @@ const schema = new Schema<ProxmoxContainer>(
       required: true,
       default: uuidv4,
     },
+    customName: {
+      type: Schema.Types.String,
+    },
+    node: {
+      type: Schema.Types.String,
+    },
     id: {
       type: Schema.Types.String,
     },
     name: {
+      type: Schema.Types.String,
+    },
+    hostname: {
       type: Schema.Types.String,
     },
     displayIcon: {
@@ -59,6 +71,9 @@ const schema = new Schema<ProxmoxContainer>(
       enum: SsmProxmox.ContainerType,
     },
     config: {
+      type: Object,
+    },
+    interfaces: {
       type: Object,
     },
   },

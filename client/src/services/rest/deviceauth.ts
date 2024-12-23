@@ -30,11 +30,38 @@ export async function putDeviceDockerAuth(
   data: API.DeviceDockerAuthParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.SimpleResult>(`/api/devices/${deviceId}/docker`, {
+  return request<API.SimpleResult>(`/api/devices/${deviceId}/auth/docker`, {
     method: 'POST',
     data: data,
     ...(options || {}),
   });
+}
+
+export async function postDeviceProxmoxAuth(
+  deviceId: string,
+  data: API.ProxmoxAuth,
+  options?: { [key: string]: any },
+) {
+  return request<API.SimpleResult>(`/api/devices/${deviceId}/auth/proxmox`, {
+    method: 'POST',
+    data: data,
+    ...(options || {}),
+  });
+}
+
+export async function postCheckDeviceProxmoxAuth(
+  deviceId: string,
+  data: API.ProxmoxAuth,
+  options?: { [key: string]: any },
+) {
+  return request<API.SimpleResult>(
+    `/api/devices/${deviceId}/auth/proxmox/test-connection`,
+    {
+      method: 'POST',
+      data: data,
+      ...(options || {}),
+    },
+  );
 }
 
 export async function deleteDockerCert(

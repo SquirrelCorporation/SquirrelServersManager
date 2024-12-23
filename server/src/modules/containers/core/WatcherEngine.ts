@@ -17,6 +17,7 @@ import providerConf from '../registries/providers/provider.conf';
 import Quay from '../registries/providers/quay/Quay';
 import Registry from '../registries/Registry';
 import Docker from '../watchers/providers/docker/Docker';
+import Proxmox from '../watchers/providers/proxmox/Proxmox';
 import Component, { Kind } from './Component';
 import { REGISTRIES, WATCHERS } from './conf';
 
@@ -54,6 +55,8 @@ function getComponentClass(
   switch (`${kind}/${provider}`) {
     case `${Kind.WATCHER}/${WATCHERS.DOCKER}`:
       return new Docker();
+    case `${Kind.WATCHER}/${WATCHERS.PROXMOX}`:
+      return new Proxmox();
     case `${Kind.REGISTRY}/${REGISTRIES.HUB}`:
       return new Hub();
     case `${Kind.REGISTRY}/${REGISTRIES.CUSTOM}`:
@@ -131,11 +134,11 @@ async function registerComponent(
  * @returns {Promise}
  */
 async function registerWatchers(): Promise<any> {
-  const devicesToWatch = await DeviceUseCases.getDevicesToWatch();
+  const dockerDevicesToWatch = await DeviceUseCases.getDockerDevicesToWatch();
 
   try {
     const watchersToRegister: any = [];
-    devicesToWatch?.map((device) => {
+    dockerDevicesToWatch?.map((device) => {
       watchersToRegister.push(
         registerComponent(
           device._id,
@@ -146,6 +149,34 @@ async function registerWatchers(): Promise<any> {
             cron: device.dockerWatcherCron as string,
             watchbydefault: true,
             deviceUuid: device.uuid,
+            watchstats: device.dockerStatsWatcher,
+            cronstats: device.dockerStatsCron as string,
+            watchevents: device.dockerEventsWatcher,
+            host: device.ip as string,
+          },
+        ),
+      );
+    });
+    await Promise.all(watchersToRegister);
+  } catch (e: any) {
+    logger.warn(`Some watchers failed to register (${e.message})`);
+    logger.debug(e);
+  }
+
+  const proxmoxDevicesToWatch = await DeviceUseCases.getProxmoxDevicesToWatch();
+  try {
+    const watchersToRegister: any = [];
+    proxmoxDevicesToWatch?.map((device) => {
+      watchersToRegister.push(
+        registerComponent(
+          device._id,
+          Kind.WATCHER,
+          WATCHERS.PROXMOX,
+          `${WATCHERS.PROXMOX}-${device.uuid}`,
+          {
+            cron: device.dockerWatcherCron as string,
+            deviceUuid: device.uuid,
+            watchbydefault: true,
             watchstats: device.dockerStatsWatcher,
             cronstats: device.dockerStatsCron as string,
             watchevents: device.dockerEventsWatcher,

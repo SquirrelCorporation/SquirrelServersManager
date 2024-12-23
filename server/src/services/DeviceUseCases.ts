@@ -16,6 +16,7 @@ import DeviceDownTimeEventRepo from '../data/database/repository/DeviceDownTimeE
 import DeviceRepo from '../data/database/repository/DeviceRepo';
 import DeviceStatRepo from '../data/database/repository/DeviceStatRepo';
 import PlaybookRepo from '../data/database/repository/PlaybookRepo';
+import ProxmoxContainerRepo from '../data/database/repository/ProxmoxContainerRepo';
 import SSHCredentialsHelper from '../helpers/ssh/SSHCredentialsHelper';
 import PinoLogger from '../logger';
 import { InternalError } from '../middlewares/api/ApiError';
@@ -23,6 +24,7 @@ import { DEFAULT_VAULT_ID, vaultEncrypt } from '../modules/ansible-vault/ansible
 import Inventory from '../modules/ansible/utils/InventoryTransformer';
 import { getCustomAgent } from '../modules/containers/core/CustomAgent';
 import WatcherEngine from '../modules/containers/core/WatcherEngine';
+import Docker from '../modules/containers/watchers/providers/docker/Docker';
 import PlaybookUseCases from './PlaybookUseCases';
 
 const logger = PinoLogger.child({ module: 'DeviceUseCases' }, { msgPrefix: '[DEVICE] - ' });
@@ -112,6 +114,7 @@ async function deleteDevice(device: Device) {
   await ContainerNetworkRepo.deleteByDevice(device);
   await ContainerImageRepo.deleteByDevice(device);
   await ContainerRepo.deleteByDevice(device);
+  await ProxmoxContainerRepo.deleteByDevice(device);
 }
 
 async function updateDockerWatcher(
@@ -131,9 +134,15 @@ async function updateDockerWatcher(
   await DeviceRepo.update(device);
 }
 
-async function getDevicesToWatch() {
+async function getDockerDevicesToWatch() {
   return DeviceRepo.findWithFilter({
     dockerWatcher: true,
+  });
+}
+
+async function getProxmoxDevicesToWatch() {
+  return DeviceRepo.findWithFilter({
+    'capabilities.containers.proxmox.enabled': true, // Use dot notation to filter nested fields
   });
 }
 
@@ -173,6 +182,7 @@ async function checkAnsibleConnection(
           ip,
           uuid: 'tmp',
           status: SsmStatus.DeviceStatus.REGISTERING,
+          capabilities: { containers: {} },
         },
         authType,
         sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
@@ -219,6 +229,7 @@ async function checkDockerConnection(
         ip,
         uuid: 'tmp',
         status: SsmStatus.DeviceStatus.REGISTERING,
+        capabilities: { containers: {} },
       },
       authType,
       sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
@@ -229,20 +240,8 @@ async function checkDockerConnection(
       becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
       sshKeyPass: sshKeyPass ? await vaultEncrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
     };
-    const options = await SSHCredentialsHelper.getDockerSshConnectionOptions(
-      mockedDeviceAuth.device,
-      mockedDeviceAuth,
-    );
-    const agent = getCustomAgent(logger, {
-      ...options.sshOptions,
-      timeout: 60000,
-    });
-    options.modem = new DockerModem({
-      agent: agent,
-    });
-    const dockerApi = new Dockerode({ ...options, timeout: 60000 });
-    await dockerApi.ping();
-    await dockerApi.info();
+    await Docker.testDockerConnection(mockedDeviceAuth.device, mockedDeviceAuth);
+
     return {
       status: 'successful',
     };
@@ -256,17 +255,7 @@ async function checkDockerConnection(
 
 async function checkDeviceDockerConnection(device: Device, deviceAuth: DeviceAuth) {
   try {
-    const options = await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
-    const agent = getCustomAgent(logger, {
-      ...options.sshOptions,
-      timeout: 60000,
-    });
-    options.modem = new DockerModem({
-      agent: agent,
-    });
-    const dockerApi = new Dockerode({ ...options, timeout: 60000 });
-    await dockerApi.ping();
-    await dockerApi.info();
+    await Docker.testDockerConnection(device, deviceAuth);
     return {
       status: 'successful',
     };
@@ -295,10 +284,11 @@ export default {
   getDevicesOverview,
   deleteDevice,
   updateDockerWatcher,
-  getDevicesToWatch,
+  getDockerDevicesToWatch,
   updateDockerInfo,
   checkAnsibleConnection,
   checkDockerConnection,
   checkDeviceDockerConnection,
   checkDeviceAnsibleConnection,
+  getProxmoxDevicesToWatch,
 };
