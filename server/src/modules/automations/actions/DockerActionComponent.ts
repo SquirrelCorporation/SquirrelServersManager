@@ -32,7 +32,7 @@ class DockerActionComponent extends AbstractActionComponent {
         success = false;
       } else {
         try {
-          await ContainerUseCases.performAction(container, this.dockerAction);
+          await ContainerUseCases.performDockerAction(container, this.dockerAction);
         } catch (error: any) {
           this.childLogger.error(error);
           success = false;
