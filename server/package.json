@@ -34,7 +34,7 @@
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "luxon": "^3.5.0",
-    "mongoose": "^8.9.1",
+    "mongoose": "^8.9.2",
     "node-cron": "^3.0.3",
     "node-ssh": "^13.2.0",
     "parse-docker-image-name": "^3.0.0",
