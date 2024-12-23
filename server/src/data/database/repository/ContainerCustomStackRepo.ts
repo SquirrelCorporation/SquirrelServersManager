@@ -36,6 +36,14 @@ async function listAllByRepository(
     .exec();
 }
 
+async function deleteAllByRepository(
+  containerCustomStackRepository: ContainerCustomStackRepository,
+) {
+  await ContainerCustomStackModel.deleteMany({
+    containerCustomStackRepository: containerCustomStackRepository,
+  }).exec();
+}
+
 async function findOneByPath(path: string) {
   return await ContainerCustomStackModel.findOne({ path: path }).lean().exec();
 }
@@ -48,4 +56,5 @@ export default {
   findByUuid,
   listAllByRepository,
   findOneByPath,
+  deleteAllByRepository,
 };

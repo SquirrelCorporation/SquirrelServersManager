@@ -62,8 +62,8 @@ async function findOneByUniqueQuickReference(quickRef: string): Promise<Playbook
     .exec();
 }
 
-async function deleteByRepository(playbooksRepository: PlaybooksRepository): Promise<void> {
-  await PlaybookModel.deleteOne({ playbooksRepository: playbooksRepository }).exec();
+async function deleteAllByRepository(playbooksRepository: PlaybooksRepository): Promise<void> {
+  await PlaybookModel.deleteMany({ playbooksRepository: playbooksRepository }).exec();
 }
 
 export default {
@@ -77,5 +77,5 @@ export default {
   findOneByPath,
   findAllWithActiveRepositories,
   findOneByUniqueQuickReference,
-  deleteByRepository,
+  deleteAllByRepository,
 };
