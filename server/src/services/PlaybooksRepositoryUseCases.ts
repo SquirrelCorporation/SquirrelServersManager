@@ -1,4 +1,5 @@
 import { API } from 'ssm-shared-lib';
+import PlaybookRepo from '../data/database/repository/PlaybookRepo';
 import { ForbiddenError, InternalError } from '../middlewares/api/ApiError';
 import Playbook, { PlaybookModel } from '../data/database/model/Playbook';
 import PlaybooksRepository from '../data/database/model/PlaybooksRepository';
@@ -126,6 +127,7 @@ async function deleteRepository(repository: PlaybooksRepository): Promise<void> 
   const directory = playbooksRepositoryComponent.getDirectory();
   const rootPath = playbooksRepositoryComponent.rootPath;
   await PlaybooksRepositoryEngine.deregisterRepository(repository.uuid);
+  await PlaybookRepo.deleteAllByRepository(repository);
   await PlaybooksRepositoryRepo.deleteByUuid(repository.uuid);
   Shell.FileSystemManager.deleteFiles(directory, rootPath);
 }
