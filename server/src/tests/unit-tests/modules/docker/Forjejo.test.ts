@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import Forgejo from '../../../../modules/docker/registries/providers/forgejo/Forgejo';
+import Forgejo from '../../../../modules/containers/registries/providers/forgejo/Forgejo';
 
 describe('testing Forjejo Registry', () => {
   const forgejo = new Forgejo();

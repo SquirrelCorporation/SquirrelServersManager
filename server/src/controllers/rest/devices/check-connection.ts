@@ -1,8 +1,10 @@
 import { API } from 'ssm-shared-lib';
 import DeviceAuthRepo from '../../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../../data/database/repository/DeviceRepo';
+import { preWriteSensitiveInfos } from '../../../helpers/sensitive/handle-sensitive-info';
 import { ForbiddenError, InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
+import Proxmox from '../../../modules/containers/watchers/providers/proxmox/Proxmox';
 import Diagnostic from '../../../modules/diagnostic/Diagnostic';
 import DeviceUseCases from '../../../services/DeviceUseCases';
 
@@ -132,5 +134,55 @@ export const postDiagnostic = async (req, res) => {
     new SuccessResponse('Get Device Diagnostic').send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
+  }
+};
+
+export const getCheckDeviceProxmoxConnection = async (req, res) => {
+  const { port, tokens, userPwd, remoteConnectionMethod, connectionMethod, ignoreSslErrors } =
+    req.body as API.ProxmoxAuth;
+  const { uuid } = req.params;
+  const device = await DeviceRepo.findOneByUuid(uuid);
+  if (!device) {
+    throw new NotFoundError('Device ID not found');
+  }
+  const optionalExistingDeviceAuth = await DeviceAuthRepo.findOneByDevice(device);
+  if (!optionalExistingDeviceAuth) {
+    throw new NotFoundError('Device Auth not found');
+  }
+  const proxmoxAuth = {
+    remoteConnectionMethod,
+    connectionMethod,
+    port,
+    ignoreSslErrors,
+    tokens: {
+      tokenId: tokens?.tokenId,
+      tokenSecret: tokens?.tokenSecret
+        ? await preWriteSensitiveInfos(
+            tokens?.tokenSecret,
+            optionalExistingDeviceAuth?.proxmoxAuth?.tokens?.tokenSecret,
+          )
+        : undefined,
+    },
+    userPwd: {
+      username: userPwd?.username,
+      password: userPwd?.password
+        ? await preWriteSensitiveInfos(
+            userPwd?.password,
+            optionalExistingDeviceAuth?.proxmoxAuth?.userPwd?.password,
+          )
+        : undefined,
+    },
+  } as Partial<API.ProxmoxAuth>;
+  try {
+    const nodes = await Proxmox.testProxmoxConnection(device, {
+      ...optionalExistingDeviceAuth,
+      proxmoxAuth,
+    });
+    new SuccessResponse('Tested proxmox auth', { connectionStatus: 'successful', nodes }).send(res);
+  } catch (error: any) {
+    new SuccessResponse('Tested proxmox auth', {
+      connectionStatus: 'failed',
+      errorMessage: error.message,
+    }).send(res);
   }
 };

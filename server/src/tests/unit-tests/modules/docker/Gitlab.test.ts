@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import Gitlab from '../../../../modules/docker/registries/providers/gitlab/Gitlab';
+import Gitlab from '../../../../modules/containers/registries/providers/gitlab/Gitlab';
 
 describe('testing Gitlab Registry', () => {
   const gitlab = new Gitlab();

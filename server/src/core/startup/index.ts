@@ -12,8 +12,8 @@ import { copyAnsibleCfgFileIfDoesntExist } from '../../helpers/ansible/AnsibleCo
 import PinoLogger from '../../logger';
 import AutomationEngine from '../../modules/automations/AutomationEngine';
 import Crons from '../../modules/crons';
-import WatcherEngine from '../../modules/docker/core/WatcherEngine';
-import providerConf from '../../modules/docker/registries/providers/provider.conf';
+import WatcherEngine from '../../modules/containers/core/WatcherEngine';
+import providerConf from '../../modules/containers/registries/providers/provider.conf';
 import NotificationComponent from '../../modules/notifications/NotificationComponent';
 import ContainerCustomStacksRepositoryEngine from '../../modules/repository/ContainerCustomStacksRepositoryEngine';
 import { createADefaultLocalUserRepository } from '../../modules/repository/default-playbooks-repositories';
@@ -43,15 +43,15 @@ class Startup {
   }
 
   private async initializeModules() {
-    await PlaybooksRepositoryEngine.init();
-    void PlaybooksRepositoryEngine.syncAllRegistered();
+    //  await PlaybooksRepositoryEngine.init();
+    // void PlaybooksRepositoryEngine.syncAllRegistered();
     void sshPrivateKeyFileManager.removeAllAnsibleTemporaryPrivateKeys();
     void NotificationComponent.init();
     void Crons.initScheduledJobs();
     void WatcherEngine.init();
-    void AutomationEngine.init();
-    void UpdateChecker.checkVersion();
-    void ContainerCustomStacksRepositoryEngine.init();
+    //void AutomationEngine.init();
+    // void UpdateChecker.checkVersion();
+    // void ContainerCustomStacksRepositoryEngine.init();
     void Telemetry.init();
   }
 

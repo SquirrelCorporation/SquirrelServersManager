@@ -8,8 +8,14 @@ export const postCustomNameOfContainerValidator = [
   validator,
 ];
 
-export const postContainerActionValidator = [
+export const postDockerContainerActionValidator = [
   param('id').exists().notEmpty().isString(),
+  param('action').exists().notEmpty().isString().isIn(Object.values(SsmContainer.Actions)),
+  validator,
+];
+
+export const postProxmoxDockerContainerActionValidator = [
+  param('uuid').exists().notEmpty().isUUID().isString(),
   param('action').exists().notEmpty().isString().isIn(Object.values(SsmContainer.Actions)),
   validator,
 ];

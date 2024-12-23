@@ -1,5 +1,5 @@
 import { body, param } from 'express-validator';
-import { SsmAnsible } from 'ssm-shared-lib';
+import { SsmAnsible, SsmProxmox } from 'ssm-shared-lib';
 import validator from '../../../middlewares/Validator';
 
 export const postCheckAnsibleConnectionValidator = [
@@ -113,5 +113,28 @@ export const postDiagnosticValidator = [
     .withMessage('Uuid is required')
     .isUUID()
     .withMessage('Uuid is not valid'),
+  validator,
+];
+
+export const getCheckDeviceProxmoxConnectionValidator = [
+  param('uuid')
+    .exists()
+    .notEmpty()
+    .withMessage('Uuid is required')
+    .isUUID()
+    .withMessage('Uuid is not valid'),
+  body('remoteConnectionMethod')
+    .exists()
+    .isIn(Object.values(SsmProxmox.RemoteConnectionMethod))
+    .withMessage('Remote connection method is not supported'),
+  body('connectionMethod')
+    .exists()
+    .isIn(Object.values(SsmProxmox.ConnectionMethod))
+    .withMessage('Connection method is not supported'),
+  body('port').exists().isNumeric().withMessage('Port is not a number'),
+  body('ignoreSslErrors')
+    .default(false)
+    .isBoolean()
+    .withMessage('Ignore SSL errors is not a boolean'),
   validator,
 ];

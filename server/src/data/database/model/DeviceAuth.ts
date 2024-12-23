@@ -1,6 +1,6 @@
 import { Binary } from 'bson';
 import { Schema, model } from 'mongoose';
-import { SsmAnsible } from 'ssm-shared-lib';
+import { SsmAnsible, SsmProxmox } from 'ssm-shared-lib';
 import Device from './Device';
 
 export const DOCUMENT_NAME = 'DeviceAuth';
@@ -34,6 +34,20 @@ export default interface DeviceAuth {
   customDockerAgentForward?: boolean;
   customDockerTryKeyboard?: boolean;
   customDockerSocket?: string;
+  proxmoxAuth?: {
+    remoteConnectionMethod?: SsmProxmox.RemoteConnectionMethod;
+    connectionMethod?: SsmProxmox.ConnectionMethod;
+    ignoreSslErrors?: boolean;
+    port?: number;
+    userPwd?: {
+      username?: string;
+      password?: string;
+    };
+    tokens?: {
+      tokenId?: string;
+      tokenSecret?: string;
+    };
+  };
   createdAt?: Date;
   updatedAt?: Date;
   dockerKey?: Buffer | Binary | null;
@@ -169,6 +183,39 @@ const schema = new Schema<DeviceAuth>(
     dockerKey: {
       type: Schema.Types.Buffer,
       required: false,
+    },
+    proxmoxAuth: {
+      remoteConnectionMethod: {
+        type: Schema.Types.String,
+        enum: SsmProxmox.RemoteConnectionMethod,
+      },
+      connectionMethod: {
+        type: Schema.Types.String,
+        enum: SsmProxmox.ConnectionMethod,
+      },
+      ignoreSslErrors: {
+        type: Schema.Types.Boolean,
+        default: false,
+      },
+      port: {
+        type: Schema.Types.Number,
+      },
+      userPwd: {
+        username: {
+          type: Schema.Types.String,
+        },
+        password: {
+          type: Schema.Types.String,
+        },
+      },
+      tokens: {
+        tokenId: {
+          type: Schema.Types.String,
+        },
+        tokenSecret: {
+          type: Schema.Types.String,
+        },
+      },
     },
   },
   {

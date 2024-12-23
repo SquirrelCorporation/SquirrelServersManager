@@ -1,12 +1,13 @@
 import { parse } from 'url';
 import { API, SsmContainer } from 'ssm-shared-lib';
 import ContainerRepo from '../../../data/database/repository/ContainerRepo';
+import ProxmoxContainerRepo from '../../../data/database/repository/ProxmoxContainerRepo';
 import { filterByFields, filterByQueryParams } from '../../../helpers/query/FilterHelper';
 import { paginate } from '../../../helpers/query/PaginationHelper';
 import { sortByFields } from '../../../helpers/query/SorterHelper';
 import { BadRequestError, InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import WatcherEngine from '../../../modules/docker/core/WatcherEngine';
+import WatcherEngine from '../../../modules/containers/core/WatcherEngine';
 import ContainerUseCases from '../../../services/ContainerUseCases';
 
 export const getContainers = async (req, res) => {
@@ -18,7 +19,9 @@ export const getContainers = async (req, res) => {
       filter: any;
     };
 
-  const containers = (await ContainerRepo.findAll()) as API.Container[];
+  const containers = (await Promise.all([ContainerRepo.findAll(), ProxmoxContainerRepo.findAll()]))
+    .filter(Boolean) // Remove any undefined or null
+    .flat() as API.Container[];
 
   // Use the separated services
   let dataSource = sortByFields(containers, params);
@@ -63,7 +66,7 @@ export const refreshAll = async (req, res) => {
   }
 };
 
-export const postContainerAction = async (req, res) => {
+export const postDockerContainerAction = async (req, res) => {
   const { id, action } = req.params;
   const container = await ContainerRepo.findContainerById(id);
   if (!container) {
@@ -72,6 +75,25 @@ export const postContainerAction = async (req, res) => {
   if (!(Object.values(SsmContainer.Actions) as string[]).includes(action)) {
     throw new BadRequestError();
   }
-  const result = await ContainerUseCases.performAction(container, action as SsmContainer.Actions);
+  const result = await ContainerUseCases.performDockerAction(
+    container,
+    action as SsmContainer.Actions,
+  );
+  new SuccessResponse('Performed container action', result).send(res);
+};
+
+export const postProxmoxContainerAction = async (req, res) => {
+  const { uuid, action } = req.params;
+  const container = await ProxmoxContainerRepo.findContainerByUuid(uuid);
+  if (!container) {
+    throw new NotFoundError(`Container with uuid ${uuid} not found`);
+  }
+  if (!(Object.values(SsmContainer.Actions) as string[]).includes(action)) {
+    throw new BadRequestError();
+  }
+  const result = await ContainerUseCases.performProxmoxAction(
+    container,
+    action as SsmContainer.Actions,
+  );
   new SuccessResponse('Performed container action', result).send(res);
 };

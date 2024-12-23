@@ -1,9 +1,12 @@
 import AdvancedSwitch from '@/components/DeviceConfiguration/AdvancedSwitch';
+import CapabilityCard from '@/components/DeviceConfiguration/capability/CapabilityCard';
 import DockerAdvancedConnectionCard from '@/components/DeviceConfiguration/docker/DockerAdvancedConnectionCard';
 import DockerEngineHostCard from '@/components/DeviceConfiguration/docker/DockerEngineHostCard';
 import DockerWatchCard from '@/components/DeviceConfiguration/docker/DockerWatchCard';
 import DockerWatcherCronsCard from '@/components/DeviceConfiguration/docker/DockerWatcherCronsCard';
+import { postDeviceCapabilities } from '@/services/rest/device';
 import { ProFormInstance } from '@ant-design/pro-components';
+import { message } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
 import 'react-js-cron/dist/styles.css';
@@ -20,9 +23,28 @@ export const DockerConfigurationFormElements: React.FC<
   const [showAdvanced, setShowAdvanced] = React.useState(false);
 
   const toggleShowAdvanced = () => setShowAdvanced(!showAdvanced);
-
+  const handleOnChangeCapability = async (checked: boolean) => {
+    if (!device.uuid || !device.capabilities?.containers) return;
+    await postDeviceCapabilities(device.uuid, {
+      containers: {
+        ...device.capabilities?.containers,
+        docker: {
+          enabled: checked,
+        },
+      },
+    }).catch((error) => {
+      message.error({
+        content: `Configuration update failed (${error.message})`,
+        duration: 6,
+      });
+    });
+  };
   return (
     <>
+      <CapabilityCard
+        initialValue={device.capabilities?.containers?.docker?.enabled || true}
+        onChange={handleOnChangeCapability}
+      />
       <DockerWatchCard device={device} />
       <DockerEngineHostCard
         device={device}

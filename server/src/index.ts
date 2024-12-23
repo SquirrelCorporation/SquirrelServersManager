@@ -1,5 +1,5 @@
 import { connection } from './data/database';
-import WatcherEngine from './modules/docker/core/WatcherEngine';
+import WatcherEngine from './modules/containers/core/WatcherEngine';
 import logger from './logger';
 import Startup from './core/startup';
 import './middlewares/Passport';

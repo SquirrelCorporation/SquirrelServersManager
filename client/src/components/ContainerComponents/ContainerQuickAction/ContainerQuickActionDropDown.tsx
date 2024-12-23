@@ -5,10 +5,12 @@ import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, MenuProps, Space } from 'antd';
 import { ItemType } from 'rc-menu/es/interface';
 import React, { ReactNode } from 'react';
+import { API } from 'ssm-shared-lib';
 
 export type ServiceQuickActionProps = {
   onDropDownClicked: (idx: number) => Promise<void>;
   children?: ReactNode;
+  container: API.Container;
 };
 
 const ContainerQuickActionDropDown: React.FC<ServiceQuickActionProps> = (
@@ -25,7 +27,9 @@ const ContainerQuickActionDropDown: React.FC<ServiceQuickActionProps> = (
     void props.onDropDownClicked(idx);
   };
 
-  const items = ServiceQuickActionReference.map((e, index) => {
+  const items = ServiceQuickActionReference.filter((e) =>
+    e.supportedBy.includes(props.container.displayType),
+  ).map((e, index) => {
     if (e.type === ServiceQuickActionReferenceTypes.DIVIDER)
       return { type: 'divider' };
     return {

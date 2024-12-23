@@ -1,7 +1,7 @@
 import ContainerRegistry from '../data/database/model/ContainerRegistry';
 import ContainerRegistryRepo from '../data/database/repository/ContainerRegistryRepo';
 import PinoLogger from '../logger';
-import WatcherEngine from '../modules/docker/core/WatcherEngine';
+import WatcherEngine from '../modules/containers/core/WatcherEngine';
 import type { SSMServicesTypes } from '../types/typings.d.ts';
 
 const logger = PinoLogger.child(

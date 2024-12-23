@@ -29,7 +29,7 @@ async function findOneByIp(ip: string): Promise<Device | null> {
 }
 
 async function findAll(): Promise<Device[] | null> {
-  return await DeviceModel.find().sort({ createdAt: -1 }).lean().exec();
+  return await DeviceModel.find({ disabled: false }).sort({ createdAt: -1 }).lean().exec();
 }
 
 async function setDeviceOfflineAfter(inactivityInMinutes: number) {
