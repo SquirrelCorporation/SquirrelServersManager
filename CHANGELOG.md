@@ -6,6 +6,7 @@
 
 **Implemented enhancements:**
 
+- \[FEAT\]  Add basic proxmox support [\#595](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/595) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Add telemetry support for anonymized usage tracking [\#563](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/563) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Fixed bugs:**
@@ -21,6 +22,9 @@
 
 **Merged pull requests:**
 
+- Bump vuetify from 3.7.5 to 3.7.6 in /site [\#593](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/593) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @aws-sdk/client-ecr from 3.713.0 to 3.716.0 in /server [\#592](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/592) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump mongoose from 8.9.1 to 8.9.2 in /server [\#591](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/591) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Update dependencies to latest versions [\#579](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/579) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update default cron interval for dockerWatcherCron [\#562](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/562) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update package-lock.json with dependency version bumps [\#560](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/560) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
