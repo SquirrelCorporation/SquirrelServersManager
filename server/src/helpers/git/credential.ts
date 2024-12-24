@@ -1,6 +1,7 @@
 import { GitProcess } from 'dugite';
 import { trim } from 'lodash';
 import { SsmGit } from 'ssm-shared-lib';
+import logger from '../../logger';
 import { getRemoteUrl } from './inspect';
 
 // TODO: support folderLocation as rawUrl like `/Users/linonetwo/Desktop/repo/playbooks-repository-sync-js/test/mockUpstreamRepo/credential` for test, or gitlab url.
@@ -47,6 +48,18 @@ export const getAzureReposUrlWithCredential = (
       .replace('https://dev.azure.com/', `https://${username}:${accessToken}@dev.azure.com/`),
   );
 
+export const getGiteaUrlWithCredential = (
+  rawUrl: string,
+  username: string,
+  accessToken: string,
+): string =>
+  trim(
+    rawUrl.replaceAll('\n', '').replace(
+      /https?:\/\/([a-zA-Z0-9.-]+(:\d+)?)(\/.*)/, // Matches domain, optional port, and trailing path
+      `https://${username}:${accessToken}@$1$3`, // Replaces with credentials and preserves the rest of the path
+    ),
+  );
+
 const getUrlWithOutCredential = (urlWithCredential: string): string =>
   trim(urlWithCredential.replace(/.+@/, 'https://'));
 
@@ -58,6 +71,7 @@ const getUrlWithOutCredential = (urlWithCredential: string): string =>
  * @param accessToken
  * @param remoteName
  * @param serviceType
+ * @param domain
  */
 export async function credentialOn(
   directory: string,
@@ -85,7 +99,15 @@ export async function credentialOn(
       gitUrlWithCredential = getAzureReposUrlWithCredential(remoteUrl, userName, accessToken);
       break;
     }
+    case SsmGit.Services.Gitea: {
+      gitUrlWithCredential = getGiteaUrlWithCredential(remoteUrl, userName, accessToken);
+      break;
+    }
+    default: {
+      throw new Error(`Unknown service type ${serviceType}`);
+    }
   }
+  logger.error(gitUrlWithCredential);
   await GitProcess.exec(['remote', 'add', remoteName, gitUrlWithCredential], directory);
   await GitProcess.exec(['remote', 'set-url', remoteName, gitUrlWithCredential], directory);
 }
@@ -103,23 +125,18 @@ export async function credentialOff(
   serviceType = SsmGit.Services.Github,
 ): Promise<void> {
   const gitRepoUrl = remoteUrl ?? (await getRemoteUrl(directory, remoteName));
-  let gitUrlWithOutCredential;
+  let gitUrlWithOutCredential: string;
   switch (serviceType) {
-    case SsmGit.Services.Github: {
+    case SsmGit.Services.Github:
+    case SsmGit.Services.GitLab:
+    case SsmGit.Services.Bitbucket:
+    case SsmGit.Services.AzureRepos:
+    case SsmGit.Services.Gitea: {
       gitUrlWithOutCredential = getUrlWithOutCredential(gitRepoUrl);
       break;
     }
-    case SsmGit.Services.GitLab: {
-      gitUrlWithOutCredential = getUrlWithOutCredential(gitRepoUrl);
-      break;
-    }
-    case SsmGit.Services.Bitbucket: {
-      gitUrlWithOutCredential = getUrlWithOutCredential(gitRepoUrl);
-      break;
-    }
-    case SsmGit.Services.AzureRepos: {
-      gitUrlWithOutCredential = getUrlWithOutCredential(gitRepoUrl);
-      break;
+    default: {
+      throw new Error(`Unknown service type ${serviceType}`);
     }
   }
   await GitProcess.exec(['remote', 'set-url', remoteName, gitUrlWithOutCredential], directory);
