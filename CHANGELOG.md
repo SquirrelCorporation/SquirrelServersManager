@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.26...HEAD)
+
+**Merged pull requests:**
+
+- \[CHORE\] Set NODE\_ENV to production for build steps in workflows [\#603](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/603) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 ## [v0.1.26](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.26) (2024-12-24)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.25...v0.1.26)
