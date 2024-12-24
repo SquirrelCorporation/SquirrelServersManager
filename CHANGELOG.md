@@ -6,6 +6,7 @@
 
 **Implemented enhancements:**
 
+- \[FEAT\] Add Gitea support and improve Git URL validation. [\#599](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/599) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\]  Add basic proxmox support [\#595](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/595) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Add telemetry support for anonymized usage tracking [\#563](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/563) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
@@ -20,6 +21,7 @@
 
 **Closed issues:**
 
+- \[FEATURE\] Add Gitea [\#581](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/581)
 - \[BUG\] Ratelimited by docker seems like container update cron task is responsible [\#546](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/546)
 
 **Merged pull requests:**
