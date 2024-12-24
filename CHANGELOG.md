@@ -11,8 +11,10 @@
 
 **Fixed bugs:**
 
+- \[BUG\] rm records of deleted repos [\#582](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/582)
 - \[BUG\] Container Stack Bugs [\#577](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/577)
 - Invalid Project Name Error in Deploy Custom Stack Compose [\#555](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/555)
+- \[BUG\] Refactor repository deletion to use deleteAllByRepository [\#596](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/596) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Refactor UI state and update Docker transformer logic [\#578](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/578) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Improve stack naming and validation logic. [\#561](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/561) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
@@ -25,6 +27,13 @@
 - Bump vuetify from 3.7.5 to 3.7.6 in /site [\#593](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/593) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @aws-sdk/client-ecr from 3.713.0 to 3.716.0 in /server [\#592](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/592) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump mongoose from 8.9.1 to 8.9.2 in /server [\#591](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/591) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump globals from 15.13.0 to 15.14.0 in /server [\#590](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/590) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint-plugin-import-x from 4.5.1 to 4.6.1 in /server [\#589](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/589) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump memfs from 4.15.0 to 4.15.1 in /server [\#588](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/588) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.3.0-alpine to 23.5.0-alpine in /server [\#587](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/587) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @umijs/max from 4.4.1 to 4.4.2 in /client [\#586](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/586) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @ant-design/charts from 2.2.5 to 2.2.6 in /client [\#585](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/585) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.3.0-alpine to 23.5.0-alpine in /client [\#583](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/583) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Update dependencies to latest versions [\#579](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/579) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update default cron interval for dockerWatcherCron [\#562](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/562) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update package-lock.json with dependency version bumps [\#560](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/560) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
