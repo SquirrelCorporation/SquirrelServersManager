@@ -60,6 +60,7 @@ class GitPlaybooksRepositoryComponent
   async clone(syncAfter = false) {
     this.childLogger.info('Clone starting...');
     try {
+      await GitPlaybooksRepositoryUseCases.resetRepositoryError(this.uuid);
       try {
         void Shell.FileSystemManager.createDirectory(this.directory, DIRECTORY_ROOT);
       } catch (error: any) {
@@ -101,6 +102,7 @@ class GitPlaybooksRepositoryComponent
 
   async commitAndSync() {
     try {
+      await GitPlaybooksRepositoryUseCases.resetRepositoryError(this.uuid);
       await commitAndSync({
         ...this.options,
         logger: {
@@ -134,6 +136,7 @@ class GitPlaybooksRepositoryComponent
 
   async forcePull() {
     try {
+      await GitPlaybooksRepositoryUseCases.resetRepositoryError(this.uuid);
       await forcePull({
         ...this.options,
         logger: {
