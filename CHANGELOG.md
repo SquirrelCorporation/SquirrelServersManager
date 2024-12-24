@@ -26,6 +26,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Upgrade dependencies in package-lock.json for various modules [\#600](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/600) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump vuetify from 3.7.5 to 3.7.6 in /site [\#593](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/593) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @aws-sdk/client-ecr from 3.713.0 to 3.716.0 in /server [\#592](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/592) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump mongoose from 8.9.1 to 8.9.2 in /server [\#591](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/591) ([dependabot[bot]](https://github.com/apps/dependabot))
