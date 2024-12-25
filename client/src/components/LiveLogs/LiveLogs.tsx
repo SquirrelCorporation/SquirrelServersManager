@@ -53,6 +53,19 @@ const LiveLogs = React.forwardRef<LiveLogsHandles, LiveLogsProps>(
         .emitWithAck(SsmEvents.Logs.GET_LOGS, { containerId: id, from })
         .then((response) => {
           if (response.status === 'OK') {
+            terminalRef?.current?.onDataIn(
+              '---\n' +
+                '#  ,;;:;,\n' +
+                '#   ;;;;;\n' +
+                "#  ,:;;:;    ,'=.\n" +
+                "#  ;:;:;' .=\" ,'_\\\n" +
+                "#  ':;:;,/  ,__:=@\n" +
+                "#   ';;:;  =./)_\n" +
+                '#     `"=\\_  )_"`\n' +
+                '#          ``\'"`\n' +
+                '# Squirrel Servers Manager Container Live Logs\n' +
+                '---\n',
+            );
             socket.on(SsmEvents.Logs.NEW_LOGS, onNewLogs);
           } else {
             handleConnectionError(`(${response.status} - ${response.error})`);

@@ -32,7 +32,22 @@ const DeviceSSHTerminal = () => {
   const setupSocket = (
     onDataIn: (value: string, newLine?: boolean) => void,
   ) => {
+    terminalRef?.current?.resetTerminalContent();
     socket.connect();
+    terminalRef?.current?.onDataIn('---', true);
+    terminalRef?.current?.onDataIn('#  ,;;:;,', true);
+    terminalRef?.current?.onDataIn('#   ;;;;;', true);
+    terminalRef?.current?.onDataIn("#  ,:;;:;    ,'=.", true);
+    terminalRef?.current?.onDataIn("#  ;:;:;' .=\" ,'_\\", true);
+    terminalRef?.current?.onDataIn("#  ':;:;,/  ,__:=@", true);
+    terminalRef?.current?.onDataIn("#   ';;:;  =./)_", true);
+    terminalRef?.current?.onDataIn('#     `"=\\_  )_"`', true);
+    terminalRef?.current?.onDataIn('#          ``\'"`', true);
+    terminalRef?.current?.onDataIn(
+      '# Squirrel Servers Manager Remote SSH Terminal',
+      true,
+    );
+    terminalRef?.current?.onDataIn('---', true);
     onDataIn('🛜 Connecting...', true);
     socket
       .emitWithAck(SsmEvents.SSH.START_SESSION, { deviceUuid: id, rows, cols })

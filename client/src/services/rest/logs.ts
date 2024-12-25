@@ -26,3 +26,17 @@ export async function getServerLogs(
     ...(options || {}),
   });
 }
+
+export async function getTaskEventsLogs(
+  id: string,
+  params?: API.PageParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.Tasks>(`/api/logs/tasks/${id}/events`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
