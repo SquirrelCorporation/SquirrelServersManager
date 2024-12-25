@@ -145,6 +145,19 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
       const pollingCallback = () => terminalHandler.pollingCallback(execId);
 
       const startPolling = () => {
+        terminalRef?.current?.onDataIn(
+          '---\n' +
+            '#  ,;;:;,\n' +
+            '#   ;;;;;\n' +
+            "#  ,:;;:;    ,'=.\n" +
+            "#  ;:;:;' .=\" ,'_\\\n" +
+            "#  ':;:;,/  ,__:=@\n" +
+            "#   ';;:;  =./)_\n" +
+            '#     `"=\\_  )_"`\n' +
+            '#          ``\'"`\n' +
+            '# Squirrel Servers Manager Playbooks Executor\n' +
+            '---\n',
+        );
         // pollingCallback(); // To immediately start fetching data
         // Polling every 30 seconds
         // @ts-ignore

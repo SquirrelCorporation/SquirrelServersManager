@@ -19,6 +19,7 @@ const Index: React.FC = () => {
   const [form] = ProForm.useForm<any>();
   const [searchParams] = useSearchParams();
   const location = useLocation();
+  const [currentRow, setCurrentRow] = useState<API.ServerLog | undefined>();
 
   const [columnsStateMap, setColumnsStateMap] = useState<
     Record<string, ColumnsState>
@@ -95,20 +96,22 @@ const Index: React.FC = () => {
   }, [location.hash]);
 
   return (
-    <PageContainer
-      header={{
-        title: (
-          <Title.MainTitle
-            title={'Logs'}
-            backgroundColor={TitleColors.LOGS}
-            icon={<UnorderedListOutlined />}
-          />
-        ),
-      }}
-      tabList={logsTabItems}
-      onTabChange={handleTabChange}
-      tabActiveKey={location.hash.replace('#', '') || logsTabItems[0].key}
-    />
+    <>
+      <PageContainer
+        header={{
+          title: (
+            <Title.MainTitle
+              title={'Logs'}
+              backgroundColor={TitleColors.LOGS}
+              icon={<UnorderedListOutlined />}
+            />
+          ),
+        }}
+        tabList={logsTabItems}
+        onTabChange={handleTabChange}
+        tabActiveKey={location.hash.replace('#', '') || logsTabItems[0].key}
+      />
+    </>
   );
 };
 

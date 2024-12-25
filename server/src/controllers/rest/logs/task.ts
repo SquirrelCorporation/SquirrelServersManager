@@ -1,10 +1,12 @@
 import { parse } from 'url';
 import { API } from 'ssm-shared-lib';
+import AnsibleLogsRepo from '../../../data/database/repository/AnsibleLogsRepo';
 import AnsibleTaskRepo from '../../../data/database/repository/AnsibleTaskRepo';
 import { filterByFields, filterByQueryParams } from '../../../helpers/query/FilterHelper';
 import { paginate } from '../../../helpers/query/PaginationHelper';
 import { sortByFields } from '../../../helpers/query/SorterHelper';
 import logger from '../../../logger';
+import { NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 
 export const getTaskLogs = async (req, res) => {
@@ -39,4 +41,14 @@ export const getTaskLogs = async (req, res) => {
     pageSize,
     current: parseInt(`${params.current}`, 10) || 1,
   }).send(res);
+};
+
+export const getTaskEvents = async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    throw new NotFoundError('No id');
+  }
+  const events = await AnsibleLogsRepo.findAllByIdent(id);
+
+  new SuccessResponse('Get task logs successful', events).send(res);
 };
