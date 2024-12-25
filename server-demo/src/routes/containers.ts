@@ -95,7 +95,7 @@ router.post(
 );
 
 router.post(
-  "/containers/:uuid/action/:action",
+  "/containers/:uuid/docker/action/:action",
   asyncHandler(async (req, res) => {
     new SuccessResponse("Updated container state").send(res);
   }),

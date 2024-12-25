@@ -1,9 +1,10 @@
 import { ObjectId } from 'bson';
+import { SsmContainer } from 'ssm-shared-lib';
 import {
   addLinkProperty,
   getKindProperty,
   isUpdateAvailable,
-} from '../../../modules/docker/utils/utils';
+} from '../../../modules/containers/utils/utils';
 import Container, { ContainerModel } from '../model/Container';
 import Device from '../model/Device';
 
@@ -18,6 +19,11 @@ async function findAll() {
       },
     },
     { $unwind: '$device' },
+    {
+      $addFields: {
+        displayType: SsmContainer.ContainerTypes.DOCKER, // Add the static field `type` with value `'docker'`
+      },
+    },
   ]).exec();
 }
 

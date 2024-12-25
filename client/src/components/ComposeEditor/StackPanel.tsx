@@ -77,7 +77,13 @@ const StackPanel: React.FC<StackPanelProps> = ({
             name={'name'}
             label={'Stack name'}
             initialValue={generateReadableName()}
-            rules={[{ required: true, message: 'Please enter a name' }]}
+            rules={[
+              { required: true, message: 'Please enter a name' },
+              {
+                pattern: /^(?!.*[:\/\\_.]).*$/,
+                message: 'Characters not allowed',
+              },
+            ]}
             fieldProps={{
               addonBefore: (
                 <StackIconSelector

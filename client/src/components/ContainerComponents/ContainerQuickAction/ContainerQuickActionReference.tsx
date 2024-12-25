@@ -22,6 +22,7 @@ export type ContainerQuickActionReferenceType = {
   label?: React.ReactNode;
   icon?: React.ReactNode;
   children?: ContainerQuickActionReferenceType[];
+  supportedBy: SsmContainer.ContainerTypes[];
 };
 
 export enum ServiceQuickActionReferenceActions {
@@ -35,42 +36,64 @@ const ContainerQuickActionReference: ContainerQuickActionReferenceType[] = [
     action: ServiceQuickActionReferenceActions.LIVE_LOGS,
     icon: <Live24Filled />,
     label: 'Live Logs',
+    supportedBy: [SsmContainer.ContainerTypes.DOCKER],
   },
   {
     type: ServiceQuickActionReferenceTypes.ACTION,
     action: ServiceQuickActionReferenceActions.RENAME,
     icon: <EditOutlined />,
     label: 'Rename',
+    supportedBy: [SsmContainer.ContainerTypes.DOCKER],
   },
   {
     type: ServiceQuickActionReferenceTypes.ACTION,
     action: SsmContainer.Actions.STOP,
     icon: <StopOutlined />,
     label: 'Stop',
+    supportedBy: [
+      SsmContainer.ContainerTypes.DOCKER,
+      SsmContainer.ContainerTypes.PROXMOX,
+    ],
   },
   {
     type: ServiceQuickActionReferenceTypes.ACTION,
     action: SsmContainer.Actions.START,
     icon: <PlayCircleFilled />,
     label: 'Start',
+    supportedBy: [
+      SsmContainer.ContainerTypes.DOCKER,
+      SsmContainer.ContainerTypes.PROXMOX,
+    ],
   },
   {
     type: ServiceQuickActionReferenceTypes.ACTION,
     action: SsmContainer.Actions.RESTART,
     icon: <SwapOutlined />,
     label: 'Restart',
+    supportedBy: [
+      SsmContainer.ContainerTypes.DOCKER,
+      SsmContainer.ContainerTypes.PROXMOX,
+    ],
   },
   {
     type: ServiceQuickActionReferenceTypes.ACTION,
     action: SsmContainer.Actions.PAUSE,
     icon: <PauseOutlined />,
     label: 'Pause',
+    supportedBy: [
+      SsmContainer.ContainerTypes.DOCKER,
+      SsmContainer.ContainerTypes.PROXMOX,
+    ],
   },
   {
     type: ServiceQuickActionReferenceTypes.ACTION,
     action: SsmContainer.Actions.KILL,
     icon: <CloseCircleOutlined />,
     label: 'Kill',
+    supportedBy: [
+      SsmContainer.ContainerTypes.DOCKER,
+      SsmContainer.ContainerTypes.PROXMOX,
+    ],
   },
 ];
 

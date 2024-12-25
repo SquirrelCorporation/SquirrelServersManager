@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import Acr from '../../../../modules/docker/registries/providers/acr/Acr';
+import Acr from '../../../../modules/containers/registries/providers/acr/Acr';
 
 describe('testing Acr Registry', () => {
   const acr = new Acr();

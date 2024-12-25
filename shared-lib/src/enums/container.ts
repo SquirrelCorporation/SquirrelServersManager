@@ -1,3 +1,9 @@
+export enum ContainerTypes {
+  DOCKER = 'docker',
+  PROXMOX = 'proxmox',
+  LXC = 'lxc',
+}
+
 export enum Actions {
   PAUSE = 'pause',
   START = 'start',

@@ -8,7 +8,7 @@ import Device from '../../data/database/model/Device';
 import DeviceAuth from '../../data/database/model/DeviceAuth';
 import SSHCredentialsHelper from '../../helpers/ssh/SSHCredentialsHelper';
 import PinoLogger from '../../logger';
-import { getCustomAgent } from '../docker/core/CustomAgent';
+import { getCustomAgent } from '../containers/core/CustomAgent';
 
 const DIAGNOSTIC_SEQUENCE = Object.values(SsmDeviceDiagnostic.Checks);
 const DISK_INFO_CMD = 'df -h';

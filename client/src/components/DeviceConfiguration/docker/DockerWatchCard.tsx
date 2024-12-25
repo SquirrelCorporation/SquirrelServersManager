@@ -1,6 +1,6 @@
 import { EosIconsCronjob } from '@/components/Icons/CustomIcons';
 import { CardHeader } from '@/components/Template/CardHeader';
-import { updateDeviceDockerWatcher } from '@/services/rest/device';
+import { updateDeviceDockerConfiguration } from '@/services/rest/device';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { ProForm, ProFormSwitch } from '@ant-design/pro-components';
 import { Card, message, Tooltip } from 'antd';
@@ -26,7 +26,7 @@ const DockerWatchCard = ({ device }: DockerWatchCardProps) => {
 
   const handleOnChangeDockerWatcher = async () => {
     if (device.uuid) {
-      await updateDeviceDockerWatcher(device.uuid, {
+      await updateDeviceDockerConfiguration(device.uuid, {
         dockerWatcher: !dockerWatcher,
         dockerStatsWatcher: dockerStatsWatcher,
         dockerEventsWatcher: dockerEventsWatcher,
@@ -43,7 +43,7 @@ const DockerWatchCard = ({ device }: DockerWatchCardProps) => {
 
   const handleOnChangeStatsWatcher = async () => {
     if (device.uuid) {
-      await updateDeviceDockerWatcher(device.uuid, {
+      await updateDeviceDockerConfiguration(device.uuid, {
         dockerWatcher: dockerWatcher,
         dockerStatsWatcher: !dockerStatsWatcher,
         dockerEventsWatcher: dockerEventsWatcher,
@@ -60,7 +60,7 @@ const DockerWatchCard = ({ device }: DockerWatchCardProps) => {
 
   const handleOnChangeEventsWatcher = async () => {
     if (device.uuid) {
-      await updateDeviceDockerWatcher(device.uuid, {
+      await updateDeviceDockerConfiguration(device.uuid, {
         dockerWatcher: dockerWatcher,
         dockerStatsWatcher: dockerStatsWatcher,
         dockerEventsWatcher: !dockerEventsWatcher,

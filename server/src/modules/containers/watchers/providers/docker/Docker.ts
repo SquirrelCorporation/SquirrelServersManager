@@ -3,9 +3,12 @@ import DockerModem from 'docker-modem';
 import Dockerode, { ContainerInfo } from 'dockerode';
 import CronJob from 'node-cron';
 import parse from 'parse-docker-image-name';
+import pino from 'pino';
 import { SsmStatus } from 'ssm-shared-lib';
 import Events from '../../../../../core/events/events';
 import Container from '../../../../../data/database/model/Container';
+import Device from '../../../../../data/database/model/Device';
+import DeviceAuth from '../../../../../data/database/model/DeviceAuth';
 import ContainerRepo from '../../../../../data/database/repository/ContainerRepo';
 import ContainerStatsRepo from '../../../../../data/database/repository/ContainerStatsRepo';
 import DeviceAuthRepo from '../../../../../data/database/repository/DeviceAuthRepo';
@@ -117,6 +120,38 @@ export default class Docker extends DockerLogs {
     }
   }
 
+  static async getDockerConnectionOptions(
+    device: Device,
+    deviceAuth: DeviceAuth,
+    logger: pino.Logger<never>,
+  ) {
+    const options = await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
+    logger.debug(options);
+    const agent = getCustomAgent(logger, {
+      debug: (message: any) => {
+        logger.debug(message);
+      },
+      ...options.sshOptions,
+      timeout: 60000,
+    });
+    try {
+      options.modem = new DockerModem({
+        agent: agent,
+      });
+    } catch (error: any) {
+      logger.error(error);
+      throw new Error(error.message);
+    }
+    return options;
+  }
+
+  static async testDockerConnection(device: Device, deviceAuth: DeviceAuth) {
+    const options = await Docker.getDockerConnectionOptions(device, deviceAuth, logger);
+    const docker = new Dockerode({ ...options, timeout: 60000 });
+    await docker.ping();
+    await docker.info();
+  }
+
   async initWatcher() {
     const device = await DeviceRepo.findOneByUuid(this.configuration.deviceUuid);
     if (!device) {
@@ -130,23 +165,8 @@ export default class Docker extends DockerLogs {
         `DeviceAuth not found for deviceID ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host}`,
       );
     }
-    const options = await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
-    this.childLogger.debug(options);
-    const agent = getCustomAgent(this.childLogger, {
-      debug: (message: any) => {
-        this.childLogger.debug(message);
-      },
-      ...options.sshOptions,
-    });
-    try {
-      options.modem = new DockerModem({
-        agent: agent,
-      });
-      this.dockerApi = new Dockerode(options);
-    } catch (error: any) {
-      logger.error(error);
-      throw new Error(error.message);
-    }
+    const options = await Docker.getDockerConnectionOptions(device, deviceAuth, this.childLogger);
+    this.dockerApi = new Dockerode(options);
   }
 
   /**
@@ -168,7 +188,7 @@ export default class Docker extends DockerLogs {
     }
     if (this.listenDockerEventsTimeout) {
       clearTimeout(this.listenDockerEventsTimeout);
-      delete this.watchCronDebounced;
+      delete this.listenDockerEventsTimeout;
     }
   }
 
@@ -420,7 +440,7 @@ export default class Docker extends DockerLogs {
         containerInStore !== null &&
         containerInStore.error === undefined
       ) {
-        this.childLogger.info(
+        this.childLogger.debug(
           `addImageDetailsToContainer - Container "${container.Image}" already in store - (containerId: ${containerInStore.id})`,
         );
         return { ...containerInStore, status: container.State, labels: container?.Labels };

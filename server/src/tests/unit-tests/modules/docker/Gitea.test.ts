@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import Gitea from '../../../../modules/docker/registries/providers/gitea/Gitea';
+import Gitea from '../../../../modules/containers/registries/providers/gitea/Gitea';
 
 describe('testing Gitea Registry', () => {
   const gitea = new Gitea();

@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { SsmGit } from 'ssm-shared-lib';
 import ContainerCustomStackRepository from '../data/database/model/ContainerCustomStackRepository';
+import ContainerCustomStackRepo from '../data/database/repository/ContainerCustomStackRepo';
 import ContainerCustomStackRepositoryRepo from '../data/database/repository/ContainerCustomStackRepositoryRepo';
 import { InternalError } from '../middlewares/api/ApiError';
 import ContainerCustomStacksRepositoryComponent from '../modules/repository/ContainerCustomStacksRepositoryComponent';
@@ -92,6 +93,7 @@ async function deleteRepository(repository: ContainerCustomStackRepository): Pro
   }
   const directory = repositoryComponent.getDirectory();
   await ContainerCustomStacksRepositoryEngine.deregisterRepository(repository.uuid);
+  await ContainerCustomStackRepo.deleteAllByRepository(repository);
   await ContainerCustomStackRepositoryRepo.deleteByUuid(repository.uuid);
   Shell.FileSystemManager.deleteFiles(directory);
 }

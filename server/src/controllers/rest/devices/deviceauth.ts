@@ -2,28 +2,14 @@ import { API } from 'ssm-shared-lib';
 import DeviceAuth from '../../../data/database/model/DeviceAuth';
 import DeviceAuthRepo from '../../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../../data/database/repository/DeviceRepo';
+import {
+  preWriteSensitiveInfos,
+  redactSensitiveInfos,
+} from '../../../helpers/sensitive/handle-sensitive-info';
 import logger from '../../../logger';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
-import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../../modules/ansible-vault/ansible-vault';
-import WatcherEngine from '../../../modules/docker/core/WatcherEngine';
-
-const SENSITIVE_PLACEHOLDER = 'REDACTED';
-
-const redactSensitiveInfos = (key?: string) => {
-  return key ? SENSITIVE_PLACEHOLDER : undefined;
-};
-
-const preWriteSensitiveInfos = async (newKey: string, originalKey?: string) => {
-  if (newKey === 'REDACTED') {
-    if (!originalKey) {
-      throw new InternalError('Received a redacted key, but original is not set');
-    }
-    return originalKey;
-  } else {
-    return await vaultEncrypt(newKey, DEFAULT_VAULT_ID);
-  }
-};
+import WatcherEngine from '../../../modules/containers/core/WatcherEngine';
 
 export const getDeviceAuth = async (req, res) => {
   const { uuid } = req.params;
@@ -62,6 +48,20 @@ export const getDeviceAuth = async (req, res) => {
       dockerCa: deviceAuth.dockerCa ? 'MY_CA.pem' : undefined,
       dockerCert: deviceAuth.dockerCert ? 'MY_CERT.cert' : undefined,
       dockerKey: deviceAuth.dockerKey ? 'MY_KEY.key' : undefined,
+      proxmoxAuth: {
+        remoteConnectionMethod: deviceAuth.proxmoxAuth?.remoteConnectionMethod,
+        connectionMethod: deviceAuth.proxmoxAuth?.connectionMethod,
+        port: deviceAuth.proxmoxAuth?.port,
+        ignoreSslErrors: deviceAuth.proxmoxAuth?.ignoreSslErrors,
+        tokens: {
+          tokenId: deviceAuth.proxmoxAuth?.tokens?.tokenId,
+          tokenSecret: redactSensitiveInfos(deviceAuth.proxmoxAuth?.tokens?.tokenSecret),
+        },
+        userPwd: {
+          username: deviceAuth.proxmoxAuth?.userPwd?.username,
+          password: redactSensitiveInfos(deviceAuth.proxmoxAuth?.userPwd?.password),
+        },
+      },
     } as API.DeviceAuth;
     new SuccessResponse('Get device auth successful', deviceAuthDecrypted as API.DeviceAuth).send(
       res,
@@ -241,4 +241,46 @@ export const deleteDockerAuthCerts = async (req, res) => {
   }
 
   new SuccessResponse('Deleted file').send(res);
+};
+
+export const updateProxmoxAuth = async (req, res) => {
+  const { port, tokens, userPwd, remoteConnectionMethod, connectionMethod, ignoreSslErrors } =
+    req.body as API.ProxmoxAuth;
+  const { uuid } = req.params;
+  const device = await DeviceRepo.findOneByUuid(uuid);
+  if (!device) {
+    throw new NotFoundError('Device ID not found');
+  }
+  const optionalExistingDeviceAuth = await DeviceAuthRepo.findOneByDevice(device);
+  await DeviceAuthRepo.update({
+    device: device,
+    proxmoxAuth: {
+      remoteConnectionMethod,
+      connectionMethod,
+      port,
+      ignoreSslErrors,
+      tokens: {
+        tokenId: tokens?.tokenId,
+        tokenSecret: tokens?.tokenSecret
+          ? await preWriteSensitiveInfos(
+              tokens?.tokenSecret,
+              optionalExistingDeviceAuth?.proxmoxAuth?.tokens?.tokenSecret,
+            )
+          : undefined,
+      },
+      userPwd: {
+        username: userPwd?.username,
+        password: userPwd?.password
+          ? await preWriteSensitiveInfos(
+              userPwd?.password,
+              optionalExistingDeviceAuth?.proxmoxAuth?.userPwd?.password,
+            )
+          : undefined,
+      },
+    },
+  } as DeviceAuth);
+
+  void WatcherEngine.deregisterWatchers();
+  void WatcherEngine.registerWatchers();
+  new SuccessResponse('Successfully updated proxmox auth').send(res);
 };

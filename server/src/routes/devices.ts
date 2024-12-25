@@ -3,6 +3,7 @@ import passport from 'passport';
 import {
   getCheckDeviceAnsibleConnection,
   getCheckDeviceDockerConnection,
+  getCheckDeviceProxmoxConnection,
   postCheckAnsibleConnection,
   postCheckDockerConnection,
   postDiagnostic,
@@ -10,6 +11,7 @@ import {
 import {
   getCheckDeviceAnsibleConnectionValidator,
   getCheckDeviceDockerConnectionValidator,
+  getCheckDeviceProxmoxConnectionValidator,
   postCheckAnsibleConnectionValidator,
   postCheckDockerConnectionValidator,
   postDiagnosticValidator,
@@ -20,6 +22,8 @@ import {
   deleteDevice,
   getAllDevices,
   getDevices,
+  postDeviceCapabilities,
+  postDeviceProxmoxConfiguration,
   updateAgentInstallMethod,
   updateDockerWatcher,
 } from '../controllers/rest/devices/device';
@@ -27,6 +31,8 @@ import {
   addDeviceAutoValidator,
   addDeviceValidator,
   deleteDeviceValidator,
+  postDeviceCapabilitiesValidator,
+  postDeviceProxmoxConfigurationValidator,
   updateAgentInstallMethodValidator,
 } from '../controllers/rest/devices/device.validator';
 import {
@@ -34,12 +40,14 @@ import {
   deleteDockerAuthCerts,
   getDeviceAuth,
   updateDockerAuth,
+  updateProxmoxAuth,
   uploadDockerAuthCerts,
 } from '../controllers/rest/devices/deviceauth';
 import {
   addOrUpdateDeviceAuthValidator,
   getDeviceAuthValidator,
   updateDockerAuthValidator,
+  updateProxmoxAuthValidator,
 } from '../controllers/rest/devices/deviceauth.validator';
 import {
   getDeviceStatByDeviceUuid,
@@ -98,18 +106,29 @@ router
   .post(upload.single('uploaded_file'), uploadDockerAuthCerts)
   .delete(deleteDockerAuthCerts);
 
-router.route('/:uuid/docker').post(updateDockerAuthValidator, updateDockerAuth);
-router.route('/:uuid/docker-watcher').post(updateDockerWatcher);
+router.route('/:uuid/capabilities').post(postDeviceCapabilitiesValidator, postDeviceCapabilities);
+router.route('/:uuid/auth/docker').post(updateDockerAuthValidator, updateDockerAuth);
+router.route('/:uuid/auth/proxmox').post(updateProxmoxAuthValidator, updateProxmoxAuth);
+router
+  .route('/:uuid/conf/proxmox')
+  .post(postDeviceProxmoxConfigurationValidator, postDeviceProxmoxConfiguration);
+router.route('/:uuid/conf/docker').post(updateDockerWatcher);
+
 router
   .route('/:uuid/agent-install-method')
   .post(updateAgentInstallMethodValidator, updateAgentInstallMethod);
+
+// /:uuid/auth/
 router
-  .route(`/:uuid/check-connection/ansible`)
+  .route(`/:uuid/auth/ansible/test-connection`)
   .get(getCheckDeviceAnsibleConnectionValidator, getCheckDeviceAnsibleConnection);
 router
-  .route(`/:uuid/check-connection/docker`)
+  .route(`/:uuid/auth/docker/test-connection`)
   .get(getCheckDeviceDockerConnectionValidator, getCheckDeviceDockerConnection);
-router.post('/:uuid/check-connection/diagnostic', postDiagnosticValidator, postDiagnostic);
+router
+  .route('/:uuid/auth/proxmox/test-connection')
+  .post(getCheckDeviceProxmoxConnectionValidator, getCheckDeviceProxmoxConnection);
+router.post('/:uuid/auth/diagnostic', postDiagnosticValidator, postDiagnostic);
 
 router.route('/').put(addDeviceValidator, addDevice).get(getDevices);
 router.route('/all').get(getAllDevices);

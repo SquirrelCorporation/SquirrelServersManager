@@ -2,10 +2,10 @@ import os from 'node:os';
 import { SsmContainer } from 'ssm-shared-lib';
 import { SSM_DATA_PATH } from '../config';
 import ContainerVolume from '../data/database/model/ContainerVolume';
-import { Kind } from '../modules/docker/core/Component';
-import { WATCHERS } from '../modules/docker/core/conf';
-import WatcherEngine from '../modules/docker/core/WatcherEngine';
-import Docker from '../modules/docker/watchers/providers/docker/Docker';
+import { Kind } from '../modules/containers/core/Component';
+import { WATCHERS } from '../modules/containers/core/conf';
+import WatcherEngine from '../modules/containers/core/WatcherEngine';
+import Docker from '../modules/containers/watchers/providers/docker/Docker';
 
 const FILESYSTEM_BACKUP_PATH = SSM_DATA_PATH + '/backup/volumes/';
 const BROWSER_BACKUP_PATH = os.tmpdir() + '/';

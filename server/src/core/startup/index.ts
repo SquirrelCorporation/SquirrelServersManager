@@ -12,13 +12,14 @@ import { copyAnsibleCfgFileIfDoesntExist } from '../../helpers/ansible/AnsibleCo
 import PinoLogger from '../../logger';
 import AutomationEngine from '../../modules/automations/AutomationEngine';
 import Crons from '../../modules/crons';
-import WatcherEngine from '../../modules/docker/core/WatcherEngine';
-import providerConf from '../../modules/docker/registries/providers/provider.conf';
+import WatcherEngine from '../../modules/containers/core/WatcherEngine';
+import providerConf from '../../modules/containers/registries/providers/provider.conf';
 import NotificationComponent from '../../modules/notifications/NotificationComponent';
 import ContainerCustomStacksRepositoryEngine from '../../modules/repository/ContainerCustomStacksRepositoryEngine';
 import { createADefaultLocalUserRepository } from '../../modules/repository/default-playbooks-repositories';
 import PlaybooksRepositoryEngine from '../../modules/repository/PlaybooksRepositoryEngine';
 import sshPrivateKeyFileManager from '../../modules/shell/managers/SshPrivateKeyFileManager';
+import Telemetry from '../../modules/telemetry';
 import UpdateChecker from '../../modules/update/UpdateChecker';
 import ContainerRegistryUseCases from '../../services/ContainerRegistryUseCases';
 import { setAnsibleVersions } from '../system/ansible-versions';
@@ -42,19 +43,30 @@ class Startup {
   }
 
   private async initializeModules() {
-    await PlaybooksRepositoryEngine.init();
-    void PlaybooksRepositoryEngine.syncAllRegistered();
+    //  await PlaybooksRepositoryEngine.init();
+    // void PlaybooksRepositoryEngine.syncAllRegistered();
     void sshPrivateKeyFileManager.removeAllAnsibleTemporaryPrivateKeys();
     void NotificationComponent.init();
     void Crons.initScheduledJobs();
     void WatcherEngine.init();
-    void AutomationEngine.init();
-    void UpdateChecker.checkVersion();
-    void ContainerCustomStacksRepositoryEngine.init();
+    //void AutomationEngine.init();
+    // void UpdateChecker.checkVersion();
+    // void ContainerCustomStacksRepositoryEngine.init();
+    void Telemetry.init();
   }
 
   private async updateScheme() {
     this.logger.warn('updateScheme - Scheme version differed, starting applying updates...');
+
+    try {
+      const installId = await getFromCache(SettingsKeys.GeneralSettingsKeys.INSTALL_ID);
+      if (!installId) {
+        await setToCache(SettingsKeys.GeneralSettingsKeys.INSTALL_ID, uuidv4());
+      }
+    } catch (error: any) {
+      this.logger.error(`Error settings installId: ${error.message}`);
+    }
+
     try {
       await PlaybookModel.syncIndexes();
       this.logger.info('PlaybookModel indexes synchronized successfully.');

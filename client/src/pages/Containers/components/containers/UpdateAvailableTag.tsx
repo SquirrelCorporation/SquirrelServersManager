@@ -1,4 +1,5 @@
-import { Tag } from 'antd';
+import { Update } from '@/components/Icons/CustomIcons';
+import { Badge, Tag, Tooltip } from 'antd';
 import React from 'react';
 
 export type UpdateAvailableTagProps = {
@@ -9,7 +10,16 @@ const UpdateAvailableTag: React.FC<UpdateAvailableTagProps> = (
   props: UpdateAvailableTagProps,
 ) => {
   return props.updateAvailable ? (
-    <Tag color="cyan">Update available</Tag>
+    <Tooltip title={'Update available'}>
+      <Tag
+        color="cyan"
+        icon={
+          <Badge dot={true} color="info">
+            <Update />{' '}
+          </Badge>
+        }
+      />
+    </Tooltip>
   ) : (
     <></>
   );

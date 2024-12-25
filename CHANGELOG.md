@@ -1,8 +1,64 @@
 # Changelog
 
-## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+## [v0.1.26](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.26) (2024-12-24)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.24...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.25...v0.1.26)
+
+**Implemented enhancements:**
+
+- \[FEAT\] Add Gitea support and improve Git URL validation. [\#599](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/599) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[FEAT\]  Add basic proxmox support [\#595](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/595) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[FEAT\] Add telemetry support for anonymized usage tracking [\#563](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/563) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Fixed bugs:**
+
+- \[BUG\] rm records of deleted repos [\#582](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/582)
+- \[BUG\] Container Stack Bugs [\#577](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/577)
+- Invalid Project Name Error in Deploy Custom Stack Compose [\#555](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/555)
+- \[BUG\] Refactor repository deletion to use deleteAllByRepository [\#596](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/596) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\] Refactor UI state and update Docker transformer logic [\#578](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/578) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\] Improve stack naming and validation logic. [\#561](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/561) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Closed issues:**
+
+- \[FEATURE\] Add Gitea [\#581](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/581)
+- \[BUG\] Ratelimited by docker seems like container update cron task is responsible [\#546](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/546)
+
+**Merged pull requests:**
+
+- \[CHORE\] Upgrade dependencies in package-lock.json for various modules [\#600](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/600) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump vuetify from 3.7.5 to 3.7.6 in /site [\#593](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/593) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @aws-sdk/client-ecr from 3.713.0 to 3.716.0 in /server [\#592](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/592) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump mongoose from 8.9.1 to 8.9.2 in /server [\#591](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/591) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump globals from 15.13.0 to 15.14.0 in /server [\#590](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/590) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint-plugin-import-x from 4.5.1 to 4.6.1 in /server [\#589](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/589) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump memfs from 4.15.0 to 4.15.1 in /server [\#588](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/588) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.3.0-alpine to 23.5.0-alpine in /server [\#587](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/587) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @umijs/max from 4.4.1 to 4.4.2 in /client [\#586](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/586) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @ant-design/charts from 2.2.5 to 2.2.6 in /client [\#585](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/585) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.3.0-alpine to 23.5.0-alpine in /client [\#583](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/583) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[CHORE\] Update dependencies to latest versions [\#579](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/579) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update default cron interval for dockerWatcherCron [\#562](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/562) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update package-lock.json with dependency version bumps [\#560](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/560) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump nanoid from 3.3.7 to 3.3.8 in /client in the npm\_and\_yarn group [\#558](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/558) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump nanoid from 3.3.7 to 3.3.8 in /site in the npm\_and\_yarn group [\#557](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/557) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump the npm\_and\_yarn group across 1 directory with 2 updates [\#556](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/556) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump memfs from 4.14.0 to 4.15.0 in /server [\#554](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/554) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @typescript-eslint/eslint-plugin from 8.16.0 to 8.17.0 in /server [\#553](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/553) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vuetify from 3.7.4 to 3.7.5 in /site [\#552](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/552) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump axios from 1.7.8 to 1.7.9 in /site [\#551](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/551) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @vue-flow/core from 1.41.5 to 1.41.6 in /site [\#550](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/550) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @typescript-eslint/eslint-plugin from 8.16.0 to 8.17.0 in /client [\#549](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/549) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vitest from 2.1.6 to 2.1.8 in /client [\#548](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/548) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump antd from 5.22.2 to 5.22.3 in /client [\#547](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/547) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump nginx from 1.27.2 to 1.27.3 in /proxy [\#545](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/545) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @eslint/js from 9.15.0 to 9.16.0 in /client [\#544](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/544) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint from 9.15.0 to 9.16.0 in /server [\#542](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/542) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Update release.json to 0.1.24 [\#538](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/538) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+## [v0.1.25](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.25) (2024-11-29)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.24...v0.1.25)
 
 **Implemented enhancements:**
 
@@ -685,15 +741,15 @@
 
 ## [v0.1.10](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.10) (2024-06-07)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.10)
-
-## [v0.1.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.8) (2024-06-06)
-
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.8)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.10)
 
 ## [v0.1.9](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.9) (2024-06-06)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.9)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.9)
+
+## [v0.1.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.8) (2024-06-06)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.8)
 
 ## [v0.1.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.7) (2024-06-06)
 

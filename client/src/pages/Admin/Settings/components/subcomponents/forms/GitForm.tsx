@@ -4,6 +4,7 @@ import {
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
+import { message } from 'antd';
 import React from 'react';
 import { API, SsmGit } from 'ssm-shared-lib';
 
@@ -68,7 +69,23 @@ const GitForm: React.FC<GitFormProps> = ({ selectedRecord, repositories }) => (
       name={'remoteUrl'}
       label={'Remote Url'}
       initialValue={selectedRecord?.remoteUrl}
-      rules={[{ required: true }]}
+      rules={[
+        { required: true },
+        { type: 'url' },
+        { pattern: /https:\/\//, message: 'Please include https://' },
+      ]}
+      fieldProps={{
+        onBlur: (e) => {
+          const value = e.target.value;
+          const regex = /https?:\/\/[^@\n]+:[^@\n]+@/; // Matches user:password@ in URLs
+          if (regex.test(value)) {
+            void message.warning({
+              content:
+                'Remote URL contains a username or access token. Consider removing it for security.',
+            });
+          }
+        },
+      }}
     />
     <ProFormText
       width={'md'}
