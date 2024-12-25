@@ -40,7 +40,7 @@ const TaskLogsTerminalModal: React.FC<TaskLogsTerminalModalProps> = ({
             "#   ';;:;  =./)_\n" +
             '#     `"=\\_  )_"`\n' +
             '#          ``\'"`\n' +
-            '# Squirrel Servers Manager Playbooks Executor\n' +
+            '# Squirrel Servers Manager Playbook Executor\n' +
             '---\n',
         );
         for (const line of res.data) {

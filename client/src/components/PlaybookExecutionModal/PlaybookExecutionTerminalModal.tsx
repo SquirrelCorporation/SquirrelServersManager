@@ -155,7 +155,7 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
             "#   ';;:;  =./)_\n" +
             '#     `"=\\_  )_"`\n' +
             '#          ``\'"`\n' +
-            '# Squirrel Servers Manager Playbooks Executor\n' +
+            '# Squirrel Servers Manager Playbook Executor\n' +
             '---\n',
         );
         // pollingCallback(); // To immediately start fetching data
