@@ -48,7 +48,7 @@ export const getTaskEvents = async (req, res) => {
   if (!id) {
     throw new NotFoundError('No id');
   }
-  const events = await AnsibleLogsRepo.findAllByIdent(id);
+  const events = await AnsibleLogsRepo.findAllByIdent(id, 1);
 
   new SuccessResponse('Get task logs successful', events).send(res);
 };

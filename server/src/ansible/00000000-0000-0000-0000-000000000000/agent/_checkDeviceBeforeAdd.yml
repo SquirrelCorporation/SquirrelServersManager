@@ -21,3 +21,16 @@
     - name: Check that you can connect (GET) to the API and it returns a status 200
       ansible.builtin.uri:
         url: "{{ _ssm_masterNodeUrl }}/api/ping"
+- name: Test Sudo Working
+  hosts: all
+  tasks:
+    - become: true
+      command: id -u
+      register: id_output
+    - assert:
+        that: id_output.stdout == '0'
+- name: Task completion summary
+  hosts: all
+  tasks:
+    - debug:
+        msg: "Become completed with {{ id_output.stdout }}"
