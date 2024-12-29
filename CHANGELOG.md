@@ -8,10 +8,17 @@
 
 - \[FEATURE\] History of output for Ansible playbook executions [\#598](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/598)
 
+**Closed issues:**
+
+- \[CHORE\] Add elevation privilege test in check connection playbook [\#605](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/605)
+
 **Merged pull requests:**
 
+- \[CHORE\] Update dependencies: antd, rc-util, and @aws-sdk/client-ecr [\#608](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/608) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Add sorting option and enhance Ansible playbook tasks [\#607](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/607) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add task event logs retrieval and display in the UI [\#604](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/604) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Set NODE\_ENV to production for build steps in workflows [\#603](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/603) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump @typescript-eslint/eslint-plugin from 8.17.0 to 8.18.2 in /client [\#601](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/601) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [v0.1.26](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.26) (2024-12-24)
 
