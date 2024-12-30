@@ -105,19 +105,26 @@ export default defineConfig({
       '/docs/': [
         { text: 'Overview', link: '/docs/' },
         {
-          text: '→ Quick Start', link: '/docs/quickstart.md', items: [
+          text: '→ ⚡ Quick Start', link: '/docs/quickstart.md', items: [
             {
-              text: 'Requirements', link: '/docs/requirements.md'
+              text: '📋 Requirements', link: '/docs/requirements.md'
             },
             {
-              text: 'Installing SSM', link: '/docs/install/install.md'
+              text: '↪️ Updating SSM', link: '/docs/install/update.md'
             },
             {
-              text: 'Updating SSM', link: '/docs/install/update.md'
-            },
-            {
-              text: 'Development mode', link: '/docs/devmode.md'
+              text: '⛑️ Troubleshoot', link: '/docs/troubleshoot/troubleshoot.md'
             }
+          ]
+        },
+        {text: 'Advanced', items: [
+            {
+              text: '📀 Alternative installs', link: '/docs/install/install.md'
+            },
+
+            {
+              text: '🛠 Development mode', link: '/docs/devmode.md'
+            },
           ]
         },
         {
@@ -135,9 +142,31 @@ export default defineConfig({
                   text: 'Deleting a device', link: '/docs/devices/delete-device.md'
                 },
                 {
-                  text: 'Device configuration', link: '/docs/devices/device-configuration.md'
+                  text: 'Device configuration', link: '/docs/devices/configuration/', items: [
+                    {text: 'SSH', link: '/docs/devices/configuration/ssh.md'},
+                    {text: 'Containers: Docker', link: '/docs/devices/configuration/docker.md'},
+                    {text: 'Containers: Proxmox', link: '/docs/devices/configuration/proxmox.md'},
+                    {text: 'Diagnostic', link: '/docs/devices/configuration/diagnostic.md'}
+                  ]
                 }
               ]
+            },
+            {
+              text: 'Containers', items: [
+                {text: 'Overview', link: '/docs/containers/containers.md'},
+                {text: 'Docker', items: [
+                  {text: 'Deploy from the Store', link: '/docs/containers/deploy-store.md'}
+                  ]
+                },
+                {
+                  text: 'Proxmox', items: [
+                    { text: 'Qemu/LXC Containers', link: '/docs/containers/deploy-store.md' }
+                  ]
+                },
+                ]
+            },
+            {
+              text: 'Automations',  items: [{text: 'Overview',link: '/docs/automations/automations.md'}]
             },
             {
               text: 'Stacks - Playbooks', items: [
@@ -158,13 +187,6 @@ export default defineConfig({
                 { text: 'Local Playbooks Repositories', link: '/docs/playbooks/local-playbooks.md' },
                 { text: 'Remote Playbooks Repositories', link: '/docs/playbooks/remote-playbooks.md' }
               ]
-            },
-            {
-              text: 'Containers', items: [{text: 'Overview', link: '/docs/containers/containers.md'},
-                {text: 'Deploy from the Store', link: '/docs/containers/deploy-store.md'}]
-            },
-            {
-              text: 'Automations',  items: [{text: 'Overview',link: '/docs/automations/automations.md'}]
             },
             {
               text: 'Settings', items: [
@@ -194,9 +216,6 @@ export default defineConfig({
                 { text: 'Labels', link: '/docs/technical-guide/containers-labelling.md'}
               ]
             },
-            {
-              text: 'Troubleshoot', link: '/docs/technical-guide/troubleshoot.md'
-            }
           ]
         },
         {

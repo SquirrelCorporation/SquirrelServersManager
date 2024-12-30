@@ -114,7 +114,7 @@ const DockerWatchCard = ({ device }: DockerWatchCardProps) => {
           }}
         />
         <ProFormSwitch
-          checkedChildren={'Watch Container Events'}
+          checkedChildren={'Watch Containers Events'}
           unCheckedChildren={'Containers events not watched'}
           fieldProps={{
             value: dockerEventsWatcher,
