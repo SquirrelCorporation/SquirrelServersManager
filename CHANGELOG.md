@@ -10,10 +10,14 @@
 
 **Closed issues:**
 
+- \[FEATURE\] Enter Vault Password [\#609](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/609)
 - \[CHORE\] Add elevation privilege test in check connection playbook [\#605](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/605)
+- \[FEATURE\] add \(re\)initialize action to the git actions menu [\#422](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/422)
 
 **Merged pull requests:**
 
+- Bump framer-motion from 11.12.0 to 11.15.0 in /client [\#615](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/615) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump lint-staged from 15.2.11 to 15.3.0 in /client [\#613](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/613) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Update dependencies: antd, rc-util, and @aws-sdk/client-ecr [\#608](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/608) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add sorting option and enhance Ansible playbook tasks [\#607](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/607) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add task event logs retrieval and display in the UI [\#604](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/604) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
