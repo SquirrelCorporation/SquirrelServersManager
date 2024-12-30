@@ -71,7 +71,7 @@
     "rc-queue-anim": "^2.0.0",
     "rc-tween-one": "^3.0.6",
     "react": "^18.3.1",
-    "react-confetti": "^6.1.0",
+    "react-confetti": "^6.2.2",
     "react-dev-inspector": "^2.0.1",
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
