@@ -56,7 +56,7 @@ docker compose -f docker-compose.dev.yml up
 ```
 
 ## 🚧 Troubleshoot
-See [Troubleshoot](https://squirrelserversmanager.io/docs/technical-guide/troubleshoot)
+See [Troubleshoot](https://squirrelserversmanager.io/docs/troubleshoot/troubleshoot)
 
 ---
 
