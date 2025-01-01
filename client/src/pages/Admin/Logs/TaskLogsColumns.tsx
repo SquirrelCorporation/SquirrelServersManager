@@ -1,7 +1,24 @@
+import DeviceQuickActionDropDown from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionDropDown';
+import TaskLogsTerminalModal from '@/pages/Admin/Logs/TaskLogsTerminalModal';
 import { ProColumns } from '@ant-design/pro-components';
-import { Tag } from 'antd';
+import { Tag, Typography } from 'antd';
 import React from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';
+
+const { Text } = Typography;
+
+const EllipsisMiddle: React.FC<{ suffixCount: number; children: string }> = ({
+  suffixCount,
+  children,
+}) => {
+  const start = children.slice(0, children.length - suffixCount);
+  const suffix = children.slice(-suffixCount).trim();
+  return (
+    <Text style={{ maxWidth: '100%' }} ellipsis={{ suffix }} code>
+      {start}
+    </Text>
+  );
+};
 
 const TaskLogsColumns: ProColumns<API.Task>[] = [
   {
@@ -48,7 +65,17 @@ const TaskLogsColumns: ProColumns<API.Task>[] = [
     title: 'Command',
     dataIndex: 'cmd',
     key: 'cmd',
-    valueType: 'code',
+    render: (_, entity) => {
+      return <EllipsisMiddle suffixCount={12}>{entity.cmd}</EllipsisMiddle>;
+    },
+  },
+  {
+    dataIndex: 'option',
+    valueType: 'option',
+    hideInSearch: true,
+    render: (_, record) => [
+      <TaskLogsTerminalModal key="terminal" task={record} />,
+    ],
   },
 ];
 

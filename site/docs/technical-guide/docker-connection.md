@@ -5,7 +5,7 @@ By default, SSM will try to connect through SSH to the Docker socket using the g
 However, you may want to set up a specific SSH connection method for that:
 
 ## Using Different SSH Credentials for Connecting to the Docker Socket
-- **Navigation**: `Inventory` / `<device>` / `Configuration` => "Docker" tab; `Show advanced` on;
+- **Navigation**: `Inventory` / `<device>` / `Configuration` => "Containers" tab; `Docker` > `Show advanced` on;
 
 ![docker-advanced-con](/technical-guide/docker/docker-advanced-connection.png)
 

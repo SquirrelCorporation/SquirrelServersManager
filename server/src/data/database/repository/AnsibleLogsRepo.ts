@@ -6,12 +6,12 @@ async function create(ansibleLog: AnsibleLog): Promise<AnsibleLog> {
   return created.toObject();
 }
 
-async function findAllByIdent(ident: string): Promise<AnsibleLog[] | null> {
-  return await AnsibleLogModel.find({ ident: ident }).sort({ createdAt: -1 }).lean().exec();
+async function findAllByIdent(ident: string, sortedBy: -1 | 1 = -1): Promise<AnsibleLog[] | null> {
+  return await AnsibleLogModel.find({ ident: { $eq: ident } }).sort({ createdAt: sortedBy }).lean().exec();
 }
 
 async function deleteAllByIdent(ident: string) {
-  return await AnsibleLogModel.deleteMany({ ident: ident }).lean().exec();
+  return await AnsibleLogModel.deleteMany({ ident: { $eq: ident } }).lean().exec();
 }
 
 async function deleteAll(): Promise<void> {

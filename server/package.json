@@ -16,7 +16,7 @@
   "version": "0.1.26",
   "author": "Squirrel Team",
   "dependencies": {
-    "@aws-sdk/client-ecr": "^3.718.0",
+    "@aws-sdk/client-ecr": "^3.720.0",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",
@@ -27,7 +27,7 @@
     "dotenv": "^16.4.7",
     "dugite": "^2.7.1",
     "express": "^5.0.1",
-    "express-validator": "^7.2.0",
+    "express-validator": "^7.2.1",
     "fs-extra": "^11.2.0",
     "isomorphic-git": "^1.27.2",
     "joi": "^17.13.3",

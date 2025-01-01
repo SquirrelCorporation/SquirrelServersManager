@@ -73,6 +73,7 @@ REDIS_PORT=6379
 #SSM CONFIG
 #SSM_INSTALL_PATH=/opt/squirrelserversmanager
 #SSM_DATA_PATH=/data
+TELEMETRY_ENABLED=true
 EOF
 echo "✅ .env file has been generated with random secrets."
 else

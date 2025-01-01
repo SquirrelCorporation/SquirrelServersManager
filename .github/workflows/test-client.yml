@@ -34,13 +34,13 @@ jobs:
       run: npm ci
     - name: Build
       working-directory: ./shared-lib
-      run: npm run build --if-present
+      run: NODE_ENV=production npm run build --if-present
     - name: Install
       working-directory: ./client
       run: npm ci
     - name: Build
       working-directory: ./client
-      run: npm run build --if-present
+      run: NODE_ENV=production npm run build --if-present
     - name: Test
       working-directory: ./client
       run: npm test

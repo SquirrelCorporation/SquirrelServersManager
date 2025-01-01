@@ -32,7 +32,7 @@ In the next step, SSM will attempt to ping itself through this URL.
 ## 4. Connection tests
 ![adddevice4](/add-device/add-device-6.png)
 Ansible and Docker connections will automatically be initiated to test your previous inputs. Wait for the results and address any issues that may arise.
-If you need to use a different authentication method for Docker, you can later specify it in the Docker configuration (see [Device Configuration](/docs/devices/device-configuration)).
+If you need to use a different authentication method for Docker, you can later specify it in the Docker configuration (see [Device Configuration](/docs/devices/configuration/)).
 
 ## 4. Installation Method
 ![adddevice4](/add-device/add-device-7.png)

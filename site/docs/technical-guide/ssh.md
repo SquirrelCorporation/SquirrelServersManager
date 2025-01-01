@@ -1,17 +1,24 @@
 # SSH / Connection to Your Devices
 
-SSM uses SSH to connect to your devices. More precisely: a) it is used by Ansible to apply playbooks b) directly by the server to open a terminal c) and by the underlying Docker library to retrieve anything Docker-related.
+SSM uses SSH to connect to your devices. More precisely: 
+- a) it is used by Ansible to apply playbooks 
+- b) directly by the server to open a terminal 
+- c) and by the underlying Docker library to retrieve anything Docker-related.
 
 Every password, key, and passphrase is encrypted using Ansible Vault (AES 256) and stored in the database.
+
 ## SSH Credentials
-SSM supports both Username/Password and User/SSH Key (PKI) methods.
+SSM supports: 
+- `Username/Password` 
+- `User/SSH Key (PKI)`
+- `Passwordless` methods.
 
 ![connection-method](/technical-guide/ssh/ssh-password.png)
 
 ![connection-method](/technical-guide/ssh/ssh-key.png)
 
-:::warning SSH Key Passphrase
-Please note that setting an SSH Key passphrase is only supported with the 'paramiko' connection method.
+:::warning ⚠️ SSH Key Passphrase
+Please note that setting an SSH Key **passphrase**  is **only** supported with the **'paramiko'**  connection method.
 :::
 
 ### Limitations
