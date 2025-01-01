@@ -16,7 +16,7 @@ export async function getPlaybooksRepositories(): Promise<
 export async function getGitPlaybooksRepositories(
   params?: any,
   options?: Record<string, any>,
-) {
+): Promise<API.Response<API.GitPlaybooksRepository[]>> {
   return request<API.Response<API.GitPlaybooksRepository[]>>(
     `/api/playbooks-repository/git/`,
     {
@@ -32,7 +32,7 @@ export async function getGitPlaybooksRepositories(
 export async function getPlaybooksLocalRepositories(
   params?: any,
   options?: Record<string, any>,
-) {
+): Promise<API.Response<API.LocalPlaybooksRepository[]>> {
   return request<API.Response<API.GitPlaybooksRepository[]>>(
     `/api/playbooks-repository/local/`,
     {

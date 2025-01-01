@@ -1,4 +1,4 @@
-import ExistingDeviceAdvancedDiagnostic from '@/components/DeviceConfiguration/diagnostic/ExistingDeviceAdvancedDiagnostic';
+import TroubleshootCard from '@/components/DeviceConfiguration/diagnostic/TroubleshootCard';
 import ExistingDeviceConnectionTest from '@/components/DeviceConfiguration/diagnostic/ExistingDeviceConnectionTest';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
@@ -10,7 +10,7 @@ export type ConnectionTestTabProps = {
 const DiagnosticTab: React.FC<ConnectionTestTabProps> = (props) => (
   <>
     <ExistingDeviceConnectionTest device={props.device} />
-    <ExistingDeviceAdvancedDiagnostic device={props.device} />
+    <TroubleshootCard device={props.device} />
   </>
 );
 

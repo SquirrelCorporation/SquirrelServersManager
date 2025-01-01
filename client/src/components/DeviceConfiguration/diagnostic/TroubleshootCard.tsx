@@ -1,4 +1,5 @@
 import { MedicalSearchDiagnosisSolid } from '@/components/Icons/CustomIcons';
+import TroubleshootModal from '@/components/Troubleshoot/TroubleshootModal';
 import { postDeviceDiagnostic } from '@/services/rest/device';
 import { socket } from '@/socket';
 import { history } from '@umijs/max';
@@ -9,6 +10,7 @@ import {
   Col,
   message,
   Row,
+  Space,
   StepProps,
   Steps,
 } from 'antd';
@@ -47,9 +49,9 @@ const items: (StepProps & any)[] = [
   },
 ];
 
-const ExistingDeviceAdvancedDiagnostic: React.FC<
-  ExistingDeviceAdvancedDiagnosticProps
-> = ({ device }) => {
+const TroubleshootCard: React.FC<ExistingDeviceAdvancedDiagnosticProps> = ({
+  device,
+}) => {
   const [diagInProgress, setDiagInProgress] = React.useState(false);
   const [steps, setSteps] = React.useState<any[]>(items);
   const onDiagnosticProgress = (payload: any) => {
@@ -108,37 +110,18 @@ const ExistingDeviceAdvancedDiagnostic: React.FC<
               marginBottom: 'auto',
             }}
           >
-            Advanced Diagnostic
+            Troubleshoot
           </Col>
         </Row>
       }
       style={{ marginBottom: 10 }}
       styles={{
         header: { height: 55, minHeight: 55, paddingLeft: 15 },
-        body: { paddingBottom: 0 },
       }}
-      extra={
-        <Button
-          onClick={() => {
-            history.push({
-              pathname: '/admin/logs',
-              // @ts-expect-error lib missing type
-              search: `?msg=DEVICE_DIAGNOSTIC`,
-            });
-          }}
-        >
-          Show Diagnostic Logs
-        </Button>
-      }
     >
-      {diagInProgress && (
-        <Steps size="small" direction="vertical" items={steps} />
-      )}
-      <Button style={{ marginBottom: 20 }} onClick={onStartDiag}>
-        Run Advanced Diagnostic
-      </Button>
+      <TroubleshootModal />
     </Card>
   );
 };
 
-export default ExistingDeviceAdvancedDiagnostic;
+export default TroubleshootCard;
