@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Update dependencies to latest versions [\#620](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/620) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[TEST\] Add unit tests for `Startup` module initialization [\#619](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/619) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.27](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.27) (2025-01-01)
