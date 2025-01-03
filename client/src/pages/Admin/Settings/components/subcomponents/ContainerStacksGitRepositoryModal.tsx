@@ -11,8 +11,10 @@ import {
   putContainerStacksGitRepository,
   syncToDatabaseContainerStacksGitRepository,
 } from '@/services/rest/container-stacks-repositories';
+import { DeleteOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { ModalForm, ProForm } from '@ant-design/pro-components';
-import { Avatar, Button, Dropdown, MenuProps, message } from 'antd';
+import { history } from '@umijs/max';
+import { Avatar, Button, Dropdown, MenuProps, message, Popconfirm } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -114,6 +116,19 @@ const ContainerStacksGitRepositoryModal: React.FC<
 
   const editionMode = props.selectedRecord
     ? [
+        <Button
+          key={'show-logs'}
+          icon={<UnorderedListOutlined />}
+          onClick={() =>
+            history.push({
+              pathname: '/admin/logs',
+              // @ts-expect-error lib missing type
+              search: `?moduleId=${props.selectedRecord.uuid}`,
+            })
+          }
+        >
+          Logs
+        </Button>,
         <Dropdown.Button
           key="dropdown"
           type={'dashed'}
@@ -121,10 +136,10 @@ const ContainerStacksGitRepositoryModal: React.FC<
         >
           Actions
         </Dropdown.Button>,
-        <Button
+        <Popconfirm
+          title="Are you sure to delete this repository?"
           key="delete"
-          danger
-          onClick={async () => {
+          onConfirm={async () => {
             if (props.selectedRecord && props.selectedRecord.uuid) {
               await deleteContainerStacksGitRepository(
                 props.selectedRecord.uuid,
@@ -142,8 +157,10 @@ const ContainerStacksGitRepositoryModal: React.FC<
             }
           }}
         >
-          Delete
-        </Button>,
+          <Button danger icon={<DeleteOutlined />}>
+            Delete
+          </Button>
+        </Popconfirm>,
       ]
     : [];
 
@@ -190,6 +207,9 @@ const ContainerStacksGitRepositoryModal: React.FC<
         }
       }}
       submitter={{
+        searchConfig: {
+          submitText: 'Save',
+        },
         render: (_, defaultDoms) => {
           return [...editionMode, ...defaultDoms];
         },

@@ -64,7 +64,7 @@ class GitPlaybooksRepositoryComponent
       try {
         void Shell.FileSystemManager.createDirectory(this.directory, DIRECTORY_ROOT);
       } catch (error: any) {
-        logger.warn(error);
+        this.childLogger.warn(error);
       }
       await clone({
         ...this.options,
