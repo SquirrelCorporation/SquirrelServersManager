@@ -82,7 +82,7 @@
     "@types/passport-http": "^0.3.11",
     "@types/passport-http-bearer": "^1.0.41",
     "@types/passport-jwt": "^4.0.1",
-    "@types/ssh2": "^1.15.1",
+    "@types/ssh2": "^1.15.3",
     "@types/shelljs": "^0.8.15",
     "@types/supertest": "^6.0.2",
     "@types/uuid": "^10.0.0",
