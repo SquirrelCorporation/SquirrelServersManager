@@ -85,7 +85,7 @@
     "express": "^5.0.1"
   },
   "devDependencies": {
-    "@ant-design/plots": "^2.3.2",
+    "@ant-design/plots": "^2.3.3",
     "@ant-design/pro-cli": "^3.2.1",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.26.3",
