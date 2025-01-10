@@ -10,6 +10,11 @@
 
 **Merged pull requests:**
 
+- Bump @types/lodash from 4.17.13 to 4.17.14 in /client [\#631](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/631) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump swiper from 11.1.15 to 11.2.0 in /site [\#628](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/628) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @vue-flow/core from 1.41.6 to 1.41.7 in /site [\#627](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/627) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @types/lodash from 4.17.13 to 4.17.14 in /server [\#626](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/626) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump memfs from 4.15.2 to 4.15.3 in /server [\#625](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/625) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Enhance logging and improve repository modals usability [\#621](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/621) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update dependencies to latest versions [\#620](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/620) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[TEST\] Add unit tests for `Startup` module initialization [\#619](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/619) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
