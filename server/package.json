@@ -16,7 +16,7 @@
   "version": "0.1.26",
   "author": "Squirrel Team",
   "dependencies": {
-    "@aws-sdk/client-ecr": "^3.720.0",
+    "@aws-sdk/client-ecr": "^3.721.0",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",
@@ -29,7 +29,7 @@
     "express": "^5.0.1",
     "express-validator": "^7.2.1",
     "fs-extra": "^11.2.0",
-    "isomorphic-git": "^1.27.2",
+    "isomorphic-git": "^1.27.3",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
@@ -57,7 +57,8 @@
     "multer": "^1.4.5-lts.1",
     "js-yaml": "^4.1.0",
     "passport-mock-strategy": "^2.0.0",
-    "posthog-node": "^4.3.2"
+    "posthog-node": "^4.3.2",
+    "ssh2": "^1.16.0"
   },
   "overrides": {
     "minimatch": "5.1.2",
@@ -69,7 +70,7 @@
     "@eslint/js": "^9.17.0",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.8",
-    "@types/dockerode": "^3.3.32",
+    "@types/dockerode": "^3.3.33",
     "@types/dockerode-compose": "^1.4.1",
     "@types/fs-extra": "^11.0.4",
     "@types/jsonwebtoken": "^9.0.7",
@@ -105,6 +106,6 @@
     "vitest": "^2.1.8",
     "@types/js-yaml": "^4.0.9",
     "@types/express": "^5.0.0",
-    "memfs": "^4.15.2"
+    "memfs": "^4.15.3"
   }
 }

@@ -945,3 +945,19 @@ export type BackupVolumeResponse = {
   fileName: string;
   mode: VolumeBackupMode;
 };
+
+export type SFTPContent = {
+  filename: string;
+  longname: string;
+  isFile: boolean;
+  isDir: boolean;
+  isSymbolicLink: boolean;
+  isCharacterDevice: boolean;
+  isBlockDevice: boolean;
+  isSocket: boolean;
+  isFIFO: boolean;
+  size: number;
+  mode: number;
+  uid: number;
+  gid: number;
+};

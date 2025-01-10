@@ -164,6 +164,7 @@ const PlaybooksGitRepositoryModal: React.FC<
         </>
       }
       open={props.modalOpened}
+      clearOnDestroy
       autoFocusFirstInput
       modalProps={{
         destroyOnClose: true,

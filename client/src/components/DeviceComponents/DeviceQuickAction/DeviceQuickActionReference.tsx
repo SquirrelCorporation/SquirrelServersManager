@@ -1,3 +1,4 @@
+import { FileTree } from '@/components/Icons/CustomIcons';
 import {
   BugOutlined,
   DeleteOutlined,
@@ -33,6 +34,7 @@ export type QuickActionReferenceType = {
 export enum Actions {
   CONNECT = 'connect',
   DELETE = 'delete',
+  BROWSE_FILES = 'browseFiles',
 }
 
 const DeviceQuickActionReference: QuickActionReferenceType[] = [
@@ -55,6 +57,13 @@ const DeviceQuickActionReference: QuickActionReferenceType[] = [
     action: Actions.CONNECT,
     icon: <LoginOutlined />,
     label: 'Connect',
+    onAdvancedMenu: false,
+  },
+  {
+    type: Types.ACTION,
+    action: Actions.BROWSE_FILES,
+    icon: <FileTree />,
+    label: 'Browse files',
     onAdvancedMenu: false,
   },
   {

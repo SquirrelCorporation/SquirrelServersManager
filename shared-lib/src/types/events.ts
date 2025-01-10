@@ -12,6 +12,29 @@ export enum SSH {
   CLOSED = 'ssh:closed',
 }
 
+export enum SFTP {
+  START_SESSION = 'sftp:start',
+  READ_DIR = 'sftp:readDir',
+  MKDIR = 'sftp:mkdir',
+  RENAME = 'sftp:rename',
+  CHMOD = 'sftp:chmod',
+  DELETE = 'sftp:delete',
+  UPLOAD = 'sftp:upload',
+  DOWNLOAD = 'sftp:download',
+  STATUS = 'sftp:status',
+  CLOSED = 'sftp:closed',
+}
+
+export enum FileTransfer {
+  REQUEST = 'file:start',
+  METADATA = 'file:metadata',
+  CHUNK = 'file:chunk',
+  COMPLETE = 'file:complete',
+  PROGRESS = 'file:progress',
+  ERROR = 'file:error',
+  NOT_FOUND = 'file:notFound',
+}
+
 export enum Update {
   CONTAINER_CHANGE = 'container:change',
   NOTIFICATION_CHANGE = 'notification:change',

@@ -2688,3 +2688,52 @@ const QemuSvg = React.memo((props) => (
 export const Qemu = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={QemuSvg} {...props} />
 );
+
+const FileTreeSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M3 3h6v4H3V3m12 7h6v4h-6v-4m0 7h6v4h-6v-4m-2-4H7v5h6v2H5V9h2v2h6v2Z"
+    />
+  </svg>
+));
+
+export const FileTree = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={FileTreeSvg} {...props} />
+);
+
+const PermissionsSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 48 48"
+    {...props}
+  >
+    <mask id="ipSPermissions0">
+      <g fill="none" stroke="#fff" strokeLinecap="round" strokeWidth="4">
+        <path
+          strokeLinejoin="round"
+          d="M20 10H6a2 2 0 0 0-2 2v26a2 2 0 0 0 2 2h36a2 2 0 0 0 2-2v-2.5"
+        />
+        <path d="M10 23h8m-8 8h24" />
+        <circle cx="34" cy="16" r="6" fill="#fff" strokeLinejoin="round" />
+        <path
+          strokeLinejoin="round"
+          d="M44 28.419C42.047 24.602 38 22 34 22s-5.993 1.133-8.05 3"
+        />
+      </g>
+    </mask>
+    <path fill="currentColor" d="M0 0h48v48H0z" mask="url(#ipSPermissions0)" />
+  </svg>
+));
+
+export const Permissions = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={PermissionsSvg} {...props} />
+);
