@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.27...HEAD)
 
+**Implemented enhancements:**
+
+- \[FEAT\] SFTP module. [\#635](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/635) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Merged pull requests:**
 
 - \[CHORE\] Enhance logging and improve repository modals usability [\#621](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/621) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
