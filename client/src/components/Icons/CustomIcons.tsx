@@ -2689,6 +2689,22 @@ export const Qemu = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={QemuSvg} {...props} />
 );
 
+
+const SetActionSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 2048 2048"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M1664 0v128H0V0h1664zm-649 512l-67 128H0V512h1015zM0 1024h747l-67 128H0v-128zm1512 0h568L1004 2048H747l304-640H691l535-1024h612l-326 640zm-559 896l807-768h-456l325-640h-325l-402 768h351l-304 640h4z"
+    />
+  </svg>
+));
+       
 const FileTreeSvg = React.memo((props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -2696,14 +2712,17 @@ const FileTreeSvg = React.memo((props) => (
     height="1em"
     viewBox="0 0 24 24"
     {...props}
-  >
-    <path
+        <path
       fill="currentColor"
       d="M3 3h6v4H3V3m12 7h6v4h-6v-4m0 7h6v4h-6v-4m-2-4H7v5h6v2H5V9h2v2h6v2Z"
     />
   </svg>
 ));
-
+    
+export const SetAction = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={SetActionSvg} {...props} />
+);
+       
 export const FileTree = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={FileTreeSvg} {...props} />
 );
@@ -2736,4 +2755,5 @@ const PermissionsSvg = React.memo((props) => (
 
 export const Permissions = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={PermissionsSvg} {...props} />
-);
+
+

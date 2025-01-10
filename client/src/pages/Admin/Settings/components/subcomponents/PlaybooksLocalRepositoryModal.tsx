@@ -1,4 +1,4 @@
-import { SimpleIconsGit } from '@/components/Icons/CustomIcons';
+import { SetAction, SimpleIconsGit } from '@/components/Icons/CustomIcons';
 import DirectoryExclusionForm from '@/pages/Admin/Settings/components/subcomponents/forms/DirectoryExclusionForm';
 import {
   deletePlaybooksLocalRepository,
@@ -6,8 +6,14 @@ import {
   putPlaybooksLocalRepositories,
   syncToDatabasePlaybooksLocalRepository,
 } from '@/services/rest/playbooks-repositories';
+import {
+  DeleteOutlined,
+  TableOutlined,
+  UnorderedListOutlined,
+} from '@ant-design/icons';
 import { ModalForm, ProForm, ProFormText } from '@ant-design/pro-components';
-import { Avatar, Button, Dropdown, MenuProps, message } from 'antd';
+import { history } from '@umijs/max';
+import { Avatar, Button, Dropdown, MenuProps, message, Popconfirm } from 'antd';
 import React, { FC, useState } from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -53,6 +59,19 @@ const PlaybooksLocalRepositoryModal: FC<LocalRepositoryModalProps> = (
   };
   const editionMode = props.selectedRecord
     ? [
+        <Button
+          key={'show-logs'}
+          icon={<UnorderedListOutlined />}
+          onClick={() =>
+            history.push({
+              pathname: '/admin/logs',
+              // @ts-expect-error lib missing type
+              search: `?moduleId=${props.selectedRecord.uuid}`,
+            })
+          }
+        >
+          Logs
+        </Button>,
         <Dropdown.Button
           key="dropdown"
           type={'dashed'}
@@ -60,12 +79,10 @@ const PlaybooksLocalRepositoryModal: FC<LocalRepositoryModalProps> = (
         >
           Actions
         </Dropdown.Button>,
-        <Button
+        <Popconfirm
           key="delete"
-          danger
-          disabled={props.selectedRecord?.default === true}
-          loading={loading}
-          onClick={async () => {
+          title="Are you sure to delete this repository?"
+          onConfirm={async () => {
             setLoading(true);
             if (props.selectedRecord && props.selectedRecord.uuid) {
               await deletePlaybooksLocalRepository(props.selectedRecord.uuid)
@@ -83,8 +100,15 @@ const PlaybooksLocalRepositoryModal: FC<LocalRepositoryModalProps> = (
             setLoading(false);
           }}
         >
-          Delete
-        </Button>,
+          <Button
+            icon={<DeleteOutlined />}
+            danger
+            disabled={props.selectedRecord?.default === true}
+            loading={loading}
+          >
+            Delete
+          </Button>
+        </Popconfirm>,
       ]
     : [];
   return (
@@ -135,6 +159,9 @@ const PlaybooksLocalRepositoryModal: FC<LocalRepositoryModalProps> = (
         }
       }}
       submitter={{
+        searchConfig: {
+          submitText: 'Save',
+        },
         render: (_, defaultDoms) => {
           return [...editionMode, ...defaultDoms];
         },

@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Enhance logging and improve repository modals usability [\#621](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/621) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update dependencies to latest versions [\#620](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/620) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[TEST\] Add unit tests for `Startup` module initialization [\#619](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/619) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
