@@ -33,6 +33,7 @@ const RegistryModal: React.FC<RegistryModalProps> = (props) => {
           Connexion for {props.selectedRecord?.provider}
         </>
       }
+      clearOnDestroy
       open={props.modalOpened}
       autoFocusFirstInput
       modalProps={{

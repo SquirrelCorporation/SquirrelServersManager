@@ -2,13 +2,17 @@ import DeviceQuickActionReference, {
   Actions,
   Types,
 } from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionReference';
+import SFTPDrawer, {
+  SFTPDrawerHandles,
+} from '@/components/DeviceComponents/SFTPDrawer/SFTPDrawer';
+import { LiveLogsHandles } from '@/components/LiveLogs/LiveLogs';
 import { TerminalStateProps } from '@/components/PlaybookExecutionModal';
 import PlaybookSelectionModal from '@/components/PlaybookSelection/PlaybookSelectionModal';
 import { DownOutlined } from '@ant-design/icons';
 import { history } from '@umijs/max';
 import { Dropdown, MenuProps, Popconfirm, Space } from 'antd';
 import { ItemType } from 'rc-menu/es/interface';
-import React, { Dispatch, ReactNode, SetStateAction } from 'react';
+import React, { Dispatch, ReactNode, RefObject, SetStateAction } from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 
 export type QuickActionProps = {
@@ -26,6 +30,8 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
     visible: false,
     onConfirm: () => {},
   });
+  const ref: RefObject<SFTPDrawerHandles> =
+    React.createRef<SFTPDrawerHandles>();
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
     const idx = parseInt(key);
@@ -39,6 +45,10 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
         history.push({
           pathname: `/manage/devices/ssh/${props.target?.uuid}`,
         });
+        return;
+      }
+      if (DeviceQuickActionReference[idx].action === Actions.BROWSE_FILES) {
+        ref?.current?.showDrawer();
         return;
       }
       if (DeviceQuickActionReference[idx].type === Types.PLAYBOOK) {
@@ -122,6 +132,7 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
         itemSelected={props.target ? [props.target] : undefined}
         callback={onSelectPlaybook}
       />
+      <SFTPDrawer device={props.target as API.DeviceItem} ref={ref} />
       <Popconfirm
         title={'Are you sure you want to execute this action?'}
         open={showConfirmation.visible}

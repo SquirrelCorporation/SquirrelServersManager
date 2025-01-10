@@ -182,6 +182,7 @@ const ContainerStacksGitRepositoryModal: React.FC<
           )) || <>Add & sync a new repository</>}
         </>
       }
+      clearOnDestroy
       open={props.modalOpened}
       autoFocusFirstInput
       modalProps={{
