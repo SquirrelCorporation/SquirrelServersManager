@@ -15,6 +15,7 @@
 - Bump @vue-flow/core from 1.41.6 to 1.41.7 in /site [\#627](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/627) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @types/lodash from 4.17.13 to 4.17.14 in /server [\#626](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/626) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump memfs from 4.15.2 to 4.15.3 in /server [\#625](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/625) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @types/ssh2 from 1.15.1 to 1.15.3 in /server [\#624](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/624) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Enhance logging and improve repository modals usability [\#621](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/621) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update dependencies to latest versions [\#620](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/620) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[TEST\] Add unit tests for `Startup` module initialization [\#619](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/619) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
