@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@vue-flow/background": "^1.3.2",
-    "@vue-flow/minimap": "^1.5.0",
+    "@vue-flow/minimap": "^1.5.1",
     "swiper": "^11.2.0",
     "vuetify": "^3.7.6",
     "axios": "^1.7.9"
