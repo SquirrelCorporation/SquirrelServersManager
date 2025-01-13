@@ -10,12 +10,19 @@
 
 **Merged pull requests:**
 
+- Bump @vue-flow/core from 1.41.7 to 1.42.0 in /site [\#653](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/653) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @vue-flow/minimap from 1.5.0 to 1.5.1 in /site [\#652](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/652) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump typescript from 5.7.2 to 5.7.3 in /shared-lib [\#650](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/650) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.5.0-alpine to 23.6.0-alpine in /server [\#649](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/649) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @aws-sdk/client-ecr from 3.721.0 to 3.726.1 in /server [\#637](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/637) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump memfs from 4.15.3 to 4.17.0 in /server [\#636](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/636) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @types/lodash from 4.17.13 to 4.17.14 in /client [\#631](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/631) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump swiper from 11.1.15 to 11.2.0 in /site [\#628](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/628) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @vue-flow/core from 1.41.6 to 1.41.7 in /site [\#627](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/627) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @types/lodash from 4.17.13 to 4.17.14 in /server [\#626](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/626) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump memfs from 4.15.2 to 4.15.3 in /server [\#625](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/625) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @types/ssh2 from 1.15.1 to 1.15.3 in /server [\#624](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/624) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump isomorphic-git from 1.27.2 to 1.29.0 in /server [\#622](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/622) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Enhance logging and improve repository modals usability [\#621](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/621) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update dependencies to latest versions [\#620](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/620) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[TEST\] Add unit tests for `Startup` module initialization [\#619](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/619) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
