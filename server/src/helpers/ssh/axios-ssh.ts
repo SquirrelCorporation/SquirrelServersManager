@@ -10,8 +10,6 @@ export const createSshFetch = (connectConfig: any, ignoreSslErrors: boolean) => 
     `Creating SSH agent with config: ${JSON.stringify(connectConfig)} - ignoreSslErrors: ${ignoreSslErrors} `,
   );
   const agent = new HTTPSAgent(connectConfig, {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore Error in lib type
     rejectUnauthorized: !ignoreSslErrors, // Ignore SSL cert errors
   });
   const makeRequest = async (
