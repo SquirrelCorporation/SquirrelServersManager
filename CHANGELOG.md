@@ -12,6 +12,7 @@
 
 - Bump @vue-flow/core from 1.41.7 to 1.42.0 in /site [\#653](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/653) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @vue-flow/minimap from 1.5.0 to 1.5.1 in /site [\#652](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/652) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump swiper from 11.2.0 to 11.2.1 in /site [\#651](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/651) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump typescript from 5.7.2 to 5.7.3 in /shared-lib [\#650](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/650) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 23.5.0-alpine to 23.6.0-alpine in /server [\#649](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/649) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @aws-sdk/client-ecr from 3.721.0 to 3.726.1 in /server [\#637](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/637) ([dependabot[bot]](https://github.com/apps/dependabot))
