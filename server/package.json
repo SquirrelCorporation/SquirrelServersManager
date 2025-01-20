@@ -57,7 +57,7 @@
     "multer": "^1.4.5-lts.1",
     "js-yaml": "^4.1.0",
     "passport-mock-strategy": "^2.0.0",
-    "posthog-node": "^4.3.2",
+    "posthog-node": "^4.4.0",
     "ssh2": "^1.16.0"
   },
   "overrides": {
