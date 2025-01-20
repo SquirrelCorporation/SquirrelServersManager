@@ -22,7 +22,7 @@
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.7",
     "debounce": "^2.2.0",
-    "dockerode": "^4.0.3",
+    "dockerode": "^4.0.4",
     "dockerode-compose": "^1.4.0",
     "dotenv": "^16.4.7",
     "dugite": "^2.7.1",
