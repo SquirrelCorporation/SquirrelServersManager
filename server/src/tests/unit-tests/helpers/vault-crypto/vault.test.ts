@@ -37,44 +37,44 @@ describe('Vault', () => {
   });
 
   describe('general', function () {
-    test('shall throw on wrong header', () => {
+    test('shall throw on wrong header', async () => {
       const v = new Vault({ password });
       const vault = '';
-      expect(v.decrypt(vault)).rejects.toThrow('Bad vault header');
+      await expect(v.decrypt(vault)).rejects.toThrow('Bad vault header');
     });
 
-    test('shall throw on wrong version', () => {
+    test('shall throw on wrong version', async () => {
       const v = new Vault({ password });
       const vault = '$ANSIBLE_VAULT;1.0;AES256\n6135643365643261';
-      expect(v.decrypt(vault)).rejects.toThrow('Bad vault header');
+      await expect(v.decrypt(vault)).rejects.toThrow('Bad vault header');
     });
 
-    test('shall throw on wrong cipher', () => {
+    test('shall throw on wrong cipher', async () => {
       const v = new Vault({ password });
       const vault = '$ANSIBLE_VAULT;1.0;AES128\n6135643365643261';
-      expect(v.decrypt(vault)).rejects.toThrow('Bad vault header');
+      await expect(v.decrypt(vault)).rejects.toThrow('Bad vault header');
     });
 
-    test('shall throw on missing content', () => {
+    test('shall throw on missing content', async () => {
       const v = new Vault({ password });
       const vault = '$ANSIBLE_VAULT;1.1;AES256\n';
-      expect(v.decrypt(vault)).rejects.toThrow('Invalid vault');
+      await expect(v.decrypt(vault)).rejects.toThrow('Invalid vault');
     });
 
-    test('shall throw on compromised integrity', () => {
+    test('shall throw on compromised integrity', async () => {
       const v = new Vault({ password });
-      expect(v.decrypt(vaultBadIntegrity)).rejects.toThrow('Integrity check failed');
+      await expect(v.decrypt(vaultBadIntegrity)).rejects.toThrow('Integrity check failed');
     });
 
-    test('shall throw on bad chars', () => {
+    test('shall throw on bad chars', async () => {
       const v = new Vault({ password });
-      expect(v.decrypt(vaultBadValues)).rejects.toThrow('Integrity check failed');
+      await expect(v.decrypt(vaultBadValues)).rejects.toThrow('Integrity check failed');
     });
 
-    test('shall throw on missing password', () => {
+    test('shall throw on missing password', async () => {
       // @ts-expect-error testing
       const v = new Vault({});
-      expect(v.encrypt('vault', DEFAULT_VAULT_ID)).rejects.toThrow('No password');
+      await expect(v.encrypt('vault', DEFAULT_VAULT_ID)).rejects.toThrow('No password');
     });
   });
 
