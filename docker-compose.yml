@@ -42,11 +42,9 @@ services:
     external_links:
       - mongo
       - redis
-      - prometheus
     depends_on:
       - mongo
       - redis
-      - prometheus
     env_file: .env
     environment:
       NODE_ENV: production
