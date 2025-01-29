@@ -58,7 +58,10 @@
     "js-yaml": "^4.1.0",
     "passport-mock-strategy": "^2.0.0",
     "posthog-node": "^4.3.2",
-    "ssh2": "^1.16.0"
+    "ssh2": "^1.16.0",
+    "bull": "^4.16.5",
+    "prom-client": "^15.1.3",
+    "prometheus-query": "^3.4.1"
   },
   "overrides": {
     "minimatch": "5.1.2",

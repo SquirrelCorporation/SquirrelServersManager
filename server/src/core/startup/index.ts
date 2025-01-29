@@ -1,4 +1,4 @@
-import { Repositories, SettingsKeys, SsmGit } from 'ssm-shared-lib';
+import { Repositories, SettingsKeys, SsmGit, StatsType } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
 import { getFromCache, setToCache } from '../../data/cache';
 import initRedisValues from '../../data/cache/defaults';
@@ -8,8 +8,11 @@ import { ContainerVolumeModel } from '../../data/database/model/ContainerVolume'
 import { DeviceModel } from '../../data/database/model/Device';
 import { PlaybookModel } from '../../data/database/model/Playbook';
 import { PlaybooksRepositoryModel } from '../../data/database/model/PlaybooksRepository';
+import DeviceRepo from '../../data/database/repository/DeviceRepo';
+import DeviceStatRepo from '../../data/database/repository/DeviceStatRepo';
 import { copyAnsibleCfgFileIfDoesntExist } from '../../helpers/ansible/AnsibleConfigurationHelper';
 import PinoLogger from '../../logger';
+import RemoteSystemInformationEngine from '../../modules/remote-system-information/core/RemoteSystemInformationEngine';
 import AutomationEngine from '../../modules/automations/AutomationEngine';
 import Crons from '../../modules/crons';
 import WatcherEngine from '../../modules/containers/core/WatcherEngine';
@@ -22,6 +25,7 @@ import sshPrivateKeyFileManager from '../../modules/shell/managers/SshPrivateKey
 import Telemetry from '../../modules/telemetry';
 import UpdateChecker from '../../modules/update/UpdateChecker';
 import ContainerRegistryUseCases from '../../services/ContainerRegistryUseCases';
+import DeviceStatsUseCases from '../../services/DeviceStatsUseCases';
 import { setAnsibleVersions } from '../system/ansible-versions';
 
 class Startup {
@@ -43,6 +47,7 @@ class Startup {
   }
 
   private async initializeModules() {
+    void RemoteSystemInformationEngine.init();
     await PlaybooksRepositoryEngine.init();
     void PlaybooksRepositoryEngine.syncAllRegistered();
     void sshPrivateKeyFileManager.removeAllAnsibleTemporaryPrivateKeys();

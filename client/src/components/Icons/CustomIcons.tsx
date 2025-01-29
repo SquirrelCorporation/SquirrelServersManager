@@ -2756,3 +2756,496 @@ const PermissionsSvg = React.memo((props) => (
 export const Permissions = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={PermissionsSvg} {...props} />
 );
+
+const HardwareCircuitSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M22 0H2a2 2 0 0 0-2 2v20a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2ZM6 16a1 1 0 1 1 1-1a1.001 1.001 0 0 1-1 1ZM22 6h-2.184a3 3 0 1 0 0 2H22v4h-4v2h4v2h-2v2h2v4h-8v-1.184a3 3 0 1 0-2 0V22H7v-4.184a3 3 0 1 0-2 0V22H2V2h4v6h2V2h2v10h2V2h10Zm-4 1a1 1 0 1 1-1-1a1.001 1.001 0 0 1 1 1Z"
+    />
+  </svg>
+));
+
+export const HardwareCircuit = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={HardwareCircuitSvg} {...props} />
+);
+
+const RemoteSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M12 0C8.96 0 6.21 1.23 4.22 3.22l1.41 1.41A8.952 8.952 0 0 1 12 2c2.5 0 4.74 1 6.36 2.64l1.41-1.41C17.79 1.23 15.04 0 12 0M7.05 6.05l1.41 1.41a5.022 5.022 0 0 1 7.08 0l1.41-1.41A6.976 6.976 0 0 0 12 4c-1.93 0-3.68.78-4.95 2.05M12 15a2 2 0 0 1-2-2a2 2 0 0 1 2-2a2 2 0 0 1 2 2a2 2 0 0 1-2 2m3-6H9a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V10a1 1 0 0 0-1-1Z"
+    />
+  </svg>
+));
+
+export const Remote = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={RemoteSvg} {...props} />
+);
+
+const GraphicsCardSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 256 256"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M232 48H16a8 8 0 0 0-8 8v152a8 8 0 0 0 16 0v-16h16v16a8 8 0 0 0 16 0v-16h16v16a8 8 0 0 0 16 0v-16h16v16a8 8 0 0 0 16 0v-16h112a16 16 0 0 0 16-16V64a16 16 0 0 0-16-16m0 128H24V64h208Zm-56-16a40 40 0 1 0-40-40a40 40 0 0 0 40 40m-24-40a23.74 23.74 0 0 1 2.35-10.34l32 32A23.74 23.74 0 0 1 176 144a24 24 0 0 1-24-24m48 0a23.74 23.74 0 0 1-2.35 10.34l-32-32A23.74 23.74 0 0 1 176 96a24 24 0 0 1 24 24M80 160a40 40 0 1 0-40-40a40 40 0 0 0 40 40m-24-40a23.74 23.74 0 0 1 2.35-10.34l32 32A23.74 23.74 0 0 1 80 144a24 24 0 0 1-24-24m48 0a23.74 23.74 0 0 1-2.35 10.34l-32-32A23.74 23.74 0 0 1 80 96a24 24 0 0 1 24 24"
+    />
+  </svg>
+));
+export const GraphicsCard = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={GraphicsCardSvg} {...props} />
+);
+
+const KernelsuSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 48 48"
+    {...props}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M5.5 5.5h37v37h-37z"
+    />
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M26 9h13v13H26zM9 26h13v13H9z"
+    />
+  </svg>
+));
+
+export const Kernelsu = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={KernelsuSvg} {...props} />
+);
+
+const FlatPlatformSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 512 512"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M256.5 87.9L39.7 213.5l216.9 125.7l216.6-125.7L256.5 87.9zM31 227.4v71l218 125.7v-71L31 227.4zm450 .2L265 353.1V424l216-125.5v-70.9z"
+    />
+  </svg>
+));
+
+export const FlatPlatform = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={FlatPlatformSvg} {...props} />
+);
+
+const BinarySvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+    >
+      <rect width="4" height="6" x="14" y="14" rx="2" />
+      <rect width="4" height="6" x="6" y="4" rx="2" />
+      <path d="M6 20h4m4-10h4M6 14h2v6m6-16h2v6" />
+    </g>
+  </svg>
+));
+
+export const Binary = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={BinarySvg} {...props} />
+);
+
+const NumberSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      d="M4 17V7l7 10V7m4 10h5m-5-7a2.5 3 0 1 0 5 0a2.5 3 0 1 0-5 0"
+    />
+  </svg>
+));
+
+export const Number = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={NumberSvg} {...props} />
+);
+
+const BoltCircleOutlineSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <g fill="currentColor" fillRule="evenodd" clipRule="evenodd">
+      <path d="M12.357 6.792c.37-.223 1.014-.545 1.632-.159c.632.396.599 1.128.544 1.55c-.061.48-.231 1.114-.431 1.86l-.055.206c-.04.145-.07.26-.094.36a3.12 3.12 0 0 0-.028.127c.111.04.274.087.536.157l.05.014c.493.132.938.251 1.266.39c.326.138.77.39.914.921l.002.008l.002.008l.002.008l.002.008l.002.008l.001.008l.002.009l.002.008c.11.546-.183.969-.425 1.234c-.25.274-.619.572-1.026.896l-2.06 1.64c-.613.489-1.133.902-1.552 1.155c-.37.223-1.014.545-1.632.159c-.632-.396-.599-1.128-.544-1.55c.061-.48.231-1.114.431-1.86l.055-.206a15.07 15.07 0 0 0 .12-.475a4.402 4.402 0 0 0-.534-.17c-.519-.138-.983-.265-1.327-.416c-.328-.144-.765-.402-.907-.927l-.002-.008l-.002-.008l-.002-.008l-.002-.008l-.002-.008l-.002-.008l-.002-.008l-.001-.008c-.112-.554.191-.974.434-1.233c.239-.256.593-.538.979-.845l2.102-1.674c.613-.489 1.133-.903 1.552-1.155Zm-.662 2.364c.597-.476 1.014-.806 1.327-1.011c-.062.358-.194.855-.384 1.566l-.05.187a5.836 5.836 0 0 0-.165.735c-.033.26-.026.577.158.89l.004.006l.004.007c.186.3.457.459.695.56c.225.094.505.17.79.246c.454.122.763.206.981.284c-.158.15-.393.341-.735.614l-2.015 1.604c-.597.476-1.014.806-1.327 1.011c.062-.358.194-.856.384-1.566l.05-.187c.068-.253.137-.511.165-.735c.033-.26.026-.577-.158-.889l-.003.002c-.177-.273-.431-.435-.664-.544a5.146 5.146 0 0 0-.825-.278a12.68 12.68 0 0 1-.983-.29c.16-.148.394-.336.736-.608l2.015-1.604Z" />
+      <path d="M12 1.25C6.063 1.25 1.25 6.063 1.25 12S6.063 22.75 12 22.75S22.75 17.937 22.75 12S17.937 1.25 12 1.25ZM2.75 12a9.25 9.25 0 1 1 18.5 0a9.25 9.25 0 0 1-18.5 0Z" />
+    </g>
+  </svg>
+));
+
+export const BoltCircleOutline = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={BoltCircleOutlineSvg} {...props} />
+);
+
+const RaspberrypiSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 832 1024"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M832 608q0 44-17.5 80.5T768 746q3 83-64 149q-60 60-137 64q-16 28-57.5 46.5T416 1024t-93.5-18.5T265 959q-77-4-137-64q-67-66-64-149q-29-21-46.5-57.5T0 608q0-45 19-83t50-58q-11-37 2-80t47-77q30-29 69-44q-48-25-81.5-73.5T64 91q28-42 74.5-66.5T240 0t101.5 24.5T416 91q28-42 74.5-66.5T592 0t101.5 24.5T768 91q-8 53-41.5 101.5T644 266q40 15 70 44q34 34 47 77t2 80q31 20 50 58t19 83zM570 892q49-10 86-45q31-29 41.5-54t4.5-44t-26-38q-15-13-33-23l-1 1l-2 1q-13 7-32 11v3q0 80-57 136q13 31 19 52zm50-378q-23-38-66.5-56.5t-74-2.5t-31.5 64.5t27 72.5q41 36 79.5 45.5T612 628q26-24 28-50t-20-64zM416 960q40 0 68-18.5t28-45.5q0-11-7-23q-43 23-89 23t-89-23q-7 12-7 23q0 27 28 45.5t68 18.5zm0-128q51 0 89.5-31t38.5-65q0-16-6-38q-77-20-122-89q-45 69-122 89q-6 21-6 38q0 34 38.5 65t89.5 31zm-63.5-377q-30.5-16-74 2.5T212 514q-22 38-20 64t28 50q19 19 57.5 9.5T357 592q28-24 27-72.5T352.5 455zM176 847q37 35 86 45q6-21 19-52q-57-56-57-136v-3q-18-4-32-11q-1 0-2-1l-1-1q-18 10-33 23q-20 19-26 38t4.5 44t41.5 54zM64 608q0 41 18 74q7-10 13-16q18-18 49-23q-32-59-2-130q-10-1-14-1q-29 0-46.5 23T64 608zm106-246q-38 38-42 86q24 0 47 12q44-54 107-70q-25-31-26-69q-48 4-86 41zm76-298q-32 0-69 10t-49 22q8 45 48 86.5t89 41.5q19 0 37-4q-8-15-19.5-30.5t-26-30.5t-23.5-24.5t-24-23T192 96q51 7 97 32t77 62q12-10 18-18v-1q0-45-40.5-76T246 64zm170 192q-40 0-68 28t-28 68q0 16 6 32q32 0 58 14q17 8 32 25q15-17 32-25q26-14 58-14q6-17 6-32q0-40-28-68t-68-28zM704 96q-12-12-49-22t-68-10q-58 0-98.5 31T448 171v1q6 8 18 18q31-37 77-62t97-32q-2 2-17 15.5t-24 23t-23.5 24.5t-26 30.5T530 220q18 4 37 4q49 0 89-41.5T704 96zm-42 266q-38-37-86-41q0 38-26 69q63 16 107 70q23-12 47-12q-4-48-42-86zm42 150q-4 0-14 1q30 71-2 130q31 5 49 23q6 5 13 16q18-33 18-74q0-96-64-96z"
+    />
+  </svg>
+));
+
+export const Raspberrypi = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={RaspberrypiSvg} {...props} />
+);
+
+const FamilySvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 48 48"
+    {...props}
+  >
+    <g fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="4">
+      <path d="M10 19s-5.143 2-6 9m34-9s5.143 2 6 9m-26-9s4.8 1.167 6 7m6-7s-4.8 1.167-6 7m-4 8s-4.2.75-6 6m14-6s4.2.75 6 6" />
+      <circle cx="24" cy="31" r="5" strokeLinejoin="round" />
+      <circle cx="34" cy="14" r="6" strokeLinejoin="round" />
+      <circle cx="14" cy="14" r="6" strokeLinejoin="round" />
+    </g>
+  </svg>
+));
+
+export const Family = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={FamilySvg} {...props} />
+);
+
+const SpeedometerSlowSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M12 16c1.66 0 3-1.34 3-3c0-1.12-.61-2.1-1.5-2.61L3.79 4.77l5.53 9.58c.5.98 1.51 1.65 2.68 1.65m0-13c-1.81 0-3.5.5-4.97 1.32l2.1 1.21C10 5.19 11 5 12 5c4.42 0 8 3.58 8 8c0 2.21-.89 4.21-2.34 5.65h-.01a.996.996 0 0 0 0 1.41c.39.39 1.03.39 1.42.01A9.969 9.969 0 0 0 22 13c0-5.5-4.5-10-10-10M2 13c0 2.76 1.12 5.26 2.93 7.07c.39.38 1.02.38 1.41-.01a.996.996 0 0 0 0-1.41A7.95 7.95 0 0 1 4 13c0-1 .19-2 .54-2.9L3.33 8C2.5 9.5 2 11.18 2 13Z"
+    />
+  </svg>
+));
+
+export const SpeedometerSlow = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={SpeedometerSlowSvg} {...props} />
+);
+
+const SpeedometerSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M12 16a3 3 0 0 1-3-3c0-1.12.61-2.1 1.5-2.61l9.71-5.62l-5.53 9.58c-.5.98-1.51 1.65-2.68 1.65m0-13c1.81 0 3.5.5 4.97 1.32l-2.1 1.21C14 5.19 13 5 12 5a8 8 0 0 0-8 8c0 2.21.89 4.21 2.34 5.65h.01c.39.39.39 1.02 0 1.41c-.39.39-1.03.39-1.42.01A9.969 9.969 0 0 1 2 13A10 10 0 0 1 12 3m10 10c0 2.76-1.12 5.26-2.93 7.07c-.39.38-1.02.38-1.41-.01a.996.996 0 0 1 0-1.41A7.95 7.95 0 0 0 20 13c0-1-.19-2-.54-2.9L20.67 8C21.5 9.5 22 11.18 22 13Z"
+    />
+  </svg>
+));
+
+export const Speedometer = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={SpeedometerSvg} {...props} />
+);
+
+const FlagOutlineSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <g id="evaFlagOutline0">
+      <g id="evaFlagOutline1">
+        <path
+          id="evaFlagOutline2"
+          fill="currentColor"
+          d="M19.27 4.68a1.79 1.79 0 0 0-1.6-.25a7.53 7.53 0 0 1-2.17.28a8.54 8.54 0 0 1-3.13-.78A10.15 10.15 0 0 0 8.5 3c-2.89 0-4 1-4.2 1.14a1 1 0 0 0-.3.72V20a1 1 0 0 0 2 0v-4.3a6.28 6.28 0 0 1 2.5-.41a8.54 8.54 0 0 1 3.13.78a10.15 10.15 0 0 0 3.87.93a7.66 7.66 0 0 0 3.5-.7a1.74 1.74 0 0 0 1-1.55V6.11a1.77 1.77 0 0 0-.73-1.43ZM18 14.59a6.32 6.32 0 0 1-2.5.41a8.36 8.36 0 0 1-3.13-.79a10.34 10.34 0 0 0-3.87-.92a9.51 9.51 0 0 0-2.5.29V5.42A6.13 6.13 0 0 1 8.5 5a8.36 8.36 0 0 1 3.13.79a10.34 10.34 0 0 0 3.87.92a9.41 9.41 0 0 0 2.5-.3Z"
+        />
+      </g>
+    </g>
+  </svg>
+));
+
+export const FlagOutline = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={FlagOutlineSvg} {...props} />
+);
+
+const VmOutlineSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 16 16"
+    {...props}
+  >
+    <g fill="currentColor">
+      <path
+        fillRule="evenodd"
+        d="M1.5 2h13l.5.5v5.503a5.006 5.006 0 0 0-1-.583V3H2v9h5a5 5 0 0 0 1 3H4v-1h3v-1H1.5l-.5-.5v-10l.5-.5z"
+        clipRule="evenodd"
+      />
+      <path d="M12 8a4 4 0 1 0 0 8a4 4 0 0 0 0-8zm0 7a3 3 0 1 1 0-6.001A3 3 0 0 1 12 15z" />
+    </g>
+  </svg>
+));
+
+export const VmOutline = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={VmOutlineSvg} {...props} />
+);
+
+const CachedSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M12.05 20q-3.35 0-5.7-2.325T4 12v-.175l-1.6 1.6l-1.4-1.4l4-4l4 4l-1.4 1.4l-1.6-1.6V12q0 2.5 1.763 4.25T12.05 18q.65 0 1.275-.15t1.225-.45l1.5 1.5q-.95.55-1.95.825T12.05 20ZM19 15.975l-4-4l1.4-1.4l1.6 1.6V12q0-2.5-1.763-4.25T11.95 6q-.65 0-1.275.15T9.45 6.6l-1.5-1.5q.95-.55 1.95-.825T11.95 4q3.35 0 5.7 2.325T20 12v.175l1.6-1.6l1.4 1.4l-4 4Z"
+    />
+  </svg>
+));
+
+export const Cached = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={CachedSvg} {...props} />
+);
+
+const WifiSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 1984 1408"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M992 1395q-20 0-93-73.5t-73-93.5q0-32 62.5-54t103.5-22t103.5 22t62.5 54q0 20-73 93.5t-93 73.5zm270-271q-2 0-40-25t-101.5-50t-128.5-25t-128.5 25t-101 50t-40.5 25q-18 0-93.5-75T553 956q0-13 10-23q78-77 196-121t233-44t233 44t196 121q10 10 10 23q0 18-75.5 93t-93.5 75zm273-272q-11 0-23-8q-136-105-252-154.5T992 640q-85 0-170.5 22t-149 53T559 777t-79 53t-31 22q-17 0-92-75t-75-93q0-12 10-22q132-132 320-205t380-73t380 73t320 205q10 10 10 22q0 18-75 93t-92 75zm271-271q-11 0-22-9q-179-157-371.5-236.5T992 256t-420.5 79.5T200 572q-11 9-22 9q-17 0-92.5-75T10 413q0-13 10-23q187-186 445-288T992 0t527 102t445 288q10 10 10 23q0 18-75.5 93t-92.5 75z"
+    />
+  </svg>
+));
+
+export const Wifi = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={WifiSvg} {...props} />
+);
+
+const UsbSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 256 256"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="m252.44 121.34l-48-32A8 8 0 0 0 192 96v24H72V72h33a32 32 0 1 0 0-16H72a16 16 0 0 0-16 16v48H8a8 8 0 0 0 0 16h48v48a16 16 0 0 0 16 16h32v8a16 16 0 0 0 16 16h32a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16h-32a16 16 0 0 0-16 16v8H72v-48h120v24a8 8 0 0 0 12.44 6.66l48-32a8 8 0 0 0 0-13.32ZM136 48a16 16 0 1 1-16 16a16 16 0 0 1 16-16Zm-16 128h32v32h-32Zm88-30.95V111l25.58 17Z"
+    />
+  </svg>
+));
+export const Usb = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={UsbSvg} {...props} />
+);
+
+const InterfaceArrowsNetworkSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 14 14"
+    {...props}
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect width="13" height="13" x=".5" y=".5" rx="3" />
+      <path d="m4 8l4.5-4.5H5M10 6l-4.5 4.5H9" />
+    </g>
+  </svg>
+));
+
+export const InterfaceArrowsNetwork = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={InterfaceArrowsNetworkSvg} {...props} />;
+
+const StateSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M10 6v12h5V6Zm4 7h-3V7h3Zm5-12H6a2 2 0 0 0-2 2v18a2.005 2.005 0 0 0 2 2h13a2 2 0 0 0 2-2V3a2.006 2.006 0 0 0-2-2Zm0 20H6V3h13Z"
+    />
+  </svg>
+));
+
+export const State = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={StateSvg} {...props} />
+);
+
+const IpSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 32 32"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M19 23h-2V9h6c1.103 0 2 .897 2 2v5c0 1.103-.897 2-2 2h-4zm0-7h4v-5.001h-4zM7 11h3v10H7v2h8v-2h-3V11h3V9H7z"
+    />
+  </svg>
+));
+
+export const Ip = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={IpSvg} {...props} />
+);
+
+const SubsetProperOfBoldSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 256 256"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M212 208a12 12 0 0 1-12 12h-72a92 92 0 0 1 0-184h72a12 12 0 0 1 0 24h-72a68 68 0 0 0 0 136h72a12 12 0 0 1 12 12"
+    />
+  </svg>
+));
+
+export const SubsetProperOfBold = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={SubsetProperOfBoldSvg} {...props} />;
+
+const VirtualNetwork20RegularSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 20 20"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      d="M4.825 6.12a.5.5 0 0 1 .055.705L2.159 10l2.72 3.175a.5.5 0 1 1-.759.65l-3-3.5a.5.5 0 0 1 0-.65l3-3.5a.5.5 0 0 1 .705-.055Zm10.295 7.055a.5.5 0 0 0 .76.65l3-3.5a.5.5 0 0 0 0-.65l-3-3.5a.5.5 0 1 0-.76.65L17.842 10l-2.722 3.175ZM6 11a1 1 0 1 0 0-2a1 1 0 0 0 0 2Zm5-1a1 1 0 1 1-2 0a1 1 0 0 1 2 0Zm3 1a1 1 0 1 0 0-2a1 1 0 0 0 0 2Z"
+    />
+  </svg>
+));
+
+export const VirtualNetwork20Regular = (
+  props: Partial<CustomIconComponentProps>,
+) => <Icon component={VirtualNetwork20RegularSvg} {...props} />;
+
+const SizeSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path
+      fill="currentColor"
+      fillRule="evenodd"
+      d="M12 6V4h8v16h-8v-2H8v-2H4V8h4V6h4Zm2 0h4v12h-4V6Zm-2 2h-2v8h2V8Zm-4 2v4H6v-4h2Z"
+      clipRule="evenodd"
+    />
+  </svg>
+));
+
+export const Size = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={SizeSvg} {...props} />
+);
+
+const PciCardSvg = React.memo((props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 16 16"
+    {...props}
+  >
+    <g fill="currentColor">
+      <path d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .5.5V4h13.5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5H2v2.5a.5.5 0 0 1-1 0V2H.5a.5.5 0 0 1-.5-.5Z" />
+      <path d="M3 12.5h3.5v1a.5.5 0 0 1-.5.5H3.5a.5.5 0 0 1-.5-.5v-1Zm4 0h4v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1Z" />
+    </g>
+  </svg>
+));
+
+export const PciCard = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={PciCardSvg} {...props} />
+);

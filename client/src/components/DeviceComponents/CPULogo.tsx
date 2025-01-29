@@ -65,3 +65,13 @@ export const CPULogo: React.FC<CPULogoProps> = (props: CPULogoProps) => {
     return <Avatar style={{ backgroundColor: '#3c3d3a' }} src={<LogosAmd />} />;
   return <></>;
 };
+
+export const CPULogoSrc = (cpuBrand?: string, osArch?: string) => {
+  const cpuBrandLc = cpuBrand?.toLocaleLowerCase().trim();
+  const osArchLc = osArch?.toLocaleLowerCase().trim();
+  if (cpuBrandLc?.includes('intel')) return <LogosIntel />;
+  if (cpuBrandLc?.includes('arm') || osArchLc?.includes('arm'))
+    return <LogosArm />;
+  if (cpuBrandLc?.includes('amd')) return <LogosAmd />;
+  return;
+};

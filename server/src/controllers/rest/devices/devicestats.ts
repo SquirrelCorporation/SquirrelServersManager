@@ -7,7 +7,7 @@ import DeviceUseCases from '../../../services/DeviceUseCases';
 
 export const updateDeviceAndAddDeviceStat = async (req, res) => {
   const { uuid } = req.params;
-  const deviceInfo: API.DeviceInfo = req.body;
+  const deviceInfo = req.body;
   const device = await DeviceRepo.findOneByUuid(uuid);
   if (device == null) {
     throw new NotFoundError(`Device not found (${uuid})`);

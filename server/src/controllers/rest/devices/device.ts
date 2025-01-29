@@ -120,37 +120,6 @@ export const deleteDevice = async (req, res) => {
   new SuccessResponse('Delete device successful').send(res);
 };
 
-//TODO validation
-export const updateDockerWatcher = async (req, res) => {
-  const {
-    dockerWatcher,
-    dockerWatcherCron,
-    dockerStatsWatcher,
-    dockerStatsCron,
-    dockerEventsWatcher,
-  } = req.body;
-  const device = await DeviceRepo.findOneByUuid(req.params.uuid);
-
-  if (!device) {
-    throw new NotFoundError(`Device not found (${req.params.uuid})`);
-  }
-  await DeviceUseCases.updateDockerWatcher(
-    device,
-    dockerWatcher,
-    dockerWatcherCron,
-    dockerStatsWatcher,
-    dockerStatsCron,
-    dockerEventsWatcher,
-  );
-  new SuccessResponse('Update docker watcher flag successful', {
-    dockerWatcher: dockerWatcher,
-    dockerWatcherCron: dockerWatcherCron,
-    dockerStatsWatcher: dockerStatsWatcher,
-    dockerEventsWatcher: dockerEventsWatcher,
-    dockerStatsCron: dockerStatsCron,
-  }).send(res);
-};
-
 export const getAllDevices = async (req, res) => {
   const devices = await DeviceRepo.findAll();
   if (!devices) {
@@ -172,29 +141,4 @@ export const updateAgentInstallMethod = async (req, res) => {
   }
   const updateDevice = await DeviceRepo.update({ ...device, agentType: installMethod });
   new SuccessResponse('Update agent install method successful', updateDevice).send(res);
-};
-
-export const postDeviceCapabilities = async (req, res) => {
-  const { capabilities }: { capabilities: API.DeviceCapabilities } = req.body;
-  const { uuid } = req.params;
-  const device = await DeviceRepo.findOneByUuid(uuid);
-
-  if (!device) {
-    throw new NotFoundError(`Device not found (${uuid})`);
-  }
-  const updateDevice = await DeviceRepo.update({ ...device, capabilities });
-  void WatcherEngine.deregisterWatchers();
-  void WatcherEngine.registerWatchers();
-  new SuccessResponse('Device capabilities successfully updated', updateDevice).send(res);
-};
-
-export const postDeviceProxmoxConfiguration = async (req, res) => {
-  const { proxmoxConfiguration }: { proxmoxConfiguration: API.ProxmoxConfiguration } = req.body;
-  const { uuid } = req.params;
-  const device = await DeviceRepo.findOneByUuid(uuid);
-  if (!device) {
-    throw new NotFoundError(`Device not found (${uuid})`);
-  }
-  const updateDevice = await DeviceRepo.update({ ...device, proxmoxConfiguration });
-  new SuccessResponse('Device proxmox configuration successfully updated', updateDevice).send(res);
 };

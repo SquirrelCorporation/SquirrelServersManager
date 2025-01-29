@@ -36,11 +36,6 @@ const REDIS_DEFAULT_VALUES: { key: string; value: string; nx: boolean }[] = [
     nx: true,
   },
   {
-    key: SettingsKeys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
-    value: SettingsKeys.DefaultValue.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
-    nx: true,
-  },
-  {
     key: SettingsKeys.GeneralSettingsKeys.CONTAINER_STATS_RETENTION_IN_DAYS,
     value: SettingsKeys.DefaultValue.CONTAINER_STATS_RETENTION_IN_DAYS,
     nx: true,

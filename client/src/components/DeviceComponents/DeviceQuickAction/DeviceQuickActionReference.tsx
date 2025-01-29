@@ -1,8 +1,11 @@
-import { FileTree } from '@/components/Icons/CustomIcons';
+import { FileTree, SetAction } from '@/components/Icons/CustomIcons';
 import {
   BugOutlined,
   DeleteOutlined,
   DownloadOutlined,
+  InfoCircleFilled,
+  InfoCircleOutlined,
+  InfoOutlined,
   LoginOutlined,
   PlayCircleOutlined,
   ReloadOutlined,
@@ -35,9 +38,25 @@ export enum Actions {
   CONNECT = 'connect',
   DELETE = 'delete',
   BROWSE_FILES = 'browseFiles',
+  VIEW = 'view',
+  MANAGEMENT = 'management',
 }
 
 const DeviceQuickActionReference: QuickActionReferenceType[] = [
+  {
+    type: Types.ACTION,
+    action: Actions.VIEW,
+    icon: <InfoCircleOutlined />,
+    label: 'Device information',
+    onAdvancedMenu: false,
+  },
+  /*  {
+    type: Types.ACTION,
+    action: Actions.MANAGEMENT,
+    icon: <SetAction />,
+    label: 'Device management',
+    onAdvancedMenu: false,
+  },*/
   {
     type: Types.PLAYBOOK_SELECTION,
     icon: <PlayCircleOutlined />,

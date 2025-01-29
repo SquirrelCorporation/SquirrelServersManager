@@ -9,9 +9,8 @@ import {
   CloseOutlined,
   InfoCircleFilled,
   LoadingOutlined,
-  SwitcherOutlined,
 } from '@ant-design/icons';
-import { Alert, Button, Popover, Steps, Typography } from 'antd';
+import { Alert, Popover, Steps, Typography } from 'antd';
 import { motion } from 'framer-motion';
 import React, { useEffect, useRef, useState } from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';
@@ -143,7 +142,7 @@ const CheckDeviceConnection: React.FC<CheckDeviceConnectionProps> = (props) => {
         direction="vertical"
         items={[
           {
-            title: 'Ansible Playbook : Ansible Ping & Call SSM API URL',
+            title: 'Ansible Playbook : Ansible Ping',
             description: (
               <>
                 {playbookStatus}{' '}

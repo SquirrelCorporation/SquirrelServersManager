@@ -1,9 +1,10 @@
 import DeviceQuickActionDropDown from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionDropDown';
-import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { Proxmox, Remote, UserSecret } from '@/components/Icons/CustomIcons';
+import { DockerOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-components';
-import { Col, Row, Typography } from 'antd';
+import { Tag, Tooltip } from 'antd';
 import React from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, SsmAgent } from 'ssm-shared-lib';
 
 const InventoryColumns = (
   setCurrentRow: any,
@@ -14,7 +15,7 @@ const InventoryColumns = (
 ) => {
   const columns: ProColumns<API.DeviceItem>[] = [
     {
-      title: 'Host Id',
+      title: 'SSM Device ID',
       dataIndex: 'uuid',
       valueType: 'textarea',
       hideInTable: true,
@@ -65,96 +66,25 @@ const InventoryColumns = (
       },
     },
     {
-      title: 'Watch Containers',
-      dataIndex: 'dockerWatcher',
+      title: 'Capabilities',
       width: '10%',
       hideInSearch: true,
       render: (dom, entity) => {
-        return entity.dockerWatcher ? (
-          <Row style={{ alignItems: 'center' }} justify="center">
-            <Col>
-              <CheckCircleOutlined
-                style={{ fontSize: '16px', color: '#08c', marginRight: '4px' }}
-              />
-            </Col>
-            <Col>
-              <Typography.Text>({entity.dockerWatcherCron})</Typography.Text>
-            </Col>
-          </Row>
-        ) : (
-          <Row style={{ alignItems: 'center' }} justify="center">
-            <Col>
-              <CloseCircleOutlined
-                style={{
-                  fontSize: '16px',
-                  color: '#cc0036',
-                  marginRight: '4px',
-                }}
-              />
-            </Col>
-            <Col>
-              <Typography.Text>({entity.dockerWatcherCron})</Typography.Text>
-            </Col>
-          </Row>
+        return (
+          <>
+            {entity.capabilities?.containers?.docker?.enabled && (
+              <Tooltip title="Docker is enabled">
+                <Tag icon={<DockerOutlined />} />
+              </Tooltip>
+            )}
+            {entity.capabilities?.containers?.proxmox?.enabled && (
+              <Tooltip title="Proxmox is enabled">
+                <Tag icon={<Proxmox />} />
+              </Tooltip>
+            )}
+          </>
         );
       },
-    },
-    {
-      title: 'Os Distro',
-      dataIndex: 'osDistro',
-      valueType: 'textarea',
-      hideInTable: true,
-      hideInSearch: true,
-    },
-    {
-      title: 'Os Arch',
-      dataIndex: 'osArch',
-      valueType: 'textarea',
-      hideInTable: true,
-      hideInSearch: true,
-    },
-    {
-      title: 'Os Code Name',
-      dataIndex: 'osCodeName',
-      valueType: 'textarea',
-      hideInTable: true,
-      hideInSearch: true,
-    },
-    {
-      title: 'Os Platform',
-      dataIndex: 'osPlatform',
-      valueType: 'textarea',
-      hideInTable: true,
-      hideInSearch: true,
-    },
-    {
-      title: 'Os Kernel',
-      dataIndex: 'osKernel',
-      valueType: 'textarea',
-      hideInTable: true,
-      hideInSearch: true,
-    },
-
-    {
-      title: 'CPU Brand',
-      dataIndex: 'cpuBrand',
-      valueType: 'textarea',
-      hideInTable: true,
-      hideInSearch: true,
-    },
-    {
-      title: 'System Manufacturer ',
-      dataIndex: 'systemManufacturer',
-      valueType: 'textarea',
-      hideInTable: true,
-      hideInSearch: true,
-    },
-    {
-      title: 'System Model',
-      dataIndex: 'systemModel',
-      valueType: 'textarea',
-      hideInTable: true,
-      hideInSearch: true,
     },
     {
       title: 'Updated at',
@@ -164,18 +94,24 @@ const InventoryColumns = (
       hideInSearch: true,
     },
     {
-      title: 'Agent Version',
+      title: 'Mode',
       sorter: true,
-      dataIndex: 'agentVersion',
-      valueType: 'textarea',
-    },
-    {
-      title: 'Docker Version',
-      sorter: true,
-      dataIndex: 'dockerVersion',
-      valueType: 'textarea',
-      hideInTable: true,
-      hideInSearch: true,
+      dataIndex: 'agentType',
+      render: (dom, entity) => {
+        return (
+          <>
+            {(entity.agentType === SsmAgent.InstallMethods.LESS && (
+              <Tooltip title="Remote SSH information gathered from the host">
+                <Tag icon={<Remote />} />
+              </Tooltip>
+            )) || (
+              <Tooltip title={'Agent installed on the host'}>
+                <Tag icon={<UserSecret />} />
+              </Tooltip>
+            )}
+          </>
+        );
+      },
     },
     {
       title: 'Operating',

@@ -96,13 +96,33 @@ export async function updateDeviceDockerConfiguration(
   },
   options?: { [key: string]: any },
 ) {
-  return request<API.SimpleResult>(`/api/devices/${uuid}/conf/docker`, {
-    method: 'POST',
-    data: {
-      ...dockerOptions,
+  return request<API.SimpleResult>(
+    `/api/devices/${uuid}/configuration/containers/docker`,
+    {
+      method: 'POST',
+      data: {
+        ...dockerOptions,
+      },
+      ...(options || {}),
     },
-    ...(options || {}),
-  });
+  );
+}
+
+export async function updateDeviceSystemInformationConfiguration(
+  uuid: string,
+  systemInformationConfiguration: Partial<API.SystemInformationConfiguration>,
+  options?: { [key: string]: any },
+) {
+  return request<API.SimpleResult>(
+    `/api/devices/${uuid}/configuration/system-information`,
+    {
+      method: 'POST',
+      data: {
+        systemInformationConfiguration: { ...systemInformationConfiguration },
+      },
+      ...(options || {}),
+    },
+  );
 }
 
 export async function updateDeviceProxmoxConfiguration(
@@ -110,11 +130,14 @@ export async function updateDeviceProxmoxConfiguration(
   proxmoxConfiguration: API.ProxmoxConfiguration,
   options?: { [key: string]: any },
 ) {
-  return request<API.SimpleResult>(`/api/devices/${uuid}/conf/proxmox`, {
-    method: 'POST',
-    data: proxmoxConfiguration,
-    ...(options || {}),
-  });
+  return request<API.SimpleResult>(
+    `/api/devices/${uuid}/configuration/containers/proxmox`,
+    {
+      method: 'POST',
+      data: proxmoxConfiguration,
+      ...(options || {}),
+    },
+  );
 }
 
 export async function getCheckDeviceDockerConnection(

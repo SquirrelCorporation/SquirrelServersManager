@@ -30,6 +30,13 @@ services:
     command: --save 60 1
     labels:
       wud.display.name: "SSM - Redis"
+  prometheus:
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-prometheus:latest"
+    restart: unless-stopped
+    volumes:
+      - ./.data.prod/prometheus:/prometheus
+    labels:
+      wud.display.name: "SSM - Prometheus"
   server:
     image: "ghcr.io/squirrelcorporation/squirrelserversmanager-server:latest"
     restart: unless-stopped
@@ -42,9 +49,11 @@ services:
     external_links:
       - mongo
       - redis
+      - prometheus
     depends_on:
       - mongo
       - redis
+      - prometheus
     env_file: .env
     environment:
       NODE_ENV: production

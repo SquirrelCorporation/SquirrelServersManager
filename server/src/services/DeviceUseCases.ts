@@ -1,6 +1,4 @@
-import DockerModem from 'docker-modem';
-import Dockerode from 'dockerode';
-import { API, SsmAnsible, SsmStatus } from 'ssm-shared-lib';
+import { SsmAgent, SsmAnsible, SsmStatus } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
 import { setToCache } from '../data/cache';
 import Device, { DeviceModel } from '../data/database/model/Device';
@@ -17,12 +15,10 @@ import DeviceRepo from '../data/database/repository/DeviceRepo';
 import DeviceStatRepo from '../data/database/repository/DeviceStatRepo';
 import PlaybookRepo from '../data/database/repository/PlaybookRepo';
 import ProxmoxContainerRepo from '../data/database/repository/ProxmoxContainerRepo';
-import SSHCredentialsHelper from '../helpers/ssh/SSHCredentialsHelper';
 import PinoLogger from '../logger';
 import { InternalError } from '../middlewares/api/ApiError';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../modules/ansible-vault/ansible-vault';
 import Inventory from '../modules/ansible/utils/InventoryTransformer';
-import { getCustomAgent } from '../modules/containers/core/CustomAgent';
 import WatcherEngine from '../modules/containers/core/WatcherEngine';
 import Docker from '../modules/containers/watchers/providers/docker/Docker';
 import PlaybookUseCases from './PlaybookUseCases';
@@ -39,26 +35,26 @@ async function getDevicesOverview() {
       name: e.status !== SsmStatus.DeviceStatus.UNMANAGED ? e.fqdn : e.ip,
       status: e.status,
       uuid: e.uuid,
-      cpu: e.cpuSpeed,
-      mem: e.mem,
+      cpu: e.systemInformation?.cpu?.speed || 0,
+      mem: e.systemInformation?.mem?.total || 0,
     };
   });
   const totalCpu = devices?.reduce((accumulator, currentValue) => {
-    return accumulator + (currentValue?.cpuSpeed || 0);
+    return accumulator + (currentValue?.systemInformation?.cpu?.speed || 0);
   }, 0);
   const totalMem = devices?.reduce((accumulator, currentValue) => {
-    return accumulator + (currentValue?.mem || 0);
+    return accumulator + (currentValue?.systemInformation?.mem?.total || 0);
   }, 0);
   return {
     offline: offline,
     online: online,
     overview: overview,
     totalCpu: totalCpu ? totalCpu : NaN,
-    totalMem: totalMem ? totalMem / 1024 : NaN,
+    totalMem: totalMem ? totalMem : NaN,
   };
 }
 
-async function updateDeviceFromJson(deviceInfo: API.DeviceInfo, device: Device) {
+async function updateDeviceFromJson(deviceInfo: any, device: Device) {
   logger.info(`updateDeviceFromJson - DeviceUuid: ${device?.uuid}`);
   logger.debug(deviceInfo);
   device.ip = deviceInfo.ip;
@@ -66,29 +62,18 @@ async function updateDeviceFromJson(deviceInfo: API.DeviceInfo, device: Device) 
   device.uptime = deviceInfo.uptime;
   device.fqdn = deviceInfo.fqdn;
   device.agentVersion = deviceInfo.agentVersion;
-  device.osArch = deviceInfo.os?.arch;
-  device.osPlatform = deviceInfo.os?.platform;
-  device.osDistro = deviceInfo.os?.distro;
-  device.osCodeName = deviceInfo.os?.codename;
-  device.osKernel = deviceInfo.os?.kernel;
-  device.osLogoFile = deviceInfo.system?.raspberry?.type ? 'raspbian' : deviceInfo.os?.logofile;
-  device.systemManufacturer = deviceInfo.system?.manufacturer;
-  device.systemModel = deviceInfo.system?.model;
-  device.systemVersion = deviceInfo.system?.version;
-  device.systemUuid = deviceInfo.system?.uuid;
-  device.systemSku = deviceInfo.system?.sku;
-  device.systemVirtual = deviceInfo.system?.virtual;
-  device.cpuBrand = deviceInfo.cpu?.brand;
-  device.cpuBrand = deviceInfo.cpu?.manufacturer;
-  device.cpuFamily = deviceInfo.cpu?.family;
-  device.versions = deviceInfo.os?.versionData;
-  device.cpuSpeed = deviceInfo.cpu?.speed;
-  device.mem = deviceInfo.mem?.memTotalMb;
+  if (!device.systemInformation) {
+    device.systemInformation = {};
+  }
+  device.systemInformation.os = deviceInfo.os;
+  device.systemInformation.system = deviceInfo.system;
+  device.systemInformation.cpu = deviceInfo.cpu;
+  device.systemInformation.versions = deviceInfo.os?.versionData;
+  device.systemInformation.mem = { total: deviceInfo.mem?.memTotalMb };
   if (device.status !== SsmStatus.DeviceStatus.ONLINE) {
     await DeviceDownTimeEventRepo.closeDownTimeEvent(device);
     device.status = SsmStatus.DeviceStatus.ONLINE;
   }
-  device.raspberry = deviceInfo.system?.raspberry;
   device.agentLogPath = deviceInfo.logPath;
   device.agentType = deviceInfo.agentType;
   await DeviceRepo.update(device);
@@ -126,17 +111,26 @@ async function updateDockerWatcher(
   dockerEventsWatcher?: boolean,
 ) {
   logger.info(`updateDockerWatcher - DeviceUuid: ${device.uuid}`);
-  device.dockerWatcher = dockerWatcher;
-  device.dockerWatcherCron = dockerWatcherCron;
-  device.dockerStatsCron = dockerStatsCron;
-  device.dockerStatsWatcher = dockerStatsWatcher;
-  device.dockerEventsWatcher = dockerEventsWatcher;
+  if (!device.configuration.containers.docker) {
+    device.configuration.containers.docker = {};
+  }
+  device.configuration.containers.docker.watchContainers = dockerWatcher;
+  device.configuration.containers.docker.watchContainersCron = dockerWatcherCron;
+  device.configuration.containers.docker.watchContainersStatsCron = dockerStatsCron;
+  device.configuration.containers.docker.watchContainersStats = dockerStatsWatcher;
+  device.configuration.containers.docker.watchEvents = dockerEventsWatcher;
   await DeviceRepo.update(device);
 }
 
 async function getDockerDevicesToWatch() {
   return DeviceRepo.findWithFilter({
     dockerWatcher: true,
+  });
+}
+
+async function getRemoteSysInfoDevicesToWatch() {
+  return DeviceRepo.findWithFilter({
+    agentType: { $eq: SsmAgent.InstallMethods.LESS },
   });
 }
 
@@ -166,7 +160,7 @@ async function checkAnsibleConnection(
   sshUser?: string,
   sshPwd?: string,
   sshPort?: number,
-  becomeMethod?: string,
+  becomeMethod?: SsmAnsible.AnsibleBecomeMethod,
   becomePass?: string,
   sshKeyPass?: string,
 ) {
@@ -183,6 +177,8 @@ async function checkAnsibleConnection(
           uuid: 'tmp',
           status: SsmStatus.DeviceStatus.REGISTERING,
           capabilities: { containers: {} },
+          systemInformation: {},
+          configuration: { containers: {}, systemInformation: {} },
         },
         authType,
         sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
@@ -218,7 +214,7 @@ async function checkDockerConnection(
   sshUser?: string,
   sshPwd?: string,
   sshPort?: number,
-  becomeMethod?: string,
+  becomeMethod?: SsmAnsible.AnsibleBecomeMethod,
   becomePass?: string,
   sshKeyPass?: string,
 ) {
@@ -230,6 +226,8 @@ async function checkDockerConnection(
         uuid: 'tmp',
         status: SsmStatus.DeviceStatus.REGISTERING,
         capabilities: { containers: {} },
+        systemInformation: {},
+        configuration: { containers: {}, systemInformation: {} },
       },
       authType,
       sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
@@ -291,4 +289,5 @@ export default {
   checkDeviceDockerConnection,
   checkDeviceAnsibleConnection,
   getProxmoxDevicesToWatch,
+  getRemoteSysInfoDevicesToWatch,
 };

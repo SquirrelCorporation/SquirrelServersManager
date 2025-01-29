@@ -4,6 +4,7 @@ import { Services } from '../enums/git';
 import { RepositoryType } from '../enums/repositories';
 import { AutomationChain } from '../form/automation';
 import { ProxmoxModel } from '../namespace/proxmox';
+import { Systeminformation } from '../namespace/system-information';
 import { ExtendedTreeNode } from './tree';
 import * as SsmProxmox from '../enums/proxmox'
 
@@ -67,7 +68,6 @@ export type Settings = {
   apiKey: string;
   updateAvailable?: string;
   device: {
-    registerDeviceStatEvery: number;
     considerOffLineAfter: number;
   };
   server: {
@@ -166,46 +166,6 @@ export type CheckDockerConnection = {
   errorMessage?: string;
 }
 
-export type VersionData = {
-  kernel?: string;
-  openssl?: string;
-  systemOpenssl?: string;
-  systemOpensslLib?: string;
-  node?: string;
-  v8?: string;
-  npm?: string;
-  yarn?: string;
-  pm2?: string;
-  gulp?: string;
-  grunt?: string;
-  git?: string;
-  tsc?: string;
-  mysql?: string;
-  redis?: string;
-  mongodb?: string;
-  nginx?: string;
-  php?: string;
-  docker?: string;
-  postfix?: string;
-  postgresql?: string;
-  perl?: string;
-  python?: string;
-  python3?: string;
-  pip?: string;
-  pip3?: string;
-  java?: string;
-  gcc?: string;
-  virtualbox?: string;
-  dotnet?: string;
-};
-
-export type RaspberryRevisionData = {
-  manufacturer?: string;
-  processor?: string;
-  type?: string;
-  revision?: string;
-};
-
 export type DeviceCapabilities = {
   containers: {
     docker: {
@@ -221,43 +181,108 @@ export type DeviceCapabilities = {
 };
 
 export type ProxmoxConfiguration = {
-  watcherCron?: string;
+  watchContainersCron?: string;
 }
+
+export type SystemInformationConfiguration = {
+  system?: {
+    watch?: boolean;
+    cron?: string;
+  };
+  os?: {
+    watch?: boolean;
+    cron?: string;
+  };
+  cpu?: {
+    watch?: boolean;
+    cron?: string;
+  };
+  cpuStats?: {
+    watch?: boolean;
+    cron?: string;
+  };
+  mem?: {
+    watch?: boolean;
+    cron?: string;
+  };
+  memStats?: {
+    watch?: boolean;
+    cron?: string;
+  };
+  networkInterfaces?: {
+    watch?: boolean;
+    cron?: string;
+  };
+  versions?: {
+    watch?: boolean;
+    cron?: string;
+  };
+  usb?: {
+    watch?: boolean;
+    cron?: string;
+  };
+  wifi?: {
+    watch?: boolean;
+    cron?: string;
+  };
+  bluetooth?: {
+    watch?: boolean;
+    cron?: string;
+  };
+  graphics?: {
+    watch?: boolean;
+    cron?: string;
+  };
+  fileSystem?: {
+    watch?: boolean;
+    cron?: string;
+  };
+  fileSystemStats?: {
+    watch?: boolean;
+    cron?: string;
+  };
+};
+
+export type DeviceConfiguration = {containers: {
+      proxmox?: {
+        watchContainersCron?: string;
+      };
+      docker?: {
+        watchContainers?: boolean;
+        watchContainersCron?: string;
+        watchContainersStats?: boolean;
+        watchContainersStatsCron?: string;
+        watchEvents?: boolean;
+      };
+    };
+    systemInformation?:SystemInformationConfiguration;
+  };
+
+export type DeviceSystemInformation = {
+  system?: Systeminformation.SystemData;
+  os?: Systeminformation.OsData;
+  cpu?: Systeminformation.CpuData;
+  mem?: Partial<Systeminformation.MemData>;
+  networkInterfaces?: Systeminformation.NetworkInterfacesData[];
+  versions?: Systeminformation.VersionData;
+  usb?: Systeminformation.UsbData[];
+  wifi?: Systeminformation.WifiInterfaceData[];
+  bluetooth?: Systeminformation.BluetoothDeviceData[];
+  graphics?: Systeminformation.GraphicsData;
+  fileSystems?: Systeminformation.DiskLayoutData[];
+};
 
 export type DeviceItem = {
   uuid: string;
   capabilities: DeviceCapabilities;
-  proxmoxConfiguration: ProxmoxConfiguration;
+  configuration: DeviceConfiguration;
   disabled?: boolean;
-  dockerWatcher?: boolean;
-  dockerWatcherCron?: string;
-  dockerStatsWatcher?: boolean,
-  dockerStatsCron?: string;
-  dockerEventsWatcher?: boolean;
   hostname?: string;
   fqdn?: string;
   ip?: string;
   status: number;
   uptime?: number;
-  osArch?: string;
-  osPlatform?: string;
-  osDistro?: string;
-  osCodeName?: string;
-  osKernel?: string;
-  osLogoFile?: string;
-  systemManufacturer?: string;
-  systemModel?: string;
-  systemVersion?: string;
-  systemUuid?: string;
-  systemSku?: string;
-  systemVirtual?: boolean;
-  cpuBrand?: string;
-  cpuManufacturer?: string;
-  cpuFamily?: string;
-  cpuSpeed?: number;
-  mem?: number;
-  versions?: VersionData;
-  raspberry?: RaspberryRevisionData;
+  systemInformation:DeviceSystemInformation;
   agentType?: string;
   agentVersion?: string;
   updatedAt?: string;
@@ -513,73 +538,6 @@ export type AvailabilityStat = {
   ];
 };
 
-export type OSInfo = {
-  distro?: string;
-  release?: string;
-  codename?: string;
-  platform?: string;
-  arch?: string;
-  kernel?: string;
-  logofile?: string;
-  versionData?: VersionData;
-};
-
-export type SystemInfo = {
-  manufacturer?: string;
-  model?: string;
-  version?: string;
-  platform?: string;
-  uuid?: string;
-  sku?: string;
-  virtual?: boolean;
-  raspberry?: RaspberryRevisionData;
-};
-
-export type CPUInfo = {
-  usage?: number;
-  free?: number;
-  count?: number;
-  brand?: string;
-  manufacturer?: string;
-  vendor?: string;
-  family?: string;
-  speed?: number;
-  cores?: number;
-  physicalCores?: number;
-  processors?: number;
-};
-
-export type MemInfo = {
-  memTotalMb?: number;
-  memTotalUsedMb?: number;
-  memTotalFreeMb?: number;
-  memUsedPercentage?: number;
-  memFreePercentage?: number;
-};
-
-export type DriveInfo = {
-  storageTotalGb?: number;
-  storageUsedGb?: number;
-  storageFreeGb?: number;
-  storageUsedPercentage?: number;
-  storageFreePercentage?: number;
-};
-
-export type DeviceInfo = {
-  id: string;
-  os?: OSInfo;
-  ip?: string;
-  uptime?: number;
-  hostname?: string;
-  fqdn?: string;
-  mem?: MemInfo;
-  storage?: DriveInfo;
-  system?: SystemInfo;
-  cpu?: CPUInfo;
-  agentVersion?: string;
-  logPath?: string;
-  agentType?: 'node' | 'docker';
-};
 
 export type ExtraVar = {
   extraVar: string;

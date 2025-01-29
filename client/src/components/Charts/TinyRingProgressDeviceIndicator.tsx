@@ -1,6 +1,6 @@
 import { DeviceStatType } from '@/components/Charts/DeviceStatType';
 import { getDeviceStat } from '@/services/rest/devicestat';
-import { Tiny } from '@ant-design/plots';
+import { Tiny, TinyProgressConfig } from '@ant-design/charts';
 import { message, Skeleton } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -36,9 +36,9 @@ const TinyRingProgressDeviceIndicator: React.FC<TinyRingProps> = ({
     void asyncFetch();
   }, [asyncFetch]);
 
-  const config = useMemo(
+  const config: TinyProgressConfig = useMemo(
     () => ({
-      percent: 1,
+      percent: 0,
       width: 50,
       height: 50,
       innerRadius: 0.85,
@@ -78,7 +78,9 @@ const TinyRingProgressDeviceIndicator: React.FC<TinyRingProps> = ({
   return isLoading || isNaN(value as number) ? (
     <Skeleton.Avatar active size="large" shape="circle" />
   ) : (
-    <Tiny.Ring {...config} />
+    <>
+      <Tiny.Ring {...config} />
+    </>
   );
 };
 

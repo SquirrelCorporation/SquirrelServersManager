@@ -1,6 +1,7 @@
 import { DeviceStatType } from '@/components/Charts/DeviceStatType';
 import { getDeviceStat } from '@/services/rest/devicestat';
-import { Tiny } from '@ant-design/plots';
+import { Tiny } from '@ant-design/charts';
+import { TinyRingConfig } from '@ant-design/plots/es/components/tiny';
 import { Skeleton, Tooltip } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
@@ -22,10 +23,10 @@ const TinyRingProgressDeviceGraph: React.FC<TinyRingProps> = ({
 
   const asyncFetch = useCallback(async () => {
     try {
-      const res = await getDeviceStat(deviceUuid, type, {});
+      const res = await getDeviceStat(deviceUuid, type);
       if (res.data && res.data.value) {
         setValue({
-          percent: parseFloat((res.data.value / 100).toFixed(2)),
+          percent: res.data.value / 100,
           date: moment(res.data.date).format('YYYY-MM-DD, HH:mm'),
         });
       }
@@ -41,15 +42,12 @@ const TinyRingProgressDeviceGraph: React.FC<TinyRingProps> = ({
     void asyncFetch();
   }, [asyncFetch]);
 
-  const config = useMemo(
+  const config: TinyRingConfig = useMemo(
     () => ({
       percent: value.percent,
       width: 50,
       height: 50,
-      color: [
-        'rgba(232,237,243,0.4)',
-        value.percent < 0.8 ? '#1668dc' : '#dc4446',
-      ],
+      color: ['rgb(255,255,255)', value.percent < 0.8 ? '#1668dc' : '#dc4446'],
       innerRadius: 0.85,
       radius: 0.98,
       loading: false,
@@ -57,7 +55,7 @@ const TinyRingProgressDeviceGraph: React.FC<TinyRingProps> = ({
         {
           type: 'text',
           style: {
-            text: `${(value.percent * 100).toFixed(0)}%`,
+            text: `${value.percent?.toFixed(0)}%`,
             x: '50%',
             y: '45%',
             textAlign: 'center',

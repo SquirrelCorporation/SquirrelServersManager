@@ -1,5 +1,5 @@
 import { getContainerStats } from '@/services/rest/containersstats';
-import { Line } from '@ant-design/plots';
+import { Line } from '@ant-design/charts';
 import moment from 'moment';
 import React, { useEffect } from 'react';
 import { API } from 'ssm-shared-lib';

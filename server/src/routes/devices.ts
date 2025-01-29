@@ -1,5 +1,7 @@
 import express from 'express';
 import passport from 'passport';
+import { postDeviceCapabilities } from '../controllers/rest/devices/capabilities';
+import { postDeviceCapabilitiesValidator } from '../controllers/rest/devices/capabilities.validator';
 import {
   getCheckDeviceAnsibleConnection,
   getCheckDeviceDockerConnection,
@@ -17,22 +19,26 @@ import {
   postDiagnosticValidator,
 } from '../controllers/rest/devices/check-connection.validator';
 import {
+  postDeviceProxmoxConfiguration,
+  postDeviceSystemInformationConfiguration,
+  updateDockerWatcher,
+} from '../controllers/rest/devices/configuration';
+import {
+  postDeviceProxmoxConfigurationValidator,
+  postDeviceSystemInformationConfigurationValidator,
+} from '../controllers/rest/devices/configuration.validator';
+import {
   addDevice,
   addDeviceAuto,
   deleteDevice,
   getAllDevices,
   getDevices,
-  postDeviceCapabilities,
-  postDeviceProxmoxConfiguration,
   updateAgentInstallMethod,
-  updateDockerWatcher,
 } from '../controllers/rest/devices/device';
 import {
   addDeviceAutoValidator,
   addDeviceValidator,
   deleteDeviceValidator,
-  postDeviceCapabilitiesValidator,
-  postDeviceProxmoxConfigurationValidator,
   updateAgentInstallMethodValidator,
 } from '../controllers/rest/devices/device.validator';
 import {
@@ -109,10 +115,17 @@ router
 router.route('/:uuid/capabilities').post(postDeviceCapabilitiesValidator, postDeviceCapabilities);
 router.route('/:uuid/auth/docker').post(updateDockerAuthValidator, updateDockerAuth);
 router.route('/:uuid/auth/proxmox').post(updateProxmoxAuthValidator, updateProxmoxAuth);
+
 router
-  .route('/:uuid/conf/proxmox')
+  .route('/:uuid/configuration/containers/proxmox')
   .post(postDeviceProxmoxConfigurationValidator, postDeviceProxmoxConfiguration);
-router.route('/:uuid/conf/docker').post(updateDockerWatcher);
+router.route('/:uuid/configuration/containers/docker').post(updateDockerWatcher);
+router
+  .route('/:uuid/configuration/system-information')
+  .post(
+    postDeviceSystemInformationConfigurationValidator,
+    postDeviceSystemInformationConfiguration,
+  );
 
 router
   .route('/:uuid/agent-install-method')

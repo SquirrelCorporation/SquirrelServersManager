@@ -15,12 +15,12 @@ export default interface DeviceAuth {
   sshKeyPass?: string;
   sshPort?: number;
   sshConnection?: SsmAnsible.SSHConnection;
+  becomeUser?: string;
   becomePass?: string;
-  becomeMethod?: string;
+  becomeMethod?: SsmAnsible.AnsibleBecomeMethod;
   becomeExe?: string;
   becomeFlags?: string;
   strictHostKeyChecking?: boolean;
-  becomeUser?: string;
   sshCommonArgs?: string;
   sshExecutable?: string;
   customDockerSSH?: boolean;

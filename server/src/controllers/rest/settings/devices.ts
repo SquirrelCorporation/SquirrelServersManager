@@ -16,13 +16,6 @@ export const postDevicesSettings = async (req, res) => {
         );
         new SuccessResponse(`${key} successfully updated`).send(res);
         return;
-      case SettingsKeys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS:
-        await setToCache(
-          SettingsKeys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
-          value,
-        );
-        new SuccessResponse(`${key} successfully updated`).send(res);
-        return;
       default:
         res.status(404).send({
           success: false,

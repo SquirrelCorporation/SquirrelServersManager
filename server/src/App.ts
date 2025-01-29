@@ -6,6 +6,7 @@ import pinoHttp from 'pino-http';
 import { SECRET } from './config';
 import EventManager from './core/events/EventManager';
 import Events from './core/events/events';
+import { deviceRegistry } from './data/statistics';
 import logger, { httpLoggerOptions } from './logger';
 import { errorHandler } from './middlewares/ErrorHandler';
 import Socket from './middlewares/Socket';
@@ -40,6 +41,11 @@ class AppWrapper extends EventManager {
   }
 
   public setupRoutes() {
+    this.app.get('/metrics', async (_, res) => {
+      res.setHeader('Content-Type', deviceRegistry.contentType);
+      res.send(await deviceRegistry.metrics());
+    });
+
     this.app.use('/', routes);
     this.app.use(errorHandler);
   }
