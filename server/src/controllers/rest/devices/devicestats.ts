@@ -1,4 +1,3 @@
-import { API } from 'ssm-shared-lib';
 import DeviceRepo from '../../../data/database/repository/DeviceRepo';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';

@@ -1,4 +1,5 @@
 import { StatsType, Systeminformation } from 'ssm-shared-lib';
+import { DateTime } from 'luxon';
 import Device from '../data/database/model/Device';
 import ContainerRepo from '../data/database/repository/ContainerRepo';
 import { updateQueue } from '../helpers/queue/queueManager';
@@ -25,6 +26,11 @@ interface DeviceSystemInfo {
     storageTotalGb: number;
     storageUsedGb: number;
   };
+}
+
+interface DeviceStat {
+  date: string;
+  value: number;
 }
 
 // Constants
@@ -109,6 +115,54 @@ async function createStatIfMinInterval(
 ): Promise<void> {
   logger.info(`createStatIfMinInterval - DeviceUuid: ${device?.uuid}`);
   await createDeviceStatFromJson(deviceInfo, device);
+}
+
+async function getStatsByDeviceAndType(
+  device: Device,
+  from: number,
+  type?: string,
+): Promise<DeviceStat[] | null> {
+  logger.info(`getStatsByDeviceAndType - type: ${type}, from: ${from}, device: ${device.uuid}`);
+
+  if (!type) {
+    throw new Error('Type is required');
+  }
+
+  if (!device?.uuid) {
+    throw new Error('Device UUID is required');
+  }
+
+  try {
+    // Calculate time range
+    const toDate = DateTime.now().toJSDate();
+    const fromDate = DateTime.now().minus({ hours: from }).toJSDate();
+
+    const result = await prometheusService.queryDeviceMetrics(
+      type as StatsType.DeviceStatsType,
+      [device.uuid],
+      { from: fromDate, to: toDate },
+    );
+
+    if (!result.success) {
+      logger.error(`Failed to get stats: ${result.error}`);
+      return null;
+    }
+
+    if (!result.data) {
+      return null;
+    }
+
+    // Transform the data into DeviceStat format
+    return result.data
+      .map((item) => ({
+        date: item.date,
+        value: parseFloat(item.value),
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+  } catch (error) {
+    logger.error(`Error getting stats for device ${device.uuid}:`, error);
+    return null;
+  }
 }
 
 async function getStatsByDevicesAndType(
@@ -206,7 +260,8 @@ async function getStatByDeviceAndType(
 
 export default {
   createStatIfMinInterval,
-  getStatsByDevicesAndType,
+  getStatsByDeviceAndType,
   getStatByDeviceAndType,
+  getStatsByDevicesAndType,
   getSingleAveragedStatsByDevicesAndType,
 };
