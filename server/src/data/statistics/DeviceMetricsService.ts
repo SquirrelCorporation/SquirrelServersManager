@@ -153,4 +153,5 @@ export class DeviceMetricsService {
   }
 }
 
-export default DeviceMetricsService.getInstance();
+const deviceMetricsServiceInstance = DeviceMetricsService.getInstance();
+export default deviceMetricsServiceInstance;
