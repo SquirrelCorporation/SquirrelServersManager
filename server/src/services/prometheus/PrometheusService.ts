@@ -198,6 +198,38 @@ export class PrometheusService {
       };
     }
   }
+
+  public async queryAveragedStatByType(
+    type: StatsType.DeviceStatsType,
+    range: { days: number; offset: number }
+  ): Promise<QueryResult<{ value: number }>> {
+    try {
+      const metricType = this.getMetricTypeFromStatsType(type);
+      const metricName = deviceMetricsService.getMetricName(metricType);
+      const offsetStr = range.offset > 0 ? `offset ${range.offset}d` : '';
+      const query = `avg(avg_over_time(${metricName}[${range.days}d] ${offsetStr}))`;
+
+      const result = await this.driver.instantQuery(query);
+
+      if (!result?.result?.[0]) {
+        return { success: false, data: null };
+      }
+
+      return {
+        success: true,
+        data: {
+          value: result.result[0].value.value as number,
+        },
+      };
+    } catch (error) {
+      logger.error('Error querying averaged stat by type:', error);
+      return {
+        success: false,
+        data: null,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      };
+    }
+  }
 }
 
 export default PrometheusService.getInstance();

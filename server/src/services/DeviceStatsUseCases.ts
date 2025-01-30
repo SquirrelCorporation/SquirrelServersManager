@@ -258,10 +258,43 @@ async function getStatByDeviceAndType(
   return result.data ? [result.data] : null;
 }
 
+async function getSingleAveragedStatByType(
+  from: number,
+  to: number,
+  type?: string,
+): Promise<[{ value: number }] | null> {
+  logger.info(`getStatByType - type: ${type}, from: ${from}, to: ${to}`);
+
+  if (!type) {
+    throw new Error('Type is required');
+  }
+
+  try {
+    const result = await prometheusService.queryAveragedStatByType(
+      type as StatsType.DeviceStatsType,
+      {
+        days: from - to,
+        offset: to,
+      }
+    );
+
+    if (!result.success) {
+      logger.error(`Failed to get averaged stat: ${result.error}`);
+      return null;
+    }
+
+    return result.data ? [result.data] : null;
+  } catch (error) {
+    logger.error(`Error getting averaged stat for type ${type}:`, error);
+    return null;
+  }
+}
+
 export default {
   createStatIfMinInterval,
   getStatsByDeviceAndType,
   getStatByDeviceAndType,
   getStatsByDevicesAndType,
   getSingleAveragedStatsByDevicesAndType,
+  getSingleAveragedStatByType,
 };
