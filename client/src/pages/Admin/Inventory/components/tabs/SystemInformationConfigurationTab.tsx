@@ -1,13 +1,28 @@
+import {
+  ElNetwork,
+  FileSystem,
+  GrommetIconsSystem,
+  HardwareCircuit,
+  Usb,
+  Version,
+  WhhCpu,
+  WhhRam,
+  Wifi,
+} from '@/components/Icons/CustomIcons';
 import { CardHeader } from '@/components/Template/CardHeader';
 import { updateDeviceSystemInformationConfiguration } from '@/services/rest/device';
 import { capitalizeFirstLetter } from '@/utils/strings';
-import { FieldTimeOutlined } from '@ant-design/icons';
+import {
+  CheckCircleFilled,
+  FieldTimeOutlined,
+  InfoCircleFilled,
+} from '@ant-design/icons';
 import {
   ProForm,
   ProFormSelect,
   ProFormSwitch,
 } from '@ant-design/pro-components';
-import { Card, message } from 'antd';
+import { Card, message, Space, Tooltip } from 'antd';
 import React, { useEffect } from 'react';
 import Cron from 'react-js-cron';
 import { API } from 'ssm-shared-lib';
@@ -65,6 +80,31 @@ const SystemInformationConfigurationTab: React.FC<
     }
   };
 
+  const getIcon = (value: string) => {
+    switch (value.toLowerCase()) {
+      case 'networkinterfaces':
+        return <ElNetwork />;
+      case 'system':
+        return <HardwareCircuit />;
+      case 'cpu':
+        return <WhhCpu />;
+      case 'mem':
+        return <WhhRam />;
+      case 'filesystems':
+        return <FileSystem />;
+      case 'wifi':
+        return <Wifi />;
+      case 'usb':
+        return <Usb />;
+      case 'os':
+        return <GrommetIconsSystem />;
+      case 'versions':
+        return <Version />;
+      default:
+        return <ElNetwork />;
+    }
+  };
+
   return (
     <ProForm
       submitter={{
@@ -87,14 +127,39 @@ const SystemInformationConfigurationTab: React.FC<
           header: { height: 55, minHeight: 55, paddingLeft: 15 },
           body: { paddingBottom: 0 },
         }}
+        extra={
+          <Tooltip title="Remote system information are collected through SSH at regular intervals. You can configure the frequency for each collections.">
+            <InfoCircleFilled />
+          </Tooltip>
+        }
       >
         <ProForm.Group>
           <ProFormSelect
             name={'feature'}
             label={'Feature'}
             options={options}
+            width={'sm'}
             initialValue={selectedFeature}
             onChange={(value: string) => setSelectedFeature(value)}
+            fieldProps={{
+              menuItemSelectedIcon: <CheckCircleFilled />,
+              labelRender: (values) => (
+                <Space>
+                  <span role="img" aria-label={values.label as string}>
+                    {getIcon(values.label as string)}{' '}
+                  </span>
+                  {values.label}
+                </Space>
+              ),
+              optionRender: (option) => (
+                <Space>
+                  <span role="img" aria-label={option.data.label as string}>
+                    {getIcon(option.data.label as string)}
+                  </span>
+                  {option.data.label}
+                </Space>
+              ),
+            }}
           />
 
           <ProFormSwitch
@@ -102,7 +167,6 @@ const SystemInformationConfigurationTab: React.FC<
             labelAlign={'left'}
             name={`switch`}
             fieldProps={{
-              size: 'small',
               value: isFeatureEnabled,
               onChange: (value) => handleOnChangeWatch(value),
             }}

@@ -1,9 +1,9 @@
 import DeviceManagementModal, {
   DeviceManagementModalHandles,
-} from '@/components/DeviceComponents/Device/DeviceManagementModal';
+} from '@/components/DeviceComponents/DeviceInformation/DeviceManagementModal';
 import DeviceInformationModal, {
   DeviceInformationModalHandles,
-} from '@/components/DeviceComponents/Device/DeviceInformationModal';
+} from '@/components/DeviceComponents/DeviceInformation/DeviceInformationModal';
 import DeviceQuickActionReference, {
   Actions,
   Types,

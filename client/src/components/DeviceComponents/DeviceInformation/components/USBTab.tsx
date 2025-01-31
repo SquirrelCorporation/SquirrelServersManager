@@ -1,6 +1,6 @@
 import SystemInformationView, {
   DetailInfo,
-} from '@/components/DeviceComponents/Device/components/SystemInformationView';
+} from '@/components/DeviceComponents/DeviceInformation/components/SystemInformationView';
 import {
   FlatPlatform,
   HardwareCircuit,

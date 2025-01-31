@@ -2,6 +2,7 @@ import CronJob from 'node-cron';
 import { updateQueue } from '../../../helpers/queue/queueManager';
 import RemoteSSHExecutorComponent from '../core/RemoteSSHExecutorComponent';
 import { UpdateStatsType, UpdateType } from '../helpers/queueProcessor';
+import BluetoothComponent from '../system-information/bluetooth/BluetoothComponent';
 import CPUComponent from '../system-information/cpu/CPUComponent';
 import { FileSystemComponent } from '../system-information/filesystem/FileSystemComponent';
 import GraphicsComponent from '../system-information/graphics/GraphicsComponent';
@@ -33,7 +34,10 @@ class RemoteSystemInformationWatcher extends RemoteSSHExecutorComponent {
     WIFI: WifiComponent;
     Graphics: GraphicsComponent;
     Network: NetworkComponent;
+    Bluetooth: BluetoothComponent;
   };
+  private retryCount = 0; // Track the number of retries
+  private readonly MAX_BACKOFF_TIME = 30 * 60 * 1000; // Maximum delay of 30 minutes (in milliseconds)
 
   private watchers: CronWatchers;
 
@@ -100,6 +104,7 @@ class RemoteSystemInformationWatcher extends RemoteSSHExecutorComponent {
       await this.setupComponent('Graphics', GraphicsComponent);
       await this.setupComponent('Network', NetworkComponent);
       await this.setupComponent('System', SystemComponent);
+      await this.setupComponent('Bluetooth', BluetoothComponent);
 
       // Setup watchers
       this.setupWatcher('cpu', () => this.getCPU(), this.configuration.cpu);
@@ -123,12 +128,34 @@ class RemoteSystemInformationWatcher extends RemoteSSHExecutorComponent {
       this.setupWatcher('wifi', () => this.getWifi(), this.configuration.wifi);
       this.setupWatcher('os', () => this.getOSInformation(), this.configuration.os);
       this.setupWatcher('versions', () => this.getVersions(), this.configuration.versions);
+      this.setupWatcher('bluetooth', () => this.getBluetooth(), this.configuration.bluetooth);
 
       this.logger.info('RemoteSystemInformationWatcher initialized');
     } catch (error) {
-      this.logger.error('Failed to initialize RemoteSystemInformationWatcher:', error);
-      throw error;
+      this.retryCount++;
+      const backoffDelay = Math.min(
+        this.getExponentialBackoffDelay(this.retryCount),
+        this.MAX_BACKOFF_TIME,
+      );
+
+      this.logger.error(
+        `Initialization failed. Retrying after ${backoffDelay / 1000} seconds (attempt ${this.retryCount}).`,
+        error,
+      );
+
+      // Retry after a delay
+      setTimeout(() => {
+        this.init().catch((err) => {
+          this.logger.error('Retry failed:', err);
+        });
+      }, backoffDelay);
     }
+  }
+
+  // Helper method to calculate the exponential backoff delay
+  private getExponentialBackoffDelay(retryCount: number): number {
+    const baseDelay = 1000; // Base delay of 1 second
+    return baseDelay * Math.pow(2, retryCount); // Exponential growth: 2^retryCount * base delay
   }
 
   private async enqueueUpdate(
@@ -220,6 +247,11 @@ class RemoteSystemInformationWatcher extends RemoteSSHExecutorComponent {
   public async getVersions() {
     const versions = await this.components.OSInformation.versions('*');
     await this.enqueueUpdate(this.configuration.deviceUuid, UpdateType.Versions, versions);
+  }
+
+  public async getBluetooth() {
+    const devices = await this.components.Bluetooth.bluetoothDevices();
+    await this.enqueueUpdate(this.configuration.deviceUuid, UpdateType.Bluetooth, devices);
   }
 
   public async deregisterComponent(): Promise<void> {

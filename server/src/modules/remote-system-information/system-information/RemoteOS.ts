@@ -72,7 +72,7 @@ export abstract class RemoteOS {
   protected async fileExists(path: string): Promise<boolean> {
     try {
       // Execute the command to check if the file exists
-      const command = `test -f ${path} && echo "true" || echo "false"`;
+      const command = `test -e ${path} && echo "true" || echo "false"`;
       const result = await this.execAsync(command);
 
       // The result should be "true" or "false", based on the command output
@@ -577,10 +577,14 @@ export abstract class RemoteOS {
    */
   private async getDirectories(path: string): Promise<string[]> {
     const command = `find "${path}" -maxdepth 1 -type d ! -path "${path}"`;
+    logger.debug('getDirectories: ' + command);
     try {
       const result = await this.execAsync(command);
+      logger.debug('getDirectories: ' + result);
+
       return result.trim().split('\n').filter(Boolean);
-    } catch {
+    } catch (error: any) {
+      logger.debug(error);
       return [];
     }
   }
@@ -603,14 +607,17 @@ export abstract class RemoteOS {
    */
   private async getFilesRecursively(path: string): Promise<string[]> {
     try {
+      logger.debug(`Recursively getting files in ${path}`);
       const directories = await this.getDirectories(path);
+      logger.debug(`${directories.length} directories`);
       const filesInDirs = await Promise.all(
         directories.map((dir) => this.getFilesRecursively(dir)),
       );
 
       const allFiles = filesInDirs.reduce((acc, files) => acc.concat(files), []);
       const filesInCurrentDir = await this.getFiles(path);
-
+      logger.debug(`${filesInCurrentDir.length} files`);
+      logger.debug(filesInCurrentDir);
       return allFiles.concat(filesInCurrentDir);
     } catch {
       return [];

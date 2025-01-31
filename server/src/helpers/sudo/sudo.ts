@@ -1,5 +1,6 @@
 import { SsmAnsible } from 'ssm-shared-lib';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
+import logger from '../../logger';
 import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../modules/ansible-vault/ansible-vault';
 
 export async function generateSudoCommand(deviceUuid: string): Promise<string> {
@@ -14,9 +15,11 @@ export async function generateSudoCommand(deviceUuid: string): Promise<string> {
       : undefined,
     method: deviceAuth.becomeMethod,
   };
-
   switch (method) {
     case SsmAnsible.AnsibleBecomeMethod.SUDO:
+      if (user && password) {
+        return `echo ${JSON.stringify(password)} | su - ${user}`;
+      }
       // Sudo command with password
       if (password) {
         return `echo ${JSON.stringify(password)} | sudo -S -p "" true`;

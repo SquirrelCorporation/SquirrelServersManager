@@ -1,15 +1,17 @@
-import CPUTab from '@/components/DeviceComponents/Device/components/CPUTab';
-import FilesystemsTab from '@/components/DeviceComponents/Device/components/FilesystemsTab';
-import MemoryTab from '@/components/DeviceComponents/Device/components/MemoryTab';
-import NetworkInterfacesTab from '@/components/DeviceComponents/Device/components/NetworkInterfacesTab';
-import OSTab from '@/components/DeviceComponents/Device/components/OSTab';
-import SummaryTab from '@/components/DeviceComponents/Device/components/SummaryTab';
-import SystemTab from '@/components/DeviceComponents/Device/components/SystemTab';
-import USBTab from '@/components/DeviceComponents/Device/components/USBTab';
-import WifiTab from '@/components/DeviceComponents/Device/components/WifiTab';
+import CPUTab from '@/components/DeviceComponents/DeviceInformation/components/CPUTab';
+import FilesystemsTab from '@/components/DeviceComponents/DeviceInformation/components/FilesystemsTab';
+import GraphicsTab from '@/components/DeviceComponents/DeviceInformation/components/GraphicsTab';
+import MemoryTab from '@/components/DeviceComponents/DeviceInformation/components/MemoryTab';
+import NetworkInterfacesTab from '@/components/DeviceComponents/DeviceInformation/components/NetworkInterfacesTab';
+import OSTab from '@/components/DeviceComponents/DeviceInformation/components/OSTab';
+import SummaryTab from '@/components/DeviceComponents/DeviceInformation/components/SummaryTab';
+import SystemTab from '@/components/DeviceComponents/DeviceInformation/components/SystemTab';
+import USBTab from '@/components/DeviceComponents/DeviceInformation/components/USBTab';
+import WifiTab from '@/components/DeviceComponents/DeviceInformation/components/WifiTab';
 import {
   ElNetwork,
   FileSystem,
+  GraphicsCard,
   GrommetIconsSystem,
   HardwareCircuit,
   Usb,
@@ -17,18 +19,7 @@ import {
   WhhRam,
   Wifi,
 } from '@/components/Icons/CustomIcons';
-import {
-  Avatar,
-  Card,
-  Col,
-  List,
-  Modal,
-  Row,
-  Tabs,
-  TabsProps,
-  Typography,
-} from 'antd';
-import { motion } from 'framer-motion';
+import { Modal, Tabs, TabsProps } from 'antd';
 import React, { useImperativeHandle, useState } from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -94,6 +85,12 @@ const DeviceInformationModal = React.forwardRef<
       label: 'FileSystems',
       icon: <FileSystem />,
       children: <FilesystemsTab device={device} />,
+    },
+    {
+      key: 'graphics',
+      label: 'Graphics',
+      icon: <GraphicsCard />,
+      children: <GraphicsTab device={device} />,
     },
     {
       key: 'wifi',

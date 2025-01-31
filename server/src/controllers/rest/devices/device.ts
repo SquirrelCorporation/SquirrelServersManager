@@ -1,5 +1,5 @@
 import { parse } from 'url';
-import { API, SsmAnsible, SsmStatus } from 'ssm-shared-lib';
+import { API, SsmAgent, SsmAnsible, SsmStatus } from 'ssm-shared-lib';
 import { setToCache } from '../../../data/cache';
 import Device from '../../../data/database/model/Device';
 import DeviceAuth from '../../../data/database/model/DeviceAuth';
@@ -12,6 +12,7 @@ import { BadRequestError, ForbiddenError, NotFoundError } from '../../../middlew
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../../modules/ansible-vault/ansible-vault';
 import WatcherEngine from '../../../modules/containers/core/WatcherEngine';
+import RemoteSystemInformationEngine from '../../../modules/remote-system-information/core/RemoteSystemInformationEngine';
 import DeviceUseCases from '../../../services/DeviceUseCases';
 
 export const addDevice = async (req, res) => {
@@ -25,6 +26,7 @@ export const addDevice = async (req, res) => {
     sshPort,
     unManaged,
     becomeMethod,
+    becomeUser,
     becomePass,
     sshKeyPass,
     installMethod,
@@ -50,9 +52,13 @@ export const addDevice = async (req, res) => {
       sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
       sshKeyPass: sshKeyPass ? await vaultEncrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
       becomeMethod: becomeMethod,
+      becomeUser: becomeUser,
       becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
     } as DeviceAuth);
     void WatcherEngine.registerWatcher(createdDevice);
+    if (installMethod === SsmAgent.InstallMethods.LESS) {
+      void RemoteSystemInformationEngine.registerWatcher(createdDevice);
+    }
     new SuccessResponse('Add device successful', { device: createdDevice as API.DeviceItem }).send(
       res,
     );

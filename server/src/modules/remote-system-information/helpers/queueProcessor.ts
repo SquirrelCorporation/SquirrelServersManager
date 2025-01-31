@@ -15,6 +15,7 @@ export enum UpdateType {
   OS = 'OS',
   System = 'System',
   Versions = 'Versions',
+  Bluetooth = 'Bluetooth',
 }
 
 export enum UpdateStatsType {
@@ -73,6 +74,9 @@ updateQueue.process(async (job) => {
         break;
       case UpdateType.MemoryLayout:
         device.systemInformation.memLayout = data;
+        break;
+      case UpdateType.Bluetooth:
+        device.systemInformation.bluetooth = data;
         break;
       case UpdateStatsType.CPU_STATS:
         await StatisticsRepo.processCpuStatistics(data, deviceUuid);
