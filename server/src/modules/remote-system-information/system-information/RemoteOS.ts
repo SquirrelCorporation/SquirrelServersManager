@@ -577,14 +577,14 @@ export abstract class RemoteOS {
    */
   private async getDirectories(path: string): Promise<string[]> {
     const command = `find "${path}" -maxdepth 1 -type d ! -path "${path}"`;
-    logger.error('getDirectories: ' + command);
+    logger.debug('getDirectories: ' + command);
     try {
       const result = await this.execAsync(command);
-      logger.error('getDirectories: ' + result);
+      logger.debug('getDirectories: ' + result);
 
       return result.trim().split('\n').filter(Boolean);
     } catch (error: any) {
-      logger.error(error);
+      logger.debug(error);
       return [];
     }
   }
@@ -607,17 +607,17 @@ export abstract class RemoteOS {
    */
   private async getFilesRecursively(path: string): Promise<string[]> {
     try {
-      logger.error(`Recursively getting files in ${path}`);
+      logger.debug(`Recursively getting files in ${path}`);
       const directories = await this.getDirectories(path);
-      logger.error(`${directories.length} directories`);
+      logger.debug(`${directories.length} directories`);
       const filesInDirs = await Promise.all(
         directories.map((dir) => this.getFilesRecursively(dir)),
       );
 
       const allFiles = filesInDirs.reduce((acc, files) => acc.concat(files), []);
       const filesInCurrentDir = await this.getFiles(path);
-      logger.error(`${filesInCurrentDir.length} files`);
-      logger.error(filesInCurrentDir);
+      logger.debug(`${filesInCurrentDir.length} files`);
+      logger.debug(filesInCurrentDir);
       return allFiles.concat(filesInCurrentDir);
     } catch {
       return [];
