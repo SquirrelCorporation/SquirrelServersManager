@@ -8,6 +8,12 @@
 
 - \[FEAT\] SFTP module. [\#635](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/635) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
+**Fixed bugs:**
+
+- \[BUG\] allow more TLDs during mail validation [\#682](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/682)
+- \[BUG\] Proxmox update results in LXC hanging [\#634](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/634)
+- \[BUG– Use Ant Design's built-in email validation [\#683](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/683) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Merged pull requests:**
 
 - \[CHORE\] Refactor stats system to integrate Prometheus-based services [\#681](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/681) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
