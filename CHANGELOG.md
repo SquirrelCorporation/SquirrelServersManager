@@ -17,6 +17,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Add support for graphics and Bluetooth monitoring. [\#686](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/686) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor stats system to integrate Prometheus-based services [\#681](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/681) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor tests to use async methods consistently [\#680](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/680) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update dependencies to latest versions in package-lock.json [\#679](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/679) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
