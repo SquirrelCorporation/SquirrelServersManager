@@ -6,6 +6,7 @@
 
 **Implemented enhancements:**
 
+- \[FEAT\] Enhance SFTP file download to support directories as tarballs [\#685](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/685) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] SFTP module. [\#635](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/635) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Fixed bugs:**
