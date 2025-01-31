@@ -158,7 +158,7 @@ export class PrometheusService {
 
       return { success: true, data };
     } catch (error) {
-      logger.error('Error querying aggregated metrics:', error);
+      logger.error(error, 'Error querying aggregated metrics:');
       return {
         success: false,
         data: null,
@@ -190,7 +190,7 @@ export class PrometheusService {
         },
       };
     } catch (error) {
-      logger.error('Error querying latest metric:', error);
+      logger.error(error, 'Error querying latest metric:');
       return {
         success: false,
         data: null,
@@ -201,7 +201,7 @@ export class PrometheusService {
 
   public async queryAveragedStatByType(
     type: StatsType.DeviceStatsType,
-    range: { days: number; offset: number }
+    range: { days: number; offset: number },
   ): Promise<QueryResult<{ value: number }>> {
     try {
       const metricType = this.getMetricTypeFromStatsType(type);
@@ -222,7 +222,7 @@ export class PrometheusService {
         },
       };
     } catch (error) {
-      logger.error('Error querying averaged stat by type:', error);
+      logger.error(error, 'Error querying averaged stat by type:');
       return {
         success: false,
         data: null,

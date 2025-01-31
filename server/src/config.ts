@@ -14,7 +14,7 @@ export const redisConf = {
 };
 
 export const prometheusConf = {
-  host: process.env.PROMETHEUS_HOST || `http://server:9090`,
+  host: process.env.PROMETHEUS_HOST || `http://prometheus:9090`,
   baseURL: process.env.PROMETHEUS_BASE_URL || `/api/v1`,
 };
 
