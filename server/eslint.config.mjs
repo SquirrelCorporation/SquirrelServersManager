@@ -106,6 +106,8 @@ export default [
         {
           functions: false,
         },
+        'error',
+        { classes: false },
       ],
 
       'no-unused-vars': 'off',
