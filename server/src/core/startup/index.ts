@@ -48,7 +48,7 @@ class Startup {
 
   private async initializeModules() {
     void RemoteSystemInformationEngine.init();
-    await PlaybooksRepositoryEngine.init();
+    /* await PlaybooksRepositoryEngine.init();
     void PlaybooksRepositoryEngine.syncAllRegistered();
     void sshPrivateKeyFileManager.removeAllAnsibleTemporaryPrivateKeys();
     void NotificationComponent.init();
@@ -57,7 +57,7 @@ class Startup {
     void AutomationEngine.init();
     void UpdateChecker.checkVersion();
     void ContainerCustomStacksRepositoryEngine.init();
-    void Telemetry.init();
+    void Telemetry.init();*/
   }
 
   private async updateScheme() {

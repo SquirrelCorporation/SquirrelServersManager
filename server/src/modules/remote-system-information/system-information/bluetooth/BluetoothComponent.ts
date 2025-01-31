@@ -22,6 +22,7 @@ export default class BluetoothComponent extends RemoteOS {
         const result: Partial<Systeminformation.BluetoothDeviceData>[] = [];
         if (this.platform === 'linux') {
           // get files in /var/lib/bluetooth/ recursive
+
           const btFiles = await this.getFilesInPath('/var/lib/bluetooth/');
           for (const element of btFiles) {
             const filename = path.basename(element);
@@ -52,7 +53,7 @@ export default class BluetoothComponent extends RemoteOS {
               }
             }
           } catch (e) {
-            this.logger.error(e);
+            this.logger.debug(e);
             util.noop();
           }
 
@@ -148,7 +149,7 @@ export default class BluetoothComponent extends RemoteOS {
                   });
                 }
               } catch (e) {
-                this.logger.error(e);
+                this.logger.debug(e);
                 util.noop();
               }
             }

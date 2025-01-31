@@ -98,7 +98,7 @@ export function parseLinuxBluetoothInfo(
   return result;
 }
 
-export function parseDarwinBluetoothDevices(bluetoothObject: any, macAddr2: string) {
+export function parseDarwinBluetoothDevices(bluetoothObject: any, macAddr2: string | null) {
   const result: Partial<Systeminformation.BluetoothDeviceData> = {};
   const typeStr = (
     (bluetoothObject.device_minorClassOfDevice_string ||

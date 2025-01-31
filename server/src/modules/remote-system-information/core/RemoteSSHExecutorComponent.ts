@@ -157,6 +157,7 @@ export default class RemoteSSHExecutorComponent extends Component {
       await this.connect(); // Establish initial connection
     } catch (error: any) {
       this.logger.error(error);
+      throw error;
     }
   }
 
@@ -169,7 +170,6 @@ export default class RemoteSSHExecutorComponent extends Component {
         .on('ready', async () => {
           this.logger.info('SSH Connection established');
           try {
-            this.startKeepAlive();
             await this.elevatePrivilege();
           } catch (err) {
             reject(err);
@@ -213,6 +213,7 @@ export default class RemoteSSHExecutorComponent extends Component {
               if (code === 0) {
                 this.logger.info('Privilege elevation successful (with sudo password)');
                 this.isElevated = true;
+                this.startKeepAlive();
                 return resolve();
               } else {
                 const msg = `Privilege elevation with password failed with code ${code}`;

@@ -1,33 +1,17 @@
-import { CPULogo, CPULogoSrc } from '@/components/DeviceComponents/CPULogo';
-import SystemInformationView from '@/components/DeviceComponents/Device/components/SystemInformationView';
-import { OsLogo } from '@/components/DeviceComponents/OsLogo/OsLogo';
+import { CPULogoSrc } from '@/components/DeviceComponents/CPULogo';
+import SystemInformationView from '@/components/DeviceComponents/DeviceInformation/components/SystemInformationView';
 import {
-  Binary,
-  BoltCircleOutline,
   Cached,
-  ElNetwork,
   Family,
-  FileSystem,
   FlagOutline,
   FlatPlatform,
-  GraphicsCard,
-  GrommetIconsSystem,
-  HardwareCircuit,
-  Kernelsu,
-  Nametag,
-  NetworkOverlay,
-  Number,
-  Raspberrypi,
   Speedometer,
   SpeedometerSlow,
-  Version,
   VmOutline,
   WhhCpu,
-  WhhRam,
 } from '@/components/Icons/CustomIcons';
 import { capitalizeFirstLetter } from '@/utils/strings';
-import { Avatar, Card, Col, Image, List, Row, Typography } from 'antd';
-import { motion } from 'framer-motion';
+import { Typography } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 

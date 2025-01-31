@@ -89,7 +89,8 @@ const HostCard: React.FC<HostCardProps> = ({ deviceIp, showAdvanced }) => (
               />
               <ProFormSelect
                 name="sshConnection"
-                label="Connection Method"
+                label="Ansible Connection Method"
+                tooltip={'This only controls the Ansible connection method.'}
                 initialValue={SsmAnsible.SSHConnection.PARAMIKO}
                 rules={[{ required: true }]}
                 options={Object.values(SsmAnsible.SSHConnection).map((e) => ({

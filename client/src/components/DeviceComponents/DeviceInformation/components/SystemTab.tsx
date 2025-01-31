@@ -1,4 +1,4 @@
-import SystemInformationView from '@/components/DeviceComponents/Device/components/SystemInformationView';
+import SystemInformationView from '@/components/DeviceComponents/DeviceInformation/components/SystemInformationView';
 import { OsLogo } from '@/components/DeviceComponents/OsLogo/OsLogo';
 import {
   FlatPlatform,

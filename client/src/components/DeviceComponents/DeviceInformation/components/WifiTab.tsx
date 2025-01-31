@@ -1,33 +1,7 @@
-import { CPULogo, CPULogoSrc } from '@/components/DeviceComponents/CPULogo';
 import SystemInformationView, {
   DetailInfo,
-} from '@/components/DeviceComponents/Device/components/SystemInformationView';
-import { OsLogo } from '@/components/DeviceComponents/OsLogo/OsLogo';
-import {
-  Binary,
-  BoltCircleOutline,
-  ElNetwork,
-  FileSystem,
-  FlatPlatform,
-  GraphicsCard,
-  GrommetIconsSystem,
-  HardwareCircuit,
-  InterfaceArrowsNetwork,
-  Kernelsu,
-  Nametag,
-  NetworkOverlay,
-  Number,
-  PciCard,
-  Raspberrypi,
-  Size,
-  Version,
-  WhhCpu,
-  WhhRam,
-} from '@/components/Icons/CustomIcons';
-import { capitalizeFirstLetter } from '@/utils/strings';
-import { ProFormSelect } from '@ant-design/pro-components';
-import { Avatar, Card, Col, Image, List, Row, Typography } from 'antd';
-import { motion } from 'framer-motion';
+} from '@/components/DeviceComponents/DeviceInformation/components/SystemInformationView';
+import { FlatPlatform } from '@/components/Icons/CustomIcons';
 import React, { useEffect } from 'react';
 import { API } from 'ssm-shared-lib';
 
