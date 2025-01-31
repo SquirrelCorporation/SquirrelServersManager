@@ -1,4 +1,5 @@
 import * as util from 'node:util';
+import path from 'path';
 import { Logger } from 'pino';
 import { Socket } from 'socket.io';
 import { API, SsmEvents } from 'ssm-shared-lib';
@@ -309,14 +310,73 @@ export default class SFTPInstance {
       }
       const localRootPath = `/tmp/${v4()}`;
       FileSystemManager.createDirectory(localRootPath);
-      const localPath = `${localRootPath}/${data.path.split('/').pop()}`;
-      sftp.fastGet(data.path, localPath, (err) => {
+      const remotePath = data.path;
+      const localPath = path.join(localRootPath, path.basename(remotePath));
+
+      // Check if the remote path is a directory or a file
+      sftp.stat(remotePath, (err, stats) => {
         if (err) {
-          this.logger.error(`Error downloading file: ${err.message}`);
-          this.socket.emit(SsmEvents.SFTP.DOWNLOAD, { status: 'ERROR', message: err.message });
+          this.logger.error(`Error getting file stats: ${err.message}`);
+          this.socket.emit(SsmEvents.FileTransfer.ERROR, { status: 'ERROR', message: err.message });
         } else {
-          this.logger.info(`File downloaded from ${data.path} to ${localPath}`);
-          sendFile(this.socket, localRootPath, data.path.split('/').pop() as string);
+          if (stats.isDirectory()) {
+            const remoteTempDir = `/tmp/${v4()}`; // A unique
+            const tarPath = `${remoteTempDir}/${path.basename(remotePath)}.tar.gz`;
+            // Create a tarball from the remote directory
+            const tarCommand = `mkdir -p "${remoteTempDir}" && tar -czvf "${tarPath}" "${remotePath}"`;
+            this.logger.info(`Creating tarball: ${tarCommand}`);
+            this.sshConnectionInstance.ssh.exec(tarCommand, (err, stream) => {
+              if (err) {
+                this.logger.error(`Error creating tarball: ${err.message}`);
+                this.socket.emit(SsmEvents.FileTransfer.ERROR, {
+                  status: 'ERROR',
+                  message: err.message,
+                });
+              } else {
+                stream
+                  .on('close', (code, signal) => {
+                    if (code !== 0) {
+                      this.logger.error(`Tarball creation failed with code ${code}`);
+                      this.socket.emit(SsmEvents.FileTransfer.ERROR, {
+                        status: 'ERROR',
+                        message: `Tarball creation failed with code ${code}`,
+                      });
+                      return;
+                    }
+                    this.logger.info(`Tarball created at ${tarPath}`);
+                    sftp.fastGet(tarPath, `${localPath}.tar.gz`, (err) => {
+                      if (err) {
+                        this.logger.error(err);
+                        this.logger.error(`Error downloading file: ${err.message}`);
+                        this.socket.emit(SsmEvents.FileTransfer.ERROR, {
+                          status: 'ERROR',
+                          message: err.message,
+                        });
+                      } else {
+                        this.logger.info(`File downloaded from ${tarPath} to ${localPath}`);
+                        sendFile(this.socket, localRootPath, tarPath.split('/').pop() as string);
+                      }
+                    });
+                  })
+                  .on('data', (data) => {
+                    this.logger.info(`Tarball creation progress...`);
+                  });
+              }
+            });
+          } else {
+            sftp.fastGet(data.path, localPath, (err) => {
+              if (err) {
+                this.logger.error(`Error downloading file: ${err.message}`);
+                this.socket.emit(SsmEvents.FileTransfer.ERROR, {
+                  status: 'ERROR',
+                  message: err.message,
+                });
+              } else {
+                this.logger.info(`File downloaded from ${data.path} to ${localPath}`);
+                sendFile(this.socket, localRootPath, data.path.split('/').pop() as string);
+              }
+            });
+          }
         }
       });
     } catch (error: any) {

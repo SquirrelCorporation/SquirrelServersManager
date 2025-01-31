@@ -76,15 +76,15 @@ const DownloadModal = React.forwardRef<
     fileBufferRef.current.push(chunk); // Append chunk directly to the mutable ref
   };
 
-  const handleError = (error: string) => {
-    message.error({
-      content: `Error during file download: ${error}`,
+  const handleError = (error: any) => {
+    void message.error({
+      content: `Error during file download: ${error?.message || error}`,
       duration: 6,
     });
   };
 
   const handleNotfound = (error: string) => {
-    message.error({
+    void message.error({
       content: `File not found: ${error}`,
       duration: 6,
     });
