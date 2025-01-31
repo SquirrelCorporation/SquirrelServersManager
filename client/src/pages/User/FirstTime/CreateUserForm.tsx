@@ -47,7 +47,7 @@ const CreateUserForm = ({
       rules={[
         { required: true },
         {
-          pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+          type: 'email',
           message: 'Please enter a valid email',
         },
       ]}
