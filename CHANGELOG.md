@@ -17,6 +17,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Refine TinyRing progress components and update VCS mappings [\#699](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/699) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Enable SSH keep-alive mechanism upon connection establishment [\#698](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/698) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Upgrade dependencies to latest versions. [\#697](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/697) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor SSH command execution to streamline privilege elevation [\#696](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/696) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
