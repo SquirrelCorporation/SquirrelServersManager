@@ -5,8 +5,8 @@ title: 'Squirrel Servers Manager'
    
 hero:
   name: 'Squirrel Servers Manager (SSM)'
-  text: 'A user-friendly, UI/UX focused server & configuration management tool'
-  tagline: 'Powered by Ansible & Docker'
+  text: 'Powerful containers & servers management tool'
+  tagline: 'Powered by Ansible, Docker & Prometheus'
   image:
     src: /logo.svg
     alt: SSM
@@ -24,8 +24,8 @@ hero:
       link: https://discord.gg/cnQjsFCGKJ
 
 features:
-  - title: All your servers in one place
-    details: Available for many different platforms
+  - title: Agentless
+    details: Everything is done through SSH!
     icon:
       src: /flower-twirl.svg
   - title: Ansible & Docker Compatible
@@ -88,12 +88,6 @@ bash -c "$(wget -qLO - https://getssm.io/proxmox)"
 
 &nbsp;
 :::
-
----
-
-<div>
-<iframe width="560" height="315" style="margin-left: auto; margin-right: auto" src="https://www.youtube.com/embed/zxWa21ypFCk?si=PXVOJZ31wwxLqUOv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-</div>
 
 ## Experience the immense power encapsulated within these tools, now presented through a user-friendly interface.
 
