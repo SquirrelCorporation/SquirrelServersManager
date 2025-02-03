@@ -17,6 +17,9 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Enable SSH keep-alive mechanism upon connection establishment [\#698](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/698) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Upgrade dependencies to latest versions. [\#697](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/697) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Refactor SSH command execution to streamline privilege elevation [\#696](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/696) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add unit tests for system utilities and RemoteOS features [\#695](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/695) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump swiper from 11.2.1 to 11.2.2 in /site [\#694](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/694) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @aws-sdk/client-ecr from 3.734.0 to 3.739.0 in /server [\#692](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/692) ([dependabot[bot]](https://github.com/apps/dependabot))
