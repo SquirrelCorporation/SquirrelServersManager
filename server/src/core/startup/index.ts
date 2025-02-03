@@ -81,6 +81,12 @@ class Startup {
 
     try {
       await DeviceModel.syncIndexes();
+      const devices = await DeviceRepo.findAll();
+      if (devices) {
+        for (const device of devices) {
+          void PlaybookModel.applyDefaults(device);
+        }
+      }
       this.logger.info('DeviceModel indexes synchronized successfully.');
     } catch (error: any) {
       this.logger.error(`Error synchronizing DeviceModel indexes: ${error.message}`);
