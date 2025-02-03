@@ -11,7 +11,6 @@ import Component from './Component';
 export default class RemoteSSHExecutorComponent extends Component {
   private sshClient: Client | null = null;
   private connectionConfig!: ConnectConfig;
-  private isElevated: boolean = false; // To track if privilege elevation was successful
   private keepAliveInterval: NodeJS.Timeout | undefined;
   private reconnectDelay = 5000; // Delay before retrying connection in case of failure
   private isExecuting: boolean = false;
@@ -31,18 +30,30 @@ export default class RemoteSSHExecutorComponent extends Component {
     return new Promise((resolve, reject) => {
       process.nextTick(async () => {
         try {
-          // If we're not connected or elevated, wait for reconnection
-          if (!this.sshClient || !this.isElevated) {
+          // If we're not connected, wait for reconnection
+          if (!this.sshClient) {
             await this.reconnect();
-            if (!this.sshClient || !this.isElevated) {
-              return reject(new Error('SSH Client not connected or privilege elevation failed'));
+            if (!this.sshClient) {
+              return reject(new Error('SSH Client not connected'));
             }
           }
 
           const maxBuffer = options?.maxBuffer ?? Infinity;
           const encoding: BufferEncoding = options?.encoding ?? 'utf8';
 
-          this.logger.debug(`Running command: ${command}`);
+          // Get the sudo command and prepend it to the actual command if needed
+          let finalCommand = command;
+          if (options?.elevatePrivilege) {
+            try {
+              const sudoCmd = await generateSudoCommand(this.configuration.deviceUuid);
+              finalCommand = sudoCmd.replace('%command%', command);
+            } catch (error) {
+              this.logger.error('Failed to generate sudo command:', error);
+              return reject(new Error('Failed to generate sudo command'));
+            }
+          }
+
+          this.logger.debug(`Running command: ${finalCommand}`);
 
           let result = '';
           let errorOutput = '';
@@ -52,7 +63,7 @@ export default class RemoteSSHExecutorComponent extends Component {
           let isResolved = false; // To ensure no double resolve/reject
 
           try {
-            this.sshClient.exec(command, (err, stream) => {
+            this.sshClient.exec(finalCommand, (err, stream) => {
               if (err) {
                 return reject({ err, result: '' });
               }
@@ -64,11 +75,11 @@ export default class RemoteSSHExecutorComponent extends Component {
                 isResolved = true;
 
                 if (exitCode === 0) {
-                  this.logger.debug(`Command executed successfully: ${command}`);
+                  this.logger.debug(`Command executed successfully: ${finalCommand}`);
                   resolve(result.trim());
                 } else {
                   const error = new Error(
-                    `Command "${command}" failed with code ${exitCode}, signal: ${exitSignal}, stderr: "${errorOutput.trim()}"`,
+                    `Command "${finalCommand}" failed with code ${exitCode}, signal: ${exitSignal}, stderr: "${errorOutput.trim()}"`,
                   );
                   this.logger.debug(error.message);
                   reject({ err: error, result: result.trim() });
@@ -101,18 +112,18 @@ export default class RemoteSSHExecutorComponent extends Component {
                   exitCode = code;
                   exitSignal = signal;
                   this.logger.debug(
-                    `Command "${command}" exited with code ${code} and signal ${signal}. Awaiting close event to finalize...`,
+                    `Command "${finalCommand}" exited with code ${code} and signal ${signal}. Awaiting close event to finalize...`,
                   );
                 })
                 .on('close', () => {
-                  this.logger.debug(`Command "${command}" stream closed. Finalizing...`);
+                  this.logger.debug(`Command "${finalCommand}" stream closed. Finalizing...`);
 
                   if (exitCode === null) {
                     // If `exit` signal was not received before `close`
                     if (!isResolved) {
                       isResolved = true;
                       this.logger.warn(
-                        `Command "${command}" closed without receiving an exit event. Assuming output is complete...`,
+                        `Command "${finalCommand}" closed without receiving an exit event. Assuming output is complete...`,
                       );
                       reject({
                         err: new Error(
@@ -178,11 +189,6 @@ export default class RemoteSSHExecutorComponent extends Component {
       conn
         .on('ready', async () => {
           this.logger.info('SSH Connection established');
-          try {
-            await this.elevatePrivilege();
-          } catch (err) {
-            reject(err);
-          }
           retryAttempt = 0;
           resolve(); // Connection successful
         })
@@ -202,60 +208,11 @@ export default class RemoteSSHExecutorComponent extends Component {
     });
   }
 
-  // Sudo with password
-  private async elevatePrivilege() {
-    // Command to execute sudo with a TTY and password
-    try {
-      const command = await generateSudoCommand(this.configuration.deviceUuid);
-      this.logger.debug(`Elevation command: ${command}`);
-      return new Promise<void>((resolve, reject) => {
-        if (!this.sshClient) {
-          return reject(new Error('SSH Client not connected'));
-        }
-        this.sshClient.exec(command, { pty: true }, (err, stream) => {
-          if (err) {
-            this.logger.error(`Error during privilege elevation with password: ${err.message}`);
-            return reject(err);
-          }
-          stream
-            .on('close', (code: number) => {
-              if (code === 0) {
-                this.logger.info('Privilege elevation successful (with sudo password)');
-                this.isElevated = true;
-                this.startKeepAlive();
-                return resolve();
-              } else {
-                const msg = `Privilege elevation with password failed with code ${code}`;
-                this.logger.error(msg);
-                return reject(new Error(msg));
-              }
-            })
-            .stdout.on('data', (data: any) => {
-              this.logger.debug(`Privilege elevation stdout: ${data.toString()}`);
-            })
-            .stderr.on('data', (data) => {
-              this.logger.error(`Privilege elevation stderr: ${data.toString()}`);
-            });
-        });
-      });
-    } catch (err: any) {
-      this.logger.error(`Error during privilege elevation with password: ${err?.message}`);
-    }
-  }
-
   // Reconnection logic
   private async reconnect(retryAttempt = 0): Promise<void> {
     // If already reconnecting, return the existing promise
     if (this.reconnectPromise) {
       return this.reconnectPromise;
-    }
-
-    this.isElevated = false;
-
-    if (retryAttempt > 3) {
-      this.reconnectPromise = null;
-      this.logger.error('Maximum reconnection attempts reached, shutting down SSH Manager');
-      throw new Error('Maximum reconnection attempts reached');
     }
 
     this.logger.info(`Reconnecting in ${this.reconnectDelay / 1000} seconds...`);

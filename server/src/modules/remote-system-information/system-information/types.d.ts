@@ -7,6 +7,7 @@ export interface RemoteExecOptions {
   maxBuffer?: number | undefined;
   encoding?: BufferEncoding | null | undefined;
   env?: NodeJS.ProcessEnv & { LANG: string };
+  elevatePrivilege?: boolean;
 }
 
 export type RemoteExecutorType = (cmd: string, options?: RemoteExecOptions) => Promise<string>;
