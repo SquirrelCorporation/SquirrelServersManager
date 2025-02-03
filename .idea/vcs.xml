@@ -3,5 +3,10 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../SquirrelServersManager-Agent" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/_.data.dev/container-stacks/88adc05d-49ba-43bd-91be-9bb816f31691" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/_.data.dev/container-stacks/a254b063-275f-425f-b299-7456b3e74339" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/_.data.dev/playbooks/9b4461c7-5450-4893-bee3-132c782a2257" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/_.data.dev/playbooks/d0954f06-282d-4b24-b786-69315755dcd0" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/_.data.dev/playbooks/e7ec27b0-465b-4f33-ab5a-b8868571deae" vcs="Git" />
   </component>
 </project>

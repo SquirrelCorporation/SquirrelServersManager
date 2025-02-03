@@ -26,7 +26,7 @@ const TinyRingProgressDeviceGraph: React.FC<TinyRingProps> = ({
       const res = await getDeviceStat(deviceUuid, type);
       if (res.data && res.data.value) {
         setValue({
-          percent: res.data.value / 100,
+          percent: parseFloat((res.data.value / 100).toFixed(2)),
           date: moment(res.data.date).format('YYYY-MM-DD, HH:mm'),
         });
       }
@@ -48,14 +48,13 @@ const TinyRingProgressDeviceGraph: React.FC<TinyRingProps> = ({
       width: 50,
       height: 50,
       color: ['rgb(255,255,255)', value.percent < 0.8 ? '#1668dc' : '#dc4446'],
-      innerRadius: 0.85,
+      innerRadius: 0.92,
       radius: 0.98,
-      loading: false,
       annotations: [
         {
           type: 'text',
           style: {
-            text: `${value.percent?.toFixed(0)}%`,
+            text: `${((value.percent ?? 0) * 100).toFixed(0)}%`,
             x: '50%',
             y: '45%',
             textAlign: 'center',
@@ -79,14 +78,14 @@ const TinyRingProgressDeviceGraph: React.FC<TinyRingProps> = ({
         },
       ],
     }),
-    [value, type],
+    [value, type, deviceUuid],
   );
 
   return isLoading ? (
     <Skeleton.Avatar active size="large" shape="circle" />
   ) : (
     <Tooltip title={`Updated at ${value.date}`}>
-      <Tiny.Ring {...config} />{' '}
+      <Tiny.Ring key={`${deviceUuid}-${type}`} {...config} />
     </Tooltip>
   );
 };
