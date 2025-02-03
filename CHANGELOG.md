@@ -17,6 +17,14 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Add unit tests for system utilities and RemoteOS features [\#695](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/695) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump swiper from 11.2.1 to 11.2.2 in /site [\#694](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/694) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @aws-sdk/client-ecr from 3.734.0 to 3.739.0 in /server [\#692](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/692) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump mongoose from 8.9.5 to 8.9.6 in /server [\#691](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/691) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump semver from 7.6.3 to 7.7.0 in /server [\#690](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/690) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @eslint/compat from 1.2.5 to 1.2.6 in /server [\#689](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/689) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.6.1-alpine to 23.7.0-alpine in /client [\#688](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/688) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.6.1-alpine to 23.7.0-alpine in /server [\#687](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/687) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Add support for graphics and Bluetooth monitoring. [\#686](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/686) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor stats system to integrate Prometheus-based services [\#681](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/681) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor tests to use async methods consistently [\#680](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/680) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
