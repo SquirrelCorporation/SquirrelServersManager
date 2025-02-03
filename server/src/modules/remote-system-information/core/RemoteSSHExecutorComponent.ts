@@ -190,6 +190,7 @@ export default class RemoteSSHExecutorComponent extends Component {
         .on('ready', async () => {
           this.logger.info('SSH Connection established');
           retryAttempt = 0;
+          this.startKeepAlive();
           resolve(); // Connection successful
         })
         .on('error', (err) => {
