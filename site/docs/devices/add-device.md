@@ -3,10 +3,10 @@
 ## 🌰 In a Nutshell
 
 :::info Sum-up
-1. **Navigate to Inventory**: Install agent on new device.
+1. **Navigate to Inventory**: Add a new device.
 2. **Enter SSH Info**: Port, IP, sudo method, login type.
 3. **Run Connection Tests**: Ansible and Docker checks.
-4. **Select Installation Method**: Directly on the host or dockerized
+4. **Select Installation Method**: Agentless or not.
 5. **Confirm Details**: Click "Confirm".
 :::
 
