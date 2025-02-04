@@ -33,12 +33,14 @@ const NoDeviceModal = () => {
     target: API.DeviceItem,
     installMethod: SsmAgent.InstallMethods,
   ) => {
-    setTerminal({
-      target: [target],
-      isOpen: true,
-      quickRef: 'installAgent',
-      extraVars: [{ extraVar: '_ssm_installMethod', value: installMethod }],
-    });
+    if (installMethod !== SsmAgent.InstallMethods.LESS) {
+      setTerminal({
+        target: [target],
+        isOpen: true,
+        quickRef: 'installAgent',
+        extraVars: [{ extraVar: '_ssm_installMethod', value: installMethod }],
+      });
+    }
   };
 
   const handleOk = () => {

@@ -1,4 +1,3 @@
-import { SwapOutlined, SwitcherOutlined } from '@ant-design/icons';
 import { Alert, Button, Space, Typography } from 'antd';
 import React from 'react';
 
