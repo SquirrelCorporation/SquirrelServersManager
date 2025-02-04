@@ -17,6 +17,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Synchronize playbook defaults during device startup. [\#701](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/701) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add Dependabot config for Docker updates in /prometheus [\#700](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/700) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refine TinyRing progress components and update VCS mappings [\#699](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/699) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Enable SSH keep-alive mechanism upon connection establishment [\#698](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/698) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
