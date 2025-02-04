@@ -12,15 +12,22 @@ services:
     labels:
       wud.display.name: "SSM - Proxy"
       wud.watch.digest: false
+  prometheus:
+    container_name: prometheus-ssm
+    restart: unless-stopped
+    volumes:
+      - ./.data.prod/prometheus:/prometheus
+    labels:
+      wud.display.name: "SSM - Prometheus"
   mongo:
     container_name: mongo-ssm
-    image: mongo
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-prometheus:latest"
     restart: unless-stopped
     volumes:
       - ./.data.prod/db:/data/db
     command: --quiet
     labels:
-      wud.display.name: "SSM - MongoDB"
+      wud.display.name: "SSM - Prometheus"
   redis:
     container_name: cache-ssm
     image: redis
