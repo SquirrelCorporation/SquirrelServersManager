@@ -9,7 +9,6 @@ import { DeviceModel } from '../../data/database/model/Device';
 import { PlaybookModel } from '../../data/database/model/Playbook';
 import { PlaybooksRepositoryModel } from '../../data/database/model/PlaybooksRepository';
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
-import DeviceStatRepo from '../../data/database/repository/DeviceStatRepo';
 import { copyAnsibleCfgFileIfDoesntExist } from '../../helpers/ansible/AnsibleConfigurationHelper';
 import PinoLogger from '../../logger';
 import RemoteSystemInformationEngine from '../../modules/remote-system-information/core/RemoteSystemInformationEngine';
