@@ -5,6 +5,7 @@ import { Button, Col, Modal, Row, Alert, Typography, Tag, Grid } from 'antd';
 import {
   ProFormDependency,
   ProFormInstance,
+  ProFormText,
   StepsForm,
 } from '@ant-design/pro-components';
 import { motion } from 'framer-motion';
@@ -42,8 +43,6 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
   const [dockerConnectionStatus, setDockerConnectionStatus] = useState();
   const [dockerConnectionErrorMessage, setDockerConnectionErrorMessage] =
     useState();
-  const [controlNodeConnectionString, setControlNodeConnectionString] =
-    useState({});
   const screens = useBreakpoint();
 
   const handleCancel = () => {
@@ -84,7 +83,6 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
     if (step === 0) {
       const formValues = form?.getFieldsValue(true);
       setSshConnection(formValues);
-      setControlNodeConnectionString(form?.getFieldsValue());
       setDockerConnectionStatus(undefined);
       setDockerConnectionErrorMessage(undefined);
       setExecId(undefined);
@@ -175,7 +173,6 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                     onClick={() => {
                       if (step === 1) setSshConnection({});
                       if (step === 2) {
-                        setControlNodeConnectionString({});
                         setDockerConnectionStatus(undefined);
                         setDockerConnectionErrorMessage(undefined);
                         setExecId(undefined);
@@ -255,39 +252,56 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                     case SsmAgent.InstallMethods.NODE:
                     case SsmAgent.InstallMethods.NODE_ENHANCED_PLAYBOOK:
                       return (
-                        <Alert
-                          style={{
-                            marginBottom: 10,
-                          }}
-                          type={'info'}
-                          showIcon
-                          message={
-                            <>
-                              <Typography.Text>
-                                SSM will install, if needed:{' '}
-                                <Tag>Node (NVM)</Tag>
-                                <Tag>NPM</Tag>
-                                <Tag>PM2</Tag>
-                              </Typography.Text>
-                            </>
-                          }
-                        />
+                        <>
+                          <ProFormText
+                            name={'controlNodeURL'}
+                            label={'Control Node URL'}
+                            tooltip={'The URL of the this server.'}
+                            initialValue={`http://${document.location.hostname}:8000`}
+                          />
+                          <Alert
+                            style={{
+                              marginBottom: 10,
+                            }}
+                            type={'info'}
+                            showIcon
+                            message={
+                              <>
+                                <Typography.Text>
+                                  SSM will install, if needed:{' '}
+                                  <Tag>Node (NVM)</Tag>
+                                  <Tag>NPM</Tag>
+                                  <Tag>PM2</Tag>
+                                </Typography.Text>
+                              </>
+                            }
+                          />
+                        </>
                       );
                     case SsmAgent.InstallMethods.DOCKER:
                       return (
-                        <Alert
-                          style={{
-                            marginBottom: 10,
-                          }}
-                          type={'info'}
-                          showIcon
-                          message={
-                            <Typography.Text>
-                              SSM will install, if needed: <Tag>Docker</Tag>
-                              <Tag>Docker Compose</Tag>
-                            </Typography.Text>
-                          }
-                        />
+                        <>
+                          {' '}
+                          <ProFormText
+                            name={'controlNodeURL'}
+                            label={'Control Node URL'}
+                            tooltip={'The URL of the this server.'}
+                            initialValue={`http://${document.location.hostname}:8000`}
+                          />
+                          <Alert
+                            style={{
+                              marginBottom: 10,
+                            }}
+                            type={'info'}
+                            showIcon
+                            message={
+                              <Typography.Text>
+                                SSM will install, if needed: <Tag>Docker</Tag>
+                                <Tag>Docker Compose</Tag>
+                              </Typography.Text>
+                            }
+                          />
+                        </>
                       );
                     default:
                       return null;
@@ -300,10 +314,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
               title="Confirm"
               style={{ maxWidth: screens.xs ? '80%' : '100%' }}
             >
-              <SummaryCard
-                sshConnection={sshConnection}
-                controlNodeConnectionString={controlNodeConnectionString}
-              />
+              <SummaryCard sshConnection={sshConnection} />
             </StepsForm.StepForm>
           </StepsForm>
         </Col>
