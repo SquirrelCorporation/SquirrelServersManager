@@ -37,50 +37,52 @@ const AgentConfigurationTab: React.FC<AgentConfigurationTabProps> = ({
         })
       }
     >
-      {device && device.agentType && (
-        <Card
-          type="inner"
-          title={
-            <Row>
-              <Col>
-                <Avatar
-                  style={{ backgroundColor: '#36aa40' }}
-                  shape="square"
-                  icon={<InfoCircleFilled />}
-                />
-              </Col>
-              <Col
-                style={{
-                  marginLeft: 10,
-                  marginTop: 'auto',
-                  marginBottom: 'auto',
-                }}
-              >
-                Agent Info
-              </Col>
-            </Row>
-          }
-          style={{ marginBottom: 10 }}
-          styles={{
-            header: { height: 55, minHeight: 55, paddingLeft: 15 },
-            body: { paddingBottom: 0 },
-          }}
-        >
-          <Space style={{ marginBottom: 10 }}>
-            <>
-              Agent Type:{' '}
-              <Tag>
-                {device.agentType === SsmAgent.InstallMethods.DOCKER
-                  ? 'Docker'
-                  : 'NodeJS'}
-              </Tag>
-            </>
-            <>
-              Agent Version: <Tag>{device.agentVersion}</Tag>
-            </>
-          </Space>
-        </Card>
-      )}
+      {device &&
+        device.agentType &&
+        device.agentType !== SsmAgent.InstallMethods.LESS && (
+          <Card
+            type="inner"
+            title={
+              <Row>
+                <Col>
+                  <Avatar
+                    style={{ backgroundColor: '#36aa40' }}
+                    shape="square"
+                    icon={<InfoCircleFilled />}
+                  />
+                </Col>
+                <Col
+                  style={{
+                    marginLeft: 10,
+                    marginTop: 'auto',
+                    marginBottom: 'auto',
+                  }}
+                >
+                  Agent Info
+                </Col>
+              </Row>
+            }
+            style={{ marginBottom: 10 }}
+            styles={{
+              header: { height: 55, minHeight: 55, paddingLeft: 15 },
+              body: { paddingBottom: 0 },
+            }}
+          >
+            <Space style={{ marginBottom: 10 }}>
+              <>
+                Agent Type:{' '}
+                <Tag>
+                  {device.agentType === SsmAgent.InstallMethods.DOCKER
+                    ? 'Docker'
+                    : 'NodeJS'}
+                </Tag>
+              </>
+              <>
+                Agent Version: <Tag>{device.agentVersion}</Tag>
+              </>
+            </Space>
+          </Card>
+        )}
       <Card
         type="inner"
         title={

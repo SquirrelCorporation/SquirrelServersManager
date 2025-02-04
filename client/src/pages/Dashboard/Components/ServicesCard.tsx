@@ -92,14 +92,14 @@ const ContainersCard: React.FC = () => {
           <InfoCircleFilled style={{ color: 'white' }} />
         </Tooltip>
       }
-      total={<Typography.Title level={3}>{nbRunning} RUNNING</Typography.Title>}
+      total={`${nbRunning} RUNNING`}
       footer={
         <Field
           label={<Typography.Text>Out of</Typography.Text>}
           value={<Typography.Text>{nbTotal} total</Typography.Text>}
         />
       }
-      contentHeight={80}
+      contentHeight={60}
     >
       <Tiny.Area {...config} />
     </ChartCard>

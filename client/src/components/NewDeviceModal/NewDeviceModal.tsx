@@ -1,18 +1,7 @@
 import AgentInstallMethod from '@/components/DeviceConfiguration/AgentInstallMethod';
 import { DownloadOutlined } from '@ant-design/icons';
-import { useModel } from '@umijs/max';
 import React, { useRef, useState } from 'react';
-import {
-  Button,
-  Col,
-  Modal,
-  Row,
-  message,
-  Alert,
-  Typography,
-  Tag,
-  Grid,
-} from 'antd';
+import { Button, Col, Modal, Row, Alert, Typography, Tag, Grid } from 'antd';
 import {
   ProFormDependency,
   ProFormInstance,
@@ -21,7 +10,6 @@ import {
 import { motion } from 'framer-motion';
 import {
   GrommetIconsInstall,
-  TablerPlugConnected,
   StreamlineComputerConnection,
 } from '@/components/Icons/CustomIcons';
 import {
@@ -56,24 +44,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
     useState();
   const [controlNodeConnectionString, setControlNodeConnectionString] =
     useState({});
-  const { initialState } = useModel('@@initialState');
-  const currentUser = initialState?.currentUser;
   const screens = useBreakpoint();
-
-  const checkHostAPI = async (url: string) => {
-    try {
-      await fetch(`${url}/api/ping`, {
-        method: 'GET',
-        headers: { accept: 'application/json' },
-      });
-      message.success({ content: `Found API at ${url}`, duration: 8 });
-    } catch (err: any) {
-      message.error({
-        content: `Cannot detect API (${err?.message}) at ${url}/api/ping, we recommend to edit the previous control node URL`,
-        duration: 8,
-      });
-    }
-  };
 
   const handleCancel = () => {
     props.setIsModalOpen(false);
@@ -109,44 +80,45 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
     }
   };
 
-  const handleStepChange = (step: number, form: any) => {
-    if (step === 0) setSshConnection(form?.getFieldsValue(true));
-    if (step === 1) {
+  const handleStepChange = (step: number, form?: ProFormInstance) => {
+    if (step === 0) {
+      const formValues = form?.getFieldsValue(true);
+      setSshConnection(formValues);
       setControlNodeConnectionString(form?.getFieldsValue());
       setDockerConnectionStatus(undefined);
       setDockerConnectionErrorMessage(undefined);
       setExecId(undefined);
       postCheckAnsibleConnection(
-        sshConnection.deviceIp,
+        formValues.deviceIp,
         {
-          authType: sshConnection.authType,
-          sshPort: sshConnection.sshPort,
-          sshUser: sshConnection.sshUser,
-          sshPwd: sshConnection.sshPwd,
-          sshKey: sshConnection.sshKey,
+          authType: formValues.authType,
+          sshPort: formValues.sshPort,
+          sshUser: formValues.sshUser,
+          sshPwd: formValues.sshPwd,
+          sshKey: formValues.sshKey,
           sshConnection:
-            sshConnection.sshConnection ?? SsmAnsible.SSHConnection.PARAMIKO,
-          becomeUser: sshConnection.becomeUser,
-          becomeMethod: sshConnection.becomeMethod,
-          becomePass: sshConnection.becomePass,
-          strictHostChecking: sshConnection.strictHostChecking ?? true,
+            formValues.sshConnection ?? SsmAnsible.SSHConnection.PARAMIKO,
+          becomeUser: formValues.becomeUser,
+          becomeMethod: formValues.becomeMethod,
+          becomePass: formValues.becomePass,
+          strictHostChecking: formValues.strictHostChecking ?? true,
         },
         form?.getFieldsValue().controlNodeURL,
       ).then((e) => {
         setExecId(e.data.taskId);
       });
       postCheckDockerConnection(
-        sshConnection.deviceIp,
+        formValues.deviceIp,
         {
-          authType: sshConnection.authType,
-          sshPort: sshConnection.sshPort,
-          sshUser: sshConnection.sshUser,
-          sshPwd: sshConnection.sshPwd,
-          sshKey: sshConnection.sshKey,
-          becomeUser: sshConnection.becomeUser,
-          becomeMethod: sshConnection.becomeMethod,
-          becomePass: sshConnection.becomePass,
-          strictHostChecking: sshConnection.strictHostChecking ?? true,
+          authType: formValues.authType,
+          sshPort: formValues.sshPort,
+          sshUser: formValues.sshUser,
+          sshPwd: formValues.sshPwd,
+          sshKey: formValues.sshKey,
+          becomeUser: formValues.becomeUser,
+          becomeMethod: formValues.becomeMethod,
+          becomePass: formValues.becomePass,
+          strictHostChecking: formValues.strictHostChecking ?? true,
         },
         form?.getFieldsValue().controlNodeURL,
       ).then((e) => {
@@ -166,7 +138,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
       title={
         <>
           <GrommetIconsInstall />
-          &nbsp; Install agent on device
+          &nbsp; Add a new device
         </>
       }
       open={props.isModalOpen}
@@ -222,9 +194,11 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                     handleStepChange(step, form);
                     onSubmit?.();
                   }}
-                  icon={step < 4 ? undefined : <DownloadOutlined />}
+                  icon={step < 3 ? undefined : <DownloadOutlined />}
                 >
-                  {step < 4 ? 'Next' : 'Confirm & Install Agent'}
+                  {step < 3
+                    ? 'Next'
+                    : `Confirm ${formRef.current?.getFieldValue('installMethod') !== SsmAgent.InstallMethods.LESS ? 'and Install Agent' : ''}`}
                 </Button>,
               ],
             }}
@@ -241,43 +215,6 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
               }}
             >
               <SSHConnectionFormElements formRef={formRef} />
-            </StepsForm.StepForm>
-            <StepsForm.StepForm
-              name="checkbox"
-              title="Node"
-              style={{
-                minHeight: '350px',
-                maxWidth: screens.xs ? '80%' : '100%',
-              }}
-              onFinish={async (formData) => {
-                setLoading(true);
-                await checkHostAPI(formData.controlNodeURL);
-                setLoading(false);
-                return true;
-              }}
-            >
-              <StepFormCard
-                title="SSM URL"
-                icon={<TablerPlugConnected />}
-                tooltip="The URL of this server, to enable the agent to connect to your device. This will set the API_URL_MASTER variable in the .env file of the agent."
-                formItems={[
-                  {
-                    name: 'controlNodeURL',
-                    label: 'Control Node URL',
-                    placeholder: 'http://192.168.0.1',
-                    rules: [{ required: true }],
-                    initialValue: currentUser?.settings?.masterNodeUrl
-                      ? currentUser?.settings.masterNodeUrl
-                      : `http://${document.location.hostname}:8000`,
-                  },
-                ]}
-              />
-              <Alert
-                message={
-                  'Ensure that the server running Squirrel Servers Manager has port *8000* opened and accessible from the device you wish to add.'
-                }
-                showIcon
-              />
             </StepsForm.StepForm>
             <StepsForm.StepForm
               name="test"

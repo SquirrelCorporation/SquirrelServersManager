@@ -96,7 +96,7 @@ const AvailabilityCard: React.FC = () => {
       action={action}
       total={total}
       footer={footer}
-      contentHeight={80}
+      contentHeight={60}
     >
       <MiniProgress percent={percent as number} />
     </ChartCard>

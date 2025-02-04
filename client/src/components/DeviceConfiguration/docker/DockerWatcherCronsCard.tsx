@@ -14,9 +14,9 @@ const DockerWatcherCronsCard: React.FC<DockerWatcherCronsCardProps> = ({
 }) => {
   const [dockerWatcherCron, setDockerWatcherCron] = useState<
     string | undefined
-  >(device.dockerWatcherCron);
+  >(device.configuration?.containers?.docker?.watchContainersCron);
   const [dockerStatsCron, setDockerStatsCron] = useState<string | undefined>(
-    device.dockerStatsCron,
+    device.configuration?.containers?.docker?.watchContainersStatsCron,
   );
 
   return (

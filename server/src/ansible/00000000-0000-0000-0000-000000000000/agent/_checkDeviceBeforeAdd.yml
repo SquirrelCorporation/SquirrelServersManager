@@ -8,7 +8,7 @@
 #     `"=\_  )_"`
 #          ``'"`
 # Playbook Name: Check Device connectivity before adding
-# Description: This playbook checks that the device is reachable, and can communicate with SSM API.
+# Description: This playbook checks that the device is reachable.
 # Module: SSM-CORE
 # Tags: installation, agent, ping, connectivity
 
@@ -18,9 +18,6 @@
     - name: Test Connection
       ping:
       timeout: 600
-    - name: Check that you can connect (GET) to the API and it returns a status 200
-      ansible.builtin.uri:
-        url: "{{ _ssm_masterNodeUrl }}/api/ping"
 - name: Test Sudo Working
   hosts: all
   tasks:

@@ -8,6 +8,7 @@ import { Server, Socket as _Socket } from 'socket.io';
 import { SsmEvents } from 'ssm-shared-lib';
 import { SECRET } from '../config';
 import { getContainerLogs } from '../controllers/socket/container-logs';
+import { startSFTPSession } from '../controllers/socket/sftp-session';
 import { startSSHSession } from '../controllers/socket/ssh-session';
 import UserRepo from '../data/database/repository/UserRepo';
 import _logger from '../logger';
@@ -48,6 +49,7 @@ export default class Socket {
     const io = this.io;
     socket.on(SsmEvents.Logs.GET_LOGS, getContainerLogs({ io, socket }));
     socket.on(SsmEvents.SSH.START_SESSION, startSSHSession({ io, socket }));
+    socket.on(SsmEvents.SFTP.START_SESSION, startSFTPSession({ io, socket }));
   };
 
   private authenticateSocketJWT = (req: Request, res: Response, next: NextFunction) => {

@@ -21,6 +21,7 @@ const EditContainerNameModal: React.FC<EditContainerNameModalProps> = (
       title={`Edit container name`}
       open={props.isEditContainerCustomNameModalOpened}
       autoFocusFirstInput
+      clearOnDestroy
       modalProps={{
         destroyOnClose: true,
         onCancel: () => props.setIsEditContainerCustomNameModalOpened(false),

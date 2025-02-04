@@ -1,10 +1,10 @@
 import SoftwareIcon from '@/components/DeviceComponents/OSSoftwaresVersions/SoftwareIcon';
 import { Avatar, Table, TableColumnsType } from 'antd';
 import React from 'react';
-import { API } from 'ssm-shared-lib';
+import { Systeminformation } from 'ssm-shared-lib';
 
 type OsSoftwareVersionsType = {
-  versions: API.VersionData;
+  versions: Systeminformation.VersionData;
 };
 
 const OsSoftwareVersions: React.FC<OsSoftwareVersionsType> = (props) => {
@@ -37,7 +37,6 @@ const OsSoftwareVersions: React.FC<OsSoftwareVersionsType> = (props) => {
             <Avatar
               style={{ backgroundColor: 'black' }}
               shape="square"
-              size="large"
               src={<SoftwareIcon name={value} />}
             />{' '}
             {value}
@@ -53,10 +52,11 @@ const OsSoftwareVersions: React.FC<OsSoftwareVersionsType> = (props) => {
   ];
   return (
     <Table
+      size={'small'}
       columns={columns}
       dataSource={data}
       pagination={{ pageSize: 50 }}
-      scroll={{ y: 240 }}
+      scroll={{ y: 500 }}
     />
   );
 };

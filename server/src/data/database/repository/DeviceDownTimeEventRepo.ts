@@ -15,7 +15,7 @@ async function closeDownTimeEvent(device: Device): Promise<void> {
     .lean()
     .exec();
   if (!deviceDownTimeEvent) {
-    logger.error(
+    logger.debug(
       `[DeviceDownTimeEventRepo][CloseDownTimeEvent] Opened event not found for device ${device.uuid}`,
     );
     return;

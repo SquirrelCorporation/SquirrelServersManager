@@ -16,3 +16,4 @@ export * as SsmAlert from './enums/alert';
 export * as SsmGit from './enums/git';
 export * as SsmDeviceDiagnostic from './enums/diagnostic'
 export * from './namespace/proxmox'
+export * from './namespace/system-information'

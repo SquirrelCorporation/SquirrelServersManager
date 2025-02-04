@@ -13,6 +13,15 @@ services:
     labels:
       wud.display.name: "SSM - Proxy"
       wud.watch.digest: false
+  prometheus:
+    build:
+      context: ./prometheus  # Directory containing Dockerfile and prometheus.yml
+    container_name: prometheus-ssm
+    restart: unless-stopped
+    volumes:
+      - ./.data.prod/prometheus:/prometheus
+    labels:
+      wud.display.name: "SSM - Prometheus"
   mongo:
     container_name: mongo-ssm
     image: mongo
@@ -42,9 +51,11 @@ services:
     external_links:
       - mongo
       - redis
+      - prometheus
     depends_on:
       - mongo
       - redis
+      - prometheus
     volumes:
       - ./.data.prod:/data
     build:
