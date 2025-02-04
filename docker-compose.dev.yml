@@ -10,6 +10,7 @@ services:
       - mongo
       - server
       - redis
+      - prometheus
     labels:
       wud.display.name: "SSM - Proxy"
       wud.watch.digest: false
@@ -59,6 +60,7 @@ services:
     external_links:
       - mongo
       - redis
+      - prometheus
     depends_on:
       - mongo
       - redis
