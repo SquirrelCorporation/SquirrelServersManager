@@ -1,7 +1,7 @@
 services:
   proxy:
     restart: unless-stopped
-    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-proxy:latest"
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-proxy:v0.1.27"
     ports:
       - "8000:8000"
     depends_on:
@@ -40,7 +40,7 @@ services:
     labels:
       wud.display.name: "SSM - Redis"
   server:
-    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-server:latest"
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-server:v0.1.27"
     restart: unless-stopped
     healthcheck:
       test: curl --fail http://localhost:3000/ping || exit 1
@@ -65,7 +65,7 @@ services:
       wud.display.name: "SSM - Server"
       wud.watch.digest: false
   client:
-    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-client:latest"
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-client:v0.1.27"
     restart: unless-stopped
     depends_on:
       - server
