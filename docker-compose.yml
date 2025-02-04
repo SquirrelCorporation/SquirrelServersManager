@@ -23,7 +23,7 @@ services:
       wud.display.name: "SSM - Prometheus"
   mongo:
     container_name: mongo-ssm
-    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-mongo:latest"
+    image: mongo
     restart: unless-stopped
     volumes:
       - ./.data.prod/db:/data/db
