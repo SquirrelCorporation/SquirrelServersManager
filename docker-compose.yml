@@ -15,6 +15,7 @@ services:
       wud.watch.digest: false
   prometheus:
     container_name: prometheus-ssm
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-prometheus:latest"
     restart: unless-stopped
     volumes:
       - ./.data.prod/prometheus:/prometheus
@@ -22,7 +23,7 @@ services:
       wud.display.name: "SSM - Prometheus"
   mongo:
     container_name: mongo-ssm
-    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-prometheus:latest"
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-mongo:latest"
     restart: unless-stopped
     volumes:
       - ./.data.prod/db:/data/db
