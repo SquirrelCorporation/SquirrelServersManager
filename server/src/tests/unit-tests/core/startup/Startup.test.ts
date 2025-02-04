@@ -33,7 +33,9 @@ vi.mock('../../../../core/system/ansible-versions', () => ({
 vi.mock('../../../../modules/repository/default-playbooks-repositories', () => ({
   createADefaultLocalUserRepository: vi.fn(),
 }));
-
+vi.mock('../../../../data/database/repository/DeviceRepo', () => ({
+  default: { findAll: async () => [], findWithFilter: async () => [] },
+}));
 vi.mock('../../../../helpers/ansible/AnsibleConfigurationHelper', () => ({
   copyAnsibleCfgFileIfDoesntExist: vi.fn(),
 }));
@@ -81,6 +83,7 @@ describe('Startup Integration Tests', () => {
     vi.spyOn(ContainerCustomStackModel, 'updateMany').mockResolvedValue({});
     vi.spyOn(ContainerCustomStacksRepositoryModel, 'find').mockResolvedValue([]);
     vi.spyOn(ContainerVolumeModel, 'find').mockResolvedValue([]);
+
     // @ts-expect-error private fun
     vi.spyOn(PlaybookModel, 'syncIndexes').mockResolvedValue();
     // @ts-expect-error private fun
