@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.28-alpha...HEAD)
+
+**Merged pull requests:**
+
+- \[CHORE\] Upgrade to version 0.1.28 and remove unused dependency. [\#704](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/704) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 ## [v0.1.28-alpha](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.28-alpha) (2025-02-04)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.27...v0.1.28-alpha)
