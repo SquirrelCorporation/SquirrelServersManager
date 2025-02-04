@@ -8,7 +8,7 @@ import Swiper from './components/Swiper.vue';
 # About Squirrel Servers Manager
 
 ## <span style="display: flex; align-items: center;"><img src="/about/tldraw.svg" alt="tldr" style="margin-right: 8px;" /> TL;DR</span>
-Squirrel Servers Manager (SSM) is a <b>configuration & container manager</b>, powered by Ansible and Docker, **to manage all your servers in one place**! It focuses on UI/UX and ease of use.
+Squirrel Servers Manager (SSM) is a <b>configuration & container manager</b>, powered by Ansible, Docker and Prometheus, **to manage all your servers in one place**! It focuses on UI/UX and ease of use.
 
 :::info ℹ️ Some examples of what you can do with it:
 - Apply system updates to single or multiple servers
