@@ -29,7 +29,7 @@ services:
       - ./.data.prod/db:/data/db
     command: --quiet
     labels:
-      wud.display.name: "SSM - Prometheus"
+      wud.display.name: "SSM - MongoDB"
   redis:
     container_name: cache-ssm
     image: redis
