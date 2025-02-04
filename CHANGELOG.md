@@ -17,11 +17,15 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Synchronize playbook defaults during device startup. [\#701](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/701) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Add Dependabot config for Docker updates in /prometheus [\#700](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/700) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Refine TinyRing progress components and update VCS mappings [\#699](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/699) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Enable SSH keep-alive mechanism upon connection establishment [\#698](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/698) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Upgrade dependencies to latest versions. [\#697](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/697) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor SSH command execution to streamline privilege elevation [\#696](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/696) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add unit tests for system utilities and RemoteOS features [\#695](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/695) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump swiper from 11.2.1 to 11.2.2 in /site [\#694](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/694) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vuetify from 3.7.7 to 3.7.9 in /site [\#693](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/693) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @aws-sdk/client-ecr from 3.734.0 to 3.739.0 in /server [\#692](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/692) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump mongoose from 8.9.5 to 8.9.6 in /server [\#691](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/691) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump semver from 7.6.3 to 7.7.0 in /server [\#690](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/690) ([dependabot[bot]](https://github.com/apps/dependabot))
