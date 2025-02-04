@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+## [v0.1.28-alpha](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.28-alpha) (2025-02-04)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.27...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.27...v0.1.28-alpha)
 
 **Implemented enhancements:**
 
