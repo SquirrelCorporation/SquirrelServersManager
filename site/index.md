@@ -25,19 +25,19 @@ hero:
 
 features:
   - title: Agentless
-    details: Everything is done through SSH!
+    details: Manage everything seamlessly over SSH — no agents required!
     icon:
       src: /flower-twirl.svg
-  - title: Ansible & Docker Compatible
-    details: Thanks to the power of Ansible and Docker, you can fully manage your servers, services, and configuration through SSM
+  - title: Ansible & Docker Compatibility
+    details: Harness the power of Ansible and Docker to manage servers, services, and configurations effortlessly through SSM.
     icon:
       src: /ansible.svg
-  - title: Simple to use, yet powerful
-    details: Although SSM focuses on ease of use, its flexibility enables you to create powerful and complex setups
+  - title: Simple Yet Powerful
+    details: Designed for ease of use, SSM provides the flexibility to create robust and complex setups, perfectly tailored to your needs.
     icon:
       src: /acorn.svg
   - title: Open Source
-    details: SSM is open source. We pledge transparency, flexibility, and adaptability, allowing you to customize the software to your specific needs.
+    details: SSM is fully open source, delivering transparency and adaptability. Customize the software to match your unique requirements.
     icon:
       src: /source-code.svg
 

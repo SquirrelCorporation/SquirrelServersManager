@@ -229,7 +229,7 @@ export default defineConfig({
 
     footer: {
       message: 'Made with love',
-      copyright: 'Copyright © 2024-present Squirrel Team & Contributors'
+      copyright: 'Copyright © 2025-present Squirrel Team & Contributors'
     }
   },
   ignoreDeadLinks: [
