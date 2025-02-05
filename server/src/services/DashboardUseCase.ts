@@ -23,6 +23,7 @@ async function getSystemPerformance() {
     currentCpu: currentCpu && currentCpu.length > 0 ? currentCpu[0].value : NaN,
     previousCpu: previousCpu && previousCpu.length > 0 ? previousCpu[0].value : NaN,
   };
+  logger.error(values);
   const status = {
     message:
       values.currentMem > parseInt(minMem) && values.currentCpu < parseInt(maxCpu)
