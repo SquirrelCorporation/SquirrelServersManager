@@ -1,8 +1,7 @@
 services:
   proxy:
     restart: unless-stopped
-    build:
-      context: ./proxy
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-proxy:latest"
     ports:
       - "8000:8000"
     depends_on:
@@ -15,41 +14,33 @@ services:
       wud.display.name: "SSM - Proxy"
       wud.watch.digest: false
   prometheus:
-    build:
-      context: ./prometheus  # Directory containing Dockerfile and prometheus.yml
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-prometheus:latest"
     container_name: prometheus-ssm
     restart: unless-stopped
     volumes:
-      - ./.data.dev/prometheus:/prometheus
-    ports:
-      - "9090:9090"  # Prometheus UI accessible on this port
+      - ./.data.prod/prometheus:/prometheus
     labels:
       wud.display.name: "SSM - Prometheus"
   mongo:
-    env_file:
-      - ./.env.dev
-    container_name: mongo
+    container_name: mongo-ssm
     image: mongo
     restart: unless-stopped
     volumes:
-      - ./.data.dev/db:/data/db
+      - ./.data.prod/db:/data/db
     command: --quiet
-    ports:
-      - "${DB_PORT}:27017"
     labels:
       wud.display.name: "SSM - MongoDB"
-      wud.watch.digest: false
   redis:
     container_name: cache-ssm
     image: redis
     restart: unless-stopped
     volumes:
-      - ./.data.dev/cache:/data
+      - ./.data.prod/cache:/data
     command: --save 60 1
     labels:
       wud.display.name: "SSM - Redis"
-      wud.watch.digest: false
   server:
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-server:latest"
     restart: unless-stopped
     healthcheck:
       test: curl --fail http://localhost:3000/ping || exit 1
@@ -65,37 +56,19 @@ services:
       - mongo
       - redis
       - prometheus
-    build:
-      context: ./server
-      additional_contexts:
-        - shared-lib=./shared-lib
-      target: dev
-    env_file:
-      - ./.env.dev
-    volumes:
-      - ./server/src:/opt/squirrelserversmanager/server/src
-      - ./.data.dev:/data
+    env_file: .env
     environment:
-      NODE_ENV: development
-      DEBUG: nodejs-docker-express:*
+      NODE_ENV: production
+    volumes:
+      - ./.data.prod:/data
     labels:
       wud.display.name: "SSM - Server"
       wud.watch.digest: false
   client:
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-client:latest"
     restart: unless-stopped
-    environment:
-      DEBUG: http-proxy-middleware*
     depends_on:
       - server
-    build:
-      context: ./client
-      additional_contexts:
-        - shared-lib=./shared-lib
-      target: dev
-    volumes:
-      - ./client/src:/opt/squirrelserversmanager/client/src
-      - ./client/config:/opt/squirrelserversmanager/client/config
-      - ./client/public:/opt/squirrelserversmanager/client/public
     labels:
       wud.display.name: "SSM - Client"
       wud.watch.digest: false

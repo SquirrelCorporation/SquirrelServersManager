@@ -5,7 +5,9 @@ import Diagram from './../components/Diagram.vue';
 
 # Overview
 
-Squirrel Servers Manager (SSM) is backend and front-end software focused on configuration and Docker management. Its goal is to be **simple** to use, yet offer depth of customization.
+Squirrel Servers Manager (SSM) is a versatile backend and frontend solution for configuration and Docker management. It’s designed to be **simple** to use while offering comprehensive customization options.
+
+No agents required — just SSH!
 
 [Jump to Quick Start](/docs/quickstart)
 
@@ -27,17 +29,3 @@ Once a device is added, SSM will automagically:
 
 - Connections from SSM 🐿️ to your devices 🌰🌰🌰 run through `SSH`.
 - Credentials are encrypted using Ansible Vault.
-
-## <span style="display: flex; align-items: center;"><img src="/overview/hat.svg" alt="tldr" style="margin-right: 8px;" /> Agent (Recommended)</span>
-
-SSM is agent-based. To harness its full power, you must install a Node.js-based [agent](https://github.com/SquirrelCorporation/SquirrelServersManager-Agent) on all your devices, either via the UI or manually.
-
-:::warning Note
-The SSM agent is not mandatory; you can manually add devices without the agent (see [Unmanaged Devices](/docs/devices/add-unamanaged)).
-:::
-
-**The agent allows**:
-- System information retrieval (OS & package versions; hardware details)
-- Statistics gathering (CPU, memory usage)
-- Downtime detection
-- IP address update

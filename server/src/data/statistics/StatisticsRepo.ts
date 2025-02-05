@@ -6,10 +6,13 @@ async function processMemoryStatistics(memoryUsage: Systeminformation.MemData, d
   if (memoryUsage.used === undefined || memoryUsage.total === undefined) {
     return;
   }
-  logger.debug(`Memory usage: ${memoryUsage.used} - total: ${memoryUsage.total}`);
+  logger.debug(`Memory usage: ${memoryUsage.available} - total: ${memoryUsage.total}`);
   if (memoryUsage.used !== 0) {
-    await Statistics.setMemoryUsage(memoryUsage.total / memoryUsage.used, deviceUuid);
-    await Statistics.setMemoryFree(1 - memoryUsage.total / memoryUsage.used, deviceUuid);
+    await Statistics.setMemoryUsage(
+      (1 - memoryUsage.available / memoryUsage.total) * 100,
+      deviceUuid,
+    );
+    await Statistics.setMemoryFree((memoryUsage.free / memoryUsage.total) * 100, deviceUuid);
   } else {
     await Statistics.setMemoryUsage(0, deviceUuid);
   }
@@ -37,8 +40,8 @@ async function processFileStorageStatistics(
   const totalSize = fileStorageUsage.reduce((acc, cur) => acc + cur.size, 0);
   logger.debug(`File storage usage: ${totalUsed} used on ${totalSize} total`);
   if (totalUsed !== 0) {
-    await Statistics.setFileStorageUsage(totalSize / totalUsed, deviceUuid);
-    await Statistics.setFileStorageFree(1 - totalSize / totalUsed, deviceUuid);
+    await Statistics.setFileStorageUsage((totalUsed / totalSize) * 100, deviceUuid);
+    await Statistics.setFileStorageFree((1 - totalUsed / totalSize) * 100, deviceUuid);
   } else {
     await Statistics.setFileStorageUsage(0, deviceUuid);
     await Statistics.setFileStorageFree(1, deviceUuid);

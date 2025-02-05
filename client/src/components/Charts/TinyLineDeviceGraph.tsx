@@ -25,8 +25,8 @@ const TinyLineDeviceGraph: React.FC<TinyLineProps> = ({
     }
 
     const formattedData = list.data.map((e) => ({
-      date: moment(e.date).format('YYYY-MM-DD, HH:mm'),
-      value: (e.value / 100).toFixed(2),
+      date: moment(e.date, 'YYYY-MM-DD-HH-mm-ss').format('YYYY-MM-DD, HH:mm'),
+      value: parseFloat((e.value / 100).toFixed(2)),
     }));
 
     return Array.from(new Set(formattedData.map((d) => d.date))).map(

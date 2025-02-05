@@ -5,8 +5,8 @@ title: 'Squirrel Servers Manager'
    
 hero:
   name: 'Squirrel Servers Manager (SSM)'
-  text: 'A user-friendly, UI/UX focused server & configuration management tool'
-  tagline: 'Powered by Ansible & Docker'
+  text: 'Powerful containers & servers management tool'
+  tagline: 'Powered by Ansible, Docker & Prometheus'
   image:
     src: /logo.svg
     alt: SSM
@@ -24,20 +24,20 @@ hero:
       link: https://discord.gg/cnQjsFCGKJ
 
 features:
-  - title: All your servers in one place
-    details: Available for many different platforms
+  - title: Agentless
+    details: Manage everything seamlessly over SSH — no agents required!
     icon:
       src: /flower-twirl.svg
-  - title: Ansible & Docker Compatible
-    details: Thanks to the power of Ansible and Docker, you can fully manage your servers, services, and configuration through SSM
+  - title: Ansible & Docker Compatibility
+    details: Harness the power of Ansible and Docker to manage servers, services, and configurations effortlessly through SSM.
     icon:
       src: /ansible.svg
-  - title: Simple to use, yet powerful
-    details: Although SSM focuses on ease of use, its flexibility enables you to create powerful and complex setups
+  - title: Simple Yet Powerful
+    details: Designed for ease of use, SSM provides the flexibility to create robust and complex setups, perfectly tailored to your needs.
     icon:
       src: /acorn.svg
   - title: Open Source
-    details: SSM is open source. We pledge transparency, flexibility, and adaptability, allowing you to customize the software to your specific needs.
+    details: SSM is fully open source, delivering transparency and adaptability. Customize the software to match your unique requirements.
     icon:
       src: /source-code.svg
 
@@ -88,12 +88,6 @@ bash -c "$(wget -qLO - https://getssm.io/proxmox)"
 
 &nbsp;
 :::
-
----
-
-<div>
-<iframe width="560" height="315" style="margin-left: auto; margin-right: auto" src="https://www.youtube.com/embed/zxWa21ypFCk?si=PXVOJZ31wwxLqUOv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-</div>
 
 ## Experience the immense power encapsulated within these tools, now presented through a user-friendly interface.
 
