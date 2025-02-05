@@ -60,7 +60,7 @@ const TaskLogsTerminalModal: React.FC<TaskLogsTerminalModalProps> = ({
           setIsOpen(true);
         }}
       >
-        Show logs
+        Logs
       </a>
       <Modal
         open={isOpen}

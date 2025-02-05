@@ -127,10 +127,24 @@ const DeviceListPage = memo(() => {
                     animate="animate"
                     variants={shineAnimation}
                   >
-                    <Avatar src={OsLogo(item.osLogoFile)} size="large" />
+                    <Avatar
+                      src={OsLogo(
+                        item.systemInformation?.system?.raspberry?.type
+                          ? 'raspbian'
+                          : item.systemInformation?.os?.logofile,
+                      )}
+                      size="large"
+                    />
                   </motion.div>
                 ) : (
-                  <Avatar src={OsLogo(item.osLogoFile)} size="large" />
+                  <Avatar
+                    src={OsLogo(
+                      item.systemInformation?.system?.raspberry?.type
+                        ? 'raspbian'
+                        : item.systemInformation?.os?.logofile,
+                    )}
+                    size="large"
+                  />
                 )
               }
               title={item.hostname}
@@ -140,8 +154,7 @@ const DeviceListPage = memo(() => {
               uuid={item.uuid}
               createdAt={item.createdAt}
               status={item.status}
-              cpuSpeed={item.cpuSpeed}
-              mem={item.mem}
+              systemInformation={item.systemInformation}
             />
           </List.Item>
         </motion.div>

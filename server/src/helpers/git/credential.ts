@@ -1,7 +1,6 @@
 import { GitProcess } from 'dugite';
 import { trim } from 'lodash';
 import { SsmGit } from 'ssm-shared-lib';
-import logger from '../../logger';
 import { getRemoteUrl } from './inspect';
 
 // TODO: support folderLocation as rawUrl like `/Users/linonetwo/Desktop/repo/playbooks-repository-sync-js/test/mockUpstreamRepo/credential` for test, or gitlab url.
@@ -107,7 +106,6 @@ export async function credentialOn(
       throw new Error(`Unknown service type ${serviceType}`);
     }
   }
-  logger.error(gitUrlWithCredential);
   await GitProcess.exec(['remote', 'add', remoteName, gitUrlWithCredential], directory);
   await GitProcess.exec(['remote', 'set-url', remoteName, gitUrlWithCredential], directory);
 }

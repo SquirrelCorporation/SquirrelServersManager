@@ -9,9 +9,9 @@ const renderTotal = (total: any) => {
   }
   return (
     <div className={styles.total}>
-      <Typography.Title level={3}>
+      <Typography.Text style={{ fontSize: '26px' }}>
         {typeof total === 'function' ? total() : total}
-      </Typography.Title>
+      </Typography.Text>
     </div>
   );
 };

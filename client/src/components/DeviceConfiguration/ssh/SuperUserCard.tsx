@@ -41,7 +41,7 @@ const SuperUserCard: React.FC<SuperUserCardProps> = ({ formRef }) => (
     extra={
       <Tooltip
         title={
-          'To enable "Ansible Become" feature for sudo operations, fill the sudo method and sudo user & password. Passwords are saved using Vault.'
+          'SSM will need to elevate privileges for some operations, fill the sudo method and sudo user & password. Passwords are saved using Vault.'
         }
       >
         <InfoCircleFilled />

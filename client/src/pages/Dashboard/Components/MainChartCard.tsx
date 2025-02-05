@@ -5,7 +5,7 @@ import {
 import Devicestatus from '@/utils/devicestatus';
 import { getTimeDistance } from '@/utils/time';
 import { LoadingOutlined } from '@ant-design/icons';
-import { Line } from '@ant-design/plots';
+import { Line, LineConfig } from '@ant-design/charts';
 import { useModel } from '@umijs/max';
 import {
   Card,
@@ -30,6 +30,13 @@ const MainChartCard: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [graphData, setGraphData] = useState<API.DeviceStat[] | undefined>([]);
+  const [graphMemData, setGraphMemData] = useState<
+    API.DeviceStat[] | undefined
+  >([]);
+  const [graphStorageData, setGraphStorageData] = useState<
+    API.DeviceStat[] | undefined
+  >([]);
+
   const [topTenData, setTopTenData] = useState<
     { name: string; value: number }[] | undefined
   >([]);
@@ -84,8 +91,21 @@ const MainChartCard: React.FC = () => {
             to: rangePickerValue[1].toDate(),
           }),
         ]);
-        setGraphData(deviceStats.data);
-        setTopTenData(averagedDeviceStats.data);
+        console.log(deviceStats.data);
+        switch (type) {
+          case StatsType.DeviceStatsType.CPU:
+            setGraphData(deviceStats.data);
+            setTopTenData(averagedDeviceStats.data);
+            break;
+          case StatsType.DeviceStatsType.MEM_USED:
+            setGraphMemData(deviceStats.data);
+            setTopTenData(averagedDeviceStats.data);
+            break;
+          case StatsType.DeviceStatsType.DISK_USED:
+            setGraphStorageData(deviceStats.data);
+            setTopTenData(averagedDeviceStats.data);
+            break;
+        }
       }
     } catch (error) {
       console.error('Failed to fetch data:', error);
@@ -98,7 +118,7 @@ const MainChartCard: React.FC = () => {
     void fetchData();
   }, [fetchData]);
 
-  const cpuConfig = useMemo(
+  const cpuConfig: LineConfig = useMemo(
     () => ({
       data: graphData,
       loading,
@@ -153,9 +173,19 @@ const MainChartCard: React.FC = () => {
   const memConfig = useMemo(
     () => ({
       ...cpuConfig,
+      data: graphMemData,
       // Customize further if needed
     }),
-    [cpuConfig],
+    [graphMemData, loading],
+  );
+
+  const storageConfig = useMemo(
+    () => ({
+      ...cpuConfig,
+      data: graphStorageData,
+      // Customize further if needed
+    }),
+    [graphStorageData, loading],
   );
 
   const handleTabChange = (key: string) => {
@@ -254,7 +284,7 @@ const MainChartCard: React.FC = () => {
           <Row>
             <Col xl={16} lg={12} md={12} sm={24} xs={24}>
               <div className={styles.salesBar}>
-                <Line {...cpuConfig} />
+                <Line {...storageConfig} />
               </div>
             </Col>
             <Col xl={8} lg={12} md={12} sm={24} xs={24}>
@@ -291,7 +321,7 @@ const MainChartCard: React.FC = () => {
         ),
       },
     ],
-    [cpuConfig, memConfig, topTenData],
+    [cpuConfig, memConfig, storageConfig, topTenData],
   );
 
   const tabBarExtra = useMemo(

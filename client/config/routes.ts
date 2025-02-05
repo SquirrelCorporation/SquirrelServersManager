@@ -21,6 +21,7 @@ export default [
     path: '/manage',
     name: 'Manage',
     icon: 'GlobalOutlined',
+    component: './Devices',
     routes: [
       {
         name: 'Devices',

@@ -14,7 +14,8 @@ const ProxmoxWatcherCronsCard: React.FC<ProxmoxWatcherCronsCardProps> = ({
   device,
 }) => {
   const [watcherCron, setWatcherCron] = useState<string>(
-    device.proxmoxConfiguration?.watcherCron || '*/1 * * * *',
+    device.configuration?.containers?.proxmox?.watchContainersCron ||
+      '*/1 * * * *',
   );
   const handleOnChangeEventsWatcher = async () => {
     if (device.uuid) {
@@ -28,7 +29,10 @@ const ProxmoxWatcherCronsCard: React.FC<ProxmoxWatcherCronsCardProps> = ({
     }
   };
   useEffect(() => {
-    if (watcherCron !== device.proxmoxConfiguration?.watcherCron) {
+    if (
+      watcherCron !==
+      device.configuration?.containers.proxmox?.watchContainersCron
+    ) {
       void handleOnChangeEventsWatcher();
     }
   }, [watcherCron]);

@@ -3,22 +3,26 @@ import React from 'react';
 import { SsmAgent } from 'ssm-shared-lib';
 
 const AgentInstallMethod = ({
-  initialValue = SsmAgent.InstallMethods.NODE,
+  initialValue = SsmAgent.InstallMethods.LESS,
 }) => (
   <ProFormRadio.Group
     layout={'vertical'}
     initialValue={initialValue}
     options={[
       {
-        label: 'NodeJS Agent - Default (Recommended)',
+        label: 'AgentLess (Recommended)',
+        value: SsmAgent.InstallMethods.LESS,
+      },
+      {
+        label: 'NodeJS Agent - Default (Deprecated)',
         value: SsmAgent.InstallMethods.NODE,
       },
       {
-        label: 'NodeJS Agent - Enhanced Playbook (Experimental)',
+        label: 'NodeJS Agent - Enhanced Playbook (Deprecated)',
         value: SsmAgent.InstallMethods.NODE_ENHANCED_PLAYBOOK,
       },
       {
-        label: 'Dockerized Agent (Experimental)',
+        label: 'Dockerized Agent (Deprecated)',
         value: SsmAgent.InstallMethods.DOCKER,
       },
     ]}
