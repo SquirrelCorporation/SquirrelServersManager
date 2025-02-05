@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Upgrade dependencies in client package [\#708](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/708) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Bug fixes [\#706](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/706) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Upgrade to version 0.1.28 and remove unused dependency. [\#704](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/704) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
