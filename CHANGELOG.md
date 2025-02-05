@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.28-alpha...HEAD)
 
+**Fixed bugs:**
+
+- \[BUG\] Fix data formatting in TinyLineDeviceGraph component [\#709](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/709) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Merged pull requests:**
 
 - \[CHORE\] Upgrade dependencies in client package [\#708](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/708) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
