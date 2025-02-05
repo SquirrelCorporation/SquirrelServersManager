@@ -7,6 +7,7 @@
 **Merged pull requests:**
 
 - \[CHORE\] Add Prometheus configuration to .env files [\#712](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/712) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[DOC\] Docs agentless [\#702](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/702) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.28-alpha.2](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.28-alpha.2) (2025-02-05)
 
