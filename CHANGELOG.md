@@ -6,6 +6,7 @@
 
 **Fixed bugs:**
 
+- \[CHORE\] Refactor memory and storage usage calculations. [\#711](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/711) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Fix data formatting in TinyLineDeviceGraph component [\#709](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/709) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Merged pull requests:**
