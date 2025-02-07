@@ -37,9 +37,6 @@ export const getCurrentUser = async (req, res) => {
   const performanceMaxCpu = await getIntConfFromCache(
     SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
   );
-  const registerDeviceStatEvery = await getIntConfFromCache(
-    SettingsKeys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
-  );
   const updateAvailable = await getFromCache(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE);
   const masterNodeUrl = await getFromCache(SsmAnsible.DefaultSharedExtraVarsList.MASTER_NODE_URL);
 
@@ -81,7 +78,6 @@ export const getCurrentUser = async (req, res) => {
       },
       apiKey: req.user?.apiKey,
       device: {
-        registerDeviceStatEvery: registerDeviceStatEvery,
         considerOffLineAfter: considerDeviceOffline,
       },
       server: {

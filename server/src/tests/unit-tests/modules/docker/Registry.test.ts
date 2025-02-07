@@ -62,7 +62,7 @@ describe('testing Registry', () => {
     ).resolves.toStrictEqual(['v3', 'v2', 'v1']);
   });
 
-  test('getImageManifestDigest should return digest for application/vnd.docker.distribution.manifest.list.v2+json then application/vnd.docker.distribution.manifest.v2+json', () => {
+  test('getImageManifestDigest should return digest for application/vnd.docker.distribution.manifest.list.v2+json then application/vnd.docker.distribution.manifest.v2+json', async () => {
     const registryMocked = new Registry();
     registryMocked.childLogger = { debug: vi.fn(), info: vi.fn(), error: vi.fn(), warn: vi.fn() };
     // @ts-expect-error partial type
@@ -107,7 +107,7 @@ describe('testing Registry', () => {
       }
       throw new Error('Boom!');
     };
-    expect(
+    await expect(
       registryMocked.getImageManifestDigest({
         name: 'image',
         architecture: 'amd64',
@@ -127,7 +127,7 @@ describe('testing Registry', () => {
     });
   });
 
-  test('getImageManifestDigest should return digest for application/vnd.docker.distribution.manifest.list.v2+json then application/vnd.docker.container.image.v1+json', () => {
+  test('getImageManifestDigest should return digest for application/vnd.docker.distribution.manifest.list.v2+json then application/vnd.docker.container.image.v1+json', async () => {
     const registryMocked = new Registry();
     registryMocked.childLogger = { debug: vi.fn(), info: vi.fn(), error: vi.fn(), warn: vi.fn() };
     // @ts-expect-error partial type
@@ -164,7 +164,7 @@ describe('testing Registry', () => {
       }
       throw new Error('Boom!');
     };
-    expect(
+    await expect(
       registryMocked.getImageManifestDigest({
         name: 'image',
         architecture: 'amd64',
@@ -184,7 +184,7 @@ describe('testing Registry', () => {
     });
   });
 
-  test('getImageManifestDigest should return digest for application/vnd.docker.distribution.manifest.v2+json', () => {
+  test('getImageManifestDigest should return digest for application/vnd.docker.distribution.manifest.v2+json', async () => {
     const registryMocked = new Registry();
     registryMocked.childLogger = { debug: vi.fn(), info: vi.fn(), error: vi.fn(), warn: vi.fn() };
     // @ts-expect-error partial type
@@ -215,7 +215,7 @@ describe('testing Registry', () => {
       }
       throw new Error('Boom!');
     };
-    expect(
+    await expect(
       registryMocked.getImageManifestDigest({
         name: 'image',
         architecture: 'amd64',
@@ -235,7 +235,7 @@ describe('testing Registry', () => {
     });
   });
 
-  test('getImageManifestDigest should return digest for application/vnd.docker.container.image.v1+json', () => {
+  test('getImageManifestDigest should return digest for application/vnd.docker.container.image.v1+json', async () => {
     const registryMocked = new Registry();
     registryMocked.childLogger = { debug: vi.fn(), info: vi.fn(), error: vi.fn(), warn: vi.fn() };
     // @ts-expect-error partial type
@@ -262,7 +262,7 @@ describe('testing Registry', () => {
       }
       throw new Error('Boom!');
     };
-    expect(
+    await expect(
       registryMocked.getImageManifestDigest({
         name: 'image',
         architecture: 'amd64',
@@ -283,12 +283,12 @@ describe('testing Registry', () => {
     });
   });
 
-  test('getImageManifestDigest should throw when no digest found', () => {
+  test('getImageManifestDigest should throw when no digest found', async () => {
     const registryMocked = new Registry();
     registryMocked.childLogger = { debug: vi.fn(), info: vi.fn(), error: vi.fn(), warn: vi.fn() };
     // @ts-expect-error partial type
     registryMocked.callRegistry = async () => ({});
-    expect(
+    await expect(
       registryMocked.getImageManifestDigest({
         name: 'image',
         architecture: 'amd64',

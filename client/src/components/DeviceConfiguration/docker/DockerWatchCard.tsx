@@ -13,15 +13,13 @@ interface DockerWatchCardProps {
 
 const DockerWatchCard = ({ device }: DockerWatchCardProps) => {
   const [dockerWatcher, setDockerWatcher] = useState<boolean>(
-    device.dockerWatcher === undefined ? true : device.dockerWatcher,
+    device.configuration?.containers?.docker?.watchContainers ?? true,
   );
   const [dockerEventsWatcher, setDockerEventsWatcher] = useState<boolean>(
-    device.dockerEventsWatcher === undefined
-      ? true
-      : device.dockerEventsWatcher,
+    device.configuration?.containers?.docker?.watchEvents ?? true,
   );
   const [dockerStatsWatcher, setDockerStatsWatcher] = useState<boolean>(
-    device.dockerStatsWatcher === undefined ? true : device.dockerStatsWatcher,
+    device.configuration?.containers?.docker?.watchContainersStats ?? true,
   );
 
   const handleOnChangeDockerWatcher = async () => {

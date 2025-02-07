@@ -33,7 +33,11 @@ const CombinedPowerCard: React.FC = () => {
           type: 'mem',
           uuid: `${index}-${device.name}`,
           value:
-            (device.mem || 0) / 1024 / (currentUser?.devices?.totalMem || 1),
+            (device.mem || 0) /
+            (1024 * 1024 * 1024) /
+            ((currentUser?.devices?.totalMem
+              ? currentUser?.devices?.totalMem / (1024 * 1024 * 1024)
+              : undefined) || 1),
         })) || [],
     [currentUser],
   );
@@ -82,18 +86,20 @@ const CombinedPowerCard: React.FC = () => {
     <ChartCard
       bordered={false}
       loading={loading}
-      title={<Typography.Title level={5}>Combined Power</Typography.Title>}
+      title={
+        <Typography.Title style={{ fontSize: '14px' }}>
+          Combined Power
+        </Typography.Title>
+      }
       action={
         <Tooltip title="Sum of all your devices">
           <InfoCircleFilled style={{ color: 'white' }} />
         </Tooltip>
       }
-      total={
-        <Typography.Title level={3}>
-          {currentUser?.devices?.totalCpu?.toFixed(1)} GHz /{' '}
-          {currentUser?.devices?.totalMem?.toFixed(0)} Gb
-        </Typography.Title>
-      }
+      total={`
+          ${currentUser?.devices?.totalCpu?.toFixed(1)} GHz /
+          ${(currentUser?.devices?.totalMem ? currentUser?.devices?.totalMem / (1024 * 1024 * 1024) : undefined)?.toFixed(0)} Gb
+       `}
       footer={
         <Field
           label={<Typography.Text>Of</Typography.Text>}
@@ -104,7 +110,7 @@ const CombinedPowerCard: React.FC = () => {
           }
         />
       }
-      contentHeight={80}
+      contentHeight={60}
     >
       <Bar {...config} />
     </ChartCard>

@@ -44,7 +44,7 @@ export const httpLoggerOptions = {
 
   // Define a custom error message
   customErrorMessage: function (req, res, err) {
-    return `Request errored with status code: ${res.statusCode}`;
+    return `Request errored with status code: ${res.statusCode} - ${req.method} - ${req.url} - ${err.message}`;
   },
 };
 

@@ -1,10 +1,14 @@
 # Manually Installing the Agent
 
-If you have difficulties installing the agent from the UI, you can install it manually on the device.
 
-:::info ℹ️ Requirements
-[Please read the stack requirements before installing the agent](/docs/requirements)
+:::warning Deprecation notice
+Agents are deprecated >= 0.1.28.
 :::
+
+SSM is **agentless** by default. However, they may be some particular cases where installing an agent may be useful.
+
+
+If you have difficulties installing the agent from the UI, you can install it manually on the device.
 
 ## NodeJS Vanilla Agent
 

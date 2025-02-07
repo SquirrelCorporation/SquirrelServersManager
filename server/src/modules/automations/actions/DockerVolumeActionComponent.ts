@@ -30,7 +30,9 @@ class DockerVolumeActionComponent extends AbstractActionComponent {
       this.childLogger.info(`Docker Volume Action - executeAction - for volume: ${volumeUuid}`);
       const volume = await ContainerVolumeRepo.findByUuid(volumeUuid);
       if (!volume) {
-        this.childLogger.error(`Volume not found for ${volumeUuid}`);
+        this.childLogger.error(
+          `Volume not found. (Volume uuid: ${volumeUuid}, Action: ${this.dockerVolumeAction})`,
+        );
         success = false;
       } else {
         try {

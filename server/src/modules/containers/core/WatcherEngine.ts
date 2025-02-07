@@ -129,6 +129,7 @@ async function registerComponent(
     );
   }
 }
+
 /**
  * Register watchers from database.
  * @returns {Promise}
@@ -146,12 +147,12 @@ async function registerWatchers(): Promise<any> {
           WATCHERS.DOCKER,
           `${WATCHERS.DOCKER}-${device.uuid}`,
           {
-            cron: device.dockerWatcherCron as string,
+            cron: device.configuration.containers.docker?.watchContainersCron as string,
             watchbydefault: true,
             deviceUuid: device.uuid,
-            watchstats: device.dockerStatsWatcher,
-            cronstats: device.dockerStatsCron as string,
-            watchevents: device.dockerEventsWatcher,
+            watchstats: device.configuration.containers.docker?.watchContainersStats as boolean,
+            cronstats: device.configuration.containers.docker?.watchContainersStatsCron as string,
+            watchevents: device.configuration.containers.docker?.watchEvents as boolean,
             host: device.ip as string,
           },
         ),
@@ -174,12 +175,12 @@ async function registerWatchers(): Promise<any> {
           WATCHERS.PROXMOX,
           `${WATCHERS.PROXMOX}-${device.uuid}`,
           {
-            cron: device.dockerWatcherCron as string,
+            cron: device.configuration.containers.proxmox?.watchContainersCron as string,
             deviceUuid: device.uuid,
             watchbydefault: true,
-            watchstats: device.dockerStatsWatcher,
-            cronstats: device.dockerStatsCron as string,
-            watchevents: device.dockerEventsWatcher,
+            watchstats: false,
+            cronstats: '' as string,
+            watchevents: false,
             host: device.ip as string,
           },
         ),
@@ -204,12 +205,12 @@ async function registerWatcher(device: Device): Promise<any> {
       WATCHERS.DOCKER,
       `${WATCHERS.DOCKER}-${device.uuid}`,
       {
-        cron: device.dockerWatcherCron as string,
+        cron: device.configuration.containers.docker?.watchContainersCron as string,
         watchbydefault: true,
         deviceUuid: device.uuid,
-        watchstats: device.dockerStatsWatcher,
-        cronstats: device.dockerStatsCron as string,
-        watchevents: device.dockerEventsWatcher,
+        watchstats: device.configuration.containers.docker?.watchContainersStats as boolean,
+        cronstats: device.configuration.containers.docker?.watchContainersStatsCron as string,
+        watchevents: device.configuration.containers.docker?.watchEvents as boolean,
         host: device.ip as string,
       },
     );

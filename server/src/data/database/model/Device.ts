@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { API, SsmStatus } from 'ssm-shared-lib';
+import { SsmStatus, Systeminformation } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
 
 export const DOCUMENT_NAME = 'Device';
@@ -22,46 +22,331 @@ export default interface Device {
       };
     };
   };
-  proxmoxConfiguration?: {
-    watcherCron?: string;
+  configuration: {
+    containers: {
+      proxmox?: {
+        watchContainersCron?: string;
+      };
+      docker?: {
+        watchContainers?: boolean;
+        watchContainersCron?: string;
+        watchContainersStats?: boolean;
+        watchContainersStatsCron?: string;
+        watchEvents?: boolean;
+      };
+    };
+    systemInformation?: {
+      system?: {
+        watch?: boolean;
+        cron?: string;
+      };
+      os?: {
+        watch?: boolean;
+        cron?: string;
+      };
+      cpu?: {
+        watch?: boolean;
+        cron?: string;
+      };
+      cpuStats?: {
+        watch?: boolean;
+        cron?: string;
+      };
+      mem?: {
+        watch?: boolean;
+        cron?: string;
+      };
+      memStats?: {
+        watch?: boolean;
+        cron?: string;
+      };
+      networkInterfaces?: {
+        watch?: boolean;
+        cron?: string;
+      };
+      versions?: {
+        watch?: boolean;
+        cron?: string;
+      };
+      usb?: {
+        watch?: boolean;
+        cron?: string;
+      };
+      wifi?: {
+        watch?: boolean;
+        cron?: string;
+      };
+      bluetooth?: {
+        watch?: boolean;
+        cron?: string;
+      };
+      graphics?: {
+        watch?: boolean;
+        cron?: string;
+      };
+      fileSystems?: {
+        watch?: boolean;
+        cron?: string;
+      };
+      fileSystemsStats?: {
+        watch?: boolean;
+        cron?: string;
+      };
+    };
   };
-  dockerWatcher?: boolean;
-  dockerWatcherCron?: string;
-  dockerStatsWatcher?: boolean;
-  dockerStatsCron?: string;
-  dockerEventsWatcher?: boolean;
   dockerVersion?: string;
   dockerId?: string;
   hostname?: string;
   fqdn?: string;
-  ip?: string;
   status: number;
   uptime?: number;
-  osArch?: string;
-  osPlatform?: string;
-  osDistro?: string;
-  osCodeName?: string;
-  osKernel?: string;
-  osLogoFile?: string;
-  systemManufacturer?: string;
-  systemModel?: string;
-  systemVersion?: string;
-  systemUuid?: string;
-  systemSku?: string;
-  systemVirtual?: boolean;
-  cpuBrand?: string;
-  cpuManufacturer?: string;
-  cpuFamily?: string;
-  cpuSpeed?: number;
-  mem?: number;
+  systemInformation: {
+    system?: Systeminformation.SystemData;
+    os?: Systeminformation.OsData;
+    cpu?: Systeminformation.CpuData;
+    mem?: Partial<Systeminformation.MemData>;
+    networkInterfaces?: Systeminformation.NetworkInterfacesData[];
+    versions?: Systeminformation.VersionData;
+    usb?: Systeminformation.UsbData;
+    wifi?: Systeminformation.WifiInterfaceData[];
+    bluetooth?: Systeminformation.BluetoothDeviceData[];
+    graphics?: Systeminformation.GraphicsData;
+    memLayout?: Systeminformation.MemLayoutData[];
+    fileSystems?: Systeminformation.DiskLayoutData[];
+  };
+  ip?: string;
   agentVersion?: string;
-  versions?: API.VersionData;
-  raspberry?: API.RaspberryRevisionData;
   createdAt?: Date;
   updatedAt?: Date;
   agentLogPath?: string;
-  agentType?: 'node' | 'docker';
+  agentType?: 'node' | 'docker' | 'less';
 }
+
+const SystemInformationConfigurationSchema = new Schema<
+  Device['configuration']['systemInformation']
+>(
+  {
+    system: {
+      watch: {
+        type: Schema.Types.Boolean,
+        default: true,
+      },
+      cron: {
+        type: Schema.Types.String,
+        default: '0 0 1 * *', // Default to once a month (at midnight on the 1st day of the month)
+      },
+    },
+    os: {
+      watch: {
+        type: Schema.Types.Boolean,
+        default: true,
+      },
+      cron: {
+        type: Schema.Types.String,
+        default: '0 */12 * * *', // Default to every 12 hours
+      },
+    },
+    cpu: {
+      watch: {
+        type: Schema.Types.Boolean,
+        default: true,
+      },
+      cron: {
+        type: Schema.Types.String,
+        default: '0 0 1 * *', // Default to once a month (at midnight on the 1st day of the month)
+      },
+    },
+    mem: {
+      watch: {
+        type: Schema.Types.Boolean,
+        default: true,
+      },
+      cron: {
+        type: Schema.Types.String,
+        default: '0 0 1 * *', // Default to once a month (at midnight on the 1st day of the month)
+      },
+    },
+    networkInterfaces: {
+      watch: {
+        type: Schema.Types.Boolean,
+        default: true,
+      },
+      cron: {
+        type: Schema.Types.String,
+        default: '0 0 1 * *', // Default to once a month (at midnight on the 1st day of the month)
+      },
+    },
+    versions: {
+      watch: {
+        type: Schema.Types.Boolean,
+        default: true,
+      },
+      cron: {
+        type: Schema.Types.String,
+        default: '0 */6 * * *', // Default to every 6 hour
+      },
+    },
+    usb: {
+      watch: {
+        type: Schema.Types.Boolean,
+        default: true,
+      },
+      cron: {
+        type: Schema.Types.String,
+        default: '0 */8 * * *', // Default to every 8 hours
+      },
+    },
+    wifi: {
+      watch: {
+        type: Schema.Types.Boolean,
+        default: true,
+      },
+      cron: {
+        type: Schema.Types.String,
+        default: '0 */5 * * *', // Default to every 5 hours
+      },
+    },
+    bluetooth: {
+      watch: {
+        type: Schema.Types.Boolean,
+        default: true,
+      },
+      cron: {
+        type: Schema.Types.String,
+        default: '0 */12 * * *', // Default to every 12 hours
+      },
+    },
+    graphics: {
+      watch: {
+        type: Schema.Types.Boolean,
+        default: true,
+      },
+      cron: {
+        type: Schema.Types.String,
+        default: '0 0 1 * *', // Default to once a month (at midnight on the 1st day of the month)
+      },
+    },
+    memStats: {
+      watch: {
+        type: Schema.Types.Boolean,
+        default: true,
+      },
+      cron: {
+        type: Schema.Types.String,
+        default: '*/30 * * * * *', // Default to once a month (at midnight on the 1st day of the month)
+      },
+    },
+    cpuStats: {
+      watch: {
+        type: Schema.Types.Boolean,
+        default: true,
+      },
+      cron: {
+        type: Schema.Types.String,
+        default: '*/30 * * * * *', // Default to once a month (at midnight on the 1st day of the month)
+      },
+    },
+    fileSystems: {
+      watch: {
+        type: Schema.Types.Boolean,
+        default: true,
+      },
+      cron: {
+        type: Schema.Types.String,
+        default: '0 0 1 * *', // Default to once a month (at midnight on the 1st day of the month)
+      },
+    },
+    fileSystemsStats: {
+      watch: {
+        type: Schema.Types.Boolean,
+        default: true,
+      },
+      cron: {
+        type: Schema.Types.String,
+        default: '0 */30 * * * *',
+      },
+    },
+  },
+  {
+    _id: false, // Prevent `_id` creation for sub-schema
+    timestamps: false, // Sub-schema doesn't need timestamps
+  },
+);
+
+const DockerConfigurationSchema = new Schema<Device['configuration']['containers']['docker']>({
+  watchContainers: {
+    type: Schema.Types.Boolean,
+    required: true,
+    default: true,
+  },
+  watchContainersCron: {
+    type: Schema.Types.String,
+    required: true,
+    default: '0 */4 * * *',
+  },
+  watchContainersStatsCron: {
+    type: Schema.Types.String,
+    required: true,
+    default: '0 * * * *',
+  },
+  watchContainersStats: {
+    type: Schema.Types.Boolean,
+    required: true,
+    default: true,
+  },
+  watchEvents: {
+    type: Schema.Types.Boolean,
+    required: true,
+    default: true,
+  },
+});
+
+const SystemInformationSchema = new Schema<Device['systemInformation']>({
+  cpu: {
+    type: Object,
+    required: false,
+  },
+  mem: {
+    type: Object,
+    required: false,
+  },
+  versions: {
+    type: Object,
+    required: false,
+  },
+  fileSystems: {
+    type: Object,
+    required: false,
+  },
+  networkInterfaces: {
+    type: Object,
+    required: false,
+  },
+  os: {
+    type: Object,
+    required: false,
+  },
+  system: {
+    type: Object,
+    required: false,
+  },
+  usb: {
+    type: Object,
+    required: false,
+  },
+  bluetooth: {
+    type: Object,
+    required: false,
+  },
+  wifi: {
+    type: Object,
+    required: false,
+  },
+  graphics: {
+    type: Object,
+    required: false,
+  },
+});
 
 const schema = new Schema<Device>(
   {
@@ -96,31 +381,28 @@ const schema = new Schema<Device>(
         },
       },
     },
-    proxmoxConfiguration: {
-      watcherCron: {
-        type: Schema.Types.String,
-        default: '0 */4 * * *',
+    configuration: {
+      containers: {
+        proxmox: {
+          watchContainersCron: {
+            type: Schema.Types.String,
+            default: '0 */4 * * *',
+          },
+        },
+        docker: {
+          type: DockerConfigurationSchema,
+          default: {},
+        },
+      },
+      systemInformation: {
+        type: SystemInformationConfigurationSchema,
+        default: {},
       },
     },
     disabled: {
       type: Schema.Types.Boolean,
       required: true,
       default: false,
-    },
-    dockerWatcher: {
-      type: Schema.Types.Boolean,
-      required: true,
-      default: true,
-    },
-    dockerWatcherCron: {
-      type: Schema.Types.String,
-      required: true,
-      default: '0 */4 * * *',
-    },
-    dockerStatsCron: {
-      type: Schema.Types.String,
-      required: true,
-      default: '0 * * * *',
     },
     hostname: {
       type: Schema.Types.String,
@@ -140,84 +422,9 @@ const schema = new Schema<Device>(
       default: SsmStatus.DeviceStatus.REGISTERING,
       required: true,
     },
-    osArch: {
-      type: Schema.Types.String,
-      required: false,
-    },
-    osDistro: {
-      type: Schema.Types.String,
-      required: false,
-    },
-    osPlatform: {
-      type: Schema.Types.String,
-      required: false,
-    },
-    osCodeName: {
-      type: Schema.Types.String,
-      required: false,
-    },
-    osKernel: {
-      type: Schema.Types.String,
-      required: false,
-    },
-    osLogoFile: {
-      type: Schema.Types.String,
-      required: false,
-    },
-    systemManufacturer: {
-      type: Schema.Types.String,
-      required: false,
-    },
-    systemModel: {
-      type: Schema.Types.String,
-      required: false,
-    },
-    systemVersion: {
-      type: Schema.Types.String,
-      required: false,
-    },
-    systemUuid: {
-      type: Schema.Types.String,
-      required: false,
-    },
-    systemSku: {
-      type: Schema.Types.String,
-      required: false,
-    },
-    systemVirtual: {
-      type: Schema.Types.Boolean,
-      required: false,
-    },
-    cpuBrand: {
-      type: Schema.Types.String,
-      required: false,
-    },
-    cpuManufacturer: {
-      type: Schema.Types.String,
-      required: false,
-    },
-    cpuFamily: {
-      type: Schema.Types.String,
-      required: false,
-    },
-    cpuSpeed: {
-      type: Schema.Types.Number,
-      required: false,
-    },
-    mem: {
-      type: Schema.Types.Number,
-      required: false,
-    },
+    systemInformation: SystemInformationSchema,
     agentVersion: {
       type: Schema.Types.String,
-      required: false,
-    },
-    versions: {
-      type: Object,
-      required: false,
-    },
-    raspberry: {
-      type: Object,
       required: false,
     },
     dockerVersion: {
@@ -227,16 +434,6 @@ const schema = new Schema<Device>(
     dockerId: {
       type: Schema.Types.String,
       required: false,
-    },
-    dockerStatsWatcher: {
-      type: Schema.Types.Boolean,
-      required: true,
-      default: true,
-    },
-    dockerEventsWatcher: {
-      type: Schema.Types.Boolean,
-      required: true,
-      default: true,
     },
     agentLogPath: {
       type: Schema.Types.String,

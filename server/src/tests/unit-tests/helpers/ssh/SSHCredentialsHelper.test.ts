@@ -1,6 +1,6 @@
 import { SsmAnsible } from 'ssm-shared-lib';
 import { SSHConnection } from 'ssm-shared-lib/distribution/enums/ansible';
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import Device from '../../../../data/database/model/Device';
 import DeviceAuth from '../../../../data/database/model/DeviceAuth';
 import SSHCredentialsHelper from '../../../../helpers/ssh/SSHCredentialsHelper';
@@ -47,6 +47,10 @@ describe('SSHCredentialsHelper', () => {
       dockerCustomSshKeyPass: undefined,
       dockerCustomSshPwd: undefined,
     };
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   test('should handle key-based SSHType for default Docker SSH', async () => {

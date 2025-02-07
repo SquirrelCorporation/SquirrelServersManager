@@ -1,3 +1,4 @@
+import Icon from '@ant-design/icons';
 import React from 'react';
 import {
   CibNpm,
@@ -37,7 +38,7 @@ type SoftwareIconType = {
   name: string;
 };
 
-const iconMap: { [key: string]: React.FC<React.SVGProps<SVGElement>> } = {
+const iconMap: { [key: string]: (props: any) => JSX.Element } = {
   kernel:
     StreamlineComputerChip2CoreMicroprocessorDeviceElectronicsChipComputer,
   openssl: EpLock,
@@ -77,7 +78,12 @@ const iconMap: { [key: string]: React.FC<React.SVGProps<SVGElement>> } = {
 
 const SoftwareIcon: React.FC<SoftwareIconType> = ({ name }) => {
   const IconComponent = iconMap[name.toLowerCase()] || GenericSoftwareResource;
-  return <IconComponent style={{ verticalAlign: 'middle' }} />;
+  return (
+    <Icon
+      component={IconComponent}
+      style={{ verticalAlign: 'middle', fontSize: '16px' }}
+    />
+  );
 };
 
 export default SoftwareIcon;

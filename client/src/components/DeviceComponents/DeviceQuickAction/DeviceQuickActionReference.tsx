@@ -1,7 +1,11 @@
+import { FileTree, SetAction } from '@/components/Icons/CustomIcons';
 import {
   BugOutlined,
   DeleteOutlined,
   DownloadOutlined,
+  InfoCircleFilled,
+  InfoCircleOutlined,
+  InfoOutlined,
   LoginOutlined,
   PlayCircleOutlined,
   ReloadOutlined,
@@ -33,9 +37,26 @@ export type QuickActionReferenceType = {
 export enum Actions {
   CONNECT = 'connect',
   DELETE = 'delete',
+  BROWSE_FILES = 'browseFiles',
+  VIEW = 'view',
+  MANAGEMENT = 'management',
 }
 
 const DeviceQuickActionReference: QuickActionReferenceType[] = [
+  {
+    type: Types.ACTION,
+    action: Actions.VIEW,
+    icon: <InfoCircleOutlined />,
+    label: 'Device information',
+    onAdvancedMenu: false,
+  },
+  /*  {
+    type: Types.ACTION,
+    action: Actions.MANAGEMENT,
+    icon: <SetAction />,
+    label: 'Device management',
+    onAdvancedMenu: false,
+  },*/
   {
     type: Types.PLAYBOOK_SELECTION,
     icon: <PlayCircleOutlined />,
@@ -58,6 +79,13 @@ const DeviceQuickActionReference: QuickActionReferenceType[] = [
     onAdvancedMenu: false,
   },
   {
+    type: Types.ACTION,
+    action: Actions.BROWSE_FILES,
+    icon: <FileTree />,
+    label: 'Browse files',
+    onAdvancedMenu: false,
+  },
+  {
     onAdvancedMenu: false,
     type: Types.DIVIDER,
   },
@@ -71,45 +99,6 @@ const DeviceQuickActionReference: QuickActionReferenceType[] = [
   {
     onAdvancedMenu: true,
     type: Types.DIVIDER,
-  },
-  {
-    type: Types.PLAYBOOK,
-    playbookQuickRef: 'updateAgent',
-    onAdvancedMenu: true,
-    icon: <ToTopOutlined />,
-    label: 'Update Agent',
-  },
-  {
-    type: Types.PLAYBOOK,
-    playbookQuickRef: 'reinstallAgent',
-    onAdvancedMenu: true,
-    icon: <DownloadOutlined />,
-    label: 'Reinstall Agent',
-  },
-  {
-    type: Types.PLAYBOOK,
-    playbookQuickRef: 'restartAgent',
-    onAdvancedMenu: true,
-    icon: <ThunderboltOutlined />,
-    label: 'Restart Agent',
-  },
-  {
-    type: Types.PLAYBOOK,
-    onAdvancedMenu: true,
-    playbookQuickRef: 'retrieveAgentLogs',
-    icon: <BugOutlined />,
-    label: 'Retrieve Agent Logs',
-  },
-  {
-    onAdvancedMenu: true,
-    type: Types.DIVIDER,
-  },
-  {
-    type: Types.PLAYBOOK,
-    playbookQuickRef: 'uninstallAgent',
-    onAdvancedMenu: true,
-    icon: <DeleteOutlined />,
-    label: 'Uninstall Agent',
   },
   {
     type: Types.ACTION,

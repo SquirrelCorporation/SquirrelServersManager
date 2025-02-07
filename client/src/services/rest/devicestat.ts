@@ -19,7 +19,7 @@ export async function getDeviceStats(
 export async function getDeviceStat(
   deviceId: string,
   type: string,
-  params: API.DeviceStatParams,
+  params?: API.DeviceStatParams,
   options?: Record<string, any>,
 ) {
   return request<API.SimpleDeviceStat>(

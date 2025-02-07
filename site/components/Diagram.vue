@@ -107,6 +107,16 @@ const initialEdges = [
     style: { stroke: 'orange' },
     labelBgStyle: { fill: 'orange' },
     animated: true,
+  },
+  {
+    id: 'e1-4',
+    type: 'smoothstep',
+    source: '1',
+    target: '4',
+    label: 'SSH (Statistics)',
+    style: { stroke: 'orange' },
+    labelBgStyle: { fill: 'orange' },
+    animated: true,
   }
 ];
 

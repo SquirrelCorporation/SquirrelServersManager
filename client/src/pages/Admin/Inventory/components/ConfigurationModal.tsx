@@ -2,6 +2,7 @@ import AgentConfigurationTab from '@/pages/Admin/Inventory/components/tabs/Agent
 import ContainersConfigurationTab from '@/pages/Admin/Inventory/components/tabs/ContainersConfigurationTab';
 import DiagnosticTab from '@/pages/Admin/Inventory/components/tabs/DiagnosticTab';
 import SSHConfigurationFormTab from '@/pages/Admin/Inventory/components/tabs/SSHConfigurationFormTab';
+import SystemInformationConfigurationTab from '@/pages/Admin/Inventory/components/tabs/SystemInformationConfigurationTab';
 import { Modal, Tabs, TabsProps } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
@@ -20,6 +21,11 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
       key: 'ssh',
       label: 'SSH',
       children: <SSHConfigurationFormTab values={device} />,
+    },
+    {
+      key: 'system-information',
+      label: 'System Information',
+      children: <SystemInformationConfigurationTab device={device} />,
     },
     {
       key: 'containers',
