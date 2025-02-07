@@ -11,6 +11,7 @@ import { PlaybooksRepositoryModel } from '../../../../data/database/model/Playbo
 import AutomationEngine from '../../../../modules/automations/AutomationEngine';
 import WatcherEngine from '../../../../modules/containers/core/WatcherEngine';
 import NotificationComponent from '../../../../modules/notifications/NotificationComponent';
+import RemoteSystemInformationEngine from '../../../../modules/remote-system-information/core/RemoteSystemInformationEngine';
 import ContainerCustomStacksRepositoryEngine from '../../../../modules/repository/ContainerCustomStacksRepositoryEngine';
 import PlaybooksRepositoryEngine from '../../../../modules/repository/PlaybooksRepositoryEngine';
 import sshPrivateKeyFileManager from '../../../../modules/shell/managers/SshPrivateKeyFileManager';
@@ -51,6 +52,9 @@ vi.mock('../../../../modules/notifications/NotificationComponent', () => ({
   default: { init: vi.fn() },
 }));
 vi.mock('../../../../modules/repository/ContainerCustomStacksRepositoryEngine', () => ({
+  default: { init: vi.fn() },
+}));
+vi.mock('../../../../modules/remote-system-information/core/RemoteSystemInformationEngine', () => ({
   default: { init: vi.fn() },
 }));
 vi.mock('../../../../modules/repository/PlaybooksRepositoryEngine', () => ({
@@ -106,6 +110,7 @@ describe('Startup Integration Tests', () => {
     expect(Telemetry.init).toHaveBeenCalled();
     expect(NotificationComponent.init).toHaveBeenCalled();
     expect(sshPrivateKeyFileManager.removeAllAnsibleTemporaryPrivateKeys).toHaveBeenCalled();
+    expect(RemoteSystemInformationEngine.init).toHaveBeenCalled();
   });
 
   it('should call updateScheme when the scheme version differs', async () => {
