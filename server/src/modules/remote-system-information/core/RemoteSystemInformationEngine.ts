@@ -1,6 +1,7 @@
 import Device from '../../../data/database/model/Device';
 import PinoLogger from '../../../logger';
 import DeviceUseCases from '../../../services/DeviceUseCases';
+import { Kind } from '../../containers/core/Component';
 import RemoteSystemInformationWatcher from '../watchers/RemoteSystemInformationWatcher';
 import Component from './Component';
 import { RemoteSystemInformationConfigurationSchema } from './types';
@@ -50,6 +51,14 @@ async function registerComponent(
       `Error when registering component ${providerLowercase}/${nameLowercase} (${e.message})`,
     );
   }
+}
+
+async function deregisterWatcher(_id: string): Promise<any> {
+  Object.values(getStates().watcher).map(async (watcher) => {
+    if (watcher._id === _id) {
+      await deregisterComponent(watcher);
+    }
+  });
 }
 
 async function registerWatcher(device: Device): Promise<any> {
@@ -198,4 +207,5 @@ export default {
   init,
   deregisterAll,
   registerWatcher,
+  deregisterWatcher,
 };

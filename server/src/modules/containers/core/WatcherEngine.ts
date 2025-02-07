@@ -317,11 +317,19 @@ async function deregisterRegistries(): Promise<any> {
 }
 
 /**
- * Deregister all registries.
+ * Deregister all watchers.
  * @returns {Promise}
  */
 async function deregisterWatchers(): Promise<any> {
   return deregisterComponents(Kind.WATCHER, Object.values(getStates().watcher));
+}
+
+async function deregisterWatcher(_id: string): Promise<any> {
+  Object.values(getStates().watcher).map(async (watcher) => {
+    if (watcher._id === _id) {
+      await deregisterComponent(Kind.WATCHER, watcher);
+    }
+  });
 }
 
 /**
@@ -362,4 +370,5 @@ export default {
   deregisterAll,
   buildId,
   registerWatcher,
+  deregisterWatcher,
 };

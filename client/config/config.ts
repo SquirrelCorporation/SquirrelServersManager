@@ -7,6 +7,7 @@ const { REACT_APP_ENV = 'dev' } = process.env;
 import MonacoEditorWebpackPlugin from 'monaco-editor-webpack-plugin';
 
 export default defineConfig({
+  routes,
   /**
    * @doc https://umijs.org/docs/api/config#hash
    */
@@ -15,7 +16,6 @@ export default defineConfig({
    * @doc https://umijs.org/docs/guides/routes
    */
   // umi routes: https://umijs.org/docs/routing
-  routes,
   /**
    * @doc  https://ant.design/docs/react/customize-theme-cn
    * @doc  https://umijs.org/docs/api/config#theme

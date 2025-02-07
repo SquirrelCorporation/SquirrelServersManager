@@ -1,7 +1,7 @@
-import { RemoteSSHExecutorComponent } from '../../core/RemoteSSHExecutorComponent';
 import { SecurityTest, SecurityTestResult } from './types';
 import { getAllTests, getTestById, resolveTestDependencies } from './database';
 import logger from '../../../../logger';
+import RemoteSSHExecutorComponent from '../../core/RemoteSSHExecutorComponent';
 
 export interface TestExecutionResult {
   testId: string;
@@ -10,6 +10,7 @@ export interface TestExecutionResult {
   result: SecurityTestResult;
   timestamp: string;
   duration: number;
+  priority: string;
 }
 
 export class TestExecutor {
@@ -22,7 +23,7 @@ export class TestExecutor {
       timeout?: number;
       parallel?: boolean;
       stopOnFailure?: boolean;
-    } = {}
+    } = {},
   ) {}
 
   async detectPlatform(): Promise<void> {
@@ -47,20 +48,21 @@ export class TestExecutor {
           category: test.category,
           result: {
             status: 'skipped',
-            message: `Test not applicable for platform ${this.platform}`
+            message: `Test not applicable for platform ${this.platform}`,
           },
           timestamp: new Date().toISOString(),
-          duration: 0
+          duration: 0,
+          priority: test.priority,
         };
       }
 
       // Execute command
-      const command = typeof test.command === 'function' ? 
-        test.command(this.platform) : test.command;
+      const command =
+        typeof test.command === 'function' ? test.command(this.platform) : test.command;
 
       const output = await this.executor.runCommand(command, {
         elevatePrivilege: true,
-        timeout: this.options.timeout
+        timeout: this.options.timeout,
       });
 
       // Evaluate results
@@ -72,11 +74,11 @@ export class TestExecutor {
         category: test.category,
         result,
         timestamp: new Date().toISOString(),
-        duration: Date.now() - startTime
+        duration: Date.now() - startTime,
+        priority: test.priority,
       };
-
-    } catch (error) {
-      logger.error(`Error executing test ${test.id}:`, error);
+    } catch (error: any) {
+      logger.error(error, `Error executing test ${test.id}`);
       return {
         testId: test.id,
         name: test.name,
@@ -84,21 +86,22 @@ export class TestExecutor {
         result: {
           status: 'fail',
           message: 'Test execution failed',
-          details: error instanceof Error ? error.message : String(error)
+          details: error instanceof Error ? error.message : error?.err?.message,
         },
         timestamp: new Date().toISOString(),
-        duration: Date.now() - startTime
+        duration: Date.now() - startTime,
+        priority: test.priority,
       };
     }
   }
 
   async executeTests(testIds?: string[]): Promise<TestExecutionResult[]> {
     await this.detectPlatform();
-    
+
     const results: TestExecutionResult[] = [];
-    const tests = testIds ? 
-      testIds.map(id => getTestById(id)).filter((t): t is SecurityTest => t !== undefined) :
-      getAllTests();
+    const tests = testIds
+      ? testIds.map((id) => getTestById(id)).filter((t): t is SecurityTest => t !== undefined)
+      : getAllTests();
 
     for (const test of tests) {
       // Skip if already executed
@@ -145,16 +148,19 @@ export class TestExecutor {
       failed: 0,
       warnings: 0,
       skipped: 0,
-      categories: new Map<string, {
-        total: number;
-        passed: number;
-        failed: number;
-        warnings: number;
-        skipped: number;
-      }>()
+      categories: new Map<
+        string,
+        {
+          total: number;
+          passed: number;
+          failed: number;
+          warnings: number;
+          skipped: number;
+        }
+      >(),
     };
 
-    results.forEach(result => {
+    results.forEach((result) => {
       // Update overall counts
       switch (result.result.status) {
         case 'pass':
@@ -177,7 +183,7 @@ export class TestExecutor {
         passed: 0,
         failed: 0,
         warnings: 0,
-        skipped: 0
+        skipped: 0,
       };
 
       categoryStats.total++;
@@ -201,7 +207,7 @@ export class TestExecutor {
 
     return {
       ...summary,
-      categories: Object.fromEntries(summary.categories)
+      categories: Object.fromEntries(summary.categories),
     };
   }
 }

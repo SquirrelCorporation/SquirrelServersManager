@@ -11,6 +11,7 @@ export interface SecurityTest {
   command: string | ((platform: string) => string); // Command to run or function that returns command
   evaluate: (output: string) => SecurityTestResult;
   tags?: string[];
+  priority: 'high' | 'medium' | 'low';
 }
 
 export interface SecurityTestResult {

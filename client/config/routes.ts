@@ -21,6 +21,7 @@ export default [
     path: '/manage',
     name: 'Manage',
     icon: 'GlobalOutlined',
+    hideInBreadcrumb: true,
     routes: [
       {
         name: 'Devices',
@@ -39,6 +40,12 @@ export default [
         name: 'Automations',
         icon: 'interaction',
         component: './Automations/Automations',
+      },
+      {
+        path: '/manage/security',
+        name: 'Security',
+        icon: 'SecurityScanOutlined',
+        component: './Security/Security',
       },
     ],
   },

@@ -1,5 +1,6 @@
-import { RemoteExecOptions } from '../system-information/types';
-import { RemoteSSHExecutorComponent } from '../core/RemoteSSHExecutorComponent';
+import DeviceRepo from '../../../data/database/repository/DeviceRepo';
+import SecurityTestResultRepo from '../../../data/database/repository/SecurityTestResultRepo';
+import RemoteSSHExecutorComponent from '../core/RemoteSSHExecutorComponent';
 import logger from '../../../logger';
 import { CISFramework } from './compliance/CISFramework';
 import { NISTFramework } from './compliance/NISTFramework';
@@ -20,11 +21,13 @@ export class SecurityScanner {
   private cisFramework: CISFramework;
   private nistFramework: NISTFramework;
   private testExecutor: TestExecutor;
+  private deviceUuid: string;
 
   constructor(private executor: RemoteSSHExecutorComponent) {
     this.cisFramework = new CISFramework(executor);
     this.nistFramework = new NISTFramework(executor);
     this.testExecutor = new TestExecutor(executor);
+    this.deviceUuid = executor.configuration.deviceUuid;
   }
 
   async performFullScan(options: SecurityScanOptions = {}): Promise<{
@@ -34,19 +37,32 @@ export class SecurityScanner {
     try {
       // Execute security tests
       const testResults = await this.executeSecurityTests(options);
-      
+
       // Execute compliance checks if requested
       let complianceResults: ComplianceCheckResult[] | undefined;
       if (options.includeCompliance) {
         complianceResults = await this.performComplianceChecks();
       }
-
+      const device = await DeviceRepo.findOneByUuid(this.deviceUuid);
+      if (device) {
+        for (const result of testResults) {
+          void SecurityTestResultRepo.updateOrCreate({
+            device,
+            name: result.name,
+            category: result.category,
+            id: result.testId,
+            result: result.result,
+            duration: result.duration,
+            priority: result.priority,
+          });
+        }
+      }
       return {
         testResults,
-        complianceResults
+        complianceResults,
       };
     } catch (error) {
-      logger.error('Error during security scan:', error);
+      logger.error(error, 'Error during security scan:');
       throw error;
     }
   }
@@ -56,27 +72,27 @@ export class SecurityScanner {
     this.testExecutor = new TestExecutor(this.executor, {
       timeout: options.timeout,
       parallel: options.parallel,
-      stopOnFailure: options.stopOnFailure
+      stopOnFailure: options.stopOnFailure,
     });
 
     // Collect tests to run based on options
     const testsToRun = new Set<string>();
 
     if (options.categories) {
-      options.categories.forEach(category => {
-        getTestsByCategory(category).forEach(test => testsToRun.add(test.id));
+      options.categories.forEach((category) => {
+        getTestsByCategory(category).forEach((test) => testsToRun.add(test.id));
       });
     }
 
     if (options.frameworks) {
-      options.frameworks.forEach(framework => {
-        getTestsByFramework(framework).forEach(test => testsToRun.add(test.id));
+      options.frameworks.forEach((framework) => {
+        getTestsByFramework(framework).forEach((test) => testsToRun.add(test.id));
       });
     }
 
     // Execute tests
     return await this.testExecutor.executeTests(
-      testsToRun.size > 0 ? Array.from(testsToRun) : undefined
+      testsToRun.size > 0 ? Array.from(testsToRun) : undefined,
     );
   }
 
@@ -121,22 +137,27 @@ export class SecurityScanner {
     };
   }> {
     const testSummary = this.testExecutor.getExecutionSummary(results.testResults);
-    
+
     let complianceSummary;
     if (results.complianceResults) {
-      const frameworkResults = new Map<string, {
-        version: string;
-        passed: number;
-        total: number;
-      }>();
+      const frameworkResults = new Map<
+        string,
+        {
+          version: string;
+          passed: number;
+          total: number;
+        }
+      >();
 
-      results.complianceResults.forEach(result => {
+      results.complianceResults.forEach((result) => {
         const framework = result.framework;
         const current = frameworkResults.get(framework) || {
-          version: result.framework === this.cisFramework.getName() ? 
-            this.cisFramework.getVersion() : this.nistFramework.getVersion(),
+          version:
+            result.framework === this.cisFramework.getName()
+              ? this.cisFramework.getVersion()
+              : this.nistFramework.getVersion(),
           passed: 0,
-          total: 0
+          total: 0,
         };
 
         current.total++;
@@ -148,7 +169,7 @@ export class SecurityScanner {
       });
 
       const totalChecks = results.complianceResults.length;
-      const passedChecks = results.complianceResults.filter(r => r.status === 'pass').length;
+      const passedChecks = results.complianceResults.filter((r) => r.status === 'pass').length;
 
       complianceSummary = {
         totalChecks,
@@ -160,23 +181,23 @@ export class SecurityScanner {
           version: stats.version,
           passedChecks: stats.passed,
           totalChecks: stats.total,
-          score: (stats.passed / stats.total) * 100
-        }))
+          score: (stats.passed / stats.total) * 100,
+        })),
       };
     }
 
     return {
       summary: {
         tests: testSummary,
-        compliance: complianceSummary
+        compliance: complianceSummary,
       },
-      details: results
+      details: results,
     };
   }
 
   async performComplianceChecks(): Promise<ComplianceCheckResult[]> {
     const results: ComplianceCheckResult[] = [];
-    
+
     try {
       const cisResults = await this.cisFramework.performChecks();
       results.push(...cisResults);

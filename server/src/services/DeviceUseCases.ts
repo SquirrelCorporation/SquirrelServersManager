@@ -15,12 +15,14 @@ import DeviceRepo from '../data/database/repository/DeviceRepo';
 import DeviceStatRepo from '../data/database/repository/DeviceStatRepo';
 import PlaybookRepo from '../data/database/repository/PlaybookRepo';
 import ProxmoxContainerRepo from '../data/database/repository/ProxmoxContainerRepo';
+import SecurityTestResultRepo from '../data/database/repository/SecurityTestResultRepo';
 import PinoLogger from '../logger';
 import { InternalError } from '../middlewares/api/ApiError';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../modules/ansible-vault/ansible-vault';
 import Inventory from '../modules/ansible/utils/InventoryTransformer';
 import WatcherEngine from '../modules/containers/core/WatcherEngine';
 import Docker from '../modules/containers/watchers/providers/docker/Docker';
+import RemoteSystemInformationEngine from '../modules/remote-system-information/core/RemoteSystemInformationEngine';
 import PlaybookUseCases from './PlaybookUseCases';
 
 const logger = PinoLogger.child({ module: 'DeviceUseCases' }, { msgPrefix: '[DEVICE] - ' });
@@ -86,7 +88,11 @@ async function deleteDevice(device: Device) {
   await DeviceAuthRepo.deleteByDevice(device);
   await DeviceDownTimeEventRepo.deleteManyByDevice(device);
   await DeviceRepo.deleteByUuid(device.uuid);
-  await WatcherEngine.registerWatcher(device);
+  await WatcherEngine.deregisterWatcher(device._id);
+  if (device.agentType === SsmAgent.InstallMethods.LESS) {
+    await RemoteSystemInformationEngine.deregisterWatcher(device._id);
+  }
+  await SecurityTestResultRepo.deleteByDevice(device);
   const containers = await ContainerRepo.findContainersByDevice(device);
   if (containers) {
     await Promise.all(

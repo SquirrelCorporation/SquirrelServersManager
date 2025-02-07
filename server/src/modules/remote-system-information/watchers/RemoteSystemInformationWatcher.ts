@@ -1,7 +1,9 @@
 import CronJob from 'node-cron';
 import { updateQueue } from '../../../helpers/queue/queueManager';
+import logger from '../../../logger';
 import RemoteSSHExecutorComponent from '../core/RemoteSSHExecutorComponent';
 import { UpdateStatsType, UpdateType } from '../helpers/queueProcessor';
+import { SecurityScanner } from '../security-scanner/SecurityScanner';
 import BluetoothComponent from '../system-information/bluetooth/BluetoothComponent';
 import CPUComponent from '../system-information/cpu/CPUComponent';
 import { FileSystemComponent } from '../system-information/filesystem/FileSystemComponent';
@@ -92,7 +94,10 @@ class RemoteSystemInformationWatcher extends RemoteSSHExecutorComponent {
     try {
       this.logger.info('Initializing RemoteSystemInformationWatcher...');
       await super.init();
-
+      const _sec = new SecurityScanner(this);
+      logger.info('Starting security scan...');
+      logger.info(await _sec.performFullScan());
+      return;
       // Initialize components
       await this.setupComponent('CPU', CPUComponent, this.configuration.deviceUuid);
       await this.setupComponent('Memory', MemoryComponent);
