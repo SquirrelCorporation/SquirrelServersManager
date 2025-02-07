@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Add tests for RemoteSystemInformationEngine initialization [\#714](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/714) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update dependencies for the client and server modules [\#713](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/713) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add Prometheus configuration to .env files [\#712](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/712) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Docs agentless [\#702](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/702) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
