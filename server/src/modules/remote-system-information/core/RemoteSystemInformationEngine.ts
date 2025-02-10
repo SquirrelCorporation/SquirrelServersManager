@@ -198,4 +198,8 @@ export default {
   init,
   deregisterAll,
   registerWatcher,
+  registerComponent,
+  registerWatchers,
+  deregisterComponent,
+  getStates,
 };

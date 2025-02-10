@@ -123,6 +123,30 @@ const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
       </>
     ),
   },
+  {
+    title: 'Err',
+    dataIndex: 'err',
+    key: 'err',
+    hideInSearch: true,
+    width: '10%',
+    render: (text, record) => (
+      <>
+        {record.err && (
+          <Popover
+            content={
+              <JsonFormatter
+                json={record.err}
+                tabWith={4}
+                jsonStyle={jsonStyle}
+              />
+            }
+          >
+            <InfoCircleFilled />
+          </Popover>
+        )}
+      </>
+    ),
+  },
 ];
 
 export default ServerLogsColumns;
