@@ -7,6 +7,7 @@
 **Merged pull requests:**
 
 - \[CHORE\] Refactor error logging and enhance Logs schema/UI. [\#727](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/727) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update images to 'latest' and add Prometheus service [\#707](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/707) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.28](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.28) (2025-02-07)
 
