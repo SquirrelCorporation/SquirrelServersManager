@@ -422,6 +422,7 @@ export type ServerLog = {
   msg: string;
   req: any;
   res: any;
+  err: any;
 };
 
 export type DeviceAuthResponse = {

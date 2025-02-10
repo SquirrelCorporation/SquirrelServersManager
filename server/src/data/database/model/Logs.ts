@@ -11,6 +11,7 @@ export default interface Logs {
   msg: string;
   req: any;
   res: any;
+  err: any;
 }
 
 const schema = new Schema<Logs>(
@@ -46,6 +47,11 @@ const schema = new Schema<Logs>(
       required: false,
     },
     res: {
+      type: Object,
+      immutable: true,
+      required: false,
+    },
+    err: {
       type: Object,
       immutable: true,
       required: false,

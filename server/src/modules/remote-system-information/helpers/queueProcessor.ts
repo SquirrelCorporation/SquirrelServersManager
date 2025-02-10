@@ -98,7 +98,7 @@ updateQueue.process(async (job) => {
     logger.info(`Successfully updated ${updateType} for device ${deviceUuid}`);
     logger.debug(JSON.stringify(data));
   } catch (err: any) {
-    logger.error(`Failed to process job: ${err?.message}`, err);
+    logger.error(err, `Failed to process job: ${err?.message}`);
     throw err; // Let Bull handle retries if the job fails
   }
 });

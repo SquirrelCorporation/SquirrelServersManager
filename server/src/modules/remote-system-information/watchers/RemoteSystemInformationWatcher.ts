@@ -78,13 +78,13 @@ class RemoteSystemInformationWatcher extends RemoteSSHExecutorComponent {
         cron: CronJob.schedule(config.cron, async () => {
           try {
             await handler();
-          } catch (error) {
-            this.logger.error(`Error in ${name} watcher:`, error);
+          } catch (error: any) {
+            this.logger.error(error, `Error in ${name} watcher: ${error?.message}`);
           }
         }),
       };
       // Initial run
-      handler().catch((error) => this.logger.error(`Error in initial ${name} watch:`, error));
+      handler().catch((error) => this.logger.error(error, `Error in initial ${name} watch`));
     }
   }
 
@@ -169,8 +169,8 @@ class RemoteSystemInformationWatcher extends RemoteSSHExecutorComponent {
         updateType,
         data,
       });
-    } catch (error) {
-      this.logger.error(`Failed to enqueue update for ${updateType}:`, error);
+    } catch (error: any) {
+      this.logger.error(`Failed to enqueue update for ${updateType}: ${error?.message}`);
       throw error;
     }
   }

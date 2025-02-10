@@ -59,7 +59,7 @@ describe('RemoteSystemInformationWatcher', () => {
       // Wait for error handler to be called
       await new Promise((resolve) => setTimeout(resolve, 0));
 
-      expect(loggerStub.error).toHaveBeenCalledWith(`Error in initial ${name} watch:`, error);
+      expect(loggerStub.error).toHaveBeenCalledWith(error, `Error in initial ${name} watch`);
     });
 
     it('should not setup watcher when watch is false', () => {

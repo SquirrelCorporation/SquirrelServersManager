@@ -30,6 +30,9 @@ const Index: React.FC = () => {
     res: {
       show: false,
     },
+    err: {
+      show: false,
+    },
   });
 
   if (searchParams.get('module')) {
