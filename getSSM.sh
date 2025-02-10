@@ -74,6 +74,9 @@ REDIS_PORT=6379
 #SSM_INSTALL_PATH=/opt/squirrelserversmanager
 #SSM_DATA_PATH=/data
 TELEMETRY_ENABLED=true
+# PROMETHEUS
+PROMETHEUS_USERNAME=$(generate_random_string 16)
+PROMETHEUS_PASSWORD=$(generate_random_string 32)
 EOF
 echo "✅ .env file has been generated with random secrets."
 else

@@ -11,6 +11,8 @@ const logger = PinoLogger.child({ module: 'PrometheusService' }, { msgPrefix: '[
 export interface PrometheusConfig {
   endpoint: string;
   baseURL: string;
+  username: string;
+  password: string;
 }
 
 export interface TimeRange {
@@ -35,6 +37,10 @@ export class PrometheusService {
     this.driver = new PrometheusDriver({
       endpoint: config.endpoint,
       baseURL: config.baseURL,
+      auth: {
+        username: config.username,
+        password: config.password,
+      },
     });
   }
 
@@ -43,6 +49,8 @@ export class PrometheusService {
       PrometheusService.instance = new PrometheusService({
         endpoint: prometheusConf.host,
         baseURL: prometheusConf.baseURL,
+        username: prometheusConf.user,
+        password: prometheusConf.password,
       });
     }
     return PrometheusService.instance;
