@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.28-alpha.2...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.28...HEAD)
+
+**Merged pull requests:**
+
+- \[CHORE\] Refactor error logging and enhance Logs schema/UI. [\#727](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/727) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+## [v0.1.28](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.28) (2025-02-07)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.28-alpha.2...v0.1.28)
 
 **Merged pull requests:**
 
@@ -867,15 +875,15 @@
 
 ## [v0.1.10](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.10) (2024-06-07)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.10)
-
-## [v0.1.9](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.9) (2024-06-06)
-
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.9)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.10)
 
 ## [v0.1.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.8) (2024-06-06)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.8)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.8)
+
+## [v0.1.9](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.9) (2024-06-06)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.9)
 
 ## [v0.1.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.7) (2024-06-06)
 
