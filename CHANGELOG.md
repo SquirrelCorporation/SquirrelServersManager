@@ -6,7 +6,16 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Add support for Remote System Information connection tests [\#728](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/728) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor error logging and enhance Logs schema/UI. [\#727](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/727) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump prettier from 3.4.2 to 3.5.0 in /server [\#726](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/726) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @aws-sdk/client-ecr from 3.743.0 to 3.744.0 in /server [\#725](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/725) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @eslint/js from 9.19.0 to 9.20.0 in /server [\#723](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/723) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @eslint/js from 9.19.0 to 9.20.0 in /client [\#720](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/720) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump prettier from 3.4.2 to 3.5.0 in /client [\#719](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/719) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @babel/preset-env from 7.26.7 to 7.26.8 in /client [\#718](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/718) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vuetify from 3.7.9 to 3.7.11 in /site [\#717](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/717) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump nginx from 1.27.3 to 1.27.4 in /proxy [\#716](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/716) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Update images to 'latest' and add Prometheus service [\#707](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/707) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.28](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.28) (2025-02-07)
