@@ -36,9 +36,18 @@ services:
       - mongo
       - server
       - redis
+      - prometheus
     labels:
       wud.display.name: "SSM - Proxy"
       wud.watch.digest: false
+  prometheus:
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-prometheus:latest"
+    container_name: prometheus-ssm
+    restart: unless-stopped
+    volumes:
+      - ./.data.prod/prometheus:/prometheus
+    labels:
+      wud.display.name: "SSM - Prometheus"
   mongo:
     container_name: mongo-ssm
     image: mongo
@@ -69,9 +78,11 @@ services:
     external_links:
       - mongo
       - redis
+      - prometheus
     depends_on:
       - mongo
       - redis
+      - prometheus
     env_file: .env
     environment:
       NODE_ENV: production
