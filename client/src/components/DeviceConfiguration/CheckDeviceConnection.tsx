@@ -13,12 +13,15 @@ import {
 import { Alert, Popover, Steps, Typography } from 'antd';
 import { motion } from 'framer-motion';
 import React, { useEffect, useRef, useState } from 'react';
-import { API, SsmAnsible } from 'ssm-shared-lib';
+import { API, SsmAgent, SsmAnsible } from 'ssm-shared-lib';
 
 export type CheckDeviceConnectionProps = {
+  installMethod: SsmAgent.InstallMethods;
   execId?: string;
   dockerConnRes?: string;
   dockerConnErrorMessage?: string;
+  rsiConnRes?: string;
+  rsiConnErrorMessage?: string;
 };
 
 const taskInit: TaskStatusTimelineType = {
@@ -34,11 +37,19 @@ const animationVariants = {
 };
 
 const CheckDeviceConnection: React.FC<CheckDeviceConnectionProps> = (props) => {
-  const { execId, dockerConnRes, dockerConnErrorMessage } = props;
+  const {
+    execId,
+    dockerConnRes,
+    dockerConnErrorMessage,
+    rsiConnErrorMessage,
+    rsiConnRes,
+  } = props;
   const timerIdRef = useRef();
   const [isPollingEnabled, setIsPollingEnabled] = useState(false);
   const [playbookStatus, setPlaybookStatus] = useState('running...');
   const [dockerStatus, setDockerStatus] = useState('running...');
+  const [rsiStatus, setRsiStatus] = useState('running...');
+
   const [execRes, setExecRes] = useState(<></>);
   const [smartFailure, setSmartFailure] = useState<
     API.SmartFailure | undefined
@@ -107,6 +118,14 @@ const CheckDeviceConnection: React.FC<CheckDeviceConnectionProps> = (props) => {
       setDockerStatus('running...');
     }
   }, [dockerConnRes]);
+
+  useEffect(() => {
+    if (rsiConnRes) {
+      setRsiStatus(rsiConnRes);
+    } else {
+      setRsiStatus('running...');
+    }
+  }, [rsiConnRes]);
 
   useEffect(() => {
     const pollingCallback = () => {
@@ -202,6 +221,38 @@ const CheckDeviceConnection: React.FC<CheckDeviceConnectionProps> = (props) => {
                 <LoadingOutlined />
               ),
           },
+          ...(props.installMethod === SsmAgent.InstallMethods.LESS
+            ? [
+                {
+                  title: 'Remote System Information Connection test',
+                  description: (
+                    <>
+                      {rsiStatus}{' '}
+                      {rsiStatus === 'failed' && (
+                        <Popover
+                          content={
+                            <Typography.Text type="danger">
+                              {rsiConnErrorMessage}
+                            </Typography.Text>
+                          }
+                          title={'Remote System Information Connection Logs'}
+                        >
+                          <InfoCircleFilled />
+                        </Popover>
+                      )}
+                    </>
+                  ),
+                  icon:
+                    rsiStatus === 'successful' ? (
+                      <CheckCircleOutlined />
+                    ) : rsiStatus === 'failed' ? (
+                      <CloseOutlined style={{ color: 'red' }} />
+                    ) : (
+                      <LoadingOutlined />
+                    ),
+                },
+              ]
+            : []),
         ]}
       />
       {smartFailure && (

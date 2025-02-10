@@ -15,12 +15,14 @@ import DeviceRepo from '../data/database/repository/DeviceRepo';
 import DeviceStatRepo from '../data/database/repository/DeviceStatRepo';
 import PlaybookRepo from '../data/database/repository/PlaybookRepo';
 import ProxmoxContainerRepo from '../data/database/repository/ProxmoxContainerRepo';
+import SSHCredentialsHelper from '../helpers/ssh/SSHCredentialsHelper';
 import PinoLogger from '../logger';
 import { InternalError } from '../middlewares/api/ApiError';
 import { DEFAULT_VAULT_ID, vaultEncrypt } from '../modules/ansible-vault/ansible-vault';
 import Inventory from '../modules/ansible/utils/InventoryTransformer';
 import WatcherEngine from '../modules/containers/core/WatcherEngine';
 import Docker from '../modules/containers/watchers/providers/docker/Docker';
+import RemoteSystemInformationWatcher from '../modules/remote-system-information/watchers/RemoteSystemInformationWatcher';
 import PlaybookUseCases from './PlaybookUseCases';
 
 const logger = PinoLogger.child({ module: 'DeviceUseCases' }, { msgPrefix: '[DEVICE] - ' });
@@ -251,9 +253,74 @@ async function checkDockerConnection(
   }
 }
 
+async function checkRemoteSystemInformationConnection(
+  ip?: string,
+  authType?: SsmAnsible.SSHType,
+  sshKey?: string,
+  sshUser?: string,
+  sshPwd?: string,
+  sshPort?: number,
+  becomeMethod?: SsmAnsible.AnsibleBecomeMethod,
+  becomePass?: string,
+  sshKeyPass?: string,
+) {
+  try {
+    const mockedDeviceAuth = {
+      device: {
+        _id: 'tmp',
+        ip,
+        uuid: 'tmp',
+        status: SsmStatus.DeviceStatus.REGISTERING,
+        capabilities: { containers: {} },
+        systemInformation: {},
+        configuration: { containers: {}, systemInformation: {} },
+      },
+      authType,
+      sshKey: sshKey ? await vaultEncrypt(sshKey, DEFAULT_VAULT_ID) : undefined,
+      sshUser,
+      sshPwd: sshPwd ? await vaultEncrypt(sshPwd, DEFAULT_VAULT_ID) : undefined,
+      sshPort: sshPort || 22,
+      becomeMethod,
+      becomePass: becomePass ? await vaultEncrypt(becomePass, DEFAULT_VAULT_ID) : undefined,
+      sshKeyPass: sshKeyPass ? await vaultEncrypt(sshKeyPass, DEFAULT_VAULT_ID) : undefined,
+    };
+    await RemoteSystemInformationWatcher.testConnection(
+      await SSHCredentialsHelper.getSShConnection(mockedDeviceAuth.device, mockedDeviceAuth),
+    );
+
+    return {
+      status: 'successful',
+    };
+  } catch (error: any) {
+    return {
+      status: 'failed',
+      message: error.message,
+    };
+  }
+}
+
 async function checkDeviceDockerConnection(device: Device, deviceAuth: DeviceAuth) {
   try {
     await Docker.testDockerConnection(device, deviceAuth);
+    return {
+      status: 'successful',
+    };
+  } catch (error: any) {
+    logger.error(error);
+    return {
+      status: 'failed',
+      message: error.message,
+    };
+  }
+}
+
+async function checkDeviceRemoteSystemInformationConnection(
+  device: Device,
+  deviceAuth: DeviceAuth,
+) {
+  try {
+    const connection = await SSHCredentialsHelper.getSShConnection(device, deviceAuth);
+    await RemoteSystemInformationWatcher.testConnection(connection);
     return {
       status: 'successful',
     };
@@ -290,4 +357,5 @@ export default {
   checkDeviceAnsibleConnection,
   getProxmoxDevicesToWatch,
   getRemoteSysInfoDevicesToWatch,
+  checkDeviceRemoteSystemInformationConnection,
 };

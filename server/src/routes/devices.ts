@@ -6,14 +6,17 @@ import {
   getCheckDeviceAnsibleConnection,
   getCheckDeviceDockerConnection,
   getCheckDeviceProxmoxConnection,
+  getCheckDeviceRemoteSystemInformationConnection,
   postCheckAnsibleConnection,
   postCheckDockerConnection,
+  postCheckRemoteSystemInformationConnection,
   postDiagnostic,
 } from '../controllers/rest/devices/check-connection';
 import {
   getCheckDeviceAnsibleConnectionValidator,
   getCheckDeviceDockerConnectionValidator,
   getCheckDeviceProxmoxConnectionValidator,
+  getCheckDeviceRemoteSystemInformationConnectionValidator,
   postCheckAnsibleConnectionValidator,
   postCheckDockerConnectionValidator,
   postDiagnosticValidator,
@@ -93,6 +96,11 @@ router.post(
   postCheckDockerConnectionValidator,
   postCheckDockerConnection,
 );
+router.post(
+  '/check-connection/remote-system-information',
+  postCheckDockerConnectionValidator,
+  postCheckRemoteSystemInformationConnection,
+);
 
 router.get(`/dashboard/stats/performances`, getDashboardPerformanceStats);
 router.post(
@@ -141,6 +149,13 @@ router
 router
   .route('/:uuid/auth/proxmox/test-connection')
   .post(getCheckDeviceProxmoxConnectionValidator, getCheckDeviceProxmoxConnection);
+router
+  .route('/:uuid/auth/remote-system-information/test-connection')
+  .get(
+    getCheckDeviceRemoteSystemInformationConnectionValidator,
+    getCheckDeviceRemoteSystemInformationConnection,
+  );
+
 router.post('/:uuid/auth/diagnostic', postDiagnosticValidator, postDiagnostic);
 
 router.route('/').put(addDeviceValidator, addDevice).get(getDevices);

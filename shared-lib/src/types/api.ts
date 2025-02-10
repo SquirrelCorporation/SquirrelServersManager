@@ -166,6 +166,11 @@ export type CheckDockerConnection = {
   errorMessage?: string;
 }
 
+export type CheckRemoteSystemInformationConnection = {
+  connectionStatus: string;
+  errorMessage?: string;
+}
+
 export type DeviceCapabilities = {
   containers: {
     docker: {

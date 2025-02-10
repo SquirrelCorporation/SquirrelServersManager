@@ -209,6 +209,34 @@ export default class RemoteSSHExecutorComponent extends Component {
     });
   }
 
+  public static async testConnection(config: ConnectConfig): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const conn = new Client();
+      conn
+        .on('ready', () => {
+          conn.exec('echo', (err, stream) => {
+            if (err) {
+              conn.end(); // Close the connection after the test succeeds
+              reject(err);
+            }
+            stream.on('exit', (code: number, signal: any) => {
+              if (code === 0) {
+                conn.end(); // Close the connection after the test succeeds
+                resolve();
+              } else {
+                conn.end(); // Close the connection after the test succeeds
+                reject(new Error(`Connection failed with code ${code}, signal: ${signal}`));
+              }
+            });
+          });
+        })
+        .on('error', (err) => {
+          reject(err); // Return the error if connection fails
+        })
+        .connect(config); // Connect using provided configuration
+    });
+  }
+
   // Reconnection logic
   private async reconnect(retryAttempt = 0): Promise<void> {
     // If already reconnecting, return the existing promise

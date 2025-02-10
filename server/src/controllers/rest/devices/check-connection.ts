@@ -1,4 +1,5 @@
 import { API } from 'ssm-shared-lib';
+import { CheckRemoteSystemInformationConnection } from 'ssm-shared-lib/distribution/types/api';
 import DeviceAuthRepo from '../../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../../data/database/repository/DeviceRepo';
 import { preWriteSensitiveInfos } from '../../../helpers/sensitive/handle-sensitive-info';
@@ -75,6 +76,33 @@ export const postCheckDockerConnection = async (req, res) => {
   }
 };
 
+export const postCheckRemoteSystemInformationConnection = async (req, res) => {
+  const { ip, authType, sshKey, sshUser, sshPwd, sshPort, becomeMethod, becomePass, sshKeyPass } =
+    req.body;
+  if (!req.user) {
+    throw new ForbiddenError();
+  }
+  const result = await DeviceUseCases.checkDockerConnection(
+    ip,
+    authType,
+    sshKey,
+    sshUser,
+    sshPwd,
+    sshPort,
+    becomeMethod,
+    becomePass,
+    sshKeyPass,
+  );
+  try {
+    new SuccessResponse('Post CheckRemoteSystemInformationConnection', {
+      connectionStatus: result.status,
+      errorMessage: result.message,
+    } as API.CheckRemoteSystemInformationConnection).send(res);
+  } catch (error: any) {
+    throw new InternalError(error.message);
+  }
+};
+
 export const getCheckDeviceDockerConnection = async (req, res) => {
   const { uuid } = req.params;
   const device = await DeviceRepo.findOneByUuid(uuid);
@@ -88,6 +116,30 @@ export const getCheckDeviceDockerConnection = async (req, res) => {
   try {
     const result = await DeviceUseCases.checkDeviceDockerConnection(device, deviceAuth);
     new SuccessResponse('Post CheckDeviceDockerConnection', {
+      connectionStatus: result.status,
+      errorMessage: result.message,
+    } as API.CheckDockerConnection).send(res);
+  } catch (error: any) {
+    throw new InternalError(error.message);
+  }
+};
+
+export const getCheckDeviceRemoteSystemInformationConnection = async (req, res) => {
+  const { uuid } = req.params;
+  const device = await DeviceRepo.findOneByUuid(uuid);
+  if (!device) {
+    throw new NotFoundError('Device ID not found');
+  }
+  const deviceAuth = await DeviceAuthRepo.findOneByDevice(device);
+  if (!deviceAuth) {
+    throw new NotFoundError('Device Auth not found');
+  }
+  try {
+    const result = await DeviceUseCases.checkDeviceRemoteSystemInformationConnection(
+      device,
+      deviceAuth,
+    );
+    new SuccessResponse('Post getCheckDeviceRemoteSystemInformationConnection', {
       connectionStatus: result.status,
       errorMessage: result.message,
     } as API.CheckDockerConnection).send(res);

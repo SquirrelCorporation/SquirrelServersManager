@@ -96,6 +96,16 @@ export const getCheckDeviceDockerConnectionValidator = [
   validator,
 ];
 
+export const getCheckDeviceRemoteSystemInformationConnectionValidator = [
+  param('uuid')
+    .exists()
+    .notEmpty()
+    .withMessage('Uuid is required')
+    .isUUID()
+    .withMessage('Uuid is not valid'),
+  validator,
+];
+
 export const getCheckDeviceAnsibleConnectionValidator = [
   param('uuid')
     .exists()
