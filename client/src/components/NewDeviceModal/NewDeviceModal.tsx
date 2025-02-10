@@ -17,6 +17,7 @@ import {
   putDevice,
   postCheckAnsibleConnection,
   postCheckDockerConnection,
+  postCheckRemoteSystemInformationConnection,
 } from '@/services/rest/device';
 import SSHConnectionFormElements from '@/components/DeviceConfiguration/SSHConnectionFormElements';
 import CheckDeviceConnection from '@/components/DeviceConfiguration/CheckDeviceConnection';
@@ -37,12 +38,25 @@ const { useBreakpoint } = Grid;
 
 const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
   const formRef = useRef<ProFormInstance>();
+  const sshFormRef = useRef<ProFormInstance>();
+  const installMethodFormRef = useRef<ProFormInstance>();
   const [loading, setLoading] = useState(false);
   const [sshConnection, setSshConnection] = useState<any>({});
-  const [execId, setExecId] = useState();
-  const [dockerConnectionStatus, setDockerConnectionStatus] = useState();
+  const [execId, setExecId] = useState<string | undefined>();
+  const [dockerConnectionStatus, setDockerConnectionStatus] = useState<
+    string | undefined
+  >();
   const [dockerConnectionErrorMessage, setDockerConnectionErrorMessage] =
-    useState();
+    useState<string | undefined>();
+  const [rsiConnectionStatus, setRsiConnectionStatus] = useState<
+    string | undefined
+  >();
+  const [rsiConnectionErrorMessage, setRsiConnectionErrorMessage] = useState<
+    string | undefined
+  >();
+  const [agentInstallMethod, setAgentInstallMethod] = useState<
+    string | undefined
+  >();
   const screens = useBreakpoint();
 
   const handleCancel = () => {
@@ -79,50 +93,79 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
     }
   };
 
-  const handleStepChange = (step: number, form?: ProFormInstance) => {
+  const handleStepChange = (step: number) => {
+    const sshFormValues = sshFormRef?.current?.getFieldsValue(true);
+    const installMethodFormValues =
+      installMethodFormRef?.current?.getFieldsValue(true);
     if (step === 0) {
-      const formValues = form?.getFieldsValue(true);
-      setSshConnection(formValues);
+      setSshConnection(sshFormValues);
+    }
+    if (step === 1) {
+      setAgentInstallMethod(installMethodFormValues?.installMethod);
       setDockerConnectionStatus(undefined);
       setDockerConnectionErrorMessage(undefined);
+      setRsiConnectionStatus(undefined);
+      setRsiConnectionErrorMessage(undefined);
       setExecId(undefined);
       postCheckAnsibleConnection(
-        formValues.deviceIp,
+        sshFormValues.deviceIp,
         {
-          authType: formValues.authType,
-          sshPort: formValues.sshPort,
-          sshUser: formValues.sshUser,
-          sshPwd: formValues.sshPwd,
-          sshKey: formValues.sshKey,
+          authType: sshFormValues.authType,
+          sshPort: sshFormValues.sshPort,
+          sshUser: sshFormValues.sshUser,
+          sshPwd: sshFormValues.sshPwd,
+          sshKey: sshFormValues.sshKey,
           sshConnection:
-            formValues.sshConnection ?? SsmAnsible.SSHConnection.PARAMIKO,
-          becomeUser: formValues.becomeUser,
-          becomeMethod: formValues.becomeMethod,
-          becomePass: formValues.becomePass,
-          strictHostChecking: formValues.strictHostChecking ?? true,
+            sshFormValues.sshConnection ?? SsmAnsible.SSHConnection.PARAMIKO,
+          becomeUser: sshFormValues.becomeUser,
+          becomeMethod: sshFormValues.becomeMethod,
+          becomePass: sshFormValues.becomePass,
+          strictHostChecking: sshFormValues.strictHostChecking ?? true,
         },
-        form?.getFieldsValue().controlNodeURL,
+        installMethodFormValues?.controlNodeURL,
       ).then((e) => {
         setExecId(e.data.taskId);
       });
       postCheckDockerConnection(
-        formValues.deviceIp,
+        sshFormValues.deviceIp,
         {
-          authType: formValues.authType,
-          sshPort: formValues.sshPort,
-          sshUser: formValues.sshUser,
-          sshPwd: formValues.sshPwd,
-          sshKey: formValues.sshKey,
-          becomeUser: formValues.becomeUser,
-          becomeMethod: formValues.becomeMethod,
-          becomePass: formValues.becomePass,
-          strictHostChecking: formValues.strictHostChecking ?? true,
+          authType: sshFormValues.authType,
+          sshPort: sshFormValues.sshPort,
+          sshUser: sshFormValues.sshUser,
+          sshPwd: sshFormValues.sshPwd,
+          sshKey: sshFormValues.sshKey,
+          becomeUser: sshFormValues.becomeUser,
+          becomeMethod: sshFormValues.becomeMethod,
+          becomePass: sshFormValues.becomePass,
+          strictHostChecking: sshFormValues.strictHostChecking ?? true,
         },
-        form?.getFieldsValue().controlNodeURL,
+        installMethodFormValues?.controlNodeURL,
       ).then((e) => {
         setDockerConnectionStatus(e.data.connectionStatus);
         setDockerConnectionErrorMessage(e.data.errorMessage);
       });
+      if (
+        installMethodFormValues?.installMethod === SsmAgent.InstallMethods.LESS
+      ) {
+        postCheckRemoteSystemInformationConnection(
+          sshFormValues.deviceIp,
+          {
+            authType: sshFormValues.authType,
+            sshPort: sshFormValues.sshPort,
+            sshUser: sshFormValues.sshUser,
+            sshPwd: sshFormValues.sshPwd,
+            sshKey: sshFormValues.sshKey,
+            becomeUser: sshFormValues.becomeUser,
+            becomeMethod: sshFormValues.becomeMethod,
+            becomePass: sshFormValues.becomePass,
+            strictHostChecking: sshFormValues.strictHostChecking ?? true,
+          },
+          installMethodFormValues?.controlNodeURL,
+        ).then((e) => {
+          setRsiConnectionStatus(e.data.connectionStatus);
+          setRsiConnectionErrorMessage(e.data.errorMessage);
+        });
+      }
     }
   };
 
@@ -166,15 +209,17 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
               </motion.div>
             )}
             submitter={{
-              render: ({ form, onSubmit, step, onPre }) => [
+              render: ({ onSubmit, step, onPre }) => [
                 step > 0 && (
                   <Button
                     key="pre"
                     onClick={() => {
                       if (step === 1) setSshConnection({});
-                      if (step === 2) {
+                      if (step === 3) {
                         setDockerConnectionStatus(undefined);
                         setDockerConnectionErrorMessage(undefined);
+                        setRsiConnectionStatus(undefined);
+                        setRsiConnectionErrorMessage(undefined);
                         setExecId(undefined);
                       }
                       onPre?.();
@@ -188,7 +233,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                   loading={loading}
                   type="primary"
                   onClick={() => {
-                    handleStepChange(step, form);
+                    handleStepChange(step);
                     onSubmit?.();
                   }}
                   icon={step < 3 ? undefined : <DownloadOutlined />}
@@ -204,6 +249,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
             }}
           >
             <StepsForm.StepForm
+              formRef={sshFormRef}
               name="base"
               title="SSH"
               style={{
@@ -214,26 +260,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
               <SSHConnectionFormElements formRef={formRef} />
             </StepsForm.StepForm>
             <StepsForm.StepForm
-              name="test"
-              title="Test"
-              style={{
-                alignItems: 'start',
-                maxWidth: screens.xs ? '80%' : '100%',
-              }}
-            >
-              <StepFormCard
-                title="Test connections"
-                icon={<StreamlineComputerConnection />}
-                content={
-                  <CheckDeviceConnection
-                    execId={execId}
-                    dockerConnRes={dockerConnectionStatus}
-                    dockerConnErrorMessage={dockerConnectionErrorMessage}
-                  />
-                }
-              />
-            </StepsForm.StepForm>
-            <StepsForm.StepForm
+              formRef={installMethodFormRef}
               name="installMethod"
               title="Install Method"
               style={{
@@ -281,7 +308,6 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                     case SsmAgent.InstallMethods.DOCKER:
                       return (
                         <>
-                          {' '}
                           <ProFormText
                             name={'controlNodeURL'}
                             label={'Control Node URL'}
@@ -308,6 +334,31 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
                   }
                 }}
               </ProFormDependency>
+            </StepsForm.StepForm>
+            <StepsForm.StepForm
+              name="test"
+              title="Test"
+              style={{
+                alignItems: 'start',
+                maxWidth: screens.xs ? '80%' : '100%',
+              }}
+            >
+              <StepFormCard
+                title="Test connections"
+                icon={<StreamlineComputerConnection />}
+                content={
+                  <CheckDeviceConnection
+                    installMethod={
+                      agentInstallMethod as SsmAgent.InstallMethods
+                    }
+                    execId={execId}
+                    dockerConnRes={dockerConnectionStatus}
+                    dockerConnErrorMessage={dockerConnectionErrorMessage}
+                    rsiConnRes={rsiConnectionStatus}
+                    rsiConnErrorMessage={rsiConnectionErrorMessage}
+                  />
+                }
+              />
             </StepsForm.StepForm>
             <StepsForm.StepForm
               name="confirm"
