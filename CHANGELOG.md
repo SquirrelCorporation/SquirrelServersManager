@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Add authentication support for Prometheus integration [\#730](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/730) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Add Prometheus integration to Docker setup and documentation [\#729](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/729) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add support for Remote System Information connection tests [\#728](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/728) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor error logging and enhance Logs schema/UI. [\#727](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/727) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
