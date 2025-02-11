@@ -16,6 +16,8 @@ export const redisConf = {
 export const prometheusConf = {
   host: process.env.PROMETHEUS_HOST || `http://prometheus:9090`,
   baseURL: process.env.PROMETHEUS_BASE_URL || `/api/v1`,
+  user: process.env.PROMETHEUS_USERNAME || 'user',
+  password: process.env.PROMETHEUS_PASSWORD || 'pass',
 };
 
 export const SECRET = process.env.SECRET || '';

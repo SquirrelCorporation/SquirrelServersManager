@@ -6,3 +6,4 @@ scrape_configs:
     static_configs:
       - targets:
           - 'server:3000' # Replace with the address of your server
+    # Authentication settings (basic_auth) will be injected here dynamically

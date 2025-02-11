@@ -15,6 +15,7 @@ services:
       wud.display.name: "SSM - Proxy"
       wud.watch.digest: false
   prometheus:
+    env_file: .env
     build:
       context: ./prometheus  # Directory containing Dockerfile and prometheus.yml
     container_name: prometheus-ssm

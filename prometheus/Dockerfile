@@ -1,8 +1,15 @@
 # Use the official Prometheus base image
 FROM prom/prometheus:latest
 
-# Copy your Prometheus configuration to the image
-COPY prometheus.yml /etc/prometheus/prometheus.yml
+# Copy your base Prometheus configuration file to the image
+COPY prometheus.base.yml /etc/prometheus/prometheus.base.yml
 
-# Default command (inherited from the base image, no need to change)
-CMD ["--config.file=/etc/prometheus/prometheus.yml"]
+# Copy your custom entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+USER root
+# Ensure the entrypoint script is executable
+RUN chmod +x /entrypoint.sh
+USER nobody
+
+# Override the default CMD with the entrypoint script
+ENTRYPOINT ["/entrypoint.sh"]

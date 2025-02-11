@@ -19,6 +19,8 @@ services:
       context: ./prometheus  # Directory containing Dockerfile and prometheus.yml
     container_name: prometheus-ssm
     restart: unless-stopped
+    env_file:
+      - ./.env.dev
     volumes:
       - ./.data.dev/prometheus:/prometheus
     ports:

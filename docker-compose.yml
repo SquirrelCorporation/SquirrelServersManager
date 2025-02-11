@@ -17,6 +17,7 @@ services:
     image: "ghcr.io/squirrelcorporation/squirrelserversmanager-prometheus:latest"
     container_name: prometheus-ssm
     restart: unless-stopped
+    env_file: .env
     volumes:
       - ./.data.prod/prometheus:/prometheus
     labels:
