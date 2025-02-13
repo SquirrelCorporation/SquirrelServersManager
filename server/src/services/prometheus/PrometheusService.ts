@@ -26,6 +26,29 @@ export interface QueryResult<T> {
   error?: string;
 }
 
+interface DeviceFilter {
+  type: 'device';
+  deviceId: string;
+}
+
+interface ContainerFilter {
+  type: 'container';
+  containerId: string;
+}
+
+interface DevicesFilter {
+  type: 'devices';
+  deviceIds: string[];
+}
+
+interface ContainersFilter {
+  type: 'containers';
+  containerIds: string[];
+}
+
+type MetricsIdFilter = DeviceFilter | ContainerFilter;
+type MetricsIdsFilter = DevicesFilter | ContainersFilter;
+
 // Constants
 const DEFAULT_AGGREGATION_WINDOW = '1h';
 
@@ -56,7 +79,9 @@ export class PrometheusService {
     return PrometheusService.instance;
   }
 
-  private getMetricTypeFromStatsType(type: StatsType.DeviceStatsType): MetricType {
+  private getMetricTypeFromStatsType(
+    type: StatsType.DeviceStatsType | StatsType.ContainerStatsType,
+  ): MetricType {
     switch (type) {
       case StatsType.DeviceStatsType.CPU:
         return MetricType.CPU_USAGE;
@@ -68,6 +93,10 @@ export class PrometheusService {
         return MetricType.STORAGE_USAGE;
       case StatsType.DeviceStatsType.DISK_FREE:
         return MetricType.STORAGE_FREE;
+      case StatsType.ContainerStatsType.CPU:
+        return MetricType.CONTAINER_CPU_USAGE;
+      case StatsType.ContainerStatsType.MEM:
+        return MetricType.CONTAINER_MEMORY_USAGE;
       default:
         throw new Error(`Unsupported metric type: ${type}`);
     }
@@ -96,16 +125,21 @@ export class PrometheusService {
     };
   }
 
-  public async queryDeviceMetrics(
-    type: StatsType.DeviceStatsType,
-    deviceIds: string[],
+  public async queryMetrics(
+    type: StatsType.DeviceStatsType | StatsType.ContainerStatsType,
+    filter: MetricsIdsFilter,
     range: TimeRange,
   ): Promise<QueryResult<Array<{ date: string; value: string; name: string }>>> {
     try {
       const metricType = this.getMetricTypeFromStatsType(type);
       const metricName = deviceMetricsService.getMetricName(metricType);
-      const deviceFilter = this.buildDeviceFilter(deviceIds);
-      const query = `avg_over_time(${metricName}{device_id=~"${deviceFilter}"}[${DEFAULT_AGGREGATION_WINDOW}])`;
+      const idsFilter = this.buildDeviceFilter(
+        filter.type === 'devices' ? filter.deviceIds : filter.containerIds,
+      );
+      const queryFilter =
+        filter.type === 'containers' ? `container_id=~"${idsFilter}"` : `device_id=~"${idsFilter}"`;
+
+      const query = `avg_over_time(${metricName}{${queryFilter}}[${DEFAULT_AGGREGATION_WINDOW}])`;
 
       const result = await this.driver.rangeQuery(
         query,
@@ -122,7 +156,10 @@ export class PrometheusService {
         metric.values.map((value) => ({
           date: DateTime.fromJSDate(new Date(value.time)).toFormat('yyyy-MM-dd-HH:00:00'),
           value: value.value,
-          name: metric.metric.labels.device_id,
+          name:
+            filter.type === 'devices'
+              ? metric.metric.labels.device_id
+              : metric.metric.labels.container_id,
         })),
       );
 
@@ -141,17 +178,20 @@ export class PrometheusService {
   }
 
   public async queryAggregatedMetrics(
-    type: StatsType.DeviceStatsType,
-    deviceIds: string[],
+    type: StatsType.DeviceStatsType | StatsType.ContainerStatsType,
+    filter: MetricsIdsFilter,
     range: TimeRange,
   ): Promise<QueryResult<Array<{ value: number; name: string }>>> {
     try {
       const metricType = this.getMetricTypeFromStatsType(type);
       const metricName = deviceMetricsService.getMetricName(metricType);
-      const deviceFilter = this.buildDeviceFilter(deviceIds);
+      const idsFilter = this.buildDeviceFilter(
+        filter.type === 'devices' ? filter.deviceIds : filter.containerIds,
+      );
+      const labelName = filter.type === 'containers' ? 'container_id' : 'device_id';
       const { rangeDuration, offsetDuration } = this.calculateTimeParameters(range);
 
-      const query = `avg by (device_id)(avg_over_time(${metricName}{device_id=~"${deviceFilter}"}[${rangeDuration}] ${offsetDuration}))`;
+      const query = `avg by (${labelName})(avg_over_time(${metricName}{${labelName}=~"${idsFilter}"}[${rangeDuration}] ${offsetDuration}))`;
 
       const result = await this.driver.instantQuery(query);
 
@@ -161,7 +201,7 @@ export class PrometheusService {
 
       const data = result.result.map((metric) => ({
         value: metric.value.value as number,
-        name: metric.metric.labels.device_id,
+        name: metric.metric.labels[labelName],
       }));
 
       return { success: true, data };
@@ -176,13 +216,18 @@ export class PrometheusService {
   }
 
   public async queryLatestMetric(
-    type: StatsType.DeviceStatsType,
-    deviceId: string,
+    type: StatsType.DeviceStatsType | StatsType.ContainerStatsType,
+    filter: MetricsIdFilter,
   ): Promise<QueryResult<{ value: number; date?: string }>> {
     try {
       const metricType = this.getMetricTypeFromStatsType(type);
       const metricName = deviceMetricsService.getMetricName(metricType);
-      const query = `${metricName}{device_id="${deviceId}"}`;
+      const queryFilter =
+        filter.type === 'container'
+          ? `container_id="${filter.containerId}"`
+          : `device_id="${filter.deviceId}"`;
+
+      const query = `${metricName}{${queryFilter}}`;
 
       const result = await this.driver.instantQuery(query, DateTime.now().toJSDate());
 
@@ -208,7 +253,7 @@ export class PrometheusService {
   }
 
   public async queryAveragedStatByType(
-    type: StatsType.DeviceStatsType,
+    type: StatsType.DeviceStatsType | StatsType.ContainerStatsType,
     range: { days: number; offset: number },
   ): Promise<QueryResult<{ value: number }>> {
     try {
@@ -231,6 +276,46 @@ export class PrometheusService {
       };
     } catch (error) {
       logger.error(error, 'Error querying averaged stat by type:');
+      return {
+        success: false,
+        data: null,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      };
+    }
+  }
+
+  public async queryAveragedStatsByType(
+    type: StatsType.DeviceStatsType | StatsType.ContainerStatsType,
+    range: TimeRange,
+  ): Promise<QueryResult<Array<{ date: string; value: string }>>> {
+    try {
+      const metricType = this.getMetricTypeFromStatsType(type);
+      const metricName = deviceMetricsService.getMetricName(metricType);
+      const query = `avg(avg_over_time(${metricName}[1h]))`;
+
+      const result = await this.driver.rangeQuery(
+        query,
+        range.from,
+        range.to,
+        DEFAULT_AGGREGATION_WINDOW,
+      );
+      logger.error(result);
+      if (!result?.result) {
+        return { success: false, data: null };
+      }
+      logger.error(result.result);
+      const data = result.result.flatMap((metric) =>
+        metric.values.map((value) => ({
+          date: DateTime.fromJSDate(new Date(value.time)).toFormat('yyyy-MM-dd-HH:00:00'),
+          value: value.value,
+        })),
+      );
+      return {
+        success: true,
+        data: data.sort((a, b) => a.date.localeCompare(b.date)),
+      };
+    } catch (error) {
+      logger.error(error, 'Error querying averaged stats by type:');
       return {
         success: false,
         data: null,

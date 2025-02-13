@@ -10,6 +10,8 @@ export enum MetricType {
   MEMORY_FREE = 'memory_free',
   STORAGE_USAGE = 'storage_usage',
   STORAGE_FREE = 'storage_free',
+  CONTAINER_CPU_USAGE = 'container_cpu_usage',
+  CONTAINER_MEMORY_USAGE = 'container_memory_usage',
 }
 
 interface MetricDefinition {
@@ -90,6 +92,26 @@ export class DeviceMetricsService {
           labelNames: ['device_id'],
         }),
       },
+      {
+        type: MetricType.CONTAINER_CPU_USAGE,
+        name: 'container_cpu_usage_percent',
+        help: 'CPU usage in percent for containers',
+        gauge: new Gauge({
+          name: 'container_cpu_usage_percent',
+          help: 'CPU usage in percent for containers',
+          labelNames: ['container_id'],
+        }),
+      },
+      {
+        type: MetricType.CONTAINER_MEMORY_USAGE,
+        name: 'container_memory_usage_percent',
+        help: 'Memory usage in percent for containers',
+        gauge: new Gauge({
+          name: 'container_memory_usage_percent',
+          help: 'Memory usage in percent for containers',
+          labelNames: ['container_id'],
+        }),
+      },
     ];
 
     // Register all metrics
@@ -122,6 +144,33 @@ export class DeviceMetricsService {
       logger.debug(`Set ${metric.name} for device ${deviceUuid} to ${value}`);
     } catch (error) {
       logger.error(`Failed to set metric ${type} for device ${deviceUuid}: ${error}`);
+      throw error;
+    }
+  }
+
+  public async setContainerMetric(
+    type: MetricType,
+    value: number,
+    containerId: string,
+  ): Promise<void> {
+    try {
+      const metric = this.metrics.get(type);
+      if (!metric) {
+        throw new Error(`Metric type ${type} not found`);
+      }
+
+      if (!containerId) {
+        throw new Error('Container ID is required');
+      }
+
+      if (typeof value !== 'number' || isNaN(value)) {
+        throw new Error(`Invalid value for metric ${type}: ${value}`);
+      }
+
+      metric.gauge.set({ container_id: containerId }, value);
+      logger.debug(`Set ${metric.name} for container ${containerId} to ${value}`);
+    } catch (error) {
+      logger.error(`Failed to set metric ${type} for container ${containerId}: ${error}`);
       throw error;
     }
   }

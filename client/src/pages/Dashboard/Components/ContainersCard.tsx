@@ -9,6 +9,7 @@ import { InfoCircleFilled } from '@ant-design/icons';
 import { Tooltip, Typography } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { API, SsmStatus } from 'ssm-shared-lib';
+import moment from 'moment';
 
 const ContainersCard: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -29,18 +30,22 @@ const ContainersCard: React.FC = () => {
 
       setNbRunning(runningResponse.data);
       setNbTotal(totalResponse.data);
-
       const formattedStats = [
         ...(statsResponse.data?.cpuStats ?? []).map((e: API.ContainerStat) => ({
           type: 'cpu',
-          ...e,
+          value: `${e.value}`,
+          date: moment(e.date, 'YYYY-MM-DD-HH-mm-ss').format(
+            'YYYY-MM-DD, HH:mm',
+          ),
         })),
         ...(statsResponse.data?.memStats ?? []).map((e: API.ContainerStat) => ({
           type: 'mem',
-          ...e,
+          value: `${e.value}`,
+          date: moment(e.date, 'YYYY-MM-DD-HH-mm-ss').format(
+            'YYYY-MM-DD, HH:mm',
+          ),
         })),
       ];
-
       setStats(formattedStats);
     } catch (error) {
       console.error(error);

@@ -287,7 +287,7 @@ const DockerConfigurationSchema = new Schema<Device['configuration']['containers
   watchContainersStatsCron: {
     type: Schema.Types.String,
     required: true,
-    default: '0 * * * *',
+    default: '*/5 * * * *',
   },
   watchContainersStats: {
     type: Schema.Types.Boolean,

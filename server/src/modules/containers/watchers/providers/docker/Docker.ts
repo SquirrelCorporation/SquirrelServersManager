@@ -15,6 +15,7 @@ import DeviceAuthRepo from '../../../../../data/database/repository/DeviceAuthRe
 import DeviceRepo from '../../../../../data/database/repository/DeviceRepo';
 import SSHCredentialsHelper from '../../../../../helpers/ssh/SSHCredentialsHelper';
 import logger from '../../../../../logger';
+import ContainerStatsUseCases from '../../../../../services/ContainerStatsUseCases';
 import DeviceUseCases from '../../../../../services/DeviceUseCases';
 import Component from '../../../core/Component';
 import { getCustomAgent } from '../../../core/CustomAgent';
@@ -80,6 +81,7 @@ export default class Docker extends DockerLogs {
       this.childLogger.info(
         `Cron scheduled (cron: "${this.configuration.cron}", device: ${this.configuration.host})`,
       );
+      this.childLogger.info(this.configuration);
       this.watchCron = CronJob.schedule(this.configuration.cron, () => {
         this.watchContainersFromCron();
         this.watchNetworksFromCron();
@@ -97,6 +99,9 @@ export default class Docker extends DockerLogs {
         this.watchNetworksFromCron();
         this.watchVolumesFromCron();
         this.watchImagesFromCron();
+        if (this.configuration.watchstats) {
+          this.watchContainerStats();
+        }
       }, START_WATCHER_DELAY_MS);
 
       this.watchCronDebounced = debounce(() => {
@@ -610,7 +615,7 @@ export default class Docker extends DockerLogs {
           const dockerContainer = this.dockerApi.getContainer(container.id);
           this.childLogger.debug(`watchContainerStats getContainer - ${dockerContainer.id}`);
           const dockerStats = await dockerContainer.stats({ stream: false });
-          await ContainerStatsRepo.create(container, dockerStats);
+          await ContainerStatsUseCases.createStats(container, dockerStats);
         } catch (error: any) {
           this.childLogger.error(error);
           this.childLogger.error(

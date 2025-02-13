@@ -6,7 +6,6 @@ import {
 import Title, { TitleColors } from '@/components/Template/Title';
 import SystemPerformanceCard from '@/pages/Dashboard/Components/SystemPerformanceCard';
 import {
-  postContainerStatsSettings,
   postDashboardSetting,
   postDeviceSetting,
   postDeviceStatsSettings,
@@ -52,10 +51,6 @@ const GeneralSettings: React.FC = () => {
   const [serverLogsRetentionInDays, setServerLogsRetentionInDays] = useState<
     number | null
   >(currentUser?.settings.logs.serverRetention);
-  const [containerStatsRetentionInDays, setContainerStatsRetentionInDays] =
-    useState<number | null>(
-      currentUser?.settings.stats.containerStatsRetention,
-    );
   const [deviceStatsRetentionInDays, setDeviceStatsRetentionInDays] = useState<
     number | null
   >(currentUser?.settings.stats.deviceStatsRetention);
@@ -159,21 +154,6 @@ const GeneralSettings: React.FC = () => {
     }
   };
 
-  const onChangeContainerStatsRetention = async (newValue: number | null) => {
-    if (newValue) {
-      await postContainerStatsSettings(
-        SettingsKeys.GeneralSettingsKeys.CONTAINER_STATS_RETENTION_IN_DAYS,
-        newValue,
-      ).then(() => {
-        setContainerStatsRetentionInDays(newValue);
-        message.success({
-          content: 'Setting successfully updated',
-          duration: 6,
-        });
-      });
-    }
-  };
-
   return (
     <Card>
       <Card
@@ -247,25 +227,6 @@ const GeneralSettings: React.FC = () => {
                 suffix="day(s)"
                 style={{ width: '100%' }}
                 onChange={onChangeDeviceStatsRetention}
-              />
-            </Col>
-          </Row>
-          <Row justify="space-between" align="middle" gutter={[16, 16]}>
-            <Col xs={24} sm={8}>
-              <Typography.Text>
-                <Popover content={'Delete container statistics after X days'}>
-                  <InfoCircleFilled />
-                </Popover>{' '}
-                Container statistics retention days
-              </Typography.Text>
-            </Col>
-            <Col xs={24} sm={8}>
-              <InputNumber
-                min={1}
-                defaultValue={containerStatsRetentionInDays || 0}
-                suffix="day(s)"
-                style={{ width: '100%' }}
-                onChange={onChangeContainerStatsRetention}
               />
             </Col>
           </Row>

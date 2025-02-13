@@ -2,6 +2,7 @@ import ContainerStatsDetail from '@/pages/Containers/components/containers/Conta
 import { getContainerStat } from '@/services/rest/containers';
 import { Popover, Progress } from 'antd';
 import React from 'react';
+import { StatsType } from 'ssm-shared-lib';
 
 export type ProgressProps = {
   containerId?: string;
@@ -15,10 +16,16 @@ const ContainerStatProgress: React.FC<ProgressProps> = (
 
   const asyncFetch = async () => {
     if (props.containerId) {
-      getContainerStat(props.containerId, 'cpu').then((e) => {
+      getContainerStat(
+        props.containerId,
+        StatsType.ContainerStatsType.CPU,
+      ).then((e) => {
         setCpu(e.data?.value);
       });
-      getContainerStat(props.containerId, 'mem').then((e) => {
+      getContainerStat(
+        props.containerId,
+        StatsType.ContainerStatsType.MEM,
+      ).then((e) => {
         setMem(e.data?.value);
       });
     }
@@ -33,7 +40,10 @@ const ContainerStatProgress: React.FC<ProgressProps> = (
       <Popover
         title="CPU Usage Evolution"
         content={
-          <ContainerStatsDetail type={'cpu'} containerId={props.containerId} />
+          <ContainerStatsDetail
+            type={StatsType.ContainerStatsType.CPU}
+            containerId={props.containerId}
+          />
         }
       >
         <Progress
@@ -45,7 +55,10 @@ const ContainerStatProgress: React.FC<ProgressProps> = (
       <Popover
         title="Memory Usage Evolution"
         content={
-          <ContainerStatsDetail type={'mem'} containerId={props.containerId} />
+          <ContainerStatsDetail
+            type={StatsType.ContainerStatsType.MEM}
+            containerId={props.containerId}
+          />
         }
       >
         <Progress

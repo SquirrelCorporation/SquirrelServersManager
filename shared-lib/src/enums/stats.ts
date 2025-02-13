@@ -1,6 +1,6 @@
 export enum ContainerStatsType {
-  CPU = 'cpu',
-  MEM = 'mem'
+  CPU = 'containerCpu',
+  MEM = 'containerMem'
 }
 
 export enum DeviceStatsType {
