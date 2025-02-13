@@ -18,8 +18,9 @@ services:
     container_name: prometheus-ssm
     restart: unless-stopped
     env_file: .env
-    volumes:
+   volumes:
       - ./.data.prod/prometheus:/prometheus
+    entrypoint: ["/bin/sh", "-c", "mkdir -p /prometheus/data && chmod -R 777 /prometheus/data && /bin/prometheus"]
     labels:
       wud.display.name: "SSM - Prometheus"
   mongo:
