@@ -1,6 +1,5 @@
 // services/PrometheusService.ts
 import { DateTime } from 'luxon';
-import { MetricValue } from 'prom-client';
 import { PrometheusDriver } from 'prometheus-query';
 import { StatsType } from 'ssm-shared-lib';
 import { prometheusConf } from '../../config';
@@ -101,14 +100,14 @@ export class PrometheusService {
   }
 
   private formatMetricDate(date: Date): string {
-    return DateTime.fromJSDate(date).toFormat('yyyy-MM-dd-HH:00:00');
+    return DateTime.fromJSDate(date, { zone: 'UTC' }).toFormat('yyyy-MM-dd-HH:00:00');
   }
 
   public async queryMetrics(
     type: StatsType.DeviceStatsType | StatsType.ContainerStatsType,
     filter: MetricsIdsFilter,
     range: TimeRange,
-  ): Promise<QueryResult<MetricValue<any>[]>> {
+  ): Promise<QueryResult<{ name: string; value: number; date: string }[]>> {
     try {
       const metricType = this.getMetricTypeFromStatsType(type);
       const metricName = deviceMetricsService.getMetricName(metricType);
@@ -127,12 +126,13 @@ export class PrometheusService {
       }
 
       const labelKey = isDevicesFilter(filter) ? 'device_id' : 'container_id';
-      const data = result.result.flatMap((metric) =>
-        metric.values.map((value) => ({
-          date: this.formatMetricDate(new Date(value.time)),
-          value: value.value,
-          name: metric.metric.labels[labelKey],
-        })),
+      const data: { date: string; name: string; value: number }[] = result.result.flatMap(
+        (metric) =>
+          metric.values.map((value) => ({
+            date: this.formatMetricDate(new Date(value.time)),
+            value: value.value,
+            name: metric.metric.labels[labelKey],
+          })),
       );
 
       return {
