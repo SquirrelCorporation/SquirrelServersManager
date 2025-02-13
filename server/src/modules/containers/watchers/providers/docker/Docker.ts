@@ -10,7 +10,6 @@ import Container from '../../../../../data/database/model/Container';
 import Device from '../../../../../data/database/model/Device';
 import DeviceAuth from '../../../../../data/database/model/DeviceAuth';
 import ContainerRepo from '../../../../../data/database/repository/ContainerRepo';
-import ContainerStatsRepo from '../../../../../data/database/repository/ContainerStatsRepo';
 import DeviceAuthRepo from '../../../../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../../../../data/database/repository/DeviceRepo';
 import SSHCredentialsHelper from '../../../../../helpers/ssh/SSHCredentialsHelper';
