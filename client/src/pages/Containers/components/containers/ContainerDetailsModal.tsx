@@ -13,7 +13,7 @@ import {
   SwapOutlined,
 } from '@ant-design/icons';
 import { history } from '@umijs/max';
-import { Button, Divider, message, Modal } from 'antd';
+import { Button, Divider, message, Modal, Space } from 'antd';
 import React from 'react';
 import { API, SsmContainer } from 'ssm-shared-lib';
 
@@ -68,7 +68,7 @@ const ContainerDetailsModal: React.FC<ContainerDetailsModalProps> = ({
       width={800}
       footer={(_, extra) => (
         <>
-          <Button.Group style={{ marginRight: 15 }}>
+          <Space.Compact style={{ marginRight: 15 }}>
             {selectedRecord.displayType ===
               SsmContainer.ContainerTypes.DOCKER && (
               <Button
@@ -112,7 +112,7 @@ const ContainerDetailsModal: React.FC<ContainerDetailsModalProps> = ({
             >
               Kill
             </Button>
-          </Button.Group>
+          </Space.Compact>
           <extra.OkBtn />
         </>
       )}

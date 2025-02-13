@@ -6,7 +6,11 @@ async function create(notification: InAppNotification): Promise<InAppNotificatio
 }
 
 async function findAllNotSeen(): Promise<InAppNotification[] | null> {
-  return await InAppNotificationModel.find({ seen: false }).sort({ createdAt: -1 }).lean().exec();
+  return await InAppNotificationModel.find({ seen: false })
+    .sort({ createdAt: -1 })
+    .limit(100)
+    .lean()
+    .exec();
 }
 
 async function countAllNotSeen(): Promise<number> {
