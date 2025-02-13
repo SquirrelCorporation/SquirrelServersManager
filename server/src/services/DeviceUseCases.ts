@@ -7,12 +7,10 @@ import User from '../data/database/model/User';
 import ContainerImageRepo from '../data/database/repository/ContainerImageRepo';
 import ContainerNetworkRepo from '../data/database/repository/ContainerNetworkRepo';
 import ContainerRepo from '../data/database/repository/ContainerRepo';
-import ContainerStatsRepo from '../data/database/repository/ContainerStatsRepo';
 import ContainerVolumeRepo from '../data/database/repository/ContainerVolumeRepo';
 import DeviceAuthRepo from '../data/database/repository/DeviceAuthRepo';
 import DeviceDownTimeEventRepo from '../data/database/repository/DeviceDownTimeEventRepo';
 import DeviceRepo from '../data/database/repository/DeviceRepo';
-import DeviceStatRepo from '../data/database/repository/DeviceStatRepo';
 import PlaybookRepo from '../data/database/repository/PlaybookRepo';
 import ProxmoxContainerRepo from '../data/database/repository/ProxmoxContainerRepo';
 import SSHCredentialsHelper from '../helpers/ssh/SSHCredentialsHelper';
@@ -84,19 +82,10 @@ async function updateDeviceFromJson(deviceInfo: any, device: Device) {
 
 async function deleteDevice(device: Device) {
   logger.info(`deleteDevice - DeviceUuid: ${device.uuid}`);
-  await DeviceStatRepo.deleteManyByDevice(device);
   await DeviceAuthRepo.deleteByDevice(device);
   await DeviceDownTimeEventRepo.deleteManyByDevice(device);
   await DeviceRepo.deleteByUuid(device.uuid);
   await WatcherEngine.registerWatcher(device);
-  const containers = await ContainerRepo.findContainersByDevice(device);
-  if (containers) {
-    await Promise.all(
-      containers.map(async (container) => {
-        await ContainerStatsRepo.deleteByContainer(container);
-      }),
-    );
-  }
   await ContainerVolumeRepo.deleteByDevice(device);
   await ContainerNetworkRepo.deleteByDevice(device);
   await ContainerImageRepo.deleteByDevice(device);
@@ -126,7 +115,7 @@ async function updateDockerWatcher(
 
 async function getDockerDevicesToWatch() {
   return DeviceRepo.findWithFilter({
-    dockerWatcher: true,
+    'capabilities.containers.docker.enabled': true, // Use dot notation to filter nested fields
   });
 }
 

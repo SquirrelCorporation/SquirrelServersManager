@@ -2,14 +2,10 @@ import express from 'express';
 import passport from 'passport';
 import {
   deleteAnsibleLogs,
-  deleteContainerStats,
-  deleteDeviceStats,
   deleteLogs,
   deletePlaybooksModelAndResync,
   postRestartServer,
 } from '../controllers/rest/settings/advanced';
-import { postContainerStatsSettings } from '../controllers/rest/settings/containerstats';
-import { postContainerStatsSettingsValidator } from '../controllers/rest/settings/containerstats.validator';
 import { postDashboardSettings } from '../controllers/rest/settings/dashboard';
 import { postDashboardSettingsValidator } from '../controllers/rest/settings/dashboard.validator';
 import { postDevicesSettings } from '../controllers/rest/settings/devices';
@@ -30,15 +26,8 @@ router.post(`/devices/:key`, postDevicesSettingsValidator, postDevicesSettings);
 router.post(`/logs/:key`, postLogsSettingsValidator, postLogsSettings);
 router.post(`/device-stats/:key`, postDeviceStatsSettingsValidator, postDeviceStatsSettings);
 router.post(`/keys/master-node-url`, postMasterNodeUrlValueValidator, postMasterNodeUrlValue);
-router.post(
-  `/container-stats/:key`,
-  postContainerStatsSettingsValidator,
-  postContainerStatsSettings,
-);
 router.post('/advanced/restart', postRestartServer);
 router.delete('/advanced/logs', deleteLogs);
 router.delete('/advanced/ansible-logs', deleteAnsibleLogs);
-router.delete('/advanced/device-stats', deleteDeviceStats);
-router.delete('/advanced/container-stats', deleteContainerStats);
 router.delete('/advanced/playbooks-and-resync', deletePlaybooksModelAndResync);
 export default router;

@@ -137,9 +137,9 @@ async function getStatsByDeviceAndType(
     const toDate = DateTime.now().toJSDate();
     const fromDate = DateTime.now().minus({ hours: from }).toJSDate();
 
-    const result = await prometheusService.queryDeviceMetrics(
+    const result = await prometheusService.queryMetrics(
       type as StatsType.DeviceStatsType,
-      [device.uuid],
+      { type: 'devices', deviceIds: [device.uuid] },
       { from: fromDate, to: toDate },
     );
 
@@ -179,9 +179,9 @@ async function getStatsByDevicesAndType(
     throw new Error('Type is required');
   }
 
-  const result = await prometheusService.queryDeviceMetrics(
+  const result = await prometheusService.queryMetrics(
     type as StatsType.DeviceStatsType,
-    devices.map((d) => d.uuid),
+    { type: 'devices', deviceIds: devices.map((d) => d.uuid) },
     { from, to },
   );
 
@@ -214,7 +214,7 @@ async function getSingleAveragedStatsByDevicesAndType(
 
   const result = await prometheusService.queryAggregatedMetrics(
     type,
-    devices.map((d) => d.uuid),
+    { type: 'devices', deviceIds: devices.map((d) => d.uuid) },
     { from, to },
   );
 
@@ -245,10 +245,10 @@ async function getStatByDeviceAndType(
     return [{ value: await ContainerRepo.countByDeviceId(device._id) }];
   }
 
-  const result = await prometheusService.queryLatestMetric(
-    type as StatsType.DeviceStatsType,
-    device.uuid,
-  );
+  const result = await prometheusService.queryLatestMetric(type as StatsType.DeviceStatsType, {
+    type: 'device',
+    deviceId: device.uuid,
+  });
 
   if (!result.success) {
     logger.error(`Failed to get latest stat: ${result.error}`);
@@ -275,7 +275,7 @@ async function getSingleAveragedStatByType(
       {
         days: from - to,
         offset: to,
-      }
+      },
     );
 
     if (!result.success) {

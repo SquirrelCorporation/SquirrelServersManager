@@ -72,22 +72,6 @@ export async function deleteAnsibleLogs(options?: Record<string, any>) {
   });
 }
 
-export async function deleteContainerStats(options?: Record<string, any>) {
-  return request<API.SimpleResult>(`/api/settings/advanced/container-stats`, {
-    method: 'DELETE',
-    ...{},
-    ...(options || {}),
-  });
-}
-
-export async function deleteDeviceStats(options?: Record<string, any>) {
-  return request<API.SimpleResult>(`/api/settings/advanced/device-stats`, {
-    method: 'DELETE',
-    ...{},
-    ...(options || {}),
-  });
-}
-
 export async function deletePlaybooksAndResync(options?: Record<string, any>) {
   return request<API.SimpleResult>(
     `/api/settings/advanced/playbooks-and-resync`,
@@ -97,19 +81,6 @@ export async function deletePlaybooksAndResync(options?: Record<string, any>) {
       ...(options || {}),
     },
   );
-}
-
-export async function postContainerStatsSettings(
-  type: string,
-  value: number,
-  options?: Record<string, any>,
-) {
-  return request<API.SimpleResult>(`/api/settings/container-stats/${type}`, {
-    method: 'POST',
-    ...{},
-    data: { value: value },
-    ...(options || {}),
-  });
 }
 
 export async function postDeviceStatsSettings(

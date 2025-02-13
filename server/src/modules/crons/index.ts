@@ -1,8 +1,6 @@
 import CronJob from 'node-cron';
 import { SettingsKeys } from 'ssm-shared-lib';
-import ContainerStatsRepo from '../../data/database/repository/ContainerStatsRepo';
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
-import DeviceStatRepo from '../../data/database/repository/DeviceStatRepo';
 import PinoLogger from '../../logger';
 import CronRepo from '../../data/database/repository/CronRepo';
 import AnsibleTaskRepo from '../../data/database/repository/AnsibleTaskRepo';
@@ -47,26 +45,6 @@ const CRONS: CronJobType[] = [
         SettingsKeys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS,
       );
       await LogsRepo.deleteAllOld(parseInt(delay));
-    },
-  },
-  {
-    name: '_CleanDeviceStats',
-    schedule: '*/5 * * * *',
-    fun: async () => {
-      const delay = await getConfFromCache(
-        SettingsKeys.GeneralSettingsKeys.DEVICE_STATS_RETENTION_IN_DAYS,
-      );
-      await DeviceStatRepo.deleteAllOld(parseInt(delay));
-    },
-  },
-  {
-    name: '_CleanContainerStats',
-    schedule: '*/5 * * * *',
-    fun: async () => {
-      const delay = await getConfFromCache(
-        SettingsKeys.GeneralSettingsKeys.CONTAINER_STATS_RETENTION_IN_DAYS,
-      );
-      await ContainerStatsRepo.deleteAllOld(parseInt(delay));
     },
   },
   {
