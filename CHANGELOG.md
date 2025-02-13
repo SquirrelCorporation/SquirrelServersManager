@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Refactor Prometheus service and add type definitions. [\#739](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/739) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Remove container and device stats features [\#738](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/738) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump elliptic from 6.6.0 to 6.6.1 in /client in the npm\_and\_yarn group [\#737](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/737) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Update dependencies in `package-lock.json` to newer versions [\#734](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/734) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
