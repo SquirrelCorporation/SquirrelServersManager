@@ -1,11 +1,11 @@
-import { StatsType, Systeminformation } from 'ssm-shared-lib';
 import { DateTime } from 'luxon';
+import { StatsType, Systeminformation } from 'ssm-shared-lib';
 import Device from '../data/database/model/Device';
 import ContainerRepo from '../data/database/repository/ContainerRepo';
+import deviceMetricsService, { MetricType } from '../data/statistics/DeviceMetricsService';
 import { updateQueue } from '../helpers/queue/queueManager';
 import PinoLogger from '../logger';
 import { UpdateStatsType } from '../modules/remote-system-information/helpers/queueProcessor';
-import deviceMetricsService, { MetricType } from '../data/statistics/DeviceMetricsService';
 import prometheusService from './prometheus/PrometheusService';
 
 const logger = PinoLogger.child(
@@ -156,7 +156,7 @@ async function getStatsByDeviceAndType(
     return result.data
       .map((item) => ({
         date: item.date,
-        value: parseFloat(item.value),
+        value: parseFloat(`${item.value}`),
       }))
       .sort((a, b) => a.date.localeCompare(b.date));
   } catch (error) {
@@ -170,7 +170,7 @@ async function getStatsByDevicesAndType(
   from: Date,
   to: Date,
   type?: string,
-): Promise<{ date: string; value: string; name: string }[] | null> {
+): Promise<{ date: string; value: number; name: string }[] | null> {
   logger.info(
     `getStatsByDevicesAndType - type: ${type}, from: ${from}, to: ${to}, nb devices: ${devices.length}`,
   );

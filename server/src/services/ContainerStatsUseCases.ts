@@ -4,7 +4,8 @@ import { StatsType } from 'ssm-shared-lib';
 import Container from '../data/database/model/Container';
 import { DeviceMetricsService, MetricType } from '../data/statistics/DeviceMetricsService';
 import PinoLogger from '../logger';
-import prometheusService, { QueryResult } from './prometheus/PrometheusService';
+import prometheusService from './prometheus/PrometheusService';
+import { QueryResult } from './prometheus/types/prometheus';
 
 const logger = PinoLogger.child(
   { module: 'ContainerStatsUseCases' },
@@ -87,7 +88,7 @@ async function getStatsByDeviceAndType(
     const toDate = DateTime.now().toJSDate();
     const fromDate = DateTime.now().minus({ hours: from }).toJSDate();
 
-    let result: QueryResult<{ date: string; value: string; name: string }[]>;
+    let result: QueryResult<{ date: string; value: number; name: string }[]>;
     switch (type) {
       case StatsType.ContainerStatsType.CPU:
       case StatsType.ContainerStatsType.MEM:
@@ -114,7 +115,7 @@ async function getStatsByDeviceAndType(
     return result.data
       .map((item) => ({
         date: item.date,
-        value: parseFloat(item.value),
+        value: parseFloat(`${item.value}`),
       }))
       .sort((a, b) => a.date.localeCompare(b.date));
   } catch (error) {

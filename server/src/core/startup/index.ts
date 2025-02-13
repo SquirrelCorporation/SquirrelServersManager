@@ -1,4 +1,4 @@
-import { Repositories, SettingsKeys, SsmGit, StatsType } from 'ssm-shared-lib';
+import { Repositories, SettingsKeys, SsmGit } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
 import { getFromCache, setToCache } from '../../data/cache';
 import initRedisValues from '../../data/cache/defaults';
@@ -11,12 +11,12 @@ import { PlaybooksRepositoryModel } from '../../data/database/model/PlaybooksRep
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
 import { copyAnsibleCfgFileIfDoesntExist } from '../../helpers/ansible/AnsibleConfigurationHelper';
 import PinoLogger from '../../logger';
-import RemoteSystemInformationEngine from '../../modules/remote-system-information/core/RemoteSystemInformationEngine';
 import AutomationEngine from '../../modules/automations/AutomationEngine';
-import Crons from '../../modules/crons';
 import WatcherEngine from '../../modules/containers/core/WatcherEngine';
 import providerConf from '../../modules/containers/registries/providers/provider.conf';
+import Crons from '../../modules/crons';
 import NotificationComponent from '../../modules/notifications/NotificationComponent';
+import RemoteSystemInformationEngine from '../../modules/remote-system-information/core/RemoteSystemInformationEngine';
 import ContainerCustomStacksRepositoryEngine from '../../modules/repository/ContainerCustomStacksRepositoryEngine';
 import { createADefaultLocalUserRepository } from '../../modules/repository/default-playbooks-repositories';
 import PlaybooksRepositoryEngine from '../../modules/repository/PlaybooksRepositoryEngine';
@@ -24,7 +24,6 @@ import sshPrivateKeyFileManager from '../../modules/shell/managers/SshPrivateKey
 import Telemetry from '../../modules/telemetry';
 import UpdateChecker from '../../modules/update/UpdateChecker';
 import ContainerRegistryUseCases from '../../services/ContainerRegistryUseCases';
-import DeviceStatsUseCases from '../../services/DeviceStatsUseCases';
 import { setAnsibleVersions } from '../system/ansible-versions';
 
 class Startup {
