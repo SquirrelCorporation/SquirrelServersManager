@@ -21,6 +21,7 @@ import {
   Divider,
   message,
   Row,
+  Space,
   Tag,
   Tooltip,
 } from 'antd';
@@ -109,7 +110,7 @@ const ExtraVarsViewEditor: React.FC<ExtraVarsViewEditionProps> = ({
     extraVar: API.ExtraVar,
     formRef: React.MutableRefObject<ProFormInstance | undefined>,
   ) => (
-    <Button.Group>
+    <Space.Compact>
       <Button
         key="submit"
         danger
@@ -127,7 +128,7 @@ const ExtraVarsViewEditor: React.FC<ExtraVarsViewEditionProps> = ({
       >
         Delete
       </Button>
-    </Button.Group>
+    </Space.Compact>
   );
 
   const ExtraVarRow = ({ extraVar }: { extraVar: API.ExtraVar }) => {
