@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { PrometheusDriver } from 'prometheus-query';
 import { DateTime } from 'luxon';
 import { StatsType } from 'ssm-shared-lib';
@@ -42,6 +43,30 @@ export class PrometheusService {
         password: config.password,
       },
     });
+  }
+
+  async updatePrometheusRetention(retentionTime: string): Promise<void> {
+    try {
+      const response = await axios.post(
+        `${prometheusConf.host}/-/reload`,
+        {},
+        {
+          params: {
+            'storage.tsdb.retention.time': retentionTime,
+          },
+          auth: {
+            username: prometheusConf.user,
+            password: prometheusConf.password,
+          },
+        },
+      );
+
+      if (response.status === 200) {
+        logger.info(`Successfully updated retention time to ${retentionTime}`);
+      }
+    } catch (error) {
+      logger.error(error, 'Failed to update Prometheus retention');
+    }
   }
 
   public static getInstance(): PrometheusService {

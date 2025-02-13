@@ -15,4 +15,4 @@ else
 fi
 
 # Start Prometheus
-/bin/prometheus --config.file="$DYNAMIC_CONFIG"
+/bin/prometheus --config.file="$DYNAMIC_CONFIG" --web.enable-lifecycle
