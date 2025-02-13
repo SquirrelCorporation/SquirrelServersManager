@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Update dependencies in `package-lock.json` to newer versions [\#734](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/734) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Chore remove logger [\#732](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/732) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add authentication support for Prometheus integration [\#730](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/730) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Add Prometheus integration to Docker setup and documentation [\#729](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/729) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
