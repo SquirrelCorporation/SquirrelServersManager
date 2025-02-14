@@ -19,7 +19,6 @@ services:
       context: ./prometheus  # Directory containing Dockerfile and prometheus.yml
     container_name: prometheus-ssm
     restart: unless-stopped
-    entrypoint: [ "/bin/sh", "-c", "mkdir -p /prometheus/data && chmod -R 755 /prometheus && /entrypoint.sh" ]
     env_file:
       - ./.env.dev
     volumes:
