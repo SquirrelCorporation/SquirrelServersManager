@@ -3,6 +3,7 @@ import { SsmStatus } from 'ssm-shared-lib';
 import DeviceAuthRepo from '../../../data/database/repository/DeviceAuthRepo';
 import DeviceDownTimeEventRepo from '../../../data/database/repository/DeviceDownTimeEventRepo';
 import DeviceRepo from '../../../data/database/repository/DeviceRepo';
+import { tryResolveHost } from '../../../helpers/dns/dns-helper';
 import SSHCredentialsHelper from '../../../helpers/ssh/SSHCredentialsHelper';
 import { generateSudoCommand } from '../../../helpers/sudo/sudo';
 import { RemoteExecOptions } from '../system-information/types';
@@ -205,7 +206,12 @@ export default class RemoteSSHExecutorComponent extends Component {
           this.logger.warn('SSH Connection closed');
         });
       // Connect using the provided configuration
-      conn.connect(this.connectionConfig);
+      (async () => {
+        conn.connect({
+          ...this.connectionConfig,
+          host: await tryResolveHost(this.connectionConfig.host as string),
+        });
+      })();
     });
   }
 
@@ -232,8 +238,14 @@ export default class RemoteSSHExecutorComponent extends Component {
         })
         .on('error', (err) => {
           reject(err); // Return the error if connection fails
-        })
-        .connect(config); // Connect using provided configuration
+        });
+
+      (async () => {
+        conn.connect({
+          ...config,
+          host: await tryResolveHost(config.host as string),
+        });
+      })();
     });
   }
 

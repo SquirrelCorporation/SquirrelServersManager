@@ -40,7 +40,7 @@ const HostCard: React.FC<HostCardProps> = ({ deviceIp, showAdvanced }) => (
     extra={
       <Tooltip
         title={
-          'Enter the IP and SSH port. Please note that Ipv6 is not supported yet.'
+          'Enter the IP/Hostname and SSH port. Please note that Ipv6 is not supported yet.'
         }
       >
         <InfoCircleFilled />
@@ -50,7 +50,7 @@ const HostCard: React.FC<HostCardProps> = ({ deviceIp, showAdvanced }) => (
     <ProForm.Group>
       <ProFormText
         name="deviceIp"
-        label="Device IP"
+        label="Device IP/Hostname"
         width="sm"
         placeholder="192.168.0.1"
         disabled={deviceIp !== undefined}
@@ -58,8 +58,9 @@ const HostCard: React.FC<HostCardProps> = ({ deviceIp, showAdvanced }) => (
         rules={[
           { required: true },
           {
-            pattern: /^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/,
-            message: 'Please enter a valid IP (we do not support v6 yet)',
+            pattern:
+              /^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$|^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])(\.[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])*$/,
+            message: 'Please enter a valid IP address or hostname',
           },
         ]}
       />

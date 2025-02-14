@@ -1,5 +1,4 @@
 import { API } from 'ssm-shared-lib';
-import { CheckRemoteSystemInformationConnection } from 'ssm-shared-lib/distribution/types/api';
 import DeviceAuthRepo from '../../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../../data/database/repository/DeviceRepo';
 import { preWriteSensitiveInfos } from '../../../helpers/sensitive/handle-sensitive-info';
@@ -82,7 +81,7 @@ export const postCheckRemoteSystemInformationConnection = async (req, res) => {
   if (!req.user) {
     throw new ForbiddenError();
   }
-  const result = await DeviceUseCases.checkDockerConnection(
+  const result = await DeviceUseCases.checkRemoteSystemInformationConnection(
     ip,
     authType,
     sshKey,

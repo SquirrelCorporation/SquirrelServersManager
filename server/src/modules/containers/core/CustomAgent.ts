@@ -1,8 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import pino from 'pino';
-import { Client } from 'ssh2';
-import ssh2 from 'ssh2';
+import ssh2, { Client } from 'ssh2';
+import { tryResolveHost } from '../../../helpers/dns/dns-helper';
 import Logger = pino.Logger;
 
 export const getCustomAgent = (childLogger: any, opt: any) => {
@@ -65,10 +65,14 @@ export const getCustomAgent = (childLogger: any, opt: any) => {
             this.logger.warn(`Agent destroy for ${opt.host}`);
             conn.end();
             this.destroy();
-          })
-          .connect(opt);
+          });
+        (async () => {
+          const connectConfig = { ...opt, host: await tryResolveHost(opt.host as string) };
+          this.logger.debug(`Connecting to ${connectConfig.host}`);
+          conn.connect(connectConfig);
+        })();
       } catch (error: any) {
-        this.logger.error(`Error connecting to ${opt.host} : ${err.message}`);
+        this.logger.error(`Error connecting to ${opt.host} : ${error.message}`);
         this.logger.error(error);
       }
     }
