@@ -1,14 +1,25 @@
-import { body, param } from 'express-validator';
+import { body, oneOf, param } from 'express-validator';
 import { SsmAgent, SsmAnsible } from 'ssm-shared-lib';
 import validator from '../../../middlewares/Validator';
 
 export const addDeviceValidator = [
-  body('ip')
-    .exists()
-    .notEmpty()
-    .withMessage('Ip is required in body')
-    .isIP()
-    .withMessage('IP is invalid'),
+  oneOf([
+    body('ip')
+      .exists()
+      .notEmpty()
+      .withMessage('Ip is required in body')
+      .isIP()
+      .withMessage('IP is invalid'),
+    body('ip')
+      .isFQDN({
+        require_tld: false,
+        allow_underscores: true,
+        allow_trailing_dot: true,
+        allow_numeric_tld: true,
+        ignore_max_length: true,
+      })
+      .withMessage('Value must be a valid IP address or hostname'),
+  ]),
   body('authType')
     .exists()
     .withMessage('authType in body is required')
@@ -51,12 +62,23 @@ export const addDeviceValidator = [
 ];
 
 export const addDeviceAutoValidator = [
-  body('ip')
-    .exists()
-    .notEmpty()
-    .withMessage('Ip is required in body')
-    .isIP()
-    .withMessage('IP is invalid'),
+  oneOf([
+    body('ip')
+      .exists()
+      .notEmpty()
+      .withMessage('Ip is required in body')
+      .isIP()
+      .withMessage('IP is invalid'),
+    body('ip')
+      .isFQDN({
+        require_tld: false,
+        allow_underscores: true,
+        allow_trailing_dot: true,
+        allow_numeric_tld: true,
+        ignore_max_length: true,
+      })
+      .withMessage('Value must be a valid IP address or hostname'),
+  ]),
   validator,
 ];
 

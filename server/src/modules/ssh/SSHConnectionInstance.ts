@@ -1,6 +1,7 @@
 import ssh from 'ssh2';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
+import { tryResolveHost } from '../../helpers/dns/dns-helper';
 import SSHCredentialsHelper from '../../helpers/ssh/SSHCredentialsHelper';
 import { NotFoundError } from '../../middlewares/api/ApiError';
 
@@ -16,8 +17,11 @@ export default class SSHConnectionInstance {
   async connect() {
     const { device, deviceAuth } = await this.fetchDeviceAndAuth();
     const sshCredentials = await SSHCredentialsHelper.getSShConnection(device, deviceAuth);
-
-    this.ssh.connect(sshCredentials);
+    const connectConfig = {
+      ...sshCredentials,
+      host: await tryResolveHost(sshCredentials.host as string),
+    };
+    this.ssh.connect(connectConfig);
   }
 
   private async fetchDeviceAndAuth() {

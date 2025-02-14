@@ -349,4 +349,5 @@ export default {
   getProxmoxDevicesToWatch,
   getRemoteSysInfoDevicesToWatch,
   checkDeviceRemoteSystemInformationConnection,
+  checkRemoteSystemInformationConnection,
 };
