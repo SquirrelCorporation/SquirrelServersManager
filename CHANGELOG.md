@@ -4,6 +4,11 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.28...HEAD)
 
+**Implemented enhancements:**
+
+- \[FEATURE\] Support for Hostnames in Addition to IP Addresses [\#684](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/684)
+- \[FEATURE\] Add support for hostnames alongside IP addresses in SSH [\#745](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/745) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Fixed bugs:**
 
 - \[BUG\]  Container display not showing every container [\#733](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/733)
