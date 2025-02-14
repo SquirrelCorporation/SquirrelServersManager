@@ -62,7 +62,7 @@ export default class Docker extends DockerLogs {
       watchstats: this.joi.boolean().default(true),
       cronstats: this.joi.string().default('*/1 * * * *'),
       watchbydefault: this.joi.boolean().default(true),
-      watchall: this.joi.boolean().default(false),
+      watchall: this.joi.boolean().default(true),
       watchevents: this.joi.boolean().default(true),
       deviceUuid: this.joi.string().required(),
     });

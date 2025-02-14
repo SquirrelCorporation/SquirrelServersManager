@@ -1,12 +1,12 @@
 import { ExtraVarsType, SSHConnection, SSHType } from '../enums/ansible';
 import { ContainerTypes, VolumeBackupMode } from '../enums/container';
 import { Services } from '../enums/git';
+import * as SsmProxmox from '../enums/proxmox';
 import { RepositoryType } from '../enums/repositories';
 import { AutomationChain } from '../form/automation';
 import { ProxmoxModel } from '../namespace/proxmox';
 import { Systeminformation } from '../namespace/system-information';
 import { ExtendedTreeNode } from './tree';
-import * as SsmProxmox from '../enums/proxmox'
 
 export type Response<T> = {
   success: boolean;
@@ -258,6 +258,7 @@ export type DeviceConfiguration = {containers: {
         watchContainersStats?: boolean;
         watchContainersStatsCron?: string;
         watchEvents?: boolean;
+        watchAll?: boolean;
       };
     };
     systemInformation?:SystemInformationConfiguration;

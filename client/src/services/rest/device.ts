@@ -2,10 +2,6 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 import { API, SsmAgent } from 'ssm-shared-lib';
-import {
-  CheckAnsibleConnection,
-  Response,
-} from 'ssm-shared-lib/distribution/types/api';
 
 export async function getDevices(
   params?: API.PageParams,
@@ -118,6 +114,7 @@ export async function updateDeviceDockerConfiguration(
     dockerEventsWatcher: boolean;
     dockerWatcherCron?: string;
     dockerStatsCron?: string;
+    dockerWatchAll?: boolean;
   },
   options?: { [key: string]: any },
 ) {

@@ -154,6 +154,7 @@ async function registerWatchers(): Promise<any> {
             cronstats: device.configuration.containers.docker?.watchContainersStatsCron as string,
             watchevents: device.configuration.containers.docker?.watchEvents as boolean,
             host: device.ip as string,
+            watchall: device.configuration.containers.docker?.watchAll as boolean,
           },
         ),
       );
