@@ -5,6 +5,7 @@ import ProxmoxContainerRepo from '../../../data/database/repository/ProxmoxConta
 import { filterByFields, filterByQueryParams } from '../../../helpers/query/FilterHelper';
 import { paginate } from '../../../helpers/query/PaginationHelper';
 import { sortByFields } from '../../../helpers/query/SorterHelper';
+import logger from '../../../logger';
 import { BadRequestError, InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import WatcherEngine from '../../../modules/containers/core/WatcherEngine';
@@ -26,10 +27,11 @@ export const getContainers = async (req, res) => {
   // Use the separated services
   let dataSource = sortByFields(containers, params);
   dataSource = filterByFields(dataSource, params);
+  logger.error(params);
   dataSource = filterByQueryParams(
     dataSource.map((e) => ({ ...e, deviceUuid: e.device?.uuid })),
     params,
-    ['status', 'name', 'updateAvailable', 'deviceUuid'],
+    ['status[]', 'name', 'updateAvailable', 'deviceUuid'],
   );
   const totalBeforePaginate = dataSource?.length || 0;
 
