@@ -45,7 +45,7 @@ export const DockerConfigurationFormElements: React.FC<
         initialValue={device.capabilities?.containers?.docker?.enabled || true}
         onChange={handleOnChangeCapability}
       />
-      <DockerWatchCard device={device} />
+      <DockerWatchCard device={device} showAdvanced={showAdvanced} />
       <DockerEngineHostCard
         device={device}
         showAdvanced={showAdvanced}

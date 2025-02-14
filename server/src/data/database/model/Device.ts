@@ -33,6 +33,7 @@ export default interface Device {
         watchContainersStats?: boolean;
         watchContainersStatsCron?: string;
         watchEvents?: boolean;
+        watchAll?: boolean;
       };
     };
     systemInformation?: {
@@ -295,6 +296,11 @@ const DockerConfigurationSchema = new Schema<Device['configuration']['containers
     default: true,
   },
   watchEvents: {
+    type: Schema.Types.Boolean,
+    required: true,
+    default: true,
+  },
+  watchAll: {
     type: Schema.Types.Boolean,
     required: true,
     default: true,

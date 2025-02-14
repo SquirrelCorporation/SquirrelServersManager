@@ -53,6 +53,7 @@ export const updateDockerWatcher = async (req, res) => {
     dockerStatsWatcher,
     dockerStatsCron,
     dockerEventsWatcher,
+    dockerWatchAll,
   } = req.body;
   const device = await DeviceRepo.findOneByUuid(req.params.uuid);
 
@@ -66,6 +67,7 @@ export const updateDockerWatcher = async (req, res) => {
     dockerStatsWatcher,
     dockerStatsCron,
     dockerEventsWatcher,
+    dockerWatchAll,
   );
   new SuccessResponse('Update docker watcher flag successful', {
     dockerWatcher: dockerWatcher,
@@ -73,5 +75,6 @@ export const updateDockerWatcher = async (req, res) => {
     dockerStatsWatcher: dockerStatsWatcher,
     dockerEventsWatcher: dockerEventsWatcher,
     dockerStatsCron: dockerStatsCron,
+    dockerWatchAll: dockerWatchAll,
   }).send(res);
 };
