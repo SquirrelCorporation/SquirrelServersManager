@@ -14,27 +14,35 @@ const logger = PinoLogger.child(
 
 async function createStats(container: Container, stats: Dockerode.ContainerStats) {
   const { cpu_stats, precpu_stats, memory_stats } = stats;
-  const cpuDelta = cpu_stats.cpu_usage.total_usage - precpu_stats.cpu_usage.total_usage;
 
-  const cpuSystemDelta = cpu_stats.system_cpu_usage - precpu_stats.system_cpu_usage;
-
-  const memUsed: undefined | number = memory_stats.usage - (memory_stats.stats.cache || 0);
-  const memAvailable = memory_stats.limit;
-  const memUsedPercentage = Math.round((memUsed / memAvailable) * 100.0) || undefined;
-  const cpuUsedPercentage = Math.round((cpuDelta / cpuSystemDelta) * 100) || undefined;
-  if (memUsedPercentage) {
-    await DeviceMetricsService.getInstance().setContainerMetric(
-      MetricType.CONTAINER_MEMORY_USAGE,
-      memUsedPercentage,
-      container.id,
-    );
+  try {
+    const memUsed: undefined | number = memory_stats.usage - (memory_stats?.stats?.cache || 0);
+    const memAvailable = memory_stats.limit;
+    const memUsedPercentage = Math.round((memUsed / memAvailable) * 100.0) || undefined;
+    if (memUsedPercentage) {
+      await DeviceMetricsService.getInstance().setContainerMetric(
+        MetricType.CONTAINER_MEMORY_USAGE,
+        memUsedPercentage,
+        container.id,
+      );
+    }
+  } catch (error: any) {
+    logger.warn(`Failed to set memory usage for container ${container.id}: ${error?.message}`);
   }
-  if (cpuUsedPercentage) {
-    await DeviceMetricsService.getInstance().setContainerMetric(
-      MetricType.CONTAINER_CPU_USAGE,
-      cpuUsedPercentage,
-      container.id,
-    );
+
+  try {
+    const cpuDelta = cpu_stats.cpu_usage.total_usage - precpu_stats.cpu_usage.total_usage;
+    const cpuSystemDelta = cpu_stats.system_cpu_usage - precpu_stats.system_cpu_usage;
+    const cpuUsedPercentage = Math.round((cpuDelta / cpuSystemDelta) * 100) || undefined;
+    if (cpuUsedPercentage) {
+      await DeviceMetricsService.getInstance().setContainerMetric(
+        MetricType.CONTAINER_CPU_USAGE,
+        cpuUsedPercentage,
+        container.id,
+      );
+    }
+  } catch (error: any) {
+    logger.warn(`Failed to set cpu usage for container ${container.id}: ${error?.message}`);
   }
 }
 
