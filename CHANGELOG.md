@@ -11,6 +11,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Update filtering logic and improve container status handling [\#743](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/743) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Handle errors in container stats processing gracefully [\#742](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/742) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor Prometheus service and add type definitions. [\#739](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/739) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Remove container and device stats features [\#738](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/738) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
