@@ -4,6 +4,11 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.28...HEAD)
 
+**Fixed bugs:**
+
+- \[BUG\]  Container display not showing every container [\#733](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/733)
+- \[BUG\] Add support for "watch all containers" configuration [\#741](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/741) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Merged pull requests:**
 
 - \[CHORE\] Refactor Prometheus service and add type definitions. [\#739](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/739) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
