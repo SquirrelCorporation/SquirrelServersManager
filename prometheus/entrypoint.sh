@@ -4,6 +4,11 @@
 BASE_CONFIG="/etc/prometheus/prometheus.base.yml"
 DYNAMIC_CONFIG="/etc/prometheus/prometheus.yml"
 
+# Set up the data directory with correct permissions
+mkdir -p /prometheus/data
+chmod -R 755 /prometheus
+chown -R nobody:nobody /prometheus
+
 # Check if values for authentication are provided through environment variables
 if [ -n "$PROMETHEUS_USERNAME" ] && [ -n "$PROMETHEUS_PASSWORD" ]; then
   echo "Configuring Prometheus with authentication..."
@@ -15,4 +20,4 @@ else
 fi
 
 # Start Prometheus
-/bin/prometheus --config.file="$DYNAMIC_CONFIG"
+exec su -s /bin/sh nobody -c "/bin/prometheus --config.file=\"$DYNAMIC_CONFIG\""
