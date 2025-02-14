@@ -7,6 +7,7 @@
 **Fixed bugs:**
 
 - \[BUG\]  Container display not showing every container [\#733](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/733)
+- \[BUG\] Set up proper permissions and user context for Prometheus [\#744](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/744) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Add support for "watch all containers" configuration [\#741](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/741) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Merged pull requests:**
