@@ -1,5 +1,4 @@
 // Filtering logic
-import logger from '../../logger';
 
 export function filterByFields<T>(data: T[], params: any): T[] {
   if (params.filter) {
@@ -36,7 +35,7 @@ export function filterByQueryParams<T>(
   // Separate array parameters from other parameters
   const arrayParams = queryParams.filter((e) => e.includes('[]'));
   const regularParams = queryParams.filter((e) => !e.includes('[]'));
-  logger.error(arrayParams);
+
   // Apply AND filtering for regular params
   let filteredData = data;
   regularParams.forEach((e) => {
