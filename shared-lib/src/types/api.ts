@@ -412,6 +412,11 @@ export type PlaybookFile = {
   playableInBatch?: boolean;
 };
 
+export type CustomVault = {
+  vaultId: string;
+  password: string;
+}
+
 export type PlaybooksRepository = {
   name: string;
   uuid: string;
@@ -419,6 +424,7 @@ export type PlaybooksRepository = {
   type: RepositoryType;
   children?: ExtendedTreeNode[];
   directoryExclusionList?: string[];
+  vaults?: CustomVault[];
 };
 
 export type ServerLog = {

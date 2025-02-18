@@ -4,6 +4,11 @@ import { Repositories, SsmGit } from 'ssm-shared-lib';
 export const DOCUMENT_NAME = 'PlaybooksRepository';
 export const COLLECTION_NAME = 'playbooksrepository';
 
+export interface CustomVault {
+  vaultId: string;
+  password: string;
+}
+
 export default interface PlaybooksRepository {
   _id?: string;
   uuid: string;
@@ -22,9 +27,24 @@ export default interface PlaybooksRepository {
   onError?: boolean;
   onErrorMessage?: string;
   gitService?: SsmGit.Services;
+  vaults?: CustomVault[];
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+const vaultSchema = new Schema(
+  {
+    vaultId: {
+      type: Schema.Types.String,
+      required: true,
+    },
+    password: {
+      type: Schema.Types.String,
+      required: true,
+    },
+  },
+  { _id: false },
+);
 
 const schema = new Schema<PlaybooksRepository>(
   {
@@ -103,6 +123,11 @@ const schema = new Schema<PlaybooksRepository>(
     gitService: {
       type: Schema.Types.String,
       required: false,
+    },
+    vaults: {
+      type: [vaultSchema], // Array of vault schemas
+      required: false,
+      default: undefined,
     },
   },
   {

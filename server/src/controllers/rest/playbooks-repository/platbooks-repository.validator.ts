@@ -20,3 +20,8 @@ export const deleteAnyFromRepositoryValidator = [
   body('fullPath').exists().isString().not().contains('..').withMessage('path is incorrect'),
   validator,
 ];
+
+export const getPlaybookCustomVaultsValidator = [
+  param('uuid').exists().isString().isUUID().withMessage('Uuid is incorrect'),
+  validator,
+];
