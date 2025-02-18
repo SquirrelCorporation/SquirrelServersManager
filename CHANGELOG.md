@@ -15,8 +15,17 @@
 - \[BUG\] Set up proper permissions and user context for Prometheus [\#744](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/744) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Add support for "watch all containers" configuration [\#741](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/741) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
+**Closed issues:**
+
+- \[BUG\] Server ist crashing when add device with sshkey connection [\#748](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/748)
+- \[BUG\] prometheus seems to have no permissions on mount [\#747](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/747)
+- \[CHORE\] Migrate Container Stats to Prometheus 🧹 [\#736](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/736)
+- \[BUG\] Current Proxmox install process leads to non-functional install [\#617](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/617)
+- \[FEATURE\] Agent Docker connection test failing due to secure setup of SSH [\#594](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/594)
+
 **Merged pull requests:**
 
+- \[CHORE\] Bump version to 0.1.29 across all packages [\#762](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/762) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update filtering logic and improve container status handling [\#743](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/743) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Handle errors in container stats processing gracefully [\#742](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/742) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor Prometheus service and add type definitions. [\#739](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/739) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
