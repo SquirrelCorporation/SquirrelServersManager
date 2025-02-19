@@ -102,10 +102,7 @@ export default [
       ],
 
       'no-use-before-define': [
-        'error',
-        {
-          functions: false,
-        },
+        'off',
       ],
 
       'no-unused-vars': 'off',

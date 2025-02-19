@@ -128,6 +128,7 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
       title="Playbook"
       open={props.isModalOpen}
       autoFocusFirstInput
+      clearOnDestroy
       modalProps={{
         destroyOnClose: true,
         onCancel: () => {

@@ -11,6 +11,7 @@ import { errorHandler } from './middlewares/ErrorHandler';
 import Socket from './middlewares/Socket';
 import RealTime from './modules/real-time/RealTime';
 import routes from './routes';
+import metrics from './controllers/rest/metrics/metrics';
 
 class AppWrapper extends EventManager {
   protected readonly app = express();
@@ -27,7 +28,10 @@ class AppWrapper extends EventManager {
   public setup() {
     this.app.use(
       pinoHttp({
-        logger: logger.child({ module: 'REST' }, { msgPrefix: '[REST] - ' }),
+        logger: logger.child(
+          { module: 'REST' },
+          { msgPrefix: '[REST] - ', redact: ['req.headers.authorization'] },
+        ),
         ...httpLoggerOptions,
       }),
     );
@@ -40,6 +44,7 @@ class AppWrapper extends EventManager {
   }
 
   public setupRoutes() {
+    this.app.use(metrics);
     this.app.use('/', routes);
     this.app.use(errorHandler);
   }

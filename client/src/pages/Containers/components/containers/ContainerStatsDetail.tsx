@@ -1,5 +1,5 @@
 import { getContainerStats } from '@/services/rest/containersstats';
-import { Line } from '@ant-design/plots';
+import { Line } from '@ant-design/charts';
 import moment from 'moment';
 import React, { useEffect } from 'react';
 import { API } from 'ssm-shared-lib';
@@ -20,7 +20,9 @@ const ContainerStatsDetail: React.FC<ContainerStatsDetailProps> = (
       ? list.data
           .map((e: { date: string; value: number }) => {
             return {
-              date: moment(e.date).format('YYYY-MM-DD, HH:mm'),
+              date: moment(e.date, 'YYYY-MM-DD-HH-mm-ss').format(
+                'YYYY-MM-DD, HH:mm',
+              ),
               value: e.value ? parseFloat(e.value.toFixed(2)) : NaN,
             };
           })

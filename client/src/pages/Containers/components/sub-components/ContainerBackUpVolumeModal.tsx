@@ -44,6 +44,7 @@ const ContainerBackUpVolumeModal: React.FC<ContainerBackUpVolumeModalProps> = ({
             Backup
           </Button>
         }
+        clearOnDestroy
         modalProps={{
           destroyOnClose: true,
         }}

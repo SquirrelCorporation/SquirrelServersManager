@@ -9,20 +9,41 @@ import { API } from 'ssm-shared-lib';
 
 interface DockerWatchCardProps {
   device: Partial<API.DeviceItem>;
+  showAdvanced: boolean;
 }
 
-const DockerWatchCard = ({ device }: DockerWatchCardProps) => {
+const DockerWatchCard = ({ device, showAdvanced }: DockerWatchCardProps) => {
   const [dockerWatcher, setDockerWatcher] = useState<boolean>(
-    device.dockerWatcher === undefined ? true : device.dockerWatcher,
+    device.configuration?.containers?.docker?.watchContainers ?? true,
   );
   const [dockerEventsWatcher, setDockerEventsWatcher] = useState<boolean>(
-    device.dockerEventsWatcher === undefined
-      ? true
-      : device.dockerEventsWatcher,
+    device.configuration?.containers?.docker?.watchEvents ?? true,
   );
   const [dockerStatsWatcher, setDockerStatsWatcher] = useState<boolean>(
-    device.dockerStatsWatcher === undefined ? true : device.dockerStatsWatcher,
+    device.configuration?.containers?.docker?.watchContainersStats ?? true,
   );
+  const [dockerWatchAll, setDockerWatchAll] = useState<boolean>(
+    device.configuration?.containers?.docker?.watchAll ?? true,
+  );
+
+  const handleOnChangeDockerWatchAll = async () => {
+    if (device.uuid) {
+      await updateDeviceDockerConfiguration(device.uuid, {
+        dockerWatcher: dockerWatcher,
+        dockerStatsWatcher: dockerStatsWatcher,
+        dockerEventsWatcher: dockerEventsWatcher,
+        dockerWatchAll: !dockerWatchAll,
+      }).then((response) => {
+        setDockerWatcher(response.data.dockerWatcher);
+        setDockerEventsWatcher(response.data.dockerEventsWatcher);
+        setDockerStatsWatcher(response.data.dockerStatsWatcher);
+        setDockerWatchAll(response.data.dockerWatchAll);
+        message.success({ content: 'Setting updated' });
+      });
+    } else {
+      message.error({ content: 'Internal error - no device id' });
+    }
+  };
 
   const handleOnChangeDockerWatcher = async () => {
     if (device.uuid) {
@@ -30,10 +51,12 @@ const DockerWatchCard = ({ device }: DockerWatchCardProps) => {
         dockerWatcher: !dockerWatcher,
         dockerStatsWatcher: dockerStatsWatcher,
         dockerEventsWatcher: dockerEventsWatcher,
+        dockerWatchAll: dockerWatchAll,
       }).then((response) => {
         setDockerWatcher(response.data.dockerWatcher);
         setDockerEventsWatcher(response.data.dockerEventsWatcher);
         setDockerStatsWatcher(response.data.dockerStatsWatcher);
+        setDockerWatchAll(response.data.dockerWatchAll);
         message.success({ content: 'Setting updated' });
       });
     } else {
@@ -47,10 +70,12 @@ const DockerWatchCard = ({ device }: DockerWatchCardProps) => {
         dockerWatcher: dockerWatcher,
         dockerStatsWatcher: !dockerStatsWatcher,
         dockerEventsWatcher: dockerEventsWatcher,
+        dockerWatchAll: dockerWatchAll,
       }).then((response) => {
         setDockerWatcher(response.data.dockerWatcher);
         setDockerEventsWatcher(response.data.dockerEventsWatcher);
         setDockerStatsWatcher(response.data.dockerStatsWatcher);
+        setDockerWatchAll(response.data.dockerWatchAll);
         message.success({ content: 'Setting updated' });
       });
     } else {
@@ -64,10 +89,12 @@ const DockerWatchCard = ({ device }: DockerWatchCardProps) => {
         dockerWatcher: dockerWatcher,
         dockerStatsWatcher: dockerStatsWatcher,
         dockerEventsWatcher: !dockerEventsWatcher,
+        dockerWatchAll: dockerWatchAll,
       }).then((response) => {
         setDockerWatcher(response.data.dockerWatcher);
         setDockerEventsWatcher(response.data.dockerEventsWatcher);
         setDockerStatsWatcher(response.data.dockerStatsWatcher);
+        setDockerWatchAll(response.data.dockerWatchAll);
         message.success({ content: 'Setting updated' });
       });
     } else {
@@ -122,6 +149,18 @@ const DockerWatchCard = ({ device }: DockerWatchCardProps) => {
           }}
         />
       </ProForm.Group>
+      {showAdvanced && (
+        <ProForm.Group>
+          <ProFormSwitch
+            checkedChildren={'Watch All Containers'}
+            unCheckedChildren={'Watch Only Running Containers'}
+            fieldProps={{
+              value: dockerWatchAll,
+              onChange: handleOnChangeDockerWatchAll,
+            }}
+          />
+        </ProForm.Group>
+      )}
     </Card>
   );
 };

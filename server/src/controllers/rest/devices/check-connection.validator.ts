@@ -1,14 +1,25 @@
-import { body, param } from 'express-validator';
+import { body, oneOf, param } from 'express-validator';
 import { SsmAnsible, SsmProxmox } from 'ssm-shared-lib';
 import validator from '../../../middlewares/Validator';
 
 export const postCheckAnsibleConnectionValidator = [
-  body('ip')
-    .exists()
-    .notEmpty()
-    .withMessage('Ip is required in body')
-    .isIP()
-    .withMessage('IP is invalid'),
+  oneOf([
+    body('ip')
+      .exists()
+      .notEmpty()
+      .withMessage('Ip is required in body')
+      .isIP()
+      .withMessage('IP is invalid'),
+    body('ip')
+      .isFQDN({
+        require_tld: false,
+        allow_underscores: true,
+        allow_trailing_dot: true,
+        allow_numeric_tld: true,
+        ignore_max_length: true,
+      })
+      .withMessage('Value must be a valid IP address or hostname'),
+  ]),
   body('sshConnection')
     .exists()
     .withMessage('sshConnection in body is required')
@@ -52,12 +63,23 @@ export const postCheckAnsibleConnectionValidator = [
 ];
 
 export const postCheckDockerConnectionValidator = [
-  body('ip')
-    .exists()
-    .notEmpty()
-    .withMessage('Ip is required in body')
-    .isIP()
-    .withMessage('IP is invalid'),
+  oneOf([
+    body('ip')
+      .exists()
+      .notEmpty()
+      .withMessage('Ip is required in body')
+      .isIP()
+      .withMessage('IP is invalid'),
+    body('ip')
+      .isFQDN({
+        require_tld: false,
+        allow_underscores: true,
+        allow_trailing_dot: true,
+        allow_numeric_tld: true,
+        ignore_max_length: true,
+      })
+      .withMessage('Value must be a valid IP address or hostname'),
+  ]),
   body('authType')
     .exists()
     .withMessage('authType in body is required')
@@ -87,6 +109,16 @@ export const postCheckDockerConnectionValidator = [
 ];
 
 export const getCheckDeviceDockerConnectionValidator = [
+  param('uuid')
+    .exists()
+    .notEmpty()
+    .withMessage('Uuid is required')
+    .isUUID()
+    .withMessage('Uuid is not valid'),
+  validator,
+];
+
+export const getCheckDeviceRemoteSystemInformationConnectionValidator = [
   param('uuid')
     .exists()
     .notEmpty()

@@ -8,7 +8,7 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
   if (err instanceof ApiError) {
     ApiError.handle(err, res, req);
   } else {
-    logger.error(err);
+    logger.error(`${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
     if (err.message === 'Unauthorized') {
       ApiError.handle(new AuthFailureError('Unauthorized'), res, req);
       return;

@@ -27,7 +27,7 @@ router.get(
   }),
 );
 
-router.route("/devices/:uuid/conf/docker").post(
+router.route("/devices/:uuid/configuration/containers/docker").post(
   asyncHandler(async (req, res) => {
     new SuccessResponse("Docker watcher").send(res);
   }),

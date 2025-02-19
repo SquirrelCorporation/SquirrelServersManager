@@ -8,13 +8,15 @@ import { ContainerVolumeModel } from '../../data/database/model/ContainerVolume'
 import { DeviceModel } from '../../data/database/model/Device';
 import { PlaybookModel } from '../../data/database/model/Playbook';
 import { PlaybooksRepositoryModel } from '../../data/database/model/PlaybooksRepository';
+import DeviceRepo from '../../data/database/repository/DeviceRepo';
 import { copyAnsibleCfgFileIfDoesntExist } from '../../helpers/ansible/AnsibleConfigurationHelper';
 import PinoLogger from '../../logger';
 import AutomationEngine from '../../modules/automations/AutomationEngine';
-import Crons from '../../modules/crons';
 import WatcherEngine from '../../modules/containers/core/WatcherEngine';
 import providerConf from '../../modules/containers/registries/providers/provider.conf';
+import Crons from '../../modules/crons';
 import NotificationComponent from '../../modules/notifications/NotificationComponent';
+import RemoteSystemInformationEngine from '../../modules/remote-system-information/core/RemoteSystemInformationEngine';
 import ContainerCustomStacksRepositoryEngine from '../../modules/repository/ContainerCustomStacksRepositoryEngine';
 import { createADefaultLocalUserRepository } from '../../modules/repository/default-playbooks-repositories';
 import PlaybooksRepositoryEngine from '../../modules/repository/PlaybooksRepositoryEngine';
@@ -43,6 +45,7 @@ class Startup {
   }
 
   private async initializeModules() {
+    void RemoteSystemInformationEngine.init();
     await PlaybooksRepositoryEngine.init();
     void PlaybooksRepositoryEngine.syncAllRegistered();
     void sshPrivateKeyFileManager.removeAllAnsibleTemporaryPrivateKeys();
@@ -76,6 +79,12 @@ class Startup {
 
     try {
       await DeviceModel.syncIndexes();
+      const devices = await DeviceRepo.findAll();
+      if (devices) {
+        for (const device of devices) {
+          void PlaybookModel.applyDefaults(device);
+        }
+      }
       this.logger.info('DeviceModel indexes synchronized successfully.');
     } catch (error: any) {
       this.logger.error(`Error synchronizing DeviceModel indexes: ${error.message}`);

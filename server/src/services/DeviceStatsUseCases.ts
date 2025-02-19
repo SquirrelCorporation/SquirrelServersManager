@@ -1,53 +1,120 @@
 import { DateTime } from 'luxon';
-import { API, SettingsKeys, StatsType } from 'ssm-shared-lib';
-import { getIntConfFromCache } from '../data/cache';
+import { StatsType, Systeminformation } from 'ssm-shared-lib';
 import Device from '../data/database/model/Device';
-import DeviceStat from '../data/database/model/DeviceStat';
 import ContainerRepo from '../data/database/repository/ContainerRepo';
-import DeviceStatRepo from '../data/database/repository/DeviceStatRepo';
+import deviceMetricsService, { MetricType } from '../data/statistics/DeviceMetricsService';
+import { updateQueue } from '../helpers/queue/queueManager';
 import PinoLogger from '../logger';
+import { UpdateStatsType } from '../modules/remote-system-information/helpers/queueProcessor';
+import prometheusService from './prometheus/PrometheusService';
 
 const logger = PinoLogger.child(
   { module: 'DeviceStatsUseCases' },
   { msgPrefix: '[DEVICE_STATS] - ' },
 );
 
-async function createDeviceStatFromJson(deviceInfo: API.DeviceInfo, device: Device) {
-  logger.info(`createDeviceStatFromJson - DeviceUuid: ${device?.uuid}`);
-  await DeviceStatRepo.create({
-    device: device,
-    storageTotalGb: deviceInfo.storage?.storageTotalGb,
-    storageUsedGb: deviceInfo.storage?.storageUsedGb,
-    storageFreeGb: deviceInfo.storage?.storageFreeGb,
-    storageUsedPercentage: deviceInfo.storage?.storageUsedPercentage,
-    storageFreePercentage: deviceInfo.storage?.storageFreePercentage,
-    cpuUsage: deviceInfo.cpu?.usage,
-    memTotalMb: deviceInfo.mem?.memTotalMb,
-    memTotalUsedMb: deviceInfo.mem?.memTotalUsedMb,
-    memTotalFreeMb: deviceInfo.mem?.memTotalFreeMb,
-    memUsedPercentage: deviceInfo.mem?.memUsedPercentage,
-    memFreePercentage: deviceInfo.mem?.memFreePercentage,
-  });
+// Types
+interface DeviceSystemInfo {
+  mem?: {
+    memTotalMb: number;
+    memUsedPercentage: number;
+  };
+  cpu?: {
+    usage: number;
+  };
+  storage?: {
+    storageTotalGb: number;
+    storageUsedGb: number;
+  };
 }
 
-async function createStatIfMinInterval(deviceInfo: API.DeviceInfo, device: Device): Promise<void> {
-  logger.info(`createStatIfMinInterval - DeviceUuid: ${device?.uuid}`);
-  const deviceStat = await DeviceStatRepo.findLatestStat(device);
-  const minInternal = await getIntConfFromCache(
-    SettingsKeys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
-  );
-  if (
-    !deviceStat ||
-    !deviceStat.createdAt ||
-    deviceStat.createdAt < DateTime.now().minus({ second: minInternal }).toJSDate()
-  ) {
-    logger.info(
-      `createStatIfMinInterval- Creating new device stat record... (latest: ${deviceStat?.createdAt}`,
-    );
-    await createDeviceStatFromJson(deviceInfo, device);
-  } else {
-    logger.info('createStatIfMinInterval - DeviceStat already exist, not creating');
+interface DeviceStat {
+  date: string;
+  value: number;
+}
+
+// Constants
+const BYTES_IN_MB = 1024 * 1024;
+
+// Utility functions
+const convertMbToBytes = (mb: number): number => mb * BYTES_IN_MB;
+
+async function createDeviceStatFromJson(deviceInfo: DeviceSystemInfo, device: Device) {
+  if (!device?.uuid) {
+    logger.error('Invalid device: missing UUID');
+    throw new Error('Invalid device: missing UUID');
   }
+
+  logger.info(`createDeviceStatFromJson - DeviceUuid: ${device.uuid}`);
+
+  try {
+    const metrics: Array<{ type: MetricType; value: number }> = [];
+
+    // Memory stats
+    if (deviceInfo.mem) {
+      metrics.push(
+        { type: MetricType.MEMORY_USAGE, value: deviceInfo.mem.memUsedPercentage },
+        { type: MetricType.MEMORY_FREE, value: 100 - deviceInfo.mem.memUsedPercentage },
+      );
+
+      await updateQueue.add({
+        deviceUuid: device.uuid,
+        updateType: UpdateStatsType.MEM_STATS,
+        data: {
+          total: convertMbToBytes(deviceInfo.mem.memTotalMb),
+          used: deviceInfo.mem.memUsedPercentage,
+        } as Systeminformation.MemData,
+      });
+    }
+
+    // CPU stats
+    if (deviceInfo.cpu) {
+      metrics.push({ type: MetricType.CPU_USAGE, value: deviceInfo.cpu.usage });
+
+      await updateQueue.add({
+        deviceUuid: device.uuid,
+        updateType: UpdateStatsType.CPU_STATS,
+        data: { currentLoad: deviceInfo.cpu.usage } as Systeminformation.CurrentLoadData,
+      });
+    }
+
+    // Storage stats
+    if (deviceInfo.storage) {
+      const storageUsedPercent =
+        (deviceInfo.storage.storageUsedGb / deviceInfo.storage.storageTotalGb) * 100;
+      metrics.push(
+        { type: MetricType.STORAGE_USAGE, value: storageUsedPercent },
+        { type: MetricType.STORAGE_FREE, value: 100 - storageUsedPercent },
+      );
+
+      await updateQueue.add({
+        deviceUuid: device.uuid,
+        updateType: UpdateStatsType.FILE_SYSTEM_STATS,
+        data: [
+          {
+            size: deviceInfo.storage.storageTotalGb,
+            used: deviceInfo.storage.storageUsedGb,
+          },
+        ] as Systeminformation.FsSizeData[],
+      });
+    }
+
+    // Update all metrics in one batch
+    if (metrics.length > 0) {
+      await deviceMetricsService.setMetrics(metrics, device.uuid);
+    }
+  } catch (error) {
+    logger.error(`Failed to update device stats for device ${device.uuid}: ${error}`);
+    throw error;
+  }
+}
+
+async function createStatIfMinInterval(
+  deviceInfo: DeviceSystemInfo,
+  device: Device,
+): Promise<void> {
+  logger.info(`createStatIfMinInterval - DeviceUuid: ${device?.uuid}`);
+  await createDeviceStatFromJson(deviceInfo, device);
 }
 
 async function getStatsByDeviceAndType(
@@ -56,15 +123,45 @@ async function getStatsByDeviceAndType(
   type?: string,
 ): Promise<DeviceStat[] | null> {
   logger.info(`getStatsByDeviceAndType - type: ${type}, from: ${from}, device: ${device.uuid}`);
-  switch (type) {
-    case StatsType.DeviceStatsType.CPU:
-      return await DeviceStatRepo.findStatsByDeviceAndType(device, '$cpuUsage', from);
-    case StatsType.DeviceStatsType.MEM_USED:
-      return await DeviceStatRepo.findStatsByDeviceAndType(device, '$memUsedPercentage', from);
-    case StatsType.DeviceStatsType.MEM_FREE:
-      return await DeviceStatRepo.findStatsByDeviceAndType(device, '$memFreePercentage', from);
-    default:
-      throw new Error('Unknown Type');
+
+  if (!type) {
+    throw new Error('Type is required');
+  }
+
+  if (!device?.uuid) {
+    throw new Error('Device UUID is required');
+  }
+
+  try {
+    // Calculate time range
+    const toDate = DateTime.now().toJSDate();
+    const fromDate = DateTime.now().minus({ hours: from }).toJSDate();
+
+    const result = await prometheusService.queryMetrics(
+      type as StatsType.DeviceStatsType,
+      { type: 'devices', deviceIds: [device.uuid] },
+      { from: fromDate, to: toDate },
+    );
+
+    if (!result.success) {
+      logger.error(`Failed to get stats: ${result.error}`);
+      return null;
+    }
+
+    if (!result.data) {
+      return null;
+    }
+
+    // Transform the data into DeviceStat format
+    return result.data
+      .map((item) => ({
+        date: item.date,
+        value: parseFloat(`${item.value}`),
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+  } catch (error) {
+    logger.error(`Error getting stats for device ${device.uuid}:`, error);
+    return null;
   }
 }
 
@@ -73,44 +170,32 @@ async function getStatsByDevicesAndType(
   from: Date,
   to: Date,
   type?: string,
-): Promise<[{ date: string; value: string; name: string }] | null> {
+): Promise<{ date: string; value: number; name: string }[] | null> {
   logger.info(
-    `findStatsByDevicesAndType - type: ${type}, from: ${from}, nb devices: ${devices.length}`,
+    `getStatsByDevicesAndType - type: ${type}, from: ${from}, to: ${to}, nb devices: ${devices.length}`,
   );
-  switch (type) {
-    case StatsType.DeviceStatsType.CPU:
-      return await DeviceStatRepo.findStatsByDevicesAndType(devices, '$cpuUsage', from, to);
-    case StatsType.DeviceStatsType.MEM_USED:
-      return await DeviceStatRepo.findStatsByDevicesAndType(
-        devices,
-        '$memUsedPercentage',
-        from,
-        to,
-      );
-    case StatsType.DeviceStatsType.MEM_FREE:
-      return await DeviceStatRepo.findStatsByDevicesAndType(
-        devices,
-        '$memFreePercentage',
-        from,
-        to,
-      );
-    case StatsType.DeviceStatsType.DISK_USED:
-      return await DeviceStatRepo.findStatsByDevicesAndType(
-        devices,
-        '$storageUsedPercentage',
-        from,
-        to,
-      );
-    case StatsType.DeviceStatsType.DISK_FREE:
-      return await DeviceStatRepo.findStatsByDevicesAndType(
-        devices,
-        '$storageFreePercentage',
-        from,
-        to,
-      );
-    default:
-      throw new Error('Unknown Type');
+
+  if (!type) {
+    throw new Error('Type is required');
   }
+
+  const result = await prometheusService.queryMetrics(
+    type as StatsType.DeviceStatsType,
+    { type: 'devices', deviceIds: devices.map((d) => d.uuid) },
+    { from, to },
+  );
+
+  if (!result.success) {
+    logger.error(`Failed to get stats: ${result.error}`);
+    return null;
+  }
+
+  return (
+    result.data?.map((item) => ({
+      ...item,
+      name: devices.find((d) => d.uuid === item.name)?.fqdn || item.name,
+    })) || null
+  );
 }
 
 async function getSingleAveragedStatsByDevicesAndType(
@@ -118,68 +203,59 @@ async function getSingleAveragedStatsByDevicesAndType(
   from: Date,
   to: Date,
   type?: StatsType.DeviceStatsType,
-): Promise<[{ value: string; name: string }] | null> {
+): Promise<{ value: number; name: string }[] | null> {
   logger.info(
     `findSingleAveragedStatByDevicesAndType - type: ${type}, from: ${from}, to: ${to}, nb devices: ${devices.length}`,
   );
-  switch (type) {
-    case StatsType.DeviceStatsType.CPU:
-      return await DeviceStatRepo.findSingleAveragedStatByDevicesAndType(
-        devices,
-        '$cpuUsage',
-        from,
-        to,
-      );
-    case StatsType.DeviceStatsType.MEM_USED:
-      return await DeviceStatRepo.findSingleAveragedStatByDevicesAndType(
-        devices,
-        '$memUsedPercentage',
-        from,
-        to,
-      );
-    case StatsType.DeviceStatsType.MEM_FREE:
-      return await DeviceStatRepo.findSingleAveragedStatByDevicesAndType(
-        devices,
-        '$memFreePercentage',
-        from,
-        to,
-      );
-    case StatsType.DeviceStatsType.DISK_USED:
-      return await DeviceStatRepo.findSingleAveragedStatByDevicesAndType(
-        devices,
-        '$storageUsedPercentage',
-        from,
-        to,
-      );
-    case StatsType.DeviceStatsType.DISK_FREE:
-      return await DeviceStatRepo.findSingleAveragedStatByDevicesAndType(
-        devices,
-        '$storageFreePercentage',
-        from,
-        to,
-      );
-    default:
-      throw new Error('Unknown Type');
+
+  if (!type) {
+    throw new Error('Type is required');
   }
+
+  const result = await prometheusService.queryAggregatedMetrics(
+    type,
+    { type: 'devices', deviceIds: devices.map((d) => d.uuid) },
+    { from, to },
+  );
+
+  if (!result.success) {
+    logger.error(`Failed to get aggregated stats: ${result.error}`);
+    return null;
+  }
+
+  return (
+    result.data?.map((item) => ({
+      ...item,
+      name: devices.find((d) => d.uuid === item.name)?.fqdn || item.name,
+    })) || null
+  );
 }
 
 async function getStatByDeviceAndType(
   device: Device,
   type?: string,
-): Promise<[{ _id?: string; value: number; createdAt?: string }] | null> {
+): Promise<[{ _id?: string; value: number; date?: string }] | null> {
   logger.info(`getStatByDeviceAndType - type: ${type}, device: ${device.uuid}`);
-  switch (type) {
-    case StatsType.DeviceStatsType.CPU:
-      return await DeviceStatRepo.findStatByDeviceAndType(device, '$cpuUsage');
-    case StatsType.DeviceStatsType.MEM_USED:
-      return await DeviceStatRepo.findStatByDeviceAndType(device, '$memUsedPercentage');
-    case StatsType.DeviceStatsType.MEM_FREE:
-      return await DeviceStatRepo.findStatByDeviceAndType(device, '$memFreePercentage');
-    case StatsType.DeviceStatsType.CONTAINERS:
-      return [{ value: await ContainerRepo.countByDeviceId(device._id) }];
-    default:
-      throw new Error('Unknown Type');
+
+  if (!type) {
+    throw new Error('Type is required');
   }
+
+  if (type === StatsType.DeviceStatsType.CONTAINERS) {
+    return [{ value: await ContainerRepo.countByDeviceId(device._id) }];
+  }
+
+  const result = await prometheusService.queryLatestMetric(type as StatsType.DeviceStatsType, {
+    type: 'device',
+    deviceId: device.uuid,
+  });
+
+  if (!result.success) {
+    logger.error(`Failed to get latest stat: ${result.error}`);
+    return null;
+  }
+
+  return result.data ? [result.data] : null;
 }
 
 async function getSingleAveragedStatByType(
@@ -187,16 +263,30 @@ async function getSingleAveragedStatByType(
   to: number,
   type?: string,
 ): Promise<[{ value: number }] | null> {
-  logger.info(`getStatByType - type: ${type}`);
-  switch (type) {
-    case StatsType.DeviceStatsType.CPU:
-      return await DeviceStatRepo.findSingleAveragedStatAndType('$cpuUsage', from, to);
-    case StatsType.DeviceStatsType.MEM_USED:
-      return await DeviceStatRepo.findSingleAveragedStatAndType('$memUsedPercentage', from, to);
-    case StatsType.DeviceStatsType.MEM_FREE:
-      return await DeviceStatRepo.findSingleAveragedStatAndType('$memFreePercentage', from, to);
-    default:
-      throw new Error('Unknown Type');
+  logger.info(`getStatByType - type: ${type}, from: ${from}, to: ${to}`);
+
+  if (!type) {
+    throw new Error('Type is required');
+  }
+
+  try {
+    const result = await prometheusService.queryAveragedStatByType(
+      type as StatsType.DeviceStatsType,
+      {
+        days: from - to,
+        offset: to,
+      },
+    );
+
+    if (!result.success) {
+      logger.error(`Failed to get averaged stat: ${result.error}`);
+      return null;
+    }
+
+    return result.data ? [result.data] : null;
+  } catch (error) {
+    logger.error(`Error getting averaged stat for type ${type}:`, error);
+    return null;
   }
 }
 

@@ -4,7 +4,7 @@ import { defineConfig } from 'vitepress';
 export default defineConfig({
   title: 'Squirrel Servers Manager',
   description:
-    'A user friendly, UI/UX focus server & configuration management tool',
+    'The most powerfully designed and user-friendly containers & configuration management tool.',
   appearance: 'force-dark',
   lastUpdated: true,
   cleanUrls: true,
@@ -136,9 +136,6 @@ export default defineConfig({
                   text: 'Adding a device', link: '/docs/devices/add-device.md'
                 },
                 {
-                  text: 'Adding an unmanaged device (agentless mode)', link: '/docs/devices/add-unamanaged.md'
-                },
-                {
                   text: 'Deleting a device', link: '/docs/devices/delete-device.md'
                 },
                 {
@@ -160,7 +157,7 @@ export default defineConfig({
                 },
                 {
                   text: 'Proxmox', items: [
-                    { text: 'Qemu/LXC Containers', link: '/docs/containers/deploy-store.md' }
+                    { text: 'Qemu/LXC Containers', link: '/docs/containers/qemu-lxc-containers.md' }
                   ]
                 },
                 ]
@@ -232,7 +229,7 @@ export default defineConfig({
 
     footer: {
       message: 'Made with love',
-      copyright: 'Copyright © 2024-present Squirrel Team & Contributors'
+      copyright: 'Copyright © 2025-present Squirrel Team & Contributors'
     }
   },
   ignoreDeadLinks: [

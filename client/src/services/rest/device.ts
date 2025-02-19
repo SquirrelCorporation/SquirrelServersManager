@@ -56,11 +56,14 @@ export async function postCheckAnsibleConnection(
   masterNodeUrl?: string,
   options?: { [key: string]: any },
 ) {
-  return request<API.NewDevice>('/api/devices/check-connection/ansible', {
-    data: { ip: ip, masterNodeUrl: masterNodeUrl, ...deviceAuth },
-    method: 'POST',
-    ...(options || {}),
-  });
+  return request<API.Response<API.CheckAnsibleConnection>>(
+    '/api/devices/check-connection/ansible',
+    {
+      data: { ip: ip, masterNodeUrl: masterNodeUrl, ...deviceAuth },
+      method: 'POST',
+      ...(options || {}),
+    },
+  );
 }
 
 export async function postCheckDockerConnection(
@@ -68,18 +71,36 @@ export async function postCheckDockerConnection(
   deviceAuth: API.DeviceAuthParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.NewDevice>('/api/devices/check-connection/docker', {
-    data: { ip: ip, ...deviceAuth },
-    method: 'POST',
-    ...(options || {}),
-  });
+  return request<API.Response<API.CheckDockerConnection>>(
+    '/api/devices/check-connection/docker',
+    {
+      data: { ip: ip, ...deviceAuth },
+      method: 'POST',
+      ...(options || {}),
+    },
+  );
+}
+
+export async function postCheckRemoteSystemInformationConnection(
+  ip: string,
+  deviceAuth: API.DeviceAuthParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.Response<API.CheckRemoteSystemInformationConnection>>(
+    '/api/devices/check-connection/remote-system-information',
+    {
+      data: { ip: ip, ...deviceAuth },
+      method: 'POST',
+      ...(options || {}),
+    },
+  );
 }
 
 export async function deleteDevice(
   uuid: string,
   options?: { [key: string]: any },
 ) {
-  return request<API.SimpleResult>(`/api/devices/${uuid}`, {
+  return request<API.Response<API.SimpleResult>>(`/api/devices/${uuid}`, {
     method: 'DELETE',
     ...(options || {}),
   });
@@ -93,16 +114,37 @@ export async function updateDeviceDockerConfiguration(
     dockerEventsWatcher: boolean;
     dockerWatcherCron?: string;
     dockerStatsCron?: string;
+    dockerWatchAll?: boolean;
   },
   options?: { [key: string]: any },
 ) {
-  return request<API.SimpleResult>(`/api/devices/${uuid}/conf/docker`, {
-    method: 'POST',
-    data: {
-      ...dockerOptions,
+  return request<API.Response<API.SimpleResult>>(
+    `/api/devices/${uuid}/configuration/containers/docker`,
+    {
+      method: 'POST',
+      data: {
+        ...dockerOptions,
+      },
+      ...(options || {}),
     },
-    ...(options || {}),
-  });
+  );
+}
+
+export async function updateDeviceSystemInformationConfiguration(
+  uuid: string,
+  systemInformationConfiguration: Partial<API.SystemInformationConfiguration>,
+  options?: { [key: string]: any },
+) {
+  return request<API.Response<API.SimpleResult>>(
+    `/api/devices/${uuid}/configuration/system-information`,
+    {
+      method: 'POST',
+      data: {
+        systemInformationConfiguration: { ...systemInformationConfiguration },
+      },
+      ...(options || {}),
+    },
+  );
 }
 
 export async function updateDeviceProxmoxConfiguration(
@@ -110,18 +152,21 @@ export async function updateDeviceProxmoxConfiguration(
   proxmoxConfiguration: API.ProxmoxConfiguration,
   options?: { [key: string]: any },
 ) {
-  return request<API.SimpleResult>(`/api/devices/${uuid}/conf/proxmox`, {
-    method: 'POST',
-    data: proxmoxConfiguration,
-    ...(options || {}),
-  });
+  return request<API.Response<API.SimpleResult>>(
+    `/api/devices/${uuid}/configuration/containers/proxmox`,
+    {
+      method: 'POST',
+      data: proxmoxConfiguration,
+      ...(options || {}),
+    },
+  );
 }
 
 export async function getCheckDeviceDockerConnection(
   uuid: string,
   options?: { [key: string]: any },
 ) {
-  return request<API.SimpleResult>(
+  return request<API.Response<API.CheckDockerConnection>>(
     `/api/devices/${uuid}/auth/docker/test-connection`,
     {
       method: 'GET',
@@ -134,8 +179,21 @@ export async function getCheckDeviceAnsibleConnection(
   uuid: string,
   options?: { [key: string]: any },
 ) {
-  return request<API.SimpleResult>(
+  return request<API.Response<API.CheckAnsibleConnection>>(
     `/api/devices/${uuid}/auth/ansible/test-connection`,
+    {
+      method: 'GET',
+      ...(options || {}),
+    },
+  );
+}
+
+export async function getCheckDeviceRemoteSystemInformationConnection(
+  uuid: string,
+  options?: { [key: string]: any },
+) {
+  return request<API.Response<API.CheckRemoteSystemInformationConnection>>(
+    `/api/devices/${uuid}/auth/remote-system-information/test-connection`,
     {
       method: 'GET',
       ...(options || {}),
@@ -164,10 +222,13 @@ export async function postDeviceDiagnostic(
   uuid: string,
   options?: { [key: string]: any },
 ) {
-  return request<API.SimpleResult>(`/api/devices/${uuid}/auth/diagnostic`, {
-    method: 'POST',
-    ...(options || {}),
-  });
+  return request<API.Response<API.SimpleResult>>(
+    `/api/devices/${uuid}/auth/diagnostic`,
+    {
+      method: 'POST',
+      ...(options || {}),
+    },
+  );
 }
 
 export async function postDeviceCapabilities(

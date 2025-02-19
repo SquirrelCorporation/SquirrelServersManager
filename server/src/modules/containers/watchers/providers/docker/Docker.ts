@@ -10,11 +10,11 @@ import Container from '../../../../../data/database/model/Container';
 import Device from '../../../../../data/database/model/Device';
 import DeviceAuth from '../../../../../data/database/model/DeviceAuth';
 import ContainerRepo from '../../../../../data/database/repository/ContainerRepo';
-import ContainerStatsRepo from '../../../../../data/database/repository/ContainerStatsRepo';
 import DeviceAuthRepo from '../../../../../data/database/repository/DeviceAuthRepo';
 import DeviceRepo from '../../../../../data/database/repository/DeviceRepo';
 import SSHCredentialsHelper from '../../../../../helpers/ssh/SSHCredentialsHelper';
 import logger from '../../../../../logger';
+import ContainerStatsUseCases from '../../../../../services/ContainerStatsUseCases';
 import DeviceUseCases from '../../../../../services/DeviceUseCases';
 import Component from '../../../core/Component';
 import { getCustomAgent } from '../../../core/CustomAgent';
@@ -62,7 +62,7 @@ export default class Docker extends DockerLogs {
       watchstats: this.joi.boolean().default(true),
       cronstats: this.joi.string().default('*/1 * * * *'),
       watchbydefault: this.joi.boolean().default(true),
-      watchall: this.joi.boolean().default(false),
+      watchall: this.joi.boolean().default(true),
       watchevents: this.joi.boolean().default(true),
       deviceUuid: this.joi.string().required(),
     });
@@ -80,6 +80,7 @@ export default class Docker extends DockerLogs {
       this.childLogger.info(
         `Cron scheduled (cron: "${this.configuration.cron}", device: ${this.configuration.host})`,
       );
+      this.childLogger.info(this.configuration);
       this.watchCron = CronJob.schedule(this.configuration.cron, () => {
         this.watchContainersFromCron();
         this.watchNetworksFromCron();
@@ -97,6 +98,9 @@ export default class Docker extends DockerLogs {
         this.watchNetworksFromCron();
         this.watchVolumesFromCron();
         this.watchImagesFromCron();
+        if (this.configuration.watchstats) {
+          this.watchContainerStats();
+        }
       }, START_WATCHER_DELAY_MS);
 
       this.watchCronDebounced = debounce(() => {
@@ -610,7 +614,7 @@ export default class Docker extends DockerLogs {
           const dockerContainer = this.dockerApi.getContainer(container.id);
           this.childLogger.debug(`watchContainerStats getContainer - ${dockerContainer.id}`);
           const dockerStats = await dockerContainer.stats({ stream: false });
-          await ContainerStatsRepo.create(container, dockerStats);
+          await ContainerStatsUseCases.createStats(container, dockerStats);
         } catch (error: any) {
           this.childLogger.error(error);
           this.childLogger.error(

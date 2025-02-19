@@ -6,7 +6,6 @@ import {
 import Title, { TitleColors } from '@/components/Template/Title';
 import SystemPerformanceCard from '@/pages/Dashboard/Components/SystemPerformanceCard';
 import {
-  postContainerStatsSettings,
   postDashboardSetting,
   postDeviceSetting,
   postDeviceStatsSettings,
@@ -30,7 +29,6 @@ import {
   Popover,
   Row,
   Slider,
-  Space,
   Typography,
 } from 'antd';
 import React, { useState } from 'react';
@@ -53,14 +51,6 @@ const GeneralSettings: React.FC = () => {
   const [serverLogsRetentionInDays, setServerLogsRetentionInDays] = useState<
     number | null
   >(currentUser?.settings.logs.serverRetention);
-  const [registerDeviceStatEveryXSeconds, setRegisterDeviceStatEveryXSeconds] =
-    useState<number | null>(
-      currentUser?.settings.device.registerDeviceStatEvery,
-    );
-  const [containerStatsRetentionInDays, setContainerStatsRetentionInDays] =
-    useState<number | null>(
-      currentUser?.settings.stats.containerStatsRetention,
-    );
   const [deviceStatsRetentionInDays, setDeviceStatsRetentionInDays] = useState<
     number | null
   >(currentUser?.settings.stats.deviceStatsRetention);
@@ -143,21 +133,6 @@ const GeneralSettings: React.FC = () => {
     }
   };
 
-  const onChangeRegisterDeviceStatEvery = async (newValue: number | null) => {
-    if (newValue) {
-      await postDeviceSetting(
-        SettingsKeys.GeneralSettingsKeys.REGISTER_DEVICE_STAT_EVERY_IN_SECONDS,
-        newValue,
-      ).then(() => {
-        setRegisterDeviceStatEveryXSeconds(newValue);
-        message.success({
-          content: 'Setting successfully updated',
-          duration: 6,
-        });
-      });
-    }
-  };
-
   const confirmReset = async () => {
     await postResetSettings().then(() => {
       message.warning({ content: 'Settings have been reset', duration: 6 });
@@ -171,21 +146,6 @@ const GeneralSettings: React.FC = () => {
         newValue,
       ).then(() => {
         setDeviceStatsRetentionInDays(newValue);
-        message.success({
-          content: 'Setting successfully updated',
-          duration: 6,
-        });
-      });
-    }
-  };
-
-  const onChangeContainerStatsRetention = async (newValue: number | null) => {
-    if (newValue) {
-      await postContainerStatsSettings(
-        SettingsKeys.GeneralSettingsKeys.CONTAINER_STATS_RETENTION_IN_DAYS,
-        newValue,
-      ).then(() => {
-        setContainerStatsRetentionInDays(newValue);
         message.success({
           content: 'Setting successfully updated',
           duration: 6,
@@ -270,25 +230,6 @@ const GeneralSettings: React.FC = () => {
               />
             </Col>
           </Row>
-          <Row justify="space-between" align="middle" gutter={[16, 16]}>
-            <Col xs={24} sm={8}>
-              <Typography.Text>
-                <Popover content={'Delete container statistics after X days'}>
-                  <InfoCircleFilled />
-                </Popover>{' '}
-                Container statistics retention days
-              </Typography.Text>
-            </Col>
-            <Col xs={24} sm={8}>
-              <InputNumber
-                min={1}
-                defaultValue={containerStatsRetentionInDays || 0}
-                suffix="day(s)"
-                style={{ width: '100%' }}
-                onChange={onChangeContainerStatsRetention}
-              />
-            </Col>
-          </Row>
         </Flex>
       </Card>
       <Card
@@ -324,30 +265,6 @@ const GeneralSettings: React.FC = () => {
                 suffix="minute(s)"
                 style={{ width: '100%' }}
                 onChange={onChangeConsiderDeviceOnline}
-              />
-            </Col>
-          </Row>
-          <Row justify="space-between" align="middle" gutter={[16, 16]}>
-            <Col xs={24} sm={8}>
-              <Typography.Text>
-                <Popover
-                  content={
-                    'Allow a device stat to be saved only when the latest is older than the settings, regardless of the frequency of the agent'
-                  }
-                >
-                  <InfoCircleFilled />
-                </Popover>{' '}
-                Register device stats every
-              </Typography.Text>
-            </Col>
-            <Col xs={24} sm={8}>
-              <InputNumber
-                min={1}
-                max={600}
-                defaultValue={registerDeviceStatEveryXSeconds || 0}
-                suffix="second(s)"
-                style={{ width: '100%' }}
-                onChange={onChangeRegisterDeviceStatEvery}
               />
             </Col>
           </Row>

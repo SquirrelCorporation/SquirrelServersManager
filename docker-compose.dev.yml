@@ -10,9 +10,23 @@ services:
       - mongo
       - server
       - redis
+      - prometheus
     labels:
       wud.display.name: "SSM - Proxy"
       wud.watch.digest: false
+  prometheus:
+    build:
+      context: ./prometheus  # Directory containing Dockerfile and prometheus.yml
+    container_name: prometheus-ssm
+    restart: unless-stopped
+    env_file:
+      - ./.env.dev
+    volumes:
+      - ./.data.dev/prometheus:/prometheus
+    ports:
+      - "9090:9090"  # Prometheus UI accessible on this port
+    labels:
+      wud.display.name: "SSM - Prometheus"
   mongo:
     env_file:
       - ./.env.dev
@@ -48,9 +62,11 @@ services:
     external_links:
       - mongo
       - redis
+      - prometheus
     depends_on:
       - mongo
       - redis
+      - prometheus
     build:
       context: ./server
       additional_contexts:

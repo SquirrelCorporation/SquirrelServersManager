@@ -3,7 +3,7 @@
 <img src="./client/public/logo.svg" align="right"
      alt="SSM by Emmanuel Costa" width="120" height="178">
 
-Squirrel Servers Manager is an all-in-one configuration and container management tool, powered by Ansible and Docker, with a focus on UI/UX.
+Squirrel Servers Manager is an all-in-one configuration and container management tool, powered by Ansible, Docker & Prometheus, with a focus on UI/UX.
 It is designed to provide a user-friendly alternative to well-known established tools, while being totally open-source and free.
 
 [![Publish Containers](https://github.com/SquirrelCorporation/SquirrelServersManager/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/SquirrelCorporation/SquirrelServersManager/actions/workflows/docker-publish.yml)

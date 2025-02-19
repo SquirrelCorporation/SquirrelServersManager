@@ -12,11 +12,17 @@ import { API } from 'ssm-shared-lib';
 
 const { Text } = Typography;
 
-const ListContent: React.FC<API.DeviceItem> = React.memo((props) => {
-  const cpuSpeed = useMemo(() => props.cpuSpeed?.toFixed(1), [props.cpuSpeed]);
+const ListContent: React.FC<Partial<API.DeviceItem>> = React.memo((props) => {
+  const cpuSpeed = useMemo(
+    () => props.systemInformation?.cpu?.speed?.toFixed(1),
+    [props.systemInformation?.cpu?.speed],
+  );
   const memSize = useMemo(
-    () => (props.mem ? Math.round(props.mem / 1024) : 'NaN'),
-    [props.mem],
+    () =>
+      props.systemInformation?.mem?.total
+        ? Math.ceil(props.systemInformation?.mem?.total / (1024 * 1024 * 1024))
+        : 'NaN',
+    [props.systemInformation?.mem?.total],
   );
 
   const carouselContent = useMemo(() => {
@@ -46,19 +52,19 @@ const ListContent: React.FC<API.DeviceItem> = React.memo((props) => {
                   <Col span={6}>
                     <TinyRingProgressDeviceGraph
                       type={DeviceStatType.CPU}
-                      deviceUuid={props.uuid}
+                      deviceUuid={props.uuid as string}
                     />
                   </Col>
                   <Col span={6}>
                     <TinyRingProgressDeviceGraph
                       type={DeviceStatType.MEM_USED}
-                      deviceUuid={props.uuid}
+                      deviceUuid={props.uuid as string}
                     />
                   </Col>
                   <Col span={6}>
                     <TinyRingProgressDeviceIndicator
                       type={DeviceStatType.CONTAINERS}
-                      deviceUuid={props.uuid}
+                      deviceUuid={props.uuid as string}
                     />
                   </Col>
                 </Row>
@@ -70,7 +76,7 @@ const ListContent: React.FC<API.DeviceItem> = React.memo((props) => {
                   <Col span={24}>
                     <TinyLineDeviceGraph
                       type={DeviceStatType.CPU}
-                      deviceUuid={props.uuid}
+                      deviceUuid={props.uuid as string}
                       from={24}
                     />
                   </Col>
@@ -93,7 +99,7 @@ const ListContent: React.FC<API.DeviceItem> = React.memo((props) => {
                   <Col span={24}>
                     <TinyLineDeviceGraph
                       type={DeviceStatType.MEM_USED}
-                      deviceUuid={props.uuid}
+                      deviceUuid={props.uuid as string}
                       from={24}
                     />
                   </Col>
@@ -125,7 +131,7 @@ const ListContent: React.FC<API.DeviceItem> = React.memo((props) => {
     <div className={styles.listContent} key={props.uuid}>
       <div className={styles.listContentItem}>
         <span>
-          <DeviceStatusTag status={props.status} />
+          <DeviceStatusTag status={props.status as number} />
         </span>
         <p>{props.hostname}</p>
       </div>

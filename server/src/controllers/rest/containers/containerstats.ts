@@ -59,7 +59,7 @@ export const getNbContainersByStatus = async (req, res) => {
 export const getAveragedStats = async (req, res) => {
   try {
     const stats = await ContainerStatsUseCases.getCpUAndMemAveragedStats();
-    new SuccessResponse('Get averaged stats', stats).send(res);
+    new SuccessResponse('Get averaged container stats', stats).send(res);
   } catch (error: any) {
     throw new InternalError(error.message);
   }

@@ -26,6 +26,7 @@ const CreateFileInRepositoryModalForm: React.FC<
       title={`Create a new ${props.mode}`}
       open={props.opened}
       autoFocusFirstInput
+      clearOnDestroy
       modalProps={{
         destroyOnClose: true,
         onCancel: () => props.setModalOpened(false),

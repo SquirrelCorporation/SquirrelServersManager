@@ -158,10 +158,9 @@ const NotificationsWidget: React.FC = () => {
 
   const hide = useCallback(() => setOpen(false), []);
 
-  const handleOpenChange = useCallback(
-    (newOpen: boolean) => setOpen(newOpen),
-    [],
-  );
+  const handleOpenChange = useCallback((newOpen: boolean) => {
+    setOpen(newOpen);
+  }, []);
 
   useEffect(() => {
     socket.connect();

@@ -44,7 +44,7 @@ abstract class AbstractActionComponent extends EventManager {
       throw new Error(`Automation with uuid ${this.automationUuid} not found`);
     }
     await AutomationRepo.setLastExecutionStatus(automation, 'failed');
-    this.childLogger.error('Automation failed');
+    this.childLogger.error(`Automation failed - error: ${optionalMessage || 'Unknown reason'}`);
     this.emit(Events.AUTOMATION_FAILED, {
       message: optionalMessage || `The automation "${this.moduleName}" failed`,
       severity: 'error',

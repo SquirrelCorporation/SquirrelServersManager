@@ -100,7 +100,7 @@ const Login: React.FC = () => {
                     fontSize: 14,
                   }}
                 >
-                  Squirrel Team
+                  AGPL-3.0 license
                 </span>
               </Divider>
             </div>

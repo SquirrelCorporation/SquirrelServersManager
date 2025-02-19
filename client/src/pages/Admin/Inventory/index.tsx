@@ -6,7 +6,6 @@ import DeviceQuickActionReference, {
 import OsSoftwareVersions from '@/components/DeviceComponents/OSSoftwaresVersions/OsSoftwareVersions';
 import { GrommetIconsInstall } from '@/components/Icons/CustomIcons';
 import NewDeviceModal from '@/components/NewDeviceModal/NewDeviceModal';
-import NewUnManagedDeviceModal from '@/components/NewDeviceModal/NewUnManagedDeviceModal';
 import TerminalModal, {
   TerminalStateProps,
 } from '@/components/PlaybookExecutionModal';
@@ -26,16 +25,7 @@ import {
   ProDescriptions,
   ProTable,
 } from '@ant-design/pro-components';
-import {
-  Button,
-  Col,
-  Drawer,
-  Dropdown,
-  MenuProps,
-  message,
-  Popconfirm,
-  Row,
-} from 'antd';
+import { Button, Drawer, message, Popconfirm } from 'antd';
 import React, { useRef, useState } from 'react';
 import { API, SsmAnsible, SsmAgent } from 'ssm-shared-lib';
 import ConfigurationModal from './components/ConfigurationModal';
@@ -57,11 +47,6 @@ const Inventory: React.FC = () => {
     mode: SsmAnsible.ExecutionMode.APPLY,
   });
   const [addNewDeviceModalIsOpen, setAddNewDeviceModalIsOpen] = useState(false);
-  const [
-    addNewUnManagedDeviceModalIsOpen,
-    setAddNewUnManagedDeviceModalIsOpen,
-  ] = useState(false);
-
   const [playbookSelectionModalIsOpened, setPlaybookSelectionModalIsOpened] =
     React.useState(false);
   const [selectedRowsState, setSelectedRows] = useState<API.DeviceItem[]>([]);
@@ -102,32 +87,19 @@ const Inventory: React.FC = () => {
     setTerminal,
   );
 
-  const onMenuClick: MenuProps['onClick'] = () => {
-    setAddNewUnManagedDeviceModalIsOpen(true);
-  };
-
-  const items = [
-    {
-      key: '1',
-      label: 'Register an unmanaged device (without agent)',
-    },
-  ];
-
   const onAddNewDevice = (
     target: API.DeviceItem,
     installMethod: SsmAgent.InstallMethods,
   ) => {
     actionRef?.current?.reload();
-    setTerminal({
-      target: [target],
-      isOpen: true,
-      quickRef: 'installAgent',
-      extraVars: [{ extraVar: '_ssm_installMethod', value: installMethod }],
-    });
-  };
-
-  const onAddNewUnmanagedDevice = () => {
-    actionRef?.current?.reload();
+    if (installMethod !== SsmAgent.InstallMethods.LESS) {
+      setTerminal({
+        target: [target],
+        isOpen: true,
+        quickRef: 'installAgent',
+        extraVars: [{ extraVar: '_ssm_installMethod', value: installMethod }],
+      });
+    }
   };
 
   const onDeleteNewDevice = async () => {
@@ -172,12 +144,6 @@ const Inventory: React.FC = () => {
         setIsModalOpen={setAddNewDeviceModalIsOpen}
         onAddNewDevice={onAddNewDevice}
       />
-      <NewUnManagedDeviceModal
-        isModalOpen={addNewUnManagedDeviceModalIsOpen}
-        setIsModalOpen={setAddNewUnManagedDeviceModalIsOpen}
-        onAddNewUnmanagedDevice={onAddNewUnmanagedDevice}
-      />
-
       <ProTable<API.DeviceItem, API.PageParams>
         headerTitle="List of Devices"
         actionRef={actionRef}
@@ -203,21 +169,14 @@ const Inventory: React.FC = () => {
         }}
         toolBarRender={() => {
           return [
-            <Dropdown.Button
-              menu={{ items, onClick: onMenuClick }}
-              key="3"
+            <Button
+              key={'add-device'}
               type="primary"
-              onClick={() => {
-                setAddNewDeviceModalIsOpen(true);
-              }}
+              icon={<GrommetIconsInstall />}
+              onClick={() => setAddNewDeviceModalIsOpen(true)}
             >
-              <Row>
-                <Col>
-                  <GrommetIconsInstall />
-                </Col>
-                <Col>&nbsp;Install agent on new device</Col>
-              </Row>
-            </Dropdown.Button>,
+              Add a new device
+            </Button>,
           ];
         }}
       />
@@ -257,7 +216,6 @@ const Inventory: React.FC = () => {
         updateModalOpen={configurationModalOpen}
         device={currentRow || {}}
       />
-
       <Drawer
         width={600}
         open={showDetail}
@@ -283,9 +241,11 @@ const Inventory: React.FC = () => {
             />
           </>
         )}
-        {currentRow?.versions && (
+        {currentRow?.systemInformation?.versions && (
           <div style={{ marginTop: '20px' }}>
-            <OsSoftwareVersions versions={currentRow.versions} />
+            <OsSoftwareVersions
+              versions={currentRow.systemInformation?.versions}
+            />
           </div>
         )}
       </Drawer>

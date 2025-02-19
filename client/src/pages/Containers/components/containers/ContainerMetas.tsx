@@ -115,7 +115,8 @@ const ContainerMetas = (props: ContainerMetasProps) => {
     status: {
       dataIndex: 'status',
       title: 'Status',
-      valueType: 'select' as ProFieldValueType,
+      valueType: 'checkbox' as ProFieldValueType,
+      initialValue: ['running', 'paused', 'unreachable', 'stopped'],
       valueEnum: {
         running: {
           text: 'running',
@@ -128,6 +129,9 @@ const ContainerMetas = (props: ContainerMetasProps) => {
         },
         stopped: {
           text: 'stopped',
+        },
+        exited: {
+          text: 'exited',
         },
       },
     },

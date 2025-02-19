@@ -18,6 +18,7 @@ import {
   UnorderedListOutlined,
 } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
+import { history } from '@umijs/max';
 import {
   Avatar,
   Button,
@@ -327,14 +328,34 @@ const PlaybookSettings: React.FC = () => {
                 if (row.onError) {
                   return (
                     <Popover
+                      overlayStyle={{ maxWidth: 450 }}
                       content={
-                        <Space direction="vertical" size={'small'}>
+                        <Space
+                          direction="vertical"
+                          size={'small'}
+                          style={{ width: '100%' }}
+                        >
                           <Typography.Text>
                             This repository is on error:
                           </Typography.Text>
                           <Typography.Text code style={{ fontSize: 13 }}>
                             {row.onErrorMessage}
                           </Typography.Text>
+                          <Row justify="end">
+                            <Col>
+                              <Button
+                                onClick={() =>
+                                  history.push({
+                                    pathname: '/admin/logs',
+                                    // @ts-expect-error lib missing type
+                                    search: `?moduleId=${row.uuid}`,
+                                  })
+                                }
+                              >
+                                More logs
+                              </Button>
+                            </Col>
+                          </Row>
                         </Space>
                       }
                     >

@@ -6,6 +6,7 @@ import EventManager from '../../core/events/EventManager';
 import Events from '../../core/events/events';
 import Device from '../../data/database/model/Device';
 import DeviceAuth from '../../data/database/model/DeviceAuth';
+import { tryResolveHost } from '../../helpers/dns/dns-helper';
 import SSHCredentialsHelper from '../../helpers/ssh/SSHCredentialsHelper';
 import PinoLogger from '../../logger';
 import { getCustomAgent } from '../containers/core/CustomAgent';
@@ -41,8 +42,11 @@ class Diagnostic extends EventManager {
             `checkSSHConnectivity - SSH connection error to ${options.host}: ${err.message}`,
           );
           reject(err);
-        })
-        .connect(options);
+        });
+      (async () => {
+        const connectConfig = { ...options, host: await tryResolveHost(options.host as string) };
+        conn.connect(connectConfig);
+      })();
     });
   };
 
@@ -117,7 +121,10 @@ class Diagnostic extends EventManager {
         this.childLogger.info('checkDiskSpace - Connection ended');
       });
 
-      conn.connect(options);
+      (async () => {
+        const connectConfig = { ...options, host: await tryResolveHost(options.host as string) };
+        conn.connect(connectConfig);
+      })();
     });
   };
 
@@ -158,7 +165,10 @@ class Diagnostic extends EventManager {
         this.childLogger.info('checkDiskSpace - Connection ended');
       });
 
-      conn.connect(options);
+      (async () => {
+        const connectConfig = { ...options, host: await tryResolveHost(options.host as string) };
+        conn.connect(connectConfig);
+      })();
     });
   };
 

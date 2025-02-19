@@ -1,38 +1,47 @@
 import express from 'express';
 import passport from 'passport';
+import { postDeviceCapabilities } from '../controllers/rest/devices/capabilities';
+import { postDeviceCapabilitiesValidator } from '../controllers/rest/devices/capabilities.validator';
 import {
   getCheckDeviceAnsibleConnection,
   getCheckDeviceDockerConnection,
   getCheckDeviceProxmoxConnection,
+  getCheckDeviceRemoteSystemInformationConnection,
   postCheckAnsibleConnection,
   postCheckDockerConnection,
+  postCheckRemoteSystemInformationConnection,
   postDiagnostic,
 } from '../controllers/rest/devices/check-connection';
 import {
   getCheckDeviceAnsibleConnectionValidator,
   getCheckDeviceDockerConnectionValidator,
   getCheckDeviceProxmoxConnectionValidator,
+  getCheckDeviceRemoteSystemInformationConnectionValidator,
   postCheckAnsibleConnectionValidator,
   postCheckDockerConnectionValidator,
   postDiagnosticValidator,
 } from '../controllers/rest/devices/check-connection.validator';
+import {
+  postDeviceProxmoxConfiguration,
+  postDeviceSystemInformationConfiguration,
+  updateDockerWatcher,
+} from '../controllers/rest/devices/configuration';
+import {
+  postDeviceProxmoxConfigurationValidator,
+  postDeviceSystemInformationConfigurationValidator,
+} from '../controllers/rest/devices/configuration.validator';
 import {
   addDevice,
   addDeviceAuto,
   deleteDevice,
   getAllDevices,
   getDevices,
-  postDeviceCapabilities,
-  postDeviceProxmoxConfiguration,
   updateAgentInstallMethod,
-  updateDockerWatcher,
 } from '../controllers/rest/devices/device';
 import {
   addDeviceAutoValidator,
   addDeviceValidator,
   deleteDeviceValidator,
-  postDeviceCapabilitiesValidator,
-  postDeviceProxmoxConfigurationValidator,
   updateAgentInstallMethodValidator,
 } from '../controllers/rest/devices/device.validator';
 import {
@@ -87,6 +96,11 @@ router.post(
   postCheckDockerConnectionValidator,
   postCheckDockerConnection,
 );
+router.post(
+  '/check-connection/remote-system-information',
+  postCheckDockerConnectionValidator,
+  postCheckRemoteSystemInformationConnection,
+);
 
 router.get(`/dashboard/stats/performances`, getDashboardPerformanceStats);
 router.post(
@@ -109,10 +123,17 @@ router
 router.route('/:uuid/capabilities').post(postDeviceCapabilitiesValidator, postDeviceCapabilities);
 router.route('/:uuid/auth/docker').post(updateDockerAuthValidator, updateDockerAuth);
 router.route('/:uuid/auth/proxmox').post(updateProxmoxAuthValidator, updateProxmoxAuth);
+
 router
-  .route('/:uuid/conf/proxmox')
+  .route('/:uuid/configuration/containers/proxmox')
   .post(postDeviceProxmoxConfigurationValidator, postDeviceProxmoxConfiguration);
-router.route('/:uuid/conf/docker').post(updateDockerWatcher);
+router.route('/:uuid/configuration/containers/docker').post(updateDockerWatcher);
+router
+  .route('/:uuid/configuration/system-information')
+  .post(
+    postDeviceSystemInformationConfigurationValidator,
+    postDeviceSystemInformationConfiguration,
+  );
 
 router
   .route('/:uuid/agent-install-method')
@@ -128,6 +149,13 @@ router
 router
   .route('/:uuid/auth/proxmox/test-connection')
   .post(getCheckDeviceProxmoxConnectionValidator, getCheckDeviceProxmoxConnection);
+router
+  .route('/:uuid/auth/remote-system-information/test-connection')
+  .get(
+    getCheckDeviceRemoteSystemInformationConnectionValidator,
+    getCheckDeviceRemoteSystemInformationConnection,
+  );
+
 router.post('/:uuid/auth/diagnostic', postDiagnosticValidator, postDiagnostic);
 
 router.route('/').put(addDeviceValidator, addDevice).get(getDevices);

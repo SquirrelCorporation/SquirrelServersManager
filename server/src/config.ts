@@ -13,6 +13,13 @@ export const redisConf = {
   port: parseInt(process.env.REDIS_PORT || '6379'),
 };
 
+export const prometheusConf = {
+  host: process.env.PROMETHEUS_HOST || `http://prometheus:9090`,
+  baseURL: process.env.PROMETHEUS_BASE_URL || `/api/v1`,
+  user: process.env.PROMETHEUS_USERNAME || 'user',
+  password: process.env.PROMETHEUS_PASSWORD || 'pass',
+};
+
 export const SECRET = process.env.SECRET || '';
 export const VAULT_PWD = process.env.VAULT_PWD || '';
 export const SESSION_DURATION = parseInt(process.env.SESSION_DURATION || '86400000');

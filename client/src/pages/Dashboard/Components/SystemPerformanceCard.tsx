@@ -51,12 +51,9 @@ const SystemPerformanceCard: React.FC = () => {
 
   const total = useMemo(
     () => (
-      <Typography.Title
-        level={2}
-        type={performancesStat?.danger ? 'danger' : undefined}
-      >
+      <div style={{ color: performancesStat?.danger ? '#b82727' : undefined }}>
         {performancesStat?.message}
-      </Typography.Title>
+      </div>
     ),
     [performancesStat],
   );
@@ -100,7 +97,7 @@ const SystemPerformanceCard: React.FC = () => {
       loading={loading}
       total={total}
       footer={footer}
-      contentHeight={80}
+      contentHeight={60}
     >
       <Trend
         reverseColor={false}

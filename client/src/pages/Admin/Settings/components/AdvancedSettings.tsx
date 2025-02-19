@@ -1,15 +1,12 @@
 import {
   ConfigurationSolid,
   IonServer,
-  MaterialSymbolsDashboard,
   PajamasLog,
 } from '@/components/Icons/CustomIcons';
 import Title, { TitleColors } from '@/components/Template/Title';
 import AnsibleConfiguration from '@/pages/Admin/Settings/components/subcomponents/AnsibleConfiguration';
 import {
   deleteAnsibleLogs,
-  deleteContainerStats,
-  deleteDeviceStats,
   deletePlaybooksAndResync,
   deleteServerLogs,
   postRestartServer,
@@ -28,12 +25,6 @@ const AdvancedSettings: React.FC = () => {
         break;
       case 'ansible':
         purgeFunction = deleteAnsibleLogs;
-        break;
-      case 'device':
-        purgeFunction = deleteDeviceStats;
-        break;
-      case 'container':
-        purgeFunction = deleteContainerStats;
         break;
       case 'playbooks':
         purgeFunction = deletePlaybooksAndResync;
@@ -98,69 +89,6 @@ const AdvancedSettings: React.FC = () => {
               danger
               icon={<DeleteOutline />}
               onClick={() => purgeLogs('ansible')}
-            >
-              Purge
-            </Button>
-          </Col>
-        </Row>
-      </Card>
-      <Card
-        type="inner"
-        style={{ marginTop: 16 }}
-        title={
-          <Title.SubTitle
-            title={'Statistics'}
-            backgroundColor={TitleColors.DASHBOARD}
-            icon={<MaterialSymbolsDashboard />}
-          />
-        }
-      >
-        <Row gutter={[16, 16]} align="middle" justify="space-between">
-          <Col flex="auto">
-            <Typography.Text>
-              <Popover
-                content={
-                  'Delete all device stats from database - Be aware that it can be long'
-                }
-              >
-                <InfoCircleFilled />
-              </Popover>{' '}
-              Device Statistics
-            </Typography.Text>
-          </Col>
-          <Col>
-            <Button
-              danger
-              icon={<DeleteOutline />}
-              onClick={() => purgeLogs('device')}
-            >
-              Purge
-            </Button>
-          </Col>
-        </Row>
-        <Row
-          gutter={[16, 16]}
-          align="middle"
-          justify="space-between"
-          style={{ marginTop: 16 }}
-        >
-          <Col flex="auto">
-            <Typography.Text>
-              <Popover
-                content={
-                  'Delete all the container stats from database - Be aware that it can be long'
-                }
-              >
-                <InfoCircleFilled />
-              </Popover>{' '}
-              Container Stats
-            </Typography.Text>
-          </Col>
-          <Col>
-            <Button
-              danger
-              icon={<DeleteOutline />}
-              onClick={() => purgeLogs('container')}
             >
               Purge
             </Button>

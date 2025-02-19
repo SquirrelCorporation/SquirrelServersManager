@@ -1,6 +1,6 @@
 import { DeviceStatType } from '@/components/Charts/DeviceStatType';
 import { getDeviceStats } from '@/services/rest/devicestat';
-import { Tiny } from '@ant-design/plots';
+import { Tiny } from '@ant-design/charts';
 import { message } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
@@ -25,7 +25,7 @@ const TinyLineDeviceGraph: React.FC<TinyLineProps> = ({
     }
 
     const formattedData = list.data.map((e) => ({
-      date: moment(e.date).format('YYYY-MM-DD, HH:mm'),
+      date: moment(e.date, 'YYYY-MM-DD-HH-mm-ss').format('YYYY-MM-DD, HH:mm'),
       value: parseFloat((e.value / 100).toFixed(2)),
     }));
 

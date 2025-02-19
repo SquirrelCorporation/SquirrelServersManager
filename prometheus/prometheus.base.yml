@@ -1,0 +1,9 @@
+global:
+  scrape_interval: 15s  # How often Prometheus scrapes targets
+
+scrape_configs:
+  - job_name: 'server-metrics' # Server pulling statistics
+    static_configs:
+      - targets:
+          - 'server:3000' # Replace with the address of your server
+    # Authentication settings (basic_auth) will be injected here dynamically

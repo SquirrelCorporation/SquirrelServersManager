@@ -29,7 +29,7 @@ export const getContainers = async (req, res) => {
   dataSource = filterByQueryParams(
     dataSource.map((e) => ({ ...e, deviceUuid: e.device?.uuid })),
     params,
-    ['status', 'name', 'updateAvailable', 'deviceUuid'],
+    ['status[]', 'name', 'updateAvailable', 'deviceUuid'],
   );
   const totalBeforePaginate = dataSource?.length || 0;
 
