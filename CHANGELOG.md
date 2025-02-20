@@ -7,6 +7,9 @@
 **Merged pull requests:**
 
 - \[CHORE\] Update dependencies and bump package version to 0.1.29 [\#764](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/764) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump vuetify from 3.7.11 to 3.7.12 in /site [\#755](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/755) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.7.0-alpine to 23.8.0-alpine in /client [\#754](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/754) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.7.0-alpine to 23.8.0-alpine in /server [\#753](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/753) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [v0.1.29](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.29) (2025-02-18)
 
