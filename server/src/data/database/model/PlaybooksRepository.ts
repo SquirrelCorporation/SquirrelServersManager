@@ -1,13 +1,10 @@
 import { Schema, model } from 'mongoose';
+import mongooseAutopopulate from 'mongoose-autopopulate';
 import { Repositories, SsmGit } from 'ssm-shared-lib';
+import { AnsibleVault } from './AnsibleVault';
 
 export const DOCUMENT_NAME = 'PlaybooksRepository';
 export const COLLECTION_NAME = 'playbooksrepository';
-
-export interface CustomVault {
-  vaultId: string;
-  password: string;
-}
 
 export default interface PlaybooksRepository {
   _id?: string;
@@ -27,24 +24,10 @@ export default interface PlaybooksRepository {
   onError?: boolean;
   onErrorMessage?: string;
   gitService?: SsmGit.Services;
-  vaults?: CustomVault[];
+  vaults?: AnsibleVault[] | string[];
   createdAt?: Date;
   updatedAt?: Date;
 }
-
-const vaultSchema = new Schema(
-  {
-    vaultId: {
-      type: Schema.Types.String,
-      required: true,
-    },
-    password: {
-      type: Schema.Types.String,
-      required: true,
-    },
-  },
-  { _id: false },
-);
 
 const schema = new Schema<PlaybooksRepository>(
   {
@@ -124,17 +107,22 @@ const schema = new Schema<PlaybooksRepository>(
       type: Schema.Types.String,
       required: false,
     },
-    vaults: {
-      type: [vaultSchema], // Array of vault schemas
-      required: false,
-      default: undefined,
-    },
+    vaults: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'AnsibleVault', // References the AnsibleVault model
+        required: false,
+        autopopulate: true, // This is the key part
+      },
+    ],
   },
   {
     timestamps: true,
     versionKey: false,
   },
 );
+
+schema.plugin(mongooseAutopopulate);
 
 export const PlaybooksRepositoryModel = model<PlaybooksRepository>(
   DOCUMENT_NAME,

@@ -1,11 +1,12 @@
-import ansible_runner
+import argparse
+import json
+import logging
 import os
+import sys
+
+import ansible_runner
 import requests
 import requests_unixsocket
-import logging
-import argparse
-import sys
-import json
 
 logger = logging.getLogger('ansible-runner')
 
@@ -63,6 +64,13 @@ def parse_args():
     arg_parser.add_argument("--debug",  help="Debug", required=False, default=False)
     arg_parser.add_argument("--check", help="Run in check (dry-run) mode", action='store_true')
     arg_parser.add_argument("--diff", help="Show diffs", action='store_true')
+    arg_parser.add_argument(
+      "--vault-id",
+      action="append",  # This allows multiple --vault-id arguments
+      help="Specify vault identity to use (can be used multiple times)",
+      default=[],  # Default to empty list
+      metavar="identity@source"
+    )
     group = arg_parser.add_mutually_exclusive_group(required=False)
     group.add_argument("--specific-host", help="Specify a host manually in json", default=None)
     group.add_argument("--host-pattern", help="Specify a host pattern in inventory", default="all")
@@ -95,6 +103,7 @@ def execute():
         'json_mode': True,
         'verbosity': args.log_level
     }
+
     # Add additional arguments for dry-run and diff if specified
     if args.check:
         runner_args['cmdline'] = '--check'
@@ -103,8 +112,16 @@ def execute():
             runner_args['cmdline'] += ' --diff'
         else:
             runner_args['cmdline'] = '--diff'
+
+    vault_cmd = ''
+    if args.vault_id:
+      vault_cmd = ' ' + ' '.join(f'--vault-id {vid}' for vid in args.vault_id)
+    if not args.vault_id:
+      vault_cmd = ' --vault-id ssm@ssm-ansible-vault-password-client.py'
     if 'cmdline' in runner_args:
-      runner_args['cmdline'] += ' --vault-id ssm@ssm-ansible-vault-password-client.py'
+      runner_args['cmdline'] += vault_cmd
+    else:
+      runner_args['cmdline'] = vault_cmd.strip()
 
     thread_obj, runner_obj = ansible_runner.run_async(**runner_args)
     sys.stdout.write(runner_obj.config.ident)

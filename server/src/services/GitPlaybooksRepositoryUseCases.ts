@@ -12,6 +12,7 @@ async function addGitRepository(
   remoteUrl: string,
   gitService: SsmGit.Services,
   directoryExclusionList?: string[],
+  vaults?: string[],
 ) {
   const uuid = uuidv4();
   const gitRepository = await PlaybooksRepositoryEngine.registerRepository({
@@ -40,6 +41,7 @@ async function addGitRepository(
     enabled: true,
     directoryExclusionList,
     gitService,
+    vaults,
   });
   void gitRepository.clone(true);
 }
@@ -54,6 +56,7 @@ async function updateGitRepository(
   remoteUrl: string,
   gitService: SsmGit.Services,
   directoryExclusionList?: string[],
+  vaults?: string[],
 ) {
   await PlaybooksRepositoryEngine.deregisterRepository(uuid);
   const gitRepository = await PlaybooksRepositoryEngine.registerRepository({
@@ -82,6 +85,7 @@ async function updateGitRepository(
     enabled: true,
     directoryExclusionList,
     gitService,
+    vaults,
   });
 }
 

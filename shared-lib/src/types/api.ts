@@ -424,7 +424,7 @@ export type PlaybooksRepository = {
   type: RepositoryType;
   children?: ExtendedTreeNode[];
   directoryExclusionList?: string[];
-  vaults?: CustomVault[];
+  vaults?: string[];
 };
 
 export type ServerLog = {
@@ -932,3 +932,9 @@ export type SFTPContent = {
   uid: number;
   gid: number;
 };
+
+export type AnsibleVault = {
+  _id: string;
+  vaultId: string;
+  password: string;
+}

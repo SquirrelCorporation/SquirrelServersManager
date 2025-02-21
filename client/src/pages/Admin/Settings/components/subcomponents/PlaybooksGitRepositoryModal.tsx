@@ -1,5 +1,5 @@
 import { SimpleIconsGit } from '@/components/Icons/CustomIcons';
-import CustomVaultsModal from '@/pages/Admin/Settings/components/subcomponents/CustomVaultsModal';
+import CustomVault from '@/pages/Admin/Settings/components/subcomponents/forms/CustomVault';
 import DirectoryExclusionForm from '@/pages/Admin/Settings/components/subcomponents/forms/DirectoryExclusionForm';
 import GitForm from '@/pages/Admin/Settings/components/subcomponents/forms/GitForm';
 import {
@@ -117,7 +117,6 @@ const PlaybooksGitRepositoryModal: React.FC<
 
   const editionMode = props.selectedRecord
     ? [
-        <CustomVaultsModal />,
         <Button
           key={'show-logs'}
           icon={<UnorderedListOutlined />}
@@ -222,6 +221,7 @@ const PlaybooksGitRepositoryModal: React.FC<
       />
       <ProForm.Group>
         <DirectoryExclusionForm selectedRecord={props.selectedRecord} />
+        <CustomVault selectedRecord={props.selectedRecord} />
       </ProForm.Group>
     </ModalForm>
   );

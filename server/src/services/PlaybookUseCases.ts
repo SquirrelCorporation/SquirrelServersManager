@@ -1,5 +1,6 @@
 import { API, SsmAnsible } from 'ssm-shared-lib';
 import { setToCache } from '../data/cache';
+import { AnsibleVault } from '../data/database/model/AnsibleVault';
 import Playbook, { PlaybookModel } from '../data/database/model/Playbook';
 import User from '../data/database/model/User';
 import ExtraVars from '../modules/ansible/extravars/ExtraVars';
@@ -41,6 +42,8 @@ async function executePlaybook(
     target,
     substitutedExtraVars,
     mode,
+    undefined,
+    playbook.playbooksRepository?.vaults as AnsibleVault[] | undefined,
   );
 }
 
@@ -64,6 +67,7 @@ async function executePlaybookOnInventory(
     undefined,
     undefined,
     execUuid,
+    playbook.playbooksRepository?.vaults as AnsibleVault[] | undefined,
   );
 }
 

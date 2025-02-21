@@ -1,4 +1,5 @@
-import { SetAction, SimpleIconsGit } from '@/components/Icons/CustomIcons';
+import { SimpleIconsGit } from '@/components/Icons/CustomIcons';
+import CustomVault from '@/pages/Admin/Settings/components/subcomponents/forms/CustomVault';
 import DirectoryExclusionForm from '@/pages/Admin/Settings/components/subcomponents/forms/DirectoryExclusionForm';
 import {
   deletePlaybooksLocalRepository,
@@ -6,11 +7,7 @@ import {
   putPlaybooksLocalRepositories,
   syncToDatabasePlaybooksLocalRepository,
 } from '@/services/rest/playbooks-repositories';
-import {
-  DeleteOutlined,
-  TableOutlined,
-  UnorderedListOutlined,
-} from '@ant-design/icons';
+import { DeleteOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { ModalForm, ProForm, ProFormText } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import { Avatar, Button, Dropdown, MenuProps, message, Popconfirm } from 'antd';
@@ -144,6 +141,7 @@ const PlaybooksLocalRepositoryModal: FC<LocalRepositoryModalProps> = (
                 ...props.selectedRecord,
                 name: values.name,
                 directoryExclusionList: values.directoryExclusionList,
+                vaults: values.vaults,
               },
             );
             props.setModalOpened(false);
@@ -193,6 +191,9 @@ const PlaybooksLocalRepositoryModal: FC<LocalRepositoryModalProps> = (
       </ProForm.Group>
       <ProForm.Group>
         <DirectoryExclusionForm selectedRecord={props.selectedRecord} />
+        {!props.selectedRecord?.default && (
+          <CustomVault selectedRecord={props.selectedRecord} />
+        )}
       </ProForm.Group>
     </ModalForm>
   );

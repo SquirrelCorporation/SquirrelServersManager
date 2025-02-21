@@ -1,5 +1,6 @@
 import express from 'express';
 import passport from 'passport';
+import { getVaultPwd } from '../controllers/rest/ansible/vault';
 import {
   execPlaybook,
   execPlaybookByQuickRef,
@@ -20,8 +21,8 @@ import {
   postInstallAnsibleGalaxyCollection,
 } from '../controllers/rest/playbooks/galaxy';
 import {
-  getAnsibleGalaxyCollectionsValidator,
   getAnsibleGalaxyCollectionValidator,
+  getAnsibleGalaxyCollectionsValidator,
   postInstallAnsibleGalaxyCollectionValidator,
 } from '../controllers/rest/playbooks/galaxy.validator';
 import { addTaskEvent, addTaskStatus } from '../controllers/rest/playbooks/hook';
@@ -41,7 +42,6 @@ import {
   editPlaybookValidator,
   getPlaybookValidator,
 } from '../controllers/rest/playbooks/playbook.validator';
-import { getVaultPwd } from '../controllers/rest/playbooks/vault';
 
 const router = express.Router();
 
@@ -51,8 +51,8 @@ router.post(
   addTaskStatus,
 );
 router.post(`/hook/task/event`, passport.authenticate('bearer', { session: false }), addTaskEvent);
-router.get('/vault', passport.authenticate('bearer', { session: false }), getVaultPwd);
 router.get(`/inventory`, passport.authenticate('bearer', { session: false }), getInventory);
+router.get('/vaults/:vaultId', passport.authenticate('bearer', { session: false }), getVaultPwd);
 
 router.use(passport.authenticate('jwt', { session: false }));
 
