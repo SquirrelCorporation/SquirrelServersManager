@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.29...HEAD)
 
+**Implemented enhancements:**
+
+- \[FEAT\] Add server stats endpoints and client integration [\#766](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/766) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Merged pull requests:**
 
 - \[CHORE\] Update dependencies and bump package version to 0.1.29 [\#764](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/764) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
