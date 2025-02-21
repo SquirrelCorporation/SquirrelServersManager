@@ -2,7 +2,22 @@
 
 ## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.28...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.29...HEAD)
+
+**Implemented enhancements:**
+
+- \[FEAT\] Add server stats endpoints and client integration [\#766](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/766) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Merged pull requests:**
+
+- \[CHORE\] Update dependencies and bump package version to 0.1.29 [\#764](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/764) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump vuetify from 3.7.11 to 3.7.12 in /site [\#755](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/755) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.7.0-alpine to 23.8.0-alpine in /client [\#754](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/754) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.7.0-alpine to 23.8.0-alpine in /server [\#753](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/753) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v0.1.29](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.29) (2025-02-18)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.28...v0.1.29)
 
 **Implemented enhancements:**
 
@@ -15,8 +30,17 @@
 - \[BUG\] Set up proper permissions and user context for Prometheus [\#744](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/744) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Add support for "watch all containers" configuration [\#741](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/741) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
+**Closed issues:**
+
+- \[BUG\] Server ist crashing when add device with sshkey connection [\#748](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/748)
+- \[BUG\] prometheus seems to have no permissions on mount [\#747](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/747)
+- \[CHORE\] Migrate Container Stats to Prometheus 🧹 [\#736](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/736)
+- \[BUG\] Current Proxmox install process leads to non-functional install [\#617](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/617)
+- \[FEATURE\] Agent Docker connection test failing due to secure setup of SSH [\#594](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/594)
+
 **Merged pull requests:**
 
+- \[CHORE\] Bump version to 0.1.29 across all packages [\#762](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/762) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update filtering logic and improve container status handling [\#743](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/743) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Handle errors in container stats processing gracefully [\#742](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/742) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor Prometheus service and add type definitions. [\#739](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/739) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))

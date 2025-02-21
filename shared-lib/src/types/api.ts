@@ -938,3 +938,91 @@ export type AnsibleVault = {
   vaultId: string;
   password: string;
 }
+/*
+ const data = {
+    // Memory metrics
+    memory: {
+      resident: serverStatus?.mem.resident,  // Resident memory in MB
+      virtual: serverStatus?.mem.virtual,    // Virtual memory in MB
+      mapped: serverStatus?.mem.mapped       // Memory mapped size
+    },
+
+    // Connections
+    connections: serverStatus?.connections,   // Current, available, total connections
+
+    // CPU metrics
+    cpu: {
+      userPercent: serverStatus?.cpu.user,
+      systemPercent: serverStatus?.cpu.sys,
+      idlePercent: serverStatus?.cpu.idle
+    },
+
+    // Operations metrics
+    operations: serverStatus?.opcounters,    // Insert, query, update, delete counts
+
+    // Storage metrics
+    storage: await mongoose.connection.db?.stats()  // Database storage statistics
+  };
+ */
+export type MongoDBServerStats = {
+  memory: {
+    resident: number;
+    virtual: number;
+    mapped: number;
+  };
+  connections: {
+    current: number;
+    available: number;
+    total: number;
+  };
+  cpu: {
+    userPercent: number;
+    systemPercent: number;
+    idlePercent: number;
+  };
+  operations: {
+    insert: number;
+    query: number;
+    update: number;
+  };
+}
+
+/*
+ const data = {
+    memory: parseRedisInfo(memory),    // Memory usage, peak memory, etc.
+    cpu: parseRedisInfo(cpu),          // CPU statistics
+    stats: parseRedisInfo(stats),      // General statistics
+    server: parseRedisInfo(server)     // Server information
+  };
+ */
+export type RedisServerStats = {
+  memory: {
+    used_memory: number;
+    used_memory_human: string;
+    used_memory_peak: number;
+    used_memory_peak_human: string;
+    used_memory_lua: number;
+    mem_fragmentation_ratio: number;
+    mem_allocator: string;
+  };
+  cpu: {
+    used_cpu_sys: number;
+    used_cpu_user: number;
+    used_cpu_sys_children: number;
+    used_cpu_user_children: number;
+  };
+  stats: {
+    total_connections_received: number;
+    total_commands_processed: number;
+  };
+  server: any;
+}
+
+export type PrometheusServerStats = {
+  totalScrapes: number;
+  targetCount: number;
+  memoryInUse: number;
+  timeSeriesCount: number;
+  storageRetention: string;
+  [key: string]: any;
+}
