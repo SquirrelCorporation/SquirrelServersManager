@@ -32,15 +32,12 @@ import {
   addDirectoryToPlaybookRepositoryValidator,
   addPlaybookToRepositoryValidator,
   deleteAnyFromRepositoryValidator,
-  getPlaybookCustomVaultsValidator,
 } from '../controllers/rest/playbooks-repository/platbooks-repository.validator';
 import {
   addDirectoryToPlaybookRepository,
   addPlaybookToRepository,
   deleteAnyFromRepository,
-  getPlaybookCustomVaults,
   getPlaybooksRepositories,
-  postPlaybookCustomVaults,
 } from '../controllers/rest/playbooks-repository/playbooks-repository';
 
 const router = express.Router();
@@ -85,9 +82,5 @@ router
   .route('/:uuid/playbook/:playbookName/')
   .put(addPlaybookToRepositoryValidator, addPlaybookToRepository);
 router.route('/:uuid/').delete(deleteAnyFromRepositoryValidator, deleteAnyFromRepository);
-router
-  .route('/:uuid/vaults')
-  .get(getPlaybookCustomVaultsValidator, getPlaybookCustomVaults)
-  .post(postPlaybookCustomVaults);
 
 export default router;

@@ -66,36 +66,3 @@ export const deleteAnyFromRepository = async (req, res) => {
     throw new InternalError(error.message);
   }
 };
-
-export const getPlaybookCustomVaults = async (req, res) => {
-  const { uuid } = req.params;
-
-  const playbookRepository = await PlaybooksRepositoryRepo.findByUuid(uuid);
-  if (!playbookRepository) {
-    throw new NotFoundError(`PlaybookRepository ${uuid} not found`);
-  }
-  try {
-    new SuccessResponse('Got playbook custom vaults successfully', playbookRepository.vaults).send(
-      res,
-    );
-  } catch (error: any) {
-    throw new InternalError(error.message);
-  }
-};
-
-export const postPlaybookCustomVaults = async (req, res) => {
-  const { uuid } = req.params;
-  const { vaultId, password } = req.body;
-
-  const playbookRepository = await PlaybooksRepositoryRepo.findByUuid(uuid);
-  if (!playbookRepository) {
-    throw new NotFoundError(`PlaybookRepository ${uuid} not found`);
-  }
-  playbookRepository.vaults = [...(playbookRepository.vaults ?? []), { vaultId, password }];
-  await PlaybooksRepositoryRepo.update(playbookRepository);
-  try {
-    new SuccessResponse('Post playbook custom vault successfully').send(res);
-  } catch (error: any) {
-    throw new InternalError(error.message);
-  }
-};
