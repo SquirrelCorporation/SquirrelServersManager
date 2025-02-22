@@ -17,8 +17,13 @@
 - \[FEATURE\] Change breadcrumb behavior [\#765](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/765)
 - \[BUG\] Add route redirects for improved navigation [\#769](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/769) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
+**Closed issues:**
+
+- Improve height of the add device modal so it says ~ the same [\#386](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/386)
+
 **Merged pull requests:**
 
+- \[CHORE\] Set a minimum height for NewDeviceModal components [\#770](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/770) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Update dependencies and bump package version to 0.1.29 [\#764](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/764) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump vuetify from 3.7.11 to 3.7.12 in /site [\#755](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/755) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 23.7.0-alpine to 23.8.0-alpine in /client [\#754](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/754) ([dependabot[bot]](https://github.com/apps/dependabot))
