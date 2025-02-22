@@ -128,6 +128,7 @@ describe('buildAnsibleCmd() function', () => {
       `--specific-host '${JSON.stringify(inventory)}'`,
       '--log-level 1',
       '--check --diff',
+      '  --vault-id ssm@ssm-ansible-vault-password-client.py',
     ];
 
     const expectedCmd = ansibleCmdPartsWithDiffCheck.join(' ').trim();
@@ -159,6 +160,7 @@ describe('buildAnsibleCmd() function', () => {
       `--specific-host '${JSON.stringify(inventory)}'`,
       '--log-level 1',
       '--check',
+      ' --vault-id ssm@ssm-ansible-vault-password-client.py',
     ];
 
     const expectedCmd = ansibleCmdPartsWithCheck.join(' ').trim();
@@ -189,6 +191,7 @@ describe('buildAnsibleCmd() function', () => {
       `--ident '${uuid}'`,
       `--specific-host '${JSON.stringify(inventory)}'`,
       '--log-level 1',
+      '  --vault-id ssm@ssm-ansible-vault-password-client.py',
     ];
 
     const expectedCmd = ansibleCmdPartsWithApply.join(' ').trim();

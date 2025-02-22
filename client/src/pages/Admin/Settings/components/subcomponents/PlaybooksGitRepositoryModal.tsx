@@ -1,4 +1,5 @@
 import { SimpleIconsGit } from '@/components/Icons/CustomIcons';
+import CustomVault from '@/pages/Admin/Settings/components/subcomponents/forms/CustomVault';
 import DirectoryExclusionForm from '@/pages/Admin/Settings/components/subcomponents/forms/DirectoryExclusionForm';
 import GitForm from '@/pages/Admin/Settings/components/subcomponents/forms/GitForm';
 import {
@@ -220,6 +221,7 @@ const PlaybooksGitRepositoryModal: React.FC<
       />
       <ProForm.Group>
         <DirectoryExclusionForm selectedRecord={props.selectedRecord} />
+        <CustomVault selectedRecord={props.selectedRecord} />
       </ProForm.Group>
     </ModalForm>
   );

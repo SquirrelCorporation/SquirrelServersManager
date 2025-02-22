@@ -2,10 +2,13 @@ import {
   ErrorCircleSettings20Regular,
   SimpleIconsGit,
   StreamlineLocalStorageFolderSolid,
+  UserSecret,
 } from '@/components/Icons/CustomIcons';
 import Title, { TitleColors } from '@/components/Template/Title';
+import CustomVaultModal from '@/pages/Admin/Settings/components/subcomponents/CustomVaultModal';
 import PlaybooksGitRepositoryModal from '@/pages/Admin/Settings/components/subcomponents/PlaybooksGitRepositoryModal';
 import PlaybooksLocalRepositoryModal from '@/pages/Admin/Settings/components/subcomponents/PlaybooksLocalRepositoryModal';
+import { getAnsibleVaults } from '@/services/rest/ansible';
 import {
   getGitPlaybooksRepositories,
   getPlaybooksLocalRepositories,
@@ -51,6 +54,7 @@ const PlaybookSettings: React.FC = () => {
   const [localRepositories, setLocalRepositories] = useState<
     API.LocalPlaybooksRepository[]
   >([]);
+  const [customVaults, setCustomVaults] = useState<API.AnsibleVault[]>([]);
 
   const asyncFetch = async () => {
     await getGitPlaybooksRepositories().then((list) => {
@@ -63,6 +67,11 @@ const PlaybookSettings: React.FC = () => {
         setLocalRepositories(list.data);
       }
     });
+    await getAnsibleVaults().then((list) => {
+      if (list?.data) {
+        setCustomVaults(list.data);
+      }
+    });
   };
 
   useEffect(() => {
@@ -70,9 +79,14 @@ const PlaybookSettings: React.FC = () => {
   }, []);
 
   const [gitModalOpened, setGitModalOpened] = useState<boolean>(false);
-  const [selectedGitRecord, setSelectedGitRecord] = useState<any>();
+  const [selectedGitRecord, setSelectedGitRecord] =
+    useState<API.GitPlaybooksRepository>();
   const [localModalOpened, setLocalModalOpened] = useState<boolean>(false);
-  const [selectedLocalRecord, setSelectedLocalRecord] = useState<any>();
+  const [selectedLocalRecord, setSelectedLocalRecord] =
+    useState<API.LocalPlaybooksRepository>();
+  const [selectedVaultRecord, setSelectedVaultRecord] =
+    useState<API.AnsibleVault>();
+  const [vaultModalOpened, setVaultModalOpened] = useState<boolean>(false);
 
   const onChange = async (newValue: number | null) => {
     if (newValue !== null) {
@@ -93,14 +107,21 @@ const PlaybookSettings: React.FC = () => {
         setModalOpened={setGitModalOpened}
         modalOpened={gitModalOpened}
         asyncFetch={asyncFetch}
-        selectedRecord={selectedGitRecord}
+        selectedRecord={selectedGitRecord as API.GitPlaybooksRepository}
       />
       <PlaybooksLocalRepositoryModal
         repositories={localRepositories}
         setModalOpened={setLocalModalOpened}
         modalOpened={localModalOpened}
         asyncFetch={asyncFetch}
-        selectedRecord={selectedLocalRecord}
+        selectedRecord={selectedLocalRecord as API.LocalPlaybooksRepository}
+      />
+      <CustomVaultModal
+        vaults={customVaults}
+        setModalOpened={setVaultModalOpened}
+        modalOpened={vaultModalOpened}
+        asyncFetch={asyncFetch}
+        selectedRecord={selectedVaultRecord}
       />
       <Card
         type="inner"
@@ -370,6 +391,72 @@ const PlaybookSettings: React.FC = () => {
             },
           }}
           dataSource={gitRepositories}
+        />
+      </Card>
+      <Card
+        type="inner"
+        title={
+          <Title.SubTitle
+            title={'Vaults'}
+            backgroundColor={TitleColors.SECRET}
+            icon={<UserSecret />}
+          />
+        }
+        style={{ marginTop: 16 }}
+        extra={
+          <Space>
+            <Button
+              type={'primary'}
+              icon={<AddCircleOutline />}
+              onClick={() => {
+                setSelectedVaultRecord(undefined);
+                setVaultModalOpened(true);
+              }}
+            >
+              Add a new vault
+            </Button>
+            <Tooltip title={'Add & update your Ansible Vaults'}>
+              <InfoCircleFilled />
+            </Tooltip>
+          </Space>
+        }
+      >
+        <ProList<API.AnsibleVault>
+          ghost={true}
+          itemCardProps={{
+            ghost: true,
+          }}
+          pagination={
+            customVaults?.length > 8
+              ? {
+                  defaultPageSize: 8,
+                  showSizeChanger: false,
+                  showQuickJumper: false,
+                }
+              : false
+          }
+          rowSelection={false}
+          grid={{ gutter: 0, xs: 1, sm: 2, md: 2, lg: 2, xl: 4, xxl: 4 }}
+          onItem={(record: API.AnsibleVault) => {
+            return {
+              onMouseEnter: () => {
+                console.log(record);
+              },
+              onClick: () => {
+                setSelectedVaultRecord(record);
+                setVaultModalOpened(true);
+              },
+            };
+          }}
+          metas={{
+            title: {
+              dataIndex: 'vaultId',
+            },
+            avatar: {
+              render: () => <Avatar src={<UserSecret />} />,
+            },
+          }}
+          dataSource={customVaults}
         />
       </Card>
     </Card>

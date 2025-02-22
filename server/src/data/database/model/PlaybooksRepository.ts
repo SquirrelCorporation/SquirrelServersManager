@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
+import mongooseAutopopulate from 'mongoose-autopopulate';
 import { Repositories, SsmGit } from 'ssm-shared-lib';
+import { AnsibleVault } from './AnsibleVault';
 
 export const DOCUMENT_NAME = 'PlaybooksRepository';
 export const COLLECTION_NAME = 'playbooksrepository';
@@ -22,6 +24,7 @@ export default interface PlaybooksRepository {
   onError?: boolean;
   onErrorMessage?: string;
   gitService?: SsmGit.Services;
+  vaults?: AnsibleVault[] | string[];
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -104,12 +107,22 @@ const schema = new Schema<PlaybooksRepository>(
       type: Schema.Types.String,
       required: false,
     },
+    vaults: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'AnsibleVault', // References the AnsibleVault model
+        required: false,
+        autopopulate: true, // This is the key part
+      },
+    ],
   },
   {
     timestamps: true,
     versionKey: false,
   },
 );
+
+schema.plugin(mongooseAutopopulate);
 
 export const PlaybooksRepositoryModel = model<PlaybooksRepository>(
   DOCUMENT_NAME,

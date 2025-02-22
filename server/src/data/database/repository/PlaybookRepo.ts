@@ -26,14 +26,14 @@ async function findAllWithActiveRepositories(): Promise<Playbook[] | null> {
 
 async function findOneByName(name: string): Promise<Playbook | null> {
   return await PlaybookModel.findOne({ name: name })
-    .populate({ path: 'playbooksRepository' })
+    .populate({ path: 'playbooksRepository', populate: { path: 'vaults' } })
     .lean()
     .exec();
 }
 
 async function findOneByUuid(uuid: string): Promise<Playbook | null> {
   return await PlaybookModel.findOne({ uuid: uuid })
-    .populate({ path: 'playbooksRepository' })
+    .populate({ path: 'playbooksRepository', populate: { path: 'vaults' } })
     .lean()
     .exec();
 }
@@ -50,14 +50,14 @@ async function deleteByUuid(uuid: string): Promise<void> {
 
 async function findOneByPath(path: string): Promise<Playbook | null> {
   return await PlaybookModel.findOne({ path: path })
-    .populate({ path: 'playbooksRepository' })
+    .populate({ path: 'playbooksRepository', populate: { path: 'vaults' } })
     .lean()
     .exec();
 }
 
 async function findOneByUniqueQuickReference(quickRef: string): Promise<Playbook | null> {
   return await PlaybookModel.findOne({ uniqueQuickRef: quickRef })
-    .populate({ path: 'playbooksRepository' })
+    .populate({ path: 'playbooksRepository', populate: { path: 'vaults' } })
     .lean()
     .exec();
 }

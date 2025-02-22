@@ -18,6 +18,7 @@ export const addGitRepository = async (req, res) => {
     remoteUrl,
     directoryExclusionList,
     gitService,
+    vaults,
   }: API.GitPlaybooksRepository = req.body;
   await GitRepositoryUseCases.addGitRepository(
     name,
@@ -28,6 +29,7 @@ export const addGitRepository = async (req, res) => {
     remoteUrl,
     gitService,
     directoryExclusionList,
+    vaults,
   );
   new SuccessResponse('Added playbooks git repository').send(res);
 };
@@ -54,6 +56,7 @@ export const updateGitRepository = async (req, res) => {
     remoteUrl,
     directoryExclusionList,
     gitService,
+    vaults,
   }: API.GitPlaybooksRepository = req.body;
 
   await GitRepositoryUseCases.updateGitRepository(
@@ -66,6 +69,7 @@ export const updateGitRepository = async (req, res) => {
     remoteUrl,
     gitService,
     directoryExclusionList,
+    vaults,
   );
   new SuccessResponse('Updated playbooks git repository').send(res);
 };
