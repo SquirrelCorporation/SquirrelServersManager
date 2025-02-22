@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.1.30](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.30) (2025-02-22)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/V0.1.30...v0.1.30)
+
 ## [V0.1.30](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/V0.1.30) (2025-02-22)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.29...V0.1.30)
