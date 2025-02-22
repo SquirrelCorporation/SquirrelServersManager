@@ -12,6 +12,11 @@
 - \[FEAT\] 654 featadd custom ansible vault [\#767](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/767) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Add server stats endpoints and client integration [\#766](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/766) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
+**Fixed bugs:**
+
+- \[FEATURE\] Change breadcrumb behavior [\#765](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/765)
+- \[BUG\] Add route redirects for improved navigation [\#769](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/769) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Merged pull requests:**
 
 - \[CHORE\] Update dependencies and bump package version to 0.1.29 [\#764](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/764) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
