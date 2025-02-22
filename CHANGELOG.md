@@ -6,6 +6,8 @@
 
 **Implemented enhancements:**
 
+- \[FEAT\] Add custom ansible vault [\#654](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/654)
+- \[FEAT\] 654 featadd custom ansible vault [\#767](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/767) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Add server stats endpoints and client integration [\#766](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/766) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Merged pull requests:**
