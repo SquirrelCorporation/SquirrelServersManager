@@ -23,6 +23,10 @@ export default [
     icon: 'GlobalOutlined',
     routes: [
       {
+        path: '/manage',
+        redirect: '/manage/devices',
+      },
+      {
         name: 'Devices',
         icon: 'table',
         path: '/manage/devices',
@@ -49,6 +53,10 @@ export default [
     access: 'canAdmin',
     routes: [
       {
+        path: '/stack',
+        redirect: '/stack/playbooks',
+      },
+      {
         name: 'Playbooks',
         icon: 'PlaySquareOutlined',
         path: '/stack/playbooks',
@@ -68,7 +76,7 @@ export default [
     icon: 'crown',
     access: 'canAdmin',
     routes: [
-      { path: '/admin', component: './Admin/Inventory' },
+      { path: '/admin', redirect: '/admin/inventory' },
       {
         name: 'Inventory',
         icon: 'database',

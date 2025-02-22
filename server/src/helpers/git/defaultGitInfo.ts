@@ -6,4 +6,7 @@ export const defaultGitInfo = {
   branch: 'main',
   remote: 'origin',
   gitService: SsmGit.Services.Github,
+  env: {
+    GIT_SSL_NO_VERIFY: 'false',
+  },
 };

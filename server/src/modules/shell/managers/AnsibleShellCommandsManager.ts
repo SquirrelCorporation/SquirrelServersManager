@@ -2,6 +2,7 @@ import shell from 'shelljs';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
 import { SSM_INSTALL_PATH } from '../../../config';
+import { AnsibleVault } from '../../../data/database/model/AnsibleVault';
 import User from '../../../data/database/model/User';
 import AnsibleTaskRepo from '../../../data/database/repository/AnsibleTaskRepo';
 import DeviceAuthRepo from '../../../data/database/repository/DeviceAuthRepo';
@@ -33,6 +34,7 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
     extraVars?: API.ExtraVars,
     mode: SsmAnsible.ExecutionMode = SsmAnsible.ExecutionMode.APPLY,
     execUuid?: string,
+    vaults?: AnsibleVault[],
   ) {
     this.logger.info(`executePlaybook - Starting... (playbook: ${playbookPath})`);
     execUuid = execUuid || uuidv4();
@@ -59,6 +61,7 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
       mode,
       target,
       execUuid,
+      vaults,
     );
   }
 
@@ -70,6 +73,7 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
     mode: SsmAnsible.ExecutionMode = SsmAnsible.ExecutionMode.APPLY,
     target?: string[],
     execUuid?: string,
+    vaults?: AnsibleVault[],
   ) {
     execUuid = execUuid || uuidv4();
 
@@ -86,6 +90,7 @@ class AnsibleShellCommandsManager extends AbstractShellCommander {
           user,
           extraVars,
           mode,
+          vaults,
         );
         this.logger.info(`executePlaybook - Executing "${cmd}"`);
         const child = shell.exec(cmd, {

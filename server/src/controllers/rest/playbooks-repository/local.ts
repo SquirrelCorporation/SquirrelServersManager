@@ -1,4 +1,4 @@
-import { Repositories } from 'ssm-shared-lib';
+import { API, Repositories } from 'ssm-shared-lib';
 import PlaybooksRepositoryRepo from '../../../data/database/repository/PlaybooksRepositoryRepo';
 import logger from '../../../logger';
 import { NotFoundError } from '../../../middlewares/api/ApiError';
@@ -19,14 +19,8 @@ export const getLocalRepositories = async (req, res) => {
 export const updateLocalRepository = async (req, res) => {
   const { uuid } = req.params;
   logger.info(`[CONTROLLER] - POST - /local/:uuid`);
-  const {
-    name,
-    directoryExclusionList,
-  }: {
-    name: string;
-    directoryExclusionList?: string[];
-  } = req.body;
-  await LocalRepositoryUseCases.updateLocalRepository(uuid, name, directoryExclusionList);
+  const { name, directoryExclusionList, vaults }: API.LocalPlaybooksRepository = req.body;
+  await LocalRepositoryUseCases.updateLocalRepository(uuid, name, directoryExclusionList, vaults);
   new SuccessResponse('Updated playbooks local repository').send(res);
 };
 
@@ -43,14 +37,8 @@ export const deleteLocalRepository = async (req, res) => {
 
 export const addLocalRepository = async (req, res) => {
   logger.info(`[CONTROLLER] - PUT - /local/`);
-  const {
-    name,
-    directoryExclusionList,
-  }: {
-    name: string;
-    directoryExclusionList?: string[];
-  } = req.body;
-  await LocalRepositoryUseCases.addLocalRepository(name, directoryExclusionList);
+  const { name, directoryExclusionList, vaults }: API.LocalPlaybooksRepository = req.body;
+  await LocalRepositoryUseCases.addLocalRepository(name, directoryExclusionList, vaults);
   new SuccessResponse('Added playbooks local repository').send(res);
 };
 

@@ -19,7 +19,7 @@ export async function clone(options: {
   userInfo?: IGitUserInfos;
 }): Promise<void> {
   const { dir, remoteUrl, userInfo, logger, defaultGitInfo = defaultDefaultGitInfo } = options;
-  const { gitUserName, branch, gitService } = userInfo ?? defaultGitInfo;
+  const { gitUserName, branch, gitService, env } = userInfo ?? defaultGitInfo;
   const { accessToken } = userInfo ?? {};
 
   if (accessToken === '' || accessToken === undefined) {
@@ -57,16 +57,17 @@ export async function clone(options: {
     GitStep.PrepareClone,
   );
   logDebug(`Running git init for clone in dir ${dir}`, GitStep.PrepareClone);
-  await initGitWithBranch(dir, branch, { initialCommit: false });
-  const remoteName = await getRemoteName(dir, branch);
+  await initGitWithBranch(dir, branch, { initialCommit: false, env: env });
+  const remoteName = await getRemoteName(dir, branch, env);
   logDebug(`Successfully Running git init for clone in dir ${dir}`, GitStep.PrepareClone);
   logProgress(GitStep.StartConfiguringGithubRemoteRepository);
-  await credentialOn(dir, remoteUrl, gitUserName, accessToken, remoteName, gitService);
+  await credentialOn(dir, remoteUrl, gitUserName, accessToken, remoteName, gitService, env);
   try {
     logProgress(GitStep.StartFetchingFromGithubRemote);
     const { stderr: pullStdError, exitCode } = await GitProcess.exec(
       ['pull', remoteName, `${branch}:${branch}`],
       dir,
+      { env },
     );
     if (exitCode === 0) {
       logProgress(GitStep.SynchronizationFinish);
@@ -74,6 +75,6 @@ export async function clone(options: {
       throw new GitPullPushError(options, pullStdError);
     }
   } finally {
-    await credentialOff(dir, remoteName, remoteUrl);
+    await credentialOff(dir, remoteName, remoteUrl, undefined, env);
   }
 }

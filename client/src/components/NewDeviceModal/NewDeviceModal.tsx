@@ -1,30 +1,30 @@
 import AgentInstallMethod from '@/components/DeviceConfiguration/AgentInstallMethod';
+import CheckDeviceConnection from '@/components/DeviceConfiguration/CheckDeviceConnection';
+import SSHConnectionFormElements from '@/components/DeviceConfiguration/SSHConnectionFormElements';
+import {
+  GrommetIconsInstall,
+  StreamlineComputerConnection,
+} from '@/components/Icons/CustomIcons';
+import {
+  postCheckAnsibleConnection,
+  postCheckDockerConnection,
+  postCheckRemoteSystemInformationConnection,
+  putDevice,
+} from '@/services/rest/device';
 import { DownloadOutlined } from '@ant-design/icons';
-import React, { useRef, useState } from 'react';
-import { Button, Col, Modal, Row, Alert, Typography, Tag, Grid } from 'antd';
 import {
   ProFormDependency,
   ProFormInstance,
   ProFormText,
   StepsForm,
 } from '@ant-design/pro-components';
+import { Alert, Button, Col, Grid, Modal, Row, Tag, Typography } from 'antd';
 import { motion } from 'framer-motion';
-import {
-  GrommetIconsInstall,
-  StreamlineComputerConnection,
-} from '@/components/Icons/CustomIcons';
-import {
-  putDevice,
-  postCheckAnsibleConnection,
-  postCheckDockerConnection,
-  postCheckRemoteSystemInformationConnection,
-} from '@/services/rest/device';
-import SSHConnectionFormElements from '@/components/DeviceConfiguration/SSHConnectionFormElements';
-import CheckDeviceConnection from '@/components/DeviceConfiguration/CheckDeviceConnection';
-import { SsmAnsible, SsmAgent, API } from 'ssm-shared-lib';
+import React, { useRef, useState } from 'react';
+import { API, SsmAgent, SsmAnsible } from 'ssm-shared-lib';
+import AnimationPlayer from './AnimationPlayer';
 import StepFormCard from './StepFormCard';
 import SummaryCard from './SummaryCard';
-import AnimationPlayer from './AnimationPlayer';
 
 export type NewDeviceModalProps = {
   isModalOpen: boolean;
@@ -174,6 +174,8 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
     visible: { opacity: 1, x: 0 },
   };
 
+  const MODAL_MIN_HEIGHT = 600;
+
   return (
     <Modal
       title={
@@ -187,7 +189,12 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
       width={1000}
       footer={(_, { CancelBtn }) => <CancelBtn />}
     >
-      <Row style={{ alignItems: 'center' }} justify="center">
+      <Row
+        style={{
+          alignItems: 'center',
+        }}
+        justify="center"
+      >
         {!screens.xs && (
           <Col span={8}>
             <AnimationPlayer />
@@ -255,6 +262,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
               style={{
                 alignItems: 'start',
                 maxWidth: screens.xs ? '80%' : '100%',
+                minHeight: MODAL_MIN_HEIGHT,
               }}
             >
               <SSHConnectionFormElements formRef={formRef} />
@@ -266,6 +274,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
               style={{
                 alignItems: 'start',
                 maxWidth: screens.xs ? '80%' : '100%',
+                minHeight: MODAL_MIN_HEIGHT,
               }}
             >
               <StepFormCard
@@ -341,6 +350,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
               style={{
                 alignItems: 'start',
                 maxWidth: screens.xs ? '80%' : '100%',
+                minHeight: MODAL_MIN_HEIGHT,
               }}
             >
               <StepFormCard
@@ -363,7 +373,10 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
             <StepsForm.StepForm
               name="confirm"
               title="Confirm"
-              style={{ maxWidth: screens.xs ? '80%' : '100%' }}
+              style={{
+                maxWidth: screens.xs ? '80%' : '100%',
+                minHeight: MODAL_MIN_HEIGHT,
+              }}
             >
               <SummaryCard sshConnection={sshConnection} />
             </StepsForm.StepForm>

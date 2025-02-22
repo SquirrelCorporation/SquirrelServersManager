@@ -49,11 +49,19 @@ export async function initGit(options: IInitGitOptions): Promise<void> {
     logger?.debug(message, { functionName: 'initGit', step });
 
   logProgress(GitStep.StartGitInitialization);
-  const { gitUserName, email, branch } = userInfo ?? defaultGitInfo;
+  const { gitUserName, email, branch, env } = userInfo ?? defaultGitInfo;
   logDebug(`Running git init in dir ${dir}`, GitStep.StartGitInitialization);
   await initGitWithBranch(dir, branch);
   logDebug(`Successfully Running git init in dir ${dir}`, GitStep.StartGitInitialization);
-  await commitFiles(dir, gitUserName, email ?? defaultGitInfo.email);
+  await commitFiles(
+    dir,
+    gitUserName,
+    email ?? defaultGitInfo.email,
+    undefined,
+    undefined,
+    logger,
+    env,
+  );
 
   // if we are config local note git repository, we are done here
   if (syncImmediately !== true) {

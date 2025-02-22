@@ -1,7 +1,9 @@
 import { API, SsmAnsible } from 'ssm-shared-lib';
+import { AnsibleVault } from '../../data/database/model/AnsibleVault';
 import User from '../../data/database/model/User';
 import { ANSIBLE_CONFIG_FILE } from '../../helpers/ansible/AnsibleConfigurationHelper';
 import { Playbooks } from '../../types/typings';
+import { DEFAULT_VAULT_ID } from '../ansible-vault/ansible-vault';
 import ExtraVarsTransformer from './extravars/ExtraVarsTransformer';
 
 class AnsibleCommandBuilder {
@@ -38,6 +40,14 @@ class AnsibleCommandBuilder {
     }
   }
 
+  getVaults(vaults?: Partial<AnsibleVault>[]): string {
+    return vaults
+      ? vaults
+          .map((vault) => `--vault-id ${vault.vaultId}@ssm-ansible-vault-password-client.py`)
+          .join(' ')
+      : '';
+  }
+
   buildAnsibleCmd(
     playbook: string,
     uuid: string,
@@ -45,14 +55,16 @@ class AnsibleCommandBuilder {
     user: User,
     extraVars?: API.ExtraVars,
     mode: SsmAnsible.ExecutionMode = SsmAnsible.ExecutionMode.APPLY,
+    vaults?: AnsibleVault[],
   ) {
     const inventoryTargetsCmd = this.getInventoryTargets(inventoryTargets);
     const logLevel = this.getLogLevel(user);
     const extraVarsCmd = this.getExtraVars(extraVars);
     const ident = `--ident '${uuid}'`;
     const dryRun = this.getDryRun(mode);
+    const vaultsCmd = this.getVaults([...(vaults || []), { vaultId: DEFAULT_VAULT_ID }]);
 
-    return `${AnsibleCommandBuilder.sudo} ${AnsibleCommandBuilder.ssmApiKeyEnv}=${user.apiKey} ${AnsibleCommandBuilder.ansibleConfigKeyEnv}=${ANSIBLE_CONFIG_FILE} ANSIBLE_FORCE_COLOR=1 ${AnsibleCommandBuilder.python} ${AnsibleCommandBuilder.ansibleRunner} --playbook '${playbook}' ${ident} ${inventoryTargetsCmd} ${logLevel} ${dryRun} ${extraVarsCmd}`;
+    return `${AnsibleCommandBuilder.sudo} ${AnsibleCommandBuilder.ssmApiKeyEnv}=${user.apiKey} ${AnsibleCommandBuilder.ansibleConfigKeyEnv}=${ANSIBLE_CONFIG_FILE} ANSIBLE_FORCE_COLOR=1 ${AnsibleCommandBuilder.python} ${AnsibleCommandBuilder.ansibleRunner} --playbook '${playbook}' ${ident} ${inventoryTargetsCmd} ${logLevel} ${dryRun} ${extraVarsCmd} ${vaultsCmd}`;
   }
 }
 

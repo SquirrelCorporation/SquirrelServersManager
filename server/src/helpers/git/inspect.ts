@@ -1,10 +1,10 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
-/* eslint-disable unicorn/prevent-abbreviations */
 import path from 'path';
 import url from 'url';
 import { GitProcess } from 'dugite';
 import fs from 'fs-extra';
 import { compact } from 'lodash';
+/* eslint-disable unicorn/prevent-abbreviations */
 import { AssumeSyncError, CantSyncGitNotInitializedError } from './errors';
 import { GitStep, ILogger } from './interface';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -26,9 +26,13 @@ export interface ModifiedFileList {
 /**
  * Get modified files and modify type in a folder
  * @param {string} folderPath location to scan git repository modify state
+ * @param env
  */
-export async function getModifiedFileList(folderPath: string): Promise<ModifiedFileList[]> {
-  const { stdout } = await GitProcess.exec(['status', '--porcelain'], folderPath);
+export async function getModifiedFileList(
+  folderPath: string,
+  env?: Record<string, string>,
+): Promise<ModifiedFileList[]> {
+  const { stdout } = await GitProcess.exec(['status', '--porcelain'], folderPath, { env });
   const stdoutLines = stdout.split('\n');
   const nonEmptyLines = compact(stdoutLines);
   const statusMatrixLines = compact(
@@ -112,13 +116,17 @@ export function getRemoteRepoName(remoteUrl: string): string | undefined {
 /**
  * See if there is any file not being committed
  * @param {string} folderPath repo path to test
+ * @param env
  * @example ```ts
 if (await haveLocalChanges(dir)) {
   // ... do commit and push
 ```
  */
-export async function haveLocalChanges(folderPath: string): Promise<boolean> {
-  const { stdout } = await GitProcess.exec(['status', '--porcelain'], folderPath);
+export async function haveLocalChanges(
+  folderPath: string,
+  env?: Record<string, string>,
+): Promise<boolean> {
+  const { stdout } = await GitProcess.exec(['status', '--porcelain'], folderPath, { env });
   const matchResult = stdout.match(/^(\?\?|[ACMR] |[ ACMR][DM])*/gm);
 
   return !!matchResult?.some?.(Boolean);
@@ -129,10 +137,16 @@ export async function haveLocalChanges(folderPath: string): Promise<boolean> {
  *
  * https://github.com/simonthum/git-sync/blob/31cc140df2751e09fae2941054d5b61c34e8b649/git-sync#L228-L232
  * @param folderPath
+ * @param env
  */
-export async function getDefaultBranchName(folderPath: string): Promise<string | undefined> {
+export async function getDefaultBranchName(
+  folderPath: string,
+  env?: Record<string, string>,
+): Promise<string | undefined> {
   try {
-    const { stdout } = await GitProcess.exec(['rev-parse', '--abbrev-ref', 'HEAD'], folderPath);
+    const { stdout } = await GitProcess.exec(['rev-parse', '--abbrev-ref', 'HEAD'], folderPath, {
+      env,
+    });
     const [branchName] = stdout.split('\n');
     // don't return empty string, so we can use ?? syntax
     if (branchName === '') {
@@ -156,12 +170,14 @@ export type SyncState = 'noUpstreamOrBareUpstream' | 'equal' | 'ahead' | 'behind
  * @param defaultBranchName
  * @param remoteName
  * @param logger
+ * @param env
  */
 export async function getSyncState(
   dir: string,
   defaultBranchName: string,
   remoteName: string,
   logger?: ILogger,
+  env?: Record<string, string>,
 ): Promise<SyncState> {
   const logDebug = (message: string, step: GitStep): unknown =>
     logger?.debug?.(message, { functionName: 'getSyncState', step, dir });
@@ -172,14 +188,14 @@ export async function getSyncState(
       dir,
     });
   logProgress(GitStep.CheckingLocalSyncState);
-  remoteName = remoteName ?? (await getRemoteName(dir, defaultBranchName));
+  remoteName = remoteName ?? (await getRemoteName(dir, defaultBranchName, env));
   const gitArgs = [
     'rev-list',
     '--count',
     '--left-right',
     `${remoteName}/${defaultBranchName}...HEAD`,
   ];
-  const { stdout, stderr } = await GitProcess.exec(gitArgs, dir);
+  const { stdout, stderr } = await GitProcess.exec(gitArgs, dir, { env });
   logDebug(
     `Checking sync state with upstream, command: \`git ${gitArgs.join(' ')}\` , stdout:\n${stdout}\n(stdout end)`,
     GitStep.CheckingLocalSyncState,
@@ -222,8 +238,9 @@ export async function assumeSync(
   defaultBranchName: string,
   remoteName: string,
   logger?: ILogger,
+  env?: Record<string, string>,
 ): Promise<void> {
-  const syncState = await getSyncState(folderPath, defaultBranchName, remoteName, logger);
+  const syncState = await getSyncState(folderPath, defaultBranchName, remoteName, logger, env);
   if (syncState === 'equal') {
     return;
   }
@@ -234,14 +251,19 @@ export async function assumeSync(
  * get various repo state in string format
  * @param folderPath repo path to check
  * @param logger
+ * @param env
  * @returns gitState
  * // TODO: use template literal type to get exact type of git repository state
  */
-export async function getGitRepositoryState(folderPath: string, logger?: ILogger): Promise<string> {
-  if (!(await hasGit(folderPath))) {
+export async function getGitRepositoryState(
+  folderPath: string,
+  logger?: ILogger,
+  env?: Record<string, string>,
+): Promise<string> {
+  if (!(await hasGit(folderPath, undefined, env))) {
     return 'NOGIT';
   }
-  const gitDirectory = await getGitDirectory(folderPath, logger);
+  const gitDirectory = await getGitDirectory(folderPath, logger, env);
   const [isRebaseI, isRebaseM, isAMRebase, isMerging, isCherryPicking, isBisecting] =
     await Promise.all([
       // isRebaseI
@@ -292,7 +314,7 @@ export async function getGitRepositoryState(folderPath: string, logger?: ILogger
     }
   }
   result += (
-    await GitProcess.exec(['rev-parse', '--is-bare-repository', folderPath], folderPath)
+    await GitProcess.exec(['rev-parse', '--is-bare-repository', folderPath], folderPath, { env })
   ).stdout.startsWith('true')
     ? '|BARE'
     : '';
@@ -305,7 +327,7 @@ export async function getGitRepositoryState(folderPath: string, logger?: ILogger
     }
   } */
   // previous above `git diff --no-ext-diff --quiet --exit-code` logic from git-sync script can only detect if an existed file changed, can't detect newly added file, so we use `haveLocalChanges` instead
-  if (await haveLocalChanges(folderPath)) {
+  if (await haveLocalChanges(folderPath, env)) {
     result += '|DIRTY';
   }
 
@@ -316,8 +338,13 @@ export async function getGitRepositoryState(folderPath: string, logger?: ILogger
  * echo the git repository dir
  * @param dir repo path
  * @param logger
+ * @param env
  */
-export async function getGitDirectory(dir: string, logger?: ILogger): Promise<string> {
+export async function getGitDirectory(
+  dir: string,
+  logger?: ILogger,
+  env?: Record<string, string>,
+): Promise<string> {
   const logDebug = (message: string, step: GitStep): unknown =>
     logger?.debug?.(message, { functionName: 'getGitDirectory', step, dir });
   const logProgress = (step: GitStep): unknown =>
@@ -331,13 +358,16 @@ export async function getGitDirectory(dir: string, logger?: ILogger): Promise<st
   const { stdout, stderr } = await GitProcess.exec(
     ['rev-parse', '--is-inside-work-tree', dir],
     dir,
+    { env },
   );
   if (typeof stderr === 'string' && stderr.length > 0) {
     logDebug(stderr, GitStep.CheckingLocalGitRepoSanity);
     throw new CantSyncGitNotInitializedError(dir);
   }
   if (stdout.startsWith('true')) {
-    const { stdout: stdout2 } = await GitProcess.exec(['rev-parse', '--git-dir', dir], dir);
+    const { stdout: stdout2 } = await GitProcess.exec(['rev-parse', '--git-dir', dir], dir, {
+      env,
+    });
     const [gitPath2, gitPath1] = compact(stdout2.split('\n'));
     if (gitPath2 !== undefined && gitPath1 !== undefined) {
       return path.resolve(gitPath1, gitPath2);
@@ -350,11 +380,16 @@ export async function getGitDirectory(dir: string, logger?: ILogger): Promise<st
  * Check if dir has `.git`.
  * @param dir folder that may contain a git repository
  * @param strict if is true, then dir should be the root of the git repo. Default is true
+ * @param env
  * @returns
  */
-export async function hasGit(dir: string, strict = true): Promise<boolean> {
+export async function hasGit(
+  dir: string,
+  strict = true,
+  env?: Record<string, string>,
+): Promise<boolean> {
   try {
-    const resultDir = await getGitDirectory(dir);
+    const resultDir = await getGitDirectory(dir, undefined, env);
     if (strict && path.dirname(resultDir) !== dir) {
       return false;
     }
@@ -371,16 +406,24 @@ export async function hasGit(dir: string, strict = true): Promise<boolean> {
  *
  * https://github.com/simonthum/git-sync/blob/31cc140df2751e09fae2941054d5b61c34e8b649/git-sync#L238-L257
  */
-export async function getRemoteName(dir: string, branch: string): Promise<string> {
-  let { stdout } = await GitProcess.exec(['config', '--get', `branch.${branch}.pushRemote`], dir);
+export async function getRemoteName(
+  dir: string,
+  branch: string,
+  env?: Record<string, string>,
+): Promise<string> {
+  let { stdout } = await GitProcess.exec(['config', '--get', `branch.${branch}.pushRemote`], dir, {
+    env,
+  });
   if (stdout.trim()) {
     return stdout.trim();
   }
-  ({ stdout } = await GitProcess.exec(['config', '--get', `remote.pushDefault`], dir));
+  ({ stdout } = await GitProcess.exec(['config', '--get', `remote.pushDefault`], dir, { env }));
   if (stdout.trim()) {
     return stdout.trim();
   }
-  ({ stdout } = await GitProcess.exec(['config', '--get', `branch.${branch}.remote`], dir));
+  ({ stdout } = await GitProcess.exec(['config', '--get', `branch.${branch}.remote`], dir, {
+    env,
+  }));
   if (stdout.trim()) {
     return stdout.trim();
   }

@@ -20,6 +20,7 @@ export default interface ContainerCustomStackRepository {
   onError?: boolean;
   onErrorMessage?: string;
   gitService: SsmGit.Services;
+  ignoreSSLErrors?: boolean;
 }
 
 const schema = new Schema<ContainerCustomStackRepository>(
@@ -72,6 +73,10 @@ const schema = new Schema<ContainerCustomStackRepository>(
     gitService: {
       type: Schema.Types.String,
       required: true,
+    },
+    ignoreSSLErrors: {
+      type: Schema.Types.Boolean,
+      default: false,
     },
   },
   {

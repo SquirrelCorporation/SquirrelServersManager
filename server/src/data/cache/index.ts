@@ -26,7 +26,7 @@ async function createRedisClient(): Promise<any> {
   return redisClient;
 }
 
-async function getRedisClient(): Promise<RedisClientType> {
+export async function getRedisClient(): Promise<RedisClientType> {
   if (!isReady) {
     redisClient = await createRedisClient();
   }

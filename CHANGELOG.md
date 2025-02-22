@@ -1,8 +1,37 @@
 # Changelog
 
-## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+## [V0.1.30](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/V0.1.30) (2025-02-22)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.28...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.29...V0.1.30)
+
+**Implemented enhancements:**
+
+- \[BUG\] - Selfhosted Git server , certificate verification failed [\#746](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/746)
+- \[FEAT\] Add custom ansible vault [\#654](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/654)
+- \[FEAT\] Add support for custom Git environments and SSL error handling. [\#768](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/768) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[FEAT\] 654 featadd custom ansible vault [\#767](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/767) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[FEAT\] Add server stats endpoints and client integration [\#766](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/766) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Fixed bugs:**
+
+- \[FEATURE\] Change breadcrumb behavior [\#765](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/765)
+- \[BUG\] Add route redirects for improved navigation [\#769](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/769) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Closed issues:**
+
+- Improve height of the add device modal so it says ~ the same [\#386](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/386)
+
+**Merged pull requests:**
+
+- \[CHORE\] Set a minimum height for NewDeviceModal components [\#770](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/770) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update dependencies and bump package version to 0.1.29 [\#764](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/764) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump vuetify from 3.7.11 to 3.7.12 in /site [\#755](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/755) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.7.0-alpine to 23.8.0-alpine in /client [\#754](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/754) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.7.0-alpine to 23.8.0-alpine in /server [\#753](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/753) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v0.1.29](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.29) (2025-02-18)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.28...v0.1.29)
 
 **Implemented enhancements:**
 
@@ -916,15 +945,15 @@
 
 ## [v0.1.10](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.10) (2024-06-07)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.10)
-
-## [v0.1.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.8) (2024-06-06)
-
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.8)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.10)
 
 ## [v0.1.9](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.9) (2024-06-06)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.9)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.9)
+
+## [v0.1.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.8) (2024-06-06)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.8)
 
 ## [v0.1.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.7) (2024-06-06)
 

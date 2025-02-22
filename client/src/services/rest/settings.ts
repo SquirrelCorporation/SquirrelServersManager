@@ -107,3 +107,36 @@ export async function postMasterNodeUrlValue(
     ...(options || {}),
   });
 }
+
+export async function getMongoDBServerStats(options?: Record<string, any>) {
+  return request<API.Response<API.MongoDBServerStats>>(
+    `/api/settings/information/mongodb`,
+    {
+      method: 'GET',
+      ...{},
+      ...(options || {}),
+    },
+  );
+}
+
+export async function getRedisServerStats(options?: Record<string, any>) {
+  return request<API.Response<API.RedisServerStats>>(
+    `/api/settings/information/redis`,
+    {
+      method: 'GET',
+      ...{},
+      ...(options || {}),
+    },
+  );
+}
+
+export async function getPrometheusServerStats(options?: Record<string, any>) {
+  return request<API.Response<API.PrometheusServerStats>>(
+    `/api/settings/information/prometheus`,
+    {
+      method: 'GET',
+      ...{},
+      ...(options || {}),
+    },
+  );
+}

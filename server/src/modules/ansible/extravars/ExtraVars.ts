@@ -3,7 +3,6 @@ import { getFromCache } from '../../../data/cache';
 import DeviceRepo from '../../../data/database/repository/DeviceRepo';
 import UserRepo from '../../../data/database/repository/UserRepo';
 import pinoLogger from '../../../logger';
-import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../ansible-vault/ansible-vault';
 
 class ExtraVars {
   private logger = pinoLogger.child(
