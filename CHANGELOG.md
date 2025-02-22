@@ -6,7 +6,9 @@
 
 **Implemented enhancements:**
 
+- \[BUG\] - Selfhosted Git server , certificate verification failed [\#746](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/746)
 - \[FEAT\] Add custom ansible vault [\#654](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/654)
+- \[FEAT\] Add support for custom Git environments and SSL error handling. [\#768](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/768) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] 654 featadd custom ansible vault [\#767](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/767) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Add server stats endpoints and client integration [\#766](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/766) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
