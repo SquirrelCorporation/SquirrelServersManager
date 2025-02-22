@@ -7,6 +7,7 @@ export interface IGitUserInfosWithoutToken {
   /** Github Login: username , this is also used to filter user's repo when searching repo */
   gitUserName: string;
   gitService: SsmGit.Services;
+  env?: Record<string, string>;
 }
 
 export interface IGitUserInfos extends IGitUserInfosWithoutToken {

@@ -1,6 +1,7 @@
 import { capitalizeFirstLetter } from '@/utils/strings';
 import {
   ProForm,
+  ProFormCheckbox,
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
@@ -55,13 +56,14 @@ const GitForm: React.FC<GitFormProps> = ({ selectedRecord, repositories }) => (
       name={'email'}
       label={'Git Email'}
       initialValue={selectedRecord?.email}
-      rules={[{ required: true }]}
+      rules={[{ required: true }, { type: 'email' }]}
     />
     <ProFormText
       width={'md'}
       name={'userName'}
       label={'Git Username'}
       initialValue={selectedRecord?.userName}
+      tooltip={'The username to use when connecting to the remote repository.'}
       rules={[{ required: true }]}
     />
     <ProFormText
@@ -69,6 +71,9 @@ const GitForm: React.FC<GitFormProps> = ({ selectedRecord, repositories }) => (
       name={'remoteUrl'}
       label={'Remote Url'}
       initialValue={selectedRecord?.remoteUrl}
+      tooltip={
+        'The remote URL to clone from. E.g: https://github.com/user/repo.git'
+      }
       rules={[
         { required: true },
         { type: 'url' },
@@ -92,6 +97,7 @@ const GitForm: React.FC<GitFormProps> = ({ selectedRecord, repositories }) => (
       name={'branch'}
       label={'Branch'}
       initialValue={selectedRecord?.branch}
+      tooltip={'The branch to pull from. E.g: main, develop, master, etc.'}
       rules={[{ required: true }]}
     />
     <ProFormText.Password
@@ -99,6 +105,15 @@ const GitForm: React.FC<GitFormProps> = ({ selectedRecord, repositories }) => (
       name={'accessToken'}
       label={'Access Token'}
       rules={[{ required: true }]}
+    />
+    <ProFormCheckbox
+      width={'md'}
+      name={'ignoreSSLErrors'}
+      label={'Ignore SSL Errors'}
+      tooltip={
+        'Ignore SSL errors when connecting to the remote repository, for example, self-signed certificates.'
+      }
+      initialValue={selectedRecord?.ignoreSSLErrors}
     />
   </ProForm.Group>
 );

@@ -16,6 +16,7 @@ import { GitStep, IGitUserInfos, IGitUserInfosWithoutToken, ILogger } from './in
  * @param message
  * @param filesToIgnore
  * @param logger
+ * @param env
  */
 export async function commitFiles(
   dir: string,
@@ -24,6 +25,7 @@ export async function commitFiles(
   message = 'Commit with SSM',
   filesToIgnore: string[] = [],
   logger?: ILogger,
+  env?: Record<string, string>,
 ): Promise<IGitResult> {
   const logProgress = (step: GitStep): unknown =>
     logger?.info(step, {
@@ -36,7 +38,7 @@ export async function commitFiles(
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { listFiles, remove } = await require('isomorphic-git');
 
-  await GitProcess.exec(['add', '.'], dir);
+  await GitProcess.exec(['add', '.'], dir, { env });
   // find and unStage files that are in the ignore list
   const stagedFiles = await listFiles({ fs, dir });
   if (filesToIgnore.length > 0) {
@@ -51,7 +53,11 @@ export async function commitFiles(
   }
 
   logProgress(GitStep.AddComplete);
-  return await GitProcess.exec(['commit', '-m', message, `--author="${username} <${email}>"`], dir);
+  return await GitProcess.exec(
+    ['commit', '-m', message, `--author="${username} <${email}>"`],
+    dir,
+    { env },
+  );
 }
 
 /**
@@ -79,7 +85,9 @@ export async function pushUpstream(
   /** when push to remote, we need to specify the local branch name and remote branch name */
   const branchMapping = `${branch}:${branch}`;
   logProgress(GitStep.GitPush);
-  const pushResult = await GitProcess.exec(['push', remoteName, branchMapping], dir);
+  const pushResult = await GitProcess.exec(['push', remoteName, branchMapping], dir, {
+    env: userInfo?.env,
+  });
   logProgress(GitStep.GitPushComplete);
   if (pushResult.exitCode !== 0) {
     throw new GitPullPushError(
@@ -115,6 +123,7 @@ export async function mergeUpstream(
   const mergeResult = await GitProcess.exec(
     ['merge', '--ff', '--ff-only', `${remoteName}/${branch}`],
     dir,
+    { env: userInfo?.env },
   );
   logProgress(GitStep.GitMergeComplete);
   if (mergeResult.exitCode !== 0) {
@@ -134,6 +143,7 @@ export async function mergeUpstream(
  * @param email
  * @param logger
  * @param providedRepositoryState result of `await getGitRepositoryState(dir, logger)`, optional, if not provided, we will run `await getGitRepositoryState(dir, logger)` by ourself.
+ * @param env
  */
 export async function continueRebase(
   dir: string,
@@ -141,6 +151,7 @@ export async function continueRebase(
   email: string,
   logger?: ILogger,
   providedRepositoryState?: string,
+  env?: Record<string, string>,
 ): Promise<void> {
   const logProgress = (step: GitStep): unknown =>
     logger?.info(step, {
@@ -153,7 +164,7 @@ export async function continueRebase(
   let rebaseContinueExitCode = 0;
   let rebaseContinueStdError = '';
   let repositoryState: string =
-    providedRepositoryState ?? (await getGitRepositoryState(dir, logger));
+    providedRepositoryState ?? (await getGitRepositoryState(dir, logger, env));
   // prevent infin loop, if there is some bug that I miss
   let loopCount = 0;
   while (hasNotCommittedConflict) {
@@ -166,13 +177,16 @@ export async function continueRebase(
       username,
       email,
       'Conflict files committed',
+      undefined,
+      undefined,
+      env,
     );
-    const rebaseContinueResult = await GitProcess.exec(['rebase', '--continue'], dir);
+    const rebaseContinueResult = await GitProcess.exec(['rebase', '--continue'], dir, { env });
     // get info for logging
     rebaseContinueExitCode = rebaseContinueResult.exitCode;
     rebaseContinueStdError = rebaseContinueResult.stderr;
     const rebaseContinueStdOut = rebaseContinueResult.stdout;
-    repositoryState = await getGitRepositoryState(dir, logger);
+    repositoryState = await getGitRepositoryState(dir, logger, env);
     // if git add . + git commit failed or git rebase --continue failed
     if (commitExitCode !== 0 || rebaseContinueExitCode !== 0) {
       throw new CantSyncInSpecialGitStateAutoFixFailed(
@@ -190,11 +204,17 @@ export async function continueRebase(
  * @param dir
  * @param remoteName
  * @param branch if not provided, will fetch all branches
+ * @param env
  */
-export async function fetchRemote(dir: string, remoteName: string, branch?: string) {
+export async function fetchRemote(
+  dir: string,
+  remoteName: string,
+  branch?: string,
+  env?: Record<string, string>,
+) {
   if (branch === undefined) {
-    await GitProcess.exec(['fetch', remoteName], dir);
+    await GitProcess.exec(['fetch', remoteName], dir, { env });
   } else {
-    await GitProcess.exec(['fetch', remoteName, branch], dir);
+    await GitProcess.exec(['fetch', remoteName, branch], dir, { env });
   }
 }

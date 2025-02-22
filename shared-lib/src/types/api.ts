@@ -696,6 +696,7 @@ export type GitPlaybooksRepository = PlaybooksRepository & {
   accessToken?: string;
   onError?: boolean;
   onErrorMessage?: string;
+  ignoreSSLErrors?: boolean;
 }
 
 export type LocalPlaybooksRepository = PlaybooksRepository & {
@@ -717,6 +718,7 @@ export type GitContainerStacksRepository = {
   onErrorMessage?: string;
   gitService: Services;
   accessToken?: string;
+  ignoreSSLErrors?: boolean;
 }
 
 export type ExtraVars = ExtraVar[];

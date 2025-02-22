@@ -17,6 +17,7 @@ export const addGitRepository = async (req, res) => {
     remoteUrl,
     matchesList,
     gitService,
+    ignoreSSLErrors,
   }: API.GitContainerStacksRepository = req.body;
   await GitRepositoryUseCases.addGitRepository(
     name,
@@ -27,6 +28,7 @@ export const addGitRepository = async (req, res) => {
     remoteUrl,
     gitService,
     matchesList,
+    ignoreSSLErrors,
   );
   new SuccessResponse('Added container stacks git repository').send(res);
 };
@@ -51,6 +53,7 @@ export const updateGitRepository = async (req, res) => {
     remoteUrl,
     matchesList,
     gitService,
+    ignoreSSLErrors,
   }: API.GitContainerStacksRepository = req.body;
   await GitRepositoryUseCases.updateGitRepository(
     uuid,
@@ -62,6 +65,7 @@ export const updateGitRepository = async (req, res) => {
     remoteUrl,
     gitService,
     matchesList,
+    ignoreSSLErrors,
   );
   new SuccessResponse('Updated container stacks git repository').send(res);
 };
