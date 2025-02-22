@@ -52,10 +52,10 @@ export async function commitAndSync(options: ICommitAndSyncOptions): Promise<voi
     commitOnly,
   } = options;
   const { gitUserName, email, branch, gitService } = userInfo ?? defaultGitInfo;
-  const { accessToken } = userInfo ?? {};
+  const { accessToken, env } = userInfo ?? {};
 
-  const defaultBranchName = (await getDefaultBranchName(dir)) ?? branch;
-  const remoteName = await getRemoteName(dir, defaultBranchName);
+  const defaultBranchName = (await getDefaultBranchName(dir, env)) ?? branch;
+  const remoteName = await getRemoteName(dir, defaultBranchName, env);
 
   const logProgress = (step: GitStep): unknown =>
     logger?.info?.(step, {
@@ -92,8 +92,10 @@ export async function commitAndSync(options: ICommitAndSyncOptions): Promise<voi
     userInfo,
   });
 
-  await GitProcess.exec(['config', 'user.email', `"${email ?? defaultGitInfo.email}"`], dir);
-  await GitProcess.exec(['config', `user.name`, `"${gitUserName}"`], dir);
+  await GitProcess.exec(['config', 'user.email', `"${email ?? defaultGitInfo.email}"`], dir, {
+    env,
+  });
+  await GitProcess.exec(['config', `user.name`, `"${gitUserName}"`], dir, { env });
 
   if (await haveLocalChanges(dir)) {
     logProgress(GitStep.HaveThingsToCommit);
@@ -104,6 +106,8 @@ export async function commitAndSync(options: ICommitAndSyncOptions): Promise<voi
       email ?? defaultGitInfo.email,
       commitMessage,
       filesToIgnore,
+      undefined,
+      env,
     );
     if (commitExitCode !== 0) {
       logWarn(`commit failed ${commitStdError}`, GitStep.CommitComplete);
@@ -120,13 +124,19 @@ export async function commitAndSync(options: ICommitAndSyncOptions): Promise<voi
   if (remoteUrl === '' || remoteUrl === undefined) {
     throw new SyncParameterMissingError('remoteUrl');
   }
-  await credentialOn(dir, remoteUrl, gitUserName, accessToken, remoteName, gitService);
+  await credentialOn(dir, remoteUrl, gitUserName, accessToken, remoteName, gitService, env);
   logProgress(GitStep.FetchingData);
   try {
-    await fetchRemote(dir, remoteName, defaultBranchName);
+    await fetchRemote(dir, remoteName, defaultBranchName, env);
     let exitCode = 0;
     let stderr: string | undefined;
-    const syncStateAfterCommit = await getSyncState(dir, defaultBranchName, remoteName, logger);
+    const syncStateAfterCommit = await getSyncState(
+      dir,
+      defaultBranchName,
+      remoteName,
+      logger,
+      env,
+    );
     switch (syncStateAfterCommit) {
       case 'equal': {
         logProgress(GitStep.NoNeedToSync);
@@ -161,6 +171,7 @@ export async function commitAndSync(options: ICommitAndSyncOptions): Promise<voi
         ({ exitCode, stderr } = await GitProcess.exec(
           ['rebase', `${remoteName}/${defaultBranchName}`],
           dir,
+          { env },
         ));
         logProgress(GitStep.RebaseResultChecking);
         if (exitCode !== 0) {
@@ -171,12 +182,19 @@ export async function commitAndSync(options: ICommitAndSyncOptions): Promise<voi
         }
         if (
           exitCode === 0 &&
-          (await getGitRepositoryState(dir, logger)).length === 0 &&
-          (await getSyncState(dir, defaultBranchName, remoteName, logger)) === 'ahead'
+          (await getGitRepositoryState(dir, logger, env)).length === 0 &&
+          (await getSyncState(dir, defaultBranchName, remoteName, logger, env)) === 'ahead'
         ) {
           logProgress(GitStep.RebaseSucceed);
         } else {
-          await continueRebase(dir, gitUserName, email ?? defaultGitInfo.email, logger);
+          await continueRebase(
+            dir,
+            gitUserName,
+            email ?? defaultGitInfo.email,
+            logger,
+            undefined,
+            env,
+          );
           logProgress(GitStep.RebaseConflictNeedsResolve);
         }
         await pushUpstream(dir, defaultBranchName, remoteName, userInfo, logger);
@@ -189,7 +207,7 @@ export async function commitAndSync(options: ICommitAndSyncOptions): Promise<voi
 
     if (exitCode === 0) {
       logProgress(GitStep.PerformLastCheckBeforeSynchronizationFinish);
-      await assumeSync(dir, defaultBranchName, remoteName, logger);
+      await assumeSync(dir, defaultBranchName, remoteName, logger, env);
       logProgress(GitStep.SynchronizationFinish);
     } else {
       switch (exitCode) {
@@ -205,7 +223,7 @@ export async function commitAndSync(options: ICommitAndSyncOptions): Promise<voi
     }
   } finally {
     // always restore original remoteUrl without token
-    await credentialOff(dir, remoteName, remoteUrl);
+    await credentialOff(dir, remoteName, remoteUrl, undefined, env);
   }
 }
 
@@ -231,9 +249,9 @@ export async function syncPreflightCheck(configs: {
     defaultGitInfo = defaultDefaultGitInfo,
     userInfo,
   } = configs;
-  const { gitUserName, email } = userInfo ?? defaultGitInfo;
+  const { gitUserName, email, env } = userInfo ?? defaultGitInfo;
 
-  const repoStartingState = await getGitRepositoryState(dir, logger);
+  const repoStartingState = await getGitRepositoryState(dir, logger, env);
   if (repoStartingState.length === 0 || repoStartingState === '|DIRTY') {
     logProgress?.(GitStep.PrepareSync);
     logDebug?.(
@@ -250,6 +268,7 @@ export async function syncPreflightCheck(configs: {
       email ?? defaultGitInfo.email,
       logger,
       repoStartingState,
+      env,
     );
   }
 }

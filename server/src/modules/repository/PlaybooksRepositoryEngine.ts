@@ -3,10 +3,10 @@ import PlaybooksRepository from '../../data/database/model/PlaybooksRepository';
 import PlaybooksRepositoryRepo from '../../data/database/repository/PlaybooksRepositoryRepo';
 import PinoLogger from '../../logger';
 import { DEFAULT_VAULT_ID, vaultDecrypt } from '../ansible-vault/ansible-vault';
+import { saveSSMDefaultPlaybooksRepositories } from './default-playbooks-repositories';
 import GitPlaybooksRepositoryComponent from './git-playbooks-repository/GitPlaybooksRepositoryComponent';
 import LocalPlaybooksRepositoryComponent from './local-playbooks-repository/LocalPlaybooksRepositoryComponent';
 import { AbstractComponent } from './PlaybooksRepositoryComponent';
-import { saveSSMDefaultPlaybooksRepositories } from './default-playbooks-repositories';
 
 const logger = PinoLogger.child(
   { module: 'PlaybooksRepositoryEngine' },
@@ -30,8 +30,17 @@ export function getState(): stateType {
 }
 
 async function registerGitRepository(playbookRepository: PlaybooksRepository) {
-  const { uuid, name, branch, email, userName, accessToken, remoteUrl, gitService } =
-    playbookRepository;
+  const {
+    uuid,
+    name,
+    branch,
+    email,
+    userName,
+    accessToken,
+    remoteUrl,
+    gitService,
+    ignoreSSLErrors,
+  } = playbookRepository;
   if (!accessToken) {
     throw new Error('accessToken is required');
   }
@@ -50,6 +59,7 @@ async function registerGitRepository(playbookRepository: PlaybooksRepository) {
     decryptedAccessToken,
     remoteUrl,
     gitService,
+    ignoreSSLErrors,
   );
 }
 

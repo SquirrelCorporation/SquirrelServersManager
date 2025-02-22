@@ -1,12 +1,5 @@
 import { SsmAlert, SsmGit } from 'ssm-shared-lib';
 import Events from '../../../core/events/events';
-import logger from '../../../logger';
-import GitPlaybooksRepositoryUseCases from '../../../services/GitPlaybooksRepositoryUseCases';
-import PlaybooksRepositoryComponent, {
-  AbstractComponent,
-  DIRECTORY_ROOT,
-} from '../PlaybooksRepositoryComponent';
-import Shell from '../../shell';
 import {
   GitStep,
   IGitUserInfos,
@@ -16,6 +9,12 @@ import {
   commitAndSync,
   forcePull,
 } from '../../../helpers/git';
+import GitPlaybooksRepositoryUseCases from '../../../services/GitPlaybooksRepositoryUseCases';
+import Shell from '../../shell';
+import PlaybooksRepositoryComponent, {
+  AbstractComponent,
+  DIRECTORY_ROOT,
+} from '../PlaybooksRepositoryComponent';
 
 class GitPlaybooksRepositoryComponent
   extends PlaybooksRepositoryComponent
@@ -33,6 +32,7 @@ class GitPlaybooksRepositoryComponent
     accessToken: string,
     remoteUrl: string,
     gitService: SsmGit.Services,
+    ignoreSSLErrors: boolean,
   ) {
     super(uuid, name, DIRECTORY_ROOT);
     this.uuid = uuid;
@@ -43,6 +43,11 @@ class GitPlaybooksRepositoryComponent
       branch: branch,
       accessToken: accessToken,
       gitService: gitService,
+      env: ignoreSSLErrors
+        ? {
+            GIT_SSL_NO_VERIFY: 'true',
+          }
+        : undefined,
     };
     this.options = {
       dir: this.directory,

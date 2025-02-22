@@ -1,7 +1,7 @@
 import pino from 'pino';
 import shell from 'shelljs';
-import { RepositoryType } from 'ssm-shared-lib/distribution/enums/repositories';
 import { SsmAlert, SsmGit } from 'ssm-shared-lib';
+import { RepositoryType } from 'ssm-shared-lib/distribution/enums/repositories';
 import { v4 as uuidv4 } from 'uuid';
 import { SSM_DATA_PATH } from '../../config';
 import EventManager from '../../core/events/EventManager';
@@ -12,11 +12,6 @@ import ContainerCustomStackRepo from '../../data/database/repository/ContainerCu
 import ContainerStacksRepositoryRepo from '../../data/database/repository/ContainerCustomStackRepositoryRepo';
 import { extractTopLevelName } from '../../helpers/docker/utils';
 import { FileInfo, getMatchingFiles } from '../../helpers/files/recursive-find';
-import logger from '../../logger';
-import { NotFoundError } from '../../middlewares/api/ApiError';
-import GitCustomStacksRepositoryUseCases from '../../services/GitCustomStacksRepositoryUseCases';
-import Shell from '../shell';
-import FileSystemManager from '../shell/managers/FileSystemManager';
 import {
   GitStep,
   IGitUserInfos,
@@ -26,6 +21,11 @@ import {
   commitAndSync,
   forcePull,
 } from '../../helpers/git';
+import logger from '../../logger';
+import { NotFoundError } from '../../middlewares/api/ApiError';
+import GitCustomStacksRepositoryUseCases from '../../services/GitCustomStacksRepositoryUseCases';
+import Shell from '../shell';
+import FileSystemManager from '../shell/managers/FileSystemManager';
 
 export const DIRECTORY_ROOT = `${SSM_DATA_PATH}/container-stacks`;
 
@@ -45,6 +45,7 @@ class ContainerCustomStacksRepositoryComponent extends EventManager {
     accessToken: string,
     remoteUrl: string,
     gitService: SsmGit.Services,
+    ignoreSSLErrors?: boolean,
   ) {
     super();
     const dir = `${DIRECTORY_ROOT}/${uuid}`;
@@ -65,6 +66,11 @@ class ContainerCustomStacksRepositoryComponent extends EventManager {
       branch: branch,
       accessToken: accessToken,
       gitService: gitService,
+      env: ignoreSSLErrors
+        ? {
+            GIT_SSL_NO_VERIFY: 'true',
+          }
+        : undefined,
     };
     this.options = {
       dir: this.directory,

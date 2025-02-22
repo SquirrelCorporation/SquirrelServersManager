@@ -71,6 +71,7 @@ const getUrlWithOutCredential = (urlWithCredential: string): string =>
  * @param remoteName
  * @param serviceType
  * @param domain
+ * @param env
  */
 export async function credentialOn(
   directory: string,
@@ -79,6 +80,7 @@ export async function credentialOn(
   accessToken: string,
   remoteName: string,
   serviceType: SsmGit.Services,
+  env?: Record<string, string>,
 ): Promise<void> {
   let gitUrlWithCredential;
   switch (serviceType) {
@@ -106,8 +108,10 @@ export async function credentialOn(
       throw new Error(`Unknown service type ${serviceType}`);
     }
   }
-  await GitProcess.exec(['remote', 'add', remoteName, gitUrlWithCredential], directory);
-  await GitProcess.exec(['remote', 'set-url', remoteName, gitUrlWithCredential], directory);
+  await GitProcess.exec(['remote', 'add', remoteName, gitUrlWithCredential], directory, { env });
+  await GitProcess.exec(['remote', 'set-url', remoteName, gitUrlWithCredential], directory, {
+    env,
+  });
 }
 /**
  *  Add remote without credential
@@ -115,12 +119,14 @@ export async function credentialOn(
  * @param remoteName
  * @param remoteUrl
  * @param serviceType
+ * @param env
  */
 export async function credentialOff(
   directory: string,
   remoteName: string,
   remoteUrl?: string,
   serviceType = SsmGit.Services.Github,
+  env?: Record<string, string>,
 ): Promise<void> {
   const gitRepoUrl = remoteUrl ?? (await getRemoteUrl(directory, remoteName));
   let gitUrlWithOutCredential: string;
@@ -137,5 +143,5 @@ export async function credentialOff(
       throw new Error(`Unknown service type ${serviceType}`);
     }
   }
-  await GitProcess.exec(['remote', 'set-url', remoteName, gitUrlWithOutCredential], directory);
+  await GitProcess.exec(['remote', 'set-url', remoteName, gitUrlWithOutCredential], directory, env);
 }

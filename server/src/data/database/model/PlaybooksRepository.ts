@@ -19,6 +19,7 @@ export default interface PlaybooksRepository {
   directory?: string;
   enabled: boolean;
   default?: boolean;
+  ignoreSSLErrors?: boolean;
   tree?: any;
   directoryExclusionList?: string[];
   onError?: boolean;
@@ -106,6 +107,10 @@ const schema = new Schema<PlaybooksRepository>(
     gitService: {
       type: Schema.Types.String,
       required: false,
+    },
+    ignoreSSLErrors: {
+      type: Schema.Types.Boolean,
+      default: false,
     },
     vaults: [
       {

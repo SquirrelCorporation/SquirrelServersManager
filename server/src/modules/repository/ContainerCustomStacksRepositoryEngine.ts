@@ -28,8 +28,17 @@ export function getState(): stateType {
 async function registerGitRepository(
   containerCustomStackRepository: ContainerCustomStackRepository,
 ) {
-  const { uuid, name, branch, email, userName, accessToken, remoteUrl, gitService } =
-    containerCustomStackRepository;
+  const {
+    uuid,
+    name,
+    branch,
+    email,
+    userName,
+    accessToken,
+    remoteUrl,
+    gitService,
+    ignoreSSLErrors,
+  } = containerCustomStackRepository;
   if (!accessToken) {
     throw new Error('accessToken is required');
   }
@@ -46,6 +55,7 @@ async function registerGitRepository(
     decryptedAccessToken,
     remoteUrl,
     gitService,
+    ignoreSSLErrors,
   );
 }
 

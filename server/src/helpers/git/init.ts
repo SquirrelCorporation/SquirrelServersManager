@@ -1,6 +1,6 @@
 import path from 'path';
-import fs from 'fs-extra';
 import { GitProcess } from 'dugite';
+import fs from 'fs-extra';
 import { defaultGitInfo } from './defaultGitInfo';
 
 export interface IGitInitOptions {
@@ -23,6 +23,7 @@ export interface IGitInitOptions {
    * https://stackoverflow.com/a/51527691/4617295
    */
   initialCommit?: boolean;
+  env?: Record<string, string>;
 }
 
 /**
@@ -36,15 +37,18 @@ export async function initGitWithBranch(
   if (options?.bare === true) {
     const bareGitPath = path.join(dir, '.git');
     await fs.mkdirp(bareGitPath);
-    await GitProcess.exec(['init', `--initial-branch=${branch}`, '--bare'], bareGitPath);
+    await GitProcess.exec(['init', `--initial-branch=${branch}`, '--bare'], bareGitPath, {
+      env: options.env,
+    });
   } else {
-    await GitProcess.exec(['init', `--initial-branch=${branch}`], dir);
+    await GitProcess.exec(['init', `--initial-branch=${branch}`], dir, { env: options?.env });
   }
 
   if (options?.initialCommit !== false) {
     await GitProcess.exec(
       ['commit', `--allow-empty`, '-n', '-m', 'Initial commit when init a new git repository.'],
       dir,
+      { env: options?.env },
     );
   }
 }

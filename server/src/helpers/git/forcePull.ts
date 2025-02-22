@@ -30,9 +30,9 @@ export interface IForcePullOptions {
 export async function forcePull(options: IForcePullOptions) {
   const { dir, logger, defaultGitInfo = defaultDefaultGitInfo, userInfo, remoteUrl } = options;
   const { gitUserName, branch, gitService } = userInfo ?? defaultGitInfo;
-  const { accessToken } = userInfo ?? {};
-  const defaultBranchName = (await getDefaultBranchName(dir)) ?? branch;
-  const remoteName = await getRemoteName(dir, branch);
+  const { accessToken, env } = userInfo ?? {};
+  const defaultBranchName = (await getDefaultBranchName(dir, env)) ?? branch;
+  const remoteName = await getRemoteName(dir, branch, defaultGitInfo.env);
 
   if (accessToken === '' || accessToken === undefined) {
     throw new SyncParameterMissingError('accessToken');
@@ -70,11 +70,11 @@ export async function forcePull(options: IForcePullOptions) {
     userInfo,
   });
   logProgress(GitStep.StartConfiguringGithubRemoteRepository);
-  await credentialOn(dir, remoteUrl, gitUserName, accessToken, remoteName, gitService);
+  await credentialOn(dir, remoteUrl, gitUserName, accessToken, remoteName, gitService, env);
   try {
     logProgress(GitStep.StartFetchingFromGithubRemote);
-    await fetchRemote(dir, defaultGitInfo.remote, defaultGitInfo.branch);
-    const syncState = await getSyncState(dir, defaultBranchName, remoteName, logger);
+    await fetchRemote(dir, defaultGitInfo.remote, defaultGitInfo.branch, env);
+    const syncState = await getSyncState(dir, defaultBranchName, remoteName, logger, env);
     logDebug(`syncState in dir ${dir} is ${syncState}`, GitStep.StartFetchingFromGithubRemote);
     if (syncState === 'equal') {
       // if there is no new commit in remote (and nothing messy in local), we don't need to pull.
@@ -82,7 +82,7 @@ export async function forcePull(options: IForcePullOptions) {
       return;
     }
     logProgress(GitStep.StartResettingLocalToRemote);
-    await hardResetLocalToRemote(dir, branch, remoteName);
+    await hardResetLocalToRemote(dir, branch, remoteName, env);
     logProgress(GitStep.FinishForcePull);
   } catch (error) {
     if (error instanceof CantForcePullError) {
@@ -91,17 +91,23 @@ export async function forcePull(options: IForcePullOptions) {
       throw new CantForcePullError(`${(error as Error).message} ${(error as Error).stack ?? ''}`);
     }
   } finally {
-    await credentialOff(dir, remoteName, remoteUrl);
+    await credentialOff(dir, remoteName, remoteUrl, undefined, env);
   }
 }
 
 /**
  * Internal method used by forcePull, does the `reset --hard`.
  */
-export async function hardResetLocalToRemote(dir: string, branch: string, remoteName: string) {
+export async function hardResetLocalToRemote(
+  dir: string,
+  branch: string,
+  remoteName: string,
+  env?: Record<string, string>,
+) {
   const { exitCode, stderr } = await GitProcess.exec(
     ['reset', '--hard', `${remoteName}/${branch}`],
     dir,
+    env,
   );
   if (exitCode !== 0) {
     throw new CantForcePullError(`${remoteName}/${branch} ${stderr}`);
