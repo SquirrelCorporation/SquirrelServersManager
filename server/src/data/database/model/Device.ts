@@ -366,12 +366,6 @@ const schema = new Schema<Device>(
       default: uuidv4,
     },
     capabilities: {
-      ansible: {
-        ansiblePythonInterpreter: {
-          type: Schema.Types.String,
-          required: false,
-        },
-      },
       containers: {
         docker: {
           enabled: {
@@ -397,6 +391,12 @@ const schema = new Schema<Device>(
       },
     },
     configuration: {
+      ansible: {
+        ansiblePythonInterpreter: {
+          type: Schema.Types.String,
+          required: false,
+        },
+      },
       containers: {
         proxmox: {
           watchContainersCron: {
