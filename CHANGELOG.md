@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.30...HEAD)
+
+**Merged pull requests:**
+
+- \[CHORE\] Delete unused animation JSON file & bump libs [\#777](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/777) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump swiper from 11.2.2 to 11.2.4 in /site [\#756](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/756) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v0.1.30](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.30) (2025-02-22)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/V0.1.30...v0.1.30)
@@ -32,6 +41,7 @@
 - Bump vuetify from 3.7.11 to 3.7.12 in /site [\#755](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/755) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 23.7.0-alpine to 23.8.0-alpine in /client [\#754](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/754) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 23.7.0-alpine to 23.8.0-alpine in /server [\#753](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/753) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[CHORE\] Delete unused animation JSON file & bump libs [\#777](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/777) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.29](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.29) (2025-02-18)
 
