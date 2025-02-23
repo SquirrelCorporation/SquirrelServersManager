@@ -23,6 +23,9 @@ export default interface Device {
     };
   };
   configuration: {
+    ansible: {
+      ansiblePythonInterpreter?: string;
+    };
     containers: {
       proxmox?: {
         watchContainersCron?: string;
@@ -363,6 +366,12 @@ const schema = new Schema<Device>(
       default: uuidv4,
     },
     capabilities: {
+      ansible: {
+        ansiblePythonInterpreter: {
+          type: Schema.Types.String,
+          required: false,
+        },
+      },
       containers: {
         docker: {
           enabled: {
