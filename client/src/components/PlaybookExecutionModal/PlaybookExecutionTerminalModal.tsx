@@ -7,18 +7,10 @@ import TerminalCore, {
 } from '@/components/Terminal/TerminalCore';
 import { getAnsibleSmartFailure } from '@/services/rest/ansible';
 import { ClockCircleOutlined, ThunderboltOutlined } from '@ant-design/icons';
-import {
-  DotLottieCommonPlayer,
-  DotLottiePlayer,
-} from '@dotlottie/react-player';
+import { DotLottie, DotLottieReact } from '@lottiefiles/dotlottie-react';
+
 import { Button, Col, Modal, notification, Row, Steps, Typography } from 'antd';
-import React, {
-  LegacyRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 
 export interface PlaybookExecutionTerminalModalHandles {
@@ -71,13 +63,13 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
     const timerIdRef = useRef();
     const [hasReachedFinalStatus, setHasReachedFinalStatus] = useState(false);
     const terminalRef = useRef<TerminalCoreHandles>(null);
-    const lottieRef = useRef<DotLottieCommonPlayer>();
+    const [dotLottie, setDotLottie] = useState<DotLottie | null>(null);
     const [api, contextHolder] = notification.useNotification();
 
     useEffect(() => {
       if (hasReachedFinalStatus) {
         terminalRef?.current?.onDataIn('# Playbook execution finished', true);
-        lottieRef.current?.stop();
+        dotLottie?.stop();
       }
     }, [hasReachedFinalStatus]);
 
@@ -145,6 +137,7 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
       const pollingCallback = () => terminalHandler.pollingCallback(execId);
 
       const startPolling = () => {
+        dotLottie?.play();
         terminalRef?.current?.onDataIn(
           '---\n' +
             '#  ,;;:;,\n' +
@@ -208,12 +201,12 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
           open={isOpen}
           title={
             <div style={{ verticalAlign: 'center' }}>
-              <DotLottiePlayer
-                ref={lottieRef as LegacyRef<DotLottieCommonPlayer>}
-                src="/Animation-1705922266332.lottie"
+              <DotLottieReact
+                dotLottieRefCallback={setDotLottie}
+                src="/lotties/running_squirrel.lottie"
                 autoplay
                 loop
-                style={{ height: '5%', width: '5%', display: 'inline-block' }}
+                style={{ height: '8%', width: '8%', display: 'inline-block' }}
               />
               <div
                 style={{
