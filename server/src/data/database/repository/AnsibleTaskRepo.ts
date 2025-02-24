@@ -9,7 +9,7 @@ async function create(ansibleTask: AnsibleTask): Promise<AnsibleTask> {
 }
 
 async function updateStatus(ident: string, status: string) {
-  return await AnsibleTaskModel.findOneAndUpdate({ ident: { $eq: ident } }, { status: status })
+  return await AnsibleTaskModel.findOneAndUpdate({ ident: { $eq: ident } }, { status: { $eq: status } })
     .lean()
     .exec();
 }
