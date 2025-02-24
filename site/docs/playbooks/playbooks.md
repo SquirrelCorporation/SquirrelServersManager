@@ -28,7 +28,7 @@
 :::warning Using your own repositories
 While it is currently possible, we strongly advise creating your own repository for your custom playbooks instead of using `ssm-core` or `ssm-tools`. These custom repositories will be erased after each update of SSM.
 
-It is better to create a [local](/docs/playbooks/local-playbooks) or [remote](/docs/playbooks/remote-playbooks) repository.
+It is better to create a [local](/docs/playbooks-repositories/local-playbooks) or [remote](/docs/playbooks-repositories/remote-playbooks) repository.
 :::
 ## Editing playbooks
 
@@ -45,7 +45,7 @@ You must click on the save button (bottom right floating menu)
 
 ## Syncing playbooks (only for remote repositories)
 
-When working with a [remote repository](/docs/playbooks/remote-playbooks), a *right-click* on the root node will offer you additional options, such as Commit & Syncing your changes, or force pulling from the repository
+When working with a [remote repository](/docs/playbooks-repositories/remote-playbooks), a *right-click* on the root node will offer you additional options, such as Commit & Syncing your changes, or force pulling from the repository
 
 ![edit-file](/playbooks/remote-dropdown.gif)
 
