@@ -6,7 +6,13 @@ Updating your installation depends on the method you used for the installation:
 
 ## Updating - Docker (getSsm Script or Pre-built Images)
 
-Locate the SSM's `docker-compose.yml` file and execute:
+Locate the SSM's `docker-compose.yml` file and update the file with:
+
+```shell
+curl -o docker-compose.yml https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager/refs/heads/master/docker-compose.yml
+```
+
+then:
 
 ```shell
 docker-compose stop
@@ -24,10 +30,18 @@ docker compose up
 
 ## Updating - Proxmox
 
+:::warning ⚠️ Update the container memory
+It is highly recommended that you temporary set the container memory to 4096MB for the duration of the update
+::: 
+
 From the shell of the **LXC instance**:
 
 ```shell
 bash -c "$(wget -qLO - https://getssm.io/proxmox)"
+```
+or
+```shell
+bash -c "$(wget -qO - https://getssm.io/proxmox)"
 ```
 
 ## Updating - Manual Install

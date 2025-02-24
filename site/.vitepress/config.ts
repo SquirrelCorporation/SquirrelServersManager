@@ -181,8 +181,8 @@ export default defineConfig({
             {
               text: 'Playbooks Repositories', items: [
 
-                { text: 'Local Playbooks Repositories', link: '/docs/playbooks/local-playbooks.md' },
-                { text: 'Remote Playbooks Repositories', link: '/docs/playbooks/remote-playbooks.md' }
+                { text: 'Local Playbooks Repositories', link: '/docs/playbooks-repositories/local-playbooks.md' },
+                { text: 'Remote Playbooks Repositories', link: '/docs/playbooks-repositories/remote-playbooks.md' }
               ]
             },
             {
