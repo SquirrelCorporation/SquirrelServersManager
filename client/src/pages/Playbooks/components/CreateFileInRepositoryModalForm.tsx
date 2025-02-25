@@ -19,29 +19,36 @@ export type CreateFileInRepositoryModalFormProps = {
 
 const CreateFileInRepositoryModalForm: React.FC<
   CreateFileInRepositoryModalFormProps
-> = (props) => {
-  console.log(`path: ${props.path}, basedPath: ${props.basedPath}`);
+> = ({
+  setModalOpened,
+  opened,
+  mode,
+  path,
+  basedPath,
+  playbooksRepositoryName,
+  playbooksRepositoryUuid,
+  submitNewFile,
+}) => {
+  console.log(`path: ${path}, basedPath: ${basedPath}`);
   return (
     <ModalForm<{ name: string }>
-      title={`Create a new ${props.mode}`}
-      open={props.opened}
+      title={`Create a new ${mode}`}
+      open={opened}
       autoFocusFirstInput
       clearOnDestroy
       modalProps={{
         destroyOnClose: true,
-        onCancel: () => props.setModalOpened(false),
+        onCancel: () => setModalOpened(false),
       }}
       onFinish={async (values) => {
-        return await props
-          .submitNewFile(
-            props.playbooksRepositoryUuid,
-            values.name,
-            `${props.path}/${values.name}`,
-            props.mode,
-          )
-          .then(() => {
-            props.setModalOpened(false);
-          });
+        return await submitNewFile(
+          playbooksRepositoryUuid,
+          values.name,
+          `${path}/${values.name}`,
+          mode,
+        ).then(() => {
+          setModalOpened(false);
+        });
       }}
     >
       <ProFormText
@@ -49,18 +56,16 @@ const CreateFileInRepositoryModalForm: React.FC<
         required={true}
         name={'name'}
         fieldProps={{
-          prefix:
-            props.path.replace(props.basedPath, props.playbooksRepositoryName) +
-            '/',
-          suffix: props.mode === 'playbook' ? '.yml' : undefined,
+          prefix: path.replace(basedPath, playbooksRepositoryName) + '/',
+          suffix: mode === 'playbook' ? '.yml' : undefined,
         }}
-        label={`${props.mode} name`}
-        tooltip={`Enter a ${props.mode} name (the character '_' is not authorized)`}
-        placeholder={`${props.mode} name`}
+        label={`${mode} name`}
+        tooltip={`Enter a ${mode} name (the character '_' is not authorized)`}
+        placeholder={`${mode} name`}
         rules={[
           {
             required: true,
-            message: `Please input your ${props.mode} name!`,
+            message: `Please input your ${mode} name!`,
           },
           {
             pattern: new RegExp('^[0-9a-zA-Z\\-]{0,100}$'),

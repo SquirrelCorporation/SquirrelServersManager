@@ -11,11 +11,11 @@ import React, { FC, useState } from 'react';
 import { API } from 'ssm-shared-lib';
 
 type CustomVaultModalProps = {
-  selectedRecord?: Partial<API.CustomVault>;
+  selectedRecord?: Partial<API.AnsibleVault>;
   modalOpened: boolean;
   setModalOpened: any;
   asyncFetch: () => Promise<void>;
-  vaults: API.CustomVault[];
+  vaults: API.AnsibleVault[];
 };
 
 const PlaybooksLocalRepositoryModal: FC<CustomVaultModalProps> = ({
@@ -57,7 +57,7 @@ const PlaybooksLocalRepositoryModal: FC<CustomVaultModalProps> = ({
       ]
     : [];
   return (
-    <ModalForm<API.CustomVault>
+    <ModalForm<API.AnsibleVault>
       title={
         <>
           <Avatar

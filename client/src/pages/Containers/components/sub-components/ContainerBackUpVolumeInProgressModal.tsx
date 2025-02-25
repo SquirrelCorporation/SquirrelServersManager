@@ -2,12 +2,20 @@ import { BackupSolid } from '@/components/Icons/CustomIcons';
 import { getBackUpVolume, postBackUpVolume } from '@/services/rest/services';
 import { socket } from '@/socket';
 import { Button, Flex, message, Modal, Result, Spin } from 'antd';
-import React, { useEffect } from 'react';
-import { SsmEvents, SsmContainer } from 'ssm-shared-lib';
+import React, { Dispatch, SetStateAction, useEffect } from 'react';
+import { SsmContainer, SsmEvents } from 'ssm-shared-lib';
 
 type ContainerBackUpVolumeInProgressModalProps = {
-  setInProgress: any;
-  inProgress: { visible: boolean; mode: string };
+  setInProgress: Dispatch<
+    SetStateAction<{
+      visible: boolean;
+      mode: SsmContainer.VolumeBackupMode | undefined;
+    }>
+  >;
+  inProgress: {
+    visible: boolean;
+    mode: SsmContainer.VolumeBackupMode | undefined;
+  };
   volumeUuid: string;
 };
 
@@ -27,7 +35,10 @@ const ContainerBackUpVolumeInProgressModal: React.FC<
     if (inProgress?.visible === true) {
       setBackupInfo(undefined);
       setIsFinished(undefined);
-      postBackUpVolume(volumeUuid, inProgress.mode)
+      postBackUpVolume(
+        volumeUuid,
+        inProgress.mode as SsmContainer.VolumeBackupMode,
+      )
         .then((e) => {
           setBackupInfo({ fileName: e.data.fileName, mode: e.data.mode });
           void message.loading({ content: 'Backup in progress', duration: 2 });

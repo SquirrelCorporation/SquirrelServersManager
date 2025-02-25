@@ -7,15 +7,15 @@ type CardHeaderProps = {
   icon: ReactNode;
 };
 
-export const CardHeader = (props: CardHeaderProps) => {
+export const CardHeader: React.FC<CardHeaderProps> = ({
+  color,
+  title,
+  icon,
+}) => {
   return (
     <Row>
       <Col>
-        <Avatar
-          style={{ backgroundColor: props.color }}
-          shape="square"
-          icon={props.icon}
-        />
+        <Avatar style={{ backgroundColor: color }} shape="square" icon={icon} />
       </Col>
       <Col
         style={{
@@ -24,7 +24,7 @@ export const CardHeader = (props: CardHeaderProps) => {
           marginBottom: 'auto',
         }}
       >
-        {props.title}
+        {title}
       </Col>
     </Row>
   );

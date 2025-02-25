@@ -23,6 +23,8 @@ type ContainerDetailsModalProps = {
   isOpen: boolean;
 };
 
+const MODAL_WIDTH = 800;
+
 const ContainerDetailsModal: React.FC<ContainerDetailsModalProps> = ({
   setOpenModal,
   isOpen,
@@ -65,7 +67,7 @@ const ContainerDetailsModal: React.FC<ContainerDetailsModalProps> = ({
         </>
       }
       destroyOnClose
-      width={800}
+      width={MODAL_WIDTH}
       footer={(_, extra) => (
         <>
           <Space.Compact style={{ marginRight: 15 }}>

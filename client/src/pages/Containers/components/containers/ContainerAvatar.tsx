@@ -41,7 +41,7 @@ const ContainerAvatar: React.FC<ContainerAvatarProps> = (props) => {
   const getName = () => {
     try {
       return row.customName?.slice(0, 3) || row.name?.slice(0, 3);
-    } catch (error: any) {
+    } catch {
       return 'undefined';
     }
   };

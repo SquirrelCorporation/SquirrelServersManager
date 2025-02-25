@@ -122,8 +122,8 @@ export async function getContainerStat(
   type: string,
   params?: any,
   options?: Record<string, any>,
-) {
-  return request<API.SimpleDeviceStat>(
+): Promise<API.Response<API.SimpleDeviceStat>> {
+  return request<API.Response<API.SimpleDeviceStat>>(
     `/api/containers/${containerId}/stat/${type}`,
     {
       method: 'GET',

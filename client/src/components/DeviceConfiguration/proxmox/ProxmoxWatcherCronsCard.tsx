@@ -20,7 +20,7 @@ const ProxmoxWatcherCronsCard: React.FC<ProxmoxWatcherCronsCardProps> = ({
   const handleOnChangeEventsWatcher = async () => {
     if (device.uuid) {
       await updateDeviceProxmoxConfiguration(device.uuid, {
-        watcherCron,
+        watchContainersCron: watcherCron,
       }).then(() => {
         message.success({ content: 'Setting updated' });
       });

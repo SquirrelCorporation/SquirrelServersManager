@@ -91,7 +91,6 @@ const SystemPerformanceCard: React.FC = () => {
 
   return (
     <ChartCard
-      bordered={false}
       title={title}
       action={action}
       loading={loading}

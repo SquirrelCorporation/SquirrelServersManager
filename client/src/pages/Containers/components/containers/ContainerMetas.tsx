@@ -35,7 +35,13 @@ type ContainerMetasProps = {
   >;
   reload: () => void;
 };
-const ContainerMetas = (props: ContainerMetasProps) => {
+
+const ContainerMetas = ({
+  selectedRecord,
+  setSelectedRecord,
+  setIsEditContainerCustomNameModalOpened,
+  reload,
+}: ContainerMetasProps) => {
   const handleQuickAction = async (idx: number) => {
     if (
       ServiceQuickActionReference[idx].type ===
@@ -45,14 +51,14 @@ const ContainerMetas = (props: ContainerMetasProps) => {
         ServiceQuickActionReference[idx].action ===
         ServiceQuickActionReferenceActions.RENAME
       ) {
-        props.setIsEditContainerCustomNameModalOpened(true);
+        setIsEditContainerCustomNameModalOpened(true);
       }
       if (
         ServiceQuickActionReference[idx].action ===
         ServiceQuickActionReferenceActions.LIVE_LOGS
       ) {
         history.push({
-          pathname: `/manage/containers/logs/${props.selectedRecord?.id}`,
+          pathname: `/manage/containers/logs/${selectedRecord?.id}`,
         });
       }
       if (
@@ -65,14 +71,14 @@ const ContainerMetas = (props: ContainerMetasProps) => {
           duration: 6,
         });
         await postDockerContainerAction(
-          props.selectedRecord?.id as string,
+          selectedRecord?.id as string,
           ServiceQuickActionReference[idx].action as SsmContainer.Actions,
         ).then(() => {
           message.success({
             content: `Container: ${ServiceQuickActionReference[idx].action}`,
             duration: 6,
           });
-          return props.reload();
+          return reload();
         });
       }
     }
@@ -241,7 +247,7 @@ const ContainerMetas = (props: ContainerMetasProps) => {
         <a
           key={`quickAction-${row.id}`}
           onClick={() => {
-            props.setSelectedRecord(row);
+            setSelectedRecord(row);
           }}
         >
           <ContainerQuickActionDropDown

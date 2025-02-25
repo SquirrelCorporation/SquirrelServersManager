@@ -1,12 +1,8 @@
 import { DockerConfigurationFormElements } from '@/components/DeviceConfiguration/DockerConfigurationFormElements';
-import {
-  getDeviceAuth,
-  postCheckDeviceProxmoxAuth,
-  putDeviceDockerAuth,
-} from '@/services/rest/deviceauth';
+import { getDeviceAuth, putDeviceDockerAuth } from '@/services/rest/deviceauth';
 import { ProFormInstance } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
-import { Button, message, Space } from 'antd';
+import { message, Space } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -14,9 +10,9 @@ export type DockerConfigurationFormProps = {
   device: Partial<API.DeviceItem>;
 };
 
-const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
-  props,
-) => {
+const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = ({
+  device,
+}) => {
   const formRef = React.useRef<ProFormInstance | undefined>();
 
   return (
@@ -38,8 +34,8 @@ const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
           },
         }}
         onFinish={async (values) => {
-          if (props?.device?.uuid && values) {
-            await putDeviceDockerAuth(props.device.uuid, {
+          if (device?.uuid && values) {
+            await putDeviceDockerAuth(device.uuid, {
               customDockerSSH: values.customDockerSSH,
               dockerCustomAuthType: values.dockerCustomAuthType,
               dockerCustomSshUser: values.dockerCustomSshUser,
@@ -72,8 +68,8 @@ const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
           }
         }}
         request={async () => {
-          if (props?.device?.uuid) {
-            return await getDeviceAuth(props.device.uuid).then((res) => {
+          if (device?.uuid) {
+            return await getDeviceAuth(device.uuid).then((res) => {
               return {
                 customDockerSSH: res.data.customDockerSSH,
                 dockerCustomAuthType: res.data.dockerCustomAuthType,
@@ -99,10 +95,7 @@ const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = (
           }
         }}
       >
-        <DockerConfigurationFormElements
-          device={props.device}
-          formRef={formRef}
-        />
+        <DockerConfigurationFormElements device={device} formRef={formRef} />
       </ProForm>
     </>
   );

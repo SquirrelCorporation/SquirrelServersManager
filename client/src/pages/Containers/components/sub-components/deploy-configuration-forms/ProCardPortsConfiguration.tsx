@@ -10,9 +10,13 @@ import { Space } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
-const ProCardPortsConfiguration: React.FC<{ template: API.Template }> = (
-  props,
-) => {
+type ProCardPortsConfigurationProps = {
+  template: API.Template;
+};
+
+const ProCardPortsConfiguration: React.FC<ProCardPortsConfigurationProps> = ({
+  template,
+}) => {
   return (
     <ProCard
       title={
@@ -32,7 +36,7 @@ const ProCardPortsConfiguration: React.FC<{ template: API.Template }> = (
             creatorButtonText: 'Add a new port',
           }}
           copyIconProps={false}
-          initialValue={props.template?.ports?.map((e) => {
+          initialValue={template?.ports?.map((e) => {
             return {
               host: e.host,
               protocol: e.protocol,
