@@ -57,7 +57,7 @@ describe('SSHCredentialsHelper', () => {
     deviceAuth.authType = SsmAnsible.SSHType.KeyBased;
     const result = SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
 
-    expect(result).resolves.toMatchObject({
+    await expect(result).resolves.toMatchObject({
       protocol: 'ssh',
       port: 22,
       username: 'apiuser',

@@ -1,9 +1,9 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { Automations } from 'ssm-shared-lib';
-import AutomationComponent from '../../../../modules/automations/AutomationComponent';
-import CronTriggerComponent from '../../../../modules/automations/triggers/CronTriggerComponent';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import DockerActionComponent from '../../../../modules/automations/actions/DockerActionComponent';
 import PlaybookActionComponent from '../../../../modules/automations/actions/PlaybookActionComponent';
+import AutomationComponent from '../../../../modules/automations/AutomationComponent';
+import CronTriggerComponent from '../../../../modules/automations/triggers/CronTriggerComponent';
 
 vi.mock('./../../../../modules/automations/triggers/CronTriggerComponent');
 vi.mock('./../../../../modules/automations/actions/DockerActionComponent');
@@ -46,7 +46,7 @@ describe('init method of AutomationComponent class', () => {
   test('should throw error for unknown trigger type', async () => {
     // @ts-expect-error provoke error
     automation.automationChain.trigger = 'Unknown';
-    expect(automation.init()).rejects.toThrow('Unknown trigger type');
+    await expect(automation.init()).rejects.toThrow('Unknown trigger type');
   });
 
   test('should properly initialize actions for docker action type', async () => {
@@ -68,6 +68,6 @@ describe('init method of AutomationComponent class', () => {
   test('should throw error for unknown action type', async () => {
     // @ts-expect-error provoke error
     automation.automationChain.actions[0].action = 'Unknown';
-    expect(automation.init()).rejects.toThrow('Unknown action type');
+    await expect(automation.init()).rejects.toThrow('Unknown action type');
   });
 });

@@ -123,8 +123,8 @@ describe('testing Hub Registry', () => {
     });
   });
 
-  test('authenticate should perform authenticate request', () => {
-    expect(
+  test('authenticate should perform authenticate request', async () => {
+    await expect(
       hub.authenticate(
         // @ts-expect-error partial type
         {},

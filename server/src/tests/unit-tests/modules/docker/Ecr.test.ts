@@ -112,9 +112,9 @@ describe('testing ECR Registry', () => {
     });
   });
 
-  test('authenticate should call ecr auth endpoint', () => {
+  test('authenticate should call ecr auth endpoint', async () => {
     // @ts-expect-error partial type
-    expect(ecr.authenticate(undefined, { headers: {} })).resolves.toEqual({
+    await expect(ecr.authenticate(undefined, { headers: {} })).resolves.toEqual({
       headers: {
         Authorization: 'Basic xxxxx',
       },

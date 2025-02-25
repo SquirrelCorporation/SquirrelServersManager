@@ -117,9 +117,9 @@ describe('testing GCR Registry', () => {
     });
   });
 
-  test('authenticate should call ecr auth endpoint', () => {
+  test('authenticate should call ecr auth endpoint', async () => {
     // @ts-expect-error partial type
-    expect(gcr.authenticate({}, { headers: {} })).resolves.toEqual({
+    await expect(gcr.authenticate({}, { headers: {} })).resolves.toEqual({
       headers: {
         Authorization: 'Bearer xxxxx',
       },

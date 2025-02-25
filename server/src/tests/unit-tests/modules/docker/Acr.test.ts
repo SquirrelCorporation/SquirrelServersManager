@@ -72,9 +72,9 @@ describe('testing Acr Registry', () => {
     });
   });
 
-  test('authenticate should add basic auth', () => {
+  test('authenticate should add basic auth', async () => {
     // @ts-expect-error partial type
-    expect(acr.authenticate(undefined, { headers: {} })).resolves.toEqual({
+    await expect(acr.authenticate(undefined, { headers: {} })).resolves.toEqual({
       headers: {
         Authorization: 'Basic Y2xpZW50aWQ6Y2xpZW50c2VjcmV0',
       },
