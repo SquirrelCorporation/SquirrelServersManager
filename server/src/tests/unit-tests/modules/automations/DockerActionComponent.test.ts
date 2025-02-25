@@ -104,7 +104,7 @@ describe('DockerActionComponent', () => {
     );
 
     // An error should be thrown if the container can't be retrieved
-    expect(dockerActionComponent.executeAction()).resolves.toBeUndefined();
+    await expect(dockerActionComponent.executeAction()).resolves.toBeUndefined();
     expect(ContainerUseCases.performDockerAction).not.toHaveBeenCalled();
   });
 

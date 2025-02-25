@@ -137,8 +137,8 @@ describe('testing Quay Registry', () => {
     });
   });
 
-  test('authenticate should populate header with base64 bearer', () => {
-    expect(quay.authenticate({}, { headers: {} })).resolves.toEqual({
+  test('authenticate should populate header with base64 bearer', async () => {
+    await expect(quay.authenticate({}, { headers: {} })).resolves.toEqual({
       headers: {
         Authorization: 'Bearer token',
       },

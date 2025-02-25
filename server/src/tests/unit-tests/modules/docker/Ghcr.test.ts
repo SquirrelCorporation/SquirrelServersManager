@@ -77,9 +77,9 @@ describe('testing GHCR Registry', () => {
     });
   });
 
-  test('authenticate should populate header with base64 bearer', () => {
+  test('authenticate should populate header with base64 bearer', async () => {
     // @ts-expect-error partial type
-    expect(ghcr.authenticate({}, { headers: {} })).resolves.toEqual({
+    await expect(ghcr.authenticate({}, { headers: {} })).resolves.toEqual({
       headers: {
         Authorization: 'Bearer dG9rZW4=',
       },

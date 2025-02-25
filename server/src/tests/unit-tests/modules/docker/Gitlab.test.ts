@@ -81,7 +81,7 @@ describe('testing Gitlab Registry', () => {
     ).toBeTruthy();
   });
 
-  test('authenticate should perform authenticate request', () => {
+  test('authenticate should perform authenticate request', async () => {
     vi.mock('axios', () => {
       const axios = vi.fn(() => {
         return {
@@ -92,7 +92,7 @@ describe('testing Gitlab Registry', () => {
       });
       return { default: axios };
     });
-    expect(
+    await expect(
       gitlab.authenticate(
         // @ts-expect-error partial type
         {},

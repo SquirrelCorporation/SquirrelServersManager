@@ -56,26 +56,26 @@ describe('testing Component', () => {
     expect(spyInit).toHaveBeenCalledTimes(1);
   });
 
-  test('register should not call init when validateConfiguration fails', () => {
+  test('register should not call init when validateConfiguration fails', async () => {
     const component = new Component();
     component.validateConfiguration = () => {
       throw new Error('validation failed');
     };
     const spyInit = vi.spyOn(component, 'init');
     // @ts-expect-error partial type
-    expect(component.register('id', 'type', 'name', { x: 'x' })).rejects.toThrowError(
+    await expect(component.register('id', 'type', 'name', { x: 'x' })).rejects.toThrowError(
       'validation failed',
     );
     expect(spyInit).toHaveBeenCalledTimes(0);
   });
 
-  test('register should throw when init fails', () => {
+  test('register should throw when init fails', async () => {
     const component = new Component();
     component.init = () => {
       throw new Error('init failed');
     };
     // @ts-expect-error partial type
-    expect(component.register('id', 'type', 'name', { x: 'x' })).rejects.toThrowError(
+    await expect(component.register('id', 'type', 'name', { x: 'x' })).rejects.toThrowError(
       'init failed',
     );
   });
