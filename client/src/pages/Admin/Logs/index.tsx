@@ -9,17 +9,15 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
-import { useSearchParams } from '@umijs/max';
-import React, { useState, useEffect } from 'react';
+import { history, useLocation, useSearchParams } from '@umijs/max';
 import { TabsProps } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { API } from 'ssm-shared-lib';
-import { history, useLocation } from '@umijs/max';
 
 const Index: React.FC = () => {
   const [form] = ProForm.useForm<any>();
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const [currentRow, setCurrentRow] = useState<API.ServerLog | undefined>();
 
   const [columnsStateMap, setColumnsStateMap] = useState<
     Record<string, ColumnsState>

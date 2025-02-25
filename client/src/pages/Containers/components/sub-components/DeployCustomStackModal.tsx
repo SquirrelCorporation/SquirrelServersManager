@@ -38,9 +38,7 @@ const DeployCustomStackModal: React.FC<DeployCustomStackModalProps> = ({
         data={data}
         setIsOpen={setCreateModuleModalOpened}
         isOpen={createModuleModalOpened}
-        call={async (data) =>
-          await postDeployContainerCustomStack(stackUuid, data)
-        }
+        call={async (e) => await postDeployContainerCustomStack(stackUuid, e)}
         displayName={'Deploy Custom Stack'}
       />
       <ModalForm

@@ -9,10 +9,10 @@ export type ContainerStatsDetailProps = {
   type: string;
 };
 
-const ContainerStatsDetail: React.FC<ContainerStatsDetailProps> = (
-  props: ContainerStatsDetailProps,
-) => {
-  const { containerId, type } = props;
+const ContainerStatsDetail: React.FC<ContainerStatsDetailProps> = ({
+  containerId,
+  type,
+}) => {
   const [data, setData] = React.useState<API.ContainerStat[] | undefined>();
 
   const formatData = (list: API.ContainerStats) => {

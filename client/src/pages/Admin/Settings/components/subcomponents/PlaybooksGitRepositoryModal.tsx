@@ -52,9 +52,15 @@ const items = [
 
 const PlaybooksGitRepositoryModal: React.FC<
   PlaybooksGitRepositoryModalProps
-> = (props) => {
+> = ({
+  selectedRecord,
+  modalOpened,
+  setModalOpened,
+  asyncFetch,
+  repositories,
+}) => {
   const onMenuClick: MenuProps['onClick'] = async (e) => {
-    if (!props.selectedRecord.uuid) {
+    if (!selectedRecord.uuid) {
       message.error({
         content: 'Internal error - no uuid',
         duration: 6,
@@ -63,59 +69,55 @@ const PlaybooksGitRepositoryModal: React.FC<
     }
     switch (e.key) {
       case '1':
-        await forcePullPlaybooksGitRepository(props.selectedRecord.uuid).then(
-          () => {
-            message.loading({
-              content: 'Force pull command launched',
-              duration: 6,
-            });
-          },
-        );
+        await forcePullPlaybooksGitRepository(selectedRecord.uuid).then(() => {
+          message.loading({
+            content: 'Force pull command launched',
+            duration: 6,
+          });
+        });
         return;
       case '2':
-        await commitAndSyncPlaybooksGitRepository(
-          props.selectedRecord.uuid,
-        ).then(() => {
-          message.loading({
-            content: 'Commit and sync command launched',
-            duration: 6,
-          });
-        });
-        return;
-      case '3':
-        await forceClonePlaybooksGitRepository(props.selectedRecord.uuid).then(
+        await commitAndSyncPlaybooksGitRepository(selectedRecord.uuid).then(
           () => {
             message.loading({
-              content: 'Force clone command launched',
+              content: 'Commit and sync command launched',
               duration: 6,
             });
           },
         );
         return;
-      case '4':
-        await syncToDatabasePlaybooksGitRepository(
-          props.selectedRecord.uuid,
-        ).then(() => {
+      case '3':
+        await forceClonePlaybooksGitRepository(selectedRecord.uuid).then(() => {
           message.loading({
-            content: 'Sync to database command launched',
+            content: 'Force clone command launched',
             duration: 6,
           });
         });
         return;
+      case '4':
+        await syncToDatabasePlaybooksGitRepository(selectedRecord.uuid).then(
+          () => {
+            message.loading({
+              content: 'Sync to database command launched',
+              duration: 6,
+            });
+          },
+        );
+        return;
       case '5':
-        await forceRegisterPlaybooksGitRepository(
-          props.selectedRecord.uuid,
-        ).then(() => {
-          message.loading({
-            content: 'Force register command launched',
-            duration: 6,
-          });
-        });
+        await forceRegisterPlaybooksGitRepository(selectedRecord.uuid).then(
+          () => {
+            message.loading({
+              content: 'Force register command launched',
+              duration: 6,
+            });
+          },
+        );
         return;
     }
   };
 
-  const editionMode = props.selectedRecord
+  const editionMode = selectedRecord
     ? [
         <Button
           key={'show-logs'}
@@ -124,7 +126,7 @@ const PlaybooksGitRepositoryModal: React.FC<
             history.push({
               pathname: '/admin/logs',
               // @ts-expect-error lib missing type
-              search: `?moduleId=${props.selectedRecord.uuid}`,
+              search: `?moduleId=${selectedRecord.uuid}`,
             })
           }
         >
@@ -141,8 +143,8 @@ const PlaybooksGitRepositoryModal: React.FC<
           title="Are you sure to delete this repository?"
           key="delete"
           onConfirm={async () => {
-            if (props.selectedRecord && props.selectedRecord.uuid) {
-              await deletePlaybooksGitRepository(props.selectedRecord.uuid)
+            if (selectedRecord && selectedRecord.uuid) {
+              await deletePlaybooksGitRepository(selectedRecord.uuid)
                 .then(() =>
                   message.warning({
                     content: 'Repository deleted',
@@ -150,9 +152,9 @@ const PlaybooksGitRepositoryModal: React.FC<
                   }),
                 )
                 .finally(() => {
-                  props.setModalOpened(false);
+                  setModalOpened(false);
                 });
-              await props.asyncFetch();
+              await asyncFetch();
             }
           }}
         >
@@ -176,34 +178,34 @@ const PlaybooksGitRepositoryModal: React.FC<
             }}
             src={<SimpleIconsGit />}
           />
-          {(props.selectedRecord && (
-            <>Edit repository {props.selectedRecord?.name}</>
-          )) || <>Add & sync a new repository</>}
+          {(selectedRecord && <>Edit repository {selectedRecord?.name}</>) || (
+            <>Add & sync a new repository</>
+          )}
         </>
       }
-      open={props.modalOpened}
+      open={modalOpened}
       clearOnDestroy
       autoFocusFirstInput
       modalProps={{
         destroyOnClose: true,
-        onCancel: () => props.setModalOpened(false),
+        onCancel: () => setModalOpened(false),
       }}
       onFinish={async (values) => {
-        if (props.selectedRecord) {
+        if (selectedRecord) {
           await postPlaybooksGitRepository(
-            props.selectedRecord.uuid as string,
+            selectedRecord.uuid as string,
             values,
           );
-          props.setModalOpened(false);
-          await props.asyncFetch();
+          setModalOpened(false);
+          await asyncFetch();
         } else {
           await putPlaybooksGitRepository(values);
           message.loading({
             content: 'Repository cloning & processing in process...',
             duration: 6,
           });
-          props.setModalOpened(false);
-          await props.asyncFetch();
+          setModalOpened(false);
+          await asyncFetch();
         }
       }}
       submitter={{
@@ -215,13 +217,10 @@ const PlaybooksGitRepositoryModal: React.FC<
         },
       }}
     >
-      <GitForm
-        selectedRecord={props.selectedRecord}
-        repositories={props.repositories}
-      />
+      <GitForm selectedRecord={selectedRecord} repositories={repositories} />
       <ProForm.Group>
-        <DirectoryExclusionForm selectedRecord={props.selectedRecord} />
-        <CustomVault selectedRecord={props.selectedRecord} />
+        <DirectoryExclusionForm selectedRecord={selectedRecord} />
+        <CustomVault selectedRecord={selectedRecord} />
       </ProForm.Group>
     </ModalForm>
   );

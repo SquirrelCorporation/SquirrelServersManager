@@ -375,17 +375,9 @@ export type DeviceStat = {
   value: number;
 };
 
-export type ContainerStats = {
-  data?: ContainerStat[];
-  success?: boolean;
-};
-
 export type ContainerAveragedStats = {
-  data?: {
     cpuStats: ContainerStat[];
     memStats: ContainerStat[];
-  };
-  success?: boolean;
 };
 
 
@@ -411,11 +403,6 @@ export type PlaybookFile = {
   extraVars?: ExtraVars;
   playableInBatch?: boolean;
 };
-
-export type CustomVault = {
-  vaultId: string;
-  password: string;
-}
 
 export type PlaybooksRepository = {
   name: string;

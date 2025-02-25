@@ -20,7 +20,7 @@ import {
 } from '@ant-design/pro-components';
 import { Alert, Button, Col, Grid, Modal, Row, Tag, Typography } from 'antd';
 import { motion } from 'framer-motion';
-import React, { useRef, useState } from 'react';
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
 import { API, SsmAgent, SsmAnsible } from 'ssm-shared-lib';
 import AnimationPlayer from './AnimationPlayer';
 import StepFormCard from './StepFormCard';
@@ -28,20 +28,31 @@ import SummaryCard from './SummaryCard';
 
 export type NewDeviceModalProps = {
   isModalOpen: boolean;
-  setIsModalOpen: any;
+  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
   onAddNewDevice: (
     target: API.DeviceItem,
     installMethod: SsmAgent.InstallMethods,
   ) => void;
 };
+
 const { useBreakpoint } = Grid;
 
-const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
+const MODAL_MIN_HEIGHT = 600;
+
+const MODAL_WIDTH = 1000;
+
+const NewDeviceModal: React.FC<NewDeviceModalProps> = ({
+  isModalOpen,
+  setIsModalOpen,
+  onAddNewDevice,
+}) => {
   const formRef = useRef<ProFormInstance>();
   const sshFormRef = useRef<ProFormInstance>();
   const installMethodFormRef = useRef<ProFormInstance>();
   const [loading, setLoading] = useState(false);
-  const [sshConnection, setSshConnection] = useState<any>({});
+  const [sshConnection, setSshConnection] = useState<Partial<API.DeviceAuth>>(
+    {},
+  );
   const [execId, setExecId] = useState<string | undefined>();
   const [dockerConnectionStatus, setDockerConnectionStatus] = useState<
     string | undefined
@@ -60,7 +71,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
   const screens = useBreakpoint();
 
   const handleCancel = () => {
-    props.setIsModalOpen(false);
+    setIsModalOpen(false);
   };
 
   const handleFinish = async (values: any) => {
@@ -86,8 +97,8 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
         values.installMethod,
       );
       formRef.current?.resetFields();
-      props.setIsModalOpen(false);
-      props.onAddNewDevice(res.data?.device, values.installMethod);
+      setIsModalOpen(false);
+      onAddNewDevice(res.data?.device, values.installMethod);
     } finally {
       setLoading(false);
     }
@@ -174,8 +185,6 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
     visible: { opacity: 1, x: 0 },
   };
 
-  const MODAL_MIN_HEIGHT = 600;
-
   return (
     <Modal
       title={
@@ -184,9 +193,9 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = (props) => {
           &nbsp; Add a new device
         </>
       }
-      open={props.isModalOpen}
+      open={isModalOpen}
       onCancel={handleCancel}
-      width={1000}
+      width={MODAL_WIDTH}
       footer={(_, { CancelBtn }) => <CancelBtn />}
     >
       <Row

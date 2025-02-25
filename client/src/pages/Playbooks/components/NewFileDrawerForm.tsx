@@ -23,7 +23,9 @@ export type NewFileModalFormProps = {
 };
 const { Option } = Select;
 
-const NewFileDrawerForm: React.FC<NewFileModalFormProps> = (props) => {
+const NewFileDrawerForm: React.FC<NewFileModalFormProps> = ({
+  submitNewFile,
+}) => {
   const [repositories, setRepositories] = React.useState<
     API.PlaybooksRepository[] | undefined
   >();
@@ -32,7 +34,6 @@ const NewFileDrawerForm: React.FC<NewFileModalFormProps> = (props) => {
   const [selectedPlaybook, setSelectedPlaybook] = React.useState<
     API.PlaybooksRepository | undefined
   >();
-  const [visible, setVisible] = React.useState<boolean>(false);
 
   useEffect(() => {
     setLoading(true);
@@ -84,19 +85,17 @@ const NewFileDrawerForm: React.FC<NewFileModalFormProps> = (props) => {
       }}
       onFinish={async (values) => {
         setLoading(true);
-        await props
-          .submitNewFile(
-            selectedPlaybook?.uuid as string,
-            values.name,
-            `${values.repository}/${values.name}`,
-            fileType as 'playbook' | 'directory',
-          )
-          .finally(async () => {
-            await getPlaybooksRepositories().then((res) => {
-              setRepositories(res.data);
-            });
-            setLoading(false);
+        await submitNewFile(
+          selectedPlaybook?.uuid as string,
+          values.name,
+          `${values.repository}/${values.name}`,
+          fileType as 'playbook' | 'directory',
+        ).finally(async () => {
+          await getPlaybooksRepositories().then((res) => {
+            setRepositories(res.data);
           });
+          setLoading(false);
+        });
         return true;
       }}
     >

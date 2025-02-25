@@ -7,7 +7,11 @@ import {
   putPlaybooksLocalRepositories,
   syncToDatabasePlaybooksLocalRepository,
 } from '@/services/rest/playbooks-repositories';
-import { DeleteOutlined, UnorderedListOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  QuestionCircleOutlined,
+  UnorderedListOutlined,
+} from '@ant-design/icons';
 import { ModalForm, ProForm, ProFormText } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
 import { Avatar, Button, Dropdown, MenuProps, message, Popconfirm } from 'antd';
@@ -161,7 +165,11 @@ const PlaybooksLocalRepositoryModal: FC<LocalRepositoryModalProps> = (
           submitText: 'Save',
         },
         render: (_, defaultDoms) => {
-          return [...editionMode, ...defaultDoms];
+          return [
+            ...editionMode,
+            <Button icon={<QuestionCircleOutlined />} />,
+            ...defaultDoms,
+          ];
         },
       }}
     >

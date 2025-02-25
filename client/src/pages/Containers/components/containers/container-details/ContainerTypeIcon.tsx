@@ -1,8 +1,8 @@
-import { ExternalLink, Proxmox } from '@/components/Icons/CustomIcons';
+import { Proxmox } from '@/components/Icons/CustomIcons';
 import { DockerOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
 import React from 'react';
-import { API, SsmContainer } from 'ssm-shared-lib';
+import { SsmContainer } from 'ssm-shared-lib';
 
 export type ContainerTypeIconProps = {
   displayType: SsmContainer.ContainerTypes;

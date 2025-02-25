@@ -8,26 +8,22 @@ export type ProgressProps = {
   containerId?: string;
 };
 
-const ContainerStatProgress: React.FC<ProgressProps> = (
-  props: ProgressProps,
-) => {
+const ContainerStatProgress: React.FC<ProgressProps> = ({ containerId }) => {
   const [cpu, setCpu] = React.useState<number>(Number.NaN);
   const [mem, setMem] = React.useState<number>(Number.NaN);
 
   const asyncFetch = async () => {
-    if (props.containerId) {
-      getContainerStat(
-        props.containerId,
-        StatsType.ContainerStatsType.CPU,
-      ).then((e) => {
-        setCpu(e.data?.value);
-      });
-      getContainerStat(
-        props.containerId,
-        StatsType.ContainerStatsType.MEM,
-      ).then((e) => {
-        setMem(e.data?.value);
-      });
+    if (containerId) {
+      getContainerStat(containerId, StatsType.ContainerStatsType.CPU).then(
+        (e) => {
+          setCpu(e.data?.value);
+        },
+      );
+      getContainerStat(containerId, StatsType.ContainerStatsType.MEM).then(
+        (e) => {
+          setMem(e.data?.value);
+        },
+      );
     }
   };
 
@@ -42,7 +38,7 @@ const ContainerStatProgress: React.FC<ProgressProps> = (
         content={
           <ContainerStatsDetail
             type={StatsType.ContainerStatsType.CPU}
-            containerId={props.containerId}
+            containerId={containerId}
           />
         }
       >
@@ -57,7 +53,7 @@ const ContainerStatProgress: React.FC<ProgressProps> = (
         content={
           <ContainerStatsDetail
             type={StatsType.ContainerStatsType.MEM}
-            containerId={props.containerId}
+            containerId={containerId}
           />
         }
       >

@@ -9,14 +9,20 @@ import React from 'react';
 import { API } from 'ssm-shared-lib';
 
 type RegistryModalProps = {
-  selectedRecord: any;
+  selectedRecord: API.ContainerRegistry;
   modalOpened: boolean;
   setModalOpened: any;
   asyncFetch: () => Promise<void>;
   registries: API.ContainerRegistry[];
 };
 
-const RegistryModal: React.FC<RegistryModalProps> = (props) => {
+const RegistryModal: React.FC<RegistryModalProps> = ({
+  setModalOpened,
+  modalOpened,
+  selectedRecord,
+  registries,
+  asyncFetch,
+}) => {
   return (
     <ModalForm<any>
       title={
@@ -28,35 +34,35 @@ const RegistryModal: React.FC<RegistryModalProps> = (props) => {
               marginRight: 4,
               backgroundColor: 'rgba(41,70,147,0.51)',
             }}
-            src={<RegistryLogo provider={props.selectedRecord?.provider} />}
+            src={<RegistryLogo provider={selectedRecord?.provider} />}
           />
-          Connexion for {props.selectedRecord?.provider}
+          Connexion for {selectedRecord?.provider}
         </>
       }
       clearOnDestroy
-      open={props.modalOpened}
+      open={modalOpened}
       autoFocusFirstInput
       modalProps={{
         destroyOnClose: true,
-        onCancel: () => props.setModalOpened(false),
+        onCancel: () => setModalOpened(false),
       }}
       onFinish={async (values) => {
-        if (props.selectedRecord?.name !== 'custom') {
-          await updateRegistry(props.selectedRecord.name, values);
-          props.setModalOpened(false);
-          await props.asyncFetch();
+        if (selectedRecord?.name !== 'custom') {
+          await updateRegistry(selectedRecord.name, values);
+          setModalOpened(false);
+          await asyncFetch();
         } else {
           await createCustomRegistry(
             values.newName,
             values,
-            props.selectedRecord.authScheme,
+            selectedRecord.authScheme,
           );
-          props.setModalOpened(false);
-          await props.asyncFetch();
+          setModalOpened(false);
+          await asyncFetch();
         }
       }}
     >
-      {props.selectedRecord?.authSet && (
+      {selectedRecord?.authSet && (
         <Space
           direction="vertical"
           style={{ width: '100%', marginBottom: '15px', marginTop: '15px' }}
@@ -69,7 +75,7 @@ const RegistryModal: React.FC<RegistryModalProps> = (props) => {
           />
         </Space>
       )}
-      {props.selectedRecord?.name === 'custom' && (
+      {selectedRecord?.name === 'custom' && (
         <>
           <Space
             direction="vertical"
@@ -84,7 +90,7 @@ const RegistryModal: React.FC<RegistryModalProps> = (props) => {
         </>
       )}
       <ProForm.Group>
-        {props.selectedRecord?.name === 'custom' && (
+        {selectedRecord?.name === 'custom' && (
           <ProFormText
             width={'md'}
             name={'newName'}
@@ -93,9 +99,7 @@ const RegistryModal: React.FC<RegistryModalProps> = (props) => {
               { required: true },
               {
                 validator(_, value) {
-                  if (
-                    props.registries.find((e) => e.name === value) === undefined
-                  ) {
+                  if (registries.find((e) => e.name === value) === undefined) {
                     return Promise.resolve();
                   }
                   return Promise.reject('Name already exists');
@@ -104,7 +108,7 @@ const RegistryModal: React.FC<RegistryModalProps> = (props) => {
             ]}
           />
         )}
-        {props.selectedRecord?.authScheme.map((e: any) => {
+        {selectedRecord?.authScheme.map((e: any) => {
           if (e?.type === 'choice') {
             let i = 1;
             return e.values.map((f: any) => {

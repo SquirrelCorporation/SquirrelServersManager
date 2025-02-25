@@ -12,7 +12,10 @@ interface DockerWatchCardProps {
   showAdvanced: boolean;
 }
 
-const DockerWatchCard = ({ device, showAdvanced }: DockerWatchCardProps) => {
+const DockerWatchCard: React.FC<DockerWatchCardProps> = ({
+  device,
+  showAdvanced,
+}) => {
   const [dockerWatcher, setDockerWatcher] = useState<boolean>(
     device.configuration?.containers?.docker?.watchContainers ?? true,
   );

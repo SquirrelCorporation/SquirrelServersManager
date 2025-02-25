@@ -200,7 +200,7 @@ const CreateNewVarForm: React.FC<CreateNewVarFormProps> = ({
                           } a variable name`,
                         },
                         {
-                          validator(_, value) {
+                          validator(_: any, value: any) {
                             if (
                               !value ||
                               currentExtraVars.findIndex(

@@ -1,5 +1,5 @@
 import { request } from '@umijs/max';
-import { API } from 'ssm-shared-lib';
+import { API, SsmContainer } from 'ssm-shared-lib';
 
 export async function getTemplates(
   params?: any,
@@ -112,7 +112,7 @@ export async function postDeploy(
 
 export async function postBackUpVolume(
   uuid: string,
-  mode: string,
+  mode: SsmContainer.VolumeBackupMode,
   params?: any,
   options?: Record<string, any>,
 ): Promise<API.Response<API.BackupVolumeResponse>> {

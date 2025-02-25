@@ -1,6 +1,3 @@
-import DeviceManagementModal, {
-  DeviceManagementModalHandles,
-} from '@/components/DeviceComponents/DeviceInformation/DeviceManagementModal';
 import DeviceInformationModal, {
   DeviceInformationModalHandles,
 } from '@/components/DeviceComponents/DeviceInformation/DeviceInformationModal';
@@ -28,7 +25,13 @@ export type QuickActionProps = {
   children?: ReactNode;
 };
 
-const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
+const DeviceQuickActionDropDown: React.FC<QuickActionProps> = ({
+  onDropDownClicked,
+  advancedMenu,
+  setTerminal,
+  target,
+  children,
+}) => {
   const [playbookSelectionModalIsOpened, setPlaybookSelectionModalIsOpened] =
     React.useState(false);
   const [showConfirmation, setShowConfirmation] = React.useState({
@@ -39,8 +42,6 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
     React.createRef<SFTPDrawerHandles>();
   const deviceInformationRef: RefObject<DeviceInformationModalHandles> =
     React.createRef<DeviceInformationModalHandles>();
-  const deviceManagementRef: RefObject<DeviceManagementModalHandles> =
-    React.createRef<DeviceManagementModalHandles>();
   const onClick: MenuProps['onClick'] = ({ key }) => {
     const idx = parseInt(key);
     if (idx >= 0) {
@@ -51,7 +52,7 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
 
       if (DeviceQuickActionReference[idx].action === Actions.CONNECT) {
         history.push({
-          pathname: `/manage/devices/ssh/${props.target?.uuid}`,
+          pathname: `/manage/devices/ssh/${target?.uuid}`,
         });
         return;
       }
@@ -64,7 +65,7 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
         return;
       }
       if (DeviceQuickActionReference[idx].action === Actions.MANAGEMENT) {
-        deviceManagementRef?.current?.open();
+        //deviceManagementRef?.current?.open();
         return;
       }
       if (DeviceQuickActionReference[idx].type === Types.PLAYBOOK) {
@@ -72,19 +73,19 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
           setShowConfirmation({
             visible: true,
             onConfirm: () => {
-              props.setTerminal({
+              setTerminal({
                 isOpen: true,
                 quickRef: DeviceQuickActionReference[idx].playbookQuickRef,
-                target: props.target ? [props.target] : undefined,
+                target: target ? [target] : undefined,
               });
             },
           });
           return;
         }
-        props.setTerminal({
+        setTerminal({
           isOpen: true,
           quickRef: DeviceQuickActionReference[idx].playbookQuickRef,
-          target: props.target ? [props.target] : undefined,
+          target: target ? [target] : undefined,
         });
         return;
       }
@@ -92,15 +93,15 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
         setPlaybookSelectionModalIsOpened(true);
         return;
       }
-      props.onDropDownClicked(idx);
+      onDropDownClicked(idx);
     }
   };
 
   const items = DeviceQuickActionReference.map((e, index) => {
-    if (!props.target && e.action === Actions.CONNECT) {
+    if (!target && e.action === Actions.CONNECT) {
       return;
     }
-    if (e.onAdvancedMenu && props.advancedMenu === true) {
+    if (e.onAdvancedMenu && advancedMenu === true) {
       if (e.type === Types.DIVIDER) return { type: 'divider' };
       return {
         icon: e.icon,
@@ -126,14 +127,14 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
   const onSelectPlaybook = (
     playbook: string,
     playbookName: string,
-    target: API.DeviceItem[] | undefined,
+    _target: API.DeviceItem[] | undefined,
     extraVars?: API.ExtraVars,
     mode?: SsmAnsible.ExecutionMode,
   ) => {
-    props.setTerminal({
+    setTerminal({
       isOpen: true,
       command: playbook,
-      target: target,
+      target: _target,
       extraVars: extraVars,
       playbookName: playbookName,
       mode: mode,
@@ -145,22 +146,15 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
       <PlaybookSelectionModal
         isModalOpen={playbookSelectionModalIsOpened}
         setIsModalOpen={setPlaybookSelectionModalIsOpened}
-        itemSelected={props.target ? [props.target] : undefined}
+        itemSelected={target ? [target] : undefined}
         callback={onSelectPlaybook}
       />
-      {props.target && (
+      {target && (
         <>
-          <DeviceInformationModal
-            ref={deviceInformationRef}
-            device={props.target}
-          />
-          <DeviceManagementModal
-            ref={deviceManagementRef}
-            device={props.target}
-          />
+          <DeviceInformationModal ref={deviceInformationRef} device={target} />
         </>
       )}
-      <SFTPDrawer device={props.target as API.DeviceItem} ref={ref} />
+      <SFTPDrawer device={target as API.DeviceItem} ref={ref} />
       <Popconfirm
         title={'Are you sure you want to execute this action?'}
         open={showConfirmation.visible}
@@ -176,7 +170,7 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = (props) => {
       />
       <Dropdown menu={{ items, onClick }}>
         <a onClick={(e) => e.preventDefault()}>
-          <Space>{props.children ? props.children : <DownOutlined />}</Space>
+          <Space>{children ? children : <DownOutlined />}</Space>
         </a>
       </Dropdown>
     </>

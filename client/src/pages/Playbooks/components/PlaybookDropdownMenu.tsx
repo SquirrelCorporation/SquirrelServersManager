@@ -68,13 +68,20 @@ const menuItemsGitRootNode: PlaybookDrownMenuItemType[] = [
   },
 ];
 
-const PlaybookDropdownMenu: React.FC<PlaybookDropdownMenuType> = (props) => {
+const PlaybookDropdownMenu: React.FC<PlaybookDropdownMenuType> = ({
+  children,
+  callbacks,
+  cannotDelete,
+  playbookRepository,
+  type,
+  remoteRootNode,
+  path,
+}) => {
   const [open, setOpen] = React.useState(false);
   const items = menuItems
     .filter(
       (e) =>
-        (e.fileType === 'deletable' && !props.cannotDelete) ||
-        e.fileType === props.type,
+        (e.fileType === 'deletable' && !cannotDelete) || e.fileType === type,
     )
     .map((e) => {
       return {
@@ -83,47 +90,47 @@ const PlaybookDropdownMenu: React.FC<PlaybookDropdownMenuType> = (props) => {
         icon: e.icon,
       };
     }) as MenuProps['items'];
-  if (props.remoteRootNode) {
+  if (remoteRootNode) {
     items?.push(...menuItemsGitRootNode);
   }
   const onClick: MenuProps['onClick'] = async ({ key, domEvent }) => {
     domEvent.stopPropagation();
     switch (key) {
       case '1':
-        props.callbacks.callbackCreateDirectory(
-          props.path,
-          props.playbookRepository.uuid,
-          props.playbookRepository.name,
-          props.playbookRepository.basePath,
+        callbacks.callbackCreateDirectory(
+          path,
+          playbookRepository.uuid,
+          playbookRepository.name,
+          playbookRepository.basePath,
         );
         break;
       case '2':
-        props.callbacks.callbackCreatePlaybook(
-          props.path,
-          props.playbookRepository.uuid,
-          props.playbookRepository.name,
-          props.playbookRepository.basePath,
+        callbacks.callbackCreatePlaybook(
+          path,
+          playbookRepository.uuid,
+          playbookRepository.name,
+          playbookRepository.basePath,
         );
         break;
       case '3':
         setOpen(true);
         break;
       case '4':
-        await commitAndSyncPlaybooksGitRepository(
-          props.playbookRepository.uuid,
-        ).then(() => {
-          message.info({
-            content: 'Commit & sync command sent',
-            duration: 6,
-          });
-        });
+        await commitAndSyncPlaybooksGitRepository(playbookRepository.uuid).then(
+          () => {
+            message.info({
+              content: 'Commit & sync command sent',
+              duration: 6,
+            });
+          },
+        );
         break;
       case '5':
-        await forcePullPlaybooksGitRepository(
-          props.playbookRepository.uuid,
-        ).then(() => {
-          message.info({ content: 'Force pull command sent', duration: 6 });
-        });
+        await forcePullPlaybooksGitRepository(playbookRepository.uuid).then(
+          () => {
+            message.info({ content: 'Force pull command sent', duration: 6 });
+          },
+        );
         break;
     }
   };
@@ -132,20 +139,17 @@ const PlaybookDropdownMenu: React.FC<PlaybookDropdownMenuType> = (props) => {
     <>
       <Popconfirm
         title="Delete the file"
-        description={`Are you sure to delete ${props.path.split('/')[props.path.split('/').length - 1]}?`}
+        description={`Are you sure to delete ${path.split('/')[path.split('/').length - 1]}?`}
         open={open}
         onConfirm={() =>
-          props.callbacks.callbackDeleteFile(
-            props.playbookRepository.uuid,
-            props.path,
-          )
+          callbacks.callbackDeleteFile(playbookRepository.uuid, path)
         }
         onCancel={() => setOpen(false)}
         okText="Yes"
         cancelText="No"
       />
       <Dropdown menu={{ items, onClick }} trigger={['contextMenu']}>
-        {props.children}
+        {children}
       </Dropdown>
     </>
   );

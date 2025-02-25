@@ -29,10 +29,16 @@ type AutomationEditProps = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
+const AutomationEditionDrawer: React.FC<AutomationEditProps> = ({
+  reload,
+  selectedRow,
+  setSelectedRow,
+  open,
+  setOpen,
+}) => {
   const [form] = ProForm.useForm<any>();
   const [automations, setAutomations] = useState<API.Automation[]>([]);
-  const [overrideExtraVars, setOverrideExtraVars] = React.useState<any>([]);
+  const [overrideExtraVars, setOverrideExtraVars] = React.useState<any[]>([]);
   const formRefName = useRef<ProFormInstance<{ name: string }> | undefined>(
     null,
   );
@@ -61,12 +67,12 @@ const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
       <DrawerForm
         form={form}
         title="Automation Editor"
-        open={props.open}
+        open={open}
         request={
-          props.selectedRow
+          selectedRow
             ? async () => {
                 return transformAutomationChain(
-                  (props.selectedRow as API.Automation).automationChains,
+                  (selectedRow as API.Automation).automationChains,
                 );
               }
             : undefined
@@ -75,8 +81,8 @@ const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
           placement: 'left',
           destroyOnClose: true,
           onClose: () => {
-            props.setOpen(false);
-            props.setSelectedRow(undefined);
+            setOpen(false);
+            setSelectedRow(undefined);
           },
           extra: (
             <Space direction={'vertical'} align={'center'}>
@@ -89,13 +95,13 @@ const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
                 <ProFormText
                   name={'name'}
                   style={{ marginBottom: 0 }}
-                  initialValue={props.selectedRow?.name}
+                  initialValue={selectedRow?.name}
                   rules={[
                     { required: true },
                     {
                       validator(_, value) {
                         if (
-                          props.selectedRow?.name === value ||
+                          selectedRow?.name === value ||
                           automations?.findIndex((e) => e.name === value) === -1
                         ) {
                           return Promise.resolve();
@@ -153,15 +159,11 @@ const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
             message.error({ content: 'Automation format is not correct' });
             return;
           }
-          if (props.selectedRow) {
-            return await postAutomation(
-              props.selectedRow.uuid,
-              value.name,
-              rawChain,
-            )
+          if (selectedRow) {
+            return await postAutomation(selectedRow.uuid, value.name, rawChain)
               .then(() => {
-                props.reload();
-                props.setOpen(false);
+                reload();
+                setOpen(false);
                 return true;
               })
               .catch(() => {
@@ -170,8 +172,8 @@ const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
           } else {
             return await putAutomation(value.name, rawChain)
               .then(() => {
-                props.reload();
-                props.setOpen(false);
+                reload();
+                setOpen(false);
                 return true;
               })
               .catch(() => {
@@ -231,7 +233,6 @@ const AutomationEditionDrawer: React.FC<AutomationEditProps> = (props) => {
           </Flex>
           <AutomationActionInnerCard
             setOverrideExtraVars={setOverrideExtraVars}
-            overrideExtraVars={overrideExtraVars}
             formRef={form}
           />
         </ProForm.Group>

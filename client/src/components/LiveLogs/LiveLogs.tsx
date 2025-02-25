@@ -1,10 +1,10 @@
-import React, { useImperativeHandle, useEffect, useRef } from 'react';
-import { message } from 'antd';
-import { useParams } from '@@/exports';
 import TerminalCore, {
   TerminalCoreHandles,
 } from '@/components/Terminal/TerminalCore';
 import { socket } from '@/socket';
+import { useParams } from '@@/exports';
+import { message } from 'antd';
+import React, { useEffect, useImperativeHandle, useRef } from 'react';
 import { SsmEvents } from 'ssm-shared-lib';
 
 export interface LiveLogsHandles {
@@ -19,12 +19,16 @@ export interface LiveLogsProps {
 const ROWS = Math.ceil(document.body.clientHeight / 16);
 const COLS = Math.ceil(document.body.clientWidth / 8);
 
+interface LogData {
+  data: string;
+}
+
 const LiveLogs = React.forwardRef<LiveLogsHandles, LiveLogsProps>(
   ({ from }, ref) => {
     const { id } = useParams();
     const terminalRef = useRef<TerminalCoreHandles>(null);
 
-    const onNewLogs = (value: any) => {
+    const onNewLogs = (value: LogData) => {
       if (value) {
         terminalRef.current?.onDataIn(value.data);
       }

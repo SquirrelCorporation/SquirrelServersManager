@@ -3,17 +3,11 @@ import CarouselNoDevice from '@/components/NoDevice/CarouselNoDevice';
 import TerminalModal, {
   TerminalStateProps,
 } from '@/components/PlaybookExecutionModal';
-import { Image, Button, Carousel, Modal, Typography } from 'antd';
+import { Button, Modal, Typography } from 'antd';
 import React, { useState } from 'react';
-import { API, SsmAnsible, SsmAgent } from 'ssm-shared-lib';
+import { API, SsmAgent, SsmAnsible } from 'ssm-shared-lib';
 
-const contentStyle: React.CSSProperties = {
-  margin: 0,
-  height: '160px',
-  color: '#fff',
-  lineHeight: '160px',
-  textAlign: 'center',
-};
+const MODAL_WIDTH = 800;
 
 const NoDeviceModal = () => {
   const [addNewDeviceModalIsOpen, setAddNewDeviceModalIsOpen] = useState(false);
@@ -59,7 +53,7 @@ const NoDeviceModal = () => {
         onAddNewDevice={onAddNewDevice}
       />
       <Modal
-        width={800}
+        width={MODAL_WIDTH}
         title={'You made it!'}
         open={isOpen}
         footer={[

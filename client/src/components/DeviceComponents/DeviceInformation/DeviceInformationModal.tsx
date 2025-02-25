@@ -31,6 +31,8 @@ type DeviceModalProps = {
   device: API.DeviceItem;
 };
 
+const MODAL_WIDTH = 1000;
+
 const DeviceInformationModal = React.forwardRef<
   DeviceInformationModalHandles,
   DeviceModalProps
@@ -111,7 +113,7 @@ const DeviceInformationModal = React.forwardRef<
       open={visible}
       onCancel={() => setVisible(false)}
       style={{ padding: '32px 40px 48px' }}
-      width={1000}
+      width={MODAL_WIDTH}
       destroyOnClose
       okText={'Close'}
       cancelButtonProps={{ style: { display: 'none' } }}

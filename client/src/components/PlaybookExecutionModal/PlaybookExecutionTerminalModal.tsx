@@ -28,6 +28,7 @@ type PlaybookExecutionTerminalModalProps = {
   setIsPollingEnabled: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+const MODAL_WIDTH = 1000;
 const modalStyles = {
   body: {
     height: '600px',
@@ -222,7 +223,7 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
           onOk={handleOk}
           onCancel={handleCancel}
           styles={modalStyles}
-          width={1000}
+          width={MODAL_WIDTH}
           footer={() => (
             <>
               <Button

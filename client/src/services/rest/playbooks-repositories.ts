@@ -289,26 +289,3 @@ export async function deleteAnyInRepository(
     },
   );
 }
-
-export async function getPlaybookVaults(playbooksRepositoryUuid: string) {
-  return request<API.Response<API.CustomVault[]>>(
-    `/api/playbooks-repository/${playbooksRepositoryUuid}`,
-    {
-      method: 'GET',
-      ...{},
-    },
-  );
-}
-
-export async function postPlaybookVaults(
-  playbooksRepositoryUuid: string,
-  vaults: API.CustomVault,
-) {
-  return request<API.Response<API.CustomVault[]>>(
-    `/api/playbooks-repository/${playbooksRepositoryUuid}`,
-    {
-      method: 'POST',
-      ...{ vaults },
-    },
-  );
-}

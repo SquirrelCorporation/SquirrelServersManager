@@ -6,10 +6,10 @@ export type UpdateAvailableTagProps = {
   updateAvailable?: boolean;
 };
 
-const UpdateAvailableTag: React.FC<UpdateAvailableTagProps> = (
-  props: UpdateAvailableTagProps,
-) => {
-  return props.updateAvailable ? (
+const UpdateAvailableTag: React.FC<UpdateAvailableTagProps> = ({
+  updateAvailable,
+}) => {
+  return updateAvailable ? (
     <Tooltip title={'Update available'}>
       <Tag
         color="cyan"

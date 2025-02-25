@@ -36,14 +36,14 @@ const animationVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
-const CheckDeviceConnection: React.FC<CheckDeviceConnectionProps> = (props) => {
-  const {
-    execId,
-    dockerConnRes,
-    dockerConnErrorMessage,
-    rsiConnErrorMessage,
-    rsiConnRes,
-  } = props;
+const CheckDeviceConnection: React.FC<CheckDeviceConnectionProps> = ({
+  execId,
+  dockerConnRes,
+  dockerConnErrorMessage,
+  rsiConnErrorMessage,
+  rsiConnRes,
+  installMethod,
+}) => {
   const timerIdRef = useRef();
   const [isPollingEnabled, setIsPollingEnabled] = useState(false);
   const [playbookStatus, setPlaybookStatus] = useState('running...');
@@ -221,7 +221,7 @@ const CheckDeviceConnection: React.FC<CheckDeviceConnectionProps> = (props) => {
                 <LoadingOutlined />
               ),
           },
-          ...(props.installMethod === SsmAgent.InstallMethods.LESS
+          ...(installMethod === SsmAgent.InstallMethods.LESS
             ? [
                 {
                   title: 'Remote System Information Connection test',
