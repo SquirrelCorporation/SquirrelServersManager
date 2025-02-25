@@ -12,7 +12,9 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Chore refacto frontend props [\#789](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/789) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[DOC\] Refactor playbooks documentation and improve update instructions [\#786](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/786) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump vuetify from 3.7.12 to 3.7.13 in /site [\#778](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/778) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[CHORE\] Delete unused animation JSON file & bump libs [\#777](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/777) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump swiper from 11.2.2 to 11.2.4 in /site [\#756](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/756) ([dependabot[bot]](https://github.com/apps/dependabot))
 
