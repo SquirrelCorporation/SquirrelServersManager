@@ -4,8 +4,15 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.30...HEAD)
 
+**Closed issues:**
+
+- \[CHORE\] Optional trigger to force device ip when installing agent 🧹 [\#119](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/119)
+- Fix code scanning alert - Database query built from user-controlled sources [\#118](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/118)
+- \[CHORE\] Use system information in agent for mem & cpu, drop node-os-utils, and dont take into account swap for used meme 🧹 [\#101](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/101)
+
 **Merged pull requests:**
 
+- \[DOC\] Refactor playbooks documentation and improve update instructions [\#786](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/786) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Delete unused animation JSON file & bump libs [\#777](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/777) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump swiper from 11.2.2 to 11.2.4 in /site [\#756](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/756) ([dependabot[bot]](https://github.com/apps/dependabot))
 
@@ -41,6 +48,7 @@
 - Bump vuetify from 3.7.11 to 3.7.12 in /site [\#755](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/755) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 23.7.0-alpine to 23.8.0-alpine in /client [\#754](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/754) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 23.7.0-alpine to 23.8.0-alpine in /server [\#753](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/753) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[DOC\] Refactor playbooks documentation and improve update instructions [\#786](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/786) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Delete unused animation JSON file & bump libs [\#777](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/777) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.29](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.29) (2025-02-18)
@@ -574,6 +582,7 @@
 - \[CHORE\] Refacto ExtraVars 🧹 [\#263](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/263)
 - \[FEATURE\] Compatibility for docker environments with a TLS Configuration [\#218](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/218)
 - \[FEAT\] Enhanced services: Create Network, Volumes & deploy single image 🔥 [\#179](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/179)
+- \[TEST\] Unit tests for Directory Tree util 🧪 [\#55](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/55)
 - \[FEAT\] Create docker network & volume [\#287](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/287) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Add Ansible SmartFailure detection and handling [\#251](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/251) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Feat ansible configuration mgt [\#236](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/236) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
