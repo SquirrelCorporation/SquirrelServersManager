@@ -1,4 +1,8 @@
 [
   "src/tests/*",
-  "src/modules/*"
+  {
+    "name": "modules",
+    "include": "src/modules/*",
+    "exclude": ["**/*.md"]
+  }
 ]

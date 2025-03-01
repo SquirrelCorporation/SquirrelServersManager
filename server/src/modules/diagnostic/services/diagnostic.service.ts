@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import DockerModem from 'docker-modem';
+import Dockerode from 'dockerode';
 import { Client, ConnectConfig } from 'ssh2';
 import { SsmDeviceDiagnostic } from 'ssm-shared-lib';
 import { EventEmitterService } from '../../../core/events/event-emitter.service';
@@ -8,6 +9,8 @@ import Device from '../../../data/database/model/Device';
 import DeviceAuth from '../../../data/database/model/DeviceAuth';
 import { tryResolveHost } from '../../../helpers/dns/dns-helper';
 import SSHCredentialsHelper from '../../../helpers/ssh/SSHCredentialsHelper';
+import PinoLogger from '../../../logger';
+import { getCustomAgent } from '../../../modules/containers/core/CustomAgent';
 
 const DIAGNOSTIC_SEQUENCE = Object.values(SsmDeviceDiagnostic.Checks);
 const DISK_INFO_CMD = 'df -h';
@@ -17,7 +20,10 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 @Injectable()
 export class DiagnosticService {
   private readonly logger = new Logger(DiagnosticService.name);
-
+  private childLogger = PinoLogger.child(
+    { module: 'DeviceDiagnostic' },
+    { msgPrefix: '[DEVICE_DIAGNOSTIC] - ' },
+  );
   constructor(private eventEmitterService: EventEmitterService) {}
 
   private checkSSHConnectivity = (options: ConnectConfig) => {
@@ -44,35 +50,31 @@ export class DiagnosticService {
 
   private checkDockerSocket = (options: any) => {
     return new Promise((resolve, reject) => {
-      const { host, port, socketPath } = options;
-      const modem = new DockerModem({
-        host,
-        port,
-        socketPath: socketPath || '/var/run/docker.sock',
+      const agent = getCustomAgent(this.childLogger, {
+        ...options.sshOptions,
+        timeout: 60000,
       });
-      modem.dial(
-        {
-          path: '/_ping',
-          method: 'GET',
-          statusCodes: {
-            200: true,
-            500: 'server error',
-          },
-        },
-        (err: any, data: any) => {
-          if (err) {
-            this.logger.error(
-              `checkDockerSocket - Docker socket error on ${host}:${port} - ${socketPath || '/var/run/docker.sock'}: ${err.message}`,
-            );
-            reject(err);
-          } else {
-            this.logger.log(
-              `checkDockerSocket - Docker socket connection established to ${host}:${port} - ${socketPath || '/var/run/docker.sock'}`,
-            );
-            resolve(data);
-          }
-        },
-      );
+
+      options.modem = new DockerModem({ agent });
+      const dockerApi = new Dockerode({ ...options, timeout: 60000 });
+
+      dockerApi.ping((err) => {
+        if (err) {
+          this.childLogger.error('checkDockerSocket - Docker API ping error:', err.message);
+          reject(err);
+        } else {
+          this.childLogger.info('checkDockerSocket - Docker API ping successful');
+          dockerApi.info((err, info) => {
+            if (err) {
+              this.childLogger.error('checkDockerSocket - Docker API info error:', err.message);
+              reject(err);
+            } else {
+              this.childLogger.info('checkDockerSocket - Docker API info retrieved:', info);
+              resolve(true);
+            }
+          });
+        }
+      });
     });
   };
 
