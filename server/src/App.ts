@@ -5,7 +5,7 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import passport from 'passport';
-import pinoHttp from 'pino-http';
+import { pinoHttp } from 'pino-http';
 import { AppModule } from './app.module';
 import { SECRET } from './config';
 import metrics from './controllers/rest/metrics/metrics';
@@ -16,6 +16,11 @@ import { errorHandler } from './middlewares/ErrorHandler';
 import Socket from './middlewares/Socket';
 import RealTime from './modules/real-time/RealTime';
 import routes from './routes';
+
+// Declare global nestApp for legacy code to access
+declare global {
+  var nestApp: INestApplication | null;
+}
 
 interface RouteInfo {
   path: string;
@@ -53,7 +58,7 @@ class AppWrapper extends EventManager {
     this.expressApp.use(passport.initialize());
   }
 
-  public async setupNestJS() {
+  public async setupNestJS(): Promise<INestApplication> {
     try {
       logger.info('Setting up NestJS application');
 
@@ -61,14 +66,17 @@ class AppWrapper extends EventManager {
       this.setupRoutes();
 
       // Create NestJS app with Express adapter using our existing Express app
-      this.nestApp = await NestFactory.create(AppModule, new ExpressAdapter(this.expressApp), {
+      const adapter = new ExpressAdapter(this.expressApp);
+      const nestApp = await NestFactory.create(AppModule, adapter, {
         logger: ['error', 'warn', 'log'],
       });
 
-      // Initialize NestJS app
-      await this.nestApp.init();
+      // Make the nestApp available globally for legacy code
+      global.nestApp = nestApp;
+
+      await nestApp.init();
       logger.info('NestJS application initialized successfully');
-      return true;
+      return nestApp;
     } catch (error) {
       // Improved error handling to avoid undefined stack properties
       const errorMessage =
@@ -77,7 +85,7 @@ class AppWrapper extends EventManager {
           : String(error);
 
       logger.error(`Failed to initialize NestJS application: ${errorMessage}`);
-      return false;
+      return null;
     }
   }
 

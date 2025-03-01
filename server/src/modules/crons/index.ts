@@ -1,12 +1,11 @@
 import CronJob from 'node-cron';
 import { SettingsKeys } from 'ssm-shared-lib';
-import DeviceRepo from '../../data/database/repository/DeviceRepo';
-import PinoLogger from '../../logger';
-import CronRepo from '../../data/database/repository/CronRepo';
-import AnsibleTaskRepo from '../../data/database/repository/AnsibleTaskRepo';
-import LogsRepo from '../../data/database/repository/LogsRepo';
 import { getConfFromCache } from '../../data/cache';
-import UpdateChecker from '../update/UpdateChecker';
+import AnsibleTaskRepo from '../../data/database/repository/AnsibleTaskRepo';
+import CronRepo from '../../data/database/repository/CronRepo';
+import DeviceRepo from '../../data/database/repository/DeviceRepo';
+import LogsRepo from '../../data/database/repository/LogsRepo';
+import PinoLogger from '../../logger';
 
 const logger = PinoLogger.child({ module: 'Cron' }, { msgPrefix: '[CRON] - ' });
 
@@ -45,13 +44,6 @@ const CRONS: CronJobType[] = [
         SettingsKeys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS,
       );
       await LogsRepo.deleteAllOld(parseInt(delay));
-    },
-  },
-  {
-    name: '_UpdateAvailable',
-    schedule: '*/30 * * * *',
-    fun: async () => {
-      void UpdateChecker.checkVersion();
     },
   },
 ];

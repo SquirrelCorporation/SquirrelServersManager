@@ -11,8 +11,16 @@ import { PlaybooksRepositoryModel } from '../../data/database/model/PlaybooksRep
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
 import { copyAnsibleCfgFileIfDoesntExist } from '../../helpers/ansible/AnsibleConfigurationHelper';
 import PinoLogger from '../../logger';
+import WatcherEngine from '../../modules/containers/core/WatcherEngine';
 import providerConf from '../../modules/containers/registries/providers/provider.conf';
+import Crons from '../../modules/crons';
+import NotificationComponent from '../../modules/notifications/NotificationComponent';
+import RemoteSystemInformationEngine from '../../modules/remote-system-information/core/RemoteSystemInformationEngine';
+import ContainerCustomStacksRepositoryEngine from '../../modules/repository/ContainerCustomStacksRepositoryEngine';
 import { createADefaultLocalUserRepository } from '../../modules/repository/default-playbooks-repositories';
+import PlaybooksRepositoryEngine from '../../modules/repository/PlaybooksRepositoryEngine';
+import sshPrivateKeyFileManager from '../../modules/shell/managers/SshPrivateKeyFileManager';
+import Telemetry from '../../modules/telemetry';
 import ContainerRegistryUseCases from '../../services/ContainerRegistryUseCases';
 import { setAnsibleVersions } from '../system/ansible-versions';
 
@@ -35,17 +43,15 @@ class Startup {
   }
 
   private async initializeModules() {
-    /* void RemoteSystemInformationEngine.init();
+    void RemoteSystemInformationEngine.init();
     await PlaybooksRepositoryEngine.init();
     void PlaybooksRepositoryEngine.syncAllRegistered();
     void sshPrivateKeyFileManager.removeAllAnsibleTemporaryPrivateKeys();
     void NotificationComponent.init();
     void Crons.initScheduledJobs();
     void WatcherEngine.init();
-    void AutomationEngine.init();
-    void UpdateChecker.checkVersion();
     void ContainerCustomStacksRepositoryEngine.init();
-    void Telemetry.init();*/
+    void Telemetry.init();
   }
 
   private async updateScheme() {
