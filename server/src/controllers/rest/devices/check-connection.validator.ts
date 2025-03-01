@@ -138,16 +138,6 @@ export const getCheckDeviceAnsibleConnectionValidator = [
   validator,
 ];
 
-export const postDiagnosticValidator = [
-  param('uuid')
-    .exists()
-    .notEmpty()
-    .withMessage('Uuid is required')
-    .isUUID()
-    .withMessage('Uuid is not valid'),
-  validator,
-];
-
 export const getCheckDeviceProxmoxConnectionValidator = [
   param('uuid')
     .exists()
@@ -170,3 +160,6 @@ export const getCheckDeviceProxmoxConnectionValidator = [
     .withMessage('Ignore SSL errors is not a boolean'),
   validator,
 ];
+
+// The postDiagnosticValidator has been moved to the DiagnosticController
+// in the new NestJS DiagnosticModule

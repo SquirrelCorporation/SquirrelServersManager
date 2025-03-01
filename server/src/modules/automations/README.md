@@ -43,6 +43,7 @@ The Automations module uses a component-based architecture:
 Triggers determine when an automation should run:
 
 - **CronTriggerComponent**: Time-based triggers using cron expressions
+- **EventTriggerComponent**: Event-based triggers for system events
 
 ### Action Components
 
@@ -51,6 +52,7 @@ Actions define what operations to perform:
 - **DockerActionComponent**: Manages Docker container operations
 - **DockerVolumeActionComponent**: Handles Docker volume operations
 - **PlaybookActionComponent**: Executes Ansible playbooks
+- **NotificationActionComponent**: Sends notifications
 
 ## Implementation Details
 
@@ -70,14 +72,17 @@ export class AutomationsModule {}
 
 ### Event-Driven Architecture
 
-The module uses an event system for communication between components:
+The module uses the NestJS event emitter system for communication between components:
 
 ```typescript
 // Publishing events
-Events.emit(AUTOMATION_EVENTS.AUTOMATION_COMPLETED, { uuid: this.automationUuid });
+this.eventEmitterService.emit(AUTOMATION_EVENTS.AUTOMATION_COMPLETED, { uuid: this.automationUuid });
 
 // Subscribing to events
-Events.on(AUTOMATION_EVENTS.AUTOMATION_COMPLETED, this.handleAutomationCompleted);
+@OnEvent(AUTOMATION_EVENTS.AUTOMATION_COMPLETED)
+handleAutomationCompleted(payload: any) {
+  // Handle the event
+}
 ```
 
 ### Extensibility
@@ -169,3 +174,12 @@ Potential areas for enhancement:
 - Improved error handling and recovery mechanisms
 - Enhanced logging and monitoring
 - User permissions and access control
+
+## Recent Changes
+
+- Migrated to NestJS event emitter system for improved event handling
+- Fixed validation for automation data in the registration process
+- Enhanced error handling during automation execution
+- Improved test coverage for trigger and action components
+- Added TypeScript strict property initialization for DTOs
+- Implemented proper error handling for automation chain execution

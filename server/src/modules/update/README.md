@@ -18,12 +18,14 @@ The UpdateService is responsible for:
 - Comparing local and remote versions using semver
 - Storing update information in the cache
 - Providing version information to other parts of the application
+- Handling error conditions during version checks
 
 ### Integration Points
 The Update Module integrates with:
 - **Cron Jobs**: Scheduled to check for updates every 30 minutes
 - **Startup Process**: Checks for updates during application startup
 - **Cache**: Stores update information for other components to access
+- **Event System**: Emits events for update status changes
 
 ## Usage
 The Update Module is designed to work automatically in the background. It's initialized when the application starts and runs periodically to check for updates.
@@ -39,12 +41,22 @@ const updateAvailable = await getFromCache(SettingsKeys.GeneralSettingsKeys.UPDA
 ```
 
 ## Testing
-The Update Module includes unit tests that verify:
+The Update Module includes comprehensive unit tests that verify:
 - Version comparison logic
 - Remote version fetching
 - Update checking process
+- Error handling for network failures
+- Invalid version format handling
 
 ## Dependencies
 - axios: For HTTP requests to fetch the latest version
 - semver: For semantic version comparison
 - ssm-shared-lib: For shared enums and constants
+- @nestjs/schedule: For cron job scheduling
+
+## Recent Changes
+- Improved error handling for network failures
+- Enhanced version comparison logic
+- Added comprehensive logging for update checks
+- Fixed test cases for various version comparison scenarios
+- Implemented proper error handling for invalid version formats

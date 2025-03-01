@@ -10,7 +10,6 @@ import {
   postCheckAnsibleConnection,
   postCheckDockerConnection,
   postCheckRemoteSystemInformationConnection,
-  postDiagnostic,
 } from '../controllers/rest/devices/check-connection';
 import {
   getCheckDeviceAnsibleConnectionValidator,
@@ -19,7 +18,6 @@ import {
   getCheckDeviceRemoteSystemInformationConnectionValidator,
   postCheckAnsibleConnectionValidator,
   postCheckDockerConnectionValidator,
-  postDiagnosticValidator,
 } from '../controllers/rest/devices/check-connection.validator';
 import {
   postDeviceProxmoxConfiguration,
@@ -156,7 +154,8 @@ router
     getCheckDeviceRemoteSystemInformationConnection,
   );
 
-router.post('/:uuid/auth/diagnostic', postDiagnosticValidator, postDiagnostic);
+// Diagnostic endpoint is now handled by DiagnosticController in the DiagnosticModule
+// router.post('/:uuid/auth/diagnostic', postDiagnosticValidator, postDiagnostic);
 
 router.route('/').put(addDeviceValidator, addDevice).get(getDevices);
 router.route('/all').get(getAllDevices);
