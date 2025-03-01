@@ -1,70 +1,39 @@
 import mongoose from 'mongoose';
+import { isConnectionReady } from '../../app.module';
 import { db } from '../../config';
 import PinoLogger from '../../logger';
 
 export const dbURI = `mongodb://${db.host}:${db.port}/${db.name}`;
 const logger = PinoLogger.child({ module: 'Database' }, { msgPrefix: '[DATABASE] - ' });
 
+/**
+ * This function is now a wrapper that returns the global mongoose connection.
+ * It's kept for backward compatibility with existing code that calls it.
+ * The actual connection is established by NestJS in app.module.ts.
+ */
 async function connectMongoDb() {
-  // Build the connection string
+  logger.info(`connectMongoDb - Using global mongoose connection (${dbURI})`);
 
-  const options = {
-    autoIndex: true,
-    minPoolSize: db.minPoolSize, // Maintain up to x socket connections
-    maxPoolSize: db.maxPoolSize, // Maintain up to x socket connections
-    connectTimeoutMS: 10000, // Give up initial connection after 10 seconds
-    socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-  };
+  // If the connection isn't ready yet, wait for it
+  if (!isConnectionReady()) {
+    logger.info('Waiting for MongoDB connection to be ready...');
 
-  logger.info(`connectMongoDb - Connecting to ${dbURI}`);
+    // Wait for up to 10 seconds for the connection to be established
+    for (let i = 0; i < 20; i++) {
+      if (isConnectionReady()) {
+        logger.info('MongoDB connection is now ready');
+        break;
+      }
 
-  function setRunValidators(this: any) {
-    this.setOptions({ runValidators: true });
+      if (i === 19) {
+        logger.warn('Timed out waiting for MongoDB connection to be ready');
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
   }
 
-  mongoose.set('strictQuery', true);
-
-  // Create the database connection
-  await mongoose
-    .plugin((schema: any) => {
-      schema.pre('findOneAndUpdate', setRunValidators);
-      schema.pre('updateMany', setRunValidators);
-      schema.pre('updateOne', setRunValidators);
-      schema.pre('update', setRunValidators);
-    })
-    .connect(dbURI, options)
-    .then(() => {
-      logger.info('connectMongoDb - Connection successful');
-    })
-    .catch((e) => {
-      logger.error('connectMongoDb - Connection error');
-      logger.error(e);
-    });
-
-  // CONNECTION EVENTS
-  // When successfully connected
-  mongoose.connection.on('connected', () => {
-    logger.debug(`Connection opened to ${dbURI}`);
-  });
-
-  // If the connection throws an error
-  mongoose.connection.on('error', (err) => {
-    logger.error('Connection error: ' + err);
-  });
-
-  // When the connection is disconnected
-  mongoose.connection.on('disconnected', () => {
-    logger.info('Connection disconnected');
-  });
-
-  // If the Node process ends, close the Mongoose connection
-  process.on('SIGINT', () => {
-    // @ts-ignore
-    mongoose.connection.close(() => {
-      logger.info('Connection disconnected through app termination');
-      process.exit(0);
-    });
-  });
+  // Return the global mongoose connection
   return mongoose.connection;
 }
 

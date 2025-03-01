@@ -14,6 +14,7 @@ RUN rm -f /usr/lib/python3.12/EXTERNALLY-MANAGED
 RUN pip install ansible-runner \
     ansible-runner-http
 RUN npm install -g typescript
+RUN npm i -g @nestjs/cli
 COPY ./package*.json .
 COPY ./tsconfig.json .
 RUN mkdir /opt/squirrelserversmanager/shared-lib

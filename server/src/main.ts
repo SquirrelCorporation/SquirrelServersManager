@@ -1,13 +1,12 @@
-import { connection } from './data/database';
-import WatcherEngine from './modules/containers/core/WatcherEngine';
-import logger from './logger';
+import app from './App';
 import Startup from './core/startup';
 import './middlewares/Passport';
+import logger from './logger';
+import WatcherEngine from './modules/containers/core/WatcherEngine';
 import Crons from './modules/crons';
-import app from './App';
 import Telemetry from './modules/telemetry';
 
-const start = () => {
+const start = async () => {
   logger.info(`
       ,;;:;,
    ;;;;;
@@ -18,28 +17,31 @@ const start = () => {
      \`"=\\_  )_"\`
           \`\`'"\`
 Starting Squirrel Servers Manager server...`);
-  connection().then(async () => {
+
+  try {
+    // Initialize NestJS (this will also set up Express routes)
+    await app.setupNestJS();
+
+    // Initialize the application
     await Startup.init();
-    app.setupRoutes();
-    app.startServer();
-  });
+
+    // Start the server
+    await app.startServer();
+  } catch (err: any) {
+    logger.error(`Failed to start application: ${err.message}`);
+    process.exit(1);
+  }
 };
 
 if (process.env.NODE_ENV !== 'test') {
-  start();
+  void start();
 }
 
 export const restart = async () => {
   await WatcherEngine.deregisterAll();
   Crons.stopAllScheduledJobs();
-  app.stopServer(start);
+  await app.stopServer(start);
 };
 
 process.on('SIGINT', Telemetry.shutdown);
 process.on('SIGTERM', Telemetry.shutdown);
-
-/*process.on('uncaughtException', (err, origin) => {
-  console.error('Unhandled exception. Please handle!', err.stack || err);
-  console.error(`Origin: ${JSON.stringify(origin)}`);
-});
-*/

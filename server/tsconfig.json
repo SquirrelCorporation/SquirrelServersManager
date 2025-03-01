@@ -12,11 +12,22 @@
     "resolveJsonModule": true,
     "noImplicitAny": false,
     "skipLibCheck": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
     "typeRoots": [
       "./src/types",
       "./node_modules/@types/"
-    ]
+    ],
+    "incremental": true,
+    "declaration": true
   },
-  "include": ["./**/*.d.ts","src//*.ts", "src//*.json",
-    "../.env", ".eslintrc.json", "typings.d.ts"]
+  "include": ["./**/*.d.ts","src/**/*.ts", "src/**/*.json", "../.env", ".eslintrc.json", "typings.d.ts"],
+  "watchOptions": {
+    "watchFile": "priorityPollingInterval",
+    "watchDirectory": "dynamicPriorityPolling",
+    "fallbackPolling": "dynamicPriority",
+    "synchronousWatchDirectory": true
+  }
 }

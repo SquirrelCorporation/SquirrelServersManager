@@ -4,7 +4,7 @@ import {
 } from '../../../data/database/model/Playbook';
 import AnsibleLogsRepo from '../../../data/database/repository/AnsibleLogsRepo';
 import LogsRepo from '../../../data/database/repository/LogsRepo';
-import { restart } from '../../../index';
+import { restart } from '../../../main';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
 import PlaybooksRepositoryEngine from '../../../modules/repository/PlaybooksRepositoryEngine';
 

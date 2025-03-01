@@ -1,9 +1,14 @@
 import http from 'http';
+import { INestApplication } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { ExpressAdapter } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import passport from 'passport';
 import pinoHttp from 'pino-http';
+import { AppModule } from './app.module';
 import { SECRET } from './config';
+import metrics from './controllers/rest/metrics/metrics';
 import EventManager from './core/events/EventManager';
 import Events from './core/events/events';
 import logger, { httpLoggerOptions } from './logger';
@@ -11,13 +16,18 @@ import { errorHandler } from './middlewares/ErrorHandler';
 import Socket from './middlewares/Socket';
 import RealTime from './modules/real-time/RealTime';
 import routes from './routes';
-import metrics from './controllers/rest/metrics/metrics';
+
+interface RouteInfo {
+  path: string;
+  methods: string;
+}
 
 class AppWrapper extends EventManager {
-  protected readonly app = express();
+  protected readonly expressApp = express();
   private server!: http.Server;
   private socket!: Socket;
   private readonly refs: any = [];
+  private nestApp!: INestApplication;
 
   constructor() {
     super();
@@ -26,7 +36,7 @@ class AppWrapper extends EventManager {
   }
 
   public setup() {
-    this.app.use(
+    this.expressApp.use(
       pinoHttp({
         logger: logger.child(
           { module: 'REST' },
@@ -35,22 +45,82 @@ class AppWrapper extends EventManager {
         ...httpLoggerOptions,
       }),
     );
-    this.app.use(express.json({ limit: '50mb' }));
+    this.expressApp.use(express.json({ limit: '50mb' }));
     if (!SECRET) {
       throw new Error('No secret defined');
     }
-    this.app.use(cookieParser());
-    this.app.use(passport.initialize());
+    this.expressApp.use(cookieParser());
+    this.expressApp.use(passport.initialize());
+  }
+
+  public async setupNestJS() {
+    try {
+      logger.info('Setting up NestJS application');
+
+      // Set up Express routes BEFORE creating the NestJS app
+      this.setupRoutes();
+
+      // Create NestJS app with Express adapter using our existing Express app
+      this.nestApp = await NestFactory.create(AppModule, new ExpressAdapter(this.expressApp), {
+        logger: ['error', 'warn', 'log'],
+      });
+
+      // Initialize NestJS app
+      await this.nestApp.init();
+      logger.info('NestJS application initialized successfully');
+      return true;
+    } catch (error) {
+      // Improved error handling to avoid undefined stack properties
+      const errorMessage =
+        error instanceof Error
+          ? `${error.message}${error.stack ? `\n${error.stack}` : ''}`
+          : String(error);
+
+      logger.error(`Failed to initialize NestJS application: ${errorMessage}`);
+      return false;
+    }
   }
 
   public setupRoutes() {
-    this.app.use(metrics);
-    this.app.use('/', routes);
-    this.app.use(errorHandler);
+    logger.info('\n\nSetting up routes ==========================================');
+    // These routes will be handled by Express
+    this.expressApp.use(metrics);
+    this.expressApp.use('/', routes);
+    this.expressApp.use(errorHandler);
+
+    // Log all registered routes for debugging
+    const registeredRoutes: RouteInfo[] = [];
+
+    // Type assertion to access the internal _router property
+    const expressRouter = (this.expressApp as any)._router;
+
+    if (expressRouter && expressRouter.stack) {
+      expressRouter.stack.forEach((middleware: any) => {
+        if (middleware.route) {
+          // Routes registered directly on the app
+          registeredRoutes.push({
+            path: middleware.route.path,
+            methods: Object.keys(middleware.route.methods).join(','),
+          });
+        } else if (middleware.name === 'router' && middleware.handle && middleware.handle.stack) {
+          // Router middleware
+          middleware.handle.stack.forEach((handler: any) => {
+            if (handler.route) {
+              registeredRoutes.push({
+                path: handler.route.path,
+                methods: Object.keys(handler.route.methods).join(','),
+              });
+            }
+          });
+        }
+      });
+    }
+
+    logger.info(`Registered Express routes: ${JSON.stringify(registeredRoutes, null, 2)}`);
   }
 
-  public startServer() {
-    this.server = this.app.listen(3000, () =>
+  public async startServer() {
+    this.server = this.expressApp.listen(3000, () =>
       logger.info(`
     🐿 Squirrel Servers Manager
     🚀 Server ready at: http://localhost:3000`),
@@ -59,7 +129,16 @@ class AppWrapper extends EventManager {
     this.emit(Events.APP_STARTED, 'App started');
   }
 
-  public stopServer(callback: () => any) {
+  public async stopServer(callback: () => any) {
+    // Close NestJS app
+    if (this.nestApp) {
+      try {
+        await this.nestApp.close();
+      } catch (error) {
+        logger.error(`Error closing NestJS app: ${error}`);
+      }
+    }
+
     this.server?.close(() => {
       logger.info('Server is closed');
       logger.info('\n----------------- restarting -------------');
@@ -68,7 +147,7 @@ class AppWrapper extends EventManager {
   }
 
   public getExpressApp() {
-    return this.app;
+    return this.expressApp;
   }
 
   public getSocket() {
