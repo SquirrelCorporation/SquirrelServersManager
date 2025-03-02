@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { db } from './config';
 import logger from './logger';
+import { AnsibleConfigModule } from './modules/ansible-config/ansible-config.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AutomationsModule } from './modules/automations/automations.module';
 import { DiagnosticModule } from './modules/diagnostic/diagnostic.module';
@@ -101,6 +102,7 @@ let connectionReady = false;
     SshModule,
     SftpModule,
     LogsModule,
+    AnsibleConfigModule,
   ],
 })
 export class AppModule implements OnModuleInit {

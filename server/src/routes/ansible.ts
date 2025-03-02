@@ -1,10 +1,5 @@
 import express from 'express';
 import passport from 'passport';
-import { deleteConf, getConf, postConf, putConf } from '../controllers/rest/ansible/configuration';
-import {
-  deleteConfValidator,
-  postConfValidator,
-} from '../controllers/rest/ansible/configuration.validator';
 import { getSmartFailure } from '../controllers/rest/ansible/smart-failure';
 import { getSmartFailureValidator } from '../controllers/rest/ansible/smart-failure.validator';
 import { deleteVault, getVaults, postVault, updateVault } from '../controllers/rest/ansible/vault';
@@ -18,12 +13,13 @@ const router = express.Router();
 
 router.use(passport.authenticate('jwt', { session: false }));
 
-router
-  .route('/config')
-  .get(getConf)
-  .post(postConfValidator, postConf)
-  .put(postConfValidator, putConf)
-  .delete(deleteConfValidator, deleteConf);
+// The config routes are now handled by the NestJS AnsibleConfigController
+// router
+//   .route('/config')
+//   .get(getConf)
+//   .post(postConfValidator, postConf)
+//   .put(postConfValidator, putConf)
+//   .delete(deleteConfValidator, deleteConf);
 
 router.route('/smart-failure').get(getSmartFailureValidator, getSmartFailure);
 

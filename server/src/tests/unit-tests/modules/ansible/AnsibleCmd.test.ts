@@ -1,7 +1,7 @@
 import { API, SsmAnsible } from 'ssm-shared-lib';
 import { describe, expect, test } from 'vitest';
 import User from '../../../../data/database/model/User';
-import { ANSIBLE_CONFIG_FILE } from '../../../../helpers/ansible/AnsibleConfigurationHelper';
+import { ANSIBLE_CONFIG_FILE } from '../../../../modules/ansible-config/constants';
 import AnsibleCmd from '../../../../modules/ansible/AnsibleCmd'; // note: replace with actual file path
 import type { Playbooks } from '../../../../types/typings';
 

@@ -1,8 +1,8 @@
+import User from 'src/data/database/model/User';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 import { AnsibleVault } from '../../data/database/model/AnsibleVault';
-import User from '../../data/database/model/User';
-import { ANSIBLE_CONFIG_FILE } from '../../helpers/ansible/AnsibleConfigurationHelper';
 import { Playbooks } from '../../types/typings';
+import { ANSIBLE_CONFIG_FILE } from '../ansible-config/constants';
 import { DEFAULT_VAULT_ID } from '../ansible-vault/ansible-vault';
 import ExtraVarsTransformer from './extravars/ExtraVarsTransformer';
 

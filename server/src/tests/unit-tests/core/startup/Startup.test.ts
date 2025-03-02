@@ -22,6 +22,48 @@ global.nestApp = {
   get: vi.fn(),
 } as any;
 
+vi.mock('../../../../data/database/model/Settings', () => ({
+  SettingsModel: {
+    findOne: vi.fn(),
+  },
+}));
+
+vi.mock('../../../../data/database/repository/DeviceRepo', () => ({
+  default: {
+    findAll: vi.fn(),
+  },
+}));
+
+vi.mock('../../../../data/database/model/Server', () => ({
+  ServerModel: {
+    findOne: vi.fn(),
+  },
+}));
+
+vi.mock('../../../../data/database/model/Inventory', () => ({
+  InventoryModel: {
+    findOne: vi.fn(),
+  },
+}));
+
+vi.mock('../../../../data/database/model/Playbook', () => ({
+  PlaybookModel: {
+    findOne: vi.fn(),
+  },
+}));
+
+vi.mock('../../../../data/database/model/ContainerStack', () => ({
+  ContainerStackModel: {
+    findOne: vi.fn(),
+  },
+}));
+
+vi.mock('../../../../data/database/model/ContainerCustomStack', () => ({
+  ContainerCustomStackModel: {
+    findOne: vi.fn(),
+  },
+}));
+
 vi.mock('../../../../data/cache', () => ({
   getFromCache: vi.fn(),
   setToCache: vi.fn(),
@@ -36,12 +78,6 @@ vi.mock('../../../../core/system/ansible-versions', () => ({
 }));
 vi.mock('../../../../modules/repository/default-playbooks-repositories', () => ({
   createADefaultLocalUserRepository: vi.fn(),
-}));
-vi.mock('../../../../data/database/repository/DeviceRepo', () => ({
-  default: { findAll: async () => [], findWithFilter: async () => [] },
-}));
-vi.mock('../../../../helpers/ansible/AnsibleConfigurationHelper', () => ({
-  copyAnsibleCfgFileIfDoesntExist: vi.fn(),
 }));
 
 vi.mock('../../../../modules/crons', () => ({ default: { initScheduledJobs: vi.fn() } }));

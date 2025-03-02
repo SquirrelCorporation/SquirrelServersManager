@@ -9,7 +9,6 @@ import { DeviceModel } from '../../data/database/model/Device';
 import { PlaybookModel } from '../../data/database/model/Playbook';
 import { PlaybooksRepositoryModel } from '../../data/database/model/PlaybooksRepository';
 import DeviceRepo from '../../data/database/repository/DeviceRepo';
-import { copyAnsibleCfgFileIfDoesntExist } from '../../helpers/ansible/AnsibleConfigurationHelper';
 import PinoLogger from '../../logger';
 import WatcherEngine from '../../modules/containers/core/WatcherEngine';
 import providerConf from '../../modules/containers/registries/providers/provider.conf';
@@ -115,10 +114,11 @@ class Startup {
     }
 
     try {
-      copyAnsibleCfgFileIfDoesntExist();
-      this.logger.info("Ansible configuration file copied if it didn't exist.");
+      // The AnsibleConfigService will handle this during initialization
+      // We don't need to call copyAnsibleCfgFileIfDoesntExist() anymore
+      this.logger.info('Ansible configuration handled by AnsibleConfigService.');
     } catch (error: any) {
-      this.logger.error(`Error copying Ansible configuration file: ${error.message}`);
+      this.logger.error(`Error with Ansible configuration: ${error.message}`);
     }
 
     try {
