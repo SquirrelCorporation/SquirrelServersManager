@@ -7,6 +7,7 @@ import logger from './logger';
 import { AuthModule } from './modules/auth/auth.module';
 import { AutomationsModule } from './modules/automations/automations.module';
 import { DiagnosticModule } from './modules/diagnostic/diagnostic.module';
+import { LogsModule } from './modules/logs/logs.module';
 import { SftpModule } from './modules/sftp-nest/sftp.module';
 import { SshModule } from './modules/ssh-nest/ssh.module';
 import { UpdateModule } from './modules/update/update.module';
@@ -97,6 +98,7 @@ let connectionReady = false;
     DiagnosticModule,
     SshModule,
     SftpModule,
+    LogsModule,
   ],
 })
 export class AppModule implements OnModuleInit {

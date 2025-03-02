@@ -5,7 +5,7 @@
 /yarn.lock
 /src/ansible/artifacts
 /src/ansible/inventory/hosts.json
-
+/coverage
 # production
 /dist
 
