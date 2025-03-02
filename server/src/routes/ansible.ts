@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
-import { getSmartFailure } from '../controllers/rest/ansible/smart-failure';
-import { getSmartFailureValidator } from '../controllers/rest/ansible/smart-failure.validator';
+// import { getSmartFailure } from '../controllers/rest/ansible/smart-failure';
+// import { getSmartFailureValidator } from '../controllers/rest/ansible/smart-failure.validator';
 import { deleteVault, getVaults, postVault, updateVault } from '../controllers/rest/ansible/vault';
 import {
   deleteVaultValidator,
@@ -21,7 +21,8 @@ router.use(passport.authenticate('jwt', { session: false }));
 //   .put(postConfValidator, putConf)
 //   .delete(deleteConfValidator, deleteConf);
 
-router.route('/smart-failure').get(getSmartFailureValidator, getSmartFailure);
+// The smart-failure route is now handled by the NestJS SmartFailureController
+// router.route('/smart-failure').get(getSmartFailureValidator, getSmartFailure);
 
 router.route('/vaults').get(getVaults).post(postVaultValidator, postVault);
 router
