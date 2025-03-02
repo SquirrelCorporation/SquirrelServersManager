@@ -22,7 +22,7 @@ class AnsibleCommandBuilder {
   }
 
   getLogLevel(user: User) {
-    return `--log-level ${user.logsLevel?.terminal || 1}`;
+    return `--log-level ${user?.logsLevel?.terminal || 1}`;
   }
 
   getExtraVars(extraVars?: API.ExtraVars) {

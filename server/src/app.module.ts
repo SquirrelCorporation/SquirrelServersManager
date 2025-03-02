@@ -9,6 +9,7 @@ import { AutomationsModule } from './modules/automations/automations.module';
 import { DiagnosticModule } from './modules/diagnostic/diagnostic.module';
 import { LogsModule } from './modules/logs/logs.module';
 import { SftpModule } from './modules/sftp-nest/sftp.module';
+import { ShellModule } from './modules/shell/shell.module';
 import { SshModule } from './modules/ssh-nest/ssh.module';
 import { UpdateModule } from './modules/update/update.module';
 
@@ -96,6 +97,7 @@ let connectionReady = false;
     AutomationsModule,
     UpdateModule,
     DiagnosticModule,
+    ShellModule,
     SshModule,
     SftpModule,
     LogsModule,
@@ -117,6 +119,9 @@ export class AppModule implements OnModuleInit {
       schema.pre('updateOne', setRunValidators);
       schema.pre('update', setRunValidators);
     });
+
+    // Store the NestJS app reference globally for bridge access
+    (global as any).nestApp = this;
   }
 }
 
