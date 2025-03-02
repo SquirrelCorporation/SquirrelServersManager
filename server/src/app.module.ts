@@ -7,6 +7,8 @@ import logger from './logger';
 import { AuthModule } from './modules/auth/auth.module';
 import { AutomationsModule } from './modules/automations/automations.module';
 import { DiagnosticModule } from './modules/diagnostic/diagnostic.module';
+import { SftpModule } from './modules/sftp-nest/sftp.module';
+import { SshModule } from './modules/ssh-nest/ssh.module';
 import { UpdateModule } from './modules/update/update.module';
 
 // Store the connection for legacy code to access
@@ -93,6 +95,8 @@ let connectionReady = false;
     AutomationsModule,
     UpdateModule,
     DiagnosticModule,
+    SshModule,
+    SftpModule,
   ],
 })
 export class AppModule implements OnModuleInit {

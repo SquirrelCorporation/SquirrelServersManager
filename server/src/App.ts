@@ -2,10 +2,12 @@ import http from 'http';
 import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import passport from 'passport';
 import { pinoHttp } from 'pino-http';
+import { Server as SocketIOServer } from 'socket.io';
 import { AppModule } from './app.module';
 import { SECRET } from './config';
 import metrics from './controllers/rest/metrics/metrics';
@@ -13,7 +15,6 @@ import EventManager from './core/events/EventManager';
 import Events from './core/events/events';
 import logger, { httpLoggerOptions } from './logger';
 import { errorHandler } from './middlewares/ErrorHandler';
-import Socket from './middlewares/Socket';
 import RealTime from './modules/real-time/RealTime';
 import routes from './routes';
 
@@ -30,7 +31,6 @@ interface RouteInfo {
 class AppWrapper extends EventManager {
   protected readonly expressApp = express();
   private server!: http.Server;
-  private socket!: Socket;
   private readonly refs: any = [];
   private nestApp!: INestApplication;
 
@@ -68,14 +68,23 @@ class AppWrapper extends EventManager {
       // Create NestJS app with Express adapter using our existing Express app
       const adapter = new ExpressAdapter(this.expressApp);
       const nestApp = await NestFactory.create(AppModule, adapter, {
-        logger: ['error', 'warn', 'log'],
+        logger: ['error', 'warn', 'log', 'debug'],
       });
 
       // Make the nestApp available globally for legacy code
       global.nestApp = nestApp;
 
+      // Log that we're initializing NestJS
+      logger.info('Initializing NestJS application with WebSocket gateways');
+
+      // We'll set up the WebSocket adapter when we start the server
+      // This ensures the HTTP server is already created
+
       await nestApp.init();
+      this.nestApp = nestApp;
+
       logger.info('NestJS application initialized successfully');
+
       return nestApp;
     } catch (error) {
       // Improved error handling to avoid undefined stack properties
@@ -133,7 +142,67 @@ class AppWrapper extends EventManager {
     🐿 Squirrel Servers Manager
     🚀 Server ready at: http://localhost:3000`),
     );
-    this.socket = new Socket(this.server);
+
+    // Set up Socket.IO server for WebSocket communication
+    try {
+      logger.info('Setting up Socket.IO server for WebSocket communication');
+
+      // Create a custom IoAdapter that uses our existing HTTP server
+      class CustomIoAdapter extends IoAdapter {
+        public server;
+        constructor(app: INestApplication, server) {
+          super(app);
+          this.server = server;
+        }
+
+        createIOServer(port: number, options?: any): any {
+          // Configure Socket.IO options
+          const socketOptions = {
+            ...options,
+            cors: {
+              origin: '*',
+              methods: ['GET', 'POST'],
+            },
+            allowEIO3: true, // Allow Engine.IO v3 clients
+            transports: ['websocket', 'polling'], // Enable both WebSocket and HTTP polling
+          };
+
+          logger.info(`Setting up Socket.IO server with options: ${JSON.stringify(socketOptions)}`);
+
+          // Create the Socket.IO server using the existing HTTP server
+          const io = new SocketIOServer(this.server, socketOptions);
+
+          // Store the Socket.IO server instance for potential future use
+          (global as any).io = io;
+
+          return io;
+        }
+
+        // Override to use our existing HTTP server
+        get httpServer() {
+          return this.server;
+        }
+      }
+
+      // Create an instance of our custom adapter
+      const customAdapter = new CustomIoAdapter(this.nestApp, this.server);
+
+      // Set the HTTP server for the adapter
+      (customAdapter as any).server = this.server;
+
+      // Apply the custom adapter to the NestJS app
+      logger.info('Applying custom WebSocket adapter to NestJS app');
+      this.nestApp.useWebSocketAdapter(customAdapter);
+
+      logger.info('Socket.IO server initialized successfully');
+      logger.info('Socket.IO server is now listening for connections');
+    } catch (error: any) {
+      logger.error(`Failed to set up Socket.IO server: ${error.message}`);
+      logger.error((error as Error).stack);
+    }
+
+    logger.info('Server started with Socket.IO server for WebSocket communication');
+
     this.emit(Events.APP_STARTED, 'App started');
   }
 
@@ -156,10 +225,6 @@ class AppWrapper extends EventManager {
 
   public getExpressApp() {
     return this.expressApp;
-  }
-
-  public getSocket() {
-    return this.socket;
   }
 }
 

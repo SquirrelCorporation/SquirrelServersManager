@@ -1,5 +1,5 @@
 import { SFTPDataNode } from '@/components/DeviceComponents/SFTPDrawer/SFTPDrawer';
-import { socket } from '@/socket';
+import { sftpSocket as socket } from '@/socket';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { message } from 'antd';
 import React, { useImperativeHandle, useState } from 'react';

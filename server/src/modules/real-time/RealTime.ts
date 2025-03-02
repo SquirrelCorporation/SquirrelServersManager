@@ -1,7 +1,6 @@
-import { Logger } from 'pino';
 import { debounce } from 'lodash';
+import { Logger } from 'pino';
 import { SsmEvents } from 'ssm-shared-lib';
-import App from '../../App';
 import EventManager from '../../core/events/EventManager';
 import Events from '../../core/events/events';
 import log from '../../logger';
@@ -52,17 +51,17 @@ class RealTimeEngine extends EventManager {
 
   private createDebouncedEmitter(eventName: string, logMessage: string, debounceTime: number) {
     return debounce((payload: any) => {
-      const io = App.getSocket().getIo();
+      /* const io = App.getSocket().getIo();
       this.childLogger.debug(`${logMessage}`);
-      io.emit(eventName, payload);
+      io.emit(eventName, payload);*/
     }, debounceTime);
   }
 
   private createEmitter(eventName: string, logMessage: string) {
     return (payload: any) => {
-      const io = App.getSocket().getIo();
+      /* const io = App.getSocket().getIo();
       this.childLogger.debug(`${logMessage}`);
-      io.emit(eventName, payload);
+      io.emit(eventName, payload);*/
     };
   }
 

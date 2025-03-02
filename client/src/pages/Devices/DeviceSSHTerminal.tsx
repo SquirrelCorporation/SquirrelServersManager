@@ -3,7 +3,7 @@ import Title, { TitleColors } from '@/components/Template/Title';
 import TerminalCore, {
   TerminalCoreHandles,
 } from '@/components/Terminal/TerminalCore';
-import { socket } from '@/socket';
+import { sshSocket as socket } from '@/socket';
 import { useParams } from '@@/exports';
 import { PageContainer } from '@ant-design/pro-components';
 import { message } from 'antd';
@@ -99,20 +99,23 @@ const DeviceSSHTerminal = () => {
 
   return (
     <PageContainer
-      title={
-        <Title.MainTitle
-          backgroundColor={TitleColors.CONTAINER_LOGS}
-          title={'SSH'}
-          icon={<Live24Filled />}
-        />
-      }
+      header={{
+        title: (
+          <Title
+            icon={<Live24Filled />}
+            title="SSH Terminal"
+            color={TitleColors.BLUE}
+          />
+        ),
+      }}
+      style={{ height: '100%' }}
     >
       <TerminalCore
+        ref={terminalRef}
         onDataOut={handleDataOut}
+        onResize={handleResize}
         cols={cols}
         rows={rows}
-        ref={terminalRef}
-        onResize={handleResize}
       />
     </PageContainer>
   );

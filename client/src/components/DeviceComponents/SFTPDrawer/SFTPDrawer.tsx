@@ -14,7 +14,7 @@ import SFTPDropdownMenu, {
   SFTPAction,
 } from '@/components/DeviceComponents/SFTPDrawer/SFTPDropdownMenu';
 import { Restart } from '@/components/Icons/CustomIcons';
-import { socket } from '@/socket';
+import { sftpSocket as socket } from '@/socket';
 import {
   Button,
   Col,
@@ -186,16 +186,34 @@ const SFTPDrawer = React.forwardRef<SFTPDrawerHandles, SFTPDrawerProps>(
     };
 
     const startSFTPSession = () => {
+      console.log('Starting SFTP session, connecting socket...');
       socket.connect(); // Ensure the socket is connected
+
+      // Add connection event listeners for debugging
+      socket.on('connect', () => {
+        console.log('SFTP socket connected successfully!');
+        console.log('Socket ID:', socket.id);
+        console.log('Socket namespace:', socket.nsp);
+      });
+
+      socket.on('connect_error', (error) => {
+        console.error('SFTP socket connection error:', error);
+      });
+
       socket.removeAllListeners(SsmEvents.SFTP.STATUS);
       socket.removeAllListeners(SsmEvents.SFTP.READ_DIR);
 
       setTreeData([{ title: '/', key: '/' }]);
+      console.log(
+        'Emitting START_SESSION event with device UUID:',
+        device.uuid,
+      );
       socket
         .emitWithAck(SsmEvents.SFTP.START_SESSION, {
           deviceUuid: device.uuid,
         })
         .then((response) => {
+          console.log('Received START_SESSION response:', response);
           if (response.status !== 'OK') {
             void message.error({
               content: `Socket failed to connect (${response.status} - ${response.error})`,
@@ -209,6 +227,13 @@ const SFTPDrawer = React.forwardRef<SFTPDrawerHandles, SFTPDrawerProps>(
               socket.off(SsmEvents.SFTP.STATUS, handleStatus);
             };
           }
+        })
+        .catch((error) => {
+          console.error('Error in START_SESSION emitWithAck:', error);
+          void message.error({
+            content: `Socket failed to connect: ${error.message}`,
+            duration: 6,
+          });
         });
     };
 

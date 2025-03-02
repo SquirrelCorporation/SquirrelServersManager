@@ -1,92 +1,28 @@
-import http from 'http';
+import { Server as HttpServer } from 'http';
+import { Injectable } from '@nestjs/common';
 import { DefaultEventsMap } from '@socket.io/component-emitter';
-import { parse } from 'cookie';
 import { NextFunction, Request, Response } from 'express';
-import * as jwt from 'jsonwebtoken';
-import pino from 'pino';
 import { Server, Socket as _Socket } from 'socket.io';
-import { SsmEvents } from 'ssm-shared-lib';
-import { SECRET } from '../config';
-import { getContainerLogs } from '../controllers/socket/container-logs';
-import { startSFTPSession } from '../controllers/socket/sftp-session';
-import { startSSHSession } from '../controllers/socket/ssh-session';
-import UserRepo from '../data/database/repository/UserRepo';
-import _logger from '../logger';
+import logger from '../logger';
 
-export type SSMSocket = _Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
-export type SSMSocketServer = Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
+// Define the Socket type
+export type Socket = _Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 
-const JWT_COOKIE_KEY = 'jwt';
-
+@Injectable()
 export default class Socket {
-  private readonly io!: Server;
-  private logger: pino.Logger<never>;
+  private io: Server | null = null;
 
-  constructor(server: http.Server) {
-    this.logger = _logger.child(
-      {
-        module: 'Socket',
-      },
-      { msgPrefix: '[SOCKET] - ' },
-    );
-    this.io = new Server(server);
-    this.setup();
+  constructor(server: HttpServer) {
+    // Legacy Socket.IO server is completely disabled
+    // All WebSocket communication is now handled by NestJS WebSocket gateways
+    logger.info('Legacy Socket.IO server is disabled. Using NestJS WebSocket gateways instead.');
   }
 
-  private setup() {
-    this.logger.info('setting up socket');
-    this.io.engine.use(this.authenticateSocketJWT);
-    this.io.on('connection', this.registerSocketEvents);
-    this.io.engine.on('connection_error', (err) => {
-      this.logger.debug(err.req); // the request object
-      this.logger.debug(err.code); // the error code, for example 1
-      this.logger.debug(err.message); // the error message, for example "Session ID unknown"
-      this.logger.debug(err.context); // some additional error context
-    });
-  }
-
-  private registerSocketEvents = async (socket: SSMSocket) => {
-    const io = this.io;
-    socket.on(SsmEvents.Logs.GET_LOGS, getContainerLogs({ io, socket }));
-    socket.on(SsmEvents.SSH.START_SESSION, startSSHSession({ io, socket }));
-    socket.on(SsmEvents.SFTP.START_SESSION, startSFTPSession({ io, socket }));
-  };
-
-  private authenticateSocketJWT = (req: Request, res: Response, next: NextFunction) => {
-    const isHandshake = (req as Request & { _query: { sid: string } })._query.sid === undefined;
-    if (isHandshake) {
-      if (!req.headers?.cookie) {
-        next();
-      }
-      const cookies = parse(req.headers.cookie as string);
-      if (!cookies) {
-        next();
-      }
-      const jwtCookie = cookies[JWT_COOKIE_KEY];
-      if (!jwtCookie) {
-        next();
-      }
-      this.verifyJWTAndFetchUser(jwtCookie, req, next);
-    } else {
+  // Keep the middleware for backward compatibility
+  public middleware() {
+    return (req: Request, res: Response, next: NextFunction) => {
+      // No-op middleware
       next();
-    }
-  };
-
-  private verifyJWTAndFetchUser(token: string, req: Request, next: NextFunction) {
-    jwt.verify(token, SECRET, (err, decoded) => {
-      if (err) {
-        return next(new Error('invalid token'));
-      }
-      UserRepo.findByEmail((decoded as any).email).then((user) => {
-        if (user) {
-          req.user = user;
-        }
-        next();
-      });
-    });
-  }
-
-  public getIo() {
-    return this.io;
+    };
   }
 }
