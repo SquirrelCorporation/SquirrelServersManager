@@ -1,3 +1,7 @@
 /.data.dev/
 .idea/
 /.idea/
+/.data.prod
+.data.dev
+.data.prod
+/server/.env.development
