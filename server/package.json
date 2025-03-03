@@ -17,7 +17,7 @@
   "author": "Squirrel Team",
   "dependencies": {
     "@aws-sdk/client-ecr": "^3.750.0",
-    "axios": "^1.7.9",
+    "axios": "^1.8.1",
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.7",
