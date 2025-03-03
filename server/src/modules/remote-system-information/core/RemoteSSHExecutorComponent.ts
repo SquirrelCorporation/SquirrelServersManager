@@ -177,6 +177,7 @@ export default class RemoteSSHExecutorComponent extends Component {
     try {
       await this.connect(); // Establish initial connection
     } catch (error: any) {
+      this.logger.error('---------------------------');
       this.logger.error(error);
       throw error;
     }
@@ -207,10 +208,15 @@ export default class RemoteSSHExecutorComponent extends Component {
         });
       // Connect using the provided configuration
       (async () => {
-        conn.connect({
-          ...this.connectionConfig,
-          host: await tryResolveHost(this.connectionConfig.host as string),
-        });
+        try {
+          conn.connect({
+            ...this.connectionConfig,
+            host: await tryResolveHost(this.connectionConfig.host as string),
+          });
+        } catch (error: any) {
+          this.logger.error(`Connection setup failed: ${error.message}`);
+          reject(error); // Propagate the error to the Promise
+        }
       })();
     });
   }

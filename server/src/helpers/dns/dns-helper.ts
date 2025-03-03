@@ -1,4 +1,5 @@
 import * as dns from 'node:dns';
+import logger from '../../logger';
 
 function isIPv4(ip: string): boolean {
   const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
@@ -42,6 +43,12 @@ export async function tryResolveHost(hostname: string): Promise<string> {
   try {
     return await dnsLookup(hostname);
   } catch (error: any) {
-    throw new Error(`Failed to resolve local hostname ${hostname}: ${error?.message}`);
+    // Log the error but don't crash
+    logger.error(
+      `Warning: Could not resolve hostname ${hostname}: ${error?.message}. Using original hostname.`,
+    );
+    // Return the original hostname instead of throwing an error
+    // This allows the application to continue even if DNS resolution fails
+    return hostname;
   }
 }

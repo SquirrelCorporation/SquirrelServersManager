@@ -1,8 +1,7 @@
-import InAppNotification from '../../data/database/model/InAppNotification';
-import InAppNotificationRepo from '../../data/database/repository/InAppNotificationRepo';
 import EventManager, { Payload } from '../../core/events/EventManager';
 import Events from '../../core/events/events';
 import pinoLogger from '../../logger';
+import { Notification } from './notifications.module';
 
 class NotificationComponent extends EventManager {
   private childLogger = pinoLogger.child(
@@ -31,18 +30,18 @@ class NotificationComponent extends EventManager {
     });
   }
 
-  private async handleNotificationEvent(event: string, payload: Payload) {
+  private async handleNotificationEvent(event: Events, payload: Payload) {
     try {
       const { message, severity, module, moduleId } = payload;
       this.childLogger.info(`handleNotificationEvent - Notification received - (event: ${event})`);
 
-      await InAppNotificationRepo.create({
+      await Notification.create({
         event,
         message,
-        severity,
+        severity: severity as 'info' | 'warning' | 'error',
         module,
         moduleId,
-      } as InAppNotification);
+      });
       this.emit(Events.UPDATED_NOTIFICATIONS, 'Updated Notification');
     } catch (error) {
       this.childLogger?.error(error);

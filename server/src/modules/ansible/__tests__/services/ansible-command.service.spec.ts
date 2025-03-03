@@ -2,12 +2,13 @@ import { SsmAnsible } from 'ssm-shared-lib';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import AnsibleTaskRepo from '../../../../data/database/repository/AnsibleTaskRepo';
 import DeviceAuthRepo from '../../../../data/database/repository/DeviceAuthRepo';
-import ansibleCmd from '../../AnsibleCmd';
-import AnsibleGalaxyCmd from '../../AnsibleGalaxyCmd';
-import Inventory from '../../utils/InventoryTransformer';
-import { AnsibleCommandService } from '../../services/ansible-command.service';
 import { ShellWrapperService } from '../../../shell/services/shell-wrapper.service';
 import { SshKeyService } from '../../../shell/services/ssh-key.service';
+import { AnsibleCommandBuilderService } from '../../services/ansible-command-builder.service';
+import { AnsibleCommandService } from '../../services/ansible-command.service';
+import { AnsibleGalaxyCommandService } from '../../services/ansible-galaxy-command.service';
+import { InventoryTransformerService } from '../../services/inventory-transformer.service';
+import Inventory from '../../utils/InventoryTransformer';
 
 vi.mock('uuid', () => ({
   v4: () => 'mock-uuid',
@@ -27,7 +28,12 @@ vi.mock('../../../../data/database/repository/DeviceAuthRepo', () => ({
 
 vi.mock('../../utils/InventoryTransformer', () => ({
   default: {
-    inventoryBuilderForTarget: vi.fn(),
+    inventoryBuilderForTarget: vi.fn().mockImplementation(() => {
+      return {
+        _meta: { hostvars: {} },
+        all: { children: [] },
+      };
+    }),
   },
 }));
 
@@ -35,6 +41,9 @@ describe('AnsibleCommandService', () => {
   let service: AnsibleCommandService;
   let shellWrapperService: ShellWrapperService;
   let sshKeyService: SshKeyService;
+  let ansibleCommandBuilderService: AnsibleCommandBuilderService;
+  let ansibleGalaxyCommandService: AnsibleGalaxyCommandService;
+  let inventoryTransformerService: InventoryTransformerService;
 
   const mockExecResult = {
     stdout: 'stdout content',
@@ -72,7 +81,34 @@ describe('AnsibleCommandService', () => {
       removeAllAnsibleExecTemporaryPrivateKeys: vi.fn(),
     } as unknown as SshKeyService;
 
-    service = new AnsibleCommandService(shellWrapperService, sshKeyService);
+    ansibleCommandBuilderService = {
+      buildAnsibleCmd: vi.fn().mockReturnValue('ansible-playbook command'),
+      getInventoryTargets: vi.fn(),
+      getExtraVars: vi.fn(),
+      getDryRun: vi.fn(),
+      getVaults: vi.fn(),
+      getLogLevel: vi.fn(),
+      sanitizeInventory: vi.fn(),
+    } as unknown as AnsibleCommandBuilderService;
+
+    ansibleGalaxyCommandService = {
+      getInstallCollectionCmd: vi
+        .fn()
+        .mockReturnValue('ansible-galaxy collection install namespace.name'),
+      getListCollectionsCmd: vi.fn().mockReturnValue('ansible-galaxy collection list'),
+    } as unknown as AnsibleGalaxyCommandService;
+
+    inventoryTransformerService = {
+      inventoryBuilderForTarget: vi.fn(),
+    } as unknown as InventoryTransformerService;
+
+    service = new AnsibleCommandService(
+      shellWrapperService,
+      sshKeyService,
+      ansibleCommandBuilderService,
+      ansibleGalaxyCommandService,
+      inventoryTransformerService,
+    );
   });
 
   it('should be defined', () => {
@@ -215,6 +251,7 @@ describe('AnsibleCommandService', () => {
 
   describe('installAnsibleGalaxyCollection', () => {
     beforeEach(() => {
+      // Mock the static timeout method to resolve immediately
       vi.spyOn(AnsibleCommandService, 'timeout').mockResolvedValue(undefined);
 
       // Mock the sequence of calls for the installation process
@@ -223,19 +260,35 @@ describe('AnsibleCommandService', () => {
         .mockReturnValueOnce(mockExecResult) // Second call - list command
         .mockReturnValueOnce({ ...mockExecResult, stdout: 'namespace.name' }); // Third call - cat command
 
-      vi.spyOn(AnsibleGalaxyCmd, 'getInstallCollectionCmd').mockReturnValue(
+      vi.spyOn(ansibleGalaxyCommandService, 'getInstallCollectionCmd').mockReturnValue(
         'ansible-galaxy collection install namespace.name',
       );
-      vi.spyOn(AnsibleGalaxyCmd, 'getListCollectionsCmd').mockReturnValue(
+      vi.spyOn(ansibleGalaxyCommandService, 'getListCollectionsCmd').mockReturnValue(
         'ansible-galaxy collection list namespace.name',
       );
     });
 
     it('should install an ansible galaxy collection', async () => {
-      await service.installAnsibleGalaxyCollection('name', 'namespace');
+      // Set a timeout for this test
+      vi.useFakeTimers();
 
-      expect(AnsibleGalaxyCmd.getInstallCollectionCmd).toHaveBeenCalledWith('name', 'namespace');
-      expect(AnsibleGalaxyCmd.getListCollectionsCmd).toHaveBeenCalledWith('name', 'namespace');
+      const promise = service.installAnsibleGalaxyCollection('name', 'namespace');
+
+      // Fast-forward time to skip the while loop
+      vi.advanceTimersByTime(10000);
+
+      await promise;
+
+      vi.useRealTimers();
+
+      expect(ansibleGalaxyCommandService.getInstallCollectionCmd).toHaveBeenCalledWith(
+        'name',
+        'namespace',
+      );
+      expect(ansibleGalaxyCommandService.getListCollectionsCmd).toHaveBeenCalledWith(
+        'name',
+        'namespace',
+      );
       expect(shellWrapperService.exec).toHaveBeenCalledWith(
         'ansible-galaxy collection install namespace.name',
       );
@@ -250,14 +303,22 @@ describe('AnsibleCommandService', () => {
     });
 
     it('should throw an error if collection verification fails', async () => {
+      // Set a timeout for this test
+      vi.useFakeTimers();
+
       vi.spyOn(shellWrapperService, 'exec')
         .mockReturnValueOnce({ ...mockExecResult, code: 0 }) // Successful installation
         .mockReturnValueOnce(mockExecResult) // Second call - list command
         .mockReturnValueOnce({ ...mockExecResult, stdout: 'different.collection' }); // Failed verification
 
-      await expect(service.installAnsibleGalaxyCollection('name', 'namespace')).rejects.toThrow(
-        'installAnsibleGalaxyCollection has failed',
-      );
+      const promise = service.installAnsibleGalaxyCollection('name', 'namespace');
+
+      // Fast-forward time to skip the while loop
+      vi.advanceTimersByTime(10000);
+
+      await expect(promise).rejects.toThrow('installAnsibleGalaxyCollection has failed');
+
+      vi.useRealTimers();
     });
   });
 
@@ -342,12 +403,14 @@ describe('AnsibleCommandService', () => {
 
   describe('executePlaybookOnInventoryFull', () => {
     const mockUser = { id: 1 } as any;
-    const mockInventoryTargets = { _meta: { hostvars: {}, all: {} } };
-    const mockExtraVars = { var1: 'value1' };
+    const mockInventoryTargets = { _meta: { hostvars: {}, all: {} } } as any;
+    const mockExtraVars = { var1: 'value1' } as any;
     const mockTarget = ['device-uuid'];
 
     beforeEach(() => {
-      vi.spyOn(ansibleCmd, 'buildAnsibleCmd').mockReturnValue('ansible-playbook command');
+      vi.spyOn(ansibleCommandBuilderService, 'buildAnsibleCmd').mockReturnValue(
+        'ansible-playbook command',
+      );
       vi.spyOn(shellWrapperService, 'exec').mockReturnValueOnce(mockChildProcess as any);
       vi.spyOn(AnsibleTaskRepo, 'create').mockResolvedValue({ id: 1 });
     });
@@ -365,7 +428,7 @@ describe('AnsibleCommandService', () => {
 
       expect(shellWrapperService.cd).toHaveBeenCalled();
       expect(shellWrapperService.rm).toHaveBeenCalledTimes(2);
-      expect(ansibleCmd.buildAnsibleCmd).toHaveBeenCalledWith(
+      expect(ansibleCommandBuilderService.buildAnsibleCmd).toHaveBeenCalledWith(
         'playbook.yml',
         'exec-uuid',
         mockInventoryTargets,

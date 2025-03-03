@@ -1,97 +1,51 @@
-import { API, SsmAgent, SsmAnsible } from 'ssm-shared-lib';
-import { getFromCache } from '../../../data/cache';
-import DeviceRepo from '../../../data/database/repository/DeviceRepo';
-import UserRepo from '../../../data/database/repository/UserRepo';
-import pinoLogger from '../../../logger';
+import { ModuleRef } from '@nestjs/core';
+import { API } from 'ssm-shared-lib';
+import { ExtraVarsService } from '../services/extra-vars.service';
 
+/**
+ * This is a bridge class that provides a static interface to the ExtraVarsService
+ * for backward compatibility with existing code.
+ */
 class ExtraVars {
-  private logger = pinoLogger.child(
-    { module: 'ExtraVars' },
-    { msgPrefix: '[VARIABLE_MANAGER] - ' },
-  );
+  private static extraVarsService: ExtraVarsService;
+  private static moduleRef: ModuleRef;
 
-  async findValueOfExtraVars(
+  /**
+   * Set the ModuleRef to allow access to the NestJS dependency injection container
+   */
+  static setModuleRef(moduleRef: ModuleRef): void {
+    ExtraVars.moduleRef = moduleRef;
+  }
+
+  /**
+   * Get the ExtraVarsService instance
+   */
+  private static getService(): ExtraVarsService {
+    if (!ExtraVars.extraVarsService) {
+      if (!ExtraVars.moduleRef) {
+        throw new Error('ModuleRef not set in ExtraVars');
+      }
+      ExtraVars.extraVarsService = ExtraVars.moduleRef.get(ExtraVarsService, { strict: false });
+    }
+    return ExtraVars.extraVarsService;
+  }
+
+  /**
+   * Find values for a list of extra vars
+   */
+  static async findValueOfExtraVars(
     extraVars: API.ExtraVars,
     forcedValues?: API.ExtraVars,
     emptySubstitute?: boolean,
     targets?: string[],
   ): Promise<API.ExtraVars> {
-    const substitutedExtraVars: API.ExtraVars = [];
-
-    for (const e of extraVars) {
-      this.logger.info(`findValueOfExtraVars - ${e.extraVar} (${e.type})`);
-      const value = await this.getSubstitutedExtraVar(e, forcedValues, targets);
-
-      if (!value && !emptySubstitute) {
-        this.logger.error(`findValueOfExtraVars - ExtraVar not found : ${e.extraVar}`);
-        if (e.required) {
-          throw new Error(`ExtraVar value not found ! (${e.extraVar})`);
-        }
-      } else {
-        substitutedExtraVars.push({ ...e, value: value || undefined });
-      }
-    }
-    this.logger.debug(substitutedExtraVars);
-    return substitutedExtraVars;
-  }
-
-  private async getSubstitutedExtraVar(
-    extraVar: API.ExtraVar,
-    forcedValues?: API.ExtraVars,
-    targets?: string[],
-  ) {
-    this.logger.debug(
-      `getSubstitutedExtraVar extraVar ${extraVar.extraVar} (${extraVar.type}) - ${targets?.join('\n')}`,
+    return ExtraVars.getService().findValueOfExtraVars(
+      extraVars,
+      forcedValues,
+      emptySubstitute,
+      targets,
     );
-    this.logger.debug('getSubstitutedExtraVar ' + JSON.stringify(forcedValues));
-
-    const forcedValue = this.getForcedValue(extraVar, forcedValues);
-    if (forcedValue) {
-      return forcedValue;
-    }
-
-    if (extraVar.type === SsmAnsible.ExtraVarsType.SHARED) {
-      return await getFromCache(extraVar.extraVar);
-    }
-
-    if (extraVar.type === SsmAnsible.ExtraVarsType.CONTEXT) {
-      return await this.getContextExtraVarValue(extraVar, targets);
-    }
-  }
-
-  private getForcedValue(extraVar: API.ExtraVar, forcedValues?: API.ExtraVars) {
-    const forcedValue = forcedValues?.find((e) => e.extraVar === extraVar.extraVar)?.value;
-    this.logger.debug(`forcedValue found: ${forcedValue}`);
-    return forcedValue;
-  }
-
-  private async getContextExtraVarValue(extraVar: API.ExtraVar, targets?: string[]) {
-    this.logger.debug(`getContextExtraVarValue - '${extraVar.extraVar}'`);
-    if (!targets) {
-      return;
-    }
-    if (targets.length > 1) {
-      throw new Error(`Cannot use CONTEXT variable with multiple targets - '${extraVar.extraVar}'`);
-    }
-    const device = await DeviceRepo.findOneByUuid(targets[0]);
-    const user = await UserRepo.findFirst();
-    if (!device) {
-      throw new Error(`Targeted device not found - (device: ${targets?.[0]})`);
-    }
-    switch (extraVar.extraVar) {
-      case SsmAnsible.DefaultContextExtraVarsList.DEVICE_ID:
-        return targets[0];
-      case SsmAnsible.DefaultContextExtraVarsList.DEVICE_IP:
-        return device.ip;
-      case SsmAnsible.DefaultContextExtraVarsList.AGENT_LOG_PATH:
-        return device.agentLogPath;
-      case SsmAnsible.DefaultContextExtraVarsList.AGENT_TYPE:
-        return device.agentType || SsmAgent.InstallMethods.NODE;
-      case SsmAnsible.DefaultContextExtraVarsList.API_KEY:
-        return user?.apiKey;
-    }
-    this.logger.error(`Context variable not found: '${extraVar.extraVar}'`);
   }
 }
 
-export default new ExtraVars();
+export default ExtraVars;

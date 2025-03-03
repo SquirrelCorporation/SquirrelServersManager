@@ -1,12 +1,12 @@
-import InAppNotificationRepo from '../../../data/database/repository/InAppNotificationRepo';
 import { SuccessResponse } from '../../../middlewares/api/ApiResponse';
+import { Notification } from '../../../modules/notifications/notifications.module';
 
 export const getAllNotifications = async (req, res) => {
-  const notifications = await InAppNotificationRepo.findAllNotSeen();
+  const notifications = await Notification.findAllNotSeen();
   new SuccessResponse('Got all notifications', notifications).send(res);
 };
 
 export const postAllSeen = async (req, res) => {
-  await InAppNotificationRepo.markAllSeen();
+  await Notification.markAllSeen();
   new SuccessResponse('Updated all notifications to seen').send(res);
 };

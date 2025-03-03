@@ -1,29 +1,19 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { SsmAnsible } from 'ssm-shared-lib';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AnsibleCommandBuilderService } from '../../services/ansible-command-builder.service';
-import { ExtraVarsTransformerService } from '../../services/extra-vars-transformer.service';
 
 describe('AnsibleCommandBuilderService', () => {
   let service: AnsibleCommandBuilderService;
-  let extraVarsTransformerService: ExtraVarsTransformerService;
+  let mockExtraVarsTransformer: any;
 
   beforeEach(async () => {
-    extraVarsTransformerService = {
+    mockExtraVarsTransformer = {
       transformExtraVars: vi.fn().mockReturnValue({ foo: 'bar' }),
-    } as unknown as ExtraVarsTransformerService;
+      logger: { log: vi.fn(), error: vi.fn() },
+      mapExtraVarToPair: vi.fn(),
+    };
 
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        AnsibleCommandBuilderService,
-        {
-          provide: ExtraVarsTransformerService,
-          useValue: extraVarsTransformerService,
-        },
-      ],
-    }).compile();
-
-    service = module.get<AnsibleCommandBuilderService>(AnsibleCommandBuilderService);
+    service = new AnsibleCommandBuilderService(mockExtraVarsTransformer);
   });
 
   it('should be defined', () => {
@@ -48,9 +38,9 @@ describe('AnsibleCommandBuilderService', () => {
     it('should return proper command when inventory is provided', () => {
       const inventory = { all: {}, target1: { hosts: ['192.168.1.1'] } };
       const spy = vi.spyOn(service, 'sanitizeInventory').mockReturnValue("'sanitized-inventory'");
-      
+
       const result = service.getInventoryTargets(inventory as any);
-      
+
       expect(spy).toHaveBeenCalledWith(inventory);
       expect(result).toBe("--specific-host 'sanitized-inventory'");
     });
@@ -65,9 +55,9 @@ describe('AnsibleCommandBuilderService', () => {
     it('should return proper command when extra vars are provided', () => {
       const extraVars = [{ extraVar: 'foo', value: 'bar' }];
       const result = service.getExtraVars(extraVars as any);
-      
-      expect(extraVarsTransformerService.transformExtraVars).toHaveBeenCalledWith(extraVars);
-      expect(result).toContain("--extra-vars");
+
+      expect(mockExtraVarsTransformer.transformExtraVars).toHaveBeenCalledWith(extraVars);
+      expect(result).toContain('--extra-vars');
       expect(result).toContain(JSON.stringify({ foo: 'bar' }));
     });
   });
@@ -91,9 +81,13 @@ describe('AnsibleCommandBuilderService', () => {
 
   describe('buildAnsibleCmd', () => {
     it('should build a complete ansible command', () => {
-      const spy1 = vi.spyOn(service, 'getInventoryTargets').mockReturnValue('--inventory mock-inventory');
+      const spy1 = vi
+        .spyOn(service, 'getInventoryTargets')
+        .mockReturnValue('--inventory mock-inventory');
       const spy2 = vi.spyOn(service, 'getLogLevel').mockReturnValue('--log-level 1');
-      const spy3 = vi.spyOn(service, 'getExtraVars').mockReturnValue("--extra-vars '{\"foo\":\"bar\"}'");
+      const spy3 = vi
+        .spyOn(service, 'getExtraVars')
+        .mockReturnValue('--extra-vars \'{"foo":"bar"}\'');
       const spy4 = vi.spyOn(service, 'getDryRun').mockReturnValue('--check');
       const spy5 = vi.spyOn(service, 'getVaults').mockReturnValue('--vault-id test@client');
 
@@ -113,9 +107,9 @@ describe('AnsibleCommandBuilderService', () => {
       expect(spy3).toHaveBeenCalled();
       expect(spy4).toHaveBeenCalledWith(SsmAnsible.ExecutionMode.CHECK);
       expect(spy5).toHaveBeenCalled();
-      
+
       expect(result).toContain('test-playbook.yml');
-      expect(result).toContain('--ident \'test-uuid\'');
+      expect(result).toContain("--ident 'test-uuid'");
       expect(result).toContain('--inventory mock-inventory');
       expect(result).toContain('--log-level 1');
       expect(result).toContain('--check');

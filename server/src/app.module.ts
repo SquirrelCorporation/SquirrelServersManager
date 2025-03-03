@@ -1,5 +1,6 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { db } from './config';
@@ -9,6 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { AutomationsModule } from './modules/automations/automations.module';
 import { DiagnosticModule } from './modules/diagnostic/diagnostic.module';
 import { LogsModule } from './modules/logs/logs.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 import { SftpModule } from './modules/sftp-nest/sftp.module';
 import { ShellModule } from './modules/shell/shell.module';
 import { SmartFailureModule } from './modules/smart-failure/smart-failure.module';
@@ -24,6 +26,7 @@ let connectionReady = false;
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    EventEmitterModule.forRoot(),
     MongooseModule.forRootAsync({
       useFactory: async () => {
         // Create a direct mongoose connection first
@@ -105,6 +108,7 @@ let connectionReady = false;
     LogsModule,
     AnsibleConfigModule,
     SmartFailureModule,
+    NotificationsModule,
   ],
 })
 export class AppModule implements OnModuleInit {

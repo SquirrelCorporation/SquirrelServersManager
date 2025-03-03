@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AnsibleCommandService } from './services/ansible-command.service';
 import { DockerComposeService } from './services/docker-compose.service';
 import { FileSystemService } from './services/file-system.service';
 import { PlaybookFileService } from './services/playbook-file.service';
@@ -14,14 +13,13 @@ import { SshKeyService } from './services/ssh-key.service';
   providers: [
     ShellWrapperService,
     FileSystemService,
-    AnsibleCommandService,
     DockerComposeService,
     PlaybookFileService,
     SshKeyService,
   ],
   exports: [
+    ShellWrapperService,
     FileSystemService,
-    AnsibleCommandService,
     DockerComposeService,
     PlaybookFileService,
     SshKeyService,

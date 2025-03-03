@@ -5,3 +5,6 @@
 .data.dev
 .data.prod
 /server/.env.development
+CLAUDE.md
+.idea/SSM.iml
+test.json

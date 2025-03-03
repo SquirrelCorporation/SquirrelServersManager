@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AnsibleConfigController } from './controllers/ansible-config.controller';
-import { AnsibleConfigService } from './services/ansible-config.service';
 import { AnsibleModule } from '../ansible/ansible.module';
 import { ShellModule } from '../shell/shell.module';
+import { AnsibleConfigController } from './controllers/ansible-config.controller';
+import { AnsibleConfigService } from './services/ansible-config.service';
 
 /**
  * AnsibleConfigModule provides functionality for managing Ansible configuration

@@ -56,26 +56,8 @@ import {
   updateDockerAuthValidator,
   updateProxmoxAuthValidator,
 } from '../controllers/rest/devices/deviceauth.validator';
-import {
-  getDeviceStatByDeviceUuid,
-  getDeviceStatsByDeviceUuid,
-  updateDeviceAndAddDeviceStat,
-} from '../controllers/rest/devices/devicestats';
-import {
-  getDeviceStatByDeviceUuidValidator,
-  getDeviceStatsByDeviceUuidValidator,
-  updateDeviceAndAddDeviceStatValidator,
-} from '../controllers/rest/devices/devicestats.validator';
-import {
-  getDashboardAvailabilityStats,
-  getDashboardAveragedStats,
-  getDashboardPerformanceStats,
-  getDashboardStat,
-} from '../controllers/rest/devices/devicestatsdashboard';
-import {
-  getDashboardAveragedStatsValidator,
-  getDashboardStatValidator,
-} from '../controllers/rest/devices/devicestatsdashboard.validator';
+import { updateDeviceAndAddDeviceStat } from '../controllers/rest/devices/devicestats';
+import { updateDeviceAndAddDeviceStatValidator } from '../controllers/rest/devices/devicestats.validator';
 import upload from '../middlewares/Upload';
 
 const router = express.Router();
@@ -100,14 +82,6 @@ router.post(
   postCheckRemoteSystemInformationConnection,
 );
 
-router.get(`/dashboard/stats/performances`, getDashboardPerformanceStats);
-router.post(
-  `/dashboard/stats/averaged/:type/`,
-  getDashboardAveragedStatsValidator,
-  getDashboardAveragedStats,
-);
-router.get(`/dashboard/stats/availability`, getDashboardAvailabilityStats);
-router.post(`/dashboard/stats/:type/`, getDashboardStatValidator, getDashboardStat);
 router
   .route(`/:uuid/auth`)
   .get(getDeviceAuthValidator, getDeviceAuth)
@@ -160,6 +134,4 @@ router
 router.route('/').put(addDeviceValidator, addDevice).get(getDevices);
 router.route('/all').get(getAllDevices);
 router.delete(`/:uuid`, deleteDeviceValidator, deleteDevice);
-router.get(`/:uuid/stats/:type/`, getDeviceStatsByDeviceUuidValidator, getDeviceStatsByDeviceUuid);
-router.get(`/:uuid/stat/:type/`, getDeviceStatByDeviceUuidValidator, getDeviceStatByDeviceUuid);
 export default router;

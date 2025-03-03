@@ -1,10 +1,10 @@
 import { TestOptions } from 'shelljs';
+import { AnsibleCommandService } from '../ansible/services/ansible-command.service';
 import originalAnsibleShellCommandsManager from './managers/AnsibleShellCommandsManager';
 import originalDockerComposeCommandManager from './managers/DockerComposeCommandManager';
 import originalFileSystemManager from './managers/FileSystemManager';
 import originalPlaybookFileManager from './managers/PlaybookFileManager';
 import originalSshPrivateKeyFileManager from './managers/SshPrivateKeyFileManager';
-import { AnsibleCommandService } from './services/ansible-command.service';
 import { DockerComposeService } from './services/docker-compose.service';
 import { FileSystemService } from './services/file-system.service';
 import { PlaybookFileService } from './services/playbook-file.service';
