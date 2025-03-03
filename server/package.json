@@ -103,7 +103,7 @@
     "globals": "^16.0.0",
     "mongodb-memory-server": "^10.1.4",
     "node-mocks-http": "^1.16.2",
-    "prettier": "^3.5.2",
+    "prettier": "^3.5.3",
     "supertest": "^7.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
