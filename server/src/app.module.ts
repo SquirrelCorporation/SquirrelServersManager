@@ -9,6 +9,7 @@ import { AnsibleConfigModule } from './modules/ansible-config/ansible-config.mod
 import { AnsibleModule } from './modules/ansible/ansible.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AutomationsModule } from './modules/automations/automations.module';
+import { ContainerStacksModule } from './modules/container-stacks/container-stacks.module';
 import { DiagnosticModule } from './modules/diagnostic/diagnostic.module';
 import { LogsModule } from './modules/logs/logs.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
@@ -93,7 +94,7 @@ let connectionReady = false;
           connectTimeoutMS: 10000,
           socketTimeoutMS: 45000,
           // Use the existing mongoose connection
-          connectionFactory: (connection) => {
+          connectionFactory: () => {
             logger.info('NestJS using the same mongoose connection');
             return mongoose.connection;
           },
@@ -102,6 +103,7 @@ let connectionReady = false;
     }),
     AuthModule,
     AutomationsModule,
+    ContainerStacksModule,
     UpdateModule,
     DiagnosticModule,
     ShellModule,

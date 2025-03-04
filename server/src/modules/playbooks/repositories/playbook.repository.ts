@@ -74,4 +74,4 @@ export class PlaybookRepository {
   async deleteAllByRepository(playbooksRepository: PlaybooksRepositoryDocument): Promise<void> {
     await this.playbookModel.deleteMany({ playbooksRepository }).exec();
   }
-} 
+}

@@ -125,6 +125,9 @@ Manages Ansible playbook execution and inventory management.
 #### Auth Module
 Handles authentication, authorization, and user management.
 
+#### Container Stacks Module
+Manages container stack repositories, including Git-based repositories for container stack definitions, with support for cloning, syncing, and updating repositories.
+
 #### Containers Module
 Manages Docker containers, images, and volumes.
 

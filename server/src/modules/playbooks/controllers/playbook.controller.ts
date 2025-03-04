@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { API, SsmAnsible } from 'ssm-shared-lib';
+import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { PlaybookService } from '../services/playbook.service';
 import { PlaybookRepository } from '../repositories/playbook.repository';
 import { Playbook } from '../schemas/playbook.schema';
@@ -31,7 +31,7 @@ export class PlaybookController {
     if (!playbook) {
       throw new Error('Playbook not found');
     }
-    
+
     return this.playbookRepository.updateOrCreate({
       ...playbook,
       ...updateData,
@@ -53,7 +53,7 @@ export class PlaybookController {
     if (!playbook) {
       throw new Error('Playbook not found');
     }
-    
+
     await this.playbookService.addExtraVarToPlaybook(playbook, extraVar);
     return { success: true };
   }
@@ -67,7 +67,7 @@ export class PlaybookController {
     if (!playbook) {
       throw new Error('Playbook not found');
     }
-    
+
     await this.playbookService.deleteExtraVarFromPlaybook(playbook, varname);
     return { success: true };
   }
@@ -82,7 +82,7 @@ export class PlaybookController {
     if (!playbook) {
       throw new Error('Playbook not found');
     }
-    
+
     const result = await this.playbookService.executePlaybook(
       playbook,
       user,
@@ -90,7 +90,7 @@ export class PlaybookController {
       execData.extraVars,
       execData.mode || SsmAnsible.ExecutionMode.APPLY,
     );
-    
+
     return result;
   }
 
@@ -104,7 +104,7 @@ export class PlaybookController {
     if (!playbook) {
       throw new Error('Playbook not found');
     }
-    
+
     const result = await this.playbookService.executePlaybook(
       playbook,
       user,
@@ -112,14 +112,14 @@ export class PlaybookController {
       execData.extraVars,
       execData.mode || SsmAnsible.ExecutionMode.APPLY,
     );
-    
+
     return result;
   }
 
   @Post('exec/inventory/:uuid')
   async execPlaybookOnInventory(
     @Param('uuid') uuid: string,
-    @Body() execData: { 
+    @Body() execData: {
       inventoryTargets?: Playbooks.All & Playbooks.HostGroups;
       extraVars?: API.ExtraVars;
       execUuid?: string;
@@ -130,7 +130,7 @@ export class PlaybookController {
     if (!playbook) {
       throw new Error('Playbook not found');
     }
-    
+
     const result = await this.playbookService.executePlaybookOnInventory(
       playbook,
       user,
@@ -138,7 +138,7 @@ export class PlaybookController {
       execData.extraVars,
       execData.execUuid,
     );
-    
+
     return result;
   }
-} 
+}

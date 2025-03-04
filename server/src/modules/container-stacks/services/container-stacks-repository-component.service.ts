@@ -1,138 +1,189 @@
+import { Injectable } from '@nestjs/common';
 import pino from 'pino';
-import shell from 'shelljs';
 import { SsmAlert, SsmGit } from 'ssm-shared-lib';
 import { RepositoryType } from 'ssm-shared-lib/distribution/enums/repositories';
 import { v4 as uuidv4 } from 'uuid';
-import { SSM_DATA_PATH } from '../../config';
-import EventManager from '../../core/events/EventManager';
-import Events from '../../core/events/events';
-import ContainerCustomStack from '../../data/database/model/ContainerCustomStack';
-import ContainerCustomStackRepository from '../../data/database/model/ContainerCustomStackRepository';
-import ContainerCustomStackRepo from '../../data/database/repository/ContainerCustomStackRepo';
-import ContainerStacksRepositoryRepo from '../../data/database/repository/ContainerCustomStackRepositoryRepo';
-import { extractTopLevelName } from '../../helpers/docker/utils';
-import { FileInfo, getMatchingFiles } from '../../helpers/files/recursive-find';
-import {
-  GitStep,
-  IGitUserInfos,
-  IInitGitOptionsSyncImmediately,
-  ILoggerContext,
-  clone,
-  commitAndSync,
-  forcePull,
-} from '../../helpers/git';
-import logger from '../../logger';
-import { NotFoundError } from '../../middlewares/api/ApiError';
-import GitCustomStacksRepositoryUseCases from '../../services/GitCustomStacksRepositoryUseCases';
-import Shell from '../shell';
-import FileSystemManager from '../shell/managers/FileSystemManager';
+import { SSM_DATA_PATH } from '../../../config';
+import EventManager from '../../../core/events/EventManager';
+import Events from '../../../core/events/events';
+import { FileInfo, getMatchingFiles } from '../../../helpers/files/recursive-find';
+import { extractTopLevelName } from '../../../helpers/docker/utils';
+import { GitStep, IGitUserInfos, IInitGitOptionsSyncImmediately, ILoggerContext, clone, commitAndSync, forcePull } from '../../../helpers/git';
+import logger from '../../../logger';
+import { NotFoundError } from '../../../middlewares/api/ApiError';
+import { ShellWrapperService } from '../../shell/services/shell-wrapper.service';
+import { ContainerCustomStacksRepositoryRepository } from '../repositories/container-custom-stacks-repository.repository';
+import { ContainerCustomStackRepository } from '../repositories/container-custom-stack.repository';
+import { ContainerStacksService } from './container-stacks.service';
 
 export const DIRECTORY_ROOT = `${SSM_DATA_PATH}/container-stacks`;
 
-class ContainerCustomStacksRepositoryComponent extends EventManager {
-  public name: string;
-  public directory: string;
-  public uuid: string;
-  public childLogger: pino.Logger<never>;
-  private readonly options: IInitGitOptionsSyncImmediately;
+export interface RepositoryConfig {
+  uuid: string;
+  name: string;
+  branch: string;
+  email: string;
+  userName: string;
+  accessToken: string;
+  remoteUrl: string;
+  gitService: SsmGit.Services;
+  ignoreSSLErrors?: boolean;
+}
+
+@Injectable()
+export class ContainerRepositoryComponentService extends EventManager {
+  public name = '';
+  public directory = '';
+  public uuid = '';
+  public childLogger!: pino.Logger<never>;
+
+  private branch = '';
+  private email = '';
+  private userName = '';
+  private accessToken = '';
+  private remoteUrl = '';
+  private gitService!: SsmGit.Services;
+  private ignoreSSLErrors = false;
+  private options!: IInitGitOptionsSyncImmediately;
+
+  private initialized = false;
 
   constructor(
-    uuid: string,
-    name: string,
-    branch: string,
-    email: string,
-    gitUserName: string,
-    accessToken: string,
-    remoteUrl: string,
-    gitService: SsmGit.Services,
-    ignoreSSLErrors?: boolean,
+    private readonly shellWrapperService: ShellWrapperService,
+    private readonly containerCustomStackRepository: ContainerCustomStackRepository,
+    private readonly containerCustomStacksRepositoryRepository: ContainerCustomStacksRepositoryRepository,
+    private readonly containerStacksService: ContainerStacksService,
   ) {
     super();
-    const dir = `${DIRECTORY_ROOT}/${uuid}`;
-    this.uuid = uuid;
+  }
+
+  initialize(config: RepositoryConfig): void {
+    const dir = `${DIRECTORY_ROOT}/${config.uuid}`;
+    this.uuid = config.uuid;
     this.directory = dir;
-    this.name = name;
+    this.name = config.name;
+    this.branch = config.branch;
+    this.email = config.email;
+    this.userName = config.userName;
+    this.accessToken = config.accessToken;
+    this.remoteUrl = config.remoteUrl;
+    this.gitService = config.gitService;
+    this.ignoreSSLErrors = config.ignoreSSLErrors || false;
+
     this.childLogger = logger.child(
       {
         module: `ContainerCustomStackRepository`,
         moduleId: `${this.uuid}`,
         moduleName: `${this.name}`,
       },
-      { msgPrefix: `[CONTAINER_CUSTOM_STACK_GIT_REPOSITORY] - ` },
+      { msgPrefix: `[CONTAINER_CUSTOM_STACK_GIT_REPOSITORY] - ` }
     );
+
     const userInfo: IGitUserInfos = {
-      email: email,
-      gitUserName: gitUserName,
-      branch: branch,
-      accessToken: accessToken,
-      gitService: gitService,
-      env: ignoreSSLErrors
+      email: this.email,
+      gitUserName: this.userName,
+      branch: this.branch,
+      accessToken: this.accessToken,
+      gitService: this.gitService,
+      env: this.ignoreSSLErrors
         ? {
             GIT_SSL_NO_VERIFY: 'true',
           }
         : undefined,
     };
+
     this.options = {
       dir: this.directory,
       syncImmediately: true,
       userInfo: userInfo,
-      remoteUrl: remoteUrl,
+      remoteUrl: this.remoteUrl,
     };
+
+    this.initialized = true;
   }
 
-  public async delete() {
-    Shell.FileSystemManager.deleteFiles(this.directory);
+  private checkInitialized(): void {
+    if (!this.initialized) {
+      throw new Error('Component not initialized. Call initialize() first.');
+    }
   }
 
-  public async save(containerStackUuid: string, content: string) {
-    const containerStack = await ContainerCustomStackRepo.findByUuid(containerStackUuid);
+  async delete(): Promise<void> {
+    this.checkInitialized();
+    await this.shellWrapperService.rm('-rf', this.directory);
+  }
+
+  async save(containerStackUuid: string, content: string): Promise<void> {
+    this.checkInitialized();
+
+    const containerStack = await this.containerCustomStackRepository.findByUuid(containerStackUuid);
     if (!containerStack) {
       throw new NotFoundError(`Container Stack ${containerStackUuid} not found`);
     }
-    shell.ShellString(content).to(containerStack.path as string);
+
+    // Write content to the file
+    await this.shellWrapperService.exec(`echo '${content.replace(/'/g, "'\\''")}' > ${containerStack.path}`);
   }
 
-  public async syncToDatabase() {
+  async syncToDatabase(): Promise<void> {
+    this.checkInitialized();
     this.childLogger.info('saving to database...');
+
     const containerStackRepository = await this.getContainerStackRepository();
+
     const containerStacksListFromDatabase =
-      await ContainerCustomStackRepo.listAllByRepository(containerStackRepository);
+      await this.containerCustomStackRepository.listAllByRepository(containerStackRepository);
+
     this.childLogger.info(
-      `Found ${containerStacksListFromDatabase?.length || 0} stacks from database`,
+      `Found ${containerStacksListFromDatabase?.length || 0} stacks from database`
     );
+
     const containerStacksListFromDirectory = getMatchingFiles(
       this.directory,
-      containerStackRepository.matchesList as string[],
+      containerStackRepository.matchesList as string[]
     );
+
     this.childLogger.debug(containerStacksListFromDirectory);
     this.childLogger.info(
-      `Found ${containerStacksListFromDirectory?.length || 0} stacks from directory`,
+      `Found ${containerStacksListFromDirectory?.length || 0} stacks from directory`
     );
+
+    // Find stacks to delete (in DB but not in directory)
     const containerStacksListToDelete = containerStacksListFromDatabase?.filter((stack) => {
       return !containerStacksListFromDirectory?.some((p) => p.fullPath === stack.path);
     });
+
     this.childLogger.info(
-      `Found ${containerStacksListToDelete?.length || 0} stacks to delete from database`,
+      `Found ${containerStacksListToDelete?.length || 0} stacks to delete from database`
     );
+
+    // Delete stacks that no longer exist in the directory
     if (containerStacksListToDelete && containerStacksListToDelete.length > 0) {
       await Promise.all(
         containerStacksListToDelete?.map((stack) => {
           if (stack && stack.uuid) {
-            return ContainerCustomStackRepo.deleteOne(stack.uuid);
+            return this.containerCustomStackRepository.deleteOne(stack.uuid);
           }
-        }),
+          return Promise.resolve();
+        })
       );
     }
+
+    // Process stacks that exist in the directory
     const containerStackPathsToSync = containerStacksListFromDirectory?.filter((stack) => {
       return stack !== undefined;
     }) as FileInfo[];
-    this.childLogger.info(`Stacks to sync : ${containerStackPathsToSync.length}`);
+
+    this.childLogger.info(`Stacks to sync: ${containerStackPathsToSync.length}`);
+
     await Promise.all(
       containerStackPathsToSync.map(async (stackPath) => {
         return this.updateOrCreateAssociatedStack(stackPath, containerStackRepository);
-      }),
+      })
     );
+
     this.childLogger.info(`Updating Stacks Repository ${containerStackRepository.name}`);
+
     this.emit(Events.ALERT, {
       severity: SsmAlert.AlertType.SUCCESS,
       message: `Successfully updated repository "${containerStackRepository.name}" with ${containerStackPathsToSync.length} files`,
@@ -141,7 +192,7 @@ class ContainerCustomStacksRepositoryComponent extends EventManager {
   }
 
   private async getContainerStackRepository() {
-    const containerStacksRepository = await ContainerStacksRepositoryRepo.findOneByUuid(this.uuid);
+    const containerStacksRepository = await this.containerCustomStacksRepositoryRepository.findOneByUuid(this.uuid);
     if (!containerStacksRepository) {
       throw new NotFoundError(`Container Stacks repository ${this.uuid} not found`);
     }
@@ -150,17 +201,22 @@ class ContainerCustomStacksRepositoryComponent extends EventManager {
 
   private async updateOrCreateAssociatedStack(
     foundStack: FileInfo,
-    containerCustomStackRepository: ContainerCustomStackRepository,
+    containerCustomStackRepository: any
   ): Promise<void> {
-    const stackFoundInDatabase = await ContainerCustomStackRepo.findOneByPath(
-      foundStack.fullPath as string,
+    const stackFoundInDatabase = await this.containerCustomStackRepository.findOneByPath(
+      foundStack.fullPath as string
     );
+
     this.childLogger.debug(
-      `Processing stack ${JSON.stringify(foundStack)} - In database: ${stackFoundInDatabase ? 'true' : 'false'}`,
+      `Processing stack ${JSON.stringify(foundStack)} - In database: ${stackFoundInDatabase ? 'true' : 'false'}`
     );
-    const stackContent = FileSystemManager.readFile(foundStack.fullPath as string);
+
+    // Read the file content
+    const stackContent = await this.shellWrapperService.exec(`cat ${foundStack.fullPath}`);
+
     const embeddedProjectName = extractTopLevelName(stackContent);
-    const stackData: ContainerCustomStack = {
+
+    const stackData = {
       path: foundStack.fullPath,
       name:
         stackFoundInDatabase?.name ||
@@ -180,30 +236,35 @@ class ContainerCustomStacksRepositoryComponent extends EventManager {
       iconBackgroundColor: stackFoundInDatabase?.iconBackgroundColor || '#000000',
       iconColor: stackFoundInDatabase?.iconColor || '#ffffff',
     };
+
     this.childLogger.debug(`Stack data: ${JSON.stringify(stackData)}`);
-    await ContainerCustomStackRepo.updateOrCreate(stackData);
+    await this.containerCustomStackRepository.updateOrCreate(stackData);
   }
 
-  public fileBelongToRepository(path: string) {
+  fileBelongToRepository(path: string): boolean {
+    this.checkInitialized();
     this.childLogger.info(
-      `rootPath: ${this.directory?.split('/')[0]} versus ${path.split('/')[0]}`,
+      `rootPath: ${this.directory?.split('/')[0]} versus ${path.split('/')[0]}`
     );
     return this.directory?.split('/')[0] === path.split('/')[0];
   }
 
-  getDirectory() {
+  getDirectory(): string {
+    this.checkInitialized();
     return this.directory;
   }
 
-  async clone(syncAfter: boolean = false) {
+  async clone(syncAfter = false): Promise<void> {
+    this.checkInitialized();
     this.childLogger.info('Clone starting...');
+
     try {
-      await GitCustomStacksRepositoryUseCases.resetRepositoryError(this.uuid);
-      try {
-        void Shell.FileSystemManager.createDirectory(this.directory, DIRECTORY_ROOT);
-      } catch (error: any) {
-        logger.warn(error);
-      }
+      await this.containerStacksService.resetRepositoryError(this.uuid);
+
+      // Create directory if it doesn't exist
+      await this.shellWrapperService.mkdir('-p', this.directory);
+
+      // Clone the repository
       await clone({
         ...this.options,
         logger: {
@@ -219,24 +280,28 @@ class ContainerCustomStacksRepositoryComponent extends EventManager {
           },
         },
       });
+
       if (syncAfter) {
         await this.syncToDatabase();
       }
     } catch (error: any) {
       this.childLogger.error(error);
-      await GitCustomStacksRepositoryUseCases.putRepositoryOnError(this.uuid, error);
+      await this.containerStacksService.putRepositoryOnError(this.uuid, error);
       this.childLogger.info(`Emit ${Events.ALERT} with error: ${error.message}`);
       this.emit(Events.ALERT, {
         severity: SsmAlert.AlertType.ERROR,
         message: `Error during git clone: ${error.message}`,
         module: 'ContainerCustomStackRepository',
       });
+      throw error;
     }
   }
 
-  async commitAndSync() {
+  async commitAndSync(): Promise<void> {
+    this.checkInitialized();
     try {
-      await GitCustomStacksRepositoryUseCases.resetRepositoryError(this.uuid);
+      await this.containerStacksService.resetRepositoryError(this.uuid);
+
       await commitAndSync({
         ...this.options,
         logger: {
@@ -252,6 +317,7 @@ class ContainerCustomStacksRepositoryComponent extends EventManager {
           },
         },
       });
+
       this.emit(Events.ALERT, {
         severity: SsmAlert.AlertType.SUCCESS,
         message: `Successfully commit and sync repository "${this.name}"`,
@@ -259,18 +325,21 @@ class ContainerCustomStacksRepositoryComponent extends EventManager {
       });
     } catch (error: any) {
       this.childLogger.error(error);
-      await GitCustomStacksRepositoryUseCases.putRepositoryOnError(this.uuid, error);
+      await this.containerStacksService.putRepositoryOnError(this.uuid, error);
       this.emit(Events.ALERT, {
         severity: SsmAlert.AlertType.ERROR,
         message: `Error during commit and sync: ${error.message}`,
         module: 'ContainerCustomStackRepository',
       });
+      throw error;
     }
   }
 
-  async forcePull() {
+  async forcePull(): Promise<void> {
+    this.checkInitialized();
     try {
-      await GitCustomStacksRepositoryUseCases.resetRepositoryError(this.uuid);
+      await this.containerStacksService.resetRepositoryError(this.uuid);
+
       await forcePull({
         ...this.options,
         logger: {
@@ -286,6 +355,7 @@ class ContainerCustomStacksRepositoryComponent extends EventManager {
           },
         },
       });
+
       this.emit(Events.ALERT, {
         severity: SsmAlert.AlertType.SUCCESS,
         message: `Successfully forcepull repository ${this.name}`,
@@ -293,29 +363,23 @@ class ContainerCustomStacksRepositoryComponent extends EventManager {
       });
     } catch (error: any) {
       this.childLogger.error(error);
-      await GitCustomStacksRepositoryUseCases.putRepositoryOnError(this.uuid, error);
+      await this.containerStacksService.putRepositoryOnError(this.uuid, error);
       this.emit(Events.ALERT, {
         severity: SsmAlert.AlertType.ERROR,
         message: `Error during force pull: ${error.message}`,
         module: 'ContainerCustomStackRepository',
       });
+      throw error;
     }
   }
 
-  async init() {
+  async init(): Promise<void> {
+    this.checkInitialized();
     await this.clone();
   }
 
-  async syncFromRepository() {
+  async syncFromRepository(): Promise<void> {
+    this.checkInitialized();
     await this.forcePull();
   }
 }
-
-export interface AbstractComponent extends ContainerCustomStacksRepositoryComponent {
-  save(playbookUuid: string, content: string): Promise<void>;
-  init(): Promise<void>;
-  delete(): Promise<void>;
-  syncFromRepository(): Promise<void>;
-}
-
-export default ContainerCustomStacksRepositoryComponent;
