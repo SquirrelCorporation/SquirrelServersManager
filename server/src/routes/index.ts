@@ -4,10 +4,8 @@ import ansible from './ansible';
 import containerRepository from './container-stacks-repository';
 import containers from './containers';
 import devices from './devices';
-import notifications from './notifications';
 import ping from './ping';
 import playbooks from './playbooks';
-import playbooksRepository from './playbooks-repository';
 import settings from './settings';
 import user from './user';
 
@@ -21,8 +19,6 @@ router.use('/playbooks', playbooks);
 router.use('/settings', settings);
 router.use('/', user);
 router.use('/containers', containers);
-router.use('/playbooks-repository', playbooksRepository);
-router.use('/notifications', notifications);
 router.use('/ansible', ansible);
 router.use('/container-repository', containerRepository);
 

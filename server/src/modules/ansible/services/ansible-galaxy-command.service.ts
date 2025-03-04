@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ShellWrapperService } from '../../shell/services/shell-wrapper.service';
 
 /**
  * Service for building Ansible Galaxy commands
@@ -7,6 +8,8 @@ import { Injectable } from '@nestjs/common';
 export class AnsibleGalaxyCommandService {
   private static readonly ansibleGalaxy = 'ansible-galaxy';
   private static readonly collection = 'collection';
+
+  constructor(private readonly shellWrapperService: ShellWrapperService) {}
 
   /**
    * Get command to install an Ansible collection
@@ -20,5 +23,13 @@ export class AnsibleGalaxyCommandService {
    */
   getListCollectionsCmd(name: string, namespace: string): string {
     return `${AnsibleGalaxyCommandService.ansibleGalaxy} ${AnsibleGalaxyCommandService.collection} list`;
+  }
+
+  /**
+   * Install an Ansible collection
+   */
+  async installCollection(name: string, namespace: string): Promise<void> {
+    const cmd = this.getInstallCollectionCmd(name, namespace);
+    await this.shellWrapperService.exec(cmd);
   }
 }

@@ -15,9 +15,9 @@ import providerConf from '../../modules/containers/registries/providers/provider
 import Crons from '../../modules/crons';
 import NotificationComponent from '../../modules/notifications/NotificationComponent';
 import RemoteSystemInformationEngine from '../../modules/remote-system-information/core/RemoteSystemInformationEngine';
-import ContainerCustomStacksRepositoryEngine from '../../modules/repository/ContainerCustomStacksRepositoryEngine';
-import { createADefaultLocalUserRepository } from '../../modules/repository/default-playbooks-repositories';
-import PlaybooksRepositoryEngine from '../../modules/repository/PlaybooksRepositoryEngine';
+import ContainerCustomStacksRepositoryEngine from '../../modules/container-stacks/engines/ContainerCustomStacksRepositoryEngine';
+import { DefaultPlaybooksRepositoriesService } from '../../modules/playbooks/services/default-playbooks-repositories.service';
+import { PlaybooksRepositoryEngineService } from '../../modules/playbooks/services/playbooks-repository-engine.service';
 import sshPrivateKeyFileManager from '../../modules/shell/managers/SshPrivateKeyFileManager';
 import Telemetry from '../../modules/telemetry';
 import ContainerRegistryUseCases from '../../services/ContainerRegistryUseCases';
@@ -43,8 +43,8 @@ class Startup {
 
   private async initializeModules() {
     void RemoteSystemInformationEngine.init();
-    await PlaybooksRepositoryEngine.init();
-    void PlaybooksRepositoryEngine.syncAllRegistered();
+    await PlaybooksRepositoryEngineService.init();
+    void PlaybooksRepositoryEngineService.syncAllRegistered();
     void sshPrivateKeyFileManager.removeAllAnsibleTemporaryPrivateKeys();
     void NotificationComponent.init();
     void Crons.initScheduledJobs();
@@ -86,7 +86,7 @@ class Startup {
     }
 
     try {
-      await createADefaultLocalUserRepository();
+      await DefaultPlaybooksRepositoriesService.createADefaultLocalUserRepository();
       this.logger.info('Created default local user repository successfully.');
     } catch (error: any) {
       this.logger.error(`Error creating default local user repository: ${error.message}`);

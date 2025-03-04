@@ -6,11 +6,13 @@ import mongoose from 'mongoose';
 import { db } from './config';
 import logger from './logger';
 import { AnsibleConfigModule } from './modules/ansible-config/ansible-config.module';
+import { AnsibleModule } from './modules/ansible/ansible.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AutomationsModule } from './modules/automations/automations.module';
 import { DiagnosticModule } from './modules/diagnostic/diagnostic.module';
 import { LogsModule } from './modules/logs/logs.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { PlaybooksModule } from './modules/playbooks/playbooks.module';
 import { SftpModule } from './modules/sftp-nest/sftp.module';
 import { ShellModule } from './modules/shell/shell.module';
 import { SmartFailureModule } from './modules/smart-failure/smart-failure.module';
@@ -106,9 +108,11 @@ let connectionReady = false;
     SshModule,
     SftpModule,
     LogsModule,
+    AnsibleModule,
     AnsibleConfigModule,
     SmartFailureModule,
     NotificationsModule,
+    PlaybooksModule,
   ],
 })
 export class AppModule implements OnModuleInit {

@@ -101,6 +101,22 @@ Key files:
 - `notifications/controllers/notification.controller.ts` - REST API endpoints
 - `notifications/entities/notification.entity.ts` - Mongoose schema for notifications
 
+#### Repository Module
+
+The Repository Module manages Git and local playbook repositories:
+- Git repository management (clone, pull, commit, push)
+- Local repository management
+- Playbook and directory operations
+- Repository tree generation and manipulation
+- Bridge pattern for backward compatibility
+
+Key files:
+- `repository/services/playbooks-repository.service.ts` - Core repository management
+- `repository/services/git-playbooks-repository.service.ts` - Git repository operations
+- `repository/services/local-playbooks-repository.service.ts` - Local repository operations
+- `repository/controllers/playbooks-repository.controller.ts` - REST API endpoints
+- `repository/PlaybooksRepository.ts` - Bridge class for backward compatibility
+
 ### Other Modules
 
 #### Ansible Module
@@ -149,6 +165,7 @@ Modules are registered in the application's main module (`app.module.ts`):
     DiagnosticModule,
     UpdateModule,
     NotificationsModule,
+    RepositoryModule,
     // Other modules
   ],
 })
