@@ -1,12 +1,11 @@
+import * as path from 'path';
+import * as fs from 'fs';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import * as path from 'path';
-import * as fs from 'fs';
-
 import { IPlaybooksRepositoryComponent } from '../interfaces/playbooks-repository-component.interface';
-import { FileSystemService } from '../../shell/services/file-system.service';
+import { FileSystemService } from '../../shell';
 import { PlaybooksRepositoryService } from '../services/playbooks-repository.service';
 
 // Create schema definitions
@@ -35,7 +34,8 @@ export abstract class PlaybooksRepositoryComponent implements IPlaybooksReposito
     protected readonly playbooksRepositoryService: PlaybooksRepositoryService,
     protected readonly eventEmitter: EventEmitter2,
     @InjectModel(Playbook.name) protected readonly playbookModel: Model<PlaybookDocument>,
-    @InjectModel(PlaybookRepository.name) protected readonly repositoryModel: Model<PlaybookRepositoryDocument>,
+    @InjectModel(PlaybookRepository.name)
+    protected readonly repositoryModel: Model<PlaybookRepositoryDocument>,
   ) {}
 
   /**
@@ -45,8 +45,11 @@ export abstract class PlaybooksRepositoryComponent implements IPlaybooksReposito
     this.uuid = uuid;
     this.name = name;
     this.directory = directory;
-    this.rootPath = path.join(process.env.PLAYBOOKS_REPOSITORIES_PATH || '/tmp/playbooks', this.directory);
-    
+    this.rootPath = path.join(
+      process.env.PLAYBOOKS_REPOSITORIES_PATH || '/tmp/playbooks',
+      this.directory,
+    );
+
     // Ensure the repository directory exists
     if (!fs.existsSync(this.rootPath)) {
       await this.fileSystemService.createDirectory(this.rootPath);
@@ -59,13 +62,13 @@ export abstract class PlaybooksRepositoryComponent implements IPlaybooksReposito
   async delete(): Promise<void> {
     // Remove the repository directory
     await this.fileSystemService.deleteFiles(this.rootPath);
-    
+
     // Delete all playbooks associated with this repository
     await this.playbookModel.deleteMany({ repositoryUuid: this.uuid });
-    
+
     // Delete the repository from the database
     await this.repositoryModel.deleteOne({ uuid: this.uuid });
-    
+
     // Emit repository deleted event
     this.emit('repository.deleted', { uuid: this.uuid });
   }
@@ -74,15 +77,18 @@ export abstract class PlaybooksRepositoryComponent implements IPlaybooksReposito
    * Save a playbook content
    */
   async save(playbookUuid: string, content: string): Promise<void> {
-    const playbook = await this.playbookModel.findOne({ uuid: playbookUuid, repositoryUuid: this.uuid });
-    
+    const playbook = await this.playbookModel.findOne({
+      uuid: playbookUuid,
+      repositoryUuid: this.uuid,
+    });
+
     if (!playbook) {
       throw new Error(`Playbook with UUID ${playbookUuid} not found in repository ${this.uuid}`);
     }
-    
+
     const fullPath = path.join(this.rootPath, playbook.path);
     await this.fileSystemService.writeFile(content, fullPath);
-    
+
     // Emit playbook saved event
     this.emit('playbook.saved', { uuid: playbookUuid, repositoryUuid: this.uuid });
   }
@@ -96,12 +102,12 @@ export abstract class PlaybooksRepositoryComponent implements IPlaybooksReposito
     if (!playbooksRepository) {
       throw new Error(`Repository with UUID ${this.uuid} not found`);
     }
-    
+
     const filteredTree = await this.updateDirectoriesTree();
     if (!filteredTree) {
       return undefined;
     }
-    
+
     // The rest of the implementation would go here
     // For now, we'll return a placeholder value
     return 0;
@@ -116,7 +122,7 @@ export abstract class PlaybooksRepositoryComponent implements IPlaybooksReposito
     if (!playbooksRepository) {
       throw new Error(`Repository with UUID ${this.uuid} not found`);
     }
-    
+
     // The rest of the implementation would go here
     // For now, we'll return a placeholder value
     return {};
@@ -142,4 +148,4 @@ export abstract class PlaybooksRepositoryComponent implements IPlaybooksReposito
   protected emit(event: string, data: any): void {
     this.eventEmitter.emit(event, data);
   }
-} 
+}

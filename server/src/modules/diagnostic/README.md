@@ -1,5 +1,118 @@
 # Diagnostic Module
 
+This module provides diagnostic capabilities for devices in the system. It follows a clean architecture pattern with the following layers:
+
+## Domain Layer
+
+The core business logic and entities:
+
+- `entities/diagnostic.entity.ts`: Contains the core domain entities and types
+- `repositories/diagnostic-repository.interface.ts`: Defines the repository interface for data access
+
+## Application Layer
+
+The application services that orchestrate the use cases:
+
+- `interfaces/diagnostic-service.interface.ts`: Defines the service interface
+- `services/diagnostic.service.ts`: Implements the diagnostic service logic
+
+## Infrastructure Layer
+
+The implementation of interfaces defined in the domain layer:
+
+- `repositories/diagnostic.repository.ts`: Implements the repository interface
+
+## Presentation Layer
+
+The controllers, DTOs, and mappers for the API:
+
+- `controllers/diagnostic.controller.ts`: Handles HTTP requests
+- `dtos/diagnostic.dto.ts`: Data Transfer Objects for API requests and responses
+- `mappers/diagnostic.mapper.ts`: Maps between domain entities and DTOs
+
+## Module Structure
+
+The module is organized as follows:
+
+```
+diagnostic/
+├── application/
+│   ├── interfaces/
+│   │   └── diagnostic-service.interface.ts
+│   └── services/
+│       └── diagnostic.service.ts
+├── domain/
+│   ├── entities/
+│   │   └── diagnostic.entity.ts
+│   └── repositories/
+│       └── diagnostic-repository.interface.ts
+├── infrastructure/
+│   └── repositories/
+│       └── diagnostic.repository.ts
+├── presentation/
+│   ├── controllers/
+│   │   └── diagnostic.controller.ts
+│   ├── dtos/
+│   │   └── diagnostic.dto.ts
+│   └── mappers/
+│       └── diagnostic.mapper.ts
+├── __tests__/
+│   ├── application/
+│   │   └── services/
+│   │       └── diagnostic.service.spec.ts
+│   ├── infrastructure/
+│   │   └── repositories/
+│   │       └── diagnostic.repository.spec.ts
+│   └── presentation/
+│       ├── controllers/
+│       │   └── diagnostic.controller.spec.ts
+│       └── mappers/
+│           └── diagnostic.mapper.spec.ts
+├── diagnostic.module.ts
+├── index.ts
+└── README.md
+```
+
+## Usage
+
+The diagnostic module provides functionality to run diagnostic checks on devices. It performs the following checks:
+
+1. SSH connectivity
+2. SSH Docker connectivity
+3. Docker socket availability
+4. Disk space
+5. CPU and memory information
+
+The diagnostic results are returned as a report containing the status of each check.
+
+## Recent Changes
+
+### Clean Architecture Migration
+
+The module has been migrated to follow the clean architecture pattern:
+
+- **Domain Layer**: Contains the core business entities and repository interfaces
+- **Application Layer**: Contains the service interfaces and implementations
+- **Infrastructure Layer**: Contains the repository implementations
+- **Presentation Layer**: Contains the controllers, DTOs, and mappers
+
+### Test Reorganization
+
+The test structure has been reorganized to mirror the module architecture:
+
+- `__tests__/application/services/diagnostic.service.spec.ts`: Tests for the diagnostic service
+- `__tests__/infrastructure/repositories/diagnostic.repository.spec.ts`: Tests for the repository implementation
+- `__tests__/presentation/controllers/diagnostic.controller.spec.ts`: Tests for the controller
+- `__tests__/presentation/mappers/diagnostic.mapper.spec.ts`: Tests for the mapper
+
+### Device Model Integration
+
+The module now properly integrates with the devices module:
+
+- Uses the `IDevice` and `IDeviceAuth` interfaces from the devices module
+- Injects the device repositories from the devices module
+- Follows proper dependency injection patterns
+
 ## Overview
 The Diagnostic Module provides functionality to perform diagnostic checks on connected devices within the Squirrel Servers Manager (SSM) application. It allows administrators to verify connectivity, resource availability, and system health for managed servers.
 
@@ -47,7 +160,7 @@ The Diagnostic Module can be used through the REST API:
 
 ```typescript
 // Trigger diagnostic checks for a device
-POST /diagnostic/:uuid
+POST /devices/:uuid/auth/diagnostic
 ```
 
 ## Testing
@@ -64,11 +177,3 @@ Tests use Vitest for mocking dependencies such as SSH connections and Docker soc
 - docker-modem: For Docker socket connectivity
 - @nestjs/event-emitter: For event management
 - ssm-shared-lib: For shared diagnostic enums
-
-## Recent Changes
-- Migrated from legacy implementation to NestJS patterns
-- Updated diagnostic check logic with improved error handling
-- Fixed enum usage (SsmDeviceDiagnostic.Checks vs SsmDeviceDiagnostic.Check)
-- Implemented proper error rejection in connectivity checks
-- Added TypeScript strict property initialization for DTOs
-- Standardized diagnostic check sequence

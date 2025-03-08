@@ -6,11 +6,12 @@
   "scripts": {
     "dev": "nodemon",
     "dev:nest": "nest start --watch",
-    "dev:fast": "NODE_ENV=development ts-node-dev --respawn --transpile-only --watch src --clear src/main.ts",
-    "dev:legacy": "NODE_ENV=development nodemon --legacy-watch --exec 'ts-node --transpile-only' src/main.ts",
-    "start": "npm run build-shared && npm run build && cross-env NODE_ENV=production node dist/index.js",
+    "dev:fast": "NODE_ENV=development ts-node-dev --respawn --transpile-only -r tsconfig-paths/register --watch src --clear src/main.ts",
+    "dev:legacy": "NODE_ENV=development nodemon --legacy-watch --exec 'ts-node -r tsconfig-paths/register --transpile-only' src/main.ts",
+    "start": "npm run build-shared && npm run build && cross-env NODE_ENV=production node -r tsconfig-paths/register dist/index.js",
     "build": "nest build",
     "test": "vitest run",
+    "test:devices": "vitest run --run src/modules/devices/__tests__/application/services/devices.service.spec.ts src/modules/devices/__tests__/infrastructure/repositories/device-auth.repository.spec.ts",
     "test:python:install": "PIP_BREAK_SYSTEM_PACKAGES=1 pip install -r ./src/ansible/requirements.txt",
     "test:python": "npm run test:python:install && npm run test:python:run",
     "test:python:run": "cd ./src/ansible && python3 -m unittest discover -s . -p \"*.py\"",
@@ -55,6 +56,7 @@
     "mongoose": "^8.10.1",
     "mongoose-autopopulate": "^1.1.0",
     "multer": "^1.4.5-lts.1",
+    "nestjs-pino": "^4.3.1",
     "node-cron": "^3.0.3",
     "node-ssh": "^13.2.0",
     "parse-docker-image-name": "^3.0.0",
@@ -80,6 +82,7 @@
     "socket.io": "^4.8.1",
     "ssh2": "^1.16.0",
     "ssm-shared-lib": "file:../shared-lib/",
+    "tsconfig-paths": "^4.2.0",
     "yaml": "^2.7.0"
   },
   "overrides": {
@@ -132,6 +135,6 @@
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.7.3",
-    "vitest": "^3.0.7"
+    "vitest": "^3.0.8"
   }
 }

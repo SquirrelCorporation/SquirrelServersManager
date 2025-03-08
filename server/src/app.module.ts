@@ -7,18 +7,24 @@ import { db } from './config';
 import logger from './logger';
 import { AnsibleConfigModule } from './modules/ansible-config/ansible-config.module';
 import { AnsibleModule } from './modules/ansible/ansible.module';
+import { AnsibleVaultModule } from './modules/ansible-vault/ansible-vault.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AutomationsModule } from './modules/automations/automations.module';
 import { ContainerStacksModule } from './modules/container-stacks/container-stacks.module';
+import { ContainersModule } from './modules/containers/containers.module';
+import { DevicesModule } from './modules/devices/devices.module';
 import { DiagnosticModule } from './modules/diagnostic/diagnostic.module';
 import { LogsModule } from './modules/logs/logs.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { PlaybooksModule } from './modules/playbooks/playbooks.module';
+import { SchedulerModule } from './modules/scheduler/scheduler.module';
 import { SftpModule } from './modules/sftp-nest/sftp.module';
 import { ShellModule } from './modules/shell/shell.module';
 import { SmartFailureModule } from './modules/smart-failure/smart-failure.module';
 import { SshModule } from './modules/ssh-nest/ssh.module';
 import { UpdateModule } from './modules/update/update.module';
+import { UsersModule } from './modules/users/users.module';
+import { CacheModule } from './infrastructure/cache';
 
 // Store the connection for legacy code to access
 let sharedConnection: mongoose.Connection | null = null;
@@ -30,6 +36,8 @@ let connectionReady = false;
       isGlobal: true,
     }),
     EventEmitterModule.forRoot(),
+    // Register cache module with default options
+    CacheModule.register(),
     MongooseModule.forRootAsync({
       useFactory: async () => {
         // Create a direct mongoose connection first
@@ -104,6 +112,8 @@ let connectionReady = false;
     AuthModule,
     AutomationsModule,
     ContainerStacksModule,
+    ContainersModule,
+    DevicesModule,
     UpdateModule,
     DiagnosticModule,
     ShellModule,
@@ -112,9 +122,12 @@ let connectionReady = false;
     LogsModule,
     AnsibleModule,
     AnsibleConfigModule,
+    AnsibleVaultModule,
     SmartFailureModule,
     NotificationsModule,
     PlaybooksModule,
+    UsersModule,
+    SchedulerModule,
   ],
 })
 export class AppModule implements OnModuleInit {

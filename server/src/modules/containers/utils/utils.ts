@@ -1,11 +1,30 @@
 import Dockerode from 'dockerode';
 import ContainerRepo from '../../../data/database/repository/ContainerRepo';
 import logger from '../../../logger';
-import { getRegistries } from '../core/WatcherEngine';
 import Registry from '../registries/Registry';
 import Container from '../../../data/database/model/Container';
+import { ContainerDocument } from '../schemas/container.schema';
 import Tag from './tag';
 import tagUtil from './tag';
+
+// We'll need to get the registries from the WatcherEngineService instance
+let registriesGetter: () => Registry[] = () => [];
+
+/**
+ * Set the registries getter function
+ * @param getter Function that returns the registries
+ */
+export function setRegistriesGetter(getter: () => Registry[]) {
+  registriesGetter = getter;
+}
+
+/**
+ * Get the registries
+ * @returns The registries
+ */
+export function getRegistries(): Registry[] {
+  return registriesGetter();
+}
 
 /**
  * Filter candidate tags (based on tag name).
@@ -199,7 +218,7 @@ export function hasResultChanged(container, otherContainer) {
   );
 }
 
-export function isUpdateAvailable(container: Container) {
+export function isUpdateAvailable(container: ContainerDocument) {
   if (container.image === undefined || container.result === undefined) {
     return false;
   }
@@ -262,7 +281,7 @@ function getLink(linkTemplate: string | undefined, tagValue: string, isSemver: b
  * @returns {undefined|*}
  */
 //TODO that is not correct
-export function addLinkProperty(container: Container) {
+export function addLinkProperty(container: ContainerDocument) {
   if (container.linkTemplate) {
     return getLink(
       container.linkTemplate,
@@ -279,7 +298,7 @@ export function addLinkProperty(container: Container) {
   }
 }
 
-export function getKindProperty(container: Container) {
+export function getKindProperty(container: ContainerDocument) {
   const updateKind: {
     kind: 'unknown' | 'tag' | 'digest';
     localValue?: string;

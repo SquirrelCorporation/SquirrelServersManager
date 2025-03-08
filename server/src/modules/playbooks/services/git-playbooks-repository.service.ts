@@ -1,12 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { API, SsmGit } from 'ssm-shared-lib';
-import { PlaybooksRepositoryDocument, PlaybooksRepository } from '../schemas/playbooks-repository.schema';
+import { SsmGit } from 'ssm-shared-lib';
+import { v4 as uuidv4 } from 'uuid';
+import {
+  PlaybooksRepository,
+  PlaybooksRepositoryDocument,
+} from '../schemas/playbooks-repository.schema';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import PlaybooksRepositoryEngine from '../engines/PlaybooksRepositoryEngine';
-import { v4 as uuidv4 } from 'uuid';
-import { PLAYBOOKS_REPOSITORY_DOCUMENT } from '../constants';
 
 /**
  * Service for managing Git playbooks repositories
@@ -46,7 +48,7 @@ export class GitPlaybooksRepositoryService {
     ignoreSSLErrors?: boolean,
   ): Promise<void> {
     this.logger.log(`Adding Git repository ${name}`);
-    
+
     try {
       const repository = await this.playbooksRepositoryModel.create({
         name,
@@ -101,13 +103,13 @@ export class GitPlaybooksRepositoryService {
     ignoreSSLErrors?: boolean,
   ): Promise<void> {
     this.logger.log(`Updating Git repository ${name}`);
-    
+
     try {
       const repository = await this.playbooksRepositoryModel.findOne({ uuid });
       if (!repository) {
         throw new NotFoundError(`Repository with UUID ${uuid} not found`);
       }
-      
+
       repository.name = name;
       repository.accessToken = accessToken;
       repository.branch = branch;
@@ -118,9 +120,9 @@ export class GitPlaybooksRepositoryService {
       repository.directoryExclusionList = directoryExclusionList;
       repository.vaults = vaults;
       repository.ignoreSSLErrors = ignoreSSLErrors;
-      
+
       await repository.save();
-      
+
       // Re-register the repository with updated settings
       await PlaybooksRepositoryEngine.deregisterRepository(uuid);
       await PlaybooksRepositoryEngine.registerRepository(repository);
@@ -138,27 +140,27 @@ export class GitPlaybooksRepositoryService {
    */
   async forcePull(uuid: string): Promise<void> {
     this.logger.log(`Force pulling Git repository ${uuid}`);
-    
+
     try {
       const repository = await this.playbooksRepositoryModel.findOne({ uuid });
       if (!repository) {
         throw new NotFoundError(`Repository with UUID ${uuid} not found`);
       }
-      
+
       const playbooksRepositoryComponent = PlaybooksRepositoryEngine.getState().playbooksRepository[
         repository.uuid
       ] as any;
-      
+
       if (!playbooksRepositoryComponent) {
         throw new InternalError('Repository is not registered, try restarting or force sync');
       }
-      
+
       if (typeof playbooksRepositoryComponent.forcePull === 'function') {
         await playbooksRepositoryComponent.forcePull();
       } else {
         throw new InternalError('Repository does not support force pull operation');
       }
-      
+
       await this.syncToDatabase(uuid);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -173,13 +175,13 @@ export class GitPlaybooksRepositoryService {
    */
   async clone(uuid: string): Promise<void> {
     this.logger.log(`Cloning Git repository ${uuid}`);
-    
+
     try {
       const repository = await this.playbooksRepositoryModel.findOne({ uuid });
       if (!repository) {
         throw new NotFoundError(`Repository with UUID ${uuid} not found`);
       }
-      
+
       await PlaybooksRepositoryEngine.deregisterRepository(uuid);
       await PlaybooksRepositoryEngine.registerRepository(repository);
       await this.syncToDatabase(uuid);
@@ -196,27 +198,27 @@ export class GitPlaybooksRepositoryService {
    */
   async commitAndSync(uuid: string): Promise<void> {
     this.logger.log(`Committing and syncing Git repository ${uuid}`);
-    
+
     try {
       const repository = await this.playbooksRepositoryModel.findOne({ uuid });
       if (!repository) {
         throw new NotFoundError(`Repository with UUID ${uuid} not found`);
       }
-      
+
       const playbooksRepositoryComponent = PlaybooksRepositoryEngine.getState().playbooksRepository[
         repository.uuid
       ] as any;
-      
+
       if (!playbooksRepositoryComponent) {
         throw new InternalError('Repository is not registered, try restarting or force sync');
       }
-      
+
       if (typeof playbooksRepositoryComponent.commitAndSync === 'function') {
         await playbooksRepositoryComponent.commitAndSync();
       } else {
         throw new InternalError('Repository does not support commit and sync operation');
       }
-      
+
       await this.syncToDatabase(uuid);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -231,22 +233,22 @@ export class GitPlaybooksRepositoryService {
    */
   async syncFromRemote(repository: any): Promise<void> {
     this.logger.log(`Syncing Git repository ${repository.name} from remote`);
-    
+
     try {
       const playbooksRepositoryComponent = PlaybooksRepositoryEngine.getState().playbooksRepository[
         repository.uuid
       ] as any;
-      
+
       if (!playbooksRepositoryComponent) {
         throw new InternalError('Repository is not registered, try restarting or force sync');
       }
-      
+
       if (typeof playbooksRepositoryComponent.forcePull === 'function') {
         await playbooksRepositoryComponent.forcePull();
       } else {
         throw new InternalError('Repository does not support force pull operation');
       }
-      
+
       await this.syncToDatabase(repository.uuid);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -261,24 +263,24 @@ export class GitPlaybooksRepositoryService {
    */
   async syncToDatabase(repository: string | any): Promise<void> {
     let uuid: string;
-    
+
     if (typeof repository === 'string') {
       uuid = repository;
     } else {
       uuid = repository.uuid;
     }
-    
+
     this.logger.log(`Syncing Git repository ${uuid} to database`);
-    
+
     try {
       const playbooksRepositoryComponent = PlaybooksRepositoryEngine.getState().playbooksRepository[
         uuid
       ] as any;
-      
+
       if (!playbooksRepositoryComponent) {
         throw new InternalError('Repository is not registered, try restarting or force sync');
       }
-      
+
       if (typeof playbooksRepositoryComponent.syncToDatabase === 'function') {
         await playbooksRepositoryComponent.syncToDatabase();
       } else {
@@ -297,7 +299,7 @@ export class GitPlaybooksRepositoryService {
    */
   async registerRepository(repository: any): Promise<void> {
     this.logger.log(`Registering Git repository ${repository.name}`);
-    
+
     try {
       await PlaybooksRepositoryEngine.registerRepository(repository);
       await this.syncToDatabase(repository.uuid);
@@ -307,4 +309,4 @@ export class GitPlaybooksRepositoryService {
       throw new InternalError(`Error registering Git repository: ${errorMessage}`);
     }
   }
-} 
+}

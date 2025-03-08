@@ -2,14 +2,16 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { API } from 'ssm-shared-lib';
-import { PlaybooksRepositoryDocument, PlaybooksRepository } from '../schemas/playbooks-repository.schema';
+import {
+  PlaybooksRepository,
+  PlaybooksRepositoryDocument,
+} from '../schemas/playbooks-repository.schema';
 import { ForbiddenError, InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
-import { PlaybookModel } from '../../../data/database/model/Playbook';
-import { FileSystemService } from '../../shell/services/file-system.service';
-import { PlaybookFileService } from '../../shell/services/playbook-file.service';
+import { FileSystemService } from '../../shell';
+import { PlaybookFileService } from '../../shell';
 import { recursiveTreeCompletion } from '../utils/tree-utils';
-import { PlaybooksRepositoryEngineService } from './playbooks-repository-engine.service';
 import { PlaybooksRepositoryComponent } from '../components/playbooks-repository.component';
+import { PlaybooksRepositoryEngineService } from './playbooks-repository-engine.service';
 
 /**
  * Service for managing playbooks repositories
@@ -54,7 +56,9 @@ export class PlaybooksRepositoryService implements OnModuleInit {
    */
   async getAllPlaybooksRepositories(): Promise<any[]> {
     try {
-      const listOfPlaybooksRepositories = await this.playbooksRepositoryModel.find({ enabled: true }).lean();
+      const listOfPlaybooksRepositories = await this.playbooksRepositoryModel
+        .find({ enabled: true })
+        .lean();
       if (!listOfPlaybooksRepositories) {
         return [];
       }
@@ -93,16 +97,18 @@ export class PlaybooksRepositoryService implements OnModuleInit {
     repository: PlaybooksRepositoryDocument,
     path: string,
   ): Promise<void> {
-    const playbooksRepositoryComponent = this.playbooksRepositoryEngineService.getState()[repository.uuid] as PlaybooksRepositoryComponent;
-    
+    const playbooksRepositoryComponent = this.playbooksRepositoryEngineService.getState()[
+      repository.uuid
+    ] as PlaybooksRepositoryComponent;
+
     if (!playbooksRepositoryComponent) {
       throw new InternalError('Repository is not registered, try restarting or force sync');
     }
-    
+
     if (!playbooksRepositoryComponent.fileBelongToRepository(path)) {
       throw new ForbiddenError("The selected path doesn't seem to belong to the repository");
     }
-    
+
     this.fileSystemService.createDirectory(path, playbooksRepositoryComponent.rootPath);
     await playbooksRepositoryComponent.updateDirectoriesTree();
   }
@@ -119,16 +125,18 @@ export class PlaybooksRepositoryService implements OnModuleInit {
     fullPath: string,
     name: string,
   ): Promise<any> {
-    const playbooksRepositoryComponent = this.playbooksRepositoryEngineService.getState()[repository.uuid] as PlaybooksRepositoryComponent;
-    
+    const playbooksRepositoryComponent = this.playbooksRepositoryEngineService.getState()[
+      repository.uuid
+    ] as PlaybooksRepositoryComponent;
+
     if (!playbooksRepositoryComponent) {
       throw new InternalError(`PlaybookRepository doesn't seem registered`);
     }
-    
+
     if (!playbooksRepositoryComponent.fileBelongToRepository(fullPath)) {
-      throw new ForbiddenError('The selected path doesn\'t seem to belong to the repository');
+      throw new ForbiddenError("The selected path doesn't seem to belong to the repository");
     }
-    
+
     const playbook = await PlaybookModel.create({
       name: name,
       custom: true,
@@ -136,7 +144,7 @@ export class PlaybooksRepositoryService implements OnModuleInit {
       playbooksRepository: repository,
       playableInBatch: true,
     });
-    
+
     this.playbookFileService.newPlaybook(fullPath + '.yml');
     await playbooksRepositoryComponent.syncToDatabase();
     return playbook;
@@ -155,13 +163,15 @@ export class PlaybooksRepositoryService implements OnModuleInit {
     if (!playbook) {
       throw new NotFoundError(`Playbook with UUID ${playbookUuid} not found`);
     }
-    
-    const playbooksRepositoryComponent = this.playbooksRepositoryEngineService.getState()[repository.uuid] as PlaybooksRepositoryComponent;
-    
+
+    const playbooksRepositoryComponent = this.playbooksRepositoryEngineService.getState()[
+      repository.uuid
+    ] as PlaybooksRepositoryComponent;
+
     if (!playbooksRepositoryComponent) {
       throw new InternalError(`PlaybookRepository doesn't seem registered`);
     }
-    
+
     await PlaybookModel.deleteOne({ uuid: playbookUuid });
     this.playbookFileService.deletePlaybook(playbook.path);
     await playbooksRepositoryComponent.syncToDatabase();
@@ -176,16 +186,18 @@ export class PlaybooksRepositoryService implements OnModuleInit {
     repository: PlaybooksRepositoryDocument,
     path: string,
   ): Promise<void> {
-    const playbooksRepositoryComponent = this.playbooksRepositoryEngineService.getState()[repository.uuid] as PlaybooksRepositoryComponent;
-    
+    const playbooksRepositoryComponent = this.playbooksRepositoryEngineService.getState()[
+      repository.uuid
+    ] as PlaybooksRepositoryComponent;
+
     if (!playbooksRepositoryComponent) {
       throw new InternalError(`PlaybookRepository doesn't seem registered`);
     }
-    
+
     if (!playbooksRepositoryComponent.fileBelongToRepository(path)) {
-      throw new ForbiddenError('The selected path doesn\'t seem to belong to the repository');
+      throw new ForbiddenError("The selected path doesn't seem to belong to the repository");
     }
-    
+
     this.fileSystemService.deleteFiles(path, playbooksRepositoryComponent.rootPath);
     await playbooksRepositoryComponent.syncToDatabase();
   }
@@ -196,11 +208,13 @@ export class PlaybooksRepositoryService implements OnModuleInit {
    * @param content The content of the playbook
    */
   async savePlaybook(playbookUuid: string, content: string): Promise<void> {
-    const playbook = await PlaybookModel.findOne({ uuid: playbookUuid }).populate('playbooksRepository');
+    const playbook = await PlaybookModel.findOne({ uuid: playbookUuid }).populate(
+      'playbooksRepository',
+    );
     if (!playbook) {
       throw new NotFoundError(`Playbook with UUID ${playbookUuid} not found`);
     }
-    
+
     this.fileSystemService.writeFile(content, playbook.path);
   }
 
@@ -215,7 +229,8 @@ export class PlaybooksRepositoryService implements OnModuleInit {
         throw new NotFoundError(`Repository with UUID ${repositoryUuid} not found`);
       }
 
-      const playbooksRepositoryComponent = this.playbooksRepositoryEngineService.getState()[repository.uuid];
+      const playbooksRepositoryComponent =
+        this.playbooksRepositoryEngineService.getState()[repository.uuid];
       if (!playbooksRepositoryComponent) {
         throw new InternalError(`Repository component for ${repository.name} not found`);
       }
@@ -235,14 +250,14 @@ export class PlaybooksRepositoryService implements OnModuleInit {
    */
   async deleteRepository(repository: PlaybooksRepositoryDocument): Promise<void> {
     this.logger.log(`Deleting repository ${repository.name}`);
-    
+
     try {
       // Deregister the repository from the engine
       await this.playbooksRepositoryEngineService.deregisterRepository(repository.uuid);
-      
+
       // Delete the repository from the database
       await this.playbooksRepositoryModel.deleteOne({ uuid: repository.uuid });
-      
+
       this.logger.log(`Repository ${repository.name} deleted successfully`);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -257,20 +272,18 @@ export class PlaybooksRepositoryService implements OnModuleInit {
    */
   private async updateRepositoryTree(repository: PlaybooksRepository): Promise<void> {
     try {
-      const playbooksRepositoryComponent = this.playbooksRepositoryEngineService.getState()[repository.uuid];
+      const playbooksRepositoryComponent =
+        this.playbooksRepositoryEngineService.getState()[repository.uuid];
       if (!playbooksRepositoryComponent) {
         throw new InternalError(`Repository component for ${repository.name} not found`);
       }
 
       const tree = await playbooksRepositoryComponent.updateDirectoriesTree();
-      await this.playbooksRepositoryModel.updateOne(
-        { uuid: repository.uuid },
-        { $set: { tree } },
-      );
+      await this.playbooksRepositoryModel.updateOne({ uuid: repository.uuid }, { $set: { tree } });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       this.logger.error(`Error updating repository tree: ${errorMessage}`);
       throw new InternalError(`Error updating repository tree: ${errorMessage}`);
     }
   }
-} 
+}

@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-
 import { ShellModule } from '../shell/shell.module';
 import { PlaybooksRepositoryService } from './services/playbooks-repository.service';
 import { GitPlaybooksRepositoryService } from './services/git-playbooks-repository.service';
@@ -83,18 +82,18 @@ const PlaybookRepositoryComponentSchema = {
     LocalPlaybooksRepositoryService,
     PlaybooksRepositoryEngineService,
     PlaybookService,
-    
+
     // Factory
     PlaybooksRepositoryComponentFactory,
-    
+
     // Components
     GitPlaybooksRepositoryComponent,
     LocalPlaybooksRepositoryComponent,
-    
+
     // Utils
     TreeNodeService,
     DefaultPlaybooksRepositoriesService,
-    
+
     // Repositories
     PlaybooksRepositoryRepository,
     PlaybookRepository,
@@ -138,4 +137,4 @@ export { LocalPlaybooksRepositoryController } from './controllers/local-playbook
 export { PlaybookController } from './controllers/playbook.controller';
 
 // Export schemas
-export { Playbook } from './schemas/playbook.schema'; 
+export { Playbook } from './schemas/playbook.schema';

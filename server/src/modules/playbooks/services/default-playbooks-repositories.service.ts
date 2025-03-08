@@ -43,20 +43,30 @@ export class DefaultPlaybooksRepositoriesService {
    */
   async saveSSMDefaultPlaybooksRepositories(): Promise<void> {
     this.logger.log('Saving default SSM playbooks repositories');
-    
+
     // Check if repositories exist first
-    const coreRepo = await this.playbooksRepositoryRepository.findByUuid(this.corePlaybooksRepository.uuid!);
+    const coreRepo = await this.playbooksRepositoryRepository.findByUuid(
+      this.corePlaybooksRepository.uuid!,
+    );
     if (!coreRepo) {
       await this.playbooksRepositoryRepository.create(this.corePlaybooksRepository);
     } else {
-      await this.playbooksRepositoryRepository.update(this.corePlaybooksRepository.uuid!, this.corePlaybooksRepository);
+      await this.playbooksRepositoryRepository.update(
+        this.corePlaybooksRepository.uuid!,
+        this.corePlaybooksRepository,
+      );
     }
-    
-    const toolsRepo = await this.playbooksRepositoryRepository.findByUuid(this.toolsPlaybooksRepository.uuid!);
+
+    const toolsRepo = await this.playbooksRepositoryRepository.findByUuid(
+      this.toolsPlaybooksRepository.uuid!,
+    );
     if (!toolsRepo) {
       await this.playbooksRepositoryRepository.create(this.toolsPlaybooksRepository);
     } else {
-      await this.playbooksRepositoryRepository.update(this.toolsPlaybooksRepository.uuid!, this.toolsPlaybooksRepository);
+      await this.playbooksRepositoryRepository.update(
+        this.toolsPlaybooksRepository.uuid!,
+        this.toolsPlaybooksRepository,
+      );
     }
   }
 
@@ -65,12 +75,12 @@ export class DefaultPlaybooksRepositoriesService {
    */
   async createDefaultLocalUserRepository(userEmail: string): Promise<void> {
     this.logger.log('Creating default local user repository');
-    
+
     if (!userEmail) {
       this.logger.warn('No user email provided, skipping default repository creation');
       return;
     }
-    
+
     const userPlaybooksRepository: Partial<PlaybooksRepository> = {
       name: userEmail.trim().split('@')[0] || 'user-default',
       enabled: true,
@@ -78,19 +88,24 @@ export class DefaultPlaybooksRepositoriesService {
       directory: `${this.SSM_DATA_PATH}/playbooks/00000000-0000-0000-0000-000000000002`,
       uuid: '00000000-0000-0000-0000-000000000002',
     };
-    
+
     // Check if repository exists first
-    const userRepo = await this.playbooksRepositoryRepository.findByUuid(userPlaybooksRepository.uuid!);
+    const userRepo = await this.playbooksRepositoryRepository.findByUuid(
+      userPlaybooksRepository.uuid!,
+    );
     if (!userRepo) {
       await this.playbooksRepositoryRepository.create(userPlaybooksRepository);
     } else {
-      await this.playbooksRepositoryRepository.update(userPlaybooksRepository.uuid!, userPlaybooksRepository);
+      await this.playbooksRepositoryRepository.update(
+        userPlaybooksRepository.uuid!,
+        userPlaybooksRepository,
+      );
     }
-    
+
     try {
       this.fileSystemService.createDirectory(userPlaybooksRepository.directory as string);
     } catch (error: any) {
       this.logger.error(`Error creating directory: ${error.message}`);
     }
   }
-} 
+}

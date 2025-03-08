@@ -52,9 +52,8 @@ class PlaybooksRepositoryEngine {
    * @returns Repository component
    */
   static async registerRepository(playbookRepository: PlaybooksRepositoryDocument): Promise<void> {
-     PlaybooksRepositoryEngine.getService().registerRepository(playbookRepository);
+    PlaybooksRepositoryEngine.getService().registerRepository(playbookRepository);
   }
-
 
   /**
    * Deregister a repository
@@ -63,7 +62,6 @@ class PlaybooksRepositoryEngine {
   static async deregisterRepository(uuid: string): Promise<void> {
     return PlaybooksRepositoryEngine.getService().deregisterRepository(uuid);
   }
-
 }
 
 export default PlaybooksRepositoryEngine;

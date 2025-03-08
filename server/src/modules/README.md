@@ -33,9 +33,48 @@ module-name/
 └── README.md                   # Module documentation
 ```
 
+Some modules have been refactored to follow the Clean Architecture pattern with this structure:
+
+```
+module-name/
+├── domain/                     # Domain layer (entities, interfaces)
+│   ├── entities/               # Domain entities
+│   └── repositories/           # Repository interfaces
+├── application/                # Application layer (services)
+│   └── services/               # Business logic services
+├── infrastructure/             # Infrastructure layer (repositories)
+│   ├── repositories/           # Repository implementations
+│   └── schemas/                # Database schemas
+├── presentation/               # Presentation layer (controllers)
+│   ├── controllers/            # HTTP controllers
+│   ├── dtos/                   # Data Transfer Objects
+│   ├── interfaces/             # Presentation interfaces
+│   └── utils/                  # Utility functions
+├── __tests__/                  # Tests that mirror the module structure
+│   ├── application/            # Application layer tests
+│   └── presentation/           # Presentation layer tests
+├── constants.ts                # Module constants
+├── index.ts                    # Public API exports
+└── module-name.module.ts       # Module definition
+```
+
 ## Modules Overview
 
 ### Recently Refactored Modules
+
+#### Ansible Config Module
+
+The Ansible Config Module provides functionality for managing Ansible configuration files:
+- CRUD operations for Ansible configuration entries
+- Secure configuration file parsing and writing
+- Validation of configuration entries
+- Clean Architecture implementation with proper separation of concerns
+
+Key files:
+- `ansible-config/application/services/ansible-config.service.ts` - Core configuration management
+- `ansible-config/presentation/controllers/ansible-config.controller.ts` - REST API endpoints
+- `ansible-config/presentation/dtos/ansible-config.dto.ts` - Data Transfer Objects
+- `ansible-config/presentation/interfaces/config.interface.ts` - Configuration interfaces
 
 #### Logs Module
 
@@ -58,11 +97,26 @@ The Diagnostic Module performs health checks on connected devices:
 - Docker socket connectivity testing
 - Disk space monitoring
 - CPU and memory information retrieval
+- Clean Architecture implementation with proper separation of concerns
 
 Key files:
-- `diagnostic/services/diagnostic.service.ts` - Core diagnostic functionality
-- `diagnostic/controllers/diagnostic.controller.ts` - REST API endpoints
+- `diagnostic/domain/entities/diagnostic.entity.ts` - Core domain entities
+- `diagnostic/application/services/diagnostic.service.ts` - Core diagnostic functionality
+- `diagnostic/presentation/controllers/diagnostic.controller.ts` - REST API endpoints
+- `diagnostic/infrastructure/repositories/diagnostic.repository.ts` - Repository implementation
 - `diagnostic/diagnostic.module.ts` - Module definition with event emitter integration
+
+The Diagnostic Module has been refactored to follow the Clean Architecture pattern:
+- **Domain Layer**: Contains the core business entities and repository interfaces
+- **Application Layer**: Contains the service interfaces and implementations
+- **Infrastructure Layer**: Contains the repository implementations
+- **Presentation Layer**: Contains the controllers, DTOs, and mappers
+
+The test structure mirrors the module architecture:
+- `diagnostic/__tests__/domain/` - Tests for domain entities
+- `diagnostic/__tests__/application/` - Tests for application services
+- `diagnostic/__tests__/infrastructure/` - Tests for infrastructure repositories
+- `diagnostic/__tests__/presentation/` - Tests for controllers and mappers
 
 #### Update Module
 
@@ -117,10 +171,22 @@ Key files:
 - `repository/controllers/playbooks-repository.controller.ts` - REST API endpoints
 - `repository/PlaybooksRepository.ts` - Bridge class for backward compatibility
 
-### Other Modules
-
 #### Ansible Module
-Manages Ansible playbook execution and inventory management.
+
+The Ansible Module manages Ansible playbook execution and inventory management:
+- Execute Ansible commands and playbooks
+- Transform inventory files
+- Manage extra variables
+- Track Ansible task execution
+- Clean Architecture implementation with proper separation of concerns
+
+Key files:
+- `ansible/application/services/ansible-command-builder.service.ts` - Command building
+- `ansible/domain/entities/` - Domain entities for Ansible operations
+- `ansible/presentation/controllers/` - REST API endpoints
+- `ansible/infrastructure/repositories/` - Repository implementations
+
+### Other Modules
 
 #### Auth Module
 Handles authentication, authorization, and user management.
@@ -266,7 +332,8 @@ The application is being gradually migrated from a legacy architecture to NestJS
 Planned improvements for the modular architecture:
 
 1. **Complete NestJS Migration**: Fully migrate all modules to NestJS patterns
-2. **Enhanced Event System**: Improve event-driven communication between modules
-3. **Standardized Error Handling**: Implement consistent error handling across modules
-4. **API Documentation**: Add OpenAPI/Swagger documentation for all endpoints
-5. **Performance Optimization**: Optimize module initialization and execution
+2. **Clean Architecture Adoption**: Continue refactoring modules to follow the Clean Architecture pattern
+3. **Enhanced Event System**: Improve event-driven communication between modules
+4. **Standardized Error Handling**: Implement consistent error handling across modules
+5. **API Documentation**: Add OpenAPI/Swagger documentation for all endpoints
+6. **Performance Optimization**: Optimize module initialization and execution

@@ -12,59 +12,102 @@ The Ansible Module provides functionality for executing Ansible commands and pla
 
 ## Architecture
 
-The module follows a standard NestJS architecture with:
+The module follows the NestJS Clean Architecture pattern with a well-defined layered approach:
 
-- **Controllers**: Handle HTTP requests and delegate to services
-- **Services**: Implement business logic
-- **Schemas**: Define data models
-- **Repositories**: Handle database operations
-- **DTOs**: Define data transfer objects
-- **Bridge Classes**: Provide backward compatibility with the old codebase
+- **Domain**: Contains entities, interfaces, and domain logic
+- **Application**: Contains services that implement business logic
+- **Infrastructure**: Contains implementations of repositories and external services
+- **Presentation**: Contains controllers that handle HTTP requests
+
+### Module Structure
+
+```
+ansible/
+├── domain/            # Domain layer (entities, interfaces)
+├── application/       # Application layer (services)
+├── infrastructure/    # Infrastructure layer (repositories)
+├── presentation/      # Presentation layer (controllers)
+├── __tests__/         # Tests
+├── utils/             # Utility functions
+├── extravars/         # Extra variables management
+├── index.ts           # Barrel file for exports
+├── ansible.module.ts  # Module definition
+└── README.md          # This file
+```
+
+### Dependency Injection
+
+The module uses NestJS dependency injection patterns:
+
+1. **Service-to-Service Injection**: Direct class-based injection
+   ```typescript
+   constructor(
+     private readonly shellWrapperService: ShellWrapperService,
+     private readonly sshKeyService: SshKeyService
+   ) {}
+   ```
+
+2. **Repository Injection**: Token-based injection
+   ```typescript
+   constructor(
+     @Inject('DEVICE_REPOSITORY') private readonly deviceRepository: any,
+     @Inject('ANSIBLE_TASK_REPOSITORY') private readonly ansibleTaskRepository: any
+   ) {}
+   ```
+
+3. **Module Exports**: Each module exports its entities and services through barrel files (index.ts)
+   ```typescript
+   // From a module's index.ts
+   export { IDevice, IDeviceAuth }; // Entities
+   export { DeviceService };        // Services
+   ```
+
+### Domain Entities
+
+The module uses interfaces for domain entities that are imported from their respective modules:
+
+- `IUser` from the users module
+- `IDeviceAuth` from the devices module
+- `IAnsibleVault` from the ansible-vault module
+
+### Services
+
+- **AnsibleCommandService**: Service for executing Ansible commands
+- **AnsibleCommandBuilderService**: Service for building Ansible commands
+- **AnsibleGalaxyCommandService**: Service for executing Ansible Galaxy commands
+- **InventoryTransformerService**: Service for transforming inventory files
+- **ExtraVarsService**: Service for managing extra variables
+- **ExtraVarsTransformerService**: Service for transforming extra variables
+- **GalaxyService**: Service for managing Ansible Galaxy collections
+- **TaskLogsService**: Service for managing Ansible task logs
 
 ### Controllers
 
 - `TaskLogsController`: Controller for Ansible task logs operations
+- `GalaxyController`: Controller for Ansible Galaxy operations
 
-### Services
+## Recent Architectural Improvements
 
-- `AnsibleCommandService`: Service for executing Ansible commands
-- `AnsibleCommandBuilderService`: Service for building Ansible commands
-- `AnsibleGalaxyCommandService`: Service for executing Ansible Galaxy commands
-- `InventoryTransformerService`: Service for transforming inventory files
-- `ExtraVarsService`: Service for managing extra variables
-- `ExtraVarsTransformerService`: Service for transforming extra variables
-- `TaskLogsService`: Service for managing Ansible task logs
+### Migration to NestJS Clean Architecture
 
-### Schemas
+- Implemented proper layered architecture (domain, application, infrastructure, presentation)
+- Used barrel files (index.ts) to export entities and services from each module
+- Improved dependency injection with proper NestJS patterns
+- Removed direct database access in services in favor of repository injection
+- Updated imports to use module-level exports rather than direct file paths
 
-- `AnsibleLog`: Schema for Ansible logs
-- `AnsibleTask`: Schema for Ansible tasks
+### Type Safety Improvements
 
-### Repositories
+- Replaced concrete model classes with interfaces from their respective modules
+- Improved error handling and type checking
+- Enhanced service method signatures for better IDE support
 
-- `AnsibleLogsRepository`: Repository for Ansible logs
-- `AnsibleTaskRepository`: Repository for Ansible tasks
-
-### Bridge Classes
-
-- `AnsibleCmd`: Bridge class for executing Ansible commands
-- `AnsibleGalaxyCmd`: Bridge class for executing Ansible Galaxy commands
-- `ExtraVars`: Bridge class for managing extra variables
-- `InventoryTransformer`: Bridge class for transforming inventory files
-
-## Recent Changes
-
-### Migration of Ansible Logs and Tasks
-
-- Moved Ansible logs and tasks from the Logs module to the Ansible module
-- Created dedicated schemas, repositories, services, and controllers in the Ansible module
-- Updated the module imports and exports
-- Updated the API endpoints to use the new structure
-
-### API Endpoints
+## API Endpoints
 
 - `GET /ansible/logs/tasks`: Get all Ansible task logs
 - `GET /ansible/logs/tasks/:id/events`: Get events for a specific Ansible task
+- `GET /ansible/galaxy/collections`: Get Ansible Galaxy collections
+- `POST /ansible/galaxy/collections`: Install an Ansible Galaxy collection
 
 ## Usage
 
@@ -88,14 +131,14 @@ export class AppModule {}
 ### Executing Ansible Commands
 
 ```typescript
-import { AnsibleCommandService } from './modules/ansible/services/ansible-command.service';
+import { AnsibleCommandService } from './modules/ansible';
 
 @Injectable()
 export class MyService {
   constructor(private readonly ansibleCommandService: AnsibleCommandService) {}
 
-  async executePlaybook(playbookPath: string, inventory: string) {
-    return this.ansibleCommandService.executePlaybook(playbookPath, inventory);
+  async executePlaybook(playbookPath: string, user: IUser, target?: string[]) {
+    return this.ansibleCommandService.executePlaybookFull(playbookPath, user, target);
   }
 }
 ```
@@ -103,7 +146,7 @@ export class MyService {
 ### Managing Ansible Task Logs
 
 ```typescript
-import { TaskLogsService } from './modules/ansible/services/task-logs.service';
+import { TaskLogsService } from './modules/ansible';
 
 @Injectable()
 export class MyService {

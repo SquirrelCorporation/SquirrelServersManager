@@ -5,7 +5,12 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": false,
-    "tsConfigPath": "tsconfig.json"
+    "tsConfigPath": "tsconfig.json",
+    "assets": [
+      { "include": "**/*.py", "outDir": "dist" },
+      { "include": "**/*.yml", "outDir": "dist" },
+      { "include": "**/*.yaml", "outDir": "dist" }
+    ]
   },
   "watchOptions": {
     "watchFile": "priorityPollingInterval",

@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { DirectoryTree } from 'ssm-shared-lib';
-import { ExtraVarsService } from '../../ansible/services/extra-vars.service';
+import { ExtraVarsService } from '../../ansible';
 import { Playbook, PlaybookDocument } from '../components/playbooks-repository.component';
 
 /**
@@ -26,17 +26,17 @@ export class TreeNodeService {
   async completeNode(node: DirectoryTree.ExtendedTreeNode) {
     const { path } = node;
     this.logger.debug(`Completing node for path: ${path}`);
-    
+
     const playbook = await this.playbookModel.findOne({ path }).exec();
-    
+
     if (!playbook) {
       throw new Error(`Unable to find any playbook for path ${path}`);
     }
-    
+
     const extraVars = playbook?.extraVars
       ? await this.extraVarsService.findValueOfExtraVars(playbook.extraVars, undefined, true)
       : undefined;
-      
+
     return {
       ...node,
       uuid: playbook?.uuid,
@@ -44,4 +44,4 @@ export class TreeNodeService {
       custom: playbook?.custom,
     };
   }
-} 
+}

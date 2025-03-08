@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
-import { PlaybookService } from '../services/playbook.service';
-import { PlaybookRepository } from '../repositories/playbook.repository';
-import { Playbook } from '../schemas/playbook.schema';
 import { User } from '../../../decorators/user.decorator';
 import { Playbooks } from '../../../types/typings';
+import { PlaybookRepository } from '../repositories/playbook.repository';
+import { Playbook } from '../schemas/playbook.schema';
+import { PlaybookService } from '../services/playbook.service';
 
 @Controller('playbooks')
 @UseGuards(JwtAuthGuard)
@@ -45,10 +45,7 @@ export class PlaybookController {
   }
 
   @Post(':uuid/extravars')
-  async addExtraVarToPlaybook(
-    @Param('uuid') uuid: string,
-    @Body() extraVar: API.ExtraVar,
-  ) {
+  async addExtraVarToPlaybook(@Param('uuid') uuid: string, @Body() extraVar: API.ExtraVar) {
     const playbook = await this.playbookRepository.findOneByUuid(uuid);
     if (!playbook) {
       throw new Error('Playbook not found');
@@ -59,10 +56,7 @@ export class PlaybookController {
   }
 
   @Delete(':uuid/extravars/:varname')
-  async deleteExtraVarFromPlaybook(
-    @Param('uuid') uuid: string,
-    @Param('varname') varname: string,
-  ) {
+  async deleteExtraVarFromPlaybook(@Param('uuid') uuid: string, @Param('varname') varname: string) {
     const playbook = await this.playbookRepository.findOneByUuid(uuid);
     if (!playbook) {
       throw new Error('Playbook not found');
@@ -75,7 +69,8 @@ export class PlaybookController {
   @Post('exec/:uuid')
   async execPlaybook(
     @Param('uuid') uuid: string,
-    @Body() execData: { target?: string[]; extraVars?: API.ExtraVars; mode?: SsmAnsible.ExecutionMode },
+    @Body()
+    execData: { target?: string[]; extraVars?: API.ExtraVars; mode?: SsmAnsible.ExecutionMode },
     @User() user: any,
   ) {
     const playbook = await this.playbookRepository.findOneByUuid(uuid);
@@ -83,21 +78,20 @@ export class PlaybookController {
       throw new Error('Playbook not found');
     }
 
-    const result = await this.playbookService.executePlaybook(
+    return await this.playbookService.executePlaybook(
       playbook,
       user,
       execData.target,
       execData.extraVars,
       execData.mode || SsmAnsible.ExecutionMode.APPLY,
     );
-
-    return result;
   }
 
   @Post('exec/quick-ref/:quickRef')
   async execPlaybookByQuickRef(
     @Param('quickRef') quickRef: string,
-    @Body() execData: { target?: string[]; extraVars?: API.ExtraVars; mode?: SsmAnsible.ExecutionMode },
+    @Body()
+    execData: { target?: string[]; extraVars?: API.ExtraVars; mode?: SsmAnsible.ExecutionMode },
     @User() user: any,
   ) {
     const playbook = await this.playbookRepository.findOneByUniqueQuickReference(quickRef);
@@ -105,21 +99,20 @@ export class PlaybookController {
       throw new Error('Playbook not found');
     }
 
-    const result = await this.playbookService.executePlaybook(
+    return await this.playbookService.executePlaybook(
       playbook,
       user,
       execData.target,
       execData.extraVars,
       execData.mode || SsmAnsible.ExecutionMode.APPLY,
     );
-
-    return result;
   }
 
   @Post('exec/inventory/:uuid')
   async execPlaybookOnInventory(
     @Param('uuid') uuid: string,
-    @Body() execData: {
+    @Body()
+    execData: {
       inventoryTargets?: Playbooks.All & Playbooks.HostGroups;
       extraVars?: API.ExtraVars;
       execUuid?: string;
@@ -131,14 +124,12 @@ export class PlaybookController {
       throw new Error('Playbook not found');
     }
 
-    const result = await this.playbookService.executePlaybookOnInventory(
+    return await this.playbookService.executePlaybookOnInventory(
       playbook,
       user,
       execData.inventoryTargets,
       execData.extraVars,
       execData.execUuid,
     );
-
-    return result;
   }
 }

@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@modules/*": ["server/src/modules/*"],
+      "@common/*": ["server/src/common/*"],
+      "@config/*": ["server/src/config/*"]
+    }
+  },
+  "include": ["server/src/**/*"]
+} 

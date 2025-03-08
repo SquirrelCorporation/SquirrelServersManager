@@ -72,4 +72,4 @@ export class Playbook {
   playbooksRepository!: PlaybooksRepositoryDocument;
 }
 
-export const PlaybookSchema = SchemaFactory.createForClass(Playbook); 
+export const PlaybookSchema = SchemaFactory.createForClass(Playbook);

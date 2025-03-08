@@ -1,12 +1,15 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Logger } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { API, Repositories } from 'ssm-shared-lib';
 import { NotFoundError } from '../../../middlewares/api/ApiError';
-import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../../modules/ansible-vault/ansible-vault';
+import { DEFAULT_VAULT_ID, vaultEncrypt } from '../../ansible-vault/ansible-vault';
 import { GitPlaybooksRepositoryService } from '../services/git-playbooks-repository.service';
 import { PlaybooksRepositoryService } from '../services/playbooks-repository.service';
-import { PlaybooksRepository, PlaybooksRepositoryDocument } from '../schemas/playbooks-repository.schema';
+import {
+  PlaybooksRepository,
+  PlaybooksRepositoryDocument,
+} from '../schemas/playbooks-repository.schema';
 
 /**
  * Controller for managing Git playbooks repositories
@@ -19,7 +22,7 @@ export class GitPlaybooksRepositoryController {
     private readonly gitPlaybooksRepositoryService: GitPlaybooksRepositoryService,
     private readonly playbooksRepositoryService: PlaybooksRepositoryService,
     @InjectModel(PlaybooksRepository.name)
-    private readonly playbooksRepositoryModel: Model<PlaybooksRepositoryDocument>
+    private readonly playbooksRepositoryModel: Model<PlaybooksRepositoryDocument>,
   ) {}
 
   /**
@@ -29,7 +32,7 @@ export class GitPlaybooksRepositoryController {
   @Put()
   async addGitRepository(@Body() repository: API.GitPlaybooksRepository): Promise<void> {
     this.logger.log(`Adding Git repository ${repository.name}`);
-    
+
     const {
       name,
       accessToken,
@@ -42,7 +45,7 @@ export class GitPlaybooksRepositoryController {
       vaults,
       ignoreSSLErrors,
     } = repository;
-    
+
     await this.gitPlaybooksRepositoryService.addGitRepository(
       name,
       await vaultEncrypt(accessToken as string, DEFAULT_VAULT_ID),
@@ -53,7 +56,7 @@ export class GitPlaybooksRepositoryController {
       gitService,
       directoryExclusionList || [],
       vaults as string[],
-      ignoreSSLErrors
+      ignoreSSLErrors,
     );
   }
 
@@ -64,14 +67,16 @@ export class GitPlaybooksRepositoryController {
   @Get()
   async getGitRepositories(): Promise<API.GitPlaybooksRepository[]> {
     this.logger.log('Getting all Git repositories');
-    
-    const repositories = await this.playbooksRepositoryModel.find({
-      type: Repositories.RepositoryType.GIT
-    }).lean();
-    
-    return repositories.map(repo => ({
+
+    const repositories = await this.playbooksRepositoryModel
+      .find({
+        type: Repositories.RepositoryType.GIT,
+      })
+      .lean();
+
+    return repositories.map((repo) => ({
       ...repo,
-      accessToken: 'REDACTED'
+      accessToken: 'REDACTED',
     })) as unknown as API.GitPlaybooksRepository[];
   }
 
@@ -83,10 +88,10 @@ export class GitPlaybooksRepositoryController {
   @Post(':uuid')
   async updateGitRepository(
     @Param('uuid') uuid: string,
-    @Body() repository: API.GitPlaybooksRepository
+    @Body() repository: API.GitPlaybooksRepository,
   ): Promise<void> {
     this.logger.log(`Updating Git repository ${uuid}`);
-    
+
     const {
       name,
       accessToken,
@@ -99,7 +104,7 @@ export class GitPlaybooksRepositoryController {
       vaults,
       ignoreSSLErrors,
     } = repository;
-    
+
     await this.gitPlaybooksRepositoryService.updateGitRepository(
       uuid,
       name,
@@ -111,7 +116,7 @@ export class GitPlaybooksRepositoryController {
       gitService,
       directoryExclusionList || [],
       vaults as string[],
-      ignoreSSLErrors
+      ignoreSSLErrors,
     );
   }
 
@@ -122,13 +127,15 @@ export class GitPlaybooksRepositoryController {
   @Delete(':uuid')
   async deleteGitRepository(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Deleting Git repository ${uuid}`);
-    
+
     const repository = await this.playbooksRepositoryModel.findOne({ uuid });
     if (!repository) {
       throw new NotFoundError(`Repository ${uuid} not found`);
     }
-    
-    await this.playbooksRepositoryService.deleteRepository(repository as unknown as PlaybooksRepositoryDocument);
+
+    await this.playbooksRepositoryService.deleteRepository(
+      repository as unknown as PlaybooksRepositoryDocument,
+    );
   }
 
   /**
@@ -138,7 +145,7 @@ export class GitPlaybooksRepositoryController {
   @Post(':uuid/force-pull')
   async forcePullRepository(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Force pulling Git repository ${uuid}`);
-    
+
     await this.gitPlaybooksRepositoryService.forcePull(uuid);
   }
 
@@ -149,7 +156,7 @@ export class GitPlaybooksRepositoryController {
   @Post(':uuid/force-clone')
   async forceCloneRepository(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Force cloning Git repository ${uuid}`);
-    
+
     await this.gitPlaybooksRepositoryService.clone(uuid);
   }
 
@@ -160,7 +167,7 @@ export class GitPlaybooksRepositoryController {
   @Post(':uuid/commit-and-sync')
   async commitAndSyncRepository(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Committing and syncing Git repository ${uuid}`);
-    
+
     await this.gitPlaybooksRepositoryService.commitAndSync(uuid);
   }
 
@@ -171,7 +178,7 @@ export class GitPlaybooksRepositoryController {
   @Post(':uuid/sync-to-database')
   async syncToDatabaseRepository(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Syncing Git repository ${uuid} to database`);
-    
+
     await this.gitPlaybooksRepositoryService.syncToDatabase(uuid);
   }
 
@@ -182,12 +189,12 @@ export class GitPlaybooksRepositoryController {
   @Post(':uuid/force-register')
   async forceRegister(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Force registering Git repository ${uuid}`);
-    
+
     const repository = await this.playbooksRepositoryModel.findOne({ uuid });
     if (!repository) {
       throw new NotFoundError(`Repository ${uuid} not found`);
     }
-    
+
     await this.gitPlaybooksRepositoryService.registerRepository(repository);
   }
-} 
+}

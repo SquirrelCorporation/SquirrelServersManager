@@ -1,8 +1,7 @@
 import { ModuleRef } from '@nestjs/core';
-import { Model } from 'mongoose';
+import { API } from 'ssm-shared-lib';
 import { PlaybooksRepositoryService } from '../services/playbooks-repository.service';
 import { PlaybooksRepositoryDocument } from '../schemas/playbooks-repository.schema';
-import { API } from 'ssm-shared-lib';
 
 /**
  * Bridge class for backward compatibility with the old PlaybooksRepository
@@ -29,7 +28,9 @@ export default class PlaybooksRepository {
     }
 
     if (!PlaybooksRepository.service) {
-      PlaybooksRepository.service = PlaybooksRepository.moduleRef.get(PlaybooksRepositoryService, { strict: false });
+      PlaybooksRepository.service = PlaybooksRepository.moduleRef.get(PlaybooksRepositoryService, {
+        strict: false,
+      });
     }
 
     return PlaybooksRepository.service;
@@ -115,4 +116,4 @@ export default class PlaybooksRepository {
   static async syncRepository(repositoryUuid: string): Promise<void> {
     return PlaybooksRepository.getService().syncRepository(repositoryUuid);
   }
-} 
+}

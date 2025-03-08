@@ -1,6 +1,40 @@
 # Container Stacks Module
 
-The Container Stacks Module provides functionality for managing container stack repositories, including Git-based repositories for container stack definitions.
+This module provides services for managing container stacks and repositories.
+
+## Architecture
+
+The module follows the Clean Architecture pattern with the following layers:
+
+### Domain Layer
+
+Contains the core business logic, entities, and repository interfaces.
+
+- **Entities**: Define the core business objects
+- **Repositories**: Define interfaces for data access
+
+### Application Layer
+
+Contains the application services and use cases.
+
+- **Services**: Implement the business logic
+- **Interfaces**: Define the contracts for the services
+
+### Infrastructure Layer
+
+Contains the implementation details for external services and data access.
+
+- **Repositories**: Implement the repository interfaces
+- **Schemas**: Define the database schemas
+- **Mappers**: Map between domain entities and infrastructure models
+
+### Presentation Layer
+
+Contains the controllers and DTOs for the API.
+
+- **Controllers**: Handle HTTP requests
+- **DTOs**: Define the data transfer objects
+- **Mappers**: Map between domain entities and DTOs
 
 ## Features
 
@@ -9,35 +43,6 @@ The Container Stacks Module provides functionality for managing container stack 
 - Track repository status and errors
 - Store and retrieve container stack definitions
 - Support for different Git services (GitHub, GitLab, etc.)
-
-## Architecture
-
-The module follows a standard NestJS architecture with:
-
-- **Controllers**: Handle HTTP requests and delegate to services
-- **Services**: Implement business logic
-- **Schemas**: Define data models
-- **Repositories**: Handle database operations
-
-### Controllers
-
-- `ContainerStacksController`: Controller for container stack repository operations
-
-### Services
-
-- `ContainerStacksService`: Main service for managing container stacks and repositories
-- `ContainerCustomStacksRepositoryEngineService`: Engine service for managing repository operations
-- `ContainerRepositoryComponentService`: Component service for handling individual repository operations
-
-### Schemas
-
-- `ContainerCustomStackDocument`: Schema for container stack definitions
-- `ContainerCustomStackRepositoryDocument`: Schema for container stack repositories
-
-### Repositories
-
-- `ContainerCustomStackRepository`: Repository for container stack operations
-- `ContainerCustomStacksRepositoryRepository`: Repository for container stack repository operations
 
 ## API Endpoints
 
@@ -50,20 +55,17 @@ The module follows a standard NestJS architecture with:
 
 ## Usage
 
-The module is used by importing it into the application module:
+The module exports the `ContainerStacksModule` and `ContainerStacksService` for use in other modules.
 
 ```typescript
-import { ContainerStacksModule } from './modules/container-stacks/container-stacks.module';
-
-@Module({
-  imports: [
-    // ...
-    ContainerStacksModule,
-    // ...
-  ],
-})
-export class AppModule {}
+import { ContainerStacksModule } from './modules/container-stacks';
 ```
+
+## Services
+
+- **ContainerStacksService**: Manages container stacks and repositories
+- **ContainerCustomStacksRepositoryEngineService**: Manages repository operations
+- **ContainerRepositoryComponentService**: Manages repository components
 
 ## Using the Services
 

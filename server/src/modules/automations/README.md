@@ -6,27 +6,51 @@ The Automations module provides a flexible and extensible system for creating, m
 
 ## Architecture
 
-The module follows NestJS architectural patterns and best practices:
+The module follows the Clean Architecture pattern with clear separation of concerns:
+
+### Layer Structure
+
+1. **Domain Layer**
+   - `domain/entities/` - Core business entities
+   - `domain/repositories/` - Repository interfaces
+   - `domain/components/` - Domain-specific components
+
+2. **Application Layer**
+   - `application/services/` - Business logic and use cases
+
+3. **Infrastructure Layer**
+   - `infrastructure/schemas/` - Mongoose schemas for MongoDB
+   - `infrastructure/repositories/` - Repository implementations
+
+4. **Presentation Layer**
+   - `presentation/controllers/` - REST API endpoints
+   - `presentation/dtos/` - Data Transfer Objects for API requests/responses
+   - `presentation/interfaces/` - Presentation-specific interfaces
+   - `presentation/utils/` - Utility functions for the presentation layer
+
+5. **Module Definition**
+   - `automations.module.ts` - NestJS module definition
+   - `index.ts` - Public API exports
 
 ### Core Components
 
-1. **Module Structure**
-   - `automations.module.ts` - NestJS module definition
-   - `automations.controller.ts` - REST API endpoints
-   - `automations.service.ts` - Business logic and data access
-   - `automation-engine.service.ts` - Core automation execution engine
+1. **Domain Components**
+   - `AutomationComponent` - Base component class
+   - `AbstractTriggerComponent` - Base class for all trigger components
+   - `AbstractActionComponent` - Base class for all action components
 
-2. **Data Layer**
-   - `schemas/` - Mongoose schemas for MongoDB
-   - `dto/` - Data Transfer Objects for API requests/responses
+2. **Application Services**
+   - `AutomationsService` - Business logic for automation management
+   - `AutomationEngine` - Core automation execution engine
 
-3. **Component System**
-   - `components/automation.component.ts` - Base component class
-   - `components/triggers/` - Event trigger components
-   - `components/actions/` - Action execution components
+3. **Infrastructure Components**
+   - `AutomationRepository` - MongoDB repository implementation
+   - `AutomationSchema` - Mongoose schema for MongoDB
 
-4. **Testing**
-   - `tests/` - Organized test files mirroring the module structure
+4. **Presentation Components**
+   - `AutomationsController` - REST API endpoints
+   - `CreateAutomationDto` - DTO for creating automations
+   - `UpdateAutomationDto` - DTO for updating automations
 
 ## Component System
 
@@ -64,10 +88,27 @@ The module uses NestJS dependency injection for services and components:
 @Module({
   imports: [MongooseModule.forFeature([{ name: Automation.name, schema: AutomationSchema }])],
   controllers: [AutomationsController],
-  providers: [AutomationsService, AutomationEngine],
+  providers: [AutomationsService, AutomationEngine, AutomationRepository],
   exports: [AutomationsService, AutomationEngine],
 })
 export class AutomationsModule {}
+```
+
+### Repository Pattern
+
+The module implements the repository pattern for data access:
+
+```typescript
+export interface IAutomationRepository {
+  findAll(): Promise<Automation[]>;
+  findAllEnabled(): Promise<Automation[]>;
+  findOne(uuid: string): Promise<Automation | null>;
+  findByUuid(uuid: string): Promise<Automation | null>;
+  create(automation: Automation): Promise<Automation>;
+  update(uuid: string, automation: Partial<Automation>): Promise<Automation | null>;
+  delete(uuid: string): Promise<void>;
+  setLastExecutionStatus(uuid: string, status: 'success' | 'failed'): Promise<void>;
+}
 ```
 
 ### Event-Driven Architecture
@@ -104,8 +145,12 @@ export class NewActionComponent extends AbstractActionComponent {
 The module follows a comprehensive testing strategy:
 
 1. **Directory Structure**
-   - Tests are organized in a dedicated `tests/` directory
-   - The test directory structure mirrors the module structure
+   - Tests are organized in a dedicated `__tests__/` directory
+   - The test directory structure mirrors the module structure:
+     - `__tests__/domain/` - Tests for domain layer
+     - `__tests__/application/` - Tests for application layer
+     - `__tests__/infrastructure/` - Tests for infrastructure layer
+     - `__tests__/presentation/` - Tests for presentation layer
 
 2. **Test Types**
    - Unit tests for individual components
@@ -135,34 +180,40 @@ The module exposes the following REST API endpoints:
 
 When extending or modifying this module, follow these best practices:
 
-1. **Separation of Concerns**
+1. **Clean Architecture Principles**
+   - Keep domain logic independent of frameworks
+   - Ensure dependencies point inward (domain ← application ← infrastructure/presentation)
+   - Use interfaces for dependency inversion
+
+2. **Separation of Concerns**
    - Keep controllers focused on request/response handling
    - Keep services focused on business logic
-   - Keep components focused on specific functionality
+   - Keep repositories focused on data access
+   - Keep entities focused on domain rules
 
-2. **Error Handling**
+3. **Error Handling**
    - Use try/catch blocks for error handling
    - Return appropriate HTTP status codes
    - Log errors with context information
 
-3. **Testing**
+4. **Testing**
    - Write tests for all new functionality
-   - Maintain test organization in the `tests/` directory
+   - Maintain test organization in the `__tests__/` directory
    - Mock external dependencies
 
-4. **Documentation**
+5. **Documentation**
    - Document public APIs and interfaces
    - Keep this README updated with new components
    - Add comments for complex logic
 
 ## Module Template
 
-This module serves as a template for creating new modules in the Squirrel Servers Manager application. When creating a new module:
+This module serves as a template for creating new Clean Architecture modules in the Squirrel Servers Manager application. When creating a new module:
 
-1. Create a similar directory structure
-2. Implement the core NestJS components (module, controller, service)
-3. Define schemas and DTOs
-4. Organize tests in a dedicated directory
+1. Create a similar layer structure (domain, application, infrastructure, presentation)
+2. Implement the core components for each layer
+3. Define entities, interfaces, schemas, and DTOs
+4. Organize tests to mirror the module structure
 5. Create a README.md file based on this template
 
 ## Future Enhancements
@@ -174,12 +225,14 @@ Potential areas for enhancement:
 - Improved error handling and recovery mechanisms
 - Enhanced logging and monitoring
 - User permissions and access control
+- Stronger typing for automation chains
 
 ## Recent Changes
 
-- Migrated to NestJS event emitter system for improved event handling
-- Fixed validation for automation data in the registration process
+- Refactored to follow Clean Architecture principles
+- Implemented proper repository pattern with interfaces
+- Separated domain entities from database schemas
+- Organized code into appropriate layers
+- Improved test organization to mirror module structure
 - Enhanced error handling during automation execution
-- Improved test coverage for trigger and action components
-- Added TypeScript strict property initialization for DTOs
 - Implemented proper error handling for automation chain execution

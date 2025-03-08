@@ -1,5 +1,5 @@
 import http from 'http';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { IoAdapter } from '@nestjs/platform-socket.io';
@@ -73,6 +73,15 @@ class AppWrapper extends EventManager {
 
       // Make the nestApp available globally for legacy code
       global.nestApp = nestApp;
+
+      // Set up global validation pipe
+      nestApp.useGlobalPipes(
+        new ValidationPipe({
+          transform: true,
+          whitelist: true,
+          forbidNonWhitelisted: true,
+        })
+      );
 
       // Log that we're initializing NestJS
       logger.info('Initializing NestJS application with WebSocket gateways');

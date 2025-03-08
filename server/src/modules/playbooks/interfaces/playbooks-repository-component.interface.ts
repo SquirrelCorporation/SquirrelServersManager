@@ -8,7 +8,7 @@ export interface IPlaybooksRepositoryComponent {
   name: string;
   directory: string;
   rootPath: string;
-  
+
   delete(): Promise<void>;
   save(playbookUuid: string, content: string): Promise<void>;
   syncToDatabase(): Promise<number | undefined>;
@@ -60,4 +60,4 @@ export interface LocalComponentOptions {
   uuid: string;
   name: string;
   directory: string;
-} 
+}

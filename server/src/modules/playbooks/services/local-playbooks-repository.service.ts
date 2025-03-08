@@ -1,12 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PlaybooksRepositoryDocument, PlaybooksRepository } from '../schemas/playbooks-repository.schema';
+import { v4 as uuidv4 } from 'uuid';
+import {
+  PlaybooksRepository,
+  PlaybooksRepositoryDocument,
+} from '../schemas/playbooks-repository.schema';
 import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
 import PlaybooksRepositoryEngine from '../engines/PlaybooksRepositoryEngine';
-import { v4 as uuidv4 } from 'uuid';
-import { DIRECTORY_ROOT } from './constants';
-import { PLAYBOOKS_REPOSITORY_DOCUMENT } from '../constants';
+import { DIRECTORY_ROOT } from '../constants';
 
 /**
  * Service for managing local playbooks repositories
@@ -35,7 +37,7 @@ export class LocalPlaybooksRepositoryService {
     vaults: string[] = [],
   ): Promise<any> {
     this.logger.log(`Initializing local repository ${name} at ${directory}`);
-    
+
     try {
       const uuid = uuidv4();
       const repository = await this.playbooksRepositoryModel.create({
@@ -70,12 +72,12 @@ export class LocalPlaybooksRepositoryService {
     vaults: string[] = [],
   ): Promise<void> {
     this.logger.log(`Adding local repository ${name}`);
-    
+
     try {
       // Create a unique directory for the repository
       const uuid = uuidv4();
       const directory = `${DIRECTORY_ROOT}/${uuid}`;
-      
+
       await this.initLocalRepository(directory, name, directoryExclusionList, vaults);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -98,19 +100,19 @@ export class LocalPlaybooksRepositoryService {
     vaults: string[] = [],
   ): Promise<void> {
     this.logger.log(`Updating local repository ${name}`);
-    
+
     try {
       const repository = await this.playbooksRepositoryModel.findOne({ uuid });
       if (!repository) {
         throw new NotFoundError(`Repository with UUID ${uuid} not found`);
       }
-      
+
       repository.name = name;
       repository.directoryExclusionList = directoryExclusionList;
       repository.vaults = vaults;
-      
+
       await repository.save();
-      
+
       // Re-register the repository with updated settings
       await PlaybooksRepositoryEngine.deregisterRepository(uuid);
       await PlaybooksRepositoryEngine.registerRepository(repository);
@@ -128,24 +130,24 @@ export class LocalPlaybooksRepositoryService {
    */
   async syncToDatabase(repository: string | any): Promise<void> {
     let uuid: string;
-    
+
     if (typeof repository === 'string') {
       uuid = repository;
     } else {
       uuid = repository.uuid;
     }
-    
+
     this.logger.log(`Syncing local repository ${uuid} to database`);
-    
+
     try {
       const playbooksRepositoryComponent = PlaybooksRepositoryEngine.getState().playbooksRepository[
         uuid
       ] as any;
-      
+
       if (!playbooksRepositoryComponent) {
         throw new InternalError('Repository is not registered, try restarting or force sync');
       }
-      
+
       if (typeof playbooksRepositoryComponent.syncToDatabase === 'function') {
         await playbooksRepositoryComponent.syncToDatabase();
       } else {
@@ -157,4 +159,4 @@ export class LocalPlaybooksRepositoryService {
       throw new InternalError(`Error syncing local repository to database: ${errorMessage}`);
     }
   }
-} 
+}

@@ -1,10 +1,13 @@
-import { Controller, Get, Post, Body, Param, Logger } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Param, Post } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { API } from 'ssm-shared-lib';
 import { PlaybooksRepositoryService } from '../services/playbooks-repository.service';
 import { NotFoundError } from '../../../middlewares/api/ApiError';
-import { PlaybooksRepository, PlaybooksRepositoryDocument } from '../schemas/playbooks-repository.schema';
+import {
+  PlaybooksRepository,
+  PlaybooksRepositoryDocument,
+} from '../schemas/playbooks-repository.schema';
 
 /**
  * Controller for managing playbooks repositories
@@ -16,7 +19,7 @@ export class PlaybooksRepositoryController {
   constructor(
     private readonly playbooksRepositoryService: PlaybooksRepositoryService,
     @InjectModel(PlaybooksRepository.name)
-    private readonly playbooksRepositoryModel: Model<PlaybooksRepositoryDocument>
+    private readonly playbooksRepositoryModel: Model<PlaybooksRepositoryDocument>,
   ) {}
 
   /**
@@ -37,18 +40,18 @@ export class PlaybooksRepositoryController {
   @Post(':uuid/directory/:directoryName')
   async addDirectoryToPlaybookRepository(
     @Param('uuid') uuid: string,
-    @Body() { fullPath }: { fullPath: string }
+    @Body() { fullPath }: { fullPath: string },
   ): Promise<void> {
     this.logger.log(`Adding directory ${fullPath} to repository ${uuid}`);
-    
+
     const playbookRepository = await this.playbooksRepositoryModel.findOne({ uuid });
     if (!playbookRepository) {
       throw new NotFoundError(`PlaybookRepository ${uuid} not found`);
     }
-    
+
     await this.playbooksRepositoryService.createDirectoryInPlaybookRepository(
       playbookRepository as unknown as PlaybooksRepositoryDocument,
-      fullPath
+      fullPath,
     );
   }
 
@@ -63,19 +66,19 @@ export class PlaybooksRepositoryController {
   async addPlaybookToRepository(
     @Param('uuid') uuid: string,
     @Param('playbookName') playbookName: string,
-    @Body() { fullPath }: { fullPath: string }
+    @Body() { fullPath }: { fullPath: string },
   ): Promise<any> {
     this.logger.log(`Adding playbook ${playbookName} at ${fullPath} to repository ${uuid}`);
-    
+
     const playbookRepository = await this.playbooksRepositoryModel.findOne({ uuid });
     if (!playbookRepository) {
       throw new NotFoundError(`PlaybookRepository ${uuid} not found`);
     }
-    
+
     return await this.playbooksRepositoryService.createPlaybookInRepository(
       playbookRepository as unknown as PlaybooksRepositoryDocument,
       fullPath,
-      playbookName
+      playbookName,
     );
   }
 
@@ -87,18 +90,18 @@ export class PlaybooksRepositoryController {
   @Post(':uuid/playbook/:playbookUuid/delete')
   async deletePlaybookFromRepository(
     @Param('uuid') uuid: string,
-    @Param('playbookUuid') playbookUuid: string
+    @Param('playbookUuid') playbookUuid: string,
   ): Promise<void> {
     this.logger.log(`Deleting playbook ${playbookUuid} from repository ${uuid}`);
-    
+
     const playbookRepository = await this.playbooksRepositoryModel.findOne({ uuid });
     if (!playbookRepository) {
       throw new NotFoundError(`PlaybookRepository ${uuid} not found`);
     }
-    
+
     await this.playbooksRepositoryService.deletePlaybookFromRepository(
       playbookRepository as unknown as PlaybooksRepositoryDocument,
-      playbookUuid
+      playbookUuid,
     );
   }
 
@@ -110,18 +113,18 @@ export class PlaybooksRepositoryController {
   @Post(':uuid/directory/delete')
   async deleteDirectoryFromRepository(
     @Param('uuid') uuid: string,
-    @Body() { fullPath }: { fullPath: string }
+    @Body() { fullPath }: { fullPath: string },
   ): Promise<void> {
     this.logger.log(`Deleting directory ${fullPath} from repository ${uuid}`);
-    
+
     const playbookRepository = await this.playbooksRepositoryModel.findOne({ uuid });
     if (!playbookRepository) {
       throw new NotFoundError(`PlaybookRepository ${uuid} not found`);
     }
-    
+
     await this.playbooksRepositoryService.deleteDirectoryFromRepository(
       playbookRepository as unknown as PlaybooksRepositoryDocument,
-      fullPath
+      fullPath,
     );
   }
 
@@ -133,7 +136,7 @@ export class PlaybooksRepositoryController {
   @Post('playbook/:playbookUuid/save')
   async savePlaybook(
     @Param('playbookUuid') playbookUuid: string,
-    @Body() { content }: { content: string }
+    @Body() { content }: { content: string },
   ): Promise<void> {
     this.logger.log(`Saving playbook ${playbookUuid}`);
     await this.playbooksRepositoryService.savePlaybook(playbookUuid, content);
@@ -148,4 +151,4 @@ export class PlaybooksRepositoryController {
     this.logger.log(`Syncing repository ${uuid}`);
     await this.playbooksRepositoryService.syncRepository(uuid);
   }
-} 
+}

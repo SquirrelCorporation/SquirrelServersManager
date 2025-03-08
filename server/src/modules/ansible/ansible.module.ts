@@ -2,20 +2,23 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { HttpModule } from '@nestjs/axios';
 import { ShellModule } from '../shell/shell.module';
-import { AnsibleCommandService } from './services/ansible-command.service';
-import { AnsibleCommandBuilderService } from './services/ansible-command-builder.service';
-import { AnsibleGalaxyCommandService } from './services/ansible-galaxy-command.service';
-import { InventoryTransformerService } from './services/inventory-transformer.service';
-import { ExtraVarsService } from './services/extra-vars.service';
-import { ExtraVarsTransformerService } from './services/extra-vars-transformer.service';
-import { TaskLogsService } from './services/task-logs.service';
-import { TaskLogsController } from './controllers/task-logs.controller';
-import { GalaxyController } from './controllers/galaxy.controller';
-import { GalaxyService } from './services/galaxy.service';
-import { AnsibleLogsRepository } from './repositories/ansible-logs.repository';
-import { AnsibleTaskRepository } from './repositories/ansible-task.repository';
-import { AnsibleLog, AnsibleLogSchema } from './schemas/ansible-log.schema';
-import { AnsibleTask, AnsibleTaskSchema } from './schemas/ansible-task.schema';
+import { LogsModule } from '../logs/logs.module';
+import { AnsibleCommandService } from './application/services/ansible-command.service';
+import { AnsibleCommandBuilderService } from './application/services/ansible-command-builder.service';
+import { AnsibleGalaxyCommandService } from './application/services/ansible-galaxy-command.service';
+import { InventoryTransformerService } from './application/services/inventory-transformer.service';
+import { ExtraVarsService } from './application/services/extra-vars.service';
+import { ExtraVarsTransformerService } from './application/services/extra-vars-transformer.service';
+import { TaskLogsService } from './application/services/task-logs.service';
+import { PlaybookHooksService } from './application/services/playbook-hooks.service';
+import { TaskLogsController } from './presentation/controllers/task-logs.controller';
+import { GalaxyController } from './presentation/controllers/galaxy.controller';
+import { PlaybookHooksController } from './presentation/controllers/playbook-hooks.controller';
+import { GalaxyService } from './application/services/galaxy.service';
+import { AnsibleTaskRepository } from './infrastructure/repositories/ansible-task.repository';
+import { AnsibleTaskStatusRepository } from './infrastructure/repositories/ansible-task-status.repository';
+import { AnsibleTask, AnsibleTaskSchema } from './infrastructure/schemas/ansible-task.schema';
+import { AnsibleTaskStatus, AnsibleTaskStatusSchema } from './infrastructure/schemas/ansible-task-status.schema';
 
 /**
  * AnsibleModule provides services for executing Ansible commands and playbooks
@@ -24,12 +27,13 @@ import { AnsibleTask, AnsibleTaskSchema } from './schemas/ansible-task.schema';
   imports: [
     HttpModule,
     ShellModule,
+    LogsModule,
     MongooseModule.forFeature([
-      { name: AnsibleLog.name, schema: AnsibleLogSchema },
       { name: AnsibleTask.name, schema: AnsibleTaskSchema },
+      { name: AnsibleTaskStatus.name, schema: AnsibleTaskStatusSchema },
     ]),
   ],
-  controllers: [TaskLogsController, GalaxyController],
+  controllers: [TaskLogsController, GalaxyController, PlaybookHooksController],
   providers: [
     AnsibleCommandService,
     AnsibleCommandBuilderService,
@@ -39,8 +43,9 @@ import { AnsibleTask, AnsibleTaskSchema } from './schemas/ansible-task.schema';
     ExtraVarsTransformerService,
     TaskLogsService,
     GalaxyService,
-    AnsibleLogsRepository,
+    PlaybookHooksService,
     AnsibleTaskRepository,
+    AnsibleTaskStatusRepository,
   ],
   exports: [
     AnsibleCommandService,
@@ -51,8 +56,9 @@ import { AnsibleTask, AnsibleTaskSchema } from './schemas/ansible-task.schema';
     ExtraVarsTransformerService,
     TaskLogsService,
     GalaxyService,
-    AnsibleLogsRepository,
+    PlaybookHooksService,
     AnsibleTaskRepository,
+    AnsibleTaskStatusRepository,
   ],
 })
 export class AnsibleModule {}

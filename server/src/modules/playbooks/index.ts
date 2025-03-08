@@ -1,6 +1,6 @@
 /**
  * Playbooks module provides functionality for managing playbooks repositories
- * 
+ *
  * This module includes:
  * - Services for managing playbooks repositories
  * - Components for interacting with different types of repositories (git, local)
@@ -28,4 +28,4 @@ export { PlaybooksRepositoryEngineService } from './services/playbooks-repositor
 // Export controllers
 export { PlaybooksRepositoryController } from './controllers/playbooks-repository.controller';
 export { GitPlaybooksRepositoryController } from './controllers/git-playbooks-repository.controller';
-export { LocalPlaybooksRepositoryController } from './controllers/local-playbooks-repository.controller'; 
+export { LocalPlaybooksRepositoryController } from './controllers/local-playbooks-repository.controller';

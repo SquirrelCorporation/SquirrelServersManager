@@ -76,15 +76,15 @@ export class TreeNodeService {
   async completeNode(node: DirectoryTree.ExtendedTreeNode) {
     const { path } = node;
     const playbook = await this.playbookModel.findOne({ path }).exec();
-    
+
     if (!playbook) {
       throw new Error(`Unable to find any playbook for path ${path}`);
     }
-    
+
     const extraVars = playbook?.extraVars
       ? await this.extraVarsService.findValueOfExtraVars(playbook.extraVars, undefined, true)
       : undefined;
-      
+
     return {
       ...node,
       uuid: playbook?.uuid,

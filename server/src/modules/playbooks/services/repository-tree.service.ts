@@ -1,6 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
+import { Injectable, Logger } from '@nestjs/common';
 import { DirectoryTree } from 'ssm-shared-lib';
 
 /**
@@ -24,9 +24,12 @@ export class RepositoryTreeService {
    * @param options Options for generating the tree
    * @returns The generated tree
    */
-  generateDirectoryTree(rootPath: string, options: DirectoryTreeOptions = {}): DirectoryTree.TreeNode {
+  generateDirectoryTree(
+    rootPath: string,
+    options: DirectoryTreeOptions = {},
+  ): DirectoryTree.TreeNode {
     this.logger.debug(`Generating directory tree for ${rootPath}`);
-    
+
     if (!fs.existsSync(rootPath)) {
       this.logger.warn(`Root path ${rootPath} does not exist`);
       return {
@@ -68,31 +71,35 @@ export class RepositoryTreeService {
    * @param options Options for building the tree
    * @returns The built tree node or undefined if the node should be excluded
    */
-  private buildTree(rootPath: string, currentPath: string, options: DirectoryTreeOptions): DirectoryTree.TreeNode | undefined {
+  private buildTree(
+    rootPath: string,
+    currentPath: string,
+    options: DirectoryTreeOptions,
+  ): DirectoryTree.TreeNode | undefined {
     const name = path.basename(currentPath);
-    
+
     // Check if the path should be excluded
     if (options.exclude && options.exclude.includes(name)) {
       return undefined;
     }
-    
+
     const stats = fs.statSync(currentPath);
-    
+
     if (stats.isDirectory()) {
       const children: DirectoryTree.TreeNode[] = [];
-      
+
       try {
         const files = fs.readdirSync(currentPath);
-        
+
         for (const file of files) {
           const filePath = path.join(currentPath, file);
           const node = this.buildTree(rootPath, filePath, options);
-          
+
           if (node) {
             children.push(node);
           }
         }
-        
+
         return {
           name,
           path: currentPath,
@@ -113,14 +120,14 @@ export class RepositoryTreeService {
       if (options.extensions && !options.extensions.test(name)) {
         return undefined;
       }
-      
+
       return {
         name,
         path: currentPath,
         type: DirectoryTree.CONSTANTS.FILE,
       };
     }
-    
+
     return undefined;
   }
 
@@ -131,7 +138,7 @@ export class RepositoryTreeService {
    */
   recursivelyFlattenTree(tree: DirectoryTree.TreeNode): DirectoryTree.TreeNode[] {
     const result = this.recursivelyFlattenTreeInternal(tree);
-    return result.filter(node => node !== undefined) as DirectoryTree.TreeNode[];
+    return result.filter((node) => node !== undefined) as DirectoryTree.TreeNode[];
   }
 
   /**
@@ -147,9 +154,9 @@ export class RepositoryTreeService {
     if (!tree) {
       return [];
     }
-    
+
     const result: (DirectoryTree.TreeNode | undefined)[] = [tree];
-    
+
     if (tree.children && tree.children.length > 0) {
       for (const child of tree.children) {
         if (child) {
@@ -157,7 +164,7 @@ export class RepositoryTreeService {
         }
       }
     }
-    
+
     return result;
   }
-} 
+}

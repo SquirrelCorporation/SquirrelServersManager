@@ -1,7 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PlaybooksRepositoryDocument, PlaybooksRepository } from '../schemas/playbooks-repository.schema';
+import {
+  PlaybooksRepository,
+  PlaybooksRepositoryDocument,
+} from '../schemas/playbooks-repository.schema';
 import { NotFoundError } from '../../../middlewares/api/ApiError';
 import { PLAYBOOKS_REPOSITORY_DOCUMENT } from '../constants';
 
@@ -56,7 +59,10 @@ export class PlaybooksRepositoryRepository {
    * @param updateData Data to update
    * @returns The updated repository
    */
-  async update(uuid: string, updateData: Partial<PlaybooksRepository>): Promise<PlaybooksRepositoryDocument | null> {
+  async update(
+    uuid: string,
+    updateData: Partial<PlaybooksRepository>,
+  ): Promise<PlaybooksRepositoryDocument | null> {
     this.logger.debug(`Updating repository with UUID: ${uuid}`);
     return this.playbooksRepositoryModel
       .findOneAndUpdate({ uuid }, { $set: updateData }, { new: true })
@@ -82,4 +88,4 @@ export class PlaybooksRepositoryRepository {
     this.logger.debug(`Deleting repository with UUID: ${uuid}`);
     return this.playbooksRepositoryModel.findOneAndDelete({ uuid }).exec();
   }
-} 
+}

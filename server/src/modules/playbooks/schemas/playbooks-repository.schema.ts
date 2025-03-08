@@ -87,8 +87,3 @@ export class PlaybooksRepository {
 }
 
 export const PlaybooksRepositorySchema = SchemaFactory.createForClass(PlaybooksRepository);
-
-// Add mongoose-autopopulate plugin
-PlaybooksRepositorySchema.plugin(require('mongoose-autopopulate'), {
-  maxDepth: 2,
-}); 

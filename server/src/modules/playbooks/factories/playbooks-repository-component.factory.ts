@@ -2,12 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-
-import { GitComponentOptions, LocalComponentOptions } from '../interfaces/playbooks-repository-component.interface';
-import { PlaybooksRepositoryComponent, Playbook, PlaybookDocument, PlaybookRepository, PlaybookRepositoryDocument } from '../components/playbooks-repository.component';
+import {
+  GitComponentOptions,
+  LocalComponentOptions,
+} from '../interfaces/playbooks-repository-component.interface';
+import {
+  Playbook,
+  PlaybookDocument,
+  PlaybookRepository,
+  PlaybookRepositoryDocument,
+  PlaybooksRepositoryComponent,
+} from '../components/playbooks-repository.component';
 import { GitPlaybooksRepositoryComponent } from '../components/git-playbooks-repository.component';
 import { LocalPlaybooksRepositoryComponent } from '../components/local-playbooks-repository.component';
-import { FileSystemService } from '../../shell/services/file-system.service';
+import { FileSystemService } from '../../shell';
 import { PlaybooksRepositoryService } from '../services/playbooks-repository.service';
 import { GitPlaybooksRepositoryService } from '../services/git-playbooks-repository.service';
 import { LocalPlaybooksRepositoryService } from '../services/local-playbooks-repository.service';
@@ -26,7 +34,8 @@ export class PlaybooksRepositoryComponentFactory {
     private readonly playbooksRepositoryRepository: PlaybooksRepositoryRepository,
     private readonly eventEmitter: EventEmitter2,
     @InjectModel(Playbook.name) private readonly playbookModel: Model<PlaybookDocument>,
-    @InjectModel(PlaybookRepository.name) private readonly repositoryModel: Model<PlaybookRepositoryDocument>,
+    @InjectModel(PlaybookRepository.name)
+    private readonly repositoryModel: Model<PlaybookRepositoryDocument>,
   ) {}
 
   /**
@@ -44,7 +53,7 @@ export class PlaybooksRepositoryComponentFactory {
       this.playbookModel,
       this.repositoryModel,
     );
-    
+
     await component.initializeWithOptions(options);
     return component;
   }
@@ -54,7 +63,9 @@ export class PlaybooksRepositoryComponentFactory {
    * @param options Local component options
    * @returns Initialized Local repository component
    */
-  async createLocalComponent(options: LocalComponentOptions): Promise<LocalPlaybooksRepositoryComponent> {
+  async createLocalComponent(
+    options: LocalComponentOptions,
+  ): Promise<LocalPlaybooksRepositoryComponent> {
     const component = new LocalPlaybooksRepositoryComponent(
       this.fileSystemService,
       this.playbooksRepositoryService,
@@ -64,7 +75,7 @@ export class PlaybooksRepositoryComponentFactory {
       this.playbookModel,
       this.repositoryModel,
     );
-    
+
     await component.initializeWithOptions(options);
     return component;
   }
@@ -75,7 +86,10 @@ export class PlaybooksRepositoryComponentFactory {
    * @param options Component options
    * @returns Initialized repository component
    */
-  async createComponent(type: string, options: GitComponentOptions | LocalComponentOptions): Promise<PlaybooksRepositoryComponent> {
+  async createComponent(
+    type: string,
+    options: GitComponentOptions | LocalComponentOptions,
+  ): Promise<PlaybooksRepositoryComponent> {
     switch (type.toLowerCase()) {
       case 'git':
         return await this.createGitComponent(options as GitComponentOptions);
@@ -85,4 +99,4 @@ export class PlaybooksRepositoryComponentFactory {
         throw new Error(`Unsupported repository type: ${type}`);
     }
   }
-} 
+}

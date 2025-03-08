@@ -1,14 +1,18 @@
-import { AnsibleCommandService } from './services/ansible-command.service';
-import { AnsibleCommandBuilderService } from './services/ansible-command-builder.service';
-import { AnsibleGalaxyCommandService } from './services/ansible-galaxy-command.service';
-import { InventoryTransformerService } from './services/inventory-transformer.service';
-import { ExtraVarsService } from './services/extra-vars.service';
-import { ExtraVarsTransformerService } from './services/extra-vars-transformer.service';
+import { AnsibleCommandService } from './application/services/ansible-command.service';
+import { AnsibleCommandBuilderService } from './application/services/ansible-command-builder.service';
+import { AnsibleGalaxyCommandService } from './application/services/ansible-galaxy-command.service';
+import { InventoryTransformerService } from './application/services/inventory-transformer.service';
+import { ExtraVarsService } from './application/services/extra-vars.service';
+import { ExtraVarsTransformerService } from './application/services/extra-vars-transformer.service';
+import { IAnsibleTaskStatusRepository } from './domain/repositories/ansible-task-status.repository.interface';
+import { IAnsibleTaskStatus } from './domain/entities/ansible-task-status.interface';
+import { IAnsibleTaskRepository } from './domain/repositories/ansible-task.repository.interface';
+import { IAnsibleTask } from './domain/entities/ansible-task.interface';
+import { AnsibleTaskStatusRepository } from './infrastructure/repositories/ansible-task-status.repository';
+import { AnsibleTaskRepository } from './infrastructure/repositories/ansible-task.repository';
+import { AnsibleTaskStatus, AnsibleTaskStatusSchema } from './infrastructure/schemas/ansible-task-status.schema';
+import { AnsibleTask, AnsibleTaskSchema } from './infrastructure/schemas/ansible-task.schema';
 
-// Import old implementations for backward compatibility
-import ansibleCmd from './AnsibleCmd';
-import AnsibleGalaxyCmd from './AnsibleGalaxyCmd';
-import smartFailure from './SmartFailure';
 
 // Export all NestJS services
 export {
@@ -18,15 +22,14 @@ export {
   InventoryTransformerService,
   ExtraVarsService,
   ExtraVarsTransformerService,
-};
-
-// Export old implementations for backward compatibility
-export { ansibleCmd, AnsibleGalaxyCmd, smartFailure };
-
-// Default export for backward compatibility
-export default {
-  AnsibleCommandService,
-  ansibleCmd,
-  AnsibleGalaxyCmd,
-  smartFailure,
+  IAnsibleTaskStatusRepository,
+  IAnsibleTaskStatus,
+  IAnsibleTaskRepository,
+  IAnsibleTask,
+  AnsibleTaskStatusRepository,
+  AnsibleTaskRepository,
+  AnsibleTaskStatus,
+  AnsibleTaskStatusSchema,
+  AnsibleTask,
+  AnsibleTaskSchema,
 };

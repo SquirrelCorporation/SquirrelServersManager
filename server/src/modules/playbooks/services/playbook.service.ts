@@ -81,7 +81,7 @@ export class PlaybookService {
     if (playbook.extraVars?.some(e => e.extraVar === extraVar.extraVar)) {
       throw new Error('ExtraVar already exists');
     }
-    
+
     const concatExtra = [
       ...(playbook.extraVars || []),
       {
@@ -91,13 +91,13 @@ export class PlaybookService {
         deletable: true,
       },
     ];
-    
+
     await this.playbookRepository.updateOrCreate({
       ...playbook,
       extraVars: concatExtra,
       playableInBatch: !concatExtra.find((e) => e.type === SsmAnsible.ExtraVarsType.CONTEXT),
     });
-    
+
     if (extraVar.type === SsmAnsible.ExtraVarsType.SHARED) {
       await setToCache(extraVar.extraVar, extraVar.value || '');
     }
@@ -107,10 +107,10 @@ export class PlaybookService {
     const removedVar = playbook.extraVars?.filter((e) => {
       return e.extraVar !== extraVarName;
     });
-    
+
     await this.playbookRepository.updateOrCreate({
       ...playbook,
       extraVars: removedVar,
     });
   }
-} 
+}

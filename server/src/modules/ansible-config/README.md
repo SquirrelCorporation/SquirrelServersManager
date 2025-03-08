@@ -11,6 +11,40 @@ This NestJS module provides a centralized way to manage Ansible configuration fi
 - **Validation**: Input validation for configuration entries
 - **Error Handling**: Comprehensive error handling for all operations
 
+## Architecture
+
+The module follows the NestJS Clean Architecture pattern with a well-defined layered approach:
+
+- **Domain**: Contains entities, interfaces, and domain logic
+- **Application**: Contains services that implement business logic
+- **Infrastructure**: Contains implementations of repositories and external services
+- **Presentation**: Contains controllers, DTOs, and interfaces for handling HTTP requests
+
+### Module Structure
+
+```
+ansible-config/
+├── domain/            # Domain layer (entities, interfaces)
+│   ├── entities/      # Domain entities
+│   └── repositories/  # Repository interfaces
+├── application/       # Application layer (services)
+│   └── services/      # Business logic services
+├── infrastructure/    # Infrastructure layer (repositories)
+│   ├── repositories/  # Repository implementations
+│   └── schemas/       # Database schemas
+├── presentation/      # Presentation layer (controllers)
+│   ├── controllers/   # HTTP controllers
+│   ├── dtos/          # Data Transfer Objects
+│   ├── interfaces/    # Presentation interfaces
+│   └── utils/         # Utility functions
+├── __tests__/         # Tests that mirror the module structure
+│   ├── application/   # Application layer tests
+│   └── presentation/  # Presentation layer tests
+├── constants.ts       # Module constants
+├── index.ts           # Module exports
+└── ansible-config.module.ts  # Module definition
+```
+
 ## API Endpoints
 
 The module exposes the following REST endpoints:
@@ -117,7 +151,7 @@ await fetch('/api/ansible/configuration', {
 
 ## Testing
 
-The module includes comprehensive unit tests for both the service and controller components. Run the tests using:
+The module includes comprehensive unit tests for both the service and controller components. The test structure mirrors the module structure, following the clean architecture approach. Run the tests using:
 
 ```bash
 npm test

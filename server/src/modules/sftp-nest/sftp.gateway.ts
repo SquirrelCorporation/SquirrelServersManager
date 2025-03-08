@@ -41,7 +41,6 @@ export class SftpGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   afterInit(server: Server) {
     this.logger.log('SFTP WebSocket Gateway initialized');
-    this.logger.debug(`Server namespace: ${server.name}`);
 
     // Add error event listener to the server
     server.engine?.on('connection_error', (err: any) => {

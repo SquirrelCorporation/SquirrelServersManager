@@ -1,3 +1,6 @@
+// Register path aliases before any other imports
+import './path-register';
+
 import app from './App';
 import Startup from './core/startup';
 import './middlewares/Passport';
