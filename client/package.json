@@ -103,7 +103,7 @@
     "@types/react-dom": "^18.3.1",
     "@types/react-helmet": "^6.1.11",
     "@types/testing-library__jest-dom": "^6.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.24.1",
+    "@typescript-eslint/eslint-plugin": "^8.26.0",
     "@umijs/fabric": "^4.0.1",
     "@umijs/lint": "^4.4.5",
     "antd-pro-merge-less": "^3.0.11",
