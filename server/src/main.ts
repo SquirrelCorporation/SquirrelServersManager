@@ -1,12 +1,5 @@
-// Register path aliases before any other imports
-import './path-register';
-
 import app from './App';
-import Startup from './core/startup';
-import './middlewares/Passport';
 import logger from './logger';
-import WatcherEngine from './modules/containers/core/WatcherEngine';
-import Crons from './modules/crons';
 import Telemetry from './modules/telemetry';
 
 const start = async () => {
@@ -25,9 +18,6 @@ Starting Squirrel Servers Manager server...`);
     // Initialize NestJS (this will also set up Express routes)
     await app.setupNestJS();
 
-    // Initialize the application
-    await Startup.init();
-
     // Start the server
     await app.startServer();
   } catch (err: any) {
@@ -41,8 +31,6 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 export const restart = async () => {
-  await WatcherEngine.deregisterAll();
-  Crons.stopAllScheduledJobs();
   await app.stopServer(start);
 };
 

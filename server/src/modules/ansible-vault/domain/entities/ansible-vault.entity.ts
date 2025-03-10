@@ -7,4 +7,4 @@ export interface IAnsibleVault {
   password: string;
   createdAt?: Date;
   updatedAt?: Date;
-} 
+}

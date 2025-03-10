@@ -1,3 +1,15 @@
+```
+  ,;;:;,
+   ;;;;;
+  ,:;;:;    ,'=.
+  ;:;:;' .=" ,'_\
+  ':;:;,/  ,__:=@
+   ';;:;  =./)_
+     `"=\_  )_"`
+          ``'"`
+```
+Squirrel Servers Manager 🐿️
+---
 # Ansible Configuration Module
 
 This NestJS module provides a centralized way to manage Ansible configuration files. It offers a complete set of CRUD operations for Ansible configuration entries, with proper validation, error handling, and security measures.

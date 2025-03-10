@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SettingsKeys, StatsType } from 'ssm-shared-lib';
-import { getConfFromCache } from '../../../../data/cache';
+import { ICacheService } from '../../../../infrastructure/cache';
 import { PROMETHEUS_SERVICE } from '../../../../infrastructure/prometheus/prometheus.provider';
 import { PrometheusService } from '../../../../infrastructure/prometheus/prometheus.service';
 import PinoLogger from '../../../../logger';
@@ -19,6 +19,7 @@ export class DashboardService {
     private readonly deviceDownTimeService: DeviceDownTimeService,
     @Inject(PROMETHEUS_SERVICE)
     private readonly prometheusService: PrometheusService,
+    @Inject('ICacheService') private readonly cacheService: ICacheService
   ) {}
 
   async getSystemPerformance() {
@@ -53,10 +54,10 @@ export class DashboardService {
       },
     );
 
-    const minMem = await getConfFromCache(
+    const minMem = await this.cacheService.get(
       SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
     );
-    const maxCpu = await getConfFromCache(
+    const maxCpu = await this.cacheService.get(
       SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
     );
 

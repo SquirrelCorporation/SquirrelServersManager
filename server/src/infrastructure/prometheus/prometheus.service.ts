@@ -3,7 +3,6 @@ import { DateTime } from 'luxon';
 import { PrometheusDriver } from 'prometheus-query';
 import { StatsType } from 'ssm-shared-lib';
 import { prometheusConf } from '../../config';
-import deviceMetricsService, { MetricType } from '../../data/statistics/DeviceMetricsService';
 import PinoLogger from '../../logger';
 import { MetricsIdFilter, MetricsIdsFilter, isDevicesFilter } from './types/filters.types';
 import {
@@ -16,6 +15,18 @@ import {
 
 const DEFAULT_AGGREGATION_WINDOW = '1h' as const;
 const DAY_IN_SECONDS = 60 * 60 * 24;
+/**
+ * Types of metrics that can be collected
+ */
+export enum MetricType {
+  CPU_USAGE = 'cpu_usage',
+  MEMORY_USAGE = 'memory_usage',
+  MEMORY_FREE = 'memory_free',
+  STORAGE_USAGE = 'storage_usage',
+  STORAGE_FREE = 'storage_free',
+  CONTAINER_CPU_USAGE = 'container_cpu_usage',
+  CONTAINER_MEMORY_USAGE = 'container_memory_usage',
+}
 
 @Injectable()
 export class PrometheusService {
@@ -52,6 +63,21 @@ export class PrometheusService {
       },
     });
   }
+
+
+  /**
+   * Get the name of a metric by type
+   * @param type The type of metric
+   * @returns The name of the metric
+   */
+  public getMetricName(type: MetricType): string {
+    const metric = this.metricTypeMap[type];
+    if (!metric) {
+      throw new Error(`Metric type ${type} not found`);
+    }
+    return metric.name;
+  }
+
 
   private getMetricTypeFromStatsType(
     type: StatsType.DeviceStatsType | StatsType.ContainerStatsType,
@@ -105,7 +131,7 @@ export class PrometheusService {
   ): Promise<QueryResult<{ name: string; value: number; date: string }[]>> {
     try {
       const metricType = this.getMetricTypeFromStatsType(type);
-      const metricName = deviceMetricsService.getMetricName(metricType);
+      const metricName = this.getMetricName(metricType);
       const queryFilter = this.buildQueryFilter(filter);
       const query = `avg_over_time(${metricName}{${queryFilter}}[${DEFAULT_AGGREGATION_WINDOW}])`;
 
@@ -146,7 +172,7 @@ export class PrometheusService {
   ): Promise<QueryResult<AggregatedMetric[]>> {
     try {
       const metricType = this.getMetricTypeFromStatsType(type);
-      const metricName = deviceMetricsService.getMetricName(metricType);
+      const metricName = this.getMetricName(metricType);
       const queryFilter = this.buildQueryFilter(filter);
       const labelName = isDevicesFilter(filter) ? 'device_id' : 'container_id';
       const { rangeDuration, offsetDuration } = this.calculateTimeParameters(range);
@@ -176,7 +202,7 @@ export class PrometheusService {
   ): Promise<QueryResult<LatestMetric>> {
     try {
       const metricType = this.getMetricTypeFromStatsType(type);
-      const metricName = deviceMetricsService.getMetricName(metricType);
+      const metricName = this.getMetricName(metricType);
       const idKey = filter.type === 'container' ? 'container_id' : 'device_id';
       const idValue = filter.type === 'container' ? filter.containerId : filter.deviceId;
       const query = `${metricName}{${idKey}="${idValue}"}`;
@@ -205,7 +231,7 @@ export class PrometheusService {
   ): Promise<QueryResult<{ value: number }>> {
     try {
       const metricType = this.getMetricTypeFromStatsType(type);
-      const metricName = deviceMetricsService.getMetricName(metricType);
+      const metricName = this.getMetricName(metricType);
       const offsetStr = range.offset > 0 ? `offset ${range.offset}d` : '';
       const query = `avg(avg_over_time(${metricName}[${range.days}d] ${offsetStr}))`;
 
@@ -232,7 +258,7 @@ export class PrometheusService {
   ): Promise<QueryResult<Array<{ date: string; value: string }>>> {
     try {
       const metricType = this.getMetricTypeFromStatsType(type);
-      const metricName = deviceMetricsService.getMetricName(metricType);
+      const metricName = this.getMetricName(metricType);
       const query = `avg(avg_over_time(${metricName}[1h]))`;
 
       const result = await this.driver.rangeQuery(

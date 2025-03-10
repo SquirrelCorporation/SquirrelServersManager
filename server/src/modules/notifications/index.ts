@@ -1,6 +1,7 @@
-import { Notification, NotificationsModule } from './notifications.module';
+import { NotificationsModule } from './notifications.module';
+import { Notification } from './domain/entities/notification.entity';
 
-export { NotificationsModule, Notification };
-export * from './entities/notification.entity';
-export * from './services/notification.service';
-export * from './controllers/notification.controller';
+export { NotificationsModule };
+export { Notification };
+export * from './application/services/notification.service';
+export * from './presentation/controllers/notification.controller';

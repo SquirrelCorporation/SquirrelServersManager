@@ -1,114 +1,90 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ShellModule } from '../shell/shell.module';
-import { PlaybooksRepositoryService } from './services/playbooks-repository.service';
-import { GitPlaybooksRepositoryService } from './services/git-playbooks-repository.service';
-import { LocalPlaybooksRepositoryService } from './services/local-playbooks-repository.service';
-import { PlaybooksRepositoryEngineService } from './services/playbooks-repository-engine.service';
-import { PlaybooksRepositoryComponentFactory } from './factories/playbooks-repository-component.factory';
-import { Playbook as PlaybookComponent, PlaybookRepository as PlaybookRepositoryComponent } from './components/playbooks-repository.component';
-import { GitPlaybooksRepositoryComponent } from './components/git-playbooks-repository.component';
-import { LocalPlaybooksRepositoryComponent } from './components/local-playbooks-repository.component';
-import { TreeNodeService } from './services/tree-node.service';
-import { DefaultPlaybooksRepositoriesService } from './services/default-playbooks-repositories.service';
-import { PlaybooksRepositoryController } from './controllers/playbooks-repository.controller';
-import { GitPlaybooksRepositoryController } from './controllers/git-playbooks-repository.controller';
-import { LocalPlaybooksRepositoryController } from './controllers/local-playbooks-repository.controller';
-import { PlaybooksRepositoryRepository } from './repositories/playbooks-repository.repository';
-import { Playbook, PlaybookSchema } from './schemas/playbook.schema';
-import { PlaybookRepository } from './repositories/playbook.repository';
-import { PlaybookService } from './services/playbook.service';
-import { PlaybookController } from './controllers/playbook.controller';
+import { AnsibleModule } from '../ansible/ansible.module';
 
-// Define schemas
-const PlaybookComponentSchema = {
-  name: PlaybookComponent.name,
-  schema: {
-    uuid: { type: String, required: true, unique: true },
-    name: { type: String, required: true },
-    path: { type: String, required: true },
-    custom: { type: Boolean, default: true },
-    repositoryUuid: { type: String, required: true },
-    playableInBatch: { type: Boolean, default: false },
-    extraVars: { type: Object },
-    uniqueQuickRef: { type: String },
-  },
-};
+// Application services
+import { PlaybookService } from './application/services/playbook.service';
+import { PlaybooksRepositoryService } from './application/services/playbooks-register.service';
+import { TreeNodeService } from './application/services/tree-node.service';
+import { RepositoryTreeService } from './application/services/repository-tree.service';
 
-const PlaybookRepositoryComponentSchema = {
-  name: PlaybookRepositoryComponent.name,
-  schema: {
-    uuid: { type: String, required: true, unique: true },
-    name: { type: String, required: true },
-    type: { type: String, required: true, enum: ['git', 'local'] },
-    directory: { type: String, required: true },
-    enabled: { type: Boolean, default: true },
-    default: { type: Boolean, default: false },
-    branch: { type: String },
-    email: { type: String },
-    gitUserName: { type: String },
-    accessToken: { type: String },
-    remoteUrl: { type: String },
-    gitService: { type: String },
-    ignoreSSLErrors: { type: Boolean, default: false },
-    tree: { type: Object },
-  },
-};
+// Infrastructure repositories
+import { PlaybookRepository } from './infrastructure/repositories/playbook.repository';
+import { PlaybooksRepositoryRepository } from './infrastructure/repositories/playbooks-register.repository';
+import { GitPlaybooksRepositoryService } from './application/services/components/git-playbooks-register.service';
+import { LocalPlaybooksRepositoryService } from './infrastructure/repositories/local-playbooks-repository.service';
+import { PlaybooksRepositoryEngineService } from './application/services/components/playbooks-register-engine.service';
+import { DefaultPlaybooksRepositoriesService } from './application/services/components/default-playbooks-register.service';
 
-/**
- * PlaybooksModule provides services for managing playbooks repositories
- */
+// Presentation controllers
+import { PlaybookController } from './presentation/controllers/playbook.controller';
+import { PlaybooksRepositoryController } from './presentation/controllers/playbooks-repository.controller';
+import { GitPlaybooksRepositoryController } from './presentation/controllers/git-playbooks-repository.controller';
+import { LocalPlaybooksRepositoryController } from './presentation/controllers/local-playbooks-repository.controller';
+
+// Infrastructure schemas
+import { Playbook, PlaybookSchema } from './infrastructure/schemas/playbook.schema';
+import { PlaybooksRepository, PlaybooksRepositorySchema } from './infrastructure/schemas/playbooks-register.schema';
+
+// Domain interfaces
+import { PLAYBOOK_REPOSITORY } from './domain/repositories/playbook-repository.interface';
+import { PLAYBOOKS_REPOSITORY_REPOSITORY } from './domain/repositories/playbooks-register-repository.interface';
+
 @Module({
   imports: [
-    ShellModule,
-    EventEmitterModule.forRoot(),
     MongooseModule.forFeature([
-      PlaybookComponentSchema,
-      PlaybookRepositoryComponentSchema,
       { name: Playbook.name, schema: PlaybookSchema },
+      { name: PlaybooksRepository.name, schema: PlaybooksRepositorySchema },
     ]),
+    ShellModule,
+    AnsibleModule,
   ],
   controllers: [
+    PlaybookController,
     PlaybooksRepositoryController,
     GitPlaybooksRepositoryController,
     LocalPlaybooksRepositoryController,
-    PlaybookController,
   ],
   providers: [
-    // Services
+    // Application services
+    PlaybookService,
     PlaybooksRepositoryService,
+    TreeNodeService,
+    RepositoryTreeService,
+
+    // Infrastructure services
     GitPlaybooksRepositoryService,
     LocalPlaybooksRepositoryService,
     PlaybooksRepositoryEngineService,
-    PlaybookService,
-
-    // Factory
-    PlaybooksRepositoryComponentFactory,
-
-    // Components
-    GitPlaybooksRepositoryComponent,
-    LocalPlaybooksRepositoryComponent,
-
-    // Utils
-    TreeNodeService,
     DefaultPlaybooksRepositoriesService,
 
-    // Repositories
+    // Infrastructure repositories
     PlaybooksRepositoryRepository,
     PlaybookRepository,
+
+    // Domain repositories
+    {
+      provide: PLAYBOOK_REPOSITORY,
+      useClass: PlaybookRepository,
+    },
+    {
+      provide: PLAYBOOKS_REPOSITORY_REPOSITORY,
+      useClass: PlaybooksRepositoryRepository,
+    },
   ],
   exports: [
-    PlaybooksRepositoryService,
-    GitPlaybooksRepositoryService,
-    LocalPlaybooksRepositoryService,
-    PlaybooksRepositoryEngineService,
-    PlaybooksRepositoryComponentFactory,
-    TreeNodeService,
-    DefaultPlaybooksRepositoriesService,
-    MongooseModule,
+    // Application services
     PlaybookService,
+    PlaybooksRepositoryService,
+
+    // Infrastructure repositories
     PlaybookRepository,
+    PlaybooksRepositoryRepository,
+
+    // Domain repositories
+    PLAYBOOK_REPOSITORY,
+    PLAYBOOKS_REPOSITORY_REPOSITORY,
   ],
 })
 export class PlaybooksModule {}

@@ -19,7 +19,8 @@
     "paths": {
       "@modules/*": ["src/modules/*"],
       "@common/*": ["src/common/*"],
-      "@config/*": ["src/config/*"]
+      "@config/*": ["src/config/*"],
+      "@infrastructure/*": ["src/infrastructure/*"],
     },
     "typeRoots": [
       "./src/types",

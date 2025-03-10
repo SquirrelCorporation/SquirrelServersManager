@@ -1,29 +1,22 @@
-import { Module, OnModuleInit } from '@nestjs/common';
-import { ModuleRef } from '@nestjs/core';
+import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { NotificationController } from './controllers/notification.controller';
-import { Notification, NotificationSchema } from './entities/notification.entity';
-import NotificationBridge from './Notification';
-import { NotificationComponentService } from './services/notification-component.service';
-import { NotificationService } from './services/notification.service';
+import { NotificationService } from './application/services/notification.service';
+import { NotificationComponentService } from './application/services/notification-component.service';
+import { NOTIFICATION, NotificationSchema } from './infrastructure/schemas/notification.schema';
+import { NotificationRepository } from './infrastructure/repositories/notification.repository';
+import { NotificationController } from './presentation/controllers/notification.controller';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: Notification.name, schema: NotificationSchema }])],
+  imports: [MongooseModule.forFeature([{ name: NOTIFICATION, schema: NotificationSchema }])],
   controllers: [NotificationController],
-  providers: [NotificationService, NotificationComponentService],
+  providers: [
+    NotificationService,
+    NotificationComponentService,
+    {
+      provide: 'INotificationRepository',
+      useClass: NotificationRepository,
+    },
+  ],
   exports: [NotificationService],
 })
-export class NotificationsModule implements OnModuleInit {
-  constructor(private moduleRef: ModuleRef) {}
-
-  /**
-   * Initialize the bridge class with the ModuleRef
-   * to allow it to access the NestJS dependency injection container
-   */
-  onModuleInit() {
-    NotificationBridge.setModuleRef(this.moduleRef);
-  }
-}
-
-// Export the bridge class for backward compatibility
-export { default as Notification } from './Notification';
+export class NotificationsModule {}

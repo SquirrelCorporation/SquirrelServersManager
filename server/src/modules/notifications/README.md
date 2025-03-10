@@ -1,3 +1,15 @@
+```
+  ,;;:;,
+   ;;;;;
+  ,:;;:;    ,'=.
+  ;:;:;' .=" ,'_\
+  ':;:;,/  ,__:=@
+   ';;:;  =./)_
+     `"=\_  )_"`
+          ``'"`
+```
+Squirrel Servers Manager 🐿️
+---
 # Notifications Module
 
 ## Overview
@@ -6,33 +18,180 @@ The Notifications module provides a comprehensive system for managing applicatio
 
 ## Architecture
 
-The module follows NestJS architectural patterns and best practices:
+The module follows Clean Architecture principles with clear separation of concerns:
 
-### Core Components
+### Core Layers
 
-1. **Module Structure**
-   - `notifications.module.ts` - NestJS module definition
-   - `services/` - Business logic services
-   - `controllers/` - REST API controllers
-   - `entities/` - Mongoose schemas for MongoDB
-   - `__tests__/` - Test files for services and controllers
+1. **Domain Layer**
+   - Contains the core business entities and interfaces
+   - Defines the repository interfaces
+   - Independent of frameworks and implementation details
 
-2. **Services**
-   - `notification.service.ts` - Core service for managing notifications
-   - `notification-component.service.ts` - Service for handling notification events
+2. **Application Layer**
+   - Contains the business logic and use cases
+   - Depends only on the domain layer
+   - Handles event emissions and business rules
 
-3. **Controllers**
-   - `notification.controller.ts` - REST API endpoints for notifications
+3. **Infrastructure Layer**
+   - Implements the repository interfaces
+   - Contains database schemas and data access logic
 
-4. **Entities**
-   - `notification.entity.ts` - Schema for notification documents
+4. **Presentation Layer**
+   - Contains controllers for handling HTTP requests
+   - Depends on the application layer for business logic
+   - Handles request/response formatting
 
-5. **Bridge Classes**
-   - `Notification.ts` - Bridge class for backward compatibility
+### Directory Structure
 
-## Notification Entity
+```
+notifications/
+├── __tests__/                        # Test files mirroring the module structure
+│   ├── application/                  # Application layer tests
+│   │   └── services/                 # Service tests
+│   └── presentation/                 # Presentation layer tests
+│       └── controllers/              # Controller tests
+├── domain/                           # Domain layer
+│   ├── entities/                     # Domain entities
+│   │   └── notification.entity.ts    # Notification entity interface
+│   └── repositories/                 # Repository interfaces
+│       └── notification-repository.interface.ts
+├── application/                      # Application layer
+│   └── services/                     # Business logic services
+│       ├── notification.service.ts   # Core notification service
+│       └── notification-component.service.ts # Event handling service
+├── infrastructure/                   # Infrastructure layer
+│   ├── repositories/                 # Repository implementations
+│   │   └── notification.repository.ts # MongoDB repository implementation
+│   └── schemas/                      # Database schemas
+│       └── notification.schema.ts    # Mongoose schema for notifications
+├── presentation/                     # Presentation layer
+│   └── controllers/                  # REST API controllers
+│       └── notification.controller.ts # Notification endpoints
+├── notifications.module.ts           # NestJS module definition
+├── index.ts                          # Public API exports
+└── README.md                         # Module documentation
+```
 
-The module uses a Mongoose schema to define notifications:
+## Domain Layer
+
+### Notification Entity
+
+The domain layer defines the core notification entity:
+
+```typescript
+export interface Notification {
+  id?: string;
+  event: string;
+  message: string;
+  severity: 'info' | 'warning' | 'error';
+  seen: boolean;
+  module: string;
+  moduleId?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+```
+
+### Repository Interface
+
+The domain layer also defines the repository interface:
+
+```typescript
+export interface INotificationRepository {
+  create(notification: Partial<Notification>): Promise<Notification>;
+  findAllNotSeen(): Promise<Notification[]>;
+  countAllNotSeen(): Promise<number>;
+  markAllSeen(): Promise<void>;
+}
+```
+
+## Application Layer
+
+### NotificationService
+
+The application layer contains the business logic for notifications:
+
+```typescript
+@Injectable()
+export class NotificationService {
+  constructor(
+    @Inject('INotificationRepository')
+    private readonly notificationRepository: INotificationRepository,
+    private readonly eventEmitter: EventEmitter2
+  ) {}
+
+  async create(notification: Partial<Notification>): Promise<Notification> {
+    const created = await this.notificationRepository.create(notification);
+    
+    // Emit event to notify clients about the new notification
+    this.eventEmitter.emit(Events.UPDATED_NOTIFICATIONS, 'Updated Notification');
+    
+    return created;
+  }
+
+  async findAllNotSeen(): Promise<Notification[]> {
+    return this.notificationRepository.findAllNotSeen();
+  }
+
+  async countAllNotSeen(): Promise<number> {
+    return this.notificationRepository.countAllNotSeen();
+  }
+
+  async markAllSeen(): Promise<void> {
+    await this.notificationRepository.markAllSeen();
+    
+    // Emit event to notify clients that notifications have been updated
+    this.eventEmitter.emit(Events.UPDATED_NOTIFICATIONS, 'Updated Notification');
+  }
+}
+```
+
+### NotificationComponentService
+
+Handles notification events:
+
+```typescript
+@Injectable()
+export class NotificationComponentService extends EventManager implements OnModuleInit {
+  private eventsToListen = [
+    Events.AUTOMATION_FAILED,
+    Events.DOCKER_STAT_FAILED,
+    Events.DOCKER_WATCH_FAILED,
+  ];
+
+  constructor(private readonly notificationService: NotificationService) {
+    super();
+  }
+
+  onModuleInit() {
+    this.subscribeToEvents();
+  }
+
+  private subscribeToEvents() {
+    this.eventsToListen.forEach((event) => {
+      this.on(event, (payload: Payload) => this.handleNotificationEvent(event, payload));
+    });
+  }
+
+  private async handleNotificationEvent(event: Events, payload: Payload) {
+    // Create notification based on event
+    await this.notificationService.create({
+      event,
+      message: payload.message,
+      severity: payload.severity,
+      module: payload.module,
+      moduleId: payload.moduleId,
+      seen: false,
+    });
+  }
+}
+```
+
+## Infrastructure Layer
+
+### Notification Schema
+
+The infrastructure layer defines the MongoDB schema:
 
 ```typescript
 @Schema({
@@ -61,7 +220,7 @@ export class Notification {
     required: true,
     immutable: true,
   })
-  event!: Events;
+  event!: string;
 
   @Prop({
     type: String,
@@ -71,127 +230,104 @@ export class Notification {
   module!: string;
 
   @Prop({
+    type: String,
+    required: false,
+    immutable: true,
+  })
+  moduleId?: string;
+
+  @Prop({
     type: Boolean,
     required: true,
     default: false,
   })
   seen!: boolean;
-
-  @Prop({
-    type: Date,
-  })
-  createdAt?: Date;
-
-  @Prop({
-    type: Date,
-  })
-  updatedAt?: Date;
 }
 ```
 
-## Service Layer
+### Repository Implementation
 
-The service layer implements business logic for notifications:
-
-### NotificationService
-
-Handles core notification operations:
-
-- Creating new notifications
-- Finding unseen notifications
-- Counting unseen notifications
-- Marking notifications as seen
+The infrastructure layer implements the repository interface:
 
 ```typescript
 @Injectable()
-export class NotificationService {
+export class NotificationRepository implements INotificationRepository {
+  constructor(
+    @InjectModel(NOTIFICATION) private notificationModel: Model<NotificationDocument>,
+  ) {}
+
   async create(notification: Partial<Notification>): Promise<Notification> {
-    // Create notification and emit event
+    const created = await this.notificationModel.create(notification);
+    return created.toObject();
   }
 
   async findAllNotSeen(): Promise<Notification[]> {
-    // Find all unseen notifications
+    return this.notificationModel
+      .find({ seen: false })
+      .sort({ createdAt: -1 })
+      .limit(100)
+      .lean()
+      .exec();
   }
 
   async countAllNotSeen(): Promise<number> {
-    // Count unseen notifications
+    return this.notificationModel.countDocuments({ seen: false }).lean().exec();
   }
 
   async markAllSeen(): Promise<void> {
-    // Mark all notifications as seen
+    await this.notificationModel.updateMany({ seen: false }, { seen: true }).lean().exec();
   }
 }
 ```
 
-### NotificationComponentService
+## Presentation Layer
 
-Handles notification events:
+### NotificationController
 
-- Subscribes to system events
-- Creates notifications based on events
-- Emits notification update events
-
-## Controller Layer
-
-The controller layer provides REST API endpoints:
+The presentation layer provides REST API endpoints:
 
 ```typescript
 @Controller('notifications')
-@UseGuards(JwtAuthGuard)
 export class NotificationController {
+  constructor(private readonly notificationService: NotificationService) {}
+
   @Get()
-  async getAllNotifications(): Promise<Notification[]> {
-    // Get all unseen notifications
+  async findAllNotSeen(): Promise<Notification[]> {
+    return this.notificationService.findAllNotSeen();
   }
 
-  @Post()
+  @Get('count')
+  async countAllNotSeen(): Promise<{ count: number }> {
+    const count = await this.notificationService.countAllNotSeen();
+    return { count };
+  }
+
+  @Post('mark-seen')
   async markAllSeen(): Promise<void> {
-    // Mark all notifications as seen
+    return this.notificationService.markAllSeen();
   }
 }
 ```
 
-## Bridge Pattern
+## Module Configuration
 
-The module implements a bridge pattern for backward compatibility:
+The module is configured in `notifications.module.ts`:
 
 ```typescript
-export default class Notification {
-  private static moduleRef: ModuleRef;
-  private static service: NotificationService;
-
-  static setModuleRef(moduleRef: ModuleRef): void {
-    Notification.moduleRef = moduleRef;
-  }
-
-  private static getService(): NotificationService {
-    if (!Notification.moduleRef) {
-      throw new Error('ModuleRef not set in Notification');
-    }
-    
-    if (!Notification.service) {
-      Notification.service = Notification.moduleRef.get(NotificationService, { strict: false });
-    }
-    
-    return Notification.service;
-  }
-
-  static async create(notification: Partial<NotificationEntity>): Promise<NotificationEntity> {
-    return Notification.getService().create(notification);
-  }
-
-  static async findAllNotSeen(): Promise<NotificationEntity[]> {
-    return Notification.getService().findAllNotSeen();
-  }
-
-  static async countAllNotSeen(): Promise<number> {
-    return Notification.getService().countAllNotSeen();
-  }
-
-  static async markAllSeen(): Promise<void> {
-    return Notification.getService().markAllSeen();
-  }
-}
+@Module({
+  imports: [MongooseModule.forFeature([{ name: NOTIFICATION, schema: NotificationSchema }])],
+  controllers: [NotificationController],
+  providers: [
+    NotificationService,
+    NotificationComponentService,
+    {
+      provide: 'INotificationRepository',
+      useClass: NotificationRepository,
+    },
+  ],
+  exports: [NotificationService],
+})
+export class NotificationsModule {}
 ```
 
 ## Event System
@@ -203,43 +339,50 @@ The module uses NestJS event emitter for event-driven communication:
 
 ## Testing Strategy
 
-The module includes comprehensive tests:
+The module includes comprehensive tests that mirror the clean architecture structure:
 
-1. **Controller Tests**
+1. **Application Layer Tests**
+   - Test business logic in services
+   - Mock repository dependencies
+   - Verify correct behavior and event emissions
+
+2. **Presentation Layer Tests**
    - Test API endpoints
    - Mock service dependencies
    - Verify correct responses
-
-2. **Service Tests**
-   - Test business logic
-   - Mock database models and event emitter
-   - Verify correct behavior
 
 ## Best Practices
 
 When extending or modifying this module, follow these best practices:
 
-1. **Event-Driven Architecture**
+1. **Clean Architecture Principles**
+   - Maintain separation of concerns between layers
+   - Keep the domain layer independent of frameworks
+   - Use dependency injection for loose coupling
+
+2. **Event-Driven Architecture**
    - Use events for cross-module communication
    - Keep event handlers focused and simple
+   - Emit events from the service layer, not the repository
 
-2. **Type Safety**
+3. **Type Safety**
    - Use TypeScript interfaces and types
    - Define proper schemas with decorators
 
-3. **Error Handling**
+4. **Error Handling**
    - Use try/catch blocks for error handling
    - Log errors with context information
 
-4. **Testing**
+5. **Testing**
    - Write tests for all new functionality
    - Mock external dependencies
    - Test error handling scenarios
 
 ## Recent Changes
 
-- Migrated to NestJS architecture
+- Migrated to Clean Architecture
 - Implemented event-driven notification system
 - Enhanced type safety with TypeScript interfaces
 - Improved error handling
-- Added comprehensive unit tests 
+- Added comprehensive unit tests
+- Removed bridge pattern for direct module usage

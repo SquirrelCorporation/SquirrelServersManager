@@ -12,6 +12,5 @@
     "src/**/ansible/inventory/*.json",
     "src/tests/helpers/directory-tree/test_data/*"
   ],
-  "exec": "ts-node -r tsconfig-paths/register --transpile-only src/main.ts"
-
+  "exec": "ts-node --transpile-only -r tsconfig-paths/register src/main.ts"
 }

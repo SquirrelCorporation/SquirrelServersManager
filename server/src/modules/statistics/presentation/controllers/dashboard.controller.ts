@@ -1,14 +1,17 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import { JwtAuthGuard } from '../../../../guards/jwt-auth.guard';
-import DeviceRepo from '../../../../data/database/repository/DeviceRepo';
+import { DEVICE_REPOSITORY, IDeviceRepository } from '../../../devices/domain/repositories/device-repository.interface';
 import { DashboardStatQueryDto } from '../dto/dashboard-stats.dto';
-import { DashboardService } from '../../../application/services/dashboard.service';
+import { DashboardService } from '../../application/services/dashboard.service';
 
 @Controller('dashboard/stats')
 @UseGuards(JwtAuthGuard)
 export class DashboardController {
-  constructor(private readonly dashboardService: DashboardService) {}
+  constructor(
+    private readonly dashboardService: DashboardService,
+    @Inject(DEVICE_REPOSITORY) private readonly deviceRepository: IDeviceRepository
+  ) {}
 
   @Get('performances')
   async getDashboardPerformanceStats() {
@@ -35,7 +38,7 @@ export class DashboardController {
     const { from, to } = query;
     const { devices } = body;
 
-    const devicesToQuery = await DeviceRepo.findByUuids(devices);
+    const devicesToQuery = await this.deviceRepository.findByUuids(devices);
     if (!devicesToQuery || devicesToQuery.length !== devices.length) {
       throw new Error('Some devices were not found');
     }

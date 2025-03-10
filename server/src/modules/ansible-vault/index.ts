@@ -9,6 +9,9 @@ export { AnsibleVaultModule };
 // Re-export types and constants
 export { IAnsibleVault, DEFAULT_VAULT_ID };
 
+// Re-export services
+export { VaultCryptoService };
+
 // Re-export the encrypt/decrypt functions in a way that's compatible with the legacy API
 export const vaultEncrypt = async (value: string, vaultId: string): Promise<string> => {
   const service = globalThis.nestApp?.get(VaultCryptoService);

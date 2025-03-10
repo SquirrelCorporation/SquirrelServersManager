@@ -1,20 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { TaskHookDto } from '../../presentation/dtos/task-hook.dto';
 import { TaskEventDto } from '../../presentation/dtos/task-event.dto';
-import { AnsibleTaskRepository } from '../../infrastructure/repositories/ansible-task.repository';
-import { AnsibleTaskStatusRepository } from '../../infrastructure/repositories/ansible-task-status.repository';
-import { AnsibleLogsRepository } from '../../../logs/repositories/ansible-logs.repository';
+import { IAnsibleTaskRepository } from '../../domain/repositories/ansible-task.repository.interface';
+import { IAnsibleTaskStatusRepository } from '../../domain/repositories/ansible-task-status.repository.interface';
+import { IAnsibleLogsRepository } from '../../../logs/domain/repositories/ansible-logs-repository.interface';
+import { ICacheService } from '../../../../infrastructure/cache';
 import { BadRequestError, NotFoundError } from '../../../../middlewares/api/ApiError';
 import { isFinalStatus } from '../../../../helpers/ansible/AnsibleTaskHelper';
-import { SshKeyService } from '../../../shell';
+import { ISshKeyService } from '../../../shell/application/interfaces/ssh-key.interface';
 
 @Injectable()
 export class PlaybookHooksService {
   constructor(
-    private readonly taskRepository: AnsibleTaskRepository,
-    private readonly taskStatusRepository: AnsibleTaskStatusRepository,
-    private readonly logsRepository: AnsibleLogsRepository,
-    private readonly sshKeyService: SshKeyService,
+    @Inject('IAnsibleTaskRepository')
+    private readonly taskRepository: IAnsibleTaskRepository,
+    @Inject('IAnsibleTaskStatusRepository')
+    private readonly taskStatusRepository: IAnsibleTaskStatusRepository,
+    @Inject('IAnsibleLogsRepository')
+    private readonly logsRepository: IAnsibleLogsRepository,
+    @Inject('ISshKeyService')
+    private readonly sshKeyService: ISshKeyService,
+    @Inject('ICacheService') private readonly cacheService: ICacheService,
   ) {}
 
   async addTaskStatus(taskHookDto: TaskHookDto) {

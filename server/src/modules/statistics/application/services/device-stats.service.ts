@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { StatsType } from 'ssm-shared-lib';
-import Device from '../../../../data/database/model/Device';
-import DeviceRepo from '../../../../data/database/repository/DeviceRepo';
+import { IDevice } from '../../../devices/domain/entities/device.entity';
+import { DEVICE_REPOSITORY, IDeviceRepository } from '../../../devices/domain/repositories/device-repository.interface';
 import { PROMETHEUS_SERVICE } from '../../../../infrastructure/prometheus/prometheus.provider';
 import { PrometheusService } from '../../../../infrastructure/prometheus/prometheus.service';
 import {
@@ -21,9 +21,10 @@ export class DeviceStatsService {
   constructor(
     @Inject(PROMETHEUS_SERVICE)
     private readonly prometheusService: PrometheusService,
+    @Inject(DEVICE_REPOSITORY) private readonly deviceRepository: IDeviceRepository
   ) {}
 
-  async getStatsByDeviceAndType(device: Device, from: Date, to: Date, type?: string) {
+  async getStatsByDeviceAndType(device: IDevice, from: Date, to: Date, type?: string) {
     if (!device?.uuid) {
       this.logger.error('Invalid device: missing UUID');
       throw new Error('Invalid device: missing UUID');
@@ -56,7 +57,7 @@ export class DeviceStatsService {
     }
   }
 
-  async getStatsByDevicesAndType(devices: Device[], from: Date, to: Date, type?: string) {
+  async getStatsByDevicesAndType(devices: IDevice[], from: Date, to: Date, type?: string) {
     if (!devices?.length) {
       this.logger.error('Invalid devices: empty array');
       throw new Error('Invalid devices: empty array');
@@ -107,7 +108,7 @@ export class DeviceStatsService {
         return null;
       }
 
-      const devices = await DeviceRepo.findByUuids(deviceIds);
+      const devices = await this.deviceRepository.findByUuids(deviceIds);
       if (!devices || devices.length !== deviceIds.length) {
         throw new Error('Some devices were not found');
       }
@@ -129,7 +130,7 @@ export class DeviceStatsService {
     }
   }
 
-  async getStatByDeviceAndType(device: Device, type?: string) {
+  async getStatByDeviceAndType(device: IDevice, type?: string) {
     if (!device?.uuid) {
       this.logger.error('Invalid device: missing UUID');
       throw new Error('Invalid device: missing UUID');

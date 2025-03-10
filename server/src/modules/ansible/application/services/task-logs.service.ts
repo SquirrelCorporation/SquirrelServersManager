@@ -1,12 +1,12 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { paginate } from 'src/helpers/query/PaginationHelper';
-import { filterByQueryParams } from 'src/helpers/query/FilterHelper';
-import { filterByFields } from 'src/helpers/query/FilterHelper';
-import { sortByFields } from 'src/helpers/query/SorterHelper';
+import { filterByQueryParams } from '../../../../helpers/query/FilterHelper';
+import { filterByFields } from '../../../../helpers/query/FilterHelper';
+import { sortByFields } from '../../../../helpers/query/SorterHelper';
+import { paginate } from '../../../../helpers/query/PaginationHelper';
 import { AnsibleTaskRepository } from '../../infrastructure/repositories/ansible-task.repository';
-import { AnsibleLogsRepository } from '../../../logs/repositories/ansible-logs.repository';
 import { PaginatedResponseDto, TaskResponseDto } from '../../presentation/dtos/task-response.dto';
+import { IAnsibleLogsRepository } from '../../../logs/domain/repositories/ansible-logs-repository.interface';
 
 /**
  * Service for managing Ansible task logs
@@ -17,7 +17,8 @@ export class TaskLogsService {
 
   constructor(
     private readonly ansibleTaskRepository: AnsibleTaskRepository,
-    private readonly ansibleLogsRepository: AnsibleLogsRepository,
+    @Inject('IAnsibleLogsRepository')
+    private readonly ansibleLogsRepository: IAnsibleLogsRepository,
   ) {}
 
   /**

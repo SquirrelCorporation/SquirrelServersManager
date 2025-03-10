@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import pino from 'pino';
 import { SsmAlert, SsmGit } from 'ssm-shared-lib';
 import { RepositoryType } from 'ssm-shared-lib/distribution/enums/repositories';
@@ -19,11 +19,12 @@ import {
 } from '../../../../helpers/git';
 import logger from '../../../../logger';
 import { NotFoundError } from '../../../../middlewares/api/ApiError';
-import { ShellWrapperService } from '../../../shell/services/shell-wrapper.service';
+import { ShellWrapperService } from '../../../shell';
 import { ContainerCustomStacksRepositoryRepository } from '../../infrastructure/repositories/container-custom-stacks-repository.repository';
 import { ContainerCustomStackRepository } from '../../infrastructure/repositories/container-custom-stack.repository';
 import { RepositoryConfig } from '../../domain/entities/repository-config.entity';
 import { IContainerCustomStackRepositoryEntity } from '../../domain/entities/container-custom-stack.entity';
+import { CONTAINER_STACKS_SERVICE } from '../interfaces/container-stacks-service.interface';
 import { ContainerStacksService } from './container-stacks.service';
 
 export const DIRECTORY_ROOT = `${SSM_DATA_PATH}/container-stacks`;
@@ -51,7 +52,7 @@ export class ContainerRepositoryComponentService extends EventManager {
     private readonly shellWrapperService: ShellWrapperService,
     private readonly containerCustomStackRepository: ContainerCustomStackRepository,
     private readonly containerCustomStacksRepositoryRepository: ContainerCustomStacksRepositoryRepository,
-    private readonly containerStacksService: ContainerStacksService,
+    @Inject(CONTAINER_STACKS_SERVICE) private readonly containerStacksService: ContainerStacksService,
   ) {
     super();
   }

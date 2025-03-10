@@ -42,7 +42,12 @@ export class ContainerCustomStackDocument extends Document {
   @Prop()
   path?: string;
 
-  @Prop({ required: true, default: Repositories.RepositoryType.LOCAL })
+  @Prop({
+    type: String,
+    required: true,
+    enum: Object.values(Repositories.RepositoryType),
+    default: Repositories.RepositoryType.LOCAL
+  })
   type!: Repositories.RepositoryType;
 
   @Prop({

@@ -1,3 +1,15 @@
+```
+  ,;;:;,
+   ;;;;;
+  ,:;;:;    ,'=.
+  ;:;:;' .=" ,'_\
+  ':;:;,/  ,__:=@
+   ';;:;  =./)_
+     `"=\_  )_"`
+          ``'"`
+```
+Squirrel Servers Manager 🐿️
+---
 # Ansible Module
 
 The Ansible Module provides functionality for executing Ansible commands and playbooks, as well as managing Ansible tasks and logs.

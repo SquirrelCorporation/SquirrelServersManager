@@ -1,13 +1,22 @@
 import { Module } from '@nestjs/common';
-import { SmartFailureController } from './controllers/smart-failure.controller';
-import { SmartFailureService } from './services/smart-failure.service';
+import { LogsModule } from '../logs/logs.module';
+import { SmartFailureService } from './application/services/smart-failure.service';
+import { AnsibleLogsRepository } from './infrastructure/repositories/ansible-logs.repository';
+import { SmartFailureController } from './presentation/controllers/smart-failure.controller';
 
 /**
  * Module for smart failure analysis of Ansible logs
  */
 @Module({
+  imports: [LogsModule],
   controllers: [SmartFailureController],
-  providers: [SmartFailureService],
+  providers: [
+    SmartFailureService,
+    {
+      provide: 'IAnsibleLogsRepository',
+      useClass: AnsibleLogsRepository,
+    },
+  ],
   exports: [SmartFailureService],
 })
 export class SmartFailureModule {}

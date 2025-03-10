@@ -7,6 +7,9 @@ import { DEVICE_AUTH_REPOSITORY } from '../../domain/repositories/device-auth-re
 import { IDeviceAuthRepository } from '../../domain/repositories/device-auth-repository.interface';
 import { IDevice } from '../../domain/entities/device.entity';
 import { IDeviceAuth } from '../../domain/entities/device-auth.entity';
+import { UpdateDeviceAuthDto } from '../../presentation/dtos/device-auth.dto';
+import { UpdateDockerAuthDto } from '../../presentation/dtos/update-docker-auth.dto';
+import { UpdateProxmoxAuthDto } from '../../presentation/dtos/update-proxmox-auth.dto';
 
 @Injectable()
 export class DevicesService implements IDevicesService {
@@ -62,12 +65,74 @@ export class DevicesService implements IDevicesService {
     return this.deviceAuthRepository.updateOrCreateIfNotExist(deviceAuth as IDeviceAuth);
   }
 
-  async updateDeviceAuth(deviceAuth: IDeviceAuth): Promise<IDeviceAuth> {
-    const result = await this.deviceAuthRepository.update(deviceAuth);
+  async updateDeviceAuth(deviceAuth: IDeviceAuth, updates?: UpdateDeviceAuthDto): Promise<IDeviceAuth> {
+    let updatedDeviceAuth = deviceAuth;
+
+    if (updates) {
+      // Extract becomeMethod and handle type conversion
+      const { becomeMethod, ...restDto } = updates;
+
+      updatedDeviceAuth = {
+        ...deviceAuth,
+        ...restDto,
+        // Keep the original authType from device auth
+        authType: deviceAuth.authType,
+        // Cast becomeMethod to the appropriate enum if it exists
+        ...(becomeMethod && { becomeMethod: becomeMethod as SsmAnsible.AnsibleBecomeMethod })
+      };
+    }
+
+    const result = await this.deviceAuthRepository.update(updatedDeviceAuth);
     if (!result) {
       throw new Error(`Failed to update device auth for device: ${deviceAuth.device}`);
     }
     return result;
+  }
+
+  async updateDockerAuth(deviceAuth: IDeviceAuth, updates: UpdateDockerAuthDto): Promise<IDeviceAuth> {
+    // Cast Docker auth type if needed
+    const updatedDeviceAuth = {
+      ...deviceAuth,
+      customDockerSSH: updates.customDockerSSH ?? deviceAuth.customDockerSSH,
+      dockerCustomAuthType: updates.dockerCustomAuthType as unknown as SsmAnsible.SSHType ?? deviceAuth.dockerCustomAuthType,
+      dockerCustomSshUser: updates.dockerCustomSshUser ?? deviceAuth.dockerCustomSshUser,
+      dockerCustomSshPwd: updates.dockerCustomSshPwd ?? deviceAuth.dockerCustomSshPwd,
+      dockerCustomSshKey: updates.dockerCustomSshKey ?? deviceAuth.dockerCustomSshKey,
+      dockerCustomSshKeyPass: updates.dockerCustomSshKeyPass ?? deviceAuth.dockerCustomSshKeyPass,
+      customDockerForcev6: updates.customDockerForcev6 ?? deviceAuth.customDockerForcev6,
+      customDockerForcev4: updates.customDockerForcev4 ?? deviceAuth.customDockerForcev4,
+      customDockerAgentForward: updates.customDockerAgentForward ?? deviceAuth.customDockerAgentForward,
+      customDockerTryKeyboard: updates.customDockerTryKeyboard ?? deviceAuth.customDockerTryKeyboard,
+      customDockerSocket: updates.customDockerSocket ?? deviceAuth.customDockerSocket
+    };
+
+    return this.updateDeviceAuth(updatedDeviceAuth);
+  }
+
+  async updateProxmoxAuth(deviceAuth: IDeviceAuth, updates: UpdateProxmoxAuthDto): Promise<IDeviceAuth> {
+    // Convert the connection methods to the proper types
+    const proxmoxAuth = {
+      ...deviceAuth.proxmoxAuth || {},
+      remoteConnectionMethod: updates.remoteConnectionMethod as any ?? deviceAuth.proxmoxAuth?.remoteConnectionMethod,
+      connectionMethod: updates.connectionMethod as any ?? deviceAuth.proxmoxAuth?.connectionMethod,
+      port: updates.port ?? deviceAuth.proxmoxAuth?.port,
+      ignoreSslErrors: updates.ignoreSslErrors ?? deviceAuth.proxmoxAuth?.ignoreSslErrors,
+      tokens: {
+        tokenId: updates.tokens?.tokenId ?? deviceAuth.proxmoxAuth?.tokens?.tokenId,
+        tokenSecret: updates.tokens?.tokenSecret ?? deviceAuth.proxmoxAuth?.tokens?.tokenSecret,
+      },
+      userPwd: {
+        username: updates.userPwd?.username ?? deviceAuth.proxmoxAuth?.userPwd?.username,
+        password: updates.userPwd?.password ?? deviceAuth.proxmoxAuth?.userPwd?.password,
+      },
+    };
+
+    const updatedDeviceAuth = {
+      ...deviceAuth,
+      proxmoxAuth
+    };
+
+    return this.updateDeviceAuth(updatedDeviceAuth);
   }
 
   async deleteDeviceAuthByDevice(device: IDevice): Promise<void> {

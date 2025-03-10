@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { AutomationComponent } from '../../domain/components/automation.component';
 import { Automation } from '../../domain/entities/automation.entity';
 import { IAutomationRepository } from '../../domain/repositories/automation.repository.interface';
-import { IContainerRepository } from '../../../containers/domain/repositories/container.repository.interface';
+import { IContainerRepository } from '../../containers/domain/repositories/container.repository.interface';
 import { IContainerService } from '../../../containers/application/services/container.service.interface';
 import { IVolumeRepository } from '../../../containers/domain/repositories/volume.repository.interface';
 import { IVolumeService } from '../../../containers/application/services/volume.service.interface';

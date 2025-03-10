@@ -11,9 +11,9 @@ export class DeviceMapper {
       disabled: dto.disabled,
       capabilities: {
         containers: {
-          docker: dto.capabilitie?.containers?.docker,
-          proxmox: dto.capabilitie?.containers?.proxmox,
-          lxd: dto.capabilitie?.containers?.lxd,
+          docker: dto.capabilities?.containers?.docker,
+          proxmox: dto.capabilities?.containers?.proxmox,
+          lxd: dto.capabilities?.containers?.lxd,
         }
       },
       configuration: dto.configuration,

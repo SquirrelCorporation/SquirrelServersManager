@@ -2,8 +2,8 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { VAULT_PWD } from '../../../../config';
 import { IAnsibleVault } from '../../domain/entities/ansible-vault.entity';
 import { ANSIBLE_VAULT_REPOSITORY, IAnsibleVaultRepository } from '../../domain/repositories/ansible-vault-repository.interface';
-import { DEFAULT_VAULT_ID, VaultCryptoService } from './vault-crypto.service';
 import PinoLogger from '../../../../logger';
+import { DEFAULT_VAULT_ID, VaultCryptoService } from './vault-crypto.service';
 
 const logger = PinoLogger.child({ module: 'AnsibleVaultService' });
 
@@ -42,11 +42,11 @@ export class AnsibleVaultService {
   async deleteVault(vaultId: string): Promise<void> {
     logger.info(`Deleting vault with ID: ${vaultId}`);
     const vault = await this.ansibleVaultRepository.findOneByVaultId(vaultId);
-    
+
     if (!vault) {
       throw new NotFoundException(`Vault with ID ${vaultId} not found`);
     }
-    
+
     await this.ansibleVaultRepository.deleteOne(vault);
   }
 
@@ -59,11 +59,11 @@ export class AnsibleVaultService {
   async updateVault(vaultId: string, password: string): Promise<IAnsibleVault | null> {
     logger.info(`Updating vault with ID: ${vaultId}`);
     const vault = await this.ansibleVaultRepository.findOneByVaultId(vaultId);
-    
+
     if (!vault) {
       throw new NotFoundException(`Vault with ID ${vaultId} not found`);
     }
-    
+
     vault.password = password;
     return this.ansibleVaultRepository.updateOne(vault);
   }
@@ -75,18 +75,18 @@ export class AnsibleVaultService {
    */
   async getVaultPassword(vaultId: string): Promise<string> {
     logger.info(`Getting password for vault with ID: ${vaultId}`);
-    
+
     // Handle default vaults
     if (vaultId === 'default' || vaultId === DEFAULT_VAULT_ID) {
       return VAULT_PWD;
     }
-    
+
     const vault = await this.ansibleVaultRepository.findOneByVaultId(vaultId);
-    
+
     if (!vault) {
       throw new NotFoundException(`Vault with ID ${vaultId} not found`);
     }
-    
+
     return vault.password;
   }
 
@@ -106,7 +106,7 @@ export class AnsibleVaultService {
    * @param vaultId ID of the vault to use
    * @returns Decrypted value
    */
-  async decrypt(value: string, vaultId: string): Promise<string> {
+  async decrypt(value: string, vaultId: string): Promise<string | undefined> {
     return this.vaultCryptoService.decrypt(value, vaultId);
   }
 
@@ -116,7 +116,7 @@ export class AnsibleVaultService {
    * @param vaultId ID of the vault to use
    * @returns Decrypted value
    */
-  decryptSync(value: string, vaultId: string): string {
+  decryptSync(value: string, vaultId: string): string | undefined {
     return this.vaultCryptoService.decryptSync(value, vaultId);
   }
-} 
+}

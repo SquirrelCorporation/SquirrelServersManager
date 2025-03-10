@@ -1,3 +1,15 @@
+```
+  ,;;:;,
+   ;;;;;
+  ,:;;:;    ,'=.
+  ;:;:;' .=" ,'_\
+  ':;:;,/  ,__:=@
+   ';;:;  =./)_
+     `"=\_  )_"`
+          ``'"`
+```
+Squirrel Servers Manager 🐿️
+---
 # Container Stacks Module
 
 This module provides services for managing container stacks and repositories.

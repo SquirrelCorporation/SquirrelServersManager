@@ -37,9 +37,13 @@ export class CacheModule {
           useValue: options,
         },
         CacheService,
+        {
+          provide: 'ICacheService',
+          useExisting: CacheService,
+        },
         CacheDefaultService,
       ],
-      exports: [CacheService],
+      exports: [CacheService, 'ICacheService'],
     };
   }
 }

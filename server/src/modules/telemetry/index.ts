@@ -1,7 +1,7 @@
 import { PostHog } from 'posthog-node';
 import { SettingsKeys } from 'ssm-shared-lib';
 import { TELEMETRY_ENABLED } from '../../config';
-import { getFromCache } from '../../data/cache';
+//import { getFromCache } from '../../data/cache';
 import logger from '../../logger';
 
 class Telemetry {
@@ -21,7 +21,9 @@ class Telemetry {
   }
 
   public async init() {
-    const installId = await getFromCache(SettingsKeys.GeneralSettingsKeys.INSTALL_ID);
+    const installId = '1234567890';
+    //TODO: Get from cache
+    //const installId = await getFromCache(SettingsKeys.GeneralSettingsKeys.INSTALL_ID);
     if (!installId) {
       logger.error('Install ID not found');
     }

@@ -1,3 +1,15 @@
+```
+  ,;;:;,
+   ;;;;;
+  ,:;;:;    ,'=.
+  ;:;:;' .=" ,'_\
+  ':;:;,/  ,__:=@
+   ';;:;  =./)_
+     `"=\_  )_"`
+          ``'"`
+```
+Squirrel Servers Manager 🐿️
+---
 # Statistics Module
 
 The Statistics Module provides a NestJS implementation for device statistics and dashboard metrics functionality.

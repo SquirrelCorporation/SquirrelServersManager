@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/c
 import { JwtAuthGuard } from '../../../../guards/jwt-auth.guard';
 import { AnsibleVaultService } from '../../application/services/ansible-vault.service';
 import { CreateVaultDto, UpdateVaultDto, VaultPasswordResponseDto } from '../dto/ansible-vault.dto';
-import { DEFAULT_VAULT_ID } from '../../application/services/vault-crypto.service';
 
 @Controller('ansible/vaults')
 @UseGuards(JwtAuthGuard)
@@ -55,15 +54,15 @@ export class AnsibleVaultController {
   @Get(':vaultId/password')
   async getVaultPassword(@Param('vaultId') vaultId: string) {
     const password = await this.ansibleVaultService.getVaultPassword(vaultId);
-    
+
     const response: VaultPasswordResponseDto = {
       pwd: password,
     };
-    
+
     return {
       success: true,
       message: 'Successfully got vault pwd',
       data: response,
     };
   }
-} 
+}

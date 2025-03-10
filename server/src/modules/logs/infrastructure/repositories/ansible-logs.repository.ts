@@ -1,0 +1,41 @@
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { AnsibleLogEntity } from '../../domain/entities/ansible-log.entity';
+import { IAnsibleLogsRepository } from '../../domain/repositories/ansible-logs-repository.interface';
+import { AnsibleLog } from '../schemas/ansible-log.schema';
+import { AnsibleLogMapper } from '../mappers/ansible-log.mapper';
+
+@Injectable()
+export class AnsibleLogsRepository implements IAnsibleLogsRepository {
+  constructor(
+    @InjectModel(AnsibleLog.name) private ansibleLogModel: Model<AnsibleLog>,
+    private ansibleLogMapper: AnsibleLogMapper,
+  ) {}
+
+  async create(ansibleLog: Partial<AnsibleLogEntity>): Promise<AnsibleLogEntity> {
+    const schemaLog = this.ansibleLogMapper.toPersistence(ansibleLog);
+    const created = await this.ansibleLogModel.create(schemaLog);
+    return this.ansibleLogMapper.toDomain(created.toObject());
+  }
+
+  async findAllByIdent(ident: string, sortDirection: 1 | -1 = -1): Promise<AnsibleLogEntity[]> {
+    const logs = await this.ansibleLogModel
+      .find({ ident: { $eq: ident } })
+      .sort({ createdAt: sortDirection })
+      .lean()
+      .exec();
+    return logs.map(log => this.ansibleLogMapper.toDomain(log));
+  }
+
+  async deleteAllByIdent(ident: string) {
+    return this.ansibleLogModel
+      .deleteMany({ ident: { $eq: ident } })
+      .lean()
+      .exec();
+  }
+
+  async deleteAll(): Promise<void> {
+    await this.ansibleLogModel.deleteMany().exec();
+  }
+}

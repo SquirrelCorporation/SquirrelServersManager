@@ -1,3 +1,15 @@
+```
+  ,;;:;,
+   ;;;;;
+  ,:;;:;    ,'=.
+  ;:;:;' .=" ,'_\
+  ':;:;,/  ,__:=@
+   ';;:;  =./)_
+     `"=\_  )_"`
+          ``'"`
+```
+Squirrel Servers Manager 🐿️
+---
 # Squirrel Servers Manager Modules
 
 ## Overview
@@ -15,6 +27,7 @@ The SSM application follows a modular architecture based on NestJS principles:
 3. **Event-Driven Communication**: Modules communicate using the NestJS event emitter system.
 4. **Repository Pattern**: Data access is abstracted through repositories.
 5. **Testing**: Each module includes comprehensive unit and integration tests.
+6. **Clean Architecture**: Many modules now follow clean architecture principles with proper separation of concerns.
 
 ### Module Structure
 
@@ -33,34 +46,112 @@ module-name/
 └── README.md                   # Module documentation
 ```
 
-Some modules have been refactored to follow the Clean Architecture pattern with this structure:
+Modules that follow the Clean Architecture pattern use this structure:
 
 ```
 module-name/
+├── __tests__/                  # Test files mirroring the module structure
+│   ├── application/            # Application layer tests
+│   ├── infrastructure/         # Infrastructure layer tests
+│   └── presentation/           # Presentation layer tests
 ├── domain/                     # Domain layer (entities, interfaces)
 │   ├── entities/               # Domain entities
 │   └── repositories/           # Repository interfaces
-├── application/                # Application layer (services)
+├── application/                # Application layer (use cases)
+│   ├── interfaces/             # Service interfaces
 │   └── services/               # Business logic services
-├── infrastructure/             # Infrastructure layer (repositories)
+├── infrastructure/             # Infrastructure layer (implementations)
 │   ├── repositories/           # Repository implementations
-│   └── schemas/                # Database schemas
+│   ├── schemas/                # Database schemas
+│   └── mappers/                # Mappers between entities and schemas
 ├── presentation/               # Presentation layer (controllers)
 │   ├── controllers/            # HTTP controllers
 │   ├── dtos/                   # Data Transfer Objects
-│   ├── interfaces/             # Presentation interfaces
-│   └── utils/                  # Utility functions
-├── __tests__/                  # Tests that mirror the module structure
-│   ├── application/            # Application layer tests
-│   └── presentation/           # Presentation layer tests
-├── constants.ts                # Module constants
+│   └── mappers/                # Mappers between entities and DTOs
+├── module-name.module.ts       # NestJS module definition
 ├── index.ts                    # Public API exports
-└── module-name.module.ts       # Module definition
+└── README.md                   # Module documentation
 ```
+
+### Modules Using Clean Architecture
+
+The following modules have been refactored to follow the Clean Architecture pattern:
+
+1. **Devices Module**: Manages device information and connectivity
+2. **Logs Module**: Manages server logs and Ansible task execution logs
+3. **Notifications Module**: Manages system notifications for various events
+4. **Ansible Vault Module**: Manages encrypted Ansible vault files
+5. **Shell Module**: Provides shell command execution and file system operations
+6. **Smart Failure Module**: Analyzes Ansible logs for common failure patterns
+7. **Users Module**: Manages user accounts, authentication, and authorization
+8. **SFTP Module**: Provides secure file transfer functionality for remote devices
+9. **SSH Module**: Provides secure shell connectivity to remote devices
 
 ## Modules Overview
 
 ### Recently Refactored Modules
+
+#### SSH Module
+
+The SSH Module provides secure shell connectivity to remote devices:
+- Secure SSH connections to remote devices
+- Interactive terminal sessions
+- Session management for multiple clients
+- Terminal resizing
+- WebSocket-based real-time communication
+- Clean Architecture implementation with proper separation of concerns
+
+Key files:
+- `ssh/domain/entities/ssh.entity.ts` - Core domain entities
+- `ssh/domain/repositories/ssh-repository.interface.ts` - Repository interface
+- `ssh/application/services/ssh-connection.service.ts` - SSH connection service
+- `ssh/application/services/ssh-terminal.service.ts` - Terminal operations service
+- `ssh/presentation/gateways/ssh.gateway.ts` - WebSocket gateway
+
+#### SFTP Module
+
+The SFTP Module provides secure file transfer functionality for remote devices:
+- Secure SFTP connections to remote devices
+- Directory browsing and navigation
+- File upload and download
+- File and directory management (create, rename, delete, chmod)
+- WebSocket-based real-time communication
+- Clean Architecture implementation with proper separation of concerns
+
+Key files:
+- `sftp/domain/entities/sftp.entity.ts` - Core domain entities
+- `sftp/domain/repositories/sftp-repository.interface.ts` - Repository interface
+- `sftp/application/services/sftp.service.ts` - Core SFTP operations
+- `sftp/infrastructure/services/file-stream.service.ts` - File streaming service
+- `sftp/presentation/gateways/sftp.gateway.ts` - WebSocket gateway
+
+#### Shell Module
+
+The Shell Module provides a reliable interface for executing shell commands and managing file system operations:
+- File system operations (create, delete, read, write)
+- Docker Compose command execution
+- SSH key management
+- Clean Architecture implementation with proper separation of concerns
+
+Key files:
+- `shell/application/services/file-system.service.ts` - File system operations
+- `shell/application/services/shell-wrapper.service.ts` - Shell command execution
+- `shell/application/interfaces/file-system.interface.ts` - File system service interface
+- `shell/infrastructure/shell-wrapper.ts` - Shell command wrapper
+
+#### Smart Failure Module
+
+The Smart Failure Module analyzes Ansible logs to identify common failure patterns and provides helpful error messages and resolution steps:
+- Analyzes Ansible logs for common failure patterns
+- Provides detailed error messages and resolution steps
+- Securely authenticates requests using JWT
+- Clean Architecture implementation with proper separation of concerns
+
+Key files:
+- `smart-failure/application/services/smart-failure.service.ts` - Core log analysis
+- `smart-failure/domain/constants.ts` - Failure pattern definitions
+- `smart-failure/infrastructure/repositories/ansible-logs.repository.ts` - Repository implementation
+- `smart-failure/presentation/controllers/smart-failure.controller.ts` - REST API endpoints
 
 #### Ansible Config Module
 
@@ -118,6 +209,35 @@ The test structure mirrors the module architecture:
 - `diagnostic/__tests__/infrastructure/` - Tests for infrastructure repositories
 - `diagnostic/__tests__/presentation/` - Tests for controllers and mappers
 
+#### Devices Module
+
+The Devices Module manages device information, connectivity, and status:
+- Device registration and management
+- Device connectivity testing
+- Device status monitoring
+- Device group management
+- Clean Architecture implementation with proper separation of concerns
+
+Key files:
+- `devices/domain/entities/device.entity.ts` - Core domain entity interface
+- `devices/domain/repositories/device-repository.interface.ts` - Repository interface
+- `devices/application/services/device.service.ts` - Core device management
+- `devices/infrastructure/repositories/device.repository.ts` - Repository implementation
+- `devices/infrastructure/schemas/device.schema.ts` - Mongoose schema
+- `devices/presentation/controllers/device.controller.ts` - REST API endpoints
+
+The Devices Module has been refactored to follow the Clean Architecture pattern:
+- **Domain Layer**: Contains the core business entities and repository interfaces
+- **Application Layer**: Contains the service implementations with business logic
+- **Infrastructure Layer**: Contains the repository implementations and database schemas
+- **Presentation Layer**: Contains the controllers for handling HTTP requests
+
+The test structure mirrors the module architecture:
+- `devices/__tests__/domain/` - Tests for domain entities
+- `devices/__tests__/application/` - Tests for application services
+- `devices/__tests__/infrastructure/` - Tests for infrastructure repositories
+- `devices/__tests__/presentation/` - Tests for controllers and DTOs
+
 #### Update Module
 
 The Update Module manages application version checking and updates:
@@ -147,13 +267,49 @@ The Notifications Module manages system notifications for various events:
 - Creation and tracking of notifications for system events
 - Notification status management (seen/unseen)
 - Event-driven notification generation
-- Bridge pattern for backward compatibility
+- Clean Architecture implementation with proper separation of concerns
 
 Key files:
-- `notifications/services/notification.service.ts` - Core notification management
-- `notifications/services/notification-component.service.ts` - Event handling
-- `notifications/controllers/notification.controller.ts` - REST API endpoints
-- `notifications/entities/notification.entity.ts` - Mongoose schema for notifications
+- `notifications/domain/entities/notification.entity.ts` - Core domain entity interface
+- `notifications/domain/repositories/notification-repository.interface.ts` - Repository interface
+- `notifications/application/services/notification.service.ts` - Core notification management
+- `notifications/application/services/notification-component.service.ts` - Event handling
+- `notifications/infrastructure/repositories/notification.repository.ts` - Repository implementation
+- `notifications/infrastructure/schemas/notification.schema.ts` - Mongoose schema
+- `notifications/presentation/controllers/notification.controller.ts` - REST API endpoints
+
+The Notifications Module has been refactored to follow the Clean Architecture pattern:
+- **Domain Layer**: Contains the core business entities and repository interfaces
+- **Application Layer**: Contains the service implementations with business logic and event emissions
+- **Infrastructure Layer**: Contains the repository implementations and database schemas
+- **Presentation Layer**: Contains the controllers for handling HTTP requests
+
+The test structure mirrors the module architecture:
+- `notifications/__tests__/application/` - Tests for application services
+- `notifications/__tests__/presentation/` - Tests for controllers
+
+#### Users Module
+
+The Users Module manages user accounts, authentication, and authorization:
+- User registration and management
+- User authentication
+- Role-based access control
+- User profile management
+- Clean Architecture implementation with proper separation of concerns
+
+Key files:
+- `users/domain/entities/user.entity.ts` - Core domain entity interface
+- `users/domain/repositories/user-repository.interface.ts` - Repository interface
+- `users/application/services/user.service.ts` - Core user management
+- `users/infrastructure/repositories/user.repository.ts` - Repository implementation
+- `users/infrastructure/schemas/user.schema.ts` - Mongoose schema
+- `users/presentation/controllers/user.controller.ts` - REST API endpoints
+
+The Users Module has been refactored to follow the Clean Architecture pattern:
+- **Domain Layer**: Contains the core business entities and repository interfaces
+- **Application Layer**: Contains the service implementations with business logic
+- **Infrastructure Layer**: Contains the repository implementations and database schemas
+- **Presentation Layer**: Contains the controllers for handling HTTP requests
 
 #### Repository Module
 

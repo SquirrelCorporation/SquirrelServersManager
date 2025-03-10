@@ -1,177 +1,124 @@
-# Logs Module
+```
+  ,;;:;,
+   ;;;;;
+  ,:;;:;    ,'=.
+  ;:;:;' .=" ,'_\
+  ':;:;,/  ,__:=@
+   ';;:;  =./)_
+     `"=\_  )_"`
+          ``'"`
+```
+Squirrel Servers Manager 🐿️
+---
+# Logs Module - Clean Architecture
 
 ## Overview
 
 The Logs module provides a comprehensive system for managing server logs and Ansible task execution logs within the Squirrel Servers Manager application. It allows users to view, search, and manage logs for both server activities and Ansible automation tasks.
 
-## Architecture
+## Clean Architecture Structure
 
-The module follows NestJS architectural patterns and best practices:
+The module follows the Clean Architecture pattern with the following layers:
 
-### Core Components
+### 1. Domain Layer
 
-1. **Module Structure**
-   - `logs.module.ts` - NestJS module definition
-   - `services/` - Business logic services
-   - `repositories/` - Data access layer
-   - `schemas/` - Mongoose schemas for MongoDB
-   - `dto/` - Data Transfer Objects for API requests/responses
+The core business logic and entities, independent of any framework or external concerns.
 
-2. **Services**
-   - `server-logs.service.ts` - Manages server logs
-   - `task-logs.service.ts` - Manages Ansible task logs
+- **Entities**: Pure domain entities without any framework dependencies
+  - `server-log.entity.ts`
+  - `ansible-log.entity.ts`
+  - `ansible-task.entity.ts`
 
-3. **Repositories**
-   - `server-logs.repository.ts` - Data access for server logs
-   - `ansible-logs.repository.ts` - Data access for Ansible logs
-   - `ansible-task.repository.ts` - Data access for Ansible tasks
+- **Repository Interfaces**: Abstractions for data access
+  - `server-logs-repository.interface.ts`
+  - `ansible-logs-repository.interface.ts`
+  - `ansible-task-repository.interface.ts`
 
-4. **Schemas**
-   - `server-log.schema.ts` - Schema for server logs
-   - `ansible-log.schema.ts` - Schema for Ansible logs
-   - `ansible-task.schema.ts` - Schema for Ansible tasks
+### 2. Application Layer
 
-5. **Testing**
-   - `tests/` - Organized test files mirroring the module structure
+Contains the application-specific business rules and orchestrates the flow of data to and from entities.
 
-## Repository Pattern
+- **Services**: Implement use cases that orchestrate the flow of data
+  - `server-logs.service.ts`
 
-The Logs module implements the repository pattern to abstract data access:
+- **Interfaces**: Service interfaces for dependency inversion
+  - `server-logs-service.interface.ts`
 
-### Repository Classes
+### 3. Infrastructure Layer
 
-- **ServerLogsRepository**: Manages server log data
-- **AnsibleLogsRepository**: Manages Ansible log data
-- **AnsibleTaskRepository**: Manages Ansible task data
+Implements interfaces defined in the domain layer, providing concrete implementations for external concerns.
 
-### Implementation Details
+- **Repositories**: Database-specific implementations of repository interfaces
+  - `server-logs.repository.ts`
+  - `ansible-logs.repository.ts`
+  - `ansible-task.repository.ts`
 
-Each repository encapsulates Mongoose model operations:
+- **Schemas**: Database schemas for MongoDB
+  - `server-log.schema.ts`
+  - `ansible-log.schema.ts`
+  - `ansible-task.schema.ts`
 
-```typescript
-@Injectable()
-export class ServerLogsRepository {
-  constructor(@InjectModel(ServerLog.name) private serverLogModel: Model<ServerLog>) {}
+- **Mappers**: Map between domain entities and database schemas
+  - `server-log.mapper.ts`
+  - `ansible-log.mapper.ts`
+  - `ansible-task.mapper.ts`
 
-  async findAll(): Promise<ServerLog[]> {
-    return this.serverLogModel.find().sort({ time: -1 }).limit(10000).lean().exec();
-  }
+### 4. Presentation Layer
 
-  async deleteAllOld(ageInDays: number): Promise<void> {
-    await this.serverLogModel
-      .deleteMany({
-        time: { $lt: DateTime.now().minus({ day: ageInDays }).toJSDate() },
-      })
-      .exec();
-  }
+Handles HTTP requests and responses, converting between the application's internal data format and the format exposed to external clients.
 
-  async deleteAll(): Promise<void> {
-    await this.serverLogModel.deleteMany().exec();
-  }
-}
+- **Controllers**: Handle HTTP requests and responses
+  - `logs.controller.ts`
+
+- **DTOs**: Data Transfer Objects for API requests/responses
+  - `server-log-response.dto.ts`
+  - `server-logs-query.dto.ts`
+
+- **Mappers**: Map between domain entities and DTOs
+  - `server-log.mapper.ts`
+
+## Testing Structure
+
+The test files mirror the module structure:
+
+```
+__tests__/
+├── application/
+│   └── services/
+│       └── server-logs.service.spec.ts
+├── infrastructure/
+│   └── repositories/
+│       ├── server-logs.repository.spec.ts
+│       ├── ansible-logs.repository.spec.ts
+│       └── ansible-task.repository.spec.ts
+└── presentation/
+    └── controllers/
+        └── logs.controller.spec.ts
 ```
 
-## Service Layer
+## Dependency Rule
 
-The service layer implements business logic and uses repositories for data access:
+The fundamental rule of Clean Architecture is that dependencies can only point inward. This means:
 
-### Service Classes
+- Presentation depends on Application
+- Application depends on Domain
+- Infrastructure implements interfaces defined in Domain
 
-- **ServerLogsService**: Business logic for server logs
-- **TaskLogsService**: Business logic for Ansible task logs
+No inner layer should depend on an outer layer.
 
-### Implementation Details
+## Benefits of Clean Architecture
 
-Services use dependency injection to access repositories:
+1. **Separation of Concerns**: Each layer has a specific responsibility
+2. **Testability**: Business logic can be tested independently of external concerns
+3. **Flexibility**: External frameworks and tools can be replaced with minimal impact
+4. **Maintainability**: Changes in one layer have minimal impact on other layers
 
-```typescript
-@Injectable()
-export class ServerLogsService {
-  constructor(private readonly serverLogsRepository: ServerLogsRepository) {}
+## API Endpoints
 
-  async getServerLogs(serverId: string): Promise<ServerLog[]> {
-    return this.serverLogsRepository.findAllByServerId(serverId);
-  }
-
-  async deleteServerLogs(serverId: string): Promise<void> {
-    await this.serverLogsRepository.deleteAllByServerId(serverId);
-  }
-}
-```
-
-## Schema Design
-
-The module uses Mongoose schemas with TypeScript interfaces:
-
-### Schema Examples
-
-```typescript
-@Schema()
-export class ServerLog {
-  @Prop({ required: true })
-  serverId!: string;
-
-  @Prop({ required: true })
-  content!: string;
-
-  @Prop({ default: Date.now })
-  time?: Date;
-}
-
-export const ServerLogSchema = SchemaFactory.createForClass(ServerLog);
-export type ServerLogDocument = HydratedDocument<ServerLog>;
-```
-
-## Testing Strategy
-
-The module follows a comprehensive testing strategy:
-
-1. **Directory Structure**
-   - Tests are organized in a dedicated `tests/` directory
-   - The test directory structure mirrors the module structure
-
-2. **Test Types**
-   - Unit tests for repositories
-   - Unit tests for services
-   - Integration tests for service-repository interactions
-
-3. **Mocking Approach**
-   - Mongoose models are mocked to avoid actual database operations
-   - External dependencies are mocked using Vitest's mocking capabilities
-
-4. **Test File Naming**
-   - Test files use the `.spec.ts` extension
-   - Test files are named after the file they test
-
-## Best Practices
-
-When extending or modifying this module, follow these best practices:
-
-1. **Repository Pattern**
-   - Keep data access logic in repositories
-   - Use dependency injection for repositories
-   - Return plain objects from repositories using `.lean()`
-
-2. **Type Safety**
-   - Use TypeScript interfaces and types
-   - Define document types for Mongoose models
-   - Use proper type annotations for method parameters and return values
-
-3. **Error Handling**
-   - Use try/catch blocks for error handling
-   - Log errors with context information
-   - Return appropriate responses
-
-4. **Testing**
-   - Write tests for all new functionality
-   - Mock external dependencies
-   - Test error handling scenarios
-
-## Recent Changes
-
-- Migrated to NestJS architecture
-- Implemented repository pattern for data access
-- Enhanced type safety with TypeScript interfaces
-- Improved error handling
-- Added comprehensive unit tests
-- Fixed TypeScript strict property initialization issues
+- `GET /logs/server`: Get server logs with filtering and pagination
+  - Query parameters:
+    - `current`: Current page number (default: 1)
+    - `pageSize`: Number of items per page (default: 10)
+    - `search`: Search term to filter logs
+    - `sortField`: Field to sort by
+    - `sortOrder`: Sort order ('ascend' or 'descend')

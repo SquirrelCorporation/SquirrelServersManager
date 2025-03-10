@@ -1,9 +1,10 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { ICacheService } from './interfaces/cache.service.interface';
 
 @Injectable()
-export class CacheService {
+export class CacheService implements ICacheService {
   private readonly logger = new Logger(CacheService.name);
 
   constructor(
@@ -19,7 +20,7 @@ export class CacheService {
   async get<T>(key: string): Promise<T | null> {
     try {
       return await this.cacheManager.get<T>(key);
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(`Error getting key ${key} from cache: ${error.message}`);
       return null;
     }
@@ -58,8 +59,8 @@ export class CacheService {
    */
   async set<T>(key: string, value: T, ttl?: number): Promise<void> {
     try {
-      await this.cacheManager.set(key, value, ttl ? { ttl: ttl * 1000 } : undefined);
-    } catch (error) {
+      await this.cacheManager.set(key, value, ttl);
+    } catch (error: any) {
       this.logger.error(`Error setting key ${key} in cache: ${error.message}`);
     }
   }
@@ -88,7 +89,7 @@ export class CacheService {
   async del(key: string): Promise<void> {
     try {
       await this.cacheManager.del(key);
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(`Error deleting key ${key} from cache: ${error.message}`);
     }
   }
@@ -98,9 +99,20 @@ export class CacheService {
    */
   async reset(): Promise<void> {
     try {
-      await this.cacheManager.reset();
-    } catch (error) {
+      await this.cacheManager.del('*');
+    } catch (error: any) {
       this.logger.error(`Error resetting cache: ${error.message}`);
     }
+  }
+
+  /**
+   * Get a value from cache or return default value if not found
+   * @param key The key to get
+   * @param defaultValue The default value to return if key not found
+   * @returns The value from cache or the default value
+   */
+  async getFromCache<T>(key: string, defaultValue: T): Promise<T> {
+    const value = await this.get<T>(key);
+    return value !== null && value !== undefined ? value : defaultValue;
   }
 }

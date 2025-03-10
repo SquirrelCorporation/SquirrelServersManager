@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AnsibleVaultModule } from '../ansible-vault/ansible-vault.module';
 import { DevicesService } from './application/services/devices.service';
 import { DevicesController } from './presentation/controllers/devices.controller';
 import { DevicesAuthController } from './presentation/controllers/devices-auth.controller';
@@ -13,6 +14,8 @@ import { DEVICE_REPOSITORY } from './domain/repositories/device-repository.inter
 import { DEVICE_AUTH_REPOSITORY } from './domain/repositories/device-auth-repository.interface';
 import { DeviceMapper } from './presentation/mappers/device.mapper';
 import { DeviceRepositoryMapper } from './infrastructure/mappers/device-repository.mapper';
+import { SensitiveInfoService } from './application/services/sensitive-info.service';
+import { SENSITIVE_INFO_SERVICE } from './domain/services/sensitive-info.service.interface';
 
 @Module({
   imports: [
@@ -20,6 +23,7 @@ import { DeviceRepositoryMapper } from './infrastructure/mappers/device-reposito
       { name: DEVICE, schema: DeviceSchema },
       { name: DEVICE_AUTH, schema: DeviceAuthSchema },
     ]),
+    AnsibleVaultModule,
   ],
   controllers: [
     DevicesController,
@@ -31,6 +35,7 @@ import { DeviceRepositoryMapper } from './infrastructure/mappers/device-reposito
     DevicesService,
     DeviceMapper,
     DeviceRepositoryMapper,
+    SensitiveInfoService,
     {
       provide: DEVICE_REPOSITORY,
       useClass: DeviceRepository,
@@ -43,7 +48,18 @@ import { DeviceRepositoryMapper } from './infrastructure/mappers/device-reposito
       provide: 'IDevicesService',
       useExisting: DevicesService,
     },
+    {
+      provide: SENSITIVE_INFO_SERVICE,
+      useClass: SensitiveInfoService,
+    },
   ],
-  exports: [DevicesService, 'IDevicesService'],
+  exports: [
+    DevicesService,
+    'IDevicesService',
+    SENSITIVE_INFO_SERVICE,
+    SensitiveInfoService,
+    DEVICE_REPOSITORY,
+    DEVICE_AUTH_REPOSITORY
+  ],
 })
 export class DevicesModule {}

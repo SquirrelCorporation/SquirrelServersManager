@@ -33,3 +33,9 @@ export {
   AnsibleTask,
   AnsibleTaskSchema,
 };
+
+// Domain exports
+export * from './domain/repositories/ansible-task.repository.interface';
+
+// Module export
+export * from './ansible.module';

@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import AnsibleTaskStatusRepo from '../../../../../data/database/repository/AnsibleTaskStatusRepo';
 import AutomationRepo from '../../../../../data/database/repository/AutomationRepo';
 import PlaybookRepo from '../../../../../data/database/repository/PlaybookRepo';
-import UserRepo from '../../../../../data/database/repository/UserRepo';
+import { IUserRepository } from '../../../../users/domain/repositories/user-repository.interface';
 import PlaybookUseCases from '../../../../../services/PlaybookUseCases';
 import { PlaybookActionComponent } from '../../../components/actions/playbook-action.component';
 
@@ -19,11 +19,33 @@ vi.mock('../../../../../logger', () => ({
   },
 }));
 
-vi.mock('../../../../../data/database/repository/UserRepo', () => ({
-  default: {
-    findFirst: vi.fn(),
-  },
-}));
+// Create a mock user repository
+const mockUserRepository: IUserRepository = {
+  findFirst: vi.fn(),
+  findByEmail: vi.fn(),
+  findByEmailAndPassword: vi.fn(),
+  findByApiKey: vi.fn(),
+  findAll: vi.fn(),
+  count: vi.fn(),
+  create: vi.fn(),
+  update: vi.fn(),
+  updateApiKey: vi.fn(),
+  updateLogsLevel: vi.fn(),
+};
+
+// Mock the PlaybookActionComponent to use our mock repository
+vi.mock('../../../components/actions/playbook-action.component', async () => {
+  const actual = await vi.importActual<any>('../../../components/actions/playbook-action.component');
+  return {
+    ...actual,
+    PlaybookActionComponent: class extends actual.PlaybookActionComponent {
+      constructor(...args: any[]) {
+        super(...args);
+        this.userRepo = mockUserRepository;
+      }
+    }
+  };
+});
 
 vi.mock('../../../../../data/database/repository/PlaybookRepo', () => ({
   default: {
@@ -74,7 +96,7 @@ describe('PlaybookActionComponent', () => {
     vi.useFakeTimers();
 
     // Setup default mocks
-    vi.mocked(UserRepo.findFirst).mockResolvedValue(mockUser as any);
+    vi.mocked(mockUserRepository.findFirst).mockResolvedValue(mockUser as any);
     vi.mocked(PlaybookRepo.findOneByUuid).mockResolvedValue(mockPlaybook as any);
     vi.mocked(PlaybookUseCases.executePlaybook).mockResolvedValue(mockExecId);
     vi.mocked(AutomationRepo.findByUuid).mockResolvedValue(mockAutomation as any);
@@ -127,7 +149,7 @@ describe('PlaybookActionComponent', () => {
     it('should execute playbook successfully', async () => {
       await component.executeAction();
 
-      expect(UserRepo.findFirst).toHaveBeenCalled();
+      expect(mockUserRepository.findFirst).toHaveBeenCalled();
       expect(PlaybookRepo.findOneByUuid).toHaveBeenCalledWith(mockPlaybookUuid);
       expect(PlaybookUseCases.executePlaybook).toHaveBeenCalledWith(
         mockPlaybook,

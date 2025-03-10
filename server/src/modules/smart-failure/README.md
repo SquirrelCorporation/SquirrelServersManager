@@ -1,6 +1,18 @@
+```
+  ,;;:;,
+   ;;;;;
+  ,:;;:;    ,'=.
+  ;:;:;' .=" ,'_\
+  ':;:;,/  ,__:=@
+   ';;:;  =./)_
+     `"=\_  )_"`
+          ``'"`
+```
+Squirrel Servers Manager 🐿️
+---
 # Smart Failure Module
 
-The SmartFailure module is a NestJS implementation of the Ansible smart failure detection system. It analyzes Ansible execution logs to identify common failure patterns and provides helpful error messages and resolution steps.
+The Smart Failure module is a NestJS implementation of the Ansible smart failure detection system. It analyzes Ansible execution logs to identify common failure patterns and provides helpful error messages and resolution steps.
 
 ## Features
 
@@ -12,13 +24,23 @@ The SmartFailure module is a NestJS implementation of the Ansible smart failure 
 
 ## Architecture
 
-The module follows the NestJS architecture with the following components:
+The module follows the Clean Architecture pattern with proper separation of concerns:
 
-- **Controller**: Handles HTTP requests and responses
-- **Service**: Implements the business logic for log analysis
-- **DTO**: Defines the data transfer objects for request validation
-- **Interfaces**: Defines the data structures for failure patterns and responses
+### Domain Layer
+- **Entities**: Defines the core business entities like `FailurePattern`
+- **Repository Interfaces**: Defines the `IAnsibleLogsRepository` interface
 - **Constants**: Defines the failure patterns to detect
+
+### Application Layer
+- **Service Interfaces**: Defines the `ISmartFailureService` interface
+- **Services**: Implements the business logic for log analysis in `SmartFailureService`
+
+### Infrastructure Layer
+- **Repositories**: Implements the `AnsibleLogsRepository` that uses the Logs module's repository
+
+### Presentation Layer
+- **Controllers**: Handles HTTP requests and responses in `SmartFailureController`
+- **DTOs**: Defines the data transfer objects for request validation
 
 ## API Endpoints
 
@@ -88,15 +110,11 @@ export class AppModule {}
 
 ## Testing
 
-The module includes comprehensive tests for both the controller and service. See [TESTING.md](./TESTING.md) for more details.
+The module includes comprehensive tests that mirror the module structure:
 
-## Manual Testing
-
-A standalone test script is provided for manual testing:
-
-```bash
-npx ts-node src/modules/smart-failure/test-smart-failure.ts
-```
+- **Application Layer Tests**: Tests for the `SmartFailureService`
+- **Infrastructure Layer Tests**: Tests for the `AnsibleLogsRepository`
+- **Presentation Layer Tests**: Tests for the `SmartFailureController`
 
 ## Future Improvements
 

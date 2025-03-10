@@ -1,6 +1,5 @@
 import express from 'express';
 import { prometheusConf } from '../../../config';
-import { deviceRegistry } from '../../../data/statistics';
 import logger from '../../../logger';
 
 const router = express.Router();
@@ -19,8 +18,8 @@ router.get('/metrics', async (req, res) => {
     return;
   }
 
-  res.setHeader('Content-Type', deviceRegistry.contentType);
-  res.send(await deviceRegistry.metrics());
+ // res.setHeader('Content-Type', deviceRegistry.contentType);
+  //res.send(await deviceRegistry.metrics());
 });
 
 export default router;

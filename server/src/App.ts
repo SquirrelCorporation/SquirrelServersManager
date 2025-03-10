@@ -16,7 +16,6 @@ import Events from './core/events/events';
 import logger, { httpLoggerOptions } from './logger';
 import { errorHandler } from './middlewares/ErrorHandler';
 import RealTime from './modules/real-time/RealTime';
-import routes from './routes';
 
 // Declare global nestApp for legacy code to access
 declare global {
@@ -111,7 +110,6 @@ class AppWrapper extends EventManager {
     logger.info('\n\nSetting up routes ==========================================');
     // These routes will be handled by Express
     this.expressApp.use(metrics);
-    this.expressApp.use('/', routes);
     this.expressApp.use(errorHandler);
 
     // Log all registered routes for debugging

@@ -1,13 +1,17 @@
 import Dockerode from 'dockerode';
 import { ConnectConfig } from 'ssh2';
 import { SsmAnsible, SsmProxmox } from 'ssm-shared-lib';
-import Device from '../../data/database/model/Device';
-import DeviceAuth from '../../data/database/model/DeviceAuth';
-import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../modules/ansible-vault/ansible-vault';
 import { ProxmoxEngineOptions } from '../proxmox-api';
+import { IDevice, IDeviceAuth } from '../../modules/devices';
+
+const DEFAULT_VAULT_ID = 'ssm';
+// TODO: Import from ansible-vault module????
+const vaultDecrypt = async (str: string, vault: string) => {
+  return str;
+}
 
 class SSHCredentialsHelper {
-  async getSShConnection(device: Device, deviceAuth: DeviceAuth) {
+  async getSShConnection(device: IDevice, deviceAuth: IDeviceAuth) {
     const baseSsh: ConnectConfig = {
       tryKeyboard: true, // deviceAuth.customDockerTryKeyboard,
       forceIPv4: deviceAuth.customDockerForcev4,
@@ -19,7 +23,7 @@ class SSHCredentialsHelper {
     return { ...baseSsh, ...sshCredentials };
   }
 
-  async getDockerSshConnectionOptions(device: Device, deviceAuth: DeviceAuth) {
+  async getDockerSshConnectionOptions(device: IDevice, deviceAuth: IDeviceAuth) {
     const baseSsh: ConnectConfig = {
       tryKeyboard: true, // deviceAuth.customDockerTryKeyboard,
       forceIPv4: deviceAuth.customDockerForcev4,
@@ -49,8 +53,8 @@ class SSHCredentialsHelper {
   }
 
   async getProxmoxConnectionOptions(
-    device: Device,
-    deviceAuth: DeviceAuth,
+    device: IDevice,
+    deviceAuth: IDeviceAuth,
   ): Promise<ProxmoxEngineOptions & { ignoreSslErrors: boolean }> {
     if (deviceAuth.proxmoxAuth?.connectionMethod === SsmProxmox.ConnectionMethod.USER_PWD) {
       return {
@@ -81,7 +85,7 @@ class SSHCredentialsHelper {
     );
   }
 
-  private async handleSSHCredentials(deviceAuth: DeviceAuth): Promise<ConnectConfig> {
+  private async handleSSHCredentials(deviceAuth: IDeviceAuth): Promise<ConnectConfig> {
     return this.determineSSHCredentials(
       deviceAuth.authType as SsmAnsible.SSHType,
       deviceAuth.sshUser as string,
@@ -91,7 +95,7 @@ class SSHCredentialsHelper {
     );
   }
 
-  private async handleCustomSSHCredentials(deviceAuth: DeviceAuth): Promise<ConnectConfig> {
+  private async handleCustomSSHCredentials(deviceAuth: IDeviceAuth): Promise<ConnectConfig> {
     return this.determineSSHCredentials(
       deviceAuth.dockerCustomAuthType as SsmAnsible.SSHType,
       deviceAuth.dockerCustomSshUser as string,

@@ -42,7 +42,11 @@ export class DeviceAuth {
   @Prop()
   sshKeyPass?: string;
 
-  @Prop({ default: SsmAnsible.SSHConnection.PARAMIKO, enum: SsmAnsible.SSHConnection })
+  @Prop({ 
+    type: String,
+    default: SsmAnsible.SSHConnection.PARAMIKO, 
+    enum: SsmAnsible.SSHConnection 
+  })
   sshConnection?: SsmAnsible.SSHConnection;
 
   @Prop()
@@ -51,7 +55,10 @@ export class DeviceAuth {
   @Prop()
   becomePass?: string;
 
-  @Prop()
+  @Prop({
+    type: String,
+    enum: SsmAnsible.AnsibleBecomeMethod
+  })
   becomeMethod?: SsmAnsible.AnsibleBecomeMethod;
 
   @Prop()
@@ -75,7 +82,10 @@ export class DeviceAuth {
   @Prop({ default: false })
   customDockerSSH?: boolean;
 
-  @Prop({ enum: SsmAnsible.SSHType })
+  @Prop({ 
+    type: String,
+    enum: SsmAnsible.SSHType 
+  })
   dockerCustomAuthType?: SsmAnsible.SSHType;
 
   @Prop()

@@ -5,6 +5,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Inject,
   Param,
   Patch,
   Post,
@@ -20,7 +21,7 @@ import { DevicesService } from '../../application/services/devices.service';
 import { CreateDeviceAuthDto, UpdateDeviceAuthDto } from '../dtos/device-auth.dto';
 import { UpdateDockerAuthDto } from '../dtos/update-docker-auth.dto';
 import { UpdateProxmoxAuthDto } from '../dtos/update-proxmox-auth.dto';
-import { preWriteSensitiveInfos } from '../../../../helpers/sensitive/handle-sensitive-info';
+import { ISensitiveInfoService, SENSITIVE_INFO_SERVICE } from '../../domain/services/sensitive-info.service.interface';
 
 // Configure multer for file uploads
 const fileFilter = (req: any, file: Express.Multer.File, callback: any) => {
@@ -34,7 +35,11 @@ const fileFilter = (req: any, file: Express.Multer.File, callback: any) => {
 @Controller('api/devices')
 @UseGuards(JwtAuthGuard)
 export class DevicesAuthController {
-  constructor(private readonly devicesService: DevicesService) {}
+  constructor(
+    private readonly devicesService: DevicesService,
+    @Inject(SENSITIVE_INFO_SERVICE)
+    private readonly sensitiveInfoService: ISensitiveInfoService
+  ) {}
 
   @Get(':uuid/auth')
   async getDeviceAuth(@Param('uuid') uuid: string) {
@@ -49,15 +54,14 @@ export class DevicesAuthController {
         throw new HttpException(`Device Auth for device with UUID ${uuid} not found`, HttpStatus.NOT_FOUND);
       }
 
-      return {
-        success: true,
-        message: 'Device auth retrieved successfully',
-        data: deviceAuth,
-      };
-    } catch (error: any) {
+      return deviceAuth;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
       throw new HttpException(
-        error.message || 'Error retrieving device auth',
-        error instanceof HttpException ? error.getStatus() : HttpStatus.BAD_REQUEST,
+        error instanceof Error ? error.message : 'An unknown error occurred',
+        HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
   }
@@ -87,10 +91,13 @@ export class DevicesAuthController {
         message: 'Device auth created successfully',
         data: { type: result.authType },
       };
-    } catch (error: any) {
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
       throw new HttpException(
-        error.message || 'Error creating device auth',
-        error instanceof HttpException ? error.getStatus() : HttpStatus.BAD_REQUEST,
+        error instanceof Error ? error.message : 'Error creating device auth',
+        HttpStatus.BAD_REQUEST
       );
     }
   }
@@ -106,64 +113,49 @@ export class DevicesAuthController {
         throw new HttpException(`Device with UUID ${uuid} not found`, HttpStatus.NOT_FOUND);
       }
 
-      const deviceAuthList = await this.devicesService.findDeviceAuthByDeviceUuid(uuid);
-      if (!deviceAuthList || deviceAuthList.length === 0) {
+      const deviceAuth = await this.devicesService.findDeviceAuthByDevice(device);
+      if (!deviceAuth) {
         throw new HttpException(`Device Auth for device with UUID ${uuid} not found`, HttpStatus.NOT_FOUND);
       }
 
-      const deviceAuth = deviceAuthList[0];
-
-      // Process sensitive information
+      // Handle sensitive information
       if (updateDeviceAuthDto.sshPwd) {
-        updateDeviceAuthDto.sshPwd = await preWriteSensitiveInfos(
+        updateDeviceAuthDto.sshPwd = await this.sensitiveInfoService.prepareSensitiveInfoForWrite(
           updateDeviceAuthDto.sshPwd,
-          deviceAuth.sshPwd
+          deviceAuth.sshPwd,
         );
       }
 
       if (updateDeviceAuthDto.sshKey) {
-        updateDeviceAuthDto.sshKey = await preWriteSensitiveInfos(
+        updateDeviceAuthDto.sshKey = await this.sensitiveInfoService.prepareSensitiveInfoForWrite(
           updateDeviceAuthDto.sshKey,
-          deviceAuth.sshKey
+          deviceAuth.sshKey,
         );
       }
 
       if (updateDeviceAuthDto.sshKeyPass) {
-        updateDeviceAuthDto.sshKeyPass = await preWriteSensitiveInfos(
+        updateDeviceAuthDto.sshKeyPass = await this.sensitiveInfoService.prepareSensitiveInfoForWrite(
           updateDeviceAuthDto.sshKeyPass,
-          deviceAuth.sshKeyPass
+          deviceAuth.sshKeyPass,
         );
       }
 
       if (updateDeviceAuthDto.becomePass) {
-        updateDeviceAuthDto.becomePass = await preWriteSensitiveInfos(
+        updateDeviceAuthDto.becomePass = await this.sensitiveInfoService.prepareSensitiveInfoForWrite(
           updateDeviceAuthDto.becomePass,
-          deviceAuth.becomePass
+          deviceAuth.becomePass,
         );
       }
 
-      const updatedDeviceAuth = {
-        ...deviceAuth,
-        ...updateDeviceAuthDto,
-        // Keep the original authType from device auth
-        authType: deviceAuth.authType,
-        // Cast becomeMethod to the appropriate enum if it exists
-        becomeMethod: updateDeviceAuthDto.becomeMethod ?
-          updateDeviceAuthDto.becomeMethod as unknown as SsmAnsible.AnsibleBecomeMethod :
-          deviceAuth.becomeMethod
-      };
-
-      const result = await this.devicesService.updateDeviceAuth(updatedDeviceAuth as any);
-
-      return {
-        success: true,
-        message: 'Device auth updated successfully',
-        data: result,
-      };
-    } catch (error: any) {
+      const updatedDeviceAuth = await this.devicesService.updateDeviceAuth(deviceAuth, updateDeviceAuthDto);
+      return updatedDeviceAuth;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
       throw new HttpException(
-        error.message || 'Error updating device auth',
-        error instanceof HttpException ? error.getStatus() : HttpStatus.BAD_REQUEST,
+        error instanceof Error ? error.message : 'An unknown error occurred',
+        HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
   }
@@ -182,10 +174,13 @@ export class DevicesAuthController {
         success: true,
         message: 'Device auth deleted successfully',
       };
-    } catch (error: any) {
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
       throw new HttpException(
-        error.message || 'Error deleting device auth',
-        error instanceof HttpException ? error.getStatus() : HttpStatus.BAD_REQUEST,
+        error instanceof Error ? error.message : 'An unknown error occurred',
+        HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
   }
@@ -206,55 +201,37 @@ export class DevicesAuthController {
         throw new HttpException(`Device Auth for device with UUID ${uuid} not found`, HttpStatus.NOT_FOUND);
       }
 
-      // Process sensitive information
+      // Handle sensitive information
       if (updateDockerAuthDto.dockerCustomSshPwd) {
-        updateDockerAuthDto.dockerCustomSshPwd = await preWriteSensitiveInfos(
+        updateDockerAuthDto.dockerCustomSshPwd = await this.sensitiveInfoService.prepareSensitiveInfoForWrite(
           updateDockerAuthDto.dockerCustomSshPwd,
-          deviceAuth.dockerCustomSshPwd
+          deviceAuth.dockerCustomSshPwd,
         );
       }
 
       if (updateDockerAuthDto.dockerCustomSshKey) {
-        updateDockerAuthDto.dockerCustomSshKey = await preWriteSensitiveInfos(
+        updateDockerAuthDto.dockerCustomSshKey = await this.sensitiveInfoService.prepareSensitiveInfoForWrite(
           updateDockerAuthDto.dockerCustomSshKey,
-          deviceAuth.dockerCustomSshKey
+          deviceAuth.dockerCustomSshKey,
         );
       }
 
       if (updateDockerAuthDto.dockerCustomSshKeyPass) {
-        updateDockerAuthDto.dockerCustomSshKeyPass = await preWriteSensitiveInfos(
+        updateDockerAuthDto.dockerCustomSshKeyPass = await this.sensitiveInfoService.prepareSensitiveInfoForWrite(
           updateDockerAuthDto.dockerCustomSshKeyPass,
-          deviceAuth.dockerCustomSshKeyPass
+          deviceAuth.dockerCustomSshKeyPass,
         );
       }
 
-      // Cast Docker auth type if needed
-      if (updateDockerAuthDto.dockerCustomAuthType) {
-        const typedDockerAuthDto = {
-          ...updateDockerAuthDto,
-          // Map dockerCustomAuthType to SSHType or whatever is appropriate
-          dockerCustomAuthType: updateDockerAuthDto.dockerCustomAuthType as any
-        };
-
-        const updatedDeviceAuth = {
-          ...deviceAuth,
-          ...typedDockerAuthDto
-        };
-
-        const result = await this.devicesService.updateDeviceAuth(updatedDeviceAuth);
-
-        return {
-          success: true,
-          message: 'Docker auth updated successfully',
-          data: {
-            dockerCustomAuthType: result.dockerCustomAuthType,
-          },
-        };
+      const updatedDeviceAuth = await this.devicesService.updateDockerAuth(deviceAuth, updateDockerAuthDto);
+      return updatedDeviceAuth;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
       }
-    } catch (error: any) {
       throw new HttpException(
-        error.message || 'Error updating docker auth',
-        error instanceof HttpException ? error.getStatus() : HttpStatus.BAD_REQUEST,
+        error instanceof Error ? error.message : 'An unknown error occurred',
+        HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
   }
@@ -380,53 +357,30 @@ export class DevicesAuthController {
         throw new HttpException(`Device Auth for device with UUID ${uuid} not found`, HttpStatus.NOT_FOUND);
       }
 
-      // Process sensitive information
+      // Handle sensitive information
       if (updateProxmoxAuthDto.tokens?.tokenSecret) {
-        updateProxmoxAuthDto.tokens.tokenSecret = await preWriteSensitiveInfos(
+        updateProxmoxAuthDto.tokens.tokenSecret = await this.sensitiveInfoService.prepareSensitiveInfoForWrite(
           updateProxmoxAuthDto.tokens.tokenSecret,
-          deviceAuth.proxmoxAuth?.tokens?.tokenSecret
+          deviceAuth.proxmoxAuth?.tokens?.tokenSecret,
         );
       }
 
       if (updateProxmoxAuthDto.userPwd?.password) {
-        updateProxmoxAuthDto.userPwd.password = await preWriteSensitiveInfos(
+        updateProxmoxAuthDto.userPwd.password = await this.sensitiveInfoService.prepareSensitiveInfoForWrite(
           updateProxmoxAuthDto.userPwd.password,
-          deviceAuth.proxmoxAuth?.userPwd?.password
+          deviceAuth.proxmoxAuth?.userPwd?.password,
         );
       }
 
-      // Convert the connection methods to the proper types
-      const proxmoxAuth = {
-        ...deviceAuth.proxmoxAuth || {},
-        remoteConnectionMethod: updateProxmoxAuthDto.remoteConnectionMethod as any,
-        connectionMethod: updateProxmoxAuthDto.connectionMethod as any,
-        port: updateProxmoxAuthDto.port,
-        ignoreSslErrors: updateProxmoxAuthDto.ignoreSslErrors,
-        tokens: {
-          tokenId: updateProxmoxAuthDto.tokens?.tokenId || deviceAuth.proxmoxAuth?.tokens?.tokenId,
-          tokenSecret: updateProxmoxAuthDto.tokens?.tokenSecret || deviceAuth.proxmoxAuth?.tokens?.tokenSecret,
-        },
-        userPwd: {
-          username: updateProxmoxAuthDto.userPwd?.username || deviceAuth.proxmoxAuth?.userPwd?.username,
-          password: updateProxmoxAuthDto.userPwd?.password || deviceAuth.proxmoxAuth?.userPwd?.password,
-        },
-      };
-
-      const updatedDeviceAuth = {
-        ...deviceAuth,
-        proxmoxAuth
-      };
-
-      await this.devicesService.updateDeviceAuth(updatedDeviceAuth);
-
-      return {
-        success: true,
-        message: 'Proxmox auth updated successfully',
-      };
-    } catch (error: any) {
+      const updatedDeviceAuth = await this.devicesService.updateProxmoxAuth(deviceAuth, updateProxmoxAuthDto);
+      return updatedDeviceAuth;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
       throw new HttpException(
-        error.message || 'Error updating proxmox auth',
-        error instanceof HttpException ? error.getStatus() : HttpStatus.BAD_REQUEST,
+        error instanceof Error ? error.message : 'An unknown error occurred',
+        HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
   }

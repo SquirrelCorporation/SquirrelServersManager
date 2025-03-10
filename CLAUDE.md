@@ -3,24 +3,26 @@
 ## Build, Lint & Test Commands
 - **Server Build**: `cd server && npm run build`
 - **Client Build**: `cd client && npm run build`
+- **Server Dev**: `cd server && npm run dev`
 - **Server Tests**: `cd server && npm run test` 
 - **Client Tests**: `cd client && npm run test`
-- **Coverage**: `cd server && npm run coverage`
-- **Run Single Test**: `cd server && npx vitest run path/to/test/file.test.ts`
+- **Run Single Test**: `cd server && npx vitest run path/to/test/file.spec.ts`
+- **Test Specific Module**: `cd server && npx vitest run src/modules/ansible/__tests__`
 - **Watch Tests**: `cd server && npm run test:dev`
+- **Coverage**: `cd server && npm run coverage`
+- **ESLint**: `cd server && npx eslint "src/**/*.ts"`
 
 ## Code Style Guidelines
-- **TypeScript**: Strict typing preferred but noImplicitAny allowed
-- **Formatting**: 100 char line length, 2-space indent, LF endings
-- **Strings**: Single quotes
+- **TypeScript**: Strict typing with noImplicitAny allowed
+- **Formatting**: 2-space indent, LF, curly braces required, single quotes
+- **Imports**: Sort order: builtin → external → internal with no lines between
+- **Architecture**: 
+  - NestJS modular design with Clean Architecture layers
+  - Tests under `__tests__` directories mirroring module structure
+  - Files end with .spec.ts for tests
 - **Naming**: 
-  - PascalCase: classes, interfaces, types
-  - camelCase: functions, variables, methods
+  - PascalCase: classes, interfaces, types, decorators
+  - camelCase: functions, variables, methods, properties
   - ALL_CAPS: constants
-- **Imports**: Sorted by groups (built-in → external → internal)
-- **Architecture**: NestJS decorators, dependency injection, services
-- **Error Handling**: 
-  - Proper try/catch with typed errors
-  - Consistent API error responses
-  - Logger for context-aware errors
-- **Testing**: Vitest framework, follow describe/it pattern
+- **Error Handling**: Typed errors, proper try/catch, API error responses
+- **Path Aliases**: @modules/, @common/, @config/, @infrastructure/

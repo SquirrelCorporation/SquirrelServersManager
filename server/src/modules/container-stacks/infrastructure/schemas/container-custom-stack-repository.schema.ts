@@ -43,7 +43,11 @@ export class ContainerCustomStackRepositoryDocument extends Document {
   @Prop({ required: false })
   onErrorMessage?: string;
 
-  @Prop({ required: true })
+  @Prop({
+    type: String,
+    required: true,
+    enum: Object.values(SsmGit.Services)
+  })
   gitService!: SsmGit.Services;
 
   @Prop({ default: false })

@@ -9,19 +9,20 @@ import { AnsibleConfigModule } from './modules/ansible-config/ansible-config.mod
 import { AnsibleModule } from './modules/ansible/ansible.module';
 import { AnsibleVaultModule } from './modules/ansible-vault/ansible-vault.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { AutomationsModule } from './modules/automations/automations.module';
+//import { AutomationsModule } from './modules/automations/automations.module';
 import { ContainerStacksModule } from './modules/container-stacks/container-stacks.module';
-import { ContainersModule } from './modules/containers/containers.module';
+//import { ContainersModule } from './modules/containers/containers.module';
 import { DevicesModule } from './modules/devices/devices.module';
 import { DiagnosticModule } from './modules/diagnostic/diagnostic.module';
 import { LogsModule } from './modules/logs/logs.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { PlaybooksModule } from './modules/playbooks/playbooks.module';
 import { SchedulerModule } from './modules/scheduler/scheduler.module';
-import { SftpModule } from './modules/sftp-nest/sftp.module';
+import { SettingsModule } from './modules/settings/settings.module';
+import { SftpModule } from './modules/sftp/sftp.module';
 import { ShellModule } from './modules/shell/shell.module';
 import { SmartFailureModule } from './modules/smart-failure/smart-failure.module';
-import { SshModule } from './modules/ssh-nest/ssh.module';
+import { SshModule } from './modules/ssh/ssh.module';
 import { UpdateModule } from './modules/update/update.module';
 import { UsersModule } from './modules/users/users.module';
 import { CacheModule } from './infrastructure/cache';
@@ -110,9 +111,9 @@ let connectionReady = false;
       },
     }),
     AuthModule,
-    AutomationsModule,
+ //   AutomationsModule,
     ContainerStacksModule,
-    ContainersModule,
+    // ContainersModule,
     DevicesModule,
     UpdateModule,
     DiagnosticModule,
@@ -128,6 +129,7 @@ let connectionReady = false;
     PlaybooksModule,
     UsersModule,
     SchedulerModule,
+    SettingsModule,
   ],
 })
 export class AppModule implements OnModuleInit {

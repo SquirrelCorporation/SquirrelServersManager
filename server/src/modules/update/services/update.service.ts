@@ -1,11 +1,11 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { firstValueFrom } from 'rxjs';
 import * as semver from 'semver';
 import { SettingsKeys } from 'ssm-shared-lib';
 import { version } from '../../../../package.json';
-import { setToCache } from '../../../data/cache';
+import { ICacheService } from '../../../infrastructure/cache';
 
 @Injectable()
 export class UpdateService implements OnModuleInit {
@@ -13,7 +13,10 @@ export class UpdateService implements OnModuleInit {
   private readonly RELEASE_URL =
     'https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager/refs/heads/master/release.json';
 
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    @Inject('ICacheService') private readonly cacheService: ICacheService
+  ) {}
 
   /**
    * Initialize the service
@@ -76,17 +79,17 @@ export class UpdateService implements OnModuleInit {
 
     if (comparison === 0) {
       this.logger.log('SSM remote and current versions are identical, no update available.');
-      await setToCache(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE, '');
+      await this.cacheService.set(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE, '');
     } else if (comparison === 1) {
       this.logger.log(
         `The SSM local version (${localVersion}) is newer than the remote version (${remoteVersion}).`,
       );
-      await setToCache(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE, '');
+      await this.cacheService.set(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE, '');
     } else if (comparison === -1) {
       this.logger.log(
         `The SSM local version ${localVersion} is older than the remote version (${remoteVersion}).`,
       );
-      await setToCache(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE, remoteVersion);
+      await this.cacheService.set(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE, remoteVersion);
     }
   }
 

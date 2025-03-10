@@ -10,9 +10,9 @@ import SSHCredentialsHelper from '../../../../../helpers/ssh/SSHCredentialsHelpe
 import { SSMServicesTypes } from '../../../../../types/typings';
 import { Kind } from '../../../core/Component';
 import PinoLogger from '../../../../../logger';
-import { DevicesService } from '../../../../../modules/devices/application/services/devices.service';
-import { IDevice } from '../../../../../modules/devices/domain/entities/device.entity';
-import { IDeviceAuth } from '../../../../../modules/devices/domain/entities/device-auth.entity';
+import { DevicesService } from '../../../../../modules/devices';
+import { IDevice } from '../../../../../modules/devices';
+import { IDeviceAuth } from '../../../../../modules/devices';
 
 const DEBOUNCED_WATCH_CRON_MS = 5000;
 const logger = PinoLogger.child({ module: 'ProxmoxService' }, { msgPrefix: '[PROXMOX_SERVICE] - ' });

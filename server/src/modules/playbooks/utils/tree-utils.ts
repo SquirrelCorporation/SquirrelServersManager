@@ -2,7 +2,7 @@ import { DirectoryTree } from 'ssm-shared-lib';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ExtraVarsService } from '../../ansible/services/extra-vars.service';
+import { ExtraVarsService } from '../../ansible'
 import { Playbook, PlaybookDocument } from '../components/playbooks-repository.component';
 
 export function recursivelyFlattenTree(

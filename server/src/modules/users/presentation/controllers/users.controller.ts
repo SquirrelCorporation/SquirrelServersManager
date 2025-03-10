@@ -9,13 +9,13 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { RolesGuard } from 'src/guards/roles.guard';
-import { Roles } from 'src/decorators/roles.decorator';
+import { RolesGuard } from '../../../../guards/roles.guard';
 import { UsersService } from '../../application/services/users.service';
 import { UserMapper } from '../mappers/user.mapper';
 import { IUser } from '../../domain/entities/user.entity';
 import { JwtAuthGuard } from '../../../../guards/jwt-auth.guard';
 import { User } from '../../../../decorators/user.decorator';
+import { Roles } from '../../../../decorators/roles.decorator';
 
 @Controller('users')
 export class UsersController {

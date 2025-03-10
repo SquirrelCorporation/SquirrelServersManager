@@ -24,6 +24,6 @@ import { UserRepositoryMapper } from './infrastructure/mappers/user-repository.m
       useClass: UserRepository,
     },
   ],
-  exports: [UsersService],
+  exports: [UsersService, USER_REPOSITORY],
 })
 export class UsersModule {}

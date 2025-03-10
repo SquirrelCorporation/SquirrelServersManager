@@ -214,19 +214,6 @@ export class MetricsService {
   }
 
   /**
-   * Get the name of a metric by type
-   * @param type The type of metric
-   * @returns The name of the metric
-   */
-  public getMetricName(type: MetricType): string {
-    const metric = this.metrics.get(type);
-    if (!metric) {
-      throw new Error(`Metric type ${type} not found`);
-    }
-    return metric.name;
-  }
-
-  /**
    * Get the names of all metrics
    * @returns Array of metric names
    */
