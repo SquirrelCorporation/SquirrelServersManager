@@ -1,8 +1,9 @@
 import { Repositories } from 'ssm-shared-lib';
 import { Injectable, Logger } from '@nestjs/common';
-import { PlaybooksRepositoryRepository } from '../../../infrastructure/repositories/playbooks-register.repository';
-import { FileSystemService } from '../../shell';
-import { PlaybooksRepository } from '../../../infrastructure/schemas/playbooks-register.schema';
+import { FileSystemService } from '@modules/shell';
+import { PlaybooksRegisterRepository } from '@modules/playbooks/infrastructure/repositories/playbooks-register.repository';
+import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
+import { SSM_DATA_PATH, SSM_INSTALL_PATH } from 'src/config';
 
 /**
  * Service for managing default playbooks repositories
@@ -11,32 +12,29 @@ import { PlaybooksRepository } from '../../../infrastructure/schemas/playbooks-r
 export class DefaultPlaybooksRegisterService {
   private readonly logger = new Logger(DefaultPlaybooksRegisterService.name);
 
-  // Path constants
-  private readonly SSM_INSTALL_PATH = process.env.SSM_INSTALL_PATH || '/opt/ssm';
-  private readonly SSM_DATA_PATH = process.env.SSM_DATA_PATH || '/var/lib/ssm';
 
-  private readonly corePlaybooksRepository: Partial<PlaybooksRepository> = {
+  private readonly corePlaybooksRepository: Partial<IPlaybooksRegister> = {
     name: 'ssm-core',
     uuid: '00000000-0000-0000-0000-000000000000',
     enabled: true,
     type: Repositories.RepositoryType.LOCAL,
-    directory: `${this.SSM_INSTALL_PATH}/server/src/ansible/00000000-0000-0000-0000-000000000000`,
+    directory: `${SSM_INSTALL_PATH}/server/src/ansible/00000000-0000-0000-0000-000000000000`,
     default: true,
   };
 
-  private readonly toolsPlaybooksRepository: Partial<PlaybooksRepository> = {
+  private readonly toolsPlaybooksRepository: Partial<IPlaybooksRegister> = {
     name: 'ssm-tools',
     uuid: '00000000-0000-0000-0000-000000000001',
     enabled: true,
     type: Repositories.RepositoryType.LOCAL,
-    directory: `${this.SSM_INSTALL_PATH}/server/src/ansible/00000000-0000-0000-0000-000000000001`,
+    directory: `${SSM_INSTALL_PATH}/server/src/ansible/00000000-0000-0000-0000-000000000001`,
     default: true,
   };
 
   constructor(
-    private readonly playbooksRepositoryRepository: PlaybooksRepositoryRepository,
+    private readonly playbooksRepositoryRepository: PlaybooksRegisterRepository,
     private readonly fileSystemService: FileSystemService,
-  ) {}
+  ) {  }
 
   /**
    * Save the default SSM playbooks repositories
@@ -81,11 +79,11 @@ export class DefaultPlaybooksRegisterService {
       return;
     }
 
-    const userPlaybooksRepository: Partial<PlaybooksRepository> = {
+    const userPlaybooksRepository: Partial<IPlaybooksRegister> = {
       name: userEmail.trim().split('@')[0] || 'user-default',
       enabled: true,
       type: Repositories.RepositoryType.LOCAL,
-      directory: `${this.SSM_DATA_PATH}/playbooks/00000000-0000-0000-0000-000000000002`,
+      directory: `${SSM_DATA_PATH}/playbooks/00000000-0000-0000-0000-000000000002`,
       uuid: '00000000-0000-0000-0000-000000000002',
     };
 

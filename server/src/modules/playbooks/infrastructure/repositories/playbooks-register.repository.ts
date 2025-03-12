@@ -1,25 +1,24 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { IPlaybooksRegisterRepository } from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
+import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
 import {
-  PlaybooksRepository,
-  PlaybooksRepositoryDocument,
+  PlaybooksRegisterDocument,
+
 } from '../schemas/playbooks-register.schema';
 import { NotFoundError } from '../../../middlewares/api/ApiError';
-import { PLAYBOOKS_REPOSITORY_DOCUMENT } from '../constants';
-import { IPlaybooksRepositoryRepository } from '../../domain/repositories/playbooks-register-repository.interface';
-import { IPlaybooksRepository } from '../../domain/entities/playbooks-register.entity';
 
 /**
  * Repository for accessing playbooks repository data in the database
  */
 @Injectable()
-export class PlaybooksRegisterRepository implements IPlaybooksRepositoryRepository {
+export class PlaybooksRegisterRepository implements IPlaybooksRegisterRepository {
   private readonly logger = new Logger(PlaybooksRegisterRepository.name);
 
   constructor(
-    @InjectModel(PLAYBOOKS_REPOSITORY_DOCUMENT)
-    private readonly playbooksRepositoryModel: Model<PlaybooksRepositoryDocument>,
+    @InjectModel(PLAYBOOKS_REGISTER_DOCUMENT)
+    private readonly playbooksRegisterModel: Model<PlaybooksRegisterDocument>,
   ) {}
 
   /**
@@ -27,18 +26,18 @@ export class PlaybooksRegisterRepository implements IPlaybooksRepositoryReposito
    * @param uuid Repository UUID
    * @returns The repository or null if not found
    */
-  async findByUuid(uuid: string): Promise<IPlaybooksRepository | null> {
+  async findByUuid(uuid: string): Promise<IPlaybooksRegister| null> {
     this.logger.debug(`Finding repository with UUID: ${uuid}`);
-    return this.playbooksRepositoryModel.findOne({ uuid }).exec();
+    return this.playbooksRegisterModel.findOne({ uuid }).exec();
   }
 
   /**
    * Find all active repositories
    * @returns Array of active repositories
    */
-  async findAllActive(): Promise<IPlaybooksRepository[]> {
+  async findAllActive(): Promise<IPlaybooksRegister[]> {
     this.logger.debug('Finding all active repositories');
-    return this.playbooksRepositoryModel.find({ enabled: true }).exec();
+    return this.playbooksRegisterModel.find({ enabled: true }).exec();
   }
 
   /**
@@ -47,7 +46,7 @@ export class PlaybooksRegisterRepository implements IPlaybooksRepositoryReposito
    * @returns The repository
    * @throws NotFoundError if the repository is not found
    */
-  async findByUuidOrFail(uuid: string): Promise<IPlaybooksRepository> {
+  async findByUuidOrFail(uuid: string): Promise<IPlaybooksRegister> {
     const repository = await this.findByUuid(uuid);
     if (!repository) {
       throw new NotFoundError(`Repository with UUID ${uuid} not found`);
@@ -63,8 +62,8 @@ export class PlaybooksRegisterRepository implements IPlaybooksRepositoryReposito
    */
   async update(
     uuid: string,
-    updateData: Partial<IPlaybooksRepository>,
-  ): Promise<IPlaybooksRepository | null> {
+    updateData: Partial<IPlaybooksRegister>,
+  ): Promise<IPlaybooksRegister | null> {
     this.logger.debug(`Updating repository with UUID: ${uuid}`);
     return this.playbooksRepositoryModel
       .findOneAndUpdate({ uuid }, { $set: updateData }, { new: true })
@@ -76,7 +75,7 @@ export class PlaybooksRegisterRepository implements IPlaybooksRepositoryReposito
    * @param repositoryData Repository data
    * @returns The created repository
    */
-  async create(repositoryData: Partial<IPlaybooksRepository>): Promise<IPlaybooksRepository> {
+  async create(repositoryData: Partial<IPlaybooksRegister>): Promise<IPlaybooksRegister> {
     this.logger.debug(`Creating new repository: ${repositoryData.name}`);
     return this.playbooksRepositoryModel.create(repositoryData);
   }
@@ -86,7 +85,7 @@ export class PlaybooksRegisterRepository implements IPlaybooksRepositoryReposito
    * @param uuid Repository UUID
    * @returns The deleted repository
    */
-  async delete(uuid: string): Promise<IPlaybooksRepository | null> {
+  async delete(uuid: string): Promise<IPlaybooksRegister | null> {
     this.logger.debug(`Deleting repository with UUID: ${uuid}`);
     return this.playbooksRepositoryModel.findOneAndDelete({ uuid }).exec();
   }

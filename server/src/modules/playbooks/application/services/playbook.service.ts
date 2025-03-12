@@ -5,6 +5,7 @@ import { IAnsibleVault } from '@modules/ansible-vault';
 import { IUser } from '@modules/users/domain/entities/user.entity';
 import { IShellWrapperService } from '@modules/shell';
 import { ICacheService } from '@infrastructure/cache';
+import { IPlaybook } from '@modules/playbooks/domain/entities/playbook.entity';
 import { Playbooks } from '../../../types/typings';
 import { Playbook } from '../../infrastructure/schemas/playbook.schema';
 import { IPlaybookRepository, PLAYBOOK_REPOSITORY } from '../../domain/repositories/playbook-repository.interface';
@@ -90,7 +91,7 @@ export class PlaybookService {
     return '';
   }
 
-  async addExtraVarToPlaybook(playbook: Playbook, extraVar: API.ExtraVar) {
+  async addExtraVarToPlaybook(playbook: IPlaybook, extraVar: API.ExtraVar) {
     if (playbook.extraVars?.some(e => e.extraVar === extraVar.extraVar)) {
       throw new Error('ExtraVar already exists');
     }
@@ -116,7 +117,7 @@ export class PlaybookService {
     }
   }
 
-  async deleteExtraVarFromPlaybook(playbook: Playbook, extraVarName: string) {
+  async deleteExtraVarFromPlaybook(playbook: IPlaybook, extraVarName: string) {
     const removedVar = playbook.extraVars?.filter((e) => {
       return e.extraVar !== extraVarName;
     });

@@ -15,8 +15,8 @@ export interface DirectoryTreeOptions {
  * Service for generating directory trees
  */
 @Injectable()
-export class RepositoryTreeService {
-  private readonly logger = new Logger(RepositoryTreeService.name);
+export class RegisterTreeService {
+  private readonly logger = new Logger(RegisterTreeService.name);
 
   /**
    * Generate a directory tree

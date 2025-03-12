@@ -1,7 +1,7 @@
 export const DIRECTORY_ROOT = `${SSM_DATA_PATH}/playbooks`;
 export const FILE_PATTERN = /\.yml$/;
 
-abstract class PlaybooksRepositoryComponent extends EventManager {
+export default abstract class PlaybooksRegisterComponent extends EventManager {
   public name: string;
   public directory: string;
   public uuid: string;

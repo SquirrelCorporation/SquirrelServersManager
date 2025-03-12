@@ -18,7 +18,7 @@ export * from './domain/repositories/playbooks-register-repository.interface';
 // Application exports
 export * from './application/services/playbook.service';
 export * from './application/services/playbooks-register.service';
-export * from './application/services/repository-tree.service';
+export * from './application/services/register-tree.service';
 export * from './application/services/tree-node.service';
 
 // Infrastructure exports
@@ -26,7 +26,7 @@ export * from './infrastructure/repositories/playbook.repository';
 export * from './infrastructure/repositories/playbooks-register.repository';
 export * from './application/services/components/git-playbooks-register.service';
 export * from './infrastructure/repositories/local-playbooks-repository.service';
-export * from './application/services/components/playbooks-register-engine.service';
+export * from './application/services/engine/playbooks-register-engine.service';
 export * from './application/services/components/default-playbooks-register.service';
 export * from './infrastructure/schemas/playbook.schema';
 export * from './infrastructure/schemas/playbooks-register.schema';

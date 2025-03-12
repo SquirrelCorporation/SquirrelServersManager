@@ -1,3 +1,5 @@
+import { SsmGit } from "ssm-shared-lib";
+
 /**
  * Interface for the playbooks repository entity in the domain layer
  */
@@ -9,13 +11,18 @@ export interface IPlaybooksRegister {
   path: string;
   type: 'local' | 'git';
   enabled: boolean;
-  gitUrl?: string;
-  gitBranch?: string;
-  gitUsername?: string;
-  gitPassword?: string;
-  gitPrivateKey?: string;
-  gitPassphrase?: string;
+  ignoreSSLErrors?: boolean;
+  accessToken?: string;
+  email?: string;
+  gitService?: SsmGit.Services;
+  directoryExclusionList?: string[];
+  branch?: string;
+  userName?: string;
+  remoteUrl?: string;
+  directory: string;
   createdAt?: Date;
   updatedAt?: Date;
   vaults?: string[];
+  default?: boolean;
+  tree?: any;
 }

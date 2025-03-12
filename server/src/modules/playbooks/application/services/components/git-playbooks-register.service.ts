@@ -1,166 +1,99 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { SsmGit } from 'ssm-shared-lib';
-import { v4 as uuidv4 } from 'uuid';
+import { IPlaybooksRegisterRepository } from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
+import PlaybooksRegisterComponent from '@modules/playbooks/application/services/components/abstract-playbooks-register-component';
+import { PlaybooksRegisterEngineService } from '@modules/playbooks/application/services/engine/playbooks-register-engine.service';
+import { GitStep, IGitUserInfos, IInitGitOptionsSyncImmediately, ILoggerContext, clone, commitAndSync, forcePull } from 'src/helpers/git';
+import Events from 'src/core/events/events';
+import { SsmAlert, SsmGit } from 'ssm-shared-lib';
+import { InternalError, NotFoundError } from '../../../../../middlewares/api/ApiError';
 import {
   PlaybooksRegister,
 } from '../../../infrastructure/schemas/playbooks-register.schema';
-import { InternalError, NotFoundError } from '../../../middlewares/api/ApiError';
-import PlaybooksRepositoryEngine from '../engines/PlaybooksRepositoryEngine';
 
 /**
  * Service for managing Git playbooks repositories
  */
 @Injectable()
-export class GitPlaybooksRegisterService {
+export class GitPlaybooksRegisterService extends PlaybooksRegisterComponent {
   private readonly logger = new Logger(GitPlaybooksRegisterService.name);
+  private readonly options: IInitGitOptionsSyncImmediately;
 
-  constructor(
-    @InjectModel(PlaybooksRegister.name)
-    private readonly playbooksRepositoryModel: Model<PlaybooksRepositoryDocument>,
-  ) {}
-
-  /**
-   * Add a Git repository
-   * @param name Repository name
-   * @param accessToken Access token
-   * @param branch Branch
-   * @param email Email
-   * @param userName Username
-   * @param remoteUrl Remote URL
-   * @param gitService Git service
-   * @param directoryExclusionList Directory exclusion list
-   * @param vaults Vaults
-   * @param ignoreSSLErrors Ignore SSL errors
-   */
-  async addGitRepository(
-    name: string,
-    accessToken: string,
-    branch: string,
-    email: string,
-    userName: string,
-    remoteUrl: string,
-    gitService: SsmGit.Services,
-    directoryExclusionList: string[],
-    vaults: string[],
-    ignoreSSLErrors?: boolean,
-  ): Promise<void> {
-    this.logger.log(`Adding Git repository ${name}`);
-
-    try {
-      const repository = await this.playbooksRepositoryModel.create({
-        name,
-        type: 'git',
-        enabled: true,
-        uuid: uuidv4(),
-        accessToken,
-        branch,
-        email,
-        userName,
-        remoteUrl,
-        gitService,
-        directoryExclusionList,
-        vaults,
-        ignoreSSLErrors,
-      });
-
-      // Register the repository with the engine
-      await PlaybooksRepositoryEngine.registerRepository(repository);
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error(`Error adding Git repository: ${errorMessage}`);
-      throw new InternalError(`Error adding Git repository: ${errorMessage}`);
-    }
-  }
-
-  /**
-   * Update a Git repository
-   * @param uuid Repository UUID
-   * @param name Repository name
-   * @param accessToken Access token
-   * @param branch Branch
-   * @param email Email
-   * @param userName Username
-   * @param remoteUrl Remote URL
-   * @param gitService Git service
-   * @param directoryExclusionList Directory exclusion list
-   * @param vaults Vaults
-   * @param ignoreSSLErrors Ignore SSL errors
-   */
-  async updateGitRepository(
+constructor(
     uuid: string,
+    logger: any,
     name: string,
-    accessToken: string,
     branch: string,
     email: string,
-    userName: string,
+    gitUserName: string,
+    accessToken: string,
     remoteUrl: string,
     gitService: SsmGit.Services,
-    directoryExclusionList: string[],
-    vaults: string[],
-    ignoreSSLErrors?: boolean,
-  ): Promise<void> {
-    this.logger.log(`Updating Git repository ${name}`);
+    ignoreSSLErrors: boolean,
+  ) {
+    super(uuid, name, DIRECTORY_ROOT);
+    this.uuid = uuid;
+    this.name = name;
+    const userInfo: IGitUserInfos = {
+      email: email,
+      gitUserName: gitUserName,
+      branch: branch,
+      accessToken: accessToken,
+      gitService: gitService,
+      env: ignoreSSLErrors
+        ? {
+            GIT_SSL_NO_VERIFY: 'true',
+          }
+        : undefined,
+    };
+    this.options = {
+      dir: this.directory,
+      syncImmediately: true,
+      userInfo: userInfo,
+      remoteUrl: remoteUrl,
+    };
 
-    try {
-      const repository = await this.playbooksRepositoryModel.findOne({ uuid });
-      if (!repository) {
-        throw new NotFoundError(`Repository with UUID ${uuid} not found`);
-      }
-
-      repository.name = name;
-      repository.accessToken = accessToken;
-      repository.branch = branch;
-      repository.email = email;
-      repository.userName = userName;
-      repository.remoteUrl = remoteUrl;
-      repository.gitService = gitService;
-      repository.directoryExclusionList = directoryExclusionList;
-      repository.vaults = vaults;
-      repository.ignoreSSLErrors = ignoreSSLErrors;
-
-      await repository.save();
-
-      // Re-register the repository with updated settings
-      await PlaybooksRepositoryEngine.deregisterRepository(uuid);
-      await PlaybooksRepositoryEngine.registerRepository(repository);
-      await this.syncToDatabase(uuid);
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error(`Error updating Git repository: ${errorMessage}`);
-      throw new InternalError(`Error updating Git repository: ${errorMessage}`);
-    }
+    this.childLogger = logger.child(
+      { module: `PlaybooksGitRepository`, moduleId: `${this.uuid}`, moduleName: `${this.name}` },
+      { msgPrefix: `[PLAYBOOKS_GIT_REPOSITORY] - ` },
+    );
   }
 
+
+
+ async init() {
+    await this.clone();
+  }
+
+  async syncFromRepository() {
+    await this.forcePull();
+  }
   /**
    * Force pull a Git repository
    * @param uuid Repository UUID
    */
-  async forcePull(uuid: string): Promise<void> {
-    this.logger.log(`Force pulling Git repository ${uuid}`);
-
+  async forcePull(): Promise<void> {
     try {
-      const repository = await this.playbooksRepositoryModel.findOne({ uuid });
-      if (!repository) {
-        throw new NotFoundError(`Repository with UUID ${uuid} not found`);
-      }
-
-      const playbooksRepositoryComponent = PlaybooksRepositoryEngine.getState().playbooksRepository[
-        repository.uuid
-      ] as any;
-
-      if (!playbooksRepositoryComponent) {
-        throw new InternalError('Repository is not registered, try restarting or force sync');
-      }
-
-      if (typeof playbooksRepositoryComponent.forcePull === 'function') {
-        await playbooksRepositoryComponent.forcePull();
-      } else {
-        throw new InternalError('Repository does not support force pull operation');
-      }
-
-      await this.syncToDatabase(uuid);
+       await forcePull({
+        ...this.options,
+        logger: {
+          debug: (message: string, context: ILoggerContext): unknown =>
+            this.childLogger.debug(message, { callerFunction: 'forcePull', ...context }),
+          warn: (message: string, context: ILoggerContext): unknown =>
+            this.childLogger.warn(message, { callerFunction: 'forcePull', ...context }),
+          info: (message: GitStep, context: ILoggerContext): void => {
+            this.childLogger.info(message, {
+              callerFunction: 'forcePull',
+              ...context,
+            });
+          },
+        },
+      });
+      this.emit(Events.ALERT, {
+        severity: SsmAlert.AlertType.SUCCESS,
+        message: `Successfully forcepull repository ${this.name}`,
+        module: 'GitPlaybooksRepositoryComponent',
+      });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       this.logger.error(`Error force pulling Git repository: ${errorMessage}`);
@@ -170,20 +103,37 @@ export class GitPlaybooksRegisterService {
 
   /**
    * Clone a Git repository
-   * @param uuid Repository UUID
    */
-  async clone(uuid: string): Promise<void> {
-    this.logger.log(`Cloning Git repository ${uuid}`);
-
+  async clone(syncAfter = false): Promise<void> {
     try {
-      const repository = await this.playbooksRepositoryModel.findOne({ uuid });
-      if (!repository) {
-        throw new NotFoundError(`Repository with UUID ${uuid} not found`);
+ try {
+        void Shell.FileSystemManager.createDirectory(this.directory, DIRECTORY_ROOT);
+      } catch (error: any) {
+        this.childLogger.warn(error);
       }
-
-      await PlaybooksRepositoryEngine.deregisterRepository(uuid);
-      await PlaybooksRepositoryEngine.registerRepository(repository);
-      await this.syncToDatabase(uuid);
+       await clone({
+        ...this.options,
+        logger: {
+          debug: (message: string, context: ILoggerContext): unknown =>
+            this.childLogger.info(message, { callerFunction: 'clone', ...context }),
+          warn: (message: string, context: ILoggerContext): unknown =>
+            this.childLogger.warn(message, { callerFunction: 'clone', ...context }),
+          info: (message: GitStep, context: ILoggerContext): void => {
+            this.childLogger.info(message, {
+              callerFunction: 'clone',
+              ...context,
+            });
+          },
+        },
+      });
+      if (syncAfter) {
+        const nbSync = await this.syncToDatabase();
+        this.emit(Events.ALERT, {
+          severity: SsmAlert.AlertType.SUCCESS,
+          message: `Successfully updated repository ${this.name} with ${nbSync} files`,
+          module: 'GitPlaybooksRepositoryComponent',
+        });
+      }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       this.logger.error(`Error cloning Git repository: ${errorMessage}`);
@@ -193,119 +143,34 @@ export class GitPlaybooksRegisterService {
 
   /**
    * Commit and sync a Git repository
-   * @param uuid Repository UUID
    */
-  async commitAndSync(uuid: string): Promise<void> {
-    this.logger.log(`Committing and syncing Git repository ${uuid}`);
+  async commitAndSync(): Promise<void> {
 
     try {
-      const repository = await this.playbooksRepositoryModel.findOne({ uuid });
-      if (!repository) {
-        throw new NotFoundError(`Repository with UUID ${uuid} not found`);
-      }
-
-      const playbooksRepositoryComponent = PlaybooksRepositoryEngine.getState().playbooksRepository[
-        repository.uuid
-      ] as any;
-
-      if (!playbooksRepositoryComponent) {
-        throw new InternalError('Repository is not registered, try restarting or force sync');
-      }
-
-      if (typeof playbooksRepositoryComponent.commitAndSync === 'function') {
-        await playbooksRepositoryComponent.commitAndSync();
-      } else {
-        throw new InternalError('Repository does not support commit and sync operation');
-      }
-
-      await this.syncToDatabase(uuid);
+      await commitAndSync({
+        ...this.options,
+        logger: {
+          debug: (message: string, context: ILoggerContext): unknown =>
+            this.childLogger.debug(message, { callerFunction: 'commitAndSync', ...context }),
+          warn: (message: string, context: ILoggerContext): unknown =>
+            this.childLogger.warn(message, { callerFunction: 'commitAndSync', ...context }),
+          info: (message: GitStep, context: ILoggerContext): void => {
+            this.childLogger.info(message, {
+              callerFunction: 'commitAndSync',
+              ...context,
+            });
+          },
+        },
+      });
+      this.emit(Events.ALERT, {
+        severity: SsmAlert.AlertType.SUCCESS,
+        message: `Successfully commit and sync repository ${this.name}`,
+        module: 'GitPlaybooksRepositoryComponent',
+      });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       this.logger.error(`Error committing and syncing Git repository: ${errorMessage}`);
       throw new InternalError(`Error committing and syncing Git repository: ${errorMessage}`);
-    }
-  }
-
-  /**
-   * Sync a Git repository from remote
-   * @param repository Repository
-   */
-  async syncFromRemote(repository: any): Promise<void> {
-    this.logger.log(`Syncing Git repository ${repository.name} from remote`);
-
-    try {
-      const playbooksRepositoryComponent = PlaybooksRepositoryEngine.getState().playbooksRepository[
-        repository.uuid
-      ] as any;
-
-      if (!playbooksRepositoryComponent) {
-        throw new InternalError('Repository is not registered, try restarting or force sync');
-      }
-
-      if (typeof playbooksRepositoryComponent.forcePull === 'function') {
-        await playbooksRepositoryComponent.forcePull();
-      } else {
-        throw new InternalError('Repository does not support force pull operation');
-      }
-
-      await this.syncToDatabase(repository.uuid);
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error(`Error syncing Git repository from remote: ${errorMessage}`);
-      throw new InternalError(`Error syncing Git repository from remote: ${errorMessage}`);
-    }
-  }
-
-  /**
-   * Sync a Git repository to database
-   * @param repository Repository
-   */
-  async syncToDatabase(repository: string | any): Promise<void> {
-    let uuid: string;
-
-    if (typeof repository === 'string') {
-      uuid = repository;
-    } else {
-      uuid = repository.uuid;
-    }
-
-    this.logger.log(`Syncing Git repository ${uuid} to database`);
-
-    try {
-      const playbooksRepositoryComponent = PlaybooksRepositoryEngine.getState().playbooksRepository[
-        uuid
-      ] as any;
-
-      if (!playbooksRepositoryComponent) {
-        throw new InternalError('Repository is not registered, try restarting or force sync');
-      }
-
-      if (typeof playbooksRepositoryComponent.syncToDatabase === 'function') {
-        await playbooksRepositoryComponent.syncToDatabase();
-      } else {
-        throw new InternalError('Repository does not support sync to database operation');
-      }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error(`Error syncing Git repository to database: ${errorMessage}`);
-      throw new InternalError(`Error syncing Git repository to database: ${errorMessage}`);
-    }
-  }
-
-  /**
-   * Register a Git repository
-   * @param repository Repository
-   */
-  async registerRepository(repository: any): Promise<void> {
-    this.logger.log(`Registering Git repository ${repository.name}`);
-
-    try {
-      await PlaybooksRepositoryEngine.registerRepository(repository);
-      await this.syncToDatabase(repository.uuid);
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error(`Error registering Git repository: ${errorMessage}`);
-      throw new InternalError(`Error registering Git repository: ${errorMessage}`);
     }
   }
 }

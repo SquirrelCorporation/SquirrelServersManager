@@ -2,19 +2,17 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ShellModule } from '../shell/shell.module';
 import { AnsibleModule } from '../ansible/ansible.module';
-
-// Application services
 import { PlaybookService } from './application/services/playbook.service';
-import { PlaybooksRepositoryService } from './application/services/playbooks-register.service';
+import { PlaybooksRegisterService } from './application/services/playbooks-register.service';
 import { TreeNodeService } from './application/services/tree-node.service';
-import { RepositoryTreeService } from './application/services/repository-tree.service';
+import { RepositoryTreeService } from './application/services/register-tree.service';
 
 // Infrastructure repositories
 import { PlaybookRepository } from './infrastructure/repositories/playbook.repository';
 import { PlaybooksRepositoryRepository } from './infrastructure/repositories/playbooks-register.repository';
 import { GitPlaybooksRepositoryService } from './application/services/components/git-playbooks-register.service';
 import { LocalPlaybooksRepositoryService } from './infrastructure/repositories/local-playbooks-repository.service';
-import { PlaybooksRepositoryEngineService } from './application/services/components/playbooks-register-engine.service';
+import { PlaybooksRepositoryEngineService } from './application/services/engine/playbooks-register-engine.service';
 import { DefaultPlaybooksRepositoriesService } from './application/services/components/default-playbooks-register.service';
 
 // Presentation controllers
@@ -49,7 +47,7 @@ import { PLAYBOOKS_REPOSITORY_REPOSITORY } from './domain/repositories/playbooks
   providers: [
     // Application services
     PlaybookService,
-    PlaybooksRepositoryService,
+    PlaybooksRegisterService,
     TreeNodeService,
     RepositoryTreeService,
 
