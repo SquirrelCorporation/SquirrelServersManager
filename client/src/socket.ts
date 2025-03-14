@@ -1,4 +1,4 @@
-import { io, ManagerOptions, SocketOptions } from "socket.io-client";
+import { io, ManagerOptions, SocketOptions } from 'socket.io-client';
 
 // Create a singleton manager for all socket connections
 // This ensures proper multiplexing and prevents duplicate connections
@@ -11,47 +11,42 @@ const socketOptions: Partial<ManagerOptions & SocketOptions> = {
   transports: ['websocket'],
   // Add explicit multiplexing options for Socket.IO
   forceNew: false, // Don't force new manager for namespaces
-  multiplex: true // Enable multiplexing (default, but explicit for clarity)
+  multiplex: true, // Enable multiplexing (default, but explicit for clarity)
 };
 
 // Create a single instance to share across the application
-const socketManager = io(socketOptions);
 const sshSocketManager = io('/ssh', socketOptions);
 const sftpSocketManager = io('/sftp', socketOptions);
+const containerSocketManager = io('/containers', socketOptions);
+const notificationSocketManager = io('/notifications', socketOptions);
+const diagnosticSocketManager = io('/diagnostic', socketOptions);
+const containerLiveLogsSocketManager = io(
+  '/containers-live-logs',
+  socketOptions,
+);
 
 // Export the socket instances
-export const socket = socketManager;
 export const sshSocket = sshSocketManager;
 export const sftpSocket = sftpSocketManager;
-
-// Add debugging info for socket connections
-socket.on('connect', () => {
-  console.log('Default socket connected:', {
-    id: socket.id, 
-    connected: socket.connected,
-    namespace: socket.nsp
-  });
-});
+export const containerSocket = containerSocketManager;
+export const notificationSocket = notificationSocketManager;
+export const diagnosticSocket = diagnosticSocketManager;
+export const containerLiveLogsSocket = containerLiveLogsSocketManager;
 
 sshSocket.on('connect', () => {
   console.log('SSH socket connected:', {
-    id: sshSocket.id, 
+    id: sshSocket.id,
     connected: sshSocket.connected,
-    namespace: sshSocket.nsp
+    namespace: sshSocket.nsp,
   });
 });
 
 sftpSocket.on('connect', () => {
   console.log('SFTP socket connected:', {
-    id: sftpSocket.id, 
+    id: sftpSocket.id,
     connected: sftpSocket.connected,
-    namespace: sftpSocket.nsp
+    namespace: sftpSocket.nsp,
   });
-});
-
-// Better error handling with details
-socket.on('connect_error', (error) => {
-  console.error('Socket connection error:', error);
 });
 
 sshSocket.on('connect_error', (error) => {
@@ -70,15 +65,15 @@ sshSocket.on('disconnect', (reason) => {
 // Add message success tracking for SSH
 let lastSshMessageTime = 0;
 const originalEmit = sshSocket.emit;
-sshSocket.emit = function(...args: any[]) {
+sshSocket.emit = function (...args: any[]) {
   const eventName = args[0];
   console.log(`Emitting event: ${eventName}`);
   lastSshMessageTime = Date.now();
-  
+
   // Add a wrapper to track server responses on emitWithAck
   if (args[0] === 'ssh:startSession') {
     console.log('Starting SSH session...');
   }
-  
+
   return originalEmit.apply(this, args);
 } as any;

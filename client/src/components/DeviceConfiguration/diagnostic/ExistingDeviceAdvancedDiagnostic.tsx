@@ -1,6 +1,6 @@
 import { MedicalSearchDiagnosisSolid } from '@/components/Icons/CustomIcons';
 import { postDeviceDiagnostic } from '@/services/rest/device';
-import { socket } from '@/socket';
+import { diagnosticSocket as socket } from '@/socket';
 import { history } from '@umijs/max';
 import {
   Avatar,

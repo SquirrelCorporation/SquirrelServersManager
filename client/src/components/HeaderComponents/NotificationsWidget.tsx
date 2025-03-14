@@ -7,7 +7,7 @@ import {
   getAllNotifications,
   markAsAllSeen,
 } from '@/services/rest/notifications';
-import { socket } from '@/socket';
+import { notificationSocket as socket } from '@/socket';
 import {
   CheckSquareOutlined,
   CloseOutlined,
@@ -24,7 +24,7 @@ import {
   Typography,
 } from 'antd';
 import moment from 'moment';
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { API, SsmEvents } from 'ssm-shared-lib';
 
 const customizeRenderEmpty = () => (

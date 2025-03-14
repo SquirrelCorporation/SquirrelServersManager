@@ -1,7 +1,7 @@
 import TerminalCore, {
   TerminalCoreHandles,
 } from '@/components/Terminal/TerminalCore';
-import { socket } from '@/socket';
+import { containerLiveLogsSocket as socket } from '@/socket';
 import { useParams } from '@@/exports';
 import { message } from 'antd';
 import React, { useEffect, useImperativeHandle, useRef } from 'react';
