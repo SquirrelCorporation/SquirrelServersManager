@@ -9,7 +9,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
+import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { CONTAINER_STACKS_SERVICE, IContainerStacksService } from '../../application/interfaces/container-stacks-service.interface';
 import { ContainerCustomStack, IContainerCustomStackRepositoryEntity } from '../../domain/entities/container-custom-stack.entity';
 

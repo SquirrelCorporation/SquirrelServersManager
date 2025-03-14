@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../../guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { AnsibleVaultService } from '../../application/services/ansible-vault.service';
 import { CreateVaultDto, UpdateVaultDto, VaultPasswordResponseDto } from '../dto/ansible-vault.dto';
 

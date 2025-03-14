@@ -8,7 +8,6 @@ export interface IPlaybooksRegister {
   uuid: string;
   name: string;
   description?: string;
-  path: string;
   type: 'local' | 'git';
   enabled: boolean;
   ignoreSSLErrors?: boolean;

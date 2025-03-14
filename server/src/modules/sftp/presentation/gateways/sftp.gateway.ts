@@ -25,11 +25,6 @@ import {
 
 @WebSocketGateway({
   namespace: '/sftp',
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST'],
-  },
-  transports: ['websocket', 'polling'],
 })
 export class SftpGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger = new Logger(SftpGateway.name);
@@ -51,15 +46,15 @@ export class SftpGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   handleConnection(client: Socket) {
-    this.logger.log(`Client connected: ${client.id}`);
+    this.logger.log(`Client connected (sftp): ${client.id}`);
     if (client.nsp) {
-      this.logger.debug(`Client namespace: ${client.nsp.name}`);
+      this.logger.debug(`Client namespace (sftp): ${client.nsp.name}`);
     }
-    this.logger.debug(`Client handshake: ${JSON.stringify(client.handshake)}`);
+    this.logger.debug(`Client handshake (sftp): ${JSON.stringify(client.handshake)}`);
   }
 
   handleDisconnect(client: Socket) {
-    this.logger.log(`Client disconnected: ${client.id}`);
+    this.logger.log(`Client disconnected (sftp): ${client.id}`);
     this.sftpService.closeClientSessions(client.id);
   }
 

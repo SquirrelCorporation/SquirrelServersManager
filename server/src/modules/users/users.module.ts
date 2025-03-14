@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { JwtModule } from '@nestjs/jwt';
+import { SECRET } from '../../config';
 import { UsersService } from './application/services/users.service';
 import { UsersController } from './presentation/controllers/users.controller';
 import { UserRepository } from './infrastructure/repositories/user.repository';
@@ -13,6 +15,10 @@ import { UserRepositoryMapper } from './infrastructure/mappers/user-repository.m
     MongooseModule.forFeature([
       { name: USER, schema: UserSchema },
     ]),
+    JwtModule.register({
+      secret: SECRET,
+      signOptions: { expiresIn: '24h' },
+    }),
   ],
   controllers: [UsersController],
   providers: [

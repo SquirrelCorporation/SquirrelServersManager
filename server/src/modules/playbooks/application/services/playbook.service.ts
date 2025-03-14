@@ -1,13 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { API, SsmAnsible } from 'ssm-shared-lib';
-import { ExtraVarsService } from '@modules/ansible';
+import { AnsibleCommandService, ExtraVarsService } from '@modules/ansible';
 import { IAnsibleVault } from '@modules/ansible-vault';
 import { IUser } from '@modules/users/domain/entities/user.entity';
 import { IShellWrapperService } from '@modules/shell';
 import { ICacheService } from '@infrastructure/cache';
 import { IPlaybook } from '@modules/playbooks/domain/entities/playbook.entity';
-import { Playbooks } from '../../../types/typings';
-import { Playbook } from '../../infrastructure/schemas/playbook.schema';
+import { Playbooks } from 'src/types/typings';
 import { IPlaybookRepository, PLAYBOOK_REPOSITORY } from '../../domain/repositories/playbook-repository.interface';
 
 @Injectable()
@@ -17,11 +16,12 @@ export class PlaybookService {
     private readonly playbookRepository: IPlaybookRepository,
     @Inject('ICacheService') private readonly cacheService: ICacheService,
     @Inject('SHELL_WRAPPER_SERVICE') private readonly shellWrapperService: IShellWrapperService,
-    private readonly extraVarsService: ExtraVarsService
+    private readonly extraVarsService: ExtraVarsService,
+    private readonly ansibleCommandService: AnsibleCommandService
   ) {}
 
   async completeExtraVar(
-    playbook: Playbook,
+    playbook: IPlaybook,
     target: string[] | undefined,
     extraVarsForcedValues?: API.ExtraVars,
   ) {
@@ -38,7 +38,7 @@ export class PlaybookService {
   }
 
   async executePlaybook(
-    playbook: Playbook,
+    playbook: IPlaybook,
     user: IUser,
     target: string[] | undefined,
     extraVarsForcedValues?: API.ExtraVars,
@@ -49,13 +49,19 @@ export class PlaybookService {
       target,
       extraVarsForcedValues,
     );
-    return await this.shellWrapperService.exec(
-      `ansible-playbook ${playbook.path} ${this.buildCommandOptions(user, target, substitutedExtraVars, mode, playbook.playbooksRepository?.vaults as IAnsibleVault[] | undefined)}`
-    );
+ return await this.ansibleCommandService.executePlaybookFull(
+    playbook.path,
+    user,
+    target,
+    substitutedExtraVars,
+    mode,
+    undefined,
+    playbook.playbooksRepository?.vaults as IAnsibleVault[] | undefined,
+  );
   }
 
   async executePlaybookOnInventory(
-    playbook: Playbook,
+    playbook: IPlaybook,
     user: IUser,
     inventoryTargets?: Playbooks.All & Playbooks.HostGroups,
     extraVarsForcedValues?: API.ExtraVars,
@@ -66,30 +72,18 @@ export class PlaybookService {
       undefined,
       extraVarsForcedValues,
     );
-    return await this.shellWrapperService.exec(
-      `ansible-playbook ${playbook.path} ${this.buildInventoryCommandOptions(user, inventoryTargets, substitutedExtraVars, execUuid, playbook.playbooksRepository?.vaults as IAnsibleVault[] | undefined)}`
+    return await this.ansibleCommandService.executePlaybookOnInventory(
+    playbook.path,
+    user,
+    inventoryTargets,
+    substitutedExtraVars,
+    undefined,
+    undefined,
+    execUuid,
+    playbook.playbooksRepository?.vaults as IAnsibleVault[] | undefined,
     );
   }
 
-  private buildCommandOptions(
-    user: IUser,
-    target: string[] | undefined,
-    extraVars?: API.ExtraVars,
-    mode?: SsmAnsible.ExecutionMode,
-    vaults?: IAnsibleVault[]
-  ): string {
-    return '';
-  }
-
-  private buildInventoryCommandOptions(
-    user: IUser,
-    inventoryTargets?: Playbooks.All & Playbooks.HostGroups,
-    extraVars?: API.ExtraVars,
-    execUuid?: string,
-    vaults?: IAnsibleVault[]
-  ): string {
-    return '';
-  }
 
   async addExtraVarToPlaybook(playbook: IPlaybook, extraVar: API.ExtraVar) {
     if (playbook.extraVars?.some(e => e.extraVar === extraVar.extraVar)) {

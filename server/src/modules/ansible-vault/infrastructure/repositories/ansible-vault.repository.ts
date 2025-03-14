@@ -6,6 +6,7 @@ import { IAnsibleVaultRepository } from '../../domain/repositories/ansible-vault
 import { IAnsibleVault } from '../../domain/entities/ansible-vault.entity';
 import { ANSIBLE_VAULT, AnsibleVaultDocument } from '../schemas/ansible-vault.schema';
 import { AnsibleVaultRepositoryMapper } from '../mappers/ansible-vault-repository.mapper';
+import { PlaybooksRegister } from '../../../playbooks/infrastructure/schemas/playbooks-register.schema';
 import PinoLogger from '../../../../logger';
 
 const logger = PinoLogger.child({ module: 'AnsibleVaultRepository' });
@@ -15,7 +16,7 @@ export class AnsibleVaultRepository implements IAnsibleVaultRepository {
   constructor(
     @InjectModel(ANSIBLE_VAULT) private ansibleVaultModel: Model<AnsibleVaultDocument>,
     private readonly mapper: AnsibleVaultRepositoryMapper,
-    @InjectModel('PlaybooksRepository') private readonly playbooksRepositoryModel: MongooseModel<any>
+    @InjectModel(PlaybooksRegister.name) private readonly playbooksRepositoryModel: MongooseModel<any>
   ) {}
 
   async findAll(): Promise<IAnsibleVault[] | null> {

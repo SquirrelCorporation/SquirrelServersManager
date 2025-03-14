@@ -16,7 +16,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { SsmAnsible } from 'ssm-shared-lib';
-import { JwtAuthGuard } from '../../../../guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { DevicesService } from '../../application/services/devices.service';
 import { CreateDeviceAuthDto, UpdateDeviceAuthDto } from '../dtos/device-auth.dto';
 import { UpdateDockerAuthDto } from '../dtos/update-docker-auth.dto';
@@ -32,7 +32,7 @@ const fileFilter = (req: any, file: Express.Multer.File, callback: any) => {
   callback(null, true);
 };
 
-@Controller('api/devices')
+@Controller('devices')
 @UseGuards(JwtAuthGuard)
 export class DevicesAuthController {
   constructor(

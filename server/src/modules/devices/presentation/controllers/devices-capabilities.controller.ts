@@ -5,7 +5,7 @@ import {
 } from '../dtos/device-capabilities.dto';
 import { DeviceMapper } from '../mappers/device.mapper';
 
-@Controller('api/devices')
+@Controller('devices')
 export class DevicesCapabilitiesController {
   constructor(
     private readonly devicesService: DevicesService,

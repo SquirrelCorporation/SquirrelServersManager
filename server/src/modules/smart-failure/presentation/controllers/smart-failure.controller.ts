@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards, Inject } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
 import { ISmartFailureService } from '../../application/interfaces/smart-failure.service.interface';
 import { SmartFailureRequestDto } from '../dtos/smart-failure.dto';
@@ -9,7 +9,10 @@ import { SmartFailureRequestDto } from '../dtos/smart-failure.dto';
 @Controller('ansible/smart-failure')
 @UseGuards(JwtAuthGuard)
 export class SmartFailureController {
-  constructor(private readonly smartFailureService: ISmartFailureService) {}
+  constructor(
+    @Inject('ISmartFailureService')
+    private readonly smartFailureService: ISmartFailureService
+  ) {}
 
   /**
    * Get smart failure analysis for a specific Ansible execution

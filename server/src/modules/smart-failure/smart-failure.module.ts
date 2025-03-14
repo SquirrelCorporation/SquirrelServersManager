@@ -11,12 +11,15 @@ import { SmartFailureController } from './presentation/controllers/smart-failure
   imports: [LogsModule],
   controllers: [SmartFailureController],
   providers: [
-    SmartFailureService,
+    {
+      provide: 'ISmartFailureService',
+      useClass: SmartFailureService,
+    },
     {
       provide: 'IAnsibleLogsRepository',
       useClass: AnsibleLogsRepository,
     },
   ],
-  exports: [SmartFailureService],
+  exports: ['ISmartFailureService'],
 })
 export class SmartFailureModule {}

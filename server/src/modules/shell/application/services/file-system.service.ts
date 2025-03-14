@@ -130,7 +130,7 @@ export class FileSystemService implements IFileSystemService {
       fileExist = fs.realpathSync(path.resolve(fullPath));
     } catch {}
     if (fileExist) {
-      throw new Error('Directory or file already exists');
+      throw new Error(`Directory or file already exists: ${fullPath}`);
     }
   }
 }

@@ -56,10 +56,10 @@ export class DashboardService {
 
     const minMem = await this.cacheService.get(
       SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
-    );
+    ) as string;
     const maxCpu = await this.cacheService.get(
       SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
-    );
+    ) as string;
 
     const values = {
       currentMem:

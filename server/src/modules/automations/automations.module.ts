@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ContainersModule } from '../containers/containers.module';
 import { PlaybooksModule } from '../playbooks/playbooks.module';
 import { AnsibleModule } from '../ansible/ansible.module';
@@ -13,6 +14,7 @@ import { AutomationsController } from './presentation/controllers/automations.co
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Automation.name, schema: AutomationSchema }]),
+    ScheduleModule,
     ContainersModule,
     PlaybooksModule,
     AnsibleModule,

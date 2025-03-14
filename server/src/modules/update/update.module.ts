@@ -5,7 +5,7 @@ import { CacheModule } from '../../infrastructure/cache';
 import { UpdateService } from './services/update.service';
 
 @Module({
-  imports: [ScheduleModule.forRoot(), HttpModule, CacheModule],
+  imports: [ScheduleModule, HttpModule, CacheModule],
   providers: [UpdateService],
   exports: [UpdateService],
 })

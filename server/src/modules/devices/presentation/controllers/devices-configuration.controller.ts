@@ -3,7 +3,7 @@ import { DevicesService } from '../../application/services/devices.service';
 import { DockerConfigurationDto, ProxmoxConfigurationDto, SystemInformationConfigurationDto } from '../dtos/device-configuration.dto';
 import { DeviceMapper } from '../mappers/device.mapper';
 
-@Controller('api/devices')
+@Controller('devices')
 export class DevicesConfigurationController {
   constructor(
     private readonly devicesService: DevicesService,
@@ -87,4 +87,4 @@ export class DevicesConfigurationController {
     const updatedDevice = this.deviceMapper.updateEntity(device, updateData);
     return this.devicesService.update(updatedDevice);
   }
-} 
+}

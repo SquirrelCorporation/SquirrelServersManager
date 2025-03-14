@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
-import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../../ansible-vault';
+import { DEFAULT_VAULT_ID, VaultCryptoService } from '@modules/ansible-vault';
 import { ContainerCustomStacksRepositoryRepository } from '../../infrastructure/repositories/container-custom-stacks-repository.repository';
 import { ContainerCustomStackRepository } from '../../infrastructure/repositories/container-custom-stack.repository';
 import { ShellWrapperService } from '../../../shell';
@@ -23,10 +23,12 @@ export class ContainerCustomStacksRepositoryEngineService {
     private readonly containerCustomStackRepository: ContainerCustomStackRepository,
     private readonly shellWrapperService: ShellWrapperService,
     @Inject(forwardRef(() => ContainerStacksService))
-    private readonly containerStacksService: ContainerStacksService
+    private readonly containerStacksService: ContainerStacksService,
+    private readonly vaultCryptoService: VaultCryptoService
   ) {}
 
   async init(): Promise<void> {
+    this.logger.log('Initializing ContainerCustomStacksRepositoryEngineService');
     try {
       await this.registerRepositories();
     } catch (error) {
@@ -60,7 +62,7 @@ export class ContainerCustomStacksRepositoryEngineService {
 
     let decryptedAccessToken = '';
     try {
-      const result = await vaultDecrypt(accessToken, DEFAULT_VAULT_ID);
+      const result = await this.vaultCryptoService.decrypt(accessToken, DEFAULT_VAULT_ID);
       if (!result) {
         throw new Error('Error decrypting access token');
       }
@@ -103,6 +105,7 @@ export class ContainerCustomStacksRepositoryEngineService {
   }
 
   async registerRepositories(): Promise<void> {
+    this.logger.log('Registering repositories');
     const repositories = await this.containerCustomStacksRepositoryRepository.findAll();
     this.logger.log(`Found ${repositories?.length} repositories in database.`);
 

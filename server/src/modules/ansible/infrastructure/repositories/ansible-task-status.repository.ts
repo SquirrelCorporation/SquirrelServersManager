@@ -36,4 +36,8 @@ export class AnsibleTaskStatusRepository implements IAnsibleTaskStatusRepository
       updatedAt: doc.updatedAt,
     };
   }
+
+  async deleteAllByIdent(taskIdent: string): Promise<void> {
+    await this.ansibleTaskStatusModel.deleteMany({ taskIdent }).exec();
+  }
 }

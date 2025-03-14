@@ -21,6 +21,7 @@
       "@common/*": ["src/common/*"],
       "@config/*": ["src/config/*"],
       "@infrastructure/*": ["src/infrastructure/*"],
+      "@middlewares/*": ["src/middlewares/*"], 
     },
     "typeRoots": [
       "./src/types",

@@ -7,73 +7,80 @@ import {
   Param,
   Post,
   Put,
+  Res,
   UseGuards,
 } from '@nestjs/common';
-import { RolesGuard } from '../../../../guards/roles.guard';
+import { Response } from 'express';
+import { SESSION_DURATION } from 'src/config';
+import { AuthFailureError } from '@middlewares/api/ApiError';
+import { JwtService } from '@nestjs/jwt';
+import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { UsersService } from '../../application/services/users.service';
 import { UserMapper } from '../mappers/user.mapper';
 import { IUser } from '../../domain/entities/user.entity';
-import { JwtAuthGuard } from '../../../../guards/jwt-auth.guard';
 import { User } from '../../../../decorators/user.decorator';
-import { Roles } from '../../../../decorators/roles.decorator';
+import { LoginDto } from '../dtos/login.dto';
+import { LoginResponseDto } from '../dtos/login-response.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly userMapper: UserMapper,
+    private readonly jwtService: JwtService,
   ) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
   async getAllUsers() {
     const users = await this.usersService.getAllUsers();
-    return {
-      success: true,
-      message: 'Users retrieved successfully',
-      data: this.userMapper.toResponseList(users),
+    return { hasUsers: users?.length && users.length > 0
     };
   }
 
-  @Get('profile')
-  @UseGuards(JwtAuthGuard)
-  async getUserProfile(@User() user) {
-    const userProfile = await this.usersService.findUserByEmail(user.email);
-    return {
-      success: true,
-      message: 'User profile retrieved successfully',
-      data: this.userMapper.toResponse(userProfile),
-    };
-  }
+  @Post('login')
+  async login(
+    @Body() loginDto: LoginDto,
+    @Res({ passthrough: true }) response: Response
+  ): Promise<LoginResponseDto> {
+    const { username, password } = loginDto;
 
-  @Post('first-user')
-  async createFirstUser(
-    @Body() userData: { name: string; email: string; password: string; avatar?: string },
-  ) {
-    try {
-      const { name, email, password, avatar } = userData;
-      const user = await this.usersService.createFirstAdminUser(name, email, password, avatar);
-
-      return {
-        success: true,
-        message: 'First user created successfully',
-        data: this.userMapper.toResponse(user),
-      };
-    } catch (error: unknown) {
-      throw new HttpException(
-        {
-          success: false,
-          message: error instanceof Error ? error.message : 'Error creating first user',
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+    if (!password || !username) {
+      throw new HttpException({
+        success: false,
+        message: 'Identification is incorrect!',
+        data: {
+          isLogin: false,
+        }
+      }, HttpStatus.UNAUTHORIZED);
     }
+
+    const user = await this.usersService.findUserByEmailAndPassword(username, password);
+
+    if (!user) {
+      throw new AuthFailureError('Identification is incorrect!');
+    }
+
+    const payload = {
+      email: user.email,
+      expiration: Date.now() + SESSION_DURATION,
+    };
+
+    const token = this.jwtService.sign(payload);
+
+    // Set the cookie using passthrough response
+    response.cookie('jwt', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+    });
+
+    return {
+      currentAuthority: user.role,
+    };
   }
+
 
   @Post()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
+  @UseGuards(JwtAuthGuard)
   async createUser(@Body() userData: Partial<IUser>) {
     try {
       const user = await this.usersService.createUser(userData as IUser);
@@ -160,4 +167,10 @@ export class UsersController {
       data: this.userMapper.toResponse(updatedUser),
     };
   }
+
+  @Get('current')
+  @UseGuards(JwtAuthGuard)
+  async getCurrentUser(@User() user) {
+    return this.usersService.getCurrentUser(user)
+    }
 }

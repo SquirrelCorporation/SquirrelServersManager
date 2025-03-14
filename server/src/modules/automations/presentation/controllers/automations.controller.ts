@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { JwtAuthGuard } from '../../../../guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { SuccessResponse } from '../../../../middlewares/api/ApiResponse';
 import { AutomationsService } from '../../application/services/automations.service';
 import { Automation } from '../../domain/entities/automation.entity';

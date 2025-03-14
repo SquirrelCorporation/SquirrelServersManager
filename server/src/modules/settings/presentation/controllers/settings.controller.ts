@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Inject, Param, Post, Res, UseGuards, UsePipes } from '@nestjs/common';
 import { Response } from 'express';
 import { SettingsKeys } from 'ssm-shared-lib';
-import { JwtAuthGuard } from '../../../../guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { AdvancedOperationsService } from '../../application/services/advanced-operations.service';
 import { InformationService } from '../../application/services/information.service';
 import { ISettingsService } from '../../application/interfaces/settings-service.interface';

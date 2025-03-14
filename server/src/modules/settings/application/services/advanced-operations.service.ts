@@ -4,7 +4,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IServerLogsRepository } from '../../../logs/domain/repositories/server-logs-repository.interface';
 import { IAnsibleLogsRepository } from '../../../logs/domain/repositories/ansible-logs-repository.interface';
-import { PlaybooksRepositoryEngineService } from '../../../playbooks/services/playbooks-repository-engine.service';
 
 @Injectable()
 export class AdvancedOperationsService {
@@ -16,7 +15,6 @@ export class AdvancedOperationsService {
     private readonly serverLogsRepository: IServerLogsRepository,
     @Inject('ANSIBLE_LOGS_REPOSITORY')
     private readonly ansibleLogsRepository: IAnsibleLogsRepository,
-    private readonly playbooksRepositoryEngineService: PlaybooksRepositoryEngineService,
     @InjectModel('Playbook') private readonly playbookModel: Model<any>
   ) {}
 
@@ -57,19 +55,6 @@ export class AdvancedOperationsService {
       // Drop the Playbook collection
       await this.playbookModel.db.collection('playbooks').drop();
 
-      // Get all repositories and re-register them
-      const components = this.playbooksRepositoryEngineService.getState();
-
-      // Deregister all repositories
-      for (const uuid in components) {
-        await this.playbooksRepositoryEngineService.deregisterRepository(uuid);
-      }
-
-      // Re-register all repositories from the database
-      const repositories = await this.playbookModel.db.collection('playbookrepositories').find().toArray();
-      for (const repository of repositories) {
-        await this.playbooksRepositoryEngineService.registerRepository(repository);
-      }
 
       this.logger.log('Playbooks model deleted and resynced successfully');
     } catch (error: unknown) {

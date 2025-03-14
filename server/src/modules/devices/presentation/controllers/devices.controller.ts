@@ -4,7 +4,7 @@ import { CreateDeviceDto, UpdateDeviceDto } from '../dtos/device.dto';
 import { CreateDeviceAuthDto, UpdateDeviceAuthDto } from '../dtos/device-auth.dto';
 import { DeviceMapper } from '../mappers/device.mapper';
 
-@Controller('api/devices')
+@Controller('devices')
 export class DevicesController {
   constructor(
     private readonly devicesService: DevicesService,

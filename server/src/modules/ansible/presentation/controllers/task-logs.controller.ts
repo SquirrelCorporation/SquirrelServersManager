@@ -1,7 +1,7 @@
 import { parse } from 'url';
 import { Controller, Get, Logger, Param, Query, Req, UseGuards } from '@nestjs/common';
 import { Request} from 'express';
-import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
+import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { TaskLogsService } from '../../application/services/task-logs.service';
 import { TaskLogsQueryDto } from '../dtos/task-logs-query.dto';
 

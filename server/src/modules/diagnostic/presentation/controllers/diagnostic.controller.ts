@@ -1,5 +1,5 @@
 import { Controller, Inject, Param, Post, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../../guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { InternalError, NotFoundError } from '../../../../middlewares/api/ApiError';
 import { DiagnosticService } from '../../application/services/diagnostic.service';
 import { IDiagnosticRepository } from '../../domain/repositories/diagnostic-repository.interface';

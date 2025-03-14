@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { Model } from 'mongoose';
 import { AutomationComponent } from '../../domain/components/automation.component';
 import { Automation } from '../../domain/entities/automation.entity';
@@ -37,7 +38,10 @@ export class AutomationEngine implements OnModuleInit {
     @Inject('ANSIBLE_MODULE.TaskStatusRepository') private ansibleTaskStatusRepo: IAnsibleTaskStatusRepository,
 
     // Users module dependencies
-    @Inject('USERS_MODULE.UserRepository') private userRepo: IUserRepository
+    @Inject('USERS_MODULE.UserRepository') private userRepo: IUserRepository,
+
+    // NestJS scheduler registry
+    private readonly schedulerRegistry: SchedulerRegistry
   ) {}
 
   /**
@@ -90,7 +94,8 @@ export class AutomationEngine implements OnModuleInit {
         this.playbookRepo,
         this.ansibleTaskStatusRepo,
         this.userRepo,
-        this.playbookUseCases
+        this.playbookUseCases,
+        this.schedulerRegistry
       ));
 
       // Initialize the component

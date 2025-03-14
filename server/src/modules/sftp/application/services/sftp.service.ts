@@ -4,7 +4,8 @@ import { Socket } from 'socket.io';
 import { SFTPWrapper } from 'ssh2';
 import { API, SsmEvents } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
-import { SshConnectionService } from '../../../ssh/';
+import { Client } from 'ssh2';
+import { SshConnectionService } from '@infrastructure/ssh/services/ssh-connection.service';
 import { FileStreamService } from '../../infrastructure/services/file-stream.service';
 import { SftpSessionDto } from '../../presentation/dtos/sftp-session.dto';
 import {
@@ -16,7 +17,7 @@ import {
   SftpSession,
   SftpStatusMessage,
 } from '../../domain/entities/sftp.entity';
-import { ISftpRepository } from '../../domain/repositories/sftp-repository.interface';
+import { SftpRepository } from '../../infrastructure/repositories/sftp.repository';
 import { ISftpService } from '../interfaces/sftp-service.interface';
 
 @Injectable()
@@ -28,7 +29,7 @@ export class SftpService implements ISftpService {
   constructor(
     private readonly sshConnectionService: SshConnectionService,
     private readonly fileStreamService: FileStreamService,
-    @Inject('ISftpRepository') private readonly sftpRepository: ISftpRepository
+    private readonly sftpRepository: SftpRepository
   ) {}
 
   /**
@@ -41,7 +42,8 @@ export class SftpService implements ISftpService {
 
     try {
       // Create SSH connection
-      const { ssh, host } = await this.sshConnectionService.createConnection(deviceUuid);
+      const ssh = new Client();
+      const { host } = await this.sshConnectionService.createConnection(ssh, deviceUuid);
 
       // Create session object
       const session: SftpSession = {

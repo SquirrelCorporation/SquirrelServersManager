@@ -2,10 +2,10 @@ import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { API } from 'ssm-shared-lib';
 import { FileSystemService } from '@modules/shell';
 import { PlaybookFileService } from '@modules/shell';
-import PlaybooksRegisterComponent from '@modules/playbooks/application/services/components/abstract-playbooks-register-component';
+import PlaybooksRegisterComponent from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
 import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
-import { IPlaybooksRegisterRepository } from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
-import { IPlaybookRepository } from '@modules/playbooks/domain/repositories/playbook-repository.interface';
+import { IPlaybooksRegisterRepository, PLAYBOOKS_REGISTER_REPOSITORY } from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
+import { IPlaybookRepository, PLAYBOOK_REPOSITORY } from '@modules/playbooks/domain/repositories/playbook-repository.interface';
 import { ForbiddenError, InternalError, NotFoundError } from '../../../../middlewares/api/ApiError';
 import { recursiveTreeCompletion } from '../../utils/tree-utils';
 import { PlaybooksRegisterEngineService } from './engine/playbooks-register-engine.service';
@@ -18,7 +18,9 @@ export class PlaybooksRegisterService implements OnModuleInit {
   private readonly logger = new Logger(PlaybooksRegisterService.name);
 
   constructor(
+    @Inject(PLAYBOOKS_REGISTER_REPOSITORY)
     private readonly playbooksRegisterRepository: IPlaybooksRegisterRepository,
+    @Inject(PLAYBOOK_REPOSITORY)
     private readonly playbookRepository: IPlaybookRepository,
     @Inject(PlaybooksRegisterEngineService)
     private readonly playbooksRegisterEngineService: PlaybooksRegisterEngineService,

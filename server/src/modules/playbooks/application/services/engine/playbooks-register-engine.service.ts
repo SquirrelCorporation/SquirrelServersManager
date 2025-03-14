@@ -1,12 +1,14 @@
-import { GitPlaybooksRegisterService } from '@modules/playbooks/application/services/components/git-playbooks-register.service';
-import { LocalPlaybooksRegisterService } from '@modules/playbooks/application/services/components/local-playbooks-repository.service';
-import PlaybooksRegisterComponent from '@modules/playbooks/application/services/components/abstract-playbooks-register-component';
+import { GitPlaybooksRegisterComponent } from '@modules/playbooks/application/services/components/git-playbooks-register.component';
+import { LocalPlaybooksRegisterComponent } from '@modules/playbooks/application/services/components/local-playbooks-repository.component';
+import PlaybooksRegisterComponent from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
 import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
-import { IPlaybooksRegisterRepository } from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
+import { IPlaybooksRegisterRepository, PLAYBOOKS_REGISTER_REPOSITORY } from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { SsmGit } from 'ssm-shared-lib';
+import { PlaybooksRegister } from '@modules/playbooks/infrastructure/schemas/playbooks-register.schema';
+import { GitComponentOptions, LocalComponentOptions } from '@modules/playbooks/domain/interfaces/component-options.interface';
+import { PlaybooksRegisterComponentFactory } from '../components/component-factory.service';
 
 /**
  * Service for managing playbooks repository components
@@ -19,7 +21,7 @@ export class PlaybooksRegisterEngineService {
   constructor(
     @Inject(forwardRef(() => PlaybooksRegisterComponentFactory))
     private readonly componentFactory: PlaybooksRegisterComponentFactory,
-    @InjectModel(PlaybookRegister.name)
+    @Inject(PLAYBOOKS_REGISTER_REPOSITORY)
     private readonly playbooksRegisterRepository: IPlaybooksRegisterRepository,
   ) {}
 
@@ -36,7 +38,7 @@ export class PlaybooksRegisterEngineService {
         return;
       }
 
-      let component: GitPlaybooksRegisterService | LocalPlaybooksRegisterService;
+      let component: GitPlaybooksRegisterComponent | LocalPlaybooksRegisterComponent;
 
       if (register.type === 'git') {
         const options: GitComponentOptions = {

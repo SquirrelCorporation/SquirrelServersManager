@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { PlaybooksRegister, PlaybooksRegisterSchema } from '../playbooks/infrastructure/schemas/playbooks-register.schema';
 import { AnsibleVaultService } from './application/services/ansible-vault.service';
 import { VaultCryptoService } from './application/services/vault-crypto.service';
 import { AnsibleVaultController } from './presentation/controllers/ansible-vault.controller';
@@ -12,7 +13,7 @@ import { ANSIBLE_VAULT_REPOSITORY } from './domain/repositories/ansible-vault-re
   imports: [
     MongooseModule.forFeature([
       { name: ANSIBLE_VAULT, schema: AnsibleVaultSchema },
-      { name: 'PlaybooksRepository', schema: null, collection: 'playbooksrepository' },
+      { name: PlaybooksRegister.name, schema: PlaybooksRegisterSchema },
     ]),
   ],
   controllers: [AnsibleVaultController],
@@ -27,4 +28,4 @@ import { ANSIBLE_VAULT_REPOSITORY } from './domain/repositories/ansible-vault-re
   ],
   exports: [AnsibleVaultService, VaultCryptoService],
 })
-export class AnsibleVaultModule {} 
+export class AnsibleVaultModule {}

@@ -14,6 +14,7 @@ import { ContainerLogsDto } from '../dto/container-logs.dto';
 import { ContainerLogsService } from '../services/container-logs.service';
 
 @WebSocketGateway({
+  namespace: '/containers',
   cors: {
     origin: '*',
   },

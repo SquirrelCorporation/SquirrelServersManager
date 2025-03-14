@@ -18,7 +18,7 @@ export class PlaybookRepository implements IPlaybookRepository {
     return PlaybookMapper.toDomain(created) as IPlaybook;
   }
 
-  async updateOrCreate(playbook: Partial<IPlaybook>): Promise<IPlaybook | null> {
+  async updateOrCreate(playbook: Partial<IPlaybook>): Promise<IPlaybook> {
     const updated = await this.playbookModel.findOneAndUpdate(
       { path: playbook.path },
       playbook,
@@ -27,7 +27,7 @@ export class PlaybookRepository implements IPlaybookRepository {
       .lean()
       .exec();
 
-    return PlaybookMapper.toDomain(updated);
+    return PlaybookMapper.toDomain(updated) as IPlaybook;
   }
 
   async findAll(): Promise<IPlaybook[] | null> {

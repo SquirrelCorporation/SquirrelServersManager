@@ -1,4 +1,5 @@
 import { Logger } from '@nestjs/common';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { Automations } from 'ssm-shared-lib';
 import pino from 'pino';
 import { IAnsibleTaskStatusRepository } from '@modules/ansible';
@@ -21,39 +22,38 @@ import { CronTriggerComponent } from './triggers/cron-trigger.component';
 export class AutomationComponent {
   public uuid: string;
   public name: string;
-  public trigger?: AbstractTriggerComponent;
-  public actions: AbstractActionComponent[];
+  public automationChain: any;
   public childLogger: pino.Logger<never>;
-  public automationChain: Automations.AutomationChain;
-  private automationRepository: IAutomationRepository;
+  public trigger: AbstractTriggerComponent | undefined;
+  public actions: AbstractActionComponent[] = [];
+  private readonly module = 'Automation';
 
   constructor(
     uuid: string,
     name: string,
     automationChain: any,
-    automationRepository: IAutomationRepository,
-    private containerRepo?: IContainerRepository,
-    private containerUseCases?: IContainerService,
-    private containerVolumeRepo?: IVolumeRepository,
-    private containerVolumeUseCases?: IVolumeService,
-    private playbookRepo?: IPlaybookRepository,
-    private ansibleTaskStatusRepo?: IAnsibleTaskStatusRepository,
-    private userRepo?: IUserRepository,
-    private playbookUseCases?: IPlaybookService
+    private readonly automationRepository: IAutomationRepository,
+    private readonly containerRepo?: IContainerRepository,
+    private readonly containerUseCases?: IContainerService,
+    private readonly containerVolumeRepo?: IVolumeRepository,
+    private readonly containerVolumeUseCases?: IVolumeService,
+    private readonly playbookRepo?: IPlaybookRepository,
+    private readonly ansibleTaskStatusRepo?: IAnsibleTaskStatusRepository,
+    private readonly userRepo?: IUserRepository,
+    private readonly playbookUseCases?: IPlaybookService,
+    private readonly schedulerRegistry?: SchedulerRegistry
   ) {
     this.uuid = uuid;
     this.name = name;
-    this.automationRepository = automationRepository;
+    this.automationChain = automationChain;
     this.childLogger = logger.child(
       {
-        module: `Automation`,
-        moduleId: `${this.uuid}`,
+        module: `${this.module}`,
+        moduleId: `${uuid}`,
         moduleName: `${name}`,
       },
       { msgPrefix: '[AUTOMATION] - ' },
     );
-    this.automationChain = automationChain;
-    this.actions = [];
   }
 
   async init() {
@@ -66,7 +66,15 @@ export class AutomationComponent {
               this.childLogger.error('Missing cronValue in automation chain');
               throw new Error('Missing cronValue in automation chain');
             }
-            this.trigger = new CronTriggerComponent(this.automationChain.cronValue, this);
+            if (!this.schedulerRegistry) {
+              this.childLogger.error('Missing schedulerRegistry in automation component');
+              throw new Error('Missing schedulerRegistry in automation component');
+            }
+            this.trigger = new CronTriggerComponent(
+              this.automationChain.cronValue,
+              this,
+              this.schedulerRegistry
+            );
             break;
           default:
             throw new Error(`Unknown trigger type ${this.automationChain.trigger}`);
@@ -77,55 +85,74 @@ export class AutomationComponent {
       }
 
       // Initialize actions based on the automation chain
-      if (this.automationChain && Array.isArray(this.automationChain.actions)) {
-        const actionsChain = this.automationChain.actions;
-        this.actions = actionsChain.map((actionChain) => {
-          if (!actionChain || !actionChain.action) {
-            this.childLogger.error('Invalid action in automation chain');
-            throw new Error('Invalid action in automation chain');
-          }
-
-          switch (actionChain.action) {
-            case Automations.Actions.DOCKER:
-              return new DockerActionComponent(
-                this.uuid,
-                this.name,
-                actionChain.dockerAction,
-                actionChain.dockerContainers,
-                this.automationRepository,
-                this.containerRepo,
-                this.containerUseCases
-              );
-            case Automations.Actions.PLAYBOOK:
-              return new PlaybookActionComponent(
-                this.uuid,
-                this.name,
-                actionChain.playbook,
-                actionChain.actionDevices,
-                actionChain.extraVarsForcedValues,
-                this.automationRepository,
-                this.playbookRepo,
-                this.ansibleTaskStatusRepo,
-                this.userRepo,
-                this.playbookUseCases
-              );
-            case Automations.Actions.DOCKER_VOLUME:
-              return new DockerVolumeActionComponent(
-                this.uuid,
-                this.name,
-                actionChain.dockerVolumeAction,
-                actionChain.dockerVolumes,
-                this.automationRepository,
-                this.containerVolumeRepo,
-                this.containerVolumeUseCases
-              );
-            default:
-              throw new Error(`Unknown action type`);
-          }
-        });
-      } else {
+      if (!this.automationChain.actions || !Array.isArray(this.automationChain.actions)) {
         this.childLogger.error('Invalid automation chain structure: missing actions array');
         throw new Error('Invalid automation chain structure: missing actions array');
+      }
+
+      // Process each action in the chain
+      for (const actionConfig of this.automationChain.actions) {
+        if (!actionConfig || !actionConfig.action) {
+          this.childLogger.error('Invalid action in automation chain');
+          throw new Error('Invalid action in automation chain');
+        }
+
+        let actionComponent: AbstractActionComponent;
+
+        switch (actionConfig.action) {
+          case Automations.Actions.DOCKER:
+            if (!this.containerRepo || !this.containerUseCases) {
+              throw new Error('Container dependencies not provided for Docker action');
+            }
+            actionComponent = new DockerActionComponent(
+              this.uuid,
+              this.name,
+              actionConfig.dockerAction,
+              actionConfig.dockerContainers,
+              this.automationRepository,
+              this.containerRepo,
+              this.containerUseCases,
+            );
+            break;
+
+          case Automations.Actions.DOCKER_VOLUME:
+            if (!this.containerVolumeRepo || !this.containerVolumeUseCases) {
+              throw new Error('Container volume dependencies not provided for Docker volume action');
+            }
+            actionComponent = new DockerVolumeActionComponent(
+              this.uuid,
+              this.name,
+              actionConfig.volumeAction,
+              actionConfig.volumeNames,
+              this.automationRepository,
+              this.containerVolumeRepo,
+              this.containerVolumeUseCases,
+            );
+            break;
+
+          case Automations.Actions.PLAYBOOK:
+            if (!this.playbookRepo || !this.ansibleTaskStatusRepo || !this.userRepo || !this.playbookUseCases) {
+              throw new Error('Playbook dependencies not provided for Playbook action');
+            }
+            actionComponent = new PlaybookActionComponent(
+              this.uuid,
+              this.name,
+              actionConfig.playbookId,
+              actionConfig.playbookName,
+              actionConfig.playbookPath,
+              this.automationRepository,
+              this.playbookRepo,
+              this.ansibleTaskStatusRepo,
+              this.userRepo,
+              this.playbookUseCases,
+            );
+            break;
+
+          default:
+            throw new Error('Unknown action type');
+        }
+
+        this.actions.push(actionComponent);
       }
 
       this.childLogger.info(

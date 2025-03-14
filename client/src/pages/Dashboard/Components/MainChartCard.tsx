@@ -1,7 +1,7 @@
 import {
   getDashboardAveragedDevicesStats,
   getDashboardDevicesStats,
-} from '@/services/rest/devicestat';
+} from '@/services/rest/stastistics';
 import Devicestatus from '@/utils/devicestatus';
 import { getTimeDistance } from '@/utils/time';
 import { LoadingOutlined } from '@ant-design/icons';

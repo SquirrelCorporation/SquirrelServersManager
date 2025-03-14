@@ -1,31 +1,20 @@
-import { Module } from '@nestjs/common';
+import { Global, Logger, Module } from '@nestjs/common';
+import { SshInfrastructureModule } from '@infrastructure/ssh/ssh-infrastructure.module';
 import { DevicesModule } from '../devices/devices.module';
-import { DEVICE_REPOSITORY } from '../devices/domain/repositories/device-repository.interface';
-import { DEVICE_AUTH_REPOSITORY } from '../devices/domain/repositories/device-auth-repository.interface';
-import { SshConnectionService } from './application/services/ssh-connection.service';
 import { SshTerminalService } from './application/services/ssh-terminal.service';
-import { SshRepository } from './infrastructure/repositories/ssh.repository';
 import { SshGateway } from './presentation/gateways/ssh.gateway';
 
 @Module({
-  imports: [DevicesModule],
-  providers: [
-    SshGateway,
-    SshConnectionService,
-    SshTerminalService,
-    {
-      provide: 'ISshRepository',
-      useClass: SshRepository,
-    },
-    {
-      provide: 'DeviceRepository',
-      useExisting: DEVICE_REPOSITORY,
-    },
-    {
-      provide: 'DeviceAuthRepository',
-      useExisting: DEVICE_AUTH_REPOSITORY,
-    },
+  imports: [
+    DevicesModule,
+    // Import the infrastructure module to get SshConnectionService
+    // This helps ensure it's only instantiated once
+    SshInfrastructureModule,
   ],
-  exports: [SshConnectionService, SshTerminalService],
+  providers: [
+    SshGateway, // The WebSocket gateway for SSH
+    SshTerminalService, // Service for terminal sessions
+  ],
 })
+@Global() // Make this a global module
 export class SshModule {}

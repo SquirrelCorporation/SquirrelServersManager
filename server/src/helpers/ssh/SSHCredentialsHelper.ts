@@ -1,13 +1,17 @@
 import Dockerode from 'dockerode';
 import { ConnectConfig } from 'ssh2';
 import { SsmAnsible, SsmProxmox } from 'ssm-shared-lib';
+import Vault from 'src/helpers/vault-crypto/Vault';
+import { VAULT_PWD } from 'src/config';
 import { ProxmoxEngineOptions } from '../proxmox-api';
 import { IDevice, IDeviceAuth } from '../../modules/devices';
+
 
 const DEFAULT_VAULT_ID = 'ssm';
 // TODO: Import from ansible-vault module????
 const vaultDecrypt = async (str: string, vault: string) => {
-  return str;
+  const _vault = new Vault({ password: VAULT_PWD });
+  return await _vault.decrypt(str, vault);
 }
 
 class SSHCredentialsHelper {

@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { firstValueFrom } from 'rxjs';
 import * as semver from 'semver';
 import { SettingsKeys } from 'ssm-shared-lib';
@@ -15,7 +15,8 @@ export class UpdateService implements OnModuleInit {
 
   constructor(
     private readonly httpService: HttpService,
-    @Inject('ICacheService') private readonly cacheService: ICacheService
+    @Inject('ICacheService') private readonly cacheService: ICacheService,
+    private readonly schedulerRegistry: SchedulerRegistry
   ) {}
 
   /**
@@ -23,6 +24,17 @@ export class UpdateService implements OnModuleInit {
    */
   onModuleInit() {
     this.logger.log('UpdateService initialized');
+    try {
+      try {
+        // Try to delete any existing job first
+        this.schedulerRegistry.deleteCronJob('checkVersion');
+      } catch {
+        // Job didn't exist, which is fine
+      }
+      this.logger.log('Version check cron job registered');
+    } catch (error) {
+      this.logger.error('Failed to register version check cron job:', error);
+    }
   }
 
   /**
@@ -64,7 +76,7 @@ export class UpdateService implements OnModuleInit {
    * Runs every 30 minutes
    * @returns Promise that resolves when the check is complete
    */
-  @Cron(CronExpression.EVERY_30_MINUTES)
+  @Cron(CronExpression.EVERY_30_MINUTES, { name: 'checkVersion' })
   public async checkVersion(): Promise<void> {
     this.logger.log('Checking for updates...');
     const localVersion = version;

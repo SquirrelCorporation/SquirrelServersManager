@@ -9,7 +9,6 @@ export interface SshSession {
   ssh: Client;
   stream?: ClientChannel;
   ttyOptions: PseudoTtyOptions;
-  host?: string;
 }
 
 export interface SshConnectionOptions {

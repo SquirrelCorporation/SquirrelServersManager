@@ -19,13 +19,12 @@ export interface IPlaybooksRegisterRepository {
    */
   findAllActive(): Promise<IPlaybooksRegister[]>;
 
-  /**
-   * Find a repository by UUID and ensure it exists
-   * @param uuid Repository UUID
-   * @returns The repository
-   * @throws NotFoundError if the repository is not found
+    /**
+   * Find all active repositories
+   * @returns Array of active repositories
    */
-  findByUuidOrFail(uuid: string): Promise<IPlaybooksRegister>;
+  findAllByType(type: any): Promise<IPlaybooksRegister[]>;
+
 
   /**
    * Update a repository

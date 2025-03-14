@@ -1,5 +1,5 @@
 import { DeviceStatType } from '@/components/Charts/DeviceStatType';
-import { getDeviceStats } from '@/services/rest/devicestat';
+import { getDeviceStats } from '@/services/rest/stastistics';
 import { Tiny } from '@ant-design/charts';
 import { message } from 'antd';
 import moment from 'moment';

@@ -1,9 +1,4 @@
 import { DirectoryTree } from 'ssm-shared-lib';
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { ExtraVarsService } from '../../ansible'
-import { Playbook, PlaybookDocument } from '../components/playbooks-repository.component';
 
 export function recursivelyFlattenTree(
   tree: DirectoryTree.TreeNode,
@@ -55,41 +50,4 @@ export async function recursiveTreeCompletion(tree: any): Promise<any> {
   }
 
   return [];
-}
-
-/**
- * Service for tree node operations
- */
-@Injectable()
-export class TreeNodeService {
-  constructor(
-    @InjectModel(Playbook.name)
-    private readonly playbookModel: Model<PlaybookDocument>,
-    private readonly extraVarsService: ExtraVarsService,
-  ) {}
-
-  /**
-   * Complete a node with additional information
-   * @param node The node to complete
-   * @returns The completed node
-   */
-  async completeNode(node: DirectoryTree.ExtendedTreeNode) {
-    const { path } = node;
-    const playbook = await this.playbookModel.findOne({ path }).exec();
-
-    if (!playbook) {
-      throw new Error(`Unable to find any playbook for path ${path}`);
-    }
-
-    const extraVars = playbook?.extraVars
-      ? await this.extraVarsService.findValueOfExtraVars(playbook.extraVars, undefined, true)
-      : undefined;
-
-    return {
-      ...node,
-      uuid: playbook?.uuid,
-      extraVars: extraVars,
-      custom: playbook?.custom,
-    };
-  }
 }

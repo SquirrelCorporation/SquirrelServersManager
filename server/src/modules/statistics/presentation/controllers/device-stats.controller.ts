@@ -1,10 +1,10 @@
 import { Controller, Get, Inject, Param, Query, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../../guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { DEVICE_REPOSITORY, IDeviceRepository } from '../../../devices/domain/repositories/device-repository.interface';
 import { DeviceStatsParamsDto, DeviceStatsQueryDto } from '../dto/device-stats.dto';
 import { DeviceStatsService } from '../../application/services/device-stats.service';
 
-@Controller('devices')
+@Controller('statistics/devices')
 @UseGuards(JwtAuthGuard)
 export class DeviceStatsController {
   constructor(

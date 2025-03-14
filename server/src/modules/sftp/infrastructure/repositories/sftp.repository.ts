@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Socket } from 'socket.io';
 import { SFTPWrapper } from 'ssh2';
-import { SshConnectionService } from '../../../ssh';
+import { SshConnectionService } from '@infrastructure/ssh/services/ssh-connection.service';
 import { FileStreamService } from '../services/file-stream.service';
 import {
   SftpChmodOptions,

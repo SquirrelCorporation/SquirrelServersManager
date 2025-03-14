@@ -75,4 +75,80 @@ export class UsersService {
     logger.info('Creating first admin user');
     return this.createUser(userData);
   }
+
+  async getCurrentUser(user: IUser) {
+    const online = 0;
+    const offline = 0;
+    const totalCpu = 0;
+    const totalMem = 0;
+    const overview = [];
+    const systemPerformance = {
+      danger: false,
+      message: '',
+    };
+    const serverLogRetention = 0;
+    const ansibleLogRetention = 0;
+    const deviceStatsRetention = 0;
+    const containerStatsRetention = 0;
+    const performanceMinMem = 0;
+    const performanceMaxCpu = 0;
+    const updateAvailable = false;
+    const SSM_DATA_PATH = '';
+    const masterNodeUrl = '';
+    const considerDeviceOffline = false;
+    const version = '';
+    const dependencies = [];
+    const getAnsibleVersion = async () => '';
+    const getAnsibleRunnerVersion = async () => '';
+    return {
+    name: user?.name,
+    avatar: user?.avatar,
+    email: user?.email,
+    access: user?.role,
+    devices: {
+      online: online,
+      offline: offline,
+      totalCpu: totalCpu,
+      totalMem: totalMem,
+      overview: overview,
+    },
+    systemPerformance: {
+      danger: systemPerformance.danger,
+      message: systemPerformance.message,
+    },
+    settings: {
+      userSpecific: {
+        userLogsLevel: user?.logsLevel,
+      },
+      logs: {
+        serverRetention: serverLogRetention,
+        ansibleRetention: ansibleLogRetention,
+      },
+      stats: {
+        deviceStatsRetention: deviceStatsRetention,
+        containerStatsRetention: containerStatsRetention,
+      },
+      dashboard: {
+        performance: {
+          minMem: performanceMinMem,
+          maxCpu: performanceMaxCpu,
+        },
+      },
+      apiKey: user?.apiKey,
+      device: {
+        considerOffLineAfter: considerDeviceOffline,
+      },
+      server: {
+        version: version,
+        deps: dependencies,
+        processes: process.versions,
+        ansibleVersion: await getAnsibleVersion(),
+        ansibleRunnerVersion: await getAnsibleRunnerVersion(),
+      },
+      updateAvailable,
+      ssmDataPath: SSM_DATA_PATH,
+      masterNodeUrl,
+    },
+  }
+  }
 }

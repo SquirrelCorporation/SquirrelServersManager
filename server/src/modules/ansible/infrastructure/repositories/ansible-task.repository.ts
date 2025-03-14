@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { DateTime } from 'luxon';
+import { IAnsibleTaskStatusRepository } from '@modules/ansible';
 import { AnsibleTask } from '../schemas/ansible-task.schema';
 import { IAnsibleTask } from '../../domain/entities/ansible-task.interface';
 import { IAnsibleTaskRepository } from '../../domain/repositories/ansible-task.repository.interface';
@@ -9,6 +11,8 @@ import { IAnsibleTaskRepository } from '../../domain/repositories/ansible-task.r
 export class AnsibleTaskRepository implements IAnsibleTaskRepository {
   constructor(
     @InjectModel(AnsibleTask.name) private readonly ansibleTaskModel: Model<AnsibleTask>,
+    @Inject('IAnsibleTaskStatusRepository')
+    private readonly ansibleTaskStatusRepository: IAnsibleTaskStatusRepository,
   ) {}
 
   async create(task: Partial<IAnsibleTask>): Promise<IAnsibleTask> {
@@ -80,5 +84,28 @@ export class AnsibleTaskRepository implements IAnsibleTaskRepository {
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     };
+  }
+
+  async  deleteAllTasksAndStatuses(ansibleTask: IAnsibleTask) {
+  await this.ansibleTaskStatusRepository.deleteAllByIdent(ansibleTask.ident);
+  // TODO Import from logs module???
+    //await AnsibleLogsRepo.deleteAllByIdent(ansibleTask.ident);
+}
+
+
+  async  findAllOld(ageInMinutes: number): Promise<IAnsibleTask[]> {
+  const tasks = await this.ansibleTaskModel.find({
+    createdAt: { $lt: DateTime.now().minus({ minute: ageInMinutes }).toJSDate() },
+  })
+    .lean()
+    .exec();
+  return tasks.map(this.mapToIAnsibleTask);
+}
+
+  async deleteAllOldLogsAndStatuses(ageInMinutes: number): Promise<void> {
+    const tasks = await this.findAllOld(ageInMinutes);
+    tasks?.forEach(async (task) => {
+    await this.deleteAllTasksAndStatuses(task);
+  });
   }
 }

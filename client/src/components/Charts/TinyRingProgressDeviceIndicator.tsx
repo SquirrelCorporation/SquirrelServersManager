@@ -1,5 +1,5 @@
 import { DeviceStatType } from '@/components/Charts/DeviceStatType';
-import { getDeviceStat } from '@/services/rest/devicestat';
+import { getDeviceStat } from '@/services/rest/stastistics';
 import { Tiny, TinyProgressConfig } from '@ant-design/charts';
 import { message, Skeleton } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';

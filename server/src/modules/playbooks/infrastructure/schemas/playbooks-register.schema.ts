@@ -94,4 +94,4 @@ export class PlaybooksRegister {
   updatedAt?: Date;
 }
 
-export const PlaybooksRepositorySchema = SchemaFactory.createForClass(PlaybooksRegister);
+export const PlaybooksRegisterSchema = SchemaFactory.createForClass(PlaybooksRegister);

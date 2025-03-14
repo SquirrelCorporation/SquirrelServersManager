@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
+import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { GalaxyService } from '../../application/services/galaxy.service';
 import { CollectionQueryDto, InstallCollectionDto } from '../dtos/galaxy-collection.dto';
 import { CollectionInstallResponseDto, CollectionResponseDto, InstalledCollectionResponseDto } from '../dtos/galaxy-response.dto';

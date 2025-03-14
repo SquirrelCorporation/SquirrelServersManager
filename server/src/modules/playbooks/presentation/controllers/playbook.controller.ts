@@ -1,11 +1,10 @@
+import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
+import { IPlaybook, PlaybookRepository, PlaybookService } from '@modules/playbooks';
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { User } from 'src/decorators/user.decorator';
+import { Playbooks } from 'src/types/typings';
 import { API, SsmAnsible } from 'ssm-shared-lib';
-import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
-import { User } from '../../../decorators/user.decorator';
-import { Playbooks } from '../../../types/typings';
-import { PlaybookRepository } from '../repositories/playbook.repository';
-import { Playbook } from '../schemas/playbook.schema';
-import { PlaybookService } from '../services/playbook.service';
+
 
 @Controller('playbooks')
 @UseGuards(JwtAuthGuard)
@@ -26,7 +25,7 @@ export class PlaybookController {
   }
 
   @Patch(':uuid')
-  async editPlaybook(@Param('uuid') uuid: string, @Body() updateData: Partial<Playbook>) {
+  async editPlaybook(@Param('uuid') uuid: string, @Body() updateData: Partial<IPlaybook>) {
     const playbook = await this.playbookRepository.findOneByUuid(uuid);
     if (!playbook) {
       throw new Error('Playbook not found');

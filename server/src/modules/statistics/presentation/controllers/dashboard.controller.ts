@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Inject, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { DateTime } from 'luxon';
-import { JwtAuthGuard } from '../../../../guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { DEVICE_REPOSITORY, IDeviceRepository } from '../../../devices/domain/repositories/device-repository.interface';
 import { DashboardStatQueryDto } from '../dto/dashboard-stats.dto';
 import { DashboardService } from '../../application/services/dashboard.service';
 
-@Controller('dashboard/stats')
+@Controller('statistics/dashboard')
 @UseGuards(JwtAuthGuard)
 export class DashboardController {
   constructor(
@@ -60,7 +60,7 @@ export class DashboardController {
     return stats;
   }
 
-  @Post(':type')
+  @Post('stats/:type')
   async getDashboardStat(@Param('type') type: string, @Query() query: DashboardStatQueryDto) {
     const { from, to } = query;
 

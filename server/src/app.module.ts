@@ -2,6 +2,7 @@ import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ScheduleModule } from '@nestjs/schedule';
 import mongoose from 'mongoose';
 import { db } from './config';
 import logger from './logger';
@@ -22,10 +23,13 @@ import { SettingsModule } from './modules/settings/settings.module';
 import { SftpModule } from './modules/sftp/sftp.module';
 import { ShellModule } from './modules/shell/shell.module';
 import { SmartFailureModule } from './modules/smart-failure/smart-failure.module';
-import { SshModule } from './modules/ssh/ssh.module';
 import { UpdateModule } from './modules/update/update.module';
 import { UsersModule } from './modules/users/users.module';
 import { CacheModule } from './infrastructure/cache';
+import { SshInfrastructureModule } from './infrastructure/ssh/ssh-infrastructure.module';
+import { HealthModule } from './modules/health/health.module';
+import { StatisticsModule } from './modules/statistics/statistics.module';
+import { SshModule } from './modules/ssh/ssh.module';
 
 // Store the connection for legacy code to access
 let sharedConnection: mongoose.Connection | null = null;
@@ -37,8 +41,14 @@ let connectionReady = false;
       isGlobal: true,
     }),
     EventEmitterModule.forRoot(),
+    ScheduleModule.forRoot({
+      // Set graceful shutdown to true to allow proper cleanup of cron jobs
+      gracefulShutdown: true
+    }),
     // Register cache module with default options
     CacheModule.register(),
+    // Register the SSH infrastructure module first - this ensures a single instance of services
+    SshInfrastructureModule,
     MongooseModule.forRootAsync({
       useFactory: async () => {
         // Create a direct mongoose connection first
@@ -111,13 +121,16 @@ let connectionReady = false;
       },
     }),
     AuthModule,
- //   AutomationsModule,
+    StatisticsModule,
+    //   AutomationsModule,
     ContainerStacksModule,
     // ContainersModule,
     DevicesModule,
     UpdateModule,
     DiagnosticModule,
     ShellModule,
+    // Make sure the SshModule is provided as a global module with dynamic registration
+    // This ensures that there's only one instance of the module and its providers
     SshModule,
     SftpModule,
     LogsModule,
@@ -130,6 +143,7 @@ let connectionReady = false;
     UsersModule,
     SchedulerModule,
     SettingsModule,
+    HealthModule,
   ],
 })
 export class AppModule implements OnModuleInit {

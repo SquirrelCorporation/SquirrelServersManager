@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Post, Put, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
+import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { AnsibleConfigService } from '../../application/services/ansible-config.service';
 import { AnsibleConfigDto, DeleteAnsibleConfigDto } from '../dtos/ansible-config.dto';
 

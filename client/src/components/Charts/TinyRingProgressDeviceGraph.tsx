@@ -1,5 +1,5 @@
 import { DeviceStatType } from '@/components/Charts/DeviceStatType';
-import { getDeviceStat } from '@/services/rest/devicestat';
+import { getDeviceStat } from '@/services/rest/stastistics';
 import { Tiny } from '@ant-design/charts';
 import { TinyRingConfig } from '@ant-design/plots/es/components/tiny';
 import { Skeleton, Tooltip } from 'antd';

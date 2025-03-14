@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AnsibleVaultModule } from '@modules/ansible-vault';
 import { ShellModule } from '../shell/shell.module';
 import { ContainerStacksController } from './presentation/controllers/container-stacks.controller';
 import { ContainerStacksService } from './application/services/container-stacks.service';
@@ -23,6 +24,7 @@ import { ContainerCustomStackRepositoryMapper } from './infrastructure/mappers/c
 @Module({
   imports: [
     ShellModule,
+    AnsibleVaultModule,
     MongooseModule.forFeature([
       { name: CONTAINER_CUSTOM_STACK, schema: ContainerCustomStackSchema },
       { name: CONTAINER_CUSTOM_STACK_REPOSITORY, schema: ContainerCustomStackRepositorySchema },

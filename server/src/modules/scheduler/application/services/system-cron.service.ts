@@ -1,5 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { SettingsKeys } from 'ssm-shared-lib';
 import { IDevicesService } from '../../../devices';
 import PinoLogger from '../../../../logger';
@@ -11,7 +11,7 @@ import { CronService } from './cron.service';
 const logger = PinoLogger.child({ module: 'SystemCronService' });
 
 @Injectable()
-export class SystemCronService {
+export class SystemCronService implements OnModuleInit {
   constructor(
     @Inject('IDevicesService')
     private readonly devicesService: IDevicesService,
@@ -21,8 +21,34 @@ export class SystemCronService {
     private readonly logsRepo: IServerLogsRepository,
     @Inject('ICacheService')
     private readonly cacheService: ICacheService,
-    private readonly cronService: CronService
+    private readonly cronService: CronService,
+    private readonly schedulerRegistry: SchedulerRegistry
   ) {}
+  
+  async onModuleInit() {
+    logger.info('Initializing SystemCronService');
+    // Try to delete any existing crons to avoid duplicates
+    try {
+      this.schedulerRegistry.deleteCronJob('_isDeviceOffline');
+      logger.info('Deleted existing _isDeviceOffline cron job');
+    } catch (err) {
+      // Job didn't exist, which is fine
+    }
+    
+    try {
+      this.schedulerRegistry.deleteCronJob('_CleanAnsibleTasksLogsAndStatuses');
+      logger.info('Deleted existing _CleanAnsibleTasksLogsAndStatuses cron job');
+    } catch (err) {
+      // Job didn't exist, which is fine
+    }
+    
+    try {
+      this.schedulerRegistry.deleteCronJob('_CleanServerLogs');
+      logger.info('Deleted existing _CleanServerLogs cron job');
+    } catch (err) {
+      // Job didn't exist, which is fine
+    }
+  }
 
   @Cron('0 * * * * *', { name: '_isDeviceOffline' })
   async checkOfflineDevices() {

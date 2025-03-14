@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Socket } from 'socket.io';
-import { ClientChannel, PseudoTtyOptions } from 'ssh2';
+import { Client, ClientChannel, PseudoTtyOptions } from 'ssh2';
 import { SsmEvents } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
+import { SshConnectionService } from '@infrastructure/ssh/services/ssh-connection.service';
 import { SshSession } from '../../domain/entities/ssh.entity';
 import { ISshTerminalService } from '../interfaces/ssh-terminal-service.interface';
-import { SshConnectionService } from './ssh-connection.service';
 
 @Injectable()
 export class SshTerminalService implements ISshTerminalService {
@@ -23,10 +23,8 @@ export class SshTerminalService implements ISshTerminalService {
     const clientId = client.id;
 
     try {
-      // Create SSH connection
-      const { ssh, host } = await this.sshConnectionService.createConnection(deviceUuid);
-
-      // Create session object
+      const ssh = new Client();
+          // Create session object
       const ttyOptions: PseudoTtyOptions = {
         rows,
         cols,
@@ -35,18 +33,20 @@ export class SshTerminalService implements ISshTerminalService {
         term: 'xterm-256color',
       };
 
-      const session: SshSession = {
+     const session: SshSession = {
         id: sessionId,
         clientId,
         deviceUuid,
         client,
         ssh,
         ttyOptions,
-        host,
       };
 
-      // Set up event listeners
+            // Set up event listeners
       this.setupSshEventListeners(session);
+      // Create SSH connection
+      const { host } = await this.sshConnectionService.createConnection(ssh, deviceUuid);
+
 
       // Store session
       this.sessions.set(sessionId, session);
@@ -84,11 +84,13 @@ export class SshTerminalService implements ISshTerminalService {
     });
 
     ssh.on('ready', () => {
+      this.logger.log(`SSH connection ready for ${deviceUuid}`);
       client.emit(SsmEvents.SSH.STATUS, {
         status: 'OK',
         message: 'SSH CONNECTION ESTABLISHED',
       });
 
+      this.logger.log(`Creating shell for ${deviceUuid}`);
       // Create shell
       ssh.shell(ttyOptions, (err: Error | undefined, stream: ClientChannel) => {
         if (err) {

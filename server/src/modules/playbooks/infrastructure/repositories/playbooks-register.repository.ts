@@ -1,13 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IPlaybooksRegisterRepository } from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
-import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
+import { IPlaybooksRegisterRepository } from '../../domain/repositories/playbooks-register-repository.interface';
+import { IPlaybooksRegister } from '../../domain/entities/playbooks-register.entity';
 import {
-  PlaybooksRegisterDocument,
-
+  PlaybooksRegister,
+  PlaybooksRegisterDocument
 } from '../schemas/playbooks-register.schema';
-import { NotFoundError } from '../../../middlewares/api/ApiError';
 
 /**
  * Repository for accessing playbooks repository data in the database
@@ -17,18 +16,33 @@ export class PlaybooksRegisterRepository implements IPlaybooksRegisterRepository
   private readonly logger = new Logger(PlaybooksRegisterRepository.name);
 
   constructor(
-    @InjectModel(PLAYBOOKS_REGISTER_DOCUMENT)
+    @InjectModel(PlaybooksRegister.name)
     private readonly playbooksRegisterModel: Model<PlaybooksRegisterDocument>,
   ) {}
+
+  private toEntity(doc: PlaybooksRegisterDocument | null): IPlaybooksRegister | null {
+    if (!doc) {return null;}
+    return {
+      uuid: doc.uuid,
+      name: doc.name,
+      enabled: doc.enabled,
+      tree: doc.tree,
+      type: doc.type,
+      directory: doc.directory,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
+    };
+  }
 
   /**
    * Find a repository by UUID
    * @param uuid Repository UUID
    * @returns The repository or null if not found
    */
-  async findByUuid(uuid: string): Promise<IPlaybooksRegister| null> {
+  async findByUuid(uuid: string): Promise<IPlaybooksRegister | null> {
     this.logger.debug(`Finding repository with UUID: ${uuid}`);
-    return this.playbooksRegisterModel.findOne({ uuid }).exec();
+    const doc = await this.playbooksRegisterModel.findOne({ uuid }).exec();
+    return this.toEntity(doc);
   }
 
   /**
@@ -37,21 +51,8 @@ export class PlaybooksRegisterRepository implements IPlaybooksRegisterRepository
    */
   async findAllActive(): Promise<IPlaybooksRegister[]> {
     this.logger.debug('Finding all active repositories');
-    return this.playbooksRegisterModel.find({ enabled: true }).exec();
-  }
-
-  /**
-   * Find a repository by UUID and ensure it exists
-   * @param uuid Repository UUID
-   * @returns The repository
-   * @throws NotFoundError if the repository is not found
-   */
-  async findByUuidOrFail(uuid: string): Promise<IPlaybooksRegister> {
-    const repository = await this.findByUuid(uuid);
-    if (!repository) {
-      throw new NotFoundError(`Repository with UUID ${uuid} not found`);
-    }
-    return repository;
+    const docs = await this.playbooksRegisterModel.find({ enabled: true }).exec();
+    return docs.map(doc => this.toEntity(doc)).filter((entity): entity is IPlaybooksRegister => entity !== null);
   }
 
   /**
@@ -65,9 +66,10 @@ export class PlaybooksRegisterRepository implements IPlaybooksRegisterRepository
     updateData: Partial<IPlaybooksRegister>,
   ): Promise<IPlaybooksRegister | null> {
     this.logger.debug(`Updating repository with UUID: ${uuid}`);
-    return this.playbooksRepositoryModel
+    const doc = await this.playbooksRegisterModel
       .findOneAndUpdate({ uuid }, { $set: updateData }, { new: true })
       .exec();
+    return this.toEntity(doc);
   }
 
   /**
@@ -77,7 +79,10 @@ export class PlaybooksRegisterRepository implements IPlaybooksRegisterRepository
    */
   async create(repositoryData: Partial<IPlaybooksRegister>): Promise<IPlaybooksRegister> {
     this.logger.debug(`Creating new repository: ${repositoryData.name}`);
-    return this.playbooksRepositoryModel.create(repositoryData);
+    const doc = await this.playbooksRegisterModel.create(repositoryData);
+    const entity = this.toEntity(doc);
+    if (!entity) {throw new Error('Failed to create repository');}
+    return entity;
   }
 
   /**
@@ -87,6 +92,13 @@ export class PlaybooksRegisterRepository implements IPlaybooksRegisterRepository
    */
   async delete(uuid: string): Promise<IPlaybooksRegister | null> {
     this.logger.debug(`Deleting repository with UUID: ${uuid}`);
-    return this.playbooksRepositoryModel.findOneAndDelete({ uuid }).exec();
+    const doc = await this.playbooksRegisterModel.findOneAndDelete({ uuid }).exec();
+    return this.toEntity(doc);
+  }
+
+  async findAllByType(type: any): Promise<IPlaybooksRegister[]> {
+    this.logger.debug(`Finding all repositories with type: ${type}`);
+    const docs = await this.playbooksRegisterModel.find({ type }).exec();
+    return docs.map(doc => this.toEntity(doc)).filter((entity): entity is IPlaybooksRegister => entity !== null);
   }
 }

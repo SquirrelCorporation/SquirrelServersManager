@@ -13,7 +13,7 @@ export { IDevice, IDeviceAuth };
 // Domain exports
 export * from './domain/entities/device.entity';
 export * from './domain/repositories/device-repository.interface';
-
+export * from './domain/repositories/device-auth-repository.interface';
 // Application exports
 export * from './application/interfaces/devices-service.interface';
 export * from './application/services/devices.service';

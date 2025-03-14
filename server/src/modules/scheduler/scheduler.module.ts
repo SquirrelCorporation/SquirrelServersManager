@@ -18,7 +18,7 @@ import { SystemCronService } from './application/services/system-cron.service';
     MongooseModule.forFeature([
       { name: CRON, schema: CronSchema },
     ]),
-    ScheduleModule.forRoot(),
+    ScheduleModule,
     DevicesModule,
     AnsibleModule,
     LogsModule,

@@ -32,6 +32,7 @@ export class ContainerStacksService implements IContainerStacksService, OnModule
   }
 
   async onModuleInit() {
+    this.logger.log('Initializing ContainerStacksService');
     await this.containerCustomStacksRepositoryEngine.init();
   }
 

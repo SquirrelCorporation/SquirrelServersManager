@@ -1,13 +1,10 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { JwtAuthGuard } from '../../../../guards/jwt-auth.guard';
-import { RolesGuard } from '../../../../guards/roles.guard';
-import { Roles } from '../../../../decorators/roles.decorator';
+import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { CronService } from '../../application/services/cron.service';
 
 @Controller('admin/crons')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('admin')
+@UseGuards(JwtAuthGuard)
 export class CronController {
   constructor(
     private readonly cronService: CronService,
@@ -26,10 +23,6 @@ export class CronController {
       active: activeJobsArray.includes(cron.name),
     })) || [];
 
-    return {
-      success: true,
-      message: 'Cron jobs retrieved successfully',
-      data: enrichedCrons,
-    };
+    return enrichedCrons;
   }
 }

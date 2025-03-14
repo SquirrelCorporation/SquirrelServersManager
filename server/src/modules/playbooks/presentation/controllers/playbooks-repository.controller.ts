@@ -1,13 +1,9 @@
 import { Body, Controller, Get, Logger, Param, Post } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { API } from 'ssm-shared-lib';
-import { PlaybooksRepositoryService } from '../services/playbooks-repository.service';
-import { NotFoundError } from '../../../middlewares/api/ApiError';
-import {
-  PlaybooksRepository,
-  PlaybooksRepositoryDocument,
-} from '../schemas/playbooks-repository.schema';
+import { PlaybooksRegisterRepository } from '@modules/playbooks/infrastructure/repositories/playbooks-register.repository';
+import { NotFoundError } from '@middlewares/api/ApiError';
+import { PlaybooksRegisterService } from '@modules/playbooks/application/services/playbooks-register.service';
+
 
 /**
  * Controller for managing playbooks repositories
@@ -17,9 +13,8 @@ export class PlaybooksRepositoryController {
   private readonly logger = new Logger(PlaybooksRepositoryController.name);
 
   constructor(
-    private readonly playbooksRepositoryService: PlaybooksRepositoryService,
-    @InjectModel(PlaybooksRepository.name)
-    private readonly playbooksRepositoryModel: Model<PlaybooksRepositoryDocument>,
+    private readonly playbooksRegisterService: PlaybooksRegisterService,
+    private readonly playbooksRegisterRepository: PlaybooksRegisterRepository,
   ) {}
 
   /**
@@ -29,7 +24,7 @@ export class PlaybooksRepositoryController {
   @Get()
   async getPlaybooksRepositories(): Promise<API.PlaybooksRepository[]> {
     this.logger.log('Getting all playbooks repositories');
-    return await this.playbooksRepositoryService.getAllPlaybooksRepositories();
+    return await this.playbooksRegisterService.getAllPlaybooksRepositories();
   }
 
   /**
@@ -44,13 +39,13 @@ export class PlaybooksRepositoryController {
   ): Promise<void> {
     this.logger.log(`Adding directory ${fullPath} to repository ${uuid}`);
 
-    const playbookRepository = await this.playbooksRepositoryModel.findOne({ uuid });
-    if (!playbookRepository) {
+    const playbooksRegister = await this.playbooksRegisterRepository.findByUuid( uuid);
+    if (!playbooksRegister) {
       throw new NotFoundError(`PlaybookRepository ${uuid} not found`);
     }
 
-    await this.playbooksRepositoryService.createDirectoryInPlaybookRepository(
-      playbookRepository as unknown as PlaybooksRepositoryDocument,
+    await this.playbooksRegisterService.createDirectoryInPlaybookRepository(
+      playbooksRegister,
       fullPath,
     );
   }
@@ -70,13 +65,13 @@ export class PlaybooksRepositoryController {
   ): Promise<any> {
     this.logger.log(`Adding playbook ${playbookName} at ${fullPath} to repository ${uuid}`);
 
-    const playbookRepository = await this.playbooksRepositoryModel.findOne({ uuid });
-    if (!playbookRepository) {
+    const playbooksRegister = await this.playbooksRegisterRepository.findByUuid( uuid);
+    if (!playbooksRegister) {
       throw new NotFoundError(`PlaybookRepository ${uuid} not found`);
     }
 
-    return await this.playbooksRepositoryService.createPlaybookInRepository(
-      playbookRepository as unknown as PlaybooksRepositoryDocument,
+    return await this.playbooksRegisterService.createPlaybookInRepository(
+      playbooksRegister,
       fullPath,
       playbookName,
     );
@@ -94,13 +89,13 @@ export class PlaybooksRepositoryController {
   ): Promise<void> {
     this.logger.log(`Deleting playbook ${playbookUuid} from repository ${uuid}`);
 
-    const playbookRepository = await this.playbooksRepositoryModel.findOne({ uuid });
-    if (!playbookRepository) {
+    const playbooksRegister = await this.playbooksRegisterRepository.findByUuid( uuid);
+    if (!playbooksRegister) {
       throw new NotFoundError(`PlaybookRepository ${uuid} not found`);
     }
 
-    await this.playbooksRepositoryService.deletePlaybookFromRepository(
-      playbookRepository as unknown as PlaybooksRepositoryDocument,
+    await this.playbooksRegisterService.deletePlaybookFromRepository(
+      playbooksRegister,
       playbookUuid,
     );
   }
@@ -117,13 +112,13 @@ export class PlaybooksRepositoryController {
   ): Promise<void> {
     this.logger.log(`Deleting directory ${fullPath} from repository ${uuid}`);
 
-    const playbookRepository = await this.playbooksRepositoryModel.findOne({ uuid });
-    if (!playbookRepository) {
+    const playbooksRegister = await this.playbooksRegisterRepository.findByUuid( uuid);
+    if (!playbooksRegister) {
       throw new NotFoundError(`PlaybookRepository ${uuid} not found`);
     }
 
-    await this.playbooksRepositoryService.deleteDirectoryFromRepository(
-      playbookRepository as unknown as PlaybooksRepositoryDocument,
+    await this.playbooksRegisterService.deleteDirectoryFromRepository(
+      playbooksRegister,
       fullPath,
     );
   }
@@ -139,7 +134,7 @@ export class PlaybooksRepositoryController {
     @Body() { content }: { content: string },
   ): Promise<void> {
     this.logger.log(`Saving playbook ${playbookUuid}`);
-    await this.playbooksRepositoryService.savePlaybook(playbookUuid, content);
+    await this.playbooksRegisterService.savePlaybook(playbookUuid, content);
   }
 
   /**
@@ -149,6 +144,6 @@ export class PlaybooksRepositoryController {
   @Post(':uuid/sync')
   async syncRepository(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Syncing repository ${uuid}`);
-    await this.playbooksRepositoryService.syncRepository(uuid);
+    await this.playbooksRegisterService.syncRepository(uuid);
   }
 }
