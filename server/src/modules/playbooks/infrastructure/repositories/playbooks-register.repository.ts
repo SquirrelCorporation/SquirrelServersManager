@@ -40,7 +40,7 @@ export class PlaybooksRegisterRepository implements IPlaybooksRegisterRepository
    * @returns The repository or null if not found
    */
   async findByUuid(uuid: string): Promise<IPlaybooksRegister | null> {
-    this.logger.debug(`Finding repository with UUID: ${uuid}`);
+    this.logger.log(`Finding repository with UUID: ${uuid}`);
     const doc = await this.playbooksRegisterModel.findOne({ uuid }).exec();
     return this.toEntity(doc);
   }

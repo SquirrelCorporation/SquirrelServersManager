@@ -4,6 +4,7 @@ import PlaybooksRegisterComponent from '@modules/playbooks/application/services/
 import { FileSystemService, PlaybookFileService } from '@modules/shell';
 import { PlaybookRepository } from '@modules/playbooks/infrastructure/repositories/playbook.repository';
 import { PlaybooksRegisterRepository } from '@modules/playbooks/infrastructure/repositories/playbooks-register.repository';
+import { TreeNodeService } from '@modules/playbooks';
 
 /**
  * Service for managing local playbooks repositories
@@ -18,12 +19,13 @@ export class LocalPlaybooksRegisterComponent extends PlaybooksRegisterComponent 
     playbookRepository: PlaybookRepository,
     playbooksRegisterRepository: PlaybooksRegisterRepository,
     private readonly eventEmitter: EventEmitter2,
+    treeNodeService: TreeNodeService,
     uuid: string,
     logger: any,
     name: string,
     rootPath: string
   ) {
-    super(fileSystemService, playbookFileService, playbookRepository, playbooksRegisterRepository, uuid, name, rootPath);
+    super(fileSystemService, playbookFileService, playbookRepository, playbooksRegisterRepository,treeNodeService, uuid, name, rootPath);
     this.childLogger = logger.child(
       { module: `PlaybooksLocalRepository`, moduleId: `${this.uuid}`, moduleName: `${this.name}` },
       { msgPrefix: `[PLAYBOOKS_LOCAL_REPOSITORY] - ` },

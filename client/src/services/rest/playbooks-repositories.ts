@@ -102,7 +102,7 @@ export async function syncToDatabasePlaybooksLocalRepository(
   options?: Record<string, any>,
 ) {
   return request<API.SimpleResult>(
-    `/api/playbooks-repository/local/${uuid}/sync-to-database-repository`,
+    `/api/playbooks-repository/local/${uuid}/sync-to-database`,
     {
       method: 'POST',
       params: {
@@ -167,7 +167,7 @@ export async function syncToDatabasePlaybooksGitRepository(
   options?: Record<string, any>,
 ) {
   return request<API.SimpleResult>(
-    `/api/playbooks-repository/git/${uuid}/sync-to-database-repository`,
+    `/api/playbooks-repository/git/${uuid}/sync-to-database`,
     {
       method: 'POST',
       params: {
@@ -201,7 +201,7 @@ export async function forceClonePlaybooksGitRepository(
   options?: Record<string, any>,
 ) {
   return request<API.SimpleResult>(
-    `/api/playbooks-repository/git/${uuid}/force-clone-repository`,
+    `/api/playbooks-repository/git/${uuid}/force-clone`,
     {
       method: 'POST',
       params: {
@@ -218,7 +218,7 @@ export async function commitAndSyncPlaybooksGitRepository(
   options?: Record<string, any>,
 ) {
   return request<API.SimpleResult>(
-    `/api/playbooks-repository/git/${uuid}/commit-and-sync-repository`,
+    `/api/playbooks-repository/git/${uuid}/commit-and-sync`,
     {
       method: 'POST',
       params: {

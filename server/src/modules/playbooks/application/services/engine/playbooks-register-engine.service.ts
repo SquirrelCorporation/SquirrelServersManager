@@ -2,7 +2,6 @@ import { GitPlaybooksRegisterComponent } from '@modules/playbooks/application/se
 import { LocalPlaybooksRegisterComponent } from '@modules/playbooks/application/services/components/local-playbooks-repository.component';
 import PlaybooksRegisterComponent from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
 import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
-import { IPlaybooksRegisterRepository, PLAYBOOKS_REGISTER_REPOSITORY } from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { SsmGit } from 'ssm-shared-lib';
 import { GitComponentOptions, LocalComponentOptions } from '@modules/playbooks/domain/interfaces/component-options.interface';
@@ -19,8 +18,6 @@ export class PlaybooksRegisterEngineService {
   constructor(
     @Inject(forwardRef(() => PlaybooksRegisterComponentFactory))
     private readonly componentFactory: PlaybooksRegisterComponentFactory,
-    @Inject(PLAYBOOKS_REGISTER_REPOSITORY)
-    private readonly playbooksRegisterRepository: IPlaybooksRegisterRepository,
   ) {}
 
   /**
@@ -50,14 +47,15 @@ export class PlaybooksRegisterEngineService {
           gitService: (register.gitService as SsmGit.Services) || SsmGit.Services.Github,
           ignoreSSLErrors: register.ignoreSSLErrors || false,
         };
-
+        this.logger.log(`Creating git component ${JSON.stringify(options)}`);
         component = await this.componentFactory.createGitComponent(options);
       } else {
         const options: LocalComponentOptions = {
           uuid: register.uuid,
           name: register.name,
-          directory: register.directory || register.uuid,
+          directory: register.directory,
         };
+        this.logger.log(`Creating local component ${JSON.stringify(options)}`);
 
         component = await this.componentFactory.createLocalComponent(options);
       }

@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
 import mongoose from 'mongoose';
 import { LoggerModule } from 'nestjs-pino';
+import { SshModule } from '@modules/ssh';
 import { db } from './config';
 import logger, { httpLoggerOptions } from './logger';
 import { AnsibleConfigModule } from './modules/ansible-config/ansible-config.module';
@@ -30,7 +31,6 @@ import { CacheModule } from './infrastructure/cache';
 import { SshInfrastructureModule } from './infrastructure/ssh/ssh-infrastructure.module';
 import { HealthModule } from './modules/health/health.module';
 import { StatisticsModule } from './modules/statistics/statistics.module';
-import { SshModule } from './modules/ssh/ssh.module';
 
 // Store the connection for legacy code to access
 let sharedConnection: mongoose.Connection | null = null;

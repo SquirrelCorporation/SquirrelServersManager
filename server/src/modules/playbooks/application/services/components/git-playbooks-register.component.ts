@@ -5,8 +5,9 @@ import { GitStep, IGitUserInfos, IInitGitOptionsSyncImmediately, ILoggerContext,
 import { SsmAlert, SsmGit } from 'ssm-shared-lib';
 import { InternalError } from '@middlewares/api/ApiError';
 import { FileSystemService, PlaybookFileService } from '@modules/shell';
-import { PlaybookRepository } from '@modules/playbooks/playbooks.module';
+import { PlaybookRepository } from '@modules/playbooks/infrastructure/repositories/playbook.repository';
 import { PlaybooksRegisterRepository } from '@modules/playbooks/infrastructure/repositories/playbooks-register.repository';
+import { TreeNodeService } from '@modules/playbooks';
 import Events from '../../../../../core/events/events';
 
 /**
@@ -23,6 +24,7 @@ export class GitPlaybooksRegisterComponent extends PlaybooksRegisterComponent {
     playbookRepository: PlaybookRepository,
     playbooksRegisterRepository: PlaybooksRegisterRepository,
     private readonly eventEmitter: EventEmitter2,
+    treeNodeService: TreeNodeService,
     uuid: string,
     logger: any,
     name: string,
@@ -34,7 +36,7 @@ export class GitPlaybooksRegisterComponent extends PlaybooksRegisterComponent {
     gitService: SsmGit.Services,
     ignoreSSLErrors: boolean,
   ) {
-    super(fileSystemService, playbookFileService, playbookRepository, playbooksRegisterRepository, uuid, name, DIRECTORY_ROOT);
+    super(fileSystemService, playbookFileService, playbookRepository, playbooksRegisterRepository,treeNodeService, uuid, name, DIRECTORY_ROOT);
 
     // Configure user information
     const userInfo: IGitUserInfos = {

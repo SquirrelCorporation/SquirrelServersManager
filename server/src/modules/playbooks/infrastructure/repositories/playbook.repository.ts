@@ -19,10 +19,18 @@ export class PlaybookRepository implements IPlaybookRepository {
   }
 
   async updateOrCreate(playbook: Partial<IPlaybook>): Promise<IPlaybook> {
+    // Create a copy of the playbook object to avoid modifying the original
+    const playbookToUpdate = { ...playbook };
+
+    // If playbooksRepository is provided as an object, use its _id
+    if (playbookToUpdate.playbooksRepository && typeof playbookToUpdate.playbooksRepository === 'object') {
+      playbookToUpdate.playbooksRepository = playbookToUpdate.playbooksRepository._id;
+    }
+
     const updated = await this.playbookModel.findOneAndUpdate(
       { path: playbook.path },
-      playbook,
-      { upsert: true }
+      playbookToUpdate,
+      { upsert: true, new: true }
     )
       .lean()
       .exec();
@@ -66,7 +74,9 @@ export class PlaybookRepository implements IPlaybookRepository {
   async listAllByRepository(
     playbooksRepository: IPlaybooksRegister,
   ): Promise<IPlaybook[] | null> {
-    const playbooks = await this.playbookModel.find({ playbooksRepository }).lean().exec();
+    const playbooks = await this.playbookModel.find({
+      playbooksRepository: playbooksRepository._id,
+    }).lean().exec();
     return PlaybookMapper.toDomainArray(playbooks);
   }
 
@@ -93,6 +103,6 @@ export class PlaybookRepository implements IPlaybookRepository {
   }
 
   async deleteAllByRepository(playbooksRepository: IPlaybooksRegister): Promise<void> {
-    await this.playbookModel.deleteMany({ playbooksRepository }).exec();
+    await this.playbookModel.deleteMany({ playbooksRepository: playbooksRepository._id }).exec();
   }
 }

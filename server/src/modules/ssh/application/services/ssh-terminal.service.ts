@@ -1,9 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { Socket } from 'socket.io';
+import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { Client, ClientChannel, PseudoTtyOptions } from 'ssh2';
 import { SsmEvents } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
 import { SshConnectionService } from '@infrastructure/ssh/services/ssh-connection.service';
+import { SshGateway } from '../../presentation/gateways/ssh.gateway';
 import { SshSession } from '../../domain/entities/ssh.entity';
 import { ISshTerminalService } from '../interfaces/ssh-terminal-service.interface';
 
@@ -13,14 +13,18 @@ export class SshTerminalService implements ISshTerminalService {
   private sessions: Map<string, SshSession> = new Map();
   private clientSessions: Map<string, Set<string>> = new Map();
 
-  constructor(private readonly sshConnectionService: SshConnectionService) {}
+
+  constructor(
+    private readonly sshConnectionService: SshConnectionService,
+    @Inject(forwardRef(() => SshGateway))
+    private readonly sshGateway: SshGateway
+  ) {}
 
   /**
    * Creates a new SSH terminal session
    */
-  async createSession(client: Socket, deviceUuid: string, cols: number, rows: number): Promise<string> {
+  async createSession(clientId: string, deviceUuid: string, cols: number, rows: number): Promise<string> {
     const sessionId = uuidv4();
-    const clientId = client.id;
 
     try {
       const ssh = new Client();
@@ -37,7 +41,6 @@ export class SshTerminalService implements ISshTerminalService {
         id: sessionId,
         clientId,
         deviceUuid,
-        client,
         ssh,
         ttyOptions,
       };
@@ -60,7 +63,7 @@ export class SshTerminalService implements ISshTerminalService {
       this.logger.log(`SSH session created: ${sessionId} for device: ${deviceUuid}`);
 
       // Send welcome message
-      client.emit(
+      this.sshGateway.emit(
         SsmEvents.SSH.NEW_DATA,
         `✅ Connected to device: ${deviceUuid} on ${host}!\r\n---\r\n`,
       );
@@ -77,15 +80,15 @@ export class SshTerminalService implements ISshTerminalService {
    * Sets up event listeners for the SSH connection
    */
   private setupSshEventListeners(session: SshSession): void {
-    const { ssh, client, ttyOptions, deviceUuid } = session;
+    const { ssh, ttyOptions, deviceUuid } = session;
 
     ssh.on('banner', (data: string) => {
-      client.emit(SsmEvents.SSH.NEW_DATA, data.replace(/\r?\n/g, '\r\n'));
+      this.sshGateway.emit(SsmEvents.SSH.NEW_DATA, data.replace(/\r?\n/g, '\r\n'));
     });
 
     ssh.on('ready', () => {
       this.logger.log(`SSH connection ready for ${deviceUuid}`);
-      client.emit(SsmEvents.SSH.STATUS, {
+      this.sshGateway.emit(SsmEvents.SSH.STATUS, {
         status: 'OK',
         message: 'SSH CONNECTION ESTABLISHED',
       });
@@ -103,7 +106,7 @@ export class SshTerminalService implements ISshTerminalService {
 
         // Set up stream event handlers
         stream.on('data', (data: Buffer) => {
-          client.emit(SsmEvents.SSH.NEW_DATA, data.toString('utf-8'));
+          this.sshGateway.emit(SsmEvents.SSH.NEW_DATA, data.toString('utf-8'));
         });
 
         stream.on('close', (code: number | null, signal: string | null) => {
@@ -122,7 +125,7 @@ export class SshTerminalService implements ISshTerminalService {
 
     ssh.on('end', () => {
       this.logger.warn(`SSH connection ended for device: ${deviceUuid}`);
-      client.emit(SsmEvents.SSH.STATUS, {
+      this.sshGateway.emit(SsmEvents.SSH.STATUS, {
         status: 'DISCONNECT',
         message: 'SSH CONNECTION ENDED',
       });
@@ -131,7 +134,7 @@ export class SshTerminalService implements ISshTerminalService {
 
     ssh.on('close', () => {
       this.logger.warn(`SSH connection closed for device: ${deviceUuid}`);
-      client.emit(SsmEvents.SSH.STATUS, {
+      this.sshGateway.emit(SsmEvents.SSH.STATUS, {
         status: 'DISCONNECT',
         message: 'SSH CONNECTION CLOSED',
       });
@@ -150,7 +153,7 @@ export class SshTerminalService implements ISshTerminalService {
       }
 
       this.logger.error(`SSH error: ${message}`);
-      client.emit(SsmEvents.SSH.STATUS, {
+      this.sshGateway.emit(SsmEvents.SSH.STATUS, {
         status: 'DISCONNECT',
         message,
       });

@@ -5,6 +5,8 @@ import { Body, Controller, Delete, Get, Inject, Logger, Param, Post, Put } from 
 import { API, Repositories } from 'ssm-shared-lib';
 import { PlaybooksRegisterEngineService } from '../../application/services/engine/playbooks-register-engine.service';
 import { LocalPlaybooksRegisterComponent } from '../../application/services/components/local-playbooks-repository.component';
+import { PLAYBOOKS_REGISTER_SERVICE } from '../../domain/services/playbooks-register-service.interface';
+import { PLAYBOOKS_REGISTER_ENGINE_SERVICE } from '../controllers/git-playbooks-register.controller';
 
 /**
  * Controller for managing local playbooks repositories
@@ -14,7 +16,9 @@ export class LocalPlaybooksRepositoryController {
   private readonly logger = new Logger(LocalPlaybooksRepositoryController.name);
 
   constructor(
+    @Inject(PLAYBOOKS_REGISTER_ENGINE_SERVICE)
     private readonly playbooksRegisterEngineService: PlaybooksRegisterEngineService,
+    @Inject(PLAYBOOKS_REGISTER_SERVICE)
     private readonly playbooksRegisterService: PlaybooksRegisterService,
     @Inject(PLAYBOOKS_REGISTER_REPOSITORY)
     private readonly playbooksRegisterRepository: IPlaybooksRegisterRepository,

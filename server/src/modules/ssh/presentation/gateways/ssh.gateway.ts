@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -11,10 +11,10 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SsmEvents } from 'ssm-shared-lib';
-import { SshTerminalService } from '../../application/services/ssh-terminal.service';
-import { ScreenResizeDto, SshSessionDto } from '../dtos/ssh-session.dto';
+import { ScreenResizeDto, SshSessionDto } from '@modules/ssh/presentation/dtos/ssh-session.dto';
+import { SshTerminalService } from '@modules/ssh';
 
-// Using a specific namespace for SSH to prevent gateway conflicts
+@Injectable()
 @WebSocketGateway({
   namespace: '/ssh'
 })
@@ -26,7 +26,10 @@ export class SshGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   @WebSocketServer()
   server!: Server;
 
-  constructor(private readonly sshTerminalService: SshTerminalService) {}
+  constructor(
+    @Inject(forwardRef(() => SshTerminalService))
+    private readonly sshTerminalService: SshTerminalService
+  ) {}
 
   afterInit() {
     this.logger.log(`SSH WebSocket Gateway initialized`);
@@ -64,7 +67,7 @@ export class SshGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
         return { sessionId: existingSessionId!, success: true };
       }
 
-      const sessionId = await this.sshTerminalService.createSession(client, deviceUuid, cols, rows);
+      const sessionId = await this.sshTerminalService.createSession(client.id, deviceUuid, cols, rows);
       this.logger.log(`Sending ack...`);
 
       // Store the client's session
@@ -102,5 +105,9 @@ export class SshGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     } else {
       console.log(`Ignoring resize from client ${client.id} - no active session`);
     }
+  }
+
+  emit(event: string, data: any) {
+    this.server.emit(event, data);
   }
 }

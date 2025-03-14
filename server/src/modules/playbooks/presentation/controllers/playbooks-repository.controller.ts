@@ -1,9 +1,8 @@
-import { Body, Controller, Get, Logger, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Logger, Param, Post } from '@nestjs/common';
 import { API } from 'ssm-shared-lib';
-import { PlaybooksRegisterRepository } from '@modules/playbooks/infrastructure/repositories/playbooks-register.repository';
 import { NotFoundError } from '@middlewares/api/ApiError';
-import { PlaybooksRegisterService } from '@modules/playbooks/application/services/playbooks-register.service';
-
+import { IPlaybooksRegisterRepository, PLAYBOOKS_REGISTER_REPOSITORY } from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
+import { IPlaybooksRegisterService, PLAYBOOKS_REGISTER_SERVICE } from '@modules/playbooks/domain/services/playbooks-register-service.interface';
 
 /**
  * Controller for managing playbooks repositories
@@ -13,8 +12,10 @@ export class PlaybooksRepositoryController {
   private readonly logger = new Logger(PlaybooksRepositoryController.name);
 
   constructor(
-    private readonly playbooksRegisterService: PlaybooksRegisterService,
-    private readonly playbooksRegisterRepository: PlaybooksRegisterRepository,
+    @Inject(PLAYBOOKS_REGISTER_SERVICE)
+    private readonly playbooksRegisterService: IPlaybooksRegisterService,
+    @Inject(PLAYBOOKS_REGISTER_REPOSITORY)
+    private readonly playbooksRegisterRepository: IPlaybooksRegisterRepository,
   ) {}
 
   /**

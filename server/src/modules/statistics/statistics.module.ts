@@ -6,12 +6,13 @@ import { DashboardController } from './presentation/controllers/dashboard.contro
 import { DeviceStatsController } from './presentation/controllers/device-stats.controller';
 import { DashboardService } from './application/services/dashboard.service';
 import { DeviceDownTimeService } from './application/services/device-downtime.service';
-import { MetricsService } from './application/services/device-metrics.service';
+import { MetricsService } from './application/services/metrics.service';
 import { DeviceStatsService } from './application/services/device-stats.service';
 import { DEVICE_DOWNTIME_EVENT, DeviceDownTimeEventSchema } from './infrastructure/schemas/device-downtime-event.schema';
 import { DeviceDownTimeEventRepositoryMapper } from './infrastructure/mappers/device-downtime-event-repository.mapper';
 import { DeviceDownTimeEventRepository } from './infrastructure/repositories/device-downtime-event.repository';
 import { DEVICE_DOWNTIME_EVENT_REPOSITORY } from './domain/repositories/device-downtime-event-repository.interface';
+import { MetricsController } from './presentation/controllers/metrics.controller';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { DEVICE_DOWNTIME_EVENT_REPOSITORY } from './domain/repositories/device-d
     ]),
     DevicesModule,
   ],
-  controllers: [DashboardController, DeviceStatsController],
+  controllers: [DashboardController, DeviceStatsController, MetricsController],
   providers: [
     PrometheusProvider,
     DashboardService,

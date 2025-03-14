@@ -1,11 +1,17 @@
 import { NotFoundError } from '@middlewares/api/ApiError';
 import { DEFAULT_VAULT_ID, VaultCryptoService } from '@modules/ansible-vault';
-import { PlaybooksRegisterService } from '@modules/playbooks';
 import { IPlaybooksRegisterRepository, PLAYBOOKS_REGISTER_REPOSITORY } from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
 import { Body, Controller, Delete, Get, Inject, Logger, Param, Post, Put } from '@nestjs/common';
 import { API, Repositories } from 'ssm-shared-lib';
 import { PlaybooksRegisterEngineService } from '../../application/services/engine/playbooks-register-engine.service';
 import { GitPlaybooksRegisterComponent } from '../../application/services/components/git-playbooks-register.component';
+import { PlaybooksRegisterService } from '../../application/services/playbooks-register.service';
+import { IPlaybooksRegister } from '../../domain/entities/playbooks-register.entity';
+import { PLAYBOOKS_REGISTER_SERVICE } from '../../domain/services/playbooks-register-service.interface';
+
+// Define string tokens for the services
+export const PLAYBOOKS_REGISTER_ENGINE_SERVICE = 'PLAYBOOKS_REGISTER_ENGINE_SERVICE';
+export const VAULT_CRYPTO_SERVICE = 'VAULT_CRYPTO_SERVICE';
 
 /**
  * Controller for managing Git playbooks repositories
@@ -15,10 +21,13 @@ export class GitPlaybooksRepositoryController {
   private readonly logger = new Logger(GitPlaybooksRepositoryController.name);
 
   constructor(
+    @Inject(PLAYBOOKS_REGISTER_ENGINE_SERVICE)
     private readonly playbooksRegisterEngineService: PlaybooksRegisterEngineService,
+    @Inject(PLAYBOOKS_REGISTER_SERVICE)
     private readonly playbooksRegisterService: PlaybooksRegisterService,
     @Inject(PLAYBOOKS_REGISTER_REPOSITORY)
     private readonly playbooksRegisterRepository: IPlaybooksRegisterRepository,
+    @Inject(VAULT_CRYPTO_SERVICE)
     private readonly vaultCryptoService: VaultCryptoService,
   ) {}
 
@@ -51,18 +60,24 @@ export class GitPlaybooksRepositoryController {
       ignoreSSLErrors,
     } = repository;
 
-    const register = await this.playbooksRegisterService.createGitRepository(
+    // Create the Git repository
+    const encryptedToken = await this.vaultCryptoService.encrypt(accessToken as string, DEFAULT_VAULT_ID);
+
+    // Create the repository in the database
+    const register = await this.playbooksRegisterRepository.create({
       name,
-      await this.vaultCryptoService.encrypt(accessToken as string, DEFAULT_VAULT_ID),
+      type: Repositories.RepositoryType.GIT,
+      enabled: true,
+      accessToken: encryptedToken,
       branch,
       email,
       userName,
       remoteUrl,
       gitService,
-      directoryExclusionList || [],
-      vaults as string[],
+      directoryExclusionList: directoryExclusionList || [],
+      vaults: vaults as string[],
       ignoreSSLErrors,
-    );
+    } as IPlaybooksRegister);
 
     await this.playbooksRegisterEngineService.registerRegister(register);
   }
@@ -110,23 +125,29 @@ export class GitPlaybooksRepositoryController {
       ignoreSSLErrors,
     } = repository;
 
-    const register = await this.playbooksRegisterService.updateRepository(
-      uuid,
-      {
-        name,
-        accessToken: await this.vaultCryptoService.encrypt(accessToken as string, DEFAULT_VAULT_ID),
-        branch,
-        email,
-        userName,
-        remoteUrl,
-        gitService,
-        directoryExclusionList: directoryExclusionList || [],
-        vaults: vaults as string[],
-        ignoreSSLErrors,
-      }
-    );
+    const encryptedToken = await this.vaultCryptoService.encrypt(accessToken as string, DEFAULT_VAULT_ID);
 
-    await this.playbooksRegisterEngineService.registerRegister(register);
+    // Find the repository
+    const existingRegister = await this.playbooksRegisterRepository.findByUuid(uuid);
+    if (!existingRegister) {
+      throw new NotFoundError(`Repository ${uuid} not found`);
+    }
+
+    // Update the repository
+    const updatedRegister = await this.playbooksRegisterRepository.update(uuid, {
+      name,
+      accessToken: encryptedToken,
+      branch,
+      email,
+      userName,
+      remoteUrl,
+      gitService,
+      directoryExclusionList: directoryExclusionList || [],
+      vaults: vaults as string[],
+      ignoreSSLErrors,
+    });
+
+    await this.playbooksRegisterEngineService.registerRegister(updatedRegister as IPlaybooksRegister);
   }
 
   /**

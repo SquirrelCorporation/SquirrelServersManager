@@ -1,6 +1,5 @@
 import { Logger } from '@nestjs/common';
 import { NotFoundError } from '@middlewares/api/ApiError';
-import { recursivelyFlattenTree } from '@modules/playbooks/utils/tree-utils';
 import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
 import { IPlaybook } from '@modules/playbooks/domain/entities/playbook.entity';
 import { PlaybookRepository } from '@modules/playbooks/infrastructure/repositories/playbook.repository';
@@ -8,6 +7,7 @@ import { PlaybooksRegisterRepository } from '@modules/playbooks/infrastructure/r
 import { FileSystemService, PlaybookFileService } from '@modules/shell';
 import directoryTree from 'src/helpers/directory-tree/directory-tree';
 import { SSM_DATA_PATH } from 'src/config';
+import { TreeNodeService } from '@modules/playbooks';
 
 // Using environment variable or default path
 export const DIRECTORY_ROOT = SSM_DATA_PATH ? `${SSM_DATA_PATH}/playbooks` : '/tmp/playbooks';
@@ -25,6 +25,7 @@ export default abstract class PlaybooksRegisterComponent {
 
   private static playbookRepository: PlaybookRepository;
   private static playbooksRegisterRepository: PlaybooksRegisterRepository;
+  private static treeNodeService: TreeNodeService;
 
   /**
    * Initialize the repositories used by all components
@@ -33,10 +34,12 @@ export default abstract class PlaybooksRegisterComponent {
    */
   public static initializeRepositories(
     playbookRepo: PlaybookRepository,
-    playbooksRegisterRepo: PlaybooksRegisterRepository
+    playbooksRegisterRepo: PlaybooksRegisterRepository,
+    treeNodeService: TreeNodeService,
   ): void {
     PlaybooksRegisterComponent.playbookRepository = playbookRepo;
     PlaybooksRegisterComponent.playbooksRegisterRepository = playbooksRegisterRepo;
+    PlaybooksRegisterComponent.treeNodeService = treeNodeService;
   }
 
   protected constructor(
@@ -44,6 +47,7 @@ export default abstract class PlaybooksRegisterComponent {
     protected readonly playbookFileService: PlaybookFileService,
     protected readonly playbookRepository: PlaybookRepository,
     protected readonly playbooksRegisterRepository: PlaybooksRegisterRepository,
+    protected readonly treeNodeService: TreeNodeService,
     uuid: string,
     name: string,
     rootPath: string
@@ -87,15 +91,18 @@ export default abstract class PlaybooksRegisterComponent {
   public async syncToDatabase() {
     this.childLogger.info('saving to database...');
     const playbooksRegister = await this.getPlaybooksRegister();
+    this.childLogger.info(`getting directories tree...`);
     const filteredTree = await this.updateDirectoriesTree();
     if (!filteredTree) {
+      this.childLogger.warn('No playbooks found in directory');
       return;
     }
+    this.childLogger.info(`getting playbooks from database...`);
     const playbooksListFromDatabase = await this.playbookRepository.listAllByRepository(playbooksRegister);
     this.childLogger.info(
       `Found ${playbooksListFromDatabase?.length || 0} playbooks from database`,
     );
-    const playbooksListFromDirectory = recursivelyFlattenTree(filteredTree).map((treeNode) => {
+    const playbooksListFromDirectory = this.treeNodeService.recursivelyFlattenTree(filteredTree).map((treeNode) => {
       if (treeNode && treeNode.extension?.match(FILE_PATTERN)) {
         this.childLogger.debug(`Found child : ${JSON.stringify(treeNode)}`);
         const { name, path } = treeNode;
@@ -137,6 +144,7 @@ export default abstract class PlaybooksRegisterComponent {
    * Get the playbooks repository
    */
   private async getPlaybooksRegister() {
+    this.childLogger.info(`Getting playbooks register ${this.uuid}`);
     const playbooksRegister = await this.playbooksRegisterRepository.findByUuid(this.uuid);
     if (!playbooksRegister) {
       throw new NotFoundError(`Playbooks repository ${this.uuid} not found`);
@@ -148,7 +156,9 @@ export default abstract class PlaybooksRegisterComponent {
    * Update the directory tree and save to database
    */
   public async updateDirectoriesTree() {
+    this.childLogger.info(`Updating directories tree for ${this.uuid}`);
     const playbooksRegister = await this.getPlaybooksRegister();
+    this.childLogger.info(`Getting directories tree... ${this.directory}`);
     const filteredTree = directoryTree(this.directory, {
       extensions: FILE_PATTERN,
       attributes: ['type', 'extension'],
@@ -200,8 +210,12 @@ export default abstract class PlaybooksRegisterComponent {
         this.childLogger.error(`Failed to parse configuration for ${foundPlaybook.name}: ${error.message}`);
       }
     }
-
-    await this.playbookRepository.updateOrCreate(playbookData);
+    this.childLogger.info(`Updating or creating playbook ${playbookData.name}`);
+    try {
+      await this.playbookRepository.updateOrCreate(playbookData);
+    } catch (error: any) {
+      this.childLogger.error(error, `Failed to update or create playbook ${playbookData.name}: ${error.message}`);
+    }
   }
 
   /**

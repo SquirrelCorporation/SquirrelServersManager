@@ -4,6 +4,7 @@ import { FileSystemService, PlaybookFileService } from '@modules/shell';
 import { PlaybookRepository } from '@modules/playbooks/infrastructure/repositories/playbook.repository';
 import { PlaybooksRegisterRepository } from '@modules/playbooks/infrastructure/repositories/playbooks-register.repository';
 import { GitComponentOptions, LocalComponentOptions } from '@modules/playbooks/domain/interfaces/component-options.interface';
+import { TreeNodeService } from '@modules/playbooks';
 import pinoLogger  from '../../../../../logger';
 import { GitPlaybooksRegisterComponent } from './git-playbooks-register.component';
 import { LocalPlaybooksRegisterComponent } from './local-playbooks-repository.component';
@@ -21,6 +22,7 @@ export class PlaybooksRegisterComponentFactory implements OnModuleInit {
     private readonly playbookRepository: PlaybookRepository,
     private readonly playbooksRegisterRepository: PlaybooksRegisterRepository,
     private readonly eventEmitter: EventEmitter2,
+    private readonly treeNodeService: TreeNodeService,
   ) {}
 
   /**
@@ -30,7 +32,8 @@ export class PlaybooksRegisterComponentFactory implements OnModuleInit {
     this.logger.log('Initializing PlaybooksRegisterComponentFactory');
     PlaybooksRegisterComponent.initializeRepositories(
       this.playbookRepository,
-      this.playbooksRegisterRepository
+      this.playbooksRegisterRepository,
+      this.treeNodeService
     );
     this.logger.log('PlaybooksRegisterComponentFactory initialized');
   }
@@ -49,6 +52,7 @@ export class PlaybooksRegisterComponentFactory implements OnModuleInit {
       this.playbookRepository,
       this.playbooksRegisterRepository,
       this.eventEmitter,
+      this.treeNodeService,
       options.uuid,
       pinoLogger, // Pass logger instance
       options.name,
@@ -76,10 +80,11 @@ export class PlaybooksRegisterComponentFactory implements OnModuleInit {
       this.playbookRepository,
       this.playbooksRegisterRepository,
       this.eventEmitter,
+      this.treeNodeService,
       options.uuid,
       pinoLogger, // Pass logger instance
       options.name,
-      options.directory || options.uuid
+      options.directory.replace(`/${options.uuid}`, '')
     );
   }
 }

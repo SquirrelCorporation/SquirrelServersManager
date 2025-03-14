@@ -7,14 +7,14 @@ import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks
 import { IPlaybooksRegisterRepository, PLAYBOOKS_REGISTER_REPOSITORY } from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
 import { IPlaybookRepository, PLAYBOOK_REPOSITORY } from '@modules/playbooks/domain/repositories/playbook-repository.interface';
 import { ForbiddenError, InternalError, NotFoundError } from '../../../../middlewares/api/ApiError';
-import { recursiveTreeCompletion } from '../../utils/tree-utils';
+import { IPlaybooksRegisterService } from '../../domain/services/playbooks-register-service.interface';
 import { PlaybooksRegisterEngineService } from './engine/playbooks-register-engine.service';
-
+import { TreeNodeService } from './tree-node.service';
 /**
  * Service for managing playbooks repositories
  */
 @Injectable()
-export class PlaybooksRegisterService implements OnModuleInit {
+export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnModuleInit {
   private readonly logger = new Logger(PlaybooksRegisterService.name);
 
   constructor(
@@ -22,12 +22,10 @@ export class PlaybooksRegisterService implements OnModuleInit {
     private readonly playbooksRegisterRepository: IPlaybooksRegisterRepository,
     @Inject(PLAYBOOK_REPOSITORY)
     private readonly playbookRepository: IPlaybookRepository,
-    @Inject(PlaybooksRegisterEngineService)
     private readonly playbooksRegisterEngineService: PlaybooksRegisterEngineService,
-    @Inject(FileSystemService)
     private readonly fileSystemService: FileSystemService,
-    @Inject(PlaybookFileService)
     private readonly playbookFileService: PlaybookFileService,
+    private readonly treeNodeService: TreeNodeService,
   ) {}
 
   /**
@@ -59,7 +57,8 @@ export class PlaybooksRegisterService implements OnModuleInit {
   async getAllPlaybooksRepositories(): Promise<API.PlaybooksRepository[]> {
     try {
        const registers = await this.playbooksRegisterRepository.findAllActive();
-
+      this.logger.log(`getAllPlaybooksRepositories - found ${registers.length} registers`);
+      this.logger.log(`getAllPlaybooksRepositories - registers: ${JSON.stringify(registers)}`);
       if (!registers) {
         return [];
       }
@@ -69,7 +68,7 @@ export class PlaybooksRegisterService implements OnModuleInit {
           this.logger.debug(`getAllPlaybooksRepositories - processing ${register.name}`);
           return {
             name: register.name,
-            children: await recursiveTreeCompletion(register.tree),
+            children: await this.treeNodeService.recursiveTreeCompletion(register.tree),
             type: register.type,
             uuid: register.uuid,
             path: register.directory,
