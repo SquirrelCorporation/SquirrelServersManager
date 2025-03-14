@@ -1,6 +1,9 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
+import { CacheModule } from '@infrastructure/cache';
+import { DevicesModule } from '@modules/devices';
+import { AnsibleModule } from '@modules/ansible';
 import { SECRET } from '../../config';
 import { UsersService } from './application/services/users.service';
 import { UsersController } from './presentation/controllers/users.controller';
@@ -19,6 +22,9 @@ import { UserRepositoryMapper } from './infrastructure/mappers/user-repository.m
       secret: SECRET,
       signOptions: { expiresIn: '24h' },
     }),
+    CacheModule,
+    DevicesModule,
+    forwardRef(() => AnsibleModule),
   ],
   controllers: [UsersController],
   providers: [

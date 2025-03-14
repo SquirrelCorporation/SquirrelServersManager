@@ -1,0 +1,1 @@
+export const DEVICES_SERVICE = 'IDevicesService'; 

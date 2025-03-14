@@ -1,4 +1,4 @@
-import { Global, Logger, Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { SshInfrastructureModule } from '@infrastructure/ssh/ssh-infrastructure.module';
 import { DevicesModule } from '../devices/devices.module';
 import { SshTerminalService } from './application/services/ssh-terminal.service';

@@ -4,9 +4,7 @@ import PlaybooksRegisterComponent from '@modules/playbooks/application/services/
 import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
 import { IPlaybooksRegisterRepository, PLAYBOOKS_REGISTER_REPOSITORY } from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import { SsmGit } from 'ssm-shared-lib';
-import { PlaybooksRegister } from '@modules/playbooks/infrastructure/schemas/playbooks-register.schema';
 import { GitComponentOptions, LocalComponentOptions } from '@modules/playbooks/domain/interfaces/component-options.interface';
 import { PlaybooksRegisterComponentFactory } from '../components/component-factory.service';
 
@@ -63,9 +61,6 @@ export class PlaybooksRegisterEngineService {
 
         component = await this.componentFactory.createLocalComponent(options);
       }
-
-      // Initialize the component
-      await component.init();
 
       // Register the component
       this.components[register.uuid] = component;

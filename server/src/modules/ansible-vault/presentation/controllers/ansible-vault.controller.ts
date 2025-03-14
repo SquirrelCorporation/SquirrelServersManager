@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/c
 import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { AnsibleVaultService } from '../../application/services/ansible-vault.service';
 import { CreateVaultDto, UpdateVaultDto, VaultPasswordResponseDto } from '../dto/ansible-vault.dto';
+import { Public } from '../../../../decorators/public.decorator';
 
 @Controller('ansible/vaults')
 @UseGuards(JwtAuthGuard)
@@ -45,12 +46,10 @@ export class AnsibleVaultController {
     @Body() updateVaultDto: UpdateVaultDto
   ) {
     await this.ansibleVaultService.updateVault(vaultId, updateVaultDto.password);
-    return {
-      success: true,
-      message: 'Vault updated',
-    };
+    return;
   }
 
+  @Public()
   @Get(':vaultId/password')
   async getVaultPassword(@Param('vaultId') vaultId: string) {
     const password = await this.ansibleVaultService.getVaultPassword(vaultId);
@@ -59,10 +58,6 @@ export class AnsibleVaultController {
       pwd: password,
     };
 
-    return {
-      success: true,
-      message: 'Successfully got vault pwd',
-      data: response,
-    };
+    return response;
   }
 }

@@ -14,6 +14,7 @@ export { IDevice, IDeviceAuth };
 export * from './domain/entities/device.entity';
 export * from './domain/repositories/device-repository.interface';
 export * from './domain/repositories/device-auth-repository.interface';
+export * from './domain/services/devices-service.interface';
 // Application exports
 export * from './application/interfaces/devices-service.interface';
 export * from './application/services/devices.service';

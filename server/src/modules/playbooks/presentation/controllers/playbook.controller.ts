@@ -77,13 +77,14 @@ export class PlaybookController {
       throw new Error('Playbook not found');
     }
 
-    return await this.playbookService.executePlaybook(
+    const result = await this.playbookService.executePlaybook(
       playbook,
       user,
       execData.target,
       execData.extraVars,
       execData.mode || SsmAnsible.ExecutionMode.APPLY,
     );
+    return { execId: result };
   }
 
   @Post('exec/quick-ref/:quickRef')
@@ -98,13 +99,14 @@ export class PlaybookController {
       throw new Error('Playbook not found');
     }
 
-    return await this.playbookService.executePlaybook(
+    const result =  await this.playbookService.executePlaybook(
       playbook,
       user,
       execData.target,
       execData.extraVars,
       execData.mode || SsmAnsible.ExecutionMode.APPLY,
     );
+    return { execId: result };
   }
 
   @Post('exec/inventory/:uuid')
@@ -130,5 +132,23 @@ export class PlaybookController {
       execData.extraVars,
       execData.execUuid,
     );
+  }
+
+  @Get('exec/:uuid/logs')
+  async getExecLogs(@Param('uuid') uuid: string) {
+    const execLogs = await this.playbookService.getExecLogs(uuid);
+    return {
+      execId: uuid,
+      execLogs: execLogs,
+    }
+  }
+
+  @Get('exec/:uuid/status')
+  async getExecStatus(@Param('uuid') uuid: string) {
+    const taskStatuses = await this.playbookService.getExecStatus(uuid);
+    return {
+    execId: uuid,
+    execStatuses: taskStatuses,
+  }
   }
 }

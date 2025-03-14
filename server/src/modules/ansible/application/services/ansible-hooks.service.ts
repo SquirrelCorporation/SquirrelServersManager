@@ -10,7 +10,7 @@ import { isFinalStatus } from '../../../../helpers/ansible/AnsibleTaskHelper';
 import { ISshKeyService } from '../../../shell/application/interfaces/ssh-key.interface';
 
 @Injectable()
-export class PlaybookHooksService {
+export class AnsibleHooksService {
   constructor(
     @Inject('IAnsibleTaskRepository')
     private readonly taskRepository: IAnsibleTaskRepository,
@@ -71,6 +71,7 @@ export class PlaybookHooksService {
       ident: taskEventDto.runner_ident,
       content: taskEventDto.stdout ? removeEmptyLines(taskEventDto.stdout) : JSON.stringify(taskEventDto),
       logRunnerId: taskEventDto.uuid,
+      stdout: taskEventDto.stdout,
     });
 
     return { message: 'Task event logged successfully' };

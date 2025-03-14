@@ -19,6 +19,7 @@ export class ShellWrapperService implements IShellWrapperService {
   cp = ShellWrapper.cp;
   ln = ShellWrapper.ln;
   exec = ShellWrapper.exec;
+  cd = ShellWrapper.cd;
 
   /**
    * Write content to a file

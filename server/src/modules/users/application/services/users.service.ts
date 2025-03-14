@@ -1,7 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { ICacheService } from '@infrastructure/cache';
+import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
+import { SSM_DATA_PATH } from 'src/config';
+import { SettingsKeys, SsmAnsible } from 'ssm-shared-lib';
+import { AnsibleCommandService } from '@modules/ansible';
 import { IUser, Role } from '../../domain/entities/user.entity';
 import { IUserRepository, USER_REPOSITORY } from '../../domain/repositories/user-repository.interface';
 import PinoLogger from '../../../../logger';
+import { dependencies, version } from '../../../../../package.json';
 
 const logger = PinoLogger.child({ module: 'UsersService' });
 
@@ -10,6 +16,9 @@ export class UsersService {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: IUserRepository,
+    @Inject('ICacheService') private readonly cacheService: ICacheService,
+    @Inject(DEVICES_SERVICE) private readonly devicesService: IDevicesService,
+    private readonly ansibleCommandService: AnsibleCommandService
   ) {}
 
   async createUser(userData: IUser): Promise<IUser> {
@@ -77,29 +86,36 @@ export class UsersService {
   }
 
   async getCurrentUser(user: IUser) {
-    const online = 0;
-    const offline = 0;
-    const totalCpu = 0;
-    const totalMem = 0;
-    const overview = [];
+    const { online, offline, totalCpu, totalMem, overview } =
+      await this.devicesService.getDevicesOverview();
     const systemPerformance = {
       danger: false,
       message: '',
     };
-    const serverLogRetention = 0;
-    const ansibleLogRetention = 0;
-    const deviceStatsRetention = 0;
-    const containerStatsRetention = 0;
-    const performanceMinMem = 0;
-    const performanceMaxCpu = 0;
-    const updateAvailable = false;
-    const SSM_DATA_PATH = '';
-    const masterNodeUrl = '';
-    const considerDeviceOffline = false;
-    const version = '';
-    const dependencies = [];
-    const getAnsibleVersion = async () => '';
-    const getAnsibleRunnerVersion = async () => '';
+     const considerDeviceOffline = await this.cacheService.get(
+    SettingsKeys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
+  );
+  const serverLogRetention = await this.cacheService.get(
+    SettingsKeys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS,
+  );
+  const containerStatsRetention = await this.cacheService.get(
+    SettingsKeys.GeneralSettingsKeys.CONTAINER_STATS_RETENTION_IN_DAYS,
+  );
+  const deviceStatsRetention = await this.cacheService.get(
+    SettingsKeys.GeneralSettingsKeys.DEVICE_STATS_RETENTION_IN_DAYS,
+  );
+  const ansibleLogRetention = await this.cacheService.get(
+    SettingsKeys.GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
+  );
+  const performanceMinMem = await this.cacheService.get(
+    SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
+  );
+  const performanceMaxCpu = await this.cacheService.get(
+    SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
+  );
+  const updateAvailable = await this.cacheService.get(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE);
+  const masterNodeUrl = await this.cacheService.get(SsmAnsible.DefaultSharedExtraVarsList.MASTER_NODE_URL);
+
     return {
     name: user?.name,
     avatar: user?.avatar,
@@ -142,8 +158,8 @@ export class UsersService {
         version: version,
         deps: dependencies,
         processes: process.versions,
-        ansibleVersion: await getAnsibleVersion(),
-        ansibleRunnerVersion: await getAnsibleRunnerVersion(),
+        ansibleVersion: await this.ansibleCommandService.getAnsibleVersion(),
+        ansibleRunnerVersion: await this.ansibleCommandService.getAnsibleRunnerVersion(),
       },
       updateAvailable,
       ssmDataPath: SSM_DATA_PATH,

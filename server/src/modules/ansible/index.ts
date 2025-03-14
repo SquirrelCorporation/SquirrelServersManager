@@ -12,7 +12,7 @@ import { AnsibleTaskStatusRepository } from './infrastructure/repositories/ansib
 import { AnsibleTaskRepository } from './infrastructure/repositories/ansible-task.repository';
 import { AnsibleTaskStatus, AnsibleTaskStatusSchema } from './infrastructure/schemas/ansible-task-status.schema';
 import { AnsibleTask, AnsibleTaskSchema } from './infrastructure/schemas/ansible-task.schema';
-
+import { TaskLogsService } from './application/services/task-logs.service';
 
 // Export all NestJS services
 export {
@@ -32,6 +32,7 @@ export {
   AnsibleTaskStatusSchema,
   AnsibleTask,
   AnsibleTaskSchema,
+  TaskLogsService
 };
 
 // Domain exports

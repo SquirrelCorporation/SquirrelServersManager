@@ -4,8 +4,9 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
 import mongoose from 'mongoose';
+import { LoggerModule } from 'nestjs-pino';
 import { db } from './config';
-import logger from './logger';
+import logger, { httpLoggerOptions } from './logger';
 import { AnsibleConfigModule } from './modules/ansible-config/ansible-config.module';
 import { AnsibleModule } from './modules/ansible/ansible.module';
 import { AnsibleVaultModule } from './modules/ansible-vault/ansible-vault.module';
@@ -37,6 +38,27 @@ let connectionReady = false;
 
 @Module({
   imports: [
+    LoggerModule.forRoot({
+      pinoHttp: {...httpLoggerOptions, transport: {
+          targets: [
+            {
+              target: 'pino-pretty',
+              options: {
+                colorize: true,
+              },
+            },
+            {
+              target: 'pino-mongodb',
+      options: {
+        uri: `mongodb://${db.host}:${db.port}/`,
+        database: `${db.name}`,
+        collection: 'logs',
+      },
+    },
+          ],
+        },
+    }
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
     }),

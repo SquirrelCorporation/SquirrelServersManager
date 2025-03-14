@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SsmAnsible } from 'ssm-shared-lib';
+import { SsmAnsible, SsmStatus } from 'ssm-shared-lib';
 import { IDevicesService } from '../interfaces/devices-service.interface';
 import { DEVICE_REPOSITORY } from '../../domain/repositories/device-repository.interface';
 import { IDeviceRepository } from '../../domain/repositories/device-repository.interface';
@@ -213,5 +213,33 @@ export class DevicesService implements IDevicesService {
     };
 
     return this.updateDeviceAuth(transformedAuth);
+  }
+
+  async getDevicesOverview(): Promise<{ online?: number; offline?: number; totalCpu?: number; totalMem?: number; overview?: any }> {
+    const devices = await this.findAll();
+   const offline = devices?.filter((e) => e.status === SsmStatus.DeviceStatus.OFFLINE).length;
+  const online = devices?.filter((e) => e.status === SsmStatus.DeviceStatus.ONLINE).length;
+  const overview = devices?.map((e) => {
+    return {
+      name: e.status !== SsmStatus.DeviceStatus.UNMANAGED ? e.fqdn : e.ip,
+      status: e.status,
+      uuid: e.uuid,
+      cpu: e.systemInformation?.cpu?.speed || 0,
+      mem: e.systemInformation?.mem?.total || 0,
+    };
+  });
+  const totalCpu = devices?.reduce((accumulator, currentValue) => {
+    return accumulator + (currentValue?.systemInformation?.cpu?.speed || 0);
+  }, 0);
+  const totalMem = devices?.reduce((accumulator, currentValue) => {
+    return accumulator + (currentValue?.systemInformation?.mem?.total || 0);
+  }, 0);
+  return {
+    offline: offline,
+    online: online,
+    overview: overview,
+    totalCpu: totalCpu ? totalCpu : NaN,
+    totalMem: totalMem ? totalMem : NaN,
+  };
   }
 }

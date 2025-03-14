@@ -65,7 +65,7 @@ export class Playbook {
 
   @Prop({
     type: MongooseSchema.Types.ObjectId,
-    ref: 'PlaybookRepository',
+    ref: 'PlaybooksRegister',
     required: true,
     index: true,
   })

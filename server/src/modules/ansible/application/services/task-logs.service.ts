@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
+import { AnsibleTaskStatusRepository } from '@modules/ansible';
 import { filterByQueryParams } from '../../../../helpers/query/FilterHelper';
 import { filterByFields } from '../../../../helpers/query/FilterHelper';
 import { sortByFields } from '../../../../helpers/query/SorterHelper';
@@ -19,6 +20,7 @@ export class TaskLogsService {
     private readonly ansibleTaskRepository: AnsibleTaskRepository,
     @Inject('IAnsibleLogsRepository')
     private readonly ansibleLogsRepository: IAnsibleLogsRepository,
+    private readonly ansibleTaskStatusRepository: AnsibleTaskStatusRepository,
   ) {}
 
   /**
@@ -97,6 +99,21 @@ export class TaskLogsService {
       return events;
     } catch (error) {
       this.logger.error(`Error getting task logs for ${id}`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get all task status by ident
+   * @param ident - The task ident
+   * @returns The task statuses
+   */
+  async getTaskStatuses(ident: string) {
+    try {
+      const events = await this.ansibleTaskStatusRepository.findByTaskIdent(ident);
+      return events;
+    } catch (error) {
+      this.logger.error(`Error getting task logs for ${ident}`, error);
       throw error;
     }
   }

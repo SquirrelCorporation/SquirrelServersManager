@@ -1,11 +1,11 @@
 import { Test } from '@nestjs/testing';
-import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { DefaultPlaybooksRegisterService } from '../../../application/services/default-playbooks-register.service';
-import { PlaybooksRegisterRepository } from '../../../infrastructure/repositories/playbooks-register.repository';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { FileSystemService } from '@modules/shell';
-import { IPlaybooksRegister } from '../../../domain/entities/playbooks-register.entity';
 import { Repositories } from 'ssm-shared-lib';
 import { SSM_DATA_PATH, SSM_INSTALL_PATH } from 'src/config';
+import { DefaultPlaybooksRegisterService } from '../../../application/services/default-playbooks-register.service';
+import { PlaybooksRegisterRepository } from '../../../infrastructure/repositories/playbooks-register.repository';
+import { IPlaybooksRegister } from '../../../domain/entities/playbooks-register.entity';
 
 // Mock config values
 vi.mock('src/config', () => ({

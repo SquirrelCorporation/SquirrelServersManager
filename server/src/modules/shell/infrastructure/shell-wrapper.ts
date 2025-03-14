@@ -15,6 +15,7 @@ export const ShellWrapper = {
   cp: shell.cp.bind(shell),
   ln: shell.ln.bind(shell),
   exec: shell.exec.bind(shell),
+  cd: shell.cd.bind(shell),
   to: (content: string, path: string): ShellString => {
     const result = shell.ShellString(content);
     result.to(path);

@@ -5,6 +5,7 @@ import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import { pinoHttp } from 'pino-http';
+import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import { SECRET } from './config';
 import metrics from './controllers/rest/metrics/metrics';
@@ -58,8 +59,8 @@ class AppWrapper extends EventManager {
       this.setupRoutes();
 
       // Create NestJS app with Express adapter using our existing Express app
-      const nestApp = await NestFactory.create<NestExpressApplication>(AppModule);
-
+      const nestApp = await NestFactory.create<NestExpressApplication>(AppModule, { bufferLogs: true });
+      nestApp.useLogger(nestApp.get(Logger));
       nestApp.listen(3000);
       nestApp.use(cookieParser());
       nestApp.use(passport.initialize());
@@ -71,11 +72,12 @@ class AppWrapper extends EventManager {
         new ValidationPipe({
           transform: true,
           whitelist: true,
-          forbidNonWhitelisted: true,
+          forbidNonWhitelisted: false,
+          forbidUnknownValues: false,
         })
       );
       // Apply global interceptor for standardized response format
-      nestApp.useGlobalInterceptors(new TransformInterceptor());
+      nestApp.useGlobalInterceptors(new TransformInterceptor(), new LoggerErrorInterceptor());
 
       // Apply global exception filter
       nestApp.useGlobalFilters(new HttpExceptionFilter());

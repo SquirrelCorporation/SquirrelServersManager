@@ -38,8 +38,8 @@ export class ServerLogsService implements IServerLogsService {
     // Map to DTOs
     const dtos = dataSource.map(log => this.serverLogPresentationMapper.toDto(log));
 
-    return {
-      data: dtos,
+    return dtos;
+    /*
       meta: {
         total: totalBeforePaginate,
         success: true,
@@ -48,5 +48,6 @@ export class ServerLogsService implements IServerLogsService {
       },
       message: 'Get server logs successful',
     };
+    */
   }
 }

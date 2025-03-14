@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards, Inject } from '@nestjs/common';
+import { Controller, Get, Inject, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
 import { ISmartFailureService } from '../../application/interfaces/smart-failure.service.interface';
 import { SmartFailureRequestDto } from '../dtos/smart-failure.dto';
@@ -25,10 +25,6 @@ export class SmartFailureController {
     const smartFailure =
       await this.smartFailureService.parseAnsibleLogsAndMayGetSmartFailure(execId);
 
-    return {
-      status: 'success',
-      message: 'May got Ansible SmartFailure',
-      data: smartFailure,
-    };
+    return smartFailure;
   }
 }

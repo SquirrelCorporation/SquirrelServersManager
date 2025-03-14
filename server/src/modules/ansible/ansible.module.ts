@@ -15,15 +15,16 @@ import { InventoryTransformerService } from './application/services/inventory-tr
 import { ExtraVarsService } from './application/services/extra-vars.service';
 import { ExtraVarsTransformerService } from './application/services/extra-vars-transformer.service';
 import { TaskLogsService } from './application/services/task-logs.service';
-import { PlaybookHooksService } from './application/services/playbook-hooks.service';
-import { TaskLogsController } from './presentation/controllers/task-logs.controller';
-import { GalaxyController } from './presentation/controllers/galaxy.controller';
-import { PlaybookHooksController } from './presentation/controllers/playbook-hooks.controller';
+import { AnsibleHooksService } from './application/services/ansible-hooks.service';
+import { TaskLogsController } from './presentation/controllers/ansible-task-logs.controller';
+import { GalaxyController } from './presentation/controllers/ansible-galaxy.controller';
+import { AnsibleHooksController } from './presentation/controllers/ansible-hooks.controller';
 import { GalaxyService } from './application/services/galaxy.service';
 import { AnsibleTaskRepository } from './infrastructure/repositories/ansible-task.repository';
 import { AnsibleTaskStatusRepository } from './infrastructure/repositories/ansible-task-status.repository';
 import { AnsibleTask, AnsibleTaskSchema } from './infrastructure/schemas/ansible-task.schema';
 import { AnsibleTaskStatus, AnsibleTaskStatusSchema } from './infrastructure/schemas/ansible-task-status.schema';
+import { IAnsibleTaskRepository } from './domain/repositories/ansible-task.repository.interface';
 
 /**
  * AnsibleModule provides services for executing Ansible commands and playbooks
@@ -42,7 +43,7 @@ import { AnsibleTaskStatus, AnsibleTaskStatusSchema } from './infrastructure/sch
     ]),
     CacheModule,
   ],
-  controllers: [TaskLogsController, GalaxyController, PlaybookHooksController],
+  controllers: [TaskLogsController, GalaxyController, AnsibleHooksController],
   providers: [
     AnsibleCommandService,
     AnsibleCommandBuilderService,
@@ -56,7 +57,7 @@ import { AnsibleTaskStatus, AnsibleTaskStatusSchema } from './infrastructure/sch
       provide: DEFAULT_VAULT_ID,
       useValue: DEFAULT_VAULT_ID,
     },
-    PlaybookHooksService,
+    AnsibleHooksService,
     AnsibleTaskRepository,
     AnsibleTaskStatusRepository,
     {
@@ -65,7 +66,7 @@ import { AnsibleTaskStatus, AnsibleTaskStatusSchema } from './infrastructure/sch
     },
     {
       provide: 'IAnsibleTaskRepository',
-      useExisting: AnsibleTaskRepository,
+      useClass: AnsibleTaskRepository,
     },
     {
       provide: 'IAnsibleTaskStatusRepository',
@@ -85,7 +86,7 @@ import { AnsibleTaskStatus, AnsibleTaskStatusSchema } from './infrastructure/sch
     ExtraVarsTransformerService,
     TaskLogsService,
     GalaxyService,
-    PlaybookHooksService,
+    AnsibleHooksService,
     AnsibleTaskRepository,
     AnsibleTaskStatusRepository,
     'ICacheService',

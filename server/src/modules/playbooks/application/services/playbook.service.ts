@@ -7,6 +7,7 @@ import { IShellWrapperService } from '@modules/shell';
 import { ICacheService } from '@infrastructure/cache';
 import { IPlaybook } from '@modules/playbooks/domain/entities/playbook.entity';
 import { Playbooks } from 'src/types/typings';
+import { TaskLogsService } from '@modules/ansible';
 import { IPlaybookRepository, PLAYBOOK_REPOSITORY } from '../../domain/repositories/playbook-repository.interface';
 
 @Injectable()
@@ -17,7 +18,8 @@ export class PlaybookService {
     @Inject('ICacheService') private readonly cacheService: ICacheService,
     @Inject('SHELL_WRAPPER_SERVICE') private readonly shellWrapperService: IShellWrapperService,
     private readonly extraVarsService: ExtraVarsService,
-    private readonly ansibleCommandService: AnsibleCommandService
+    private readonly ansibleCommandService: AnsibleCommandService,
+    private readonly ansibleTaskService: TaskLogsService
   ) {}
 
   async completeExtraVar(
@@ -120,5 +122,13 @@ export class PlaybookService {
       ...playbook,
       extraVars: removedVar,
     });
+  }
+
+  async getExecLogs(execId: string) {
+    return this.ansibleTaskService.getTaskLogs(execId);
+  }
+
+  async getExecStatus(execId: string) {
+    return this.ansibleTaskService.getTaskStatuses(execId);
   }
 }
