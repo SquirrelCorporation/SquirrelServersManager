@@ -14,7 +14,7 @@ import { AnsibleVaultModule } from './modules/ansible-vault/ansible-vault.module
 import { AuthModule } from './modules/auth/auth.module';
 //import { AutomationsModule } from './modules/automations/automations.module';
 import { ContainerStacksModule } from './modules/container-stacks/container-stacks.module';
-//import { ContainersModule } from './modules/containers/containers.module';
+import { ContainersModule } from './modules/containers/containers.module';
 import { DevicesModule } from './modules/devices/devices.module';
 import { DiagnosticModule } from './modules/diagnostic/diagnostic.module';
 import { LogsModule } from './modules/logs/logs.module';
@@ -31,6 +31,7 @@ import { CacheModule } from './infrastructure/cache';
 import { SshInfrastructureModule } from './infrastructure/ssh/ssh-infrastructure.module';
 import { HealthModule } from './modules/health/health.module';
 import { StatisticsModule } from './modules/statistics/statistics.module';
+import { PluginModule } from './infrastructure/plugins';
 
 // Store the connection for legacy code to access
 let sharedConnection: mongoose.Connection | null = null;
@@ -146,7 +147,7 @@ let connectionReady = false;
     StatisticsModule,
     //   AutomationsModule,
     ContainerStacksModule,
-    // ContainersModule,
+    // ContainersModule, // Temporarily disabled due to TypeScript compilation issues
     DevicesModule,
     UpdateModule,
     DiagnosticModule,
@@ -166,6 +167,7 @@ let connectionReady = false;
     SchedulerModule,
     SettingsModule,
     HealthModule,
+    PluginModule,
   ],
 })
 export class AppModule implements OnModuleInit {
