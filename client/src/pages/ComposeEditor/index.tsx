@@ -15,7 +15,7 @@ import {
   postContainerCustomStack,
   postContainerCustomStackDryRun,
   postTransformContainerCustomStack,
-} from '@/services/rest/containers';
+} from '@/services/rest/container-stacks';
 import {
   ApartmentOutlined,
   CheckOutlined,

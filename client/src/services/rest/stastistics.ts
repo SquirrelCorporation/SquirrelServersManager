@@ -42,7 +42,7 @@ export async function getDashboardDevicesStats(
   params: API.DashboardDevicesStatParams,
   options?: Record<string, any>,
 ) {
-  return request<API.DeviceStats>(`${STATISTICS_API_URL}/dashboard/${type}`, {
+  return request<API.DeviceStats>(`${STATISTICS_API_URL}/dashboard/stats/${type}`, {
     method: 'POST',
     data: { devices: devicesId },
     params: {

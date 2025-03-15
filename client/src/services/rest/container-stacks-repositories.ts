@@ -1,12 +1,14 @@
 import { request } from '@umijs/max';
 import { API } from 'ssm-shared-lib';
 
+const API_PATH = '/api/container-stacks/repositories';
+
 export async function getGitContainerStacksRepositories(
   params?: any,
   options?: Record<string, any>,
 ) {
   return request<API.Response<API.GitContainerStacksRepository[]>>(
-    `/api/container-repository/git/`,
+    `${API_PATH}`,
     {
       method: 'GET',
       params: {
@@ -24,7 +26,7 @@ export async function postContainerStacksGitRepository(
   options?: Record<string, any>,
 ) {
   return request<API.SimpleResult>(
-    `/api/container-repository/git/${repositoryUuid}`,
+    `${API_PATH}/${repositoryUuid}`,
     {
       data: { ...repository },
       method: 'POST',
@@ -41,7 +43,7 @@ export async function putContainerStacksGitRepository(
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.SimpleResult>(`/api/container-repository/git/`, {
+  return request<API.SimpleResult>(`${API_PATH}`, {
     data: { ...repository },
     method: 'PUT',
     params: {
@@ -56,7 +58,7 @@ export async function deleteContainerStacksGitRepository(
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.SimpleResult>(`/api/container-repository/git/${uuid}`, {
+  return request<API.SimpleResult>(`${API_PATH}/${uuid}`, {
     method: 'DELETE',
     params: {
       ...params,
@@ -71,7 +73,7 @@ export async function syncToDatabaseContainerStacksGitRepository(
   options?: Record<string, any>,
 ) {
   return request<API.SimpleResult>(
-    `/api/container-repository/git/${uuid}/sync-to-database-repository`,
+    `${API_PATH}/${uuid}/sync-to-database`,
     {
       method: 'POST',
       params: {
@@ -88,7 +90,7 @@ export async function forcePullContainerStacksGitRepository(
   options?: Record<string, any>,
 ) {
   return request<API.SimpleResult>(
-    `/api/container-repository/git/${uuid}/force-pull-repository`,
+    `${API_PATH}/${uuid}/force-pull`,
     {
       method: 'POST',
       params: {
@@ -105,7 +107,7 @@ export async function forceCloneContainerStacksGitRepository(
   options?: Record<string, any>,
 ) {
   return request<API.SimpleResult>(
-    `/api/container-repository/git/${uuid}/force-clone-repository`,
+    `${API_PATH}/${uuid}/force-clone`,
     {
       method: 'POST',
       params: {
@@ -122,7 +124,7 @@ export async function commitAndSyncContainerStacksGitRepository(
   options?: Record<string, any>,
 ) {
   return request<API.SimpleResult>(
-    `/api/container-repository/git/${uuid}/commit-and-sync-repository`,
+    `${API_PATH}/${uuid}/commit-and-sync`,
     {
       method: 'POST',
       params: {
@@ -139,7 +141,7 @@ export async function forceRegisterContainerStacksGitRepository(
   options?: Record<string, any>,
 ) {
   return request<API.SimpleResult>(
-    `/api/container-repository/git/${uuid}/force-register`,
+    `${API_PATH}/${uuid}/force-register`,
     {
       method: 'POST',
       params: {

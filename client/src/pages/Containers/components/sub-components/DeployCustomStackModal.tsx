@@ -1,7 +1,7 @@
 import { StackIcon } from '@/components/ComposeEditor/StackIconSelector';
 import { Target } from '@/components/Icons/CustomIcons';
 import DockerOpsModal from '@/pages/Containers/components/sub-components/DockerOpsModal';
-import { postDeployContainerCustomStack } from '@/services/rest/containers';
+import { postDeployContainerCustomStack } from '@/services/rest/container-stacks';
 import { getAllDevices } from '@/services/rest/device';
 import { CheckCircleFilled, RocketOutlined } from '@ant-design/icons';
 import {

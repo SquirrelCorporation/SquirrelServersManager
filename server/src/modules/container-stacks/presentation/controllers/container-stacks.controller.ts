@@ -21,17 +21,17 @@ export class ContainerStacksController {
     private readonly containerStacksService: IContainerStacksService,
   ) {}
 
-  @Get('stacks')
+  @Get()
   async getAllStacks(): Promise<ContainerCustomStack[]> {
     return this.containerStacksService.getAllStacks();
   }
 
-  @Post('stacks')
+  @Post()
   async createStack(@Body() stack: ContainerCustomStack): Promise<ContainerCustomStack> {
     return this.containerStacksService.createStack(stack);
   }
 
-  @Put('stacks/:uuid')
+  @Put(':uuid')
   async updateStack(
     @Param('uuid') uuid: string,
     @Body() stack: Partial<ContainerCustomStack>,
@@ -39,7 +39,7 @@ export class ContainerStacksController {
     return this.containerStacksService.updateStack(uuid, stack);
   }
 
-  @Delete('stacks/:uuid')
+  @Delete(':uuid')
   async deleteStack(@Param('uuid') uuid: string): Promise<boolean> {
     return this.containerStacksService.deleteStackByUuid(uuid);
   }

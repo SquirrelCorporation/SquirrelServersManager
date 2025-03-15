@@ -1,5 +1,6 @@
 import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { IPlaybook, PlaybookRepository, PlaybookService } from '@modules/playbooks';
+import { PlaybookFileService } from '@modules/shell';
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { User } from 'src/decorators/user.decorator';
 import { Playbooks } from 'src/types/typings';
@@ -12,6 +13,7 @@ export class PlaybookController {
   constructor(
     private readonly playbookService: PlaybookService,
     private readonly playbookRepository: PlaybookRepository,
+    private readonly playbookFileService: PlaybookFileService,
   ) {}
 
   @Get()
@@ -21,20 +23,22 @@ export class PlaybookController {
 
   @Get(':uuid')
   async getPlaybook(@Param('uuid') uuid: string) {
-    return this.playbookRepository.findOneByUuid(uuid);
+     const playbook = await this.playbookRepository.findOneByUuid(uuid);
+    if (!playbook) {
+      throw new Error('Playbook not found');
+    }
+
+    return this.playbookFileService.readPlaybook(playbook.path)
   }
 
   @Patch(':uuid')
-  async editPlaybook(@Param('uuid') uuid: string, @Body() updateData: Partial<IPlaybook>) {
+  async editPlaybook(@Param('uuid') uuid: string, @Body() updateData: { content: string }) {
     const playbook = await this.playbookRepository.findOneByUuid(uuid);
     if (!playbook) {
       throw new Error('Playbook not found');
     }
 
-    return this.playbookRepository.updateOrCreate({
-      ...playbook,
-      ...updateData,
-    });
+    return this.playbookFileService.editPlaybook(playbook.path, updateData.content)
   }
 
   @Delete(':uuid')
