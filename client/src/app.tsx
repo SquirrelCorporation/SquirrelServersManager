@@ -20,6 +20,8 @@ import defaultSettings from '../config/defaultSettings';
 import { version } from '../package.json';
 import Logo from '../public/logo.svg';
 import { errorConfig } from './requestErrorConfig';
+import { PluginProvider } from './plugins/contexts/plugin-context';
+import PluginRoutes from './plugins/components/PluginRoutes';
 
 const loginPath = '/user/login';
 const onboardingPath = '/user/onboarding';
@@ -91,6 +93,7 @@ export const layout: RunTimeLayoutConfig = ({
 }) => {
   return {
     logo: Logo,
+    title: 'Squirrel Servers Manager',
     actionsRender: () => [
       <DocumentationWidget key="doc" />,
       <DevicesHeaderWidget key="online" />,
@@ -121,30 +124,31 @@ export const layout: RunTimeLayoutConfig = ({
     //  403
     // unAccessible: <div>unAccessible</div>,
     //  loading
-    childrenRender: (children: any) => {
-      // if (initialState?.loading) return <PageLoading />;
-      const versionMismatch =
-        version != initialState?.currentUser?.settings?.server.version;
+    contentStyle: { margin: 0 },
+    // @ts-ignore
+    childrenRender: (children) => {
+      const versionMismatch = version != initialState?.currentUser?.settings?.server.version;
+      
       return (
-        <>
-          <AlertNotification />
-          {initialState?.currentUser?.settings?.server.version &&
-            versionMismatch && (
-              <Alert
-                style={{ marginTop: 20, marginLeft: 20, marginRight: 20 }}
-                message="Version Mismatch"
-                description={`The server version (${initialState?.currentUser?.settings?.server.version}) does not match the client version (${version}). You may need to retry a docker compose pull to update SSM.`}
-                type="warning"
-                showIcon
-                banner
-              />
-            )}
-          {initialState?.currentUser?.devices?.overview &&
+        <PluginProvider>
+          {initialState?.currentUser?.settings?.server.version && versionMismatch && (
+            <Alert
+              style={{ marginTop: 20, marginLeft: 20, marginRight: 20 }}
+              message="Version Mismatch"
+              description={`The server version (${initialState?.currentUser?.settings?.server.version}) does not match the client version (${version}). You may need to retry a docker compose pull to update SSM.`}
+              type="warning"
+              showIcon
+              banner
+            />
+          )}
+          {initialState?.currentUser?.devices?.overview && 
             initialState?.currentUser?.devices?.overview?.length === 0 && (
-              <NoDeviceModal />
-            )}
+            <NoDeviceModal />
+          )}
           {children}
-        </>
+          <PluginRoutes />
+          <AlertNotification />
+        </PluginProvider>
       );
     },
     ...initialState?.settings,

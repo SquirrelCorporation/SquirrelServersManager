@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AbstractWatcherComponent } from './abstract-watcher.component';
-import { SSMServicesTypes } from '../../../../../types/typings';
+import { SSMServicesTypes } from '../../../../../types/typings.d';
 import PinoLogger from '../../../../../logger';
 import { ContainerService } from '../container.service';
 import * as Docker from 'dockerode';

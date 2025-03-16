@@ -77,6 +77,7 @@ services:
     volumes:
       - ./server/src:/opt/squirrelserversmanager/server/src
       - ./.data.dev:/data
+      - ./plugins:/opt/squirrelserversmanager/plugins
     environment:
       NODE_ENV: development
       DEBUG: nodejs-docker-express:*
@@ -98,6 +99,7 @@ services:
       - ./client/src:/opt/squirrelserversmanager/client/src
       - ./client/config:/opt/squirrelserversmanager/client/config
       - ./client/public:/opt/squirrelserversmanager/client/public
+      - ./plugins:/opt/squirrelserversmanager/client/public/plugins
     labels:
       wud.display.name: "SSM - Client"
       wud.watch.digest: false

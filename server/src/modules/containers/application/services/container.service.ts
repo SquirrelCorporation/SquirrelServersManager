@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ContainerServiceInterface } from '../interfaces/container-service.interface';
 import { ContainerEntity } from '../../domain/entities/container.entity';
 import { CONTAINER_REPOSITORY } from '../../domain/repositories/container-repository.interface';
-import { SSMServicesTypes } from '../../../../types/typings';
+import { SSMServicesTypes } from '../../../../types/typings.d';
 import { WatcherEngineServiceInterface } from '../interfaces/watcher-engine-service.interface';
 import { WATCHER_ENGINE_SERVICE } from '../interfaces/watcher-engine-service.interface';
 import { DevicesService } from '../../../devices/application/services/devices.service';

@@ -1,6 +1,6 @@
 import { OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import Component, { Kind } from '../../core/Component';
-import { SSMServicesTypes } from '../../../../types/typings';
+import { SSMServicesTypes } from '../../../../types/typings.d';
 import Docker from '../../watchers/providers/docker/Docker';
 import Registry from '../../registries/Registry';
 import Device from '../../../../data/database/model/Device';

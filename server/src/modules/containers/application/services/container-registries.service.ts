@@ -4,7 +4,7 @@ import { ContainerRegistriesServiceInterface } from '../interfaces/container-reg
 import { ContainerRegistryRepositoryInterface, CONTAINER_REGISTRY_REPOSITORY } from '../../domain/repositories/container-registry-repository.interface';
 import { WATCHER_ENGINE_SERVICE } from '../interfaces/watcher-engine-service.interface';
 import { WatcherEngineServiceInterface } from '../interfaces/watcher-engine-service.interface';
-import { SSMServicesTypes } from '../../../../types/typings';
+import { SSMServicesTypes } from '../../../../types/typings.d';
 import PinoLogger from '../../../../logger';
 
 const logger = PinoLogger.child(

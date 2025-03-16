@@ -1,6 +1,6 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import PinoLogger from '../../../../../logger';
-import { SSMServicesTypes } from '../../../../../types/typings';
+import { SSMServicesTypes } from '../../../../../types/typings.d';
 import { Component } from '../../../domain/components/component.interface';
 import { Kind } from '../../../domain/components/kind.enum';
 import { WatcherEngineServiceInterface } from '../../interfaces/watcher-engine-service.interface';

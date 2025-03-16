@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import { SSMServicesTypes } from '../../../../types/typings';
+import { SSMServicesTypes } from '../../../../types/typings.d';
 
 export const CONTAINER_SCHEMA = 'Container';
 
@@ -9,16 +9,16 @@ export type ContainerDocument = Container & Document;
 @Schema({ timestamps: true, versionKey: false })
 export class Container {
   @Prop({ type: String, required: true })
-  uuid!: string;
+  uuid: string;
 
   @Prop({ type: String, required: true })
-  name!: string;
+  name: string;
 
   @Prop({ type: String, required: true })
-  deviceUuid!: string;
+  deviceUuid: string;
 
   @Prop({ type: String, required: true })
-  image!: string;
+  image: string;
 
   @Prop({ type: String })
   customName?: string;

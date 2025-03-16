@@ -1,5 +1,5 @@
 import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
-import { IPlaybook, PlaybookRepository, PlaybookService } from '@modules/playbooks';
+import { PlaybookRepository, PlaybookService } from '@modules/playbooks';
 import { PlaybookFileService } from '@modules/shell';
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { User } from 'src/decorators/user.decorator';

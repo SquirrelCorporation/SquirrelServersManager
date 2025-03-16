@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { AbstractRegistryComponent } from './abstract-registry.component';
 import PinoLogger from '../../../../../logger';
 import axios from 'axios';
-import { GoogleAuth } from 'google-auth-library';
 
 const logger = PinoLogger.child({ module: 'GcrRegistryComponent' }, { msgPrefix: '[GCR_REGISTRY] - ' });
 
@@ -13,9 +12,6 @@ const logger = PinoLogger.child({ module: 'GcrRegistryComponent' }, { msgPrefix:
 export class GcrRegistryComponent extends AbstractRegistryComponent {
   private baseUrl = 'https://gcr.io';
   private token: string | null = null;
-  private tokenExpiry: Date | null = null;
-  private auth: GoogleAuth | null = null;
-  private client: any = null;
 
   /**
    * Setup the registry component
@@ -26,10 +22,12 @@ export class GcrRegistryComponent extends AbstractRegistryComponent {
     // Check if we have credentials
     if (this.configuration.clientemail && this.configuration.privatekey) {
       try {
-        await this.authenticate();
-        logger.info(`Successfully authenticated with GCR as ${this.configuration.clientemail}`);
+        // Generate basic auth token using credentials
+        const authString = `${this.configuration.clientemail}:${this.configuration.privatekey}`;
+        this.token = Buffer.from(authString).toString('base64');
+        logger.info(`Successfully prepared authentication for GCR as ${this.configuration.clientemail}`);
       } catch (error) {
-        logger.error(`Failed to authenticate with GCR: ${error.message}`);
+        logger.error(`Failed to prepare authentication for GCR: ${error.message}`);
         // Don't throw - we'll try to use anonymous access
       }
     } else {
@@ -43,9 +41,6 @@ export class GcrRegistryComponent extends AbstractRegistryComponent {
   protected async cleanup(): Promise<void> {
     logger.info(`Cleaning up GCR registry: ${this.name}`);
     this.token = null;
-    this.tokenExpiry = null;
-    this.auth = null;
-    this.client = null;
   }
 
   /**
@@ -56,17 +51,16 @@ export class GcrRegistryComponent extends AbstractRegistryComponent {
     
     // Reset authentication
     this.token = null;
-    this.tokenExpiry = null;
-    this.auth = null;
-    this.client = null;
     
     // Re-authenticate if credentials are provided
     if (this.configuration.clientemail && this.configuration.privatekey) {
       try {
-        await this.authenticate();
-        logger.info(`Successfully re-authenticated with GCR as ${this.configuration.clientemail}`);
+        // Generate basic auth token using credentials
+        const authString = `${this.configuration.clientemail}:${this.configuration.privatekey}`;
+        this.token = Buffer.from(authString).toString('base64');
+        logger.info(`Successfully re-prepared authentication for GCR as ${this.configuration.clientemail}`);
       } catch (error) {
-        logger.error(`Failed to re-authenticate with GCR: ${error.message}`);
+        logger.error(`Failed to re-prepare authentication for GCR: ${error.message}`);
       }
     }
   }
@@ -76,11 +70,6 @@ export class GcrRegistryComponent extends AbstractRegistryComponent {
    */
   async listImages(): Promise<any[]> {
     try {
-      // Ensure we're authenticated if credentials are provided
-      if (this.configuration.clientemail && this.configuration.privatekey) {
-        await this.ensureAuthenticated();
-      }
-      
       // Get catalog from GCR API
       // GCR doesn't provide a direct catalog endpoint like Docker Registry API
       // Instead, we use the GCR-specific API
@@ -140,11 +129,6 @@ export class GcrRegistryComponent extends AbstractRegistryComponent {
    */
   async getImageInfo(imageName: string, tag: string = 'latest'): Promise<any> {
     try {
-      // Ensure we're authenticated if credentials are provided
-      if (this.configuration.clientemail && this.configuration.privatekey) {
-        await this.ensureAuthenticated();
-      }
-      
       // Get manifest
       const manifestResponse = await axios.get(
         `${this.baseUrl}/v2/${imageName}/manifests/${tag}`,
@@ -191,63 +175,12 @@ export class GcrRegistryComponent extends AbstractRegistryComponent {
    */
   async testConnection(): Promise<boolean> {
     try {
-      if (this.configuration.clientemail && this.configuration.privatekey) {
-        // Try to authenticate
-        await this.authenticate();
-        return true;
-      }
-      
-      // For anonymous access, try a basic API call
-      await axios.get(`${this.baseUrl}/v2/`);
+      // For anonymous access or with auth, try a basic API call
+      await axios.get(`${this.baseUrl}/v2/`, this.getAuthHeaders());
       return true;
     } catch (error) {
       logger.error(`GCR connection test failed: ${error.message}`);
       return false;
-    }
-  }
-
-  /**
-   * Authenticate with GCR
-   */
-  private async authenticate(): Promise<void> {
-    try {
-      const { clientemail, privatekey } = this.configuration;
-      
-      if (!clientemail || !privatekey) {
-        throw new Error('Client email and private key are required for GCR authentication');
-      }
-      
-      // Create a new GoogleAuth instance
-      this.auth = new GoogleAuth({
-        credentials: {
-          client_email: clientemail,
-          private_key: privatekey,
-        },
-        scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-      });
-      
-      // Get the client
-      this.client = await this.auth.getClient();
-      
-      // Get an access token
-      const { token, expiryDate } = await this.client.getAccessToken();
-      this.token = token;
-      this.tokenExpiry = expiryDate;
-      
-      logger.info('Successfully authenticated with GCR');
-    } catch (error) {
-      logger.error(`GCR authentication failed: ${error.message}`);
-      throw error;
-    }
-  }
-
-  /**
-   * Ensure we're authenticated
-   */
-  private async ensureAuthenticated(): Promise<void> {
-    // Check if token is missing or expired
-    if (!this.token || (this.tokenExpiry && new Date() > this.tokenExpiry)) {
-      await this.authenticate();
     }
   }
 
@@ -258,7 +191,7 @@ export class GcrRegistryComponent extends AbstractRegistryComponent {
     if (this.token) {
       return {
         headers: {
-          Authorization: `Bearer ${this.token}`,
+          Authorization: `Basic ${this.token}`,
         },
       };
     }

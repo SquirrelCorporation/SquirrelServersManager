@@ -1,6 +1,6 @@
 import { Component } from '../../../domain/components/component.interface';
 import { Kind } from '../../../domain/components/kind.enum';
-import { SSMServicesTypes } from '../../../../../types/typings';
+import { SSMServicesTypes } from '../../../../../types/typings.d';
 import PinoLogger from '../../../../../logger';
 
 const logger = PinoLogger.child({ module: 'AbstractRegistryComponent' }, { msgPrefix: '[ABSTRACT_REGISTRY] - ' });

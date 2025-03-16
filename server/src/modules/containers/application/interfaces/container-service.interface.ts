@@ -1,5 +1,5 @@
 import { ContainerEntity } from '../../domain/entities/container.entity';
-import { SSMServicesTypes } from '../../../../types/typings';
+import { SSMServicesTypes } from '../../../../types/typings.d';
 
 export const CONTAINER_SERVICE = 'CONTAINER_SERVICE';
 

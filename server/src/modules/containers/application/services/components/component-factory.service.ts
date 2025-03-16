@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Component } from '../../../domain/components/component.interface';
 import { Kind } from '../../../domain/components/kind.enum';
-import { SSMServicesTypes } from '../../../../../types/typings';
+import { SSMServicesTypes } from '../../../../../types/typings.d';
 import { AbstractWatcherComponent } from './abstract-watcher.component';
 import { AbstractRegistryComponent } from './abstract-registry.component';
 import PinoLogger from '../../../../../logger';

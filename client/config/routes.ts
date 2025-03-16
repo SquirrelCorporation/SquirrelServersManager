@@ -71,6 +71,12 @@ export default [
     ],
   },
   {
+    path: '/plugins',
+    name: 'Plugins',
+    icon: 'AppstoreAddOutlined',
+    component: './Plugins',
+  },
+  {
     path: '/admin',
     name: 'Configuration',
     icon: 'crown',

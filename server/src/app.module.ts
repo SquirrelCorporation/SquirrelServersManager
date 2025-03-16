@@ -14,7 +14,7 @@ import { AnsibleVaultModule } from './modules/ansible-vault/ansible-vault.module
 import { AuthModule } from './modules/auth/auth.module';
 //import { AutomationsModule } from './modules/automations/automations.module';
 import { ContainerStacksModule } from './modules/container-stacks/container-stacks.module';
-import { ContainersModule } from './modules/containers/containers.module';
+// import { ContainersModule } from './modules/containers/containers.module';
 import { DevicesModule } from './modules/devices/devices.module';
 import { DiagnosticModule } from './modules/diagnostic/diagnostic.module';
 import { LogsModule } from './modules/logs/logs.module';
@@ -31,7 +31,7 @@ import { CacheModule } from './infrastructure/cache';
 import { SshInfrastructureModule } from './infrastructure/ssh/ssh-infrastructure.module';
 import { HealthModule } from './modules/health/health.module';
 import { StatisticsModule } from './modules/statistics/statistics.module';
-import { PluginModule } from './infrastructure/plugins';
+import { PluginsModule } from './modules/plugins/plugins.module';
 
 // Store the connection for legacy code to access
 let sharedConnection: mongoose.Connection | null = null;
@@ -63,11 +63,10 @@ let connectionReady = false;
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    EventEmitterModule.forRoot(),
-    ScheduleModule.forRoot({
-      // Set graceful shutdown to true to allow proper cleanup of cron jobs
-      gracefulShutdown: true
+    EventEmitterModule.forRoot({
+      wildcard: true,
     }),
+    ScheduleModule.forRoot(),
     // Register cache module with default options
     CacheModule.register(),
     // Register the SSH infrastructure module first - this ensures a single instance of services
@@ -147,7 +146,7 @@ let connectionReady = false;
     StatisticsModule,
     //   AutomationsModule,
     ContainerStacksModule,
-    // ContainersModule, // Temporarily disabled due to TypeScript compilation issues
+    // ContainersModule, // Commented out due to missing schema file
     DevicesModule,
     UpdateModule,
     DiagnosticModule,
@@ -167,7 +166,7 @@ let connectionReady = false;
     SchedulerModule,
     SettingsModule,
     HealthModule,
-    PluginModule,
+    PluginsModule,
   ],
 })
 export class AppModule implements OnModuleInit {

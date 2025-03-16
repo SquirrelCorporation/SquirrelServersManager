@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import app from './App';
 import logger from './logger';
 import Telemetry from './modules/telemetry';

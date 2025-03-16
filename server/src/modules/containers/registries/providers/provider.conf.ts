@@ -1,4 +1,4 @@
-import type { SSMServicesTypes } from '../../../../types/typings';
+import type { SSMServicesTypes } from '../../../../types/typings.d';
 import { REGISTRIES } from '../../core/conf';
 
 const providerConf: SSMServicesTypes.RegistryAuthConfig[] = [

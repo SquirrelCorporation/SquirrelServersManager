@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import { SsmAnsible } from 'ssm-shared-lib';
-import Container from '../data/database/model/Container';
+import { ContainerEntity } from '../modules/containers/domain/entities/container.entity';
 
 export declare namespace Playbooks {
   type HostVar = {
@@ -105,6 +105,10 @@ export declare namespace Playbooks {
  */
 
 export declare namespace SSMServicesTypes {
+  export type ContainerConfig = {
+    [key: string]: any;
+  };
+
   export type ConfigurationRegistrySchema = {
     password?: string;
     url?: string;
@@ -167,7 +171,7 @@ export declare namespace SSMServicesTypes {
 
   export type ContainerReport = {
     changed?: boolean;
-    container: Container;
+    container: ContainerEntity;
   };
 
   export type RequestOptionsType = AxiosRequestConfig;

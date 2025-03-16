@@ -13,7 +13,7 @@ import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
 import { ContainerServiceInterface } from '../../application/interfaces/container-service.interface';
 import { CONTAINER_SERVICE } from '../../application/interfaces/container-service.interface';
 import { Inject } from '@nestjs/common';
-import { SSMServicesTypes } from '../../../../types/typings';
+import { SSMServicesTypes } from '../../../../types/typings.d';
 
 @Controller('containers')
 @UseGuards(JwtAuthGuard)

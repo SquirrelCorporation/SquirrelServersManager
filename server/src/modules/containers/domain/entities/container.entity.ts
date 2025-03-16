@@ -1,4 +1,4 @@
-import { SSMServicesTypes } from '../../../../types/typings';
+import { SSMServicesTypes } from '../../../../types/typings.d';
 
 /**
  * Domain entity for a container

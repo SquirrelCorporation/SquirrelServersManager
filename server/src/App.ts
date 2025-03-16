@@ -1,24 +1,22 @@
 import http from 'http';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
-import { pinoHttp } from 'pino-http';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import { SECRET } from './config';
-import metrics from './controllers/rest/metrics/metrics';
 import EventManager from './core/events/EventManager';
 import Events from './core/events/events';
 import { HttpExceptionFilter } from './infrastructure/filters/http-exception.filter';
 import { TransformInterceptor } from './infrastructure/interceptors/transform.interceptor';
-import logger, { httpLoggerOptions } from './logger';
-import { errorHandler } from './middlewares/ErrorHandler';
+import logger from './logger';
 import RealTime from './modules/real-time/RealTime';
 
 // Declare global nestApp for legacy code to access
 declare global {
+  // eslint-disable-next-line no-var
   var nestApp: INestApplication | null;
 }
 
@@ -26,6 +24,7 @@ class AppWrapper extends EventManager {
   private server!: http.Server;
   private readonly refs: any = [];
   private nestApp!: INestApplication;
+  private readonly logger = logger;
 
   constructor() {
     super();
@@ -34,22 +33,11 @@ class AppWrapper extends EventManager {
   }
 
   public setup() {
-/*    this.expressApp.use(
-      pinoHttp({
-        logger: logger.child(
-          { module: 'REST' },
-          { msgPrefix: '[REST] - ', redact: ['req.headers.authorization'] },
-        ),
-        ...httpLoggerOptions,
-      }),
-    );
-    */
-   // this.expressApp.use(express.json({ limit: '50mb' }));
     if (!SECRET) {
       throw new Error('No secret defined');
     }
-
   }
+
 
   public async setupNestJS(): Promise<INestApplication> {
     try {
@@ -61,9 +49,14 @@ class AppWrapper extends EventManager {
       // Create NestJS app with Express adapter using our existing Express app
       const nestApp = await NestFactory.create<NestExpressApplication>(AppModule, { bufferLogs: true });
       nestApp.useLogger(nestApp.get(Logger));
-      nestApp.listen(3000);
+
+      // Enable CORS
+      nestApp.enableCors();
+
+      // Configure the app
       nestApp.use(cookieParser());
       nestApp.use(passport.initialize());
+
       // Make the nestApp available globally for legacy code
       globalThis.nestApp = nestApp;
 
@@ -85,14 +78,36 @@ class AppWrapper extends EventManager {
       // Log that we're initializing NestJS
       logger.info('Initializing NestJS application with WebSocket gateways');
 
-      // We'll set up the WebSocket adapter when we start the server
-      // This ensures the HTTP server is already created
+      // Initialize plugin system if available
+      try {
+        const pluginSystem = nestApp.get('PLUGIN_SYSTEM', { strict: false });
+        if (pluginSystem) {
+          logger.info('Initializing plugin system');
 
+          // Add debug logging for the NestJS app
+          logger.info(`NestJS app type: ${typeof nestApp}`);
+          logger.info(`NestJS app methods: ${Object.keys(nestApp).filter(key => typeof nestApp[key] === 'function').join(', ')}`);
+
+          const httpAdapter = nestApp.getHttpAdapter();
+          logger.info(`HTTP adapter type: ${typeof httpAdapter}`);
+          logger.info(`HTTP adapter methods: ${Object.keys(httpAdapter).filter(key => typeof httpAdapter[key] === 'function').join(', ')}`);
+
+          await pluginSystem.initializePlugins(nestApp);
+          logger.info('Plugin system initialized');
+        }
+      } catch (error) {
+        logger.warn('Plugin system not available or failed to initialize', error);
+      }
+
+      // Initialize the application
       logger.info('Initializing NestJS application - this will create all modules/providers');
       await nestApp.init();
       this.nestApp = nestApp;
 
-      logger.info('NestJS application initialized successfully');
+      // Start listening on port 3000
+      await nestApp.listen(3000);
+      logger.info('NestJS application listening on port 3000');
+
 
       return nestApp;
     } catch (error) {
@@ -109,9 +124,6 @@ class AppWrapper extends EventManager {
 
   public setupRoutes() {
     logger.info('\n\nSetting up routes ==========================================');
-    // These routes will be handled by Express
-   // this.expressApp.use(metrics);
-   // this.expressApp.use(errorHandler);
   }
 
   public async startServer() {
@@ -136,7 +148,7 @@ class AppWrapper extends EventManager {
   }
 
   public getExpressApp() {
-   // return this.expressApp;
+    // Return the express app if needed
   }
 }
 

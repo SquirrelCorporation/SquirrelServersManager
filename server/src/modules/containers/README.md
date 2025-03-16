@@ -12,7 +12,7 @@ Squirrel Servers Manager 🐿️
 ---
 # Containers Module
 
-The Containers Module provides functionality for managing Docker containers, volumes, networks, images, and container registries.
+The Containers Module provides functionality for managing Docker and Proxmox containers across connected devices. It follows Clean Architecture principles with clear separation of concerns between domain, application, infrastructure, and presentation layers.
 
 ## Features
 
@@ -26,13 +26,35 @@ The Containers Module provides functionality for managing Docker containers, vol
 
 ## Architecture
 
-The module follows a standard NestJS architecture with:
+This module is structured according to clean architecture principles:
 
-- **Controllers**: Handle HTTP requests and delegate to services
-- **Services**: Implement business logic
-- **Schemas**: Define data models
-- **Repositories**: Handle database operations
-- **DTOs**: Define data transfer objects
+### Domain Layer
+
+- **Entities**: Core business objects like ContainerEntity
+- **Repositories**: Interfaces defining data access methods
+- **Components**: Component interfaces and enums
+
+### Application Layer
+
+- **Services**: Business logic for container operations
+- **Components**: Reusable component implementations
+  - AbstractWatcherComponent: Base class for container watchers
+  - AbstractRegistryComponent: Base class for registry providers
+- **Engine**: WatcherEngine for managing container watchers and registries
+
+### Infrastructure Layer
+
+- **Repositories**: Concrete implementations of repository interfaces
+- **Mappers**: Transform domain entities to/from database documents
+- **Schemas**: Database schema definitions
+
+### Presentation Layer
+
+- **Controllers**: HTTP endpoints for container operations
+- **Gateways**: WebSocket endpoints for real-time container logs
+- **DTOs**: Data transfer objects for validation and API structure
+
+## Key Components
 
 ### Controllers
 
@@ -46,40 +68,41 @@ The module follows a standard NestJS architecture with:
 
 ### Services
 
-- `ContainersService`: Service for container operations
+- `ContainerService`: Service for container operations
+- `ContainerLogsService`: Service for container logs
 - `ContainerStatsService`: Service for container statistics
 - `ContainerVolumesService`: Service for container volume operations
-- `ContainerRegistriesService`: Service for container registry operations
-- `DockerService`: Service for Docker-specific operations
-- `ProxmoxService`: Service for Proxmox-specific operations
-- `WatcherEngineService`: Service for watching container events
+- `WatcherEngineService`: Core engine for container watchers and registries
+- `ContainerComponentFactory`: Factory for creating watcher and registry components
 
-### Schemas
+### Container Watchers
 
-- `Container`: Schema for container data
-- `ContainerVolume`: Schema for container volume data
-- `ContainerNetwork`: Schema for container network data
-- `ContainerRegistry`: Schema for container registry data
-- `ContainerTemplate`: Schema for container template data
+The module uses a component-based architecture for container watchers:
 
-### Repositories
+- **Docker Watcher**: Manages Docker containers on remote devices
+- **Proxmox Watcher**: Manages Proxmox LXC containers on remote devices
 
-- `ContainerRepository`: Repository for container operations
-- `ContainerVolumeRepository`: Repository for container volume operations
-- `ContainerRegistryRepository`: Repository for container registry operations
-- `ContainerTemplateRepository`: Repository for container template operations
+### Container Registries
+
+Various registry providers are supported through a component system:
+
+- Docker Hub, GCR, GHCR, Quay, ECR, GitLab, etc.
 
 ## API Endpoints
 
 - `GET /containers`: Get all containers
-- `GET /containers/:id`: Get container by ID
-- `POST /containers`: Create a new container
-- `PUT /containers/:id`: Update a container
-- `DELETE /containers/:id`: Delete a container
-- `POST /containers/:id/start`: Start a container
-- `POST /containers/:id/stop`: Stop a container
-- `POST /containers/:id/restart`: Restart a container
-- `GET /containers/:id/logs`: Get container logs
+- `GET /containers/:uuid`: Get container by UUID
+- `GET /containers/device/:deviceUuid`: Get containers by device UUID
+- `POST /containers/device/:deviceUuid`: Create a new container on device
+- `PATCH /containers/:uuid`: Update a container
+- `DELETE /containers/:uuid`: Delete a container
+- `POST /containers/:uuid/start`: Start a container
+- `POST /containers/:uuid/stop`: Stop a container
+- `POST /containers/:uuid/restart`: Restart a container
+- `POST /containers/:uuid/pause`: Pause a container
+- `POST /containers/:uuid/unpause`: Unpause a container
+- `POST /containers/:uuid/kill`: Kill a container
+- `GET /containers/:uuid/logs`: Get container logs
 - `GET /containers/stats`: Get container statistics
 - `GET /containers/volumes`: Get all volumes
 - `POST /containers/volumes`: Create a new volume
@@ -94,12 +117,20 @@ The module follows a standard NestJS architecture with:
 - `GET /containers/templates`: Get all templates
 - `POST /containers/templates/deploy`: Deploy a template
 
+## WebSocket Endpoints
+
+- `container-logs`: Namespace for container logs
+  - `subscribe`: Subscribe to container logs
+  - `unsubscribe`: Unsubscribe from container logs
+
 ## Usage
+
+### Module Import
 
 The module is used by importing it into the application module:
 
 ```typescript
-import { ContainersModule } from './modules/containers/containers.module';
+import { ContainersModule } from '@modules/containers';
 
 @Module({
   imports: [
@@ -111,60 +142,106 @@ import { ContainersModule } from './modules/containers/containers.module';
 export class AppModule {}
 ```
 
-## Using the Services
-
 ### Managing Containers
 
 ```typescript
-import { ContainersService } from './modules/containers/services/containers.service';
+import { ContainerService, CONTAINER_SERVICE } from '@modules/containers';
 
 @Injectable()
 export class MyService {
-  constructor(private readonly containersService: ContainersService) {}
+  constructor(
+    @Inject(CONTAINER_SERVICE)
+    private readonly containerService: ContainerService
+  ) {}
 
-  async getContainers(deviceId: string) {
-    return this.containersService.getContainers(deviceId);
+  async getAllContainers() {
+    return this.containerService.getAllContainers();
   }
 
-  async startContainer(deviceId: string, containerId: string) {
-    return this.containersService.startContainer(deviceId, containerId);
+  async getContainersByDeviceUuid(deviceUuid: string) {
+    return this.containerService.getContainersByDeviceUuid(deviceUuid);
+  }
+
+  async startContainer(containerUuid: string) {
+    return this.containerService.startContainer(containerUuid);
+  }
+
+  async createContainer(deviceUuid: string, containerData: CreateContainerDto) {
+    return this.containerService.createContainer(deviceUuid, containerData);
   }
 }
 ```
 
-### Working with Container Volumes
+### Accessing Container Logs
 
 ```typescript
-import { ContainerVolumesService } from './modules/containers/services/container-volumes.service';
+import { ContainerLogsService, CONTAINER_LOGS_SERVICE } from '@modules/containers';
 
 @Injectable()
 export class MyService {
-  constructor(private readonly containerVolumesService: ContainerVolumesService) {}
+  constructor(
+    @Inject(CONTAINER_LOGS_SERVICE)
+    private readonly containerLogsService: ContainerLogsService
+  ) {}
 
-  async getVolumes(deviceId: string) {
-    return this.containerVolumesService.getVolumes(deviceId);
-  }
-
-  async createVolume(deviceId: string, name: string) {
-    return this.containerVolumesService.createVolume(deviceId, name);
+  async getContainerLogs(containerUuid: string, options?: any) {
+    return this.containerLogsService.getContainerLogs(containerUuid, options);
   }
 }
 ```
 
-### Working with Container Registries
+### Working with Container Registries and Watchers
 
 ```typescript
-import { ContainerRegistriesService } from './modules/containers/services/container-registries.service';
+import { 
+  WatcherEngineService, 
+  WATCHER_ENGINE_SERVICE,
+  Kind,
+  WATCHERS,
+  REGISTRIES 
+} from '@modules/containers';
 
 @Injectable()
 export class MyService {
-  constructor(private readonly containerRegistriesService: ContainerRegistriesService) {}
+  constructor(
+    @Inject(WATCHER_ENGINE_SERVICE)
+    private readonly watcherEngineService: WatcherEngineService
+  ) {}
 
-  async getRegistries() {
-    return this.containerRegistriesService.getRegistries();
+  async registerDockerWatcher(deviceId: string, deviceUuid: string, config: any) {
+    return this.watcherEngineService.registerComponent(
+      deviceId,
+      Kind.WATCHER,
+      WATCHERS.DOCKER,
+      `${WATCHERS.DOCKER}-${deviceUuid}`,
+      config
+    );
   }
 
-  async addRegistry(registry: ContainerRegistryDto) {
-    return this.containerRegistriesService.addRegistry(registry);
+  async registerRegistry(registryId: string, provider: string, name: string, auth: any) {
+    return this.watcherEngineService.registerComponent(
+      registryId,
+      Kind.REGISTRY,
+      provider,
+      name,
+      { ...auth, name, provider }
+    );
   }
 }
+```
+
+## Extending the Module
+
+### Adding a New Watcher Type
+
+1. Create a new component class extending AbstractWatcherComponent
+2. Implement required methods for container operations
+3. Add the component to ContainerComponentFactory
+4. Update the WATCHERS constants
+
+### Adding a New Registry Provider
+
+1. Create a new component class extending AbstractRegistryComponent
+2. Implement required methods for registry operations
+3. Add the component to ContainerComponentFactory
+4. Update the REGISTRIES constants
