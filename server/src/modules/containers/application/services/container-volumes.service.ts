@@ -1,4 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 import { ContainerVolumesServiceInterface } from '../interfaces/container-volumes-service.interface';
 import { ContainerVolumeEntity } from '../../domain/entities/container-volume.entity';
 import { CONTAINER_VOLUME_REPOSITORY } from '../../domain/repositories/container-volume-repository.interface';
@@ -7,7 +8,6 @@ import { WATCHER_ENGINE_SERVICE } from '../interfaces/watcher-engine-service.int
 import { WatcherEngineServiceInterface } from '../interfaces/watcher-engine-service.interface';
 import { DevicesService } from '../../../devices/application/services/devices.service';
 import PinoLogger from '../../../../logger';
-import { v4 as uuidv4 } from 'uuid';
 import { WATCHERS } from '../../constants';
 
 const logger = PinoLogger.child({ module: 'ContainerVolumesService' }, { msgPrefix: '[CONTAINER_VOLUMES] - ' });
@@ -49,7 +49,7 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
   async createVolume(deviceUuid: string, volumeData: Partial<ContainerVolumeEntity>): Promise<ContainerVolumeEntity> {
     try {
       logger.info(`Creating volume ${volumeData.name} on device ${deviceUuid}`);
-      
+
       // Verify device exists
       const device = await this.devicesService.findByUuid(deviceUuid);
       if (!device) {
@@ -61,7 +61,7 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
         volumeData.name as string,
         deviceUuid
       );
-      
+
       if (existingVolume) {
         throw new Error(`Volume with name ${volumeData.name} already exists on device ${deviceUuid}`);
       }
@@ -69,14 +69,14 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
       // Find the Docker watcher component for this device
       const watcherName = `${WATCHERS.DOCKER}-${deviceUuid}`;
       const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
-      
+
       if (!dockerComponent) {
         throw new Error(`Docker watcher for device ${deviceUuid} not found`);
       }
 
       // Create volume in Docker
       const createdVolume = await dockerComponent.createVolume(volumeData);
-      
+
       // Create a volume entity with UUID
       const volumeEntity: ContainerVolumeEntity = {
         ...createdVolume,
@@ -118,7 +118,7 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
   async deleteVolume(uuid: string): Promise<boolean> {
     try {
       logger.info(`Deleting volume ${uuid}`);
-      
+
       // Find the existing volume
       const existingVolume = await this.volumeRepository.findOneByUuid(uuid);
       if (!existingVolume) {
@@ -129,7 +129,7 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
       const deviceUuid = existingVolume.deviceUuid;
       const watcherName = `${WATCHERS.DOCKER}-${deviceUuid}`;
       const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
-      
+
       if (!dockerComponent) {
         throw new Error(`Docker watcher for device ${deviceUuid} not found`);
       }
@@ -151,11 +151,11 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
   async pruneVolumes(deviceUuid: string): Promise<{ count: number }> {
     try {
       logger.info(`Pruning unused volumes on device ${deviceUuid}`);
-      
+
       // Find the Docker watcher component for this device
       const watcherName = `${WATCHERS.DOCKER}-${deviceUuid}`;
       const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
-      
+
       if (!dockerComponent) {
         throw new Error(`Docker watcher for device ${deviceUuid} not found`);
       }
@@ -184,7 +184,7 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
       throw error;
     }
   }
-  
+
   /**
    * Backup a volume
    * @param volume The volume to backup
@@ -197,23 +197,23 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
   ): Promise<{ filePath: string; fileName: string }> {
     try {
       logger.info(`Backing up volume ${volume.name} in ${mode} mode`);
-      
+
       // Find the Docker watcher component for this device
       const watcherName = `${WATCHERS.DOCKER}-${volume.deviceUuid}`;
       const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
-      
+
       if (!dockerComponent) {
         throw new Error(`Docker watcher for device ${volume.deviceUuid} not found`);
       }
-      
+
       // Implementation would depend on how Docker volumes are backed up
       // This is a placeholder that would need to be implemented based on the actual requirements
-      
+
       const fileName = `${volume.name}-backup-${Date.now()}.tar.gz`;
       const filePath = mode === 'filesystem' ? '/var/lib/ssm/backup/volumes/' : '/tmp/';
-      
+
       logger.info(`Volume ${volume.name} backed up to ${filePath}${fileName}`);
-      
+
       return { filePath, fileName };
     } catch (error) {
       logger.error(`Failed to backup volume ${volume.name}: ${error.message}`);

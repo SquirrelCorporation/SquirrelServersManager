@@ -36,7 +36,7 @@ export class ContainerService implements ContainerServiceInterface {
   async getContainersByDeviceUuid(deviceUuid: string): Promise<ContainerEntity[]> {
     return this.containerRepository.findAllByDeviceUuid(deviceUuid);
   }
-  
+
   async findContainerById(id: string): Promise<ContainerEntity | null> {
     const container = await this.containerRepository.findOneById(id);
     if (!container) {
@@ -44,11 +44,11 @@ export class ContainerService implements ContainerServiceInterface {
     }
     return container;
   }
-  
+
   async countContainers(): Promise<number> {
     return this.containerRepository.count();
   }
-  
+
   async countContainersByStatus(status: string): Promise<number> {
     return this.containerRepository.countByStatus(status);
   }
@@ -65,7 +65,7 @@ export class ContainerService implements ContainerServiceInterface {
     // Find Docker watcher component for this device
     const watcherName = `docker-${deviceUuid}`;
     const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
-    
+
     if (!dockerComponent) {
       throw new Error(`Docker watcher for device ${deviceUuid} not found`);
     }
@@ -73,7 +73,7 @@ export class ContainerService implements ContainerServiceInterface {
     try {
       // Use Docker component to create container
       const createdContainer = await dockerComponent.createContainer(containerData);
-      
+
       // Save container to database
       const containerEntity: ContainerEntity = {
         id: createdContainer.id,
@@ -118,7 +118,7 @@ export class ContainerService implements ContainerServiceInterface {
     const deviceUuid = container.deviceUuid;
     const watcherName = `docker-${deviceUuid}`;
     const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
-    
+
     if (!dockerComponent) {
       throw new Error(`Docker watcher for device ${deviceUuid} not found`);
     }
@@ -126,7 +126,7 @@ export class ContainerService implements ContainerServiceInterface {
     try {
       // Use Docker component to delete container
       await dockerComponent.removeContainer(container.id);
-      
+
       // Delete from database
       return this.containerRepository.deleteByUuid(uuid);
     } catch (error) {
@@ -169,7 +169,7 @@ export class ContainerService implements ContainerServiceInterface {
     const deviceUuid = container.deviceUuid;
     const watcherName = `docker-${deviceUuid}`;
     const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
-    
+
     if (!dockerComponent) {
       throw new Error(`Docker watcher for device ${deviceUuid} not found`);
     }
@@ -194,7 +194,7 @@ export class ContainerService implements ContainerServiceInterface {
     const deviceUuid = container.deviceUuid;
     const watcherName = `docker-${deviceUuid}`;
     const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
-    
+
     if (!dockerComponent) {
       throw new Error(`Docker watcher for device ${deviceUuid} not found`);
     }
@@ -202,7 +202,7 @@ export class ContainerService implements ContainerServiceInterface {
     try {
       // Use Docker component to execute action
       await dockerComponent[`${action}Container`](container.id);
-      
+
       // Update container state if needed based on action
       let newState: string | undefined;
       switch (action) {

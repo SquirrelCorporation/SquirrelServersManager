@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { DockerHubRegistryComponent } from '../../../../application/services/components/docker-hub-registry.component';
+import { DockerHubRegistryComponent } from '../../../../application/services/components/registry/docker-hub-registry.component';
 import { Kind } from '../../../../domain/components/kind.enum';
 import axios from 'axios';
 

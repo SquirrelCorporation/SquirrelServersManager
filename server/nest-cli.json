@@ -5,20 +5,11 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": false,
-    "tsConfigPath": "tsconfig.json",
+    "tsConfigPath": "tsconfig.build.json",
     "assets": [
       { "include": "**/*.py", "outDir": "dist" },
       { "include": "**/*.yml", "outDir": "dist" },
       { "include": "**/*.yaml", "outDir": "dist" }
-    ],
-    "plugins": [
-      {
-        "name": "@nestjs/swagger",
-        "options": {
-          "classValidatorShim": false,
-          "introspectComments": true
-        }
-      }
     ]
   },
   "watchOptions": {

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { AbstractRegistryComponent } from '../../../../application/services/components/abstract-registry.component';
+import { AbstractRegistryComponent } from '../../../../application/services/components/registry/abstract-registry.component';
 import { Kind } from '../../../../domain/components/kind.enum';
 import { SSMServicesTypes } from '../../../../../../types/typings.d';
 

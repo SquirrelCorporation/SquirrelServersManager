@@ -3,19 +3,22 @@ import PinoLogger from '../../../../../logger';
 import { SSMServicesTypes } from '../../../../../types/typings.d';
 import { Component } from '../../../domain/components/component.interface';
 import { Kind } from '../../../domain/components/kind.enum';
-import { WatcherEngineServiceInterface } from '../../interfaces/watcher-engine-service.interface';
+import { IWatcherEngineService } from '../../../domain/components/watcher.interface';
+import { IRegistryComponentFactory } from '../../../domain/components/registry.interface';
 import { DevicesService } from '../../../../devices/application/services/devices.service';
-import { ContainerComponentFactory } from '../components/component-factory.service';
-import { WATCHERS, REGISTRIES } from '../../../constants';
+import { WatcherComponentFactory } from '../components/watcher/watcher-component-factory.service';
+import { REGISTRIES, WATCHERS } from '../../../constants';
+import { ContainerRegistriesServiceInterface } from '../../interfaces/container-registries-service.interface';
 
 const logger = PinoLogger.child({ module: 'WatcherEngineService' }, { msgPrefix: '[WATCHER_ENGINE] - ' });
 
 /**
  * Container watchers and registries management service
  * Manages the lifecycle of container-related components
+ * Uses specialized factories for creating different component types
  */
 @Injectable()
-export class WatcherEngineService implements WatcherEngineServiceInterface, OnModuleInit, OnModuleDestroy {
+export class WatcherEngineService implements IWatcherEngineService, OnModuleInit, OnModuleDestroy {
   private state: {
     registry: Record<string, Component<SSMServicesTypes.ConfigurationSchema>>;
     watcher: Record<string, Component<SSMServicesTypes.ConfigurationSchema>>;
@@ -26,7 +29,9 @@ export class WatcherEngineService implements WatcherEngineServiceInterface, OnMo
 
   constructor(
     private readonly devicesService: DevicesService,
-    private readonly componentFactory: ContainerComponentFactory,
+    private readonly registryFactory: IRegistryComponentFactory,
+    private readonly watcherFactory: WatcherComponentFactory,
+    private readonly containerRegistriesService: ContainerRegistriesServiceInterface,
   ) {}
 
   /**
@@ -59,6 +64,7 @@ export class WatcherEngineService implements WatcherEngineServiceInterface, OnMo
 
   /**
    * Register a component
+   * Uses specialized factories for different component types
    */
   async registerComponent(
     id: string,
@@ -71,10 +77,65 @@ export class WatcherEngineService implements WatcherEngineServiceInterface, OnMo
     const nameLowercase = name.toLowerCase();
     try {
       logger.info(`Registering "${provider}/${name}" component...`);
+
+      // Create the appropriate component using the specialized factories
+      let component: Component<SSMServicesTypes.ConfigurationSchema>;
       
-      // Create the appropriate component using the factory
-      const component = this.componentFactory.createComponent(kind, providerLowercase);
-      
+      if (kind === Kind.WATCHER) {
+        // Use the specialized watcher factory for watcher components
+        switch (providerLowercase) {
+          case WATCHERS.DOCKER:
+            component = this.watcherFactory.createDockerComponent();
+            break;
+          case WATCHERS.PROXMOX:
+            component = this.watcherFactory.createProxmoxComponent();
+            break;
+          default:
+            throw new Error(`Unknown watcher provider: ${providerLowercase}`);
+        }
+      } else if (kind === Kind.REGISTRY) {
+        // Use the specialized registry factory for registry components
+        switch (providerLowercase) {
+          case REGISTRIES.HUB:
+            component = this.registryFactory.createDockerHubComponent();
+            break;
+          case REGISTRIES.CUSTOM:
+            component = this.registryFactory.createCustomComponent();
+            break;
+          case REGISTRIES.GCR:
+            component = this.registryFactory.createGcrComponent();
+            break;
+          case REGISTRIES.GHCR:
+            component = this.registryFactory.createGhcrComponent();
+            break;
+          case REGISTRIES.ACR:
+            component = this.registryFactory.createAcrComponent();
+            break;
+          case REGISTRIES.ECR:
+            component = this.registryFactory.createEcrComponent();
+            break;
+          case REGISTRIES.QUAY:
+            component = this.registryFactory.createQuayComponent();
+            break;
+          case REGISTRIES.GITLAB:
+            component = this.registryFactory.createGitLabComponent();
+            break;
+          case REGISTRIES.GITEA:
+            component = this.registryFactory.createGiteaComponent();
+            break;
+          case REGISTRIES.FORGEJO:
+            component = this.registryFactory.createForgejoComponent();
+            break;
+          case REGISTRIES.LSCR:
+            component = this.registryFactory.createLscrComponent();
+            break;
+          default:
+            throw new Error(`Unknown registry provider: ${providerLowercase}`);
+        }
+      } else {
+        throw new Error(`Unknown component kind: ${kind}`);
+      }
+
       // Register the component with its configuration
       const componentRegistered = await component.register(
         id,
@@ -83,7 +144,7 @@ export class WatcherEngineService implements WatcherEngineServiceInterface, OnMo
         nameLowercase,
         configuration,
       );
-      
+
       // Store the component in the state
       switch (kind) {
         case Kind.WATCHER:
@@ -95,7 +156,7 @@ export class WatcherEngineService implements WatcherEngineServiceInterface, OnMo
         default:
           throw new Error(`Unknown registering component: ${componentRegistered.getId()}`);
       }
-      
+
       return componentRegistered;
     } catch (error: any) {
       logger.error(
@@ -113,8 +174,8 @@ export class WatcherEngineService implements WatcherEngineServiceInterface, OnMo
       const dockerDevicesToWatch = await this.devicesService.getDockerDevicesToWatch();
       const proxmoxDevicesToWatch = await this.devicesService.getProxmoxDevicesToWatch();
 
-      const watchersToRegister = [];
-      
+      const watchersToRegister: any[] = [];
+
       // Register Docker watchers
       for (const device of dockerDevicesToWatch || []) {
         watchersToRegister.push(
@@ -197,15 +258,27 @@ export class WatcherEngineService implements WatcherEngineServiceInterface, OnMo
    * Register registries
    */
   async registerRegistries(): Promise<void> {
-    // This is a simplified implementation - you'll need to implement the actual logic
-    // to fetch and register container registries from your database
     try {
-      // Register default registries
+      // Register Docker Hub registry by default (can be anonymous)
       await this.registerComponent('default-docker-hub', Kind.REGISTRY, REGISTRIES.HUB, 'Docker Hub', {});
-      
-      // Register additional registries from database
-      // const containerRegistries = await this.containerRegistriesService.listAllSetupRegistries();
-      // ... register those registries
+
+      // Register all registries that have authentication set up in the database
+      const registries = await this.containerRegistriesService.listAllSetupRegistries();
+
+      for (const registry of registries) {
+        // Skip Docker Hub as it's already registered by default
+        if (registry.provider === REGISTRIES.HUB) {
+          continue;
+        }
+
+        await this.registerComponent(
+          registry.id,
+          Kind.REGISTRY,
+          registry.provider,
+          registry.name,
+          registry.auth || {} // Pass the stored authentication details
+        );
+      }
     } catch (error: any) {
       logger.warn(`Some registries failed to register (${error.message})`);
       logger.debug(error);
@@ -239,7 +312,7 @@ export class WatcherEngineService implements WatcherEngineServiceInterface, OnMo
         default:
           logger.error(`Unknown kind ${kind}`);
       }
-      
+
       if (components) {
         delete components[component.getId()];
       }

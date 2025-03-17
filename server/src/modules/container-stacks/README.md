@@ -48,6 +48,60 @@ Contains the controllers and DTOs for the API.
 - **DTOs**: Define the data transfer objects
 - **Mappers**: Map between domain entities and DTOs
 
+## Module Structure
+
+```mermaid
+graph TD
+    subgraph Presentation
+        C[ContainerStacksController]
+        DTOs[DTOs]
+    end
+
+    subgraph Application
+        CSS[ContainerStacksService]
+        CSRES[ContainerStacksRepositoryEngineService]
+        CRCS[ContainerRepositoryComponentService]
+    end
+
+    subgraph Domain
+        E[Entities]
+        RI[Repository Interfaces]
+    end
+
+    subgraph Infrastructure
+        CSR[ContainerCustomStackRepository]
+        CSRR[ContainerCustomStacksRepositoryRepository]
+        M[Mappers]
+        S[Schemas]
+    end
+
+    subgraph External
+        MG[Mongoose]
+        AV[AnsibleVault]
+        SH[Shell]
+    end
+
+    C --> CSS
+    C --> CSRES
+    C --> CRCS
+    
+    CSS --> RI
+    CSRES --> RI
+    CRCS --> RI
+    
+    CSR --> E
+    CSRR --> E
+    
+    M --> E
+    M --> S
+    
+    CSR --> MG
+    CSRR --> MG
+    
+    CSRES --> AV
+    CSRES --> SH
+```
+
 ## Features
 
 - Manage container stack repositories (Git-based)
@@ -72,6 +126,56 @@ The module exports the `ContainerStacksModule` and `ContainerStacksService` for 
 ```typescript
 import { ContainerStacksModule } from './modules/container-stacks';
 ```
+
+## Testing
+
+The module includes comprehensive tests for all layers:
+
+### Mappers Tests
+
+- **ContainerCustomStackMapper**: Tests mapping between domain entities and persistence models
+  - Maps persistence model to domain entity with all properties
+  - Handles null/undefined persistence models
+  - Maps domain entity to persistence model
+  - Handles minimal domain entity
+
+- **ContainerCustomStackRepositoryMapper**: Tests mapping between repository entities and persistence models
+  - Maps persistence model to domain entity with all properties
+  - Handles null/undefined persistence models
+  - Maps domain entity to persistence model
+  - Handles minimal domain entity
+
+### Service Tests
+
+- **ContainerRepositoryComponentService**: Tests component management functionality
+  - Gets component details
+  - Handles component not found
+  - Deploys components successfully
+  - Handles deployment failures
+  - Removes components successfully
+  - Handles removal failures
+
+### Controller Tests
+
+- **ContainerStacksController**: Tests API endpoints
+  - Stack operations:
+    - Gets all stacks
+    - Creates a stack
+    - Updates a stack
+    - Deletes a stack
+  - Repository operations:
+    - Gets all repositories
+    - Gets a repository by UUID
+    - Creates a repository
+    - Updates a repository
+    - Deletes a repository
+
+### Module Tests
+
+- **ContainerStacksModule**: Tests module compilation and dependency injection
+  - Verifies module compilation with all dependencies
+  - Mocks external dependencies (Mongoose, Auth, Shell, AnsibleVault)
+  - Tests module provider configuration
 
 ## Services
 

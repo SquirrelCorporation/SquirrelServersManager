@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { ContainerComponentFactory } from '../../../../application/services/components/component-factory.service';
 import { Kind } from '../../../../domain/components/kind.enum';
 import { ContainerService } from '../../../../application/services/container.service';
-import { AbstractRegistryComponent } from '../../../../application/services/components/abstract-registry.component';
+import { AbstractRegistryComponent } from '../../../../application/services/components/registry/abstract-registry.component';
 import { Component } from '../../../../domain/components/component.interface';
 import { SSMServicesTypes } from '../../../../../../types/typings.d';
 
