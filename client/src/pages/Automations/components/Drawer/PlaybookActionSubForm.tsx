@@ -1,5 +1,5 @@
 import ExtraVarView from '@/components/PlaybookSelection/ExtraVarView';
-import { getAllDevices } from '@/services/rest/device';
+import { getAllDevices } from '@/services/rest/devices/devices';
 import { getPlaybooks } from '@/services/rest/playbooks';
 import { CheckCircleFilled, FileOutlined, LockFilled } from '@ant-design/icons';
 import { ProFormSelect } from '@ant-design/pro-components';

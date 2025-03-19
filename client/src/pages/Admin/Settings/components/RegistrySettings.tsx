@@ -4,7 +4,7 @@ import {
   getRegistries,
   removeRegistry,
   resetRegistry,
-} from '@/services/rest/containers';
+} from '@/services/rest/containers/container-registries';
 import {
   CheckCircleOutlined,
   MinusCircleOutlined,

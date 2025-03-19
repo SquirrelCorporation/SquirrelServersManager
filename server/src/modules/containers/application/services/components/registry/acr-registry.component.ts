@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
-import { SSMServicesTypes } from '../../../../../../types/typings';
+import { Image, RequestOptionsType } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
 
 const logger = PinoLogger.child({ module: 'AcrRegistryComponent' }, { msgPrefix: '[ACR_REGISTRY] - ' });
@@ -44,14 +44,14 @@ export class AcrRegistryComponent extends AbstractRegistryComponent {
   /**
    * Return true if image has ACR registry URL
    */
-  match(image: SSMServicesTypes.Image): boolean {
+  match(image: Image): boolean {
     return /^.*\.?azurecr.io$/.test(image.registry.url);
   }
 
   /**
    * Normalize image according to ACR characteristics
    */
-  normalizeImage(image: SSMServicesTypes.Image): SSMServicesTypes.Image {
+  normalizeImage(image: Image): Image {
     const imageNormalized = image;
     imageNormalized.registry.name = 'acr';
     if (!imageNormalized.registry.url.startsWith('https://')) {
@@ -64,9 +64,9 @@ export class AcrRegistryComponent extends AbstractRegistryComponent {
    * Authenticate to ACR
    */
   async authenticate(
-    image: SSMServicesTypes.Image,
-    requestOptions: SSMServicesTypes.RequestOptionsType,
-  ): Promise<SSMServicesTypes.RequestOptionsType> {
+    image: Image,
+    requestOptions: RequestOptionsType,
+  ): Promise<RequestOptionsType> {
     const requestOptionsWithAuth = requestOptions;
     if (
       requestOptionsWithAuth.headers &&

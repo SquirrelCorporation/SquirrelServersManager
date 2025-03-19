@@ -6,7 +6,6 @@ import { ScheduleModule } from '@nestjs/schedule';
 import mongoose from 'mongoose';
 import { LoggerModule } from 'nestjs-pino';
 import { SshModule } from '@modules/ssh';
-import { ContainersModule } from '@modules/containers';
 import { db } from './config';
 import logger, { httpLoggerOptions } from './logger';
 import { AnsibleConfigModule } from './modules/ansible-config/ansible-config.module';
@@ -15,7 +14,7 @@ import { AnsibleVaultModule } from './modules/ansible-vault/ansible-vault.module
 import { AuthModule } from './modules/auth/auth.module';
 //import { AutomationsModule } from './modules/automations/automations.module';
 import { ContainerStacksModule } from './modules/container-stacks/container-stacks.module';
-// import { ContainersModule } from './modules/containers/containers.module';
+import { ContainersModule } from './modules/containers/containers.module';
 import { DevicesModule } from './modules/devices/devices.module';
 import { DiagnosticModule } from './modules/diagnostic/diagnostic.module';
 import { LogsModule } from './modules/logs/logs.module';

@@ -10,7 +10,7 @@ import {
   Wifi,
 } from '@/components/Icons/CustomIcons';
 import { CardHeader } from '@/components/Template/CardHeader';
-import { updateDeviceSystemInformationConfiguration } from '@/services/rest/device';
+import { updateDeviceSystemInformationConfiguration } from '@/services/rest/devices/devices';
 import { capitalizeFirstLetter } from '@/utils/strings';
 import {
   CheckCircleFilled,

@@ -1,33 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import * as Dockerode from 'dockerode';
+import Dockerode from 'dockerode';
 import DockerModem from 'docker-modem';
 import debounce from 'debounce';
-import { v4 as uuidv4 } from 'uuid';
-import { CronJob } from 'cron';
+import CronJob from 'node-cron';
 import * as Joi from 'joi';
 import parse from 'parse-docker-image-name';
 import { SsmStatus } from 'ssm-shared-lib';
-import { getCustomAgent } from '../../../../../core/CustomAgent';
-import { Label } from '../../../../../utils/label';
-import tag from '../../../../../utils/tag';
+import { getCustomAgent } from 'src/helpers/ssh/custom-agent';
+import { ContainerEntity } from '@modules/containers/domain/entities/container.entity';
+import { IDevice, IDeviceAuth } from '@modules/devices';
+import { Label } from '../../../../../../utils/label';
+import tag from '../../../../../../utils/tag';
 import {
   getContainerName,
-  getRegistry,
+  getOldContainers,
   getRepoDigest,
   getTagCandidates,
   hasResultChanged,
   isContainerToWatch,
   isDigestToWatch,
-  normalizeContainer,
-  pruneOldContainers,
-} from '../../../../../utils/utils';
-import { ContainerServiceInterface } from '../../../../../../application/interfaces/container-service.interface';
-import { ContainerStatsServiceInterface } from '../../../../../../application/interfaces/container-stats-service.interface';
-import { IContainerLogsService } from '../../../../../../application/interfaces/container-logs-service.interface';
-import { ContainerImagesServiceInterface } from '../../../../../../application/interfaces/container-images-service.interface';
-import { ContainerVolumesServiceInterface } from '../../../../../../application/interfaces/container-volumes-service.interface';
-import { ContainerNetworksServiceInterface } from '../../../../../../application/interfaces/container-networks-service.interface';
+} from '../../../../../../utils/utils';
+import { CONTAINER_SERVICE, ContainerServiceInterface } from '../../../../../../application/interfaces/container-service.interface';
+import { CONTAINER_STATS_SERVICE, ContainerStatsServiceInterface } from '../../../../../../application/interfaces/container-stats-service.interface';
+import { CONTAINER_LOGS_SERVICE, IContainerLogsService } from '../../../../../../application/interfaces/container-logs-service.interface';
+import { CONTAINER_IMAGES_SERVICE, ContainerImagesServiceInterface } from '../../../../../../application/interfaces/container-images-service.interface';
+import { CONTAINER_VOLUMES_SERVICE, ContainerVolumesServiceInterface } from '../../../../../../application/interfaces/container-volumes-service.interface';
+import { CONTAINER_NETWORKS_SERVICE, ContainerNetworksServiceInterface } from '../../../../../../application/interfaces/container-networks-service.interface';
 import { AbstractDockerLogsComponent } from './abstract-docker-logs.component';
 
 // The delay before starting the watcher when the app is started
@@ -42,8 +41,8 @@ const DEBOUNCED_WATCH_CRON_MS = 5000;
  */
 @Injectable()
 export class DockerWatcherComponent extends AbstractDockerLogsComponent {
-  watchCron!: CronJob | undefined;
-  watchCronStat!: CronJob | undefined;
+  watchCron!:  CronJob.ScheduledTask | undefined;;
+  watchCronStat!:  CronJob.ScheduledTask | undefined;;
   watchCronTimeout: any;
   watchCronDebounced: any = undefined;
   listenDockerEventsTimeout: any;
@@ -51,14 +50,20 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
 
   constructor(
     protected readonly eventEmitter: EventEmitter2,
+    @Inject(CONTAINER_SERVICE)
     protected readonly containerService: ContainerServiceInterface,
+    @Inject(CONTAINER_STATS_SERVICE)
     protected readonly containerStatsService: ContainerStatsServiceInterface,
+    @Inject(CONTAINER_LOGS_SERVICE)
     protected readonly containerLogsService: IContainerLogsService,
+    @Inject(CONTAINER_IMAGES_SERVICE)
     protected readonly containerImagesService: ContainerImagesServiceInterface,
+    @Inject(CONTAINER_VOLUMES_SERVICE)
     protected readonly containerVolumesService: ContainerVolumesServiceInterface,
-    protected readonly containerNetworksService: ContainerNetworksServiceInterface
+    @Inject(CONTAINER_NETWORKS_SERVICE)
+    protected readonly containerNetworksService: ContainerNetworksServiceInterface,
   ) {
-    super(eventEmitter, containerService, containerStatsService, containerLogsService, 
+    super(eventEmitter, containerService, containerStatsService, containerLogsService,
           containerImagesService, containerVolumesService, containerNetworksService);
   }
 
@@ -86,13 +91,11 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
         this.watchVolumesFromCron();
         this.watchImagesFromCron();
       });
-
       if (this.configuration.watchstats) {
         this.watchCronStat = CronJob.schedule(this.configuration.cronstats, () => {
           this.watchContainerStats();
         });
       }
-
       // watch at startup (after all components have been registered)
       this.watchCronTimeout = setTimeout(() => {
         this.watchContainersFromCron();
@@ -110,12 +113,11 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
         this.watchVolumesFromCron();
         this.watchImagesFromCron();
       }, DEBOUNCED_WATCH_CRON_MS);
-
       // listen to docker events
       if (this.configuration.watchevents) {
         this.listenDockerEventsTimeout = setTimeout(
           () => this.listenDockerEvents(),
-          START_WATCHER_DELAY_MS
+          START_WATCHER_DELAY_MS,
         );
       }
 
@@ -146,7 +148,6 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
           `DeviceAuth not found for deviceID ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host}`
         );
       }
-
       const options = await this.getDockerConnectionOptions(device, deviceAuth);
       this.dockerApi = new Dockerode(options);
     } catch (error: any) {
@@ -158,11 +159,10 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
   /**
    * Get Docker connection options
    */
-  async getDockerConnectionOptions(device: any, deviceAuth: any): Promise<any> {
+  async getDockerConnectionOptions(device: IDevice, deviceAuth: IDeviceAuth): Promise<any> {
     try {
       // In NestJS version, we use containerService to get connection options
       const options = await this.containerService.getDockerSshConnectionOptions(device, deviceAuth);
-      this.childLogger.debug(options);
 
       const agent = getCustomAgent(this.childLogger, {
         debug: (message: any) => {
@@ -195,12 +195,12 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     this.childLogger.info('deregisterComponent');
 
     if (this.watchCron) {
-      this.watchCron.stop();
+      this.schedulerRegistry.deleteCronJob(this.watchCron);
       delete this.watchCron;
     }
 
     if (this.watchCronStat) {
-      this.watchCronStat.stop();
+      this.schedulerRegistry.deleteCronJob(this.watchCronStat);
       delete this.watchCronStat;
     }
 
@@ -247,8 +247,7 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
       ...this.configuration,
       cafile: this.maskValue(this.configuration.cafile),
       certfile: this.maskValue(this.configuration.certfile),
-      keyfile: this.maskValue(this.configuration.keyfile),
-      password: this.maskValue(this.configuration.password)
+      keyfile: this.maskValue(this.configuration.keyfile)
     };
   }
 
@@ -271,84 +270,6 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     return value.substring(0, 3) + '*'.repeat(value.length - 6) + value.substring(value.length - 3);
   }
 
-  /**
-   * Start container watch jobs
-   */
-  private startWatchJobs(): void {
-    const { cron, watchstats, cronstats, watchevents } = this.configuration;
-
-    // Container watcher job
-    if (cron) {
-      this.childLogger.info(`Starting container watcher cron job with schedule: ${cron}`);
-      this.cronJob = new CronJob(cron, () => {
-        this.watchContainersFromCron().catch(error => {
-          this.childLogger.error(`Failed to sync containers: ${error.message}`);
-        });
-
-        this.watchNetworksFromCron().catch(error => {
-          this.childLogger.error(`Failed to sync networks: ${error.message}`);
-        });
-
-        this.watchVolumesFromCron().catch(error => {
-          this.childLogger.error(`Failed to sync volumes: ${error.message}`);
-        });
-
-        this.watchImagesFromCron().catch(error => {
-          this.childLogger.error(`Failed to sync images: ${error.message}`);
-        });
-      });
-
-      this.cronJob.start();
-    }
-
-    // Container stats job
-    if (watchstats && cronstats) {
-      this.childLogger.info(`Starting container stats cron job with schedule: ${cronstats}`);
-      this.statsJob = new CronJob(cronstats, () => {
-        this.watchContainerStats().catch(error => {
-          this.childLogger.error(`Failed to sync container stats: ${error.message}`);
-        });
-      });
-
-      this.statsJob.start();
-    }
-
-    // Delayed first run
-    this.watchCronTimeout = setTimeout(() => {
-      this.watchContainersFromCron().catch(error => {
-        this.childLogger.error(`Failed to sync containers: ${error.message}`);
-      });
-
-      this.watchNetworksFromCron().catch(error => {
-        this.childLogger.error(`Failed to sync networks: ${error.message}`);
-      });
-
-      this.watchVolumesFromCron().catch(error => {
-        this.childLogger.error(`Failed to sync volumes: ${error.message}`);
-      });
-
-      this.watchImagesFromCron().catch(error => {
-        this.childLogger.error(`Failed to sync images: ${error.message}`);
-      });
-
-      if (watchstats) {
-        this.watchContainerStats().catch(error => {
-          this.childLogger.error(`Failed to sync container stats: ${error.message}`);
-        });
-      }
-    }, 1000);
-
-    // Set up debounced watch
-    this.watchCronDebounced = this.debouncedWatch.bind(this);
-
-    // Listen to docker events
-    if (watchevents) {
-      this.listenDockerEventsTimeout = setTimeout(
-        () => this.listenDockerEvents(),
-        1000
-      );
-    }
-  }
 
   /**
    * Debounced watch handler
@@ -435,7 +356,7 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     // Reset previous results if so
     delete containerWithResult.result;
     delete containerWithResult.error;
-    this.childLogger.debug('Start watching');
+    this.childLogger.info('Start watching');
 
     try {
       containerWithResult.result = await this.findNewVersion(container);
@@ -471,8 +392,11 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
         this.childLogger.error(
           `listContainers - error: ${e.message} - (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`
         );
-        // In NestJS version, use containerService to update status
-        await this.containerService.updateContainerStatusByWatcher(this.name, SsmStatus.ContainerStatus.UNREACHABLE);
+        // Update the status of containers as unreachable
+        // Note: containerService.updateContainerStatusByWatcher doesn't exist in the interface
+        // Instead, find all containers by device and update their status
+       await this.containerService.updateContainerStatusByWatcher(this.name, SsmStatus.ContainerStatus.UNREACHABLE);
+
         return [];
       }
 
@@ -514,9 +438,9 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
 
       // Prune old containers from the store
       try {
-        // In NestJS version, use containerService to find containers
+        // Get all containers for this device and filter by watcher
         const containersFromTheStore = await this.containerService.getContainersByWatcher(this.name);
-        pruneOldContainers(containersToReturn, containersFromTheStore);
+        this.pruneOldContainers(containersToReturn, containersFromTheStore);
       } catch (e: any) {
         this.childLogger.warn(
           `Error when trying to prune the old containers (message: ${e.message}, deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`
@@ -533,18 +457,20 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     }
   }
 
+
+
   /**
    * Find new version for a Container.
    */
   async findNewVersion(container: any) {
     try {
-      const registryProvider = getRegistry(container.image.registry.name);
+      const registryProvider = await this.containerService.getRegistryByName(container.image.registry.name);
       const result: { tag: string; digest?: string; created?: string } = {
         tag: container.image.tag.value,
       };
 
       if (!registryProvider) {
-        this.childLogger.error(
+        this.childLogger.warn(
           `findNewVersion - Unsupported registry: ${container.image.registry.name} (image: ${container.image.name})`
         );
       } else {
@@ -614,15 +540,16 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     try {
       const containerId = container.Id;
       // Is container already in store? just return it :)
-      // In NestJS version, use containerService
-      const containerInStore = await this.containerService.getContainerById(containerId);
+      // Find the container by ID in all containers for this device
+      const containersInDevice = await this.containerService.getContainersByDeviceUuid(this.configuration.deviceUuid);
+      const containerInStore = containersInDevice.find(c => c.id === containerId);
 
       if (
         containerInStore !== undefined &&
         containerInStore !== null &&
         containerInStore.error === undefined
       ) {
-        this.childLogger.debug(
+        this.childLogger.info(
           `addImageDetailsToContainer - Container "${container.Image}" already in store - (containerId: ${containerInStore.id})`
         );
         return { ...containerInStore, status: container.State, labels: container?.Labels };
@@ -682,7 +609,7 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
         );
       }
 
-      return normalizeContainer({
+      return this.containerService.normalizeContainer({
         id: containerId,
         name: containerName || 'unknown',
         status,
@@ -738,7 +665,6 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
       container: containerWithResult,
       changed: false,
     };
-
     // In NestJS version, use containerService to get device
     const device = await this.containerService.getDeviceByUuid(this.configuration.deviceUuid);
     if (!device) {
@@ -748,24 +674,21 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     }
 
     // Find container in db & compare
-    // In NestJS version, use containerService
-    const containerInDb = await this.containerService.getContainerById(containerWithResult.id);
+    // Find the container in all containers for this device
+    const allContainers = await this.containerService.getContainersByDeviceUuid(this.configuration.deviceUuid);
+    const containerInDb = allContainers.find(c => c.id === containerWithResult.id);
 
     // Not found in DB? => Save it
     if (!containerInDb) {
-      this.childLogger.debug('Container watched for the first time');
-      // In NestJS version, use containerService
       containerReport.container = await this.containerService.createContainer(
         this.configuration.deviceUuid,
         containerWithResult
       );
       containerReport.changed = true;
-
       // Found in DB? => update it
     } else {
-      // In NestJS version, use containerService
       containerReport.container = await this.containerService.updateContainer(
-        containerInDb.uuid,
+        containerWithResult.id,
         containerWithResult
       );
       containerReport.changed = !!(
@@ -775,47 +698,6 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     }
 
     return containerReport;
-  }
-
-  /**
-   * Format container information
-   */
-  private formatContainerInfo(containerInfo: any): any {
-    return {
-      id: containerInfo.Id,
-      name: containerInfo.Name.replace(/^\//, ''), // Remove leading slash
-      image: containerInfo.Config.Image,
-      command: containerInfo.Config.Cmd ? containerInfo.Config.Cmd.join(' ') : '',
-      state: containerInfo.State.Status,
-      status: containerInfo.State.Status,
-      createdAt: new Date(containerInfo.Created),
-      ports: this.formatPorts(containerInfo.NetworkSettings.Ports),
-      labels: containerInfo.Config.Labels || {},
-      env: containerInfo.Config.Env || [],
-      networks: containerInfo.NetworkSettings.Networks || {},
-      mounts: containerInfo.Mounts || [],
-      restart: containerInfo.HostConfig.RestartPolicy.Name,
-      oomKilled: containerInfo.State.OOMKilled
-    };
-  }
-
-  /**
-   * Format ports mapping
-   */
-  private formatPorts(ports: any): any {
-    const formattedPorts: any = {};
-
-    if (!ports) {
-      return formattedPorts;
-    }
-
-    Object.entries(ports).forEach(([portProto, bindings]: [string, any]) => {
-      formattedPorts[portProto] = {
-        bindings: bindings || [],
-      };
-    });
-
-    return formattedPorts;
   }
 
   /**
@@ -867,37 +749,6 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     }
   }
 
-  /**
-   * Mask configuration (hide sensitive data)
-   */
-  maskConfiguration(): any {
-    return {
-      ...this.configuration,
-      cafile: this.maskValue(this.configuration.cafile),
-      certfile: this.maskValue(this.configuration.certfile),
-      keyfile: this.maskValue(this.configuration.keyfile),
-      password: this.maskValue(this.configuration.password)
-    };
-  }
-
-  /**
-   * Helper to mask sensitive values
-   */
-  private maskValue(value: any): string {
-    if (!value) {
-      return '';
-    }
-
-    if (typeof value !== 'string') {
-      return '******';
-    }
-
-    if (value.length <= 8) {
-      return '*'.repeat(value.length);
-    }
-
-    return value.substring(0, 3) + '*'.repeat(value.length - 6) + value.substring(value.length - 3);
-  }
 
   /**
    * Container action methods - matching original implementation
@@ -950,59 +801,67 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     }
   }
 
+  async unpauseContainer(container: any): Promise<any> {
+    try {
+      return await this.dockerApi.getContainer(container.id).unpause();
+    } catch (error: any) {
+      this.childLogger.error(`Failed to unpause container ${container.id}: ${error.message}`);
+      throw error;
+    }
+  }
+
   /**
-   * NestJS utility methods that help with container management
+ * Prune old containers from the store.
+ * @param newContainers
+ * @param containersFromTheStore
+ */
+  pruneOldContainers(
+  newContainers: (ContainerEntity | undefined)[] | undefined,
+  containersFromTheStore: ContainerEntity[] | null,
+  ) {
+    try {
+      const containersToRemove = getOldContainers(newContainers, containersFromTheStore);
+      containersToRemove.forEach((containerToRemove) => {
+        void this.containerService.deleteContainerById(containerToRemove.id);
+      });
+    } catch (error: any) {
+      this.childLogger.error(error);
+      this.childLogger.error(`Failed to prune old containers: ${error.message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Get container by ID
+   */
+  async getContainer(containerId: string): Promise<any> {
+    try {
+      const container = this.dockerApi.getContainer(containerId);
+      return await container.inspect();
+    } catch (error: any) {
+      this.childLogger.error(`Failed to get container ${containerId}: ${error.message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * List all containers
+   */
+  async listContainers(): Promise<any[]> {
+    try {
+      return await this.dockerApi.listContainers({ all: true });
+    } catch (error: any) {
+      this.childLogger.error(`Failed to list containers: ${error.message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Create a new container
    */
   async createContainer(containerConfig: any): Promise<any> {
     try {
-      this.childLogger.info(`Creating container ${containerConfig.name}`);
-
-      // Prepare Docker configuration
-      const dockerConfig: Dockerode.ContainerCreateOptions = {
-        Image: containerConfig.image,
-        name: containerConfig.name,
-        Env: this.prepareEnvironmentVariables(containerConfig.env),
-        HostConfig: {
-          PortBindings: this.preparePortBindings(containerConfig.ports),
-          Binds: this.prepareVolumeBindings(containerConfig.volumes),
-          RestartPolicy: {
-            Name: containerConfig.restart || 'no'
-          },
-          Privileged: containerConfig.privileged || false
-        },
-        Labels: containerConfig.labels || {}
-      };
-
-      if (containerConfig.command) {
-        dockerConfig.Cmd = containerConfig.command.split(' ');
-      }
-
-      // Create the container
-      const container = await this.dockerApi.createContainer(dockerConfig);
-
-      // Start the container if it was created successfully
-      await container.start();
-
-      // Inspect the container to get full details
-      const details = await container.inspect();
-
-      // Add UUID and format for our system
-      const formattedContainer = this.formatContainerInfo(details);
-      const containerUuid = uuidv4();
-
-      // Add container to database
-      const containerEntity = {
-        ...formattedContainer,
-        uuid: containerUuid,
-        deviceUuid: this.configuration.deviceUuid,
-        watchers: [this.name],
-        isManaged: true,
-        isWatched: true
-      };
-
-      await this.containerService.createContainer(this.configuration.deviceUuid, containerEntity);
-
-      return { ...formattedContainer, uuid: containerUuid };
+      return await this.dockerApi.createContainer(containerConfig);
     } catch (error: any) {
       this.childLogger.error(`Failed to create container: ${error.message}`);
       throw error;
@@ -1010,91 +869,33 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
   }
 
   /**
-   * Format container information
+   * Remove a container
    */
-  private formatContainerInfo(containerInfo: any): any {
-    return {
-      id: containerInfo.Id,
-      name: containerInfo.Name.replace(/^\//, ''), // Remove leading slash
-      image: containerInfo.Config.Image,
-      command: containerInfo.Config.Cmd ? containerInfo.Config.Cmd.join(' ') : '',
-      state: containerInfo.State.Status,
-      status: containerInfo.State.Status,
-      createdAt: new Date(containerInfo.Created),
-      ports: this.formatPorts(containerInfo.NetworkSettings.Ports),
-      labels: containerInfo.Config.Labels || {},
-      env: containerInfo.Config.Env || [],
-      networks: containerInfo.NetworkSettings.Networks || {},
-      mounts: containerInfo.Mounts || [],
-      restart: containerInfo.HostConfig.RestartPolicy.Name,
-      oomKilled: containerInfo.State.OOMKilled
-    };
+  async removeContainer(container: any): Promise<void> {
+    try {
+      const dockerContainer = this.dockerApi.getContainer(container.id);
+      await dockerContainer.remove();
+    } catch (error: any) {
+      this.childLogger.error(`Failed to remove container ${container.id}: ${error.message}`);
+      throw error;
+    }
   }
 
   /**
-   * Format ports mapping
+   * Get container logs
    */
-  private formatPorts(ports: any): any {
-    const formattedPorts: any = {};
-
-    if (!ports) {
-      return formattedPorts;
+  async getContainerLogs(container: any, options?: any): Promise<any> {
+    try {
+      const dockerContainer = this.dockerApi.getContainer(container.id);
+      return await dockerContainer.logs({
+        follow: false,
+        stdout: true,
+        stderr: true,
+        ...options
+      });
+    } catch (error: any) {
+      this.childLogger.error(`Failed to get logs for container ${container.id}: ${error.message}`);
+      throw error;
     }
-
-    Object.entries(ports).forEach(([portProto, bindings]: [string, any]) => {
-      formattedPorts[portProto] = {
-        bindings: bindings || [],
-      };
-    });
-
-    return formattedPorts;
-  }
-
-  /**
-   * Prepare environment variables
-   */
-  private prepareEnvironmentVariables(env?: Record<string, string>): string[] {
-    if (!env) {
-      return [];
-    }
-
-    return Object.entries(env).map(([key, value]) => `${key}=${value}`);
-  }
-
-  /**
-   * Prepare port bindings
-   */
-  private preparePortBindings(ports?: Record<string, any>): any {
-    const portBindings: any = {};
-
-    if (!ports) {
-      return portBindings;
-    }
-
-    Object.entries(ports).forEach(([portProto, binding]: [string, any]) => {
-      portBindings[portProto] = binding.bindings ? binding.bindings.map((b: any) => ({
-        HostIp: b.hostIp || '',
-        HostPort: b.hostPort || ''
-      })) : [];
-    });
-
-    return portBindings;
-  }
-
-  /**
-   * Prepare volume bindings
-   */
-  private prepareVolumeBindings(volumes?: any[]): string[] {
-    if (!volumes) {
-      return [];
-    }
-
-    return volumes.map(volume => {
-      let binding = `${volume.source}:${volume.target}`;
-      if (volume.readonly) {
-        binding += ':ro';
-      }
-      return binding;
-    });
   }
 }

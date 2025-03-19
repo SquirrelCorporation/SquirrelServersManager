@@ -1,5 +1,5 @@
 import SSHConnectionFormElements from '@/components/DeviceConfiguration/SSHConnectionFormElements';
-import { getDeviceAuth, putDeviceAuth } from '@/services/rest/deviceauth';
+import { getDeviceAuth, putDeviceAuth } from '@/services/rest/devices/device-credentials';
 import { ProFormInstance } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
 import { message, Space } from 'antd';

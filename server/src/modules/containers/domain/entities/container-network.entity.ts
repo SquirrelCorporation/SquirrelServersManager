@@ -1,32 +1,28 @@
+import { IPAM, NetworkContainer } from "dockerode";
+
 /**
  * Domain entity for container networks
  */
 export interface ContainerNetworkEntity {
+  _id?: string;
+ name: string;
+  status: string;
+  watcher: string;
   id: string;
-  uuid: string;
-  name: string;
-  deviceUuid: string;
-  driver: string;
+  deviceUuid?: string;
+  created: string;
   scope: string;
-  ipam?: {
-    driver: string;
-    options?: Record<string, string>;
-    config?: Array<{
-      subnet?: string;
-      gateway?: string;
-      ipRange?: string;
-    }>;
-  };
-  internal?: boolean;
-  enableIPv6?: boolean;
-  options?: Record<string, string>;
-  labels?: Record<string, string>;
-  containers?: Record<string, {
-    name: string;
-    endpointId: string;
-    macAddress: string;
-    ipv4Address: string;
-    ipv6Address: string;
-  }>;
+  driver: string;
+  enableIPv6: boolean;
+  ipam?: IPAM | undefined;
+  internal: boolean;
+  attachable: boolean;
+  ingress: boolean;
+  configFrom?: { Network: string } | undefined;
+  configOnly: boolean;
+  containers?: { [id: string]: NetworkContainer } | undefined;
+  options?: { [key: string]: string } | undefined;
+  labels?: { [key: string]: string } | undefined;
   createdAt?: Date;
+  updatedAt?: Date;
 }

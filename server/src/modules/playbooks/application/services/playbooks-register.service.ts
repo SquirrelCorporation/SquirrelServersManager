@@ -4,12 +4,19 @@ import { FileSystemService } from '@modules/shell';
 import { PlaybookFileService } from '@modules/shell';
 import PlaybooksRegisterComponent from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
 import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
-import { IPlaybooksRegisterRepository, PLAYBOOKS_REGISTER_REPOSITORY } from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
-import { IPlaybookRepository, PLAYBOOK_REPOSITORY } from '@modules/playbooks/domain/repositories/playbook-repository.interface';
+import {
+  IPlaybooksRegisterRepository,
+  PLAYBOOKS_REGISTER_REPOSITORY,
+} from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
+import {
+  IPlaybookRepository,
+  PLAYBOOK_REPOSITORY,
+} from '@modules/playbooks/domain/repositories/playbook-repository.interface';
 import { ForbiddenError, InternalError, NotFoundError } from '../../../../middlewares/api/ApiError';
 import { IPlaybooksRegisterService } from '../../domain/services/playbooks-register-service.interface';
 import { PlaybooksRegisterEngineService } from './engine/playbooks-register-engine.service';
 import { TreeNodeService } from './tree-node.service';
+
 /**
  * Service for managing playbooks repositories
  */
@@ -56,26 +63,24 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnMo
    */
   async getAllPlaybooksRepositories(): Promise<API.PlaybooksRepository[]> {
     try {
-       const registers = await this.playbooksRegisterRepository.findAllActive();
+      const registers = await this.playbooksRegisterRepository.findAllActive();
       this.logger.log(`getAllPlaybooksRepositories - found ${registers.length} registers`);
       this.logger.log(`getAllPlaybooksRepositories - registers: ${JSON.stringify(registers)}`);
       if (!registers) {
         return [];
       }
 
-      const substitutedListOfPlaybooks = registers.map(
-        async (register) => {
-          this.logger.debug(`getAllPlaybooksRepositories - processing ${register.name}`);
-          return {
-            name: register.name,
-            children: await this.treeNodeService.recursiveTreeCompletion(register.tree),
-            type: register.type,
-            uuid: register.uuid,
-            path: register.directory,
-            default: register.default,
-          };
-        },
-      );
+      const substitutedListOfPlaybooks = registers.map(async (register) => {
+        this.logger.debug(`getAllPlaybooksRepositories - processing ${register.name}`);
+        return {
+          name: register.name,
+          children: await this.treeNodeService.recursiveTreeCompletion(register.tree),
+          type: register.type,
+          uuid: register.uuid,
+          path: register.directory,
+          default: register.default,
+        };
+      });
 
       return (await Promise.all(substitutedListOfPlaybooks)).sort((a, b) =>
         b.default ? 1 : a.default ? 1 : a.name.localeCompare(b.name),
@@ -182,10 +187,7 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnMo
    * @param repository The repository to delete the directory from
    * @param path The path of the directory to delete
    */
-  async deleteDirectoryFromRepository(
-    register: IPlaybooksRegister,
-    path: string,
-  ): Promise<void> {
+  async deleteDirectoryFromRepository(register: IPlaybooksRegister, path: string): Promise<void> {
     const playbooksRegisterComponent = this.playbooksRegisterEngineService.getState()[
       register.uuid
     ] as PlaybooksRegisterComponent;

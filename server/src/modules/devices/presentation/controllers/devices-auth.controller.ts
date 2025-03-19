@@ -32,7 +32,7 @@ const fileFilter = (req: any, file: Express.Multer.File, callback: any) => {
   callback(null, true);
 };
 
-@Controller('devices')
+@Controller('device-credentials')
 @UseGuards(JwtAuthGuard)
 export class DevicesAuthController {
   constructor(
@@ -41,7 +41,8 @@ export class DevicesAuthController {
     private readonly sensitiveInfoService: ISensitiveInfoService
   ) {}
 
-  @Get(':uuid/auth')
+
+  @Get(':uuid')
   async getDeviceAuth(@Param('uuid') uuid: string) {
     try {
       const device = await this.devicesService.findOneByUuid(uuid);
@@ -66,7 +67,7 @@ export class DevicesAuthController {
     }
   }
 
-  @Post(':uuid/auth')
+  @Post(':uuid')
   async createDeviceAuth(
     @Param('uuid') uuid: string,
     @Body() createDeviceAuthDto: CreateDeviceAuthDto,
@@ -86,11 +87,7 @@ export class DevicesAuthController {
 
       const result = await this.devicesService.updateOrCreateDeviceAuth(deviceAuth as any);
 
-      return {
-        success: true,
-        message: 'Device auth created successfully',
-        data: { type: result.authType },
-      };
+      return { type: result.authType }
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
@@ -102,7 +99,7 @@ export class DevicesAuthController {
     }
   }
 
-  @Patch(':uuid/auth')
+  @Patch(':uuid')
   async updateDeviceAuth(
     @Param('uuid') uuid: string,
     @Body() updateDeviceAuthDto: UpdateDeviceAuthDto,
@@ -160,7 +157,8 @@ export class DevicesAuthController {
     }
   }
 
-  @Delete(':uuid/auth')
+
+  @Delete(':uuid')
   async removeDeviceAuth(@Param('uuid') uuid: string) {
     try {
       const device = await this.devicesService.findOneByUuid(uuid);
@@ -170,10 +168,7 @@ export class DevicesAuthController {
 
       await this.devicesService.deleteDeviceAuthByDevice(device);
 
-      return {
-        success: true,
-        message: 'Device auth deleted successfully',
-      };
+      return;
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
@@ -185,7 +180,7 @@ export class DevicesAuthController {
     }
   }
 
-  @Patch(':uuid/auth/docker')
+  @Patch(':uuid/docker')
   async updateDockerAuth(
     @Param('uuid') uuid: string,
     @Body() updateDockerAuthDto: UpdateDockerAuthDto,
@@ -236,7 +231,7 @@ export class DevicesAuthController {
     }
   }
 
-  @Post(':uuid/auth/docker/certs/:type')
+  @Post(':uuid/docker/certs/:type')
   @UseInterceptors(
     FileInterceptor('file', {
       limits: {
@@ -284,10 +279,7 @@ export class DevicesAuthController {
 
       await this.devicesService.updateDeviceAuth(deviceAuth);
 
-      return {
-        success: true,
-        message: 'Docker certificate uploaded successfully',
-      };
+      return;
     } catch (error: any) {
       throw new HttpException(
         error.message || 'Error uploading docker certificate',
@@ -296,7 +288,7 @@ export class DevicesAuthController {
     }
   }
 
-  @Delete(':uuid/auth/docker/certs/:type')
+  @Delete(':uuid/docker/certs/:type')
   async deleteDockerAuthCerts(
     @Param('uuid') uuid: string,
     @Param('type') type: string,
@@ -329,10 +321,7 @@ export class DevicesAuthController {
           break;
       }
 
-      return {
-        success: true,
-        message: 'Docker certificate deleted successfully',
-      };
+      return;
     } catch (error: any) {
       throw new HttpException(
         error.message || 'Error deleting docker certificate',
@@ -341,7 +330,7 @@ export class DevicesAuthController {
     }
   }
 
-  @Patch(':uuid/auth/proxmox')
+  @Patch(':uuid/proxmox')
   async updateProxmoxAuth(
     @Param('uuid') uuid: string,
     @Body() updateProxmoxAuthDto: UpdateProxmoxAuthDto,

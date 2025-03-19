@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
+import { Image, RequestOptionsType } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
-import { SSMServicesTypes } from '../../../../../../types/typings';
 
 const logger = PinoLogger.child({ module: 'GcrRegistryComponent' }, { msgPrefix: '[GCR_REGISTRY] - ' });
 
@@ -50,7 +50,7 @@ export class GcrRegistryComponent extends AbstractRegistryComponent {
    * @param image the image
    * @returns {boolean}
    */
-  match(image: SSMServicesTypes.Image): boolean {
+  match(image: Image): boolean {
     return /^.*\.?gcr.io$/.test(image.registry.url);
   }
 
@@ -59,7 +59,7 @@ export class GcrRegistryComponent extends AbstractRegistryComponent {
    * @param image
    * @returns {*}
    */
-  normalizeImage(image: SSMServicesTypes.Image): SSMServicesTypes.Image {
+  normalizeImage(image: Image): Image {
     const imageNormalized = image;
     imageNormalized.registry.name = 'gcr';
     if (!imageNormalized.registry.url.startsWith('https://')) {
@@ -72,13 +72,13 @@ export class GcrRegistryComponent extends AbstractRegistryComponent {
    * Authenticate to GCR
    */
   async authenticate(
-    image: SSMServicesTypes.Image,
-    requestOptions: SSMServicesTypes.RequestOptionsType,
-  ): Promise<SSMServicesTypes.RequestOptionsType> {
+    image: Image,
+    requestOptions: RequestOptionsType,
+  ): Promise<RequestOptionsType> {
     if (!this.configuration.clientemail) {
       return requestOptions;
     }
-    const request: SSMServicesTypes.RequestOptionsType = {
+    const request: RequestOptionsType = {
       method: 'GET',
       url: `https://gcr.io/v2/token?scope=repository:${image.name}:pull`,
       headers: {

@@ -1,23 +1,24 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
+import { fullName } from '@modules/containers/utils/utils';
+import SSHCredentialsHelper from 'src/helpers/ssh/SSHCredentialsHelper';
+import { IDevice, IDeviceAuth } from '@modules/devices';
 import { ContainerServiceInterface } from '../interfaces/container-service.interface';
 import { ContainerEntity } from '../../domain/entities/container.entity';
 import { CONTAINER_REPOSITORY } from '../../domain/repositories/container-repository.interface';
-import { SSMServicesTypes } from '../../../../types/typings.d';
-import { WatcherEngineServiceInterface } from '../interfaces/watcher-engine-service.interface';
-import { WATCHER_ENGINE_SERVICE } from '../interfaces/watcher-engine-service.interface';
+import { IWatcherEngineService, WATCHER_ENGINE_SERVICE } from '../interfaces/watcher-engine-service.interface';
 import { DevicesService } from '../../../devices/application/services/devices.service';
-import PinoLogger from '../../../../logger';
 import { ContainerRepositoryInterface } from '../../domain/repositories/container-repository.interface';
 
-const logger = PinoLogger.child({ module: 'ContainerService' }, { msgPrefix: '[CONTAINER_SERVICE] - ' });
 
 @Injectable()
 export class ContainerService implements ContainerServiceInterface {
+  private readonly logger = new Logger(ContainerService.name);
   constructor(
     @Inject(CONTAINER_REPOSITORY)
     private readonly containerRepository: ContainerRepositoryInterface,
     @Inject(WATCHER_ENGINE_SERVICE)
-    private readonly watcherEngineService: WatcherEngineServiceInterface,
+    private readonly watcherEngineService: IWatcherEngineService,
     private readonly devicesService: DevicesService,
   ) {}
 
@@ -25,8 +26,8 @@ export class ContainerService implements ContainerServiceInterface {
     return this.containerRepository.findAll();
   }
 
-  async getContainerByUuid(uuid: string): Promise<ContainerEntity | null> {
-    const container = await this.containerRepository.findOneByUuid(uuid);
+  async getContainerById(id: string): Promise<ContainerEntity | null> {
+    const container = await this.containerRepository.findOneById(id);
     if (!container) {
       return null;
     }
@@ -55,63 +56,48 @@ export class ContainerService implements ContainerServiceInterface {
 
   async createContainer(
     deviceUuid: string,
-    containerData: SSMServicesTypes.CreateContainerParams
+    containerData: ContainerEntity
   ): Promise<ContainerEntity> {
-    const device = await this.devicesService.findByUuid(deviceUuid);
+    const device = await this.devicesService.findOneByUuid(deviceUuid);
     if (!device) {
       throw new NotFoundException(`Device with UUID ${deviceUuid} not found`);
     }
-
-    // Find Docker watcher component for this device
-    const watcherName = `docker-${deviceUuid}`;
-    const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
-
-    if (!dockerComponent) {
-      throw new Error(`Docker watcher for device ${deviceUuid} not found`);
-    }
-
-    try {
-      // Use Docker component to create container
-      const createdContainer = await dockerComponent.createContainer(containerData);
-
-      // Save container to database
-      const containerEntity: ContainerEntity = {
-        id: createdContainer.id,
-        uuid: createdContainer.uuid || createdContainer.Id,
-        name: containerData.name,
-        deviceUuid,
-        image: containerData.image,
-        state: createdContainer.state,
-        status: createdContainer.status,
-        watchers: [watcherName],
-        isManaged: true,
-        isWatched: true,
-      };
-
-      return this.containerRepository.create(containerEntity);
-    } catch (error) {
-      logger.error(`Failed to create container: ${error.message}`);
-      throw error;
-    }
-  }
+      containerData.deviceUuid = deviceUuid;
+      return this.containerRepository.create(containerData);
+   }
 
   async updateContainer(
-    uuid: string,
+    id: string,
     containerData: Partial<ContainerEntity>
   ): Promise<ContainerEntity> {
-    const container = await this.containerRepository.findOneByUuid(uuid);
-    if (!container) {
-      throw new NotFoundException(`Container with UUID ${uuid} not found`);
+      const container = await this.containerRepository.findOneById(id);
+      if (!container) {
+        throw new NotFoundException(`Container with ID ${id} not found`);
     }
-
     // Update in database
-    return this.containerRepository.update(uuid, containerData);
+      return this.containerRepository.update(id, containerData);
   }
 
-  async deleteContainer(uuid: string): Promise<boolean> {
-    const container = await this.containerRepository.findOneByUuid(uuid);
+    normalizeContainer(container: ContainerEntity) {
+  const containerWithNormalizedImage = container;
+  this.logger.log(`[UTILS] - normalizeContainer - for name: ${container.image?.name}`);
+  const registryProvider = Object.values(this.watcherEngineService.getRegistries()).find((provider) =>
+    provider.match(container.image),
+  ) as AbstractRegistryComponent;
+  if (!registryProvider) {
+    this.logger.warn(`${fullName(container)} - No Registry Provider found`);
+    containerWithNormalizedImage.image.registry.name = 'unknown';
+  } else {
+    this.logger.log('Registry found! ' + registryProvider.getId());
+    containerWithNormalizedImage.image = registryProvider.normalizeImage(container.image);
+  }
+  return containerWithNormalizedImage;
+}
+
+  async deleteContainer(id: string): Promise<boolean> {
+    const container = await this.containerRepository.findOneById(id);
     if (!container) {
-      throw new NotFoundException(`Container with UUID ${uuid} not found`);
+      throw new NotFoundException(`Container with ID ${id} not found`);
     }
 
     // Find Docker watcher component for this device
@@ -128,41 +114,41 @@ export class ContainerService implements ContainerServiceInterface {
       await dockerComponent.removeContainer(container.id);
 
       // Delete from database
-      return this.containerRepository.deleteByUuid(uuid);
-    } catch (error) {
-      logger.error(`Failed to delete container: ${error.message}`);
+      return this.containerRepository.deleteById(id);
+    } catch (error: any) {
+      this.logger.error(`Failed to delete container: ${error.message}`);
       throw error;
     }
   }
 
-  async startContainer(uuid: string): Promise<boolean> {
-    return this.executeContainerAction(uuid, 'start');
+  async startContainer(id: string): Promise<boolean> {
+    return this.executeContainerAction(id, 'start');
   }
 
-  async stopContainer(uuid: string): Promise<boolean> {
-    return this.executeContainerAction(uuid, 'stop');
+  async stopContainer(id: string): Promise<boolean> {
+    return this.executeContainerAction(id, 'stop');
   }
 
-  async restartContainer(uuid: string): Promise<boolean> {
-    return this.executeContainerAction(uuid, 'restart');
+  async restartContainer(id: string): Promise<boolean> {
+    return this.executeContainerAction(id, 'restart');
   }
 
-  async pauseContainer(uuid: string): Promise<boolean> {
-    return this.executeContainerAction(uuid, 'pause');
+  async pauseContainer(id: string): Promise<boolean> {
+    return this.executeContainerAction(id, 'pause');
   }
 
-  async unpauseContainer(uuid: string): Promise<boolean> {
-    return this.executeContainerAction(uuid, 'unpause');
+  async unpauseContainer(id: string): Promise<boolean> {
+    return this.executeContainerAction(id, 'unpause');
   }
 
-  async killContainer(uuid: string): Promise<boolean> {
-    return this.executeContainerAction(uuid, 'kill');
+  async killContainer(id: string): Promise<boolean> {
+    return this.executeContainerAction(id, 'kill');
   }
 
-  async getContainerLogs(uuid: string, options?: any): Promise<any> {
-    const container = await this.containerRepository.findOneByUuid(uuid);
+  async getContainerLogs(id: string, options?: any): Promise<any> {
+    const container = await this.containerRepository.findOneById(id);
     if (!container) {
-      throw new NotFoundException(`Container with UUID ${uuid} not found`);
+      throw new NotFoundException(`Container with id ${id} not found`);
     }
 
     // Find Docker watcher component for this device
@@ -177,17 +163,17 @@ export class ContainerService implements ContainerServiceInterface {
     try {
       // Use Docker component to get logs
       return dockerComponent.getContainerLogs(container.id, options);
-    } catch (error) {
-      logger.error(`Failed to get container logs: ${error.message}`);
+    } catch (error: any) {
+      this.logger.error(`Failed to get container logs: ${error.message}`);
       throw error;
     }
   }
 
   // Helper method to execute container actions (start, stop, etc.)
-  private async executeContainerAction(uuid: string, action: string): Promise<boolean> {
-    const container = await this.containerRepository.findOneByUuid(uuid);
+  private async executeContainerAction(id: string, action: string): Promise<boolean> {
+    const container = await this.containerRepository.findOneById(id);
     if (!container) {
-      throw new NotFoundException(`Container with UUID ${uuid} not found`);
+      throw new NotFoundException(`Container with id ${id} not found`);
     }
 
     // Find Docker watcher component for this device
@@ -222,13 +208,57 @@ export class ContainerService implements ContainerServiceInterface {
       }
 
       if (newState) {
-        await this.containerRepository.update(uuid, { state: newState });
+        await this.containerRepository.update(id, { status: newState });
       }
 
       return true;
-    } catch (error) {
-      logger.error(`Failed to ${action} container: ${error.message}`);
+    } catch (error: any) {
+      this.logger.error(`Failed to ${action} container: ${error.message}`);
       throw error;
     }
+  }
+
+  async deleteContainerById(id: string): Promise<boolean> {
+    return await this.containerRepository.deleteById(id);
+  }
+
+  async getDeviceByUuid(uuid: string): Promise<IDevice | null> {
+    return await this.devicesService.findOneByUuid(uuid);
+  }
+
+  async getDeviceAuth(deviceUuid: string): Promise<IDeviceAuth | null> {
+    const res = await this.devicesService.findDeviceAuthByDeviceUuid(deviceUuid);
+    return res?.[0] || null;
+  }
+
+  async getDockerSshConnectionOptions(device: IDevice, deviceAuth: IDeviceAuth): Promise<any> {
+    return await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
+  }
+
+  async updateDeviceDockerInfo(deviceUuid: string, dockerId: string, version: string): Promise<void> {
+   const device = await this.devicesService.findOneByUuid(deviceUuid);
+   if (!device) {
+    throw new NotFoundException(`Device with UUID ${deviceUuid} not found`);
+   }
+    device.updatedAt = new Date();
+    device.dockerId = dockerId;
+    device.dockerVersion = version;
+    await this.devicesService.update(device);
+  }
+
+  async getContainerByUuid(uuid: string): Promise<ContainerEntity | null> {
+    return await this.containerRepository.findOneById(uuid);
+  }
+
+  async getRegistryByName(name: string): Promise<AbstractRegistryComponent | null> {
+    return this.watcherEngineService.getRegistries().find((registry) => registry.getId() === name) || null;
+  }
+
+  async getContainersByWatcher(watcherName: string): Promise<ContainerEntity[]> {
+    return await this.containerRepository.findAllByWatcher(watcherName);
+  }
+
+  async updateContainerStatusByWatcher(watcherName: string, status: string): Promise<void> {
+    return await this.containerRepository.updateStatusByWatcher(watcherName, status);
   }
 }

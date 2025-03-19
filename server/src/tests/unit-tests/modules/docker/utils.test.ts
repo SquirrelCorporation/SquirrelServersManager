@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import * as utils from '../../../../modules/containers/utils/utils';
-import * as WatcherEngine from '../../../../modules/containers/core/WatcherEngine';
+import * as WatcherEngine from '../../../../modules/containers/application/services/components/core/WatcherEngine';
 import Acr from '../../../../modules/containers/registries/providers/acr/Acr';
 import Ecr from '../../../../modules/containers/registries/providers/ecr/Ecr';
 import Gcr from '../../../../modules/containers/registries/providers/gcr/Gcr';
@@ -34,7 +34,7 @@ describe('testing utils', () => {
   vi.mock('../../../../modules/containers/core/WatcherEngine', async (importOriginal) => {
     return {
       ...(await importOriginal<
-        typeof import('../../../../modules/containers/core/WatcherEngine')
+        typeof import('../../../../modules/containers/application/services/components/core/WatcherEngine')
       >()),
       // this will only affect "getRegistries" outside of the original module
       getRegistries: () => getRegistries(),

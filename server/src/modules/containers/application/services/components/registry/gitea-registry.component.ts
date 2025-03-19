@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CustomRegistryComponent } from '@modules/containers/application/services/components/registry/custom-registry.component';
-import { SSMServicesTypes } from '../../../../../../types/typings';
+import { Image } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
 
 const logger = PinoLogger.child({ module: 'GiteaRegistryComponent' }, { msgPrefix: '[GITEA_REGISTRY] - ' });
@@ -60,7 +60,7 @@ export class GiteaRegistryComponent extends CustomRegistryComponent {
   /**
    * Return true if image registry match gitea fqdn.
    */
-  match(image: SSMServicesTypes.Image): boolean {
+  match(image: Image): boolean {
     if (!this.configuration.url) {
       throw new Error('Configuration url is undefined');
     }
@@ -74,7 +74,7 @@ export class GiteaRegistryComponent extends CustomRegistryComponent {
   /**
    * Normalize image according to Gitea Container Registry characteristics.
    */
-  normalizeImage(image: SSMServicesTypes.Image): SSMServicesTypes.Image {
+  normalizeImage(image: Image): Image {
     const imageNormalized = image;
     imageNormalized.registry.name = 'gitea';
     imageNormalized.registry.url = `${this.configuration.url}/v2`;

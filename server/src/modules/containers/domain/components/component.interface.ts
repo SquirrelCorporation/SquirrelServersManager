@@ -1,4 +1,4 @@
-import { SSMServicesTypes } from 'src/types/typings';
+import { ConfigurationAuthenticationSchema, ConfigurationRegistrySchema, ConfigurationTriggerSchema, ConfigurationWatcherSchema } from '@modules/containers/types';
 import { Kind } from './kind.enum';
 
 /**
@@ -6,10 +6,10 @@ import { Kind } from './kind.enum';
  */
 export interface Component<
   T extends
-    | SSMServicesTypes.ConfigurationRegistrySchema
-    | SSMServicesTypes.ConfigurationTriggerSchema
-    | SSMServicesTypes.ConfigurationWatcherSchema
-    | SSMServicesTypes.ConfigurationAuthenticationSchema,
+    |ConfigurationRegistrySchema
+    |ConfigurationTriggerSchema
+    |ConfigurationWatcherSchema
+    |ConfigurationAuthenticationSchema,
 > {
   /**
    * Get the component's ID

@@ -1,14 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, SchemaTimestampsConfig } from 'mongoose';
 
 export const CONTAINER_REGISTRY_SCHEMA = 'ContainerRegistry';
 
-export type ContainerRegistryDocument = ContainerRegistry & Document;
+export type ContainerRegistryDocument = ContainerRegistry & Document & SchemaTimestampsConfig;
 
 @Schema({ timestamps: true, versionKey: false })
 export class ContainerRegistry {
   @Prop({ type: String, required: true })
-  name: string;
+  name!: string;
 
   @Prop({ type: Object, required: false })
   auth?: any;
@@ -17,16 +17,16 @@ export class ContainerRegistry {
   authScheme?: any;
 
   @Prop({ type: String, required: true })
-  provider: string;
+  provider!: string;
 
   @Prop({ type: Boolean, default: false })
-  authSet: boolean;
+  authSet!: boolean;
 
   @Prop({ type: Boolean, default: false })
-  canAuth: boolean;
+  canAuth!: boolean;
 
   @Prop({ type: Boolean, default: false })
-  canAnonymous: boolean;
+  canAnonymous!: boolean;
 
   @Prop({ type: String })
   fullName?: string;

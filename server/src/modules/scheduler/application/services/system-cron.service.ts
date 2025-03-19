@@ -24,7 +24,7 @@ export class SystemCronService implements OnModuleInit {
     private readonly cronService: CronService,
     private readonly schedulerRegistry: SchedulerRegistry
   ) {}
-  
+
   async onModuleInit() {
     logger.info('Initializing SystemCronService');
     // Try to delete any existing crons to avoid duplicates
@@ -34,14 +34,14 @@ export class SystemCronService implements OnModuleInit {
     } catch (err) {
       // Job didn't exist, which is fine
     }
-    
+
     try {
       this.schedulerRegistry.deleteCronJob('_CleanAnsibleTasksLogsAndStatuses');
       logger.info('Deleted existing _CleanAnsibleTasksLogsAndStatuses cron job');
     } catch (err) {
       // Job didn't exist, which is fine
     }
-    
+
     try {
       this.schedulerRegistry.deleteCronJob('_CleanServerLogs');
       logger.info('Deleted existing _CleanServerLogs cron job');

@@ -18,13 +18,22 @@ const compat = new FlatCompat({
 });
 
 export default [
-  ...compat.extends('eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'),
+  ...compat.extends(
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
+  ),
   {
     plugins: {
       '@typescript-eslint': typescriptEslint,
       import: _import,
       prettier,
       '@stylistic': stylistic,
+    },
+    settings: {
+      'import/parsers': {
+        '@typescript-eslint/parser': ['.ts'],
+      },
     },
     languageOptions: {
       globals: {
@@ -101,9 +110,7 @@ export default [
         },
       ],
 
-      'no-use-before-define': [
-        'off',
-      ],
+      'no-use-before-define': ['off'],
 
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'error',

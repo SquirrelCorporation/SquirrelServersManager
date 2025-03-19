@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import Joi from 'joi';
 import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
-import { SSMServicesTypes } from '../../../../../../types/typings';
+import { Image, RequestOptionsType } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
 
 const logger = PinoLogger.child({ module: 'CustomRegistryComponent' }, { msgPrefix: '[CUSTOM_REGISTRY] - ' });
@@ -71,7 +71,7 @@ export class CustomRegistryComponent extends AbstractRegistryComponent {
    * @param image the image
    * @returns {boolean}
    */
-  match(image: SSMServicesTypes.Image): boolean {
+  match(image: Image): boolean {
     return this.configuration.url?.indexOf(image.registry.url) !== -1;
   }
 
@@ -80,7 +80,7 @@ export class CustomRegistryComponent extends AbstractRegistryComponent {
    * @param image
    * @returns {*}
    */
-  normalizeImage(image: SSMServicesTypes.Image): SSMServicesTypes.Image {
+  normalizeImage(image: Image): Image {
     const imageNormalized = { ...image };
     imageNormalized.registry.name = 'custom';
     imageNormalized.registry.url = `${this.configuration.url}/v2`;
@@ -94,9 +94,9 @@ export class CustomRegistryComponent extends AbstractRegistryComponent {
    * @returns {Promise<*>}
    */
   async authenticate(
-    image: SSMServicesTypes.Image,
-    requestOptions: SSMServicesTypes.RequestOptionsType,
-  ): Promise<SSMServicesTypes.RequestOptionsType> {
+    image: Image,
+    requestOptions: RequestOptionsType,
+  ): Promise<RequestOptionsType> {
     const requestOptionsWithAuth = { ...requestOptions };
     const credentials = this.getAuthCredentials();
     if (credentials && requestOptionsWithAuth.headers) {

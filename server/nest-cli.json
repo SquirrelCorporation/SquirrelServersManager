@@ -9,7 +9,8 @@
     "assets": [
       { "include": "**/*.py", "outDir": "dist" },
       { "include": "**/*.yml", "outDir": "dist" },
-      { "include": "**/*.yaml", "outDir": "dist" }
+      { "include": "**/*.yaml", "outDir": "dist" },
+      { "include": "**/*.json", "outDir": "dist" }
     ]
   },
   "watchOptions": {

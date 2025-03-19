@@ -2,7 +2,7 @@ import RegistryLogo from '@/components/RegistryComponents/RegistryLogo';
 import {
   createCustomRegistry,
   updateRegistry,
-} from '@/services/rest/containers';
+} from '@/services/rest/containers/container-registries';
 import { ModalForm, ProForm, ProFormText } from '@ant-design/pro-components';
 import { Alert, Avatar, Space } from 'antd';
 import React from 'react';

@@ -1,30 +1,30 @@
+import { parse } from 'url';
+import * as os from 'os';
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Param,
+  Controller,
   Delete,
-  Patch,
-  UseGuards,
+  Get,
+  HttpException,
+  HttpStatus,
   Inject,
+  Param,
+  Patch,
+  Post,
   Query,
   Req,
   Res,
-  HttpStatus,
-  HttpException,
+  UseGuards,
 } from '@nestjs/common';
-import { parse } from 'url';
-import * as os from 'os';
+import { FileSystemService } from '@modules/shell';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
-import { ContainerVolumesServiceInterface, CONTAINER_VOLUMES_SERVICE } from '../../application/interfaces/container-volumes-service.interface';
+import { CONTAINER_VOLUMES_SERVICE, ContainerVolumesServiceInterface } from '../../application/interfaces/container-volumes-service.interface';
 import { CreateVolumeDto } from '../dtos/create-volume.dto';
 import { filterByFields, filterByQueryParams } from '../../../../helpers/query/FilterHelper';
 import { paginate } from '../../../../helpers/query/PaginationHelper';
 import { sortByFields } from '../../../../helpers/query/SorterHelper';
-import { FileSystemService } from '../../../../shell/services/file-system.service';
 
-@Controller('volumes')
+@Controller('container-volumes')
 @UseGuards(JwtAuthGuard)
 export class ContainerVolumesController {
   constructor(
@@ -107,7 +107,7 @@ export class ContainerVolumesController {
   async pruneVolumes(@Param('deviceUuid') deviceUuid: string) {
     return this.volumesService.pruneVolumes(deviceUuid);
   }
-  
+
   /**
    * Backup a volume
    */

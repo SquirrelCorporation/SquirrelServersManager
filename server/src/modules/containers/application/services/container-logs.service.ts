@@ -1,13 +1,18 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CONTAINER_REPOSITORY } from '../../domain/repositories/container-repository.interface';
 import { ContainerRepositoryInterface } from '../../domain/repositories/container-repository.interface';
-import { WATCHER_ENGINE_SERVICE } from '../interfaces/watcher-engine-service.interface';
-import { WatcherEngineServiceInterface } from '../interfaces/watcher-engine-service.interface';
+import {
+  IWatcherEngineService,
+  WATCHER_ENGINE_SERVICE,
+} from '../interfaces/watcher-engine-service.interface';
 import PinoLogger from '../../../../logger';
 import { ContainerEntity } from '../../domain/entities/container.entity';
-import { IContainerLogsService, CONTAINER_LOGS_SERVICE } from '../interfaces/container-logs-service.interface';
+import { IContainerLogsService } from '../interfaces/container-logs-service.interface';
 
-const logger = PinoLogger.child({ module: 'ContainerLogsService' }, { msgPrefix: '[CONTAINER_LOGS_SERVICE] - ' });
+const logger = PinoLogger.child(
+  { module: 'ContainerLogsService' },
+  { msgPrefix: '[CONTAINER_LOGS_SERVICE] - ' },
+);
 
 @Injectable()
 export class ContainerLogsService implements IContainerLogsService {
@@ -15,16 +20,16 @@ export class ContainerLogsService implements IContainerLogsService {
     @Inject(CONTAINER_REPOSITORY)
     private readonly containerRepository: ContainerRepositoryInterface,
     @Inject(WATCHER_ENGINE_SERVICE)
-    private readonly watcherEngineService: WatcherEngineServiceInterface,
+    private readonly watcherEngineService: IWatcherEngineService,
   ) {}
 
   /**
    * Find a container by UUID
    */
-  async findContainerById(uuid: string): Promise<ContainerEntity> {
-    const container = await this.containerRepository.findOneByUuid(uuid);
+  async findContainerById(id: string): Promise<ContainerEntity> {
+    const container = await this.containerRepository.findOneById(id);
     if (!container) {
-      throw new NotFoundException(`Container with UUID ${uuid} not found`);
+      throw new NotFoundException(`Container with id ${id} not found`);
     }
     return container;
   }
@@ -43,20 +48,19 @@ export class ContainerLogsService implements IContainerLogsService {
   /**
    * Get container logs
    */
-  async getContainerLogs(uuid: string, options: any = {}): Promise<string> {
+  async getContainerLogs(id: string, options: any = {}): Promise<string> {
     try {
-      const container = await this.findContainerById(uuid);
-      
-      if (!container.watchers || container.watchers.length === 0) {
-        throw new Error(`Container ${uuid} has no associated watchers`);
+      const container = await this.findContainerById(id);
+
+      if (!container.watcher) {
+        throw new Error(`Container ${id} has no associated watchers`);
       }
-      
-      const watcherName = container.watchers[0]; // Use the first watcher
-      const dockerComponent = await this.findRegisteredComponent(watcherName);
-      
+
+      const dockerComponent = await this.findRegisteredComponent(container.watcher);
+
       return dockerComponent.getContainerLogs(container.id, options);
-    } catch (error) {
-      logger.error(`Error getting logs for container ${uuid}: ${error.message}`);
+    } catch (error: any) {
+      logger.error(`Error getting logs for container ${id}: ${error.message}`);
       throw error;
     }
   }
@@ -65,31 +69,26 @@ export class ContainerLogsService implements IContainerLogsService {
    * Stream container logs (WebSocket)
    */
   async streamContainerLogs(
-    uuid: string, 
-    onData: (data: string) => void, 
-    onError: (error: Error) => void, 
-    options: any = {}
+    id: string,
+    onData: (data: string) => void,
+    onError: (error: Error) => void,
+    options: any = {},
   ): Promise<() => void> {
     try {
-      const container = await this.findContainerById(uuid);
-      
-      if (!container.watchers || container.watchers.length === 0) {
-        throw new Error(`Container ${uuid} has no associated watchers`);
+      const container = await this.findContainerById(id);
+
+      if (!container.watcher) {
+        throw new Error(`Container ${id} has no associated watchers`);
       }
-      
-      const watcherName = container.watchers[0]; // Use the first watcher
-      const dockerComponent = await this.findRegisteredComponent(watcherName);
-      
-      return dockerComponent.getContainerLiveLogs(
-        container.id,
-        options.from,
-        onData,
-      );
-    } catch (error) {
-      logger.error(`Error streaming logs for container ${uuid}: ${error.message}`);
+
+      const dockerComponent = await this.findRegisteredComponent(container.watcher);
+
+      return dockerComponent.getContainerLiveLogs(container.id, options.from, onData);
+    } catch (error: any) {
+      logger.error(`Error streaming logs for container ${id}: ${error.message}`);
       onError(error);
       return () => {
-        logger.info(`Closed log stream for container ${uuid}`);
+        logger.info(`Closed log stream for container ${id}`);
       };
     }
   }

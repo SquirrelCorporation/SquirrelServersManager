@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { GhcrRegistryComponent } from '@modules/containers/application/services/components/registry/ghcr-registry.component';
 import Joi from 'joi';
-import { SSMServicesTypes } from '../../../../../../types/typings';
+import { Image } from '@modules/containers/types';
 
 
 /**
@@ -22,14 +22,14 @@ export class LscrRegistryComponent extends GhcrRegistryComponent {
   /**
    * Return true if image has LSCR registry URL
    */
-  match(image: SSMServicesTypes.Image): boolean {
+  match(image: Image): boolean {
     return /^.*\.?lscr.io$/.test(image.registry.url);
   }
 
   /**
    * Normalize image according to LSCR registry characteristics
    */
-  normalizeImage(image: SSMServicesTypes.Image): SSMServicesTypes.Image {
+  normalizeImage(image: Image): Image {
     const imageNormalized = image;
     imageNormalized.registry.name = 'lscr';
     if (!imageNormalized.registry.url.startsWith('https://')) {

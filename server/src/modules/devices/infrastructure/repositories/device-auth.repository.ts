@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IDeviceAuthRepository } from '../../domain/repositories/device-auth-repository.interface';
@@ -8,6 +8,8 @@ import { DEVICE_AUTH, DeviceAuthDocument } from '../schemas/device-auth.schema';
 
 @Injectable()
 export class DeviceAuthRepository implements IDeviceAuthRepository {
+  private readonly logger = new Logger(DeviceAuthRepository.name);
+
   constructor(
     @InjectModel(DEVICE_AUTH) private deviceAuthModel: Model<DeviceAuthDocument>,
   ) {}
@@ -52,7 +54,6 @@ export class DeviceAuthRepository implements IDeviceAuthRepository {
     const devicesAuth = await this.deviceAuthModel.find()
       .populate({ path: 'device', match: { uuid: { $eq: uuid } } })
       .exec();
-
     const filtered = devicesAuth.filter((deviceAuth) => deviceAuth.device != null);
     return this.toDomainEntities(filtered);
   }

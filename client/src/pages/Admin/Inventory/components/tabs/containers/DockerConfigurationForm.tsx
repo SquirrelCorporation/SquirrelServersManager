@@ -1,5 +1,5 @@
 import { DockerConfigurationFormElements } from '@/components/DeviceConfiguration/DockerConfigurationFormElements';
-import { getDeviceAuth, putDeviceDockerAuth } from '@/services/rest/deviceauth';
+import { getDeviceAuth, putDeviceDockerAuth } from '@/services/rest/devices/device-credentials';
 import { ProFormInstance } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
 import { message, Space } from 'antd';

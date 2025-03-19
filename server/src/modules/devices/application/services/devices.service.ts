@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { SsmAnsible, SsmStatus } from 'ssm-shared-lib';
 import { IDevicesService } from '../interfaces/devices-service.interface';
 import { DEVICE_REPOSITORY } from '../../domain/repositories/device-repository.interface';
@@ -13,6 +13,7 @@ import { UpdateProxmoxAuthDto } from '../../presentation/dtos/update-proxmox-aut
 
 @Injectable()
 export class DevicesService implements IDevicesService {
+  private readonly logger = new Logger(DevicesService.name);
   constructor(
     @Inject(DEVICE_REPOSITORY)
     private readonly deviceRepository: IDeviceRepository,
@@ -58,7 +59,8 @@ export class DevicesService implements IDevicesService {
   }
 
   async findDeviceAuthByDeviceUuid(uuid: string): Promise<IDeviceAuth[] | null> {
-    return this.deviceAuthRepository.findOneByDeviceUuid(uuid);
+    const res = await this.deviceAuthRepository.findOneByDeviceUuid(uuid);
+    return res;
   }
 
   async updateOrCreateDeviceAuth(deviceAuth: Partial<IDeviceAuth>): Promise<IDeviceAuth> {
@@ -170,50 +172,6 @@ export class DevicesService implements IDevicesService {
     );
   }
 
-  // Updated method to handle type transformations internally
-  async createOrUpdateDeviceAuth(deviceAuth: Partial<IDeviceAuth>, deviceUuid: string): Promise<IDeviceAuth> {
-    const device = await this.findOneByUuid(deviceUuid);
-    if (!device) {
-      throw new Error(`Device with UUID ${deviceUuid} not found`);
-    }
-
-    // Extract becomeMethod and handle type conversion
-    const { becomeMethod, ...restDto } = deviceAuth;
-
-    const transformedAuth = {
-      ...restDto,
-      device,
-      ...(becomeMethod && { becomeMethod: becomeMethod as SsmAnsible.AnsibleBecomeMethod })
-    };
-
-    return this.updateOrCreateDeviceAuth(transformedAuth);
-  }
-
-  // Updated method to handle type transformations internally
-  async updateExistingDeviceAuth(deviceAuthUpdates: Partial<IDeviceAuth>, deviceUuid: string): Promise<IDeviceAuth> {
-    const device = await this.findOneByUuid(deviceUuid);
-    if (!device) {
-      throw new Error(`Device with UUID ${deviceUuid} not found`);
-    }
-
-    const deviceAuthList = await this.findDeviceAuthByDeviceUuid(deviceUuid);
-    if (!deviceAuthList || deviceAuthList.length === 0) {
-      throw new Error(`Device Auth for device with UUID ${deviceUuid} not found`);
-    }
-
-    const existingDeviceAuth = deviceAuthList[0];
-
-    // Extract becomeMethod and handle type conversion
-    const { becomeMethod, ...restDto } = deviceAuthUpdates;
-
-    const transformedAuth = {
-      ...existingDeviceAuth,
-      ...restDto,
-      ...(becomeMethod && { becomeMethod: becomeMethod as SsmAnsible.AnsibleBecomeMethod })
-    };
-
-    return this.updateDeviceAuth(transformedAuth);
-  }
 
   async getDevicesOverview(): Promise<{ online?: number; offline?: number; totalCpu?: number; totalMem?: number; overview?: any }> {
     const devices = await this.findAll();

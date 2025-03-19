@@ -3,13 +3,13 @@ import DockerModem from 'docker-modem';
 import Dockerode from 'dockerode';
 import { Client, ConnectConfig } from 'ssh2';
 import { SsmDeviceDiagnostic } from 'ssm-shared-lib';
+import { getCustomAgent } from 'src/helpers/ssh/custom-agent';
 import { EventEmitterService } from '../../../../core/events/event-emitter.service';
 import Events from '../../../../core/events/events';
 import { IDevice, IDeviceAuth } from '../../../devices';
 import { tryResolveHost } from '../../../../helpers/dns/dns-helper';
 import SSHCredentialsHelper from '../../../../helpers/ssh/SSHCredentialsHelper';
 import PinoLogger from '../../../../logger';
-import { getCustomAgent } from '../../../containers/core/CustomAgent';
 import { DiagnosticCheckType, DiagnosticReport, DiagnosticResult } from '../../domain/entities/diagnostic.entity';
 import { IDiagnosticService } from '../interfaces/diagnostic-service.interface';
 

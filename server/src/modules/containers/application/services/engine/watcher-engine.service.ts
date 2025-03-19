@@ -1,14 +1,16 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit, forwardRef } from '@nestjs/common';
+import { ConfigurationSchema } from '@modules/containers/types';
+import Component from '@modules/containers/application/services/components/core/component';
+import { Kind } from '@modules/containers/domain/components/kind.enum';
+import { REGISTRIES, WATCHERS } from '@modules/containers/constants';
+import { IRegistryComponent } from '@modules/containers/domain/components/registry.interface';
+import { IWatcherComponent } from '@modules/containers/domain/components/watcher.interface';
 import PinoLogger from '../../../../../logger';
-import { SSMServicesTypes } from '../../../../../types/typings.d';
-import { Component } from '../../../domain/components/component.interface';
-import { Kind } from '../../../domain/components/kind.enum';
-import { IWatcherEngineService } from '../../../domain/components/watcher.interface';
-import { IRegistryComponentFactory } from '../../../domain/components/registry.interface';
+import { IWatcherEngineService } from '../../interfaces/watcher-engine-service.interface';
+import { RegistryComponentFactory } from '../components/registry/registry-component-factory.service';
 import { DevicesService } from '../../../../devices/application/services/devices.service';
 import { WatcherComponentFactory } from '../components/watcher/watcher-component-factory.service';
-import { REGISTRIES, WATCHERS } from '../../../constants';
-import { ContainerRegistriesServiceInterface } from '../../interfaces/container-registries-service.interface';
+import { CONTAINER_REGISTRIES_SERVICE, ContainerRegistriesServiceInterface } from '../../interfaces/container-registries-service.interface';
 
 const logger = PinoLogger.child({ module: 'WatcherEngineService' }, { msgPrefix: '[WATCHER_ENGINE] - ' });
 
@@ -20,8 +22,8 @@ const logger = PinoLogger.child({ module: 'WatcherEngineService' }, { msgPrefix:
 @Injectable()
 export class WatcherEngineService implements IWatcherEngineService, OnModuleInit, OnModuleDestroy {
   private state: {
-    registry: Record<string, Component<SSMServicesTypes.ConfigurationSchema>>;
-    watcher: Record<string, Component<SSMServicesTypes.ConfigurationSchema>>;
+    registry: Record<string, Component<ConfigurationSchema>>;
+    watcher: Record<string, Component<ConfigurationSchema>>;
   } = {
     registry: {},
     watcher: {},
@@ -29,8 +31,9 @@ export class WatcherEngineService implements IWatcherEngineService, OnModuleInit
 
   constructor(
     private readonly devicesService: DevicesService,
-    private readonly registryFactory: IRegistryComponentFactory,
+    private readonly registryFactory: RegistryComponentFactory,
     private readonly watcherFactory: WatcherComponentFactory,
+    @Inject(forwardRef(() => CONTAINER_REGISTRIES_SERVICE))
     private readonly containerRegistriesService: ContainerRegistriesServiceInterface,
   ) {}
 
@@ -38,7 +41,7 @@ export class WatcherEngineService implements IWatcherEngineService, OnModuleInit
    * Initialize the service when the module is loaded
    */
   async onModuleInit() {
-    await this.init();
+      void this.init();
   }
 
   /**
@@ -58,7 +61,7 @@ export class WatcherEngineService implements IWatcherEngineService, OnModuleInit
   /**
    * Return all supported registries
    */
-  getRegistries(): Component<SSMServicesTypes.ConfigurationSchema>[] {
+  getRegistries(): Component<ConfigurationSchema>[] {
     return Object.values(this.getStates().registry);
   }
 
@@ -71,16 +74,16 @@ export class WatcherEngineService implements IWatcherEngineService, OnModuleInit
     kind: Kind,
     provider: string,
     name: string,
-    configuration: SSMServicesTypes.ConfigurationSchema
-  ): Promise<Component<SSMServicesTypes.ConfigurationSchema>> {
+    configuration: ConfigurationSchema
+  ): Promise<Component<ConfigurationSchema>> {
     const providerLowercase = provider.toLowerCase();
     const nameLowercase = name.toLowerCase();
     try {
       logger.info(`Registering "${provider}/${name}" component...`);
 
       // Create the appropriate component using the specialized factories
-      let component: Component<SSMServicesTypes.ConfigurationSchema>;
-      
+      let component: IWatcherComponent | IRegistryComponent;
+
       if (kind === Kind.WATCHER) {
         // Use the specialized watcher factory for watcher components
         switch (providerLowercase) {
@@ -264,7 +267,7 @@ export class WatcherEngineService implements IWatcherEngineService, OnModuleInit
 
       // Register all registries that have authentication set up in the database
       const registries = await this.containerRegistriesService.listAllSetupRegistries();
-
+      logger.info(`Registering ${registries.length} registries`);
       for (const registry of registries) {
         // Skip Docker Hub as it's already registered by default
         if (registry.provider === REGISTRIES.HUB) {
@@ -272,7 +275,7 @@ export class WatcherEngineService implements IWatcherEngineService, OnModuleInit
         }
 
         await this.registerComponent(
-          registry.id,
+          registry._id as string,
           Kind.REGISTRY,
           registry.provider,
           registry.name,
@@ -291,7 +294,7 @@ export class WatcherEngineService implements IWatcherEngineService, OnModuleInit
    */
   async deregisterComponent(
     kind: Kind,
-    component: Component<SSMServicesTypes.ConfigurationSchema>
+    component: Component<ConfigurationSchema>
   ): Promise<void> {
     try {
       await component.deregister();
@@ -300,7 +303,7 @@ export class WatcherEngineService implements IWatcherEngineService, OnModuleInit
         `Error when de-registering component ${component.getId()} (error: ${error.message})`,
       );
     } finally {
-      let components: Record<string, Component<SSMServicesTypes.ConfigurationSchema>> | undefined = undefined;
+      let components: Record<string, Component<ConfigurationSchema>> | undefined = undefined;
 
       switch (kind) {
         case Kind.WATCHER:
@@ -324,7 +327,7 @@ export class WatcherEngineService implements IWatcherEngineService, OnModuleInit
    */
   async deregisterComponents(
     kind: Kind,
-    components: Component<SSMServicesTypes.ConfigurationSchema>[]
+    components: Component<ConfigurationSchema>[]
   ): Promise<void> {
     const deregisterPromises = components.map(async (component) =>
       this.deregisterComponent(kind, component),
@@ -379,7 +382,7 @@ export class WatcherEngineService implements IWatcherEngineService, OnModuleInit
   /**
    * Find a registered docker component
    */
-  findRegisteredDockerComponent(watcher: string): Component<SSMServicesTypes.ConfigurationSchema> | undefined {
+  findRegisteredDockerComponent(watcher: string): Component<ConfigurationSchema> | undefined {
     return this.getStates().watcher[
       this.buildId(Kind.WATCHER, WATCHERS.DOCKER, watcher)
     ];

@@ -1,5 +1,5 @@
 import { BackupSolid } from '@/components/Icons/CustomIcons';
-import { getBackUpVolume, postBackUpVolume } from '@/services/rest/services';
+import { getBackUpVolume, postBackUpVolume } from '@/services/rest/containers/container-volumes';
 import { containerSocket as socket } from '@/socket';
 import { Button, Flex, message, Modal, Result, Spin } from 'antd';
 import React, { Dispatch, SetStateAction, useEffect } from 'react';

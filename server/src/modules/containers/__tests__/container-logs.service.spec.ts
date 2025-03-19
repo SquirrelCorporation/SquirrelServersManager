@@ -3,8 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ContainerLogsService } from '../services/container-logs.service';
 import { ContainerRepository } from '../repositories/container.repository';
 import { WatcherEngineService } from '../services/watcher-engine.service';
-import { Kind } from '../core/Component';
-import { WATCHERS } from '../core/conf';
+import { Kind } from '../application/services/components/core/component';
+import { WATCHERS } from '../application/services/components/core/constants';
 
 describe('ContainerLogsService', () => {
   let service: ContainerLogsService;

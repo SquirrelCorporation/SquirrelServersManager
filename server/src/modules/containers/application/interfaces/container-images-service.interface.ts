@@ -19,40 +19,12 @@ export interface ContainerImagesServiceInterface {
   /**
    * Get a specific image by UUID
    */
-  getImageByUuid(uuid: string): Promise<ContainerImageEntity | null>;
+  getImageById(id: string): Promise<ContainerImageEntity | null>;
 
   /**
-   * Pull an image on a device
+   * Create a new image record
    */
-  pullImage(deviceUuid: string, name: string, tag?: string): Promise<ContainerImageEntity>;
+  createImage(deviceUuid: string, imageData: Partial<ContainerImageEntity>): Promise<ContainerImageEntity>;
 
-  /**
-   * Remove an image from a device
-   */
-  removeImage(uuid: string, force?: boolean): Promise<boolean>;
-
-  /**
-   * Build an image from a Dockerfile
-   */
-  buildImage(deviceUuid: string, dockerfile: string, name: string, tag: string, buildContext: string, buildArgs?: Record<string, string>): Promise<ContainerImageEntity>;
-
-  /**
-   * Tag an image with a new name/tag
-   */
-  tagImage(uuid: string, newName: string, newTag: string): Promise<ContainerImageEntity>;
-
-  /**
-   * Push an image to a registry
-   */
-  pushImage(uuid: string, registryUuid?: string): Promise<boolean>;
-
-  /**
-   * Prune unused images
-   */
-  pruneImages(deviceUuid: string): Promise<{ count: number; spaceReclaimed: number }>;
-
-  /**
-   * Get image details
-   */
-  inspectImage(uuid: string): Promise<any>;
+  deleteImageById(id: string);
 }

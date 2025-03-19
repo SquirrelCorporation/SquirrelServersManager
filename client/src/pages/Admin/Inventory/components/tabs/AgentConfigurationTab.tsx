@@ -1,6 +1,6 @@
 import AgentInstallMethod from '@/components/DeviceConfiguration/AgentInstallMethod';
 import { GrommetIconsInstall } from '@/components/Icons/CustomIcons';
-import { updateAgentInstallMethod } from '@/services/rest/device';
+import { updateAgentInstallMethod } from '@/services/rest/devices/devices';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { ProForm, ProFormDependency } from '@ant-design/pro-components';
 import { Alert, Avatar, Card, Col, message, Row, Space, Tag } from 'antd';

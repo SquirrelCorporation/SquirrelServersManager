@@ -4,7 +4,7 @@ import ProxmoxContainerDetails from '@/pages/Containers/components/containers/co
 import {
   postDockerContainerAction,
   postProxmoxContainerAction,
-} from '@/services/rest/containers';
+} from '@/services/rest/containers/containers';
 import {
   CloseCircleOutlined,
   PauseOutlined,

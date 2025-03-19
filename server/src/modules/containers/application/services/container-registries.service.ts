@@ -1,10 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import { RegistryAuthConfig } from '@modules/containers/types';
 import { ContainerRegistryEntity } from '../../domain/entities/container-registry.entity';
 import { ContainerRegistriesServiceInterface } from '../interfaces/container-registries-service.interface';
-import { ContainerRegistryRepositoryInterface, CONTAINER_REGISTRY_REPOSITORY } from '../../domain/repositories/container-registry-repository.interface';
-import { WATCHER_ENGINE_SERVICE } from '../interfaces/watcher-engine-service.interface';
-import { WatcherEngineServiceInterface } from '../interfaces/watcher-engine-service.interface';
-import { SSMServicesTypes } from '../../../../types/typings.d';
+import { CONTAINER_REGISTRY_REPOSITORY, ContainerRegistryRepositoryInterface } from '../../domain/repositories/container-registry-repository.interface';
+import { IWatcherEngineService, WATCHER_ENGINE_SERVICE } from '../interfaces/watcher-engine-service.interface';
 import PinoLogger from '../../../../logger';
 
 const logger = PinoLogger.child(
@@ -17,8 +16,8 @@ export class ContainerRegistriesService implements ContainerRegistriesServiceInt
   constructor(
     @Inject(CONTAINER_REGISTRY_REPOSITORY)
     private readonly containerRegistryRepository: ContainerRegistryRepositoryInterface,
-    @Inject(WATCHER_ENGINE_SERVICE)
-    private readonly watcherEngineService: WatcherEngineServiceInterface
+    @Inject(forwardRef(() => WATCHER_ENGINE_SERVICE))
+    private readonly watcherEngineService: IWatcherEngineService
   ) {}
 
   /**
@@ -37,12 +36,12 @@ export class ContainerRegistriesService implements ContainerRegistriesServiceInt
   async getRegistryByName(name: string): Promise<ContainerRegistryEntity | null> {
     return this.containerRegistryRepository.findOneByName(name);
   }
-  
+
   /**
    * Add a registry if it doesn't already exist
    * @param registry Registry configuration
    */
-  async addIfNotExists(registry: SSMServicesTypes.RegistryAuthConfig): Promise<void> {
+  async addIfNotExists(registry: RegistryAuthConfig): Promise<void> {
     const containerRegistry = await this.containerRegistryRepository.findOneByProvider(registry.provider);
     if (!containerRegistry) {
       const savedRegistry = await this.containerRegistryRepository.create({
@@ -69,12 +68,12 @@ export class ContainerRegistriesService implements ContainerRegistriesServiceInt
     if (!registry.id) {
       throw new Error('Registry ID is required');
     }
-    
+
     await this.containerRegistryRepository.update(registry.id, {
       auth: auth,
       authSet: true
     });
-    
+
     await this.watcherEngineService.deregisterRegistries();
     await this.watcherEngineService.registerRegistries();
   }
@@ -98,10 +97,10 @@ export class ContainerRegistriesService implements ContainerRegistriesServiceInt
       canAuth: true,
       authScheme: authScheme,
     });
-    
+
     await this.watcherEngineService.deregisterRegistries();
     await this.watcherEngineService.registerRegistries();
-    
+
     return newRegistry;
   }
 
@@ -113,12 +112,12 @@ export class ContainerRegistriesService implements ContainerRegistriesServiceInt
     if (!registry.id) {
       throw new Error('Registry ID is required');
     }
-    
+
     await this.containerRegistryRepository.update(registry.id, {
       auth: undefined,
       authSet: false
     });
-    
+
     await this.watcherEngineService.deregisterRegistries();
     await this.watcherEngineService.registerRegistries();
   }
@@ -130,7 +129,7 @@ export class ContainerRegistriesService implements ContainerRegistriesServiceInt
   async listAllSetupRegistries(): Promise<ContainerRegistryEntity[]> {
     return this.containerRegistryRepository.findMany({ authSet: true });
   }
-  
+
   /**
    * Delete registry
    * @param registry Registry to delete
@@ -140,11 +139,11 @@ export class ContainerRegistriesService implements ContainerRegistriesServiceInt
     if (!registry.id) {
       throw new Error('Registry ID is required');
     }
-    
+
     await this.containerRegistryRepository.delete(registry.id);
     await this.watcherEngineService.deregisterRegistries();
     await this.watcherEngineService.registerRegistries();
-    
+
     return true;
   }
 }

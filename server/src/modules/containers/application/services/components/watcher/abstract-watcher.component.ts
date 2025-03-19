@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import * as Joi from 'joi';
+import { ConfigurationWatcherSchema } from '@modules/containers/types';
 import { Component } from '../../../../domain/components/component.interface';
-import { IWatcherComponent } from '../../../../domain/components/watcher.interface';
 import { Kind } from '../../../../domain/components/kind.enum';
-import { SSMServicesTypes } from '../../../../../../types/typings.d';
 import PinoLogger from '../../../../../../logger';
 
 const logger = PinoLogger.child({ module: 'AbstractWatcherComponent' }, { msgPrefix: '[ABSTRACT_WATCHER] - ' });
@@ -13,12 +12,12 @@ const logger = PinoLogger.child({ module: 'AbstractWatcherComponent' }, { msgPre
  * Provides common functionalities for watchers
  */
 @Injectable()
-export abstract class AbstractWatcherComponent implements IWatcherComponent {
-  protected id: string;
-  protected name: string;
-  protected provider: string;
-  protected kind: Kind;
-  protected configuration: SSMServicesTypes.ConfigurationWatcherSchema;
+export abstract class AbstractWatcherComponent {
+  protected id: string = 'unknown';
+  protected name: string = 'unknown';
+  protected provider: string = 'unknown';
+  protected kind: Kind = Kind.WATCHER;
+  protected configuration!: ConfigurationWatcherSchema;
   protected childLogger: any;
   protected joi = Joi;
 
@@ -51,8 +50,8 @@ export abstract class AbstractWatcherComponent implements IWatcherComponent {
     kind: Kind,
     provider: string,
     name: string,
-    configuration: SSMServicesTypes.ConfigurationWatcherSchema
-  ): Promise<Component<SSMServicesTypes.ConfigurationWatcherSchema>> {
+    configuration: ConfigurationWatcherSchema
+  ): Promise<Component<ConfigurationWatcherSchema>> {
     this.childLogger.info(`Registering watcher component ${provider}/${name}`);
     this.id = `${kind}.${provider}.${name}`;
     this.kind = kind;
@@ -77,7 +76,7 @@ export abstract class AbstractWatcherComponent implements IWatcherComponent {
   /**
    * Update the component configuration
    */
-  async update(configuration: SSMServicesTypes.ConfigurationWatcherSchema): Promise<Component<SSMServicesTypes.ConfigurationWatcherSchema>> {
+  async update(configuration: ConfigurationWatcherSchema): Promise<Component<ConfigurationWatcherSchema>> {
     this.childLogger.info(`Updating watcher component ${this.provider}/${this.name}`);
     this.configuration = { ...configuration };
 
@@ -126,11 +125,6 @@ export abstract class AbstractWatcherComponent implements IWatcherComponent {
    * List all containers
    */
   abstract listContainers(): Promise<any[]>;
-
-  /**
-   * Create a new container
-   */
-  abstract createContainer(containerConfig: any): Promise<any>;
 
   /**
    * Remove a container

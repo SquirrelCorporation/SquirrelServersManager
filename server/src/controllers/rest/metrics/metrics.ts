@@ -18,7 +18,7 @@ router.get('/metrics', async (req, res) => {
     return;
   }
 
- // res.setHeader('Content-Type', deviceRegistry.contentType);
+  // res.setHeader('Content-Type', deviceRegistry.contentType);
   //res.send(await deviceRegistry.metrics());
 });
 

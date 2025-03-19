@@ -56,7 +56,8 @@ export class ContainerRegistryRepository implements ContainerRegistryRepositoryI
   async update(id: string, registry: Partial<ContainerRegistryEntity>): Promise<ContainerRegistryEntity> {
     const documentData = ContainerRegistryMapper.toDocument(registry);
     await this.containerRegistryModel.updateOne({ _id: id }, documentData).exec();
-    const updatedDocument = await this.containerRegistryModel.findById(id).lean().exec();
+    const updatedDocument = await this.containerRegistryModel.findById(id).populate('device').lean().exec();
+
     return ContainerRegistryMapper.toEntity(updatedDocument);
   }
 

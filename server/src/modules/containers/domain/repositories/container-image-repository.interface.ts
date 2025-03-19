@@ -19,7 +19,7 @@ export interface ContainerImageRepositoryInterface {
   /**
    * Find one image by UUID
    */
-  findOneByUuid(uuid: string): Promise<ContainerImageEntity | null>;
+  findOneById(id: string): Promise<ContainerImageEntity | null>;
 
   /**
    * Find one image by ID and device UUID
@@ -39,10 +39,10 @@ export interface ContainerImageRepositoryInterface {
   /**
    * Update an image
    */
-  update(uuid: string, imageData: Partial<ContainerImageEntity>): Promise<ContainerImageEntity>;
+  update(id: string, imageData: Partial<ContainerImageEntity>): Promise<ContainerImageEntity>;
 
   /**
    * Delete an image by UUID
    */
-  deleteByUuid(uuid: string): Promise<boolean>;
+  deleteById(id: string): Promise<boolean>;
 }

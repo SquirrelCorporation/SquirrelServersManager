@@ -15,10 +15,10 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
-import { ContainerRegistriesServiceInterface, CONTAINER_REGISTRIES_SERVICE } from '../../application/interfaces/container-registries-service.interface';
+import { CONTAINER_REGISTRIES_SERVICE, ContainerRegistriesServiceInterface } from '../../application/interfaces/container-registries-service.interface';
 import { CreateCustomRegistryDto, UpdateRegistryAuthDto } from '../dtos/container-registry.dto';
 
-@Controller('registries')
+@Controller('container-registries')
 @UseGuards(JwtAuthGuard)
 export class ContainerRegistriesController {
   constructor(

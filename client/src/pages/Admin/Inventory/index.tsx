@@ -12,7 +12,7 @@ import TerminalModal, {
 import PlaybookSelectionModal from '@/components/PlaybookSelection/PlaybookSelectionModal';
 import Title, { TitleColors } from '@/components/Template/Title';
 import InventoryColumns from '@/pages/Admin/Inventory/InventoryColumns';
-import { deleteDevice, getDevices } from '@/services/rest/device';
+import { deleteDevice, getDevices } from '@/services/rest/devices/devices';
 import { useParams } from '@@/exports';
 import { DatabaseOutlined, WarningOutlined } from '@ant-design/icons';
 import type {

@@ -1,6 +1,6 @@
 import { EosIconsCronjob } from '@/components/Icons/CustomIcons';
 import { CardHeader } from '@/components/Template/CardHeader';
-import { updateDeviceDockerConfiguration } from '@/services/rest/device';
+import { updateDeviceDockerConfiguration } from '@/services/rest/devices/devices';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { ProForm, ProFormSwitch } from '@ant-design/pro-components';
 import { Card, message, Tooltip } from 'antd';

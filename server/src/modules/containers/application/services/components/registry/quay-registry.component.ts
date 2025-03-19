@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
-import { SSMServicesTypes } from '../../../../../../types/typings';
+import { Image, RequestOptionsType } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
 
 const logger = PinoLogger.child({ module: 'QuayRegistryComponent' }, { msgPrefix: '[QUAY_REGISTRY] - ' });
@@ -50,14 +50,14 @@ export class QuayRegistryComponent extends AbstractRegistryComponent {
   /**
    * Return true if image has Quay registry URL
    */
-  match(image: SSMServicesTypes.Image): boolean {
+  match(image: Image): boolean {
     return /^.*\.?quay.io$/.test(image.registry.url);
   }
 
   /**
    * Normalize image according to Quay.io characteristics
    */
-  normalizeImage(image: SSMServicesTypes.Image): SSMServicesTypes.Image {
+  normalizeImage(image: Image): Image {
     const imageNormalized = image;
     imageNormalized.registry.name = 'quay';
     if (!imageNormalized.registry.url.startsWith('https://')) {
@@ -70,16 +70,16 @@ export class QuayRegistryComponent extends AbstractRegistryComponent {
    * Authenticate to Quay.io
    */
   async authenticate(
-    image: SSMServicesTypes.Image,
-    requestOptions: SSMServicesTypes.RequestOptionsType,
-  ): Promise<SSMServicesTypes.RequestOptionsType> {
+    image: Image,
+    requestOptions: RequestOptionsType,
+  ): Promise<RequestOptionsType> {
     const requestOptionsWithAuth = requestOptions;
     let token;
 
     // Add Authorization if any
     const credentials = this.getAuthCredentials();
     if (credentials) {
-      const request: SSMServicesTypes.RequestOptionsType = {
+      const request: RequestOptionsType = {
         method: 'GET',
         url: `https://quay.io/v2/auth?service=quay.io&scope=repository:${image.name}:pull`,
         headers: {
@@ -131,7 +131,7 @@ export class QuayRegistryComponent extends AbstractRegistryComponent {
   /**
    * Get tags page with pagination support for Quay.io
    */
-  getTagsPage(image: SSMServicesTypes.Image, lastItem: string | undefined, link?: string): Promise<any> {
+  getTagsPage(image: Image, lastItem: string | undefined, link?: string): Promise<any> {
     // Default items per page (not honoured by all registries)
     const itemsPerPage = 1000;
     let nextPage = '';

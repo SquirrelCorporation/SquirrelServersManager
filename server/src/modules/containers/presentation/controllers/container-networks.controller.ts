@@ -1,18 +1,18 @@
+import { parse } from 'url';
 import {
   Body,
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Inject,
   Param,
   Patch,
   Post,
-  UseGuards,
   Req,
   Res,
-  HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
-import { parse } from 'url';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
 import { ContainerNetworksServiceInterface } from '../../application/interfaces/container-networks-service.interface';
 import { CONTAINER_NETWORKS_SERVICE } from '../../application/interfaces/container-networks-service.interface';
@@ -23,7 +23,7 @@ import { filterByFields, filterByQueryParams } from '../../../../helpers/query/F
 import { paginate } from '../../../../helpers/query/PaginationHelper';
 import { sortByFields } from '../../../../helpers/query/SorterHelper';
 
-@Controller('networks')
+@Controller('container-networks')
 @UseGuards(JwtAuthGuard)
 export class ContainerNetworksController {
   constructor(
@@ -101,27 +101,4 @@ export class ContainerNetworksController {
     return { success };
   }
 
-  @Post(':networkUuid/container/:containerUuid/connect')
-  async connectContainerToNetwork(
-    @Param('networkUuid') networkUuid: string,
-    @Param('containerUuid') containerUuid: string,
-  ) {
-    const success = await this.networksService.connectContainerToNetwork(
-      networkUuid,
-      containerUuid,
-    );
-    return { success };
-  }
-
-  @Post(':networkUuid/container/:containerUuid/disconnect')
-  async disconnectContainerFromNetwork(
-    @Param('networkUuid') networkUuid: string,
-    @Param('containerUuid') containerUuid: string,
-  ) {
-    const success = await this.networksService.disconnectContainerFromNetwork(
-      networkUuid,
-      containerUuid,
-    );
-    return { success };
-  }
 }

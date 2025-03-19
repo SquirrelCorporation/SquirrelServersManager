@@ -1,14 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import * as Dockerode from 'dockerode';
+import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { v4 as uuidv4 } from 'uuid';
-import { ContainerServiceInterface } from '../../../../../../application/interfaces/container-service.interface';
-import { ContainerStatsServiceInterface } from '../../../../../../application/interfaces/container-stats-service.interface';
-import { IContainerLogsService } from '../../../../../../application/interfaces/container-logs-service.interface';
-import { ContainerImagesServiceInterface } from '../../../../../../application/interfaces/container-images-service.interface';
-import { ContainerVolumesServiceInterface } from '../../../../../../application/interfaces/container-volumes-service.interface';
-import { ContainerNetworksServiceInterface } from '../../../../../../application/interfaces/container-networks-service.interface';
-import { IDockerNetworksComponent } from '../../../../../../../../domain/components/docker-watcher.interface';
+import { ContainerNetworkEntity } from '@modules/containers/domain/entities/container-network.entity';
+import { CONTAINER_SERVICE, ContainerServiceInterface } from '../../../../../../application/interfaces/container-service.interface';
+import { CONTAINER_STATS_SERVICE, ContainerStatsServiceInterface } from '../../../../../../application/interfaces/container-stats-service.interface';
+import { CONTAINER_LOGS_SERVICE, IContainerLogsService } from '../../../../../../application/interfaces/container-logs-service.interface';
+import { CONTAINER_IMAGES_SERVICE, ContainerImagesServiceInterface } from '../../../../../../application/interfaces/container-images-service.interface';
+import { CONTAINER_VOLUMES_SERVICE, ContainerVolumesServiceInterface } from '../../../../../../application/interfaces/container-volumes-service.interface';
+import { CONTAINER_NETWORKS_SERVICE, ContainerNetworksServiceInterface } from '../../../../../../application/interfaces/container-networks-service.interface';
 import { AbstractDockerListenerComponent } from './abstract-docker-listener.component';
 
 /**
@@ -16,14 +14,20 @@ import { AbstractDockerListenerComponent } from './abstract-docker-listener.comp
  * Following the playbooks module pattern, all dependencies are injected through constructor
  */
 @Injectable()
-export abstract class AbstractDockerNetworksComponent extends AbstractDockerListenerComponent implements IDockerNetworksComponent {
+export abstract class AbstractDockerNetworksComponent extends AbstractDockerListenerComponent{
   constructor(
     protected readonly eventEmitter: EventEmitter2,
+    @Inject(CONTAINER_SERVICE)
     protected readonly containerService: ContainerServiceInterface,
+    @Inject(CONTAINER_STATS_SERVICE)
     protected readonly containerStatsService: ContainerStatsServiceInterface,
+    @Inject(CONTAINER_LOGS_SERVICE)
     protected readonly containerLogsService: IContainerLogsService,
+    @Inject(CONTAINER_IMAGES_SERVICE)
     protected readonly containerImagesService: ContainerImagesServiceInterface,
+    @Inject(CONTAINER_VOLUMES_SERVICE)
     protected readonly containerVolumesService: ContainerVolumesServiceInterface,
+    @Inject(CONTAINER_NETWORKS_SERVICE)
     protected readonly containerNetworksService: ContainerNetworksServiceInterface
   ) {
     super(
@@ -54,9 +58,8 @@ export abstract class AbstractDockerNetworksComponent extends AbstractDockerList
       }
 
       // Transform networks to our format
-      const currentNetworks = rawCurrentNetworks.map(network => ({
+      const currentNetworks : ContainerNetworkEntity[] = rawCurrentNetworks.map(network => ({
         id: network.Id,
-        uuid: uuidv4(),
         name: network.Name,
         watcher: this.name,
         deviceUuid: this.configuration.deviceUuid,
@@ -72,17 +75,18 @@ export abstract class AbstractDockerNetworksComponent extends AbstractDockerList
         configOnly: network.ConfigOnly,
         containers: network.Containers,
         options: network.Options,
-        labels: network.Labels
+        labels: network.Labels,
+        status: 'unknown'
       }));
 
       // Get existing networks from our database
       const existingNetworks = await this.containerNetworksService.getNetworksByDeviceUuid(this.configuration.deviceUuid);
-
-      // Insert new networks and update existing ones
-      await this.processNetworks(currentNetworks, existingNetworks);
+      this.childLogger.info("existingNetworks: " + existingNetworks?.length);
+      // Insert new networks
+      await this.insertNewNetworks(currentNetworks, existingNetworks);
 
       // Delete networks that no longer exist
-      await this.removeDeletedNetworks(currentNetworks, existingNetworks);
+      this.deleteOldNetworks(currentNetworks, existingNetworks);
 
     } catch (error: any) {
       this.childLogger.error(`Error watching networks: ${error.message}`);
@@ -90,42 +94,56 @@ export abstract class AbstractDockerNetworksComponent extends AbstractDockerList
   }
 
   /**
-   * Process networks - create new ones and update existing
+   * Insert new networks that don't exist in the database
    */
-  private async processNetworks(currentNetworks: any[], existingNetworks: any[]): Promise<void> {
-    for (const network of currentNetworks) {
-      // Check if network exists in our database
-      const existingNetwork = existingNetworks.find(n => n.id === network.id);
+  private async insertNewNetworks(
+    currentNetworks: ContainerNetworkEntity[],
+    networksInDb: ContainerNetworkEntity[]
+  ): Promise<void> {
+    const networksToInsert = currentNetworks.filter(network => {
+      return !networksInDb.some(dbNetwork => dbNetwork.id === network.id);
+    });
 
-      if (!existingNetwork) {
-        // New network, create it
-        this.childLogger.info(`Adding new network ${network.name} (${network.id})`);
-        await this.containerNetworksService.createNetwork(this.configuration.deviceUuid, network);
-      } else {
-        // Existing network, update it if needed
-        await this.containerNetworksService.updateNetwork(existingNetwork.uuid, network);
-      }
+    if (networksToInsert.length > 0) {
+      this.childLogger.info(
+        `insertNewNetworks - got ${networksToInsert.length} networks to insert (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`
+      );
+
+      await Promise.all(
+        networksToInsert.map(async (network) => {
+          await this.containerNetworksService.createNetwork(this.configuration.deviceUuid, network);
+        })
+      );
     }
   }
 
   /**
-   * Remove networks that no longer exist in Docker
+   * Delete networks that no longer exist in Docker
    */
-  private async removeDeletedNetworks(currentNetworks: any[], existingNetworks: any[]): Promise<void> {
-    // Find networks that exist in database but not in Docker
-    const deletedNetworks = existingNetworks.filter(
-      existingNetwork => !currentNetworks.some(current => current.id === existingNetwork.id)
-    );
+  private deleteOldNetworks(
+    currentNetworks: ContainerNetworkEntity[],
+    networksInDb: ContainerNetworkEntity[]
+  ): void {
+    const networksToRemove = this.getOldNetworks(currentNetworks, networksInDb);
 
-    // Delete networks
-    for (const network of deletedNetworks) {
-      this.childLogger.info(`Removing deleted network ${network.name} (${network.id})`);
-      await this.containerNetworksService.removeNetwork(network.uuid);
-    }
+    networksToRemove.forEach(networkToRemove => {
+      this.containerNetworksService.deleteNetwork(networkToRemove.id);
+    });
   }
 
-  // Only include methods that were part of the original Docker.ts implementation
-
-  // Keep only the core functionality that's used in the original Docker.ts implementation
-  // Remove methods that weren't part of the original functionality
+  /**
+   * Get networks that exist in database but not in Docker
+   */
+  private getOldNetworks(
+    currentNetworks: ContainerNetworkEntity[],
+    networksInDb: ContainerNetworkEntity[]
+  ): ContainerNetworkEntity[] {
+       if (!networksInDb || !currentNetworks) {
+      return [];
+    }
+    return networksInDb.filter(networkFromDb => {
+      const isStillToWatch = currentNetworks.some(currentNetwork => currentNetwork.id === networkFromDb.id);
+      return isStillToWatch === undefined;
+    });
+  }
 }

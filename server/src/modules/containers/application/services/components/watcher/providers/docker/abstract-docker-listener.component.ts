@@ -1,31 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import * as Dockerode from 'dockerode';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AbstractWatcherComponent } from '../../abstract-watcher.component';
-import { ContainerServiceInterface } from '../../../../../../application/interfaces/container-service.interface';
-import { ContainerStatsServiceInterface } from '../../../../../../application/interfaces/container-stats-service.interface';
-import { IContainerLogsService } from '../../../../../../application/interfaces/container-logs-service.interface';
-import { ContainerImagesServiceInterface } from '../../../../../../application/interfaces/container-images-service.interface';
-import { ContainerVolumesServiceInterface } from '../../../../../../application/interfaces/container-volumes-service.interface';
-import { ContainerNetworksServiceInterface } from '../../../../../../application/interfaces/container-networks-service.interface';
-import { IDockerListenerComponent } from '../../../../../../../../domain/components/docker-watcher.interface';
+import { CONTAINER_SERVICE, ContainerServiceInterface } from '../../../../../../application/interfaces/container-service.interface';
+import { CONTAINER_STATS_SERVICE, ContainerStatsServiceInterface } from '../../../../../../application/interfaces/container-stats-service.interface';
+import { CONTAINER_LOGS_SERVICE, IContainerLogsService } from '../../../../../../application/interfaces/container-logs-service.interface';
+import { CONTAINER_IMAGES_SERVICE, ContainerImagesServiceInterface } from '../../../../../../application/interfaces/container-images-service.interface';
+import { CONTAINER_VOLUMES_SERVICE, ContainerVolumesServiceInterface } from '../../../../../../application/interfaces/container-volumes-service.interface';
+import { CONTAINER_NETWORKS_SERVICE, ContainerNetworksServiceInterface } from '../../../../../../application/interfaces/container-networks-service.interface';
 
 /**
  * Abstract Docker listener component that provides base functionality for Docker event monitoring
  * Following the playbooks module pattern, all dependencies are injected through constructor
  */
 @Injectable()
-export abstract class AbstractDockerListenerComponent extends AbstractWatcherComponent implements IDockerListenerComponent {
-  protected dockerApi: Dockerode;
+export abstract class AbstractDockerListenerComponent extends AbstractWatcherComponent {
+  protected dockerApi!: Dockerode;
   protected watchCronDebounced: any;
 
   constructor(
     protected readonly eventEmitter: EventEmitter2,
+    @Inject(CONTAINER_SERVICE)
     protected readonly containerService: ContainerServiceInterface,
+    @Inject(CONTAINER_STATS_SERVICE)
     protected readonly containerStatsService: ContainerStatsServiceInterface,
+    @Inject(CONTAINER_LOGS_SERVICE)
     protected readonly containerLogsService: IContainerLogsService,
+    @Inject(CONTAINER_IMAGES_SERVICE)
     protected readonly containerImagesService: ContainerImagesServiceInterface,
+    @Inject(CONTAINER_VOLUMES_SERVICE)
     protected readonly containerVolumesService: ContainerVolumesServiceInterface,
+    @Inject(CONTAINER_NETWORKS_SERVICE)
     protected readonly containerNetworksService: ContainerNetworksServiceInterface
   ) {
     super();
@@ -34,12 +39,13 @@ export abstract class AbstractDockerListenerComponent extends AbstractWatcherCom
   /**
    * Listen and react to docker events.
    */
-  protected async listenDockerEvents(): Promise<void> {
+  // This needs to be public to implement the IDockerListenerComponent interface
+  public async listenDockerEvents(): Promise<void> {
     this.childLogger.info(
       `Listening to docker events - (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`
     );
 
-    const options: Dockerode.ContainerEventOptions = {
+    const options: Dockerode.GetEventsOptions = {
       filters: {
         type: ['container'],
         event: ['create', 'destroy', 'start', 'stop', 'pause', 'unpause', 'die', 'update']
@@ -99,7 +105,7 @@ export abstract class AbstractDockerListenerComponent extends AbstractWatcherCom
 
           if (oldStatus !== newStatus) {
             // Update container status
-            await this.containerService.updateContainer(containerFound.uuid, {
+            await this.containerService.updateContainer(containerFound.id, {
               ...containerFound,
               status: newStatus
             });

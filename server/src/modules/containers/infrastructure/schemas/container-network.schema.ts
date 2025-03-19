@@ -1,53 +1,78 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, SchemaTimestampsConfig } from 'mongoose';
 
 export const CONTAINER_NETWORK_SCHEMA = 'ContainerNetwork';
 
-export type ContainerNetworkDocument = ContainerNetwork & Document;
+export type ContainerNetworkDocument = ContainerNetwork & Document & SchemaTimestampsConfig;
 
 @Schema({ timestamps: true, versionKey: false })
 export class ContainerNetwork {
   @Prop({ type: String, required: true })
-  id: string;
-
-  @Prop({ type: String, required: true, unique: true })
-  uuid: string;
+  id!: string;
 
   @Prop({ type: String, required: true })
-  name: string;
+  name!: string;
+
+  @Prop({ type: String, required: true, default: 'unknown' })
+  status!: string;
 
   @Prop({ type: String, required: true })
-  deviceUuid: string;
+  watcher!: string;
 
-  @Prop({ type: String, required: true })
-  driver: string;
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+    ref: 'Device'
+  })
+  deviceUuid!: string;
 
-  @Prop({ type: String, required: true })
-  scope: string;
+  @Prop({ type: String })
+  created!: string;
 
-  @Prop({ type: Boolean, default: false })
-  internal: boolean;
+  @Prop({ type: String })
+  driver!: string;
 
-  @Prop({ type: Boolean, default: false })
-  attachable: boolean;
+  @Prop({ type: String })
+  scope!: string;
 
-  @Prop({ type: Boolean, default: false })
-  ingress: boolean;
+  @Prop({ type: Boolean })
+  internal!: boolean;
 
-  @Prop({ type: Object, default: {} })
-  ipam: Record<string, any>;
+  @Prop({ type: Boolean })
+  attachable!: boolean;
 
-  @Prop({ type: Object, default: {} })
-  options: Record<string, any>;
+  @Prop({ type: Boolean})
+  ingress!: boolean;
 
-  @Prop({ type: Object, default: {} })
-  labels: Record<string, any>;
+  @Prop({ type: Boolean })
+  enableIPv6!: boolean;
 
-  @Prop({ type: [String], default: [] })
-  containers: string[];
+  @Prop({ type: Boolean })
+  configOnly!: boolean;
+
+  @Prop({ type: Object })
+  ipam!: Record<string, any>;
+
+  @Prop({ type: Object })
+  options!: Record<string, any>;
+
+  @Prop({ type: Object })
+  labels!: Record<string, any>;
+
+  @Prop({ type: Object })
+  containers!: Record<string, any>;
 
   @Prop({ type: Date, default: Date.now })
-  createdAt: Date;
+  createdAt!: Date;
 }
 
 export const ContainerNetworkSchema = SchemaFactory.createForClass(ContainerNetwork);
+
+// Set up the relationship with Device model
+ContainerNetworkSchema.virtual('device', {
+  ref: 'Device',
+  localField: 'deviceUuid',
+  foreignField: 'uuid',
+  justOne: true
+});

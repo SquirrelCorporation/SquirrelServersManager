@@ -9,11 +9,10 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
 import { ContainerServiceInterface } from '../../application/interfaces/container-service.interface';
 import { CONTAINER_SERVICE } from '../../application/interfaces/container-service.interface';
-import { Inject } from '@nestjs/common';
-import { SSMServicesTypes } from '../../../../types/typings.d';
 
 @Controller('containers')
 @UseGuards(JwtAuthGuard)
@@ -36,14 +35,6 @@ export class ContainersController {
   @Get('device/:deviceUuid')
   async getContainersByDeviceUuid(@Param('deviceUuid') deviceUuid: string) {
     return this.containerService.getContainersByDeviceUuid(deviceUuid);
-  }
-
-  @Post('device/:deviceUuid')
-  async createContainer(
-    @Param('deviceUuid') deviceUuid: string,
-    @Body() containerData: SSMServicesTypes.CreateContainerParams,
-  ) {
-    return this.containerService.createContainer(deviceUuid, containerData);
   }
 
   @Patch(':uuid')

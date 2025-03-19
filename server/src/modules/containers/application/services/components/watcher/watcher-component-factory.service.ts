@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import PinoLogger from '../../../../../../logger';
 import { IWatcherComponent, IWatcherComponentFactory } from '../../../../domain/components/watcher.interface';
 import { IDockerWatcherComponentFactory } from '../../../../domain/components/docker-watcher.interface';
-import { ContainerServiceInterface } from '../../../../application/interfaces/container-service.interface';
-import { ContainerStatsServiceInterface } from '../../../../application/interfaces/container-stats-service.interface';
-import { IContainerLogsService } from '../../../../application/interfaces/container-logs-service.interface';
-import { ContainerImagesServiceInterface } from '../../../../application/interfaces/container-images-service.interface';
-import { ContainerVolumesServiceInterface } from '../../../../application/interfaces/container-volumes-service.interface';
-import { ContainerNetworksServiceInterface } from '../../../../application/interfaces/container-networks-service.interface';
+import { CONTAINER_SERVICE, ContainerServiceInterface } from '../../../../application/interfaces/container-service.interface';
+import { CONTAINER_STATS_SERVICE, ContainerStatsServiceInterface } from '../../../../application/interfaces/container-stats-service.interface';
+import { CONTAINER_LOGS_SERVICE, IContainerLogsService } from '../../../../application/interfaces/container-logs-service.interface';
+import { CONTAINER_IMAGES_SERVICE, ContainerImagesServiceInterface } from '../../../../application/interfaces/container-images-service.interface';
+import { CONTAINER_VOLUMES_SERVICE, ContainerVolumesServiceInterface } from '../../../../application/interfaces/container-volumes-service.interface';
+import { CONTAINER_NETWORKS_SERVICE, ContainerNetworksServiceInterface } from '../../../../application/interfaces/container-networks-service.interface';
 import { AbstractWatcherComponent } from './abstract-watcher.component';
 import { DockerWatcherComponentFactory } from './providers/docker/docker-watcher-factory.service';
 
@@ -24,11 +24,17 @@ export class WatcherComponentFactory implements IWatcherComponentFactory {
 
   constructor(
     private readonly eventEmitter: EventEmitter2,
+    @Inject(CONTAINER_SERVICE)
     private readonly containerService: ContainerServiceInterface,
+    @Inject(CONTAINER_STATS_SERVICE)
     private readonly containerStatsService: ContainerStatsServiceInterface,
+    @Inject(CONTAINER_LOGS_SERVICE)
     private readonly containerLogsService: IContainerLogsService,
+    @Inject(CONTAINER_IMAGES_SERVICE)
     private readonly containerImagesService: ContainerImagesServiceInterface,
+    @Inject(CONTAINER_VOLUMES_SERVICE)
     private readonly containerVolumesService: ContainerVolumesServiceInterface,
+    @Inject(CONTAINER_NETWORKS_SERVICE)
     private readonly containerNetworksService: ContainerNetworksServiceInterface
   ) {
     // Initialize the Docker watcher factory

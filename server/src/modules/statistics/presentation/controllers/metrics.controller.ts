@@ -1,7 +1,7 @@
-import { Controller, Get, Headers, HttpStatus, Res } from '@nestjs/common';
+import { Controller, Get, Headers, HttpStatus, Inject, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { Logger } from '@nestjs/common';
-import { MetricsService } from '@modules/statistics/application/services/metrics.service';
+import { METRICS_SERVICE, MetricsServiceInterface } from '@modules/statistics/application/interfaces/metrics-service.interface';
 import { prometheusConf } from 'src/config';
 
 @Controller('metrics')
@@ -9,7 +9,8 @@ export class MetricsController {
   private readonly logger = new Logger(MetricsController.name);
 
   constructor(
-    private readonly metricsService: MetricsService,
+    @Inject(METRICS_SERVICE)
+    private readonly metricsService: MetricsServiceInterface,
   ) {}
 
   @Get()

@@ -1,4 +1,4 @@
-import { getContainerStats } from '@/services/rest/containersstats';
+import { getContainerStats } from '@/services/rest/containers/container-statistics';
 import { Line } from '@ant-design/charts';
 import moment from 'moment';
 import React, { useEffect } from 'react';

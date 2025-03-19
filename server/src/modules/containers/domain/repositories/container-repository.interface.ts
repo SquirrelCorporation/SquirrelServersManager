@@ -12,11 +12,6 @@ export interface ContainerRepositoryInterface {
   findAll(): Promise<ContainerEntity[]>;
 
   /**
-   * Find one container by UUID
-   */
-  findOneByUuid(uuid: string): Promise<ContainerEntity | null>;
-
-  /**
    * Find one container by ID
    */
   findOneById(id: string): Promise<ContainerEntity | null>;
@@ -44,7 +39,7 @@ export interface ContainerRepositoryInterface {
   /**
    * Delete a container by UUID
    */
-  deleteByUuid(uuid: string): Promise<boolean>;
+  deleteById(id: string): Promise<boolean>;
 
   /**
    * Count containers by device UUID

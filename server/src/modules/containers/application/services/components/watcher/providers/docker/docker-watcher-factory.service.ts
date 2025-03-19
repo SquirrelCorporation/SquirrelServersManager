@@ -1,21 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { 
-  IDockerListenerComponent, 
-  IDockerNetworksComponent, 
-  IDockerVolumesComponent, 
-  IDockerImagesComponent, 
-  IDockerLogsComponent,
-  IDockerWatcherComponentFactory 
-} from '../../../../../../../../domain/components/docker-watcher.interface';
-import { ContainerServiceInterface } from '../../../../../../interfaces/container-service.interface';
-import { ContainerStatsServiceInterface } from '../../../../../../interfaces/container-stats-service.interface';
-import { IContainerLogsService } from '../../../../../../interfaces/container-logs-service.interface';
-import { ContainerImagesServiceInterface } from '../../../../../../interfaces/container-images-service.interface';
-import { ContainerVolumesServiceInterface } from '../../../../../../interfaces/container-volumes-service.interface';
-import { ContainerNetworksServiceInterface } from '../../../../../../interfaces/container-networks-service.interface';
-import { DockerWatcherComponent } from './docker-watcher.component';
+import { IDockerWatcherComponentFactory } from '@modules/containers/domain/components/docker-watcher.interface';
+import { ContainerServiceInterface } from '@modules/containers/application/interfaces/container-service.interface';
+import { ContainerStatsServiceInterface } from '@modules/containers/application/interfaces/container-stats-service.interface';
+import { IContainerLogsService } from '@modules/containers/application/interfaces/container-logs-service.interface';
+import { ContainerImagesServiceInterface } from '@modules/containers/application/interfaces/container-images-service.interface';
+import { ContainerVolumesServiceInterface } from '@modules/containers/application/interfaces/container-volumes-service.interface';
+import { ContainerNetworksServiceInterface } from '@modules/containers/application/interfaces/container-networks-service.interface';
 import PinoLogger from '../../../../../../../../logger';
+import { DockerWatcherComponent } from './docker-watcher.component';
 
 const logger = PinoLogger.child({ module: 'DockerWatcherFactory' }, { msgPrefix: '[DOCKER_FACTORY] - ' });
 
@@ -38,7 +31,7 @@ export class DockerWatcherComponentFactory implements IDockerWatcherComponentFac
   /**
    * Create a Docker listener component
    */
-  createDockerListenerComponent(): IDockerListenerComponent {
+  createDockerListenerComponent() {
     logger.info('Creating Docker listener component');
     return new DockerWatcherComponent(
       this.eventEmitter,
@@ -54,7 +47,7 @@ export class DockerWatcherComponentFactory implements IDockerWatcherComponentFac
   /**
    * Create a Docker networks component
    */
-  createDockerNetworksComponent(): IDockerNetworksComponent {
+  createDockerNetworksComponent() {
     logger.info('Creating Docker networks component');
     return new DockerWatcherComponent(
       this.eventEmitter,
@@ -70,7 +63,7 @@ export class DockerWatcherComponentFactory implements IDockerWatcherComponentFac
   /**
    * Create a Docker volumes component
    */
-  createDockerVolumesComponent(): IDockerVolumesComponent {
+  createDockerVolumesComponent() {
     logger.info('Creating Docker volumes component');
     return new DockerWatcherComponent(
       this.eventEmitter,
@@ -86,7 +79,7 @@ export class DockerWatcherComponentFactory implements IDockerWatcherComponentFac
   /**
    * Create a Docker images component
    */
-  createDockerImagesComponent(): IDockerImagesComponent {
+  createDockerImagesComponent() {
     logger.info('Creating Docker images component');
     return new DockerWatcherComponent(
       this.eventEmitter,
@@ -102,7 +95,7 @@ export class DockerWatcherComponentFactory implements IDockerWatcherComponentFac
   /**
    * Create a Docker logs component
    */
-  createDockerLogsComponent(): IDockerLogsComponent {
+  createDockerLogsComponent() {
     logger.info('Creating Docker logs component');
     return new DockerWatcherComponent(
       this.eventEmitter,
@@ -114,11 +107,11 @@ export class DockerWatcherComponentFactory implements IDockerWatcherComponentFac
       this.containerNetworksService
     );
   }
-  
+
   /**
    * Create a complete Docker watcher component
    */
-  createDockerWatcherComponent(): IDockerLogsComponent {
+  createDockerWatcherComponent() {
     logger.info('Creating full Docker watcher component');
     return new DockerWatcherComponent(
       this.eventEmitter,

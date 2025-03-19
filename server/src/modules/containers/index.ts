@@ -16,7 +16,7 @@ export * from './application/services/container.service';
 export * from './application/services/container-logs.service';
 export * from './application/services/engine/watcher-engine.service';
 export * from './application/services/components/component-factory.service';
-export * from './application/services/components/abstract-watcher.component';
+export * from './application/services/components/watcher/abstract-watcher.component';
 export * from './application/services/components/registry/abstract-registry.component';
 
 // Infrastructure

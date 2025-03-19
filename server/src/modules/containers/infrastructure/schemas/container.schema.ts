@@ -1,97 +1,137 @@
+import { Image } from '@modules/containers/types';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Schema as MongooseSchema } from 'mongoose';
-import { SSMServicesTypes } from '../../../../types/typings.d';
+import { Document, Schema as MongooseSchema, SchemaTimestampsConfig } from 'mongoose';
 
 export const CONTAINER_SCHEMA = 'Container';
 
-export type ContainerDocument = Container & Document;
+export type ContainerDocument = Container & Document & SchemaTimestampsConfig;
 
 @Schema({ timestamps: true, versionKey: false })
 export class Container {
-  @Prop({ type: String, required: true })
-  uuid: string;
+  @Prop({
+    type: String,
+    required: true,
+    index: true,
+    ref: 'Device'
+  })
+  deviceUuid!: string;
 
-  @Prop({ type: String, required: true })
-  name: string;
+  @Prop({ type: String })
+  id!: string;
 
-  @Prop({ type: String, required: true })
-  deviceUuid: string;
-
-  @Prop({ type: String, required: true })
-  image: string;
+  @Prop({ type: String })
+  name!: string;
 
   @Prop({ type: String })
   customName?: string;
 
   @Prop({ type: String })
-  shortId?: string;
-
-  @Prop({ type: String, default: 'unknown' })
-  state?: string;
-
-  @Prop({ type: String, default: 'unknown' })
-  status?: string;
-
-  @Prop({ type: Date })
-  createdAt?: Date;
-
-  @Prop({ type: Object })
-  labels?: Record<string, string>;
-
-  @Prop({ type: Object })
-  hostConfig?: any;
+  displayName?: string;
 
   @Prop({ type: String })
-  networkMode?: string;
+  displayIcon?: string;
 
-  @Prop({ type: Object })
-  networks?: Record<string, any>;
+  @Prop({ type: String, default: 'unknown' })
+  status!: string;
 
-  @Prop({ type: Array })
-  mounts?: any[];
+  @Prop({ type: String })
+  watcher!: string;
+
+  @Prop({ type: String })
+  includeTags?: string;
+
+  @Prop({ type: String })
+  excludeTags?: string;
+
+  @Prop({ type: String })
+  transformTags?: string;
+
+  @Prop({ type: String })
+  linkTemplate?: string;
 
   @Prop({ type: String })
   command?: string;
 
   @Prop({ type: Object })
-  ports?: Record<string, any>;
+  ports?: { IP: string; PrivatePort: number; PublicPort: number; Type: string }[];
 
   @Prop({ type: Object })
-  containerConfig?: SSMServicesTypes.ContainerConfig;
-
-  @Prop({ type: String })
-  restart?: string;
-
-  @Prop({ type: String })
-  timestamp?: string;
-
-  @Prop({ type: [String], default: [] })
-  watchers?: string[];
+  networkSettings?: {
+    Networks: {
+      [p: string]: {
+        IPAMConfig?: any;
+        Links?: any;
+        Aliases?: any;
+        NetworkID: string;
+        EndpointID: string;
+        Gateway: string;
+        IPAddress: string;
+        IPPrefixLen: number;
+        IPv6Gateway: string;
+        GlobalIPv6Address: string;
+        GlobalIPv6PrefixLen: number;
+        MacAddress: string;
+      };
+    };
+  };
 
   @Prop({ type: Object })
-  stats?: any;
+  mounts?: {
+    Name?: string | undefined;
+    Type: string;
+    Source: string;
+    Destination: string;
+    Driver?: string | undefined;
+    Mode: string;
+    RW: boolean;
+    Propagation: string;
+  }[];
 
   @Prop({ type: String })
-  kind?: string;
+  link?: string;
 
-  @Prop({ type: [String] })
-  env?: string[];
+  @Prop({ type: Object })
+  image!: Image;
+
+  @Prop({ type: Object })
+  result?: {
+    tag: string;
+    digest?: string;
+    created?: string;
+    link?: string;
+  };
+
+  @Prop({ type: Object })
+  error?: {
+    message?: string;
+  };
 
   @Prop({ type: Boolean, default: false })
-  oomKilled?: boolean;
+  updateAvailable?: boolean;
 
-  @Prop({ type: Boolean, default: true })
-  isManaged?: boolean;
+  @Prop({ type: Object })
+  updateKind?: {
+    kind: 'tag' | 'digest' | 'unknown';
+    localValue?: string;
+    remoteValue?: string;
+    semverDiff?: 'major' | 'minor' | 'patch' | 'prerelease' | 'unknown';
+  };
 
-  @Prop({ type: Boolean, default: true })
-  isWatched?: boolean;
+  @Prop({ type: Object })
+  labels?: {
+    [p: string]: string;
+  };
+
+  @Prop({ type: Boolean })
+  resultChanged?: any;
 }
 
 export const ContainerSchema = SchemaFactory.createForClass(Container);
 
-// Add indexes for performance
-ContainerSchema.index({ uuid: 1 }, { unique: true });
-ContainerSchema.index({ deviceUuid: 1 });
-ContainerSchema.index({ watchers: 1 });
-ContainerSchema.index({ status: 1 });
-ContainerSchema.index({ state: 1 });
+// Set up the relationship with Device model
+ContainerSchema.virtual('device', {
+  ref: 'Device',
+  localField: 'deviceUuid',
+  foreignField: 'uuid',
+  justOne: true
+});

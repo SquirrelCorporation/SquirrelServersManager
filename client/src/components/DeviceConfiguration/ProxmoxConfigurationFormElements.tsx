@@ -1,7 +1,7 @@
 import CapabilityCard from '@/components/DeviceConfiguration/capability/CapabilityCard';
 import ProxmoxConnectionCard from '@/components/DeviceConfiguration/proxmox/ProxmoxConnectionCard';
 import ProxmoxWatcherCronsCard from '@/components/DeviceConfiguration/proxmox/ProxmoxWatcherCronsCard';
-import { postDeviceCapabilities } from '@/services/rest/device';
+import { postDeviceCapabilities } from '@/services/rest/devices/devices';
 import { ProFormInstance } from '@ant-design/pro-components';
 import { message } from 'antd';
 import React from 'react';

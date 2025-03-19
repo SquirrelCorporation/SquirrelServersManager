@@ -4,7 +4,7 @@ import DockerAdvancedConnectionCard from '@/components/DeviceConfiguration/docke
 import DockerEngineHostCard from '@/components/DeviceConfiguration/docker/DockerEngineHostCard';
 import DockerWatchCard from '@/components/DeviceConfiguration/docker/DockerWatchCard';
 import DockerWatcherCronsCard from '@/components/DeviceConfiguration/docker/DockerWatcherCronsCard';
-import { postDeviceCapabilities } from '@/services/rest/device';
+import { postDeviceCapabilities } from '@/services/rest/devices/devices';
 import { ProFormInstance } from '@ant-design/pro-components';
 import { message } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';

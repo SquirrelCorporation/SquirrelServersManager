@@ -1,22 +1,17 @@
-import Joi, { AlternativesSchema } from 'joi';
-import _joi from 'joi';
+import * as Joi from 'joi';
+import { AlternativesSchema } from 'joi';
 import pino from 'pino';
-import EventManager from '../../../core/events/EventManager';
-import logger from '../../../logger';
-import type { SSMServicesTypes } from '../../../types/typings.d.ts';
-
-export enum Kind {
-  WATCHER = 'watcher',
-  REGISTRY = 'registry',
-  UNKNOWN = 'Unknown',
-}
+import { ConfigurationAuthenticationSchema, ConfigurationRegistrySchema, ConfigurationTriggerSchema, ConfigurationWatcherSchema } from '@modules/containers/types';
+import { Kind } from '@modules/containers/domain/components/kind.enum';
+import EventManager from '../../../../../../core/events/EventManager';
+import logger from '../../../../../../logger';
 
 abstract class Component<
   T extends
-    | SSMServicesTypes.ConfigurationRegistrySchema
-    | SSMServicesTypes.ConfigurationTriggerSchema
-    | SSMServicesTypes.ConfigurationWatcherSchema
-    | SSMServicesTypes.ConfigurationAuthenticationSchema,
+    | ConfigurationRegistrySchema
+    | ConfigurationTriggerSchema
+    | ConfigurationWatcherSchema
+    | ConfigurationAuthenticationSchema,
 > extends EventManager {
   public _id: string;
   public joi: Joi.Root;
@@ -32,7 +27,7 @@ abstract class Component<
   constructor() {
     super();
     this._id = 'unknown';
-    this.joi = _joi;
+    this.joi = Joi;
     this.kind = Kind.UNKNOWN;
     this.type = 'unknown';
     this.name = 'unknown';

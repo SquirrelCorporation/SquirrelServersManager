@@ -6,8 +6,8 @@ import ProCardLabelsConfiguration from '@/pages/Containers/components/sub-compon
 import ProCardPortsConfiguration from '@/pages/Containers/components/sub-components/deploy-configuration-forms/ProCardPortsConfiguration';
 import ProCardVolumesConfiguration from '@/pages/Containers/components/sub-components/deploy-configuration-forms/ProCardVolumesConfiguration';
 import DockerOpsModal from '@/pages/Containers/components/sub-components/DockerOpsModal';
-import { getAllDevices } from '@/services/rest/device';
-import { postDeploy } from '@/services/rest/services';
+import { getAllDevices } from '@/services/rest/devices/devices';
+import { postDeploy } from '@/services/rest/containers/container-templates';
 import { CheckCircleFilled } from '@ant-design/icons';
 import {
   ModalForm,

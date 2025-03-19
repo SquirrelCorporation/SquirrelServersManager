@@ -8,8 +8,8 @@ import {
   Vlan,
 } from '@/components/Icons/CustomIcons';
 import DockerOpsModal from '@/pages/Containers/components/sub-components/DockerOpsModal';
-import { getAllDevices } from '@/services/rest/device';
-import { postNetwork } from '@/services/rest/services';
+import { getAllDevices } from '@/services/rest/devices/devices';
+import { postNetwork } from '@/services/rest/containers/container-networks';
 import {
   validateIpInSubnet,
   validateIpRangeInSubnet,

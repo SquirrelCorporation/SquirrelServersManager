@@ -1,10 +1,10 @@
-import { 
-  IsArray, 
-  IsBoolean, 
-  IsObject, 
-  IsOptional, 
-  IsString, 
-  ValidateNested 
+import {
+  IsArray,
+  IsBoolean,
+  IsObject,
+  IsOptional,
+  IsString,
+  ValidateNested
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -43,7 +43,7 @@ class IpamDto {
  */
 export class CreateNetworkDto {
   @IsString()
-  name: string;
+  name!: string;
 
   @IsString()
   @IsOptional()

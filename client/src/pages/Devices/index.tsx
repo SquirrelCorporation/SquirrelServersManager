@@ -2,7 +2,7 @@ import { OsLogo as OriginalOsLogo } from '@/components/DeviceComponents/OsLogo/O
 import { CarbonBatchJob } from '@/components/Icons/CustomIcons';
 import { TerminalStateProps } from '@/components/PlaybookExecutionModal';
 import Title, { TitleColors } from '@/components/Template/Title';
-import { getDevices } from '@/services/rest/device';
+import { getDevices } from '@/services/rest/devices/devices';
 import {
   AppstoreOutlined,
   ControlOutlined,

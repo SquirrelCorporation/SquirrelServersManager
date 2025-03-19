@@ -1,10 +1,10 @@
+import { ConfigurationRegistrySchema } from '@modules/containers/types';
 import { Component } from './component.interface';
-import { SSMServicesTypes } from '../../../../types/typings.d';
 
 /**
  * Interface for registry components
  */
-export interface IRegistryComponent extends Component<SSMServicesTypes.ConfigurationRegistrySchema> {
+export interface IRegistryComponent extends Component<ConfigurationRegistrySchema> {
   /**
    * Get configuration schema for the registry
    */

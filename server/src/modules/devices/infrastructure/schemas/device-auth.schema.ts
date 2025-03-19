@@ -42,10 +42,10 @@ export class DeviceAuth {
   @Prop()
   sshKeyPass?: string;
 
-  @Prop({ 
+  @Prop({
     type: String,
-    default: SsmAnsible.SSHConnection.PARAMIKO, 
-    enum: SsmAnsible.SSHConnection 
+    default: SsmAnsible.SSHConnection.PARAMIKO,
+    enum: SsmAnsible.SSHConnection
   })
   sshConnection?: SsmAnsible.SSHConnection;
 
@@ -82,9 +82,9 @@ export class DeviceAuth {
   @Prop({ default: false })
   customDockerSSH?: boolean;
 
-  @Prop({ 
+  @Prop({
     type: String,
-    enum: SsmAnsible.SSHType 
+    enum: SsmAnsible.SSHType
   })
   dockerCustomAuthType?: SsmAnsible.SSHType;
 

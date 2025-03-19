@@ -13,7 +13,7 @@ export class UpdateContainerDto extends PartialType(CreateContainerDto) {
   @IsOptional()
   @IsString()
   state?: string;
-  
+
   @IsOptional()
   @IsString()
   customName?: string;

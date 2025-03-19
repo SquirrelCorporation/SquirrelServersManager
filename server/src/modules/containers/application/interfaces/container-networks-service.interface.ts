@@ -6,9 +6,7 @@ export const CONTAINER_NETWORKS_SERVICE = 'CONTAINER_NETWORKS_SERVICE';
  * Interface for the Container Networks Service
  */
 export interface ContainerNetworksServiceInterface {
-  /**
-   * Get all container networks
-   */
+
   getAllNetworks(): Promise<ContainerNetworkEntity[]>;
 
   /**

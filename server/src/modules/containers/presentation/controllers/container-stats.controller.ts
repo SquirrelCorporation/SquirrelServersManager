@@ -3,16 +3,16 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Inject,
   Param,
   Query,
   UseGuards,
   UsePipes,
   ValidationPipe,
-  Inject,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
-import { ContainerServiceInterface, CONTAINER_SERVICE } from '../../application/interfaces/container-service.interface';
-import { ContainerStatsServiceInterface, CONTAINER_STATS_SERVICE } from '../../application/interfaces/container-stats-service.interface';
+import { CONTAINER_SERVICE, ContainerServiceInterface } from '../../application/interfaces/container-service.interface';
+import { CONTAINER_STATS_SERVICE, ContainerStatsServiceInterface } from '../../application/interfaces/container-stats-service.interface';
 import {
   ContainerCountParamDto,
   ContainerStatParamDto,
@@ -22,7 +22,7 @@ import {
 /**
  * Controller for container statistics
  */
-@Controller('container-stats')
+@Controller('container-statistics')
 @UseGuards(JwtAuthGuard)
 @UsePipes(new ValidationPipe({ transform: true }))
 export class ContainerStatsController {

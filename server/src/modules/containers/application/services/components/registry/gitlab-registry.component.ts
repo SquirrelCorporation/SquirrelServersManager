@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
-import { SSMServicesTypes } from '../../../../../../types/typings';
+import { Image, RequestOptionsType } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
 
 const logger = PinoLogger.child({ module: 'GitLabRegistryComponent' }, { msgPrefix: '[GITLAB_REGISTRY] - ' });
@@ -45,14 +45,14 @@ export class GitLabRegistryComponent extends AbstractRegistryComponent {
   /**
    * Return true if image has no registry url.
    */
-  match(image: SSMServicesTypes.Image): boolean {
+  match(image: Image): boolean {
     return this.configuration.url?.indexOf(image.registry.url) !== -1;
   }
 
   /**
    * Normalize images according to Gitlab characteristics.
    */
-  normalizeImage(image: SSMServicesTypes.Image): SSMServicesTypes.Image {
+  normalizeImage(image: Image): Image {
     const imageNormalized = image;
     imageNormalized.registry.name = 'gitlab';
     if (!imageNormalized.registry.url.startsWith('https://')) {
@@ -65,13 +65,13 @@ export class GitLabRegistryComponent extends AbstractRegistryComponent {
    * Authenticate to Gitlab.
    */
   async authenticate(
-    image: SSMServicesTypes.Image,
-    requestOptions: SSMServicesTypes.RequestOptionsType,
-  ): Promise<SSMServicesTypes.RequestOptionsType> {
+    image: Image,
+    requestOptions: RequestOptionsType,
+  ): Promise<RequestOptionsType> {
     if (!this.configuration.token) {
       throw new Error('Token is missing');
     }
-    const request: SSMServicesTypes.RequestOptionsType = {
+    const request: RequestOptionsType = {
       method: 'GET',
       url: `${this.configuration.authurl}/jwt/auth?service=container_registry&scope=repository:${image.name}:pull`,
       headers: {

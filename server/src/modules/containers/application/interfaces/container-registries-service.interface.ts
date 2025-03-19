@@ -1,5 +1,5 @@
+import { RegistryAuthConfig } from '@modules/containers/types';
 import { ContainerRegistryEntity } from '../../domain/entities/container-registry.entity';
-import { SSMServicesTypes } from '../../../../types/typings.d';
 
 export const CONTAINER_REGISTRIES_SERVICE = 'CONTAINER_REGISTRIES_SERVICE';
 
@@ -11,7 +11,7 @@ export interface ContainerRegistriesServiceInterface {
    * Add a registry if it doesn't already exist
    * @param registry Registry configuration
    */
-  addIfNotExists(registry: SSMServicesTypes.RegistryAuthConfig): Promise<void>;
+  addIfNotExists(registry: RegistryAuthConfig): Promise<void>;
 
   /**
    * Update registry authentication

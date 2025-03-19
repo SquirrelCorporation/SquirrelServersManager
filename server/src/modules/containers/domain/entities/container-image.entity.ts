@@ -1,19 +1,21 @@
+
 /**
  * Domain entity for container images
  */
 export interface ContainerImageEntity {
+  _id?: string;
   id: string;
-  uuid: string;
+  watcher: string;
   deviceUuid: string;
-  name: string;
-  tag: string;
-  registry?: string;
+  parentId: string;
+  repoTags: string[] | undefined;
+  repoDigests?: string[] | undefined;
+  created: number;
   size: number;
-  createdAt: Date;
-  parentId?: string;
-  repoDigests?: string[];
-  labels?: Record<string, string>;
-  containers?: string[]; // List of container IDs using this image
-  virtualSize?: number;
-  shared?: boolean;
+  virtualSize: number;
+  sharedSize: number;
+  labels: { [p: string]: string };
+  containers: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

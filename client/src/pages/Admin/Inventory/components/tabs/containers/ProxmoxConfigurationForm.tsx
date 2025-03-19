@@ -3,7 +3,7 @@ import {
   getDeviceAuth,
   postCheckDeviceProxmoxAuth,
   postDeviceProxmoxAuth,
-} from '@/services/rest/deviceauth';
+} from '@/services/rest/devices/device-credentials';
 import { ProFormInstance } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
 import { Button, message, Space } from 'antd';

@@ -12,4 +12,5 @@ export default {
   'menu.Stack': 'Stack',
   'menu.Stack.Playbooks': 'Playbooks',
   'menu.Stack.Container Stacks': 'Container Stacks',
+  'menu.Plugins': 'Plugins',
 };

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import AbstractComponent from '../../../../modules/containers/core/Component';
+import AbstractComponent from '../../../../modules/containers/application/services/components/core/Component';
 import type { SSMServicesTypes } from '../../../../types/typings';
 
 class Component<

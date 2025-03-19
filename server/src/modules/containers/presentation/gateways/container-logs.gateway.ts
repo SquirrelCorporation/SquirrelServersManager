@@ -9,13 +9,13 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Inject, Logger, UseGuards } from '@nestjs/common';
+import { SsmEvents } from 'ssm-shared-lib';
+import { DateTime } from 'luxon';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
-import { IContainerLogsService, CONTAINER_LOGS_SERVICE } from '../../application/interfaces/container-logs-service.interface';
+import { CONTAINER_LOGS_SERVICE, IContainerLogsService } from '../../application/interfaces/container-logs-service.interface';
 import PinoLogger from '../../../../logger';
 import { ContainerServiceInterface } from '../../application/interfaces/container-service.interface';
 import { CONTAINER_SERVICE } from '../../application/interfaces/container-service.interface';
-import { SsmEvents } from 'ssm-shared-lib';
-import { DateTime } from 'luxon';
 import { ContainerLogsDto } from '../dtos/container-logs.dto';
 
 const logger = PinoLogger.child({ module: 'ContainerLogsGateway' }, { msgPrefix: '[CONTAINER_LOGS_GATEWAY] - ' });
@@ -46,17 +46,17 @@ export class ContainerLogsGateway implements OnGatewayConnection, OnGatewayDisco
 
   handleDisconnect(client: Socket) {
     logger.info(`Client disconnected: ${client.id}`);
-    
+
     // Clean up subscriptions for this client
     this.subscribedContainers.forEach((clients, containerId) => {
       clients.delete(client.id);
       if (clients.size === 0) {
         this.subscribedContainers.delete(containerId);
-        
+
         // Close any active streams
         if (this.streamClosers.has(`${containerId}-${client.id}`)) {
           const closeStream = this.streamClosers.get(`${containerId}-${client.id}`);
-          closeStream();
+          closeStream?.();
           this.streamClosers.delete(`${containerId}-${client.id}`);
         }
       }
@@ -67,13 +67,13 @@ export class ContainerLogsGateway implements OnGatewayConnection, OnGatewayDisco
   @SubscribeMessage('subscribe')
   async handleSubscribe(
     @ConnectedSocket() client: Socket,
-    @MessageBody() data: { containerId: string, tail?: number },
+    @MessageBody() data: { containerId: string; tail?: number },
   ) {
     try {
       const { containerId, tail = 100 } = data;
-      
+
       logger.info(`Client ${client.id} subscribing to container ${containerId}`);
-      
+
       // Find the container
       const container = await this.containerService.getContainerByUuid(containerId);
       if (!container) {
@@ -85,7 +85,7 @@ export class ContainerLogsGateway implements OnGatewayConnection, OnGatewayDisco
       if (!this.subscribedContainers.has(containerId)) {
         this.subscribedContainers.set(containerId, new Set());
       }
-      this.subscribedContainers.get(containerId).add(client.id);
+      this.subscribedContainers?.get(containerId)?.add(client.id);
 
       // Fetch initial logs
       const initialLogs = await this.containerLogsService.getContainerLogs(containerId, { tail });
@@ -96,35 +96,35 @@ export class ContainerLogsGateway implements OnGatewayConnection, OnGatewayDisco
         const onData = (logs: string) => {
           client.emit('logs', { containerId, logs });
         };
-        
+
         const onError = (error: Error) => {
           logger.error(`Error in log stream for container ${containerId}: ${error.message}`);
           client.emit('error', { message: error.message });
         };
-        
+
         const closeStream = await this.containerLogsService.streamContainerLogs(
           containerId,
           onData,
           onError,
           { tail }
         );
-        
+
         // Store the stream closer function
         this.streamClosers.set(`${containerId}-${client.id}`, closeStream);
-        
+
         // Set up client disconnection handler
         client.once('disconnect', () => {
           if (this.streamClosers.has(`${containerId}-${client.id}`)) {
             const closer = this.streamClosers.get(`${containerId}-${client.id}`);
-            closer();
+            closer?.();
             this.streamClosers.delete(`${containerId}-${client.id}`);
           }
         });
-      } catch (error) {
+      } catch (error: any) {
         logger.error(`Failed to stream logs for container ${containerId}: ${error.message}`);
         client.emit('error', { message: `Failed to stream logs: ${error.message}` });
       }
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Error in handleSubscribe: ${error.message}`);
       client.emit('error', { message: error.message });
     }
@@ -138,23 +138,23 @@ export class ContainerLogsGateway implements OnGatewayConnection, OnGatewayDisco
   ) {
     const { containerId } = data;
     logger.info(`Client ${client.id} unsubscribing from container ${containerId}`);
-    
+
     // Close stream if active
     if (this.streamClosers.has(`${containerId}-${client.id}`)) {
       const closeStream = this.streamClosers.get(`${containerId}-${client.id}`);
-      closeStream();
+      closeStream?.();
       this.streamClosers.delete(`${containerId}-${client.id}`);
     }
-    
+
     // Remove from subscribers list
     if (this.subscribedContainers.has(containerId)) {
-      this.subscribedContainers.get(containerId).delete(client.id);
-      if (this.subscribedContainers.get(containerId).size === 0) {
-        this.subscribedContainers.delete(containerId);
+      this.subscribedContainers?.get(containerId)?.delete(client.id);
+      if (this.subscribedContainers?.get(containerId)?.size === 0) {
+        this.subscribedContainers?.delete(containerId);
       }
     }
   }
-  
+
   // Support for legacy event
   @SubscribeMessage(SsmEvents.Logs.GET_LOGS)
   async handleGetLogs(
@@ -189,12 +189,12 @@ export class ContainerLogsGateway implements OnGatewayConnection, OnGatewayDisco
 
       // Get container logs
       const closingCallback = await this.containerLogsService.streamContainerLogs(
-        container.uuid,
+        container.id,
         getContainerLogsCallback,
         errorHandler,
         { from }
       );
-      
+
       // Store the stream closer function with a unique key
       const streamKey = `legacy-${container.uuid}-${client.id}`;
       this.streamClosers.set(streamKey, closingCallback);
@@ -207,7 +207,7 @@ export class ContainerLogsGateway implements OnGatewayConnection, OnGatewayDisco
           this.streamClosers.delete(streamKey);
         }
       });
-      
+
       client.on(SsmEvents.Common.DISCONNECT, () => {
         if (this.streamClosers.has(streamKey)) {
           const closer = this.streamClosers.get(streamKey);

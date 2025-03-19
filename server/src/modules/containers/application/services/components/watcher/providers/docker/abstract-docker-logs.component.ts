@@ -1,89 +1,53 @@
 import * as stream from 'stream';
-import { Injectable } from '@nestjs/common';
-import * as Dockerode from 'dockerode';
+import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { ContainerServiceInterface } from '../../../../../../application/interfaces/container-service.interface';
-import { ContainerStatsServiceInterface } from '../../../../../../application/interfaces/container-stats-service.interface';
-import { IContainerLogsService } from '../../../../../../application/interfaces/container-logs-service.interface';
-import { ContainerImagesServiceInterface } from '../../../../../../application/interfaces/container-images-service.interface';
-import { ContainerVolumesServiceInterface } from '../../../../../../application/interfaces/container-volumes-service.interface';
-import { ContainerNetworksServiceInterface } from '../../../../../../application/interfaces/container-networks-service.interface';
+import { CONTAINER_SERVICE, ContainerServiceInterface } from '../../../../../../application/interfaces/container-service.interface';
+import { CONTAINER_STATS_SERVICE, ContainerStatsServiceInterface } from '../../../../../../application/interfaces/container-stats-service.interface';
+import { CONTAINER_LOGS_SERVICE, IContainerLogsService } from '../../../../../../application/interfaces/container-logs-service.interface';
+import { CONTAINER_IMAGES_SERVICE, ContainerImagesServiceInterface } from '../../../../../../application/interfaces/container-images-service.interface';
+import { CONTAINER_VOLUMES_SERVICE, ContainerVolumesServiceInterface } from '../../../../../../application/interfaces/container-volumes-service.interface';
+import { CONTAINER_NETWORKS_SERVICE, ContainerNetworksServiceInterface } from '../../../../../../application/interfaces/container-networks-service.interface';
 import { AbstractDockerImagesComponent } from './abstract-docker-images.component';
-import { IDockerLogsComponent } from '../../../../../../../../domain/components/docker-watcher.interface';
 
 /**
  * Abstract Docker logs component for container log handling
  * Following the playbooks module pattern, all dependencies are injected through constructor
  */
 @Injectable()
-export abstract class AbstractDockerLogsComponent extends AbstractDockerImagesComponent implements IDockerLogsComponent {
+export abstract class AbstractDockerLogsComponent extends AbstractDockerImagesComponent implements IContainerLogsService {
   constructor(
     protected readonly eventEmitter: EventEmitter2,
+    @Inject(CONTAINER_SERVICE)
     protected readonly containerService: ContainerServiceInterface,
+    @Inject(CONTAINER_STATS_SERVICE)
     protected readonly containerStatsService: ContainerStatsServiceInterface,
+    @Inject(CONTAINER_LOGS_SERVICE)
     protected readonly containerLogsService: IContainerLogsService,
+    @Inject(CONTAINER_IMAGES_SERVICE)
     protected readonly containerImagesService: ContainerImagesServiceInterface,
+    @Inject(CONTAINER_VOLUMES_SERVICE)
     protected readonly containerVolumesService: ContainerVolumesServiceInterface,
+    @Inject(CONTAINER_NETWORKS_SERVICE)
     protected readonly containerNetworksService: ContainerNetworksServiceInterface
   ) {
     super(
-      eventEmitter, 
-      containerService, 
-      containerStatsService, 
+      eventEmitter,
+      containerService,
+      containerStatsService,
       containerLogsService,
-      containerImagesService, 
+      containerImagesService,
       containerVolumesService,
       containerNetworksService
     );
   }
 
-  /**
-   * Get container logs
-   * Implements IDockerLogsComponent.getContainerLogs()
-   * @param container - Container object or container ID string
-   * @param options - Log options (timestamps, tail, etc.)
-   */
-  async getContainerLogs(container: any, options: any = {}): Promise<any> {
+  public getContainerLiveLogs(containerId: string, from: number, callback: (data: string) => void): any {
     try {
-      const containerId = typeof container === 'string' ? container : container.id;
-      this.childLogger.info(`Getting logs for container ${containerId}`);
-      const dockerContainer = this.dockerApi.getContainer(containerId);
-
-      const logOptions: Dockerode.ContainerLogsOptions = {
-        stdout: true,
-        stderr: true,
-        follow: false,
-        timestamps: options.timestamps || false,
-        tail: options.tail !== undefined ? options.tail.toString() : 'all'
-      };
-
-      const logs = await dockerContainer.logs(logOptions);
-      return logs.toString();
-    } catch (error: any) {
-      const containerId = typeof container === 'string' ? container : container.id;
-      this.childLogger.error(`Failed to get logs for container ${containerId}: ${error.message}`);
-      throw error;
-    }
-  }
-
-  /**
-   * Stream container logs in real-time
-   * Implements IDockerLogsComponent.streamContainerLogs()
-   * @param container - Container object or container ID string
-   * @param options - Stream options
-   */
-  async streamContainerLogs(container: any, options: any = {}): Promise<any> {
-    try {
-      const containerId = typeof container === 'string' ? container : container.id;
-      const from = options.from || 0;
-      const callback = options.callback || (() => {});
-      
+      this.childLogger.info(`Getting live logs for container ${containerId}`);
       const dockerContainer = this.dockerApi.getContainer(containerId);
       if (!dockerContainer) {
         throw new Error(`Container not found for ${containerId}`);
       }
-
-      this.childLogger.info(`Streaming logs for container ${containerId}`);
 
       // Create a PassThrough stream to handle the log data
       const logStream = new stream.PassThrough();
@@ -122,34 +86,10 @@ export abstract class AbstractDockerLogsComponent extends AbstractDockerImagesCo
         }
       );
 
-      // Return the stream controller
-      return {
-        stream: logStream,
-        stop: () => {
-          logStream.end();
-        }
-      };
-    } catch (error: any) {
-      this.childLogger.error(`Error setting up live logs: ${error.message}`);
-      throw error;
-    }
-  }
-  
-  /**
-   * Legacy method for backward compatibility
-   * @deprecated Use streamContainerLogs instead
-   */
-  public getContainerLiveLogs(containerId: string, from: number, callback: (data: string) => void): () => void {
-    try {
-      const stream = this.streamContainerLogs(containerId, { from, callback });
+      // Return the stop function
       return () => {
-        if (stream && typeof stream.then === 'function') {
-          stream.then(result => {
-            if (result && result.stop) {
-              result.stop();
-            }
-          });
-        }
+        this.childLogger.info(`Stopping log stream for container ${containerId}`);
+        logStream.end();
       };
     } catch (error: any) {
       this.childLogger.error(`Error setting up live logs: ${error.message}`);

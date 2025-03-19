@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { ContainerImageRepositoryInterface } from '../../domain/repositories/container-image-repository.interface';
 import { ContainerImageEntity } from '../../domain/entities/container-image.entity';
 import { ContainerImageMapper } from '../mappers/container-image.mapper';
+import { CONTAINER_IMAGE, ContainerImage } from '../schemas/container-image.schema';
 import PinoLogger from '../../../../logger';
 
 const logger = PinoLogger.child({ module: 'ContainerImageRepository' }, { msgPrefix: '[CONTAINER_IMAGE_REPO] - ' });
@@ -14,8 +15,8 @@ const logger = PinoLogger.child({ module: 'ContainerImageRepository' }, { msgPre
 @Injectable()
 export class ContainerImageRepository implements ContainerImageRepositoryInterface {
   constructor(
-    @InjectModel('ContainerImage')
-    private readonly imageModel: Model<any>,
+    @InjectModel(CONTAINER_IMAGE)
+    private readonly imageModel: Model<ContainerImage>,
   ) {}
 
   /**
@@ -23,9 +24,9 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
    */
   async findAll(): Promise<ContainerImageEntity[]> {
     try {
-      const images = await this.imageModel.find().lean().exec();
+      const images = await this.imageModel.find().populate('device').lean().exec();
       return images.map(image => ContainerImageMapper.toEntity(image));
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to find all images: ${error.message}`);
       throw error;
     }
@@ -36,9 +37,9 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
    */
   async findAllByDeviceUuid(deviceUuid: string): Promise<ContainerImageEntity[]> {
     try {
-      const images = await this.imageModel.find({ deviceUuid }).lean().exec();
+      const images = await this.imageModel.find({ deviceUuid }).populate('device').lean().exec();
       return images.map(image => ContainerImageMapper.toEntity(image));
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to find images for device ${deviceUuid}: ${error.message}`);
       throw error;
     }
@@ -47,12 +48,12 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
   /**
    * Find one image by UUID
    */
-  async findOneByUuid(uuid: string): Promise<ContainerImageEntity | null> {
+  async findOneById(id: string): Promise<ContainerImageEntity | null> {
     try {
-      const image = await this.imageModel.findOne({ uuid }).lean().exec();
+      const image = await this.imageModel.findOne({ id }).populate('device').lean().exec();
       return image ? ContainerImageMapper.toEntity(image) : null;
-    } catch (error) {
-      logger.error(`Failed to find image ${uuid}: ${error.message}`);
+    } catch (error: any) {
+      logger.error(`Failed to find image ${id}: ${error.message}`);
       throw error;
     }
   }
@@ -62,9 +63,9 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
    */
   async findOneByIdAndDeviceUuid(id: string, deviceUuid: string): Promise<ContainerImageEntity | null> {
     try {
-      const image = await this.imageModel.findOne({ id, deviceUuid }).lean().exec();
+      const image = await this.imageModel.findOne({ id, deviceUuid }).populate('device').lean().exec();
       return image ? ContainerImageMapper.toEntity(image) : null;
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to find image ${id} for device ${deviceUuid}: ${error.message}`);
       throw error;
     }
@@ -75,9 +76,9 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
    */
   async findByNameAndTag(name: string, tag: string, deviceUuid: string): Promise<ContainerImageEntity[]> {
     try {
-      const images = await this.imageModel.find({ name, tag, deviceUuid }).lean().exec();
+      const images = await this.imageModel.find({ name, tag, deviceUuid }).populate('device').lean().exec();
       return images.map(image => ContainerImageMapper.toEntity(image));
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to find images ${name}:${tag} for device ${deviceUuid}: ${error.message}`);
       throw error;
     }
@@ -91,8 +92,8 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
       const imageDocument = ContainerImageMapper.toDocument(image);
       const createdImage = await this.imageModel.create(imageDocument);
       return ContainerImageMapper.toEntity(createdImage.toObject());
-    } catch (error) {
-      logger.error(`Failed to create image: ${error.message}`);
+    } catch (error: any) {
+      logger.error(`Failed to create image: ${error.message} - ${JSON.stringify(image)}`);
       throw error;
     }
   }
@@ -100,20 +101,20 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
   /**
    * Update an image
    */
-  async update(uuid: string, imageData: Partial<ContainerImageEntity>): Promise<ContainerImageEntity> {
+  async update(id: string, imageData: Partial<ContainerImageEntity>): Promise<ContainerImageEntity> {
     try {
       const updatedImage = await this.imageModel
-        .findOneAndUpdate({ uuid }, imageData, { new: true })
+        .findOneAndUpdate({ id }, imageData, { new: true })
         .lean()
         .exec();
-      
+
       if (!updatedImage) {
-        throw new Error(`Image with UUID ${uuid} not found`);
+        throw new Error(`Image with id ${id} not found`);
       }
-      
+
       return ContainerImageMapper.toEntity(updatedImage);
-    } catch (error) {
-      logger.error(`Failed to update image ${uuid}: ${error.message}`);
+    } catch (error: any) {
+      logger.error(`Failed to update image ${id}: ${error.message}`);
       throw error;
     }
   }
@@ -121,12 +122,12 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
   /**
    * Delete an image by UUID
    */
-  async deleteByUuid(uuid: string): Promise<boolean> {
+  async deleteById(id: string): Promise<boolean> {
     try {
-      const result = await this.imageModel.deleteOne({ uuid }).exec();
+      const result = await this.imageModel.deleteOne({ id }).exec();
       return result.deletedCount === 1;
-    } catch (error) {
-      logger.error(`Failed to delete image ${uuid}: ${error.message}`);
+    } catch (error: any) {
+      logger.error(`Failed to delete image ${id}: ${error.message}`);
       throw error;
     }
   }

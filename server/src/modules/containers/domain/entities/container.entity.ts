@@ -1,33 +1,76 @@
-import { SSMServicesTypes } from '../../../../types/typings.d';
+import { Image } from "@modules/containers/types";
+import { IDevice } from "@modules/devices/domain/entities/device.entity";
 
 /**
  * Domain entity for a container
  */
 export interface ContainerEntity {
+ _id?: string;
+  deviceUuid?: string;
+  device?: IDevice;
   id: string;
-  uuid: string;
   name: string;
-  deviceUuid: string;
-  image: string;
-  shortId?: string;
-  state?: string;
-  status?: string;
-  createdAt?: Date;
-  labels?: Record<string, string>;
-  hostConfig?: any;
-  networkMode?: string;
-  networks?: Record<string, any>;
-  mounts?: any[];
+  customName?: string;
+  displayName?: string;
+  displayIcon?: string;
+  status: string;
+  watcher: string;
+  includeTags?: string;
+  excludeTags?: string;
+  transformTags?: string;
+  linkTemplate?: string;
   command?: string;
-  ports?: Record<string, any>;
-  containerConfig?: SSMServicesTypes.ContainerConfig;
-  restart?: string;
-  timestamp?: string;
-  watchers?: string[];
-  stats?: any;
-  kind?: string;
-  env?: string[];
-  oomKilled?: boolean;
-  isManaged?: boolean;
-  isWatched?: boolean;
+  ports?: { IP: string; PrivatePort: number; PublicPort: number; Type: string }[];
+  networkSettings?: {
+    Networks: {
+      [p: string]: {
+        IPAMConfig?: any;
+        Links?: any;
+        Aliases?: any;
+        NetworkID: string;
+        EndpointID: string;
+        Gateway: string;
+        IPAddress: string;
+        IPPrefixLen: number;
+        IPv6Gateway: string;
+        GlobalIPv6Address: string;
+        GlobalIPv6PrefixLen: number;
+        MacAddress: string;
+      };
+    };
+  };
+  mounts?: {
+    Name?: string | undefined;
+    Type: string;
+    Source: string;
+    Destination: string;
+    Driver?: string | undefined;
+    Mode: string;
+    RW: boolean;
+    Propagation: string;
+  }[];
+  link?: string;
+  image: Image;
+  result?: {
+    tag: string;
+    digest?: string;
+    created?: string;
+    link?: string;
+  };
+  error?: {
+    message?: string;
+  };
+  updateAvailable?: boolean;
+  updateKind?: {
+    kind: 'tag' | 'digest' | 'unknown';
+    localValue?: string;
+    remoteValue?: string;
+    semverDiff?: 'major' | 'minor' | 'patch' | 'prerelease' | 'unknown';
+  };
+  labels?: {
+    [p: string]: string;
+  };
+  resultChanged?: any;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

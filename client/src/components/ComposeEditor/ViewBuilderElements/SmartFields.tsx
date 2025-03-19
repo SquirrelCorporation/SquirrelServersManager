@@ -1,4 +1,5 @@
-import { getImages, getNetworks } from '@/services/rest/services';
+import { getImages } from '@/services/rest/containers/container-images';
+import { getNetworks } from '@/services/rest/containers/container-networks';
 import {
   ProForm,
   ProFormInstance,

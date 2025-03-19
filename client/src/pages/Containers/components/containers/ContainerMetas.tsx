@@ -10,8 +10,8 @@ import ContainerStatProgress from '@/pages/Containers/components/containers/Cont
 import InfoToolTipCard from '@/pages/Containers/components/containers/InfoToolTipCard';
 import StatusTag from '@/pages/Containers/components/containers/StatusTag';
 import UpdateAvailableTag from '@/pages/Containers/components/containers/UpdateAvailableTag';
-import { postDockerContainerAction } from '@/services/rest/containers';
-import { getAllDevices } from '@/services/rest/device';
+import { postDockerContainerAction } from '@/services/rest/containers/containers';
+import { getAllDevices } from '@/services/rest/devices/devices';
 import { capitalizeFirstLetter } from '@/utils/strings';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import {

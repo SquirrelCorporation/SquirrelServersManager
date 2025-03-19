@@ -1,7 +1,7 @@
 import ContainerBackUpVolumeModal from '@/pages/Containers/components/sub-components/ContainerBackUpVolumeModal';
 import CreateVolumeModal from '@/pages/Containers/components/sub-components/CreateVolumeModal';
-import { getAllDevices } from '@/services/rest/device';
-import { getVolumes } from '@/services/rest/services';
+import { getAllDevices } from '@/services/rest/devices/devices';
+import { getVolumes } from '@/services/rest/containers/container-volumes';
 import {
   ProColumns,
   ProFormSelect,

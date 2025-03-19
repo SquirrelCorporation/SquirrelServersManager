@@ -1,16 +1,15 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 import { ContainerNetworksServiceInterface } from '../interfaces/container-networks-service.interface';
 import { ContainerNetworkEntity } from '../../domain/entities/container-network.entity';
 import { CONTAINER_NETWORK_REPOSITORY } from '../../domain/repositories/container-network-repository.interface';
 import { ContainerNetworkRepositoryInterface } from '../../domain/repositories/container-network-repository.interface';
-import { WATCHER_ENGINE_SERVICE } from '../interfaces/watcher-engine-service.interface';
-import { WatcherEngineServiceInterface } from '../interfaces/watcher-engine-service.interface';
+import { IWatcherEngineService, WATCHER_ENGINE_SERVICE } from '../interfaces/watcher-engine-service.interface';
 import { CONTAINER_SERVICE } from '../interfaces/container-service.interface';
 import { ContainerServiceInterface } from '../interfaces/container-service.interface';
 import { DevicesService } from '../../../devices/application/services/devices.service';
 import PinoLogger from '../../../../logger';
-import { v4 as uuidv4 } from 'uuid';
-import { WATCHERS, Kind } from '../../constants';
+import { WATCHERS } from '../../constants';
 
 const logger = PinoLogger.child({ module: 'ContainerNetworksService' }, { msgPrefix: '[CONTAINER_NETWORKS] - ' });
 
@@ -20,7 +19,7 @@ export class ContainerNetworksService implements ContainerNetworksServiceInterfa
     @Inject(CONTAINER_NETWORK_REPOSITORY)
     private readonly networkRepository: ContainerNetworkRepositoryInterface,
     @Inject(WATCHER_ENGINE_SERVICE)
-    private readonly watcherEngineService: WatcherEngineServiceInterface,
+    private readonly watcherEngineService: IWatcherEngineService,
     @Inject(CONTAINER_SERVICE)
     private readonly containerService: ContainerServiceInterface,
     private readonly devicesService: DevicesService,
@@ -44,7 +43,7 @@ export class ContainerNetworksService implements ContainerNetworksServiceInterfa
    * Get a network by its UUID
    */
   async getNetworkByUuid(uuid: string): Promise<ContainerNetworkEntity | null> {
-    return this.networkRepository.findOneByUuid(uuid);
+    return this.networkRepository.findOneById(uuid);
   }
 
   /**
@@ -53,47 +52,16 @@ export class ContainerNetworksService implements ContainerNetworksServiceInterfa
   async createNetwork(deviceUuid: string, networkData: Partial<ContainerNetworkEntity>): Promise<ContainerNetworkEntity> {
     try {
       logger.info(`Creating network ${networkData.name} on device ${deviceUuid}`);
-      
-      // Verify device exists
-      const device = await this.devicesService.findByUuid(deviceUuid);
-      if (!device) {
-        throw new NotFoundException(`Device with UUID ${deviceUuid} not found`);
-      }
 
-      // Check if a network with the same name already exists
-      const existingNetwork = await this.networkRepository.findOneByNameAndDeviceUuid(
-        networkData.name as string,
-        deviceUuid
-      );
-      
-      if (existingNetwork) {
-        throw new Error(`Network with name ${networkData.name} already exists on device ${deviceUuid}`);
-      }
-
-      // Find the Docker watcher component for this device
-      const watcherName = `${WATCHERS.DOCKER}-${deviceUuid}`;
-      const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
-      
-      if (!dockerComponent) {
-        throw new Error(`Docker watcher for device ${deviceUuid} not found`);
-      }
-
-      // Create network in Docker
-      // For simplicity, we're directly using dockerComponent.createNetwork which doesn't exist
-      // In a real implementation, you'd extend DockerWatcherComponent with network methods
-      // and properly use them here
-      const createdNetwork = await this.createDockerNetwork(dockerComponent, networkData);
-      
       // Create a network entity with UUID
       const networkEntity: ContainerNetworkEntity = {
-        ...createdNetwork,
-        uuid: uuidv4(),
+        ...networkData,
         deviceUuid,
       };
 
       // Save to database
       return this.networkRepository.create(networkEntity);
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to create network: ${error.message}`);
       throw error;
     }
@@ -105,7 +73,7 @@ export class ContainerNetworksService implements ContainerNetworksServiceInterfa
   async updateNetwork(uuid: string, networkData: Partial<ContainerNetworkEntity>): Promise<ContainerNetworkEntity> {
     try {
       // Find the existing network
-      const existingNetwork = await this.networkRepository.findOneByUuid(uuid);
+      const existingNetwork = await this.networkRepository.findOneById(uuid);
       if (!existingNetwork) {
         throw new NotFoundException(`Network with UUID ${uuid} not found`);
       }
@@ -113,7 +81,7 @@ export class ContainerNetworksService implements ContainerNetworksServiceInterfa
       // Networks generally can't be updated in Docker once created
       // We can update our metadata about them though
       return this.networkRepository.update(uuid, networkData);
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to update network ${uuid}: ${error.message}`);
       throw error;
     }
@@ -122,34 +90,19 @@ export class ContainerNetworksService implements ContainerNetworksServiceInterfa
   /**
    * Delete a network
    */
-  async deleteNetwork(uuid: string): Promise<boolean> {
+  async deleteNetwork(id: string): Promise<boolean> {
     try {
-      logger.info(`Deleting network ${uuid}`);
-      
+      logger.info(`Deleting network ${id}`);
+
       // Find the existing network
-      const existingNetwork = await this.networkRepository.findOneByUuid(uuid);
+      const existingNetwork = await this.networkRepository.findOneById(id);
       if (!existingNetwork) {
-        throw new NotFoundException(`Network with UUID ${uuid} not found`);
+        throw new NotFoundException(`Network with id ${id} not found`);
       }
-
-      // Find the Docker watcher component for this device
-      const deviceUuid = existingNetwork.deviceUuid;
-      const watcherName = `${WATCHERS.DOCKER}-${deviceUuid}`;
-      const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
-      
-      if (!dockerComponent) {
-        throw new Error(`Docker watcher for device ${deviceUuid} not found`);
-      }
-
-      // Delete network in Docker
-      // For simplicity, we're directly using dockerComponent.removeNetwork which doesn't exist
-      // In a real implementation, you'd extend DockerWatcherComponent with network methods
-      await this.removeDockerNetwork(dockerComponent, existingNetwork.id);
-
       // Delete from database
-      return this.networkRepository.deleteByUuid(uuid);
-    } catch (error) {
-      logger.error(`Failed to delete network ${uuid}: ${error.message}`);
+      return this.networkRepository.deleteById(id);
+    } catch (error: any) {
+      logger.error(`Failed to delete network ${id}: ${error.message}`);
       throw error;
     }
   }
@@ -160,7 +113,7 @@ export class ContainerNetworksService implements ContainerNetworksServiceInterfa
   async connectContainerToNetwork(networkUuid: string, containerUuid: string): Promise<boolean> {
     try {
       logger.info(`Connecting container ${containerUuid} to network ${networkUuid}`);
-      
+
       // Find the network
       const network = await this.networkRepository.findOneByUuid(networkUuid);
       if (!network) {
@@ -182,7 +135,7 @@ export class ContainerNetworksService implements ContainerNetworksServiceInterfa
       const deviceUuid = network.deviceUuid;
       const watcherName = `${WATCHERS.DOCKER}-${deviceUuid}`;
       const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
-      
+
       if (!dockerComponent) {
         throw new Error(`Docker watcher for device ${deviceUuid} not found`);
       }
@@ -195,7 +148,7 @@ export class ContainerNetworksService implements ContainerNetworksServiceInterfa
       if (!network.containers) {
         network.containers = {};
       }
-      
+
       // Add container to network's container list
       network.containers[container.id] = {
         name: container.name,
@@ -204,13 +157,13 @@ export class ContainerNetworksService implements ContainerNetworksServiceInterfa
         ipv4Address: '', // Would be provided by Docker
         ipv6Address: '', // Would be provided by Docker
       };
-      
+
       await this.networkRepository.update(networkUuid, {
         containers: network.containers,
       });
 
       return true;
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to connect container to network: ${error.message}`);
       throw error;
     }
@@ -222,7 +175,7 @@ export class ContainerNetworksService implements ContainerNetworksServiceInterfa
   async disconnectContainerFromNetwork(networkUuid: string, containerUuid: string): Promise<boolean> {
     try {
       logger.info(`Disconnecting container ${containerUuid} from network ${networkUuid}`);
-      
+
       // Find the network
       const network = await this.networkRepository.findOneByUuid(networkUuid);
       if (!network) {
@@ -239,7 +192,7 @@ export class ContainerNetworksService implements ContainerNetworksServiceInterfa
       const deviceUuid = network.deviceUuid;
       const watcherName = `${WATCHERS.DOCKER}-${deviceUuid}`;
       const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
-      
+
       if (!dockerComponent) {
         throw new Error(`Docker watcher for device ${deviceUuid} not found`);
       }
@@ -257,7 +210,7 @@ export class ContainerNetworksService implements ContainerNetworksServiceInterfa
       }
 
       return true;
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to disconnect container from network: ${error.message}`);
       throw error;
     }
@@ -269,7 +222,7 @@ export class ContainerNetworksService implements ContainerNetworksServiceInterfa
   private async createDockerNetwork(dockerComponent: any, networkData: Partial<ContainerNetworkEntity>): Promise<any> {
     try {
       return dockerComponent.createNetwork(networkData);
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to create Docker network: ${error.message}`);
       throw error;
     }
@@ -281,7 +234,7 @@ export class ContainerNetworksService implements ContainerNetworksServiceInterfa
   private async removeDockerNetwork(dockerComponent: any, networkId: string): Promise<void> {
     try {
       await dockerComponent.removeNetwork(networkId);
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to remove Docker network: ${error.message}`);
       throw error;
     }
@@ -293,7 +246,7 @@ export class ContainerNetworksService implements ContainerNetworksServiceInterfa
   private async connectDockerContainerToNetwork(dockerComponent: any, networkId: string, containerId: string): Promise<void> {
     try {
       await dockerComponent.connectContainerToNetwork(networkId, containerId);
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to connect container to network: ${error.message}`);
       throw error;
     }
@@ -305,7 +258,7 @@ export class ContainerNetworksService implements ContainerNetworksServiceInterfa
   private async disconnectDockerContainerFromNetwork(dockerComponent: any, networkId: string, containerId: string): Promise<void> {
     try {
       await dockerComponent.disconnectContainerFromNetwork(networkId, containerId);
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to disconnect container from network: ${error.message}`);
       throw error;
     }

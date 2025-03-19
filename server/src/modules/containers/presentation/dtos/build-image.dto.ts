@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsOptional, IsObject } from 'class-validator';
+import { IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
 
 /**
  * DTO for building an image
@@ -6,19 +6,19 @@ import { IsNotEmpty, IsString, IsOptional, IsObject } from 'class-validator';
 export class BuildImageDto {
   @IsString()
   @IsNotEmpty()
-  dockerfile: string;
+  dockerfile!: string;
 
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @IsString()
   @IsNotEmpty()
-  tag: string;
+  tag!: string;
 
   @IsString()
   @IsNotEmpty()
-  buildContext: string;
+  buildContext!: string;
 
   @IsObject()
   @IsOptional()

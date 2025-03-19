@@ -5,7 +5,7 @@ import Telemetry from './modules/telemetry';
 
 const start = async () => {
   logger.info(`
-      ,;;:;,
+    ,;;:;,
    ;;;;;
   ,:;;:;    ,'=.
   ;:;:;' .=" ,'_\\

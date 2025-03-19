@@ -45,22 +45,13 @@ export interface IDockerVolumesComponent extends IDockerNetworksComponent {
   /**
    * Watch Docker volumes
    */
-  watchVolumesFromCron(): Promise<any[]>;
+  watchVolumesFromCron(): Promise<void>;
 
   /**
-   * Get volume by name
+   * Backup a Docker volume
    */
-  getVolume(volumeName: string): Promise<any>;
+  backupVolume(volumeName: string, backupPath: string, fileName: string, emitEvent: boolean): Promise<string>;
 
-  /**
-   * Create a Docker volume
-   */
-  createVolume(volumeConfig: any): Promise<any>;
-
-  /**
-   * Remove a Docker volume
-   */
-  removeVolume(volume: any): Promise<void>;
 }
 
 /**
@@ -112,30 +103,30 @@ export interface IDockerWatcherComponentFactory {
   /**
    * Create a Docker listener component
    */
-  createDockerListenerComponent(): IDockerListenerComponent;
+  createDockerListenerComponent();
 
   /**
    * Create a Docker networks component
    */
-  createDockerNetworksComponent(): IDockerNetworksComponent;
+  createDockerNetworksComponent();
 
   /**
    * Create a Docker volumes component
    */
-  createDockerVolumesComponent(): IDockerVolumesComponent;
+  createDockerVolumesComponent();
 
   /**
    * Create a Docker images component
    */
-  createDockerImagesComponent(): IDockerImagesComponent;
+  createDockerImagesComponent();
 
   /**
    * Create a Docker logs component
    */
-  createDockerLogsComponent(): IDockerLogsComponent;
-  
+  createDockerLogsComponent();
+
   /**
    * Create a complete Docker watcher component
    */
-  createDockerWatcherComponent(): IDockerLogsComponent;
+  createDockerWatcherComponent();
 }

@@ -1,15 +1,15 @@
 import * as fs from 'fs';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { v4 as uuidv4 } from 'uuid';
-import { ContainerServiceInterface } from '../../../../../../application/interfaces/container-service.interface';
-import { ContainerStatsServiceInterface } from '../../../../../../application/interfaces/container-stats-service.interface';
-import { IContainerLogsService } from '../../../../../../application/interfaces/container-logs-service.interface';
-import { ContainerImagesServiceInterface } from '../../../../../../application/interfaces/container-images-service.interface';
-import { ContainerVolumesServiceInterface } from '../../../../../../application/interfaces/container-volumes-service.interface';
-import { ContainerNetworksServiceInterface } from '../../../../../../application/interfaces/container-networks-service.interface';
+import { IDockerVolumesComponent } from '@modules/containers/domain/components/docker-watcher.interface';
+import { CONTAINER_SERVICE, ContainerServiceInterface } from '../../../../../../application/interfaces/container-service.interface';
+import { CONTAINER_STATS_SERVICE, ContainerStatsServiceInterface } from '../../../../../../application/interfaces/container-stats-service.interface';
+import { CONTAINER_LOGS_SERVICE, IContainerLogsService } from '../../../../../../application/interfaces/container-logs-service.interface';
+import { CONTAINER_IMAGES_SERVICE, ContainerImagesServiceInterface } from '../../../../../../application/interfaces/container-images-service.interface';
+import { CONTAINER_VOLUMES_SERVICE, ContainerVolumesServiceInterface } from '../../../../../../application/interfaces/container-volumes-service.interface';
+import { CONTAINER_NETWORKS_SERVICE, ContainerNetworksServiceInterface } from '../../../../../../application/interfaces/container-networks-service.interface';
 import { AbstractDockerNetworksComponent } from './abstract-docker-networks.component';
-import { IDockerVolumesComponent } from '../../../../../../../../domain/components/docker-watcher.interface';
 
 /**
  * Abstract Docker volumes component for volume management
@@ -19,19 +19,25 @@ import { IDockerVolumesComponent } from '../../../../../../../../domain/componen
 export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetworksComponent implements IDockerVolumesComponent {
   constructor(
     protected readonly eventEmitter: EventEmitter2,
+    @Inject(CONTAINER_SERVICE)
     protected readonly containerService: ContainerServiceInterface,
+    @Inject(CONTAINER_STATS_SERVICE)
     protected readonly containerStatsService: ContainerStatsServiceInterface,
+    @Inject(CONTAINER_LOGS_SERVICE)
     protected readonly containerLogsService: IContainerLogsService,
+    @Inject(CONTAINER_IMAGES_SERVICE)
     protected readonly containerImagesService: ContainerImagesServiceInterface,
+    @Inject(CONTAINER_VOLUMES_SERVICE)
     protected readonly containerVolumesService: ContainerVolumesServiceInterface,
+    @Inject(CONTAINER_NETWORKS_SERVICE)
     protected readonly containerNetworksService: ContainerNetworksServiceInterface
   ) {
     super(
-      eventEmitter, 
-      containerService, 
-      containerStatsService, 
+      eventEmitter,
+      containerService,
+      containerStatsService,
       containerLogsService,
-      containerImagesService, 
+      containerImagesService,
       containerVolumesService,
       containerNetworksService
     );
@@ -66,7 +72,7 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
         labels: volume.Labels,
         usageData: volume.UsageData
       }));
-
+      this.childLogger.info("========================== =========================== > " + this.name);
       // Get existing volumes from our database
       const existingVolumes = await this.containerVolumesService.getVolumesByDeviceUuid(this.configuration.deviceUuid);
 
@@ -112,7 +118,7 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
     // Delete volumes
     for (const volume of deletedVolumes) {
       this.childLogger.info(`Removing deleted volume ${volume.name}`);
-      await this.containerVolumesService.removeVolume(volume.uuid);
+      await this.containerVolumesService.deleteVolume(volume.uuid);
     }
   }
 

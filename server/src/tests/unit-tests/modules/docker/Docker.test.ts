@@ -82,7 +82,7 @@ describe('testing Docker', () => {
   vi.mock('../../../../modules/containers/core/WatcherEngine', async (importOriginal) => {
     return {
       ...(await importOriginal<
-        typeof import('../../../../modules/containers/core/WatcherEngine')
+        typeof import('../../../../modules/containers/application/services/components/core/WatcherEngine')
       >()),
       // this will only affect "getRegistries" outside of the original module
       getRegistries: () => getRegistries(),

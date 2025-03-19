@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { CustomRegistryComponent } from '@modules/containers/application/services/components/registry/custom-registry.component';
 import Joi from 'joi';
-import { SSMServicesTypes } from '../../../../../../types/typings';
+import { Image, RequestOptionsType } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
 import { AbstractRegistryComponent } from './abstract-registry.component';
 
@@ -64,7 +64,7 @@ export class DockerHubRegistryComponent extends CustomRegistryComponent {
    * @param image the image
    * @returns {boolean}
    */
-  match(image: SSMServicesTypes.Image): boolean {
+  match(image: Image): boolean {
     return !image.registry.url || /^.*\.?docker.io$/.test(image.registry.url);
   }
 
@@ -73,7 +73,7 @@ export class DockerHubRegistryComponent extends CustomRegistryComponent {
    * @param image
    * @returns {*}
    */
-  normalizeImage(image: SSMServicesTypes.Image): SSMServicesTypes.Image {
+  normalizeImage(image: Image): Image {
     const imageNormalized = super.normalizeImage(image);
     imageNormalized.registry.name = 'hub';
     if (imageNormalized.name) {
@@ -91,10 +91,10 @@ export class DockerHubRegistryComponent extends CustomRegistryComponent {
    * @returns {Promise<*>}
    */
   async authenticate(
-    image: SSMServicesTypes.Image,
-    requestOptions: SSMServicesTypes.RequestOptionsType,
-  ): Promise<SSMServicesTypes.RequestOptionsType> {
-    const request: SSMServicesTypes.RequestOptionsType = {
+    image: Image,
+    requestOptions: RequestOptionsType,
+  ): Promise<RequestOptionsType> {
+    const request: RequestOptionsType = {
       method: 'GET',
       url: `https://auth.docker.io/token?service=registry.docker.io&scope=repository:${image.name}:pull&grant_type=password`,
       headers: {
@@ -129,7 +129,7 @@ export class DockerHubRegistryComponent extends CustomRegistryComponent {
   /**
    * Format the full image name
    */
-  getImageFullName(image: SSMServicesTypes.Image, tagOrDigest: string): string {
+  getImageFullName(image: Image, tagOrDigest: string): string {
     let fullName = super.getImageFullName(image, tagOrDigest);
     fullName = fullName.replace(/registry-1.docker.io\//, '');
     fullName = fullName.replace(/library\//, '');

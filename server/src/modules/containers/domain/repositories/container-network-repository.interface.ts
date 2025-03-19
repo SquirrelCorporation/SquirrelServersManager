@@ -19,7 +19,7 @@ export interface ContainerNetworkRepositoryInterface {
   /**
    * Find one network by its UUID
    */
-  findOneByUuid(uuid: string): Promise<ContainerNetworkEntity | null>;
+  findOneById(id: string): Promise<ContainerNetworkEntity | null>;
 
   /**
    * Find one network by its name and device UUID
@@ -39,12 +39,12 @@ export interface ContainerNetworkRepositoryInterface {
   /**
    * Update a network
    */
-  update(uuid: string, network: Partial<ContainerNetworkEntity>): Promise<ContainerNetworkEntity>;
+  update(id: string, network: Partial<ContainerNetworkEntity>): Promise<ContainerNetworkEntity>;
 
   /**
    * Delete a network by UUID
    */
-  deleteByUuid(uuid: string): Promise<boolean>;
+  deleteById(id: string): Promise<boolean>;
 
   /**
    * Delete all networks by device UUID

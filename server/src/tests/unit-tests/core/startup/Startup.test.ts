@@ -8,7 +8,7 @@ import { ContainerVolumeModel } from '../../../../data/database/model/ContainerV
 import { DeviceModel } from '../../../../data/database/model/Device';
 import { PlaybookModel } from '../../../../data/database/model/Playbook';
 import { PlaybooksRepositoryModel } from '../../../../data/database/model/PlaybooksRepository';
-import WatcherEngine from '../../../../modules/containers/core/WatcherEngine';
+import WatcherEngine from '../../../../modules/containers/application/services/components/core/WatcherEngine';
 import Crons from '../../../../modules/crons';
 import NotificationComponent from '../../../../modules/notifications/NotificationComponent';
 import RemoteSystemInformationEngine from '../../../../modules/remote-system-information/core/RemoteSystemInformationEngine';

@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ScheduleModule } from '@nestjs/schedule';
 import { LscrRegistryComponent } from '@modules/containers/application/services/components/registry/lscr-registry.component';
 import { ShellModule } from '../shell/shell.module';
 import { PlaybooksModule } from '../playbooks/playbooks.module';
@@ -23,11 +24,7 @@ import { ContainerLogsService } from './application/services/container-logs.serv
 import { ContainerStatsService } from './application/services/container-stats.service';
 import { ContainerRegistriesService } from './application/services/container-registries.service';
 import { ContainerTemplatesService } from './application/services/container-templates.service';
-import { WatcherEngineService } from './application/services/engine/watcher-engine.service';
 import { RegistryComponentFactory } from './application/services/components/registry/registry-component-factory.service';
-import { WatcherComponentFactory } from './application/services/components/watcher/watcher-component-factory.service';
-import { DockerWatcherComponentFactory } from './application/services/components/watcher/providers/docker/docker-watcher-factory.service';
-import { DockerWatcherComponent } from './application/services/components/watcher/providers/docker/docker-watcher.component';
 import { DockerHubRegistryComponent } from './application/services/components/registry/docker-hub-registry.component';
 import { CustomRegistryComponent } from './application/services/components/registry/custom-registry.component';
 import { GcrRegistryComponent } from './application/services/components/registry/gcr-registry.component';
@@ -51,7 +48,8 @@ import { CONTAINER_LOGS_SERVICE } from './application/interfaces/container-logs-
 import { CONTAINER_STATS_SERVICE } from './application/interfaces/container-stats-service.interface';
 import { CONTAINER_REGISTRIES_SERVICE } from './application/interfaces/container-registries-service.interface';
 import { CONTAINER_TEMPLATES_SERVICE } from './application/interfaces/container-templates-service.interface';
-import { WATCHER_ENGINE_SERVICE } from './application/interfaces/watcher-engine-service.interface';
+import { ContainerMapper } from './infrastructure/mappers/container.mapper';
+import { ContainerNetworkMapper } from './infrastructure/mappers/container-network.mapper';
 import { ContainersController } from './presentation/controllers/containers.controller';
 import { ContainerVolumesController } from './presentation/controllers/container-volumes.controller';
 import { ContainerNetworksController } from './presentation/controllers/container-networks.controller';
@@ -60,8 +58,10 @@ import { ContainerStatsController } from './presentation/controllers/container-s
 import { ContainerRegistriesController } from './presentation/controllers/container-registries.controller';
 import { ContainerTemplatesController } from './presentation/controllers/container-templates.controller';
 import { ContainerLogsGateway } from './presentation/gateways/container-logs.gateway';
-import { IWatcherComponentFactory } from './domain/components/watcher.interface';
-import { IDockerWatcherComponentFactory } from './domain/components/docker-watcher.interface';
+import { WatcherEngineService } from './application/services/engine/watcher-engine.service';
+import { WATCHER_ENGINE_SERVICE } from './application/interfaces/watcher-engine-service.interface';
+import { WatcherComponentFactory } from './application/services/components/watcher/watcher-component-factory.service';
+import { DockerWatcherComponent } from './application/services/components/watcher/providers/docker/docker-watcher.component';
 
 /**
  * ContainersModule provides services for managing Docker containers, volumes, networks, images, and registries
@@ -76,6 +76,7 @@ import { IDockerWatcherComponentFactory } from './domain/components/docker-watch
       { name: CONTAINER_IMAGE, schema: ContainerImageSchema },
       { name: CONTAINER_REGISTRY_SCHEMA, schema: ContainerRegistrySchema },
     ]),
+    ScheduleModule.forRoot(),
     ShellModule,
     PlaybooksModule,
     StatisticsModule,
@@ -91,6 +92,10 @@ import { IDockerWatcherComponentFactory } from './domain/components/docker-watch
     ContainerTemplatesController,
   ],
   providers: [
+    // Mappers
+    ContainerMapper,
+    ContainerNetworkMapper,
+
     // Repositories
     {
       provide: CONTAINER_REPOSITORY,
@@ -115,6 +120,10 @@ import { IDockerWatcherComponentFactory } from './domain/components/docker-watch
 
     // Services
     {
+      provide: WATCHER_ENGINE_SERVICE,
+      useClass: WatcherEngineService,
+    },
+    {
       provide: CONTAINER_SERVICE,
       useClass: ContainerService,
     },
@@ -146,178 +155,9 @@ import { IDockerWatcherComponentFactory } from './domain/components/docker-watch
       provide: CONTAINER_TEMPLATES_SERVICE,
       useClass: ContainerTemplatesService,
     },
-    
-    // Components and Factories
-    {
-      provide: IRegistryComponentFactory,
-      useFactory: (
-        // Registry components
-        dockerHubRegistry: DockerHubRegistryComponent,
-        customRegistry: CustomRegistryComponent,
-        gcrRegistry: GcrRegistryComponent,
-        ghcrRegistry: GhcrRegistryComponent,
-        acrRegistry: AcrRegistryComponent,
-        ecrRegistry: EcrRegistryComponent,
-        quayRegistry: QuayRegistryComponent,
-        gitlabRegistry: GitLabRegistryComponent,
-        giteaRegistry: GiteaRegistryComponent,
-        forgejoRegistry: ForgejoRegistryComponent,
-        lscrRegistry: LscrRegistryComponent
-      ) => {
-        return new RegistryComponentFactory(
-          dockerHubRegistry,
-          customRegistry,
-          gcrRegistry,
-          ghcrRegistry,
-          acrRegistry,
-          ecrRegistry,
-          quayRegistry,
-          gitlabRegistry,
-          giteaRegistry,
-          forgejoRegistry,
-          lscrRegistry
-        );
-      },
-      inject: [
-        // Registry components
-        DockerHubRegistryComponent,
-        CustomRegistryComponent,
-        GcrRegistryComponent,
-        GhcrRegistryComponent,
-        AcrRegistryComponent,
-        EcrRegistryComponent,
-        QuayRegistryComponent,
-        GitLabRegistryComponent,
-        GiteaRegistryComponent,
-        ForgejoRegistryComponent,
-        LscrRegistryComponent
-      ]
-    },
-    
+
     RegistryComponentFactory,
-    
-    // Factory for component creation following the playbooks module pattern
-    {
-      provide: IWatcherComponentFactory,
-      useFactory: (
-        eventEmitter: EventEmitter2,
-        containerService: ContainerServiceInterface,
-        containerStatsService: ContainerStatsServiceInterface,
-        containerLogsService: IContainerLogsService,
-        containerImagesService: ContainerImagesServiceInterface,
-        containerVolumesService: ContainerVolumesServiceInterface,
-        containerNetworksService: ContainerNetworksServiceInterface
-      ) => {
-        return new WatcherComponentFactory(
-          eventEmitter,
-          containerService,
-          containerStatsService,
-          containerLogsService,
-          containerImagesService,
-          containerVolumesService,
-          containerNetworksService
-        );
-      },
-      inject: [
-        EventEmitter2,
-        CONTAINER_SERVICE,
-        CONTAINER_STATS_SERVICE,
-        CONTAINER_LOGS_SERVICE,
-        CONTAINER_IMAGES_SERVICE,
-        CONTAINER_VOLUMES_SERVICE,
-        CONTAINER_NETWORKS_SERVICE
-      ]
-    },
-    
-    {
-      provide: IDockerWatcherComponentFactory,
-      useFactory: (
-        eventEmitter: EventEmitter2,
-        containerService: ContainerServiceInterface,
-        containerStatsService: ContainerStatsServiceInterface,
-        containerLogsService: IContainerLogsService,
-        containerImagesService: ContainerImagesServiceInterface,
-        containerVolumesService: ContainerVolumesServiceInterface,
-        containerNetworksService: ContainerNetworksServiceInterface
-      ) => {
-        return new DockerWatcherComponentFactory(
-          eventEmitter,
-          containerService,
-          containerStatsService,
-          containerLogsService,
-          containerImagesService,
-          containerVolumesService,
-          containerNetworksService
-        );
-      },
-      inject: [
-        EventEmitter2,
-        CONTAINER_SERVICE,
-        CONTAINER_STATS_SERVICE,
-        CONTAINER_LOGS_SERVICE,
-        CONTAINER_IMAGES_SERVICE,
-        CONTAINER_VOLUMES_SERVICE,
-        CONTAINER_NETWORKS_SERVICE
-      ]
-    },
-    
-    // Docker component
-    {
-      provide: DockerWatcherComponent,
-      useFactory: (
-        eventEmitter: EventEmitter2,
-        containerService: ContainerServiceInterface,
-        containerStatsService: ContainerStatsServiceInterface,
-        containerLogsService: IContainerLogsService,
-        containerImagesService: ContainerImagesServiceInterface,
-        containerVolumesService: ContainerVolumesServiceInterface,
-        containerNetworksService: ContainerNetworksServiceInterface
-      ) => {
-        return new DockerWatcherComponent(
-          eventEmitter,
-          containerService,
-          containerStatsService,
-          containerLogsService,
-          containerImagesService,
-          containerVolumesService,
-          containerNetworksService
-        );
-      },
-      inject: [
-        EventEmitter2,
-        CONTAINER_SERVICE,
-        CONTAINER_STATS_SERVICE,
-        CONTAINER_LOGS_SERVICE,
-        CONTAINER_IMAGES_SERVICE,
-        CONTAINER_VOLUMES_SERVICE,
-        CONTAINER_NETWORKS_SERVICE
-      ]
-    },
-    
-    // WatcherEngineService
-    {
-      provide: WATCHER_ENGINE_SERVICE,
-      useFactory: (
-        devicesService: DevicesService,
-        registryFactory: IRegistryComponentFactory,
-        watcherFactory: IWatcherComponentFactory,
-        containerRegistriesService: ContainerRegistriesServiceInterface
-      ) => {
-        return new WatcherEngineService(
-          devicesService,
-          registryFactory,
-          watcherFactory as WatcherComponentFactory,
-          containerRegistriesService
-        );
-      },
-      inject: [
-        DevicesService,
-        IRegistryComponentFactory,
-        IWatcherComponentFactory,
-        CONTAINER_REGISTRIES_SERVICE
-      ]
-    },
-    
+    WatcherComponentFactory,
     // Registry components
     DockerHubRegistryComponent,
     CustomRegistryComponent,
@@ -331,120 +171,18 @@ import { IDockerWatcherComponentFactory } from './domain/components/docker-watch
     ForgejoRegistryComponent,
     LscrRegistryComponent,
 
+    // Watcher components
+    DockerWatcherComponent,
+
     // Gateways
     ContainerLogsGateway,
   ],
   exports: [
-    // Factories
-    {
-      provide: IRegistryComponentFactory,
-      useFactory: (
-        // Registry components
-        dockerHubRegistry: DockerHubRegistryComponent,
-        customRegistry: CustomRegistryComponent,
-        gcrRegistry: GcrRegistryComponent,
-        ghcrRegistry: GhcrRegistryComponent,
-        acrRegistry: AcrRegistryComponent,
-        ecrRegistry: EcrRegistryComponent,
-        quayRegistry: QuayRegistryComponent,
-        gitlabRegistry: GitLabRegistryComponent,
-        giteaRegistry: GiteaRegistryComponent,
-        forgejoRegistry: ForgejoRegistryComponent,
-        lscrRegistry: LscrRegistryComponent
-      ) => {
-        return new RegistryComponentFactory(
-          dockerHubRegistry,
-          customRegistry,
-          gcrRegistry,
-          ghcrRegistry,
-          acrRegistry,
-          ecrRegistry,
-          quayRegistry,
-          gitlabRegistry,
-          giteaRegistry,
-          forgejoRegistry,
-          lscrRegistry
-        );
-      },
-      inject: [
-        // Registry components
-        DockerHubRegistryComponent,
-        CustomRegistryComponent,
-        GcrRegistryComponent,
-        GhcrRegistryComponent,
-        AcrRegistryComponent,
-        EcrRegistryComponent,
-        QuayRegistryComponent,
-        GitLabRegistryComponent,
-        GiteaRegistryComponent,
-        ForgejoRegistryComponent,
-        LscrRegistryComponent
-      ]
-    },
-    {
-      provide: IWatcherComponentFactory,
-      useFactory: (
-        eventEmitter: EventEmitter2,
-        containerService: ContainerServiceInterface,
-        containerStatsService: ContainerStatsServiceInterface,
-        containerLogsService: IContainerLogsService,
-        containerImagesService: ContainerImagesServiceInterface,
-        containerVolumesService: ContainerVolumesServiceInterface,
-        containerNetworksService: ContainerNetworksServiceInterface
-      ) => {
-        return new WatcherComponentFactory(
-          eventEmitter,
-          containerService,
-          containerStatsService,
-          containerLogsService,
-          containerImagesService,
-          containerVolumesService,
-          containerNetworksService
-        );
-      },
-      inject: [
-        EventEmitter2,
-        CONTAINER_SERVICE,
-        CONTAINER_STATS_SERVICE,
-        CONTAINER_LOGS_SERVICE,
-        CONTAINER_IMAGES_SERVICE,
-        CONTAINER_VOLUMES_SERVICE,
-        CONTAINER_NETWORKS_SERVICE
-      ]
-    },
-    {
-      provide: IDockerWatcherComponentFactory,
-      useFactory: (
-        eventEmitter: EventEmitter2,
-        containerService: ContainerServiceInterface,
-        containerStatsService: ContainerStatsServiceInterface,
-        containerLogsService: IContainerLogsService,
-        containerImagesService: ContainerImagesServiceInterface,
-        containerVolumesService: ContainerVolumesServiceInterface,
-        containerNetworksService: ContainerNetworksServiceInterface
-      ) => {
-        return new DockerWatcherComponentFactory(
-          eventEmitter,
-          containerService,
-          containerStatsService,
-          containerLogsService,
-          containerImagesService,
-          containerVolumesService,
-          containerNetworksService
-        );
-      },
-      inject: [
-        EventEmitter2,
-        CONTAINER_SERVICE,
-        CONTAINER_STATS_SERVICE,
-        CONTAINER_LOGS_SERVICE,
-        CONTAINER_IMAGES_SERVICE,
-        CONTAINER_VOLUMES_SERVICE,
-        CONTAINER_NETWORKS_SERVICE
-      ]
-    },
-    
     // Services
+    {
+      provide: WATCHER_ENGINE_SERVICE,
+      useClass: WatcherEngineService,
+    },
     {
       provide: CONTAINER_SERVICE,
       useClass: ContainerService,
@@ -477,34 +215,13 @@ import { IDockerWatcherComponentFactory } from './domain/components/docker-watch
       provide: CONTAINER_TEMPLATES_SERVICE,
       useClass: ContainerTemplatesService,
     },
-    {
-      provide: WATCHER_ENGINE_SERVICE,
-      useFactory: (
-        devicesService: DevicesService,
-        registryFactory: IRegistryComponentFactory,
-        watcherFactory: IWatcherComponentFactory,
-        containerRegistriesService: ContainerRegistriesServiceInterface
-      ) => {
-        return new WatcherEngineService(
-          devicesService,
-          registryFactory,
-          watcherFactory as WatcherComponentFactory,
-          containerRegistriesService
-        );
-      },
-      inject: [
-        DevicesService,
-        IRegistryComponentFactory,
-        IWatcherComponentFactory,
-        CONTAINER_REGISTRIES_SERVICE
-      ]
-    },
-
     // Repositories for external modules that may need direct access
     {
       provide: CONTAINER_REPOSITORY,
       useClass: ContainerRepository,
     },
+    // Add ScheduleModule to exports
+    ScheduleModule,
   ],
 })
 export class ContainersModule {}

@@ -1,15 +1,17 @@
 import { OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import Component, { Kind } from '../../core/Component';
-import { SSMServicesTypes } from '../../../../types/typings.d';
-import Docker from '../../watchers/providers/docker/Docker';
-import Registry from '../../registries/Registry';
-import Device from '../../../../data/database/model/Device';
+import { IDevice } from '@modules/devices';
+import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
+import { AbstractWatcherComponent } from '@modules/containers/application/services/components/watcher/abstract-watcher.component';
+import { ConfigurationSchema } from '@modules/containers/types';
+import { Kind } from '@modules/containers/domain/components/kind.enum';
+import Component from '../services/components/core/component';
+
 
 export const WATCHER_ENGINE_SERVICE = 'WATCHER_ENGINE_SERVICE';
 
 export interface StateType {
-  registry: Record<string, Registry>;
-  watcher: Record<string, Docker>;
+  registry: Record<string, AbstractRegistryComponent>;
+  watcher: Record<string, AbstractWatcherComponent>;
 }
 
 /**
@@ -34,7 +36,7 @@ export interface IWatcherEngineService extends OnModuleInit, OnModuleDestroy {
   /**
    * Return all supported registries
    */
-  getRegistries(): Registry[];
+  getRegistries(): AbstractRegistryComponent[];
 
   /**
    * Register a component
@@ -44,8 +46,8 @@ export interface IWatcherEngineService extends OnModuleInit, OnModuleDestroy {
     kind: Kind,
     provider: string,
     name: string,
-    configuration: SSMServicesTypes.ConfigurationSchema
-  ): Promise<Component<SSMServicesTypes.ConfigurationSchema>>;
+    configuration: ConfigurationSchema
+  ): Promise<Component<ConfigurationSchema>>;
 
   /**
    * Register watchers from database
@@ -55,7 +57,7 @@ export interface IWatcherEngineService extends OnModuleInit, OnModuleDestroy {
   /**
    * Register a single watcher
    */
-  registerWatcher(device: Device): Promise<any>;
+  registerWatcher(device: IDevice): Promise<any>;
 
   /**
    * Register registries
@@ -67,7 +69,7 @@ export interface IWatcherEngineService extends OnModuleInit, OnModuleDestroy {
    */
   deregisterComponent(
     kind: Kind,
-    component: Component<SSMServicesTypes.ConfigurationSchema>
+    component: Component<ConfigurationSchema>
   ): Promise<any>;
 
   /**
@@ -75,7 +77,7 @@ export interface IWatcherEngineService extends OnModuleInit, OnModuleDestroy {
    */
   deregisterComponents(
     kind: Kind,
-    components: Component<SSMServicesTypes.ConfigurationSchema>[]
+    components: Component<ConfigurationSchema>[]
   ): Promise<any>;
 
   /**
@@ -106,5 +108,5 @@ export interface IWatcherEngineService extends OnModuleInit, OnModuleDestroy {
   /**
    * Find a registered docker component
    */
-  findRegisteredDockerComponent(watcher: string): Docker | undefined;
+  findRegisteredDockerComponent(watcher: string);
 }

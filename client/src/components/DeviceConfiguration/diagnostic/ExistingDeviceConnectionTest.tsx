@@ -4,7 +4,7 @@ import {
   getCheckDeviceAnsibleConnection,
   getCheckDeviceDockerConnection,
   getCheckDeviceRemoteSystemInformationConnection,
-} from '@/services/rest/device';
+} from '@/services/rest/devices/devices';
 import { Avatar, Button, Card, Col, Row } from 'antd';
 import React, { useState } from 'react';
 import { API, SsmAgent } from 'ssm-shared-lib';

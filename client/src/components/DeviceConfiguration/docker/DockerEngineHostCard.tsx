@@ -3,7 +3,7 @@ import {
   UilDocker,
 } from '@/components/Icons/CustomIcons';
 import { CardHeader } from '@/components/Template/CardHeader';
-import { deleteDockerCert } from '@/services/rest/deviceauth';
+import { deleteDockerCert } from '@/services/rest/devices/device-credentials';
 import { InfoCircleFilled } from '@ant-design/icons';
 import {
   ProFormDependency,

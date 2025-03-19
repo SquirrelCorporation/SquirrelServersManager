@@ -4,8 +4,7 @@ import { ContainerVolumesServiceInterface } from '../interfaces/container-volume
 import { ContainerVolumeEntity } from '../../domain/entities/container-volume.entity';
 import { CONTAINER_VOLUME_REPOSITORY } from '../../domain/repositories/container-volume-repository.interface';
 import { ContainerVolumeRepositoryInterface } from '../../domain/repositories/container-volume-repository.interface';
-import { WATCHER_ENGINE_SERVICE } from '../interfaces/watcher-engine-service.interface';
-import { WatcherEngineServiceInterface } from '../interfaces/watcher-engine-service.interface';
+import { IWatcherEngineService, WATCHER_ENGINE_SERVICE } from '../interfaces/watcher-engine-service.interface';
 import { DevicesService } from '../../../devices/application/services/devices.service';
 import PinoLogger from '../../../../logger';
 import { WATCHERS } from '../../constants';
@@ -18,7 +17,7 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
     @Inject(CONTAINER_VOLUME_REPOSITORY)
     private readonly volumeRepository: ContainerVolumeRepositoryInterface,
     @Inject(WATCHER_ENGINE_SERVICE)
-    private readonly watcherEngineService: WatcherEngineServiceInterface,
+    private readonly watcherEngineService: IWatcherEngineService,
     private readonly devicesService: DevicesService,
   ) {}
 
@@ -51,7 +50,7 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
       logger.info(`Creating volume ${volumeData.name} on device ${deviceUuid}`);
 
       // Verify device exists
-      const device = await this.devicesService.findByUuid(deviceUuid);
+      const device = await this.devicesService.findOneByUuid(deviceUuid);
       if (!device) {
         throw new NotFoundException(`Device with UUID ${deviceUuid} not found`);
       }
@@ -66,27 +65,17 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
         throw new Error(`Volume with name ${volumeData.name} already exists on device ${deviceUuid}`);
       }
 
-      // Find the Docker watcher component for this device
-      const watcherName = `${WATCHERS.DOCKER}-${deviceUuid}`;
-      const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
-
-      if (!dockerComponent) {
-        throw new Error(`Docker watcher for device ${deviceUuid} not found`);
-      }
-
-      // Create volume in Docker
-      const createdVolume = await dockerComponent.createVolume(volumeData);
-
       // Create a volume entity with UUID
       const volumeEntity: ContainerVolumeEntity = {
-        ...createdVolume,
+        ...volumeData,
+        name: volumeData.name as string,
         uuid: uuidv4(),
         deviceUuid,
       };
 
       // Save to database
       return this.volumeRepository.create(volumeEntity);
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to create volume: ${error.message}`);
       throw error;
     }
@@ -106,7 +95,7 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
       // Volumes generally can't be updated in Docker once created
       // We can update our metadata about them though
       return this.volumeRepository.update(uuid, volumeData);
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to update volume ${uuid}: ${error.message}`);
       throw error;
     }
@@ -139,7 +128,7 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
 
       // Delete from database
       return this.volumeRepository.deleteByUuid(uuid);
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to delete volume ${uuid}: ${error.message}`);
       throw error;
     }
@@ -167,7 +156,7 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
       // This would ideally sync all volumes to remove pruned ones
       // For now, we'll just return the count of pruned volumes
       return result;
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to prune volumes on device ${deviceUuid}: ${error.message}`);
       throw error;
     }
@@ -179,7 +168,7 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
   private async removeDockerVolume(dockerComponent: any, volumeName: string): Promise<void> {
     try {
       await dockerComponent.removeVolume(volumeName);
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to remove Docker volume: ${error.message}`);
       throw error;
     }
@@ -215,7 +204,7 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
       logger.info(`Volume ${volume.name} backed up to ${filePath}${fileName}`);
 
       return { filePath, fileName };
-    } catch (error) {
+    } catch (error: any) {
       logger.error(`Failed to backup volume ${volume.name}: ${error.message}`);
       throw error;
     }

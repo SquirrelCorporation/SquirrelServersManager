@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { ECR } from '@aws-sdk/client-ecr';
 import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
-import { SSMServicesTypes } from '../../../../../../types/typings';
+import { Image, RequestOptionsType } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
 
 const logger = PinoLogger.child({ module: 'EcrRegistryComponent' }, { msgPrefix: '[ECR_REGISTRY] - ' });
@@ -54,7 +54,7 @@ export class EcrRegistryComponent extends AbstractRegistryComponent {
    * @param image the image
    * @returns {boolean}
    */
-  match(image: SSMServicesTypes.Image): boolean {
+  match(image: Image): boolean {
     return (
       /^.*\.dkr\.ecr\..*\.amazonaws\.com$/.test(image.registry.url) ||
       image.registry.url === ECR_PUBLIC_GALLERY_HOSTNAME
@@ -66,7 +66,7 @@ export class EcrRegistryComponent extends AbstractRegistryComponent {
    * @param image
    * @returns {*}
    */
-  normalizeImage(image: SSMServicesTypes.Image): SSMServicesTypes.Image {
+  normalizeImage(image: Image): Image {
     const imageNormalized = image;
     imageNormalized.registry.name = 'ecr';
     if (!imageNormalized.registry.url.startsWith('https://')) {
@@ -79,9 +79,9 @@ export class EcrRegistryComponent extends AbstractRegistryComponent {
    * Authenticate to ECR registry
    */
   async authenticate(
-    image: SSMServicesTypes.Image,
-    requestOptions: SSMServicesTypes.RequestOptionsType,
-  ): Promise<SSMServicesTypes.RequestOptionsType> {
+    image: Image,
+    requestOptions: RequestOptionsType,
+  ): Promise<RequestOptionsType> {
     const requestOptionsWithAuth = requestOptions;
     // Private registry
     if (this.configuration.accesskeyid && this.configuration.secretaccesskey) {

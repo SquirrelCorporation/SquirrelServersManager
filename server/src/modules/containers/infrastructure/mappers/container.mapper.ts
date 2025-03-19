@@ -1,5 +1,5 @@
-import { ContainerEntity } from '../../domain/entities/container.entity';
 import { Injectable } from '@nestjs/common';
+import { ContainerEntity } from '../../domain/entities/container.entity';
 
 @Injectable()
 export class ContainerMapper {
@@ -8,32 +8,8 @@ export class ContainerMapper {
    */
   toEntity(document: any): ContainerEntity {
     return {
-      id: document._id.toString(),
-      uuid: document.uuid,
-      name: document.name,
-      deviceUuid: document.deviceUuid,
-      image: document.image,
-      shortId: document.shortId,
-      state: document.state,
-      status: document.status,
-      createdAt: document.createdAt,
-      labels: document.labels,
-      hostConfig: document.hostConfig,
-      networkMode: document.networkMode,
-      networks: document.networks,
-      mounts: document.mounts,
-      command: document.command,
-      ports: document.ports,
-      containerConfig: document.containerConfig,
-      restart: document.restart,
-      timestamp: document.timestamp,
-      watchers: document.watchers,
-      stats: document.stats,
-      kind: document.kind,
-      env: document.env,
-      oomKilled: document.oomKilled,
-      isManaged: document.isManaged,
-      isWatched: document.isWatched,
+      ...document,
+      _id: document._id?.toString(),
     };
   }
 
@@ -42,12 +18,6 @@ export class ContainerMapper {
    */
   toDocument(entity: ContainerEntity): any {
     const document: any = { ...entity };
-    
-    // Remove id from document as MongoDB will create its own _id
-    if (document.id) {
-      delete document.id;
-    }
-    
     return document;
   }
 }

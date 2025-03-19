@@ -1,8 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import Joi from 'joi';
+import { ConfigurationRegistrySchema, Image, Manifest, RequestOptionsType } from '@modules/containers/types';
 import { Component } from '../../../../domain/components/component.interface';
 import { Kind } from '../../../../domain/components/kind.enum';
-import { SSMServicesTypes } from '../../../../../../types/typings';
 import PinoLogger from '../../../../../../logger';
 
 const logger = PinoLogger.child({ module: 'AbstractRegistryComponent' }, { msgPrefix: '[ABSTRACT_REGISTRY] - ' });
@@ -11,7 +11,7 @@ const logger = PinoLogger.child({ module: 'AbstractRegistryComponent' }, { msgPr
  * Docker Registry Abstract class.
  * Base class for all registry implementations.
  */
-export abstract class AbstractRegistryComponent implements Component<SSMServicesTypes.ConfigurationRegistrySchema> {
+export abstract class AbstractRegistryComponent implements Component<ConfigurationRegistrySchema> {
   protected id: string;
   protected name: string;
   protected provider: string;
@@ -19,7 +19,7 @@ export abstract class AbstractRegistryComponent implements Component<SSMServices
   protected type: string;
   protected childLogger: any;
   protected joi = Joi;
-  public configuration!: SSMServicesTypes.ConfigurationRegistrySchema;
+  public configuration!: ConfigurationRegistrySchema;
 
   constructor() {
     this.kind = Kind.REGISTRY;
@@ -91,8 +91,8 @@ export abstract class AbstractRegistryComponent implements Component<SSMServices
     kind: Kind,
     provider: string,
     name: string,
-    configuration: SSMServicesTypes.ConfigurationRegistrySchema
-  ): Promise<Component<SSMServicesTypes.ConfigurationSchema>> {
+    configuration: ConfigurationRegistrySchema
+  ): Promise<Component<ConfigurationRegistrySchema>> {
     logger.info(`Registering registry component ${provider}/${name}`);
     this.id = `${kind}.${provider}.${name}`;
     this.kind = kind;
@@ -117,7 +117,7 @@ export abstract class AbstractRegistryComponent implements Component<SSMServices
   /**
    * Update the component configuration
    */
-  async update(configuration: SSMServicesTypes.ConfigurationRegistrySchema): Promise<Component<SSMServicesTypes.ConfigurationSchema>> {
+  async update(configuration: ConfigurationRegistrySchema): Promise<Component<ConfigurationRegistrySchema>> {
     logger.info(`Updating registry component ${this.provider}/${this.name}`);
     this.configuration = { ...configuration };
 
@@ -149,7 +149,7 @@ export abstract class AbstractRegistryComponent implements Component<SSMServices
    * @returns {boolean}
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  match(image: SSMServicesTypes.Image): boolean {
+  match(image: Image): boolean {
     return false;
   }
 
@@ -158,7 +158,7 @@ export abstract class AbstractRegistryComponent implements Component<SSMServices
    * @param image
    * @returns {*}
    */
-  normalizeImage(image: SSMServicesTypes.Image): SSMServicesTypes.Image {
+  normalizeImage(image: Image): Image {
     return image;
   }
 
@@ -169,9 +169,9 @@ export abstract class AbstractRegistryComponent implements Component<SSMServices
    * @returns {*}
    */
   async authenticate(
-    image: SSMServicesTypes.Image,
-    requestOptions: SSMServicesTypes.RequestOptionsType,
-  ): Promise<SSMServicesTypes.RequestOptionsType> {
+    image: Image,
+    requestOptions: RequestOptionsType,
+  ): Promise<RequestOptionsType> {
     return requestOptions;
   }
 
@@ -180,7 +180,7 @@ export abstract class AbstractRegistryComponent implements Component<SSMServices
    * @param image
    * @returns {*}
    */
-  async getTags(image: SSMServicesTypes.Image): Promise<string[]> {
+  async getTags(image: Image): Promise<string[]> {
     this.childLogger.info(`getTags- Get "${image.name}" tags`);
     const tags: string[] = [];
     let page;
@@ -210,7 +210,7 @@ export abstract class AbstractRegistryComponent implements Component<SSMServices
    * @returns {Promise<*>}
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getTagsPage(image: SSMServicesTypes.Image, lastItem: string | undefined = undefined, link?: string): Promise<any> {
+  getTagsPage(image: Image, lastItem: string | undefined = undefined, link?: string): Promise<any> {
     // Default items per page (not honoured by all registries)
     const itemsPerPage = 1000;
     const last = lastItem ? `&last=${lastItem}` : '';
@@ -227,7 +227,7 @@ export abstract class AbstractRegistryComponent implements Component<SSMServices
    * @returns {Promise<undefined|*>}
    */
   async getImageManifestDigest(
-    image: SSMServicesTypes.Image,
+    image: Image,
     digest?: string,
   ): Promise<{ digest: string; version: number; created?: string }> {
     const tagOrDigest = digest || image.tag.value;
@@ -262,7 +262,7 @@ export abstract class AbstractRegistryComponent implements Component<SSMServices
           );
           let manifestFound: any;
           const manifestFounds = responseManifests.manifests.filter(
-            (manifest: SSMServicesTypes.Manifest) =>
+            (manifest: Manifest) =>
               manifest.platform.architecture === image.architecture &&
               manifest.platform.os === image.os,
           );
@@ -275,7 +275,7 @@ export abstract class AbstractRegistryComponent implements Component<SSMServices
           // Multiple matching manifests? Try to refine using variant filtering
           if (manifestFounds.length > 1) {
             const manifestFoundFilteredOnVariant = manifestFounds.find(
-              (manifest: SSMServicesTypes.Manifest) => manifest.platform.variant === image.variant,
+              (manifest: Manifest) => manifest.platform.variant === image.variant,
             );
 
             // Manifest exactly matching with variant? Select it
@@ -368,7 +368,7 @@ export abstract class AbstractRegistryComponent implements Component<SSMServices
       Accept: 'application/json',
     },
   }: {
-    image: SSMServicesTypes.Image;
+    image: Image;
     url: string;
     method?: string;
     headers?: { Accept?: string; Authorization?: string };
@@ -392,7 +392,7 @@ export abstract class AbstractRegistryComponent implements Component<SSMServices
     }
   }
 
-  getImageFullName(image: SSMServicesTypes.Image, tagOrDigest: string): string {
+  getImageFullName(image: Image, tagOrDigest: string): string {
     // digests are separated with @ whereas tags are separated with :
     const tagOrDigestWithSeparator =
       tagOrDigest.indexOf(':') !== -1 ? `@${tagOrDigest}` : `:${tagOrDigest}`;

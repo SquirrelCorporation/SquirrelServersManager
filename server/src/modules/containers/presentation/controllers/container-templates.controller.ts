@@ -17,7 +17,7 @@ import { Request, Response } from 'express';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
 import { ContainerTemplatesQueryDto, TemplateDeployDto } from '../dtos/container-templates.dto';
 import { SuccessResponse } from '../../../../middlewares/api/ApiResponse';
-import { IContainerTemplatesService, CONTAINER_TEMPLATES_SERVICE } from '../../application/interfaces/container-templates-service.interface';
+import { CONTAINER_TEMPLATES_SERVICE, IContainerTemplatesService } from '../../application/interfaces/container-templates-service.interface';
 
 /**
  * Controller for container templates
@@ -38,16 +38,11 @@ export class ContainerTemplatesController {
    * @returns Templates with pagination metadata
    */
   @Get()
-  async getTemplates(@Query() query: ContainerTemplatesQueryDto, @Res() res: Response) {
+  async getTemplates(@Query() query: ContainerTemplatesQueryDto) {
     try {
       const result = await this.containerTemplatesService.getTemplates(query);
 
-      return new SuccessResponse('Get Templates', result.data, {
-        total: result.pagination.total,
-        success: result.pagination.success,
-        pageSize: result.pagination.pageSize,
-        current: result.pagination.current,
-      }).send(res);
+      return result.data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to get templates';
       throw new HttpException(

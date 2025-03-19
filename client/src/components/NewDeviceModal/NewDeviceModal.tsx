@@ -10,7 +10,7 @@ import {
   postCheckDockerConnection,
   postCheckRemoteSystemInformationConnection,
   putDevice,
-} from '@/services/rest/device';
+} from '@/services/rest/devices/devices';
 import { DownloadOutlined } from '@ant-design/icons';
 import {
   ProFormDependency,

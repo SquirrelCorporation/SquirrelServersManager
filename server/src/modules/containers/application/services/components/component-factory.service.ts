@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigurationSchema } from '@modules/containers/types';
 import { Component } from '../../../domain/components/component.interface';
 import { Kind } from '../../../domain/components/kind.enum';
-import { SSMServicesTypes } from '../../../../../types/typings.d';
 import PinoLogger from '../../../../../logger';
 import { IWatcherComponentFactory } from '../../../domain/components/watcher.interface';
 import { REGISTRIES, WATCHERS } from '../../../constants';
@@ -48,7 +48,7 @@ export class ContainerComponentFactory {
    * Create a component based on kind and provider
    * Uses specialized factories for different component types
    */
-  createComponent(kind: Kind, provider: string): Component<SSMServicesTypes.ConfigurationSchema> {
+  createComponent(kind: Kind, provider: string): Component<ConfigurationSchema> {
     const componentKey = `${kind}/${provider}`;
     logger.info(`Creating component for ${componentKey}`);
 
@@ -103,7 +103,7 @@ export class ContainerComponentFactory {
   /**
    * Create a mock registry component for testing/placeholder purposes
    */
-  private createMockRegistryComponent(provider: string): Component<SSMServicesTypes.ConfigurationSchema> {
+  private createMockRegistryComponent(provider: string): Component<ConfigurationSchema> {
     logger.info(`Creating mock registry component for provider: ${provider}`);
     return new(class extends AbstractRegistryComponent {
       async init(): Promise<void> {

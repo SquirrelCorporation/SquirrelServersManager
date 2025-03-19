@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
 import Joi from 'joi';
+import { Image, RequestOptionsType } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
-import { SSMServicesTypes } from '../../../../../../types/typings';
 
 const logger = PinoLogger.child({ module: 'GhcrRegistryComponent' }, { msgPrefix: '[GHCR_REGISTRY] - ' });
 
@@ -48,7 +48,7 @@ export class GhcrRegistryComponent extends AbstractRegistryComponent {
    * @param image the image
    * @returns {boolean}
    */
-  match(image: SSMServicesTypes.Image): boolean {
+  match(image: Image): boolean {
     return /^.*\.?ghcr.io$/.test(image.registry.url);
   }
 
@@ -57,7 +57,7 @@ export class GhcrRegistryComponent extends AbstractRegistryComponent {
    * @param image
    * @returns {*}
    */
-  normalizeImage(image: SSMServicesTypes.Image): SSMServicesTypes.Image {
+  normalizeImage(image: Image): Image {
     logger.info('[GHCR] - normalizeImage');
     const imageNormalized = image;
     imageNormalized.registry.name = 'ghcr';
@@ -71,9 +71,9 @@ export class GhcrRegistryComponent extends AbstractRegistryComponent {
    * Authenticate to GHCR
    */
   async authenticate(
-    image: SSMServicesTypes.Image,
-    requestOptions: SSMServicesTypes.RequestOptionsType,
-  ): Promise<SSMServicesTypes.RequestOptionsType> {
+    image: Image,
+    requestOptions: RequestOptionsType,
+  ): Promise<RequestOptionsType> {
     const requestOptionsWithAuth = requestOptions;
     const bearer = Buffer.from(
       this.configuration.token ? this.configuration.token : ':',
