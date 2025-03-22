@@ -6,8 +6,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { SSM_DATA_PATH } from '../../../../config';
 import EventManager from '../../../../core/events/EventManager';
 import Events from '../../../../core/events/events';
-import { FileInfo, getMatchingFiles } from '../../../../helpers/files/recursive-find';
 import { extractTopLevelName } from '../../../../helpers/docker/utils';
+import { FileInfo, getMatchingFiles } from '../../../../helpers/files/recursive-find';
 import {
   GitStep,
   IGitUserInfos,
@@ -20,15 +20,14 @@ import {
 import logger from '../../../../logger';
 import { NotFoundError } from '../../../../middlewares/api/ApiError';
 import { ShellWrapperService } from '../../../shell';
-import { ContainerCustomStacksRepositoryRepository } from '../../infrastructure/repositories/container-custom-stacks-repository.repository';
-import { ContainerCustomStackRepository } from '../../infrastructure/repositories/container-custom-stack.repository';
-import { RepositoryConfig } from '../../domain/entities/repository-config.entity';
 import { IContainerCustomStackRepositoryEntity } from '../../domain/entities/container-custom-stack.entity';
+import { RepositoryConfig } from '../../domain/entities/repository-config.entity';
+import { ContainerCustomStackRepository } from '../../infrastructure/repositories/container-custom-stack.repository';
+import { ContainerCustomStacksRepositoryRepository } from '../../infrastructure/repositories/container-custom-stacks-repository.repository';
 import { CONTAINER_STACKS_SERVICE } from '../interfaces/container-stacks-service.interface';
 import { ContainerStacksService } from './container-stacks.service';
 
 export const DIRECTORY_ROOT = `${SSM_DATA_PATH}/container-stacks`;
-
 
 @Injectable()
 export class ContainerRepositoryComponentService extends EventManager {
@@ -52,7 +51,8 @@ export class ContainerRepositoryComponentService extends EventManager {
     private readonly shellWrapperService: ShellWrapperService,
     private readonly containerCustomStackRepository: ContainerCustomStackRepository,
     private readonly containerCustomStacksRepositoryRepository: ContainerCustomStacksRepositoryRepository,
-    @Inject(CONTAINER_STACKS_SERVICE) private readonly containerStacksService: ContainerStacksService,
+    @Inject(CONTAINER_STACKS_SERVICE)
+    private readonly containerStacksService: ContainerStacksService,
   ) {
     super();
   }
@@ -194,7 +194,8 @@ export class ContainerRepositoryComponentService extends EventManager {
   }
 
   private async getContainerStackRepository(): Promise<IContainerCustomStackRepositoryEntity> {
-    const containerStackRepository = await this.containerCustomStacksRepositoryRepository.findByUuid(this.uuid);
+    const containerStackRepository =
+      await this.containerCustomStacksRepositoryRepository.findByUuid(this.uuid);
     if (!containerStackRepository) {
       throw new Error(`Repository with UUID ${this.uuid} not found`);
     }

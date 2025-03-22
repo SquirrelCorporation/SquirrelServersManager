@@ -1,13 +1,12 @@
 import * as path from 'path';
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Socket } from 'socket.io';
-import { SFTPWrapper } from 'ssh2';
-import { API, SsmEvents } from 'ssm-shared-lib';
-import { v4 as uuidv4 } from 'uuid';
-import { Client } from 'ssh2';
 import { SshConnectionService } from '@infrastructure/ssh/services/ssh-connection.service';
-import { FileStreamService } from '../../infrastructure/services/file-stream.service';
-import { SftpSessionDto } from '../../presentation/dtos/sftp-session.dto';
+import { SftpGateway } from '@modules/sftp';
+import { FileSystemService } from '@modules/shell';
+import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
+import { Socket } from 'socket.io';
+import { Client, SFTPWrapper } from 'ssh2';
+import { API, SsmEvents } from 'ssm-shared-lib';
+import { v4 as uuidv4, v4 } from 'uuid';
 import {
   SftpChmodOptions,
   SftpDeleteOptions,
@@ -17,7 +16,8 @@ import {
   SftpSession,
   SftpStatusMessage,
 } from '../../domain/entities/sftp.entity';
-import { SftpRepository } from '../../infrastructure/repositories/sftp.repository';
+import { FileStreamService } from '../../infrastructure/services/file-stream.service';
+import { SftpSessionDto } from '../../presentation/dtos/sftp-session.dto';
 import { ISftpService } from '../interfaces/sftp-service.interface';
 
 @Injectable()
@@ -29,7 +29,9 @@ export class SftpService implements ISftpService {
   constructor(
     private readonly sshConnectionService: SshConnectionService,
     private readonly fileStreamService: FileStreamService,
-    private readonly sftpRepository: SftpRepository
+    @Inject(forwardRef(() => SftpGateway))
+    private readonly sftpGateway: SftpGateway,
+    private readonly fileSystemService: FileSystemService,
   ) {}
 
   /**
@@ -44,13 +46,15 @@ export class SftpService implements ISftpService {
       // Create SSH connection
       const ssh = new Client();
       const { host } = await this.sshConnectionService.createConnection(ssh, deviceUuid);
-
+      this.sftpGateway.emit(SsmEvents.SFTP.STATUS, {
+        status: 'OK',
+        message: 'SFTP CONNECTION ESTABLISHED',
+      });
       // Create session object
       const session: SftpSession = {
         id: sessionId,
         clientId,
         deviceUuid,
-        client,
         ssh,
         host,
       };
@@ -68,7 +72,7 @@ export class SftpService implements ISftpService {
       this.clientSessions.get(clientId)?.add(sessionId);
 
       this.logger.log(`SFTP session created: ${sessionId} for device: ${deviceUuid}`);
-
+      await this.getSftp(sessionId);
       return sessionId;
     } catch (error: any) {
       this.logger.error(`Failed to create SFTP session: ${error.message}`);
@@ -80,18 +84,11 @@ export class SftpService implements ISftpService {
    * Sets up event listeners for the SSH connection
    */
   private setupSshEventListeners(session: SftpSession): void {
-    const { ssh, client, deviceUuid } = session;
-
-    ssh.on('ready', () => {
-      client.emit(SsmEvents.SFTP.STATUS, {
-        status: 'OK',
-        message: 'SFTP CONNECTION ESTABLISHED',
-      });
-    });
+    const { ssh, deviceUuid } = session;
 
     ssh.on('end', () => {
       this.logger.warn(`SSH connection ended for device: ${deviceUuid}`);
-      client.emit(SsmEvents.SFTP.STATUS, {
+      this.sftpGateway.emit(SsmEvents.SFTP.STATUS, {
         status: 'DISCONNECT',
         message: 'SFTP CONNECTION ENDED',
       });
@@ -100,7 +97,7 @@ export class SftpService implements ISftpService {
 
     ssh.on('close', () => {
       this.logger.warn(`SSH connection closed for device: ${deviceUuid}`);
-      client.emit(SsmEvents.SFTP.STATUS, {
+      this.sftpGateway.emit(SsmEvents.SFTP.STATUS, {
         status: 'DISCONNECT',
         message: 'SFTP CONNECTION CLOSED',
       });
@@ -119,7 +116,7 @@ export class SftpService implements ISftpService {
       }
 
       this.logger.error(`SSH error: ${message}`);
-      client.emit(SsmEvents.SFTP.STATUS, {
+      this.sftpGateway.emit(SsmEvents.SFTP.STATUS, {
         status: 'DISCONNECT',
         message,
       });
@@ -175,7 +172,7 @@ export class SftpService implements ISftpService {
       sftp.readdir(directoryPath, (err, list) => {
         if (err) {
           this.logger.error(`Error reading directory: ${err.message}`);
-          session.client.emit(SsmEvents.SFTP.READ_DIR, {
+          this.sftpGateway.emit(SsmEvents.SFTP.READ_DIR, {
             status: 'ERROR',
             message: err.message,
           } as SftpDirectoryResponse);
@@ -201,7 +198,7 @@ export class SftpService implements ISftpService {
             }) as API.SFTPContent,
         );
 
-        session.client.emit(SsmEvents.SFTP.READ_DIR, {
+        this.sftpGateway.emit(SsmEvents.SFTP.READ_DIR, {
           status: 'OK',
           path: directoryPath,
           list: fileList,
@@ -209,7 +206,7 @@ export class SftpService implements ISftpService {
       });
     } catch (error: any) {
       this.logger.error(`Error listing directory: ${error.message}`);
-      session.client.emit(SsmEvents.SFTP.READ_DIR, {
+      this.sftpGateway.emit(SsmEvents.SFTP.READ_DIR, {
         status: 'ERROR',
         message: error.message,
       } as SftpDirectoryResponse);
@@ -372,8 +369,11 @@ export class SftpService implements ISftpService {
 
     try {
       // Get the SFTP wrapper but don't use it directly since we're using the fileStreamService
-      await this.getSftp(sessionId); // Just to validate the session
-      const filename = path.basename(filePath);
+      const sftp = await this.getSftp(sessionId); // Just to validate the session
+      const localRootPath = `/tmp/${v4()}`;
+      this.fileSystemService.createDirectory(localRootPath);
+      const remotePath = filePath;
+      const localPath = path.join(localRootPath, path.basename(remotePath));
 
       // Use the FileStreamService
       const session = this.sessions.get(sessionId);
@@ -381,7 +381,83 @@ export class SftpService implements ISftpService {
         throw new Error('Session not found');
       }
 
-      this.fileStreamService.sendFile(session.client, path.dirname(filePath), filename);
+      // Check if the remote path is a directory or a file
+      sftp.stat(remotePath, (err, stats) => {
+        if (err) {
+          this.logger.error(`Error getting file stats: ${err.message}`);
+          this.sftpGateway.emit(SsmEvents.FileTransfer.ERROR, {
+            status: 'ERROR',
+            message: err.message,
+          });
+        } else {
+          if (stats.isDirectory()) {
+            const remoteTempDir = `/tmp/${v4()}`; // A unique
+            const tarPath = `${remoteTempDir}/${path.basename(remotePath)}.tar.gz`;
+            // Create a tarball from the remote directory
+            const tarCommand = `mkdir -p "${remoteTempDir}" && tar -czvf "${tarPath}" "${remotePath}"`;
+            this.logger.log(`Creating tarball: ${tarCommand}`);
+            session.ssh.exec(tarCommand, (err, stream) => {
+              if (err) {
+                this.logger.error(`Error creating tarball: ${err.message}`);
+                this.sftpGateway.emit(SsmEvents.FileTransfer.ERROR, {
+                  status: 'ERROR',
+                  message: err.message,
+                });
+              } else {
+                stream
+                  .on('close', (code, signal) => {
+                    if (code !== 0) {
+                      this.logger.error(`Tarball creation failed with code ${code}`);
+                      this.sftpGateway.emit(SsmEvents.FileTransfer.ERROR, {
+                        status: 'ERROR',
+                        message: `Tarball creation failed with code ${code}`,
+                      });
+                      return;
+                    }
+                    this.logger.log(`Tarball created at ${tarPath}`);
+                    sftp.fastGet(tarPath, `${localPath}.tar.gz`, (err) => {
+                      if (err) {
+                        this.logger.error(err);
+                        this.logger.error(`Error downloading file: ${err.message}`);
+                        this.sftpGateway.emit(SsmEvents.FileTransfer.ERROR, {
+                          status: 'ERROR',
+                          message: err.message,
+                        });
+                      } else {
+                        this.logger.log(`File downloaded from ${tarPath} to ${localPath}`);
+                        this.fileStreamService.sendFile(
+                          this.sftpGateway,
+                          localRootPath,
+                          tarPath.split('/').pop() as string,
+                        );
+                      }
+                    });
+                  })
+                  .on('data', (data) => {
+                    this.logger.log(`Tarball creation progress...`);
+                  });
+              }
+            });
+          } else {
+            sftp.fastGet(filePath, localPath, (err) => {
+              if (err) {
+                this.logger.error(`Error downloading file: ${err.message}`);
+                this.sftpGateway.emit(SsmEvents.FileTransfer.ERROR, {
+                  status: 'ERROR',
+                  message: err.message,
+                });
+              } else {
+                this.logger.log(`File downloaded from ${filePath} to ${localPath}`);
+                this.fileStreamService.sendFile(
+                  this.sftpGateway,
+                  localRootPath,
+                  filePath.split('/').pop() as string,
+                );
+              }
+            });
+          }
+        }
+      });
     } catch (error: any) {
       this.logger.error(`Error downloading file: ${error.message}`);
       throw error;

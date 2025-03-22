@@ -1,6 +1,6 @@
-import { Controller, Param, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { IDeviceAuthRepository, IDeviceRepository } from '@modules/devices';
+import { Controller, Inject, Param, Post, UseGuards } from '@nestjs/common';
 import { InternalError, NotFoundError } from '../../../../middlewares/api/ApiError';
 import { DiagnosticService } from '../../application/services/diagnostic.service';
 import { DiagnosticParamDto, DiagnosticReportDto } from '../dtos/diagnostic.dto';
@@ -12,8 +12,8 @@ export class DiagnosticController {
   constructor(
     private diagnosticService: DiagnosticService,
     private diagnosticMapper: DiagnosticMapper,
-    private deviceRepository: IDeviceRepository,
-    private deviceAuthRepository: IDeviceAuthRepository
+    @Inject('IDeviceRepository') private deviceRepository: IDeviceRepository,
+    @Inject('IDeviceAuthRepository') private deviceAuthRepository: IDeviceAuthRepository,
   ) {}
 
   @Post(':uuid')

@@ -22,6 +22,10 @@ export interface IComponentConfig {
 
 export interface IContainerRepositoryComponentService {
   getComponentDetails(repositoryPath: string, componentName: string): Promise<IComponentDetails>;
-  deployComponent(repositoryPath: string, componentName: string, config: IComponentConfig): Promise<boolean>;
+  deployComponent(
+    repositoryPath: string,
+    componentName: string,
+    config: IComponentConfig,
+  ): Promise<boolean>;
   removeComponent(repositoryPath: string, componentName: string): Promise<boolean>;
 }

@@ -1,4 +1,5 @@
-import { Inject, Logger } from '@nestjs/common';
+import { SftpService } from '@modules/sftp/application/services/sftp.service';
+import { Inject, Logger, forwardRef } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -32,7 +33,7 @@ export class SftpGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @WebSocketServer()
   server!: Server;
 
-  constructor(@Inject('ISftpService') private readonly sftpService: ISftpService) {}
+  constructor(@Inject(forwardRef(() => SftpService)) private readonly sftpService: ISftpService) {}
 
   afterInit(server: Server) {
     this.logger.log('SFTP WebSocket Gateway initialized');
@@ -62,19 +63,16 @@ export class SftpGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   async handleStartSession(
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: SftpSessionDto,
-  ): Promise<WsResponse<any>> {
+  ): Promise<{ sessionId: string; success: boolean } | { success: false; message: string }> {
     try {
       this.logger.log(`Starting SFTP session for device: ${payload.deviceUuid}`);
       this.logger.debug(`Session payload: ${JSON.stringify(payload)}`);
-      await this.sftpService.createSession(client, payload);
-      return { event: SsmEvents.SFTP.STATUS, data: { status: 'OK' } };
+      const sessionId = await this.sftpService.createSession(client, payload);
+      return { sessionId, success: true };
     } catch (error: any) {
       this.logger.error(`Error starting SFTP session: ${error.message}`);
       this.logger.error(`Error stack: ${error.stack}`);
-      return {
-        event: SsmEvents.SFTP.STATUS,
-        data: { status: 'ERROR', message: error.message },
-      };
+      return { success: false, message: error.message };
     }
   }
 
@@ -152,5 +150,9 @@ export class SftpGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.logger.debug(`Downloading file: ${payload.path}`);
     this.logger.debug(`Download payload: ${JSON.stringify(payload)}`);
     await this.sftpService.download(client.id, payload.path);
+  }
+
+  emit(event: string, data: any) {
+    this.server.emit(event, data);
   }
 }

@@ -1,4 +1,3 @@
-import { Socket } from 'socket.io';
 import { Client, SFTPWrapper } from 'ssh2';
 import { API } from 'ssm-shared-lib';
 
@@ -6,7 +5,6 @@ export interface SftpSession {
   id: string;
   clientId: string;
   deviceUuid: string;
-  client: Socket;
   ssh: Client;
   sftp?: SFTPWrapper;
   host?: string;

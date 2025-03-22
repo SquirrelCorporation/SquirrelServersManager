@@ -1,10 +1,10 @@
+import { SshConnectionService } from '@infrastructure/ssh/services/ssh-connection.service';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { Client, ClientChannel, PseudoTtyOptions } from 'ssh2';
 import { SsmEvents } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
-import { SshConnectionService } from '@infrastructure/ssh/services/ssh-connection.service';
-import { SshGateway } from '../../presentation/gateways/ssh.gateway';
 import { SshSession } from '../../domain/entities/ssh.entity';
+import { SshGateway } from '../../presentation/gateways/ssh.gateway';
 import { ISshTerminalService } from '../interfaces/ssh-terminal-service.interface';
 
 @Injectable()
@@ -13,22 +13,27 @@ export class SshTerminalService implements ISshTerminalService {
   private sessions: Map<string, SshSession> = new Map();
   private clientSessions: Map<string, Set<string>> = new Map();
 
-
   constructor(
     private readonly sshConnectionService: SshConnectionService,
     @Inject(forwardRef(() => SshGateway))
-    private readonly sshGateway: SshGateway
+    private readonly sshGateway: SshGateway,
   ) {}
 
   /**
    * Creates a new SSH terminal session
    */
-  async createSession(clientId: string, deviceUuid: string, cols: number, rows: number): Promise<string> {
+  async createSession(
+    clientId: string,
+    deviceUuid: string,
+    cols: number,
+    rows: number,
+  ): Promise<string> {
     const sessionId = uuidv4();
 
     try {
       const ssh = new Client();
-          // Create session object
+
+      // Create session object
       const ttyOptions: PseudoTtyOptions = {
         rows,
         cols,
@@ -37,7 +42,7 @@ export class SshTerminalService implements ISshTerminalService {
         term: 'xterm-256color',
       };
 
-     const session: SshSession = {
+      const session: SshSession = {
         id: sessionId,
         clientId,
         deviceUuid,
@@ -45,11 +50,10 @@ export class SshTerminalService implements ISshTerminalService {
         ttyOptions,
       };
 
-            // Set up event listeners
+      // Set up event listeners
       this.setupSshEventListeners(session);
       // Create SSH connection
       const { host } = await this.sshConnectionService.createConnection(ssh, deviceUuid);
-
 
       // Store session
       this.sessions.set(sessionId, session);

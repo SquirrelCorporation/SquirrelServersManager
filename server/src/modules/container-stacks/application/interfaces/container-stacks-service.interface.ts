@@ -1,4 +1,7 @@
-import { ContainerCustomStack, IContainerCustomStackRepositoryEntity } from '../../domain/entities/container-custom-stack.entity';
+import {
+  ContainerCustomStack,
+  IContainerCustomStackRepositoryEntity,
+} from '../../domain/entities/container-custom-stack.entity';
 
 export const CONTAINER_STACKS_SERVICE = 'CONTAINER_STACKS_SERVICE';
 
@@ -11,7 +14,12 @@ export interface IContainerStacksService {
 
   getAllRepositories(): Promise<IContainerCustomStackRepositoryEntity[]>;
   getRepositoryByUuid(uuid: string): Promise<IContainerCustomStackRepositoryEntity | null>;
-  createRepository(repository: IContainerCustomStackRepositoryEntity): Promise<IContainerCustomStackRepositoryEntity>;
-  updateRepository(uuid: string, repository: Partial<IContainerCustomStackRepositoryEntity>): Promise<IContainerCustomStackRepositoryEntity>;
+  createRepository(
+    repository: IContainerCustomStackRepositoryEntity,
+  ): Promise<IContainerCustomStackRepositoryEntity>;
+  updateRepository(
+    uuid: string,
+    repository: Partial<IContainerCustomStackRepositoryEntity>,
+  ): Promise<IContainerCustomStackRepositoryEntity>;
   deleteRepositoryByUuid(uuid: string): Promise<boolean>;
 }

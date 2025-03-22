@@ -1,16 +1,19 @@
+import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { Body, Controller, Get, Inject, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { DateTime } from 'luxon';
-import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
-import { DEVICE_REPOSITORY, IDeviceRepository } from '../../../devices/domain/repositories/device-repository.interface';
-import { DashboardStatQueryDto } from '../dto/dashboard-stats.dto';
+import {
+  DEVICE_REPOSITORY,
+  IDeviceRepository,
+} from '../../../devices/domain/repositories/device-repository.interface';
 import { DashboardService } from '../../application/services/dashboard.service';
+import { DashboardStatQueryDto } from '../dto/dashboard-stats.dto';
 
 @Controller('statistics/dashboard')
 @UseGuards(JwtAuthGuard)
 export class DashboardController {
   constructor(
     private readonly dashboardService: DashboardService,
-    @Inject(DEVICE_REPOSITORY) private readonly deviceRepository: IDeviceRepository
+    @Inject(DEVICE_REPOSITORY) private readonly deviceRepository: IDeviceRepository,
   ) {}
 
   @Get('performances')

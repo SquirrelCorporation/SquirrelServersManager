@@ -2,8 +2,14 @@ import { Module } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { EventEmitterService } from '../../core/events/event-emitter.service';
 import { DevicesModule } from '../devices';
-import { DEVICE_REPOSITORY } from '../devices/domain/repositories/device-repository.interface';
-import { DEVICE_AUTH_REPOSITORY } from '../devices/domain/repositories/device-auth-repository.interface';
+import {
+  DEVICE_AUTH_REPOSITORY,
+  IDeviceAuthRepository,
+} from '../devices/domain/repositories/device-auth-repository.interface';
+import {
+  DEVICE_REPOSITORY,
+  IDeviceRepository,
+} from '../devices/domain/repositories/device-repository.interface';
 import { DiagnosticService } from './application/services/diagnostic.service';
 import { DiagnosticController } from './presentation/controllers/diagnostic.controller';
 import { DiagnosticMapper } from './presentation/mappers/diagnostic.mapper';

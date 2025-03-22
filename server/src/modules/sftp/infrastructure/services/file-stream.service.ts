@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { SftpGateway } from '@modules/sftp/presentation/gateways/sftp.gateway';
 import { Injectable, Logger } from '@nestjs/common';
-import { Socket } from 'socket.io';
 import { SsmEvents } from 'ssm-shared-lib';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class FileStreamService {
    * @param rootPath The root path where the file is located
    * @param filename The name of the file to send
    */
-  sendFile(socket: Socket, rootPath: string, filename: string): void {
+  sendFile(socket: SftpGateway, rootPath: string, filename: string): void {
     const filePath = path.join(rootPath, filename);
 
     if (!fs.existsSync(filePath)) {

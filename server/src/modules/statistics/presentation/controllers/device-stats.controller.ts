@@ -1,15 +1,18 @@
-import { Controller, Get, Inject, Param, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
-import { DEVICE_REPOSITORY, IDeviceRepository } from '../../../devices/domain/repositories/device-repository.interface';
-import { DeviceStatsParamsDto, DeviceStatsQueryDto } from '../dto/device-stats.dto';
+import { Controller, Get, Inject, Param, Query, UseGuards } from '@nestjs/common';
+import {
+  DEVICE_REPOSITORY,
+  IDeviceRepository,
+} from '../../../devices/domain/repositories/device-repository.interface';
 import { DeviceStatsService } from '../../application/services/device-stats.service';
+import { DeviceStatsParamsDto, DeviceStatsQueryDto } from '../dto/device-stats.dto';
 
 @Controller('statistics/devices')
 @UseGuards(JwtAuthGuard)
 export class DeviceStatsController {
   constructor(
     private readonly deviceStatsService: DeviceStatsService,
-    @Inject(DEVICE_REPOSITORY) private readonly deviceRepository: IDeviceRepository
+    @Inject(DEVICE_REPOSITORY) private readonly deviceRepository: IDeviceRepository,
   ) {}
 
   @Get(':uuid/stats/:type')

@@ -1,7 +1,9 @@
-import { Controller, Get, Headers, HttpStatus, Inject, Res } from '@nestjs/common';
+import {
+  METRICS_SERVICE,
+  MetricsServiceInterface,
+} from '@modules/statistics/application/interfaces/metrics-service.interface';
+import { Controller, Get, Headers, HttpStatus, Inject, Logger, Res } from '@nestjs/common';
 import { Response } from 'express';
-import { Logger } from '@nestjs/common';
-import { METRICS_SERVICE, MetricsServiceInterface } from '@modules/statistics/application/interfaces/metrics-service.interface';
 import { prometheusConf } from 'src/config';
 
 @Controller('metrics')
@@ -17,7 +19,8 @@ export class MetricsController {
   async getMetrics(@Headers('authorization') authHeader: string, @Res() res: Response) {
     const prometheusUser = prometheusConf.user;
     const prometheusPassword = prometheusConf.password;
-    const expectedAuth = 'Basic ' + Buffer.from(`${prometheusUser}:${prometheusPassword}`).toString('base64');
+    const expectedAuth =
+      'Basic ' + Buffer.from(`${prometheusUser}:${prometheusPassword}`).toString('base64');
 
     if (!authHeader || authHeader !== expectedAuth) {
       this.logger.error('Unauthorized access attempt to metrics endpoint');

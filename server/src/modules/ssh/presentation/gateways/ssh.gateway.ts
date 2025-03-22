@@ -1,3 +1,5 @@
+import { SshTerminalService } from '@modules/ssh';
+import { ScreenResizeDto, SshSessionDto } from '@modules/ssh/presentation/dtos/ssh-session.dto';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import {
   ConnectedSocket,
@@ -7,28 +9,25 @@ import {
   OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SsmEvents } from 'ssm-shared-lib';
-import { ScreenResizeDto, SshSessionDto } from '@modules/ssh/presentation/dtos/ssh-session.dto';
-import { SshTerminalService } from '@modules/ssh';
 
 @Injectable()
 @WebSocketGateway({
-  namespace: '/ssh'
+  namespace: '/ssh',
 })
 export class SshGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger = new Logger(SshGateway.name);
   private readonly clientSessions = new Map<string, string>(); // Store client ID -> session ID
-
 
   @WebSocketServer()
   server!: Server;
 
   constructor(
     @Inject(forwardRef(() => SshTerminalService))
-    private readonly sshTerminalService: SshTerminalService
+    private readonly sshTerminalService: SshTerminalService,
   ) {}
 
   afterInit() {
@@ -41,7 +40,7 @@ export class SshGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
       id: client.id,
       nsp: client.nsp?.name,
       connected: client.connected,
-      rooms: Array.from(client.rooms || [])
+      rooms: Array.from(client.rooms || []),
     });
   }
 
@@ -55,7 +54,7 @@ export class SshGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   async handleStartSession(
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: SshSessionDto,
-    ): Promise<{ sessionId: string; success: boolean } | { success: false; message: string }> {
+  ): Promise<{ sessionId: string; success: boolean } | { success: false; message: string }> {
     // Create a unique request identifier based on client ID and device UUID
     const { deviceUuid, cols, rows } = payload;
 
@@ -63,11 +62,18 @@ export class SshGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
       // Check if this client already has an active session
       if (this.clientSessions.has(client.id)) {
         const existingSessionId = this.clientSessions.get(client.id);
-        console.log(`Client ${client.id} already has active session ${existingSessionId}. Returning existing session.`);
+        console.log(
+          `Client ${client.id} already has active session ${existingSessionId}. Returning existing session.`,
+        );
         return { sessionId: existingSessionId!, success: true };
       }
 
-      const sessionId = await this.sshTerminalService.createSession(client.id, deviceUuid, cols, rows);
+      const sessionId = await this.sshTerminalService.createSession(
+        client.id,
+        deviceUuid,
+        cols,
+        rows,
+      );
       this.logger.log(`Sending ack...`);
 
       // Store the client's session
@@ -75,7 +81,6 @@ export class SshGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 
       return { sessionId, success: true };
     } catch (error: any) {
-
       const errorMessage = error instanceof Error ? error.message : String(error);
       this.logger.error(`Error starting SSH session: ${errorMessage}`);
 
@@ -83,10 +88,8 @@ export class SshGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     }
   }
 
-
   @SubscribeMessage(SsmEvents.SSH.NEW_DATA)
   handleNewData(@ConnectedSocket() client: Socket, @MessageBody() data: string): void {
-
     // Only process data if we have an active session for this client
     if (this.clientSessions.has(client.id)) {
       const sessionId = this.clientSessions.get(client.id)!;

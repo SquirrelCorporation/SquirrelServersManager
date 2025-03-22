@@ -214,7 +214,7 @@ const SFTPDrawer = React.forwardRef<SFTPDrawerHandles, SFTPDrawerProps>(
         })
         .then((response) => {
           console.log('Received START_SESSION response:', response);
-          if (response.status !== 'OK') {
+          if (!response.success) {
             void message.error({
               content: `Socket failed to connect (${response.status} - ${response.error})`,
               duration: 6,

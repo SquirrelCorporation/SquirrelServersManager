@@ -11,12 +11,18 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
-import { CONTAINER_SERVICE, ContainerServiceInterface } from '../../application/interfaces/container-service.interface';
-import { CONTAINER_STATS_SERVICE, ContainerStatsServiceInterface } from '../../application/interfaces/container-stats-service.interface';
+import {
+  CONTAINER_SERVICE,
+  ContainerServiceInterface,
+} from '../../application/interfaces/container-service.interface';
+import {
+  CONTAINER_STATS_SERVICE,
+  ContainerStatsServiceInterface,
+} from '../../application/interfaces/container-stats-service.interface';
 import {
   ContainerCountParamDto,
   ContainerStatParamDto,
-  ContainerStatsQueryDto
+  ContainerStatsQueryDto,
 } from '../dtos/container-stats.dto';
 
 /**
@@ -47,11 +53,7 @@ export class ContainerStatsController {
 
     try {
       const stat = await this.containerStatsService.getStatByDeviceAndType(container, params.type);
-      return {
-        status: 'success',
-        message: 'Get container stat by container id successful',
-        data: stat ? stat[0] : null,
-      };
+      return stat ? stat[0] : null;
     } catch (error: any) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -79,11 +81,7 @@ export class ContainerStatsController {
         query.from,
         params.type,
       );
-      return {
-        status: 'success',
-        message: 'Get container stats by container id successful',
-        data: stats,
-      };
+      return stats;
     } catch (error: any) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -105,11 +103,7 @@ export class ContainerStatsController {
         nbContainers = await this.containerService.countContainersByStatus(params.status);
       }
 
-      return {
-        status: 'success',
-        message: 'Get nb containers',
-        data: nbContainers,
-      };
+      return nbContainers;
     } catch (error: any) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -123,11 +117,7 @@ export class ContainerStatsController {
   async getAveragedStats() {
     try {
       const stats = await this.containerStatsService.getCpuAndMemAveragedStats();
-      return {
-        status: 'success',
-        message: 'Get averaged container stats',
-        data: stats,
-      };
+      return stats;
     } catch (error: any) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
