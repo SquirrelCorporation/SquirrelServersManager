@@ -1,11 +1,21 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
+import { DEVICE_AUTH_REPOSITORY, IDeviceAuthRepository } from '@modules/devices';
+import { IUser } from '@modules/users';
+import { IAnsibleVault } from '@modules/ansible-vaults';
+import {
+  IShellWrapperService,
+  ISshKeyService,
+  SHELL_WRAPPER_SERVICE,
+  SSH_KEY_SERVICE,
+} from '@modules/shell';
+import {
+  ANSIBLE_TASK_REPOSITORY,
+  IAnsibleTaskRepository,
+} from '../../domain/repositories/ansible-task.repository.interface';
 import { SSM_INSTALL_PATH } from '../../../../config';
-import { IUser } from '../../../../modules/users';
-import { IAnsibleVault } from '../../../../modules/ansible-vault';
 import { Playbooks } from '../../../../types/typings';
-import { ShellWrapperService, SshKeyService } from '../../../shell';
 import { AnsibleCommandBuilderService } from './ansible-command-builder.service';
 import { AnsibleGalaxyCommandService } from './ansible-galaxy-command.service';
 import { InventoryTransformerService } from './inventory-transformer.service';
@@ -19,13 +29,13 @@ export class AnsibleCommandService {
   private readonly ANSIBLE_PATH = `${SSM_INSTALL_PATH}/server/src/ansible/`;
 
   constructor(
-    private readonly shellWrapper: ShellWrapperService,
-    private readonly sshKeyService: SshKeyService,
+    @Inject(SHELL_WRAPPER_SERVICE) private readonly shellWrapper: IShellWrapperService,
+    @Inject(SSH_KEY_SERVICE) private readonly sshKeyService: ISshKeyService,
+    @Inject(DEVICE_AUTH_REPOSITORY) private readonly deviceAuthRepository: IDeviceAuthRepository,
+    @Inject(ANSIBLE_TASK_REPOSITORY) private readonly ansibleTaskRepository: IAnsibleTaskRepository,
     private readonly ansibleCommandBuilder: AnsibleCommandBuilderService,
     private readonly ansibleGalaxyCommand: AnsibleGalaxyCommandService,
     private readonly inventoryTransformer: InventoryTransformerService,
-    @Inject('DEVICE_AUTH_REPOSITORY') private readonly deviceAuthRepository: any,
-    @Inject('ANSIBLE_TASK_REPOSITORY') private readonly ansibleTaskRepository: any,
   ) {}
 
   /**

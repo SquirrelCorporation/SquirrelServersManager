@@ -7,9 +7,7 @@ import { AutomationDocument } from '../schemas/automation.schema';
 
 @Injectable()
 export class AutomationRepository implements IAutomationRepository {
-  constructor(
-    @InjectModel('Automation') private automationModel: Model<AutomationDocument>,
-  ) {}
+  constructor(@InjectModel('Automation') private automationModel: Model<AutomationDocument>) {}
 
   async findAll(): Promise<Automation[]> {
     return this.automationModel.find().lean().exec();

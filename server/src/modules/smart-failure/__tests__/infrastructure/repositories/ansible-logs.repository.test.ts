@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { AnsibleLogsRepository } from '../../../infrastructure/repositories/ansible-logs.repository';
+import { AnsibleLogsRepository } from '../../../infrastructure/repositories/smart-failure.repository';
 import { AnsibleLogsRepository as LogsModuleAnsibleLogsRepository } from '../../../../logs/infrastructure/repositories/ansible-logs.repository';
 
 describe('AnsibleLogsRepository', () => {

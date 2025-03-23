@@ -10,6 +10,7 @@ import { AutomationsService } from './application/services/automations.service';
 import { AutomationRepository } from './infrastructure/repositories/automation.repository';
 import { Automation, AutomationSchema } from './infrastructure/schemas/automation.schema';
 import { AutomationsController } from './presentation/controllers/automations.controller';
+import { AUTOMATION_REPOSITORY } from './domain/repositories/automation.repository.interface';
 
 @Module({
   imports: [
@@ -18,10 +19,18 @@ import { AutomationsController } from './presentation/controllers/automations.co
     ContainersModule,
     PlaybooksModule,
     AnsibleModule,
-    UsersModule
+    UsersModule,
   ],
   controllers: [AutomationsController],
-  providers: [AutomationsService, AutomationEngine, AutomationRepository],
+  providers: [
+    AutomationsService,
+    AutomationEngine,
+    AutomationRepository,
+    {
+      provide: AUTOMATION_REPOSITORY,
+      useClass: AutomationRepository,
+    },
+  ],
   exports: [AutomationsService, AutomationEngine],
 })
 export class AutomationsModule {}

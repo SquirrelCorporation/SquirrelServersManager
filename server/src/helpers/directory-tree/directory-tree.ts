@@ -79,7 +79,7 @@ function directoryTree(
   try {
     stats = FS.statSync(path);
     lstat = FS.lstatSync(path);
-  } catch (e) {
+  } catch {
     return null;
   }
 

@@ -7,7 +7,10 @@ import { ContainerImageMapper } from '../mappers/container-image.mapper';
 import { CONTAINER_IMAGE, ContainerImage } from '../schemas/container-image.schema';
 import PinoLogger from '../../../../logger';
 
-const logger = PinoLogger.child({ module: 'ContainerImageRepository' }, { msgPrefix: '[CONTAINER_IMAGE_REPO] - ' });
+const logger = PinoLogger.child(
+  { module: 'ContainerImageRepository' },
+  { msgPrefix: '[CONTAINER_IMAGE_REPO] - ' },
+);
 
 /**
  * MongoDB implementation of the Container Image Repository
@@ -25,7 +28,7 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
   async findAll(): Promise<ContainerImageEntity[]> {
     try {
       const images = await this.imageModel.find().populate('device').lean().exec();
-      return images.map(image => ContainerImageMapper.toEntity(image));
+      return images.map((image) => ContainerImageMapper.toEntity(image));
     } catch (error: any) {
       logger.error(`Failed to find all images: ${error.message}`);
       throw error;
@@ -38,7 +41,7 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
   async findAllByDeviceUuid(deviceUuid: string): Promise<ContainerImageEntity[]> {
     try {
       const images = await this.imageModel.find({ deviceUuid }).populate('device').lean().exec();
-      return images.map(image => ContainerImageMapper.toEntity(image));
+      return images.map((image) => ContainerImageMapper.toEntity(image));
     } catch (error: any) {
       logger.error(`Failed to find images for device ${deviceUuid}: ${error.message}`);
       throw error;
@@ -61,9 +64,16 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
   /**
    * Find one image by ID and device UUID
    */
-  async findOneByIdAndDeviceUuid(id: string, deviceUuid: string): Promise<ContainerImageEntity | null> {
+  async findOneByIdAndDeviceUuid(
+    id: string,
+    deviceUuid: string,
+  ): Promise<ContainerImageEntity | null> {
     try {
-      const image = await this.imageModel.findOne({ id, deviceUuid }).populate('device').lean().exec();
+      const image = await this.imageModel
+        .findOne({ id, deviceUuid })
+        .populate('device')
+        .lean()
+        .exec();
       return image ? ContainerImageMapper.toEntity(image) : null;
     } catch (error: any) {
       logger.error(`Failed to find image ${id} for device ${deviceUuid}: ${error.message}`);
@@ -74,12 +84,22 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
   /**
    * Find images by name and tag
    */
-  async findByNameAndTag(name: string, tag: string, deviceUuid: string): Promise<ContainerImageEntity[]> {
+  async findByNameAndTag(
+    name: string,
+    tag: string,
+    deviceUuid: string,
+  ): Promise<ContainerImageEntity[]> {
     try {
-      const images = await this.imageModel.find({ name, tag, deviceUuid }).populate('device').lean().exec();
-      return images.map(image => ContainerImageMapper.toEntity(image));
+      const images = await this.imageModel
+        .find({ name, tag, deviceUuid })
+        .populate('device')
+        .lean()
+        .exec();
+      return images.map((image) => ContainerImageMapper.toEntity(image));
     } catch (error: any) {
-      logger.error(`Failed to find images ${name}:${tag} for device ${deviceUuid}: ${error.message}`);
+      logger.error(
+        `Failed to find images ${name}:${tag} for device ${deviceUuid}: ${error.message}`,
+      );
       throw error;
     }
   }
@@ -101,7 +121,10 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
   /**
    * Update an image
    */
-  async update(id: string, imageData: Partial<ContainerImageEntity>): Promise<ContainerImageEntity> {
+  async update(
+    id: string,
+    imageData: Partial<ContainerImageEntity>,
+  ): Promise<ContainerImageEntity> {
     try {
       const updatedImage = await this.imageModel
         .findOneAndUpdate({ id }, imageData, { new: true })

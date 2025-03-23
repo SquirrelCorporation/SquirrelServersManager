@@ -9,7 +9,7 @@ import { IUserRepository, USER_REPOSITORY } from '../../users';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @Inject(USER_REPOSITORY)
-    private readonly userRepository: IUserRepository
+    private readonly userRepository: IUserRepository,
   ) {
     super({
       jwtFromRequest: (req) => {

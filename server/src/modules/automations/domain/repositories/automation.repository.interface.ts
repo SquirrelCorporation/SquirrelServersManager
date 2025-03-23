@@ -1,5 +1,7 @@
 import { Automation } from '../entities/automation.entity';
 
+export const AUTOMATION_REPOSITORY = 'AUTOMATION_REPOSITORY';
+
 export interface IAutomationRepository {
   findAll(): Promise<Automation[]>;
   findAllEnabled(): Promise<Automation[]>;

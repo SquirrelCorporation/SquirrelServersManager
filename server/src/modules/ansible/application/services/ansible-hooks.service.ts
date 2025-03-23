@@ -1,26 +1,35 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { TaskHookDto } from '../../presentation/dtos/task-hook.dto';
-import { TaskEventDto } from '../../presentation/dtos/task-event.dto';
-import { IAnsibleTaskRepository } from '../../domain/repositories/ansible-task.repository.interface';
-import { IAnsibleTaskStatusRepository } from '../../domain/repositories/ansible-task-status.repository.interface';
-import { IAnsibleLogsRepository } from '../../../logs/domain/repositories/ansible-logs-repository.interface';
-import { ICacheService } from '../../../../infrastructure/cache';
+import { ANSIBLE_LOGS_REPOSITORY, IAnsibleLogsRepository } from '@modules/logs';
+import { ISshKeyService, SSH_KEY_SERVICE } from '@modules/shell';
+import {
+  ANSIBLE_TASK_REPOSITORY,
+  IAnsibleTaskRepository,
+} from '../../domain/repositories/ansible-task.repository.interface';
+import {
+  ANSIBLE_TASK_STATUS_REPOSITORY,
+  IAnsibleTaskStatusRepository,
+} from '../../domain/repositories/ansible-task-status.repository.interface';
+import {
+  CACHE_SERVICE,
+  ICacheService,
+} from '../../../../infrastructure/cache/interfaces/cache.service.interface';
 import { BadRequestError, NotFoundError } from '../../../../middlewares/api/ApiError';
 import { isFinalStatus } from '../../../../helpers/ansible/AnsibleTaskHelper';
-import { ISshKeyService } from '../../../shell/application/interfaces/ssh-key.interface';
+import { TaskEventDto } from '../../presentation/dtos/task-event.dto';
+import { TaskHookDto } from '../../presentation/dtos/task-hook.dto';
 
 @Injectable()
 export class AnsibleHooksService {
   constructor(
-    @Inject('IAnsibleTaskRepository')
+    @Inject(ANSIBLE_TASK_REPOSITORY)
     private readonly taskRepository: IAnsibleTaskRepository,
-    @Inject('IAnsibleTaskStatusRepository')
+    @Inject(ANSIBLE_TASK_STATUS_REPOSITORY)
     private readonly taskStatusRepository: IAnsibleTaskStatusRepository,
-    @Inject('IAnsibleLogsRepository')
+    @Inject(ANSIBLE_LOGS_REPOSITORY)
     private readonly logsRepository: IAnsibleLogsRepository,
-    @Inject('ISshKeyService')
+    @Inject(SSH_KEY_SERVICE)
     private readonly sshKeyService: ISshKeyService,
-    @Inject('ICacheService') private readonly cacheService: ICacheService,
+    @Inject(CACHE_SERVICE) private readonly cacheService: ICacheService,
   ) {}
 
   async addTaskStatus(taskHookDto: TaskHookDto) {
@@ -69,7 +78,9 @@ export class AnsibleHooksService {
 
     await this.logsRepository.create({
       ident: taskEventDto.runner_ident,
-      content: taskEventDto.stdout ? removeEmptyLines(taskEventDto.stdout) : JSON.stringify(taskEventDto),
+      content: taskEventDto.stdout
+        ? removeEmptyLines(taskEventDto.stdout)
+        : JSON.stringify(taskEventDto),
       logRunnerId: taskEventDto.uuid,
       stdout: taskEventDto.stdout,
     });

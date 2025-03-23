@@ -12,6 +12,13 @@ export { ShellModule };
 // Re-export domain types
 export { IShellCommand };
 
+// Define injection tokens
+export const SHELL_WRAPPER_SERVICE = 'SHELL_WRAPPER_SERVICE';
+export const FILE_SYSTEM_SERVICE = 'FILE_SYSTEM_SERVICE';
+export const DOCKER_COMPOSE_SERVICE = 'DOCKER_COMPOSE_SERVICE';
+export const PLAYBOOK_FILE_SERVICE = 'PLAYBOOK_FILE_SERVICE';
+export const SSH_KEY_SERVICE = 'ISshKeyService';
+
 // Re-export application interfaces
 export {
   IFileSystemService,

@@ -1,3 +1,5 @@
+export const CACHE_SERVICE = 'ICacheService';
+
 export interface ICacheService {
   /**
    * Get a value from the cache

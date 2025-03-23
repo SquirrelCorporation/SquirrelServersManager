@@ -14,9 +14,8 @@ export class ExtraVarsService {
   constructor(
     @Inject('DEVICE_REPOSITORY') private readonly deviceRepository: IDeviceRepository,
     @Inject('USER_REPOSITORY') private readonly userRepository: IUserRepository,
-    @Inject('ICacheService') private readonly cacheService: ICacheService
+    @Inject('ICacheService') private readonly cacheService: ICacheService,
   ) {}
-
 
   /**
    * Find values for a list of extra vars

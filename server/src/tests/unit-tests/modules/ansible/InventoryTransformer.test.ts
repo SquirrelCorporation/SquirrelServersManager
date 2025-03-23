@@ -7,7 +7,7 @@ import InventoryTransformer from '../../../../modules/ansible/utils/InventoryTra
 // Mock the vaultDecrypt function
 vi.mock('../../../../modules/ansible-vault/ansible-vault', async (importOriginal) => {
   return {
-    ...(await importOriginal<typeof import('../../../../modules/ansible-vault/ansible-vault')>()),
+    ...(await importOriginal<typeof import('../../../../modules/ansible-vaults/ansible-vault')>()),
     vaultDecrypt: async (value: string, vault: string) => {
       return value + '-decrypted';
     },

@@ -1,5 +1,7 @@
 import { IDevice } from '../../domain/entities/device.entity';
 
+export const DEVICES_SERVICE = 'IDevicesService';
+
 export interface IDevicesService {
   findAll(): Promise<IDevice[] | null>;
   findOneByUuid(uuid: string): Promise<IDevice | null>;

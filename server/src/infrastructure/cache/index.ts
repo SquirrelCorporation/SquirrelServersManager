@@ -10,7 +10,7 @@ export * from './interfaces/cache.service.interface';
 export * from './legacy-compat';
 
 // Service interface exports
-export { ICacheService } from './interfaces/cache.service.interface';
+export { ICacheService, CACHE_SERVICE } from './interfaces/cache.service.interface';
 
 // Service implementation exports
 export { CacheService } from './cache.service';

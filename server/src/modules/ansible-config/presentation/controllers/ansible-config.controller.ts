@@ -6,7 +6,7 @@ import { AnsibleConfigDto, DeleteAnsibleConfigDto } from '../dtos/ansible-config
 /**
  * Controller for managing Ansible configuration
  */
-@Controller('ansible/config')
+@Controller('ansible-config')
 @UseGuards(JwtAuthGuard)
 export class AnsibleConfigController {
   constructor(private readonly ansibleConfigService: AnsibleConfigService) {}

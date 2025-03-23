@@ -1,11 +1,11 @@
-import { IPAM, NetworkContainer } from "dockerode";
+import { IPAM, NetworkContainer } from 'dockerode';
 
 /**
  * Domain entity for container networks
  */
-export interface ContainerNetworkEntity {
+export interface IContainerNetworkEntity {
   _id?: string;
- name: string;
+  name: string;
   status: string;
   watcher: string;
   id: string;

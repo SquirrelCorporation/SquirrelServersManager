@@ -1,26 +1,41 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 import { AnsibleCommandService, ExtraVarsService } from '@modules/ansible';
-import { IAnsibleVault } from '@modules/ansible-vault';
+import { IAnsibleVault } from '@modules/ansible-vaults';
 import { IUser } from '@modules/users/domain/entities/user.entity';
-import { IShellWrapperService } from '@modules/shell';
+import { IShellWrapperService, SHELL_WRAPPER_SERVICE } from '@modules/shell';
 import { ICacheService } from '@infrastructure/cache';
 import { IPlaybook } from '@modules/playbooks/domain/entities/playbook.entity';
 import { Playbooks } from 'src/types/typings';
 import { TaskLogsService } from '@modules/ansible';
-import { IPlaybookRepository, PLAYBOOK_REPOSITORY } from '../../domain/repositories/playbook-repository.interface';
+import { IPlaybooksService } from '@modules/playbooks/application/interfaces/playbooks-service.interface';
+import {
+  IPlaybookRepository,
+  PLAYBOOK_REPOSITORY,
+} from '../../domain/repositories/playbook-repository.interface';
 
+/**
+ * PlaybookService implements the IPlaybooksService interface
+ */
 @Injectable()
-export class PlaybookService {
+export class PlaybookService implements IPlaybooksService {
   constructor(
     @Inject(PLAYBOOK_REPOSITORY)
     private readonly playbookRepository: IPlaybookRepository,
     @Inject('ICacheService') private readonly cacheService: ICacheService,
-    @Inject('SHELL_WRAPPER_SERVICE') private readonly shellWrapperService: IShellWrapperService,
+    @Inject(SHELL_WRAPPER_SERVICE) private readonly shellWrapperService: IShellWrapperService,
     private readonly extraVarsService: ExtraVarsService,
     private readonly ansibleCommandService: AnsibleCommandService,
-    private readonly ansibleTaskService: TaskLogsService
+    private readonly ansibleTaskService: TaskLogsService,
   ) {}
+
+  async getPlaybookByUuid(uuid: string): Promise<IPlaybook | null> {
+    return this.playbookRepository.findOneByUuid(uuid);
+  }
+
+  async getPlaybookByQuickReference(quickReference: string): Promise<IPlaybook | null> {
+    return this.playbookRepository.findOneByUniqueQuickReference(quickReference);
+  }
 
   async completeExtraVar(
     playbook: IPlaybook,
@@ -51,15 +66,15 @@ export class PlaybookService {
       target,
       extraVarsForcedValues,
     );
- return await this.ansibleCommandService.executePlaybookFull(
-    playbook.path,
-    user,
-    target,
-    substitutedExtraVars,
-    mode,
-    undefined,
-    playbook.playbooksRepository?.vaults as IAnsibleVault[] | undefined,
-  );
+    return await this.ansibleCommandService.executePlaybookFull(
+      playbook.path,
+      user,
+      target,
+      substitutedExtraVars,
+      mode,
+      undefined,
+      playbook.playbooksRepository?.vaults as IAnsibleVault[] | undefined,
+    );
   }
 
   async executePlaybookOnInventory(
@@ -75,20 +90,19 @@ export class PlaybookService {
       extraVarsForcedValues,
     );
     return await this.ansibleCommandService.executePlaybookOnInventory(
-    playbook.path,
-    user,
-    inventoryTargets,
-    substitutedExtraVars,
-    undefined,
-    undefined,
-    execUuid,
-    playbook.playbooksRepository?.vaults as IAnsibleVault[] | undefined,
+      playbook.path,
+      user,
+      inventoryTargets,
+      substitutedExtraVars,
+      undefined,
+      undefined,
+      execUuid,
+      playbook.playbooksRepository?.vaults as IAnsibleVault[] | undefined,
     );
   }
 
-
   async addExtraVarToPlaybook(playbook: IPlaybook, extraVar: API.ExtraVar) {
-    if (playbook.extraVars?.some(e => e.extraVar === extraVar.extraVar)) {
+    if (playbook.extraVars?.some((e) => e.extraVar === extraVar.extraVar)) {
       throw new Error('ExtraVar already exists');
     }
 

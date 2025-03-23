@@ -1,19 +1,20 @@
 import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { Model } from 'mongoose';
+import {
+  CONTAINER_SERVICE,
+  CONTAINER_VOLUMES_SERVICE,
+  ContainerServiceInterface,
+  ContainerVolumesServiceInterface,
+} from '@modules/containers';
+import { IPlaybooksService, PLAYBOOKS_SERVICE } from '@modules/playbooks';
+import { ANSIBLE_TASK_STATUS_REPOSITORY, IAnsibleTaskStatusRepository } from '@modules/ansible';
 import { AutomationComponent } from '../../domain/components/automation.component';
 import { Automation } from '../../domain/entities/automation.entity';
-import { IAutomationRepository } from '../../domain/repositories/automation.repository.interface';
-import { IContainerRepository } from '../../containers/domain/repositories/container.repository.interface';
-import { IContainerService } from '../../../containers/application/services/container.service.interface';
-import { IVolumeRepository } from '../../../containers/domain/repositories/volume.repository.interface';
-import { IVolumeService } from '../../../containers/application/services/volume.service.interface';
-import { IPlaybookRepository } from '../../../playbooks/domain/repositories/playbook.repository.interface';
-import { IPlaybookService } from '../../../playbooks/application/services/playbook.service.interface';
-import { IAnsibleTaskStatusRepository } from '../../../ansible/';
-import { IUserRepository } from '../../../users/';
-import { AutomationDocument } from '../../infrastructure/schemas/automation.schema';
+import {
+  AUTOMATION_REPOSITORY,
+  IAutomationRepository,
+} from '../../domain/repositories/automation.repository.interface';
+import { IUserRepository, USER_REPOSITORY } from '../../../users/';
 
 @Injectable()
 export class AutomationEngine implements OnModuleInit {
@@ -21,27 +22,28 @@ export class AutomationEngine implements OnModuleInit {
   private components: Map<string, AutomationComponent> = new Map();
 
   constructor(
-    @InjectModel(Automation.name) private automationModel: Model<AutomationDocument>,
+    @Inject(AUTOMATION_REPOSITORY)
     private automationRepository: IAutomationRepository,
 
     // Container module dependencies
-    @Inject('CONTAINERS_MODULE.ContainerRepository') private containerRepo: IContainerRepository,
-    @Inject('CONTAINERS_MODULE.ContainerService') private containerUseCases: IContainerService,
-    @Inject('CONTAINERS_MODULE.VolumeRepository') private containerVolumeRepo: IVolumeRepository,
-    @Inject('CONTAINERS_MODULE.VolumeService') private containerVolumeUseCases: IVolumeService,
+    @Inject(CONTAINER_SERVICE)
+    private containerUseCases: ContainerServiceInterface,
+    @Inject(CONTAINER_VOLUMES_SERVICE)
+    private containerVolumeUseCases: ContainerVolumesServiceInterface,
 
     // Playbooks module dependencies
-    @Inject('PLAYBOOKS_MODULE.PlaybookRepository') private playbookRepo: IPlaybookRepository,
-    @Inject('PLAYBOOKS_MODULE.PlaybookService') private playbookUseCases: IPlaybookService,
+    @Inject(PLAYBOOKS_SERVICE)
+    private playbookUseCases: IPlaybooksService,
 
     // Ansible module dependencies
-    @Inject('ANSIBLE_MODULE.TaskStatusRepository') private ansibleTaskStatusRepo: IAnsibleTaskStatusRepository,
+    @Inject(ANSIBLE_TASK_STATUS_REPOSITORY)
+    private ansibleTaskStatusRepo: IAnsibleTaskStatusRepository,
 
     // Users module dependencies
-    @Inject('USERS_MODULE.UserRepository') private userRepo: IUserRepository,
+    @Inject(USER_REPOSITORY) private userRepo: IUserRepository,
 
     // NestJS scheduler registry
-    private readonly schedulerRegistry: SchedulerRegistry
+    private readonly schedulerRegistry: SchedulerRegistry,
   ) {}
 
   /**
@@ -49,10 +51,8 @@ export class AutomationEngine implements OnModuleInit {
    */
   async onModuleInit() {
     this.logger.log('Initializing AutomationEngine...');
-    await this.registerComponents();
-    this.logger.log(
-      `AutomationEngine initialized with ${this.components.size} automations`,
-    );
+    this.registerComponents();
+    this.logger.log(`AutomationEngine initialized with ${this.components.size} automations`);
   }
 
   /**
@@ -82,21 +82,21 @@ export class AutomationEngine implements OnModuleInit {
       }
 
       // Create the automation component
-      this.components.set(automationToRegister.uuid, new AutomationComponent(
+      this.components.set(
         automationToRegister.uuid,
-        automationToRegister.name,
-        automationToRegister.automationChains,
-        this.automationRepository,
-        this.containerRepo,
-        this.containerUseCases,
-        this.containerVolumeRepo,
-        this.containerVolumeUseCases,
-        this.playbookRepo,
-        this.ansibleTaskStatusRepo,
-        this.userRepo,
-        this.playbookUseCases,
-        this.schedulerRegistry
-      ));
+        new AutomationComponent(
+          automationToRegister.uuid,
+          automationToRegister.name,
+          automationToRegister.automationChains,
+          this.automationRepository,
+          this.containerUseCases,
+          this.containerVolumeUseCases,
+          this.ansibleTaskStatusRepo,
+          this.userRepo,
+          this.playbookUseCases,
+          this.schedulerRegistry,
+        ),
+      );
 
       // Initialize the component
       try {
@@ -110,15 +110,15 @@ export class AutomationEngine implements OnModuleInit {
         // If initialization fails, clean up the component and rethrow
         this.components.delete(automationToRegister.uuid);
         this.logger.error(
-          `Failed to initialize automation ${automationToRegister.name}: ${initError.message}`,
           initError.stack,
+          `Failed to initialize automation ${automationToRegister.name}: ${initError.message}`,
         );
         throw initError;
       }
     } catch (error: any) {
       this.logger.error(
-        `Failed to register automation ${automationToRegister.name}: ${error.message}`,
         error.stack,
+        `Failed to register automation ${automationToRegister.name}: ${error.message}`,
       );
       throw error;
     }
@@ -152,6 +152,11 @@ export class AutomationEngine implements OnModuleInit {
    * @param automation The automation to deregister
    */
   async deregisterComponent(automation: Automation) {
+    if (!automation.uuid) {
+      this.logger.warn('Automation has no UUID, skipping deregistration');
+      return;
+    }
+
     this.logger.log(`Deregistering automation: ${automation.name} (${automation.uuid})`);
 
     const registeredAutomationComponent = this.components.get(automation.uuid);
@@ -180,6 +185,10 @@ export class AutomationEngine implements OnModuleInit {
    */
   async executeAutomation(automation: Automation) {
     this.logger.log(`Executing automation: ${automation.name} (${automation.uuid})`);
+
+    if (!automation.uuid) {
+      throw new Error('Automation has no UUID, cannot execute');
+    }
 
     const registeredAutomationComponent = this.components.get(automation.uuid);
 

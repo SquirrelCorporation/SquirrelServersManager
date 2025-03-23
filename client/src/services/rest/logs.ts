@@ -5,7 +5,7 @@ export async function getTasksLogs(
   params?: API.PageParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.Tasks>(`/api/logs/tasks`, {
+  return request<API.Tasks>(`/api/ansible/logs/tasks`, {
     method: 'GET',
     params: {
       ...params,

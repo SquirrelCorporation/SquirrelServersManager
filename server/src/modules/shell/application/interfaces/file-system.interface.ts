@@ -4,6 +4,7 @@ import { ShellString, TestOptions } from 'shelljs';
  * Interface for file system operations in the application layer
  */
 export interface IFileSystemService {
+  getTempDir(): string;
   createDirectory(fullPath: string, rootPath?: string): ShellString;
   deleteFiles(directory: string, rootPath?: string): void;
   deleteFile(filePath: string): void;

@@ -2,16 +2,19 @@ import { Injectable, Logger } from '@nestjs/common';
 import DockerModem from 'docker-modem';
 import Dockerode from 'dockerode';
 import { Client, ConnectConfig } from 'ssh2';
-import { SsmDeviceDiagnostic } from 'ssm-shared-lib';
+import { SsmDeviceDiagnostic, SsmEvents } from 'ssm-shared-lib';
 import { getCustomAgent } from 'src/helpers/ssh/custom-agent';
-import { EventEmitterService } from '../../../../core/events/event-emitter.service';
-import Events from '../../../../core/events/events';
 import { IDevice, IDeviceAuth } from '../../../devices';
 import { tryResolveHost } from '../../../../helpers/dns/dns-helper';
 import SSHCredentialsHelper from '../../../../helpers/ssh/SSHCredentialsHelper';
 import PinoLogger from '../../../../logger';
-import { DiagnosticCheckType, DiagnosticReport, DiagnosticResult } from '../../domain/entities/diagnostic.entity';
+import {
+  DiagnosticCheckType,
+  DiagnosticReport,
+  DiagnosticResult,
+} from '../../domain/entities/diagnostic.entity';
 import { IDiagnosticService } from '../interfaces/diagnostic-service.interface';
+import { DiagnosticGateway } from '../../presentation/gateways/diagnostic.gateway';
 
 const DIAGNOSTIC_SEQUENCE = Object.values(SsmDeviceDiagnostic.Checks);
 const DISK_INFO_CMD = 'df -h';
@@ -25,7 +28,7 @@ export class DiagnosticService implements IDiagnosticService {
     { module: 'DeviceDiagnostic' },
     { msgPrefix: '[DEVICE_DIAGNOSTIC] - ' },
   );
-  constructor(private eventEmitterService: EventEmitterService) {}
+  constructor(private diagnosticGateway: DiagnosticGateway) {}
 
   private checkSSHConnectivity = (options: ConnectConfig) => {
     return new Promise((resolve, reject) => {
@@ -179,7 +182,7 @@ export class DiagnosticService implements IDiagnosticService {
     const report: DiagnosticReport = {
       deviceId: device.uuid,
       timestamp: new Date(),
-      results: {} as Record<DiagnosticCheckType, DiagnosticResult>
+      results: {} as Record<DiagnosticCheckType, DiagnosticResult>,
     };
 
     for (const check of DIAGNOSTIC_SEQUENCE) {
@@ -195,10 +198,11 @@ export class DiagnosticService implements IDiagnosticService {
               success: true,
               severity: 'success',
               message: `✅ Ssh connect check passed on ${sshOptionsAnsible.host}:${sshOptionsAnsible.port}`,
-              data: { check }
+              data: { check },
             };
             report.results[check] = sshResult;
-            this.eventEmitterService.emit(Events.DIAGNOSTIC_CHECK, {
+
+            this.diagnosticGateway.emit(SsmEvents.Diagnostic.PROGRESS, {
               ...sshResult,
               module: 'DeviceDiagnostic',
             });
@@ -210,10 +214,11 @@ export class DiagnosticService implements IDiagnosticService {
               success: true,
               severity: 'success',
               message: `✅ Ssh Docker connect check passed on ${sshOptionsDocker.host}:${sshOptionsDocker.port}`,
-              data: { check }
+              data: { check },
             };
             report.results[check] = sshDockerResult;
-            this.eventEmitterService.emit(Events.DIAGNOSTIC_CHECK, {
+
+            this.diagnosticGateway.emit(SsmEvents.Diagnostic.PROGRESS, {
               ...sshDockerResult,
               module: 'DeviceDiagnostic',
             });
@@ -225,10 +230,11 @@ export class DiagnosticService implements IDiagnosticService {
               success: true,
               severity: 'success',
               message: `✅ Docker Socket check passed on ${sshOptionsDocker.host}:${sshOptionsDocker.port} - ${sshOptionsDocker.socketPath || '/var/run/docker.sock'}`,
-              data: { check }
+              data: { check },
             };
             report.results[check] = dockerSocketResult;
-            this.eventEmitterService.emit(Events.DIAGNOSTIC_CHECK, {
+
+            this.diagnosticGateway.emit(SsmEvents.Diagnostic.PROGRESS, {
               ...dockerSocketResult,
               module: 'DeviceDiagnostic',
             });
@@ -240,10 +246,11 @@ export class DiagnosticService implements IDiagnosticService {
               success: true,
               severity: 'success',
               message: `✅ Disk Space check passed on ${sshOptionsAnsible.host}:${sshOptionsAnsible.port} - ${DISK_INFO_CMD} /var/lib/docker => ${data}`,
-              data: { check, diskSpaceInfo: data }
+              data: { check, diskSpaceInfo: data },
             };
             report.results[check] = diskSpaceResult;
-            this.eventEmitterService.emit(Events.DIAGNOSTIC_CHECK, {
+
+            this.diagnosticGateway.emit(SsmEvents.Diagnostic.PROGRESS, {
               ...diskSpaceResult,
               module: 'DeviceDiagnostic',
             });
@@ -255,10 +262,11 @@ export class DiagnosticService implements IDiagnosticService {
               success: true,
               severity: 'success',
               message: `✅ CPU & Memory check passed on ${sshOptionsAnsible.host}:${sshOptionsAnsible.port} - ${CPU_MEM_INFO_CMD} => ${data}`,
-              data: { check, cpuMemInfo: data }
+              data: { check, cpuMemInfo: data },
             };
             report.results[check] = cpuMemResult;
-            this.eventEmitterService.emit(Events.DIAGNOSTIC_CHECK, {
+
+            this.diagnosticGateway.emit(SsmEvents.Diagnostic.PROGRESS, {
               ...cpuMemResult,
               module: 'DeviceDiagnostic',
             });
@@ -273,10 +281,11 @@ export class DiagnosticService implements IDiagnosticService {
           success: false,
           severity: 'error',
           message: `❌ ${error.message}`,
-          data: { check }
+          data: { check },
         };
         report.results[check] = errorResult;
-        this.eventEmitterService.emit(Events.DIAGNOSTIC_CHECK, {
+
+        this.diagnosticGateway.emit(SsmEvents.Diagnostic.PROGRESS, {
           ...errorResult,
           module: 'DeviceDiagnostic',
         });

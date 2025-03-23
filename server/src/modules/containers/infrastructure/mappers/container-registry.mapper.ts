@@ -1,4 +1,4 @@
-import { ContainerRegistryEntity } from '../../domain/entities/container-registry.entity';
+import { IContainerRegistryEntity } from '../../domain/entities/container-registry.entity';
 import { ContainerRegistryDocument } from '../schemas/container-registry.schema';
 
 /**
@@ -10,7 +10,7 @@ export class ContainerRegistryMapper {
    * @param document Container registry document
    * @returns Container registry entity
    */
-  static toEntity(document: any): ContainerRegistryEntity | null {
+  static toEntity(document: any): IContainerRegistryEntity | null {
     if (!document) {
       return null;
     }
@@ -26,12 +26,14 @@ export class ContainerRegistryMapper {
    * @param documents Container registry documents
    * @returns Container registry entities
    */
-  static toEntities(documents: ContainerRegistryDocument[]): ContainerRegistryEntity[] {
+  static toEntities(documents: ContainerRegistryDocument[]): IContainerRegistryEntity[] {
     if (!documents) {
       return [];
     }
 
-    return documents.map(document => this.toEntity(document)).filter((entity): entity is ContainerRegistryEntity => entity !== null);
+    return documents
+      .map((document) => this.toEntity(document))
+      .filter((entity): entity is IContainerRegistryEntity => entity !== null);
   }
 
   /**
@@ -39,7 +41,7 @@ export class ContainerRegistryMapper {
    * @param entity Container registry entity
    * @returns Container registry document properties
    */
-  static toDocument(entity: Partial<ContainerRegistryEntity>): Partial<ContainerRegistryDocument> {
+  static toDocument(entity: Partial<IContainerRegistryEntity>): Partial<ContainerRegistryDocument> {
     const document: any = { ...entity };
 
     return document;

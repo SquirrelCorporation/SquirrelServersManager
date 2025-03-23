@@ -1,5 +1,10 @@
 import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
-import { IDeviceAuthRepository, IDeviceRepository } from '@modules/devices';
+import {
+  DEVICE_AUTH_REPOSITORY,
+  DEVICE_REPOSITORY,
+  IDeviceAuthRepository,
+  IDeviceRepository,
+} from '@modules/devices';
 import { Controller, Inject, Param, Post, UseGuards } from '@nestjs/common';
 import { InternalError, NotFoundError } from '../../../../middlewares/api/ApiError';
 import { DiagnosticService } from '../../application/services/diagnostic.service';
@@ -12,8 +17,8 @@ export class DiagnosticController {
   constructor(
     private diagnosticService: DiagnosticService,
     private diagnosticMapper: DiagnosticMapper,
-    @Inject('IDeviceRepository') private deviceRepository: IDeviceRepository,
-    @Inject('IDeviceAuthRepository') private deviceAuthRepository: IDeviceAuthRepository,
+    @Inject(DEVICE_REPOSITORY) private deviceRepository: IDeviceRepository,
+    @Inject(DEVICE_AUTH_REPOSITORY) private deviceAuthRepository: IDeviceAuthRepository,
   ) {}
 
   @Post(':uuid')

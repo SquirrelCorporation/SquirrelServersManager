@@ -1,11 +1,11 @@
-import { Image } from "@modules/containers/types";
-import { IDevice } from "@modules/devices/domain/entities/device.entity";
+import { Image } from '@modules/containers/types';
+import { IDevice } from '@modules/devices/domain/entities/device.entity';
 
 /**
  * Domain entity for a container
  */
-export interface ContainerEntity {
- _id?: string;
+export interface IContainerEntity {
+  _id?: string;
   deviceUuid?: string;
   device?: IDevice;
   id: string;

@@ -1,18 +1,18 @@
 import { StatsType } from 'ssm-shared-lib';
-import { ContainerEntity } from '../../domain/entities/container.entity';
+import { IContainerEntity } from '../../domain/entities/container.entity';
 
 export const CONTAINER_STATS_SERVICE = 'CONTAINER_STATS_SERVICE';
 
 /**
  * Interface for the Container Stats Service
  */
-export interface ContainerStatsServiceInterface {
+export interface IContainerStatsService {
   /**
    * Create stats for a container
    * @param container The container entity
    * @param stats The container stats from Dockerode
    */
-  createStats(container: ContainerEntity, stats: any): Promise<void>;
+  createStats(container: IContainerEntity, stats: any): Promise<void>;
 
   /**
    * Get stat by container and type
@@ -21,7 +21,7 @@ export interface ContainerStatsServiceInterface {
    * @returns The container stat
    */
   getStatByDeviceAndType(
-    container: ContainerEntity,
+    container: IContainerEntity,
     type?: string,
   ): Promise<[{ _id?: string; value: number; date?: string }] | null>;
 
@@ -33,7 +33,7 @@ export interface ContainerStatsServiceInterface {
    * @returns The container stats
    */
   getStatsByDeviceAndType(
-    container: ContainerEntity,
+    container: IContainerEntity,
     from: number,
     type?: string,
   ): Promise<{ date: string; value: number; name?: string }[] | null>;

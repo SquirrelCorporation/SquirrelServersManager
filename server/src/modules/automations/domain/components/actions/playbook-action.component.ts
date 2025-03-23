@@ -1,8 +1,7 @@
-import { API, Automations } from 'ssm-shared-lib';
+import { API, Automations, SsmAnsible } from 'ssm-shared-lib';
+import { IPlaybooksService } from '@modules/playbooks';
+import { IAnsibleTaskStatusRepository } from '@modules/ansible';
 import { IAutomationRepository } from '../../../domain/repositories/automation.repository.interface';
-import { IPlaybookRepository } from '../../../../playbooks/domain/repositories/playbook.repository.interface';
-import { IPlaybookService } from '../../../../playbooks/application/services/playbook.service.interface';
-import { IAnsibleTaskStatusRepository } from '../../../../ansible/domain/repositories/task-status.repository.interface';
 import { IUserRepository } from '../../../../users/';
 import { AbstractActionComponent } from './abstract-action.component';
 
@@ -10,10 +9,9 @@ export class PlaybookActionComponent extends AbstractActionComponent {
   public readonly playbookUuid: string;
   public readonly targets: string[];
   public readonly extraVarsForcedValues?: API.ExtraVars;
-  private playbookRepo: IPlaybookRepository;
   private ansibleTaskStatusRepo: IAnsibleTaskStatusRepository;
   private userRepo: IUserRepository;
-  private playbookUseCases: IPlaybookService;
+  private playbookUseCases: IPlaybooksService;
 
   constructor(
     automationUuid: string,
@@ -22,10 +20,9 @@ export class PlaybookActionComponent extends AbstractActionComponent {
     targets: string[],
     extraVarsForcedValues?: API.ExtraVars,
     automationRepository?: IAutomationRepository,
-    playbookRepo?: IPlaybookRepository,
     ansibleTaskStatusRepo?: IAnsibleTaskStatusRepository,
     userRepo?: IUserRepository,
-    playbookUseCases?: IPlaybookService
+    playbookUseCases?: IPlaybooksService,
   ) {
     super(automationUuid, automationName, Automations.Actions.PLAYBOOK, automationRepository!);
     if (!playbookUuid || !targets || targets.length === 0) {
@@ -34,7 +31,6 @@ export class PlaybookActionComponent extends AbstractActionComponent {
     this.playbookUuid = playbookUuid;
     this.targets = targets;
     this.extraVarsForcedValues = extraVarsForcedValues;
-    this.playbookRepo = playbookRepo!;
     this.ansibleTaskStatusRepo = ansibleTaskStatusRepo!;
     this.userRepo = userRepo!;
     this.playbookUseCases = playbookUseCases!;
@@ -45,7 +41,7 @@ export class PlaybookActionComponent extends AbstractActionComponent {
 
     try {
       // Get the playbook
-      const playbook = await this.playbookRepo.findByUuid(this.playbookUuid);
+      const playbook = await this.playbookUseCases.getPlaybookByUuid(this.playbookUuid);
       if (!playbook) {
         throw new Error(`Playbook not found: ${this.playbookUuid}`);
       }
@@ -59,8 +55,8 @@ export class PlaybookActionComponent extends AbstractActionComponent {
       // Execute the playbook
       const execId = await this.playbookUseCases.executePlaybook(
         playbook,
-        this.targets,
         adminUser,
+        this.targets,
         this.extraVarsForcedValues,
       );
 
@@ -75,12 +71,7 @@ export class PlaybookActionComponent extends AbstractActionComponent {
   }
 
   static isFinalStatus = (status: string): boolean => {
-    return [
-      'SUCCESS',
-      'FAILED',
-      'ERROR',
-      'CANCELED'
-    ].includes(status);
+    return ['SUCCESS', 'FAILED', 'ERROR', 'CANCELED'].includes(status);
   };
 
   async waitForResult(execId: string, timeoutCount = 0): Promise<void> {
@@ -91,29 +82,32 @@ export class PlaybookActionComponent extends AbstractActionComponent {
     }
 
     try {
-      const taskStatus = await this.ansibleTaskStatusRepo.findByExecId(execId);
+      const execStatuses = await this.ansibleTaskStatusRepo.findByTaskIdent(execId);
 
-      if (!taskStatus) {
-        this.childLogger.error(`Task status not found for execId: ${execId}`);
-        await this.onErrorSafely('Task status not found');
-        return;
-      }
-
-      if (PlaybookActionComponent.isFinalStatus(taskStatus.status)) {
-        if (taskStatus.status === 'SUCCESS') {
-          this.childLogger.info(`Playbook execution successful: ${execId}`);
-          await this.onSuccess();
+      if (!execStatuses || execStatuses.length === 0) {
+        this.childLogger.warn(
+          `Playbook Action Component - No execution statuses found (yet) for execId: ${execId}`,
+        );
+        setTimeout(() => {
+          this.waitForResult(execId, timeoutCount + 1);
+        }, 5000);
+      } else {
+        const lastExecStatus = execStatuses[0];
+        this.childLogger.info(
+          `Playbook Action Component - Latest execution status ${lastExecStatus.status}`,
+        );
+        if (PlaybookActionComponent.isFinalStatus(lastExecStatus.status as string)) {
+          if (lastExecStatus.status === SsmAnsible.AnsibleTaskStatus.SUCCESS) {
+            await this.onSuccess();
+          } else {
+            await this.onError();
+          }
         } else {
-          this.childLogger.error(`Playbook execution failed: ${execId}, status: ${taskStatus.status}`);
-          await this.onErrorSafely(`Playbook execution failed with status: ${taskStatus.status}`);
+          setTimeout(() => {
+            this.waitForResult(execId, timeoutCount + 1);
+          }, 5000);
         }
-        return;
       }
-
-      // Not finished yet, check again after a delay
-      setTimeout(() => {
-        void this.waitForResult(execId, timeoutCount + 1);
-      }, 5000);
     } catch (error: any) {
       this.childLogger.error(`Error checking task status: ${error.message}`);
       await this.onErrorSafely(error.message);

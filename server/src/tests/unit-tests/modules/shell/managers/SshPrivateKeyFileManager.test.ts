@@ -2,7 +2,7 @@ import * as os from 'node:os';
 import path from 'path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fs, vol } from 'memfs';
-import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../../../../modules/ansible-vault/ansible-vault';
+import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../../../../modules/ansible-vaults/ansible-vault';
 import shellWrapper from '../../../../../modules/shell/ShellWrapper';
 import FileSystemManager from '../../../../../modules/shell/managers/FileSystemManager';
 import SshPrivateKeyFileManager from '../../../../../modules/shell/managers/SshPrivateKeyFileManager';

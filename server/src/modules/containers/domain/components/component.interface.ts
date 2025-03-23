@@ -4,7 +4,7 @@ import { Kind } from './kind.enum';
 /**
  * Base component interface for all container-related components
  */
-export interface Component<
+export interface IContainerComponent<
   T extends
     |ConfigurationRegistrySchema
     |ConfigurationTriggerSchema
@@ -34,7 +34,7 @@ export interface Component<
   /**
    * Register the component
    */
-  register(id: string, kind: Kind, provider: string, name: string, configuration: T): Promise<Component<T>>;
+  register(id: string, kind: Kind, provider: string, name: string, configuration: T): Promise<IContainerComponent<T>>;
 
   /**
    * Deregister the component
@@ -44,5 +44,5 @@ export interface Component<
   /**
    * Update the component's configuration
    */
-  update(configuration: T): Promise<Component<T>>;
+  update(configuration: T): Promise<IContainerComponent<T>>;
 }

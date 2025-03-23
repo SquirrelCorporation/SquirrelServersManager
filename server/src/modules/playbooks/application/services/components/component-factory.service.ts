@@ -1,11 +1,17 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { FileSystemService, PlaybookFileService } from '@modules/shell';
 import { PlaybookRepository } from '@modules/playbooks/infrastructure/repositories/playbook.repository';
 import { PlaybooksRegisterRepository } from '@modules/playbooks/infrastructure/repositories/playbooks-register.repository';
-import { GitComponentOptions, LocalComponentOptions } from '@modules/playbooks/domain/interfaces/component-options.interface';
-import { TreeNodeService } from '@modules/playbooks';
-import pinoLogger  from '../../../../../logger';
+import {
+  GitComponentOptions,
+  LocalComponentOptions,
+} from '@modules/playbooks/domain/interfaces/component-options.interface';
+import {
+  ITreeNodeService,
+  TREE_NODE_SERVICE,
+} from '@modules/playbooks/domain/interfaces/tree-node-service.interface';
+import pinoLogger from '../../../../../logger';
 import { GitPlaybooksRegisterComponent } from './git-playbooks-register.component';
 import { LocalPlaybooksRegisterComponent } from './local-playbooks-repository.component';
 import PlaybooksRegisterComponent from './abstract-playbooks-register.component';
@@ -22,7 +28,8 @@ export class PlaybooksRegisterComponentFactory implements OnModuleInit {
     private readonly playbookRepository: PlaybookRepository,
     private readonly playbooksRegisterRepository: PlaybooksRegisterRepository,
     private readonly eventEmitter: EventEmitter2,
-    private readonly treeNodeService: TreeNodeService,
+    @Inject(TREE_NODE_SERVICE)
+    private readonly treeNodeService: ITreeNodeService,
   ) {}
 
   /**
@@ -33,7 +40,7 @@ export class PlaybooksRegisterComponentFactory implements OnModuleInit {
     PlaybooksRegisterComponent.initializeRepositories(
       this.playbookRepository,
       this.playbooksRegisterRepository,
-      this.treeNodeService
+      this.treeNodeService,
     );
     this.logger.log('PlaybooksRegisterComponentFactory initialized');
   }
@@ -62,7 +69,7 @@ export class PlaybooksRegisterComponentFactory implements OnModuleInit {
       options.accessToken,
       options.remoteUrl,
       options.gitService,
-      options.ignoreSSLErrors
+      options.ignoreSSLErrors,
     );
   }
 
@@ -71,7 +78,9 @@ export class PlaybooksRegisterComponentFactory implements OnModuleInit {
    * @param options Options for the Local component
    * @returns A new Local playbooks register component instance
    */
-  async createLocalComponent(options: LocalComponentOptions): Promise<LocalPlaybooksRegisterComponent> {
+  async createLocalComponent(
+    options: LocalComponentOptions,
+  ): Promise<LocalPlaybooksRegisterComponent> {
     this.logger.log(`Creating Local component: ${options.name} (${options.uuid})`);
 
     return new LocalPlaybooksRegisterComponent(
@@ -84,7 +93,7 @@ export class PlaybooksRegisterComponentFactory implements OnModuleInit {
       options.uuid,
       pinoLogger, // Pass logger instance
       options.name,
-      options.directory.replace(`/${options.uuid}`, '')
+      options.directory.replace(`/${options.uuid}`, ''),
     );
   }
 }

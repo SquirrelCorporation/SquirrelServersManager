@@ -1,3 +1,4 @@
+import { ChildProcess } from 'child_process';
 import { ExecOptions, ShellString, TestOptions } from 'shelljs';
 
 /**
@@ -5,6 +6,7 @@ import { ExecOptions, ShellString, TestOptions } from 'shelljs';
  */
 export interface IShellWrapperService {
   mkdir(options: string, path: string): ShellString;
+  rm(path: string): ShellString;
   rm(options: string, path: string): ShellString;
   cat(path: string): ShellString;
   echo(content: string): ShellString;
@@ -14,5 +16,7 @@ export interface IShellWrapperService {
   cp(options: string, source: string, destination: string): ShellString;
   ln(options: string, source: string, destination: string): ShellString;
   to(content: string, path: string): ShellString;
-  exec(command: string, options?: ExecOptions): ShellString;
+  exec(command: string, options?: ExecOptions & { async?: false }): ShellString;
+  exec(command: string, options: ExecOptions & { async: true }): ChildProcess;
+  cd(path: string): void;
 }

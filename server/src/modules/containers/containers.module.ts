@@ -220,6 +220,11 @@ import { DockerWatcherComponent } from './application/services/components/watche
       provide: CONTAINER_REPOSITORY,
       useClass: ContainerRepository,
     },
+    // Add repository for volume access
+    {
+      provide: CONTAINER_VOLUME_REPOSITORY,
+      useClass: ContainerVolumeRepository,
+    },
     // Add ScheduleModule to exports
     ScheduleModule,
   ],

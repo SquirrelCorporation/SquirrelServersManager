@@ -4,6 +4,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
 import { LogsModule } from '../logs/logs.module';
 import { PlaybooksModule } from '../playbooks/playbooks.module';
+import { Playbook, PlaybookSchema } from '../playbooks/infrastructure/schemas/playbook.schema';
 import { SettingsService } from './application/services/settings.service';
 import { AdvancedOperationsService } from './application/services/advanced-operations.service';
 import { InformationService } from './application/services/information.service';
@@ -18,15 +19,11 @@ import { SettingsMigrationService } from './infrastructure/migration/settings-mi
       isGlobal: true,
     }),
     EventEmitterModule.forRoot(),
-    MongooseModule.forFeature([
-      { name: 'Playbook', schema: null, collection: 'playbooks' },
-    ]),
+    MongooseModule.forFeature([{ name: Playbook.name, schema: PlaybookSchema }]),
     LogsModule,
     PlaybooksModule,
   ],
-  controllers: [
-    SettingsController
-  ],
+  controllers: [SettingsController],
   providers: [
     SettingsService,
     AdvancedOperationsService,

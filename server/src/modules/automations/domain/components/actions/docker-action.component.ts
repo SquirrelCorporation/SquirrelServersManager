@@ -1,13 +1,11 @@
 import { Automations, SsmContainer } from 'ssm-shared-lib';
+import { IContainerService } from '@modules/containers';
 import { IAutomationRepository } from '../../../domain/repositories/automation.repository.interface';
-import { IContainerRepository } from '../../../../containers/domain/repositories/container.repository.interface';
-import { IContainerService } from '../../../../containers/application/services/container.service.interface';
 import { AbstractActionComponent } from './abstract-action.component';
 
 export class DockerActionComponent extends AbstractActionComponent {
   public readonly dockerAction: SsmContainer.Actions;
   public readonly containerIds: string[];
-  private containerRepo: IContainerRepository;
   private containerUseCases: IContainerService;
 
   constructor(
@@ -16,8 +14,7 @@ export class DockerActionComponent extends AbstractActionComponent {
     dockerAction: SsmContainer.Actions,
     containerIds: string[],
     automationRepository: IAutomationRepository,
-    containerRepo: IContainerRepository,
-    containerUseCases: IContainerService
+    containerUseCases: IContainerService,
   ) {
     super(automationUuid, automationName, Automations.Actions.DOCKER, automationRepository);
     if (!containerIds || !dockerAction) {
@@ -25,7 +22,6 @@ export class DockerActionComponent extends AbstractActionComponent {
     }
     this.containerIds = containerIds;
     this.dockerAction = dockerAction;
-    this.containerRepo = containerRepo;
     this.containerUseCases = containerUseCases;
   }
 
@@ -35,14 +31,14 @@ export class DockerActionComponent extends AbstractActionComponent {
 
     for (const containerId of this.containerIds) {
       this.childLogger.info(`Docker Action Component - executeAction for: ${containerId}`);
-      const container = await this.containerRepo.findContainerById(containerId);
+      const container = await this.containerUseCases.getContainerById(containerId);
 
       if (!container) {
         this.childLogger.error(`Docker Action - Container not found for ${containerId}`);
         success = false;
       } else {
         try {
-          await this.containerUseCases.performDockerAction(container, this.dockerAction);
+          await this.containerUseCases.executeContainerAction(containerId, this.dockerAction);
         } catch (error: any) {
           this.childLogger.error(error);
           success = false;

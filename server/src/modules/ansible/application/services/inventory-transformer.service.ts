@@ -48,9 +48,10 @@ export class InventoryTransformerService {
     };
 
     for (const deviceAuth of devicesAuth) {
-      const device = typeof deviceAuth.device === 'string'
-        ? { uuid: deviceAuth.device, ip: '' }
-        : deviceAuth.device;
+      const device =
+        typeof deviceAuth.device === 'string'
+          ? { uuid: deviceAuth.device, ip: '' }
+          : deviceAuth.device;
       const deviceKey = this.generateDeviceKey(device.uuid);
 
       this.logger.log(`Building inventory for ${device.uuid}`);
@@ -73,7 +74,7 @@ export class InventoryTransformerService {
    */
   async inventoryBuilderForTarget(
     devicesAuth: Partial<IDeviceAuth>[],
-    execUuid: string
+    execUuid: string,
   ): Promise<Playbooks.All & Playbooks.HostGroups> {
     this.logger.log(`Inventory for ${devicesAuth.length} device(s)`);
     const ansibleInventory: Playbooks.All & Playbooks.HostGroups = {
@@ -82,9 +83,10 @@ export class InventoryTransformerService {
     };
 
     for (const deviceAuth of devicesAuth) {
-      const device = typeof deviceAuth.device === 'string'
-        ? { uuid: deviceAuth.device, ip: '' }
-        : deviceAuth.device;
+      const device =
+        typeof deviceAuth.device === 'string'
+          ? { uuid: deviceAuth.device, ip: '' }
+          : deviceAuth.device;
 
       this.logger.log(`Building inventory for ${device?.uuid}`);
       ansibleInventory[
@@ -108,15 +110,13 @@ export class InventoryTransformerService {
 
     switch (deviceAuth.authType) {
       case SsmAnsible.SSHType.KeyBased: {
-        const deviceId = typeof deviceAuth.device === 'string'
-          ? deviceAuth.device
-          : deviceAuth.device?.uuid;
-        auth.ansible_ssh_private_key_file =
-          await this.sshKeyService.genAnsibleTemporaryPrivateKey(
-            deviceAuth.sshKey as string,
-            deviceId as string,
-            execUuid,
-          );
+        const deviceId =
+          typeof deviceAuth.device === 'string' ? deviceAuth.device : deviceAuth.device?.uuid;
+        auth.ansible_ssh_private_key_file = await this.sshKeyService.genAnsibleTemporaryPrivateKey(
+          deviceAuth.sshKey as string,
+          deviceId as string,
+          execUuid,
+        );
         if (deviceAuth.sshKeyPass) {
           if (deviceAuth.sshConnection !== SsmAnsible.SSHConnection.PARAMIKO) {
             throw new Error('Ssh key is not supported for non-paramiko connection');

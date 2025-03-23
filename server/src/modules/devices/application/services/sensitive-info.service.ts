@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ISensitiveInfoService } from '../../domain/services/sensitive-info.service.interface';
-import { DEFAULT_VAULT_ID, VaultCryptoService } from '../../../ansible-vault/application/services/vault-crypto.service';
+import { DEFAULT_VAULT_ID, VaultCryptoService } from '../../../ansible-vaults/application/services/vault-crypto.service';
 import { InternalError } from '../../../../middlewares/api/ApiError';
 
 const SENSITIVE_PLACEHOLDER = 'REDACTED';

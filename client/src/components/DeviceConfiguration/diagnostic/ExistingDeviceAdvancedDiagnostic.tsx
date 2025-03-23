@@ -1,5 +1,5 @@
 import { MedicalSearchDiagnosisSolid } from '@/components/Icons/CustomIcons';
-import { postDeviceDiagnostic } from '@/services/diagnostic/diagnostic';
+import { postDeviceDiagnostic } from '@/services/rest/diagnostic/diagnostic';
 import { diagnosticSocket as socket } from '@/socket';
 import { history } from '@umijs/max';
 import {

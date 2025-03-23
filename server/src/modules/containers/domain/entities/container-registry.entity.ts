@@ -1,7 +1,7 @@
 /**
- * Entity representing a container registry
+ * Domain entity for container registries
  */
-export interface ContainerRegistryEntity {
+export interface IContainerRegistryEntity {
   _id?: string;
   name: string;
   auth?: any;

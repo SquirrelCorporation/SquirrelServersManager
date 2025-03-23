@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ShellString } from 'shelljs';
 import { IDockerComposeService } from '../interfaces/docker-compose.interface';
 import { ShellWrapperService } from './shell-wrapper.service';
 
@@ -18,11 +19,10 @@ export class DockerComposeService implements IDockerComposeService {
    * @param command The docker-compose command to execute
    * @returns The result of the command execution
    */
-  async dockerComposeDryRun(command: string): Promise<string> {
+  dockerComposeDryRun(command: string): ShellString {
     try {
       this.logger.debug(`dockerComposeDryRun - Starting command: ${command}`);
-      const result = this.shellWrapper.exec(command);
-      return result.stdout;
+      return this.shellWrapper.exec(command);
     } catch (error) {
       this.logger.error(`dockerComposeDryRun failed: ${error}`);
       throw new Error(`Docker Compose command failed due to ${error}`);

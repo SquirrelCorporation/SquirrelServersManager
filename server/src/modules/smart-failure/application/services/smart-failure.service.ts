@@ -2,7 +2,10 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { API } from 'ssm-shared-lib';
 import { FAILURE_PATTERNS } from '../../domain/constants';
 import { FailurePattern } from '../../domain/entities/failure-pattern.interface';
-import { IAnsibleLogsRepository } from '../../domain/repositories/ansible-logs.repository.interface';
+import {
+  ISmartFailureRepository,
+  SMART_FAILURE_REPOSITORY,
+} from '../../domain/repositories/smart-failure.repository.interface';
 import { ISmartFailureService } from '../interfaces/smart-failure.service.interface';
 
 /**
@@ -14,8 +17,8 @@ export class SmartFailureService implements ISmartFailureService {
   private readonly failurePatterns: FailurePattern[];
 
   constructor(
-    @Inject('IAnsibleLogsRepository')
-    private readonly ansibleLogsRepository: IAnsibleLogsRepository
+    @Inject(SMART_FAILURE_REPOSITORY)
+    private readonly smartFailureRepository: ISmartFailureRepository,
   ) {
     this.failurePatterns = FAILURE_PATTERNS;
   }
@@ -28,7 +31,7 @@ export class SmartFailureService implements ISmartFailureService {
   public async parseAnsibleLogsAndMayGetSmartFailure(
     execId: string,
   ): Promise<API.SmartFailure | undefined> {
-    const logData = await this.ansibleLogsRepository.findAllByIdent(execId);
+    const logData = await this.smartFailureRepository.findAllByIdent(execId);
     const smartFailures: API.SmartFailure[] = [];
 
     logData?.forEach((value) => {

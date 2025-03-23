@@ -3,30 +3,32 @@ import { AbstractRegistryComponent } from '@modules/containers/application/servi
 import { fullName } from '@modules/containers/utils/utils';
 import SSHCredentialsHelper from 'src/helpers/ssh/SSHCredentialsHelper';
 import { IDevice, IDeviceAuth } from '@modules/devices';
-import { ContainerServiceInterface } from '../interfaces/container-service.interface';
-import { ContainerEntity } from '../../domain/entities/container.entity';
+import {
+  IContainerWatcherEngineService,
+  WATCHER_ENGINE_SERVICE,
+} from '../interfaces/watcher-engine-service.interface';
+import { IContainerService } from '../interfaces/container-service.interface';
+import { IContainerEntity } from '../../domain/entities/container.entity';
 import { CONTAINER_REPOSITORY } from '../../domain/repositories/container-repository.interface';
-import { IWatcherEngineService, WATCHER_ENGINE_SERVICE } from '../interfaces/watcher-engine-service.interface';
+import { IContainerRepository } from '../../domain/repositories/container-repository.interface';
 import { DevicesService } from '../../../devices/application/services/devices.service';
-import { ContainerRepositoryInterface } from '../../domain/repositories/container-repository.interface';
-
 
 @Injectable()
-export class ContainerService implements ContainerServiceInterface {
+export class ContainerService implements IContainerService {
   private readonly logger = new Logger(ContainerService.name);
   constructor(
     @Inject(CONTAINER_REPOSITORY)
-    private readonly containerRepository: ContainerRepositoryInterface,
+    private readonly containerRepository: IContainerRepository,
     @Inject(WATCHER_ENGINE_SERVICE)
-    private readonly watcherEngineService: IWatcherEngineService,
+    private readonly watcherEngineService: IContainerWatcherEngineService,
     private readonly devicesService: DevicesService,
   ) {}
 
-  async getAllContainers(): Promise<ContainerEntity[]> {
+  async getAllContainers(): Promise<IContainerEntity[]> {
     return this.containerRepository.findAll();
   }
 
-  async getContainerById(id: string): Promise<ContainerEntity | null> {
+  async getContainerById(id: string): Promise<IContainerEntity | null> {
     const container = await this.containerRepository.findOneById(id);
     if (!container) {
       return null;
@@ -34,11 +36,11 @@ export class ContainerService implements ContainerServiceInterface {
     return container;
   }
 
-  async getContainersByDeviceUuid(deviceUuid: string): Promise<ContainerEntity[]> {
+  async getContainersByDeviceUuid(deviceUuid: string): Promise<IContainerEntity[]> {
     return this.containerRepository.findAllByDeviceUuid(deviceUuid);
   }
 
-  async findContainerById(id: string): Promise<ContainerEntity | null> {
+  async findContainerById(id: string): Promise<IContainerEntity | null> {
     const container = await this.containerRepository.findOneById(id);
     if (!container) {
       return null;
@@ -56,43 +58,43 @@ export class ContainerService implements ContainerServiceInterface {
 
   async createContainer(
     deviceUuid: string,
-    containerData: ContainerEntity
-  ): Promise<ContainerEntity> {
+    containerData: IContainerEntity,
+  ): Promise<IContainerEntity> {
     const device = await this.devicesService.findOneByUuid(deviceUuid);
     if (!device) {
       throw new NotFoundException(`Device with UUID ${deviceUuid} not found`);
     }
-      containerData.deviceUuid = deviceUuid;
-      return this.containerRepository.create(containerData);
-   }
+    containerData.deviceUuid = deviceUuid;
+    return this.containerRepository.create(containerData);
+  }
 
   async updateContainer(
     id: string,
-    containerData: Partial<ContainerEntity>
-  ): Promise<ContainerEntity> {
-      const container = await this.containerRepository.findOneById(id);
-      if (!container) {
-        throw new NotFoundException(`Container with ID ${id} not found`);
+    containerData: Partial<IContainerEntity>,
+  ): Promise<IContainerEntity> {
+    const container = await this.containerRepository.findOneById(id);
+    if (!container) {
+      throw new NotFoundException(`Container with ID ${id} not found`);
     }
     // Update in database
-      return this.containerRepository.update(id, containerData);
+    return this.containerRepository.update(id, containerData);
   }
 
-    normalizeContainer(container: ContainerEntity) {
-  const containerWithNormalizedImage = container;
-  this.logger.log(`[UTILS] - normalizeContainer - for name: ${container.image?.name}`);
-  const registryProvider = Object.values(this.watcherEngineService.getRegistries()).find((provider) =>
-    provider.match(container.image),
-  ) as AbstractRegistryComponent;
-  if (!registryProvider) {
-    this.logger.warn(`${fullName(container)} - No Registry Provider found`);
-    containerWithNormalizedImage.image.registry.name = 'unknown';
-  } else {
-    this.logger.log('Registry found! ' + registryProvider.getId());
-    containerWithNormalizedImage.image = registryProvider.normalizeImage(container.image);
+  normalizeContainer(container: IContainerEntity) {
+    const containerWithNormalizedImage = container;
+    this.logger.log(`[UTILS] - normalizeContainer - for name: ${container.image?.name}`);
+    const registryProvider = Object.values(this.watcherEngineService.getRegistries()).find(
+      (provider) => provider.match(container.image),
+    ) as AbstractRegistryComponent;
+    if (!registryProvider) {
+      this.logger.warn(`${fullName(container)} - No Registry Provider found`);
+      containerWithNormalizedImage.image.registry.name = 'unknown';
+    } else {
+      this.logger.log('Registry found! ' + registryProvider.getId());
+      containerWithNormalizedImage.image = registryProvider.normalizeImage(container.image);
+    }
+    return containerWithNormalizedImage;
   }
-  return containerWithNormalizedImage;
-}
 
   async deleteContainer(id: string): Promise<boolean> {
     const container = await this.containerRepository.findOneById(id);
@@ -170,7 +172,7 @@ export class ContainerService implements ContainerServiceInterface {
   }
 
   // Helper method to execute container actions (start, stop, etc.)
-  private async executeContainerAction(id: string, action: string): Promise<boolean> {
+  public async executeContainerAction(id: string, action: string): Promise<boolean> {
     const container = await this.containerRepository.findOneById(id);
     if (!container) {
       throw new NotFoundException(`Container with id ${id} not found`);
@@ -235,26 +237,33 @@ export class ContainerService implements ContainerServiceInterface {
     return await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
   }
 
-  async updateDeviceDockerInfo(deviceUuid: string, dockerId: string, version: string): Promise<void> {
-   const device = await this.devicesService.findOneByUuid(deviceUuid);
-   if (!device) {
-    throw new NotFoundException(`Device with UUID ${deviceUuid} not found`);
-   }
+  async updateDeviceDockerInfo(
+    deviceUuid: string,
+    dockerId: string,
+    version: string,
+  ): Promise<void> {
+    const device = await this.devicesService.findOneByUuid(deviceUuid);
+    if (!device) {
+      throw new NotFoundException(`Device with UUID ${deviceUuid} not found`);
+    }
     device.updatedAt = new Date();
     device.dockerId = dockerId;
     device.dockerVersion = version;
     await this.devicesService.update(device);
   }
 
-  async getContainerByUuid(uuid: string): Promise<ContainerEntity | null> {
+  async getContainerByUuid(uuid: string): Promise<IContainerEntity | null> {
     return await this.containerRepository.findOneById(uuid);
   }
 
   async getRegistryByName(name: string): Promise<AbstractRegistryComponent | null> {
-    return this.watcherEngineService.getRegistries().find((registry) => registry.getId() === name) || null;
+    return (
+      this.watcherEngineService.getRegistries().find((registry) => registry.getId() === name) ||
+      null
+    );
   }
 
-  async getContainersByWatcher(watcherName: string): Promise<ContainerEntity[]> {
+  async getContainersByWatcher(watcherName: string): Promise<IContainerEntity[]> {
     return await this.containerRepository.findAllByWatcher(watcherName);
   }
 

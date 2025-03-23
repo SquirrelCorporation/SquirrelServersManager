@@ -1,8 +1,7 @@
 import { parse } from 'url';
-import { Controller, Get, Inject, Logger, Param, Query, Req, UseGuards } from '@nestjs/common';
-import { Request} from 'express';
+import { Controller, Get, Logger, Param, Query, Req, UseGuards } from '@nestjs/common';
+import { Request } from 'express';
 import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
-import { IAnsibleTaskRepository } from '@modules/ansible';
 import { TaskLogsService } from '../../application/services/task-logs.service';
 import { TaskLogsQueryDto } from '../dtos/task-logs-query.dto';
 
@@ -11,11 +10,7 @@ import { TaskLogsQueryDto } from '../dtos/task-logs-query.dto';
 export class TaskLogsController {
   private readonly logger = new Logger(TaskLogsController.name);
 
-  constructor(
-    private readonly taskLogsService: TaskLogsService,
-    @Inject('IAnsibleTaskRepository')
-    private readonly ansibleTaskRepository: IAnsibleTaskRepository
-  ) { }
+  constructor(private readonly taskLogsService: TaskLogsService) {}
 
   @Get('tasks')
   async getAllTasks(@Req() req: Request, @Query() queryDto: TaskLogsQueryDto) {
@@ -40,15 +35,7 @@ export class TaskLogsController {
 
     const result = await this.taskLogsService.getAllTasks(params);
 
-    return {
-      data: result.data,
-      metadata: {
-        total: result.meta.total,
-        success: result.meta.success,
-        pageSize: result.meta.pageSize,
-        current: result.meta.current,
-      }
-    };
+    return result;
   }
 
   @Get('tasks/:id/logs')

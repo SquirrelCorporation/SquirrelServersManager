@@ -11,5 +11,5 @@ export class CreateAutomationDto {
 
   @IsBoolean()
   @IsOptional()
-  enabled?: boolean = true;
+  enabled: boolean = true;
 }

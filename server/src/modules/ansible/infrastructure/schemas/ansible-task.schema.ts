@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, SchemaTimestampsConfig } from 'mongoose';
 
-export type AnsibleTaskDocument = AnsibleTask & Document;
+export type AnsibleTaskDocument = AnsibleTask & Document & SchemaTimestampsConfig;
 
 @Schema({
   collection: 'ansibletasks',
@@ -17,6 +17,9 @@ export class AnsibleTask {
 
   @Prop({ type: String })
   playbook?: string;
+
+  @Prop({ type: String })
+  cmd?: string;
 
   @Prop({ type: String, required: true, default: 'pending' })
   status!: string;

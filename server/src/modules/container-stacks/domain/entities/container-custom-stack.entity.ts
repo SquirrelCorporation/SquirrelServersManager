@@ -14,6 +14,7 @@ export interface ContainerCustomStack {
 }
 
 export interface IContainerCustomStackRepositoryEntity {
+  _id?: string;
   uuid: string;
   name: string;
   url?: string;

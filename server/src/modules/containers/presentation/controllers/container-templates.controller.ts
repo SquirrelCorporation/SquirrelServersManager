@@ -8,16 +8,17 @@ import {
   Post,
   Query,
   Req,
-  Res,
   UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
 import { ContainerTemplatesQueryDto, TemplateDeployDto } from '../dtos/container-templates.dto';
-import { SuccessResponse } from '../../../../middlewares/api/ApiResponse';
-import { CONTAINER_TEMPLATES_SERVICE, IContainerTemplatesService } from '../../application/interfaces/container-templates-service.interface';
+import {
+  CONTAINER_TEMPLATES_SERVICE,
+  IContainerTemplatesService,
+} from '../../application/interfaces/container-templates-service.interface';
 
 /**
  * Controller for container templates
@@ -45,10 +46,7 @@ export class ContainerTemplatesController {
       return result.data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to get templates';
-      throw new HttpException(
-        errorMessage,
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
+      throw new HttpException(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -60,16 +58,13 @@ export class ContainerTemplatesController {
    * @returns Execution ID
    */
   @Post('deploy')
-  async deploy(@Body() template: TemplateDeployDto, @Req() req: Request, @Res() res: Response) {
+  async deploy(@Body() template: TemplateDeployDto, @Req() req: Request) {
     try {
       const execId = await this.containerTemplatesService.deployTemplate(template, req.user);
-      return new SuccessResponse('Execution in progress', { execId }).send(res);
+      return execId;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to deploy template';
-      throw new HttpException(
-        errorMessage,
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
+      throw new HttpException(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

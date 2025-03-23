@@ -1,3 +1,4 @@
+import { IUser } from '@modules/users';
 import {
   ContainerCustomStack,
   IContainerCustomStackRepositoryEntity,
@@ -22,4 +23,7 @@ export interface IContainerStacksService {
     repository: Partial<IContainerCustomStackRepositoryEntity>,
   ): Promise<IContainerCustomStackRepositoryEntity>;
   deleteRepositoryByUuid(uuid: string): Promise<boolean>;
+  transformStack(content: any): Promise<{ yaml: string }>;
+  dryRunStack(json: any, yaml: string): Promise<{ validating: boolean; message?: string }>;
+  deployStack(uuid: string, target: string, user: IUser): Promise<{ execId: string }>;
 }

@@ -1,7 +1,7 @@
 /**
  * Domain entity for container volumes
  */
-export interface ContainerVolumeEntity {
+export interface IContainerVolumeEntity {
   _id?: string;
   uuid: string;
   name: string;

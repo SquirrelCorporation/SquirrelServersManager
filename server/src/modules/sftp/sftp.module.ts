@@ -1,9 +1,10 @@
 import { SshInfrastructureModule } from '@infrastructure/ssh/ssh-infrastructure.module';
 import { ShellModule } from '@modules/shell';
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { SftpService } from './application/services/sftp.service';
 import { FileStreamService } from './infrastructure/services/file-stream.service';
 import { SftpGateway } from './presentation/gateways/sftp.gateway';
+import { SftpRepository } from './infrastructure/repositories/sftp.repository';
 
 @Module({
   imports: [
@@ -15,9 +16,14 @@ import { SftpGateway } from './presentation/gateways/sftp.gateway';
     SftpGateway,
     SftpService,
     FileStreamService,
+    SftpRepository,
     {
       provide: 'ISftpService',
       useExisting: SftpService,
+    },
+    {
+      provide: 'ISftpRepository',
+      useExisting: SftpRepository,
     },
   ],
   exports: [SftpService, FileStreamService],

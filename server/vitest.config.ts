@@ -1,10 +1,10 @@
-import path from 'path';
+import { resolve } from 'path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    globals: true,
     environment: 'node',
+    globals: true,
     include: ['**/__tests__/**/*.spec.ts'],
     coverage: {
       reporter: ['text', 'json', 'html'],
@@ -14,10 +14,11 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@modules': path.resolve(__dirname, './src/modules'),
-      '@common': path.resolve(__dirname, './src/common'),
-      '@config': path.resolve(__dirname, './src/config')
+      '@modules': resolve(__dirname, './src/modules'),
+      '@infrastructure': resolve(__dirname, './src/infrastructure'),
+      '@common': resolve(__dirname, './src/common'),
+      '@config': resolve(__dirname, './src/config'),
+      'ssm-shared-lib': resolve(__dirname, '../shared-lib'),
     },
   },
 });

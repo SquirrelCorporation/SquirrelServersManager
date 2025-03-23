@@ -1,14 +1,12 @@
 import { Automations, SsmContainer } from 'ssm-shared-lib';
+import { IContainerVolumesService } from '@modules/containers';
 import { IAutomationRepository } from '../../../domain/repositories/automation.repository.interface';
-import { IVolumeRepository } from '../../../../containers/domain/repositories/volume.repository.interface';
-import { IVolumeService } from '../../../../containers/application/services/volume.service.interface';
 import { AbstractActionComponent } from './abstract-action.component';
 
 export class DockerVolumeActionComponent extends AbstractActionComponent {
   public readonly dockerVolumeAction: SsmContainer.VolumeActions;
   public readonly volumeUuids: string[];
-  private containerVolumeRepo: IVolumeRepository;
-  private containerVolumeUseCases: IVolumeService;
+  private containerVolumeUseCases: IContainerVolumesService;
 
   constructor(
     automationUuid: string,
@@ -16,8 +14,7 @@ export class DockerVolumeActionComponent extends AbstractActionComponent {
     dockerVolumeAction: SsmContainer.VolumeActions,
     volumeUuids: string[],
     automationRepository: IAutomationRepository,
-    containerVolumeRepo: IVolumeRepository,
-    containerVolumeUseCases: IVolumeService
+    containerVolumeUseCases: IContainerVolumesService,
   ) {
     super(automationUuid, automationName, Automations.Actions.DOCKER_VOLUME, automationRepository);
     if (!volumeUuids || !dockerVolumeAction) {
@@ -25,7 +22,6 @@ export class DockerVolumeActionComponent extends AbstractActionComponent {
     }
     this.volumeUuids = volumeUuids;
     this.dockerVolumeAction = dockerVolumeAction;
-    this.containerVolumeRepo = containerVolumeRepo;
     this.containerVolumeUseCases = containerVolumeUseCases;
   }
 
@@ -35,14 +31,18 @@ export class DockerVolumeActionComponent extends AbstractActionComponent {
 
     for (const volumeUuid of this.volumeUuids) {
       this.childLogger.info(`Docker Volume Action Component - executeAction for: ${volumeUuid}`);
-      const volume = await this.containerVolumeRepo.findVolumeByUuid(volumeUuid);
+      const volume = await this.containerVolumeUseCases.getVolumeByUuid(volumeUuid);
 
       if (!volume) {
         this.childLogger.error(`Docker Volume Action - Volume not found for ${volumeUuid}`);
         success = false;
       } else {
         try {
-          await this.containerVolumeUseCases.performVolumeAction(volume, this.dockerVolumeAction);
+          switch (this.dockerVolumeAction) {
+            case SsmContainer.VolumeActions.BACKUP:
+              await this.containerVolumeUseCases.backupVolume(volume, this.dockerVolumeAction);
+              break;
+          }
         } catch (error: any) {
           this.childLogger.error(error);
           success = false;

@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 import { IUser } from '../../../../modules/users';
-import { IAnsibleVault } from '../../../../modules/ansible-vault';
+import { IAnsibleVault } from '../../../ansible-vaults';
 import { Playbooks } from '../../../../types/typings';
 import { ANSIBLE_CONFIG_FILE } from '../../../../modules/ansible-config/constants';
-import { DEFAULT_VAULT_ID } from '../../../../modules/ansible-vault';
+import { DEFAULT_VAULT_ID } from '../../../ansible-vaults';
 import { ExtraVarsTransformerService } from './extra-vars-transformer.service';
 
 /**

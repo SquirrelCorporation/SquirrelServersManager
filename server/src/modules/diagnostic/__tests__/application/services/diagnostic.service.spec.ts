@@ -1,11 +1,12 @@
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import DockerModem from 'docker-modem';
 import { Client } from 'ssh2';
-import { SsmDeviceDiagnostic } from 'ssm-shared-lib';
+import { SsmDeviceDiagnostic, SsmEvents } from 'ssm-shared-lib';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { EventEmitterService } from '../../../../../core/events/event-emitter.service';
 import Events from '../../../../../core/events/events';
 import { DiagnosticService } from '../../../application/services/diagnostic.service';
+import { DiagnosticGateway } from '../../../presentation/gateways/diagnostic.gateway';
 
 // Define the diagnostic sequence for testing
 const DIAGNOSTIC_SEQUENCE = Object.values(SsmDeviceDiagnostic.Checks);
@@ -20,18 +21,23 @@ vi.mock('ssh2', () => ({
   })),
 }));
 
-vi.mock('docker-modem', () => {
-  return {
-    default: vi.fn().mockImplementation(() => ({
-      dial: vi.fn().mockImplementation((options, callback) => {
-        callback(null, 'OK');
-      }),
-    })),
-  };
-});
+vi.mock('docker-modem', () => ({
+  default: vi.fn().mockImplementation(() => ({})),
+}));
 
-vi.mock('../../../../../helpers/dns/dns-helper', () => ({
-  tryResolveHost: vi.fn().mockResolvedValue('127.0.0.1'),
+vi.mock('dockerode', () => ({
+  default: vi.fn().mockImplementation(() => ({
+    ping: vi.fn().mockImplementation((cb) => cb(null)),
+    info: vi.fn().mockImplementation((cb) => cb(null, {})),
+  })),
+}));
+
+vi.mock('src/helpers/ssh/custom-agent', () => ({
+  getCustomAgent: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/helpers/dns/dns-helper', () => ({
+  tryResolveHost: vi.fn().mockResolvedValue('test-host'),
 }));
 
 vi.mock('../../../../../helpers/ssh/SSHCredentialsHelper', () => ({
@@ -39,56 +45,45 @@ vi.mock('../../../../../helpers/ssh/SSHCredentialsHelper', () => ({
     getSShConnection: vi.fn().mockResolvedValue({
       host: 'test-host',
       port: 22,
-      username: 'test-user',
-      password: 'test-password',
     }),
     getDockerSshConnectionOptions: vi.fn().mockResolvedValue({
       host: 'test-host',
-      port: 22,
+      port: 2376,
       sshOptions: {
         host: 'test-host',
         port: 22,
-        username: 'test-user',
-        password: 'test-password',
       },
-      socketPath: '/var/run/docker.sock',
     }),
   },
-}));
-
-vi.mock('../../../../containers/core/CustomAgent', () => ({
-  getCustomAgent: vi.fn().mockReturnValue({}),
 }));
 
 describe('DiagnosticService', () => {
   let service: DiagnosticService;
   let eventEmitterService: EventEmitterService;
-  let eventEmitter: EventEmitter2;
+  let diagnosticGateway: DiagnosticGateway;
 
-  beforeEach(async () => {
-    vi.clearAllMocks();
-
+  beforeEach(() => {
     // Create mock EventEmitter2
-    eventEmitter = {
-      emit: vi.fn(),
-      on: vi.fn(),
-    } as unknown as EventEmitter2;
-
-    // Create a mock EventEmitterService
+    const eventEmitter = new EventEmitter2();
     eventEmitterService = new EventEmitterService(eventEmitter);
 
-    // Create the service
-    service = new DiagnosticService(eventEmitterService);
+    // Create mock DiagnosticGateway
+    diagnosticGateway = {
+      emit: vi.fn(),
+    } as unknown as DiagnosticGateway;
 
-    // Mock the private methods to prevent timeouts
+    // Create service instance
+    service = new DiagnosticService(eventEmitterService, diagnosticGateway);
+
+    // Mock private method implementations
     vi.spyOn(service as any, 'checkSSHConnectivity').mockResolvedValue(true);
-    vi.spyOn(service as any, 'checkDockerSocket').mockResolvedValue('OK');
-    vi.spyOn(service as any, 'checkDiskSpace').mockResolvedValue('Disk space info');
-    vi.spyOn(service as any, 'checkCPUAndMemory').mockResolvedValue('CPU and memory info');
+    vi.spyOn(service as any, 'checkDockerSocket').mockResolvedValue(true);
+    vi.spyOn(service as any, 'checkDiskSpace').mockResolvedValue('Disk info');
+    vi.spyOn(service as any, 'checkCPUAndMemory').mockResolvedValue('CPU and Memory info');
   });
 
   describe('run', () => {
-    it('should run diagnostic checks and emit events', async () => {
+    it('should run diagnostic checks and emit socket events', async () => {
       // Mock device and deviceAuth
       const device = {
         uuid: 'test-uuid',
@@ -104,7 +99,7 @@ describe('DiagnosticService', () => {
       } as any;
 
       // Spy on the emit method
-      vi.spyOn(eventEmitterService, 'emit');
+      vi.spyOn(diagnosticGateway, 'emit');
 
       // Call the run method
       const result = await service.run(device, deviceAuth);
@@ -114,13 +109,13 @@ describe('DiagnosticService', () => {
       expect(result).toHaveProperty('timestamp');
       expect(result).toHaveProperty('results');
 
-      // Verify that events were emitted for each check
-      expect(eventEmitterService.emit).toHaveBeenCalledTimes(DIAGNOSTIC_SEQUENCE.length);
+      // Verify that socket events were emitted for each check
+      expect(diagnosticGateway.emit).toHaveBeenCalledTimes(DIAGNOSTIC_SEQUENCE.length);
 
-      // Verify that each check emitted an event
+      // Verify that each check emitted an event with SsmEvents.Diagnostic.PROGRESS
       DIAGNOSTIC_SEQUENCE.forEach(() => {
-        expect(eventEmitterService.emit).toHaveBeenCalledWith(
-          Events.DIAGNOSTIC_CHECK,
+        expect(diagnosticGateway.emit).toHaveBeenCalledWith(
+          SsmEvents.Diagnostic.PROGRESS,
           expect.objectContaining({
             module: 'DeviceDiagnostic',
           })
@@ -149,7 +144,7 @@ describe('DiagnosticService', () => {
       );
 
       // Spy on the emit method
-      vi.spyOn(eventEmitterService, 'emit');
+      vi.spyOn(diagnosticGateway, 'emit');
 
       // Call the run method
       const result = await service.run(device, deviceAuth);
@@ -160,13 +155,16 @@ describe('DiagnosticService', () => {
       expect(result).toHaveProperty('results');
 
       // Verify that error events were emitted
-      expect(eventEmitterService.emit).toHaveBeenCalledWith(Events.DIAGNOSTIC_CHECK, {
-        success: false,
-        severity: 'error',
-        module: 'DeviceDiagnostic',
-        data: { check: SsmDeviceDiagnostic.Checks.SSH_CONNECT },
-        message: '❌ SSH connection failed',
-      });
+      expect(diagnosticGateway.emit).toHaveBeenCalledWith(
+        SsmEvents.Diagnostic.PROGRESS,
+        {
+          success: false,
+          severity: 'error',
+          module: 'DeviceDiagnostic',
+          data: { check: SsmDeviceDiagnostic.Checks.SSH_CONNECT },
+          message: '❌ SSH connection failed',
+        }
+      );
     });
   });
 

@@ -15,7 +15,7 @@ export class AdvancedOperationsService {
     private readonly serverLogsRepository: IServerLogsRepository,
     @Inject('ANSIBLE_LOGS_REPOSITORY')
     private readonly ansibleLogsRepository: IAnsibleLogsRepository,
-    @InjectModel('Playbook') private readonly playbookModel: Model<any>
+    @InjectModel('Playbook') private readonly playbookModel: Model<any>,
   ) {}
 
   /**
@@ -54,7 +54,6 @@ export class AdvancedOperationsService {
     try {
       // Drop the Playbook collection
       await this.playbookModel.db.collection('playbooks').drop();
-
 
       this.logger.log('Playbooks model deleted and resynced successfully');
     } catch (error: unknown) {

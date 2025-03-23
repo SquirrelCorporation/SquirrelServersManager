@@ -1,3 +1,6 @@
+import { IUser } from '@modules/users';
+import { API, SsmAnsible } from 'ssm-shared-lib';
+import { Playbooks } from 'src/types/typings';
 import { IPlaybook } from '../../domain/entities/playbook.entity';
 
 export const PLAYBOOKS_SERVICE = 'PLAYBOOKS_SERVICE';
@@ -7,44 +10,48 @@ export const PLAYBOOKS_SERVICE = 'PLAYBOOKS_SERVICE';
  */
 export interface IPlaybooksService {
   /**
-   * Get a playbook by UUID
+   * Get a playbook by its quick reference
+   * @param quickReference Playbook quick reference
+   * @returns The playbook
+   */
+  getPlaybookByQuickReference(quickReference: string): Promise<IPlaybook | null>;
+
+  /**
+   * Get a playbook by its UUID
    * @param uuid Playbook UUID
-   * @returns The playbook or undefined if not found
+   * @returns The playbook
    */
-  getPlaybook(uuid: string): Promise<IPlaybook | undefined>;
-  
+  getPlaybookByUuid(uuid: string): Promise<IPlaybook | null>;
+
   /**
-   * Get all playbooks
-   * @returns Array of playbooks
+   * Execute a playbook
+   * @param playbook Playbook
+   * @param user User
+   * @param target Target
+   * @param extraVarsForcedValues Extra vars forced values
+   * @param mode Execution mode
+   * @returns The execution result
    */
-  getPlaybooks(): Promise<IPlaybook[]>;
-  
+  executePlaybook(
+    playbook: IPlaybook,
+    user: IUser,
+    target: string[] | undefined,
+    extraVarsForcedValues?: API.ExtraVars,
+    mode?: SsmAnsible.ExecutionMode,
+  ): Promise<string>;
+
   /**
-   * Find a playbook by path
-   * @param path File path
-   * @returns The playbook or undefined if not found
-   */
-  findPlaybookByPath(path: string): Promise<IPlaybook | undefined>;
-  
-  /**
-   * Save a playbook
+   * Execute a playbook on an inventory
    * @param uuid Playbook UUID
-   * @param content Playbook content
-   * @param registerUuid Register UUID
-   * @returns The saved playbook
+   * @param inventory Inventory
+   * @param user User
+   * @returns The execution result
    */
-  savePlaybook(uuid: string, content: string, registerUuid: string): Promise<IPlaybook>;
-  
-  /**
-   * Delete a playbook
-   * @param uuid Playbook UUID
-   */
-  deletePlaybook(uuid: string): Promise<void>;
-  
-  /**
-   * Get playbooks by register UUID
-   * @param registerUuid Register UUID
-   * @returns Array of playbooks belonging to the register
-   */
-  getPlaybooksByRegister(registerUuid: string): Promise<IPlaybook[]>;
+  executePlaybookOnInventory(
+    playbook: IPlaybook,
+    user: IUser,
+    inventoryTargets?: Playbooks.All & Playbooks.HostGroups,
+    extraVarsForcedValues?: API.ExtraVars,
+    execUuid?: string,
+  ): Promise<string>;
 }

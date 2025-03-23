@@ -26,7 +26,7 @@ export class MetricsController {
       this.logger.error('Unauthorized access attempt to metrics endpoint');
       return res.status(HttpStatus.UNAUTHORIZED).send('Unauthorized');
     }
-    this.logger.log('Getting metrics');
+    this.logger.debug('Getting metrics');
     res.setHeader('Content-Type', this.metricsService.getRegistry().contentType);
     return res.send(await this.metricsService.getRegistry().metrics());
   }

@@ -5,6 +5,7 @@ import { redisConf } from '../../config';
 import { CacheService } from './cache.service';
 import { CACHE_MODULE_OPTIONS } from './cache.constants';
 import { CacheModuleOptions } from './interfaces/cache-options.interface';
+import { CACHE_SERVICE } from './interfaces/cache.service.interface';
 import { CacheDefaultService } from './cache-default.service';
 
 @Global()
@@ -38,12 +39,12 @@ export class CacheModule {
         },
         CacheService,
         {
-          provide: 'ICacheService',
+          provide: CACHE_SERVICE,
           useExisting: CacheService,
         },
         CacheDefaultService,
       ],
-      exports: [CacheService, 'ICacheService'],
+      exports: [CacheService, CACHE_SERVICE],
     };
   }
 }

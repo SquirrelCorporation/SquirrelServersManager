@@ -1,4 +1,4 @@
-export class CollectionResponseDto {
+export class CollectionsResponseDto {
   id!: string;
   namespace!: string;
   name!: string;
@@ -9,19 +9,17 @@ export class CollectionResponseDto {
   updated?: Date;
 }
 
+export class CollectionsPaginatedResponseDto {
+  data: CollectionsResponseDto[] = [];
+  success: boolean = true;
+  total: number = 0;
+  pageSize: number = 0;
+  current: number = 0;
+}
+
 export class InstalledCollectionResponseDto {
   namespace!: string;
   name!: string;
   version?: string;
   path?: string;
-}
-
-export class CollectionInstallResponseDto {
-  success!: boolean;
-  message!: string;
-  collection?: {
-    namespace: string;
-    name: string;
-    version?: string;
-  };
 }

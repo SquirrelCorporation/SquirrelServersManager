@@ -1,7 +1,7 @@
 import * as os from 'node:os';
 import path from 'path';
 import { Injectable, Logger } from '@nestjs/common';
-import { DEFAULT_VAULT_ID, VaultCryptoService } from '../../../ansible-vault';
+import { DEFAULT_VAULT_ID, VaultCryptoService } from '../../../ansible-vaults';
 import { ISshKeyService } from '../interfaces/ssh-key.interface';
 import { FileSystemService } from './file-system.service';
 import { ShellWrapperService } from './shell-wrapper.service';

@@ -4,7 +4,7 @@ import { GitPlaybooksRepositoryController } from '../../../presentation/controll
 import { PlaybooksRegisterEngineService } from '../../../application/services/engine/playbooks-register-engine.service';
 import { PlaybooksRegisterService } from '../../../application/services/playbooks-register.service';
 import { PLAYBOOKS_REGISTER_REPOSITORY } from '../../../domain/repositories/playbooks-register-repository.interface';
-import { VaultCryptoService, DEFAULT_VAULT_ID } from '@modules/ansible-vault';
+import { VaultCryptoService, DEFAULT_VAULT_ID } from '@modules/ansible-vaults';
 import { IPlaybooksRegister } from '../../../domain/entities/playbooks-register.entity';
 import { API, Repositories, SsmGit } from 'ssm-shared-lib';
 import { NotFoundError } from '../../../../../middlewares/api/ApiError';

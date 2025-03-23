@@ -4,13 +4,19 @@ import { AnsibleGalaxyCommandService } from './application/services/ansible-gala
 import { InventoryTransformerService } from './application/services/inventory-transformer.service';
 import { ExtraVarsService } from './application/services/extra-vars.service';
 import { ExtraVarsTransformerService } from './application/services/extra-vars-transformer.service';
-import { IAnsibleTaskStatusRepository } from './domain/repositories/ansible-task-status.repository.interface';
+import {
+  ANSIBLE_TASK_STATUS_REPOSITORY,
+  IAnsibleTaskStatusRepository,
+} from './domain/repositories/ansible-task-status.repository.interface';
 import { IAnsibleTaskStatus } from './domain/entities/ansible-task-status.interface';
 import { IAnsibleTaskRepository } from './domain/repositories/ansible-task.repository.interface';
 import { IAnsibleTask } from './domain/entities/ansible-task.interface';
 import { AnsibleTaskStatusRepository } from './infrastructure/repositories/ansible-task-status.repository';
 import { AnsibleTaskRepository } from './infrastructure/repositories/ansible-task.repository';
-import { AnsibleTaskStatus, AnsibleTaskStatusSchema } from './infrastructure/schemas/ansible-task-status.schema';
+import {
+  AnsibleTaskStatus,
+  AnsibleTaskStatusSchema,
+} from './infrastructure/schemas/ansible-task-status.schema';
 import { AnsibleTask, AnsibleTaskSchema } from './infrastructure/schemas/ansible-task.schema';
 import { TaskLogsService } from './application/services/task-logs.service';
 
@@ -23,6 +29,7 @@ export {
   ExtraVarsService,
   ExtraVarsTransformerService,
   IAnsibleTaskStatusRepository,
+  ANSIBLE_TASK_STATUS_REPOSITORY,
   IAnsibleTaskStatus,
   IAnsibleTaskRepository,
   IAnsibleTask,
@@ -32,7 +39,7 @@ export {
   AnsibleTaskStatusSchema,
   AnsibleTask,
   AnsibleTaskSchema,
-  TaskLogsService
+  TaskLogsService,
 };
 
 // Domain exports

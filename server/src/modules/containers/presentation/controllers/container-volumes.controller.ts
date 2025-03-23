@@ -17,8 +17,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { FileSystemService } from '@modules/shell';
+import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
-import { CONTAINER_VOLUMES_SERVICE, ContainerVolumesServiceInterface } from '../../application/interfaces/container-volumes-service.interface';
+import {
+  CONTAINER_VOLUMES_SERVICE,
+  IContainerVolumesService,
+} from '../../application/interfaces/container-volumes-service.interface';
 import { CreateVolumeDto } from '../dtos/create-volume.dto';
 import { filterByFields, filterByQueryParams } from '../../../../helpers/query/FilterHelper';
 import { paginate } from '../../../../helpers/query/PaginationHelper';
@@ -29,7 +33,7 @@ import { sortByFields } from '../../../../helpers/query/SorterHelper';
 export class ContainerVolumesController {
   constructor(
     @Inject(CONTAINER_VOLUMES_SERVICE)
-    private readonly volumesService: ContainerVolumesServiceInterface,
+    private readonly volumesService: IContainerVolumesService,
     private readonly fileSystemService: FileSystemService,
   ) {}
 
@@ -37,7 +41,7 @@ export class ContainerVolumesController {
    * Get all volumes with pagination, sorting, and filtering
    */
   @Get()
-  async getVolumes(@Req() req, @Res() res) {
+  async getVolumes(@Req() req) {
     const realUrl = req.url;
     const { current, pageSize } = req.query;
     const params = parse(realUrl, true).query as any;
@@ -58,16 +62,10 @@ export class ContainerVolumesController {
       dataSource = paginate(dataSource, current as number, pageSize as number);
     }
 
-    return res.status(HttpStatus.OK).json({
-      status: 'success',
-      message: 'Got volumes',
-      data: dataSource,
-      meta: {
-        total: totalBeforePaginate,
-        success: true,
-        pageSize,
-        current: parseInt(`${params.current}`, 10) || 1,
-      },
+    return new PaginatedResponseDto(dataSource, {
+      total: totalBeforePaginate,
+      pageSize,
+      current: parseInt(`${current}`, 10) || 1,
     });
   }
 
@@ -112,11 +110,7 @@ export class ContainerVolumesController {
    * Backup a volume
    */
   @Post('backup/:uuid')
-  async postBackupVolume(
-    @Param('uuid') uuid: string,
-    @Body() body: { mode: string },
-    @Res() res,
-  ) {
+  async postBackupVolume(@Param('uuid') uuid: string, @Body() body: { mode: string }, @Res() res) {
     const { mode } = body;
 
     const volume = await this.volumesService.getVolumeByUuid(uuid);

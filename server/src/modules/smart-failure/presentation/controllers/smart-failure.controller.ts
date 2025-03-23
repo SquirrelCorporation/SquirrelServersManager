@@ -6,12 +6,12 @@ import { SmartFailureRequestDto } from '../dtos/smart-failure.dto';
 /**
  * Controller for handling smart failure analysis requests
  */
-@Controller('ansible/smart-failure')
+@Controller('smart-failure')
 @UseGuards(JwtAuthGuard)
 export class SmartFailureController {
   constructor(
     @Inject('ISmartFailureService')
-    private readonly smartFailureService: ISmartFailureService
+    private readonly smartFailureService: ISmartFailureService,
   ) {}
 
   /**

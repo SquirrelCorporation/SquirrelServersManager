@@ -1,6 +1,8 @@
 /**
  * Interface for SSH key operations in the application layer
  */
+export const SSH_KEY_SERVICE = 'ISshKeyService';
+
 export interface ISshKeyService {
   getTmpKeyFileName(execUuid: string, deviceUuid: string): string;
   getTmpKeyFilePath(fileName: string): string;

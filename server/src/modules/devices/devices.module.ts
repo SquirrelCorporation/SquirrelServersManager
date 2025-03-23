@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AnsibleVaultModule } from '../ansible-vault/ansible-vault.module';
+import { AnsibleVaultsModule } from '../ansible-vaults/ansible-vaults.module';
 import { DevicesService } from './application/services/devices.service';
+import { DEVICES_SERVICE } from './application/interfaces/devices-service.interface';
 import { DevicesController } from './presentation/controllers/devices.controller';
 import { DevicesAuthController } from './presentation/controllers/devices-auth.controller';
 import { DevicesCapabilitiesController } from './presentation/controllers/devices-capabilities.controller';
@@ -23,13 +24,13 @@ import { SENSITIVE_INFO_SERVICE } from './domain/services/sensitive-info.service
       { name: DEVICE, schema: DeviceSchema },
       { name: DEVICE_AUTH, schema: DeviceAuthSchema },
     ]),
-    AnsibleVaultModule,
+    AnsibleVaultsModule,
   ],
   controllers: [
     DevicesController,
     DevicesAuthController,
     DevicesCapabilitiesController,
-    DevicesConfigurationController
+    DevicesConfigurationController,
   ],
   providers: [
     DevicesService,
@@ -45,7 +46,7 @@ import { SENSITIVE_INFO_SERVICE } from './domain/services/sensitive-info.service
       useClass: DeviceAuthRepository,
     },
     {
-      provide: 'IDevicesService',
+      provide: DEVICES_SERVICE,
       useExisting: DevicesService,
     },
     {
@@ -55,11 +56,11 @@ import { SENSITIVE_INFO_SERVICE } from './domain/services/sensitive-info.service
   ],
   exports: [
     DevicesService,
-    'IDevicesService',
+    DEVICES_SERVICE,
     SENSITIVE_INFO_SERVICE,
     SensitiveInfoService,
     DEVICE_REPOSITORY,
-    DEVICE_AUTH_REPOSITORY
+    DEVICE_AUTH_REPOSITORY,
   ],
 })
 export class DevicesModule {}

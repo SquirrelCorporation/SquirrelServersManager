@@ -1,13 +1,19 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { AnsibleTaskStatusRepository } from '@modules/ansible';
+import { ANSIBLE_LOGS_REPOSITORY, IAnsibleLogsRepository } from '@modules/logs';
 import { filterByQueryParams } from '../../../../helpers/query/FilterHelper';
 import { filterByFields } from '../../../../helpers/query/FilterHelper';
 import { sortByFields } from '../../../../helpers/query/SorterHelper';
 import { paginate } from '../../../../helpers/query/PaginationHelper';
-import { AnsibleTaskRepository } from '../../infrastructure/repositories/ansible-task.repository';
+import {
+  ANSIBLE_TASK_REPOSITORY,
+  IAnsibleTaskRepository,
+} from '../../domain/repositories/ansible-task.repository.interface';
+import {
+  ANSIBLE_TASK_STATUS_REPOSITORY,
+  IAnsibleTaskStatusRepository,
+} from '../../domain/repositories/ansible-task-status.repository.interface';
 import { PaginatedResponseDto, TaskResponseDto } from '../../presentation/dtos/task-response.dto';
-import { IAnsibleLogsRepository } from '../../../logs/domain/repositories/ansible-logs-repository.interface';
 
 /**
  * Service for managing Ansible task logs
@@ -17,10 +23,12 @@ export class TaskLogsService {
   private readonly logger = new Logger(TaskLogsService.name);
 
   constructor(
-    private readonly ansibleTaskRepository: AnsibleTaskRepository,
-    @Inject('IAnsibleLogsRepository')
+    @Inject(ANSIBLE_TASK_REPOSITORY)
+    private readonly ansibleTaskRepository: IAnsibleTaskRepository,
+    @Inject(ANSIBLE_LOGS_REPOSITORY)
     private readonly ansibleLogsRepository: IAnsibleLogsRepository,
-    private readonly ansibleTaskStatusRepository: AnsibleTaskStatusRepository,
+    @Inject(ANSIBLE_TASK_STATUS_REPOSITORY)
+    private readonly ansibleTaskStatusRepository: IAnsibleTaskStatusRepository,
   ) {}
 
   /**
@@ -61,7 +69,7 @@ export class TaskLogsService {
       dataSource = paginate(dataSource, current, pageSize);
 
       // Map to response DTO
-      const taskDtos = dataSource.map(task => {
+      const taskDtos = dataSource.map((task) => {
         const dto = new TaskResponseDto();
         dto.id = task._id || '';
         dto.ident = task.ident;
@@ -78,7 +86,6 @@ export class TaskLogsService {
       // Return paginated response with metadata
       return new PaginatedResponseDto(taskDtos, {
         total: totalBeforePaginate,
-        success: true,
         pageSize,
         current,
       });

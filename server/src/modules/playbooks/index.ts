@@ -14,19 +14,23 @@ export * from './domain/entities/playbook.entity';
 export * from './domain/entities/playbooks-register.entity';
 export * from './domain/repositories/playbook-repository.interface';
 export * from './domain/repositories/playbooks-register-repository.interface';
+export * from './domain/services/playbooks-register-service.interface';
+export * from './domain/interfaces/tree-node-service.interface';
 
 // Application exports
+export * from './application/interfaces/playbooks-service.interface';
+export * from './application/interfaces/playbooks-register-engine-service.interface';
 export * from './application/services/playbook.service';
 export * from './application/services/playbooks-register.service';
 export * from './application/services/register-tree.service';
 export * from './application/services/tree-node.service';
+export * from './application/services/components/git-playbooks-register.component';
+export * from './application/services/engine/playbooks-register-engine.service';
+export * from './application/services/default-playbooks-register.service';
 
 // Infrastructure exports
 export * from './infrastructure/repositories/playbook.repository';
 export * from './infrastructure/repositories/playbooks-register.repository';
-export * from './application/services/components/git-playbooks-register.component';
-export * from './application/services/engine/playbooks-register-engine.service';
-export * from './application/services/default-playbooks-register.service';
 export * from './infrastructure/schemas/playbook.schema';
 export * from './infrastructure/schemas/playbooks-register.schema';
 

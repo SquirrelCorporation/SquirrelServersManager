@@ -1,17 +1,25 @@
-import * as fs from 'fs';
-import * as path from 'path';
 import { Inject, Injectable, Logger, OnModuleInit, forwardRef } from '@nestjs/common';
-import { SsmGit } from 'ssm-shared-lib';
+import { API, SsmGit } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
-import { ShellWrapperService } from '../../../shell';
+import { IPlaybooksService, PLAYBOOKS_SERVICE } from '@modules/playbooks';
+import { IUser } from '@modules/users';
+import {
+  DOCKER_COMPOSE_SERVICE,
+  FILE_SYSTEM_SERVICE,
+  IDockerComposeService,
+  IFileSystemService,
+} from '@modules/shell';
 import { transformToDockerCompose } from '../../../../helpers/docker/DockerComposeJSONTransformer';
-import { filterByFields, filterByQueryParams } from '../../../../helpers/query/FilterHelper';
-import { sortByFields } from '../../../../helpers/query/SorterHelper';
-import { paginate } from '../../../../helpers/query/PaginationHelper';
 import { IContainerStacksService } from '../interfaces/container-stacks-service.interface';
 import { ContainerCustomStack } from '../../domain/entities/container-custom-stack.entity';
-import { CONTAINER_CUSTOM_STACK_REPOSITORY_REPOSITORY, IContainerCustomStackRepositoryRepository } from '../../domain/repositories/container-custom-stack-repository-repository.interface';
-import { CONTAINER_CUSTOM_STACK_REPOSITORY, IContainerCustomStackRepository } from '../../domain/repositories/container-custom-stack-repository.interface';
+import {
+  CONTAINER_CUSTOM_STACK_REPOSITORY_REPOSITORY,
+  IContainerCustomStackRepositoryRepository,
+} from '../../domain/repositories/container-custom-stack-repository-repository.interface';
+import {
+  CONTAINER_CUSTOM_STACK_REPOSITORY,
+  IContainerCustomStackRepository,
+} from '../../domain/repositories/container-custom-stack-repository.interface';
 import { IContainerCustomStackRepositoryEntity } from '../../domain/entities/container-custom-stack.entity';
 import { ContainerCustomStacksRepositoryEngineService } from './container-stacks-repository-engine-service';
 
@@ -20,13 +28,18 @@ export class ContainerStacksService implements IContainerStacksService, OnModule
   private readonly logger = new Logger(ContainerStacksService.name);
 
   constructor(
-    private readonly shellWrapperService: ShellWrapperService,
     @Inject(CONTAINER_CUSTOM_STACK_REPOSITORY)
     private readonly containerCustomStackRepository: IContainerCustomStackRepository,
     @Inject(CONTAINER_CUSTOM_STACK_REPOSITORY_REPOSITORY)
     private readonly containerCustomStackRepositoryRepository: IContainerCustomStackRepositoryRepository,
     @Inject(forwardRef(() => ContainerCustomStacksRepositoryEngineService))
     private readonly containerCustomStacksRepositoryEngine: ContainerCustomStacksRepositoryEngineService,
+    @Inject(FILE_SYSTEM_SERVICE)
+    private readonly fileSystemService: IFileSystemService,
+    @Inject(DOCKER_COMPOSE_SERVICE)
+    private readonly dockerComposeService: IDockerComposeService,
+    @Inject(PLAYBOOKS_SERVICE)
+    private readonly playbooksService: IPlaybooksService,
   ) {
     this.initializeRepositories();
   }
@@ -141,13 +154,16 @@ export class ContainerStacksService implements IContainerStacksService, OnModule
       await this.containerCustomStackRepositoryRepository.deleteByUuid(uuid);
       return true;
     } catch (error) {
-      this.logger.error(`Failed to delete repository: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.error(
+        `Failed to delete repository: ${error instanceof Error ? error.message : String(error)}`,
+      );
       return false;
     }
   }
 
   async putRepositoryOnError(repositoryUuid: string, error: unknown): Promise<void> {
-    const repository = await this.containerCustomStackRepositoryRepository.findByUuid(repositoryUuid);
+    const repository =
+      await this.containerCustomStackRepositoryRepository.findByUuid(repositoryUuid);
     if (!repository) {
       throw new Error(`Repository with Uuid: ${repositoryUuid} not found`);
     }
@@ -157,7 +173,8 @@ export class ContainerStacksService implements IContainerStacksService, OnModule
   }
 
   async resetRepositoryError(repositoryUuid: string): Promise<void> {
-    const repository = await this.containerCustomStackRepositoryRepository.findByUuid(repositoryUuid);
+    const repository =
+      await this.containerCustomStackRepositoryRepository.findByUuid(repositoryUuid);
     if (!repository) {
       throw new Error(`Repository with Uuid: ${repositoryUuid} not found`);
     }
@@ -166,36 +183,7 @@ export class ContainerStacksService implements IContainerStacksService, OnModule
     await this.containerCustomStackRepositoryRepository.update(repository.uuid, repository);
   }
 
-  // New methods to support the container stacks controller
-
-  async getStacks(params: any) {
-    const customStacks = await this.containerCustomStackRepository.findAll();
-
-    // Apply filtering, sorting, and pagination
-    let dataSource = sortByFields(customStacks, params);
-    dataSource = filterByFields(dataSource, params);
-    dataSource = filterByQueryParams(dataSource, params, ['uuid', 'name']);
-
-    return {
-      data: dataSource,
-      total: dataSource.length,
-    };
-  }
-
-  async getPaginatedStacks(params: any, current: number, pageSize: number) {
-    const { data, total } = await this.getStacks(params);
-
-    const paginatedData = paginate(data, current, pageSize);
-
-    return {
-      data: paginatedData,
-      total,
-      pageSize,
-      current,
-    };
-  }
-
-  async transformStack(content: string) {
+  async transformStack(content: any) {
     const json = JSON.parse(content);
     return { yaml: transformToDockerCompose(json) };
   }
@@ -204,7 +192,10 @@ export class ContainerStacksService implements IContainerStacksService, OnModule
     return this.containerCustomStackRepository.create(stack);
   }
 
-  async updateStack(id: string, stack: Partial<ContainerCustomStack>): Promise<ContainerCustomStack> {
+  async updateStack(
+    id: string,
+    stack: Partial<ContainerCustomStack>,
+  ): Promise<ContainerCustomStack> {
     return this.containerCustomStackRepository.update(id, stack);
   }
 
@@ -212,45 +203,49 @@ export class ContainerStacksService implements IContainerStacksService, OnModule
     return this.containerCustomStackRepository.deleteByUuid(uuid);
   }
 
-  async dryRunStack(stackData: any) {
-    const { json, yaml } = stackData;
-    const tempPath = `/tmp/${uuidv4()}`;
-    const fullFilePath = path.join(tempPath, 'docker-compose.yml');
+  async dryRunStack(json: any, yaml: string) {
+    const path = `/tmp/${uuidv4()}`;
+    const fullFilePath = `${path}/docker-compose.yml`;
 
     // Create directory
-    fs.mkdirSync(tempPath, { recursive: true });
+    this.fileSystemService.createDirectory(path);
 
     // Write file
     if (json) {
       const transformedYaml = transformToDockerCompose(json);
-      fs.writeFileSync(fullFilePath, transformedYaml);
+      this.fileSystemService.writeFile(fullFilePath, transformedYaml);
     } else {
-      fs.writeFileSync(fullFilePath, yaml);
+      this.fileSystemService.writeFile(fullFilePath, yaml);
     }
 
     // Run docker-compose config
-    try {
-      await this.shellWrapperService.exec(`docker-compose -f ${fullFilePath} config`);
+    const result = this.dockerComposeService.dockerComposeDryRun(
+      `docker-compose -f ${fullFilePath} config`,
+    );
+    if (result.code !== 0) {
       return { validating: true };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      return { validating: false, message: errorMessage };
+    } else {
+      return { validating: false, message: result.stderr };
     }
   }
 
-  async deployStack(uuid: string, target: string, user: any) {
+  async deployStack(uuid: string, target: string, user: IUser) {
     const stack = await this.containerCustomStackRepository.findByUuid(uuid);
     if (!stack) {
       throw new Error(`Stack with UUID ${uuid} not found`);
     }
 
-    // This would typically call a service to execute a playbook
-    // For now, we'll just return a mock execution ID with the target info and user ID if available
-    return {
-      execId: uuidv4(),
-      target,
-      userId: user?.id || 'anonymous'
-    };
+    const playbook = await this.playbooksService.getPlaybookByQuickReference('deploy');
+    if (!playbook) {
+      throw new Error(`Playbook 'deploy' not found`);
+    }
+
+    const execId = await this.playbooksService.executePlaybook(playbook, user, [target], [
+      { extraVar: 'definition', value: stack.yaml },
+      { extraVar: 'project', value: stack.name },
+    ] as API.ExtraVars);
+
+    return { execId };
   }
 
   async getAllStacks(): Promise<ContainerCustomStack[]> {
@@ -269,11 +264,16 @@ export class ContainerStacksService implements IContainerStacksService, OnModule
     return this.containerCustomStackRepositoryRepository.findByUuid(uuid);
   }
 
-  async createRepository(repository: IContainerCustomStackRepositoryEntity): Promise<IContainerCustomStackRepositoryEntity> {
+  async createRepository(
+    repository: IContainerCustomStackRepositoryEntity,
+  ): Promise<IContainerCustomStackRepositoryEntity> {
     return this.containerCustomStackRepositoryRepository.create(repository);
   }
 
-  async updateRepository(uuid: string, repository: Partial<IContainerCustomStackRepositoryEntity>): Promise<IContainerCustomStackRepositoryEntity> {
+  async updateRepository(
+    uuid: string,
+    repository: Partial<IContainerCustomStackRepositoryEntity>,
+  ): Promise<IContainerCustomStackRepositoryEntity> {
     return this.containerCustomStackRepositoryRepository.update(uuid, repository);
   }
 }

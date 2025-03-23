@@ -21,7 +21,7 @@ export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> 
             success: true,
             message: 'Operation successful',
             data,
-            metadata,
+            ...metadata,
             ...rest,
           };
         }

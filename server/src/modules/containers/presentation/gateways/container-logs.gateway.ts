@@ -14,7 +14,7 @@ import { DateTime } from 'luxon';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
 import { CONTAINER_LOGS_SERVICE, IContainerLogsService } from '../../application/interfaces/container-logs-service.interface';
 import PinoLogger from '../../../../logger';
-import { ContainerServiceInterface } from '../../application/interfaces/container-service.interface';
+import { IContainerService } from '../../application/interfaces/container-service.interface';
 import { CONTAINER_SERVICE } from '../../application/interfaces/container-service.interface';
 import { ContainerLogsDto } from '../dtos/container-logs.dto';
 
@@ -35,7 +35,7 @@ export class ContainerLogsGateway implements OnGatewayConnection, OnGatewayDisco
 
   constructor(
     @Inject(CONTAINER_SERVICE)
-    private readonly containerService: ContainerServiceInterface,
+    private readonly containerService: IContainerService,
     @Inject(CONTAINER_LOGS_SERVICE)
     private readonly containerLogsService: IContainerLogsService,
   ) {}

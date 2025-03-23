@@ -17,7 +17,7 @@ export abstract class AbstractActionComponent extends EventEmitter {
     automationUuid: string,
     automationName: string,
     type: Automations.Actions,
-    automationRepository: IAutomationRepository
+    automationRepository: IAutomationRepository,
   ) {
     super();
     this.type = type;

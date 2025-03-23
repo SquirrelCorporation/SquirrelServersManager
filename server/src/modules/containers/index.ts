@@ -7,11 +7,14 @@ export * from './domain/entities/container.entity';
 export * from './domain/components/component.interface';
 export * from './domain/components/kind.enum';
 export * from './domain/repositories/container-repository.interface';
+export * from './domain/repositories/container-image-repository.interface';
+export * from './domain/repositories/container-volume-repository.interface';
 
 // Application
 export * from './application/interfaces/container-service.interface';
 export * from './application/interfaces/container-logs-service.interface';
 export * from './application/interfaces/watcher-engine-service.interface';
+export * from './application/interfaces/container-volumes-service.interface';
 export * from './application/services/container.service';
 export * from './application/services/container-logs.service';
 export * from './application/services/engine/watcher-engine.service';

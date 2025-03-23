@@ -1,7 +1,7 @@
 import { SsmAnsible } from 'ssm-shared-lib';
 import DeviceAuthRepo from '../../data/database/repository/DeviceAuthRepo';
 import logger from '../../logger';
-import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../modules/ansible-vault/ansible-vault';
+import { DEFAULT_VAULT_ID, vaultDecrypt } from '../../modules/ansible-vaults/ansible-vault';
 
 export async function generateSudoCommand(deviceUuid: string): Promise<string> {
   const deviceAuth = (await DeviceAuthRepo.findOneByDeviceUuid(deviceUuid))?.[0];

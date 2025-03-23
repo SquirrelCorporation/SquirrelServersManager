@@ -46,7 +46,7 @@ export class ContainerCustomStackRepositoryDocument extends Document {
   @Prop({
     type: String,
     required: true,
-    enum: Object.values(SsmGit.Services)
+    enum: Object.values(SsmGit.Services),
   })
   gitService!: SsmGit.Services;
 
@@ -60,4 +60,6 @@ export class ContainerCustomStackRepositoryDocument extends Document {
   updatedAt?: Date;
 }
 
-export const ContainerCustomStackRepositorySchema = SchemaFactory.createForClass(ContainerCustomStackRepositoryDocument);
+export const ContainerCustomStackRepositorySchema = SchemaFactory.createForClass(
+  ContainerCustomStackRepositoryDocument,
+);

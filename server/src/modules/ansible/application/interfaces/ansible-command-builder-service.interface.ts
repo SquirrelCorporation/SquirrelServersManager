@@ -1,6 +1,6 @@
 import { API, SsmAnsible } from 'ssm-shared-lib';
 import { IUser } from '../../../users';
-import { IAnsibleVault } from '../../../ansible-vault';
+import { IAnsibleVault } from '../../../ansible-vaults';
 import { Playbooks } from '../../../../types/typings';
 
 export const ANSIBLE_COMMAND_BUILDER_SERVICE = 'ANSIBLE_COMMAND_BUILDER_SERVICE';

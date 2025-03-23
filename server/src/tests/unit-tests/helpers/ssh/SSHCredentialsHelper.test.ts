@@ -4,14 +4,14 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import Device from '../../../../data/database/model/Device';
 import DeviceAuth from '../../../../data/database/model/DeviceAuth';
 import SSHCredentialsHelper from '../../../../helpers/ssh/SSHCredentialsHelper';
-import * as vault from '../../../../modules/ansible-vault/ansible-vault';
+import * as vault from '../../../../modules/ansible-vaults/ansible-vault';
 
 // The test cases
 describe('SSHCredentialsHelper', () => {
   // Mock the vaultDecrypt function
   vi.mock('../../../../modules/ansible-vault/ansible-vault', async (importOriginal) => {
     return {
-      ...(await importOriginal<typeof import('../../../../modules/ansible-vault/ansible-vault')>()),
+      ...(await importOriginal<typeof import('../../../../modules/ansible-vaults/ansible-vault')>()),
       vaultDecrypt: async (value: string, vault: string) => {
         return value + '-decrypted';
       },

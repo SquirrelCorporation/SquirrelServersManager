@@ -2,7 +2,7 @@ import SwitchConnexionMethod from '@/components/NewDeviceModal/SwitchConnexionMe
 import TerminalHandler, {
   TaskStatusTimelineType,
 } from '@/components/PlaybookExecutionModal/PlaybookExecutionHandler';
-import { getAnsibleSmartFailure } from '@/services/rest/ansible';
+import { getAnsibleSmartFailure } from '@/services/rest/smart-failure/smart-failure';
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,

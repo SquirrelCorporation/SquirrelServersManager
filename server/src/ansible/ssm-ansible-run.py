@@ -30,7 +30,7 @@ def get_configuration(url):
                 runner_path=runner_path,
                 runner_headers=runner_headers)
 
-
+ 
 def status_handler(data, runner_config):
     plugin_config = get_configuration('http://localhost:3000/ansible/hooks/tasks/status')
     if plugin_config['runner_url'] is not None:

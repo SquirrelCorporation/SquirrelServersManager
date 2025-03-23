@@ -1,4 +1,5 @@
 import path from 'path';
+import os from 'os';
 import { Injectable, Logger } from '@nestjs/common';
 import fs from 'fs-extra';
 import { ShellString, TestOptions } from 'shelljs';
@@ -17,6 +18,14 @@ export class FileSystemService implements IFileSystemService {
 
   constructor(shellWrapper: ShellWrapperService) {
     this.shellWrapper = shellWrapper;
+  }
+
+  /**
+   * Gets the temporary directory path
+   * @returns The path to the system's temporary directory
+   */
+  getTempDir(): string {
+    return os.tmpdir();
   }
 
   /**
@@ -93,6 +102,7 @@ export class FileSystemService implements IFileSystemService {
    * @param args Arguments for the command
    * @returns The result of the command
    */
+  // eslint-disable-next-line prettier/prettier
   private executeCommand<T extends(...args: any[]) => any>(
     shellCmd: T,
     ...args: Parameters<T>

@@ -10,9 +10,9 @@ import { db } from './config';
 import logger, { httpLoggerOptions } from './logger';
 import { AnsibleConfigModule } from './modules/ansible-config/ansible-config.module';
 import { AnsibleModule } from './modules/ansible/ansible.module';
-import { AnsibleVaultModule } from './modules/ansible-vault/ansible-vault.module';
+import { AnsibleVaultsModule } from './modules/ansible-vaults/ansible-vaults.module';
 import { AuthModule } from './modules/auth/auth.module';
-//import { AutomationsModule } from './modules/automations/automations.module';
+import { AutomationsModule } from './modules/automations/automations.module';
 import { ContainerStacksModule } from './modules/container-stacks/container-stacks.module';
 import { ContainersModule } from './modules/containers/containers.module';
 import { DevicesModule } from './modules/devices/devices.module';
@@ -40,7 +40,9 @@ let connectionReady = false;
 @Module({
   imports: [
     LoggerModule.forRoot({
-      pinoHttp: {...httpLoggerOptions, transport: {
+      pinoHttp: {
+        ...httpLoggerOptions,
+        transport: {
           targets: [
             {
               target: 'pino-pretty',
@@ -50,15 +52,15 @@ let connectionReady = false;
             },
             {
               target: 'pino-mongodb',
-      options: {
-        uri: `mongodb://${db.host}:${db.port}/`,
-        database: `${db.name}`,
-        collection: 'logs',
-      },
-    },
+              options: {
+                uri: `mongodb://${db.host}:${db.port}/`,
+                database: `${db.name}`,
+                collection: 'logs',
+              },
+            },
           ],
         },
-    }
+      },
     }),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -144,21 +146,19 @@ let connectionReady = false;
     }),
     AuthModule,
     StatisticsModule,
-    //   AutomationsModule,
+    AutomationsModule,
     ContainerStacksModule,
-     ContainersModule, // Commented out due to missing schema file
+    ContainersModule, // Commented out due to missing schema file
     DevicesModule,
     UpdateModule,
     DiagnosticModule,
     ShellModule,
-    // Make sure the SshModule is provided as a global module with dynamic registration
-    // This ensures that there's only one instance of the module and its providers
     SshModule,
     SftpModule,
     LogsModule,
     AnsibleModule,
     AnsibleConfigModule,
-    AnsibleVaultModule,
+    AnsibleVaultsModule,
     SmartFailureModule,
     NotificationsModule,
     PlaybooksModule,

@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
-import { DEFAULT_VAULT_ID, VaultCryptoService } from '@modules/ansible-vault';
+import { DEFAULT_VAULT_ID, VaultCryptoService } from '@modules/ansible-vaults';
 import { ContainerCustomStacksRepositoryRepository } from '../../infrastructure/repositories/container-custom-stacks-repository.repository';
 import { ContainerCustomStackRepository } from '../../infrastructure/repositories/container-custom-stack.repository';
 import { ShellWrapperService } from '../../../shell';

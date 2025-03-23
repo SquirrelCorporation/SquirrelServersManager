@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IContainerCustomStackRepository } from '../../domain/repositories/container-custom-stack-repository.interface';
-import { ContainerCustomStack, IContainerCustomStackRepositoryEntity } from '../../domain/entities/container-custom-stack.entity';
+import {
+  ContainerCustomStack,
+  IContainerCustomStackRepositoryEntity,
+} from '../../domain/entities/container-custom-stack.entity';
 import { CONTAINER_CUSTOM_STACK } from '../../infrastructure/schemas/container-custom-stack.schema';
 import { ContainerCustomStackMapper } from '../mappers/container-custom-stack.mapper';
 
@@ -11,7 +14,7 @@ export class ContainerCustomStackRepository implements IContainerCustomStackRepo
   constructor(
     @InjectModel(CONTAINER_CUSTOM_STACK)
     private readonly containerCustomStackModel: Model<any>,
-    private readonly mapper: ContainerCustomStackMapper
+    private readonly mapper: ContainerCustomStackMapper,
   ) {}
 
   async findAll(): Promise<ContainerCustomStack[]> {
@@ -39,7 +42,7 @@ export class ContainerCustomStackRepository implements IContainerCustomStackRepo
   }
 
   async listAllByRepository(
-    repository: IContainerCustomStackRepositoryEntity
+    repository: IContainerCustomStackRepositoryEntity,
   ): Promise<ContainerCustomStack[]> {
     const entities = await this.containerCustomStackModel.find({ uuid: repository.uuid }).lean();
     return this.mapper.toDomainList(entities);
@@ -69,9 +72,7 @@ export class ContainerCustomStackRepository implements IContainerCustomStackRepo
     await this.containerCustomStackModel.deleteOne({ uuid });
   }
 
-  async deleteAllByRepository(
-    repository: IContainerCustomStackRepositoryEntity
-  ): Promise<void> {
+  async deleteAllByRepository(repository: IContainerCustomStackRepositoryEntity): Promise<void> {
     await this.containerCustomStackModel.deleteMany({ repositoryId: repository._id });
   }
 

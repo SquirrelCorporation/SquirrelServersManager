@@ -4,7 +4,7 @@ import { AbstractRegistryComponent } from '@modules/containers/application/servi
 import { AbstractWatcherComponent } from '@modules/containers/application/services/components/watcher/abstract-watcher.component';
 import { ConfigurationSchema } from '@modules/containers/types';
 import { Kind } from '@modules/containers/domain/components/kind.enum';
-import Component from '../services/components/core/component';
+import { IContainerComponent } from '../../../domain/components/component.interface';
 
 
 export const WATCHER_ENGINE_SERVICE = 'WATCHER_ENGINE_SERVICE';
@@ -17,7 +17,7 @@ export interface StateType {
 /**
  * Interface for the Watcher Engine Service
  */
-export interface IWatcherEngineService extends OnModuleInit, OnModuleDestroy {
+export interface IContainerWatcherEngineService extends OnModuleInit, OnModuleDestroy {
   /**
    * Initialize the service when the module is loaded
    */
@@ -47,7 +47,7 @@ export interface IWatcherEngineService extends OnModuleInit, OnModuleDestroy {
     provider: string,
     name: string,
     configuration: ConfigurationSchema
-  ): Promise<Component<ConfigurationSchema>>;
+  ): Promise<IContainerComponent<ConfigurationSchema>>;
 
   /**
    * Register watchers from database
@@ -69,7 +69,7 @@ export interface IWatcherEngineService extends OnModuleInit, OnModuleDestroy {
    */
   deregisterComponent(
     kind: Kind,
-    component: Component<ConfigurationSchema>
+    component: IContainerComponent<ConfigurationSchema>
   ): Promise<any>;
 
   /**
@@ -77,7 +77,7 @@ export interface IWatcherEngineService extends OnModuleInit, OnModuleDestroy {
    */
   deregisterComponents(
     kind: Kind,
-    components: Component<ConfigurationSchema>[]
+    components: IContainerComponent<ConfigurationSchema>[]
   ): Promise<any>;
 
   /**

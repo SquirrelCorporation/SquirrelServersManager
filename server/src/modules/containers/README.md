@@ -30,13 +30,14 @@ This module is structured according to clean architecture principles:
 
 ### Domain Layer
 
-- **Entities**: Core business objects like ContainerEntity
-- **Repositories**: Interfaces defining data access methods
-- **Components**: Component interfaces and enums
+- **Entities**: Core business objects like `IContainerEntity`
+- **Repositories**: Interfaces defining data access methods like `IContainerRepository`
+- **Components**: Component interfaces like `IContainerComponent` and enums like `Kind`
 
 ### Application Layer
 
-- **Services**: Business logic for container operations
+- **Interfaces**: Service interfaces like `IContainerService` and `IContainerVolumesService`
+- **Services**: Business logic implementations for container operations
 - **Components**: Reusable component implementations
   - AbstractWatcherComponent: Base class for container watchers
   - AbstractRegistryComponent: Base class for registry providers
@@ -56,6 +57,34 @@ This module is structured according to clean architecture principles:
 
 ## Key Components
 
+### Interfaces
+
+- **Domain Entities**:
+  - `IContainerEntity`: Entity interface for containers
+  - `IContainerVolumeEntity`: Entity interface for container volumes
+  - `IContainerNetworkEntity`: Entity interface for container networks
+  - `IContainerImageEntity`: Entity interface for container images
+  - `IContainerRegistryEntity`: Entity interface for container registries
+  - `IContainerComponent`: Base component interface
+
+- **Domain Repositories**:
+  - `IContainerRepository`: Repository interface for container operations
+  - `IContainerVolumeRepository`: Repository interface for volume operations
+  - `IContainerNetworkRepository`: Repository interface for network operations
+  - `IContainerImageRepository`: Repository interface for image operations
+  - `IContainerRegistryRepository`: Repository interface for registry operations
+
+- **Application Services**:
+  - `IContainerService`: Service interface for container operations
+  - `IContainerVolumesService`: Service interface for volume operations
+  - `IContainerNetworksService`: Service interface for network operations
+  - `IContainerImagesService`: Service interface for image operations
+  - `IContainerRegistriesService`: Service interface for registry operations
+  - `IContainerStatsService`: Service interface for container statistics
+  - `IContainerLogsService`: Service interface for container logs
+  - `IContainerWatcherEngineService`: Service interface for watcher engine
+  - `IContainerTemplatesService`: Service interface for container templates
+
 ### Controllers
 
 - `ContainersController`: Controller for container operations
@@ -65,14 +94,18 @@ This module is structured according to clean architecture principles:
 - `ContainerImagesController`: Controller for container image operations
 - `ContainerNetworksController`: Controller for container network operations
 - `ContainerTemplatesController`: Controller for container templates
+- `ContainerLogsGateway`: WebSocket gateway for container logs
 
 ### Services
 
-- `ContainerService`: Service for container operations
-- `ContainerLogsService`: Service for container logs
-- `ContainerStatsService`: Service for container statistics
-- `ContainerVolumesService`: Service for container volume operations
-- `WatcherEngineService`: Core engine for container watchers and registries
+- `ContainerService`: Implementation of `IContainerService`
+- `ContainerVolumesService`: Implementation of `IContainerVolumesService`
+- `ContainerNetworksService`: Implementation of `IContainerNetworksService`
+- `ContainerImagesService`: Implementation of `IContainerImagesService`
+- `ContainerRegistriesService`: Implementation of `IContainerRegistriesService`
+- `ContainerStatsService`: Implementation of `IContainerStatsService`
+- `ContainerLogsService`: Implementation of `IContainerLogsService`
+- `WatcherEngineService`: Implementation of `IContainerWatcherEngineService`
 - `ContainerComponentFactory`: Factory for creating watcher and registry components
 
 ### Container Watchers
@@ -93,7 +126,6 @@ Various registry providers are supported through a component system:
 - `GET /containers`: Get all containers
 - `GET /containers/:uuid`: Get container by UUID
 - `GET /containers/device/:deviceUuid`: Get containers by device UUID
-- `POST /containers/device/:deviceUuid`: Create a new container on device
 - `PATCH /containers/:uuid`: Update a container
 - `DELETE /containers/:uuid`: Delete a container
 - `POST /containers/:uuid/start`: Start a container
@@ -103,19 +135,39 @@ Various registry providers are supported through a component system:
 - `POST /containers/:uuid/unpause`: Unpause a container
 - `POST /containers/:uuid/kill`: Kill a container
 - `GET /containers/:uuid/logs`: Get container logs
-- `GET /containers/stats`: Get container statistics
-- `GET /containers/volumes`: Get all volumes
-- `POST /containers/volumes`: Create a new volume
-- `DELETE /containers/volumes/:name`: Delete a volume
-- `GET /containers/networks`: Get all networks
-- `POST /containers/networks`: Create a new network
-- `DELETE /containers/networks/:name`: Delete a network
-- `GET /containers/images`: Get all images
-- `GET /containers/registries`: Get all registries
-- `POST /containers/registries`: Add a new registry
-- `DELETE /containers/registries/:id`: Delete a registry
-- `GET /containers/templates`: Get all templates
-- `POST /containers/templates/deploy`: Deploy a template
+
+- `GET /container-volumes`: Get all volumes
+- `GET /container-volumes/device/:deviceUuid`: Get volumes by device UUID
+- `GET /container-volumes/:uuid`: Get volume by UUID
+- `POST /container-volumes/device/:deviceUuid`: Create a volume
+- `PATCH /container-volumes/:uuid`: Update a volume
+- `DELETE /container-volumes/:uuid`: Delete a volume
+- `POST /container-volumes/prune/device/:deviceUuid`: Prune unused volumes
+- `POST /container-volumes/backup/:uuid`: Backup a volume
+- `GET /container-volumes/backup`: Download a volume backup
+
+- `GET /container-networks`: Get all networks
+- `GET /container-networks/:uuid`: Get network by UUID
+- `GET /container-networks/device/:deviceUuid`: Get networks by device UUID
+- `POST /container-networks/device/:deviceUuid`: Create a network
+- `PATCH /container-networks/:uuid`: Update a network
+- `DELETE /container-networks/:uuid`: Delete a network
+
+- `GET /container-images`: Get all images
+
+- `GET /container-registries`: Get all registries
+- `POST /container-registries/:name`: Update registry authentication
+- `PUT /container-registries/:name`: Create a custom registry
+- `PATCH /container-registries/:name`: Reset registry authentication
+- `DELETE /container-registries/:name`: Remove a custom registry
+
+- `GET /container-statistics/:id/stat/:type`: Get container stat by type
+- `GET /container-statistics/:id/stats/:type`: Get container stats by type
+- `GET /container-statistics/count/:status`: Get container count by status
+- `GET /container-statistics/averaged`: Get averaged container stats
+
+- `GET /container-templates`: Get all templates
+- `POST /container-templates/deploy`: Deploy a template
 
 ## WebSocket Endpoints
 
@@ -145,13 +197,13 @@ export class AppModule {}
 ### Managing Containers
 
 ```typescript
-import { ContainerService, CONTAINER_SERVICE } from '@modules/containers';
+import { IContainerService, CONTAINER_SERVICE } from '@modules/containers';
 
 @Injectable()
 export class MyService {
   constructor(
     @Inject(CONTAINER_SERVICE)
-    private readonly containerService: ContainerService
+    private readonly containerService: IContainerService
   ) {}
 
   async getAllContainers() {
@@ -166,7 +218,7 @@ export class MyService {
     return this.containerService.startContainer(containerUuid);
   }
 
-  async createContainer(deviceUuid: string, containerData: CreateContainerDto) {
+  async createContainer(deviceUuid: string, containerData: IContainerEntity) {
     return this.containerService.createContainer(deviceUuid, containerData);
   }
 }
@@ -175,13 +227,13 @@ export class MyService {
 ### Accessing Container Logs
 
 ```typescript
-import { ContainerLogsService, CONTAINER_LOGS_SERVICE } from '@modules/containers';
+import { IContainerLogsService, CONTAINER_LOGS_SERVICE } from '@modules/containers';
 
 @Injectable()
 export class MyService {
   constructor(
     @Inject(CONTAINER_LOGS_SERVICE)
-    private readonly containerLogsService: ContainerLogsService
+    private readonly containerLogsService: IContainerLogsService
   ) {}
 
   async getContainerLogs(containerUuid: string, options?: any) {
@@ -194,7 +246,7 @@ export class MyService {
 
 ```typescript
 import { 
-  WatcherEngineService, 
+  IContainerWatcherEngineService, 
   WATCHER_ENGINE_SERVICE,
   Kind,
   WATCHERS,
@@ -205,7 +257,7 @@ import {
 export class MyService {
   constructor(
     @Inject(WATCHER_ENGINE_SERVICE)
-    private readonly watcherEngineService: WatcherEngineService
+    private readonly watcherEngineService: IContainerWatcherEngineService
   ) {}
 
   async registerDockerWatcher(deviceId: string, deviceUuid: string, config: any) {

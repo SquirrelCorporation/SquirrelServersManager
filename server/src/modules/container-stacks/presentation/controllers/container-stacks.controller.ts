@@ -4,18 +4,24 @@ import {
   Delete,
   Get,
   Inject,
+  Logger,
   Param,
   Post,
   Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
-import { CONTAINER_STACKS_SERVICE, IContainerStacksService } from '../../application/interfaces/container-stacks-service.interface';
-import { ContainerCustomStack, IContainerCustomStackRepositoryEntity } from '../../domain/entities/container-custom-stack.entity';
+import {
+  CONTAINER_STACKS_SERVICE,
+  IContainerStacksService,
+} from '../../application/interfaces/container-stacks-service.interface';
+import { ContainerCustomStack } from '../../domain/entities/container-custom-stack.entity';
 
 @Controller('container-stacks')
 @UseGuards(JwtAuthGuard)
 export class ContainerStacksController {
+  private readonly logger = new Logger(ContainerStacksController.name);
   constructor(
     @Inject(CONTAINER_STACKS_SERVICE)
     private readonly containerStacksService: IContainerStacksService,
@@ -44,31 +50,26 @@ export class ContainerStacksController {
     return this.containerStacksService.deleteStackByUuid(uuid);
   }
 
-  @Get('repositories')
-  async getAllRepositories(): Promise<IContainerCustomStackRepositoryEntity[]> {
-    return this.containerStacksService.getAllRepositories();
-  }
-
-  @Get('repositories/:uuid')
-  async getRepositoryByUuid(@Param('uuid') uuid: string): Promise<IContainerCustomStackRepositoryEntity | null> {
-    return this.containerStacksService.getRepositoryByUuid(uuid);
-  }
-
-  @Post('repositories')
-  async createRepository(@Body() repository: IContainerCustomStackRepositoryEntity): Promise<IContainerCustomStackRepositoryEntity> {
-    return this.containerStacksService.createRepository(repository);
-  }
-
-  @Put('repositories/:uuid')
-  async updateRepository(
+  @Post('deploy/:uuid')
+  async deployStack(
     @Param('uuid') uuid: string,
-    @Body() repository: Partial<IContainerCustomStackRepositoryEntity>,
-  ): Promise<IContainerCustomStackRepositoryEntity> {
-    return this.containerStacksService.updateRepository(uuid, repository);
+    @Body() body: { target: string },
+    @Req() req,
+  ): Promise<{ execId: string }> {
+    return this.containerStacksService.deployStack(uuid, body.target, req.user);
   }
 
-  @Delete('repositories/:uuid')
-  async deleteRepository(@Param('uuid') uuid: string): Promise<boolean> {
-    return this.containerStacksService.deleteRepositoryByUuid(uuid);
+  @Post('transform')
+  async transformStack(@Body() body: { content: any }): Promise<{ yaml: string }> {
+    this.logger.log(`Transforming stack: ${JSON.stringify(body.content)}`);
+    return this.containerStacksService.transformStack(body.content);
+  }
+
+  @Post('dry-run')
+  async dryRunStack(
+    @Body() body: { json: any; yaml: string },
+  ): Promise<{ validating: boolean; message?: string }> {
+    const { json, yaml } = body;
+    return this.containerStacksService.dryRunStack(json, yaml);
   }
 }

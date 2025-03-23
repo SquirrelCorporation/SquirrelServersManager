@@ -1,32 +1,32 @@
 import { IDevice, IDeviceAuth } from '@modules/devices';
 import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
-import { ContainerEntity } from '../../domain/entities/container.entity';
+import { IContainerEntity } from '../../domain/entities/container.entity';
 
 export const CONTAINER_SERVICE = 'CONTAINER_SERVICE';
 
 /**
  * Service interface for container operations
  */
-export interface ContainerServiceInterface {
+export interface IContainerService {
   /**
    * Get all containers
    */
-  getAllContainers(): Promise<ContainerEntity[]>;
+  getAllContainers(): Promise<IContainerEntity[]>;
 
   /**
    * Get one container by its UUID
    */
-  getContainerByUuid(uuid: string): Promise<ContainerEntity | null>;
+  getContainerByUuid(uuid: string): Promise<IContainerEntity | null>;
 
   /**
    * Get containers by device UUID
    */
-  getContainersByDeviceUuid(deviceUuid: string): Promise<ContainerEntity[]>;
+  getContainersByDeviceUuid(deviceUuid: string): Promise<IContainerEntity[]>;
 
   /**
    * Find a container by its ID
    */
-  findContainerById(id: string): Promise<ContainerEntity | null>;
+  findContainerById(id: string): Promise<IContainerEntity | null>;
 
   /**
    * Count all containers
@@ -41,18 +41,15 @@ export interface ContainerServiceInterface {
   /**
    * Create a container on a device
    */
-  createContainer(
-    deviceUuid: string,
-    containerData: ContainerEntity
-  ): Promise<ContainerEntity>;
+  createContainer(deviceUuid: string, containerData: IContainerEntity): Promise<IContainerEntity>;
 
   /**
    * Update a container's details
    */
   updateContainer(
     uuid: string,
-    containerData: Partial<ContainerEntity>
-  ): Promise<ContainerEntity>;
+    containerData: Partial<IContainerEntity>,
+  ): Promise<IContainerEntity>;
 
   /**
    * Delete a container by its UUID
@@ -97,12 +94,12 @@ export interface ContainerServiceInterface {
   /**
    * Get containers by watcher name
    */
-  getContainersByWatcher(watcherName: string): Promise<ContainerEntity[]>;
+  getContainersByWatcher(watcherName: string): Promise<IContainerEntity[]>;
 
   /**
    * Get a container by its Docker ID
    */
-  getContainerById(id: string): Promise<ContainerEntity | null>;
+  getContainerById(id: string): Promise<IContainerEntity | null>;
 
   /**
    * Update container status for all containers associated with a watcher
@@ -132,7 +129,7 @@ export interface ContainerServiceInterface {
   /**
    * Normalize a container
    */
-  normalizeContainer(container: ContainerEntity): ContainerEntity;
+  normalizeContainer(container: IContainerEntity): IContainerEntity;
 
   /**
    * Delete a container by its ID
@@ -143,4 +140,9 @@ export interface ContainerServiceInterface {
    * Get registry by name
    */
   getRegistryByName(name: string): Promise<AbstractRegistryComponent | null>;
+
+  /**
+   * Execute a container action
+   */
+  executeContainerAction(id: string, action: string): Promise<boolean>;
 }

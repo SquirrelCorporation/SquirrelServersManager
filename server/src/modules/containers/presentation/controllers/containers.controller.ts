@@ -1,3 +1,4 @@
+import { parse } from 'url';
 import {
   Body,
   Controller,
@@ -7,24 +8,55 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
-import { ContainerServiceInterface } from '../../application/interfaces/container-service.interface';
+import { IContainerService } from '../../application/interfaces/container-service.interface';
 import { CONTAINER_SERVICE } from '../../application/interfaces/container-service.interface';
+import { ContainersQueryDto } from '../dtos/container-query.dto';
+import { PaginatedResponseDto } from '../dtos/paginated-response.dto';
+import { filterByFields, filterByQueryParams } from '../../../../helpers/query/FilterHelper';
+import { paginate } from '../../../../helpers/query/PaginationHelper';
+import { sortByFields } from '../../../../helpers/query/SorterHelper';
 
 @Controller('containers')
 @UseGuards(JwtAuthGuard)
 export class ContainersController {
   constructor(
     @Inject(CONTAINER_SERVICE)
-    private readonly containerService: ContainerServiceInterface,
+    private readonly containerService: IContainerService,
   ) {}
 
   @Get()
-  async getAllContainers() {
-    return this.containerService.getAllContainers();
+  async getAllContainers(@Req() req, @Query() query: ContainersQueryDto) {
+    const realUrl = req.url;
+    const { current = 1, pageSize = 10 } = query;
+    const params = parse(realUrl, true).query as any;
+
+    // Get all containers
+    const containers = await this.containerService.getAllContainers();
+
+    // Apply sorting, filtering and pagination
+    let dataSource = sortByFields(containers, params);
+    dataSource = filterByFields(dataSource, params);
+    dataSource = filterByQueryParams(
+      dataSource.map((e) => ({ ...e, deviceUuid: e.device?.uuid })),
+      params,
+      ['status[]', 'name', 'updateAvailable', 'deviceUuid'],
+    );
+
+    const totalBeforePaginate = dataSource?.length || 0;
+
+    // Add pagination
+    dataSource = paginate(dataSource, current as number, pageSize as number);
+
+    return new PaginatedResponseDto(dataSource, {
+      total: totalBeforePaginate,
+      pageSize,
+      current: parseInt(`${current}`, 10) || 1,
+    });
   }
 
   @Get(':uuid')
@@ -38,10 +70,7 @@ export class ContainersController {
   }
 
   @Patch(':uuid')
-  async updateContainer(
-    @Param('uuid') uuid: string,
-    @Body() containerData: Partial<any>,
-  ) {
+  async updateContainer(@Param('uuid') uuid: string, @Body() containerData: Partial<any>) {
     return this.containerService.updateContainer(uuid, containerData);
   }
 
@@ -81,10 +110,7 @@ export class ContainersController {
   }
 
   @Get(':uuid/logs')
-  async getContainerLogs(
-    @Param('uuid') uuid: string,
-    @Query() options: any,
-  ) {
+  async getContainerLogs(@Param('uuid') uuid: string, @Query() options: any) {
     return this.containerService.getContainerLogs(uuid, options);
   }
 }

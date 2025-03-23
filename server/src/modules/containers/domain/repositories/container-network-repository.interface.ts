@@ -1,45 +1,45 @@
-import { ContainerNetworkEntity } from '../entities/container-network.entity';
+import { IContainerNetworkEntity } from '../entities/container-network.entity';
 
 export const CONTAINER_NETWORK_REPOSITORY = 'CONTAINER_NETWORK_REPOSITORY';
 
 /**
  * Repository interface for container network operations
  */
-export interface ContainerNetworkRepositoryInterface {
+export interface IContainerNetworkRepository {
   /**
    * Find all networks
    */
-  findAll(): Promise<ContainerNetworkEntity[]>;
+  findAll(): Promise<IContainerNetworkEntity[]>;
 
   /**
    * Find all networks by device UUID
    */
-  findAllByDeviceUuid(deviceUuid: string): Promise<ContainerNetworkEntity[]>;
+  findAllByDeviceUuid(deviceUuid: string): Promise<IContainerNetworkEntity[]>;
 
   /**
    * Find one network by its UUID
    */
-  findOneById(id: string): Promise<ContainerNetworkEntity | null>;
+  findOneById(id: string): Promise<IContainerNetworkEntity | null>;
 
   /**
    * Find one network by its name and device UUID
    */
-  findOneByNameAndDeviceUuid(name: string, deviceUuid: string): Promise<ContainerNetworkEntity | null>;
+  findOneByNameAndDeviceUuid(name: string, deviceUuid: string): Promise<IContainerNetworkEntity | null>;
 
   /**
    * Save a network
    */
-  save(network: ContainerNetworkEntity): Promise<ContainerNetworkEntity>;
+  save(network: IContainerNetworkEntity): Promise<IContainerNetworkEntity>;
 
   /**
    * Create a network
    */
-  create(network: ContainerNetworkEntity): Promise<ContainerNetworkEntity>;
+  create(network: IContainerNetworkEntity): Promise<IContainerNetworkEntity>;
 
   /**
    * Update a network
    */
-  update(id: string, network: Partial<ContainerNetworkEntity>): Promise<ContainerNetworkEntity>;
+  update(id: string, network: Partial<IContainerNetworkEntity>): Promise<IContainerNetworkEntity>;
 
   /**
    * Delete a network by UUID

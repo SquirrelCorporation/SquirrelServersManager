@@ -1,5 +1,7 @@
 import { IAnsibleTask } from '../entities/ansible-task.interface';
 
+export const ANSIBLE_TASK_REPOSITORY = 'ANSIBLE_TASK_REPOSITORY';
+
 export interface IAnsibleTaskRepository {
   create(task: Partial<IAnsibleTask>): Promise<IAnsibleTask>;
   findByIdent(ident: string): Promise<IAnsibleTask | null>;

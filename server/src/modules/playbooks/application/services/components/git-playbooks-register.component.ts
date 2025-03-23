@@ -1,13 +1,25 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import PlaybooksRegisterComponent, { DIRECTORY_ROOT } from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
-import { GitStep, IGitUserInfos, IInitGitOptionsSyncImmediately, ILoggerContext, clone, commitAndSync, forcePull } from 'src/helpers/git';
+import PlaybooksRegisterComponent, {
+  DIRECTORY_ROOT,
+} from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
+import {
+  GitStep,
+  IGitUserInfos,
+  IInitGitOptionsSyncImmediately,
+  ILoggerContext,
+  clone,
+  commitAndSync,
+  forcePull,
+} from 'src/helpers/git';
 import { SsmAlert, SsmGit } from 'ssm-shared-lib';
 import { InternalError } from '@middlewares/api/ApiError';
-import { FileSystemService, PlaybookFileService } from '@modules/shell';
-import { PlaybookRepository } from '@modules/playbooks/infrastructure/repositories/playbook.repository';
-import { PlaybooksRegisterRepository } from '@modules/playbooks/infrastructure/repositories/playbooks-register.repository';
-import { TreeNodeService } from '@modules/playbooks';
+import { IFileSystemService, IPlaybookFileService } from '@modules/shell';
+import {
+  IPlaybookRepository,
+  IPlaybooksRegisterRepository,
+  ITreeNodeService,
+} from '@modules/playbooks';
 import Events from '../../../../../core/events/events';
 
 /**
@@ -19,12 +31,12 @@ export class GitPlaybooksRegisterComponent extends PlaybooksRegisterComponent {
   private readonly options: IInitGitOptionsSyncImmediately;
 
   constructor(
-    fileSystemService: FileSystemService,
-    playbookFileService: PlaybookFileService,
-    playbookRepository: PlaybookRepository,
-    playbooksRegisterRepository: PlaybooksRegisterRepository,
+    fileSystemService: IFileSystemService,
+    playbookFileService: IPlaybookFileService,
+    playbookRepository: IPlaybookRepository,
+    playbooksRegisterRepository: IPlaybooksRegisterRepository,
     private readonly eventEmitter: EventEmitter2,
-    treeNodeService: TreeNodeService,
+    treeNodeService: ITreeNodeService,
     uuid: string,
     logger: any,
     name: string,
@@ -36,7 +48,16 @@ export class GitPlaybooksRegisterComponent extends PlaybooksRegisterComponent {
     gitService: SsmGit.Services,
     ignoreSSLErrors: boolean,
   ) {
-    super(fileSystemService, playbookFileService, playbookRepository, playbooksRegisterRepository,treeNodeService, uuid, name, DIRECTORY_ROOT);
+    super(
+      fileSystemService,
+      playbookFileService,
+      playbookRepository,
+      playbooksRegisterRepository,
+      treeNodeService,
+      uuid,
+      name,
+      DIRECTORY_ROOT,
+    );
 
     // Configure user information
     const userInfo: IGitUserInfos = {

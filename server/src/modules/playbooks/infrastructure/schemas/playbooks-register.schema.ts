@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
 import { Repositories, SsmGit } from 'ssm-shared-lib';
-import { IAnsibleVault } from '@modules/ansible-vault';
+import { IAnsibleVault } from '@modules/ansible-vaults';
 
 export type PlaybooksRegisterDocument = PlaybooksRegister & Document;
 

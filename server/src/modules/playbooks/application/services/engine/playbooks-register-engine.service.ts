@@ -4,7 +4,10 @@ import PlaybooksRegisterComponent from '@modules/playbooks/application/services/
 import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { SsmGit } from 'ssm-shared-lib';
-import { GitComponentOptions, LocalComponentOptions } from '@modules/playbooks/domain/interfaces/component-options.interface';
+import {
+  GitComponentOptions,
+  LocalComponentOptions,
+} from '@modules/playbooks/domain/interfaces/component-options.interface';
 import { PlaybooksRegisterComponentFactory } from '../components/component-factory.service';
 
 /**

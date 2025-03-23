@@ -1,6 +1,7 @@
-import { AnsibleVaultModule } from '@modules/ansible-vault';
+import { AnsibleVaultsModule } from '@modules/ansible-vaults';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { PlaybooksModule } from '@modules/playbooks/playbooks.module';
 import { ShellModule } from '../shell/shell.module';
 import { CONTAINER_REPOSITORY_COMPONENT_SERVICE } from './application/interfaces/container-repository-component-service.interface';
 import { CONTAINER_STACKS_REPOSITORY_ENGINE_SERVICE } from './application/interfaces/container-stacks-repository-engine-service.interface';
@@ -23,6 +24,7 @@ import {
   ContainerCustomStackSchema,
 } from './infrastructure/schemas/container-custom-stack.schema';
 import { ContainerStacksController } from './presentation/controllers/container-stacks.controller';
+import { ContainerStackRepositoriesController } from './presentation/controllers/container-stack-repositories.controller';
 
 /**
  * ContainerStacksModule provides services for managing container stacks and repositories
@@ -30,13 +32,14 @@ import { ContainerStacksController } from './presentation/controllers/container-
 @Module({
   imports: [
     ShellModule,
-    AnsibleVaultModule,
+    AnsibleVaultsModule,
     MongooseModule.forFeature([
       { name: CONTAINER_CUSTOM_STACK, schema: ContainerCustomStackSchema },
       { name: CONTAINER_CUSTOM_STACK_REPOSITORY, schema: ContainerCustomStackRepositorySchema },
     ]),
+    PlaybooksModule,
   ],
-  controllers: [ContainerStacksController],
+  controllers: [ContainerStacksController, ContainerStackRepositoriesController],
   providers: [
     {
       provide: CONTAINER_STACKS_SERVICE,

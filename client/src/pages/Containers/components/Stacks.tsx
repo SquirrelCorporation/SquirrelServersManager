@@ -3,7 +3,7 @@ import DeployCustomStackModal from '@/pages/Containers/components/sub-components
 import {
   deleteContainerCustomStack,
   getCustomStacks,
-} from '@/services/rest/container-stacks';
+} from '@/services/rest/container-stacks/container-stacks';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   ActionType,

@@ -3,7 +3,7 @@ import {
   getAnsibleConfig,
   postAnsibleConfig,
   putAnsibleConfig,
-} from '@/services/rest/ansible';
+} from '@/services/rest/ansible-config/ansible-config';
 import {
   ActionType,
   EditableProTable,

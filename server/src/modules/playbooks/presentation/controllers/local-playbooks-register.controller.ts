@@ -1,12 +1,12 @@
 import { NotFoundError } from '@middlewares/api/ApiError';
-import { PlaybooksRegisterService } from '@modules/playbooks/application/services/playbooks-register.service';
-import { IPlaybooksRegisterRepository, PLAYBOOKS_REGISTER_REPOSITORY } from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
+import { PlaybooksRegisterService } from '@modules/playbooks';
+import { IPlaybooksRegisterRepository, PLAYBOOKS_REGISTER_REPOSITORY } from '@modules/playbooks';
 import { Body, Controller, Delete, Get, Inject, Logger, Param, Post, Put } from '@nestjs/common';
 import { API, Repositories } from 'ssm-shared-lib';
+import { PLAYBOOKS_REGISTER_ENGINE_SERVICE } from '@modules/playbooks';
 import { PlaybooksRegisterEngineService } from '../../application/services/engine/playbooks-register-engine.service';
 import { LocalPlaybooksRegisterComponent } from '../../application/services/components/local-playbooks-repository.component';
 import { PLAYBOOKS_REGISTER_SERVICE } from '../../domain/services/playbooks-register-service.interface';
-import { PLAYBOOKS_REGISTER_ENGINE_SERVICE } from '../controllers/git-playbooks-register.controller';
 
 /**
  * Controller for managing local playbooks repositories

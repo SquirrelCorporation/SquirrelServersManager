@@ -4,19 +4,18 @@ import {
   Controller,
   Delete,
   Get,
-  HttpStatus,
   Inject,
   Param,
   Patch,
   Post,
   Req,
-  Res,
   UseGuards,
 } from '@nestjs/common';
+import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
-import { ContainerNetworksServiceInterface } from '../../application/interfaces/container-networks-service.interface';
+import { IContainerNetworksService } from '../../application/interfaces/container-networks-service.interface';
 import { CONTAINER_NETWORKS_SERVICE } from '../../application/interfaces/container-networks-service.interface';
-import { ContainerNetworkEntity } from '../../domain/entities/container-network.entity';
+import { IContainerNetworkEntity } from '../../domain/entities/container-network.entity';
 import { CreateNetworkDto } from '../dtos/create-network.dto';
 import { UpdateNetworkDto } from '../dtos/update-network.dto';
 import { filterByFields, filterByQueryParams } from '../../../../helpers/query/FilterHelper';
@@ -28,14 +27,14 @@ import { sortByFields } from '../../../../helpers/query/SorterHelper';
 export class ContainerNetworksController {
   constructor(
     @Inject(CONTAINER_NETWORKS_SERVICE)
-    private readonly networksService: ContainerNetworksServiceInterface,
+    private readonly networksService: IContainerNetworksService,
   ) {}
 
   /**
    * Get all networks with pagination, sorting, and filtering
    */
   @Get()
-  async getNetworks(@Req() req, @Res() res) {
+  async getNetworks(@Req() req) {
     const realUrl = req.url;
     const { current, pageSize } = req.query;
     const params = parse(realUrl, true).query as any;
@@ -55,17 +54,10 @@ export class ContainerNetworksController {
     if (current && pageSize) {
       dataSource = paginate(dataSource, current as number, pageSize as number);
     }
-
-    return res.status(HttpStatus.OK).json({
-      status: 'success',
-      message: 'Got networks',
-      data: dataSource,
-      meta: {
-        total: totalBeforePaginate,
-        success: true,
-        pageSize,
-        current: parseInt(`${params.current}`, 10) || 1,
-      },
+    return new PaginatedResponseDto(dataSource, {
+      total: totalBeforePaginate,
+      pageSize,
+      current: parseInt(`${current}`, 10) || 1,
     });
   }
 
@@ -83,7 +75,7 @@ export class ContainerNetworksController {
   async createNetwork(
     @Param('deviceUuid') deviceUuid: string,
     @Body() networkData: CreateNetworkDto,
-  ): Promise<ContainerNetworkEntity> {
+  ): Promise<IContainerNetworkEntity> {
     return this.networksService.createNetwork(deviceUuid, networkData);
   }
 
@@ -91,7 +83,7 @@ export class ContainerNetworksController {
   async updateNetwork(
     @Param('uuid') uuid: string,
     @Body() networkData: UpdateNetworkDto,
-  ): Promise<ContainerNetworkEntity> {
+  ): Promise<IContainerNetworkEntity> {
     return this.networksService.updateNetwork(uuid, networkData);
   }
 
@@ -100,5 +92,4 @@ export class ContainerNetworksController {
     const success = await this.networksService.deleteNetwork(uuid);
     return { success };
   }
-
 }

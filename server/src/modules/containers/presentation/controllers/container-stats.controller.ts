@@ -13,11 +13,11 @@ import {
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
 import {
   CONTAINER_SERVICE,
-  ContainerServiceInterface,
+  IContainerService,
 } from '../../application/interfaces/container-service.interface';
 import {
   CONTAINER_STATS_SERVICE,
-  ContainerStatsServiceInterface,
+  IContainerStatsService,
 } from '../../application/interfaces/container-stats-service.interface';
 import {
   ContainerCountParamDto,
@@ -34,9 +34,9 @@ import {
 export class ContainerStatsController {
   constructor(
     @Inject(CONTAINER_SERVICE)
-    private readonly containerService: ContainerServiceInterface,
+    private readonly containerService: IContainerService,
     @Inject(CONTAINER_STATS_SERVICE)
-    private readonly containerStatsService: ContainerStatsServiceInterface,
+    private readonly containerStatsService: IContainerStatsService,
   ) {}
 
   /**

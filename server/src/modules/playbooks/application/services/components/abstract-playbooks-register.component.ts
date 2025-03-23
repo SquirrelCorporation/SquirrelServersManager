@@ -1,13 +1,12 @@
 import { Logger } from '@nestjs/common';
 import { NotFoundError } from '@middlewares/api/ApiError';
-import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
-import { IPlaybook } from '@modules/playbooks/domain/entities/playbook.entity';
-import { PlaybookRepository } from '@modules/playbooks/infrastructure/repositories/playbook.repository';
-import { PlaybooksRegisterRepository } from '@modules/playbooks/infrastructure/repositories/playbooks-register.repository';
-import { FileSystemService, PlaybookFileService } from '@modules/shell';
+import { IPlaybooksRegister } from '@modules/playbooks';
+import { IPlaybook } from '@modules/playbooks';
+import { IFileSystemService, IPlaybookFileService } from '@modules/shell';
 import directoryTree from 'src/helpers/directory-tree/directory-tree';
 import { SSM_DATA_PATH } from 'src/config';
-import { TreeNodeService } from '@modules/playbooks';
+import { IPlaybookRepository, IPlaybooksRegisterRepository } from '@modules/playbooks';
+import { ITreeNodeService } from '@modules/playbooks';
 
 // Using environment variable or default path
 export const DIRECTORY_ROOT = SSM_DATA_PATH ? `${SSM_DATA_PATH}/playbooks` : '/tmp/playbooks';
@@ -23,19 +22,20 @@ export default abstract class PlaybooksRegisterComponent {
   public childLogger: any;
   public rootPath: string;
 
-  private static playbookRepository: PlaybookRepository;
-  private static playbooksRegisterRepository: PlaybooksRegisterRepository;
-  private static treeNodeService: TreeNodeService;
+  private static playbookRepository: IPlaybookRepository;
+  private static playbooksRegisterRepository: IPlaybooksRegisterRepository;
+  private static treeNodeService: ITreeNodeService;
 
   /**
-   * Initialize the repositories used by all components
-   * @param playbookRepo The playbook repository instance
-   * @param playbooksRegisterRepo The playbooks register repository instance
+   * Initialize static repositories
+   * @param playbookRepo Playbook repository
+   * @param playbooksRegisterRepo Playbooks register repository
+   * @param treeNodeService Tree node service
    */
   public static initializeRepositories(
-    playbookRepo: PlaybookRepository,
-    playbooksRegisterRepo: PlaybooksRegisterRepository,
-    treeNodeService: TreeNodeService,
+    playbookRepo: IPlaybookRepository,
+    playbooksRegisterRepo: IPlaybooksRegisterRepository,
+    treeNodeService: ITreeNodeService,
   ): void {
     PlaybooksRegisterComponent.playbookRepository = playbookRepo;
     PlaybooksRegisterComponent.playbooksRegisterRepository = playbooksRegisterRepo;
@@ -43,14 +43,14 @@ export default abstract class PlaybooksRegisterComponent {
   }
 
   protected constructor(
-    protected readonly fileSystemService: FileSystemService,
-    protected readonly playbookFileService: PlaybookFileService,
-    protected readonly playbookRepository: PlaybookRepository,
-    protected readonly playbooksRegisterRepository: PlaybooksRegisterRepository,
-    protected readonly treeNodeService: TreeNodeService,
+    protected readonly fileSystemService: IFileSystemService,
+    protected readonly playbookFileService: IPlaybookFileService,
+    protected readonly playbookRepository: IPlaybookRepository,
+    protected readonly playbooksRegisterRepository: IPlaybooksRegisterRepository,
+    protected readonly treeNodeService: ITreeNodeService,
     uuid: string,
     name: string,
-    rootPath: string
+    rootPath: string,
   ) {
     this.rootPath = rootPath;
     const dir = `${rootPath}/${uuid}`;
@@ -98,17 +98,20 @@ export default abstract class PlaybooksRegisterComponent {
       return;
     }
     this.childLogger.info(`getting playbooks from database...`);
-    const playbooksListFromDatabase = await this.playbookRepository.listAllByRepository(playbooksRegister);
+    const playbooksListFromDatabase =
+      await this.playbookRepository.listAllByRepository(playbooksRegister);
     this.childLogger.info(
       `Found ${playbooksListFromDatabase?.length || 0} playbooks from database`,
     );
-    const playbooksListFromDirectory = this.treeNodeService.recursivelyFlattenTree(filteredTree).map((treeNode) => {
-      if (treeNode && treeNode.extension?.match(FILE_PATTERN)) {
-        this.childLogger.debug(`Found child : ${JSON.stringify(treeNode)}`);
-        const { name, path } = treeNode;
-        return { name, path } as IPlaybook;
-      }
-    });
+    const playbooksListFromDirectory = this.treeNodeService
+      .recursivelyFlattenTree(filteredTree)
+      .map((treeNode) => {
+        if (treeNode && treeNode.extension?.match(FILE_PATTERN)) {
+          this.childLogger.debug(`Found child : ${JSON.stringify(treeNode)}`);
+          const { name, path } = treeNode;
+          return { name, path } as IPlaybook;
+        }
+      });
     this.childLogger.debug(playbooksListFromDirectory);
     this.childLogger.info(
       `Found ${playbooksListFromDirectory?.length || 0} playbooks from directory`,
@@ -134,9 +137,7 @@ export default abstract class PlaybooksRegisterComponent {
         return this.updateOrCreateAssociatedPlaybook(playbook, playbooksRegister);
       }),
     );
-    this.childLogger.info(
-      `Updating Playbooks Repository ${playbooksRegister.name}`,
-    );
+    this.childLogger.info(`Updating Playbooks Repository ${playbooksRegister.name}`);
     return playbooksToSync?.length;
   }
 
@@ -207,14 +208,19 @@ export default abstract class PlaybooksRegisterComponent {
         playbookData.extraVars = playbookConfiguration.extraVars;
         playbookData.uniqueQuickRef = playbookConfiguration.uniqueQuickRef;
       } catch (error: any) {
-        this.childLogger.error(`Failed to parse configuration for ${foundPlaybook.name}: ${error.message}`);
+        this.childLogger.error(
+          `Failed to parse configuration for ${foundPlaybook.name}: ${error.message}`,
+        );
       }
     }
     this.childLogger.info(`Updating or creating playbook ${playbookData.name}`);
     try {
       await this.playbookRepository.updateOrCreate(playbookData);
     } catch (error: any) {
-      this.childLogger.error(error, `Failed to update or create playbook ${playbookData.name}: ${error.message}`);
+      this.childLogger.error(
+        error,
+        `Failed to update or create playbook ${playbookData.name}: ${error.message}`,
+      );
     }
   }
 

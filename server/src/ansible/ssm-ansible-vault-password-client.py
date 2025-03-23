@@ -9,7 +9,7 @@ import requests
 logger = logging.getLogger('ansible-runner')
 
 def send_request(vault_id):
-    url_actual = "http://localhost:3000/ansible/vaults/{}/password".format(vault_id)
+    url_actual = "http://localhost:3000/ansible-vaults/{}/password".format(vault_id)
     headers = { 'Authorization': "Bearer {}".format(os.getenv("SSM_API_KEY"))}
     session = requests.Session()
     logger.debug("Getting {}".format(url_actual))

@@ -46,7 +46,7 @@ export class ContainerCustomStackDocument extends Document {
     type: String,
     required: true,
     enum: Object.values(Repositories.RepositoryType),
-    default: Repositories.RepositoryType.LOCAL
+    default: Repositories.RepositoryType.LOCAL,
   })
   type!: Repositories.RepositoryType;
 
@@ -59,4 +59,6 @@ export class ContainerCustomStackDocument extends Document {
   containerCustomStackRepository?: ContainerCustomStackRepositoryDocument;
 }
 
-export const ContainerCustomStackSchema = SchemaFactory.createForClass(ContainerCustomStackDocument);
+export const ContainerCustomStackSchema = SchemaFactory.createForClass(
+  ContainerCustomStackDocument,
+);

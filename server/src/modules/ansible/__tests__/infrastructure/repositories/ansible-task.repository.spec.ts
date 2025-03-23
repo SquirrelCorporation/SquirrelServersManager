@@ -42,8 +42,8 @@ describe('AnsibleTaskRepository', () => {
       toObject: () => ({
         _id: '123',
         ident: 'test-ident',
-        status: 'pending'
-      })
+        status: 'pending',
+      }),
     }),
   };
 
@@ -51,7 +51,7 @@ describe('AnsibleTaskRepository', () => {
     vi.clearAllMocks();
 
     // Setup model mocks
-    mockAnsibleTaskModel = function() {
+    mockAnsibleTaskModel = function () {
       return mockTaskInstance;
     };
 
@@ -62,9 +62,7 @@ describe('AnsibleTaskRepository', () => {
     mockAnsibleTaskModel.countDocuments = vi.fn().mockReturnValue(mockCountDocuments);
 
     // Create the repository with the mock model
-    repository = new AnsibleTaskRepository(
-      mockAnsibleTaskModel as unknown as Model<AnsibleTask>,
-    );
+    repository = new AnsibleTaskRepository(mockAnsibleTaskModel as unknown as Model<AnsibleTask>);
   });
 
   it('should be defined', () => {
@@ -80,10 +78,12 @@ describe('AnsibleTaskRepository', () => {
 
       const result = await repository.create(task);
 
-      expect(result).toEqual(expect.objectContaining({
-        ident: 'test-ident',
-        status: 'pending',
-      }));
+      expect(result).toEqual(
+        expect.objectContaining({
+          ident: 'test-ident',
+          status: 'pending',
+        }),
+      );
       expect(mockTaskInstance.save).toHaveBeenCalled();
     });
   });
@@ -103,11 +103,13 @@ describe('AnsibleTaskRepository', () => {
 
       expect(mockAnsibleTaskModel.findById).toHaveBeenCalledWith(id);
       expect(mockFindById.exec).toHaveBeenCalled();
-      expect(result).toEqual(expect.objectContaining({
-        _id: id,
-        ident: 'test-ident',
-        status: 'pending',
-      }));
+      expect(result).toEqual(
+        expect.objectContaining({
+          _id: id,
+          ident: 'test-ident',
+          status: 'pending',
+        }),
+      );
     });
   });
 
@@ -126,10 +128,12 @@ describe('AnsibleTaskRepository', () => {
 
       expect(mockAnsibleTaskModel.findOne).toHaveBeenCalledWith({ ident });
       expect(mockFindOne.exec).toHaveBeenCalled();
-      expect(result).toEqual(expect.objectContaining({
-        ident,
-        status: 'pending',
-      }));
+      expect(result).toEqual(
+        expect.objectContaining({
+          ident,
+          status: 'pending',
+        }),
+      );
     });
   });
 
@@ -150,13 +154,15 @@ describe('AnsibleTaskRepository', () => {
       expect(mockAnsibleTaskModel.findOneAndUpdate).toHaveBeenCalledWith(
         { ident },
         { status },
-        { new: true }
+        { new: true },
       );
       expect(mockFindOneAndUpdate.exec).toHaveBeenCalled();
-      expect(result).toEqual(expect.objectContaining({
-        ident,
-        status,
-      }));
+      expect(result).toEqual(
+        expect.objectContaining({
+          ident,
+          status,
+        }),
+      );
     });
   });
 });

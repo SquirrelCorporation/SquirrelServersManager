@@ -1,33 +1,33 @@
-import { ContainerNetworkEntity } from '../../domain/entities/container-network.entity';
+import { IContainerNetworkEntity } from '../../domain/entities/container-network.entity';
 
 export const CONTAINER_NETWORKS_SERVICE = 'CONTAINER_NETWORKS_SERVICE';
 
 /**
  * Interface for the Container Networks Service
  */
-export interface ContainerNetworksServiceInterface {
+export interface IContainerNetworksService {
 
-  getAllNetworks(): Promise<ContainerNetworkEntity[]>;
+  getAllNetworks(): Promise<IContainerNetworkEntity[]>;
 
   /**
    * Get all networks for a specific device
    */
-  getNetworksByDeviceUuid(deviceUuid: string): Promise<ContainerNetworkEntity[]>;
+  getNetworksByDeviceUuid(deviceUuid: string): Promise<IContainerNetworkEntity[]>;
 
   /**
    * Get a specific network by UUID
    */
-  getNetworkByUuid(uuid: string): Promise<ContainerNetworkEntity | null>;
+  getNetworkByUuid(uuid: string): Promise<IContainerNetworkEntity | null>;
 
   /**
    * Create a network on a device
    */
-  createNetwork(deviceUuid: string, network: Partial<ContainerNetworkEntity>): Promise<ContainerNetworkEntity>;
+  createNetwork(deviceUuid: string, network: Partial<IContainerNetworkEntity>): Promise<IContainerNetworkEntity>;
 
   /**
    * Update a network
    */
-  updateNetwork(uuid: string, network: Partial<ContainerNetworkEntity>): Promise<ContainerNetworkEntity>;
+  updateNetwork(uuid: string, network: Partial<IContainerNetworkEntity>): Promise<IContainerNetworkEntity>;
 
   /**
    * Delete a network

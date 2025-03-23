@@ -2,6 +2,7 @@ export interface IAnsibleTask {
   _id?: string;
   ident: string;
   name?: string;
+  cmd?: string;
   playbook?: string;
   status: string;
   target?: string[];

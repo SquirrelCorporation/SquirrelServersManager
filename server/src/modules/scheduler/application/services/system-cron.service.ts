@@ -1,11 +1,23 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { SettingsKeys } from 'ssm-shared-lib';
-import { IDevicesService } from '../../../devices';
+import {
+  DEVICES_SERVICE,
+  IDevicesService,
+} from '../../../devices/application/interfaces/devices-service.interface';
 import PinoLogger from '../../../../logger';
-import { ICacheService } from '../../../../infrastructure/cache';
-import { IAnsibleTaskRepository } from '../../../ansible';
-import { IServerLogsRepository } from '../../../logs';
+import {
+  CACHE_SERVICE,
+  ICacheService,
+} from '../../../../infrastructure/cache/interfaces/cache.service.interface';
+import {
+  ANSIBLE_TASK_REPOSITORY,
+  IAnsibleTaskRepository,
+} from '../../../ansible/domain/repositories/ansible-task.repository.interface';
+import {
+  IServerLogsRepository,
+  SERVER_LOGS_REPOSITORY,
+} from '../../../logs/domain/repositories/server-logs-repository.interface';
 import { CronService } from './cron.service';
 
 const logger = PinoLogger.child({ module: 'SystemCronService' });
@@ -13,16 +25,16 @@ const logger = PinoLogger.child({ module: 'SystemCronService' });
 @Injectable()
 export class SystemCronService implements OnModuleInit {
   constructor(
-    @Inject('IDevicesService')
+    @Inject(DEVICES_SERVICE)
     private readonly devicesService: IDevicesService,
-    @Inject('IAnsibleTaskRepository')
+    @Inject(ANSIBLE_TASK_REPOSITORY)
     private readonly ansibleTaskRepo: IAnsibleTaskRepository,
-    @Inject('IServerLogsRepository')
+    @Inject(SERVER_LOGS_REPOSITORY)
     private readonly logsRepo: IServerLogsRepository,
-    @Inject('ICacheService')
+    @Inject(CACHE_SERVICE)
     private readonly cacheService: ICacheService,
     private readonly cronService: CronService,
-    private readonly schedulerRegistry: SchedulerRegistry
+    private readonly schedulerRegistry: SchedulerRegistry,
   ) {}
 
   async onModuleInit() {
@@ -31,22 +43,25 @@ export class SystemCronService implements OnModuleInit {
     try {
       this.schedulerRegistry.deleteCronJob('_isDeviceOffline');
       logger.info('Deleted existing _isDeviceOffline cron job');
-    } catch (err) {
+    } catch {
       // Job didn't exist, which is fine
+      logger.debug('No existing _isDeviceOffline cron job to delete');
     }
 
     try {
       this.schedulerRegistry.deleteCronJob('_CleanAnsibleTasksLogsAndStatuses');
       logger.info('Deleted existing _CleanAnsibleTasksLogsAndStatuses cron job');
-    } catch (err) {
+    } catch {
       // Job didn't exist, which is fine
+      logger.debug('No existing _CleanAnsibleTasksLogsAndStatuses cron job to delete');
     }
 
     try {
       this.schedulerRegistry.deleteCronJob('_CleanServerLogs');
       logger.info('Deleted existing _CleanServerLogs cron job');
-    } catch (err) {
+    } catch {
       // Job didn't exist, which is fine
+      logger.debug('No existing _CleanServerLogs cron job to delete');
     }
   }
 
@@ -58,7 +73,7 @@ export class SystemCronService implements OnModuleInit {
 
       const delay = await this.cacheService.getFromCache(
         SettingsKeys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
-        '5'
+        '5',
       );
 
       await this.devicesService.setDeviceOfflineAfter(parseInt(delay));
@@ -78,7 +93,7 @@ export class SystemCronService implements OnModuleInit {
 
       const delay = await this.cacheService.getFromCache(
         SettingsKeys.GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
-        '5'
+        '5',
       );
 
       await this.ansibleTaskRepo.deleteAllOldLogsAndStatuses(parseInt(delay));
@@ -98,7 +113,7 @@ export class SystemCronService implements OnModuleInit {
 
       const delay = await this.cacheService.getFromCache(
         SettingsKeys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS,
-        '5'
+        '5',
       );
 
       await this.logsRepo.deleteAllOld(parseInt(delay));

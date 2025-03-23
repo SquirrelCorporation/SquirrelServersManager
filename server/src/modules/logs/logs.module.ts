@@ -10,6 +10,8 @@ import { ServerLogMapper } from './infrastructure/mappers/server-log.mapper';
 import { AnsibleLogMapper } from './infrastructure/mappers/ansible-log.mapper';
 import { ServerLogPresentationMapper } from './presentation/mappers/server-log.mapper';
 import { SERVER_LOGS_SERVICE } from './application/interfaces/server-logs-service.interface';
+import { SERVER_LOGS_REPOSITORY } from './domain/repositories/server-logs-repository.interface';
+import { ANSIBLE_LOGS_REPOSITORY } from './domain/repositories/ansible-logs-repository.interface';
 
 @Module({
   imports: [
@@ -30,11 +32,11 @@ import { SERVER_LOGS_SERVICE } from './application/interfaces/server-logs-servic
     ServerLogsRepository,
     AnsibleLogsRepository,
     {
-      provide: 'IServerLogsRepository',
+      provide: SERVER_LOGS_REPOSITORY,
       useExisting: ServerLogsRepository,
     },
     {
-      provide: 'IAnsibleLogsRepository',
+      provide: ANSIBLE_LOGS_REPOSITORY,
       useExisting: AnsibleLogsRepository,
     },
 
@@ -47,8 +49,8 @@ import { SERVER_LOGS_SERVICE } from './application/interfaces/server-logs-servic
     SERVER_LOGS_SERVICE,
     ServerLogsRepository,
     AnsibleLogsRepository,
-    'IAnsibleLogsRepository',
-    'IServerLogsRepository',
+    ANSIBLE_LOGS_REPOSITORY,
+    SERVER_LOGS_REPOSITORY,
   ],
 })
 export class LogsModule {}

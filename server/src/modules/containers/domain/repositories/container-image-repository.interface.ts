@@ -1,45 +1,45 @@
-import { ContainerImageEntity } from '../entities/container-image.entity';
+import { IContainerImageEntity } from '../entities/container-image.entity';
 
 export const CONTAINER_IMAGE_REPOSITORY = 'CONTAINER_IMAGE_REPOSITORY';
 
 /**
  * Interface for the Container Image Repository
  */
-export interface ContainerImageRepositoryInterface {
+export interface IContainerImageRepository {
   /**
    * Find all images
    */
-  findAll(): Promise<ContainerImageEntity[]>;
+  findAll(): Promise<IContainerImageEntity[]>;
 
   /**
    * Find all images by device UUID
    */
-  findAllByDeviceUuid(deviceUuid: string): Promise<ContainerImageEntity[]>;
+  findAllByDeviceUuid(deviceUuid: string): Promise<IContainerImageEntity[]>;
 
   /**
    * Find one image by UUID
    */
-  findOneById(id: string): Promise<ContainerImageEntity | null>;
+  findOneById(id: string): Promise<IContainerImageEntity | null>;
 
   /**
    * Find one image by ID and device UUID
    */
-  findOneByIdAndDeviceUuid(id: string, deviceUuid: string): Promise<ContainerImageEntity | null>;
+  findOneByIdAndDeviceUuid(id: string, deviceUuid: string): Promise<IContainerImageEntity | null>;
 
   /**
    * Find images by name and tag
    */
-  findByNameAndTag(name: string, tag: string, deviceUuid: string): Promise<ContainerImageEntity[]>;
+  findByNameAndTag(name: string, tag: string, deviceUuid: string): Promise<IContainerImageEntity[]>;
 
   /**
    * Create an image
    */
-  create(image: ContainerImageEntity): Promise<ContainerImageEntity>;
+  create(image: IContainerImageEntity): Promise<IContainerImageEntity>;
 
   /**
    * Update an image
    */
-  update(id: string, imageData: Partial<ContainerImageEntity>): Promise<ContainerImageEntity>;
+  update(id: string, imageData: Partial<IContainerImageEntity>): Promise<IContainerImageEntity>;
 
   /**
    * Delete an image by UUID

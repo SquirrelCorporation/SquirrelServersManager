@@ -2,7 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { DateTime } from 'luxon';
-import { IAnsibleTaskStatusRepository } from '@modules/ansible';
+import {
+  ANSIBLE_TASK_STATUS_REPOSITORY,
+  IAnsibleTaskStatusRepository,
+} from '../../domain/repositories/ansible-task-status.repository.interface';
 import { AnsibleTask } from '../schemas/ansible-task.schema';
 import { IAnsibleTask } from '../../domain/entities/ansible-task.interface';
 import { IAnsibleTaskRepository } from '../../domain/repositories/ansible-task.repository.interface';
@@ -11,7 +14,7 @@ import { IAnsibleTaskRepository } from '../../domain/repositories/ansible-task.r
 export class AnsibleTaskRepository implements IAnsibleTaskRepository {
   constructor(
     @InjectModel(AnsibleTask.name) private readonly ansibleTaskModel: Model<AnsibleTask>,
-    @Inject('IAnsibleTaskStatusRepository')
+    @Inject(ANSIBLE_TASK_STATUS_REPOSITORY)
     private readonly ansibleTaskStatusRepository: IAnsibleTaskStatusRepository,
   ) {}
 
@@ -20,6 +23,7 @@ export class AnsibleTaskRepository implements IAnsibleTaskRepository {
       ident: task.ident,
       name: task.name,
       playbook: task.playbook,
+      cmd: task.cmd,
       status: task.status,
       target: task.target,
       options: task.options,
@@ -47,22 +51,14 @@ export class AnsibleTaskRepository implements IAnsibleTaskRepository {
 
   async updateStatus(ident: string, status: string): Promise<IAnsibleTask | null> {
     const updatedTask = await this.ansibleTaskModel
-      .findOneAndUpdate(
-        { ident },
-        { status },
-        { new: true }
-      )
+      .findOneAndUpdate({ ident }, { status }, { new: true })
       .exec();
     return updatedTask ? this.mapToIAnsibleTask(updatedTask) : null;
   }
 
   async update(id: string, update: Partial<IAnsibleTask>): Promise<IAnsibleTask | null> {
     const updatedTask = await this.ansibleTaskModel
-      .findByIdAndUpdate(
-        id,
-        update,
-        { new: true }
-      )
+      .findByIdAndUpdate(id, update, { new: true })
       .exec();
     return updatedTask ? this.mapToIAnsibleTask(updatedTask) : null;
   }
@@ -86,26 +82,26 @@ export class AnsibleTaskRepository implements IAnsibleTaskRepository {
     };
   }
 
-  async  deleteAllTasksAndStatuses(ansibleTask: IAnsibleTask) {
-  await this.ansibleTaskStatusRepository.deleteAllByIdent(ansibleTask.ident);
-  // TODO Import from logs module???
+  async deleteAllTasksAndStatuses(ansibleTask: IAnsibleTask) {
+    await this.ansibleTaskStatusRepository.deleteAllByIdent(ansibleTask.ident);
+    // TODO Import from logs module???
     //await AnsibleLogsRepo.deleteAllByIdent(ansibleTask.ident);
-}
+  }
 
-
-  async  findAllOld(ageInMinutes: number): Promise<IAnsibleTask[]> {
-  const tasks = await this.ansibleTaskModel.find({
-    createdAt: { $lt: DateTime.now().minus({ minute: ageInMinutes }).toJSDate() },
-  })
-    .lean()
-    .exec();
-  return tasks.map(this.mapToIAnsibleTask);
-}
+  async findAllOld(ageInMinutes: number): Promise<IAnsibleTask[]> {
+    const tasks = await this.ansibleTaskModel
+      .find({
+        createdAt: { $lt: DateTime.now().minus({ minute: ageInMinutes }).toJSDate() },
+      })
+      .lean()
+      .exec();
+    return tasks.map(this.mapToIAnsibleTask);
+  }
 
   async deleteAllOldLogsAndStatuses(ageInMinutes: number): Promise<void> {
     const tasks = await this.findAllOld(ageInMinutes);
     tasks?.forEach(async (task) => {
-    await this.deleteAllTasksAndStatuses(task);
-  });
+      await this.deleteAllTasksAndStatuses(task);
+    });
   }
 }

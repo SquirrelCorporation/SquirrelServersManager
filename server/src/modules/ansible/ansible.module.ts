@@ -3,7 +3,8 @@ import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CacheModule } from '../../infrastructure/cache';
 import { CacheService } from '../../infrastructure/cache/cache.service';
-import { AnsibleVaultModule, DEFAULT_VAULT_ID } from '../ansible-vault';
+import { CACHE_SERVICE } from '../../infrastructure/cache/interfaces/cache.service.interface';
+import { AnsibleVaultsModule, DEFAULT_VAULT_ID } from '../ansible-vaults';
 import { DevicesModule } from '../devices/devices.module';
 import { LogsModule } from '../logs/logs.module';
 import { ShellModule } from '../shell/shell.module';
@@ -17,8 +18,8 @@ import { ExtraVarsService } from './application/services/extra-vars.service';
 import { GalaxyService } from './application/services/galaxy.service';
 import { InventoryTransformerService } from './application/services/inventory-transformer.service';
 import { TaskLogsService } from './application/services/task-logs.service';
-import { AnsibleTaskStatusRepository } from './infrastructure/repositories/ansible-task-status.repository';
 import { AnsibleTaskRepository } from './infrastructure/repositories/ansible-task.repository';
+import { AnsibleTaskStatusRepository } from './infrastructure/repositories/ansible-task-status.repository';
 import {
   AnsibleTaskStatus,
   AnsibleTaskStatusSchema,
@@ -27,6 +28,8 @@ import { AnsibleTask, AnsibleTaskSchema } from './infrastructure/schemas/ansible
 import { GalaxyController } from './presentation/controllers/ansible-galaxy.controller';
 import { AnsibleHooksController } from './presentation/controllers/ansible-hooks.controller';
 import { TaskLogsController } from './presentation/controllers/ansible-task-logs.controller';
+import { ANSIBLE_TASK_STATUS_REPOSITORY } from './domain/repositories/ansible-task-status.repository.interface';
+import { ANSIBLE_TASK_REPOSITORY } from './domain/repositories/ansible-task.repository.interface';
 
 /**
  * AnsibleModule provides services for executing Ansible commands and playbooks
@@ -36,7 +39,7 @@ import { TaskLogsController } from './presentation/controllers/ansible-task-logs
     HttpModule,
     ShellModule,
     LogsModule,
-    AnsibleVaultModule,
+    AnsibleVaultsModule,
     UsersModule,
     forwardRef(() => DevicesModule),
     MongooseModule.forFeature([
@@ -63,20 +66,16 @@ import { TaskLogsController } from './presentation/controllers/ansible-task-logs
     AnsibleTaskRepository,
     AnsibleTaskStatusRepository,
     {
-      provide: 'ICacheService',
+      provide: CACHE_SERVICE,
       useExisting: CacheService,
     },
     {
-      provide: 'IAnsibleTaskRepository',
+      provide: ANSIBLE_TASK_REPOSITORY,
       useClass: AnsibleTaskRepository,
     },
     {
-      provide: 'IAnsibleTaskStatusRepository',
+      provide: ANSIBLE_TASK_STATUS_REPOSITORY,
       useExisting: AnsibleTaskStatusRepository,
-    },
-    {
-      provide: 'ANSIBLE_TASK_REPOSITORY',
-      useExisting: AnsibleTaskRepository,
     },
   ],
   exports: [
@@ -91,10 +90,9 @@ import { TaskLogsController } from './presentation/controllers/ansible-task-logs
     AnsibleHooksService,
     AnsibleTaskRepository,
     AnsibleTaskStatusRepository,
-    'ICacheService',
-    'IAnsibleTaskRepository',
-    'IAnsibleTaskStatusRepository',
-    'ANSIBLE_TASK_REPOSITORY',
+    CACHE_SERVICE,
+    ANSIBLE_TASK_REPOSITORY,
+    ANSIBLE_TASK_STATUS_REPOSITORY,
   ],
 })
 export class AnsibleModule {}

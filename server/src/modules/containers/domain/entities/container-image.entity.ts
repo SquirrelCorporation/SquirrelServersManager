@@ -1,8 +1,9 @@
+import { Image } from "@modules/containers/types";
 
 /**
  * Domain entity for container images
  */
-export interface ContainerImageEntity {
+export interface IContainerImageEntity {
   _id?: string;
   id: string;
   watcher: string;

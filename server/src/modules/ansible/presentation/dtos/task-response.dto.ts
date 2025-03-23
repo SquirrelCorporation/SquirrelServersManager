@@ -29,15 +29,14 @@ export class TaskStatusResponseDto {
 
 export class PaginatedResponseDto<T> {
   data: T[];
-  meta: {
+  metadata: {
     total: number;
-    success: boolean;
     pageSize: number;
     current: number;
   };
 
-  constructor(data: T[], meta: { total: number; success: boolean; pageSize: number; current: number }) {
+  constructor(data: T[], metadata: { total: number; pageSize: number; current: number }) {
     this.data = data;
-    this.meta = meta;
+    this.metadata = metadata;
   }
 }

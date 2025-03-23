@@ -30,10 +30,9 @@ export class AutomationsController {
   }
 
   @Get('template/:templateId')
-  async getTemplate(@Res() res: Response, @Param('templateId') templateId: string) {
-    // This would need to be implemented based on your specific requirements
-    // For now, we'll just return a placeholder
-    return new SuccessResponse('Template functionality to be implemented').send(res);
+  async getTemplate(@Param('templateId') templateId: string) {
+    const template = await this.automationsService.getTemplate(templateId);
+    return template;
   }
 
   @Get(':uuid')

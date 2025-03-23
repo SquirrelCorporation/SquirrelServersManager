@@ -8,7 +8,7 @@ import Title, { TitleColors } from '@/components/Template/Title';
 import CustomVaultModal from '@/pages/Admin/Settings/components/subcomponents/CustomVaultModal';
 import PlaybooksGitRepositoryModal from '@/pages/Admin/Settings/components/subcomponents/PlaybooksGitRepositoryModal';
 import PlaybooksLocalRepositoryModal from '@/pages/Admin/Settings/components/subcomponents/PlaybooksLocalRepositoryModal';
-import { getAnsibleVaults } from '@/services/rest/ansible';
+import { getAnsibleVaults } from '@/services/rest/ansible-vaults/ansible-vault';
 import {
   getGitPlaybooksRepositories,
   getPlaybooksLocalRepositories,

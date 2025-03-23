@@ -3,7 +3,10 @@ import { filterByFields, filterByQueryParams } from '../../../../helpers/query/F
 import { paginate } from '../../../../helpers/query/PaginationHelper';
 import { sortByFields } from '../../../../helpers/query/SorterHelper';
 import logger from '../../../../logger';
-import { IServerLogsRepository } from '../../domain/repositories/server-logs-repository.interface';
+import {
+  IServerLogsRepository,
+  SERVER_LOGS_REPOSITORY,
+} from '../../domain/repositories/server-logs-repository.interface';
 import { ServerLogsQueryDto } from '../../presentation/dtos/server-logs-query.dto';
 import { IServerLogsService } from '../interfaces/server-logs-service.interface';
 import { ServerLogPresentationMapper } from '../../presentation/mappers/server-log.mapper';
@@ -11,7 +14,7 @@ import { ServerLogPresentationMapper } from '../../presentation/mappers/server-l
 @Injectable()
 export class ServerLogsService implements IServerLogsService {
   constructor(
-    @Inject('IServerLogsRepository') private serverLogsRepository: IServerLogsRepository,
+    @Inject(SERVER_LOGS_REPOSITORY) private serverLogsRepository: IServerLogsRepository,
     private serverLogPresentationMapper: ServerLogPresentationMapper,
   ) {}
 
@@ -36,18 +39,15 @@ export class ServerLogsService implements IServerLogsService {
     dataSource = paginate(dataSource, current as number, pageSize as number);
 
     // Map to DTOs
-    const dtos = dataSource.map(log => this.serverLogPresentationMapper.toDto(log));
+    const dtos = dataSource.map((log) => this.serverLogPresentationMapper.toDto(log));
 
-    return dtos;
-    /*
-      meta: {
+    return {
+      data: dtos,
+      metadata: {
         total: totalBeforePaginate,
-        success: true,
         pageSize,
         current: parseInt(`${current}`, 10) || 1,
       },
-      message: 'Get server logs successful',
     };
-    */
   }
 }
