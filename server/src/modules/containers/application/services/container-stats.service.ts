@@ -1,12 +1,12 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import { StatsType } from 'ssm-shared-lib';
-import { ContainerEntity } from '../../domain/entities/container.entity';
+import { IContainerEntity } from '../../domain/entities/container.entity';
 import { MetricType } from '../../../statistics/application/interfaces/metrics-service.interface';
 import { PROMETHEUS_SERVICE } from '../../../../infrastructure/prometheus/prometheus.provider';
 import { PrometheusService } from '../../../../infrastructure/prometheus/prometheus.service';
 import { QueryResult } from '../../../../infrastructure/prometheus/types/prometheus.types';
-import { ContainerStatsServiceInterface } from '../interfaces/container-stats-service.interface';
+import { IContainerStatsService } from '../interfaces/container-stats-service.interface';
 import { METRICS_SERVICE } from '../../../statistics/application/interfaces/metrics-service.interface';
 import { MetricsServiceInterface } from '../../../statistics/application/interfaces/metrics-service.interface';
 
@@ -14,7 +14,7 @@ import { MetricsServiceInterface } from '../../../statistics/application/interfa
  * Service for managing container statistics
  */
 @Injectable()
-export class ContainerStatsService implements ContainerStatsServiceInterface {
+export class ContainerStatsService implements IContainerStatsService {
   private readonly logger = new Logger(ContainerStatsService.name);
 
   constructor(
@@ -29,7 +29,7 @@ export class ContainerStatsService implements ContainerStatsServiceInterface {
    * @param container The container entity
    * @param stats The container stats from Dockerode
    */
-  async createStats(container: ContainerEntity, stats: any) {
+  async createStats(container: IContainerEntity, stats: any) {
     const { cpu_stats, precpu_stats, memory_stats } = stats;
 
     try {
@@ -44,7 +44,9 @@ export class ContainerStatsService implements ContainerStatsServiceInterface {
         );
       }
     } catch (error: any) {
-      this.logger.warn(`Failed to set memory usage for container ${container.id}: ${error?.message}`);
+      this.logger.warn(
+        `Failed to set memory usage for container ${container.id}: ${error?.message}`,
+      );
     }
 
     try {
@@ -70,7 +72,7 @@ export class ContainerStatsService implements ContainerStatsServiceInterface {
    * @returns The container stat
    */
   async getStatByDeviceAndType(
-    container: ContainerEntity,
+    container: IContainerEntity,
     type?: string,
   ): Promise<[{ _id?: string; value: number; date?: string }] | null> {
     this.logger.log(`getStatByDeviceAndType - type: ${type}, container: ${container.id}`);
@@ -108,11 +110,13 @@ export class ContainerStatsService implements ContainerStatsServiceInterface {
    * @returns The container stats
    */
   async getStatsByDeviceAndType(
-    container: ContainerEntity,
+    container: IContainerEntity,
     from: number,
     type?: string,
   ): Promise<{ date: string; value: number; name?: string }[] | null> {
-    this.logger.log(`getStatsByDeviceAndType - type: ${type}, from: ${from}, container: ${container.id}`);
+    this.logger.log(
+      `getStatsByDeviceAndType - type: ${type}, from: ${from}, container: ${container.id}`,
+    );
 
     if (!type) {
       throw new Error('Type is required');

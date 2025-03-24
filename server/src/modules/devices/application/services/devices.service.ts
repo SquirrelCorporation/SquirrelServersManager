@@ -67,7 +67,10 @@ export class DevicesService implements IDevicesService {
     return this.deviceAuthRepository.updateOrCreateIfNotExist(deviceAuth as IDeviceAuth);
   }
 
-  async updateDeviceAuth(deviceAuth: IDeviceAuth, updates?: UpdateDeviceAuthDto): Promise<IDeviceAuth> {
+  async updateDeviceAuth(
+    deviceAuth: IDeviceAuth,
+    updates?: UpdateDeviceAuthDto,
+  ): Promise<IDeviceAuth> {
     let updatedDeviceAuth = deviceAuth;
 
     if (updates) {
@@ -80,7 +83,7 @@ export class DevicesService implements IDevicesService {
         // Keep the original authType from device auth
         authType: deviceAuth.authType,
         // Cast becomeMethod to the appropriate enum if it exists
-        ...(becomeMethod && { becomeMethod: becomeMethod as SsmAnsible.AnsibleBecomeMethod })
+        ...(becomeMethod && { becomeMethod: becomeMethod as SsmAnsible.AnsibleBecomeMethod }),
       };
     }
 
@@ -91,32 +94,44 @@ export class DevicesService implements IDevicesService {
     return result;
   }
 
-  async updateDockerAuth(deviceAuth: IDeviceAuth, updates: UpdateDockerAuthDto): Promise<IDeviceAuth> {
+  async updateDockerAuth(
+    deviceAuth: IDeviceAuth,
+    updates: UpdateDockerAuthDto,
+  ): Promise<IDeviceAuth> {
     // Cast Docker auth type if needed
     const updatedDeviceAuth = {
       ...deviceAuth,
       customDockerSSH: updates.customDockerSSH ?? deviceAuth.customDockerSSH,
-      dockerCustomAuthType: updates.dockerCustomAuthType as unknown as SsmAnsible.SSHType ?? deviceAuth.dockerCustomAuthType,
+      dockerCustomAuthType:
+        (updates.dockerCustomAuthType as unknown as SsmAnsible.SSHType) ??
+        deviceAuth.dockerCustomAuthType,
       dockerCustomSshUser: updates.dockerCustomSshUser ?? deviceAuth.dockerCustomSshUser,
       dockerCustomSshPwd: updates.dockerCustomSshPwd ?? deviceAuth.dockerCustomSshPwd,
       dockerCustomSshKey: updates.dockerCustomSshKey ?? deviceAuth.dockerCustomSshKey,
       dockerCustomSshKeyPass: updates.dockerCustomSshKeyPass ?? deviceAuth.dockerCustomSshKeyPass,
       customDockerForcev6: updates.customDockerForcev6 ?? deviceAuth.customDockerForcev6,
       customDockerForcev4: updates.customDockerForcev4 ?? deviceAuth.customDockerForcev4,
-      customDockerAgentForward: updates.customDockerAgentForward ?? deviceAuth.customDockerAgentForward,
-      customDockerTryKeyboard: updates.customDockerTryKeyboard ?? deviceAuth.customDockerTryKeyboard,
-      customDockerSocket: updates.customDockerSocket ?? deviceAuth.customDockerSocket
+      customDockerAgentForward:
+        updates.customDockerAgentForward ?? deviceAuth.customDockerAgentForward,
+      customDockerTryKeyboard:
+        updates.customDockerTryKeyboard ?? deviceAuth.customDockerTryKeyboard,
+      customDockerSocket: updates.customDockerSocket ?? deviceAuth.customDockerSocket,
     };
 
     return this.updateDeviceAuth(updatedDeviceAuth);
   }
 
-  async updateProxmoxAuth(deviceAuth: IDeviceAuth, updates: UpdateProxmoxAuthDto): Promise<IDeviceAuth> {
+  async updateProxmoxAuth(
+    deviceAuth: IDeviceAuth,
+    updates: UpdateProxmoxAuthDto,
+  ): Promise<IDeviceAuth> {
     // Convert the connection methods to the proper types
     const proxmoxAuth = {
-      ...deviceAuth.proxmoxAuth || {},
-      remoteConnectionMethod: updates.remoteConnectionMethod as any ?? deviceAuth.proxmoxAuth?.remoteConnectionMethod,
-      connectionMethod: updates.connectionMethod as any ?? deviceAuth.proxmoxAuth?.connectionMethod,
+      ...(deviceAuth.proxmoxAuth || {}),
+      remoteConnectionMethod:
+        (updates.remoteConnectionMethod as any) ?? deviceAuth.proxmoxAuth?.remoteConnectionMethod,
+      connectionMethod:
+        (updates.connectionMethod as any) ?? deviceAuth.proxmoxAuth?.connectionMethod,
       port: updates.port ?? deviceAuth.proxmoxAuth?.port,
       ignoreSslErrors: updates.ignoreSslErrors ?? deviceAuth.proxmoxAuth?.ignoreSslErrors,
       tokens: {
@@ -131,7 +146,7 @@ export class DevicesService implements IDevicesService {
 
     const updatedDeviceAuth = {
       ...deviceAuth,
-      proxmoxAuth
+      proxmoxAuth,
     };
 
     return this.updateDeviceAuth(updatedDeviceAuth);
@@ -159,7 +174,7 @@ export class DevicesService implements IDevicesService {
       (await this.deviceRepository.findAll())?.filter(
         (device) =>
           device.capabilities?.containers?.docker?.enabled &&
-          device.configuration?.containers?.docker?.watchContainers
+          device.configuration?.containers?.docker?.watchContainers,
       ) || []
     );
   }
@@ -167,37 +182,42 @@ export class DevicesService implements IDevicesService {
   async getProxmoxDevicesToWatch(): Promise<IDevice[]> {
     return (
       (await this.deviceRepository.findAll())?.filter(
-        (device) => device.capabilities?.containers?.proxmox?.enabled
+        (device) => device.capabilities?.containers?.proxmox?.enabled,
       ) || []
     );
   }
 
-
-  async getDevicesOverview(): Promise<{ online?: number; offline?: number; totalCpu?: number; totalMem?: number; overview?: any }> {
+  async getDevicesOverview(): Promise<{
+    online?: number;
+    offline?: number;
+    totalCpu?: number;
+    totalMem?: number;
+    overview?: any;
+  }> {
     const devices = await this.findAll();
-   const offline = devices?.filter((e) => e.status === SsmStatus.DeviceStatus.OFFLINE).length;
-  const online = devices?.filter((e) => e.status === SsmStatus.DeviceStatus.ONLINE).length;
-  const overview = devices?.map((e) => {
+    const offline = devices?.filter((e) => e.status === SsmStatus.DeviceStatus.OFFLINE).length;
+    const online = devices?.filter((e) => e.status === SsmStatus.DeviceStatus.ONLINE).length;
+    const overview = devices?.map((e) => {
+      return {
+        name: e.status !== SsmStatus.DeviceStatus.UNMANAGED ? e.fqdn : e.ip,
+        status: e.status,
+        uuid: e.uuid,
+        cpu: e.systemInformation?.cpu?.speed || 0,
+        mem: e.systemInformation?.mem?.total || 0,
+      };
+    });
+    const totalCpu = devices?.reduce((accumulator, currentValue) => {
+      return accumulator + (currentValue?.systemInformation?.cpu?.speed || 0);
+    }, 0);
+    const totalMem = devices?.reduce((accumulator, currentValue) => {
+      return accumulator + (currentValue?.systemInformation?.mem?.total || 0);
+    }, 0);
     return {
-      name: e.status !== SsmStatus.DeviceStatus.UNMANAGED ? e.fqdn : e.ip,
-      status: e.status,
-      uuid: e.uuid,
-      cpu: e.systemInformation?.cpu?.speed || 0,
-      mem: e.systemInformation?.mem?.total || 0,
+      offline: offline,
+      online: online,
+      overview: overview,
+      totalCpu: totalCpu ? totalCpu : NaN,
+      totalMem: totalMem ? totalMem : NaN,
     };
-  });
-  const totalCpu = devices?.reduce((accumulator, currentValue) => {
-    return accumulator + (currentValue?.systemInformation?.cpu?.speed || 0);
-  }, 0);
-  const totalMem = devices?.reduce((accumulator, currentValue) => {
-    return accumulator + (currentValue?.systemInformation?.mem?.total || 0);
-  }, 0);
-  return {
-    offline: offline,
-    online: online,
-    overview: overview,
-    totalCpu: totalCpu ? totalCpu : NaN,
-    totalMem: totalMem ? totalMem : NaN,
-  };
   }
 }

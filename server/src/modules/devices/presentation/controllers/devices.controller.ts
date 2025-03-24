@@ -21,6 +21,7 @@ export class DevicesController {
     const device = this.deviceMapper.toEntity(createDeviceDto);
     return this.devicesService.create(device);
   }
+
   @Get()
   async findDevices(@Req() req) {
     const realUrl = req.url;

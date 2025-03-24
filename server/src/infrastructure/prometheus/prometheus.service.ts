@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import { PrometheusDriver } from 'prometheus-query';
 import { StatsType } from 'ssm-shared-lib';
+import { Gauge } from 'prom-client';
 import { prometheusConf } from '../../config';
 import PinoLogger from '../../logger';
 import { MetricsIdFilter, MetricsIdsFilter, isDevicesFilter } from './types/filters.types';
@@ -15,6 +16,7 @@ import {
 
 const DEFAULT_AGGREGATION_WINDOW = '1h' as const;
 const DAY_IN_SECONDS = 60 * 60 * 24;
+
 /**
  * Types of metrics that can be collected
  */
@@ -28,6 +30,92 @@ export enum MetricType {
   CONTAINER_MEMORY_USAGE = 'container_memory_usage',
 }
 
+/**
+ * Definition of a metric with its properties
+ */
+export interface MetricDefinition {
+  name: string;
+  help: string;
+  type: MetricType;
+  gauge: Gauge<string>;
+}
+
+/**
+ * Types of metrics that can be collected
+ */
+export const METRICS_DEFINITIONS: MetricDefinition[] = [
+  {
+    type: MetricType.CPU_USAGE,
+    name: 'device_cpu_usage_percent',
+    help: 'CPU usage percent of devices',
+    gauge: new Gauge({
+      name: 'device_cpu_usage_percent',
+      help: 'CPU usage percent of devices',
+      labelNames: ['device_id'],
+    }),
+  },
+  {
+    type: MetricType.MEMORY_USAGE,
+    name: 'device_memory_usage_percent',
+    help: 'Memory usage in percent for devices',
+    gauge: new Gauge({
+      name: 'device_memory_usage_percent',
+      help: 'Memory usage in percent for devices',
+      labelNames: ['device_id'],
+    }),
+  },
+  {
+    type: MetricType.MEMORY_FREE,
+    name: 'device_memory_free_percent',
+    help: 'Memory free in percent for devices',
+    gauge: new Gauge({
+      name: 'device_memory_free_percent',
+      help: 'Memory free in percent for devices',
+      labelNames: ['device_id'],
+    }),
+  },
+  {
+    type: MetricType.STORAGE_USAGE,
+    name: 'device_storage_usage_percent',
+    help: 'File storage usage in percent for devices',
+    gauge: new Gauge({
+      name: 'device_storage_usage_percent',
+      help: 'File storage usage in percent for devices',
+      labelNames: ['device_id'],
+    }),
+  },
+  {
+    type: MetricType.STORAGE_FREE,
+    name: 'device_storage_free_percent',
+    help: 'File storage free in percent for devices',
+    gauge: new Gauge({
+      name: 'device_storage_free_percent',
+      help: 'File storage free in percent for devices',
+      labelNames: ['device_id'],
+    }),
+  },
+  {
+    type: MetricType.CONTAINER_CPU_USAGE,
+    name: 'container_cpu_usage_percent',
+    help: 'CPU usage in percent for containers',
+    gauge: new Gauge({
+      name: 'container_cpu_usage_percent',
+      help: 'CPU usage in percent for containers',
+      labelNames: ['container_id'],
+    }),
+  },
+  {
+    type: MetricType.CONTAINER_MEMORY_USAGE,
+    name: 'container_memory_usage_percent',
+    help: 'Memory usage in percent for containers',
+    gauge: new Gauge({
+      name: 'container_memory_usage_percent',
+      help: 'Memory usage in percent for containers',
+      labelNames: ['container_id'],
+    }),
+  },
+];
+
 @Injectable()
 export class PrometheusService {
   private readonly driver: PrometheusDriver;
@@ -35,16 +123,6 @@ export class PrometheusService {
     { module: 'PrometheusService' },
     { msgPrefix: '[PROMETHEUS] - ' },
   );
-
-  private readonly metricTypeMap = {
-    [StatsType.DeviceStatsType.CPU]: MetricType.CPU_USAGE,
-    [StatsType.DeviceStatsType.MEM_USED]: MetricType.MEMORY_USAGE,
-    [StatsType.DeviceStatsType.MEM_FREE]: MetricType.MEMORY_FREE,
-    [StatsType.DeviceStatsType.DISK_USED]: MetricType.STORAGE_USAGE,
-    [StatsType.DeviceStatsType.DISK_FREE]: MetricType.STORAGE_FREE,
-    [StatsType.ContainerStatsType.CPU]: MetricType.CONTAINER_CPU_USAGE,
-    [StatsType.ContainerStatsType.MEM]: MetricType.CONTAINER_MEMORY_USAGE,
-  } as const;
 
   constructor(config?: PrometheusConfig) {
     const configuration = config || {
@@ -64,29 +142,17 @@ export class PrometheusService {
     });
   }
 
-
   /**
    * Get the name of a metric by type
    * @param type The type of metric
    * @returns The name of the metric
    */
-  public getMetricName(type: MetricType): string {
-    const metric = this.metricTypeMap[type];
+  public getMetricName(type: any): string {
+    const metric = METRICS_DEFINITIONS.find((metric) => metric.type === type);
     if (!metric) {
       throw new Error(`Metric type ${type} not found`);
     }
     return metric.name;
-  }
-
-
-  private getMetricTypeFromStatsType(
-    type: StatsType.DeviceStatsType | StatsType.ContainerStatsType,
-  ): MetricType {
-    const metricType = this.metricTypeMap[type];
-    if (!metricType) {
-      throw new Error(`Unsupported metric type: ${type}`);
-    }
-    return metricType;
   }
 
   private buildQueryFilter(filter: MetricsIdsFilter): string {
@@ -130,11 +196,10 @@ export class PrometheusService {
     range: TimeRange,
   ): Promise<QueryResult<{ name: string; value: number; date: string }[]>> {
     try {
-      const metricType = this.getMetricTypeFromStatsType(type);
-      const metricName = this.getMetricName(metricType);
+      const metricName = this.getMetricName(type);
       const queryFilter = this.buildQueryFilter(filter);
       const query = `avg_over_time(${metricName}{${queryFilter}}[${DEFAULT_AGGREGATION_WINDOW}])`;
-
+      this.logger.info(`queryMetrics - query: ${query}`);
       const result = await this.driver.rangeQuery(
         query,
         range.from,
@@ -171,14 +236,13 @@ export class PrometheusService {
     range: TimeRange,
   ): Promise<QueryResult<AggregatedMetric[]>> {
     try {
-      const metricType = this.getMetricTypeFromStatsType(type);
-      const metricName = this.getMetricName(metricType);
+      const metricName = this.getMetricName(type);
       const queryFilter = this.buildQueryFilter(filter);
       const labelName = isDevicesFilter(filter) ? 'device_id' : 'container_id';
       const { rangeDuration, offsetDuration } = this.calculateTimeParameters(range);
 
       const query = `avg by (${labelName})(avg_over_time(${metricName}{${queryFilter}}[${rangeDuration}] ${offsetDuration}))`;
-
+      this.logger.info(`queryAggregatedMetrics - query: ${query}`);
       const result = await this.driver.instantQuery(query);
 
       if (!result?.result) {
@@ -201,12 +265,11 @@ export class PrometheusService {
     filter: MetricsIdFilter,
   ): Promise<QueryResult<LatestMetric>> {
     try {
-      const metricType = this.getMetricTypeFromStatsType(type);
-      const metricName = this.getMetricName(metricType);
+      const metricName = this.getMetricName(type);
       const idKey = filter.type === 'container' ? 'container_id' : 'device_id';
       const idValue = filter.type === 'container' ? filter.containerId : filter.deviceId;
       const query = `${metricName}{${idKey}="${idValue}"}`;
-
+      this.logger.info(`queryLatestMetric - query: ${query}`);
       const result = await this.driver.instantQuery(query, DateTime.now().toJSDate());
 
       if (!result?.result?.[0]) {
@@ -230,11 +293,10 @@ export class PrometheusService {
     range: { days: number; offset: number },
   ): Promise<QueryResult<{ value: number }>> {
     try {
-      const metricType = this.getMetricTypeFromStatsType(type);
-      const metricName = this.getMetricName(metricType);
+      const metricName = this.getMetricName(type);
       const offsetStr = range.offset > 0 ? `offset ${range.offset}d` : '';
       const query = `avg(avg_over_time(${metricName}[${range.days}d] ${offsetStr}))`;
-
+      this.logger.info(`queryAveragedStatByType - query: ${query}`);
       const result = await this.driver.instantQuery(query);
 
       if (!result?.result?.[0]) {
@@ -257,8 +319,7 @@ export class PrometheusService {
     range: TimeRange,
   ): Promise<QueryResult<Array<{ date: string; value: string }>>> {
     try {
-      const metricType = this.getMetricTypeFromStatsType(type);
-      const metricName = this.getMetricName(metricType);
+      const metricName = this.getMetricName(type);
       const query = `avg(avg_over_time(${metricName}[1h]))`;
 
       const result = await this.driver.rangeQuery(

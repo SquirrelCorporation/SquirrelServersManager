@@ -39,11 +39,7 @@ export interface MetricsServiceInterface {
    * @param value The value to set
    * @param containerId The ID of the container
    */
-  setContainerMetric(
-    type: MetricType,
-    value: number,
-    containerId: string,
-  ): Promise<void>;
+  setContainerMetric(type: MetricType, value: number, containerId: string): Promise<void>;
 
   /**
    * Set multiple metrics for a device

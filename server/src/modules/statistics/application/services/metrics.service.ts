@@ -1,28 +1,10 @@
+import {
+  METRICS_DEFINITIONS,
+  MetricDefinition,
+  MetricType,
+} from '@infrastructure/prometheus/prometheus.service';
 import { Injectable, Logger } from '@nestjs/common';
-import { Gauge, Registry } from 'prom-client';
-
-/**
- * Types of metrics that can be collected
- */
-export enum MetricType {
-  CPU_USAGE = 'cpu_usage',
-  MEMORY_USAGE = 'memory_usage',
-  MEMORY_FREE = 'memory_free',
-  STORAGE_USAGE = 'storage_usage',
-  STORAGE_FREE = 'storage_free',
-  CONTAINER_CPU_USAGE = 'container_cpu_usage',
-  CONTAINER_MEMORY_USAGE = 'container_memory_usage',
-}
-
-/**
- * Definition of a metric with its properties
- */
-interface MetricDefinition {
-  name: string;
-  help: string;
-  type: MetricType;
-  gauge: Gauge<string>;
-}
+import { Registry } from 'prom-client';
 
 /**
  * Service for managing device and container metrics using Prometheus
@@ -43,82 +25,8 @@ export class MetricsService {
    * Initialize all metrics and register them with the Prometheus registry
    */
   private initializeMetrics(): void {
-    // Define all metrics
-    const metricsDefinitions: MetricDefinition[] = [
-      {
-        type: MetricType.CPU_USAGE,
-        name: 'device_cpu_usage_percent',
-        help: 'CPU usage percent of devices',
-        gauge: new Gauge({
-          name: 'device_cpu_usage_percent',
-          help: 'CPU usage percent of devices',
-          labelNames: ['device_id'],
-        }),
-      },
-      {
-        type: MetricType.MEMORY_USAGE,
-        name: 'device_memory_usage_percent',
-        help: 'Memory usage in percent for devices',
-        gauge: new Gauge({
-          name: 'device_memory_usage_percent',
-          help: 'Memory usage in percent for devices',
-          labelNames: ['device_id'],
-        }),
-      },
-      {
-        type: MetricType.MEMORY_FREE,
-        name: 'device_memory_free_percent',
-        help: 'Memory free in percent for devices',
-        gauge: new Gauge({
-          name: 'device_memory_free_percent',
-          help: 'Memory free in percent for devices',
-          labelNames: ['device_id'],
-        }),
-      },
-      {
-        type: MetricType.STORAGE_USAGE,
-        name: 'device_storage_usage_percent',
-        help: 'File storage usage in percent for devices',
-        gauge: new Gauge({
-          name: 'device_storage_usage_percent',
-          help: 'File storage usage in percent for devices',
-          labelNames: ['device_id'],
-        }),
-      },
-      {
-        type: MetricType.STORAGE_FREE,
-        name: 'device_storage_free_percent',
-        help: 'File storage free in percent for devices',
-        gauge: new Gauge({
-          name: 'device_storage_free_percent',
-          help: 'File storage free in percent for devices',
-          labelNames: ['device_id'],
-        }),
-      },
-      {
-        type: MetricType.CONTAINER_CPU_USAGE,
-        name: 'container_cpu_usage_percent',
-        help: 'CPU usage in percent for containers',
-        gauge: new Gauge({
-          name: 'container_cpu_usage_percent',
-          help: 'CPU usage in percent for containers',
-          labelNames: ['container_id'],
-        }),
-      },
-      {
-        type: MetricType.CONTAINER_MEMORY_USAGE,
-        name: 'container_memory_usage_percent',
-        help: 'Memory usage in percent for containers',
-        gauge: new Gauge({
-          name: 'container_memory_usage_percent',
-          help: 'Memory usage in percent for containers',
-          labelNames: ['container_id'],
-        }),
-      },
-    ];
-
     // Register all metrics
-    metricsDefinitions.forEach((metric) => {
+    METRICS_DEFINITIONS.forEach((metric) => {
       this.metrics.set(metric.type, metric);
       this.registry.registerMetric(metric.gauge);
     });

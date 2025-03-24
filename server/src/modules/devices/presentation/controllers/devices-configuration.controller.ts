@@ -66,7 +66,7 @@ export class DevicesConfigurationController {
     return this.devicesService.update(updatedDevice);
   }
 
-  @Post(':uuid/configuration/systemInformation')
+  @Post(':uuid/configuration/system-information')
   async updateSystemInformationConfiguration(
     @Param('uuid') uuid: string,
     @Body()

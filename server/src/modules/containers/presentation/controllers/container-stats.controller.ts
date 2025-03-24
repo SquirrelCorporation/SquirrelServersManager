@@ -4,6 +4,7 @@ import {
   HttpException,
   HttpStatus,
   Inject,
+  Logger,
   Param,
   Query,
   UseGuards,
@@ -32,6 +33,8 @@ import {
 @UseGuards(JwtAuthGuard)
 @UsePipes(new ValidationPipe({ transform: true }))
 export class ContainerStatsController {
+  private readonly logger = new Logger(ContainerStatsController.name);
+
   constructor(
     @Inject(CONTAINER_SERVICE)
     private readonly containerService: IContainerService,
@@ -50,7 +53,9 @@ export class ContainerStatsController {
     if (container == null) {
       throw new HttpException(`Container not found ${params.id}`, HttpStatus.NOT_FOUND);
     }
-
+    this.logger.log(
+      `getContainerStatByContainerId - container: ${container.id}, type: ${params.type}`,
+    );
     try {
       const stat = await this.containerStatsService.getStatByDeviceAndType(container, params.type);
       return stat ? stat[0] : null;
@@ -74,7 +79,9 @@ export class ContainerStatsController {
     if (container == null) {
       throw new HttpException(`Container not found ${params.id}`, HttpStatus.NOT_FOUND);
     }
-
+    this.logger.log(
+      `getContainerStatsByContainerId - container: ${container.id}, type: ${params.type}, query: ${JSON.stringify(query)}`,
+    );
     try {
       const stats = await this.containerStatsService.getStatsByDeviceAndType(
         container,

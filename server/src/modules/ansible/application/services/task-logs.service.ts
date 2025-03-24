@@ -1,7 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { ANSIBLE_LOGS_REPOSITORY, IAnsibleLogsRepository } from '@modules/logs';
-import { ITaskLogsService } from '@modules/ansible/application/interfaces/task-logs-service.interface';
+import { IAnsibleTask } from '@modules/ansible/domain/entities/ansible-task.interface';
+import { ITaskLogsService } from '../../application/interfaces/task-logs-service.interface';
 import { filterByQueryParams } from '../../../../helpers/query/FilterHelper';
 import { filterByFields } from '../../../../helpers/query/FilterHelper';
 import { sortByFields } from '../../../../helpers/query/SorterHelper';
@@ -14,7 +15,7 @@ import {
   ANSIBLE_TASK_STATUS_REPOSITORY,
   IAnsibleTaskStatusRepository,
 } from '../../domain/repositories/ansible-task-status.repository.interface';
-import { PaginatedResponseDto, TaskResponseDto } from '../../presentation/dtos/task-response.dto';
+import { PaginatedResponseDto } from '../../presentation/dtos/task-response.dto';
 
 /**
  * Service for managing Ansible task logs
@@ -48,7 +49,7 @@ export class TaskLogsService implements ITaskLogsService {
     cmd?: string;
     sorter?: any;
     filter?: any;
-  }): Promise<PaginatedResponseDto<TaskResponseDto>> {
+  }): Promise<PaginatedResponseDto<IAnsibleTask>> {
     try {
       const tasks = await this.ansibleTaskRepository.findAll();
 
@@ -69,23 +70,8 @@ export class TaskLogsService implements ITaskLogsService {
 
       dataSource = paginate(dataSource, current, pageSize);
 
-      // Map to response DTO
-      const taskDtos = dataSource.map((task) => {
-        const dto = new TaskResponseDto();
-        dto.id = task._id || '';
-        dto.ident = task.ident;
-        dto.name = task.name;
-        dto.playbook = task.playbook;
-        dto.status = task.status;
-        dto.target = task.target;
-        dto.options = task.options;
-        dto.createdAt = task.createdAt;
-        dto.updatedAt = task.updatedAt;
-        return dto;
-      });
-
       // Return paginated response with metadata
-      return new PaginatedResponseDto(taskDtos, {
+      return new PaginatedResponseDto<IAnsibleTask>(dataSource, {
         total: totalBeforePaginate,
         pageSize,
         current,

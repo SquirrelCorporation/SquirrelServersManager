@@ -3,12 +3,30 @@ import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { v4 as uuidv4 } from 'uuid';
 import { IDockerVolumesComponent } from '@modules/containers/domain/components/docker-watcher.interface';
-import { CONTAINER_SERVICE, ContainerServiceInterface } from '../../../../../../application/interfaces/container-service.interface';
-import { CONTAINER_STATS_SERVICE, ContainerStatsServiceInterface } from '../../../../../../application/interfaces/container-stats-service.interface';
-import { CONTAINER_LOGS_SERVICE, IContainerLogsService } from '../../../../../../application/interfaces/container-logs-service.interface';
-import { CONTAINER_IMAGES_SERVICE, ContainerImagesServiceInterface } from '../../../../../../application/interfaces/container-images-service.interface';
-import { CONTAINER_VOLUMES_SERVICE, ContainerVolumesServiceInterface } from '../../../../../../application/interfaces/container-volumes-service.interface';
-import { CONTAINER_NETWORKS_SERVICE, ContainerNetworksServiceInterface } from '../../../../../../application/interfaces/container-networks-service.interface';
+import {
+  CONTAINER_SERVICE,
+  IContainerService,
+} from '../../../../../../application/interfaces/container-service.interface';
+import {
+  CONTAINER_STATS_SERVICE,
+  IContainerStatsService,
+} from '../../../../../../application/interfaces/container-stats-service.interface';
+import {
+  CONTAINER_LOGS_SERVICE,
+  IContainerLogsService,
+} from '../../../../../../application/interfaces/container-logs-service.interface';
+import {
+  CONTAINER_IMAGES_SERVICE,
+  IContainerImagesService,
+} from '../../../../../../application/interfaces/container-images-service.interface';
+import {
+  CONTAINER_VOLUMES_SERVICE,
+  IContainerVolumesService,
+} from '../../../../../../application/interfaces/container-volumes-service.interface';
+import {
+  CONTAINER_NETWORKS_SERVICE,
+  IContainerNetworksService,
+} from '../../../../../../application/interfaces/container-networks-service.interface';
 import { AbstractDockerNetworksComponent } from './abstract-docker-networks.component';
 
 /**
@@ -16,21 +34,21 @@ import { AbstractDockerNetworksComponent } from './abstract-docker-networks.comp
  * Following the playbooks module pattern, all dependencies are injected through constructor
  */
 @Injectable()
-export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetworksComponent implements IDockerVolumesComponent {
+export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetworksComponent {
   constructor(
     protected readonly eventEmitter: EventEmitter2,
     @Inject(CONTAINER_SERVICE)
-    protected readonly containerService: ContainerServiceInterface,
+    protected readonly containerService: IContainerService,
     @Inject(CONTAINER_STATS_SERVICE)
-    protected readonly containerStatsService: ContainerStatsServiceInterface,
+    protected readonly containerStatsService: IContainerStatsService,
     @Inject(CONTAINER_LOGS_SERVICE)
     protected readonly containerLogsService: IContainerLogsService,
     @Inject(CONTAINER_IMAGES_SERVICE)
-    protected readonly containerImagesService: ContainerImagesServiceInterface,
+    protected readonly containerImagesService: IContainerImagesService,
     @Inject(CONTAINER_VOLUMES_SERVICE)
-    protected readonly containerVolumesService: ContainerVolumesServiceInterface,
+    protected readonly containerVolumesService: IContainerVolumesService,
     @Inject(CONTAINER_NETWORKS_SERVICE)
-    protected readonly containerNetworksService: ContainerNetworksServiceInterface
+    protected readonly containerNetworksService: IContainerNetworksService,
   ) {
     super(
       eventEmitter,
@@ -39,7 +57,7 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
       containerLogsService,
       containerImagesService,
       containerVolumesService,
-      containerNetworksService
+      containerNetworksService,
     );
   }
 
@@ -48,7 +66,7 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
    */
   protected async watchVolumesFromCron(): Promise<void> {
     this.childLogger.info(
-      `watchVolumesFromCron - (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`
+      `watchVolumesFromCron - (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
     );
 
     try {
@@ -60,7 +78,7 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
       }
 
       // Transform volumes to our format
-      const currentVolumes = rawVolumes.Volumes.map(volume => ({
+      const currentVolumes = rawVolumes.Volumes.map((volume) => ({
         name: volume.Name,
         uuid: uuidv4(),
         watcher: this.name,
@@ -70,18 +88,19 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
         driver: volume.Driver,
         options: volume.Options,
         labels: volume.Labels,
-        usageData: volume.UsageData
+        usageData: volume.UsageData,
       }));
-      this.childLogger.info("========================== =========================== > " + this.name);
+
       // Get existing volumes from our database
-      const existingVolumes = await this.containerVolumesService.getVolumesByDeviceUuid(this.configuration.deviceUuid);
+      const existingVolumes = await this.containerVolumesService.getVolumesByDeviceUuid(
+        this.configuration.deviceUuid,
+      );
 
       // Process volumes (insert new ones, update existing)
       await this.processVolumes(currentVolumes, existingVolumes);
 
       // Delete volumes that no longer exist
       await this.removeDeletedVolumes(currentVolumes, existingVolumes);
-
     } catch (error: any) {
       this.childLogger.error(`Error watching volumes: ${error.message}`);
     }
@@ -93,7 +112,7 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
   private async processVolumes(currentVolumes: any[], existingVolumes: any[]): Promise<void> {
     for (const volume of currentVolumes) {
       // Check if volume exists in our database
-      const existingVolume = existingVolumes.find(v => v.name === volume.name);
+      const existingVolume = existingVolumes.find((v) => v.name === volume.name);
 
       if (!existingVolume) {
         // New volume, create it
@@ -112,7 +131,7 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
   private async removeDeletedVolumes(currentVolumes: any[], existingVolumes: any[]): Promise<void> {
     // Find volumes that exist in database but not in Docker
     const deletedVolumes = existingVolumes.filter(
-      existingVolume => !currentVolumes.some(current => current.name === existingVolume.name)
+      (existingVolume) => !currentVolumes.some((current) => current.name === existingVolume.name),
     );
 
     // Delete volumes
@@ -125,7 +144,12 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
   /**
    * Backup a volume
    */
-  async backupVolume(volumeName: string, backupPath: string, fileName: string, emitEvent: boolean = true): Promise<string> {
+  async backupVolume(
+    volumeName: string,
+    backupPath: string,
+    fileName: string,
+    emitEvent: boolean = true,
+  ): Promise<string> {
     try {
       const filePath = `${backupPath}/${fileName}`;
 
@@ -146,9 +170,9 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
         Image: 'alpine',
         Cmd: ['sh', '-c', 'tar -cvf /backup.tar /backup'],
         HostConfig: {
-          Binds: [`${volumeName}:/backup:ro`]
+          Binds: [`${volumeName}:/backup:ro`],
         },
-        Labels: { 'wud.watch': 'false' }
+        Labels: { 'wud.watch': 'false' },
       });
 
       this.childLogger.debug(`backupVolume - Start container`);
@@ -185,7 +209,7 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
                 success: true,
                 message: 'Backup success',
                 severity: 'info',
-                module: 'docker'
+                module: 'docker',
               });
             }
 
@@ -210,7 +234,7 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
                 success: false,
                 message: 'Backup error',
                 severity: 'error',
-                module: 'docker'
+                module: 'docker',
               });
             }
 
@@ -220,7 +244,6 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
           }
         });
       });
-
     } catch (error: any) {
       this.childLogger.error(`Error backing up volume: ${error.message}`);
 
@@ -229,7 +252,7 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
           success: false,
           message: 'Backup error',
           severity: 'error',
-          module: 'docker'
+          module: 'docker',
         });
       }
 

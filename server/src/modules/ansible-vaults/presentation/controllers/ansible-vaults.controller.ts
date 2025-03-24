@@ -12,29 +12,19 @@ export class AnsibleVaultsController {
   @Get()
   async getVaults() {
     const vaults = await this.ansibleVaultService.findAll();
-    return {
-      success: true,
-      message: 'Vaults found',
-      data: vaults,
-    };
+    return vaults;
   }
 
   @Post()
   async createVault(@Body() createVaultDto: CreateVaultDto) {
     await this.ansibleVaultService.createVault(createVaultDto.vaultId, createVaultDto.password);
-    return {
-      success: true,
-      message: 'Vault created',
-    };
+    return;
   }
 
   @Delete(':vaultId')
   async deleteVault(@Param('vaultId') vaultId: string) {
     await this.ansibleVaultService.deleteVault(vaultId);
-    return {
-      success: true,
-      message: 'Vault deleted',
-    };
+    return;
   }
 
   @Post(':vaultId')

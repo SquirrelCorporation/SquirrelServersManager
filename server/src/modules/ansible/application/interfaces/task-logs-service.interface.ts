@@ -1,4 +1,7 @@
-import { PaginatedResponseDto, TaskResponseDto } from '../../presentation/dtos/task-response.dto';
+import { AnsibleLogEntity } from '@modules/logs/domain/entities/ansible-log.entity';
+import { IAnsibleTask } from '@modules/ansible/domain/entities/ansible-task.interface';
+import { IAnsibleTaskStatus } from '../../domain/entities/ansible-task-status.interface';
+import { PaginatedResponseDto } from '../../presentation/dtos/task-response.dto';
 
 export const TASK_LOGS_SERVICE = 'TASK_LOGS_SERVICE';
 
@@ -23,21 +26,21 @@ export interface ITaskLogsService {
     cmd?: string;
     sorter?: any;
     filter?: any;
-  }): Promise<PaginatedResponseDto<TaskResponseDto>>;
+  }): Promise<PaginatedResponseDto<IAnsibleTask>>;
 
   /**
    * Get task logs for a specific task
    * @param id The task ID
    * @returns The task logs
    */
-  getTaskLogs(id: string): Promise<any[]>;
+  getTaskLogs(id: string): Promise<AnsibleLogEntity[] | null>;
 
   /**
    * Get all task status by ident
    * @param ident The task ident
    * @returns The task statuses
    */
-  getTaskStatuses(ident: string): Promise<any[]>;
+  getTaskStatuses(ident: string): Promise<IAnsibleTaskStatus[]>;
 
   /**
    * Create a new log entry for a task
@@ -45,7 +48,7 @@ export interface ITaskLogsService {
    * @param content The log content
    * @returns The created log entry
    */
-  createLog(taskId: string, content: string): Promise<any>;
+  createLog(taskId: string, content: string): Promise<AnsibleLogEntity | null>;
 
   /**
    * Create a new task entry
