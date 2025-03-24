@@ -1,9 +1,9 @@
 import { EventEmitter } from 'events';
 import pino from 'pino';
 import { Automations } from 'ssm-shared-lib';
-import { IAutomationRepository } from '../../../domain/repositories/automation.repository.interface';
-import logger from '../../../../../logger';
-import Events from '../../../../../core/events/events';
+import logger from 'src/logger';
+import Events from 'src/core/events/events';
+import { IAutomationRepository } from '../../../../domain/repositories/automation.repository.interface';
 
 export abstract class AbstractActionComponent extends EventEmitter {
   public type: Automations.Actions;

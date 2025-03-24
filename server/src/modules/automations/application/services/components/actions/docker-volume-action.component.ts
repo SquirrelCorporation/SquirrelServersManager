@@ -1,6 +1,6 @@
 import { Automations, SsmContainer } from 'ssm-shared-lib';
 import { IContainerVolumesService } from '@modules/containers';
-import { IAutomationRepository } from '../../../domain/repositories/automation.repository.interface';
+import { IAutomationRepository } from '../../../../domain/repositories/automation.repository.interface';
 import { AbstractActionComponent } from './abstract-action.component';
 
 export class DockerVolumeActionComponent extends AbstractActionComponent {

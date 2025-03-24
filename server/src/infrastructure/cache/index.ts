@@ -6,9 +6,6 @@ export * from './cache.constants';
 export * from './interfaces/cache-options.interface';
 export * from './interfaces/cache.service.interface';
 
-// Export legacy compatibility layer
-export * from './legacy-compat';
-
 // Service interface exports
 export { ICacheService, CACHE_SERVICE } from './interfaces/cache.service.interface';
 

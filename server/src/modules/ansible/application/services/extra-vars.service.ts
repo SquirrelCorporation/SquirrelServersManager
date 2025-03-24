@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { API, SsmAgent, SsmAnsible } from 'ssm-shared-lib';
+import { IExtraVarsService } from '@modules/ansible/application/interfaces/extra-vars-service.interface';
 import { ICacheService } from '../../../../infrastructure/cache';
 import { IDeviceRepository } from '../../../devices';
 import { IUserRepository } from '../../../users';
@@ -8,7 +9,7 @@ import { IUserRepository } from '../../../users';
  * Service for managing Ansible extra-vars files
  */
 @Injectable()
-export class ExtraVarsService {
+export class ExtraVarsService implements IExtraVarsService {
   private readonly logger = new Logger(ExtraVarsService.name);
 
   constructor(

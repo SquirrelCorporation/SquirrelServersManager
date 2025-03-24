@@ -78,7 +78,7 @@ export class CacheDefaultService implements OnModuleInit {
         }
       }
       this.logger.log('Default Redis values initialized successfully');
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(`Error initializing default Redis values: ${error.message}`);
     }
   }

@@ -3,18 +3,18 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import {
   CONTAINER_SERVICE,
   CONTAINER_VOLUMES_SERVICE,
-  ContainerServiceInterface,
-  ContainerVolumesServiceInterface,
+  IContainerService,
+  IContainerVolumesService,
 } from '@modules/containers';
 import { IPlaybooksService, PLAYBOOKS_SERVICE } from '@modules/playbooks';
 import { ANSIBLE_TASK_STATUS_REPOSITORY, IAnsibleTaskStatusRepository } from '@modules/ansible';
-import { AutomationComponent } from '../../domain/components/automation.component';
-import { Automation } from '../../domain/entities/automation.entity';
+import { IUserRepository, USER_REPOSITORY } from '@modules/users';
+import { AutomationComponent } from '../components/automation.component';
+import { Automation } from '../../../domain/entities/automation.entity';
 import {
   AUTOMATION_REPOSITORY,
   IAutomationRepository,
-} from '../../domain/repositories/automation.repository.interface';
-import { IUserRepository, USER_REPOSITORY } from '../../../users/';
+} from '../../../domain/repositories/automation.repository.interface';
 
 @Injectable()
 export class AutomationEngine implements OnModuleInit {
@@ -27,9 +27,9 @@ export class AutomationEngine implements OnModuleInit {
 
     // Container module dependencies
     @Inject(CONTAINER_SERVICE)
-    private containerUseCases: ContainerServiceInterface,
+    private containerUseCases: IContainerService,
     @Inject(CONTAINER_VOLUMES_SERVICE)
-    private containerVolumeUseCases: ContainerVolumesServiceInterface,
+    private containerVolumeUseCases: IContainerVolumesService,
 
     // Playbooks module dependencies
     @Inject(PLAYBOOKS_SERVICE)

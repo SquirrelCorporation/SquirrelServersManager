@@ -8,7 +8,7 @@ import {
 } from '../../domain/repositories/automation.repository.interface';
 import { CreateAutomationDto } from '../../presentation/dtos/create-automation.dto';
 import { UpdateAutomationDto } from '../../presentation/dtos/update-automation.dto';
-import { AutomationEngine } from './automation-engine.service';
+import { AutomationEngine } from './engine/automation-engine.service';
 
 @Injectable()
 export class AutomationsService {

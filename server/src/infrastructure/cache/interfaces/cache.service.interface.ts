@@ -59,4 +59,4 @@ export interface ICacheService {
    * @returns The value from cache or the default value
    */
   getFromCache<T>(key: string, defaultValue: T): Promise<T>;
-} 
+}

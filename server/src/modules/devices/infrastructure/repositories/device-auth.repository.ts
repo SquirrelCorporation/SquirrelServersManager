@@ -10,19 +10,21 @@ import { DEVICE_AUTH, DeviceAuthDocument } from '../schemas/device-auth.schema';
 export class DeviceAuthRepository implements IDeviceAuthRepository {
   private readonly logger = new Logger(DeviceAuthRepository.name);
 
-  constructor(
-    @InjectModel(DEVICE_AUTH) private deviceAuthModel: Model<DeviceAuthDocument>,
-  ) {}
+  constructor(@InjectModel(DEVICE_AUTH) private deviceAuthModel: Model<DeviceAuthDocument>) {}
 
   // Helper method to transform MongoDB document to domain entity
   private toDomainEntity(doc: DeviceAuthDocument | null): IDeviceAuth | null {
-    if (!doc) {return null;}
-    return doc.toObject ? doc.toObject() : doc as unknown as IDeviceAuth;
+    if (!doc) {
+      return null;
+    }
+    return doc.toObject ? doc.toObject() : (doc as unknown as IDeviceAuth);
   }
 
   // Helper method to transform an array of MongoDB documents to domain entities
   private toDomainEntities(docs: DeviceAuthDocument[]): IDeviceAuth[] {
-    return docs.map(doc => this.toDomainEntity(doc)).filter((doc): doc is IDeviceAuth => doc !== null);
+    return docs
+      .map((doc) => this.toDomainEntity(doc))
+      .filter((doc): doc is IDeviceAuth => doc !== null);
   }
 
   async updateOrCreateIfNotExist(deviceAuth: IDeviceAuth): Promise<IDeviceAuth> {
@@ -32,7 +34,9 @@ export class DeviceAuthRepository implements IDeviceAuthRepository {
       { upsert: true, new: true },
     );
     const result = this.toDomainEntity(_deviceAuth);
-    if (!result) {throw new Error('Failed to create or update device auth');}
+    if (!result) {
+      throw new Error('Failed to create or update device auth');
+    }
     return result;
   }
 
@@ -40,7 +44,7 @@ export class DeviceAuthRepository implements IDeviceAuthRepository {
     const _deviceAuth = await this.deviceAuthModel.findOneAndUpdate(
       { device: deviceAuth.device },
       deviceAuth,
-      { new: true }
+      { new: true },
     );
     return this.toDomainEntity(_deviceAuth) || undefined;
   }
@@ -51,7 +55,8 @@ export class DeviceAuthRepository implements IDeviceAuthRepository {
   }
 
   async findOneByDeviceUuid(uuid: string): Promise<IDeviceAuth[] | null> {
-    const devicesAuth = await this.deviceAuthModel.find()
+    const devicesAuth = await this.deviceAuthModel
+      .find()
       .populate({ path: 'device', match: { uuid: { $eq: uuid } } })
       .exec();
     const filtered = devicesAuth.filter((deviceAuth) => deviceAuth.device != null);
@@ -59,7 +64,8 @@ export class DeviceAuthRepository implements IDeviceAuthRepository {
   }
 
   async findManyByDevicesUuid(uuids: string[]): Promise<IDeviceAuth[] | null> {
-    const devicesAuth = await this.deviceAuthModel.find()
+    const devicesAuth = await this.deviceAuthModel
+      .find()
       .populate({ path: 'device', match: { uuid: { $in: uuids } } })
       .exec();
 
@@ -73,7 +79,8 @@ export class DeviceAuthRepository implements IDeviceAuthRepository {
   }
 
   async findAllPopWithSshKey(): Promise<IDeviceAuth[] | null> {
-    const results = await this.deviceAuthModel.find({ sshKey: { $ne: null } })
+    const results = await this.deviceAuthModel
+      .find({ sshKey: { $ne: null } })
       .populate({ path: 'device' })
       .exec();
 
@@ -85,23 +92,20 @@ export class DeviceAuthRepository implements IDeviceAuthRepository {
   }
 
   async deleteCa(deviceAuth: IDeviceAuth): Promise<void> {
-    await this.deviceAuthModel.updateOne(
-      { device: deviceAuth.device },
-      { $unset: { dockerCa: 1 } },
-    ).exec();
+    await this.deviceAuthModel
+      .updateOne({ device: deviceAuth.device }, { $unset: { dockerCa: 1 } })
+      .exec();
   }
 
   async deleteCert(deviceAuth: IDeviceAuth): Promise<void> {
-    await this.deviceAuthModel.updateOne(
-      { device: deviceAuth.device },
-      { $unset: { dockerCert: 1 } },
-    ).exec();
+    await this.deviceAuthModel
+      .updateOne({ device: deviceAuth.device }, { $unset: { dockerCert: 1 } })
+      .exec();
   }
 
   async deleteKey(deviceAuth: IDeviceAuth): Promise<void> {
-    await this.deviceAuthModel.updateOne(
-      { device: deviceAuth.device },
-      { $unset: { dockerKey: 1 } },
-    ).exec();
+    await this.deviceAuthModel
+      .updateOne({ device: deviceAuth.device }, { $unset: { dockerKey: 1 } })
+      .exec();
   }
 }

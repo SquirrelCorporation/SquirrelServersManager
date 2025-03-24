@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { API } from 'ssm-shared-lib';
-
+import { IExtraVarsTransformerService } from '@modules/ansible/application/interfaces/extra-vars-transformer-service.interface';
 /**
  * Service for transforming extra vars into Ansible-compatible format
  */
 @Injectable()
-export class ExtraVarsTransformerService {
+export class ExtraVarsTransformerService implements IExtraVarsTransformerService {
   private readonly logger = new Logger(ExtraVarsTransformerService.name);
 
   /**

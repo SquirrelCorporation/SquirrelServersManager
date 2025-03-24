@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, SchemaTimestampsConfig } from 'mongoose';
 
-export type ServerLogDocument = ServerLog & Document;
+export type ServerLogDocument = ServerLog & Document & SchemaTimestampsConfig;
 
 @Schema({
   collection: 'logs',

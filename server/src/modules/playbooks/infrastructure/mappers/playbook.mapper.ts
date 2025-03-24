@@ -16,18 +16,8 @@ export class PlaybookMapper {
 
     // Map to domain entity
     return {
+      ...plainDoc,
       _id: plainDoc._id?.toString(),
-      uuid: plainDoc.uuid,
-      name: plainDoc.name,
-      description: plainDoc.description,
-      path: plainDoc.path,
-      uniqueQuickRef: plainDoc.uniqueQuickRef,
-      playbooksRepository: plainDoc.playbooksRepository,
-      extraVars: plainDoc.extraVars,
-      playableInBatch: plainDoc.playableInBatch,
-      custom: plainDoc.custom,
-      createdAt: plainDoc.createdAt,
-      updatedAt: plainDoc.updatedAt,
     };
   }
 
@@ -39,7 +29,9 @@ export class PlaybookMapper {
       return null;
     }
 
-    return documents.map(doc => this.toDomain(doc)).filter((doc): doc is IPlaybook => doc !== null);
+    return documents
+      .map((doc) => this.toDomain(doc))
+      .filter((doc): doc is IPlaybook => doc !== null);
   }
 
   /**
@@ -52,12 +44,12 @@ export class PlaybookMapper {
       ...rest,
       // Only include playbooksRepository if it exists
       ...(playbooksRepository && { playbooksRepository }),
-      extraVars: extraVars?.map(extraVar => ({
+      extraVars: extraVars?.map((extraVar) => ({
         extraVar: extraVar.extraVar,
         required: extraVar.required ?? false,
         type: extraVar.type ?? SsmAnsible.ExtraVarsType.MANUAL,
-        deletable: extraVar.deletable ?? true
-      }))
+        deletable: extraVar.deletable ?? true,
+      })),
     };
   }
 }

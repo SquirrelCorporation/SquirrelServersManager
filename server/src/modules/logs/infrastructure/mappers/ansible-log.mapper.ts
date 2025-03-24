@@ -1,25 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { AnsibleLogEntity } from '../../domain/entities/ansible-log.entity';
-import { AnsibleLog } from '../schemas/ansible-log.schema';
+import { AnsibleLog, AnsibleLogDocument } from '../schemas/ansible-log.schema';
 
 @Injectable()
 export class AnsibleLogMapper {
-  toDomain(persistenceModel: AnsibleLog): AnsibleLogEntity {
-    const entity = new AnsibleLogEntity();
-    entity.ident = persistenceModel.ident;
-    entity.content = persistenceModel.content;
-    entity.stdout = persistenceModel.stdout;
-    entity.logRunnerId = persistenceModel.logRunnerId;
-    entity.createdAt = (persistenceModel as any).createdAt;
-    return entity;
+  toDomain(document: AnsibleLogDocument): AnsibleLogEntity | null {
+    if (!document) {
+      return null;
+    }
+
+    // Convert to plain object first
+    const plainDoc = document.toObject ? document.toObject() : document;
+
+    return {
+      ...plainDoc,
+      _id: plainDoc._id?.toString(),
+    };
   }
 
   toPersistence(domainModel: Partial<AnsibleLogEntity>): Partial<AnsibleLog> {
-    return {
-      ident: domainModel.ident,
-      content: domainModel.content,
-      stdout: domainModel.stdout,
-      logRunnerId: domainModel.logRunnerId,
-    };
+    const document: any = { ...domainModel };
+
+    return document;
   }
 }

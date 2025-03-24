@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, SchemaTimestampsConfig } from 'mongoose';
 
-export type AnsibleLogDocument = AnsibleLog & Document;
+export type AnsibleLogDocument = AnsibleLog & Document & SchemaTimestampsConfig;
 
 @Schema({
   collection: 'ansiblelogs',

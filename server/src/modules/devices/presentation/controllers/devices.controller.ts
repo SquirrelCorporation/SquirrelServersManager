@@ -43,7 +43,14 @@ export class DevicesController {
     // Add pagination
     dataSource = paginate(dataSource, current as number, pageSize as number);
 
-    return dataSource;
+    return {
+      data: dataSource,
+      metadata: {
+        total: totalBeforePaginate,
+        current: current as number,
+        pageSize: pageSize as number,
+      },
+    };
   }
 
   @Get('/all')

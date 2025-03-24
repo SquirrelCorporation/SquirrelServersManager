@@ -1,4 +1,5 @@
 export class ServerLogEntity {
+  _id?: string;
   level?: number;
   time?: Date;
   pid?: number;

@@ -10,6 +10,7 @@ import {
   SHELL_WRAPPER_SERVICE,
   SSH_KEY_SERVICE,
 } from '@modules/shell';
+import { IAnsibleCommandService } from '@modules/ansible/application/interfaces/ansible-command-service.interface';
 import {
   ANSIBLE_TASK_REPOSITORY,
   IAnsibleTaskRepository,
@@ -24,7 +25,7 @@ import { InventoryTransformerService } from './inventory-transformer.service';
  * AnsibleCommandService provides a NestJS injectable service for executing Ansible commands.
  */
 @Injectable()
-export class AnsibleCommandService {
+export class AnsibleCommandService implements IAnsibleCommandService {
   private readonly logger = new Logger(AnsibleCommandService.name);
   private readonly ANSIBLE_PATH = `${SSM_INSTALL_PATH}/server/src/ansible/`;
 

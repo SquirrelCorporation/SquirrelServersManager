@@ -1,8 +1,8 @@
 import { API, Automations, SsmAnsible } from 'ssm-shared-lib';
 import { IPlaybooksService } from '@modules/playbooks';
 import { IAnsibleTaskStatusRepository } from '@modules/ansible';
-import { IAutomationRepository } from '../../../domain/repositories/automation.repository.interface';
-import { IUserRepository } from '../../../../users/';
+import { IUserRepository } from '@modules/users';
+import { IAutomationRepository } from '../../../../domain/repositories/automation.repository.interface';
 import { AbstractActionComponent } from './abstract-action.component';
 
 export class PlaybookActionComponent extends AbstractActionComponent {

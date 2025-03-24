@@ -45,7 +45,7 @@ export class DeviceAuth {
   @Prop({
     type: String,
     default: SsmAnsible.SSHConnection.PARAMIKO,
-    enum: SsmAnsible.SSHConnection
+    enum: SsmAnsible.SSHConnection,
   })
   sshConnection?: SsmAnsible.SSHConnection;
 
@@ -57,7 +57,7 @@ export class DeviceAuth {
 
   @Prop({
     type: String,
-    enum: SsmAnsible.AnsibleBecomeMethod
+    enum: SsmAnsible.AnsibleBecomeMethod,
   })
   becomeMethod?: SsmAnsible.AnsibleBecomeMethod;
 
@@ -84,7 +84,7 @@ export class DeviceAuth {
 
   @Prop({
     type: String,
-    enum: SsmAnsible.SSHType
+    enum: SsmAnsible.SSHType,
   })
   dockerCustomAuthType?: SsmAnsible.SSHType;
 

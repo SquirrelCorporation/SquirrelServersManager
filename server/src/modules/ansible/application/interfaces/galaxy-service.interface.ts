@@ -5,24 +5,22 @@ export const GALAXY_SERVICE = 'GALAXY_SERVICE';
  */
 export interface IGalaxyService {
   /**
-   * Search for collections in Ansible Galaxy
-   * @param query - The search query
-   * @returns List of matching collections
-   */
-  searchCollections(query: string): Promise<any[]>;
-
-  /**
    * Install a collection from Ansible Galaxy
    * @param namespace - The collection namespace
    * @param name - The collection name
-   * @param version - The collection version (optional)
    * @returns The installation result
    */
-  installCollection(namespace: string, name: string, version?: string): Promise<string>;
+  installCollection(namespace: string, name: string): Promise<void>;
 
   /**
-   * List installed collections
-   * @returns List of installed collections
+   * List collections
+   * @returns List of collections
    */
-  listInstalledCollections(): Promise<any[]>;
+  getAnsibleGalaxyCollections(
+    offset: number,
+    pageSize: number,
+    current: number,
+    namespace?: string,
+    content?: string,
+  ): Promise<any[]>;
 }

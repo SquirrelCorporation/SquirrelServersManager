@@ -1,20 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ServerLogEntity } from '../../domain/entities/server-log.entity';
-import { ServerLog } from '../schemas/server-log.schema';
+import { ServerLog, ServerLogDocument } from '../schemas/server-log.schema';
 
 @Injectable()
 export class ServerLogMapper {
-  toDomain(persistenceModel: ServerLog): ServerLogEntity {
-    const entity = new ServerLogEntity();
-    entity.level = persistenceModel.level;
-    entity.time = persistenceModel.time;
-    entity.pid = persistenceModel.pid;
-    entity.hostname = persistenceModel.hostname;
-    entity.msg = persistenceModel.msg;
-    entity.req = persistenceModel.req;
-    entity.res = persistenceModel.res;
-    entity.err = persistenceModel.err;
-    return entity;
+  toDomain(persistenceModel: ServerLogDocument): ServerLogEntity {
+    return {
+      ...persistenceModel,
+      _id: persistenceModel._id?.toString(),
+    };
   }
 
   toPersistence(domainModel: Partial<ServerLogEntity>): Partial<ServerLog> {

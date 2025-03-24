@@ -1,13 +1,17 @@
 import { Body, Controller, Param, Post } from '@nestjs/common';
 import { DevicesService } from '../../application/services/devices.service';
-import { DockerConfigurationDto, ProxmoxConfigurationDto, SystemInformationConfigurationDto } from '../dtos/device-configuration.dto';
+import {
+  DockerConfigurationDto,
+  ProxmoxConfigurationDto,
+  SystemInformationConfigurationDto,
+} from '../dtos/device-configuration.dto';
 import { DeviceMapper } from '../mappers/device.mapper';
 
 @Controller('devices')
 export class DevicesConfigurationController {
   constructor(
     private readonly devicesService: DevicesService,
-    private readonly deviceMapper: DeviceMapper
+    private readonly deviceMapper: DeviceMapper,
   ) {}
 
   @Post(':uuid/configuration/containers/docker')
@@ -65,7 +69,8 @@ export class DevicesConfigurationController {
   @Post(':uuid/configuration/systemInformation')
   async updateSystemInformationConfiguration(
     @Param('uuid') uuid: string,
-    @Body() systemInformationDto: { systemInformationConfiguration: SystemInformationConfigurationDto },
+    @Body()
+    systemInformationDto: { systemInformationConfiguration: SystemInformationConfigurationDto },
   ) {
     const device = await this.devicesService.findOneByUuid(uuid);
     if (!device) {

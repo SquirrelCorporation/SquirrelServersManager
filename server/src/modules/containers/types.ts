@@ -1,4 +1,4 @@
-import { ContainerEntity } from '@modules/containers/domain/entities/container.entity';
+import { IContainerEntity } from '@modules/containers/domain/entities/container.entity';
 import { AxiosRequestConfig } from 'axios';
 
 export type ContainerConfig = {
@@ -68,7 +68,7 @@ export type ConfigurationSchema =
 
 export type ContainerReport = {
   changed?: boolean;
-  container: ContainerEntity;
+  container: IContainerEntity;
 };
 
 export type RequestOptionsType = AxiosRequestConfig;

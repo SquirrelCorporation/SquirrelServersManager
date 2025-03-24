@@ -5,7 +5,7 @@ import { ContainersModule } from '../containers/containers.module';
 import { PlaybooksModule } from '../playbooks/playbooks.module';
 import { AnsibleModule } from '../ansible/ansible.module';
 import { UsersModule } from '../users/users.module';
-import { AutomationEngine } from './application/services/automation-engine.service';
+import { AutomationEngine } from './application/services/engine/automation-engine.service';
 import { AutomationsService } from './application/services/automations.service';
 import { AutomationRepository } from './infrastructure/repositories/automation.repository';
 import { Automation, AutomationSchema } from './infrastructure/schemas/automation.schema';

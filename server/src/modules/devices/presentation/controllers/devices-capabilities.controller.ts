@@ -1,15 +1,13 @@
 import { Body, Controller, Param, Post } from '@nestjs/common';
 import { DevicesService } from '../../application/services/devices.service';
-import {
-  UpdateDeviceCapabilitiesDto
-} from '../dtos/device-capabilities.dto';
+import { UpdateDeviceCapabilitiesDto } from '../dtos/device-capabilities.dto';
 import { DeviceMapper } from '../mappers/device.mapper';
 
 @Controller('devices')
 export class DevicesCapabilitiesController {
   constructor(
     private readonly devicesService: DevicesService,
-    private readonly deviceMapper: DeviceMapper
+    private readonly deviceMapper: DeviceMapper,
   ) {}
 
   @Post(':uuid/capabilities')

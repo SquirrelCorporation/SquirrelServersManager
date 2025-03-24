@@ -17,21 +17,20 @@ export class DeviceRepository implements IDeviceRepository {
   constructor(
     @InjectModel(DEVICE) private deviceModel: Model<DeviceDocument>,
     private readonly mapper: DeviceRepositoryMapper,
-    private eventEmitter: EventEmitter2
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async create(device: IDevice): Promise<IDevice> {
     const createdDevice = await this.deviceModel.create(device);
-    return this.mapper.toDomain(createdDevice.toObject());
+    return this.mapper.toDomain(createdDevice.toObject()) as IDevice;
   }
 
   async update(device: IDevice): Promise<IDevice | null> {
     device.updatedAt = new Date();
-    const updated = await this.deviceModel.findOneAndUpdate(
-      { uuid: device.uuid },
-      device,
-      { new: true }
-    ).lean().exec();
+    const updated = await this.deviceModel
+      .findOneAndUpdate({ uuid: device.uuid }, device, { new: true })
+      .lean()
+      .exec();
     return this.mapper.toDomain(updated);
   }
 
@@ -41,7 +40,10 @@ export class DeviceRepository implements IDeviceRepository {
   }
 
   async findByUuids(uuids: string[]): Promise<IDevice[] | null> {
-    const devices = await this.deviceModel.find({ uuid: { $in: uuids } }).lean().exec();
+    const devices = await this.deviceModel
+      .find({ uuid: { $in: uuids } })
+      .lean()
+      .exec();
     return this.mapper.toDomainList(devices);
   }
 
@@ -51,19 +53,24 @@ export class DeviceRepository implements IDeviceRepository {
   }
 
   async findAll(): Promise<IDevice[] | null> {
-    const devices = await this.deviceModel.find({ disabled: false }).sort({ createdAt: -1 }).lean().exec();
+    const devices = await this.deviceModel
+      .find({ disabled: false })
+      .sort({ createdAt: -1 })
+      .lean()
+      .exec();
     return this.mapper.toDomainList(devices);
   }
 
   async setDeviceOfflineAfter(inactivityInMinutes: number): Promise<void> {
-    const devices = await this.deviceModel.find({
-      updatedAt: { $lt: DateTime.now().minus({ minute: inactivityInMinutes }).toJSDate() },
-      $and: [
-        { status: { $ne: SsmStatus.DeviceStatus.OFFLINE } },
-        { status: { $ne: SsmStatus.DeviceStatus.UNMANAGED } },
-        { status: { $ne: SsmStatus.DeviceStatus.REGISTERING } },
-      ],
-    })
+    const devices = await this.deviceModel
+      .find({
+        updatedAt: { $lt: DateTime.now().minus({ minute: inactivityInMinutes }).toJSDate() },
+        $and: [
+          { status: { $ne: SsmStatus.DeviceStatus.OFFLINE } },
+          { status: { $ne: SsmStatus.DeviceStatus.UNMANAGED } },
+          { status: { $ne: SsmStatus.DeviceStatus.REGISTERING } },
+        ],
+      })
       .lean()
       .exec();
 
@@ -73,12 +80,13 @@ export class DeviceRepository implements IDeviceRepository {
       // Emit event for DeviceDownTimeService to handle
       this.eventEmitter.emit('device.went.offline', device.uuid);
 
-      await this.deviceModel.updateOne(
-        { uuid: device.uuid },
-        {
-          $set: { status: SsmStatus.DeviceStatus.OFFLINE },
-        },
-      )
+      await this.deviceModel
+        .updateOne(
+          { uuid: device.uuid },
+          {
+            $set: { status: SsmStatus.DeviceStatus.OFFLINE },
+          },
+        )
         .lean()
         .exec();
     }

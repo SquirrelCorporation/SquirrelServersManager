@@ -52,7 +52,10 @@ export class SshKeyService implements ISshKeyService {
    */
   async genAnsibleTemporaryPrivateKey(sskVaultedKey: string, deviceUuid: string, execUuid: string) {
     try {
-      const decryptedContent = await this.vaultCryptoService.decrypt(sskVaultedKey, DEFAULT_VAULT_ID);
+      const decryptedContent = await this.vaultCryptoService.decrypt(
+        sskVaultedKey,
+        DEFAULT_VAULT_ID,
+      );
       const tmpKeyFilePath = this.getTmpKeyFilePath(this.getTmpKeyFileName(execUuid, deviceUuid));
 
       // Use either FileSystemService or direct ShellWrapper to write the file

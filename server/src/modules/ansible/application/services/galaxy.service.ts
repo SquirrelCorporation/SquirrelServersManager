@@ -1,13 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
-import { AnsibleCommandService } from '@modules/ansible';
+import { IGalaxyService } from '@modules/ansible/application/interfaces/galaxy-service.interface';
+import { AnsibleCommandService } from './ansible-command.service';
 
 /**
  * Service for managing Ansible Galaxy collections and roles
  */
 @Injectable()
-export class GalaxyService {
+export class GalaxyService implements IGalaxyService {
   private readonly logger = new Logger(GalaxyService.name);
   private readonly galaxyApiUrl = 'https://galaxy.ansible.com/api';
 

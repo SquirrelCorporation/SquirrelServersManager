@@ -1,6 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { ANSIBLE_LOGS_REPOSITORY, IAnsibleLogsRepository } from '@modules/logs';
+import { ITaskLogsService } from '@modules/ansible/application/interfaces/task-logs-service.interface';
 import { filterByQueryParams } from '../../../../helpers/query/FilterHelper';
 import { filterByFields } from '../../../../helpers/query/FilterHelper';
 import { sortByFields } from '../../../../helpers/query/SorterHelper';
@@ -19,7 +20,7 @@ import { PaginatedResponseDto, TaskResponseDto } from '../../presentation/dtos/t
  * Service for managing Ansible task logs
  */
 @Injectable()
-export class TaskLogsService {
+export class TaskLogsService implements ITaskLogsService {
   private readonly logger = new Logger(TaskLogsService.name);
 
   constructor(
@@ -178,7 +179,11 @@ export class TaskLogsService {
    */
   async updateTask(taskId: string, update: Partial<{ name: string; status: string }>) {
     try {
-      return this.ansibleTaskRepository.update(taskId, update);
+      const result = await this.ansibleTaskRepository.update(taskId, update);
+      if (!result) {
+        this.logger.error(`Task ${taskId} not found for update`);
+      }
+      return result;
     } catch (error) {
       this.logger.error(`Error updating task ${taskId}`, error);
       throw error;
@@ -193,7 +198,11 @@ export class TaskLogsService {
   async deleteTask(taskId: string) {
     try {
       await this.ansibleLogsRepository.deleteAllByIdent(taskId);
-      return this.ansibleTaskRepository.delete(taskId);
+      const result = await this.ansibleTaskRepository.delete(taskId);
+      if (!result) {
+        this.logger.error(`Task ${taskId} not found for deletion`);
+      }
+      return result;
     } catch (error) {
       this.logger.error(`Error deleting task ${taskId}`, error);
       throw error;

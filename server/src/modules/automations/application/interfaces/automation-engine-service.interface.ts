@@ -1,5 +1,5 @@
 import { OnModuleInit } from '@nestjs/common';
-import { AutomationComponent } from '../../domain/components/automation.component';
+import { AutomationComponent } from '../services/components/automation.component';
 import { Automation } from '../../domain/entities/automation.entity';
 
 export const AUTOMATION_ENGINE_SERVICE = 'AUTOMATION_ENGINE_SERVICE';

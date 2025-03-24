@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ANSIBLE_LOGS_REPOSITORY, IAnsibleLogsRepository } from '@modules/logs';
 import { ISshKeyService, SSH_KEY_SERVICE } from '@modules/shell';
+import { IAnsibleHooksService } from '@modules/ansible/application/interfaces/ansible-hooks-service.interface';
 import {
   ANSIBLE_TASK_REPOSITORY,
   IAnsibleTaskRepository,
@@ -19,7 +20,7 @@ import { TaskEventDto } from '../../presentation/dtos/task-event.dto';
 import { TaskHookDto } from '../../presentation/dtos/task-hook.dto';
 
 @Injectable()
-export class AnsibleHooksService {
+export class AnsibleHooksService implements IAnsibleHooksService {
   constructor(
     @Inject(ANSIBLE_TASK_REPOSITORY)
     private readonly taskRepository: IAnsibleTaskRepository,

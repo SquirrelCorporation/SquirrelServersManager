@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { SsmAnsible } from 'ssm-shared-lib';
+import { IInventoryTransformerService } from '@modules/ansible/application/interfaces/inventory-transformer-service.interface';
 import { Playbooks } from '../../../../types/typings';
 import { SshKeyService } from '../../../shell';
 import { IDeviceAuth } from '../../../devices';
@@ -24,7 +25,7 @@ interface ConnectionVars {
  * Service for transforming device data into Ansible inventory format
  */
 @Injectable()
-export class InventoryTransformerService {
+export class InventoryTransformerService implements IInventoryTransformerService {
   private readonly logger = new Logger(InventoryTransformerService.name);
 
   constructor(private readonly sshKeyService: SshKeyService) {}

@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Schema as MongooseSchema } from 'mongoose';
+import { Document, Schema as MongooseSchema, SchemaTimestampsConfig } from 'mongoose';
 import { SsmAnsible } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
 import { PlaybooksRegisterDocument } from './playbooks-register.schema';
 
-export type PlaybookDocument = Playbook & Document;
+export type PlaybookDocument = Playbook & Document & SchemaTimestampsConfig;
 
 @Schema({
   timestamps: true,
