@@ -24,7 +24,7 @@ export class ContainerCustomStacksRepositoryEngineService {
     private readonly shellWrapperService: ShellWrapperService,
     @Inject(forwardRef(() => ContainerStacksService))
     private readonly containerStacksService: ContainerStacksService,
-    private readonly vaultCryptoService: VaultCryptoService
+    private readonly vaultCryptoService: VaultCryptoService,
   ) {}
 
   async init(): Promise<void> {
@@ -42,7 +42,7 @@ export class ContainerCustomStacksRepositoryEngineService {
   }
 
   private async createComponent(
-    repository: IContainerCustomStackRepositoryEntity
+    repository: IContainerCustomStackRepositoryEntity,
   ): Promise<ContainerRepositoryComponentService> {
     const {
       uuid,
@@ -68,7 +68,9 @@ export class ContainerCustomStacksRepositoryEngineService {
       }
       decryptedAccessToken = result;
     } catch (error) {
-      throw new Error(`Failed to decrypt access token: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(
+        `Failed to decrypt access token: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
 
     // Create a new component instance with all required dependencies
@@ -76,7 +78,7 @@ export class ContainerCustomStacksRepositoryEngineService {
       this.shellWrapperService,
       this.containerCustomStackRepository,
       this.containerCustomStacksRepositoryRepository,
-      this.containerStacksService
+      this.containerStacksService,
     );
 
     // Initialize it with the repository data
@@ -95,8 +97,10 @@ export class ContainerCustomStacksRepositoryEngineService {
     return component;
   }
 
-  async registerRepository(repository: IContainerCustomStackRepositoryEntity): Promise<ContainerRepositoryComponentService> {
-    this.logger.log(`Registering: ${repository.name}/${repository.uuid}`);
+  async registerRepository(
+    repository: IContainerCustomStackRepositoryEntity,
+  ): Promise<ContainerRepositoryComponentService> {
+    this.logger.log(`Registering Container Repository: ${repository.name}/${repository.uuid}`);
 
     const component = await this.createComponent(repository);
     this.state.stackRepository[repository.uuid] = component;
@@ -109,7 +113,7 @@ export class ContainerCustomStacksRepositoryEngineService {
     const repositories = await this.containerCustomStacksRepositoryRepository.findAll();
     this.logger.log(`Found ${repositories?.length} repositories in database.`);
 
-    const registrationPromises = repositories.map(repo => this.registerRepository(repo));
+    const registrationPromises = repositories.map((repo) => this.registerRepository(repo));
     await Promise.all(registrationPromises);
   }
 
@@ -132,9 +136,11 @@ export class ContainerCustomStacksRepositoryEngineService {
   }
 
   async syncAllRegistered(): Promise<void> {
-    this.logger.log(`syncAllRegistered, ${Object.keys(this.state.stackRepository).length} registered`);
+    this.logger.log(
+      `syncAllRegistered, ${Object.keys(this.state.stackRepository).length} registered`,
+    );
 
-    const syncPromises = Object.values(this.state.stackRepository).map(component => {
+    const syncPromises = Object.values(this.state.stackRepository).map((component) => {
       return component.syncFromRepository();
     });
 

@@ -6,7 +6,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import mongoose from 'mongoose';
 import { LoggerModule } from 'nestjs-pino';
 import { SshModule } from '@modules/ssh';
-import { db } from './config';
+import { BullModule } from '@nestjs/bull';
+import { db, redisConf } from './config';
 import logger, { httpLoggerOptions } from './logger';
 import { AnsibleConfigModule } from './modules/ansible-config/ansible-config.module';
 import { AnsibleModule } from './modules/ansible/ansible.module';
@@ -20,6 +21,7 @@ import { DiagnosticModule } from './modules/diagnostic/diagnostic.module';
 import { LogsModule } from './modules/logs/logs.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { PlaybooksModule } from './modules/playbooks/playbooks.module';
+import { RemoteSystemInformationModule } from './modules/remote-system-information/remote-system-information.module';
 import { SchedulerModule } from './modules/scheduler/scheduler.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { SftpModule } from './modules/sftp/sftp.module';
@@ -144,6 +146,14 @@ let connectionReady = false;
         };
       },
     }),
+    BullModule.forRootAsync({
+      useFactory: async () => ({
+        redis: {
+          host: redisConf.host,
+          port: redisConf.port,
+        },
+      }),
+    }),
     AuthModule,
     StatisticsModule,
     AutomationsModule,
@@ -167,6 +177,7 @@ let connectionReady = false;
     SettingsModule,
     HealthModule,
     PluginsModule,
+    RemoteSystemInformationModule,
   ],
 })
 export class AppModule implements OnModuleInit {

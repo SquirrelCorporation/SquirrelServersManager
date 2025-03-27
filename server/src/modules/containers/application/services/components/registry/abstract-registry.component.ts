@@ -1,11 +1,19 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import Joi from 'joi';
-import { ConfigurationRegistrySchema, Image, Manifest, RequestOptionsType } from '@modules/containers/types';
+import {
+  ConfigurationRegistrySchema,
+  Image,
+  Manifest,
+  RequestOptionsType,
+} from '@modules/containers/types';
 import { Component } from '../../../../domain/components/component.interface';
 import { Kind } from '../../../../domain/components/kind.enum';
 import PinoLogger from '../../../../../../logger';
 
-const logger = PinoLogger.child({ module: 'AbstractRegistryComponent' }, { msgPrefix: '[ABSTRACT_REGISTRY] - ' });
+const logger = PinoLogger.child(
+  { module: 'AbstractRegistryComponent' },
+  { msgPrefix: '[ABSTRACT_REGISTRY] - ' },
+);
 
 /**
  * Docker Registry Abstract class.
@@ -91,7 +99,7 @@ export abstract class AbstractRegistryComponent implements Component<Configurati
     kind: Kind,
     provider: string,
     name: string,
-    configuration: ConfigurationRegistrySchema
+    configuration: ConfigurationRegistrySchema,
   ): Promise<Component<ConfigurationRegistrySchema>> {
     logger.info(`Registering registry component ${provider}/${name}`);
     this.id = `${kind}.${provider}.${name}`;
@@ -117,7 +125,9 @@ export abstract class AbstractRegistryComponent implements Component<Configurati
   /**
    * Update the component configuration
    */
-  async update(configuration: ConfigurationRegistrySchema): Promise<Component<ConfigurationRegistrySchema>> {
+  async update(
+    configuration: ConfigurationRegistrySchema,
+  ): Promise<Component<ConfigurationRegistrySchema>> {
     logger.info(`Updating registry component ${this.provider}/${this.name}`);
     this.configuration = { ...configuration };
 
@@ -181,7 +191,7 @@ export abstract class AbstractRegistryComponent implements Component<Configurati
    * @returns {*}
    */
   async getTags(image: Image): Promise<string[]> {
-    this.childLogger.info(`getTags- Get "${image.name}" tags`);
+    this.childLogger.debug(`getTags- Get "${image.name}" tags`);
     const tags: string[] = [];
     let page;
     let hasNext = true;
@@ -233,7 +243,7 @@ export abstract class AbstractRegistryComponent implements Component<Configurati
     const tagOrDigest = digest || image.tag.value;
     let manifestDigestFound: string | undefined = undefined;
     let manifestMediaType: string | undefined = undefined;
-    this.childLogger.info(
+    this.childLogger.debug(
       `getImageManifestDigest - Get "${image.name}:${tagOrDigest}" manifest...`,
     );
     const responseManifests = (

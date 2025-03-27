@@ -61,15 +61,14 @@ export const getCustomAgent = (childLogger: any, opt: any) => {
           })
           .once('end', () => {
             this.logger.warn(`Agent destroy for ${opt.host}`);
-            this.logger.warn(opt);
             conn.end();
             this.destroy();
           });
         (async () => {
-            const resolvedHost = await tryResolveHost(opt.host as string);
-            const connectConfig = { ...opt, host: resolvedHost };
-            this.logger.info(`Connecting to ${connectConfig.host}`);
-            conn.connect(connectConfig);
+          const resolvedHost = await tryResolveHost(opt.host as string);
+          const connectConfig = { ...opt, host: resolvedHost };
+          this.logger.info(`Connecting to ${connectConfig.host}`);
+          conn.connect(connectConfig);
         })();
       } catch (error: any) {
         this.logger.error(`Error connecting to ${opt.host} : ${error.message}`);

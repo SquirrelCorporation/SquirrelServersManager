@@ -1,10 +1,10 @@
 import { ConfigurationRegistrySchema } from '@modules/containers/types';
-import { Component } from './component.interface';
+import { IComponent } from './component.interface';
 
 /**
  * Interface for registry components
  */
-export interface IRegistryComponent extends Component<ConfigurationRegistrySchema> {
+export interface IRegistryComponent extends IComponent<ConfigurationRegistrySchema> {
   /**
    * Get configuration schema for the registry
    */

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigurationSchema } from '@modules/containers/types';
-import { Component } from '../../../domain/components/component.interface';
+import { IComponent } from '../../../domain/components/component.interface';
 import { Kind } from '../../../domain/components/kind.enum';
 import PinoLogger from '../../../../../logger';
 import { IWatcherComponentFactory } from '../../../domain/components/watcher.interface';
@@ -18,7 +18,10 @@ import { ForgejoRegistryComponent } from './registry/forgejo-registry.component'
 import { LscrRegistryComponent } from './registry/lscr-registry.component';
 import { AbstractRegistryComponent } from './registry/abstract-registry.component';
 
-const logger = PinoLogger.child({ module: 'ComponentFactoryService' }, { msgPrefix: '[COMPONENT_FACTORY] - ' });
+const logger = PinoLogger.child(
+  { module: 'ComponentFactoryService' },
+  { msgPrefix: '[COMPONENT_FACTORY] - ' },
+);
 
 /**
  * Factory service for creating container components
@@ -41,14 +44,14 @@ export class ContainerComponentFactory {
     private readonly lscrRegistry: LscrRegistryComponent,
 
     // Watcher factory - specialized factory for watcher components
-    private readonly watcherFactory: IWatcherComponentFactory
+    private readonly watcherFactory: IWatcherComponentFactory,
   ) {}
 
   /**
    * Create a component based on kind and provider
    * Uses specialized factories for different component types
    */
-  createComponent(kind: Kind, provider: string): Component<ConfigurationSchema> {
+  createComponent(kind: Kind, provider: string): IComponent<ConfigurationSchema> {
     const componentKey = `${kind}/${provider}`;
     logger.info(`Creating component for ${componentKey}`);
 
@@ -60,7 +63,9 @@ export class ContainerComponentFactory {
         case WATCHERS.PROXMOX:
           return this.watcherFactory.createProxmoxComponent();
         default:
-          logger.warn(`No concrete implementation found for watcher provider: ${provider}, using mock component`);
+          logger.warn(
+            `No concrete implementation found for watcher provider: ${provider}, using mock component`,
+          );
           return this.watcherFactory.createProxmoxComponent(); // Use mock implementation
       }
     }
@@ -91,7 +96,9 @@ export class ContainerComponentFactory {
         case REGISTRIES.LSCR:
           return this.lscrRegistry;
         default:
-          logger.warn(`No concrete implementation found for registry provider: ${provider}, using mock registry`);
+          logger.warn(
+            `No concrete implementation found for registry provider: ${provider}, using mock registry`,
+          );
           return this.createMockRegistryComponent(provider);
       }
     }
@@ -103,7 +110,7 @@ export class ContainerComponentFactory {
   /**
    * Create a mock registry component for testing/placeholder purposes
    */
-  private createMockRegistryComponent(provider: string): Component<ConfigurationSchema> {
+  private createMockRegistryComponent(provider: string): IComponent<ConfigurationSchema> {
     logger.info(`Creating mock registry component for provider: ${provider}`);
     return new(class extends AbstractRegistryComponent {
       async init(): Promise<void> {

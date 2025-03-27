@@ -17,7 +17,14 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { SsmAnsible } from 'ssm-shared-lib';
 import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
-import { DevicesService } from '../../application/services/devices.service';
+import { DEVICES_SERVICE } from '../../domain/services/devices-service.interface';
+import { IDevicesService } from '../../domain/services/devices-service.interface';
+import { DEVICE_AUTH_SERVICE } from '../../domain/services/device-auth-service.interface';
+import { IDeviceAuthService } from '../../domain/services/device-auth-service.interface';
+import { DOCKER_DEVICE_SERVICE } from '../../domain/services/docker-device-service.interface';
+import { IDockerDeviceService } from '../../domain/services/docker-device-service.interface';
+import { PROXMOX_DEVICE_SERVICE } from '../../domain/services/proxmox-device-service.interface';
+import { IProxmoxDeviceService } from '../../domain/services/proxmox-device-service.interface';
 import { CreateDeviceAuthDto, UpdateDeviceAuthDto } from '../dtos/device-auth.dto';
 import { UpdateDockerAuthDto } from '../dtos/update-docker-auth.dto';
 import { UpdateProxmoxAuthDto } from '../dtos/update-proxmox-auth.dto';
@@ -42,7 +49,14 @@ const fileFilter = (req: any, file: Express.Multer.File, callback: any) => {
 @UseGuards(JwtAuthGuard)
 export class DevicesAuthController {
   constructor(
-    private readonly devicesService: DevicesService,
+    @Inject(DEVICES_SERVICE)
+    private readonly devicesService: IDevicesService,
+    @Inject(DEVICE_AUTH_SERVICE)
+    private readonly deviceAuthService: IDeviceAuthService,
+    @Inject(DOCKER_DEVICE_SERVICE)
+    private readonly dockerDeviceService: IDockerDeviceService,
+    @Inject(PROXMOX_DEVICE_SERVICE)
+    private readonly proxmoxDeviceService: IProxmoxDeviceService,
     @Inject(SENSITIVE_INFO_SERVICE)
     private readonly sensitiveInfoService: ISensitiveInfoService,
   ) {}
@@ -55,7 +69,7 @@ export class DevicesAuthController {
         throw new HttpException(`Device with UUID ${uuid} not found`, HttpStatus.NOT_FOUND);
       }
 
-      const deviceAuth = await this.devicesService.findDeviceAuthByDevice(device);
+      const deviceAuth = await this.deviceAuthService.findDeviceAuthByDevice(device);
       if (!deviceAuth) {
         throw new HttpException(
           `Device Auth for device with UUID ${uuid} not found`,
@@ -89,11 +103,11 @@ export class DevicesAuthController {
       const deviceAuth = {
         ...createDeviceAuthDto,
         authType: createDeviceAuthDto.authType,
-        becomeMethod: createDeviceAuthDto.becomeMethod as unknown as SsmAnsible.AnsibleBecomeMethod,
+        becomeMethod: createDeviceAuthDto.becomeMethod,
         device,
       };
 
-      const result = await this.devicesService.updateOrCreateDeviceAuth(deviceAuth as any);
+      const result = await this.deviceAuthService.updateOrCreateDeviceAuth(deviceAuth);
 
       return { type: result.authType };
     } catch (error) {
@@ -118,7 +132,7 @@ export class DevicesAuthController {
         throw new HttpException(`Device with UUID ${uuid} not found`, HttpStatus.NOT_FOUND);
       }
 
-      const deviceAuth = await this.devicesService.findDeviceAuthByDevice(device);
+      const deviceAuth = await this.deviceAuthService.findDeviceAuthByDevice(device);
       if (!deviceAuth) {
         throw new HttpException(
           `Device Auth for device with UUID ${uuid} not found`,
@@ -157,7 +171,7 @@ export class DevicesAuthController {
           );
       }
 
-      const updatedDeviceAuth = await this.devicesService.updateDeviceAuth(
+      const updatedDeviceAuth = await this.deviceAuthService.updateDeviceAuth(
         deviceAuth,
         updateDeviceAuthDto,
       );
@@ -181,7 +195,7 @@ export class DevicesAuthController {
         throw new HttpException(`Device with UUID ${uuid} not found`, HttpStatus.NOT_FOUND);
       }
 
-      await this.devicesService.deleteDeviceAuthByDevice(device);
+      await this.deviceAuthService.deleteDeviceAuthByDevice(device);
 
       return;
     } catch (error) {
@@ -206,7 +220,7 @@ export class DevicesAuthController {
         throw new HttpException(`Device with UUID ${uuid} not found`, HttpStatus.NOT_FOUND);
       }
 
-      const deviceAuth = await this.devicesService.findDeviceAuthByDevice(device);
+      const deviceAuth = await this.deviceAuthService.findDeviceAuthByDevice(device);
       if (!deviceAuth) {
         throw new HttpException(
           `Device Auth for device with UUID ${uuid} not found`,
@@ -239,7 +253,7 @@ export class DevicesAuthController {
           );
       }
 
-      const updatedDeviceAuth = await this.devicesService.updateDockerAuth(
+      const updatedDeviceAuth = await this.dockerDeviceService.updateDockerAuth(
         deviceAuth,
         updateDockerAuthDto,
       );
@@ -283,7 +297,7 @@ export class DevicesAuthController {
         throw new HttpException(`Device with UUID ${uuid} not found`, HttpStatus.NOT_FOUND);
       }
 
-      const deviceAuth = await this.devicesService.findDeviceAuthByDevice(device);
+      const deviceAuth = await this.deviceAuthService.findDeviceAuthByDevice(device);
       if (!deviceAuth) {
         throw new HttpException(
           `Device Auth for device with UUID ${uuid} not found`,
@@ -304,7 +318,7 @@ export class DevicesAuthController {
           break;
       }
 
-      await this.devicesService.updateDeviceAuth(deviceAuth);
+      await this.deviceAuthService.updateDeviceAuth(deviceAuth);
 
       return;
     } catch (error: any) {
@@ -327,7 +341,7 @@ export class DevicesAuthController {
         throw new HttpException(`Device with UUID ${uuid} not found`, HttpStatus.NOT_FOUND);
       }
 
-      const deviceAuth = await this.devicesService.findDeviceAuthByDevice(device);
+      const deviceAuth = await this.deviceAuthService.findDeviceAuthByDevice(device);
       if (!deviceAuth) {
         throw new HttpException(
           `Device Auth for device with UUID ${uuid} not found`,
@@ -338,13 +352,13 @@ export class DevicesAuthController {
       // Delete the appropriate certificate
       switch (type) {
         case 'ca':
-          await this.devicesService.deleteDeviceAuthCa(deviceAuth);
+          await this.deviceAuthService.deleteDeviceAuthCa(deviceAuth);
           break;
         case 'cert':
-          await this.devicesService.deleteDeviceAuthCert(deviceAuth);
+          await this.deviceAuthService.deleteDeviceAuthCert(deviceAuth);
           break;
         case 'key':
-          await this.devicesService.deleteDeviceAuthKey(deviceAuth);
+          await this.deviceAuthService.deleteDeviceAuthKey(deviceAuth);
           break;
       }
 
@@ -368,7 +382,7 @@ export class DevicesAuthController {
         throw new HttpException(`Device with UUID ${uuid} not found`, HttpStatus.NOT_FOUND);
       }
 
-      const deviceAuth = await this.devicesService.findDeviceAuthByDevice(device);
+      const deviceAuth = await this.deviceAuthService.findDeviceAuthByDevice(device);
       if (!deviceAuth) {
         throw new HttpException(
           `Device Auth for device with UUID ${uuid} not found`,
@@ -393,7 +407,7 @@ export class DevicesAuthController {
           );
       }
 
-      const updatedDeviceAuth = await this.devicesService.updateProxmoxAuth(
+      const updatedDeviceAuth = await this.proxmoxDeviceService.updateProxmoxAuth(
         deviceAuth,
         updateProxmoxAuthDto,
       );

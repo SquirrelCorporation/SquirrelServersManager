@@ -93,7 +93,7 @@ export class PlaybookActionComponent extends AbstractActionComponent {
         }, 5000);
       } else {
         const lastExecStatus = execStatuses[0];
-        this.childLogger.info(
+        this.childLogger.debug(
           `Playbook Action Component - Latest execution status ${lastExecStatus.status}`,
         );
         if (PlaybookActionComponent.isFinalStatus(lastExecStatus.status as string)) {

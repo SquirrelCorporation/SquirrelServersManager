@@ -1,10 +1,9 @@
-import { Component } from './component.interface';
-import { SSMServicesTypes } from 'src/types/typings';
+import { IComponent } from './component.interface';
 
 /**
  * Interface for watcher components
  */
-export interface IWatcherComponent extends Component<SSMServicesTypes.ConfigurationWatcherSchema> {
+export interface IWatcherComponent extends IComponent<SSMServicesTypes.ConfigurationWatcherSchema> {
   /**
    * Get container by ID
    */
@@ -84,8 +83,8 @@ export interface IWatcherEngineService {
    * Get all registered watcher states
    */
   getStates(): {
-    registry: Record<string, Component<SSMServicesTypes.ConfigurationSchema>>;
-    watcher: Record<string, Component<SSMServicesTypes.ConfigurationSchema>>;
+    registry: Record<string, IComponent<SSMServicesTypes.ConfigurationSchema>>;
+    watcher: Record<string, IComponent<SSMServicesTypes.ConfigurationSchema>>;
   };
 
   /**
@@ -106,5 +105,7 @@ export interface IWatcherEngineService {
   /**
    * Find a registered Docker component
    */
-  findRegisteredDockerComponent(watcher: string): Component<SSMServicesTypes.ConfigurationSchema> | undefined;
+  findRegisteredDockerComponent(
+    watcher: string,
+  ): IComponent<SSMServicesTypes.ConfigurationSchema> | undefined;
 }

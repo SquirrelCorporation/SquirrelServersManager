@@ -35,21 +35,6 @@ Each module typically follows this structure:
 
 ```
 module-name/
-├── __tests__/                  # Test files
-│   ├── controllers/            # Controller tests
-│   └── services/               # Service tests
-├── controllers/                # REST API controllers
-├── dto/                        # Data Transfer Objects
-├── services/                   # Business logic services
-├── module-name.module.ts       # NestJS module definition
-├── index.ts                    # Public API exports
-└── README.md                   # Module documentation
-```
-
-Modules that follow the Clean Architecture pattern use this structure:
-
-```
-module-name/
 ├── __tests__/                  # Test files mirroring the module structure
 │   ├── application/            # Application layer tests
 │   ├── infrastructure/         # Infrastructure layer tests

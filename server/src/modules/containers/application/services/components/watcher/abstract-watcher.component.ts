@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import * as Joi from 'joi';
 import { ConfigurationWatcherSchema } from '@modules/containers/types';
-import { Component } from '../../../../domain/components/component.interface';
+import { IComponent } from '../../../../domain/components/component.interface';
 import { Kind } from '../../../../domain/components/kind.enum';
 import PinoLogger from '../../../../../../logger';
 
-const logger = PinoLogger.child({ module: 'AbstractWatcherComponent' }, { msgPrefix: '[ABSTRACT_WATCHER] - ' });
+const logger = PinoLogger.child(
+  { module: 'AbstractWatcherComponent' },
+  { msgPrefix: '[ABSTRACT_WATCHER] - ' },
+);
 
 /**
  * Abstract base component for all container watchers
@@ -50,8 +53,8 @@ export abstract class AbstractWatcherComponent {
     kind: Kind,
     provider: string,
     name: string,
-    configuration: ConfigurationWatcherSchema
-  ): Promise<Component<ConfigurationWatcherSchema>> {
+    configuration: ConfigurationWatcherSchema,
+  ): Promise<IComponent<ConfigurationWatcherSchema>> {
     this.childLogger.info(`Registering watcher component ${provider}/${name}`);
     this.id = `${kind}.${provider}.${name}`;
     this.kind = kind;
@@ -76,7 +79,9 @@ export abstract class AbstractWatcherComponent {
   /**
    * Update the component configuration
    */
-  async update(configuration: ConfigurationWatcherSchema): Promise<Component<ConfigurationWatcherSchema>> {
+  async update(
+    configuration: ConfigurationWatcherSchema,
+  ): Promise<IComponent<ConfigurationWatcherSchema>> {
     this.childLogger.info(`Updating watcher component ${this.provider}/${this.name}`);
     this.configuration = { ...configuration };
 
@@ -92,7 +97,7 @@ export abstract class AbstractWatcherComponent {
    * @param data
    */
   protected emit(event: string, data: any): void {
-    this.childLogger.debug(`Emitting event ${event}`);
+    this.childLogger.debug(`Emitting event ${event} - ${JSON.stringify(data)}`);
     // Events are handled by the NestJS event emitter in the actual implementation
   }
 

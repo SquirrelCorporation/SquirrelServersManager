@@ -1,15 +1,20 @@
-import { ConfigurationAuthenticationSchema, ConfigurationRegistrySchema, ConfigurationTriggerSchema, ConfigurationWatcherSchema } from '@modules/containers/types';
+import {
+  ConfigurationAuthenticationSchema,
+  ConfigurationRegistrySchema,
+  ConfigurationTriggerSchema,
+  ConfigurationWatcherSchema,
+} from '@modules/containers/types';
 import { Kind } from './kind.enum';
 
 /**
  * Base component interface for all container-related components
  */
-export interface IContainerComponent<
+export interface IComponent<
   T extends
-    |ConfigurationRegistrySchema
-    |ConfigurationTriggerSchema
-    |ConfigurationWatcherSchema
-    |ConfigurationAuthenticationSchema,
+    | ConfigurationRegistrySchema
+    | ConfigurationTriggerSchema
+    | ConfigurationWatcherSchema
+    | ConfigurationAuthenticationSchema,
 > {
   /**
    * Get the component's ID
@@ -34,7 +39,13 @@ export interface IContainerComponent<
   /**
    * Register the component
    */
-  register(id: string, kind: Kind, provider: string, name: string, configuration: T): Promise<IContainerComponent<T>>;
+  register(
+    id: string,
+    kind: Kind,
+    provider: string,
+    name: string,
+    configuration: T,
+  ): Promise<IComponent<T>>;
 
   /**
    * Deregister the component
@@ -44,5 +55,5 @@ export interface IContainerComponent<
   /**
    * Update the component's configuration
    */
-  update(configuration: T): Promise<IContainerComponent<T>>;
+  update(configuration: T): Promise<IComponent<T>>;
 }

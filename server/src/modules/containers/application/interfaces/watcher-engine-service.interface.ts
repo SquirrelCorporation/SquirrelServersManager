@@ -4,8 +4,7 @@ import { AbstractRegistryComponent } from '@modules/containers/application/servi
 import { AbstractWatcherComponent } from '@modules/containers/application/services/components/watcher/abstract-watcher.component';
 import { ConfigurationSchema } from '@modules/containers/types';
 import { Kind } from '@modules/containers/domain/components/kind.enum';
-import { IContainerComponent } from '../../../domain/components/component.interface';
-
+import { IComponent } from '../../../domain/components/component.interface';
 
 export const WATCHER_ENGINE_SERVICE = 'WATCHER_ENGINE_SERVICE';
 
@@ -46,8 +45,8 @@ export interface IContainerWatcherEngineService extends OnModuleInit, OnModuleDe
     kind: Kind,
     provider: string,
     name: string,
-    configuration: ConfigurationSchema
-  ): Promise<IContainerComponent<ConfigurationSchema>>;
+    configuration: ConfigurationSchema,
+  ): Promise<IComponent<ConfigurationSchema>>;
 
   /**
    * Register watchers from database
@@ -67,18 +66,12 @@ export interface IContainerWatcherEngineService extends OnModuleInit, OnModuleDe
   /**
    * Deregister a component
    */
-  deregisterComponent(
-    kind: Kind,
-    component: IContainerComponent<ConfigurationSchema>
-  ): Promise<any>;
+  deregisterComponent(kind: Kind, component: IComponent<ConfigurationSchema>): Promise<any>;
 
   /**
    * Deregister all components of a kind
    */
-  deregisterComponents(
-    kind: Kind,
-    components: IContainerComponent<ConfigurationSchema>[]
-  ): Promise<any>;
+  deregisterComponents(kind: Kind, components: IComponent<ConfigurationSchema>[]): Promise<any>;
 
   /**
    * Deregister all registries

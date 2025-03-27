@@ -12,6 +12,8 @@ import { IContainerEntity } from '../../domain/entities/container.entity';
 import { CONTAINER_REPOSITORY } from '../../domain/repositories/container-repository.interface';
 import { IContainerRepository } from '../../domain/repositories/container-repository.interface';
 import { DevicesService } from '../../../devices/application/services/devices.service';
+import { DEVICE_AUTH_SERVICE } from '../../../devices/domain/services/device-auth-service.interface';
+import { IDeviceAuthService } from '../../../devices/domain/services/device-auth-service.interface';
 
 @Injectable()
 export class ContainerService implements IContainerService {
@@ -22,6 +24,8 @@ export class ContainerService implements IContainerService {
     @Inject(WATCHER_ENGINE_SERVICE)
     private readonly watcherEngineService: IContainerWatcherEngineService,
     private readonly devicesService: DevicesService,
+    @Inject(DEVICE_AUTH_SERVICE)
+    private readonly deviceAuthService: IDeviceAuthService,
   ) {}
 
   async getAllContainers(): Promise<IContainerEntity[]> {
@@ -229,7 +233,7 @@ export class ContainerService implements IContainerService {
   }
 
   async getDeviceAuth(deviceUuid: string): Promise<IDeviceAuth | null> {
-    const res = await this.devicesService.findDeviceAuthByDeviceUuid(deviceUuid);
+    const res = await this.deviceAuthService.findDeviceAuthByDeviceUuid(deviceUuid);
     return res?.[0] || null;
   }
 

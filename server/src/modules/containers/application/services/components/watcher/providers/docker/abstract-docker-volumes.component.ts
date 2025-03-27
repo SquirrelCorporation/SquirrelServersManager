@@ -2,7 +2,6 @@ import * as fs from 'fs';
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { v4 as uuidv4 } from 'uuid';
-import { IDockerVolumesComponent } from '@modules/containers/domain/components/docker-watcher.interface';
 import {
   CONTAINER_SERVICE,
   IContainerService,
