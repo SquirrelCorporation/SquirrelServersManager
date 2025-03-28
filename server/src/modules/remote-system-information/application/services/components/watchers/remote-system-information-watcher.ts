@@ -1,7 +1,7 @@
 import CronJob from 'node-cron';
 import { Queue } from 'bull';
 import { SSHExecutor } from '@modules/remote-system-information/application/services/remote-ssh-executor.service';
-import { IDeviceAuthRepository, IDeviceRepository } from '@modules/devices';
+import { IDeviceAuthService, IDevicesService } from '@modules/devices';
 import { QueueJobData, UpdateStatsType, UpdateType } from '../../../../domain/types/update.types';
 import { RemoteSystemInformationConfigurationSchema } from '../../../../domain/types/configuration.types';
 import { CpuComponent } from '../../../../domain/system-information/cpu/cpu.component';
@@ -68,12 +68,12 @@ export class RemoteSystemInformationWatcher extends SSHExecutor {
   private watchers: CronWatchers;
 
   constructor(
-    deviceRepository: IDeviceRepository,
-    deviceAuthRepository: IDeviceAuthRepository,
+    devicesService: IDevicesService,
+    deviceAuthService: IDeviceAuthService,
     private readonly queue: Queue<QueueJobData>,
     config?: Partial<RemoteSystemInformationConfigurationSchema>,
   ) {
-    super(deviceRepository, deviceAuthRepository);
+    super(devicesService, deviceAuthService);
     this.components = {} as any;
     this.watchers = {};
 

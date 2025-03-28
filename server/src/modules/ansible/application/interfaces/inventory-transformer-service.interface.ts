@@ -23,6 +23,6 @@ export interface IInventoryTransformerService {
    */
   inventoryBuilderForTarget(
     devicesAuth: Partial<IDeviceAuth>[],
-    execUuid: string
+    execUuid: string,
   ): Promise<Playbooks.All & Playbooks.HostGroups>;
 }

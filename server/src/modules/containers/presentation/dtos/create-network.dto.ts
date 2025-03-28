@@ -1,7 +1,7 @@
 import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
-class DeployNetworkConfigDto {
+class CreateNetworkConfigDto {
   @IsString()
   name!: string;
 
@@ -45,11 +45,14 @@ class DeployNetworkConfigDto {
 /**
  * DTO for creating a new container network
  */
-export class DeployNetworkDto {
+export class CreateNetworkDto {
   @ValidateNested()
-  @Type(() => DeployNetworkConfigDto)
-  config!: DeployNetworkConfigDto;
+  @Type(() => CreateNetworkConfigDto)
+  config!: CreateNetworkConfigDto;
 
   @IsString()
   target!: string;
 }
+
+// For backward compatibility
+export type DeployNetworkDto = CreateNetworkDto;

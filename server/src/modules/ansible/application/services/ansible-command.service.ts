@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
-import { DEVICE_AUTH_REPOSITORY, IDeviceAuthRepository } from '@modules/devices';
+import { DEVICE_AUTH_SERVICE, IDeviceAuthService } from '@modules/devices';
 import { IUser } from '@modules/users';
 import { IAnsibleVault } from '@modules/ansible-vaults';
 import {
@@ -32,7 +32,7 @@ export class AnsibleCommandService implements IAnsibleCommandService {
   constructor(
     @Inject(SHELL_WRAPPER_SERVICE) private readonly shellWrapper: IShellWrapperService,
     @Inject(SSH_KEY_SERVICE) private readonly sshKeyService: ISshKeyService,
-    @Inject(DEVICE_AUTH_REPOSITORY) private readonly deviceAuthRepository: IDeviceAuthRepository,
+    @Inject(DEVICE_AUTH_SERVICE) private readonly deviceAuthService: IDeviceAuthService,
     @Inject(ANSIBLE_TASK_REPOSITORY) private readonly ansibleTaskRepository: IAnsibleTaskRepository,
     private readonly ansibleCommandBuilder: AnsibleCommandBuilderService,
     private readonly ansibleGalaxyCommand: AnsibleGalaxyCommandService,
@@ -213,7 +213,7 @@ export class AnsibleCommandService implements IAnsibleCommandService {
       this.logger.log(
         `executePlaybookFull - Called with specific device: ${target} - (playbook: ${playbookPath})`,
       );
-      const devicesAuth = await this.deviceAuthRepository.findManyByDevicesUuid(target);
+      const devicesAuth = await this.deviceAuthService.findManyByDevicesUuid(target);
       if (!devicesAuth || devicesAuth.length === 0) {
         this.logger.error(
           `executePlaybookFull - Device Authentication not found (device: ${target})`,
@@ -269,7 +269,7 @@ export class AnsibleCommandService implements IAnsibleCommandService {
       this.logger.log(
         `executeAnsiblePlaybook - Called with specific device: ${target} - (playbook: ${playbookPath})`,
       );
-      const devicesAuth = await this.deviceAuthRepository.findManyByDevicesUuid(target);
+      const devicesAuth = await this.deviceAuthService.findManyByDevicesUuid(target);
       if (!devicesAuth || devicesAuth.length === 0) {
         this.logger.error(
           `executeAnsiblePlaybook - Device Authentication not found (device: ${target})`,

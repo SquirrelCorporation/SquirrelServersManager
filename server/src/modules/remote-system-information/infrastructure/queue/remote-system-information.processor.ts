@@ -2,10 +2,9 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
 import { Systeminformation } from 'ssm-shared-lib';
-import { DeviceRepository } from '../../../devices/infrastructure/repositories/device.repository';
+import { IDevicesService, DEVICES_SERVICE } from '@modules/devices';
 import { QueueJobData, UpdateStatsType, UpdateType } from '../../domain/types/update.types';
 import { MetricsService } from '../../../statistics/application/services/metrics.service';
-import { DEVICE_REPOSITORY } from '../../../devices/domain/repositories/device-repository.interface';
 import {
   METRICS_SERVICE,
   MetricType,
@@ -21,8 +20,8 @@ export class RemoteSystemInformationProcessor {
   private readonly logger = new Logger(RemoteSystemInformationProcessor.name);
 
   constructor(
-    @Inject(DEVICE_REPOSITORY)
-    private readonly deviceRepository: DeviceRepository,
+    @Inject(DEVICES_SERVICE)
+    private readonly devicesService: IDevicesService,
     @Inject(METRICS_SERVICE)
     private readonly metricsService: MetricsService,
   ) {}
@@ -37,7 +36,7 @@ export class RemoteSystemInformationProcessor {
     this.logger.log(`Processing ${updateType} update for device ${deviceUuid}`);
 
     try {
-      const device = await this.deviceRepository.findOneByUuid(deviceUuid);
+      const device = await this.devicesService.findOneByUuid(deviceUuid);
       if (!device) {
         throw new Error('Device not found');
       }
@@ -102,7 +101,7 @@ export class RemoteSystemInformationProcessor {
 
       if (!Object.values(UpdateStatsType).includes(updateType as UpdateStatsType)) {
         // Save the updated device back to the database for non-stats updates
-        await this.deviceRepository.update(device);
+        await this.devicesService.update(device);
       }
 
       this.logger.debug(`Successfully updated ${updateType} for device ${deviceUuid}`);

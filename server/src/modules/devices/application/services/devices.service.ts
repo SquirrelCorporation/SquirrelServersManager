@@ -5,6 +5,9 @@ import { DEVICE_REPOSITORY } from '../../domain/repositories/device-repository.i
 import { IDeviceRepository } from '../../domain/repositories/device-repository.interface';
 import { IDevice } from '../../domain/entities/device.entity';
 
+/**
+ * Implementation of the devices service
+ */
 @Injectable()
 export class DevicesService implements IDevicesService {
   private readonly logger = new Logger(DevicesService.name);
@@ -24,6 +27,10 @@ export class DevicesService implements IDevicesService {
 
   async findOneByUuid(uuid: string): Promise<IDevice | null> {
     return this.deviceRepository.findOneByUuid(uuid);
+  }
+  
+  async findByUuids(uuids: string[]): Promise<IDevice[] | null> {
+    return this.deviceRepository.findByUuids(uuids);
   }
 
   async findOneByIp(ip: string): Promise<IDevice | null> {

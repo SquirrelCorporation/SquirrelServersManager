@@ -3,29 +3,28 @@ import { Client } from 'ssh2';
 import { NotFoundError } from '../../../middlewares/api/ApiError';
 import SSHCredentialsHelper from '../../../helpers/ssh/SSHCredentialsHelper';
 import { tryResolveHost } from '../../../helpers/dns/dns-helper';
-import { IDeviceRepository } from '../../../modules/devices';
-import { IDeviceAuthRepository } from '../../../modules/devices/domain/repositories/device-auth-repository.interface';
+import { IDevicesService, IDeviceAuthService } from '../../../modules/devices';
 
 @Injectable()
 export class SshConnectionService {
   private readonly logger = new Logger(SshConnectionService.name);
 
   constructor(
-    @Inject('DeviceRepository') private readonly deviceRepository: IDeviceRepository,
-    @Inject('DeviceAuthRepository') private readonly deviceAuthRepository: IDeviceAuthRepository
+    @Inject('DeviceRepository') private readonly devicesService: IDevicesService,
+    @Inject('DeviceAuthRepository') private readonly deviceAuthService: IDeviceAuthService
   ) {}
 
   /**
    * Fetches device and authentication information
    */
   async fetchDeviceAndAuth(deviceUuid: string) {
-    const device = await this.deviceRepository.findOneByUuid(deviceUuid);
+    const device = await this.devicesService.findOneByUuid(deviceUuid);
     if (!device) {
       this.logger.error(`Device ${deviceUuid} not found`);
       throw new NotFoundError(`Device ${deviceUuid} not found`);
     }
 
-    const deviceAuth = await this.deviceAuthRepository.findOneByDevice(device);
+    const deviceAuth = await this.deviceAuthService.findDeviceAuthByDevice(device);
     if (!deviceAuth) {
       this.logger.error(`Authentication for device ${deviceUuid} not found`);
       throw new NotFoundError(`Authentication for device ${deviceUuid} not found`);

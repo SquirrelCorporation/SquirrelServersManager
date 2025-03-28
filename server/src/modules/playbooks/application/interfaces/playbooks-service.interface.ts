@@ -24,6 +24,20 @@ export interface IPlaybooksService {
   getPlaybookByUuid(uuid: string): Promise<IPlaybook | null>;
 
   /**
+   * Find a playbook by its unique quick reference
+   * @param quickRef Quick reference string
+   * @returns The playbook
+   */
+  findOneByUniqueQuickReference(quickRef: string): Promise<IPlaybook | null>;
+  
+  /**
+   * Find a playbook by its name
+   * @param name Playbook name
+   * @returns The playbook
+   */
+  findOneByName(name: string): Promise<IPlaybook | null>;
+
+  /**
    * Execute a playbook
    * @param playbook Playbook
    * @param user User

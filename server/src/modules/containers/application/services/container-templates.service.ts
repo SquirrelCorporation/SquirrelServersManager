@@ -7,8 +7,7 @@ import { filterByFields, filterByQueryParams } from '../../../../helpers/query/F
 import { paginate } from '../../../../helpers/query/PaginationHelper';
 import DockerComposeHelper from '../../../../helpers/docker/DockerComposeHelper';
 import { IContainerTemplatesService } from '../interfaces/container-templates-service.interface';
-import { PLAYBOOK_REPOSITORY } from '../../../playbooks/domain/repositories/playbook-repository.interface';
-import { PlaybookService } from '../../../playbooks/application/services/playbook.service';
+import { IPlaybooksService, PLAYBOOKS_SERVICE, PlaybookService } from '@modules/playbooks';
 
 /**
  * Service for managing container templates following clean architecture
@@ -19,8 +18,8 @@ export class ContainerTemplatesService implements IContainerTemplatesService {
 
   constructor(
     private readonly playbookService: PlaybookService,
-    @Inject(PLAYBOOK_REPOSITORY)
-    private readonly playbookRepository: any,
+    @Inject(PLAYBOOKS_SERVICE)
+    private readonly playbooksService: IPlaybooksService,
   ) {}
 
   /**
@@ -78,7 +77,7 @@ export class ContainerTemplatesService implements IContainerTemplatesService {
       const templateToYaml = DockerComposeHelper.fromJsonTemplateToYml(template);
 
       // Find the deploy playbook
-      const playbook = await this.playbookRepository.findOneByName('deploy');
+      const playbook = await this.playbooksService.getPlaybookByQuickReference('deploy');
       if (!playbook) {
         throw new NotFoundException("Playbook 'deploy' not found");
       }

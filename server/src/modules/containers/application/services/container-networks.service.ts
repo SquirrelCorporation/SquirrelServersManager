@@ -1,8 +1,6 @@
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { PlaybookService } from '@modules/playbooks';
+import { IPlaybooksService, PLAYBOOKS_SERVICE, PlaybookService } from '@modules/playbooks';
 import { API } from 'ssm-shared-lib';
-import { PLAYBOOK_REPOSITORY } from '@modules/playbooks/domain/repositories/playbook-repository.interface';
-import { IPlaybookRepository } from '@modules/playbooks/domain/repositories/playbook-repository.interface';
 import { IUser } from '@modules/users/domain/entities/user.entity';
 import { DeployNetworkDto } from '@modules/containers/presentation/dtos/create-network.dto';
 import { IContainerNetworksService } from '../interfaces/container-networks-service.interface';
@@ -35,8 +33,8 @@ export class ContainerNetworksService implements IContainerNetworksService {
     @Inject(WATCHER_ENGINE_SERVICE)
     private readonly watcherEngineService: IWatcherEngineService,
     private readonly playbookService: PlaybookService,
-    @Inject(PLAYBOOK_REPOSITORY)
-    private readonly playbookRepository: IPlaybookRepository,
+    @Inject(PLAYBOOKS_SERVICE)
+    private readonly playbooksService: IPlaybooksService,
   ) {}
 
   /**
@@ -80,7 +78,7 @@ export class ContainerNetworksService implements IContainerNetworksService {
       logger.info(`Creating network on device ${deviceUuid}`);
 
       const playbook =
-        await this.playbookRepository.findOneByUniqueQuickReference('createDockerNetwork');
+        await this.playbooksService.findOneByUniqueQuickReference('createDockerNetwork');
       if (!playbook) {
         throw new NotFoundException(
           'Playbook with unique quick reference createDockerNetwork not found',

@@ -6,6 +6,9 @@ import { IDeviceAuthRepository } from '../../domain/repositories/device-auth-rep
 import { IDevice } from '../../domain/entities/device.entity';
 import { IDeviceAuth } from '../../domain/entities/device-auth.entity';
 
+/**
+ * Implementation of the device auth service
+ */
 @Injectable()
 export class DeviceAuthService implements IDeviceAuthService {
   private readonly logger = new Logger(DeviceAuthService.name);
@@ -22,6 +25,18 @@ export class DeviceAuthService implements IDeviceAuthService {
   async findDeviceAuthByDeviceUuid(uuid: string): Promise<IDeviceAuth[] | null> {
     const res = await this.deviceAuthRepository.findOneByDeviceUuid(uuid);
     return res;
+  }
+  
+  async findManyByDevicesUuid(uuids: string[]): Promise<IDeviceAuth[] | null> {
+    return this.deviceAuthRepository.findManyByDevicesUuid(uuids);
+  }
+  
+  async findAllPop(): Promise<IDeviceAuth[] | null> {
+    return this.deviceAuthRepository.findAllPop();
+  }
+  
+  async findAllPopWithSshKey(): Promise<IDeviceAuth[] | null> {
+    return this.deviceAuthRepository.findAllPopWithSshKey();
   }
 
   async updateOrCreateDeviceAuth(deviceAuth: Partial<IDeviceAuth>): Promise<IDeviceAuth> {

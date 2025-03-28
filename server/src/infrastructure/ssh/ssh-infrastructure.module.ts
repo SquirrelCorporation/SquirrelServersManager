@@ -1,7 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { DevicesModule } from '@modules/devices';
-import { DEVICE_REPOSITORY } from '@modules/devices';
-import { DEVICE_AUTH_REPOSITORY } from '@modules/devices';
+import { DevicesModule, DEVICES_SERVICE, DEVICE_AUTH_SERVICE } from '@modules/devices';
 import { SshConnectionService } from './services/ssh-connection.service';
 
 @Global() // Make this module global to ensure single instance
@@ -11,11 +9,11 @@ import { SshConnectionService } from './services/ssh-connection.service';
     SshConnectionService,
     {
       provide: 'DeviceRepository',
-      useExisting: DEVICE_REPOSITORY,
+      useExisting: DEVICES_SERVICE,
     },
     {
       provide: 'DeviceAuthRepository',
-      useExisting: DEVICE_AUTH_REPOSITORY,
+      useExisting: DEVICE_AUTH_SERVICE,
     },
   ],
   exports: [SshConnectionService],

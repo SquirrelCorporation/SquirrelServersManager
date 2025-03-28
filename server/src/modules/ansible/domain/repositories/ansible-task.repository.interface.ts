@@ -1,4 +1,4 @@
-import { IAnsibleTask } from '../entities/ansible-task.interface';
+import { IAnsibleTask } from '../entities/ansible-task.entity';
 
 export const ANSIBLE_TASK_REPOSITORY = 'ANSIBLE_TASK_REPOSITORY';
 

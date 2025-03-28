@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { ANSIBLE_LOGS_REPOSITORY, IAnsibleLogsRepository } from '@modules/logs';
-import { IAnsibleTask } from '@modules/ansible/domain/entities/ansible-task.interface';
+import { IAnsibleTask } from '@modules/ansible/domain/entities/ansible-task.entity';
 import { ITaskLogsService } from '../../application/interfaces/task-logs-service.interface';
 import { filterByQueryParams } from '../../../../helpers/query/FilterHelper';
 import { filterByFields } from '../../../../helpers/query/FilterHelper';

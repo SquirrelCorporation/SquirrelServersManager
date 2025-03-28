@@ -8,18 +8,21 @@ export { DevicesModule };
 // Re-export domain types
 export { IDevice, IDeviceAuth };
 
-// Add any necessary service exports below as the module grows
-
-// Domain exports
+// Domain entity exports
 export * from './domain/entities/device.entity';
-export * from './domain/repositories/device-repository.interface';
-export * from './domain/repositories/device-auth-repository.interface';
-export * from './domain/services/devices-service.interface';
-// Application exports
-export * from './application/services/devices.service';
+export * from './domain/entities/device-auth.entity';
 
-// Infrastructure exports
-export * from './infrastructure/repositories/device.repository';
+// Service interface exports
+export * from './domain/services/devices-service.interface';
+export * from './domain/services/device-auth-service.interface';
+export * from './domain/services/docker-device-service.interface';
+export * from './domain/services/proxmox-device-service.interface';
+
+// Service implementation exports
+export * from './application/services/devices.service';
+export * from './application/services/device-auth.service';
+export * from './application/services/docker-device.service';
+export * from './application/services/proxmox-device.service';
 
 // Presentation exports
 export * from './presentation/controllers/devices.controller';

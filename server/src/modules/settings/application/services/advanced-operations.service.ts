@@ -2,8 +2,12 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IServerLogsRepository } from '../../../logs/domain/repositories/server-logs-repository.interface';
-import { IAnsibleLogsRepository } from '../../../logs/domain/repositories/ansible-logs-repository.interface';
+import { 
+  ANSIBLE_LOGS_REPOSITORY,
+  IAnsibleLogsRepository,
+  IServerLogsRepository,
+  SERVER_LOGS_REPOSITORY
+} from '@modules/logs';
 
 @Injectable()
 export class AdvancedOperationsService {
@@ -11,9 +15,9 @@ export class AdvancedOperationsService {
 
   constructor(
     private readonly eventEmitter: EventEmitter2,
-    @Inject('SERVER_LOGS_REPOSITORY')
+    @Inject(SERVER_LOGS_REPOSITORY)
     private readonly serverLogsRepository: IServerLogsRepository,
-    @Inject('ANSIBLE_LOGS_REPOSITORY')
+    @Inject(ANSIBLE_LOGS_REPOSITORY)
     private readonly ansibleLogsRepository: IAnsibleLogsRepository,
     @InjectModel('Playbook') private readonly playbookModel: Model<any>,
   ) {}

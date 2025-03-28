@@ -1,9 +1,9 @@
-import { FailurePattern } from './entities/failure-pattern.interface';
+import { IFailurePattern } from './entities/failure-pattern.entity';
 
 /**
  * Common patterns to identify failure reasons, causes, and resolutions
  */
-export const FAILURE_PATTERNS: FailurePattern[] = [
+export const FAILURE_PATTERNS: IFailurePattern[] = [
   {
     id: 'unreachable',
     pattern: /UNREACHABLE!|unable to connect to port|failed to connect to the host/i,

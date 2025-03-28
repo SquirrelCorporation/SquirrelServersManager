@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { API } from 'ssm-shared-lib';
 import { FAILURE_PATTERNS } from '../../domain/constants';
-import { FailurePattern } from '../../domain/entities/failure-pattern.interface';
+import { IFailurePattern } from '../../domain/entities/failure-pattern.entity';
 import {
   ISmartFailureRepository,
   SMART_FAILURE_REPOSITORY,
@@ -14,7 +14,7 @@ import { ISmartFailureService } from '../interfaces/smart-failure.service.interf
 @Injectable()
 export class SmartFailureService implements ISmartFailureService {
   private readonly logger = new Logger(SmartFailureService.name);
-  private readonly failurePatterns: FailurePattern[];
+  private readonly failurePatterns: IFailurePattern[];
 
   constructor(
     @Inject(SMART_FAILURE_REPOSITORY)

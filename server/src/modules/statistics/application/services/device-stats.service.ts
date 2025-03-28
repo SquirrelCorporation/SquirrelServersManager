@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { StatsType } from 'ssm-shared-lib';
-import { IDevice } from '../../../devices/domain/entities/device.entity';
-import { DEVICE_REPOSITORY, IDeviceRepository } from '../../../devices/domain/repositories/device-repository.interface';
+import { IDevice, DEVICES_SERVICE, IDevicesService } from '@modules/devices';
 import { PROMETHEUS_SERVICE } from '../../../../infrastructure/prometheus/prometheus.provider';
 import { PrometheusService } from '../../../../infrastructure/prometheus/prometheus.service';
 import {
@@ -21,7 +20,7 @@ export class DeviceStatsService {
   constructor(
     @Inject(PROMETHEUS_SERVICE)
     private readonly prometheusService: PrometheusService,
-    @Inject(DEVICE_REPOSITORY) private readonly deviceRepository: IDeviceRepository
+    @Inject(DEVICES_SERVICE) private readonly devicesService: IDevicesService
   ) {}
 
   async getStatsByDeviceAndType(device: IDevice, from: Date, to: Date, type?: string) {
@@ -108,7 +107,7 @@ export class DeviceStatsService {
         return null;
       }
 
-      const devices = await this.deviceRepository.findByUuids(deviceIds);
+      const devices = await this.devicesService.findByUuids(deviceIds);
       if (!devices || devices.length !== deviceIds.length) {
         throw new Error('Some devices were not found');
       }

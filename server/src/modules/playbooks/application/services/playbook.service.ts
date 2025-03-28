@@ -37,6 +37,14 @@ export class PlaybookService implements IPlaybooksService {
     return this.playbookRepository.findOneByUniqueQuickReference(quickReference);
   }
 
+  async findOneByUniqueQuickReference(quickRef: string): Promise<IPlaybook | null> {
+    return this.playbookRepository.findOneByUniqueQuickReference(quickRef);
+  }
+  
+  async findOneByName(name: string): Promise<IPlaybook | null> {
+    return this.playbookRepository.findOneByName(name);
+  }
+
   async completeExtraVar(
     playbook: IPlaybook,
     target: string[] | undefined,

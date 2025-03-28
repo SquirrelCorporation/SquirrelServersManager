@@ -1,4 +1,4 @@
-import { IAnsibleTaskStatus } from '../entities/ansible-task-status.interface';
+import { IAnsibleTaskStatus } from '../entities/ansible-task-status.entity';
 
 export const ANSIBLE_TASK_STATUS_REPOSITORY = 'ANSIBLE_TASK_STATUS_REPOSITORY';
 

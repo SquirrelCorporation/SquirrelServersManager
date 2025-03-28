@@ -25,7 +25,7 @@ export class CreateCustomRegistryDto {
 /**
  * DTO for container registry response
  */
-export class ContainerRegistryDto {
+export class GetContainerRegistryDto {
   @IsString()
   id!: string;
 
@@ -56,3 +56,6 @@ export class ContainerRegistryDto {
   @IsString()
   fullName?: string;
 }
+
+// For backward compatibility
+export type ContainerRegistryDto = GetContainerRegistryDto;

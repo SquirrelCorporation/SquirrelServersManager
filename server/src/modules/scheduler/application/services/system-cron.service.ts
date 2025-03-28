@@ -1,23 +1,20 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { SettingsKeys } from 'ssm-shared-lib';
-import {
-  DEVICES_SERVICE,
-  IDevicesService,
-} from '../../../devices/application/interfaces/devices-service.interface';
+import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
 import PinoLogger from '../../../../logger';
 import {
   CACHE_SERVICE,
   ICacheService,
-} from '../../../../infrastructure/cache/interfaces/cache.service.interface';
+} from '@infrastructure/cache';
 import {
   ANSIBLE_TASK_REPOSITORY,
   IAnsibleTaskRepository,
-} from '../../../ansible/domain/repositories/ansible-task.repository.interface';
+} from '@modules/ansible';
 import {
   IServerLogsRepository,
   SERVER_LOGS_REPOSITORY,
-} from '../../../logs/domain/repositories/server-logs-repository.interface';
+} from '@modules/logs';
 import { CronService } from './cron.service';
 
 const logger = PinoLogger.child({ module: 'SystemCronService' });

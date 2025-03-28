@@ -1,4 +1,7 @@
-export interface ContainerCustomStack {
+/**
+ * Entity representing a container custom stack
+ */
+export interface IContainerCustomStack {
   uuid: string;
   name: string;
   description?: string;
@@ -13,7 +16,10 @@ export interface ContainerCustomStack {
   updatedAt?: Date;
 }
 
-export interface IContainerCustomStackRepositoryEntity {
+/**
+ * Entity representing a container custom stack repository
+ */
+export interface IContainerCustomStackRepository {
   _id?: string;
   uuid: string;
   name: string;
@@ -32,3 +38,7 @@ export interface IContainerCustomStackRepositoryEntity {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+// For backward compatibility
+export type ContainerCustomStack = IContainerCustomStack;
+export type IContainerCustomStackRepositoryEntity = IContainerCustomStackRepository;

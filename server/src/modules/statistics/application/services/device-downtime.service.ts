@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import PinoLogger from '../../../../logger';
 import { DEVICE_DOWNTIME_EVENT_REPOSITORY, IDeviceDownTimeEventRepository } from '../../domain/repositories/device-downtime-event-repository.interface';
-import { IDevicesService } from '../../../devices/application/interfaces/devices-service.interface';
+import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
 
 @Injectable()
 export class DeviceDownTimeService implements OnModuleInit {
@@ -15,7 +15,7 @@ export class DeviceDownTimeService implements OnModuleInit {
   constructor(
     @Inject(DEVICE_DOWNTIME_EVENT_REPOSITORY)
     private readonly downtimeRepository: IDeviceDownTimeEventRepository,
-    @Inject('IDevicesService')
+    @Inject(DEVICES_SERVICE)
     private readonly devicesService: IDevicesService,
     private readonly eventEmitter: EventEmitter2
   ) {}

@@ -1,6 +1,6 @@
 import { AnsibleLogEntity } from '@modules/logs/domain/entities/ansible-log.entity';
-import { IAnsibleTask } from '@modules/ansible/domain/entities/ansible-task.interface';
-import { IAnsibleTaskStatus } from '../../domain/entities/ansible-task-status.interface';
+import { IAnsibleTask } from '@modules/ansible/domain/entities/ansible-task.entity';
+import { IAnsibleTaskStatus } from '../../domain/entities/ansible-task-status.entity';
 import { PaginatedResponseDto } from '../../presentation/dtos/task-response.dto';
 
 export const TASK_LOGS_SERVICE = 'TASK_LOGS_SERVICE';

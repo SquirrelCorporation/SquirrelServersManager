@@ -1,9 +1,9 @@
 import { IsNotEmpty, IsUUID } from 'class-validator';
 
 /**
- * DTO for smart failure request
+ * DTO for analyzing smart failure request
  */
-export class SmartFailureRequestDto {
+export class AnalyzeSmartFailureDto {
   /**
    * Execution ID of the Ansible run
    */
@@ -11,3 +11,6 @@ export class SmartFailureRequestDto {
   @IsNotEmpty()
   execId!: string;
 }
+
+// For backward compatibility
+export type SmartFailureRequestDto = AnalyzeSmartFailureDto;

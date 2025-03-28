@@ -2,9 +2,9 @@ import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { Body, Controller, Get, Inject, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import {
-  DEVICE_REPOSITORY,
-  IDeviceRepository,
-} from '../../../devices/domain/repositories/device-repository.interface';
+  DEVICES_SERVICE,
+  IDevicesService,
+} from '@modules/devices';
 import { DashboardService } from '../../application/services/dashboard.service';
 import { DashboardStatQueryDto } from '../dto/dashboard-stats.dto';
 
@@ -13,7 +13,7 @@ import { DashboardStatQueryDto } from '../dto/dashboard-stats.dto';
 export class DashboardController {
   constructor(
     private readonly dashboardService: DashboardService,
-    @Inject(DEVICE_REPOSITORY) private readonly deviceRepository: IDeviceRepository,
+    @Inject(DEVICES_SERVICE) private readonly devicesService: IDevicesService,
   ) {}
 
   @Get('performances')
@@ -41,7 +41,7 @@ export class DashboardController {
     const { from, to } = query;
     const { devices } = body;
 
-    const devicesToQuery = await this.deviceRepository.findByUuids(devices);
+    const devicesToQuery = await this.devicesService.findByUuids(devices);
     if (!devicesToQuery || devicesToQuery.length !== devices.length) {
       throw new Error('Some devices were not found');
     }

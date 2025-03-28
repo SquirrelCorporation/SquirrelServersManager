@@ -20,6 +20,7 @@
   - NestJS modular design with Clean Architecture layers
   - Tests under `__tests__` directories mirroring module structure
   - Files end with .spec.ts for tests
+  - **Module Encapsulation**: Only services of each module should be used and imported by other modules, never repositories
 - **Naming**: 
   - PascalCase: classes, interfaces, types, decorators
   - camelCase: functions, variables, methods, properties

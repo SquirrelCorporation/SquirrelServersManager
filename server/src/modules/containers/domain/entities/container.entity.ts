@@ -4,7 +4,7 @@ import { IDevice } from '@modules/devices/domain/entities/device.entity';
 /**
  * Domain entity for a container
  */
-export interface IContainerEntity {
+export interface IContainer {
   _id?: string;
   deviceUuid?: string;
   device?: IDevice;
@@ -74,3 +74,6 @@ export interface IContainerEntity {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+// For backward compatibility, keep the old interface name as a type alias
+export type IContainerEntity = IContainer;

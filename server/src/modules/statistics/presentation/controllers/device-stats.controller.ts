@@ -1,9 +1,9 @@
 import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { Controller, Get, Inject, Param, Query, UseGuards } from '@nestjs/common';
 import {
-  DEVICE_REPOSITORY,
-  IDeviceRepository,
-} from '../../../devices/domain/repositories/device-repository.interface';
+  DEVICES_SERVICE,
+  IDevicesService,
+} from '@modules/devices';
 import { DeviceStatsService } from '../../application/services/device-stats.service';
 import { DeviceStatsParamsDto, DeviceStatsQueryDto } from '../dto/device-stats.dto';
 
@@ -12,7 +12,7 @@ import { DeviceStatsParamsDto, DeviceStatsQueryDto } from '../dto/device-stats.d
 export class DeviceStatsController {
   constructor(
     private readonly deviceStatsService: DeviceStatsService,
-    @Inject(DEVICE_REPOSITORY) private readonly deviceRepository: IDeviceRepository,
+    @Inject(DEVICES_SERVICE) private readonly devicesService: IDevicesService,
   ) {}
 
   @Get(':uuid/stats/:type')
@@ -23,7 +23,7 @@ export class DeviceStatsController {
     const { uuid, type } = params;
     const { from, to } = query;
 
-    const device = await this.deviceRepository.findOneByUuid(uuid);
+    const device = await this.devicesService.findOneByUuid(uuid);
     if (!device) {
       throw new Error('Device not found');
     }
@@ -45,7 +45,7 @@ export class DeviceStatsController {
   async getDeviceStatByDeviceUuid(@Param() params: DeviceStatsParamsDto) {
     const { uuid, type } = params;
 
-    const device = await this.deviceRepository.findOneByUuid(uuid);
+    const device = await this.devicesService.findOneByUuid(uuid);
     if (!device) {
       throw new Error('Device not found');
     }

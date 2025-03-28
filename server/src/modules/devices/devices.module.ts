@@ -95,10 +95,6 @@ import { SENSITIVE_INFO_SERVICE } from './domain/services/sensitive-info.service
     DOCKER_DEVICE_SERVICE,
     PROXMOX_DEVICE_SERVICE,
     SENSITIVE_INFO_SERVICE,
-    
-    // Repositories
-    DEVICE_REPOSITORY,
-    DEVICE_AUTH_REPOSITORY,
   ],
 })
 export class DevicesModule {}

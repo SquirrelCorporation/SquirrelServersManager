@@ -9,13 +9,13 @@ import { RemoteSystemInformationConfigurationSchema } from '../../../domain/type
 import { REMOTE_SYSTEM_INFO_QUEUE } from '../../../infrastructure/queue/constants';
 import { RemoteSystemInformationWatcher } from '../components/watchers/remote-system-information-watcher';
 import {
-  DEVICE_REPOSITORY,
-  IDeviceRepository,
-} from '../../../../devices/domain/repositories/device-repository.interface';
+  DEVICES_SERVICE,
+  IDevicesService,
+} from '../../../../devices/domain/services/devices-service.interface';
 import {
-  DEVICE_AUTH_REPOSITORY,
-  IDeviceAuthRepository,
-} from '../../../../devices/domain/repositories/device-auth-repository.interface';
+  DEVICE_AUTH_SERVICE,
+  IDeviceAuthService,
+} from '../../../../devices/domain/services/device-auth-service.interface';
 
 /**
  * Service for managing remote system information collection
@@ -29,10 +29,10 @@ export class RemoteSystemInformationEngineService implements IRemoteSystemInform
     watchers: {},
   };
   constructor(
-    @Inject(forwardRef(() => DEVICE_REPOSITORY))
-    private readonly deviceRepository: IDeviceRepository,
-    @Inject(forwardRef(() => DEVICE_AUTH_REPOSITORY))
-    private readonly deviceAuthRepository: IDeviceAuthRepository,
+    @Inject(forwardRef(() => DEVICES_SERVICE))
+    private readonly devicesService: IDevicesService,
+    @Inject(forwardRef(() => DEVICE_AUTH_SERVICE))
+    private readonly deviceAuthService: IDeviceAuthService,
     @InjectQueue(REMOTE_SYSTEM_INFO_QUEUE) private readonly systemInfoQueue: Queue,
   ) {}
 
@@ -64,8 +64,8 @@ export class RemoteSystemInformationEngineService implements IRemoteSystemInform
     try {
       this.logger.log(`Registering "${provider}/${name}" component...`);
       const component = new RemoteSystemInformationWatcher(
-        this.deviceRepository,
-        this.deviceAuthRepository,
+        this.devicesService,
+        this.deviceAuthService,
         this.systemInfoQueue,
       );
       const componentRegistered = await component.register(_id, nameLowercase, configuration);
@@ -165,7 +165,7 @@ export class RemoteSystemInformationEngineService implements IRemoteSystemInform
       this.logger.log('Registering watchers for all devices...');
 
       // Get all devices that should be monitored (online and enabled)
-      const devices = await this.deviceRepository.findWithFilter({
+      const devices = await this.devicesService.findWithFilter({
         agentType: { $eq: SsmAgent.InstallMethods.LESS },
       });
 

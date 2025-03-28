@@ -3,7 +3,7 @@ import { IPAM, NetworkContainer } from 'dockerode';
 /**
  * Domain entity for container networks
  */
-export interface IContainerNetworkEntity {
+export interface IContainerNetwork {
   _id?: string;
   name?: string;
   status: string;
@@ -26,3 +26,6 @@ export interface IContainerNetworkEntity {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+// For backward compatibility
+export type IContainerNetworkEntity = IContainerNetwork;

@@ -1,9 +1,9 @@
 import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import {
-  DEVICE_AUTH_REPOSITORY,
-  DEVICE_REPOSITORY,
-  IDeviceAuthRepository,
-  IDeviceRepository,
+  DEVICE_AUTH_SERVICE,
+  DEVICES_SERVICE,
+  IDeviceAuthService,
+  IDevicesService,
 } from '@modules/devices';
 import { Controller, Inject, Param, Post, UseGuards } from '@nestjs/common';
 import { InternalError, NotFoundError } from '../../../../middlewares/api/ApiError';
@@ -17,20 +17,20 @@ export class DiagnosticController {
   constructor(
     private diagnosticService: DiagnosticService,
     private diagnosticMapper: DiagnosticMapper,
-    @Inject(DEVICE_REPOSITORY) private deviceRepository: IDeviceRepository,
-    @Inject(DEVICE_AUTH_REPOSITORY) private deviceAuthRepository: IDeviceAuthRepository,
+    @Inject(DEVICES_SERVICE) private devicesService: IDevicesService,
+    @Inject(DEVICE_AUTH_SERVICE) private deviceAuthService: IDeviceAuthService,
   ) {}
 
   @Post(':uuid')
   async runDiagnostic(@Param() params: DiagnosticParamDto): Promise<DiagnosticReportDto> {
     const { uuid } = params;
 
-    const device = await this.deviceRepository.findOneByUuid(uuid);
+    const device = await this.devicesService.findOneByUuid(uuid);
     if (!device) {
       throw new NotFoundError('Device ID not found');
     }
 
-    const deviceAuth = await this.deviceAuthRepository.findOneByDevice(device);
+    const deviceAuth = await this.deviceAuthService.findDeviceAuthByDevice(device);
     if (!deviceAuth) {
       throw new NotFoundError('Device Auth not found');
     }

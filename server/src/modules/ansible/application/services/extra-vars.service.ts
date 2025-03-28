@@ -1,9 +1,9 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { API, SsmAgent, SsmAnsible } from 'ssm-shared-lib';
 import { IExtraVarsService } from '@modules/ansible/application/interfaces/extra-vars-service.interface';
-import { ICacheService } from '../../../../infrastructure/cache';
-import { IDeviceRepository } from '../../../devices';
-import { IUserRepository } from '../../../users';
+import { CACHE_SERVICE, ICacheService } from '@infrastructure/cache';
+import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
+import { IUserRepository, USER_REPOSITORY } from '@modules/users';
 
 /**
  * Service for managing Ansible extra-vars files
@@ -13,9 +13,9 @@ export class ExtraVarsService implements IExtraVarsService {
   private readonly logger = new Logger(ExtraVarsService.name);
 
   constructor(
-    @Inject('DEVICE_REPOSITORY') private readonly deviceRepository: IDeviceRepository,
-    @Inject('USER_REPOSITORY') private readonly userRepository: IUserRepository,
-    @Inject('ICacheService') private readonly cacheService: ICacheService,
+    @Inject(DEVICES_SERVICE) private readonly devicesService: IDevicesService,
+    @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
+    @Inject(CACHE_SERVICE) private readonly cacheService: ICacheService,
   ) {}
 
   /**
@@ -99,7 +99,7 @@ export class ExtraVarsService implements IExtraVarsService {
       throw new Error(`Cannot use CONTEXT variable with multiple targets - '${extraVar.extraVar}'`);
     }
 
-    const device = await this.deviceRepository.findOneByUuid(targets[0]);
+    const device = await this.devicesService.findOneByUuid(targets[0]);
     const user = await this.userRepository.findFirst();
 
     if (!device) {

@@ -3,6 +3,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
 import { LogsModule } from '../logs/logs.module';
+import { ANSIBLE_LOGS_REPOSITORY, SERVER_LOGS_REPOSITORY } from '@modules/logs';
 import { PlaybooksModule } from '../playbooks/playbooks.module';
 import { Playbook, PlaybookSchema } from '../playbooks/infrastructure/schemas/playbook.schema';
 import { SettingsService } from './application/services/settings.service';
@@ -36,14 +37,6 @@ import { SettingsMigrationService } from './infrastructure/migration/settings-mi
     {
       provide: 'ISettingsService',
       useExisting: SettingsService,
-    },
-    {
-      provide: 'SERVER_LOGS_REPOSITORY',
-      useExisting: 'IServerLogsRepository',
-    },
-    {
-      provide: 'ANSIBLE_LOGS_REPOSITORY',
-      useExisting: 'IAnsibleLogsRepository',
     },
   ],
   exports: [SettingsService, 'ISettingsService', AdvancedOperationsService, InformationService],

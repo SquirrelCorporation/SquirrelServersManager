@@ -1,8 +1,7 @@
 import { Client, ConnectConfig } from 'ssh2';
 import { SsmStatus } from 'ssm-shared-lib';
 import Component from '@modules/remote-system-information/application/services/components/core/base-component';
-import { IDeviceAuthRepository } from '@modules/devices';
-import { IDeviceRepository } from '@modules/devices';
+import { IDeviceAuthService, IDevicesService } from '@modules/devices';
 import SSHCredentialsHelper from '../../../../helpers/ssh/SSHCredentialsHelper';
 import { RemoteExecOptions } from '../../domain/types/remote-executor.types';
 import { tryResolveHost } from '../../../../helpers/dns/dns-helper';
@@ -26,8 +25,8 @@ export abstract class SSHExecutor extends Component {
   }[] = []; // Queue to store pending commands
 
   constructor(
-    protected readonly deviceRepository: IDeviceRepository,
-    protected readonly deviceAuthRepository: IDeviceAuthRepository,
+    protected readonly devicesService: IDevicesService,
+    protected readonly deviceAuthService: IDeviceAuthService,
   ) {
     super();
   }
@@ -36,12 +35,12 @@ export abstract class SSHExecutor extends Component {
    * Initialize the SSH connection to a device
    */
   async init(): Promise<void> {
-    const device = await this.deviceRepository.findOneByUuid(this.configuration.deviceUuid);
+    const device = await this.devicesService.findOneByUuid(this.configuration.deviceUuid);
     if (!device) {
       throw new Error('Device not found');
     }
 
-    const deviceAuth = await this.deviceAuthRepository.findOneByDevice(device);
+    const deviceAuth = await this.deviceAuthService.findDeviceAuthByDevice(device);
     if (!deviceAuth) {
       throw new Error('DeviceAuth not found');
     }
@@ -198,7 +197,7 @@ export abstract class SSHExecutor extends Component {
             try {
               const sudoCmd = await generateSudoCommand(
                 this.configuration.deviceUuid,
-                this.deviceAuthRepository,
+                this.deviceAuthService,
               );
               finalCommand = sudoCmd.replace('%command%', command);
             } catch (error) {
@@ -399,10 +398,10 @@ export abstract class SSHExecutor extends Component {
           this.logger.debug('Heartbeat sent');
 
           // Update device status if needed
-          const device = await this.deviceRepository.findOneByUuid(this.configuration.deviceUuid);
+          const device = await this.devicesService.findOneByUuid(this.configuration.deviceUuid);
           if (device && device.status !== SsmStatus.DeviceStatus.ONLINE) {
             device.status = SsmStatus.DeviceStatus.ONLINE;
-            await this.deviceRepository.update(device);
+            await this.devicesService.update(device);
           }
         } catch (err) {
           this.logger.error(err, 'Heartbeat failed');
