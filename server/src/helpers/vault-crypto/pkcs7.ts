@@ -9,7 +9,7 @@ function pad(messageLength: number, blocksize: number): Buffer {
     throw new Error("can't pad blocks larger 256 bytes");
   }
   const padLength = blocksize - (messageLength % blocksize);
-  // @ts-expect-error error type, fix later
+
   return Buffer.alloc(padLength, Buffer.from([padLength]));
 }
 

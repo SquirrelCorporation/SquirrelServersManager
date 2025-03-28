@@ -8,11 +8,11 @@ import { StatsType } from 'ssm-shared-lib';
 export class ContainerStatParamDto {
   @IsString()
   @IsNotEmpty()
-  id: string;
+  id!: string;
 
   @IsString()
   @IsNotEmpty()
-  type: string;
+  type!: string;
 }
 
 /**
@@ -21,7 +21,7 @@ export class ContainerStatParamDto {
 export class ContainerCountParamDto {
   @IsString()
   @IsNotEmpty()
-  status: string;
+  status!: string;
 }
 
 /**
@@ -31,7 +31,7 @@ export class ContainerStatsQueryDto {
   @IsInt()
   @Min(1)
   @Type(() => Number)
-  from: number;
+  from!: number;
 }
 
 /**
@@ -39,5 +39,5 @@ export class ContainerStatsQueryDto {
  */
 export class ContainerStatsTypeDto {
   @IsEnum(StatsType.ContainerStatsType)
-  type: StatsType.ContainerStatsType;
+  type!: StatsType.ContainerStatsType;
 }

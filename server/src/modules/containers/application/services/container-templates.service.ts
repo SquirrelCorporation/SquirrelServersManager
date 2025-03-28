@@ -1,12 +1,12 @@
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { API } from 'ssm-shared-lib';
+import { IUser } from '@modules/users';
 import * as templatesRaw from '../../../../data/static/templates.json';
 import { sortByFields } from '../../../../helpers/query/SorterHelper';
 import { filterByFields, filterByQueryParams } from '../../../../helpers/query/FilterHelper';
 import { paginate } from '../../../../helpers/query/PaginationHelper';
 import DockerComposeHelper from '../../../../helpers/docker/DockerComposeHelper';
 import { IContainerTemplatesService } from '../interfaces/container-templates-service.interface';
-import { TemplateDeployDto } from '../../presentation/dtos/container-templates.dto';
 import { PLAYBOOK_REPOSITORY } from '../../../playbooks/domain/repositories/playbook-repository.interface';
 import { PlaybookService } from '../../../playbooks/application/services/playbook.service';
 
@@ -56,7 +56,7 @@ export class ContainerTemplatesService implements IContainerTemplatesService {
           success: true,
           pageSize,
           current: parseInt(`${params.current}`, 10) || 1,
-        }
+        },
       };
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -72,31 +72,10 @@ export class ContainerTemplatesService implements IContainerTemplatesService {
    * @param user User deploying the template
    * @returns Execution ID
    */
-  async deployTemplate(template: TemplateDeployDto, user: any): Promise<string> {
+  async deployTemplate(template: API.Template, user: IUser): Promise<string> {
     try {
-      // Convert TemplateDeployDto to API.Template
-      const apiTemplate: API.Template = {
-        logo: '',
-        title: template.name,
-        name: template.name,
-        description: '',
-        categories: [],
-        image: template.image,
-        restart_policy: template.restart_policy,
-        ports: template.ports.map(port => ({
-          host: port.host,
-          container: port.container,
-          protocol: port.protocol
-        })),
-        volumes: template.volumes?.map(volume => ({
-          bind: volume.host,
-          container: volume.container,
-          mode: 'rw'
-        })),
-      };
-
       // Convert template to YAML
-      const templateToYaml = DockerComposeHelper.fromJsonTemplateToYml(apiTemplate);
+      const templateToYaml = DockerComposeHelper.fromJsonTemplateToYml(template);
 
       // Find the deploy playbook
       const playbook = await this.playbookRepository.findOneByName('deploy');
@@ -112,11 +91,11 @@ export class ContainerTemplatesService implements IContainerTemplatesService {
       const execId = await this.playbookService.executePlaybook(
         playbook,
         user,
-        template.targets?.map(target => target.id),
+        template.targets?.map((target) => target.id),
         [
           { extraVar: 'definition', value: templateToYaml },
           { extraVar: 'project', value: template.name },
-        ]
+        ],
       );
 
       return execId;

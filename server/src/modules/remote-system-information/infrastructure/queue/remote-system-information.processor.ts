@@ -1,6 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
+import { Systeminformation } from 'ssm-shared-lib';
 import { DeviceRepository } from '../../../devices/infrastructure/repositories/device.repository';
 import { QueueJobData, UpdateStatsType, UpdateType } from '../../domain/types/update.types';
 import { MetricsService } from '../../../statistics/application/services/metrics.service';
@@ -48,42 +49,43 @@ export class RemoteSystemInformationProcessor {
       // Handle different update types
       switch (updateType) {
         case UpdateType.CPU:
-          device.systemInformation.cpu = data;
+          device.systemInformation.cpu = data as Systeminformation.CpuData;
           break;
         case UpdateType.Memory:
-          device.systemInformation.mem = data;
+          device.systemInformation.mem = data as Systeminformation.MemData;
           break;
         case UpdateType.FileSystems:
-          device.systemInformation.fileSystems = data;
+          device.systemInformation.fileSystems = data as Systeminformation.DiskLayoutData[];
           break;
         case UpdateType.Network:
-          device.systemInformation.networkInterfaces = data;
+          device.systemInformation.networkInterfaces =
+            data as Systeminformation.NetworkInterfacesData[];
           break;
         case UpdateType.Graphics:
-          device.systemInformation.graphics = data;
+          device.systemInformation.graphics = data as Systeminformation.GraphicsData;
           break;
         case UpdateType.WiFi:
-          device.systemInformation.wifi = data;
+          device.systemInformation.wifi = data as Systeminformation.WifiInterfaceData[];
           break;
         case UpdateType.USB:
-          device.systemInformation.usb = data;
+          device.systemInformation.usb = data as Systeminformation.UsbData;
           break;
         case UpdateType.OS:
-          device.systemInformation.os = data;
-          device.fqdn = data?.fqdn;
-          device.hostname = data?.hostname;
+          device.systemInformation.os = data as Systeminformation.OsData;
+          device.fqdn = (data as Systeminformation.OsData)?.fqdn;
+          device.hostname = (data as Systeminformation.OsData)?.hostname;
           break;
         case UpdateType.System:
-          device.systemInformation.system = data;
+          device.systemInformation.system = data as Systeminformation.SystemData;
           break;
         case UpdateType.Versions:
-          device.systemInformation.versions = data;
+          device.systemInformation.versions = data as Systeminformation.VersionData;
           break;
         case UpdateType.MemoryLayout:
-          device.systemInformation.memLayout = data;
+          device.systemInformation.memLayout = data as Systeminformation.MemLayoutData[];
           break;
         case UpdateType.Bluetooth:
-          device.systemInformation.bluetooth = data;
+          device.systemInformation.bluetooth = data as Systeminformation.BluetoothDeviceData[];
           break;
         case UpdateStatsType.CPU_STATS:
           await this.processCpuStatistics(data, deviceUuid);
@@ -92,7 +94,7 @@ export class RemoteSystemInformationProcessor {
           await this.processMemoryStatistics(data, deviceUuid);
           break;
         case UpdateStatsType.FILE_SYSTEM_STATS:
-          await this.processFileStorageStatistics(data, deviceUuid);
+          await this.processFileStorageStatistics(data as any[], deviceUuid);
           break;
         default:
           throw new Error(`Unknown update type: ${updateType}`);

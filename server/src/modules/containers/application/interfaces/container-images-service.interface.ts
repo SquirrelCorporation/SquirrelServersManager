@@ -24,7 +24,10 @@ export interface IContainerImagesService {
   /**
    * Create a new image record
    */
-  createImage(deviceUuid: string, imageData: Partial<IContainerImageEntity>): Promise<IContainerImageEntity>;
+  createImage(
+    deviceUuid: string,
+    imageData: Partial<IContainerImageEntity>,
+  ): Promise<IContainerImageEntity>;
 
   deleteImageById(id: string);
 }

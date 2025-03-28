@@ -13,8 +13,9 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { IUser } from '@modules/users';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
-import { ContainerTemplatesQueryDto, TemplateDeployDto } from '../dtos/container-templates.dto';
+import { ContainerTemplatesQueryDto } from '../dtos/container-templates.dto';
 import {
   CONTAINER_TEMPLATES_SERVICE,
   IContainerTemplatesService,
@@ -58,9 +59,12 @@ export class ContainerTemplatesController {
    * @returns Execution ID
    */
   @Post('deploy')
-  async deploy(@Body() template: TemplateDeployDto, @Req() req: Request) {
+  async deploy(@Body() template: any, @Req() req: Request) {
     try {
-      const execId = await this.containerTemplatesService.deployTemplate(template, req.user);
+      const execId = await this.containerTemplatesService.deployTemplate(
+        template,
+        req.user as IUser,
+      );
       return execId;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to deploy template';

@@ -1,6 +1,10 @@
-import { Client, ConnectConfig } from 'ssh2';
-import { IComponent } from './component.interface';
+import { ConnectConfig } from 'ssh2';
 import { RemoteExecOptions } from '../types/remote-executor.types';
+import { IComponent } from './component.interface';
+
+export interface IRemoteSSHExecutorConstructor {
+  testConnection(config: ConnectConfig): Promise<void>;
+}
 
 /**
  * Interface for the remote SSH executor component
@@ -13,7 +17,7 @@ export interface IRemoteSSHExecutor extends IComponent {
    * @param options Execution options
    */
   execAsync(command: string, options?: RemoteExecOptions): Promise<string>;
-  
+
   /**
    * Execute a command with callback on the remote device
    * @param command Command to execute
@@ -23,17 +27,11 @@ export interface IRemoteSSHExecutor extends IComponent {
   execWithCallback(
     command: string,
     callback: (err: Error | null, result: string) => void,
-    options?: RemoteExecOptions
+    options?: RemoteExecOptions,
   ): void;
-  
+
   /**
    * Close the SSH connection
    */
   close(): void;
-  
-  /**
-   * Static method to test an SSH connection
-   * @param config SSH connection configuration
-   */
-  static testConnection(config: ConnectConfig): Promise<void>;
-}  
+}

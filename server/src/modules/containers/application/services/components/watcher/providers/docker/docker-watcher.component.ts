@@ -224,12 +224,12 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     this.childLogger.info('deregisterComponent');
 
     if (this.watchCron) {
-      this.schedulerRegistry.deleteCronJob(this.watchCron);
+      this.watchCron.stop();
       delete this.watchCron;
     }
 
     if (this.watchCronStat) {
-      this.schedulerRegistry.deleteCronJob(this.watchCronStat);
+      this.watchCronStat.stop();
       delete this.watchCronStat;
     }
 

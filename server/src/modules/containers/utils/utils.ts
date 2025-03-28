@@ -1,5 +1,5 @@
 import Dockerode from 'dockerode';
-import { ContainerEntity } from '@modules/containers/domain/entities/container.entity';
+import { IContainerEntity } from '@modules/containers/domain/entities/container.entity';
 import logger from '../../../logger';
 import Tag from './tag';
 import tagUtil from './tag';
@@ -10,7 +10,7 @@ import tagUtil from './tag';
  * @param tags
  * @returns {*}
  */
-export function getTagCandidates(container: ContainerEntity, tags: string[]) {
+export function getTagCandidates(container: IContainerEntity, tags: string[]) {
   logger.debug(`[UTILS] - getTagCandidates ${tags?.join(', ')}`);
   let filteredTags = tags;
 
@@ -56,12 +56,9 @@ export function getTagCandidates(container: ContainerEntity, tags: string[]) {
   return filteredTags;
 }
 
-
-
-export function fullName(container: ContainerEntity) {
+export function fullName(container: IContainerEntity) {
   return `${container.watcher}_${container.name}`;
 }
-
 
 /**
  * Get old containers to prune.
@@ -70,8 +67,8 @@ export function fullName(container: ContainerEntity) {
  * @returns {*[]|*}
  */
 export function getOldContainers(
-  newContainers: (ContainerEntity | undefined)[] | undefined,
-  containersFromTheStore?: ContainerEntity[] | null,
+  newContainers: (IContainerEntity | undefined)[] | undefined,
+  containersFromTheStore?: IContainerEntity[] | null,
 ) {
   if (!containersFromTheStore || !newContainers) {
     return [];
@@ -83,8 +80,6 @@ export function getOldContainers(
     return isContainerStillToWatch === undefined;
   });
 }
-
-
 
 export function getContainerName(container: Dockerode.ContainerInfo) {
   let containerName;
@@ -156,7 +151,7 @@ export function hasResultChanged(container, otherContainer) {
   );
 }
 
-export function isUpdateAvailable(container: ContainerEntity) {
+export function isUpdateAvailable(container: IContainerEntity) {
   if (container.image === undefined || container.result === undefined) {
     return false;
   }
@@ -219,7 +214,7 @@ function getLink(linkTemplate: string | undefined, tagValue: string, isSemver: b
  * @returns {undefined|*}
  */
 //TODO that is not correct
-export function addLinkProperty(container: ContainerEntity) {
+export function addLinkProperty(container: IContainerEntity) {
   if (container.linkTemplate) {
     return getLink(
       container.linkTemplate,
@@ -236,7 +231,7 @@ export function addLinkProperty(container: ContainerEntity) {
   }
 }
 
-export function getKindProperty(container: ContainerEntity) {
+export function getKindProperty(container: IContainerEntity) {
   const updateKind: {
     kind: 'unknown' | 'tag' | 'digest';
     localValue?: string;

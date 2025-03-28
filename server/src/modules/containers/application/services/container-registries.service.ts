@@ -1,9 +1,15 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { RegistryAuthConfig } from '@modules/containers/types';
-import { ContainerRegistryEntity } from '../../domain/entities/container-registry.entity';
-import { ContainerRegistriesServiceInterface } from '../interfaces/container-registries-service.interface';
-import { CONTAINER_REGISTRY_REPOSITORY, ContainerRegistryRepositoryInterface } from '../../domain/repositories/container-registry-repository.interface';
-import { IWatcherEngineService, WATCHER_ENGINE_SERVICE } from '../interfaces/watcher-engine-service.interface';
+import { IContainerRegistryEntity } from '../../domain/entities/container-registry.entity';
+import { IContainerRegistriesService } from '../interfaces/container-registries-service.interface';
+import {
+  CONTAINER_REGISTRY_REPOSITORY,
+  IContainerRegistryRepository,
+} from '../../domain/repositories/container-registry-repository.interface';
+import {
+  IWatcherEngineService,
+  WATCHER_ENGINE_SERVICE,
+} from '../interfaces/watcher-engine-service.interface';
 import PinoLogger from '../../../../logger';
 
 const logger = PinoLogger.child(
@@ -12,19 +18,19 @@ const logger = PinoLogger.child(
 );
 
 @Injectable()
-export class ContainerRegistriesService implements ContainerRegistriesServiceInterface {
+export class ContainerRegistriesService implements IContainerRegistriesService {
   constructor(
     @Inject(CONTAINER_REGISTRY_REPOSITORY)
-    private readonly containerRegistryRepository: ContainerRegistryRepositoryInterface,
+    private readonly containerRegistryRepository: IContainerRegistryRepository,
     @Inject(forwardRef(() => WATCHER_ENGINE_SERVICE))
-    private readonly watcherEngineService: IWatcherEngineService
+    private readonly watcherEngineService: IWatcherEngineService,
   ) {}
 
   /**
    * Get all registries
    * @returns List of all registries
    */
-  async getAllRegistries(): Promise<ContainerRegistryEntity[]> {
+  async getAllRegistries(): Promise<IContainerRegistryEntity[]> {
     return this.containerRegistryRepository.findAll();
   }
 
@@ -33,7 +39,7 @@ export class ContainerRegistriesService implements ContainerRegistriesServiceInt
    * @param name Registry name
    * @returns Registry or null if not found
    */
-  async getRegistryByName(name: string): Promise<ContainerRegistryEntity | null> {
+  async getRegistryByName(name: string): Promise<IContainerRegistryEntity | null> {
     return this.containerRegistryRepository.findOneByName(name);
   }
 
@@ -42,7 +48,9 @@ export class ContainerRegistriesService implements ContainerRegistriesServiceInt
    * @param registry Registry configuration
    */
   async addIfNotExists(registry: RegistryAuthConfig): Promise<void> {
-    const containerRegistry = await this.containerRegistryRepository.findOneByProvider(registry.provider);
+    const containerRegistry = await this.containerRegistryRepository.findOneByProvider(
+      registry.provider,
+    );
     if (!containerRegistry) {
       const savedRegistry = await this.containerRegistryRepository.create({
         name: registry.name,
@@ -64,14 +72,14 @@ export class ContainerRegistriesService implements ContainerRegistriesServiceInt
    * @param registry Registry to update
    * @param auth Authentication details
    */
-  async updateRegistryAuth(registry: ContainerRegistryEntity, auth: any): Promise<void> {
-    if (!registry.id) {
+  async updateRegistryAuth(registry: IContainerRegistryEntity, auth: any): Promise<void> {
+    if (!registry._id) {
       throw new Error('Registry ID is required');
     }
 
-    await this.containerRegistryRepository.update(registry.id, {
+    await this.containerRegistryRepository.update(registry._id, {
       auth: auth,
-      authSet: true
+      authSet: true,
     });
 
     await this.watcherEngineService.deregisterRegistries();
@@ -85,7 +93,11 @@ export class ContainerRegistriesService implements ContainerRegistriesServiceInt
    * @param authScheme Authentication scheme
    * @returns The created registry
    */
-  async createCustomRegistry(name: string, auth: any, authScheme: any): Promise<ContainerRegistryEntity> {
+  async createCustomRegistry(
+    name: string,
+    auth: any,
+    authScheme: any,
+  ): Promise<IContainerRegistryEntity> {
     logger.info(`Creating registry: ${name}`);
 
     const newRegistry = await this.containerRegistryRepository.create({
@@ -108,14 +120,14 @@ export class ContainerRegistriesService implements ContainerRegistriesServiceInt
    * Remove registry authentication
    * @param registry Registry to update
    */
-  async removeRegistryAuth(registry: ContainerRegistryEntity): Promise<void> {
-    if (!registry.id) {
+  async removeRegistryAuth(registry: IContainerRegistryEntity): Promise<void> {
+    if (!registry._id) {
       throw new Error('Registry ID is required');
     }
 
-    await this.containerRegistryRepository.update(registry.id, {
+    await this.containerRegistryRepository.update(registry._id, {
       auth: undefined,
-      authSet: false
+      authSet: false,
     });
 
     await this.watcherEngineService.deregisterRegistries();
@@ -126,7 +138,7 @@ export class ContainerRegistriesService implements ContainerRegistriesServiceInt
    * List all registries with authentication set up
    * @returns List of registries
    */
-  async listAllSetupRegistries(): Promise<ContainerRegistryEntity[]> {
+  async listAllSetupRegistries(): Promise<IContainerRegistryEntity[]> {
     return this.containerRegistryRepository.findMany({ authSet: true });
   }
 
@@ -135,12 +147,12 @@ export class ContainerRegistriesService implements ContainerRegistriesServiceInt
    * @param registry Registry to delete
    * @returns Success flag
    */
-  async deleteRegistry(registry: ContainerRegistryEntity): Promise<boolean> {
-    if (!registry.id) {
+  async deleteRegistry(registry: IContainerRegistryEntity): Promise<boolean> {
+    if (!registry._id) {
       throw new Error('Registry ID is required');
     }
 
-    await this.containerRegistryRepository.delete(registry.id);
+    await this.containerRegistryRepository.delete(registry._id);
     await this.watcherEngineService.deregisterRegistries();
     await this.watcherEngineService.registerRegistries();
 

@@ -1,8 +1,13 @@
 import { SsmAnsible } from 'ssm-shared-lib';
-import { Logger } from '@nestjs/common';
 import { IDeviceAuthRepository } from '@modules/devices';
-import { vaultDecrypt } from '../../../ansible-vaults/application/services/vault-crypto.service';
-import { DEFAULT_VAULT_ID } from '../../../ansible-vaults/ansible-vaults.module';
+import { DEFAULT_VAULT_ID } from '@modules/ansible-vaults';
+import Vault from 'src/helpers/vault-crypto/Vault';
+import { VAULT_PWD } from 'src/config';
+
+const vaultDecrypt = async (str: string, vault: string) => {
+  const _vault = new Vault({ password: VAULT_PWD });
+  return await _vault.decrypt(str, vault);
+};
 
 /**
  * Generate sudo command based on device authentication information
@@ -13,14 +18,12 @@ export async function generateSudoCommand(
   deviceUuid: string,
   deviceAuthRepository?: IDeviceAuthRepository,
 ): Promise<string> {
-  const logger = new Logger('SudoHelper');
-
   if (!deviceAuthRepository) {
     throw new Error('DeviceAuthRepository is required');
   }
 
   // Find device auth by device UUID
-  const deviceAuth = await deviceAuthRepository.findOneByDeviceUuid(deviceUuid);
+  const deviceAuth = await deviceAuthRepository.findOneByDeviceUuid(deviceUuid)?.[0];
   if (!deviceAuth) {
     throw new Error(`DeviceAuth with uuid: ${deviceUuid} not found`);
   }

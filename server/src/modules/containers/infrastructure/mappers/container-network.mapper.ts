@@ -16,7 +16,7 @@ export class ContainerNetworkMapper {
   /**
    * Maps a container network entity to a database document
    */
-  toDocument(entity: IContainerNetworkEntity): any {
+  toDocument(entity: Partial<IContainerNetworkEntity>): any {
     const document: any = { ...entity };
 
     return document;

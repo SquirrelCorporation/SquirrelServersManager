@@ -34,7 +34,10 @@ export interface IContainerRegistryRepository {
    * @param id Registry ID
    * @param registry Updated registry data
    */
-  update(id: string, registry: Partial<IContainerRegistryEntity>): Promise<IContainerRegistryEntity>;
+  update(
+    id: string,
+    registry: Partial<IContainerRegistryEntity>,
+  ): Promise<IContainerRegistryEntity>;
 
   /**
    * Create a new registry

@@ -1,12 +1,10 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { IWatcherEngineService } from '@modules/containers/domain/components/watcher.interface';
 import { CONTAINER_REPOSITORY } from '../../domain/repositories/container-repository.interface';
-import { ContainerRepositoryInterface } from '../../domain/repositories/container-repository.interface';
-import {
-  IWatcherEngineService,
-  WATCHER_ENGINE_SERVICE,
-} from '../interfaces/watcher-engine-service.interface';
+import { IContainerRepository } from '../../domain/repositories/container-repository.interface';
+import { WATCHER_ENGINE_SERVICE } from '../interfaces/watcher-engine-service.interface';
 import PinoLogger from '../../../../logger';
-import { ContainerEntity } from '../../domain/entities/container.entity';
+import { IContainerEntity } from '../../domain/entities/container.entity';
 import { IContainerLogsService } from '../interfaces/container-logs-service.interface';
 
 const logger = PinoLogger.child(
@@ -18,7 +16,7 @@ const logger = PinoLogger.child(
 export class ContainerLogsService implements IContainerLogsService {
   constructor(
     @Inject(CONTAINER_REPOSITORY)
-    private readonly containerRepository: ContainerRepositoryInterface,
+    private readonly containerRepository: IContainerRepository,
     @Inject(WATCHER_ENGINE_SERVICE)
     private readonly watcherEngineService: IWatcherEngineService,
   ) {}
@@ -26,7 +24,7 @@ export class ContainerLogsService implements IContainerLogsService {
   /**
    * Find a container by UUID
    */
-  async findContainerById(id: string): Promise<ContainerEntity> {
+  async findContainerById(id: string): Promise<IContainerEntity> {
     const container = await this.containerRepository.findOneById(id);
     if (!container) {
       throw new NotFoundException(`Container with id ${id} not found`);
@@ -48,7 +46,7 @@ export class ContainerLogsService implements IContainerLogsService {
   /**
    * Get container logs
    */
-  async getContainerLogs(id: string, options: any = {}): Promise<string> {
+  async getContainerLogs(id: string, options: any = {}): Promise<string[]> {
     try {
       const container = await this.findContainerById(id);
 

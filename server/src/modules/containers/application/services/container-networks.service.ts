@@ -1,6 +1,4 @@
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
-import { NetworkInspectInfo } from 'dockerode';
 import { IContainerNetworksService } from '../interfaces/container-networks-service.interface';
 import { IContainerNetworkEntity } from '../../domain/entities/container-network.entity';
 import { CONTAINER_NETWORK_REPOSITORY } from '../../domain/repositories/container-network-repository.interface';
@@ -8,12 +6,10 @@ import { IContainerNetworkRepository } from '../../domain/repositories/container
 import { CONTAINER_SERVICE } from '../interfaces/container-service.interface';
 import { IContainerService } from '../interfaces/container-service.interface';
 import {
-  IContainerWatcherEngineService,
+  IWatcherEngineService,
   WATCHER_ENGINE_SERVICE,
 } from '../interfaces/watcher-engine-service.interface';
 import { WATCHERS } from '../../constants';
-import { Kind } from '../../domain/components/kind.enum';
-import { DevicesService } from '../../../devices/application/services/devices.service';
 import PinoLogger from '../../../../logger';
 
 const logger = PinoLogger.child(
@@ -31,8 +27,7 @@ export class ContainerNetworksService implements IContainerNetworksService {
     @Inject(CONTAINER_SERVICE)
     private readonly containerService: IContainerService,
     @Inject(WATCHER_ENGINE_SERVICE)
-    private readonly watcherEngineService: IContainerWatcherEngineService,
-    private readonly devicesService: DevicesService,
+    private readonly watcherEngineService: IWatcherEngineService,
   ) {}
 
   /**
@@ -52,8 +47,8 @@ export class ContainerNetworksService implements IContainerNetworksService {
   /**
    * Get a network by its UUID
    */
-  async getNetworkByUuid(uuid: string): Promise<IContainerNetworkEntity | null> {
-    return this.networkRepository.findOneById(uuid);
+  async getNetworkById(id: string): Promise<IContainerNetworkEntity | null> {
+    return this.networkRepository.findOneById(id);
   }
 
   /**
@@ -61,7 +56,7 @@ export class ContainerNetworksService implements IContainerNetworksService {
    */
   async createNetwork(
     deviceUuid: string,
-    networkData: Partial<IContainerNetworkEntity>,
+    networkData: IContainerNetworkEntity,
   ): Promise<IContainerNetworkEntity> {
     try {
       logger.info(`Creating network ${networkData.name} on device ${deviceUuid}`);
@@ -126,14 +121,14 @@ export class ContainerNetworksService implements IContainerNetworksService {
   /**
    * Connect a container to a network
    */
-  async connectContainerToNetwork(networkUuid: string, containerUuid: string): Promise<boolean> {
+  async connectContainerToNetwork(networkId: string, containerUuid: string): Promise<boolean> {
     try {
-      logger.info(`Connecting container ${containerUuid} to network ${networkUuid}`);
+      logger.info(`Connecting container ${containerUuid} to network ${networkId}`);
 
       // Find the network
-      const network = await this.networkRepository.findOneByUuid(networkUuid);
+      const network = await this.networkRepository.findOneById(networkId);
       if (!network) {
-        throw new NotFoundException(`Network with UUID ${networkUuid} not found`);
+        throw new NotFoundException(`Network with ID ${networkId} not found`);
       }
 
       // Find the container
@@ -167,14 +162,14 @@ export class ContainerNetworksService implements IContainerNetworksService {
 
       // Add container to network's container list
       network.containers[container.id] = {
-        name: container.name,
-        endpointId: '', // Would be provided by Docker
-        macAddress: '', // Would be provided by Docker
-        ipv4Address: '', // Would be provided by Docker
-        ipv6Address: '', // Would be provided by Docker
+        Name: container.name,
+        EndpointID: '', // Would be provided by Docker
+        MacAddress: '', // Would be provided by Docker
+        IPv4Address: '', // Would be provided by Docker
+        IPv6Address: '', // Would be provided by Docker
       };
 
-      await this.networkRepository.update(networkUuid, {
+      await this.networkRepository.update(networkId, {
         containers: network.containers,
       });
 
@@ -188,17 +183,14 @@ export class ContainerNetworksService implements IContainerNetworksService {
   /**
    * Disconnect a container from a network
    */
-  async disconnectContainerFromNetwork(
-    networkUuid: string,
-    containerUuid: string,
-  ): Promise<boolean> {
+  async disconnectContainerFromNetwork(networkId: string, containerUuid: string): Promise<boolean> {
     try {
-      logger.info(`Disconnecting container ${containerUuid} from network ${networkUuid}`);
+      logger.info(`Disconnecting container ${containerUuid} from network ${networkId}`);
 
       // Find the network
-      const network = await this.networkRepository.findOneByUuid(networkUuid);
+      const network = await this.networkRepository.findOneById(networkId);
       if (!network) {
-        throw new NotFoundException(`Network with UUID ${networkUuid} not found`);
+        throw new NotFoundException(`Network with ID ${networkId} not found`);
       }
 
       // Find the container
@@ -223,7 +215,7 @@ export class ContainerNetworksService implements IContainerNetworksService {
       // Update network in database
       if (network.containers && network.containers[container.id]) {
         const { [container.id]: _, ...remainingContainers } = network.containers;
-        await this.networkRepository.update(networkUuid, {
+        await this.networkRepository.update(networkId, {
           containers: remainingContainers,
         });
       }

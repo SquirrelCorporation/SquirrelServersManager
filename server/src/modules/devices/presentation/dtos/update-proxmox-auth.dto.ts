@@ -1,5 +1,14 @@
-import { IsBoolean, IsIn, IsNumber, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
+import { SsmProxmox } from 'ssm-shared-lib';
 
 class TokensDto {
   @IsOptional()
@@ -24,13 +33,13 @@ class UserPwdDto {
 export class UpdateProxmoxAuthDto {
   @IsOptional()
   @IsString()
-  @IsIn(['agent', 'tunnel', 'ssh'], { message: 'Invalid remoteConnectionMethod' })
-  remoteConnectionMethod?: 'agent' | 'tunnel' | 'ssh';
+  @IsEnum(SsmProxmox.RemoteConnectionMethod, { message: 'Invalid remoteConnectionMethod' })
+  remoteConnectionMethod?: SsmProxmox.RemoteConnectionMethod;
 
   @IsOptional()
   @IsString()
-  @IsIn(['ssh', 'https'], { message: 'Invalid connectionMethod' })
-  connectionMethod?: 'ssh' | 'https';
+  @IsEnum(SsmProxmox.ConnectionMethod, { message: 'Invalid connectionMethod' })
+  connectionMethod?: SsmProxmox.ConnectionMethod;
 
   @IsOptional()
   @IsNumber()
@@ -51,4 +60,4 @@ export class UpdateProxmoxAuthDto {
   @ValidateNested()
   @Type(() => UserPwdDto)
   userPwd?: UserPwdDto;
-} 
+}

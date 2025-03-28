@@ -4,7 +4,7 @@ import { fullName } from '@modules/containers/utils/utils';
 import SSHCredentialsHelper from 'src/helpers/ssh/SSHCredentialsHelper';
 import { IDevice, IDeviceAuth } from '@modules/devices';
 import {
-  IContainerWatcherEngineService,
+  IWatcherEngineService,
   WATCHER_ENGINE_SERVICE,
 } from '../interfaces/watcher-engine-service.interface';
 import { IContainerService } from '../interfaces/container-service.interface';
@@ -22,7 +22,7 @@ export class ContainerService implements IContainerService {
     @Inject(CONTAINER_REPOSITORY)
     private readonly containerRepository: IContainerRepository,
     @Inject(WATCHER_ENGINE_SERVICE)
-    private readonly watcherEngineService: IContainerWatcherEngineService,
+    private readonly watcherEngineService: IWatcherEngineService,
     private readonly devicesService: DevicesService,
     @Inject(DEVICE_AUTH_SERVICE)
     private readonly deviceAuthService: IDeviceAuthService,

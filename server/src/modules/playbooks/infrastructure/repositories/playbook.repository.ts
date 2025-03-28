@@ -22,16 +22,8 @@ export class PlaybookRepository implements IPlaybookRepository {
     // Create a copy of the playbook object to avoid modifying the original
     const playbookToUpdate = { ...playbook };
 
-    // If playbooksRepository is provided as an object, use its _id
-    if (playbookToUpdate.playbooksRepository && typeof playbookToUpdate.playbooksRepository === 'object') {
-      playbookToUpdate.playbooksRepository = playbookToUpdate.playbooksRepository._id;
-    }
-
-    const updated = await this.playbookModel.findOneAndUpdate(
-      { path: playbook.path },
-      playbookToUpdate,
-      { upsert: true, new: true }
-    )
+    const updated = await this.playbookModel
+      .findOneAndUpdate({ path: playbook.path }, playbookToUpdate, { upsert: true, new: true })
       .lean()
       .exec();
 
@@ -44,7 +36,8 @@ export class PlaybookRepository implements IPlaybookRepository {
   }
 
   async findAllWithActiveRepositories(): Promise<IPlaybook[] | null> {
-    const playbooks = await this.playbookModel.find()
+    const playbooks = await this.playbookModel
+      .find()
       .populate({ path: 'playbooksRepository', match: { enabled: { $eq: true } } })
       .sort({ createdAt: -1 })
       .lean()
@@ -54,7 +47,8 @@ export class PlaybookRepository implements IPlaybookRepository {
   }
 
   async findOneByName(name: string): Promise<IPlaybook | null> {
-    const playbook = await this.playbookModel.findOne({ name })
+    const playbook = await this.playbookModel
+      .findOne({ name })
       .populate({ path: 'playbooksRepository', populate: { path: 'vaults' } })
       .lean()
       .exec();
@@ -63,7 +57,8 @@ export class PlaybookRepository implements IPlaybookRepository {
   }
 
   async findOneByUuid(uuid: string): Promise<IPlaybook | null> {
-    const playbook = await this.playbookModel.findOne({ uuid })
+    const playbook = await this.playbookModel
+      .findOne({ uuid })
       .populate({ path: 'playbooksRepository', populate: { path: 'vaults' } })
       .lean()
       .exec();
@@ -71,12 +66,13 @@ export class PlaybookRepository implements IPlaybookRepository {
     return PlaybookMapper.toDomain(playbook);
   }
 
-  async listAllByRepository(
-    playbooksRepository: IPlaybooksRegister,
-  ): Promise<IPlaybook[] | null> {
-    const playbooks = await this.playbookModel.find({
-      playbooksRepository: playbooksRepository._id,
-    }).lean().exec();
+  async listAllByRepository(playbooksRepository: IPlaybooksRegister): Promise<IPlaybook[] | null> {
+    const playbooks = await this.playbookModel
+      .find({
+        playbooksRepository: playbooksRepository._id,
+      })
+      .lean()
+      .exec();
     return PlaybookMapper.toDomainArray(playbooks);
   }
 
@@ -85,7 +81,8 @@ export class PlaybookRepository implements IPlaybookRepository {
   }
 
   async findOneByPath(path: string): Promise<IPlaybook | null> {
-    const playbook = await this.playbookModel.findOne({ path })
+    const playbook = await this.playbookModel
+      .findOne({ path })
       .populate({ path: 'playbooksRepository', populate: { path: 'vaults' } })
       .lean()
       .exec();
@@ -94,7 +91,8 @@ export class PlaybookRepository implements IPlaybookRepository {
   }
 
   async findOneByUniqueQuickReference(quickRef: string): Promise<IPlaybook | null> {
-    const playbook = await this.playbookModel.findOne({ uniqueQuickRef: quickRef })
+    const playbook = await this.playbookModel
+      .findOne({ uniqueQuickRef: quickRef })
       .populate({ path: 'playbooksRepository', populate: { path: 'vaults' } })
       .lean()
       .exec();

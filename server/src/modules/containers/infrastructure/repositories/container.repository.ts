@@ -2,14 +2,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { SsmContainer } from 'ssm-shared-lib';
-import { ContainerRepositoryInterface } from '../../domain/repositories/container-repository.interface';
-import { ContainerEntity } from '../../domain/entities/container.entity';
+import { IContainerRepository } from '../../domain/repositories/container-repository.interface';
+import { IContainerEntity } from '../../domain/entities/container.entity';
 import { CONTAINER_SCHEMA, Container } from '../schemas/container.schema';
 import { ContainerMapper } from '../mappers/container.mapper';
-import pinoglogger from '../../../../logger'
 
 @Injectable()
-export class ContainerRepository implements ContainerRepositoryInterface {
+export class ContainerRepository implements IContainerRepository {
   private readonly logger = new Logger(ContainerRepository.name);
   constructor(
     @InjectModel(CONTAINER_SCHEMA)
@@ -17,54 +16,66 @@ export class ContainerRepository implements ContainerRepositoryInterface {
     private readonly containerMapper: ContainerMapper,
   ) {}
 
-  async findAll(): Promise<ContainerEntity[]> {
-    const containers = await this.containerModel.aggregate([
-      {
-        $addFields: {
-          displayType: SsmContainer.ContainerTypes.DOCKER,
+  async findAll(): Promise<IContainerEntity[]> {
+    const containers = await this.containerModel
+      .aggregate([
+        {
+          $addFields: {
+            displayType: SsmContainer.ContainerTypes.DOCKER,
+          },
         },
-      },
-      {
-        $lookup: {
-          from: 'devices',
-          localField: 'deviceUuid',
-          foreignField: 'uuid',
-          as: 'device'
-        }
-      },
-      {
-        $unwind: {
-          path: '$device',
-          preserveNullAndEmptyArrays: true
-        }
-      }
-    ]).exec();
-    return containers.map(container => this.containerMapper.toEntity(container));
+        {
+          $lookup: {
+            from: 'devices',
+            localField: 'deviceUuid',
+            foreignField: 'uuid',
+            as: 'device',
+          },
+        },
+        {
+          $unwind: {
+            path: '$device',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+      ])
+      .exec();
+    return containers.map((container) => this.containerMapper.toEntity(container));
   }
 
-  async findAllByDeviceUuid(deviceUuid: string): Promise<ContainerEntity[]> {
-    const containers = await this.containerModel.find({ deviceUuid }).populate('device').lean().exec();
-    return containers.map(container => this.containerMapper.toEntity(container));
+  async findAllByDeviceUuid(deviceUuid: string): Promise<IContainerEntity[]> {
+    const containers = await this.containerModel
+      .find({ deviceUuid })
+      .populate('device')
+      .lean()
+      .exec();
+    return containers.map((container) => this.containerMapper.toEntity(container));
   }
 
-  async findOneById(id: string): Promise<ContainerEntity | null> {
+  async findOneById(id: string): Promise<IContainerEntity | null> {
     const container = await this.containerModel.findOne({ id }).populate('device').lean().exec();
     return container ? this.containerMapper.toEntity(container) : null;
   }
 
-  async findOneByNameAndDeviceUuid(name: string, deviceUuid: string): Promise<ContainerEntity | null> {
-    const container = await this.containerModel.findOne({ name, deviceUuid }).populate('device').lean().exec();
+  async findOneByNameAndDeviceUuid(
+    name: string,
+    deviceUuid: string,
+  ): Promise<IContainerEntity | null> {
+    const container = await this.containerModel
+      .findOne({ name, deviceUuid })
+      .populate('device')
+      .lean()
+      .exec();
     return container ? this.containerMapper.toEntity(container) : null;
   }
 
-  async save(container: ContainerEntity): Promise<ContainerEntity> {
+  async save(container: IContainerEntity): Promise<IContainerEntity> {
     const document = this.containerMapper.toDocument(container);
 
     if (container.id) {
-      await this.containerModel.updateOne(
-        { _id: new Types.ObjectId(container.id) },
-        { $set: document },
-      ).exec();
+      await this.containerModel
+        .updateOne({ _id: new Types.ObjectId(container.id) }, { $set: document })
+        .exec();
       return container;
     } else {
       const createdContainer = await this.containerModel.create(document);
@@ -72,19 +83,17 @@ export class ContainerRepository implements ContainerRepositoryInterface {
     }
   }
 
-  async create(container: ContainerEntity): Promise<ContainerEntity> {
-      const document = this.containerMapper.toDocument(container);
-      const createdContainer = await this.containerModel.create(document);
-      return this.containerMapper.toEntity(createdContainer);
+  async create(container: Partial<IContainerEntity>): Promise<IContainerEntity> {
+    const document = this.containerMapper.toDocument(container);
+    const createdContainer = await this.containerModel.create(document);
+    return this.containerMapper.toEntity(createdContainer);
   }
 
-  async update(id: string, containerData: Partial<ContainerEntity>): Promise<ContainerEntity> {
-    const document = this.containerMapper.toDocument(containerData as ContainerEntity);
-    const updatedContainer = await this.containerModel.findOneAndUpdate(
-      { id },
-      { $set: document },
-      { new: true },
-    ).exec();
+  async update(id: string, containerData: Partial<IContainerEntity>): Promise<IContainerEntity> {
+    const document = this.containerMapper.toDocument(containerData as IContainerEntity);
+    const updatedContainer = await this.containerModel
+      .findOneAndUpdate({ id }, { $set: document }, { new: true })
+      .exec();
 
     if (!updatedContainer) {
       throw new Error(`Container with ID ${id} not found`);
@@ -114,9 +123,13 @@ export class ContainerRepository implements ContainerRepositoryInterface {
     return this.containerModel.find({ deviceUuid }).populate('device').lean().exec();
   }
 
-  async findAllByWatcher(watcher: string): Promise<ContainerEntity[]> {
-    const containers = await this.containerModel.find({ watcher: watcher }).populate('device').lean().exec();
-    return containers.map(container => this.containerMapper.toEntity(container));
+  async findAllByWatcher(watcher: string): Promise<IContainerEntity[]> {
+    const containers = await this.containerModel
+      .find({ watcher: watcher })
+      .populate('device')
+      .lean()
+      .exec();
+    return containers.map((container) => this.containerMapper.toEntity(container));
   }
 
   async deleteContainerById(id: string): Promise<any> {
@@ -137,11 +150,10 @@ export class ContainerRepository implements ContainerRepositoryInterface {
   }
 
   async updateContainer(container: any): Promise<any> {
-    return this.containerModel.findByIdAndUpdate(
-      container._id,
-      { $set: container },
-      { new: true },
-    ).lean().exec();
+    return this.containerModel
+      .findByIdAndUpdate(container._id, { $set: container }, { new: true })
+      .lean()
+      .exec();
   }
 
   async countByDeviceUuid(deviceUuid: string): Promise<number> {
@@ -157,9 +169,9 @@ export class ContainerRepository implements ContainerRepositoryInterface {
   }
 
   async updateStatusByWatcher(watcher: string, status: string): Promise<any> {
-    return this.containerModel.updateMany(
-      { watchers: watcher },
-      { $set: { status } },
-    ).lean().exec();
+    return this.containerModel
+      .updateMany({ watchers: watcher }, { $set: { status } })
+      .lean()
+      .exec();
   }
 }

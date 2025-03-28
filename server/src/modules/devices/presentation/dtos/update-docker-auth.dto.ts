@@ -1,16 +1,10 @@
 import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
-
-export enum DockerAuthType {
-  NONE = 'none',
-  SOCKET = 'socket',
-  SSH = 'ssh',
-  HTTPS = 'https',
-}
+import { SsmAnsible } from 'ssm-shared-lib';
 
 export class UpdateDockerAuthDto {
-  @IsEnum(DockerAuthType)
+  @IsEnum(SsmAnsible.SSHType)
   @IsOptional()
-  dockerCustomAuthType?: DockerAuthType;
+  dockerCustomAuthType?: SsmAnsible.SSHType;
 
   @IsString()
   @IsOptional()
@@ -66,4 +60,4 @@ export class UpdateDockerAuthDto {
 
   // We don't include the certificate files (dockerCa, dockerCert, dockerKey)
   // as they are handled by the file upload endpoint
-} 
+}

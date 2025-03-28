@@ -12,13 +12,19 @@ import { Inject, Logger, UseGuards } from '@nestjs/common';
 import { SsmEvents } from 'ssm-shared-lib';
 import { DateTime } from 'luxon';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
-import { CONTAINER_LOGS_SERVICE, IContainerLogsService } from '../../application/interfaces/container-logs-service.interface';
+import {
+  CONTAINER_LOGS_SERVICE,
+  IContainerLogsService,
+} from '../../application/interfaces/container-logs-service.interface';
 import PinoLogger from '../../../../logger';
 import { IContainerService } from '../../application/interfaces/container-service.interface';
 import { CONTAINER_SERVICE } from '../../application/interfaces/container-service.interface';
 import { ContainerLogsDto } from '../dtos/container-logs.dto';
 
-const logger = PinoLogger.child({ module: 'ContainerLogsGateway' }, { msgPrefix: '[CONTAINER_LOGS_GATEWAY] - ' });
+const logger = PinoLogger.child(
+  { module: 'ContainerLogsGateway' },
+  { msgPrefix: '[CONTAINER_LOGS_GATEWAY] - ' },
+);
 
 @WebSocketGateway({
   namespace: 'container-logs',
@@ -28,7 +34,7 @@ const logger = PinoLogger.child({ module: 'ContainerLogsGateway' }, { msgPrefix:
 })
 export class ContainerLogsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
-  server: Server;
+  server!: Server;
 
   private readonly subscribedContainers: Map<string, Set<string>> = new Map();
   private readonly streamClosers: Map<string, () => void> = new Map();
@@ -106,7 +112,7 @@ export class ContainerLogsGateway implements OnGatewayConnection, OnGatewayDisco
           containerId,
           onData,
           onError,
-          { tail }
+          { tail },
         );
 
         // Store the stream closer function
@@ -157,16 +163,16 @@ export class ContainerLogsGateway implements OnGatewayConnection, OnGatewayDisco
 
   // Support for legacy event
   @SubscribeMessage(SsmEvents.Logs.GET_LOGS)
-  async handleGetLogs(
-    @MessageBody() payload: ContainerLogsDto,
-    @ConnectedSocket() client: Socket,
-  ) {
+  async handleGetLogs(@MessageBody() payload: ContainerLogsDto, @ConnectedSocket() client: Socket) {
     logger.info(`Legacy log request for container ${payload.containerId}`);
 
     try {
       // Validate payload
       if (!payload.containerId) {
-        return { event: SsmEvents.Logs.GET_LOGS, data: { status: 'Bad Request', error: 'containerId is required' } };
+        return {
+          event: SsmEvents.Logs.GET_LOGS,
+          data: { status: 'Bad Request', error: 'containerId is required' },
+        };
       }
 
       // Get container and check if it exists
@@ -192,7 +198,7 @@ export class ContainerLogsGateway implements OnGatewayConnection, OnGatewayDisco
         container.id,
         getContainerLogsCallback,
         errorHandler,
-        { from }
+        { from },
       );
 
       // Store the stream closer function with a unique key

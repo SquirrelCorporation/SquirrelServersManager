@@ -18,10 +18,10 @@ class PortMap {
 
 class VolumeMount {
   @IsString()
-  source: string;
+  source!: string;
 
   @IsString()
-  target: string;
+  target!: string;
 
   @IsString()
   @IsOptional()
@@ -34,7 +34,7 @@ class VolumeMount {
 
 class NetworkConfig {
   @IsString()
-  name: string;
+  name!: string;
 
   @IsObject()
   @IsOptional()
@@ -43,10 +43,10 @@ class NetworkConfig {
 
 export class CreateContainerDto {
   @IsString()
-  name: string;
+  name!: string;
 
   @IsString()
-  image: string;
+  image!: string;
 
   @IsObject()
   @IsOptional()

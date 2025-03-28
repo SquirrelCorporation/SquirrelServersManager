@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { IDockerWatcherComponentFactory } from '@modules/containers/domain/components/docker-watcher.interface';
-import { ContainerServiceInterface } from '@modules/containers/application/interfaces/container-service.interface';
-import { ContainerStatsServiceInterface } from '@modules/containers/application/interfaces/container-stats-service.interface';
+import { IContainerService } from '@modules/containers/application/interfaces/container-service.interface';
+import { IContainerStatsService } from '@modules/containers/application/interfaces/container-stats-service.interface';
 import { IContainerLogsService } from '@modules/containers/application/interfaces/container-logs-service.interface';
-import { ContainerImagesServiceInterface } from '@modules/containers/application/interfaces/container-images-service.interface';
-import { ContainerVolumesServiceInterface } from '@modules/containers/application/interfaces/container-volumes-service.interface';
-import { ContainerNetworksServiceInterface } from '@modules/containers/application/interfaces/container-networks-service.interface';
+import { IContainerImagesService } from '@modules/containers/application/interfaces/container-images-service.interface';
+import { IContainerVolumesService } from '@modules/containers/application/interfaces/container-volumes-service.interface';
+import { IContainerNetworksService } from '@modules/containers/application/interfaces/container-networks-service.interface';
 import PinoLogger from '../../../../../../../../logger';
 import { DockerWatcherComponent } from './docker-watcher.component';
 
-const logger = PinoLogger.child({ module: 'DockerWatcherFactory' }, { msgPrefix: '[DOCKER_FACTORY] - ' });
+const logger = PinoLogger.child(
+  { module: 'DockerWatcherFactory' },
+  { msgPrefix: '[DOCKER_FACTORY] - ' },
+);
 
 /**
  * Factory for creating different levels of Docker watcher components
@@ -20,12 +23,12 @@ const logger = PinoLogger.child({ module: 'DockerWatcherFactory' }, { msgPrefix:
 export class DockerWatcherComponentFactory implements IDockerWatcherComponentFactory {
   constructor(
     private readonly eventEmitter: EventEmitter2,
-    private readonly containerService: ContainerServiceInterface,
-    private readonly containerStatsService: ContainerStatsServiceInterface,
+    private readonly containerService: IContainerService,
+    private readonly containerStatsService: IContainerStatsService,
     private readonly containerLogsService: IContainerLogsService,
-    private readonly containerImagesService: ContainerImagesServiceInterface,
-    private readonly containerVolumesService: ContainerVolumesServiceInterface,
-    private readonly containerNetworksService: ContainerNetworksServiceInterface
+    private readonly containerImagesService: IContainerImagesService,
+    private readonly containerVolumesService: IContainerVolumesService,
+    private readonly containerNetworksService: IContainerNetworksService,
   ) {}
 
   /**
@@ -40,7 +43,7 @@ export class DockerWatcherComponentFactory implements IDockerWatcherComponentFac
       this.containerLogsService,
       this.containerImagesService,
       this.containerVolumesService,
-      this.containerNetworksService
+      this.containerNetworksService,
     );
   }
 
@@ -56,7 +59,7 @@ export class DockerWatcherComponentFactory implements IDockerWatcherComponentFac
       this.containerLogsService,
       this.containerImagesService,
       this.containerVolumesService,
-      this.containerNetworksService
+      this.containerNetworksService,
     );
   }
 
@@ -72,7 +75,7 @@ export class DockerWatcherComponentFactory implements IDockerWatcherComponentFac
       this.containerLogsService,
       this.containerImagesService,
       this.containerVolumesService,
-      this.containerNetworksService
+      this.containerNetworksService,
     );
   }
 
@@ -88,7 +91,7 @@ export class DockerWatcherComponentFactory implements IDockerWatcherComponentFac
       this.containerLogsService,
       this.containerImagesService,
       this.containerVolumesService,
-      this.containerNetworksService
+      this.containerNetworksService,
     );
   }
 
@@ -104,7 +107,7 @@ export class DockerWatcherComponentFactory implements IDockerWatcherComponentFac
       this.containerLogsService,
       this.containerImagesService,
       this.containerVolumesService,
-      this.containerNetworksService
+      this.containerNetworksService,
     );
   }
 
@@ -120,7 +123,7 @@ export class DockerWatcherComponentFactory implements IDockerWatcherComponentFac
       this.containerLogsService,
       this.containerImagesService,
       this.containerVolumesService,
-      this.containerNetworksService
+      this.containerNetworksService,
     );
   }
 }

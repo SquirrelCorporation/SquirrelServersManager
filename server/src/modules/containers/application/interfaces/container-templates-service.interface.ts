@@ -1,4 +1,4 @@
-import { TemplateDeployDto } from '../../presentation/dtos/container-templates.dto';
+import { IUser } from '@modules/users';
 
 export const CONTAINER_TEMPLATES_SERVICE = 'CONTAINER_TEMPLATES_SERVICE';
 
@@ -27,5 +27,5 @@ export interface IContainerTemplatesService {
    * @param user User deploying the template
    * @returns Execution ID
    */
-  deployTemplate(template: TemplateDeployDto, user: any): Promise<string>;
+  deployTemplate(template: any, user: IUser): Promise<string>;
 }

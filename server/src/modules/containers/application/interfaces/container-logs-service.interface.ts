@@ -1,5 +1,3 @@
-import { IContainerEntity } from '../../domain/entities/container.entity';
-
 export const CONTAINER_LOGS_SERVICE = 'CONTAINER_LOGS_SERVICE';
 
 /**

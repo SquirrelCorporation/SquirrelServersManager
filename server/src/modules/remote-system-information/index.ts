@@ -1,4 +1,3 @@
-export * from './domain/entities/remote-system-info';
 export * from './domain/interfaces/component.interface';
 export * from './domain/interfaces/system-information-component.interface';
 export * from './application/interfaces/remote-ssh-executor-service.interface';
@@ -6,5 +5,4 @@ export * from './application/interfaces/remote-system-information-service.interf
 export * from './application/interfaces/remote-system-information-engine-service.interface';
 export * from './application/services/remote-system-information.service';
 export * from './application/services/remote-ssh-executor.service';
-export * from './application/services/engine/remote-system-information-engine.service';
 export * from './remote-system-information.module';

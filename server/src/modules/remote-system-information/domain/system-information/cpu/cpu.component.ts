@@ -11,7 +11,6 @@
 import pino from 'pino';
 import { Systeminformation } from 'ssm-shared-lib';
 import pinoLogger from '../../../../../logger';
-import { ICpuComponent } from '../../interfaces/cpu-component.interface';
 import {
   Callback,
   RemoteExecutorType,
@@ -21,7 +20,7 @@ import { RemoteOS } from '../remote-os/remote-os.component';
 import * as util from '../utils/system-utils';
 import { cpuBrandManufacturer, cpuManufacturer, getAMDSpeed } from './cpu.utils';
 
-export class CpuComponent extends RemoteOS implements ICpuComponent {
+export class CpuComponent extends RemoteOS {
   private logger: pino.Logger<never>;
 
   constructor(

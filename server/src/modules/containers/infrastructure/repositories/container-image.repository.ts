@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ContainerImageRepositoryInterface } from '../../domain/repositories/container-image-repository.interface';
-import { ContainerImageEntity } from '../../domain/entities/container-image.entity';
+import { IContainerImageRepository } from '../../domain/repositories/container-image-repository.interface';
+import { IContainerImageEntity } from '../../domain/entities/container-image.entity';
 import { ContainerImageMapper } from '../mappers/container-image.mapper';
 import { CONTAINER_IMAGE, ContainerImage } from '../schemas/container-image.schema';
 import PinoLogger from '../../../../logger';
@@ -12,11 +12,8 @@ const logger = PinoLogger.child(
   { msgPrefix: '[CONTAINER_IMAGE_REPO] - ' },
 );
 
-/**
- * MongoDB implementation of the Container Image Repository
- */
 @Injectable()
-export class ContainerImageRepository implements ContainerImageRepositoryInterface {
+export class ContainerImageRepository implements IContainerImageRepository {
   constructor(
     @InjectModel(CONTAINER_IMAGE)
     private readonly imageModel: Model<ContainerImage>,
@@ -25,7 +22,7 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
   /**
    * Find all images
    */
-  async findAll(): Promise<ContainerImageEntity[]> {
+  async findAll(): Promise<IContainerImageEntity[]> {
     try {
       const images = await this.imageModel.find().populate('device').lean().exec();
       return images.map((image) => ContainerImageMapper.toEntity(image));
@@ -38,7 +35,7 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
   /**
    * Find all images by device UUID
    */
-  async findAllByDeviceUuid(deviceUuid: string): Promise<ContainerImageEntity[]> {
+  async findAllByDeviceUuid(deviceUuid: string): Promise<IContainerImageEntity[]> {
     try {
       const images = await this.imageModel.find({ deviceUuid }).populate('device').lean().exec();
       return images.map((image) => ContainerImageMapper.toEntity(image));
@@ -51,7 +48,7 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
   /**
    * Find one image by UUID
    */
-  async findOneById(id: string): Promise<ContainerImageEntity | null> {
+  async findOneById(id: string): Promise<IContainerImageEntity | null> {
     try {
       const image = await this.imageModel.findOne({ id }).populate('device').lean().exec();
       return image ? ContainerImageMapper.toEntity(image) : null;
@@ -67,7 +64,7 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
   async findOneByIdAndDeviceUuid(
     id: string,
     deviceUuid: string,
-  ): Promise<ContainerImageEntity | null> {
+  ): Promise<IContainerImageEntity | null> {
     try {
       const image = await this.imageModel
         .findOne({ id, deviceUuid })
@@ -88,7 +85,7 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
     name: string,
     tag: string,
     deviceUuid: string,
-  ): Promise<ContainerImageEntity[]> {
+  ): Promise<IContainerImageEntity[]> {
     try {
       const images = await this.imageModel
         .find({ name, tag, deviceUuid })
@@ -107,7 +104,7 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
   /**
    * Create an image
    */
-  async create(image: ContainerImageEntity): Promise<ContainerImageEntity> {
+  async create(image: IContainerImageEntity): Promise<IContainerImageEntity> {
     try {
       const imageDocument = ContainerImageMapper.toDocument(image);
       const createdImage = await this.imageModel.create(imageDocument);
@@ -123,8 +120,8 @@ export class ContainerImageRepository implements ContainerImageRepositoryInterfa
    */
   async update(
     id: string,
-    imageData: Partial<ContainerImageEntity>,
-  ): Promise<ContainerImageEntity> {
+    imageData: Partial<IContainerImageEntity>,
+  ): Promise<IContainerImageEntity> {
     try {
       const updatedImage = await this.imageModel
         .findOneAndUpdate({ id }, imageData, { new: true })

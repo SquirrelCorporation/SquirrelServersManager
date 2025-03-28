@@ -1,7 +1,12 @@
 import * as Joi from 'joi';
 import { AlternativesSchema } from 'joi';
 import pino from 'pino';
-import { ConfigurationAuthenticationSchema, ConfigurationRegistrySchema, ConfigurationTriggerSchema, ConfigurationWatcherSchema } from '@modules/containers/types';
+import {
+  ConfigurationAuthenticationSchema,
+  ConfigurationRegistrySchema,
+  ConfigurationTriggerSchema,
+  ConfigurationWatcherSchema,
+} from '@modules/containers/types';
 import { Kind } from '@modules/containers/domain/components/kind.enum';
 import EventManager from '../../../../../../core/events/EventManager';
 import logger from '../../../../../../logger';

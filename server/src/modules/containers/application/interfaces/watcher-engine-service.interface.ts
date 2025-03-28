@@ -4,7 +4,7 @@ import { AbstractRegistryComponent } from '@modules/containers/application/servi
 import { AbstractWatcherComponent } from '@modules/containers/application/services/components/watcher/abstract-watcher.component';
 import { ConfigurationSchema } from '@modules/containers/types';
 import { Kind } from '@modules/containers/domain/components/kind.enum';
-import { IComponent } from '../../../domain/components/component.interface';
+import { IComponent } from '@modules/containers/domain/components/component.interface';
 
 export const WATCHER_ENGINE_SERVICE = 'WATCHER_ENGINE_SERVICE';
 
@@ -16,7 +16,7 @@ export interface StateType {
 /**
  * Interface for the Watcher Engine Service
  */
-export interface IContainerWatcherEngineService extends OnModuleInit, OnModuleDestroy {
+export interface IWatcherEngineService extends OnModuleInit, OnModuleDestroy {
   /**
    * Initialize the service when the module is loaded
    */
@@ -35,7 +35,7 @@ export interface IContainerWatcherEngineService extends OnModuleInit, OnModuleDe
   /**
    * Return all supported registries
    */
-  getRegistries(): AbstractRegistryComponent[];
+  getRegistries(): IComponent<ConfigurationSchema>[];
 
   /**
    * Register a component

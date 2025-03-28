@@ -1,30 +1,30 @@
 export class SftpSessionDto {
-  deviceUuid: string;
+  deviceUuid!: string;
 }
 
 export class SftpListDirectoryDto {
-  path: string;
+  path!: string;
 }
 
 export class SftpMkdirDto {
-  path: string;
+  path!: string;
 }
 
 export class SftpRenameDto {
-  oldPath: string;
-  newPath: string;
+  oldPath!: string;
+  newPath!: string;
 }
 
 export class SftpChmodDto {
-  path: string;
-  mode: number;
+  path!: string;
+  mode!: number;
 }
 
 export class SftpDeleteDto {
-  path: string;
-  isDir: boolean;
+  path!: string;
+  isDir!: boolean;
 }
 
 export class SftpDownloadDto {
-  path: string;
-} 
+  path!: string;
+}

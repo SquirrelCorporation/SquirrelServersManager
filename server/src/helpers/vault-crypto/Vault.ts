@@ -145,19 +145,17 @@ export default class Vault {
    */
   private _cipher(secret: string, id: string, salt: Buffer, derivedKey: DerivedKey) {
     const { key, hmacKey, iv } = derivedKey;
-    // @ts-expect-error error type, fix later
+
     const cipherF = crypto.createCipheriv(CIPHER, key, iv);
     const finalInput = Buffer.concat([
-      // @ts-expect-error error type, fix later
       Buffer.from(secret, 'utf-8'),
-      // @ts-expect-error error type, fix later
       pkcs7.pad(Buffer.from(secret, 'utf-8').length, 16),
     ]);
-    // @ts-expect-error error type, fix later
-    const ciphertext = Buffer.concat([cipherF.update(finalInput), cipherF.final()]);
 
+    const ciphertext = Buffer.concat([cipherF.update(finalInput), cipherF.final()]);
     const hmac = this._hmac(hmacKey, ciphertext);
     const hex = [salt, hmac, ciphertext].map((buf) => buf.toString('hex')).join('\n');
+
     return this._pack(id, hex);
   }
 
@@ -171,13 +169,12 @@ export default class Vault {
     const { hmac, ciphertext } = unpacked;
     const { key, hmacKey, iv } = derivedKey;
     const hmacComp = this._hmac(hmacKey, ciphertext);
-    // @ts-expect-error error type, fix later
+
     if (Buffer.compare(hmacComp, hmac) !== 0) {
       throw new Error('Integrity check failed');
     }
-    // @ts-expect-error error type, fix later
+
     const cipherF = crypto.createDecipheriv(CIPHER, key, iv);
-    // @ts-expect-error error type, fix later
     const buffer = pkcs7.unpad(Buffer.concat([cipherF.update(ciphertext), cipherF.final()]), 16);
 
     return buffer.toString();

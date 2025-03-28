@@ -24,17 +24,23 @@ export interface IContainerVolumeRepository {
   /**
    * Find one volume by name and device UUID
    */
-  findOneByNameAndDeviceUuid(name: string, deviceUuid: string): Promise<IContainerVolumeEntity | null>;
+  findOneByNameAndDeviceUuid(
+    name: string,
+    deviceUuid: string,
+  ): Promise<IContainerVolumeEntity | null>;
 
   /**
    * Create a volume
    */
-  create(volume: IContainerVolumeEntity): Promise<IContainerVolumeEntity>;
+  create(volume: Partial<IContainerVolumeEntity>): Promise<IContainerVolumeEntity>;
 
   /**
    * Update a volume
    */
-  update(uuid: string, volumeData: Partial<IContainerVolumeEntity>): Promise<IContainerVolumeEntity>;
+  update(
+    uuid: string,
+    volumeData: Partial<IContainerVolumeEntity>,
+  ): Promise<IContainerVolumeEntity>;
 
   /**
    * Delete a volume by UUID

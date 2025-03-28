@@ -1,4 +1,4 @@
-import { Image } from "@modules/containers/types";
+import { Image } from '@modules/containers/types';
 
 /**
  * Domain entity for container images
@@ -16,7 +16,7 @@ export interface IContainerImageEntity {
   virtualSize: number;
   sharedSize: number;
   labels: { [p: string]: string };
-  containers: number;
+  containers?: number;
   createdAt?: Date;
   updatedAt?: Date;
 }

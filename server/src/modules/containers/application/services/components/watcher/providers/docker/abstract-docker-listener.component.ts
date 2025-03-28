@@ -4,11 +4,11 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AbstractWatcherComponent } from '../../abstract-watcher.component';
 import {
   CONTAINER_SERVICE,
-  ContainerServiceInterface,
+  IContainerService,
 } from '../../../../../../application/interfaces/container-service.interface';
 import {
   CONTAINER_STATS_SERVICE,
-  ContainerStatsServiceInterface,
+  IContainerStatsService,
 } from '../../../../../../application/interfaces/container-stats-service.interface';
 import {
   CONTAINER_LOGS_SERVICE,
@@ -16,15 +16,15 @@ import {
 } from '../../../../../../application/interfaces/container-logs-service.interface';
 import {
   CONTAINER_IMAGES_SERVICE,
-  ContainerImagesServiceInterface,
+  IContainerImagesService,
 } from '../../../../../../application/interfaces/container-images-service.interface';
 import {
   CONTAINER_VOLUMES_SERVICE,
-  ContainerVolumesServiceInterface,
+  IContainerVolumesService,
 } from '../../../../../../application/interfaces/container-volumes-service.interface';
 import {
   CONTAINER_NETWORKS_SERVICE,
-  ContainerNetworksServiceInterface,
+  IContainerNetworksService,
 } from '../../../../../../application/interfaces/container-networks-service.interface';
 
 /**
@@ -39,17 +39,17 @@ export abstract class AbstractDockerListenerComponent extends AbstractWatcherCom
   constructor(
     protected readonly eventEmitter: EventEmitter2,
     @Inject(CONTAINER_SERVICE)
-    protected readonly containerService: ContainerServiceInterface,
+    protected readonly containerService: IContainerService,
     @Inject(CONTAINER_STATS_SERVICE)
-    protected readonly containerStatsService: ContainerStatsServiceInterface,
+    protected readonly containerStatsService: IContainerStatsService,
     @Inject(CONTAINER_LOGS_SERVICE)
     protected readonly containerLogsService: IContainerLogsService,
     @Inject(CONTAINER_IMAGES_SERVICE)
-    protected readonly containerImagesService: ContainerImagesServiceInterface,
+    protected readonly containerImagesService: IContainerImagesService,
     @Inject(CONTAINER_VOLUMES_SERVICE)
-    protected readonly containerVolumesService: ContainerVolumesServiceInterface,
+    protected readonly containerVolumesService: IContainerVolumesService,
     @Inject(CONTAINER_NETWORKS_SERVICE)
-    protected readonly containerNetworksService: ContainerNetworksServiceInterface,
+    protected readonly containerNetworksService: IContainerNetworksService,
   ) {
     super();
   }

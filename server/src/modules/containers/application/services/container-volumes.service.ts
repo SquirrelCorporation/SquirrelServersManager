@@ -1,21 +1,26 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
-import { ContainerVolumesServiceInterface } from '../interfaces/container-volumes-service.interface';
-import { ContainerVolumeEntity } from '../../domain/entities/container-volume.entity';
+import { IContainerVolumesService } from '../interfaces/container-volumes-service.interface';
+import { IContainerVolumeEntity } from '../../domain/entities/container-volume.entity';
 import { CONTAINER_VOLUME_REPOSITORY } from '../../domain/repositories/container-volume-repository.interface';
-import { ContainerVolumeRepositoryInterface } from '../../domain/repositories/container-volume-repository.interface';
-import { IWatcherEngineService, WATCHER_ENGINE_SERVICE } from '../interfaces/watcher-engine-service.interface';
+import { IContainerVolumeRepository } from '../../domain/repositories/container-volume-repository.interface';
+import {
+  IWatcherEngineService,
+  WATCHER_ENGINE_SERVICE,
+} from '../interfaces/watcher-engine-service.interface';
 import { DevicesService } from '../../../devices/application/services/devices.service';
 import PinoLogger from '../../../../logger';
 import { WATCHERS } from '../../constants';
 
-const logger = PinoLogger.child({ module: 'ContainerVolumesService' }, { msgPrefix: '[CONTAINER_VOLUMES] - ' });
+const logger = PinoLogger.child(
+  { module: 'ContainerVolumesService' },
+  { msgPrefix: '[CONTAINER_VOLUMES] - ' },
+);
 
 @Injectable()
-export class ContainerVolumesService implements ContainerVolumesServiceInterface {
+export class ContainerVolumesService implements IContainerVolumesService {
   constructor(
     @Inject(CONTAINER_VOLUME_REPOSITORY)
-    private readonly volumeRepository: ContainerVolumeRepositoryInterface,
+    private readonly volumeRepository: IContainerVolumeRepository,
     @Inject(WATCHER_ENGINE_SERVICE)
     private readonly watcherEngineService: IWatcherEngineService,
     private readonly devicesService: DevicesService,
@@ -24,28 +29,31 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
   /**
    * Get all container volumes
    */
-  async getAllVolumes(): Promise<ContainerVolumeEntity[]> {
+  async getAllVolumes(): Promise<IContainerVolumeEntity[]> {
     return this.volumeRepository.findAll();
   }
 
   /**
    * Get volumes by device UUID
    */
-  async getVolumesByDeviceUuid(deviceUuid: string): Promise<ContainerVolumeEntity[]> {
+  async getVolumesByDeviceUuid(deviceUuid: string): Promise<IContainerVolumeEntity[]> {
     return this.volumeRepository.findAllByDeviceUuid(deviceUuid);
   }
 
   /**
    * Get a volume by its UUID
    */
-  async getVolumeByUuid(uuid: string): Promise<ContainerVolumeEntity | null> {
+  async getVolumeByUuid(uuid: string): Promise<IContainerVolumeEntity | null> {
     return this.volumeRepository.findOneByUuid(uuid);
   }
 
   /**
    * Create a new volume on a device
    */
-  async createVolume(deviceUuid: string, volumeData: Partial<ContainerVolumeEntity>): Promise<ContainerVolumeEntity> {
+  async createVolume(
+    deviceUuid: string,
+    volumeData: Partial<IContainerVolumeEntity>,
+  ): Promise<IContainerVolumeEntity> {
     try {
       logger.info(`Creating volume ${volumeData.name} on device ${deviceUuid}`);
 
@@ -58,23 +66,17 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
       // Check if a volume with the same name already exists
       const existingVolume = await this.volumeRepository.findOneByNameAndDeviceUuid(
         volumeData.name as string,
-        deviceUuid
+        deviceUuid,
       );
 
       if (existingVolume) {
-        throw new Error(`Volume with name ${volumeData.name} already exists on device ${deviceUuid}`);
+        throw new Error(
+          `Volume with name ${volumeData.name} already exists on device ${deviceUuid}`,
+        );
       }
 
-      // Create a volume entity with UUID
-      const volumeEntity: ContainerVolumeEntity = {
-        ...volumeData,
-        name: volumeData.name as string,
-        uuid: uuidv4(),
-        deviceUuid,
-      };
-
       // Save to database
-      return this.volumeRepository.create(volumeEntity);
+      return this.volumeRepository.create(volumeData);
     } catch (error: any) {
       logger.error(`Failed to create volume: ${error.message}`);
       throw error;
@@ -84,7 +86,10 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
   /**
    * Update a volume
    */
-  async updateVolume(uuid: string, volumeData: Partial<ContainerVolumeEntity>): Promise<ContainerVolumeEntity> {
+  async updateVolume(
+    uuid: string,
+    volumeData: Partial<IContainerVolumeEntity>,
+  ): Promise<IContainerVolumeEntity> {
     try {
       // Find the existing volume
       const existingVolume = await this.volumeRepository.findOneByUuid(uuid);
@@ -181,7 +186,7 @@ export class ContainerVolumesService implements ContainerVolumesServiceInterface
    * @returns The file path and name of the backup
    */
   async backupVolume(
-    volume: ContainerVolumeEntity,
+    volume: IContainerVolumeEntity,
     mode: string,
   ): Promise<{ filePath: string; fileName: string }> {
     try {

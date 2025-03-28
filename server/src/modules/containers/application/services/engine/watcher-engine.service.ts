@@ -1,12 +1,15 @@
 import { Inject, Injectable, OnModuleDestroy, OnModuleInit, forwardRef } from '@nestjs/common';
-import { ConfigurationSchema } from '@modules/containers/types';
+import { ConfigurationRegistrySchema, ConfigurationSchema } from '@modules/containers/types';
 import { Kind } from '@modules/containers/domain/components/kind.enum';
 import { REGISTRIES, WATCHERS } from '@modules/containers/constants';
 import { IRegistryComponent } from '@modules/containers/domain/components/registry.interface';
 import { IWatcherComponent } from '@modules/containers/domain/components/watcher.interface';
 import { IComponent } from '@modules/containers';
 import PinoLogger from '../../../../../logger';
-import { IContainerWatcherEngineService } from '../../interfaces/watcher-engine-service.interface';
+import {
+  IWatcherEngineService,
+  StateType,
+} from '../../interfaces/watcher-engine-service.interface';
 import { RegistryComponentFactory } from '../components/registry/registry-component-factory.service';
 import { DOCKER_DEVICE_SERVICE } from '../../../../devices/domain/services/docker-device-service.interface';
 import { IDockerDeviceService } from '../../../../devices/domain/services/docker-device-service.interface';
@@ -29,12 +32,8 @@ const logger = PinoLogger.child(
  * Uses specialized factories for creating different component types
  */
 @Injectable()
-export class WatcherEngineService
-  implements IContainerWatcherEngineService, OnModuleInit, OnModuleDestroy {
-  private state: {
-    registry: Record<string, IComponent<ConfigurationSchema>>;
-    watcher: Record<string, IComponent<ConfigurationSchema>>;
-  } = {
+export class WatcherEngineService implements IWatcherEngineService, OnModuleInit, OnModuleDestroy {
+  private state: StateType = {
     registry: {},
     watcher: {},
   };
@@ -67,7 +66,7 @@ export class WatcherEngineService
   /**
    * Get the current state
    */
-  getStates() {
+  getStates(): StateType {
     return this.state;
   }
 

@@ -16,7 +16,6 @@ export * from './domain/repositories/device-repository.interface';
 export * from './domain/repositories/device-auth-repository.interface';
 export * from './domain/services/devices-service.interface';
 // Application exports
-export * from './application/interfaces/devices-service.interface';
 export * from './application/services/devices.service';
 
 // Infrastructure exports
@@ -27,7 +26,10 @@ export * from './presentation/controllers/devices.controller';
 export * from './presentation/dtos/device.dto';
 
 // Export domain interfaces
-export { ISensitiveInfoService, SENSITIVE_INFO_SERVICE } from './domain/services/sensitive-info.service.interface';
+export {
+  ISensitiveInfoService,
+  SENSITIVE_INFO_SERVICE,
+} from './domain/services/sensitive-info.service.interface';
 
 // Export application services
 export { SensitiveInfoService } from './application/services/sensitive-info.service';

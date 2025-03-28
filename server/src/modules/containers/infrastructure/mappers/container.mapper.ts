@@ -16,7 +16,7 @@ export class ContainerMapper {
   /**
    * Maps a container entity to a database document
    */
-  toDocument(entity: IContainerEntity): any {
+  toDocument(entity: Partial<IContainerEntity>): any {
     const document: any = { ...entity };
     return document;
   }

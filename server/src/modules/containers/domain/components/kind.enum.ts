@@ -4,4 +4,5 @@
 export enum Kind {
   WATCHER = 'watcher',
   REGISTRY = 'registry',
+  UNKNOWN = 'Unknown',
 }

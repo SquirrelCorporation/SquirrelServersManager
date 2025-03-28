@@ -6,7 +6,7 @@ import {
   Manifest,
   RequestOptionsType,
 } from '@modules/containers/types';
-import { Component } from '../../../../domain/components/component.interface';
+import { IComponent } from '../../../../domain/components/component.interface';
 import { Kind } from '../../../../domain/components/kind.enum';
 import PinoLogger from '../../../../../../logger';
 
@@ -19,7 +19,7 @@ const logger = PinoLogger.child(
  * Docker Registry Abstract class.
  * Base class for all registry implementations.
  */
-export abstract class AbstractRegistryComponent implements Component<ConfigurationRegistrySchema> {
+export abstract class AbstractRegistryComponent implements IComponent<ConfigurationRegistrySchema> {
   protected id: string;
   protected name: string;
   protected provider: string;
@@ -100,7 +100,7 @@ export abstract class AbstractRegistryComponent implements Component<Configurati
     provider: string,
     name: string,
     configuration: ConfigurationRegistrySchema,
-  ): Promise<Component<ConfigurationRegistrySchema>> {
+  ): Promise<IComponent<ConfigurationRegistrySchema>> {
     logger.info(`Registering registry component ${provider}/${name}`);
     this.id = `${kind}.${provider}.${name}`;
     this.kind = kind;
@@ -127,7 +127,7 @@ export abstract class AbstractRegistryComponent implements Component<Configurati
    */
   async update(
     configuration: ConfigurationRegistrySchema,
-  ): Promise<Component<ConfigurationRegistrySchema>> {
+  ): Promise<IComponent<ConfigurationRegistrySchema>> {
     logger.info(`Updating registry component ${this.provider}/${this.name}`);
     this.configuration = { ...configuration };
 

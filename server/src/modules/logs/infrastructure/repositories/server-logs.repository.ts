@@ -16,7 +16,7 @@ export class ServerLogsRepository implements IServerLogsRepository {
 
   async findAll(): Promise<ServerLogEntity[]> {
     const logs = await this.serverLogModel.find().sort({ time: -1 }).limit(10000).lean().exec();
-    return logs.map(log => this.serverLogMapper.toDomain(log));
+    return logs.map((log) => this.serverLogMapper.toDomain(log));
   }
 
   async deleteAllOld(ageInDays: number): Promise<void> {

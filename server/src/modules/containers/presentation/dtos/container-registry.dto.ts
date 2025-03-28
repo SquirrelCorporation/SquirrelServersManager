@@ -27,10 +27,10 @@ export class CreateCustomRegistryDto {
  */
 export class ContainerRegistryDto {
   @IsString()
-  id: string;
+  id!: string;
 
   @IsString()
-  name: string;
+  name!: string;
 
   @IsOptional()
   @IsObject()
@@ -41,16 +41,16 @@ export class ContainerRegistryDto {
   authScheme?: any;
 
   @IsString()
-  provider: string;
+  provider!: string;
 
   @IsOptional()
-  authSet: boolean;
+  authSet!: boolean;
 
   @IsOptional()
-  canAuth: boolean;
+  canAuth!: boolean;
 
   @IsOptional()
-  canAnonymous: boolean;
+  canAnonymous!: boolean;
 
   @IsOptional()
   @IsString()
