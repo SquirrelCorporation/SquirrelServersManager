@@ -1,6 +1,7 @@
 import * as stream from 'stream';
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import Dockerode from 'dockerode';
 import {
   CONTAINER_SERVICE,
   IContainerService,
@@ -32,9 +33,7 @@ import { AbstractDockerImagesComponent } from './abstract-docker-images.componen
  * Following the playbooks module pattern, all dependencies are injected through constructor
  */
 @Injectable()
-export abstract class AbstractDockerLogsComponent
-  extends AbstractDockerImagesComponent
-  implements IContainerLogsService {
+export abstract class AbstractDockerLogsComponent extends AbstractDockerImagesComponent {
   constructor(
     protected readonly eventEmitter: EventEmitter2,
     @Inject(CONTAINER_SERVICE)
@@ -61,68 +60,62 @@ export abstract class AbstractDockerLogsComponent
     );
   }
 
-  public getContainerLiveLogs(
-    containerId: string,
-    from: number,
-    callback: (data: string) => void,
-  ): any {
-    try {
-      this.childLogger.info(`Getting live logs for container ${containerId}`);
-      const dockerContainer = this.dockerApi.getContainer(containerId);
-      if (!dockerContainer) {
-        throw new Error(`Container not found for ${containerId}`);
-      }
-
-      // Create a PassThrough stream to handle the log data
-      const logStream = new stream.PassThrough();
-      logStream.on('data', (chunk) => {
-        const logData = chunk.toString('utf8');
-        this.childLogger.debug(logData);
-        callback(logData);
-      });
-
-      // Fetch logs with the Docker API
-      dockerContainer.logs(
-        { stderr: true, stdout: true, follow: true, since: from, timestamps: true },
-        (err: any, logStreamResult: any) => {
-          if (err) {
-            this.childLogger.error(
-              `Failed to get logs for container ${containerId}: ${err.message}`,
-            );
-            callback(`Error fetching logs: ${err.message}`);
-            return;
-          }
-
-          if (!logStreamResult) {
-            callback(`Stream is null for requested containerId ${containerId}`);
-            throw new Error(`Stream is null for requested containerId ${containerId}`);
-          }
-
-          // Connected message
-          logStream.push(
-            `✅ Connected to container: ${containerId} on ${this.configuration.host}!\n`,
-          );
-
-          // Demux the Docker stream to our PassThrough stream
-          this.dockerApi.modem.demuxStream(logStreamResult, logStream, logStream);
-
-          // Handle stream end
-          logStreamResult.on('end', () => {
-            this.childLogger.info(`Logs stream for container ${containerId} ended`);
-            logStream.end('!stop!');
-          });
-        },
-      );
-
-      // Return the stop function
-      return () => {
-        this.childLogger.info(`Stopping log stream for container ${containerId}`);
-        logStream.end();
-      };
-    } catch (error: any) {
-      this.childLogger.error(`Error setting up live logs: ${error.message}`);
-      callback(`Error setting up live logs: ${error.message}`);
-      return () => {}; // Return empty function as fallback
+  /**
+   * Fetch live logs from a Docker container
+   * @param containerId - ID of the Docker container
+   * @param from - Timestamp indicating the start time for fetching logs
+   * @param callback - Function to handle the log data
+   * @returns Function to stop the log stream
+   */
+  public getContainerLiveLogs(containerId: string, from: number, callback: (data: string) => void) {
+    const container = (this.dockerApi as Dockerode)?.getContainer(containerId);
+    if (!container) {
+      throw new Error(`Container not found for ${containerId}`);
     }
+    this.childLogger.info(`Fetching logs for container ${containerId}`);
+    const logStream = this.createLogStream(callback);
+    this.fetchLogs(container, from, logStream, containerId);
+    return () => {
+      logStream.end();
+    };
+  }
+
+  private createLogStream(callback: (data: string) => void): stream.PassThrough {
+    const logStream = new stream.PassThrough();
+    logStream.on('data', (chunk) => {
+      const logData = chunk.toString('utf8');
+      this.childLogger.debug(logData);
+      callback(logData);
+    });
+    return logStream;
+  }
+
+  private fetchLogs(
+    container: Dockerode.Container,
+    from: number,
+    logStream: stream.PassThrough,
+    containerId: string,
+  ) {
+    container.logs(
+      { stderr: true, stdout: true, follow: true, since: from, timestamps: true },
+      (err, logStreamResult) => {
+        if (err) {
+          this.childLogger.error(err.message);
+          return;
+        }
+        if (!logStreamResult) {
+          throw new Error(`Stream is null for requested containerId ${containerId}`);
+        }
+        logStream.push(
+          `✅ Connected to container: ${container.id} on ${this.configuration.host}!\n`,
+        );
+        const dockerModem = (this.dockerApi as Dockerode).modem;
+        dockerModem.demuxStream(logStreamResult, logStream, logStream);
+        logStreamResult.on('end', () => {
+          this.childLogger.info(`Logs stream for container ${containerId} ended`);
+          logStream.end('!stop!');
+        });
+      },
+    );
   }
 }

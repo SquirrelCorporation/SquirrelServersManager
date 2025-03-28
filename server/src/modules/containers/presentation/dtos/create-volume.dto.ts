@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsOptional, IsObject, IsBoolean } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
 
 /**
  * DTO for creating a new volume
@@ -6,7 +6,7 @@ import { IsNotEmpty, IsString, IsOptional, IsObject, IsBoolean } from 'class-val
 export class CreateVolumeDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @IsString()
   @IsOptional()

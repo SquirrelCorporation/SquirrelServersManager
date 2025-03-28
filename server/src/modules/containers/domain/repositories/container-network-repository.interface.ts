@@ -37,7 +37,7 @@ export interface IContainerNetworkRepository {
   /**
    * Create a network
    */
-  create(network: IContainerNetworkEntity): Promise<IContainerNetworkEntity>;
+  create(network: Partial<IContainerNetworkEntity>): Promise<IContainerNetworkEntity>;
 
   /**
    * Update a network

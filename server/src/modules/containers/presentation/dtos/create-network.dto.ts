@@ -1,76 +1,55 @@
-import {
-  IsArray,
-  IsBoolean,
-  IsObject,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
-class IpamConfigDto {
+class DeployNetworkConfigDto {
   @IsString()
-  @IsOptional()
-  subnet?: string;
+  name!: string;
+
+  @IsString()
+  network!: string;
+
+  @IsString()
+  v4_subnet!: string;
+
+  @IsString()
+  v4_gateway!: string;
+
+  @IsString()
+  v4_range!: string;
 
   @IsString()
   @IsOptional()
-  gateway?: string;
+  v6_subnet?: string;
 
   @IsString()
   @IsOptional()
-  ipRange?: string;
-}
+  v6_gateway?: string;
 
-class IpamDto {
   @IsString()
   @IsOptional()
-  driver?: string = 'default';
-
-  @IsObject()
-  @IsOptional()
-  options?: Record<string, string>;
+  v6_range?: string;
 
   @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => IpamConfigDto)
   @IsOptional()
-  config?: IpamConfigDto[];
+  v4_excludedIps?: string[];
+
+  @IsArray()
+  @IsOptional()
+  v6_excludedIps?: string[];
+
+  @IsArray()
+  @IsOptional()
+  labels?: { name: string; value: string }[];
 }
 
 /**
  * DTO for creating a new container network
  */
-export class CreateNetworkDto {
-  @IsString()
-  name!: string;
-
-  @IsString()
-  @IsOptional()
-  driver?: string = 'bridge';
-
-  @IsString()
-  @IsOptional()
-  scope?: string = 'local';
-
+export class DeployNetworkDto {
   @ValidateNested()
-  @Type(() => IpamDto)
-  @IsOptional()
-  ipam?: IpamDto;
+  @Type(() => DeployNetworkConfigDto)
+  config!: DeployNetworkConfigDto;
 
-  @IsBoolean()
-  @IsOptional()
-  internal?: boolean;
-
-  @IsBoolean()
-  @IsOptional()
-  enableIPv6?: boolean;
-
-  @IsObject()
-  @IsOptional()
-  options?: Record<string, string>;
-
-  @IsObject()
-  @IsOptional()
-  labels?: Record<string, string>;
+  @IsString()
+  target!: string;
 }

@@ -1,3 +1,5 @@
+import { DeployNetworkDto } from '@modules/containers/presentation/dtos/create-network.dto';
+import { IUser } from '@modules/users/domain/entities/user.entity';
 import { IContainerNetworkEntity } from '../../domain/entities/container-network.entity';
 
 export const CONTAINER_NETWORKS_SERVICE = 'CONTAINER_NETWORKS_SERVICE';
@@ -25,6 +27,11 @@ export interface IContainerNetworksService {
     deviceUuid: string,
     network: Partial<IContainerNetworkEntity>,
   ): Promise<IContainerNetworkEntity>;
+
+  /**
+   * Deploy a network on a device
+   */
+  deployNetwork(deviceUuid: string, network: DeployNetworkDto, user: IUser): Promise<string>;
 
   /**
    * Update a network

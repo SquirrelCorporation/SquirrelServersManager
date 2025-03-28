@@ -46,31 +46,10 @@ export class ContainerLogsService implements IContainerLogsService {
   /**
    * Get container logs
    */
-  async getContainerLogs(id: string, options: any = {}): Promise<string[]> {
-    try {
-      const container = await this.findContainerById(id);
-
-      if (!container.watcher) {
-        throw new Error(`Container ${id} has no associated watchers`);
-      }
-
-      const dockerComponent = await this.findRegisteredComponent(container.watcher);
-
-      return dockerComponent.getContainerLogs(container.id, options);
-    } catch (error: any) {
-      logger.error(`Error getting logs for container ${id}: ${error.message}`);
-      throw error;
-    }
-  }
-
-  /**
-   * Stream container logs (WebSocket)
-   */
-  async streamContainerLogs(
+  async getContainerLiveLogs(
     id: string,
-    onData: (data: string) => void,
-    onError: (error: Error) => void,
-    options: any = {},
+    from: number,
+    callback: (data: string) => void,
   ): Promise<() => void> {
     try {
       const container = await this.findContainerById(id);
@@ -81,13 +60,10 @@ export class ContainerLogsService implements IContainerLogsService {
 
       const dockerComponent = await this.findRegisteredComponent(container.watcher);
 
-      return dockerComponent.getContainerLiveLogs(container.id, options.from, onData);
+      return dockerComponent.getContainerLiveLogs(container.id, from, callback);
     } catch (error: any) {
-      logger.error(`Error streaming logs for container ${id}: ${error.message}`);
-      onError(error);
-      return () => {
-        logger.info(`Closed log stream for container ${id}`);
-      };
+      logger.error(`Error getting logs for container ${id}: ${error.message}`);
+      throw error;
     }
   }
 }

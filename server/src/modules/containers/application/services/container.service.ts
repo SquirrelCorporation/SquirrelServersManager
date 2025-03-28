@@ -88,7 +88,7 @@ export class ContainerService implements IContainerService {
     const containerWithNormalizedImage = container;
     this.logger.log(`[UTILS] - normalizeContainer - for name: ${container.image?.name}`);
     const registryProvider = Object.values(this.watcherEngineService.getRegistries()).find(
-      (provider) => provider.match(container.image),
+      (provider) => (provider as AbstractRegistryComponent).match(container.image),
     ) as AbstractRegistryComponent;
     if (!registryProvider) {
       this.logger.warn(`${fullName(container)} - No Registry Provider found`);
@@ -262,8 +262,9 @@ export class ContainerService implements IContainerService {
 
   async getRegistryByName(name: string): Promise<AbstractRegistryComponent | null> {
     return (
-      this.watcherEngineService.getRegistries().find((registry) => registry.getId() === name) ||
-      null
+      (this.watcherEngineService
+        .getRegistries()
+        .find((registry) => registry.getId() === name) as AbstractRegistryComponent) || null
     );
   }
 

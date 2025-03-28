@@ -69,7 +69,7 @@ export interface ITaskLogsService {
    * @param update The update data
    * @returns The updated task
    */
-  updateTask(taskId: string, update: Partial<{ name: string; status: string }>): Promise<any>;
+  updateTask(taskId: string, data: Partial<{ name: string; status: string }>): Promise<any>;
 
   /**
    * Delete a task and its logs

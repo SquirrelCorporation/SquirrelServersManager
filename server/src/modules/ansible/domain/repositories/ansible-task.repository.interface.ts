@@ -8,7 +8,7 @@ export interface IAnsibleTaskRepository {
   findById(id: string): Promise<IAnsibleTask | null>;
   updateStatus(ident: string, status: string): Promise<IAnsibleTask | null>;
   findAll(): Promise<IAnsibleTask[]>;
-  update?(id: string, update: Partial<IAnsibleTask>): Promise<IAnsibleTask | null>;
-  delete?(id: string): Promise<boolean>;
+  update(id: string, data: Partial<IAnsibleTask>): Promise<IAnsibleTask | null>;
+  delete(id: string): Promise<boolean>;
   deleteAllOldLogsAndStatuses(ageInMinutes: number): Promise<void>;
 }

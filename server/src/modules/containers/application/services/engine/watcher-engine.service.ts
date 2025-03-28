@@ -1,10 +1,18 @@
 import { Inject, Injectable, OnModuleDestroy, OnModuleInit, forwardRef } from '@nestjs/common';
-import { ConfigurationRegistrySchema, ConfigurationSchema } from '@modules/containers/types';
+import {
+  ConfigurationRegistrySchema,
+  ConfigurationSchema,
+  ConfigurationWatcherSchema,
+} from '@modules/containers/types';
 import { Kind } from '@modules/containers/domain/components/kind.enum';
 import { REGISTRIES, WATCHERS } from '@modules/containers/constants';
 import { IRegistryComponent } from '@modules/containers/domain/components/registry.interface';
 import { IWatcherComponent } from '@modules/containers/domain/components/watcher.interface';
-import { IComponent } from '@modules/containers';
+import {
+  AbstractRegistryComponent,
+  AbstractWatcherComponent,
+  IComponent,
+} from '@modules/containers';
 import PinoLogger from '../../../../../logger';
 import {
   IWatcherEngineService,
@@ -157,16 +165,18 @@ export class WatcherEngineService implements IWatcherEngineService, OnModuleInit
         kind,
         providerLowercase,
         nameLowercase,
-        configuration,
+        configuration as ConfigurationWatcherSchema & ConfigurationRegistrySchema,
       );
 
       // Store the component in the state
       switch (kind) {
         case Kind.WATCHER:
-          this.state.watcher[componentRegistered.getId()] = componentRegistered;
+          this.state.watcher[componentRegistered.getId()] =
+            componentRegistered as AbstractWatcherComponent;
           break;
         case Kind.REGISTRY:
-          this.state.registry[componentRegistered.getId()] = componentRegistered;
+          this.state.registry[componentRegistered.getId()] =
+            componentRegistered as AbstractRegistryComponent;
           break;
         default:
           throw new Error(`Unknown registering component: ${componentRegistered.getId()}`);

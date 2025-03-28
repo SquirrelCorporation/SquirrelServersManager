@@ -163,9 +163,9 @@ export class TaskLogsService implements ITaskLogsService {
    * @param update - The update data
    * @returns The updated task
    */
-  async updateTask(taskId: string, update: Partial<{ name: string; status: string }>) {
+  async updateTask(taskId: string, data: Partial<{ name: string; status: string }>) {
     try {
-      const result = await this.ansibleTaskRepository.update(taskId, update);
+      const result = await this.ansibleTaskRepository.update(taskId, data);
       if (!result) {
         this.logger.error(`Task ${taskId} not found for update`);
       }

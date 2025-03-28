@@ -72,7 +72,7 @@ export class ContainerTemplatesService implements IContainerTemplatesService {
    * @param user User deploying the template
    * @returns Execution ID
    */
-  async deployTemplate(template: API.Template, user: IUser): Promise<string> {
+  async deployTemplate(template: API.Template & API.Targets, user: IUser): Promise<string> {
     try {
       // Convert template to YAML
       const templateToYaml = DockerComposeHelper.fromJsonTemplateToYml(template);
@@ -88,15 +88,10 @@ export class ContainerTemplatesService implements IContainerTemplatesService {
       }
 
       // Execute the playbook
-      const execId = await this.playbookService.executePlaybook(
-        playbook,
-        user,
-        template.targets?.map((target) => target.id),
-        [
-          { extraVar: 'definition', value: templateToYaml },
-          { extraVar: 'project', value: template.name },
-        ],
-      );
+      const execId = await this.playbookService.executePlaybook(playbook, user, template.targets, [
+        { extraVar: 'definition', value: templateToYaml },
+        { extraVar: 'project', value: template.name },
+      ]);
 
       return execId;
     } catch (error: unknown) {

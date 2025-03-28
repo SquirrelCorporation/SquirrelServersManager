@@ -1,4 +1,10 @@
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { PlaybookService } from '@modules/playbooks';
+import { API } from 'ssm-shared-lib';
+import { PLAYBOOK_REPOSITORY } from '@modules/playbooks/domain/repositories/playbook-repository.interface';
+import { IPlaybookRepository } from '@modules/playbooks/domain/repositories/playbook-repository.interface';
+import { IUser } from '@modules/users/domain/entities/user.entity';
+import { DeployNetworkDto } from '@modules/containers/presentation/dtos/create-network.dto';
 import { IContainerNetworksService } from '../interfaces/container-networks-service.interface';
 import { IContainerNetworkEntity } from '../../domain/entities/container-network.entity';
 import { CONTAINER_NETWORK_REPOSITORY } from '../../domain/repositories/container-network-repository.interface';
@@ -28,6 +34,9 @@ export class ContainerNetworksService implements IContainerNetworksService {
     private readonly containerService: IContainerService,
     @Inject(WATCHER_ENGINE_SERVICE)
     private readonly watcherEngineService: IWatcherEngineService,
+    private readonly playbookService: PlaybookService,
+    @Inject(PLAYBOOK_REPOSITORY)
+    private readonly playbookRepository: IPlaybookRepository,
   ) {}
 
   /**
@@ -56,19 +65,45 @@ export class ContainerNetworksService implements IContainerNetworksService {
    */
   async createNetwork(
     deviceUuid: string,
-    networkData: IContainerNetworkEntity,
+    networkData: Partial<IContainerNetworkEntity>,
   ): Promise<IContainerNetworkEntity> {
+    networkData.deviceUuid = deviceUuid;
+    return this.networkRepository.create(networkData);
+  }
+
+  async deployNetwork(
+    deviceUuid: string,
+    networkData: DeployNetworkDto,
+    user: IUser,
+  ): Promise<string> {
     try {
-      logger.info(`Creating network ${networkData.name} on device ${deviceUuid}`);
+      logger.info(`Creating network on device ${deviceUuid}`);
 
-      // Create a network entity with UUID
-      const networkEntity: IContainerNetworkEntity = {
-        ...networkData,
-        deviceUuid,
-      };
-
-      // Save to database
-      return this.networkRepository.create(networkEntity);
+      const playbook =
+        await this.playbookRepository.findOneByUniqueQuickReference('createDockerNetwork');
+      if (!playbook) {
+        throw new NotFoundException(
+          'Playbook with unique quick reference createDockerNetwork not found',
+        );
+      }
+      const createNetworkConfig: API.ExtraVars = [];
+      Object.keys(networkData.config).forEach((key) => {
+        let value = networkData.config[key];
+        if (value) {
+          if (typeof value !== 'string') {
+            // If value is an object (including arrays), stringify it
+            value = JSON.stringify(value);
+          }
+          createNetworkConfig.push({ extraVar: key, value: value });
+        }
+      });
+      const execId = await this.playbookService.executePlaybook(
+        playbook,
+        user,
+        [networkData.target],
+        createNetworkConfig,
+      );
+      return execId;
     } catch (error: any) {
       logger.error(`Failed to create network: ${error.message}`);
       throw error;

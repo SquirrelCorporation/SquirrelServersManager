@@ -1,23 +1,11 @@
 import { parse } from 'url';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Inject,
-  Param,
-  Patch,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
+import { IUser } from '@modules/users/domain/entities/user.entity';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
 import { IContainerNetworksService } from '../../application/interfaces/container-networks-service.interface';
 import { CONTAINER_NETWORKS_SERVICE } from '../../application/interfaces/container-networks-service.interface';
-import { IContainerNetworkEntity } from '../../domain/entities/container-network.entity';
-import { CreateNetworkDto } from '../dtos/create-network.dto';
-import { UpdateNetworkDto } from '../dtos/update-network.dto';
+import { DeployNetworkDto } from '../dtos/create-network.dto';
 import { filterByFields, filterByQueryParams } from '../../../../helpers/query/FilterHelper';
 import { paginate } from '../../../../helpers/query/PaginationHelper';
 import { sortByFields } from '../../../../helpers/query/SorterHelper';
@@ -61,30 +49,18 @@ export class ContainerNetworksController {
     });
   }
 
-  @Get(':uuid')
-  async getNetworkByUuid(@Param('uuid') uuid: string) {
-    return this.networksService.getNetworkByUuid(uuid);
-  }
-
-  @Get('device/:deviceUuid')
-  async getNetworksByDeviceUuid(@Param('deviceUuid') deviceUuid: string) {
-    return this.networksService.getNetworksByDeviceUuid(deviceUuid);
-  }
-
   @Post('device/:deviceUuid')
   async createNetwork(
+    @Req() req,
     @Param('deviceUuid') deviceUuid: string,
-    @Body() networkData: CreateNetworkDto,
-  ): Promise<IContainerNetworkEntity> {
-    return this.networksService.createNetwork(deviceUuid, networkData);
-  }
-
-  @Patch(':uuid')
-  async updateNetwork(
-    @Param('uuid') uuid: string,
-    @Body() networkData: UpdateNetworkDto,
-  ): Promise<IContainerNetworkEntity> {
-    return this.networksService.updateNetwork(uuid, networkData);
+    @Body() networkData: DeployNetworkDto,
+  ): Promise<{ execId: string }> {
+    const execId = await this.networksService.deployNetwork(
+      deviceUuid,
+      networkData,
+      req.user as IUser,
+    );
+    return { execId };
   }
 
   @Delete(':uuid')
