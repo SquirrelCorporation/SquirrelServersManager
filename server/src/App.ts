@@ -10,7 +10,7 @@ import { SECRET } from './config';
 import { HttpExceptionFilter } from './infrastructure/filters/http-exception.filter';
 import { TransformInterceptor } from './infrastructure/interceptors/transform.interceptor';
 import logger from './logger';
-import RealTime from './modules/real-time/RealTime';
+import { RealTimeEngine } from './modules/real-time/RealTime';
 
 // Declare global nestApp for legacy code to access
 declare global {
@@ -25,7 +25,7 @@ class AppWrapper {
   private readonly logger = logger;
 
   constructor() {
-    this.refs.push(RealTime);
+    this.refs.push(RealTimeEngine);
     this.setup();
   }
 

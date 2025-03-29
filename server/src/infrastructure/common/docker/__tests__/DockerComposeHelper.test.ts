@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { API } from 'ssm-shared-lib';
 import yaml from 'yaml';
-import DockerComposeHelper from '../../../../helpers/docker/DockerComposeHelper';
+import { DockerComposeHelper } from '../docker-compose.util';
 
 describe('DockerComposeHelper', () => {
   test('fromJsonTemplateToYml: Basic conversion', () => {

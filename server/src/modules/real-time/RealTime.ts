@@ -1,7 +1,8 @@
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { debounce } from 'lodash';
 import { Logger } from 'pino';
 import { SsmEvents } from 'ssm-shared-lib';
-import EventManager from '../../core/events/EventManager';
+import { EventEmitterService } from '../../core/events/event-emitter.service';
 import Events from '../../core/events/events';
 import log from '../../logger';
 
@@ -34,27 +35,33 @@ const eventsToHandle = [
   },
 ];
 
-class RealTimeEngine extends EventManager {
+@Injectable()
+export class RealTimeEngine implements OnModuleInit {
   private readonly childLogger: Logger<never>;
 
-  constructor() {
-    super();
+  constructor(private readonly eventEmitterService: EventEmitterService) {
     this.childLogger = log.child(
       { module: 'RealTimeEngine' },
       { msgPrefix: '[REALTIME_ENGINE] - ' },
     );
+  }
 
-    this.on(Events.APP_STARTED, () => {
+  onModuleInit() {
+    this.childLogger.info('Initialization....');
+    this.eventEmitterService.on(Events.APP_STARTED, () => {
       this.init();
     });
   }
 
   private createDebouncedEmitter(eventName: string, logMessage: string, debounceTime: number) {
-    return debounce((payload: any) => {
-      /* const io = App.getSocket().getIo();
+    return debounce(
+      (payload: any) => {
+        /* const io = App.getSocket().getIo();
       this.childLogger.debug(`${logMessage}`);
       io.emit(eventName, payload);*/
-    }, debounceTime);
+      },
+      debounceTime,
+    );
   }
 
   private createEmitter(eventName: string, logMessage: string) {
@@ -78,12 +85,10 @@ class RealTimeEngine extends EventManager {
             ? this.createDebouncedEmitter(ssmEvent, logMessage, debounceTime)
             : this.createEmitter(ssmEvent, logMessage);
 
-        this.on(event, (payload: any) => emitter(payload));
+        this.eventEmitterService.on(event, (payload: any) => emitter(payload));
       });
     } catch (error: any) {
       this.childLogger.error(error);
     }
   }
 }
-
-export default new RealTimeEngine();

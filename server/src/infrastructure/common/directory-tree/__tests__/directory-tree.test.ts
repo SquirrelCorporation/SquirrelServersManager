@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import directoryTree from '../../../../helpers/directory-tree/directory-tree';
+import { directoryTree } from '../directory-tree.util';
 import { TEST_DATA_DIRECTORY } from './constants';
 import testTree from './fixture.js';
 import testTreeZeroDepth from './depth/fixtureZeroDepth.js';

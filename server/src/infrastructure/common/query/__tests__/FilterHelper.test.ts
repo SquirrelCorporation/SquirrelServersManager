@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { filterByFields, filterByQueryParams } from '../../../../helpers/query/FilterHelper';
+import { filterByFields, filterByQueryParams } from '../filter.util';
 
 const data = [
   { name: 'John Doe', age: 30, registered: true },

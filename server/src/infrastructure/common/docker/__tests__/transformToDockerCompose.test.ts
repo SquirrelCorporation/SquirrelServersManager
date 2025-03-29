@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { transformToDockerCompose } from '../../../../helpers/docker/DockerComposeJSONTransformer';
+import { transformToDockerCompose } from '../docker-compose-json-transformer.util';
 
 describe('transformToDockerCompose', () => {
   const baseInput = {

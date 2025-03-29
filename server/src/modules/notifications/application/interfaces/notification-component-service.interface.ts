@@ -1,5 +1,5 @@
 import { OnModuleInit } from '@nestjs/common';
-import { Payload } from '../../../../core/events/EventManager';
+import { Payload } from '../../../../core/events/event-emitter.service';
 import Events from '../../../../core/events/events';
 
 export const NOTIFICATION_COMPONENT_SERVICE = 'NOTIFICATION_COMPONENT_SERVICE';

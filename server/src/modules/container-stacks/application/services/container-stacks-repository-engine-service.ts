@@ -6,6 +6,7 @@ import { ShellWrapperService } from '../../../shell';
 import { IContainerCustomStackRepositoryEntity } from '../../domain/entities/container-custom-stack.entity';
 import { ContainerRepositoryComponentService } from './container-repository-component.service';
 import { ContainerStacksService } from './container-stacks.service';
+import { EventEmitterService } from '../../../../core/events/event-emitter.service';
 
 type StateType = {
   stackRepository: Record<string, ContainerRepositoryComponentService>;
@@ -25,6 +26,7 @@ export class ContainerCustomStacksRepositoryEngineService {
     @Inject(forwardRef(() => ContainerStacksService))
     private readonly containerStacksService: ContainerStacksService,
     private readonly vaultCryptoService: VaultCryptoService,
+    private readonly eventEmitterService: EventEmitterService,
   ) {}
 
   async init(): Promise<void> {
@@ -79,6 +81,7 @@ export class ContainerCustomStacksRepositoryEngineService {
       this.containerCustomStackRepository,
       this.containerCustomStacksRepositoryRepository,
       this.containerStacksService,
+      this.eventEmitterService,
     );
 
     // Initialize it with the repository data
