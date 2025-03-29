@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { VAULT_PWD } from '../../../../config';
-import Vault from '../../../../helpers/vault-crypto/Vault';
+import { VaultService } from '@infrastructure/security/vault-crypto/services/vault.service';
 import PinoLogger from '../../../../logger';
 
 const logger = PinoLogger.child({ module: 'VaultCryptoService' });
@@ -9,10 +9,10 @@ export const DEFAULT_VAULT_ID = 'ssm';
 
 @Injectable()
 export class VaultCryptoService {
-  private ansibleVault: Vault;
+  private ansibleVault: VaultService;
 
   constructor() {
-    this.ansibleVault = new Vault({ password: VAULT_PWD });
+    this.ansibleVault = new VaultService({ password: VAULT_PWD });
   }
 
   /**

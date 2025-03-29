@@ -1,7 +1,7 @@
 import path from 'path';
 import { GitProcess } from 'dugite';
 import fs from 'fs-extra';
-import { defaultGitInfo } from './defaultGitInfo';
+import { defaultGitInfo } from './default-info.util';
 
 export interface IGitInitOptions {
   /**

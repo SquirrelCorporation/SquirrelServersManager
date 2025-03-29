@@ -1,7 +1,7 @@
 import { GitProcess } from 'dugite';
 import { trim } from 'lodash';
 import { SsmGit } from 'ssm-shared-lib';
-import { getRemoteUrl } from './inspect';
+import { getRemoteUrl } from '../services/inspect.service';
 
 // TODO: support folderLocation as rawUrl like `/Users/linonetwo/Desktop/repo/playbooks-repository-sync-js/test/mockUpstreamRepo/credential` for test, or gitlab url.
 export const getGitHubUrlWithCredential = (

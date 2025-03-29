@@ -3,10 +3,10 @@ import DockerModem from 'docker-modem';
 import Dockerode from 'dockerode';
 import { Client, ConnectConfig } from 'ssh2';
 import { SsmDeviceDiagnostic, SsmEvents } from 'ssm-shared-lib';
-import { getCustomAgent } from 'src/helpers/ssh/custom-agent';
+import { getCustomAgent } from '@infrastructure/adapters/ssh/custom-agent.adapter';
 import { IDevice, IDeviceAuth } from '../../../devices';
-import { tryResolveHost } from '../../../../helpers/dns/dns-helper';
-import SSHCredentialsHelper from '../../../../helpers/ssh/SSHCredentialsHelper';
+import { tryResolveHost } from '@infrastructure/common/dns/dns.util';
+import { SSHCredentialsAdapter } from '@infrastructure/adapters/ssh/ssh-credentials.adapter';
 import PinoLogger from '../../../../logger';
 import {
   DiagnosticCheckType,
@@ -173,8 +173,9 @@ export class DiagnosticService implements IDiagnosticService {
   public async run(device: IDevice, deviceAuth: IDeviceAuth): Promise<DiagnosticReport> {
     this.logger.log(`Starting diagnostic for device ${device.ip} (${device.uuid})`);
 
-    const sshOptionsAnsible = await SSHCredentialsHelper.getSShConnection(device, deviceAuth);
-    const sshOptionsDocker = await SSHCredentialsHelper.getDockerSshConnectionOptions(
+    const sshHelper = new SSHCredentialsAdapter();
+    const sshOptionsAnsible = await sshHelper.getSShConnection(device, deviceAuth);
+    const sshOptionsDocker = await sshHelper.getDockerSshConnectionOptions(
       device,
       deviceAuth,
     );

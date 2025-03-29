@@ -1,10 +1,10 @@
 import { truncate } from 'lodash';
-import { commitAndSync } from './commitAndSync';
-import { defaultGitInfo as defaultDefaultGitInfo } from './defaultGitInfo';
-import { SyncParameterMissingError } from './errors';
-import { initGitWithBranch } from './init';
-import { GitStep, IGitUserInfos, IGitUserInfosWithoutToken, ILogger } from './interface';
-import { commitFiles } from './sync';
+import { commitAndSync } from './commit-and-sync.service';
+import { defaultGitInfo as defaultDefaultGitInfo } from '../utils/default-info.util';
+import { SyncParameterMissingError } from '../errors/errors.util';
+import { initGitWithBranch } from '../utils/init.util';
+import { GitStep, IGitUserInfos, IGitUserInfosWithoutToken, ILogger } from '../interfaces/git.interface';
+import { commitFiles } from './sync.service';
 
 export interface IInitGitOptionsSyncImmediately {
   /** Optional fallback of userInfo. If some info is missing in userInfo, will use defaultGitInfo instead. */

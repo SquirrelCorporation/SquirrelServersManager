@@ -24,9 +24,9 @@ import {
   IContainerVolumesService,
 } from '../../application/interfaces/container-volumes-service.interface';
 import { CreateVolumeDto } from '../dtos/create-volume.dto';
-import { filterByFields, filterByQueryParams } from '../../../../helpers/query/FilterHelper';
-import { paginate } from '../../../../helpers/query/PaginationHelper';
-import { sortByFields } from '../../../../helpers/query/SorterHelper';
+import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
+import { paginate } from '@infrastructure/common/query/pagination.util';
+import { sortByFields } from '@infrastructure/common/query/sorter.util';
 
 @Controller('container-volumes')
 @UseGuards(JwtAuthGuard)

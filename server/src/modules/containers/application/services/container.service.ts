@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
 import { fullName } from '@modules/containers/utils/utils';
-import SSHCredentialsHelper from 'src/helpers/ssh/SSHCredentialsHelper';
+import { SSHCredentialsAdapter } from '@infrastructure/adapters/ssh/ssh-credentials.adapter';
 import { IDevice, IDeviceAuth } from '@modules/devices';
 import {
   IWatcherEngineService,
@@ -238,7 +238,8 @@ export class ContainerService implements IContainerService {
   }
 
   async getDockerSshConnectionOptions(device: IDevice, deviceAuth: IDeviceAuth): Promise<any> {
-    return await SSHCredentialsHelper.getDockerSshConnectionOptions(device, deviceAuth);
+    const sshHelper = new SSHCredentialsAdapter();
+    return await sshHelper.getDockerSshConnectionOptions(device, deviceAuth);
   }
 
   async updateDeviceDockerInfo(

@@ -1,11 +1,11 @@
 import { GitProcess } from 'dugite';
-import { credentialOff, credentialOn } from './credential';
-import { defaultGitInfo as defaultDefaultGitInfo } from './defaultGitInfo';
+import { credentialOff, credentialOn } from '../utils/credential.util';
+import { defaultGitInfo as defaultDefaultGitInfo } from '../utils/default-info.util';
 import {
   CantSyncGitNotInitializedError,
   GitPullPushError,
   SyncParameterMissingError,
-} from './errors';
+} from '../errors/errors.util';
 import {
   assumeSync,
   getDefaultBranchName,
@@ -13,9 +13,9 @@ import {
   getRemoteName,
   getSyncState,
   haveLocalChanges,
-} from './inspect';
-import { GitStep, IGitUserInfos, ILogger } from './interface';
-import { commitFiles, continueRebase, fetchRemote, mergeUpstream, pushUpstream } from './sync';
+} from './inspect.service';
+import { GitStep, IGitUserInfos, ILogger } from '../interfaces/git.interface';
+import { commitFiles, continueRebase, fetchRemote, mergeUpstream, pushUpstream } from './sync.service';
 
 export interface ICommitAndSyncOptions {
   /** the commit message */

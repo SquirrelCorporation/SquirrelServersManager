@@ -6,17 +6,17 @@ import { v4 as uuidv4 } from 'uuid';
 import { SSM_DATA_PATH } from '../../../../config';
 import EventManager from '../../../../core/events/EventManager';
 import Events from '../../../../core/events/events';
-import { extractTopLevelName } from '../../../../helpers/docker/utils';
-import { FileInfo, getMatchingFiles } from '../../../../helpers/files/recursive-find';
+import { extractTopLevelName } from '@infrastructure/common/docker/utils';
+import { FileInfo, getMatchingFiles } from '@infrastructure/common/files/recursive-find.util';
 import {
   GitStep,
   IGitUserInfos,
-  IInitGitOptionsSyncImmediately,
   ILoggerContext,
-  clone,
-  commitAndSync,
-  forcePull,
-} from '../../../../helpers/git';
+} from '@infrastructure/adapters/git/interfaces/git.interface';
+import { clone } from '@infrastructure/adapters/git/services/clone.service';
+import { commitAndSync } from '@infrastructure/adapters/git/services/commit-and-sync.service';
+import { forcePull } from '@infrastructure/adapters/git/services/force-pull.service';
+import { IInitGitOptionsSyncImmediately } from '@infrastructure/adapters/git/services/init-git.service';
 import logger from '../../../../logger';
 import { NotFoundError } from '../../../../middlewares/api/ApiError';
 import { ShellWrapperService } from '../../../shell';

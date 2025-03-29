@@ -4,9 +4,9 @@ import {
   CantSyncInSpecialGitStateAutoFixFailed,
   GitPullPushError,
   SyncScriptIsInDeadLoopError,
-} from './errors';
-import { getGitRepositoryState } from './inspect';
-import { GitStep, IGitUserInfos, IGitUserInfosWithoutToken, ILogger } from './interface';
+} from '../errors';
+import { getGitRepositoryState } from './inspect.service';
+import { GitStep, IGitUserInfos, IGitUserInfosWithoutToken, ILogger } from '../interfaces/git.interface';
 
 /**
  * Git add and commit all file

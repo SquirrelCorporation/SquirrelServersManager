@@ -1,11 +1,11 @@
 import { GitProcess } from 'dugite';
 import { truncate } from 'lodash';
-import { credentialOff, credentialOn } from './credential';
-import { defaultGitInfo as defaultDefaultGitInfo } from './defaultGitInfo';
-import { GitPullPushError, SyncParameterMissingError } from './errors';
-import { initGitWithBranch } from './init';
-import { getRemoteName } from './inspect';
-import { GitStep, IGitUserInfos, ILogger } from './interface';
+import { credentialOff, credentialOn } from '../utils/credential.util';
+import { defaultGitInfo as defaultDefaultGitInfo } from '../utils/default-info.util';
+import { GitPullPushError, SyncParameterMissingError } from '../errors';
+import { initGitWithBranch } from '../utils/init.util';
+import { getRemoteName } from './inspect.service';
+import { GitStep, IGitUserInfos, ILogger } from '../interfaces/git.interface';
 
 export async function clone(options: {
   /** Optional fallback of userInfo. If some info is missing in userInfo, will use defaultGitInfo instead. */

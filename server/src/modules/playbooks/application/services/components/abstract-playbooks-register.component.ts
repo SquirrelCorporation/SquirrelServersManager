@@ -3,7 +3,7 @@ import { NotFoundError } from '@middlewares/api/ApiError';
 import { IPlaybooksRegister } from '@modules/playbooks';
 import { IPlaybook } from '@modules/playbooks';
 import { IFileSystemService, IPlaybookFileService } from '@modules/shell';
-import directoryTree from 'src/helpers/directory-tree/directory-tree';
+import { directoryTree } from '@infrastructure/common/directory-tree/directory-tree.util';
 import { SSM_DATA_PATH } from 'src/config';
 import { IPlaybookRepository, IPlaybooksRegisterRepository } from '@modules/playbooks';
 import { ITreeNodeService } from '@modules/playbooks';

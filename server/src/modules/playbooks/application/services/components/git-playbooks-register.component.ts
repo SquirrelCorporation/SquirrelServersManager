@@ -6,12 +6,12 @@ import PlaybooksRegisterComponent, {
 import {
   GitStep,
   IGitUserInfos,
-  IInitGitOptionsSyncImmediately,
   ILoggerContext,
-  clone,
-  commitAndSync,
-  forcePull,
-} from 'src/helpers/git';
+} from '@infrastructure/adapters/git/interfaces/git.interface';
+import { clone } from '@infrastructure/adapters/git/services/clone.service';
+import { commitAndSync } from '@infrastructure/adapters/git/services/commit-and-sync.service';
+import { forcePull } from '@infrastructure/adapters/git/services/force-pull.service';
+import { IInitGitOptionsSyncImmediately } from '@infrastructure/adapters/git/services/init-git.service';
 import { SsmAlert, SsmGit } from 'ssm-shared-lib';
 import { InternalError } from '@middlewares/api/ApiError';
 import { IFileSystemService, IPlaybookFileService } from '@modules/shell';

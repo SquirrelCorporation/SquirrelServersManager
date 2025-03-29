@@ -2,9 +2,9 @@ import { Client, ConnectConfig } from 'ssh2';
 import { SsmStatus } from 'ssm-shared-lib';
 import Component from '@modules/remote-system-information/application/services/components/core/base-component';
 import { IDeviceAuthService, IDevicesService } from '@modules/devices';
-import SSHCredentialsHelper from '../../../../helpers/ssh/SSHCredentialsHelper';
+import { SSHCredentialsAdapter } from '@infrastructure/adapters/ssh/ssh-credentials.adapter';
 import { RemoteExecOptions } from '../../domain/types/remote-executor.types';
-import { tryResolveHost } from '../../../../helpers/dns/dns-helper';
+import { tryResolveHost } from '@infrastructure/common/dns/dns.util';
 import { generateSudoCommand } from '../../domain/helpers/sudo';
 
 /**
@@ -45,7 +45,8 @@ export abstract class SSHExecutor extends Component {
       throw new Error('DeviceAuth not found');
     }
 
-    this.connectionConfig = await SSHCredentialsHelper.getSShConnection(device, deviceAuth);
+    const sshHelper = new SSHCredentialsAdapter();
+    this.connectionConfig = await sshHelper.getSShConnection(device, deviceAuth);
     this.logger.info('Initializing SSH Executor...');
 
     try {

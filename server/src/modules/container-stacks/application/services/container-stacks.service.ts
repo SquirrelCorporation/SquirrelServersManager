@@ -9,7 +9,7 @@ import {
   IDockerComposeService,
   IFileSystemService,
 } from '@modules/shell';
-import { transformToDockerCompose } from '../../../../helpers/docker/DockerComposeJSONTransformer';
+import { transformToDockerCompose } from '@infrastructure/common/docker/docker-compose-json-transformer.util';
 import { IContainerStacksService } from '../interfaces/container-stacks-service.interface';
 import { ContainerCustomStack } from '../../domain/entities/container-custom-stack.entity';
 import {

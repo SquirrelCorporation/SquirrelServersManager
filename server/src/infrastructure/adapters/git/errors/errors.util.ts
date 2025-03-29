@@ -3,8 +3,8 @@
  * `Object.setPrototypeOf(this, AssumeSyncError.prototype);` to fix https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
  */
 import { truncate } from 'lodash';
-import { SyncState } from './inspect';
-import { IGitUserInfos, IGitUserInfosWithoutToken } from './interface';
+import { SyncState } from '../services/inspect.service';
+import { IGitUserInfos, IGitUserInfosWithoutToken } from '../interfaces/git.interface';
 
 export class AssumeSyncError extends Error {
   constructor(state: SyncState, extraMessage?: string) {

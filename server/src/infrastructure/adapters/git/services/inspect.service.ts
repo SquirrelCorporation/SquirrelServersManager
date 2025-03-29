@@ -5,8 +5,8 @@ import { GitProcess } from 'dugite';
 import fs from 'fs-extra';
 import { compact } from 'lodash';
 /* eslint-disable unicorn/prevent-abbreviations */
-import { AssumeSyncError, CantSyncGitNotInitializedError } from './errors';
-import { GitStep, ILogger } from './interface';
+import { AssumeSyncError, CantSyncGitNotInitializedError } from '../errors';
+import { GitStep, ILogger } from '../interfaces/git.interface';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { listRemotes } = require('isomorphic-git');
 

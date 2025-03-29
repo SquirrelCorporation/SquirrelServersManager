@@ -10,13 +10,19 @@ import { InternalError } from '../../../../../../middlewares/api/ApiError';
 import Events from '../../../../../../core/events/events';
 
 // Mock the git helpers
-vi.mock('src/helpers/git', () => ({
+vi.mock('@infrastructure/adapters/git/services/clone.service', () => ({
   clone: vi.fn().mockResolvedValue(undefined),
+}));
+vi.mock('@infrastructure/adapters/git/services/force-pull.service', () => ({
   forcePull: vi.fn().mockResolvedValue(undefined),
+}));
+vi.mock('@infrastructure/adapters/git/services/commit-and-sync.service', () => ({
   commitAndSync: vi.fn().mockResolvedValue(undefined),
 }));
 
-import { clone, forcePull, commitAndSync } from 'src/helpers/git';
+import { clone } from '@infrastructure/adapters/git/services/clone.service';
+import { forcePull } from '@infrastructure/adapters/git/services/force-pull.service';
+import { commitAndSync } from '@infrastructure/adapters/git/services/commit-and-sync.service';
 
 describe('GitPlaybooksRegisterComponent', () => {
   let component: GitPlaybooksRegisterComponent;
