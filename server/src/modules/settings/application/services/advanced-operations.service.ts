@@ -3,10 +3,10 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { 
-  ANSIBLE_LOGS_REPOSITORY,
-  IAnsibleLogsRepository,
-  IServerLogsRepository,
-  SERVER_LOGS_REPOSITORY
+  ANSIBLE_LOGS_SERVICE,
+  IAnsibleLogsService,
+  IServerLogsService,
+  SERVER_LOGS_SERVICE
 } from '@modules/logs';
 
 @Injectable()
@@ -15,10 +15,10 @@ export class AdvancedOperationsService {
 
   constructor(
     private readonly eventEmitter: EventEmitter2,
-    @Inject(SERVER_LOGS_REPOSITORY)
-    private readonly serverLogsRepository: IServerLogsRepository,
-    @Inject(ANSIBLE_LOGS_REPOSITORY)
-    private readonly ansibleLogsRepository: IAnsibleLogsRepository,
+    @Inject(SERVER_LOGS_SERVICE)
+    private readonly serverLogsService: IServerLogsService,
+    @Inject(ANSIBLE_LOGS_SERVICE)
+    private readonly ansibleLogsService: IAnsibleLogsService,
     @InjectModel('Playbook') private readonly playbookModel: Model<any>,
   ) {}
 
@@ -36,8 +36,8 @@ export class AdvancedOperationsService {
    */
   async deleteLogs(): Promise<void> {
     this.logger.log('Deleting logs...');
-    // Use the server logs repository to delete all logs
-    await this.serverLogsRepository.deleteAll();
+    // Use the server logs service to delete all logs
+    await this.serverLogsService.deleteAll();
   }
 
   /**
@@ -45,8 +45,8 @@ export class AdvancedOperationsService {
    */
   async deleteAnsibleLogs(): Promise<void> {
     this.logger.log('Deleting Ansible logs...');
-    // Use the ansible logs repository to delete all logs
-    await this.ansibleLogsRepository.deleteAll();
+    // Use the ansible logs service to delete all logs
+    await this.ansibleLogsService.deleteAll();
   }
 
   /**

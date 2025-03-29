@@ -2,10 +2,11 @@ import { Module } from '@nestjs/common';
 import { CacheModule } from '@nestjs/cache-manager';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
+import { HttpModule } from '@nestjs/axios';
 import { LogsModule } from '../logs/logs.module';
-import { ANSIBLE_LOGS_REPOSITORY, SERVER_LOGS_REPOSITORY } from '@modules/logs';
 import { PlaybooksModule } from '../playbooks/playbooks.module';
 import { Playbook, PlaybookSchema } from '../playbooks/infrastructure/schemas/playbook.schema';
+import { PrometheusProvider } from '../../infrastructure/prometheus/prometheus.provider';
 import { SettingsService } from './application/services/settings.service';
 import { AdvancedOperationsService } from './application/services/advanced-operations.service';
 import { InformationService } from './application/services/information.service';
@@ -23,6 +24,7 @@ import { SettingsMigrationService } from './infrastructure/migration/settings-mi
     MongooseModule.forFeature([{ name: Playbook.name, schema: PlaybookSchema }]),
     LogsModule,
     PlaybooksModule,
+    HttpModule,
   ],
   controllers: [SettingsController],
   providers: [
@@ -30,6 +32,7 @@ import { SettingsMigrationService } from './infrastructure/migration/settings-mi
     AdvancedOperationsService,
     InformationService,
     SettingsMigrationService,
+    PrometheusProvider,
     {
       provide: SETTING_REPOSITORY,
       useClass: SettingRepository,

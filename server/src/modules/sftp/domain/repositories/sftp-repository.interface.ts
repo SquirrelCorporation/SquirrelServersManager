@@ -9,6 +9,11 @@ import {
 import { SftpSessionDto } from '../../presentation/dtos/sftp-session.dto';
 
 /**
+ * Injection token for SFTP repository
+ */
+export const SFTP_REPOSITORY = 'ISftpRepository';
+
+/**
  * Interface for SFTP repository operations
  */
 export interface ISftpRepository {

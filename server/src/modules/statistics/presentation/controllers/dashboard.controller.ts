@@ -1,10 +1,7 @@
 import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { Body, Controller, Get, Inject, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { DateTime } from 'luxon';
-import {
-  DEVICES_SERVICE,
-  IDevicesService,
-} from '@modules/devices';
+import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
 import { DashboardService } from '../../application/services/dashboard.service';
 import { DashboardStatQueryDto } from '../dto/dashboard-stats.dto';
 
@@ -33,7 +30,7 @@ export class DashboardController {
   }
 
   @Post('averaged/:type')
-  async getDashboardAveragedStats(
+  async getSingleAveragedStatsByDevicesAndType(
     @Param('type') type: string,
     @Query() query: DashboardStatQueryDto,
     @Body() body: { devices: string[] },
@@ -53,7 +50,7 @@ export class DashboardController {
       .endOf('day')
       .toJSDate();
 
-    const stats = await this.dashboardService.getAveragedStatsByDevices(
+    const stats = await this.dashboardService.getSingleAveragedStatsByDevicesAndType(
       devices,
       fromDate,
       toDate,
@@ -64,8 +61,13 @@ export class DashboardController {
   }
 
   @Post('stats/:type')
-  async getDashboardStat(@Param('type') type: string, @Query() query: DashboardStatQueryDto) {
+  async getStatsByDevicesAndType(
+    @Param('type') type: string,
+    @Body() body: { devices: string[] },
+    @Query() query: DashboardStatQueryDto,
+  ) {
     const { from, to } = query;
+    const { devices } = body;
 
     const fromDate = DateTime.fromJSDate(new Date(from.split('T')[0]))
       .endOf('day')
@@ -73,8 +75,16 @@ export class DashboardController {
     const toDate = DateTime.fromJSDate(new Date(to.split('T')[0]))
       .endOf('day')
       .toJSDate();
-
-    const stats = await this.dashboardService.getDashboardStat(fromDate, toDate, type);
+    const devicesToQuery = await this.devicesService.findByUuids(devices);
+    if (!devicesToQuery || devicesToQuery.length !== devices.length) {
+      throw new Error('Some devices were not found');
+    }
+    const stats = await this.dashboardService.getStatsByDevicesAndType(
+      devicesToQuery,
+      fromDate,
+      toDate,
+      type,
+    );
     return stats;
   }
 }

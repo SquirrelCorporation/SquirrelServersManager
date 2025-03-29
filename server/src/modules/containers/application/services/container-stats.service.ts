@@ -3,8 +3,10 @@ import { DateTime } from 'luxon';
 import { StatsType } from 'ssm-shared-lib';
 import { IContainerEntity } from '../../domain/entities/container.entity';
 import { MetricType } from '../../../statistics/application/interfaces/metrics-service.interface';
-import { PROMETHEUS_SERVICE } from '../../../../infrastructure/prometheus/prometheus.provider';
-import { PrometheusService } from '../../../../infrastructure/prometheus/prometheus.service';
+import {
+  IPrometheusService,
+  PROMETHEUS_SERVICE,
+} from '../../../../infrastructure/prometheus/prometheus.interface';
 import { QueryResult } from '../../../../infrastructure/prometheus/types/prometheus.types';
 import { IContainerStatsService } from '../interfaces/container-stats-service.interface';
 import { METRICS_SERVICE } from '../../../statistics/application/interfaces/metrics-service.interface';
@@ -21,7 +23,7 @@ export class ContainerStatsService implements IContainerStatsService {
     @Inject(METRICS_SERVICE)
     private readonly metricsService: MetricsServiceInterface,
     @Inject(PROMETHEUS_SERVICE)
-    private readonly prometheusService: PrometheusService,
+    private readonly prometheusService: IPrometheusService,
   ) {}
 
   /**

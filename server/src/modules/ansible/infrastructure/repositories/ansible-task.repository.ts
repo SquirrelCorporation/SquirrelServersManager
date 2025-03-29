@@ -82,6 +82,21 @@ export class AnsibleTaskRepository implements IAnsibleTaskRepository {
       .exec();
     return tasks.map(this.mapToIAnsibleTask);
   }
+  
+  /**
+   * Find all tasks older than the specified date
+   * @param date Date to compare against
+   * @returns Tasks older than the specified date
+   */
+  async findOlderThan(date: Date): Promise<IAnsibleTask[]> {
+    const tasks = await this.ansibleTaskModel
+      .find({
+        createdAt: { $lt: date },
+      })
+      .lean()
+      .exec();
+    return tasks.map(this.mapToIAnsibleTask);
+  }
 
   async deleteAllOldLogsAndStatuses(ageInMinutes: number): Promise<void> {
     const tasks = await this.findAllOld(ageInMinutes);

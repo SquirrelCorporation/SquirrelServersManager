@@ -1,15 +1,45 @@
-import { Body, Controller, Delete, Get, Inject, Param, Post, Res, UseGuards, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Param,
+  Post,
+  Res,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { SettingsKeys } from 'ssm-shared-lib';
 import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { AdvancedOperationsService } from '../../application/services/advanced-operations.service';
 import { InformationService } from '../../application/services/information.service';
 import { ISettingsService } from '../../application/interfaces/settings-service.interface';
-import { DashboardSettingBodyDto, DashboardSettingParamDto, DashboardSettingsValidator } from '../validators/dashboard.validator';
-import { DeviceStatsSettingBodyDto, DeviceStatsSettingParamDto, DeviceStatsSettingsValidator } from '../validators/device-stats.validator';
-import { DevicesSettingBodyDto, DevicesSettingParamDto, DevicesSettingsValidator } from '../validators/devices.validator';
-import { LogsSettingBodyDto, LogsSettingParamDto, LogsSettingsValidator } from '../validators/logs.validator';
-import { MasterNodeUrlBodyDto, MasterNodeUrlValidator } from '../validators/master-node-url.validator';
+import {
+  DashboardSettingBodyDto,
+  DashboardSettingParamDto,
+  DashboardSettingsValidator,
+} from '../validators/dashboard.validator';
+import {
+  DeviceStatsSettingBodyDto,
+  DeviceStatsSettingParamDto,
+  DeviceStatsSettingsValidator,
+} from '../validators/device-stats.validator';
+import {
+  DevicesSettingBodyDto,
+  DevicesSettingParamDto,
+  DevicesSettingsValidator,
+} from '../validators/devices.validator';
+import {
+  LogsSettingBodyDto,
+  LogsSettingParamDto,
+  LogsSettingsValidator,
+} from '../validators/logs.validator';
+import {
+  MasterNodeUrlBodyDto,
+  MasterNodeUrlValidator,
+} from '../validators/master-node-url.validator';
 
 @Controller('settings')
 @UseGuards(JwtAuthGuard)
@@ -25,7 +55,7 @@ export class SettingsController {
   @UsePipes(DashboardSettingsValidator)
   async updateDashboardSetting(
     @Param() params: DashboardSettingParamDto,
-    @Body() body: DashboardSettingBodyDto
+    @Body() body: DashboardSettingBodyDto,
   ) {
     const { key } = params;
     const { value } = body;
@@ -52,7 +82,7 @@ export class SettingsController {
   @UsePipes(DevicesSettingsValidator)
   async updateDevicesSetting(
     @Param() params: DevicesSettingParamDto,
-    @Body() body: DevicesSettingBodyDto
+    @Body() body: DevicesSettingBodyDto,
   ) {
     const { key } = params;
     const { value } = body;
@@ -71,10 +101,7 @@ export class SettingsController {
 
   @Post('logs/:key')
   @UsePipes(LogsSettingsValidator)
-  async updateLogsSetting(
-    @Param() params: LogsSettingParamDto,
-    @Body() body: LogsSettingBodyDto
-  ) {
+  async updateLogsSetting(@Param() params: LogsSettingParamDto, @Body() body: LogsSettingBodyDto) {
     const { key } = params;
     const { value } = body;
 
@@ -100,7 +127,7 @@ export class SettingsController {
   @UsePipes(DeviceStatsSettingsValidator)
   async updateDeviceStatsSetting(
     @Param() params: DeviceStatsSettingParamDto,
-    @Body() body: DeviceStatsSettingBodyDto
+    @Body() body: DeviceStatsSettingBodyDto,
   ) {
     const { key } = params;
     const { value } = body;

@@ -2,12 +2,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import Events from '../../../../core/events/events';
 import { Notification } from '../../domain/entities/notification.entity';
-import { INotificationRepository } from '../../domain/repositories/notification-repository.interface';
+import { INotificationRepository, NOTIFICATION_REPOSITORY } from '../../domain/repositories/notification-repository.interface';
 
 @Injectable()
 export class NotificationService {
   constructor(
-    @Inject('INotificationRepository')
+    @Inject(NOTIFICATION_REPOSITORY)
     private readonly notificationRepository: INotificationRepository,
     private readonly eventEmitter: EventEmitter2
   ) {}

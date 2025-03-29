@@ -1,6 +1,6 @@
 import { API, Automations, SsmAnsible } from 'ssm-shared-lib';
 import { IPlaybooksService } from '@modules/playbooks';
-import { IAnsibleTaskStatusRepository } from '@modules/ansible';
+import { ITaskLogsService } from '@modules/ansible';
 import { IUserRepository } from '@modules/users';
 import { IAutomationRepository } from '../../../../domain/repositories/automation.repository.interface';
 import { AbstractActionComponent } from './abstract-action.component';
@@ -9,7 +9,7 @@ export class PlaybookActionComponent extends AbstractActionComponent {
   public readonly playbookUuid: string;
   public readonly targets: string[];
   public readonly extraVarsForcedValues?: API.ExtraVars;
-  private ansibleTaskStatusRepo: IAnsibleTaskStatusRepository;
+  private taskLogsService: ITaskLogsService;
   private userRepo: IUserRepository;
   private playbookUseCases: IPlaybooksService;
 
@@ -20,7 +20,7 @@ export class PlaybookActionComponent extends AbstractActionComponent {
     targets: string[],
     extraVarsForcedValues?: API.ExtraVars,
     automationRepository?: IAutomationRepository,
-    ansibleTaskStatusRepo?: IAnsibleTaskStatusRepository,
+    taskLogsService?: ITaskLogsService,
     userRepo?: IUserRepository,
     playbookUseCases?: IPlaybooksService,
   ) {
@@ -31,7 +31,7 @@ export class PlaybookActionComponent extends AbstractActionComponent {
     this.playbookUuid = playbookUuid;
     this.targets = targets;
     this.extraVarsForcedValues = extraVarsForcedValues;
-    this.ansibleTaskStatusRepo = ansibleTaskStatusRepo!;
+    this.taskLogsService = taskLogsService!;
     this.userRepo = userRepo!;
     this.playbookUseCases = playbookUseCases!;
   }
@@ -82,7 +82,7 @@ export class PlaybookActionComponent extends AbstractActionComponent {
     }
 
     try {
-      const execStatuses = await this.ansibleTaskStatusRepo.findByTaskIdent(execId);
+      const execStatuses = await this.taskLogsService.getTaskStatuses(execId);
 
       if (!execStatuses || execStatuses.length === 0) {
         this.childLogger.warn(

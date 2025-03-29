@@ -11,4 +11,5 @@ export interface IAnsibleTaskRepository {
   update(id: string, data: Partial<IAnsibleTask>): Promise<IAnsibleTask | null>;
   delete(id: string): Promise<boolean>;
   deleteAllOldLogsAndStatuses(ageInMinutes: number): Promise<void>;
+  findOlderThan(date: Date): Promise<IAnsibleTask[]>;
 }

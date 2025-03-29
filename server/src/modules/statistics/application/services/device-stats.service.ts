@@ -1,8 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { StatsType } from 'ssm-shared-lib';
-import { IDevice, DEVICES_SERVICE, IDevicesService } from '@modules/devices';
-import { PROMETHEUS_SERVICE } from '../../../../infrastructure/prometheus/prometheus.provider';
-import { PrometheusService } from '../../../../infrastructure/prometheus/prometheus.service';
+import { DEVICES_SERVICE, IDevice, IDevicesService } from '@modules/devices';
+import { CONTAINER_SERVICE, IContainerService } from '@modules/containers';
+import {
+  IPrometheusService,
+  PROMETHEUS_SERVICE,
+} from '../../../../infrastructure/prometheus/prometheus.interface';
 import {
   DevicesFilter,
   MetricsIdFilter,
@@ -19,8 +22,9 @@ export class DeviceStatsService {
 
   constructor(
     @Inject(PROMETHEUS_SERVICE)
-    private readonly prometheusService: PrometheusService,
-    @Inject(DEVICES_SERVICE) private readonly devicesService: IDevicesService
+    private readonly prometheusService: IPrometheusService,
+    @Inject(DEVICES_SERVICE) private readonly devicesService: IDevicesService,
+    @Inject(CONTAINER_SERVICE) private readonly containerService: IContainerService,
   ) {}
 
   async getStatsByDeviceAndType(device: IDevice, from: Date, to: Date, type?: string) {
@@ -141,6 +145,9 @@ export class DeviceStatsService {
       if (!type) {
         return null;
       }
+      if (type === StatsType.DeviceStatsType.CONTAINERS) {
+        return { value: await this.containerService.countByDeviceUuid(device.uuid) };
+      }
 
       const statsType = type as StatsType.DeviceStatsType;
       const filter: MetricsIdFilter = { type: 'device', deviceId: device.uuid };
@@ -151,7 +158,7 @@ export class DeviceStatsService {
         return null;
       }
 
-      return [{ value: result.data.value, date: result.data.date }];
+      return { value: result.data.value, date: result.data.date };
     } catch (error) {
       this.logger.error(error, `Error getting latest stat for device ${device.uuid}`);
       return null;

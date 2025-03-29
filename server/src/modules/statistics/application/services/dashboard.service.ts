@@ -1,8 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SettingsKeys, StatsType } from 'ssm-shared-lib';
+import { IDevice } from '@modules/devices';
 import { ICacheService } from '../../../../infrastructure/cache';
-import { PROMETHEUS_SERVICE } from '../../../../infrastructure/prometheus/prometheus.provider';
-import { PrometheusService } from '../../../../infrastructure/prometheus/prometheus.service';
+import {
+  IPrometheusService,
+  PROMETHEUS_SERVICE,
+} from '../../../../infrastructure/prometheus/prometheus.interface';
 import PinoLogger from '../../../../logger';
 import { DeviceDownTimeService } from './device-downtime.service';
 import { DeviceStatsService } from './device-stats.service';
@@ -18,8 +21,8 @@ export class DashboardService {
     private readonly deviceStatsService: DeviceStatsService,
     private readonly deviceDownTimeService: DeviceDownTimeService,
     @Inject(PROMETHEUS_SERVICE)
-    private readonly prometheusService: PrometheusService,
-    @Inject('ICacheService') private readonly cacheService: ICacheService
+    private readonly prometheusService: IPrometheusService,
+    @Inject('ICacheService') private readonly cacheService: ICacheService,
   ) {}
 
   async getSystemPerformance() {
@@ -54,12 +57,12 @@ export class DashboardService {
       },
     );
 
-    const minMem = await this.cacheService.get(
+    const minMem = (await this.cacheService.get(
       SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
-    ) as string;
-    const maxCpu = await this.cacheService.get(
+    )) as string;
+    const maxCpu = (await this.cacheService.get(
       SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
-    ) as string;
+    )) as string;
 
     const values = {
       currentMem:
@@ -89,18 +92,28 @@ export class DashboardService {
     return result;
   }
 
-  async getAveragedStatsByDevices(devices: string[], from: Date, to: Date, type: string) {
+  async getSingleAveragedStatsByDevicesAndType(
+    devices: string[],
+    from: Date,
+    to: Date,
+    type: string,
+  ) {
     const stats = await this.deviceStatsService.getSingleAveragedStatsByDevicesAndType(
       devices,
       from,
       to,
       type,
     );
+    return stats?.sort((a, b) => b.value - a.value);
+  }
+
+  async getAveragedStatsByType(from: Date, to: Date, type: string) {
+    const stats = await this.deviceStatsService.getAveragedStatsByType(from, to, type);
     return stats;
   }
 
-  async getDashboardStat(from: Date, to: Date, type: string) {
-    const stats = await this.deviceStatsService.getAveragedStatsByType(from, to, type);
+  async getStatsByDevicesAndType(devices: IDevice[], from: Date, to: Date, type: string) {
+    const stats = await this.deviceStatsService.getStatsByDevicesAndType(devices, from, to, type);
     return stats;
   }
 }

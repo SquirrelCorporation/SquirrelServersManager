@@ -1,7 +1,7 @@
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Automations } from 'ssm-shared-lib';
 import pino from 'pino';
-import { IAnsibleTaskStatusRepository } from '@modules/ansible';
+import { ITaskLogsService } from '@modules/ansible';
 import { IContainerService } from '@modules/containers';
 import { IContainerVolumesService } from '@modules/containers';
 import { IPlaybooksService } from '@modules/playbooks';
@@ -31,7 +31,7 @@ export class AutomationComponent {
     private readonly automationRepository: IAutomationRepository,
     private readonly containerUseCases?: IContainerService,
     private readonly containerVolumeUseCases?: IContainerVolumesService,
-    private readonly ansibleTaskStatusRepo?: IAnsibleTaskStatusRepository,
+    private readonly taskLogsService?: ITaskLogsService,
     private readonly userRepo?: IUserRepository,
     private readonly playbookUseCases?: IPlaybooksService,
     private readonly schedulerRegistry?: SchedulerRegistry,
@@ -124,7 +124,7 @@ export class AutomationComponent {
             break;
 
           case Automations.Actions.PLAYBOOK:
-            if (!this.ansibleTaskStatusRepo || !this.userRepo || !this.playbookUseCases) {
+            if (!this.taskLogsService || !this.userRepo || !this.playbookUseCases) {
               throw new Error('Playbook dependencies not provided for Playbook action');
             }
             actionComponent = new PlaybookActionComponent(
@@ -134,7 +134,7 @@ export class AutomationComponent {
               actionConfig.actionDevices,
               actionConfig.extraVarsForcedValues,
               this.automationRepository,
-              this.ansibleTaskStatusRepo,
+              this.taskLogsService,
               this.userRepo,
               this.playbookUseCases,
             );

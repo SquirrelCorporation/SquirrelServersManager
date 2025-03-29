@@ -7,7 +7,7 @@ import {
   IContainerVolumesService,
 } from '@modules/containers';
 import { IPlaybooksService, PLAYBOOKS_SERVICE } from '@modules/playbooks';
-import { ANSIBLE_TASK_STATUS_REPOSITORY, IAnsibleTaskStatusRepository } from '@modules/ansible';
+import { ITaskLogsService, TASK_LOGS_SERVICE } from '@modules/ansible';
 import { IUserRepository, USER_REPOSITORY } from '@modules/users';
 import { AutomationComponent } from '../components/automation.component';
 import { Automation } from '../../../domain/entities/automation.entity';
@@ -36,8 +36,8 @@ export class AutomationEngine implements OnModuleInit {
     private playbookUseCases: IPlaybooksService,
 
     // Ansible module dependencies
-    @Inject(ANSIBLE_TASK_STATUS_REPOSITORY)
-    private ansibleTaskStatusRepo: IAnsibleTaskStatusRepository,
+    @Inject(TASK_LOGS_SERVICE)
+    private taskLogsService: ITaskLogsService,
 
     // Users module dependencies
     @Inject(USER_REPOSITORY) private userRepo: IUserRepository,
@@ -91,7 +91,7 @@ export class AutomationEngine implements OnModuleInit {
           this.automationRepository,
           this.containerUseCases,
           this.containerVolumeUseCases,
-          this.ansibleTaskStatusRepo,
+          this.taskLogsService,
           this.userRepo,
           this.playbookUseCases,
           this.schedulerRegistry,

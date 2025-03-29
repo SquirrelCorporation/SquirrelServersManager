@@ -1,4 +1,3 @@
-import { DeviceStatType } from '@/components/Charts/DeviceStatType';
 import TinyLineDeviceGraph from '@/components/Charts/TinyLineDeviceGraph';
 import TinyRingProgressDeviceGraph from '@/components/Charts/TinyRingProgressDeviceGraph';
 import TinyRingProgressDeviceIndicator from '@/components/Charts/TinyRingProgressDeviceIndicator';
@@ -8,7 +7,7 @@ import styles from '@/pages/Devices/Devices.less';
 import DeviceStatus from '@/utils/devicestatus';
 import { Carousel, Col, Row, Typography } from 'antd';
 import React, { useMemo } from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, StatsType } from 'ssm-shared-lib';
 
 const { Text } = Typography;
 
@@ -22,8 +21,8 @@ const ListContent: React.FC<Partial<API.DeviceItem>> = React.memo((device) => {
       device.systemInformation?.mem?.total
         ? Math.ceil(device.systemInformation?.mem?.total / (1024 * 1024 * 1024))
         : 'NaN',
-    [device.systemInformation?.mem?.total],
-  );
+    [device.systemInformation?.mem?.total], 
+  ); 
 
   const carouselContent = useMemo(() => {
     if (device.status !== DeviceStatus.UNMANAGED) {
@@ -51,19 +50,19 @@ const ListContent: React.FC<Partial<API.DeviceItem>> = React.memo((device) => {
                 <Row style={{ alignItems: 'center' }} justify="center">
                   <Col span={6}>
                     <TinyRingProgressDeviceGraph
-                      type={DeviceStatType.CPU}
+                      type={StatsType.DeviceStatsType.CPU}
                       deviceUuid={device.uuid as string}
                     />
                   </Col>
                   <Col span={6}>
                     <TinyRingProgressDeviceGraph
-                      type={DeviceStatType.MEM_USED}
+                      type={StatsType.DeviceStatsType.MEM_USED}
                       deviceUuid={device.uuid as string}
                     />
                   </Col>
                   <Col span={6}>
                     <TinyRingProgressDeviceIndicator
-                      type={DeviceStatType.CONTAINERS}
+                      type={StatsType.DeviceStatsType.CONTAINERS}
                       deviceUuid={device.uuid as string}
                     />
                   </Col>
@@ -75,7 +74,7 @@ const ListContent: React.FC<Partial<API.DeviceItem>> = React.memo((device) => {
                 <Row style={{ alignItems: 'center' }} justify="center">
                   <Col span={24}>
                     <TinyLineDeviceGraph
-                      type={DeviceStatType.CPU}
+                      type={StatsType.DeviceStatsType.CPU}
                       deviceUuid={device.uuid as string}
                       from={24}
                     />
@@ -98,7 +97,7 @@ const ListContent: React.FC<Partial<API.DeviceItem>> = React.memo((device) => {
                 <Row style={{ alignItems: 'center' }} justify="center">
                   <Col span={24}>
                     <TinyLineDeviceGraph
-                      type={DeviceStatType.MEM_USED}
+                      type={StatsType.DeviceStatsType.MEM_USED}
                       deviceUuid={device.uuid as string}
                       from={24}
                     />

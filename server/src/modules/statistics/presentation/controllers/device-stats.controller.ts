@@ -1,9 +1,7 @@
 import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { Controller, Get, Inject, Param, Query, UseGuards } from '@nestjs/common';
-import {
-  DEVICES_SERVICE,
-  IDevicesService,
-} from '@modules/devices';
+import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
+import { DateTime } from 'luxon';
 import { DeviceStatsService } from '../../application/services/device-stats.service';
 import { DeviceStatsParamsDto, DeviceStatsQueryDto } from '../dto/device-stats.dto';
 
@@ -21,15 +19,15 @@ export class DeviceStatsController {
     @Query() query: DeviceStatsQueryDto,
   ) {
     const { uuid, type } = params;
-    const { from, to } = query;
+    const { from } = query;
 
     const device = await this.devicesService.findOneByUuid(uuid);
     if (!device) {
       throw new Error('Device not found');
     }
 
-    const fromDate = from ? new Date(from) : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
-    const toDate = to ? new Date(to) : new Date();
+    const toDate = DateTime.now().toJSDate();
+    const fromDate = DateTime.now().minus({ hours: from }).toJSDate();
 
     const stats = await this.deviceStatsService.getStatsByDeviceAndType(
       device,

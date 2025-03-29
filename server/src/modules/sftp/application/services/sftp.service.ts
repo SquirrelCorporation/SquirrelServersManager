@@ -10,7 +10,7 @@ import {
 } from '../../domain/entities/sftp.entity';
 import { SftpSessionDto } from '../../presentation/dtos/sftp-session.dto';
 import { ISftpService } from '../interfaces/sftp-service.interface';
-import { ISftpRepository } from '../../domain/repositories/sftp-repository.interface';
+import { ISftpRepository, SFTP_REPOSITORY } from '../../domain/repositories/sftp-repository.interface';
 import { SftpGateway } from '../../presentation/gateways/sftp.gateway';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class SftpService implements ISftpService {
   private readonly logger = new Logger(SftpService.name);
 
   constructor(
-    @Inject('ISftpRepository')
+    @Inject(SFTP_REPOSITORY)
     private readonly sftpRepository: ISftpRepository,
     @Inject(forwardRef(() => SftpGateway))
     private readonly sftpGateway: SftpGateway,

@@ -10,6 +10,7 @@ export interface IAnsibleLogRepository {
   findAllByIdent(ident: string, sortDirection?: 1 | -1): Promise<AnsibleLogEntity[] | null>;
   deleteAllByIdent(ident: string): Promise<any>;
   deleteAll(): Promise<void>;
+  findByExecutionId(executionId: string): Promise<AnsibleLogEntity[] | null>;
 }
 
 // For backward compatibility

@@ -3,7 +3,7 @@ import Title, { TitleColors } from '@/components/Template/Title';
 import AutomationsColumns from '@/pages/Automations/AutomationsColumns';
 import AutomationEditionDrawer from '@/pages/Automations/components/Drawer/AutomationEditionDrawer';
 import CronColumns from '@/pages/Automations/CronsColumns';
-import { getAutomations } from '@/services/rest/automations';
+import { getAutomations } from '@/services/rest/automations/automations';
 import { getCrons } from '@/services/rest/cron';
 import { InteractionOutlined, LockFilled } from '@ant-design/icons';
 import {

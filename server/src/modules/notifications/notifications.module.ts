@@ -5,6 +5,8 @@ import { NotificationComponentService } from './application/services/notificatio
 import { NOTIFICATION, NotificationSchema } from './infrastructure/schemas/notification.schema';
 import { NotificationRepository } from './infrastructure/repositories/notification.repository';
 import { NotificationController } from './presentation/controllers/notification.controller';
+import { NotificationsGateway } from './presentation/gateways/notifications.gateway';
+import { NOTIFICATION_REPOSITORY } from './domain/repositories/notification-repository.interface';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: NOTIFICATION, schema: NotificationSchema }])],
@@ -12,8 +14,9 @@ import { NotificationController } from './presentation/controllers/notification.
   providers: [
     NotificationService,
     NotificationComponentService,
+    NotificationsGateway,
     {
-      provide: 'INotificationRepository',
+      provide: NOTIFICATION_REPOSITORY,
       useClass: NotificationRepository,
     },
   ],

@@ -8,6 +8,8 @@ import {
   SftpStatusMessage,
 } from '../../domain/entities/sftp.entity';
 
+export const SFTP_SERVICE = 'ISftpService';
+
 export interface ISftpService {
   createSession(client: Socket, sessionDto: SftpSessionDto): Promise<string>;
   listDirectory(clientId: string, directoryPath: string): Promise<void>;

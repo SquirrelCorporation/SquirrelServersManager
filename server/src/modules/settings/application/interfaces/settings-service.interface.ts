@@ -1,3 +1,5 @@
+export const SETTINGS_SERVICE = 'ISettingsService';
+
 export interface ISettingsService {
   /**
    * Get a setting by key

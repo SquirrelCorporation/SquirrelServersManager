@@ -7,7 +7,7 @@ import {
   getTemplate,
   postAutomation,
   putAutomation,
-} from '@/services/rest/automations';
+} from '@/services/rest/automations/automations';
 import { ArrowDownOutlined, PlusOutlined, UpOutlined } from '@ant-design/icons';
 import {
   DrawerForm,

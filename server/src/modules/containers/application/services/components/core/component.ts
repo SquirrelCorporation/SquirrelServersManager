@@ -1,6 +1,7 @@
 import * as Joi from 'joi';
 import { AlternativesSchema } from 'joi';
 import pino from 'pino';
+import { Injectable } from '@nestjs/common';
 import {
   ConfigurationAuthenticationSchema,
   ConfigurationRegistrySchema,
@@ -8,16 +9,17 @@ import {
   ConfigurationWatcherSchema,
 } from '@modules/containers/types';
 import { Kind } from '@modules/containers/domain/components/kind.enum';
-import EventManager from '../../../../../../core/events/EventManager';
+import { EventEmitterService } from '../../../../../../core/events/event-emitter.service';
 import logger from '../../../../../../logger';
 
-abstract class Component<
+@Injectable()
+export abstract class Component<
   T extends
     | ConfigurationRegistrySchema
     | ConfigurationTriggerSchema
     | ConfigurationWatcherSchema
     | ConfigurationAuthenticationSchema,
-> extends EventManager {
+> {
   public _id: string;
   public joi: Joi.Root;
   public type: string;
@@ -29,8 +31,7 @@ abstract class Component<
   /**
    * Constructor.
    */
-  constructor() {
-    super();
+  protected constructor(protected readonly eventEmitterService: EventEmitterService) {
     this._id = 'unknown';
     this.joi = Joi;
     this.kind = Kind.UNKNOWN;
@@ -153,5 +154,3 @@ abstract class Component<
     )}${value.substring(value.length - nb, value.length)}`;
   }
 }
-
-export default Component;

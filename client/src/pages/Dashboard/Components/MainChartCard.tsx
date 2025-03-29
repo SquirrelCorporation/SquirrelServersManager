@@ -81,6 +81,10 @@ const MainChartCard: React.FC = () => {
     setLoading(true);
     try {
       if (devices.length > 0) {
+        setGraphData(undefined);
+        setGraphMemData(undefined);
+        setGraphStorageData(undefined);
+        setTopTenData(undefined);
         const [deviceStats, averagedDeviceStats] = await Promise.all([
           getDashboardDevicesStats(devices as string[], type, {
             from: rangePickerValue[0].toDate(),

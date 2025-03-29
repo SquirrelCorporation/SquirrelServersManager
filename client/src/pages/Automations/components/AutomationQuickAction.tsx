@@ -1,7 +1,7 @@
 import {
   deleteAutomation,
   executeAutomation,
-} from '@/services/rest/automations';
+} from '@/services/rest/automations/automations';
 import {
   DeleteOutlined,
   DownOutlined,

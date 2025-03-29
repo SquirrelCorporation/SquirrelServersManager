@@ -101,18 +101,10 @@ import { TREE_NODE_SERVICE } from './domain/interfaces/tree-node-service.interfa
     TREE_NODE_SERVICE,
     TreeNodeService,
 
-    // Infrastructure repositories
-    PlaybookRepository,
-    PlaybooksRegisterRepository,
-
     // Engine service for external use
     PlaybooksRegisterEngineService,
     PLAYBOOKS_REGISTER_ENGINE_SERVICE,
     VAULT_CRYPTO_SERVICE,
-
-    // Domain repositories
-    PLAYBOOK_REPOSITORY,
-    PLAYBOOKS_REGISTER_REPOSITORY,
   ],
 })
 export class PlaybooksModule {}

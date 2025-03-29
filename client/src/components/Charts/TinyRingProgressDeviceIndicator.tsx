@@ -1,12 +1,12 @@
-import { DeviceStatType } from '@/components/Charts/DeviceStatType';
 import { getDeviceStat } from '@/services/rest/stastistics';
 import { Tiny, TinyProgressConfig } from '@ant-design/charts';
 import { message, Skeleton } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { StatsType } from 'ssm-shared-lib';
 
 export type TinyRingProps = {
   deviceUuid: string;
-  type: DeviceStatType;
+  type: StatsType.DeviceStatsType;
 };
 
 const TinyRingProgressDeviceIndicator: React.FC<TinyRingProps> = ({
@@ -19,6 +19,7 @@ const TinyRingProgressDeviceIndicator: React.FC<TinyRingProps> = ({
   const asyncFetch = useCallback(async () => {
     try {
       const res = await getDeviceStat(deviceUuid, type, {});
+
       if (res.data && !isNaN(res.data.value)) {
         setValue(res.data.value);
       } else {

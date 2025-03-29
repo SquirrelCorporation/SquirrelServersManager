@@ -7,10 +7,22 @@ import { PlaybooksModule } from '../playbooks/playbooks.module';
 import { StatisticsModule } from '../statistics/statistics.module';
 import { DevicesModule } from '../devices/devices.module';
 import { CONTAINER_SCHEMA, ContainerSchema } from './infrastructure/schemas/container.schema';
-import { CONTAINER_VOLUME, ContainerVolumeSchema } from './infrastructure/schemas/container-volume.schema';
-import { CONTAINER_NETWORK_SCHEMA, ContainerNetworkSchema } from './infrastructure/schemas/container-network.schema';
-import { CONTAINER_IMAGE, ContainerImageSchema } from './infrastructure/schemas/container-image.schema';
-import { CONTAINER_REGISTRY_SCHEMA, ContainerRegistrySchema } from './infrastructure/schemas/container-registry.schema';
+import {
+  CONTAINER_VOLUME,
+  ContainerVolumeSchema,
+} from './infrastructure/schemas/container-volume.schema';
+import {
+  CONTAINER_NETWORK_SCHEMA,
+  ContainerNetworkSchema,
+} from './infrastructure/schemas/container-network.schema';
+import {
+  CONTAINER_IMAGE,
+  ContainerImageSchema,
+} from './infrastructure/schemas/container-image.schema';
+import {
+  CONTAINER_REGISTRY_SCHEMA,
+  ContainerRegistrySchema,
+} from './infrastructure/schemas/container-registry.schema';
 import { ContainerRepository } from './infrastructure/repositories/container.repository';
 import { ContainerVolumeRepository } from './infrastructure/repositories/container-volume.repository';
 import { ContainerNetworkRepository } from './infrastructure/repositories/container-network.repository';
@@ -79,7 +91,7 @@ import { DockerWatcherComponent } from './application/services/components/watche
     ScheduleModule.forRoot(),
     ShellModule,
     PlaybooksModule,
-    StatisticsModule,
+    forwardRef(() => StatisticsModule),
     DevicesModule,
   ],
   controllers: [
@@ -215,17 +227,7 @@ import { DockerWatcherComponent } from './application/services/components/watche
       provide: CONTAINER_TEMPLATES_SERVICE,
       useClass: ContainerTemplatesService,
     },
-    // Repositories for external modules that may need direct access
-    {
-      provide: CONTAINER_REPOSITORY,
-      useClass: ContainerRepository,
-    },
-    // Add repository for volume access
-    {
-      provide: CONTAINER_VOLUME_REPOSITORY,
-      useClass: ContainerVolumeRepository,
-    },
-    // Add ScheduleModule to exports
+    // Export only modules and services, not repositories
     ScheduleModule,
   ],
 })

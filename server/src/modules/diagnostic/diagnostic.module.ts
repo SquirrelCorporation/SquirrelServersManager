@@ -5,11 +5,12 @@ import { DiagnosticService } from './application/services/diagnostic.service';
 import { DiagnosticController } from './presentation/controllers/diagnostic.controller';
 import { DiagnosticMapper } from './presentation/mappers/diagnostic.mapper';
 import { DiagnosticGateway } from './presentation/gateways/diagnostic.gateway';
+import { DiagnosticEventsGateway } from './presentation/gateways/diagnostic-events.gateway';
 
 @Module({
   imports: [DevicesModule],
   controllers: [DiagnosticController],
-  providers: [DiagnosticService, EventEmitterService, DiagnosticMapper, DiagnosticGateway],
+  providers: [DiagnosticService, EventEmitterService, DiagnosticMapper, DiagnosticGateway, DiagnosticEventsGateway],
   exports: [DiagnosticService],
 })
 export class DiagnosticModule {}

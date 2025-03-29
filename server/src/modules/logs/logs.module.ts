@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ServerLogsService } from './application/services/server-logs.service';
+import { AnsibleLogsService } from './application/services/ansible-logs.service';
 import { ServerLog, ServerLogSchema } from './infrastructure/schemas/server-log.schema';
 import { AnsibleLog, AnsibleLogSchema } from './infrastructure/schemas/ansible-log.schema';
 import { ServerLogsRepository } from './infrastructure/repositories/server-logs.repository';
@@ -10,6 +11,7 @@ import { ServerLogMapper } from './infrastructure/mappers/server-log.mapper';
 import { AnsibleLogMapper } from './infrastructure/mappers/ansible-log.mapper';
 import { ServerLogPresentationMapper } from './presentation/mappers/server-log.mapper';
 import { SERVER_LOGS_SERVICE } from './application/interfaces/server-logs-service.interface';
+import { ANSIBLE_LOGS_SERVICE } from './application/interfaces/ansible-logs-service.interface';
 import { SERVER_LOGS_REPOSITORY } from './domain/repositories/server-logs-repository.interface';
 import { ANSIBLE_LOGS_REPOSITORY } from './domain/repositories/ansible-logs-repository.interface';
 
@@ -27,6 +29,12 @@ import { ANSIBLE_LOGS_REPOSITORY } from './domain/repositories/ansible-logs-repo
       provide: SERVER_LOGS_SERVICE,
       useClass: ServerLogsService,
     },
+    {
+      provide: ANSIBLE_LOGS_SERVICE,
+      useClass: AnsibleLogsService,
+    },
+    AnsibleLogsService,
+    ServerLogsService,
 
     // Repositories
     ServerLogsRepository,
@@ -46,11 +54,12 @@ import { ANSIBLE_LOGS_REPOSITORY } from './domain/repositories/ansible-logs-repo
     ServerLogPresentationMapper,
   ],
   exports: [
+    // Only export services, not repositories
     SERVER_LOGS_SERVICE,
-    ServerLogsRepository,
-    AnsibleLogsRepository,
+    ANSIBLE_LOGS_SERVICE,
     ANSIBLE_LOGS_REPOSITORY,
-    SERVER_LOGS_REPOSITORY,
+    ServerLogsService,
+    AnsibleLogsService,
   ],
 })
 export class LogsModule {}

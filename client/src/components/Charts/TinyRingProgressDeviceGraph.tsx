@@ -1,10 +1,10 @@
-import { DeviceStatType } from '@/components/Charts/DeviceStatType';
 import { getDeviceStat } from '@/services/rest/stastistics';
 import { Tiny } from '@ant-design/charts';
 import { TinyRingConfig } from '@ant-design/plots/es/components/tiny';
 import { Skeleton, Tooltip } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { StatsType } from 'ssm-shared-lib';
 
 export type TinyRingProps = {
   deviceUuid: string;
@@ -66,7 +66,7 @@ const TinyRingProgressDeviceGraph: React.FC<TinyRingProps> = ({
         {
           type: 'text',
           style: {
-            text: `${type === DeviceStatType.CPU ? 'cpu' : 'mem'}`,
+            text: `${type === StatsType.DeviceStatsType.CPU ? 'cpu' : 'mem'}`,
             x: '48%',
             y: '68%',
             textAlign: 'center',

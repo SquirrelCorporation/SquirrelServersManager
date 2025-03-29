@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
 import { fullName } from '@modules/containers/utils/utils';
 import { SSHCredentialsAdapter } from '@infrastructure/adapters/ssh/ssh-credentials.adapter';
-import { IDevice, IDeviceAuth } from '@modules/devices';
+import { DEVICES_SERVICE, IDevice, IDeviceAuth, IDevicesService } from '@modules/devices';
 import {
   IWatcherEngineService,
   WATCHER_ENGINE_SERVICE,
@@ -11,7 +11,6 @@ import { IContainerService } from '../interfaces/container-service.interface';
 import { IContainerEntity } from '../../domain/entities/container.entity';
 import { CONTAINER_REPOSITORY } from '../../domain/repositories/container-repository.interface';
 import { IContainerRepository } from '../../domain/repositories/container-repository.interface';
-import { DevicesService } from '../../../devices/application/services/devices.service';
 import { DEVICE_AUTH_SERVICE } from '../../../devices/domain/services/device-auth-service.interface';
 import { IDeviceAuthService } from '../../../devices/domain/services/device-auth-service.interface';
 
@@ -23,7 +22,8 @@ export class ContainerService implements IContainerService {
     private readonly containerRepository: IContainerRepository,
     @Inject(WATCHER_ENGINE_SERVICE)
     private readonly watcherEngineService: IWatcherEngineService,
-    private readonly devicesService: DevicesService,
+    @Inject(DEVICES_SERVICE)
+    private readonly devicesService: IDevicesService,
     @Inject(DEVICE_AUTH_SERVICE)
     private readonly deviceAuthService: IDeviceAuthService,
   ) {}
@@ -58,6 +58,10 @@ export class ContainerService implements IContainerService {
 
   async countContainersByStatus(status: string): Promise<number> {
     return this.containerRepository.countByStatus(status);
+  }
+
+  async countByDeviceUuid(deviceUuid: string): Promise<number> {
+    return this.containerRepository.countByDeviceUuid(deviceUuid);
   }
 
   async createContainer(

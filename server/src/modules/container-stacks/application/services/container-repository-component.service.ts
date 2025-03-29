@@ -3,9 +3,6 @@ import pino from 'pino';
 import { SsmAlert, SsmGit } from 'ssm-shared-lib';
 import { RepositoryType } from 'ssm-shared-lib/distribution/enums/repositories';
 import { v4 as uuidv4 } from 'uuid';
-import { SSM_DATA_PATH } from '../../../../config';
-import EventManager from '../../../../core/events/EventManager';
-import Events from '../../../../core/events/events';
 import { extractTopLevelName } from '@infrastructure/common/docker/utils';
 import { FileInfo, getMatchingFiles } from '@infrastructure/common/files/recursive-find.util';
 import {
@@ -17,6 +14,9 @@ import { clone } from '@infrastructure/adapters/git/services/clone.service';
 import { commitAndSync } from '@infrastructure/adapters/git/services/commit-and-sync.service';
 import { forcePull } from '@infrastructure/adapters/git/services/force-pull.service';
 import { IInitGitOptionsSyncImmediately } from '@infrastructure/adapters/git/services/init-git.service';
+import Events from '../../../../core/events/events';
+import { EventEmitterService } from '../../../../core/events/event-emitter.service';
+import { SSM_DATA_PATH } from '../../../../config';
 import logger from '../../../../logger';
 import { NotFoundError } from '../../../../middlewares/api/ApiError';
 import { ShellWrapperService } from '../../../shell';
@@ -30,7 +30,7 @@ import { ContainerStacksService } from './container-stacks.service';
 export const DIRECTORY_ROOT = `${SSM_DATA_PATH}/container-stacks`;
 
 @Injectable()
-export class ContainerRepositoryComponentService extends EventManager {
+export class ContainerRepositoryComponentService {
   public name = '';
   public directory = '';
   public uuid = '';
@@ -53,9 +53,8 @@ export class ContainerRepositoryComponentService extends EventManager {
     private readonly containerCustomStacksRepositoryRepository: ContainerCustomStacksRepositoryRepository,
     @Inject(CONTAINER_STACKS_SERVICE)
     private readonly containerStacksService: ContainerStacksService,
-  ) {
-    super();
-  }
+    private readonly eventEmitterService: EventEmitterService,
+  ) {}
 
   initialize(config: RepositoryConfig): void {
     const dir = `${DIRECTORY_ROOT}/${config.uuid}`;
@@ -186,7 +185,7 @@ export class ContainerRepositoryComponentService extends EventManager {
 
     this.childLogger.info(`Updating Stacks Repository ${containerStackRepository.name}`);
 
-    this.emit(Events.ALERT, {
+    this.eventEmitterService.emit(Events.ALERT, {
       severity: SsmAlert.AlertType.SUCCESS,
       message: `Successfully updated repository "${containerStackRepository.name}" with ${containerStackPathsToSync.length} files`,
       module: 'ContainerCustomStackRepository',
@@ -291,7 +290,7 @@ export class ContainerRepositoryComponentService extends EventManager {
       this.childLogger.error(error);
       await this.containerStacksService.putRepositoryOnError(this.uuid, error);
       this.childLogger.info(`Emit ${Events.ALERT} with error: ${error.message}`);
-      this.emit(Events.ALERT, {
+      this.eventEmitterService.emit(Events.ALERT, {
         severity: SsmAlert.AlertType.ERROR,
         message: `Error during git clone: ${error.message}`,
         module: 'ContainerCustomStackRepository',
@@ -321,7 +320,7 @@ export class ContainerRepositoryComponentService extends EventManager {
         },
       });
 
-      this.emit(Events.ALERT, {
+      this.eventEmitterService.emit(Events.ALERT, {
         severity: SsmAlert.AlertType.SUCCESS,
         message: `Successfully commit and sync repository "${this.name}"`,
         module: 'ContainerCustomStackRepository',
@@ -329,7 +328,7 @@ export class ContainerRepositoryComponentService extends EventManager {
     } catch (error: any) {
       this.childLogger.error(error);
       await this.containerStacksService.putRepositoryOnError(this.uuid, error);
-      this.emit(Events.ALERT, {
+      this.eventEmitterService.emit(Events.ALERT, {
         severity: SsmAlert.AlertType.ERROR,
         message: `Error during commit and sync: ${error.message}`,
         module: 'ContainerCustomStackRepository',
@@ -359,7 +358,7 @@ export class ContainerRepositoryComponentService extends EventManager {
         },
       });
 
-      this.emit(Events.ALERT, {
+      this.eventEmitterService.emit(Events.ALERT, {
         severity: SsmAlert.AlertType.SUCCESS,
         message: `Successfully forcepull repository ${this.name}`,
         module: 'ContainerCustomStackRepository',
@@ -367,7 +366,7 @@ export class ContainerRepositoryComponentService extends EventManager {
     } catch (error: any) {
       this.childLogger.error(error);
       await this.containerStacksService.putRepositoryOnError(this.uuid, error);
-      this.emit(Events.ALERT, {
+      this.eventEmitterService.emit(Events.ALERT, {
         severity: SsmAlert.AlertType.ERROR,
         message: `Error during force pull: ${error.message}`,
         module: 'ContainerCustomStackRepository',

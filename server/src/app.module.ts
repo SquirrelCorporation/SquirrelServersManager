@@ -34,6 +34,7 @@ import { SshInfrastructureModule } from './infrastructure/ssh/ssh-infrastructure
 import { HealthModule } from './modules/health/health.module';
 import { StatisticsModule } from './modules/statistics/statistics.module';
 import { PluginsModule } from './infrastructure/plugins/plugins.module';
+import { EventsModule } from './core/events/events.module';
 
 // Store the connection for legacy code to access
 let sharedConnection: mongoose.Connection | null = null;
@@ -67,6 +68,7 @@ let connectionReady = false;
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    EventsModule,
     EventEmitterModule.forRoot({
       wildcard: true,
     }),

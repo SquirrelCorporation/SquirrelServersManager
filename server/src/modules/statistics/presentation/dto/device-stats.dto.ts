@@ -1,4 +1,4 @@
-import { IsDateString, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class DeviceStatsParamsDto {
   @IsUUID()
@@ -9,13 +9,9 @@ export class DeviceStatsParamsDto {
 }
 
 export class DeviceStatsQueryDto {
-  @IsDateString()
+  @IsString()
   @IsOptional()
   from?: string;
-
-  @IsDateString()
-  @IsOptional()
-  to?: string;
 }
 
 export class DeviceStatResponseDto {

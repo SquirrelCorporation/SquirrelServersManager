@@ -8,12 +8,12 @@ import {
   ICacheService,
 } from '@infrastructure/cache';
 import {
-  ANSIBLE_TASK_REPOSITORY,
-  IAnsibleTaskRepository,
+  TASK_LOGS_SERVICE,
+  ITaskLogsService,
 } from '@modules/ansible';
 import {
-  IServerLogsRepository,
-  SERVER_LOGS_REPOSITORY,
+  IServerLogsService,
+  SERVER_LOGS_SERVICE,
 } from '@modules/logs';
 import { CronService } from './cron.service';
 
@@ -24,10 +24,10 @@ export class SystemCronService implements OnModuleInit {
   constructor(
     @Inject(DEVICES_SERVICE)
     private readonly devicesService: IDevicesService,
-    @Inject(ANSIBLE_TASK_REPOSITORY)
-    private readonly ansibleTaskRepo: IAnsibleTaskRepository,
-    @Inject(SERVER_LOGS_REPOSITORY)
-    private readonly logsRepo: IServerLogsRepository,
+    @Inject(TASK_LOGS_SERVICE)
+    private readonly taskLogsService: ITaskLogsService,
+    @Inject(SERVER_LOGS_SERVICE)
+    private readonly serverLogsService: IServerLogsService,
     @Inject(CACHE_SERVICE)
     private readonly cacheService: ICacheService,
     private readonly cronService: CronService,
@@ -88,12 +88,15 @@ export class SystemCronService implements OnModuleInit {
       logger.info('Running Ansible logs cleanup job');
       const jobName = '_CleanAnsibleTasksLogsAndStatuses';
 
-      const delay = await this.cacheService.getFromCache(
+      const delaySeconds = await this.cacheService.getFromCache(
         SettingsKeys.GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
         '5',
       );
-
-      await this.ansibleTaskRepo.deleteAllOldLogsAndStatuses(parseInt(delay));
+      
+      // Convert seconds to days (needed by service method)
+      const delayDays = Math.max(1, Math.floor(parseInt(delaySeconds) / (24 * 60 * 60)));
+      
+      await this.taskLogsService.cleanOldTasksAndLogs(delayDays);
       await this.cronService.updateLastExecution(jobName);
 
       logger.info('Ansible logs cleanup job completed');
@@ -113,7 +116,8 @@ export class SystemCronService implements OnModuleInit {
         '5',
       );
 
-      await this.logsRepo.deleteAllOld(parseInt(delay));
+      // Use the deleteAllOld method with the retention period
+      await this.serverLogsService.deleteAllOld(parseInt(delay));
       await this.cronService.updateLastExecution(jobName);
 
       logger.info('Server logs cleanup job completed');

@@ -145,4 +145,9 @@ export interface IContainerService {
    * Execute a container action
    */
   executeContainerAction(id: string, action: string): Promise<boolean>;
+
+  /**
+   * Count containers by device UUID
+   */
+  countByDeviceUuid(deviceUuid: string): Promise<number>;
 }

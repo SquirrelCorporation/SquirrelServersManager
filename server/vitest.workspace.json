@@ -1,5 +1,6 @@
 [
   "src/tests/*",
+  "src/__tests__/*",
   {
     "name": "modules",
     "include": "src/modules/*",

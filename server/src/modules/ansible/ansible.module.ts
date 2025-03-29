@@ -18,6 +18,7 @@ import { ExtraVarsService } from './application/services/extra-vars.service';
 import { GalaxyService } from './application/services/galaxy.service';
 import { InventoryTransformerService } from './application/services/inventory-transformer.service';
 import { TaskLogsService } from './application/services/task-logs.service';
+import { TASK_LOGS_SERVICE } from './application/interfaces/task-logs-service.interface';
 import { AnsibleTaskRepository } from './infrastructure/repositories/ansible-task.repository';
 import { AnsibleTaskStatusRepository } from './infrastructure/repositories/ansible-task-status.repository';
 import {
@@ -57,6 +58,10 @@ import { ANSIBLE_TASK_REPOSITORY } from './domain/repositories/ansible-task.repo
     ExtraVarsService,
     ExtraVarsTransformerService,
     TaskLogsService,
+    {
+      provide: TASK_LOGS_SERVICE,
+      useClass: TaskLogsService,
+    },
     GalaxyService,
     {
       provide: DEFAULT_VAULT_ID,
@@ -79,6 +84,7 @@ import { ANSIBLE_TASK_REPOSITORY } from './domain/repositories/ansible-task.repo
     },
   ],
   exports: [
+    // Export only services, not repositories
     AnsibleCommandService,
     AnsibleCommandBuilderService,
     AnsibleGalaxyCommandService,
@@ -86,13 +92,10 @@ import { ANSIBLE_TASK_REPOSITORY } from './domain/repositories/ansible-task.repo
     ExtraVarsService,
     ExtraVarsTransformerService,
     TaskLogsService,
+    TASK_LOGS_SERVICE,
     GalaxyService,
     AnsibleHooksService,
-    AnsibleTaskRepository,
-    AnsibleTaskStatusRepository,
     CACHE_SERVICE,
-    ANSIBLE_TASK_REPOSITORY,
-    ANSIBLE_TASK_STATUS_REPOSITORY,
   ],
 })
 export class AnsibleModule {}

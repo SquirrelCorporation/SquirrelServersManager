@@ -1,11 +1,11 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import EventManager, { Payload } from '../../../../core/events/EventManager';
+import { EventEmitterService, Payload } from '../../../../core/events/event-emitter.service';
 import Events from '../../../../core/events/events';
 import pinoLogger from '../../../../logger';
 import { NotificationService } from './notification.service';
 
 @Injectable()
-export class NotificationComponentService extends EventManager implements OnModuleInit {
+export class NotificationComponentService implements OnModuleInit {
   private childLogger = pinoLogger.child(
     { module: `Notification` },
     { msgPrefix: '[NOTIFICATION] - ' },
@@ -17,9 +17,10 @@ export class NotificationComponentService extends EventManager implements OnModu
     Events.DOCKER_WATCH_FAILED,
   ];
 
-  constructor(private readonly notificationService: NotificationService) {
-    super();
-  }
+  constructor(
+    private readonly notificationService: NotificationService,
+    private readonly eventEmitterService: EventEmitterService,
+  ) {}
 
   onModuleInit() {
     this.childLogger.info('Initialization....');
@@ -28,7 +29,9 @@ export class NotificationComponentService extends EventManager implements OnModu
 
   private subscribeToEvents() {
     this.eventsToListen.forEach((event) => {
-      this.on(event, (payload: Payload) => this.handleNotificationEvent(event, payload));
+      this.eventEmitterService.on(event, (payload: Payload) =>
+        this.handleNotificationEvent(event, payload),
+      );
     });
   }
 

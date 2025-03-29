@@ -17,6 +17,23 @@ export class ServerLogsService implements IServerLogsService {
     @Inject(SERVER_LOGS_REPOSITORY) private serverLogsRepository: IServerLogsRepository,
     private serverLogPresentationMapper: ServerLogPresentationMapper,
   ) {}
+  
+  /**
+   * Delete all server logs
+   */
+  async deleteAll(): Promise<void> {
+    logger.info('[SERVICE] - ServerLogsService - deleteAll');
+    return this.serverLogsRepository.deleteAll();
+  }
+  
+  /**
+   * Delete old server logs
+   * @param days Number of days to keep logs for
+   */
+  async deleteAllOld(days: number): Promise<void> {
+    logger.info(`[SERVICE] - ServerLogsService - deleteAllOld (${days} days)`);
+    return this.serverLogsRepository.deleteAllOld(days);
+  }
 
   async getServerLogs(params: ServerLogsQueryDto) {
     logger.info('[SERVICE] - ServerLogsService - getServerLogs');

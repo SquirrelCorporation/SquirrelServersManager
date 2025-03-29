@@ -77,4 +77,11 @@ export interface ITaskLogsService {
    * @returns True if deletion was successful
    */
   deleteTask(taskId: string): Promise<boolean>;
+  
+  /**
+   * Clean old tasks and logs
+   * @param days Number of days to keep tasks and logs for
+   * @returns Number of tasks deleted
+   */
+  cleanOldTasksAndLogs(days: number): Promise<number>;
 }

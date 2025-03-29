@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ICacheService } from '@infrastructure/cache';
+import { ICacheService, CACHE_SERVICE } from '@infrastructure/cache';
 import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
 import { SSM_DATA_PATH } from 'src/config';
 import { SettingsKeys, SsmAnsible } from 'ssm-shared-lib';
@@ -16,7 +16,7 @@ export class UsersService {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: IUserRepository,
-    @Inject('ICacheService') private readonly cacheService: ICacheService,
+    @Inject(CACHE_SERVICE) private readonly cacheService: ICacheService,
     @Inject(DEVICES_SERVICE) private readonly devicesService: IDevicesService,
     private readonly ansibleCommandService: AnsibleCommandService
   ) {}

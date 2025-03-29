@@ -5,6 +5,8 @@ import { SftpService } from './application/services/sftp.service';
 import { FileStreamService } from './infrastructure/services/file-stream.service';
 import { SftpGateway } from './presentation/gateways/sftp.gateway';
 import { SftpRepository } from './infrastructure/repositories/sftp.repository';
+import { SFTP_REPOSITORY } from './domain/repositories/sftp-repository.interface';
+import { SFTP_SERVICE } from './application/interfaces/sftp-service.interface';
 
 @Module({
   imports: [
@@ -18,11 +20,11 @@ import { SftpRepository } from './infrastructure/repositories/sftp.repository';
     FileStreamService,
     SftpRepository,
     {
-      provide: 'ISftpService',
+      provide: SFTP_SERVICE,
       useExisting: SftpService,
     },
     {
-      provide: 'ISftpRepository',
+      provide: SFTP_REPOSITORY,
       useExisting: SftpRepository,
     },
   ],

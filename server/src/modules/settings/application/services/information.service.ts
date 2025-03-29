@@ -2,14 +2,21 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import mongoose from 'mongoose';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { IInformationService } from '../interfaces/information-service.interface';
+import {
+  IPrometheusService,
+  PROMETHEUS_SERVICE,
+} from '../../../../infrastructure/prometheus/prometheus.interface';
 
 @Injectable()
-export class InformationService {
+export class InformationService implements IInformationService {
   private readonly logger = new Logger(InformationService.name);
 
   constructor(
     @Inject(CACHE_MANAGER)
-    private readonly cacheManager: Cache
+    private cacheManager: Cache,
+    @Inject(PROMETHEUS_SERVICE)
+    private readonly prometheusService: IPrometheusService,
   ) {}
 
   /**
@@ -48,18 +55,73 @@ export class InformationService {
   }
 
   /**
-   * Get Redis server stats
+   * Get Redis server stats (Method required by interface)
    */
   async getRedisStats(): Promise<any> {
     try {
-      // For now, return a mock response
-      // In a real implementation, we would use the Redis client to get the info
-      return {
-        memory: {},
-        cpu: {},
-        stats: {},
-        server: {},
+      // Try accessing the first store in the 'stores' array
+      const store = (this.cacheManager.stores as any)?.[0]; // Access first element
+      // Get client from the first store
+      const client = store?.getClient?.();
+
+      if (!client || typeof client.info !== 'function') {
+        this.logger.warn('Could not get Redis client or client does not support INFO command.');
+        return {
+          status: 'error',
+          error: 'Could not access Redis INFO command sections.',
+        };
+      }
+
+      const [
+        memoryInfo,
+        cpuInfo,
+        statsInfo,
+        serverInfo,
+        clientsInfo,
+        replicationInfo,
+        keyspaceInfo,
+      ] = await Promise.all([
+        client.info('memory').catch((e) => {
+          this.logger.error(e, 'Failed to get Redis memory info');
+          return null;
+        }),
+        client.info('cpu').catch((e) => {
+          this.logger.error(e, 'Failed to get Redis cpu info');
+          return null;
+        }),
+        client.info('stats').catch((e) => {
+          this.logger.error(e, 'Failed to get Redis stats info');
+          return null;
+        }),
+        client.info('server').catch((e) => {
+          this.logger.error(e, 'Failed to get Redis server info');
+          return null;
+        }),
+        client.info('clients').catch((e) => {
+          this.logger.error(e, 'Failed to get Redis clients info');
+          return null;
+        }),
+        client.info('replication').catch((e) => {
+          this.logger.error(e, 'Failed to get Redis replication info');
+          return null;
+        }),
+        client.info('keyspace').catch((e) => {
+          this.logger.error(e, 'Failed to get Redis keyspace info');
+          return null;
+        }),
+      ]);
+
+      const data = {
+        server: this.parseRedisInfo(serverInfo),
+        clients: this.parseRedisInfo(clientsInfo),
+        memory: this.parseRedisInfo(memoryInfo),
+        cpu: this.parseRedisInfo(cpuInfo),
+        stats: this.parseRedisInfo(statsInfo),
+        replication: this.parseRedisInfo(replicationInfo),
+        keyspace: this.parseRedisInfo(keyspaceInfo),
       };
+
+      return data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       this.logger.error(`Error getting Redis stats: ${errorMessage}`);
@@ -72,9 +134,7 @@ export class InformationService {
    */
   async getPrometheusStats(): Promise<any> {
     try {
-      // For now, return a mock response
-      // In a real implementation, we would use the Prometheus client to get the stats
-      return {};
+      return this.prometheusService.prometheusServerStats();
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       this.logger.error(`Error getting Prometheus stats: ${errorMessage}`);
@@ -83,9 +143,7 @@ export class InformationService {
   }
 
   /**
-   * Parse Redis info string into an object
-   * @param info Redis info string
-   * @returns Parsed Redis info object
+   * Parse Redis info string into an object (Handles null/undefined input)
    */
   private parseRedisInfo(info: string): Record<string, string> {
     const result: Record<string, string> = {};
@@ -99,7 +157,6 @@ export class InformationService {
         }
       }
     }
-
     return result;
   }
 }

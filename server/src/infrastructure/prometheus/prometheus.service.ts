@@ -3,8 +3,11 @@ import { DateTime } from 'luxon';
 import { PrometheusDriver } from 'prometheus-query';
 import { StatsType } from 'ssm-shared-lib';
 import { Gauge } from 'prom-client';
+import { HttpService } from '@nestjs/axios';
+import { lastValueFrom } from 'rxjs';
 import { prometheusConf } from '../../config';
 import PinoLogger from '../../logger';
+import logger from '../../logger';
 import { MetricsIdFilter, MetricsIdsFilter, isDevicesFilter } from './types/filters.types';
 import {
   AggregatedMetric,
@@ -13,6 +16,7 @@ import {
   QueryResult,
   TimeRange,
 } from './types/prometheus.types';
+import { IPrometheusService } from './prometheus.interface';
 
 const DEFAULT_AGGREGATION_WINDOW = '1h' as const;
 const DAY_IN_SECONDS = 60 * 60 * 24;
@@ -117,14 +121,17 @@ export const METRICS_DEFINITIONS: MetricDefinition[] = [
 ];
 
 @Injectable()
-export class PrometheusService {
+export class PrometheusService implements IPrometheusService {
   private readonly driver: PrometheusDriver;
   private readonly logger = PinoLogger.child(
     { module: 'PrometheusService' },
     { msgPrefix: '[PROMETHEUS] - ' },
   );
 
-  constructor(config?: PrometheusConfig) {
+  constructor(
+    private readonly httpService: HttpService,
+    config?: PrometheusConfig,
+  ) {
     const configuration = config || {
       endpoint: prometheusConf.host,
       baseURL: prometheusConf.baseURL,
@@ -346,6 +353,43 @@ export class PrometheusService {
       };
     } catch (error) {
       return this.handleError('Error querying averaged stats by type:', error);
+    }
+  }
+
+  async prometheusServerStats() {
+    const { host, baseURL, user, password } = prometheusConf;
+    const auth = { username: user, password: password };
+
+    try {
+      // Get runtime information and build information
+      const runtimeInfo = await lastValueFrom(
+        this.httpService.get(`${host}${baseURL}/status/runtimeinfo`, {
+          auth,
+        }),
+      );
+      const buildInfo = await lastValueFrom(
+        this.httpService.get(`${host}${baseURL}/status/buildinfo`, { auth }),
+      );
+
+      // Get targets status (up/down)
+      const targets = await lastValueFrom(
+        this.httpService.get(`${host}${baseURL}/targets`, { auth }),
+      );
+
+      // Get TSDB stats (time series database statistics)
+      const tsdbStats = await lastValueFrom(
+        this.httpService.get(`${host}${baseURL}/status/tsdb`, { auth }),
+      );
+
+      return {
+        runtime: runtimeInfo.data.data,
+        build: buildInfo.data.data,
+        targets: targets.data.data,
+        tsdb: tsdbStats.data.data,
+      };
+    } catch (error) {
+      logger.error(error, 'Failed to fetch Prometheus stats');
+      throw error;
     }
   }
 }
