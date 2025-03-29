@@ -1,8 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Client } from 'ssh2';
 import { NotFoundError } from '../../../middlewares/api/ApiError';
-import SSHCredentialsHelper from '../../../helpers/ssh/SSHCredentialsHelper';
-import { tryResolveHost } from '../../../helpers/dns/dns-helper';
+import { SSHCredentialsAdapter } from '../../adapters/ssh/ssh-credentials.adapter';
+import { tryResolveHost } from '../../common/dns/dns.util';
 import { IDevicesService, IDeviceAuthService } from '../../../modules/devices';
 
 @Injectable()
@@ -40,7 +40,8 @@ export class SshConnectionService {
   async createConnection(ssh: Client, deviceUuid: string): Promise<{ host: string }> {
     const { device, deviceAuth, host } = await this.fetchDeviceAndAuth(deviceUuid);
 
-    const sshCredentials = await SSHCredentialsHelper.getSShConnection(device, deviceAuth);
+    const sshHelper = new SSHCredentialsAdapter();
+    const sshCredentials = await sshHelper.getSShConnection(device, deviceAuth);
     const connectConfig = {
       ...sshCredentials,
       host: await tryResolveHost(sshCredentials.host as string),

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { findIpAddress } from '../../helpers/Utils';
+import { findIpAddress } from '@infrastructure/common/utils/utils';
 import logger from '../../logger';
 import {
   AuthFailureResponse,

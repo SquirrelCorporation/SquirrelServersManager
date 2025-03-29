@@ -15,7 +15,7 @@ import {
   ICacheService,
 } from '../../../../infrastructure/cache/interfaces/cache.service.interface';
 import { BadRequestError, NotFoundError } from '../../../../middlewares/api/ApiError';
-import { isFinalStatus } from '../../../../helpers/ansible/AnsibleTaskHelper';
+import { isFinalStatus } from '@infrastructure/common/ansible/ansible-task.util';
 import { TaskEventDto } from '../../presentation/dtos/task-event.dto';
 import { TaskHookDto } from '../../presentation/dtos/task-hook.dto';
 

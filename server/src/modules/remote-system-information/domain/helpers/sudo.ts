@@ -1,11 +1,11 @@
 import { SsmAnsible } from 'ssm-shared-lib';
 import { IDeviceAuthService } from '@modules/devices';
 import { DEFAULT_VAULT_ID } from '@modules/ansible-vaults';
-import Vault from 'src/helpers/vault-crypto/Vault';
+import { VaultService } from '@infrastructure/security/vault-crypto/services/vault.service';
 import { VAULT_PWD } from 'src/config';
 
 const vaultDecrypt = async (str: string, vault: string) => {
-  const _vault = new Vault({ password: VAULT_PWD });
+  const _vault = new VaultService({ password: VAULT_PWD });
   return await _vault.decrypt(str, vault);
 };
 

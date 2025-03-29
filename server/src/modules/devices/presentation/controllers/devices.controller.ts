@@ -1,9 +1,9 @@
 import { parse } from 'url';
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req } from '@nestjs/common';
 import { API } from 'ssm-shared-lib';
-import { paginate } from 'src/helpers/query/PaginationHelper';
-import { sortByFields } from 'src/helpers/query/SorterHelper';
-import { filterByFields, filterByQueryParams } from 'src/helpers/query/FilterHelper';
+import { paginate } from '@infrastructure/common/query/pagination.util';
+import { sortByFields } from '@infrastructure/common/query/sorter.util';
+import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
 import { IDevice } from '@modules/devices';
 import { DeviceMapper } from '../mappers/device.mapper';
 import { CreateDeviceDto, UpdateDeviceDto } from '../dtos/device.dto';

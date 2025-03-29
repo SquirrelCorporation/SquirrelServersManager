@@ -7,7 +7,7 @@ import CronJob from 'node-cron';
 import * as Joi from 'joi';
 import parse from 'parse-docker-image-name';
 import { SsmStatus } from 'ssm-shared-lib';
-import { getCustomAgent } from 'src/helpers/ssh/custom-agent';
+import { getCustomAgent } from '@infrastructure/adapters/ssh/custom-agent.adapter';
 import { IContainerEntity } from '@modules/containers/domain/entities/container.entity';
 import { IDevice, IDeviceAuth } from '@modules/devices';
 import { Label } from '../../../../../../utils/label';

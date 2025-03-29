@@ -3,10 +3,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { ANSIBLE_LOGS_REPOSITORY, IAnsibleLogsRepository } from '@modules/logs';
 import { IAnsibleTask } from '@modules/ansible/domain/entities/ansible-task.entity';
 import { ITaskLogsService } from '../../application/interfaces/task-logs-service.interface';
-import { filterByQueryParams } from '../../../../helpers/query/FilterHelper';
-import { filterByFields } from '../../../../helpers/query/FilterHelper';
-import { sortByFields } from '../../../../helpers/query/SorterHelper';
-import { paginate } from '../../../../helpers/query/PaginationHelper';
+import { filterByQueryParams, filterByFields } from '@infrastructure/common/query/filter.util';
+import { sortByFields } from '@infrastructure/common/query/sorter.util';
+import { paginate } from '@infrastructure/common/query/pagination.util';
 import {
   ANSIBLE_TASK_REPOSITORY,
   IAnsibleTaskRepository,
