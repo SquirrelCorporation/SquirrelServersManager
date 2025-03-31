@@ -58,7 +58,7 @@
     "multer": "^1.4.5-lts.1",
     "js-yaml": "^4.1.0",
     "passport-mock-strategy": "^2.0.0",
-    "posthog-node": "^4.7.0",
+    "posthog-node": "^4.11.1",
     "ssh2": "^1.16.0",
     "bull": "^4.16.5",
     "prom-client": "^15.1.3",
