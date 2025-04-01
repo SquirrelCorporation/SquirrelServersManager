@@ -44,11 +44,11 @@ import { TREE_NODE_SERVICE } from './domain/interfaces/tree-node-service.interfa
     DevicesModule,
   ],
   controllers: [
-    PlaybookController,
-    PlaybooksRepositoryController,
     GitPlaybooksRepositoryController,
     LocalPlaybooksRepositoryController,
     PlaybookDiagnosticController,
+    PlaybooksRepositoryController,
+    PlaybookController,
   ],
   providers: [
     // Application services

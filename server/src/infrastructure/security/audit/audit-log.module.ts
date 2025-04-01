@@ -3,9 +3,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 
 // Empty placeholder module until we properly set up schemas and services
 @Module({
-  imports: [
-    EventEmitterModule.forRoot(),
-  ],
+  imports: [EventEmitterModule.forRoot()],
   providers: [],
   exports: [],
 })
