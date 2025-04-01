@@ -1,28 +1,20 @@
 import { parse } from 'url';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
+import {
+  BadRequestException,
+  EntityNotFoundException,
+  ServiceUnavailableException,
+} from '@infrastructure/exceptions';
+import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
+import { paginate } from '@infrastructure/common/query/pagination.util';
+import { sortByFields } from '@infrastructure/common/query/sorter.util';
 import { IContainerService } from '../../application/interfaces/container-service.interface';
 import { CONTAINER_SERVICE } from '../../application/interfaces/container-service.interface';
 import { ContainersQueryDto } from '../dtos/container-query.dto';
 import { PaginatedResponseDto } from '../dtos/paginated-response.dto';
-import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
-import { paginate } from '@infrastructure/common/query/pagination.util';
-import { sortByFields } from '@infrastructure/common/query/sorter.util';
 
 @Controller('containers')
-@UseGuards(JwtAuthGuard)
 export class ContainersController {
   constructor(
     @Inject(CONTAINER_SERVICE)
@@ -61,7 +53,16 @@ export class ContainersController {
 
   @Get(':uuid')
   async getContainerByUuid(@Param('uuid') uuid: string) {
-    return this.containerService.getContainerByUuid(uuid);
+    if (!uuid) {
+      throw new BadRequestException('Container UUID is required');
+    }
+
+    const container = await this.containerService.getContainerByUuid(uuid);
+    if (!container) {
+      throw new EntityNotFoundException('Container', uuid);
+    }
+
+    return container;
   }
 
   @Get('device/:deviceUuid')
@@ -81,36 +82,61 @@ export class ContainersController {
 
   @Post(':uuid/start')
   async startContainer(@Param('uuid') uuid: string) {
-    return { success: await this.containerService.startContainer(uuid) };
+    if (!uuid) {
+      throw new BadRequestException('Container UUID is required');
+    }
+
+    try {
+      const result = await this.containerService.startContainer(uuid);
+      return result;
+    } catch (error: any) {
+      if (error.message && error.message.includes('not found')) {
+        throw new EntityNotFoundException('Container', uuid);
+      } else if (error.message && error.message.includes('connection')) {
+        throw new ServiceUnavailableException(`Docker daemon is not available: ${error.message}`);
+      } else {
+        throw new BadRequestException(`Failed to start container: ${error.message}`);
+      }
+    }
   }
 
   @Post(':uuid/stop')
   async stopContainer(@Param('uuid') uuid: string) {
-    return { success: await this.containerService.stopContainer(uuid) };
+    if (!uuid) {
+      throw new BadRequestException('Container UUID is required');
+    }
+
+    try {
+      const result = await this.containerService.stopContainer(uuid);
+      return result;
+    } catch (error: any) {
+      if (error.message && error.message.includes('not found')) {
+        throw new EntityNotFoundException('Container', uuid);
+      } else if (error.message && error.message.includes('connection')) {
+        throw new ServiceUnavailableException(`Docker daemon is not available: ${error.message}`);
+      } else {
+        throw new BadRequestException(`Failed to stop container: ${error.message}`);
+      }
+    }
   }
 
   @Post(':uuid/restart')
   async restartContainer(@Param('uuid') uuid: string) {
-    return { success: await this.containerService.restartContainer(uuid) };
+    return await this.containerService.restartContainer(uuid);
   }
 
   @Post(':uuid/pause')
   async pauseContainer(@Param('uuid') uuid: string) {
-    return { success: await this.containerService.pauseContainer(uuid) };
+    return await this.containerService.pauseContainer(uuid);
   }
 
   @Post(':uuid/unpause')
   async unpauseContainer(@Param('uuid') uuid: string) {
-    return { success: await this.containerService.unpauseContainer(uuid) };
+    return await this.containerService.unpauseContainer(uuid);
   }
 
   @Post(':uuid/kill')
   async killContainer(@Param('uuid') uuid: string) {
-    return { success: await this.containerService.killContainer(uuid) };
-  }
-
-  @Get(':uuid/logs')
-  async getContainerLogs(@Param('uuid') uuid: string, @Query() options: any) {
-    return this.containerService.getContainerLogs(uuid, options);
+    return await this.containerService.killContainer(uuid);
   }
 }

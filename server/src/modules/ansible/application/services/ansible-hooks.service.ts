@@ -11,7 +11,7 @@ import {
   ANSIBLE_TASK_STATUS_REPOSITORY,
   IAnsibleTaskStatusRepository,
 } from '../../domain/repositories/ansible-task-status.repository.interface';
-import { BadRequestError, NotFoundError } from '../../../../middlewares/api/ApiError';
+import { BadRequestException, EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
 import { TaskEventDto } from '../../presentation/dtos/task-event.dto';
 import { TaskHookDto } from '../../presentation/dtos/task-hook.dto';
 
@@ -30,7 +30,7 @@ export class AnsibleHooksService implements IAnsibleHooksService {
 
   async addTaskStatus(taskHookDto: TaskHookDto) {
     if (!taskHookDto.runner_ident || !taskHookDto.status) {
-      throw new BadRequestError('Missing task status or id');
+      throw new BadRequestException('Missing task status or id');
     }
 
     const ident = taskHookDto.runner_ident;
@@ -39,7 +39,7 @@ export class AnsibleHooksService implements IAnsibleHooksService {
     const ansibleTask = await this.taskRepository.updateStatus(ident, status);
 
     if (!ansibleTask) {
-      throw new NotFoundError('Task not found');
+      throw new EntityNotFoundException('AnsibleTask', ident);
     }
 
     await this.taskStatusRepository.create({
@@ -63,7 +63,7 @@ export class AnsibleHooksService implements IAnsibleHooksService {
 
   async addTaskEvent(taskEventDto: TaskEventDto) {
     if (!taskEventDto.runner_ident) {
-      throw new BadRequestError('Missing task id');
+      throw new BadRequestException('Missing task id');
     }
 
     const removeEmptyLines = (str: string) =>

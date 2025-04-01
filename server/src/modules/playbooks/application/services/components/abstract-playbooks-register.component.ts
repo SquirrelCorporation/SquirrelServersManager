@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { NotFoundError } from '@middlewares/api/ApiError';
+import { EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
 import { IPlaybooksRegister } from '@modules/playbooks';
 import { IPlaybook } from '@modules/playbooks';
 import { IFileSystemService, IPlaybookFileService } from '@modules/shell';
@@ -80,7 +80,7 @@ export default abstract class PlaybooksRegisterComponent {
   public async save(playbookUuid: string, content: string) {
     const playbook = await this.playbookRepository.findOneByUuid(playbookUuid);
     if (!playbook) {
-      throw new NotFoundError(`Playbook ${playbookUuid} not found`);
+      throw new EntityNotFoundException('Playbook', playbookUuid);
     }
     await this.fileSystemService.writeFile(playbook.path, content);
   }
@@ -148,7 +148,7 @@ export default abstract class PlaybooksRegisterComponent {
     this.childLogger.info(`Getting playbooks register ${this.uuid}`);
     const playbooksRegister = await this.playbooksRegisterRepository.findByUuid(this.uuid);
     if (!playbooksRegister) {
-      throw new NotFoundError(`Playbooks repository ${this.uuid} not found`);
+      throw new EntityNotFoundException('PlaybooksRepository', this.uuid);
     }
     return playbooksRegister;
   }
@@ -188,7 +188,7 @@ export default abstract class PlaybooksRegisterComponent {
     const isCustomPlaybook = !foundPlaybook.name.startsWith('_');
     const playbookFoundInDatabase = await this.playbookRepository.findOneByPath(foundPlaybook.path);
     if (!playbookFoundInDatabase) {
-      throw new NotFoundError(`Playbook ${foundPlaybook.path} not found in database`);
+      throw new EntityNotFoundException('Playbook', `path: ${foundPlaybook.path}`);
     }
     const playbookData: IPlaybook = {
       path: foundPlaybook.path,

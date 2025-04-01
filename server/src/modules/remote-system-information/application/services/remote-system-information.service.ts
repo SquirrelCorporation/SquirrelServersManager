@@ -1,4 +1,12 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
+import { SSHCredentialsAdapter } from '@infrastructure/index';
+import {
+  DEVICES_SERVICE,
+  DEVICE_AUTH_SERVICE,
+  IDeviceAuthService,
+  IDevicesService,
+} from '@modules/devices';
+import { SSHExecutor } from '@modules/remote-system-information/application/services/remote-ssh-executor.service';
 import { IDevice } from '../../../devices/domain/entities/device.entity';
 import { IRemoteSystemInformationService } from '../interfaces/remote-system-information-service.interface';
 import { RemoteSystemInformationEngineService } from './engine/remote-system-information-engine.service';
@@ -12,7 +20,13 @@ export class RemoteSystemInformationService
 {
   private readonly logger = new Logger(RemoteSystemInformationService.name);
 
-  constructor(private readonly engineService: RemoteSystemInformationEngineService) {}
+  constructor(
+    private readonly engineService: RemoteSystemInformationEngineService,
+    @Inject(DEVICES_SERVICE)
+    private readonly devicesService: IDevicesService,
+    @Inject(DEVICE_AUTH_SERVICE)
+    private readonly deviceAuthService: IDeviceAuthService,
+  ) {}
 
   /**
    * Initialize the system when the module is loaded
@@ -78,6 +92,26 @@ export class RemoteSystemInformationService
 
   async testConnection(uuid: string): Promise<any> {
     const sshHelper = new SSHCredentialsAdapter();
-    const connection = await sshHelper.getSShConnection(device, deviceAuth);
+    try {
+      const device = await this.devicesService.findOneByUuid(uuid);
+      if (!device) {
+        throw new NotFoundException(`Device with UUID ${uuid} not found`);
+      }
+      const deviceAuth = await this.deviceAuthService.findDeviceAuthByDevice(device);
+      if (!deviceAuth) {
+        throw new NotFoundException(`Device auth with UUID ${uuid} not found`);
+      }
+      const connection = await sshHelper.getSShConnection(device, deviceAuth);
+      await SSHExecutor.testConnection(connection);
+      return {
+        connectionStatus: 'successful',
+      };
+    } catch (error: any) {
+      this.logger.error(error);
+      return {
+        connectionStatus: 'failed',
+        errorMessage: error.message,
+      };
+    }
   }
 }

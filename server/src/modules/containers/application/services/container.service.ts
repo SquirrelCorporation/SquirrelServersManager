@@ -6,6 +6,7 @@ import { DEVICES_SERVICE, IDevice, IDeviceAuth, IDevicesService } from '@modules
 import Dockerode from 'dockerode';
 import { getCustomAgent } from '@infrastructure/adapters/ssh';
 import DockerModem from 'docker-modem';
+import logger from 'src/logger';
 import {
   IWatcherEngineService,
   WATCHER_ENGINE_SERVICE,
@@ -158,30 +159,6 @@ export class ContainerService implements IContainerService {
     return this.executeContainerAction(id, 'kill');
   }
 
-  async getContainerLogs(id: string, options?: any): Promise<any> {
-    const container = await this.containerRepository.findOneById(id);
-    if (!container) {
-      throw new NotFoundException(`Container with id ${id} not found`);
-    }
-
-    // Find Docker watcher component for this device
-    const deviceUuid = container.deviceUuid;
-    const watcherName = `docker-${deviceUuid}`;
-    const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
-
-    if (!dockerComponent) {
-      throw new Error(`Docker watcher for device ${deviceUuid} not found`);
-    }
-
-    try {
-      // Use Docker component to get logs
-      return dockerComponent.getContainerLogs(container.id, options);
-    } catch (error: any) {
-      this.logger.error(`Failed to get container logs: ${error.message}`);
-      throw error;
-    }
-  }
-
   // Helper method to execute container actions (start, stop, etc.)
   public async executeContainerAction(id: string, action: string): Promise<boolean> {
     const container = await this.containerRepository.findOneById(id);
@@ -295,7 +272,7 @@ export class ContainerService implements IContainerService {
     }
     try {
       const options = await this.getDockerSshConnectionOptions(device, deviceAuth);
-      const agent = getCustomAgent(this.logger, {
+      const agent = getCustomAgent(logger, {
         debug: (message: any) => {
           this.logger.debug(message);
         },

@@ -1,10 +1,8 @@
-import { Controller, Get, Inject, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, Param } from '@nestjs/common';
 import { CONTAINER_SERVICE } from '@modules/containers';
 import { IContainerService } from '@modules/containers/application/interfaces/container-service.interface';
-import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
 
 @Controller('containers/diagnostic')
-@UseGuards(JwtAuthGuard)
 export class ContainerDiagnosticController {
   constructor(
     @Inject(CONTAINER_SERVICE)

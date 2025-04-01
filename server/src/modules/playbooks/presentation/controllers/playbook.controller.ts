@@ -1,13 +1,11 @@
-import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { PlaybookRepository, PlaybookService } from '@modules/playbooks';
 import { PlaybookFileService } from '@modules/shell';
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { User } from 'src/decorators/user.decorator';
 import { Playbooks } from 'src/types/typings';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 
 @Controller('playbooks')
-@UseGuards(JwtAuthGuard)
 export class PlaybookController {
   constructor(
     private readonly playbookService: PlaybookService,

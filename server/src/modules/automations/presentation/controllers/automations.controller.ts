@@ -1,32 +1,17 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  NotFoundException,
-  Param,
-  Post,
-  Put,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
-import { Response } from 'express';
-import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
-import { SuccessResponse } from '../../../../middlewares/api/ApiResponse';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put } from '@nestjs/common';
 import { AutomationsService } from '../../application/services/automations.service';
 import { Automation } from '../../domain/entities/automation.entity';
 import { CreateAutomationDto } from '../dtos/create-automation.dto';
 import { UpdateAutomationDto } from '../dtos/update-automation.dto';
 
 @Controller('automations')
-@UseGuards(JwtAuthGuard)
 export class AutomationsController {
   constructor(private readonly automationsService: AutomationsService) {}
 
   @Get()
-  async findAll(@Res() res: Response) {
+  async findAll() {
     const automations = await this.automationsService.findAll();
-    return new SuccessResponse('', automations).send(res);
+    return automations;
   }
 
   @Get('template/:templateId')

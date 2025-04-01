@@ -1,6 +1,5 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
-import { redisConf } from 'src/config';
 import { DevicesModule } from '../devices/devices.module';
 import { StatisticsModule } from '../statistics/statistics.module';
 import { AnsibleVaultsModule } from '../ansible-vaults/ansible-vaults.module';
@@ -8,6 +7,8 @@ import { JOB_CONCURRENCY, REMOTE_SYSTEM_INFO_QUEUE } from './infrastructure/queu
 import { RemoteSystemInformationProcessor } from './infrastructure/queue/remote-system-information.processor';
 import { RemoteSystemInformationService } from './application/services/remote-system-information.service';
 import { RemoteSystemInformationEngineService } from './application/services/engine/remote-system-information-engine.service';
+import { RemoteSystemInformationDiagnosticController } from './presentation/controllers/diagnostic';
+import { REMOTE_SYSTEM_INFORMATION_SERVICE } from './application/interfaces/remote-system-information-service.interface';
 
 /**
  * Module for remote system information collection and management
@@ -38,12 +39,18 @@ import { RemoteSystemInformationEngineService } from './application/services/eng
       },
     }),
   ],
+  controllers: [RemoteSystemInformationDiagnosticController],
   providers: [
     // Register queue processor
     RemoteSystemInformationProcessor,
     // Register services
     RemoteSystemInformationEngineService,
     RemoteSystemInformationService,
+    // Add provider for IRemoteSystemInformationService
+    {
+      provide: REMOTE_SYSTEM_INFORMATION_SERVICE,
+      useClass: RemoteSystemInformationService,
+    },
   ],
   exports: [
     // Export services

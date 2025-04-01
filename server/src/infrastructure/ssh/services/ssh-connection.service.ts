@@ -1,9 +1,9 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Client } from 'ssh2';
-import { NotFoundError } from '../../../middlewares/api/ApiError';
+import { EntityNotFoundException } from '../../exceptions/app-exceptions';
 import { SSHCredentialsAdapter } from '../../adapters/ssh/ssh-credentials.adapter';
 import { tryResolveHost } from '../../common/dns/dns.util';
-import { IDevicesService, IDeviceAuthService } from '../../../modules/devices';
+import { IDeviceAuthService, IDevicesService } from '../../../modules/devices';
 
 @Injectable()
 export class SshConnectionService {
@@ -11,7 +11,7 @@ export class SshConnectionService {
 
   constructor(
     @Inject('DeviceRepository') private readonly devicesService: IDevicesService,
-    @Inject('DeviceAuthRepository') private readonly deviceAuthService: IDeviceAuthService
+    @Inject('DeviceAuthRepository') private readonly deviceAuthService: IDeviceAuthService,
   ) {}
 
   /**
@@ -21,13 +21,13 @@ export class SshConnectionService {
     const device = await this.devicesService.findOneByUuid(deviceUuid);
     if (!device) {
       this.logger.error(`Device ${deviceUuid} not found`);
-      throw new NotFoundError(`Device ${deviceUuid} not found`);
+      throw new EntityNotFoundException('Device', deviceUuid);
     }
 
     const deviceAuth = await this.deviceAuthService.findDeviceAuthByDevice(device);
     if (!deviceAuth) {
       this.logger.error(`Authentication for device ${deviceUuid} not found`);
-      throw new NotFoundError(`Authentication for device ${deviceUuid} not found`);
+      throw new EntityNotFoundException('DeviceAuth', `for device ${deviceUuid}`);
     }
 
     const host = device.ip as string;

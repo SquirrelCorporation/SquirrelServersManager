@@ -1,14 +1,19 @@
 import http from 'http';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
+import helmet from 'helmet';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import { SECRET } from './config';
-import { HttpExceptionFilter } from './infrastructure/filters/http-exception.filter';
+import { ApiExceptionFilter } from './infrastructure/filters/api-exception.filter';
 import { TransformInterceptor } from './infrastructure/interceptors/transform.interceptor';
+import { ErrorTransformerInterceptor } from './infrastructure/interceptors/error-transformer.interceptor';
+import { AuditInterceptor } from './infrastructure/security/audit/audit.interceptor';
+import { JwtAuthGuard } from './modules/auth/strategies/jwt-auth.guard';
 import logger from './logger';
 
 // Declare global nestApp for legacy code to access
@@ -49,6 +54,34 @@ class AppWrapper {
       // Enable CORS
       nestApp.enableCors();
 
+      // Apply Helmet security headers
+      nestApp.use(
+        helmet({
+          contentSecurityPolicy: {
+            directives: {
+              defaultSrc: ["'self'"],
+              scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+              styleSrc: ["'self'", "'unsafe-inline'"],
+              imgSrc: ["'self'", 'data:'],
+              connectSrc: ["'self'"],
+              fontSrc: ["'self'"],
+              objectSrc: ["'none'"],
+              mediaSrc: ["'self'"],
+              frameSrc: ["'none'"],
+            },
+          },
+          xssFilter: true,
+          noSniff: true,
+          ieNoOpen: true,
+          referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+          hsts: {
+            maxAge: 15552000, // 180 days
+            includeSubDomains: true,
+          },
+        }),
+      );
+      logger.info('Applied Helmet security headers');
+
       // Configure the app
       nestApp.use(cookieParser());
       nestApp.use(passport.initialize());
@@ -65,11 +98,29 @@ class AppWrapper {
           forbidUnknownValues: false,
         }),
       );
-      // Apply global interceptor for standardized response format
-      nestApp.useGlobalInterceptors(new TransformInterceptor(), new LoggerErrorInterceptor());
+      // Apply global interceptors for standardized response format
+      const reflector = nestApp.get(Reflector);
+      
+      nestApp.useGlobalInterceptors(
+        new TransformInterceptor(),
+        new LoggerErrorInterceptor(),
+        new ErrorTransformerInterceptor()
+        // Temporarily disabled AuditInterceptor until we properly set up its dependencies
+        // new AuditInterceptor(auditLogService, reflector)
+      );
 
-      // Apply global exception filter
-      nestApp.useGlobalFilters(new HttpExceptionFilter());
+      // Apply global exception filter that handles both HttpExceptions and legacy ApiErrors
+      nestApp.useGlobalFilters(new ApiExceptionFilter());
+
+      // Apply global authentication guard to protect all endpoints by default
+      // Using the reflector that was already defined above
+      
+      // Apply JWT authentication guard globally
+      nestApp.useGlobalGuards(
+        new JwtAuthGuard(reflector)
+      );
+      
+      logger.info('Global authentication and authorization guards applied - use @Public() to exclude authentication');
 
       // Log that we're initializing NestJS
       logger.info('Initializing NestJS application with WebSocket gateways');

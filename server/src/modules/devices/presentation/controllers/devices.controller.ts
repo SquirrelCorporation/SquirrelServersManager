@@ -5,6 +5,11 @@ import { paginate } from '@infrastructure/common/query/pagination.util';
 import { sortByFields } from '@infrastructure/common/query/sorter.util';
 import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
 import { IDevice } from '@modules/devices';
+import {
+  BadRequestException,
+  ConflictException,
+  EntityNotFoundException,
+} from '@infrastructure/exceptions';
 import { DeviceMapper } from '../mappers/device.mapper';
 import { CreateDeviceDto, UpdateDeviceDto } from '../dtos/device.dto';
 import { DevicesService } from '../../application/services/devices.service';
@@ -18,8 +23,22 @@ export class DevicesController {
 
   @Post()
   async createDevice(@Body() createDeviceDto: CreateDeviceDto) {
-    const device = this.deviceMapper.toEntity(createDeviceDto);
-    return this.devicesService.create(device);
+    try {
+      // Validate input
+      if (!createDeviceDto || !createDeviceDto.hostname) {
+        throw new BadRequestException('Invalid device data. Hostname is required');
+      }
+
+      const device = this.deviceMapper.toEntity(createDeviceDto);
+      return this.devicesService.create(device);
+    } catch (error: any) {
+      // Re-throw NestJS exceptions
+      if (error instanceof BadRequestException || error instanceof ConflictException) {
+        throw error;
+      }
+      // Convert other errors
+      throw new BadRequestException(`Failed to create device: ${error.message}`);
+    }
   }
 
   @Get()
@@ -66,22 +85,61 @@ export class DevicesController {
 
   @Get(':uuid')
   async findOneDevice(@Param('uuid') uuid: string) {
-    return this.devicesService.findOneByUuid(uuid);
+    if (!uuid) {
+      throw new BadRequestException('Device UUID is required');
+    }
+
+    const device = await this.devicesService.findOneByUuid(uuid);
+    if (!device) {
+      throw new EntityNotFoundException('Device', uuid);
+    }
+
+    return device;
   }
 
   @Patch(':uuid')
   async updateDevice(@Param('uuid') uuid: string, @Body() updateDeviceDto: UpdateDeviceDto) {
-    const device = await this.devicesService.findOneByUuid(uuid);
-    if (!device) {
-      throw new Error(`Device with UUID ${uuid} not found`);
+    if (!uuid) {
+      throw new BadRequestException('Device UUID is required');
     }
 
-    const updatedDevice = this.deviceMapper.updateEntity(device, updateDeviceDto);
-    return this.devicesService.update(updatedDevice);
+    if (!updateDeviceDto || Object.keys(updateDeviceDto).length === 0) {
+      throw new BadRequestException('No update data provided');
+    }
+
+    const device = await this.devicesService.findOneByUuid(uuid);
+    if (!device) {
+      throw new EntityNotFoundException('Device', uuid);
+    }
+
+    try {
+      const updatedDevice = this.deviceMapper.updateEntity(device, updateDeviceDto);
+      return this.devicesService.update(updatedDevice);
+    } catch (error: any) {
+      throw new BadRequestException(`Failed to update device: ${error.message}`);
+    }
   }
 
   @Delete(':uuid')
   async removeDevice(@Param('uuid') uuid: string) {
-    return this.devicesService.deleteByUuid(uuid);
+    if (!uuid) {
+      throw new BadRequestException('Device UUID is required');
+    }
+
+    const device = await this.devicesService.findOneByUuid(uuid);
+    if (!device) {
+      throw new EntityNotFoundException('Device', uuid);
+    }
+
+    try {
+      const result = await this.devicesService.deleteByUuid(uuid);
+      return {
+        success: true,
+        message: `Device ${device.hostname} successfully deleted`,
+        data: result,
+      };
+    } catch (error: any) {
+      throw new BadRequestException(`Failed to delete device: ${error.message}`);
+    }
   }
 }

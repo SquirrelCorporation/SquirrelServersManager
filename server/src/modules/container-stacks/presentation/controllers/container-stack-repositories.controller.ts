@@ -1,5 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, Post, Put, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
+import { Body, Controller, Delete, Get, Inject, Param, Post, Put } from '@nestjs/common';
 import {
   CONTAINER_STACKS_SERVICE,
   IContainerStacksService,
@@ -7,7 +6,6 @@ import {
 import { IContainerCustomStackRepositoryEntity } from '../../domain/entities/container-custom-stack.entity';
 
 @Controller('container-stacks/repositories')
-@UseGuards(JwtAuthGuard)
 export class ContainerStackRepositoriesController {
   constructor(
     @Inject(CONTAINER_STACKS_SERVICE)

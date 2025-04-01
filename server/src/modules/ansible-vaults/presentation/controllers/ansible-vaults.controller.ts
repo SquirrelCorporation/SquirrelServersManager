@@ -1,11 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { AnsibleVaultService } from '../../application/services/ansible-vault.service';
 import { CreateVaultDto, UpdateVaultDto, VaultPasswordResponseDto } from '../dto/ansible-vault.dto';
 import { Public } from '../../../../decorators/public.decorator';
 
 @Controller('ansible-vaults')
-@UseGuards(JwtAuthGuard)
 export class AnsibleVaultsController {
   constructor(private readonly ansibleVaultService: AnsibleVaultService) {}
 

@@ -1,4 +1,4 @@
-import { NotFoundError } from '@middlewares/api/ApiError';
+import { EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
 import { DEFAULT_VAULT_ID, VaultCryptoService } from '@modules/ansible-vaults';
 import {
   IPlaybooksRegisterRepository,
@@ -35,7 +35,7 @@ export class GitPlaybooksRepositoryController {
   private getGitComponent(uuid: string): GitPlaybooksRegisterComponent {
     const component = this.playbooksRegisterEngineService.getRepository(uuid);
     if (!component || !(component instanceof GitPlaybooksRegisterComponent)) {
-      throw new NotFoundError(`Git repository ${uuid} not found`);
+      throw new EntityNotFoundException('GitRepository', uuid);
     }
     return component;
   }
@@ -137,7 +137,7 @@ export class GitPlaybooksRepositoryController {
     // Find the repository
     const existingRegister = await this.playbooksRegisterRepository.findByUuid(uuid);
     if (!existingRegister) {
-      throw new NotFoundError(`Repository ${uuid} not found`);
+      throw new EntityNotFoundException('Repository', uuid);
     }
 
     // Update the repository
@@ -169,7 +169,7 @@ export class GitPlaybooksRepositoryController {
 
     const register = await this.playbooksRegisterRepository.findByUuid(uuid);
     if (!register) {
-      throw new NotFoundError(`Repository ${uuid} not found`);
+      throw new EntityNotFoundException('Repository', uuid);
     }
 
     await this.playbooksRegisterService.deleteRepository(register);
@@ -218,7 +218,7 @@ export class GitPlaybooksRepositoryController {
 
     const register = await this.playbooksRegisterRepository.findByUuid(uuid);
     if (!register) {
-      throw new NotFoundError(`Repository ${uuid} not found`);
+      throw new EntityNotFoundException('Repository', uuid);
     }
 
     await this.playbooksRegisterEngineService.registerRegister(register);

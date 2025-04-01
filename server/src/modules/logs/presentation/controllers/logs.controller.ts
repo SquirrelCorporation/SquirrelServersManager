@@ -1,5 +1,4 @@
-import { Controller, Get, Inject, Query, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
+import { Controller, Get, Inject, Query } from '@nestjs/common';
 import {
   IServerLogsService,
   SERVER_LOGS_SERVICE,
@@ -7,7 +6,6 @@ import {
 import { ServerLogsQueryDto } from '../dtos/server-logs-query.dto';
 
 @Controller('logs')
-@UseGuards(JwtAuthGuard)
 export class LogsController {
   constructor(
     @Inject(SERVER_LOGS_SERVICE)

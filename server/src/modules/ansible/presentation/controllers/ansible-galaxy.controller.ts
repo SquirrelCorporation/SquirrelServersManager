@@ -9,7 +9,6 @@ import {
 import { CollectionsPaginatedResponseDto } from '../dtos/galaxy-response.dto';
 
 @Controller('ansible/galaxy')
-@UseGuards(JwtAuthGuard)
 export class GalaxyController {
   constructor(private readonly galaxyService: GalaxyService) {}
 

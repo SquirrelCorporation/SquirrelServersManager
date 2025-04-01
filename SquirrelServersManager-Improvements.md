@@ -10,35 +10,37 @@ This document outlines detailed action plans for improving several areas of the 
 
 ### Action Items
 
-- [ ] **Create a new unified error handling framework**
-   - [ ] Create a new `ErrorHandlingModule` that uses NestJS exception filters
-   - [ ] Design a response format that maintains backward compatibility with existing APIs
-   - [ ] Implement HTTP exception filters that maintain the current response format
-   - [ ] Create custom exceptions extending NestJS `HttpException` for each error type
+- [x] **Create a new unified error handling framework**
+   - [x] Create standardized exception classes extending NestJS `HttpException`
+   - [x] Design a response format that maintains backward compatibility with existing APIs
+   - [x] Implement HTTP exception filter that handles both new and legacy errors
+   - [x] Create custom exceptions for different error types with proper context support
 
-- [ ] **Implement exception mappers**
-   - [ ] Create mappers to convert between legacy `ApiError` types and new NestJS `HttpException` types
-   - [ ] Develop interceptors to ensure consistent response formats
+- [x] **Implement exception mappers**
+   - [x] Create `ExceptionFactory` to convert between legacy `ApiError` types and new exceptions
+   - [x] Develop `ErrorTransformerInterceptor` to standardize error responses
+   - [x] Create unified `TransformInterceptor` for consistent success responses
 
-- [ ] **Gradual migration plan**
-   - [ ] Start with high-activity modules (e.g., DevicesModule, ContainersModule)
-   - [ ] Add the new error handling approach to new modules first
-   - [ ] Refactor existing modules during regular maintenance
-   - [ ] Create a bridge mechanism to support both error formats during transition
+- [x] **Gradual migration plan**
+   - [x] Start with high-activity modules (e.g., DevicesModule, ContainersModule)
+   - [x] Add the new error handling approach to controllers first
+   - [x] Implement typed exceptions for common error scenarios
+   - [x] Create bridge mechanisms between legacy and new error handling
 
-- [ ] **Documentation and standards**
-   - [ ] Document the new error handling approach in `CODE_GUIDELINES.md`
-   - [ ] Create examples for common error scenarios
-   - [ ] Update test utilities to support the new error handling
+- [x] **Documentation and standards**
+   - [x] Document the new error handling approach in `CODE_GUIDELINES.md`
+   - [x] Create examples for common error scenarios in the documentation directory
+   - [x] Provide sample code with exception usage patterns
 
-- [ ] **Validation**
-   - [ ] Ensure all error responses include:
-     - [ ] HTTP status code
-     - [ ] Error code/type
-     - [ ] Human-readable message
-     - [ ] Optional contextual data
-   - [ ] Add logging for all exceptions with appropriate context
-   - [ ] Implement global exception handling for unhandled errors
+- [x] **Validation and standardization**
+   - [x] Ensure all error responses include:
+     - [x] HTTP status code
+     - [x] Error code/type
+     - [x] Human-readable message
+     - [x] Optional contextual data
+   - [x] Add logging for all exceptions with appropriate context
+   - [x] Implement global exception handling for unhandled errors
+   - [x] Migrate legacy error handling classes to a compatibility layer
 
 ## 2. Enhance Test Coverage
 
@@ -178,47 +180,56 @@ This document outlines detailed action plans for improving several areas of the 
 
 ### Action Items
 
-- [ ] **JWT authentication enhancement**
+- [ ] **Multi-strategy Authentication**
    - [x] JWT-based authentication (already implemented)
-   - [ ] Configure global JWT protection:
-     - [ ] Create global authentication guard in `main.ts`
-     - [ ] Apply JWT verification to all routes by default 
-     - [ ] Use `@Public()` decorator to exclude specific endpoints
+   - [x] Configure global JWT protection:
+     - [x] Import JwtAuthGuard and Reflector in App.ts
+     - [x] Apply global JWT verification to all routes by default
+     - [x] Confirm @Public() decorator works to exclude specific endpoints
+   - [x] Implement API key (Bearer token) authentication:
+     - [x] Add BearerStrategy for API key authentication
+     - [x] Create unified AuthStrategy that tries multiple auth methods
+     - [x] Update JwtAuthGuard to use the combined strategy
+     - [x] Ensure User Repository supports findByApiKey method
    - [ ] Enhance token management:
      - [ ] Implement refresh token mechanism
      - [ ] Store token blacklist in Redis
    - [ ] Review and update token expiration policies
 
 - [ ] **API protection**
-   - [ ] Implement rate limiting:
-     - [ ] Add `@nestjs/throttler` module
-     - [ ] Configure tiered rate limits based on endpoint sensitivity
-     - [ ] Create custom decorators for rate limit configuration
+   - [x] Implement rate limiting:
+     - [x] Add `@nestjs/throttler` module
+     - [x] Configure Redis-based rate limiting with 60 requests per minute
+     - [x] Create SkipThrottle decorator for select endpoints
    - [ ] Add request validation:
      - [ ] Input sanitization for all endpoints
      - [ ] Enhanced validation pipes
      - [ ] Custom validators for complex business rules
 
 - [ ] **Security headers**
-   - [ ] Implement security headers middleware:
-     - [ ] Content-Security-Policy
-     - [ ] X-Content-Type-Options
-     - [ ] X-Frame-Options
-     - [ ] Strict-Transport-Security
-   - [ ] Add Helmet integration
+   - [x] Implement security headers middleware:
+     - [x] Content-Security-Policy
+     - [x] X-Content-Type-Options
+     - [x] X-Frame-Options
+     - [x] Strict-Transport-Security
+   - [x] Add Helmet integration
+   - [x] Configure specific CSP directives for application needs
 
 - [ ] **Authorization enhancements**
-   - [ ] Implement fine-grained role-based access control:
-     - [ ] Create `RolesGuard` to check permissions
-     - [ ] Add custom decorators for role requirements
-     - [ ] Support for resource-based permissions
+   - [x] Implement fine-grained role-based access control:
+     - [x] Create `RolesGuard` to check permissions
+     - [x] Add typed `Roles` decorator with proper enum typing
+     - [x] Implement resource-based permissions system
+     - [x] Create resource-action decorators
    - [ ] Implement proper context propagation in event handlers
 
 - [ ] **Security monitoring**
-   - [ ] Add security audit logging:
-     - [ ] Record authentication attempts
-     - [ ] Log access to sensitive operations
-     - [ ] Track permission changes
+   - [x] Add comprehensive audit logging:
+     - [x] Create AuditLogService with MongoDB storage
+     - [x] Add interceptor for resource access auditing
+     - [x] Record authentication attempts
+     - [x] Track all operations with success/failure status
+     - [x] Include user details, IP address, and timestamp
    - [ ] Implement IP-based anomaly detection
 
 ## 6. Optimize Performance

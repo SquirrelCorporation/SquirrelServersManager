@@ -8,13 +8,12 @@ import {
   Post,
   Put,
   Res,
-  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { SESSION_DURATION } from 'src/config';
-import { AuthFailureError } from '@middlewares/api/ApiError';
+import { UnauthorizedException } from '@infrastructure/exceptions/app-exceptions';
 import { JwtService } from '@nestjs/jwt';
-import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
+import { Public } from 'src/decorators/public.decorator';
 import { UsersService } from '../../application/services/users.service';
 import { UserMapper } from '../mappers/user.mapper';
 import { IUser } from '../../domain/entities/user.entity';
@@ -30,12 +29,14 @@ export class UsersController {
     private readonly jwtService: JwtService,
   ) {}
 
+  @Public()
   @Get()
   async getAllUsers() {
     const users = await this.usersService.getAllUsers();
     return { hasUsers: users?.length && users.length > 0 };
   }
 
+  @Public()
   @Post('login')
   async login(
     @Body() loginDto: LoginDto,
@@ -59,7 +60,7 @@ export class UsersController {
     const user = await this.usersService.findUserByEmailAndPassword(username, password);
 
     if (!user) {
-      throw new AuthFailureError('Identification is incorrect!');
+      throw new UnauthorizedException('Identification is incorrect!');
     }
 
     const payload = {
@@ -80,10 +81,20 @@ export class UsersController {
     };
   }
 
+  @Public()
   @Post()
-  @UseGuards(JwtAuthGuard)
   async createUser(@Body() userData: Partial<IUser>) {
     try {
+      const users = await this.usersService.getAllUsers();
+      if ((users?.length || 0) >= 1) {
+        throw new HttpException(
+          {
+            success: false,
+            message: 'Only one user is allowed to be created',
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
       const user = await this.usersService.createUser(userData as IUser);
       return {
         success: true,
@@ -102,7 +113,6 @@ export class UsersController {
   }
 
   @Put(':email/api-key')
-  @UseGuards(JwtAuthGuard)
   async regenerateApiKey(@Param('email') email: string, @User() user) {
     // Only admins can regenerate API keys for other users
     if (user.role !== 'admin' && user.email !== email) {
@@ -134,7 +144,6 @@ export class UsersController {
   }
 
   @Put(':email/logs-level')
-  @UseGuards(JwtAuthGuard)
   async updateLogsLevel(
     @Param('email') email: string,
     @Body() logsLevelData: { logsLevel: any },
@@ -170,7 +179,6 @@ export class UsersController {
   }
 
   @Get('current')
-  @UseGuards(JwtAuthGuard)
   async getCurrentUser(@User() user) {
     return this.usersService.getCurrentUser(user);
   }

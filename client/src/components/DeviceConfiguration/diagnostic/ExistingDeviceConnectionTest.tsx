@@ -1,9 +1,7 @@
 import CheckDeviceConnection from '@/components/DeviceConfiguration/CheckDeviceConnection';
 import { StreamlineComputerConnection } from '@/components/Icons/CustomIcons';
 import { getCheckDeviceDockerConnection } from '@/services/rest/containers/containers-diagnostic';
-import {
-  getCheckDeviceRemoteSystemInformationConnection,
-} from '@/services/rest/devices/devices';
+import { getCheckDeviceRemoteSystemInformationConnection } from '@/services/rest/remote-system-information/diagnostic';
 import { getCheckDeviceAnsibleConnection } from '@/services/rest/playbooks/diagnostic';
 import { Avatar, Button, Card, Col, Row } from 'antd';
 import React, { useState } from 'react';

@@ -165,18 +165,6 @@ export async function updateDeviceProxmoxConfiguration(
 }
 
 
-export async function getCheckDeviceRemoteSystemInformationConnection(
-  uuid: string,
-  options?: { [key: string]: any },
-) {
-  return request<API.Response<API.CheckRemoteSystemInformationConnection>>(
-    `${BASE_URL}/${uuid}/auth/remote-system-information/test-connection`,
-    {
-      method: 'GET',
-      ...(options || {}),
-    },
-  );
-}
 
 export async function updateAgentInstallMethod(
   uuid: string,

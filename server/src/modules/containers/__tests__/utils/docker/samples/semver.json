@@ -1,0 +1,27 @@
+{
+  "id": "container-id",
+  "name": "container-name",
+  "watcher": "local",
+  "status": "running",
+  "image": {
+    "id": "image-id",
+    "name":"organization/image",
+    "registry": {
+      "name": "hub",
+      "url": "http://registry"
+    },
+    "tag": {
+      "value": "4.5.6",
+      "semver": true
+    },
+    "digest": {
+      "watch": true,
+      "value": "xxx",
+      "repo": "yyy"
+    },
+    "variant": [""],
+    "architecture":"arch",
+    "os":"os",
+    "created": ""
+  }
+}

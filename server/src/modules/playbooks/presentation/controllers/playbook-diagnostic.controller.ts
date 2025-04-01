@@ -1,12 +1,10 @@
-import { NotFoundError } from '@middlewares/api/ApiError';
+import { EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
 import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
 import { IPlaybooksService, PLAYBOOKS_SERVICE } from '@modules/playbooks';
 import { IUser } from '@modules/users';
-import { Controller, Get, Inject, Logger, Param, Req, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
+import { Controller, Get, Inject, Logger, Param, Req } from '@nestjs/common';
 
 @Controller('playbooks/diagnostic')
-@UseGuards(JwtAuthGuard)
 export class PlaybookDiagnosticController {
   private readonly logger = new Logger(PlaybookDiagnosticController.name);
 
@@ -22,13 +20,13 @@ export class PlaybookDiagnosticController {
     const { uuid } = params;
     const device = await this.devicesService.findOneByUuid(uuid);
     if (!device) {
-      throw new NotFoundError('Device ID not found');
+      throw new EntityNotFoundException('Device', uuid);
     }
 
     const playbook =
       await this.playbookService.findOneByUniqueQuickReference('checkDeviceBeforeAdd');
     if (!playbook) {
-      throw new NotFoundError('Playbook not found');
+      throw new EntityNotFoundException('Playbook', 'checkDeviceBeforeAdd');
     }
     this.logger.log(
       `Executing playbook ${playbook.name} for device ${device.uuid} for user ${req.user.uuid}`,

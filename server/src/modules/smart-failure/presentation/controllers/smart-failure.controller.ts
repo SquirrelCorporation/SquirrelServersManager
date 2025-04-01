@@ -1,13 +1,14 @@
-import { Controller, Get, Inject, Query, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
-import { ISmartFailureService, SMART_FAILURE_SERVICE } from '../../application/interfaces/smart-failure.service.interface';
+import { Controller, Get, Inject, Query } from '@nestjs/common';
+import {
+  ISmartFailureService,
+  SMART_FAILURE_SERVICE,
+} from '../../application/interfaces/smart-failure.service.interface';
 import { SmartFailureRequestDto } from '../dtos/smart-failure.dto';
 
 /**
  * Controller for handling smart failure analysis requests
  */
 @Controller('smart-failure')
-@UseGuards(JwtAuthGuard)
 export class SmartFailureController {
   constructor(
     @Inject(SMART_FAILURE_SERVICE)

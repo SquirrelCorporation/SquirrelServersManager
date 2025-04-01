@@ -1,5 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
+import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
 import { AnsibleConfigService } from '../../application/services/ansible-config.service';
 import { AnsibleConfigDto, DeleteAnsibleConfigDto } from '../dtos/ansible-config.dto';
 
@@ -7,7 +6,6 @@ import { AnsibleConfigDto, DeleteAnsibleConfigDto } from '../dtos/ansible-config
  * Controller for managing Ansible configuration
  */
 @Controller('ansible-config')
-@UseGuards(JwtAuthGuard)
 export class AnsibleConfigController {
   constructor(private readonly ansibleConfigService: AnsibleConfigService) {}
 

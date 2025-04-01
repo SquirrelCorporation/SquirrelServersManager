@@ -1,12 +1,10 @@
-import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
-import { Controller, Get, Inject, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, Param, Query } from '@nestjs/common';
 import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
 import { DateTime } from 'luxon';
 import { DeviceStatsService } from '../../application/services/device-stats.service';
 import { DeviceStatsParamsDto, DeviceStatsQueryDto } from '../dto/device-stats.dto';
 
 @Controller('statistics/devices')
-@UseGuards(JwtAuthGuard)
 export class DeviceStatsController {
   constructor(
     private readonly deviceStatsService: DeviceStatsService,
@@ -19,7 +17,7 @@ export class DeviceStatsController {
     @Query() query: DeviceStatsQueryDto,
   ) {
     const { uuid, type } = params;
-    const { from } = query;
+    const { from = 24 } = query;
 
     const device = await this.devicesService.findOneByUuid(uuid);
     if (!device) {
@@ -27,7 +25,9 @@ export class DeviceStatsController {
     }
 
     const toDate = DateTime.now().toJSDate();
-    const fromDate = DateTime.now().minus({ hours: from }).toJSDate();
+    const fromDate = DateTime.now()
+      .minus({ hours: from as number })
+      .toJSDate();
 
     const stats = await this.deviceStatsService.getStatsByDeviceAndType(
       device,

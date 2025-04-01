@@ -10,9 +10,7 @@ import {
   Patch,
   Post,
   Put,
-  UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
 import {
   CONTAINER_REGISTRIES_SERVICE,
   IContainerRegistriesService,
@@ -20,7 +18,6 @@ import {
 import { CreateCustomRegistryDto, UpdateRegistryAuthDto } from '../dtos/container-registry.dto';
 
 @Controller('container-registries')
-@UseGuards(JwtAuthGuard)
 export class ContainerRegistriesController {
   constructor(
     @Inject(CONTAINER_REGISTRIES_SERVICE)

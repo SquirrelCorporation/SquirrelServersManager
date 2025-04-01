@@ -26,7 +26,7 @@ const logger = PinoLogger.child(
 );
 
 @WebSocketGateway({
-  namespace: 'container-logs',
+  namespace: 'containers-live-logs',
   cors: {
     origin: '*',
   },
@@ -68,18 +68,17 @@ export class ContainerLogsGateway implements OnGatewayConnection, OnGatewayDisco
     });
   }
 
-  // Support for legacy event
   @SubscribeMessage(SsmEvents.Logs.GET_LOGS)
-  async handleGetLogs(@ConnectedSocket() client: Socket, @MessageBody() payload: ContainerLogsDto) {
-    logger.info(`Legacy log request for container ${payload.containerId}`);
+  async handleGetLogs(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: ContainerLogsDto,
+  ): Promise<{ sessionId: string; success: boolean } | { success: false; message: string }> {
+    logger.info(`Live logs request for container ${payload.containerId}`);
 
     try {
       // Validate payload
       if (!payload.containerId) {
-        return {
-          event: SsmEvents.Logs.GET_LOGS,
-          data: { status: 'Bad Request', error: 'containerId is required' },
-        };
+        return { success: false, message: 'containerId is required' };
       }
 
       // Get container and check if it exists
@@ -102,7 +101,7 @@ export class ContainerLogsGateway implements OnGatewayConnection, OnGatewayDisco
       );
 
       // Store the stream closer function with a unique key
-      const streamKey = `legacy-${container.id}-${client.id}`;
+      const streamKey = `${container.id}-${client.id}`;
       this.streamClosers.set(streamKey, closingCallback);
 
       // Set up event listeners for closing the connection
@@ -125,14 +124,11 @@ export class ContainerLogsGateway implements OnGatewayConnection, OnGatewayDisco
       // Send initial connection message
       getContainerLogsCallback(`🛜 Connecting...\n`);
 
-      return { event: SsmEvents.Logs.GET_LOGS, data: { status: 'OK' } };
-    } catch (error: unknown) {
-      logger.error('Error getting container logs', error);
+      return { sessionId: streamKey, success: true };
+    } catch (error: any) {
+      logger.error(error, 'Error getting container logs');
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      return {
-        event: SsmEvents.Logs.GET_LOGS,
-        data: { status: 'Internal Error', error: errorMessage },
-      };
+      return { success: false, message: errorMessage };
     }
   }
 

@@ -14,22 +14,19 @@ import {
   Query,
   Req,
   Res,
-  UseGuards,
 } from '@nestjs/common';
 import { FileSystemService } from '@modules/shell';
 import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
-import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
+import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
+import { paginate } from '@infrastructure/common/query/pagination.util';
+import { sortByFields } from '@infrastructure/common/query/sorter.util';
+import { CreateVolumeDto } from '../dtos/create-volume.dto';
 import {
   CONTAINER_VOLUMES_SERVICE,
   IContainerVolumesService,
 } from '../../application/interfaces/container-volumes-service.interface';
-import { CreateVolumeDto } from '../dtos/create-volume.dto';
-import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
-import { paginate } from '@infrastructure/common/query/pagination.util';
-import { sortByFields } from '@infrastructure/common/query/sorter.util';
 
 @Controller('container-volumes')
-@UseGuards(JwtAuthGuard)
 export class ContainerVolumesController {
   constructor(
     @Inject(CONTAINER_VOLUMES_SERVICE)

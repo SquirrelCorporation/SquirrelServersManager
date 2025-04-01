@@ -9,9 +9,7 @@ import {
   Post,
   Put,
   Req,
-  UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import {
   CONTAINER_STACKS_SERVICE,
   IContainerStacksService,
@@ -19,7 +17,6 @@ import {
 import { ContainerCustomStack } from '../../domain/entities/container-custom-stack.entity';
 
 @Controller('container-stacks')
-@UseGuards(JwtAuthGuard)
 export class ContainerStacksController {
   private readonly logger = new Logger(ContainerStacksController.name);
   constructor(

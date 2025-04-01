@@ -13,7 +13,7 @@ import { commitAndSync } from '@infrastructure/adapters/git/services/commit-and-
 import { forcePull } from '@infrastructure/adapters/git/services/force-pull.service';
 import { IInitGitOptionsSyncImmediately } from '@infrastructure/adapters/git/services/init-git.service';
 import { SsmAlert, SsmGit } from 'ssm-shared-lib';
-import { InternalError } from '@middlewares/api/ApiError';
+import { InternalServerException } from '@infrastructure/exceptions/app-exceptions';
 import { IFileSystemService, IPlaybookFileService } from '@modules/shell';
 import {
   IPlaybookRepository,
@@ -128,7 +128,7 @@ export class GitPlaybooksRegisterComponent extends PlaybooksRegisterComponent {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       this.logger.error(`Error force pulling Git repository: ${errorMessage}`);
-      throw new InternalError(`Error force pulling Git repository: ${errorMessage}`);
+      throw new InternalServerException(`Error force pulling Git repository: ${errorMessage}`);
     }
   }
 
@@ -172,7 +172,7 @@ export class GitPlaybooksRegisterComponent extends PlaybooksRegisterComponent {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       this.logger.error(`Error cloning Git repository: ${errorMessage}`);
-      throw new InternalError(`Error cloning Git repository: ${errorMessage}`);
+      throw new InternalServerException(`Error cloning Git repository: ${errorMessage}`);
     }
   }
 
@@ -205,7 +205,7 @@ export class GitPlaybooksRegisterComponent extends PlaybooksRegisterComponent {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       this.logger.error(`Error committing and syncing Git repository: ${errorMessage}`);
-      throw new InternalError(`Error committing and syncing Git repository: ${errorMessage}`);
+      throw new InternalServerException(`Error committing and syncing Git repository: ${errorMessage}`);
     }
   }
 }

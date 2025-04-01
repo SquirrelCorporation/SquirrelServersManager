@@ -12,7 +12,11 @@ import {
   IPlaybookRepository,
   PLAYBOOK_REPOSITORY,
 } from '@modules/playbooks/domain/repositories/playbook-repository.interface';
-import { ForbiddenError, InternalError, NotFoundError } from '../../../../middlewares/api/ApiError';
+import {
+  EntityNotFoundException,
+  ForbiddenException,
+  InternalServerException,
+} from '@infrastructure/exceptions/app-exceptions';
 import { IPlaybooksRegisterService } from '../../domain/services/playbooks-register-service.interface';
 import { PlaybooksRegisterEngineService } from './engine/playbooks-register-engine.service';
 import { TreeNodeService } from './tree-node.service';
@@ -88,7 +92,7 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnMo
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       this.logger.error(`Error getting all playbooks repositories: ${errorMessage}`);
-      throw new InternalError(`Error getting all playbooks repositories: ${errorMessage}`);
+      throw new InternalServerException(`Error getting all playbooks repositories: ${errorMessage}`);
     }
   }
 
@@ -107,11 +111,11 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnMo
     ] as PlaybooksRegisterComponent;
 
     if (!playbooksRegisterComponent) {
-      throw new InternalError('Repository is not registered, try restarting or force sync');
+      throw new InternalServerException('Repository is not registered, try restarting or force sync');
     }
 
     if (!playbooksRegisterComponent.fileBelongToRepository(path)) {
-      throw new ForbiddenError("The selected path doesn't seem to belong to the repository");
+      throw new ForbiddenException("The selected path doesn't seem to belong to the repository");
     }
 
     this.fileSystemService.createDirectory(path, playbooksRegisterComponent.rootPath);
@@ -135,11 +139,11 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnMo
     ] as PlaybooksRegisterComponent;
 
     if (!playbooksRegisterComponent) {
-      throw new InternalError(`PlaybookRepository doesn't seem registered`);
+      throw new InternalServerException(`PlaybookRepository doesn't seem registered`);
     }
 
     if (!playbooksRegisterComponent.fileBelongToRepository(fullPath)) {
-      throw new ForbiddenError("The selected path doesn't seem to belong to the repository");
+      throw new ForbiddenException("The selected path doesn't seem to belong to the repository");
     }
 
     const playbook = await this.playbookRepository.create({
@@ -166,7 +170,7 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnMo
   ): Promise<void> {
     const playbook = await this.playbookRepository.findOneByUuid(playbookUuid);
     if (!playbook) {
-      throw new NotFoundError(`Playbook with UUID ${playbookUuid} not found`);
+      throw new EntityNotFoundException('Playbook', playbookUuid);
     }
 
     const playbooksRegisterComponent = this.playbooksRegisterEngineService.getState()[
@@ -174,7 +178,7 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnMo
     ] as PlaybooksRegisterComponent;
 
     if (!playbooksRegisterComponent) {
-      throw new InternalError(`PlaybookRepository doesn't seem registered`);
+      throw new InternalServerException(`PlaybookRepository doesn't seem registered`);
     }
 
     await this.playbookRepository.deleteByUuid(playbookUuid);
@@ -193,11 +197,11 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnMo
     ] as PlaybooksRegisterComponent;
 
     if (!playbooksRegisterComponent) {
-      throw new InternalError(`PlaybookRepository doesn't seem registered`);
+      throw new InternalServerException(`PlaybookRepository doesn't seem registered`);
     }
 
     if (!playbooksRegisterComponent.fileBelongToRepository(path)) {
-      throw new ForbiddenError("The selected path doesn't seem to belong to the repository");
+      throw new ForbiddenException("The selected path doesn't seem to belong to the repository");
     }
 
     this.fileSystemService.deleteFiles(path, playbooksRegisterComponent.rootPath);
@@ -212,7 +216,7 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnMo
   async savePlaybook(playbookUuid: string, content: string): Promise<void> {
     const playbook = await this.playbookRepository.findOneByUuid(playbookUuid);
     if (!playbook) {
-      throw new NotFoundError(`Playbook with UUID ${playbookUuid} not found`);
+      throw new EntityNotFoundException('Playbook', playbookUuid);
     }
 
     this.fileSystemService.writeFile(content, playbook.path);
@@ -226,13 +230,13 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnMo
     try {
       const register = await this.playbooksRegisterRepository.findByUuid(registerUuid);
       if (!register) {
-        throw new NotFoundError(`Repository with UUID ${registerUuid} not found`);
+        throw new EntityNotFoundException('Repository', registerUuid);
       }
 
       const playbooksRegisterComponent =
         this.playbooksRegisterEngineService.getState()[register.uuid];
       if (!playbooksRegisterComponent) {
-        throw new InternalError(`Repository component for ${register.name} not found`);
+        throw new InternalServerException(`Repository component for ${register.name} not found`);
       }
 
       await playbooksRegisterComponent.syncToDatabase();
@@ -240,7 +244,7 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnMo
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       this.logger.error(`Error syncing repository ${registerUuid}: ${errorMessage}`);
-      throw new InternalError(`Error syncing repository: ${errorMessage}`);
+      throw new InternalServerException(`Error syncing repository: ${errorMessage}`);
     }
   }
 
@@ -262,7 +266,7 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnMo
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       this.logger.error(`Error deleting repository: ${errorMessage}`);
-      throw new InternalError(`Error deleting repository: ${errorMessage}`);
+      throw new InternalServerException(`Error deleting repository: ${errorMessage}`);
     }
   }
 
@@ -275,7 +279,7 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnMo
       const playbooksRegisterComponent =
         this.playbooksRegisterEngineService.getState()[register.uuid];
       if (!playbooksRegisterComponent) {
-        throw new InternalError(`Repository component for ${register.name} not found`);
+        throw new InternalServerException(`Repository component for ${register.name} not found`);
       }
 
       const tree = await playbooksRegisterComponent.updateDirectoriesTree();
@@ -284,7 +288,7 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnMo
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       this.logger.error(`Error updating repository tree: ${errorMessage}`);
-      throw new InternalError(`Error updating repository tree: ${errorMessage}`);
+      throw new InternalServerException(`Error updating repository tree: ${errorMessage}`);
     }
   }
 }

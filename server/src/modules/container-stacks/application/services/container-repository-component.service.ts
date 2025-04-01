@@ -14,11 +14,11 @@ import { clone } from '@infrastructure/adapters/git/services/clone.service';
 import { commitAndSync } from '@infrastructure/adapters/git/services/commit-and-sync.service';
 import { forcePull } from '@infrastructure/adapters/git/services/force-pull.service';
 import { IInitGitOptionsSyncImmediately } from '@infrastructure/adapters/git/services/init-git.service';
+import { EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
 import Events from '../../../../core/events/events';
 import { EventEmitterService } from '../../../../core/events/event-emitter.service';
 import { SSM_DATA_PATH } from '../../../../config';
 import logger from '../../../../logger';
-import { NotFoundError } from '../../../../middlewares/api/ApiError';
 import { ShellWrapperService } from '../../../shell';
 import { IContainerCustomStackRepositoryEntity } from '../../domain/entities/container-custom-stack.entity';
 import { RepositoryConfig } from '../../domain/entities/repository-config.entity';
@@ -117,7 +117,7 @@ export class ContainerRepositoryComponentService {
 
     const containerStack = await this.containerCustomStackRepository.findByUuid(containerStackUuid);
     if (!containerStack) {
-      throw new NotFoundError(`Container Stack ${containerStackUuid} not found`);
+      throw new EntityNotFoundException('ContainerStack', containerStackUuid);
     }
 
     // Write content to the file

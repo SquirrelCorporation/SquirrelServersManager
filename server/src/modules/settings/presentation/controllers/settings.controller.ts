@@ -45,7 +45,6 @@ import {
 } from '../validators/master-node-url.validator';
 
 @Controller('settings')
-@UseGuards(JwtAuthGuard)
 export class SettingsController {
   constructor(
     @Inject(SETTINGS_SERVICE)

@@ -1,4 +1,4 @@
-import { NotFoundError } from '@middlewares/api/ApiError';
+import { EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
 import { PlaybooksRegisterService } from '@modules/playbooks';
 import { IPlaybooksRegisterRepository, PLAYBOOKS_REGISTER_REPOSITORY } from '@modules/playbooks';
 import { Body, Controller, Delete, Get, Inject, Logger, Param, Post, Put } from '@nestjs/common';
@@ -27,7 +27,7 @@ export class LocalPlaybooksRepositoryController {
   private getLocalComponent(uuid: string): LocalPlaybooksRegisterComponent {
     const component = this.playbooksRegisterEngineService.getRepository(uuid);
     if (!component || !(component instanceof LocalPlaybooksRegisterComponent)) {
-      throw new NotFoundError(`Local repository ${uuid} not found`);
+      throw new EntityNotFoundException('LocalRepository', uuid);
     }
     return component;
   }
@@ -69,7 +69,7 @@ export class LocalPlaybooksRepositoryController {
 
     const register = await this.playbooksRegisterRepository.findByUuid(uuid);
     if (!register) {
-      throw new NotFoundError(`Repository ${uuid} not found`);
+      throw new EntityNotFoundException('Repository', uuid);
     }
 
     await this.playbooksRegisterEngineService.registerRegister(register);
@@ -85,7 +85,7 @@ export class LocalPlaybooksRepositoryController {
 
     const register = await this.playbooksRegisterRepository.findByUuid(uuid);
     if (!register) {
-      throw new NotFoundError(`Repository ${uuid} not found`);
+      throw new EntityNotFoundException('Repository', uuid);
     }
 
     await this.playbooksRegisterService.deleteRepository(register);

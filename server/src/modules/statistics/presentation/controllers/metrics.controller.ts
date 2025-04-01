@@ -5,6 +5,7 @@ import {
 import { Controller, Get, Headers, HttpStatus, Inject, Logger, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { prometheusConf } from 'src/config';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('metrics')
 export class MetricsController {
@@ -15,6 +16,7 @@ export class MetricsController {
     private readonly metricsService: MetricsServiceInterface,
   ) {}
 
+  @Public()
   @Get()
   async getMetrics(@Headers('authorization') authHeader: string, @Res() res: Response) {
     const prometheusUser = prometheusConf.user;

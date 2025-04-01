@@ -1,0 +1,26 @@
+{
+  "id": "container-id",
+  "name": "container",
+  "status": "running",
+  "watcher": "local",
+  "image": {
+    "id": "image-id",
+    "name":"organization/image",
+    "registry": {
+      "name": "hub",
+      "url": "xxx"
+    },
+    "tag": {
+      "value": "4.5",
+      "semver": true
+    },
+    "digest": {
+      "watch": true,
+      "value": "xxx"
+    },
+    "architecture":"arch",
+    "os":"os",
+    "variant": [""],
+    "created": "2021-06-12T05:33:38.440Z"
+  }
+}

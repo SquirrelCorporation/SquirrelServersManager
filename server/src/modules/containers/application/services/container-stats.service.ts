@@ -77,7 +77,10 @@ export class ContainerStatsService implements IContainerStatsService {
     container: IContainerEntity,
     type?: string,
   ): Promise<[{ _id?: string; value: number; date?: string }] | null> {
-    this.logger.log(`getStatByDeviceAndType - type: ${type}, container: ${container.id}`);
+    this.logger.debug(
+      `getStatByDeviceAndType - type: ${type}, container: ${container.id}`,
+      container,
+    );
 
     if (!type) {
       throw new Error('Type is required');
@@ -97,7 +100,7 @@ export class ContainerStatsService implements IContainerStatsService {
     }
 
     if (!result.success) {
-      this.logger.error(`Failed to get latest stat: ${result.error}`);
+      this.logger.error(result, `Failed to get latest stat: ${result.error}`);
       return null;
     }
 
@@ -116,8 +119,9 @@ export class ContainerStatsService implements IContainerStatsService {
     from: number,
     type?: string,
   ): Promise<{ date: string; value: number; name?: string }[] | null> {
-    this.logger.log(
+    this.logger.debug(
       `getStatsByDeviceAndType - type: ${type}, from: ${from}, container: ${container.id}`,
+      container,
     );
 
     if (!type) {

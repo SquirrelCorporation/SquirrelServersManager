@@ -1,5 +1,4 @@
-import { IsEnum, IsInt, IsNotEmpty, IsString, Min } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { StatsType } from 'ssm-shared-lib';
 
 /**
@@ -28,10 +27,9 @@ export class ContainerCountParamDto {
  * DTO for container stats query params
  */
 export class ContainerStatsQueryDto {
-  @IsInt()
-  @Min(1)
-  @Type(() => Number)
-  from!: number;
+  @IsString()
+  @IsOptional()
+  from?: string;
 }
 
 /**

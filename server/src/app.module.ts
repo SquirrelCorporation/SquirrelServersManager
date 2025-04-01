@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 import { LoggerModule } from 'nestjs-pino';
 import { SshModule } from '@modules/ssh';
 import { BullModule } from '@nestjs/bull';
-import { Keyv, createKeyv } from '@keyv/redis';
+import { createKeyv } from '@keyv/redis';
 import { CacheModule } from '@nestjs/cache-manager';
 import { db, redisConf } from './config';
 import logger, { httpLoggerOptions } from './logger';
@@ -35,6 +35,9 @@ import { SshInfrastructureModule } from './infrastructure/ssh/ssh-infrastructure
 import { HealthModule } from './modules/health/health.module';
 import { StatisticsModule } from './modules/statistics/statistics.module';
 import { PluginsModule } from './infrastructure/plugins/plugins.module';
+// Note: Temporarily commenting out advanced modules until we properly set them up
+// import { ThrottlerModule } from './infrastructure/security/throttler/throttler.module';
+import { AuditLogModule } from './infrastructure/security/audit/audit-log.module';
 import { EventsModule } from './core/events/events.module';
 
 // Store the connection for legacy code to access
@@ -167,7 +170,7 @@ let connectionReady = false;
     StatisticsModule,
     AutomationsModule,
     ContainerStacksModule,
-    ContainersModule, // Commented out due to missing schema file
+    ContainersModule,
     DevicesModule,
     UpdateModule,
     DiagnosticModule,
@@ -186,6 +189,8 @@ let connectionReady = false;
     SettingsModule,
     HealthModule,
     PluginsModule,
+    // ThrottlerModule, // Temporarily disabled
+    AuditLogModule,
     RemoteSystemInformationModule,
   ],
 })

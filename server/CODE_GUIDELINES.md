@@ -1,6 +1,18 @@
-# Code Guidelines - Naming Conventions
+```
+  ,;;:;,
+   ;;;;;
+  ,:;;:;    ,'=.
+  ;:;:;' .=" ,'_\
+  ':;:;,/  ,__:=@
+   ';;:;  =./)_
+     `"=\_  )_"`
+          ``'"`
+```
+Squirrel Servers Manager 🐿️
+---
+# Code Guidelines - Naming Conventions and Standards
 
-This document outlines the naming conventions to be followed across the codebase to maintain consistency.
+This document outlines the naming conventions and standards to be followed across the codebase to maintain consistency.
 
 ## Interfaces
 
@@ -72,6 +84,32 @@ This document outlines the naming conventions to be followed across the codebase
   2. Import and inject the service interface and token from the module
   3. Use the injected service to access functionality
 
+## Error Handling
+
+### Exception Types
+- Use the standardized exception types from `/infrastructure/exceptions/app-exceptions.ts`
+- Match exception types to HTTP status codes (e.g., `NotFoundException` for 404)
+- Include relevant context in exceptions (e.g., entity name, identifier)
+
+### Error Response Format
+- All API errors should return the standardized response format:
+  ```json
+  {
+    "success": false,
+    "message": "Human-readable error message",
+    "error": "ErrorTypeName", 
+    "statusCode": 400,
+    "timestamp": "2023-01-01T00:00:00.000Z",
+    "path": "/api/resource",
+    "data": null
+  }
+  ```
+
+### Legacy Error Handling
+- For legacy code, continue using `ApiError` types
+- Use `ExceptionFactory` to convert legacy errors to standardized ones
+- New code should use the new exception classes directly
+
 ## General Rules
 
 - Follow TypeScript best practices
@@ -81,3 +119,5 @@ This document outlines the naming conventions to be followed across the codebase
   - **ALL_UPPERCASE**: constants
 - Use descriptive names that clearly indicate purpose
 - Maintain consistent naming schemes across related components
+- Use async/await instead of direct Promise handling
+- Add JSDoc comments for public APIs

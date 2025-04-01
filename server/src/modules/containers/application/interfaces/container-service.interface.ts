@@ -87,11 +87,6 @@ export interface IContainerService {
   killContainer(uuid: string): Promise<boolean>;
 
   /**
-   * Get container logs
-   */
-  getContainerLogs(uuid: string, options?: any): Promise<any>;
-
-  /**
    * Get containers by watcher name
    */
   getContainersByWatcher(watcherName: string): Promise<IContainerEntity[]>;

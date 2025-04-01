@@ -1,14 +1,12 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { CronService } from '../../application/services/cron.service';
 
 @Controller('admin/crons')
-@UseGuards(JwtAuthGuard)
 export class CronController {
   constructor(
     private readonly cronService: CronService,
-    private readonly schedulerRegistry: SchedulerRegistry
+    private readonly schedulerRegistry: SchedulerRegistry,
   ) {}
 
   @Get()
@@ -18,10 +16,11 @@ export class CronController {
     const activeJobsArray = Array.from(activeJobs);
 
     // Add active status to crons
-    const enrichedCrons = crons?.map(cron => ({
-      ...cron,
-      active: activeJobsArray.includes(cron.name),
-    })) || [];
+    const enrichedCrons =
+      crons?.map((cron) => ({
+        ...cron,
+        active: activeJobsArray.includes(cron.name),
+      })) || [];
 
     return enrichedCrons;
   }

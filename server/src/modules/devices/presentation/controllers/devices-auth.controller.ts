@@ -10,12 +10,10 @@ import {
   Patch,
   Post,
   UploadedFile,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
-import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { DEVICES_SERVICE } from '../../domain/services/devices-service.interface';
 import { IDevicesService } from '../../domain/services/devices-service.interface';
 import { DEVICE_AUTH_SERVICE } from '../../domain/services/device-auth-service.interface';
@@ -45,7 +43,6 @@ const fileFilter = (req: any, file: Express.Multer.File, callback: any) => {
 };
 
 @Controller('device-credentials')
-@UseGuards(JwtAuthGuard)
 export class DevicesAuthController {
   constructor(
     @Inject(DEVICES_SERVICE)

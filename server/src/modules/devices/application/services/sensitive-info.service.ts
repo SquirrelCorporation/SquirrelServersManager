@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ISensitiveInfoService } from '../../domain/services/sensitive-info.service.interface';
-import { DEFAULT_VAULT_ID, VaultCryptoService } from '../../../ansible-vaults/application/services/vault-crypto.service';
-import { InternalError } from '../../../../middlewares/api/ApiError';
+import {
+  DEFAULT_VAULT_ID,
+  VaultCryptoService,
+} from '../../../ansible-vaults/application/services/vault-crypto.service';
+import { InternalServerException } from '@infrastructure/exceptions/app-exceptions';
 
 const SENSITIVE_PLACEHOLDER = 'REDACTED';
 
@@ -29,7 +32,7 @@ export class SensitiveInfoService implements ISensitiveInfoService {
   async prepareSensitiveInfoForWrite(newKey: string, originalKey?: string): Promise<string> {
     if (newKey === SENSITIVE_PLACEHOLDER) {
       if (!originalKey) {
-        throw new InternalError('Received a redacted key, but original is not set');
+        throw new InternalServerException('Received a redacted key, but original is not set');
       }
       return originalKey;
     } else {

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Inject, Logger, Param, Post } from '@nestjs/common';
 import { API } from 'ssm-shared-lib';
-import { NotFoundError } from '@middlewares/api/ApiError';
+import { EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
 import {
   IPlaybooksRegisterRepository,
   PLAYBOOKS_REGISTER_REPOSITORY,
@@ -48,7 +48,7 @@ export class PlaybooksRepositoryController {
 
     const playbooksRegister = await this.playbooksRegisterRepository.findByUuid(uuid);
     if (!playbooksRegister) {
-      throw new NotFoundError(`PlaybookRepository ${uuid} not found`);
+      throw new EntityNotFoundException('PlaybookRepository', uuid);
     }
 
     await this.playbooksRegisterService.createDirectoryInPlaybookRepository(
@@ -74,7 +74,7 @@ export class PlaybooksRepositoryController {
 
     const playbooksRegister = await this.playbooksRegisterRepository.findByUuid(uuid);
     if (!playbooksRegister) {
-      throw new NotFoundError(`PlaybookRepository ${uuid} not found`);
+      throw new EntityNotFoundException('PlaybookRepository', uuid);
     }
 
     return await this.playbooksRegisterService.createPlaybookInRepository(
@@ -98,7 +98,7 @@ export class PlaybooksRepositoryController {
 
     const playbooksRegister = await this.playbooksRegisterRepository.findByUuid(uuid);
     if (!playbooksRegister) {
-      throw new NotFoundError(`PlaybookRepository ${uuid} not found`);
+      throw new EntityNotFoundException('PlaybookRepository', uuid);
     }
 
     await this.playbooksRegisterService.deletePlaybookFromRepository(
@@ -121,7 +121,7 @@ export class PlaybooksRepositoryController {
 
     const playbooksRegister = await this.playbooksRegisterRepository.findByUuid(uuid);
     if (!playbooksRegister) {
-      throw new NotFoundError(`PlaybookRepository ${uuid} not found`);
+      throw new EntityNotFoundException('PlaybookRepository', uuid);
     }
 
     await this.playbooksRegisterService.deleteDirectoryFromRepository(playbooksRegister, fullPath);

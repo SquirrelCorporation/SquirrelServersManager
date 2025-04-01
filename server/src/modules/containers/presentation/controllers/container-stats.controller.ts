@@ -7,11 +7,9 @@ import {
   Logger,
   Param,
   Query,
-  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
 import {
   CONTAINER_SERVICE,
   IContainerService,
@@ -30,7 +28,6 @@ import {
  * Controller for container statistics
  */
 @Controller('container-statistics')
-@UseGuards(JwtAuthGuard)
 @UsePipes(new ValidationPipe({ transform: true }))
 export class ContainerStatsController {
   private readonly logger = new Logger(ContainerStatsController.name);
@@ -53,7 +50,7 @@ export class ContainerStatsController {
     if (container == null) {
       throw new HttpException(`Container not found ${params.id}`, HttpStatus.NOT_FOUND);
     }
-    this.logger.log(
+    this.logger.debug(
       `getContainerStatByContainerId - container: ${container.id}, type: ${params.type}`,
     );
     try {
@@ -79,13 +76,14 @@ export class ContainerStatsController {
     if (container == null) {
       throw new HttpException(`Container not found ${params.id}`, HttpStatus.NOT_FOUND);
     }
-    this.logger.log(
+    this.logger.debug(
       `getContainerStatsByContainerId - container: ${container.id}, type: ${params.type}, query: ${JSON.stringify(query)}`,
+      container,
     );
     try {
       const stats = await this.containerStatsService.getStatsByDeviceAndType(
         container,
-        query.from,
+        query.from ? parseInt(query.from) : 24,
         params.type,
       );
       return stats;

@@ -1,12 +1,10 @@
 import { parse } from 'url';
 import { Controller, Get, Param, Query, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
-import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { TaskLogsService } from '../../application/services/task-logs.service';
 import { TaskLogsQueryDto } from '../dtos/task-logs-query.dto';
 
 @Controller('ansible/logs')
-@UseGuards(JwtAuthGuard)
 export class TaskLogsController {
   constructor(private readonly taskLogsService: TaskLogsService) {}
 

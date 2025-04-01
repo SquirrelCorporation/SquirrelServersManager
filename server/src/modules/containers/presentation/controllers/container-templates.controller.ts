@@ -8,13 +8,11 @@ import {
   Post,
   Query,
   Req,
-  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { IUser } from '@modules/users';
-import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
 import { ContainerTemplatesQueryDto } from '../dtos/container-templates.dto';
 import {
   CONTAINER_TEMPLATES_SERVICE,
@@ -25,7 +23,6 @@ import {
  * Controller for container templates
  */
 @Controller('container-templates')
-@UseGuards(JwtAuthGuard)
 @UsePipes(new ValidationPipe({ transform: true }))
 export class ContainerTemplatesController {
   constructor(
