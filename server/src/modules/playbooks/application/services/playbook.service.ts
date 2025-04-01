@@ -4,11 +4,12 @@ import { AnsibleCommandService, ExtraVarsService } from '@modules/ansible';
 import { IAnsibleVault } from '@modules/ansible-vaults';
 import { IUser } from '@modules/users/domain/entities/user.entity';
 import { IShellWrapperService, SHELL_WRAPPER_SERVICE } from '@modules/shell';
-import { ICacheService } from '@infrastructure/cache';
 import { IPlaybook } from '@modules/playbooks/domain/entities/playbook.entity';
 import { Playbooks } from 'src/types/typings';
 import { TaskLogsService } from '@modules/ansible';
 import { IPlaybooksService } from '@modules/playbooks/application/interfaces/playbooks-service.interface';
+import { Cache } from '@nestjs/cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   IPlaybookRepository,
   PLAYBOOK_REPOSITORY,
@@ -22,7 +23,7 @@ export class PlaybookService implements IPlaybooksService {
   constructor(
     @Inject(PLAYBOOK_REPOSITORY)
     private readonly playbookRepository: IPlaybookRepository,
-    @Inject('ICacheService') private readonly cacheService: ICacheService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @Inject(SHELL_WRAPPER_SERVICE) private readonly shellWrapperService: IShellWrapperService,
     private readonly extraVarsService: ExtraVarsService,
     private readonly ansibleCommandService: AnsibleCommandService,
@@ -40,7 +41,7 @@ export class PlaybookService implements IPlaybooksService {
   async findOneByUniqueQuickReference(quickRef: string): Promise<IPlaybook | null> {
     return this.playbookRepository.findOneByUniqueQuickReference(quickRef);
   }
-  
+
   async findOneByName(name: string): Promise<IPlaybook | null> {
     return this.playbookRepository.findOneByName(name);
   }
@@ -131,7 +132,7 @@ export class PlaybookService implements IPlaybooksService {
     });
 
     if (extraVar.type === SsmAnsible.ExtraVarsType.SHARED) {
-      await this.cacheService.set(extraVar.extraVar, extraVar.value || '');
+      await this.cacheManager.set(extraVar.extraVar, extraVar.value || '');
     }
   }
 

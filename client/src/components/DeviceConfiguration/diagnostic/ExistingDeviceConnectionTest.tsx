@@ -1,10 +1,10 @@
 import CheckDeviceConnection from '@/components/DeviceConfiguration/CheckDeviceConnection';
 import { StreamlineComputerConnection } from '@/components/Icons/CustomIcons';
+import { getCheckDeviceDockerConnection } from '@/services/rest/containers/containers-diagnostic';
 import {
-  getCheckDeviceAnsibleConnection,
-  getCheckDeviceDockerConnection,
   getCheckDeviceRemoteSystemInformationConnection,
 } from '@/services/rest/devices/devices';
+import { getCheckDeviceAnsibleConnection } from '@/services/rest/playbooks/diagnostic';
 import { Avatar, Button, Card, Col, Row } from 'antd';
 import React, { useState } from 'react';
 import { API, SsmAgent } from 'ssm-shared-lib';

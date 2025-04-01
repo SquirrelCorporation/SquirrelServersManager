@@ -6,7 +6,6 @@ import { User } from 'src/decorators/user.decorator';
 import { Playbooks } from 'src/types/typings';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 
-
 @Controller('playbooks')
 @UseGuards(JwtAuthGuard)
 export class PlaybookController {
@@ -23,12 +22,12 @@ export class PlaybookController {
 
   @Get(':uuid')
   async getPlaybook(@Param('uuid') uuid: string) {
-     const playbook = await this.playbookRepository.findOneByUuid(uuid);
+    const playbook = await this.playbookRepository.findOneByUuid(uuid);
     if (!playbook) {
       throw new Error('Playbook not found');
     }
 
-    return this.playbookFileService.readPlaybook(playbook.path)
+    return this.playbookFileService.readPlaybook(playbook.path);
   }
 
   @Patch(':uuid')
@@ -38,7 +37,7 @@ export class PlaybookController {
       throw new Error('Playbook not found');
     }
 
-    return this.playbookFileService.editPlaybook(playbook.path, updateData.content)
+    return this.playbookFileService.editPlaybook(playbook.path, updateData.content);
   }
 
   @Delete(':uuid')
@@ -103,7 +102,7 @@ export class PlaybookController {
       throw new Error('Playbook not found');
     }
 
-    const result =  await this.playbookService.executePlaybook(
+    const result = await this.playbookService.executePlaybook(
       playbook,
       user,
       execData.target,
@@ -144,15 +143,15 @@ export class PlaybookController {
     return {
       execId: uuid,
       execLogs: execLogs,
-    }
+    };
   }
 
   @Get('exec/:uuid/status')
   async getExecStatus(@Param('uuid') uuid: string) {
     const taskStatuses = await this.playbookService.getExecStatus(uuid);
     return {
-    execId: uuid,
-    execStatuses: taskStatuses,
-  }
+      execId: uuid,
+      execStatuses: taskStatuses,
+    };
   }
 }

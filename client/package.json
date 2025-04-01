@@ -47,10 +47,10 @@
   "dependencies": {
     "@ant-design/charts": "^2.2.7",
     "@ant-design/icons": "^6.0.0",
-    "@ant-design/pro-components": "^2.8.6",
+    "@ant-design/pro-components": "^2.8.7",
     "@ant-design/use-emotion-css": "1.0.4",
     "@antv/g2plot": "^2.4.32",
-    "@lottiefiles/dotlottie-react": "^0.13.2",
+    "@lottiefiles/dotlottie-react": "^0.13.3",
     "@umijs/max": "^4.4.6",
     "@umijs/plugin-antd-dayjs": "^0.3.0",
     "@umijs/route-utils": "^4.0.1",
@@ -123,7 +123,7 @@
     "ts-jest": "^29.3.0", 
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2",
-    "vitest": "^3.0.9"
+    "vitest": "^3.1.1"
   },
   "engines": {
     "node": ">=20.0.0"

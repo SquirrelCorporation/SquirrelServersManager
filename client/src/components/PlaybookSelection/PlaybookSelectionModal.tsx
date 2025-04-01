@@ -4,7 +4,7 @@ import {
   TriangleFlag,
 } from '@/components/Icons/CustomIcons';
 import ExtraVarView from '@/components/PlaybookSelection/ExtraVarView';
-import { getPlaybooks } from '@/services/rest/playbooks';
+import { getPlaybooks } from '@/services/rest/playbooks/playbooks';
 import { RightSquareOutlined } from '@ant-design/icons';
 import {
   ModalForm,

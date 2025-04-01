@@ -164,31 +164,6 @@ export async function updateDeviceProxmoxConfiguration(
   );
 }
 
-export async function getCheckDeviceDockerConnection(
-  uuid: string,
-  options?: { [key: string]: any },
-) {
-  return request<API.Response<API.CheckDockerConnection>>(
-    `${BASE_URL}/${uuid}/auth/docker/test-connection`,
-    {
-      method: 'GET',
-      ...(options || {}),
-    },
-  );
-}
-
-export async function getCheckDeviceAnsibleConnection(
-  uuid: string,
-  options?: { [key: string]: any },
-) {
-  return request<API.Response<API.CheckAnsibleConnection>>(
-    `${BASE_URL}/${uuid}/auth/ansible/test-connection`,
-    {
-      method: 'GET',
-      ...(options || {}),
-    },
-  );
-}
 
 export async function getCheckDeviceRemoteSystemInformationConnection(
   uuid: string,

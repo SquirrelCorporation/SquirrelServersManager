@@ -12,7 +12,7 @@ import { getAnsibleVaults } from '@/services/rest/ansible-vaults/ansible-vault';
 import {
   getGitPlaybooksRepositories,
   getPlaybooksLocalRepositories,
-} from '@/services/rest/playbooks-repositories';
+} from '@/services/rest/playbooks/repositories';
 import { postUserLogs } from '@/services/rest/usersettings';
 import { useModel } from '@@/exports';
 import {

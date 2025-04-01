@@ -1,24 +1,26 @@
 import { request } from '@umijs/max';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 
+const BASE_URL = '/api/playbooks';
+
 export async function getPlaybooks(
   options?: Record<string, any>,
 ): Promise<API.Response<API.PlaybookFile[]>> {
-  return request<API.Response<API.PlaybookFile[]>>(`/api/playbooks/`, {
+  return request<API.Response<API.PlaybookFile[]>>(`${BASE_URL}/`, {
     method: 'GET',
     ...(options || {}),
   });
 }
 
 export async function readPlaybookContent(playbookUuid: string) {
-  return request<API.Response<string>>(`/api/playbooks/${playbookUuid}`, {
+  return request<API.Response<string>>(`${BASE_URL}/${playbookUuid}`, {
     method: 'GET',
     ...{},
   });
 }
 
 export async function patchPlaybook(playbookUuid: string, content: string) {
-  return request<API.SimpleResult>(`/api/playbooks/${playbookUuid}/`, {
+  return request<API.SimpleResult>(`${BASE_URL}/${playbookUuid}/`, {
     method: 'PATCH',
     data: { content: content },
     ...{},
@@ -32,7 +34,7 @@ export async function executePlaybook(
   mode: SsmAnsible.ExecutionMode = SsmAnsible.ExecutionMode.APPLY,
   options?: Record<string, any>,
 ) {
-  return request<API.Exec>(`/api/playbooks/exec/${playbook}`, {
+  return request<API.Exec>(`${BASE_URL}/exec/${playbook}`, {
     method: 'POST',
     data: {
       playbook: playbook,
@@ -51,7 +53,7 @@ export async function executePlaybookByQuickRef(
   mode: SsmAnsible.ExecutionMode = SsmAnsible.ExecutionMode.APPLY,
   options?: Record<string, any>,
 ) {
-  return request<API.Exec>(`/api/playbooks/exec/quick-ref/${quickRef}`, {
+  return request<API.Exec>(`${BASE_URL}/exec/quick-ref/${quickRef}`, {
     method: 'POST',
     data: {
       quickRef: quickRef,
@@ -65,7 +67,7 @@ export async function executePlaybookByQuickRef(
 
 export async function getExecLogs(execId: string) {
   return request<API.Response<API.ExecLogs>>(
-    `/api/playbooks/exec/${execId}/logs/`,
+    `${BASE_URL}/exec/${execId}/logs/`,
     {
       method: 'GET',
       ...{},
@@ -75,7 +77,7 @@ export async function getExecLogs(execId: string) {
 
 export async function getTaskStatuses(execId: string) {
   return request<API.Response<API.ExecStatuses>>(
-    `/api/playbooks/exec/${execId}/status/`,
+    `${BASE_URL}/exec/${execId}/status/`,
     {
       method: 'GET',
       ...{},
@@ -84,7 +86,7 @@ export async function getTaskStatuses(execId: string) {
 }
 
 export async function deletePlaybook(playbookUuid: string) {
-  return request<API.SimpleResult>(`/api/playbooks/${playbookUuid}/`, {
+  return request<API.SimpleResult>(`${BASE_URL}/${playbookUuid}/`, {
     method: 'DELETE',
     ...{},
   });
@@ -94,7 +96,7 @@ export async function postPlaybookExtraVar(
   playbookUuid: string,
   extraVar: API.ExtraVar,
 ) {
-  return request<API.SimpleResult>(`/api/playbooks/${playbookUuid}/extravars`, {
+  return request<API.SimpleResult>(`${BASE_URL}/${playbookUuid}/extravars`, {
     data: { extraVar: extraVar },
     method: 'POST',
     ...{},
@@ -106,7 +108,7 @@ export async function deletePlaybookExtraVar(
   extraVar: string,
 ) {
   return request<API.SimpleResult>(
-    `/api/playbooks/${playbookUuid}/extravars/${extraVar}`,
+    `${BASE_URL}/${playbookUuid}/extravars/${extraVar}`,
     {
       method: 'DELETE',
       ...{},
@@ -120,7 +122,7 @@ export async function postExtraVarSharedValue(
   options?: Record<string, any>,
 ) {
   return request<API.SimpleResult>(
-    `/api/playbooks/extravars/${data.extraVar}`,
+    `${BASE_URL}/extravars/${data.extraVar}`,
     {
       data: { value: data.value },
       method: 'POST',

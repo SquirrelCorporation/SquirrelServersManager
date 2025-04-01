@@ -11,11 +11,14 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { SettingsKeys } from 'ssm-shared-lib';
+import { SettingsKeys, SsmAnsible } from 'ssm-shared-lib';
 import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
+import {
+  ISettingsService,
+  SETTINGS_SERVICE,
+} from '../../application/interfaces/settings-service.interface';
 import { AdvancedOperationsService } from '../../application/services/advanced-operations.service';
 import { InformationService } from '../../application/services/information.service';
-import { ISettingsService } from '../../application/interfaces/settings-service.interface';
 import {
   DashboardSettingBodyDto,
   DashboardSettingParamDto,
@@ -45,7 +48,7 @@ import {
 @UseGuards(JwtAuthGuard)
 export class SettingsController {
   constructor(
-    @Inject('ISettingsService')
+    @Inject(SETTINGS_SERVICE)
     private readonly settingsService: ISettingsService,
     private readonly advancedOperationsService: AdvancedOperationsService,
     private readonly informationService: InformationService,
@@ -147,8 +150,11 @@ export class SettingsController {
   @Post('keys/master-node-url')
   @UsePipes(MasterNodeUrlValidator)
   async updateMasterNodeUrl(@Body() body: MasterNodeUrlBodyDto) {
-    await this.settingsService.setSetting('master-node-url', body.value);
-    return { success: true, message: 'Master node URL successfully updated' };
+    await this.settingsService.setSetting(
+      SsmAnsible.DefaultSharedExtraVarsList.MASTER_NODE_URL,
+      body.value,
+    );
+    return body.value;
   }
 
   @Post('advanced/restart')

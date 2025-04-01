@@ -3,8 +3,8 @@ import { SsmStatus } from 'ssm-shared-lib';
 import Component from '@modules/remote-system-information/application/services/components/core/base-component';
 import { IDeviceAuthService, IDevicesService } from '@modules/devices';
 import { SSHCredentialsAdapter } from '@infrastructure/adapters/ssh/ssh-credentials.adapter';
-import { RemoteExecOptions } from '../../domain/types/remote-executor.types';
 import { tryResolveHost } from '@infrastructure/common/dns/dns.util';
+import { RemoteExecOptions } from '../../domain/types/remote-executor.types';
 import { generateSudoCommand } from '../../domain/helpers/sudo';
 
 /**

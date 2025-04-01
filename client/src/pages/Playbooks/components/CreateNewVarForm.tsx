@@ -2,7 +2,7 @@ import ExtraVarIcon, {
   getExtraVarTooltipTitle,
 } from '@/components/PlaybookSelection/ExtraVarIcon';
 import { ExtraVarsViewEditionProps } from '@/pages/Playbooks/components/ExtraVarsViewEditor';
-import { getPlaybooks, postPlaybookExtraVar } from '@/services/rest/playbooks';
+import { getPlaybooks, postPlaybookExtraVar } from '@/services/rest/playbooks/playbooks';
 import { ProFormDependency } from '@ant-design/pro-components';
 import {
   ProForm,

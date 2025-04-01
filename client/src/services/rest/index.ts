@@ -3,7 +3,7 @@ import * as cron from './cron';
 import * as device from './devices/devices';
 import * as deviceauth from './devices/device-credentials';
 import * as logs from './logs';
-import * as ansible from './playbooks';
+import * as ansible from './playbooks/playbooks';
 /* eslint-disable */
 import * as user from './user';
 import * as usersettings from './usersettings';

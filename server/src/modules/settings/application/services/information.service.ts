@@ -13,8 +13,7 @@ export class InformationService implements IInformationService {
   private readonly logger = new Logger(InformationService.name);
 
   constructor(
-    @Inject(CACHE_MANAGER)
-    private cacheManager: Cache,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     @Inject(PROMETHEUS_SERVICE)
     private readonly prometheusService: IPrometheusService,
   ) {}
@@ -60,9 +59,9 @@ export class InformationService implements IInformationService {
   async getRedisStats(): Promise<any> {
     try {
       // Try accessing the first store in the 'stores' array
-      const store = (this.cacheManager.stores as any)?.[0]; // Access first element
+      const store = (this.cacheManager as any).stores as any;
       // Get client from the first store
-      const client = store?.getClient?.();
+      const client = store?.[0]?.getClient?.();
 
       if (!client || typeof client.info !== 'function') {
         this.logger.warn('Could not get Redis client or client does not support INFO command.');

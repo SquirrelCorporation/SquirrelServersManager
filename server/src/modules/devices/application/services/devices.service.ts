@@ -11,7 +11,7 @@ import { IDevice } from '../../domain/entities/device.entity';
 @Injectable()
 export class DevicesService implements IDevicesService {
   private readonly logger = new Logger(DevicesService.name);
-  
+
   constructor(
     @Inject(DEVICE_REPOSITORY)
     private readonly deviceRepository: IDeviceRepository,
@@ -28,7 +28,7 @@ export class DevicesService implements IDevicesService {
   async findOneByUuid(uuid: string): Promise<IDevice | null> {
     return this.deviceRepository.findOneByUuid(uuid);
   }
-  
+
   async findByUuids(uuids: string[]): Promise<IDevice[] | null> {
     return this.deviceRepository.findByUuids(uuids);
   }
@@ -72,15 +72,15 @@ export class DevicesService implements IDevicesService {
         mem: e.systemInformation?.mem?.total || 0,
       };
     });
-    
+
     const totalCpu = devices?.reduce((accumulator, currentValue) => {
       return accumulator + (currentValue?.systemInformation?.cpu?.speed || 0);
     }, 0);
-    
+
     const totalMem = devices?.reduce((accumulator, currentValue) => {
       return accumulator + (currentValue?.systemInformation?.mem?.total || 0);
     }, 0);
-    
+
     return {
       offline: offline,
       online: online,

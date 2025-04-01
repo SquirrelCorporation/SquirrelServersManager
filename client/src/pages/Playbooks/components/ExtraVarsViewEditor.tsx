@@ -9,7 +9,7 @@ import CreateNewVarForm from '@/pages/Playbooks/components/CreateNewVarForm';
 import {
   deletePlaybookExtraVar,
   postExtraVarSharedValue,
-} from '@/services/rest/playbooks';
+} from '@/services/rest/playbooks/playbooks';
 import { LockOutlined, PlusOutlined, UnlockOutlined } from '@ant-design/icons';
 import { ProFormInstance, ProFormText } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';

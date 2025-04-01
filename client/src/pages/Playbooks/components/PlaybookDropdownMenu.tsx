@@ -2,7 +2,7 @@ import { Callbacks } from '@/pages/Playbooks/components/DirectoryTreeView';
 import {
   commitAndSyncPlaybooksGitRepository,
   forcePullPlaybooksGitRepository,
-} from '@/services/rest/playbooks-repositories';
+} from '@/services/rest/playbooks/repositories';
 import {
   ArrowDownOutlined,
   DeleteOutlined,

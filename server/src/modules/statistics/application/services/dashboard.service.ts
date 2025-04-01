@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SettingsKeys, StatsType } from 'ssm-shared-lib';
 import { IDevice } from '@modules/devices';
-import { ICacheService } from '../../../../infrastructure/cache';
+import { Cache } from '@nestjs/cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   IPrometheusService,
   PROMETHEUS_SERVICE,
@@ -22,7 +23,7 @@ export class DashboardService {
     private readonly deviceDownTimeService: DeviceDownTimeService,
     @Inject(PROMETHEUS_SERVICE)
     private readonly prometheusService: IPrometheusService,
-    @Inject('ICacheService') private readonly cacheService: ICacheService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async getSystemPerformance() {
@@ -57,10 +58,10 @@ export class DashboardService {
       },
     );
 
-    const minMem = (await this.cacheService.get(
+    const minMem = (await this.cacheManager.get(
       SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
     )) as string;
-    const maxCpu = (await this.cacheService.get(
+    const maxCpu = (await this.cacheManager.get(
       SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
     )) as string;
 

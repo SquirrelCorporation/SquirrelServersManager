@@ -1,9 +1,10 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { API, SsmAgent, SsmAnsible } from 'ssm-shared-lib';
 import { IExtraVarsService } from '@modules/ansible/application/interfaces/extra-vars-service.interface';
-import { CACHE_SERVICE, ICacheService } from '@infrastructure/cache';
 import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
 import { IUserRepository, USER_REPOSITORY } from '@modules/users';
+import { Cache } from '@nestjs/cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 /**
  * Service for managing Ansible extra-vars files
@@ -15,7 +16,7 @@ export class ExtraVarsService implements IExtraVarsService {
   constructor(
     @Inject(DEVICES_SERVICE) private readonly devicesService: IDevicesService,
     @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
-    @Inject(CACHE_SERVICE) private readonly cacheService: ICacheService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   /**
@@ -65,7 +66,7 @@ export class ExtraVarsService implements IExtraVarsService {
     }
 
     if (extraVar.type === SsmAnsible.ExtraVarsType.SHARED) {
-      return await this.cacheService.getFromCache(extraVar.extraVar, '');
+      return (await this.cacheManager.get(extraVar.extraVar)) || '';
     }
 
     if (extraVar.type === SsmAnsible.ExtraVarsType.CONTEXT) {

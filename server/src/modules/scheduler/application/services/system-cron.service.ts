@@ -2,19 +2,11 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { SettingsKeys } from 'ssm-shared-lib';
 import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
+import { ITaskLogsService, TASK_LOGS_SERVICE } from '@modules/ansible';
+import { IServerLogsService, SERVER_LOGS_SERVICE } from '@modules/logs';
+import { Cache } from '@nestjs/cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import PinoLogger from '../../../../logger';
-import {
-  CACHE_SERVICE,
-  ICacheService,
-} from '@infrastructure/cache';
-import {
-  TASK_LOGS_SERVICE,
-  ITaskLogsService,
-} from '@modules/ansible';
-import {
-  IServerLogsService,
-  SERVER_LOGS_SERVICE,
-} from '@modules/logs';
 import { CronService } from './cron.service';
 
 const logger = PinoLogger.child({ module: 'SystemCronService' });
@@ -28,8 +20,7 @@ export class SystemCronService implements OnModuleInit {
     private readonly taskLogsService: ITaskLogsService,
     @Inject(SERVER_LOGS_SERVICE)
     private readonly serverLogsService: IServerLogsService,
-    @Inject(CACHE_SERVICE)
-    private readonly cacheService: ICacheService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private readonly cronService: CronService,
     private readonly schedulerRegistry: SchedulerRegistry,
   ) {}
@@ -68,10 +59,10 @@ export class SystemCronService implements OnModuleInit {
       logger.info('Running offline device detection job');
       const jobName = '_isDeviceOffline';
 
-      const delay = await this.cacheService.getFromCache(
-        SettingsKeys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
-        '5',
-      );
+      const delay =
+        ((await this.cacheManager.get(
+          SettingsKeys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
+        )) as string) || '5';
 
       await this.devicesService.setDeviceOfflineAfter(parseInt(delay));
       await this.cronService.updateLastExecution(jobName);
@@ -88,14 +79,14 @@ export class SystemCronService implements OnModuleInit {
       logger.info('Running Ansible logs cleanup job');
       const jobName = '_CleanAnsibleTasksLogsAndStatuses';
 
-      const delaySeconds = await this.cacheService.getFromCache(
-        SettingsKeys.GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
-        '5',
-      );
-      
+      const delaySeconds =
+        ((await this.cacheManager.get(
+          SettingsKeys.GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
+        )) as string) || '5';
+
       // Convert seconds to days (needed by service method)
       const delayDays = Math.max(1, Math.floor(parseInt(delaySeconds) / (24 * 60 * 60)));
-      
+
       await this.taskLogsService.cleanOldTasksAndLogs(delayDays);
       await this.cronService.updateLastExecution(jobName);
 
@@ -111,10 +102,10 @@ export class SystemCronService implements OnModuleInit {
       logger.info('Running server logs cleanup job');
       const jobName = '_CleanServerLogs';
 
-      const delay = await this.cacheService.getFromCache(
-        SettingsKeys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS,
-        '5',
-      );
+      const delay =
+        ((await this.cacheManager.get(
+          SettingsKeys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS,
+        )) as string) || '5';
 
       // Use the deleteAllOld method with the retention period
       await this.serverLogsService.deleteAllOld(parseInt(delay));

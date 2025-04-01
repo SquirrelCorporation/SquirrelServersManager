@@ -10,7 +10,7 @@ import {
   postContainerStacksGitRepository,
   putContainerStacksGitRepository,
   syncToDatabaseContainerStacksGitRepository,
-} from '@/services/rest/container-stacks/container-stacks-repositories';
+} from '@/services/rest/container-stacks/container-stacks.repositories';
 import { DeleteOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { ModalForm, ProForm } from '@ant-design/pro-components';
 import { history } from '@umijs/max';

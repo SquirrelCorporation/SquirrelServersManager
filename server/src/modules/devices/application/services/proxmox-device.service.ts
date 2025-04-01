@@ -11,7 +11,7 @@ import { IDeviceAuth } from '../../domain/entities/device-auth.entity';
 @Injectable()
 export class ProxmoxDeviceService implements IProxmoxDeviceService {
   private readonly logger = new Logger(ProxmoxDeviceService.name);
-  
+
   constructor(
     @Inject(DEVICE_AUTH_SERVICE)
     private readonly deviceAuthService: IDeviceAuthService,
@@ -34,12 +34,13 @@ export class ProxmoxDeviceService implements IProxmoxDeviceService {
         username?: string;
         password?: string;
       };
-    }
+    },
   ): Promise<IDeviceAuth> {
     // Ensure proxmoxAuth exists or create it with defaults
     const proxmoxAuth = {
       ...(deviceAuth.proxmoxAuth || {}),
-      remoteConnectionMethod: updates.remoteConnectionMethod ?? deviceAuth.proxmoxAuth?.remoteConnectionMethod,
+      remoteConnectionMethod:
+        updates.remoteConnectionMethod ?? deviceAuth.proxmoxAuth?.remoteConnectionMethod,
       connectionMethod: updates.connectionMethod ?? deviceAuth.proxmoxAuth?.connectionMethod,
       port: updates.port ?? deviceAuth.proxmoxAuth?.port,
       ignoreSslErrors: updates.ignoreSslErrors ?? deviceAuth.proxmoxAuth?.ignoreSslErrors,

@@ -8,7 +8,8 @@ import { RemoteSystemInformationEngineService } from './engine/remote-system-inf
  */
 @Injectable()
 export class RemoteSystemInformationService
-  implements IRemoteSystemInformationService, OnModuleInit {
+  implements IRemoteSystemInformationService, OnModuleInit
+{
   private readonly logger = new Logger(RemoteSystemInformationService.name);
 
   constructor(private readonly engineService: RemoteSystemInformationEngineService) {}
@@ -73,5 +74,10 @@ export class RemoteSystemInformationService
       this.logger.error(error, 'Failed to deregister all components:');
       throw error;
     }
+  }
+
+  async testConnection(uuid: string): Promise<any> {
+    const sshHelper = new SSHCredentialsAdapter();
+    const connection = await sshHelper.getSShConnection(device, deviceAuth);
   }
 }

@@ -11,7 +11,7 @@ import { IDeviceAuth } from '../../domain/entities/device-auth.entity';
 @Injectable()
 export class DockerDeviceService implements IDockerDeviceService {
   private readonly logger = new Logger(DockerDeviceService.name);
-  
+
   constructor(
     @Inject(DEVICE_AUTH_SERVICE)
     private readonly deviceAuthService: IDeviceAuthService,
@@ -33,7 +33,7 @@ export class DockerDeviceService implements IDockerDeviceService {
       customDockerAgentForward?: boolean;
       customDockerTryKeyboard?: boolean;
       customDockerSocket?: string;
-    }
+    },
   ): Promise<IDeviceAuth> {
     const updatedDeviceAuth = {
       ...deviceAuth,
@@ -45,8 +45,10 @@ export class DockerDeviceService implements IDockerDeviceService {
       dockerCustomSshKeyPass: updates.dockerCustomSshKeyPass ?? deviceAuth.dockerCustomSshKeyPass,
       customDockerForcev6: updates.customDockerForcev6 ?? deviceAuth.customDockerForcev6,
       customDockerForcev4: updates.customDockerForcev4 ?? deviceAuth.customDockerForcev4,
-      customDockerAgentForward: updates.customDockerAgentForward ?? deviceAuth.customDockerAgentForward,
-      customDockerTryKeyboard: updates.customDockerTryKeyboard ?? deviceAuth.customDockerTryKeyboard,
+      customDockerAgentForward:
+        updates.customDockerAgentForward ?? deviceAuth.customDockerAgentForward,
+      customDockerTryKeyboard:
+        updates.customDockerTryKeyboard ?? deviceAuth.customDockerTryKeyboard,
       customDockerSocket: updates.customDockerSocket ?? deviceAuth.customDockerSocket,
     };
 

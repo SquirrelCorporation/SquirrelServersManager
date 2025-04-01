@@ -10,13 +10,13 @@ import {
   deletePlaybook,
   patchPlaybook,
   readPlaybookContent,
-} from '@/services/rest/playbooks';
+} from '@/services/rest/playbooks/playbooks';
 import {
   createDirectoryInRepository,
   createEmptyPlaybookInRepository,
   deleteAnyInRepository,
   getPlaybooksRepositories,
-} from '@/services/rest/playbooks-repositories';
+} from '@/services/rest/playbooks/repositories';
 import { PlaySquareOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import Editor, { Monaco } from '@monaco-editor/react';

@@ -4,7 +4,6 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { DevicesModule } from '../devices/devices.module';
 import { AnsibleModule } from '../ansible/ansible.module';
 import { LogsModule } from '../logs/logs.module';
-import { CacheModule } from '../../infrastructure/cache';
 import { CRON, CronSchema } from './infrastructure/schemas/cron.schema';
 import { CronRepositoryMapper } from './infrastructure/mappers/cron-repository.mapper';
 import { CronRepository } from './infrastructure/repositories/cron.repository';
@@ -15,14 +14,11 @@ import { SystemCronService } from './application/services/system-cron.service';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: CRON, schema: CronSchema },
-    ]),
+    MongooseModule.forFeature([{ name: CRON, schema: CronSchema }]),
     ScheduleModule,
     DevicesModule,
     AnsibleModule,
     LogsModule,
-    CacheModule,
   ],
   controllers: [CronController],
   providers: [

@@ -150,4 +150,9 @@ export interface IContainerService {
    * Count containers by device UUID
    */
   countByDeviceUuid(deviceUuid: string): Promise<number>;
+
+  /**
+   * Check Docker connection
+   */
+  checkDockerConnection(deviceUuid: string): Promise<any>;
 }

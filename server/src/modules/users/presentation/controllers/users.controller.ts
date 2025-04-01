@@ -33,25 +33,27 @@ export class UsersController {
   @Get()
   async getAllUsers() {
     const users = await this.usersService.getAllUsers();
-    return { hasUsers: users?.length && users.length > 0
-    };
+    return { hasUsers: users?.length && users.length > 0 };
   }
 
   @Post('login')
   async login(
     @Body() loginDto: LoginDto,
-    @Res({ passthrough: true }) response: Response
+    @Res({ passthrough: true }) response: Response,
   ): Promise<LoginResponseDto> {
     const { username, password } = loginDto;
 
     if (!password || !username) {
-      throw new HttpException({
-        success: false,
-        message: 'Identification is incorrect!',
-        data: {
-          isLogin: false,
-        }
-      }, HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        {
+          success: false,
+          message: 'Identification is incorrect!',
+          data: {
+            isLogin: false,
+          },
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     const user = await this.usersService.findUserByEmailAndPassword(username, password);
@@ -77,7 +79,6 @@ export class UsersController {
       currentAuthority: user.role,
     };
   }
-
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -171,6 +172,6 @@ export class UsersController {
   @Get('current')
   @UseGuards(JwtAuthGuard)
   async getCurrentUser(@User() user) {
-    return this.usersService.getCurrentUser(user)
-    }
+    return this.usersService.getCurrentUser(user);
+  }
 }

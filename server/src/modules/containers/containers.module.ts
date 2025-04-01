@@ -2,6 +2,7 @@ import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
 import { LscrRegistryComponent } from '@modules/containers/application/services/components/registry/lscr-registry.component';
+import { ContainerDiagnosticController } from '@modules/containers/presentation/controllers/container-diagnostic.controller';
 import { ShellModule } from '../shell/shell.module';
 import { PlaybooksModule } from '../playbooks/playbooks.module';
 import { StatisticsModule } from '../statistics/statistics.module';
@@ -102,6 +103,7 @@ import { DockerWatcherComponent } from './application/services/components/watche
     ContainerStatsController,
     ContainerRegistriesController,
     ContainerTemplatesController,
+    ContainerDiagnosticController,
   ],
   providers: [
     // Mappers

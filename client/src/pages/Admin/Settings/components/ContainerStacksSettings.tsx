@@ -4,7 +4,7 @@ import {
 } from '@/components/Icons/CustomIcons';
 import Title, { TitleColors } from '@/components/Template/Title';
 import ContainerStacksGitRepositoryModal from '@/pages/Admin/Settings/components/subcomponents/ContainerStacksGitRepositoryModal';
-import { getGitContainerStacksRepositories } from '@/services/rest/container-stacks/container-stacks-repositories';
+import { getGitContainerStacksRepositories } from '@/services/rest/container-stacks/container-stacks.repositories';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
 import {

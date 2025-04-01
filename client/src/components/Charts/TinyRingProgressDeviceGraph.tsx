@@ -8,7 +8,7 @@ import { StatsType } from 'ssm-shared-lib';
 
 export type TinyRingProps = {
   deviceUuid: string;
-  type: DeviceStatType;
+  type: StatsType.DeviceStatsType;
 };
 
 const TinyRingProgressDeviceGraph: React.FC<TinyRingProps> = ({

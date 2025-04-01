@@ -1,7 +1,7 @@
 import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import {
-  DEVICE_AUTH_SERVICE,
   DEVICES_SERVICE,
+  DEVICE_AUTH_SERVICE,
   IDeviceAuthService,
   IDevicesService,
 } from '@modules/devices';

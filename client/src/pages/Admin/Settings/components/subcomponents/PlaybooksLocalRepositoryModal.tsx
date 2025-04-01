@@ -6,7 +6,7 @@ import {
   postPlaybooksLocalRepositories,
   putPlaybooksLocalRepositories,
   syncToDatabasePlaybooksLocalRepository,
-} from '@/services/rest/playbooks-repositories';
+} from '@/services/rest/playbooks/repositories';
 import {
   DeleteOutlined,
   QuestionCircleOutlined,

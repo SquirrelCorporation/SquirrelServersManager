@@ -3,6 +3,9 @@ import { AbstractRegistryComponent } from '@modules/containers/application/servi
 import { fullName } from '@modules/containers/utils/utils';
 import { SSHCredentialsAdapter } from '@infrastructure/adapters/ssh/ssh-credentials.adapter';
 import { DEVICES_SERVICE, IDevice, IDeviceAuth, IDevicesService } from '@modules/devices';
+import Dockerode from 'dockerode';
+import { getCustomAgent } from '@infrastructure/adapters/ssh';
+import DockerModem from 'docker-modem';
 import {
   IWatcherEngineService,
   WATCHER_ENGINE_SERVICE,
@@ -279,5 +282,45 @@ export class ContainerService implements IContainerService {
 
   async updateContainerStatusByWatcher(watcherName: string, status: string): Promise<void> {
     return await this.containerRepository.updateStatusByWatcher(watcherName, status);
+  }
+
+  async checkDockerConnection(deviceUuid: string) {
+    const device = await this.devicesService.findOneByUuid(deviceUuid);
+    if (!device) {
+      throw new NotFoundException(`Device with UUID ${deviceUuid} not found`);
+    }
+    const deviceAuth = await this.getDeviceAuth(deviceUuid);
+    if (!deviceAuth) {
+      throw new NotFoundException(`Device auth with UUID ${deviceUuid} not found`);
+    }
+    try {
+      const options = await this.getDockerSshConnectionOptions(device, deviceAuth);
+      const agent = getCustomAgent(this.logger, {
+        debug: (message: any) => {
+          this.logger.debug(message);
+        },
+        ...options.sshOptions,
+        timeout: 60000,
+      });
+      try {
+        options.modem = new DockerModem({
+          agent: agent,
+        });
+      } catch (error: any) {
+        this.logger.error(error);
+        throw new Error(error.message);
+      }
+      const docker = new Dockerode({ ...options, timeout: 60000 });
+      await docker.ping();
+      await docker.info();
+      return {
+        connectionStatus: 'successful',
+      };
+    } catch (error: any) {
+      return {
+        connectionStatus: 'failed',
+        errorMessage: error.message,
+      };
+    }
   }
 }

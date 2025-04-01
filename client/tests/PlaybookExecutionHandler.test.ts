@@ -17,7 +17,7 @@ import {
   getExecLogs as mockGetExecLogs,
   getTaskStatuses,
   getTaskStatuses as mockGetTaskStatuses,
-} from '../src/services/rest/playbooks';
+} from '../src/services/rest/playbooks/playbooks';
 
 // Mock the external dependencies
 vi.mock('../src/services/rest/playbooks', () => ({

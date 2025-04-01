@@ -11,7 +11,7 @@ import { PLAYBOOKS_REGISTER_SERVICE } from '../../domain/services/playbooks-regi
 /**
  * Controller for managing local playbooks repositories
  */
-@Controller('playbooks-repository/local')
+@Controller('playbooks/repositories/local')
 export class LocalPlaybooksRepositoryController {
   private readonly logger = new Logger(LocalPlaybooksRepositoryController.name);
 

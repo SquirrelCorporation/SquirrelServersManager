@@ -2,11 +2,11 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { 
+import {
   ANSIBLE_LOGS_SERVICE,
   IAnsibleLogsService,
   IServerLogsService,
-  SERVER_LOGS_SERVICE
+  SERVER_LOGS_SERVICE,
 } from '@modules/logs';
 
 @Injectable()

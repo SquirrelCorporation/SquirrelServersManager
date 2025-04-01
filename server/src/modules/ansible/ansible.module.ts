@@ -1,9 +1,6 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CacheModule } from '../../infrastructure/cache';
-import { CacheService } from '../../infrastructure/cache/cache.service';
-import { CACHE_SERVICE } from '../../infrastructure/cache/interfaces/cache.service.interface';
 import { AnsibleVaultsModule, DEFAULT_VAULT_ID } from '../ansible-vaults';
 import { DevicesModule } from '../devices/devices.module';
 import { LogsModule } from '../logs/logs.module';
@@ -47,7 +44,6 @@ import { ANSIBLE_TASK_REPOSITORY } from './domain/repositories/ansible-task.repo
       { name: AnsibleTask.name, schema: AnsibleTaskSchema },
       { name: AnsibleTaskStatus.name, schema: AnsibleTaskStatusSchema },
     ]),
-    CacheModule,
   ],
   controllers: [TaskLogsController, GalaxyController, AnsibleHooksController],
   providers: [
@@ -71,10 +67,6 @@ import { ANSIBLE_TASK_REPOSITORY } from './domain/repositories/ansible-task.repo
     AnsibleTaskRepository,
     AnsibleTaskStatusRepository,
     {
-      provide: CACHE_SERVICE,
-      useExisting: CacheService,
-    },
-    {
       provide: ANSIBLE_TASK_REPOSITORY,
       useClass: AnsibleTaskRepository,
     },
@@ -95,7 +87,6 @@ import { ANSIBLE_TASK_REPOSITORY } from './domain/repositories/ansible-task.repo
     TASK_LOGS_SERVICE,
     GalaxyService,
     AnsibleHooksService,
-    CACHE_SERVICE,
   ],
 })
 export class AnsibleModule {}

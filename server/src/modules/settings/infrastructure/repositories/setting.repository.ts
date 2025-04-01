@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Cache } from '@nestjs/cache-manager';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
 import { ISetting } from '../../domain/entities/setting.entity';
 import { ISettingRepository } from '../../domain/repositories/setting-repository.interface';
 
@@ -8,10 +8,7 @@ import { ISettingRepository } from '../../domain/repositories/setting-repository
 export class SettingRepository implements ISettingRepository {
   private readonly logger = new Logger(SettingRepository.name);
 
-  constructor(
-    @Inject(CACHE_MANAGER)
-    private readonly cacheManager: Cache,
-  ) {}
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
   /**
    * Get a setting by key
@@ -59,6 +56,7 @@ export class SettingRepository implements ISettingRepository {
    */
   async set(setting: ISetting, ttl?: number): Promise<void> {
     try {
+      this.logger.log(`Setting key ${setting.key} in cache: ${setting.value} (ttl: ${ttl})`);
       await this.cacheManager.set(setting.key, setting.value, ttl);
     } catch (error: any) {
       this.logger.error(`Error setting key ${setting.key} in cache: ${error.message}`);

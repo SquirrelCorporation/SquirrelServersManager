@@ -12,7 +12,7 @@ import { IDeviceAuth } from '../../domain/entities/device-auth.entity';
 @Injectable()
 export class DeviceAuthService implements IDeviceAuthService {
   private readonly logger = new Logger(DeviceAuthService.name);
-  
+
   constructor(
     @Inject(DEVICE_AUTH_REPOSITORY)
     private readonly deviceAuthRepository: IDeviceAuthRepository,
@@ -26,15 +26,15 @@ export class DeviceAuthService implements IDeviceAuthService {
     const res = await this.deviceAuthRepository.findOneByDeviceUuid(uuid);
     return res;
   }
-  
+
   async findManyByDevicesUuid(uuids: string[]): Promise<IDeviceAuth[] | null> {
     return this.deviceAuthRepository.findManyByDevicesUuid(uuids);
   }
-  
+
   async findAllPop(): Promise<IDeviceAuth[] | null> {
     return this.deviceAuthRepository.findAllPop();
   }
-  
+
   async findAllPopWithSshKey(): Promise<IDeviceAuth[] | null> {
     return this.deviceAuthRepository.findAllPopWithSshKey();
   }
@@ -54,7 +54,7 @@ export class DeviceAuthService implements IDeviceAuthService {
       becomeMethod?: SsmAnsible.AnsibleBecomeMethod;
       becomeUser?: string;
       becomePass?: string;
-    }
+    },
   ): Promise<IDeviceAuth> {
     let updatedDeviceAuth = deviceAuth;
 

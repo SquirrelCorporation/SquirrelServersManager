@@ -5,7 +5,9 @@ import { VAULT_CRYPTO_SERVICE } from '@modules/ansible-vaults';
 import { ShellModule } from '@modules/shell';
 import { AnsibleModule } from '@modules/ansible';
 import { AnsibleVaultsModule } from '@modules/ansible-vaults';
+import { DevicesModule } from '@modules/devices';
 import { VaultCryptoService } from '../ansible-vaults/application/services/vault-crypto.service';
+import { PlaybookDiagnosticController } from './presentation/controllers/playbook-diagnostic.controller';
 import { PLAYBOOKS_SERVICE } from './application/interfaces/playbooks-service.interface';
 import { PlaybookService } from './application/services/playbook.service';
 import { PlaybooksRegisterService } from './application/services/playbooks-register.service';
@@ -39,12 +41,14 @@ import { TREE_NODE_SERVICE } from './domain/interfaces/tree-node-service.interfa
     ShellModule,
     AnsibleModule,
     AnsibleVaultsModule,
+    DevicesModule,
   ],
   controllers: [
     PlaybookController,
     PlaybooksRepositoryController,
     GitPlaybooksRepositoryController,
     LocalPlaybooksRepositoryController,
+    PlaybookDiagnosticController,
   ],
   providers: [
     // Application services

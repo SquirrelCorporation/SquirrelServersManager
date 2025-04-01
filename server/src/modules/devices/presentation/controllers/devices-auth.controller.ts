@@ -15,7 +15,6 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
-import { SsmAnsible } from 'ssm-shared-lib';
 import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
 import { DEVICES_SERVICE } from '../../domain/services/devices-service.interface';
 import { IDevicesService } from '../../domain/services/devices-service.interface';

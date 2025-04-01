@@ -1,11 +1,10 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
-import { CacheModule } from '../../infrastructure/cache';
 import { UpdateService } from './services/update.service';
 
 @Module({
-  imports: [ScheduleModule, HttpModule, CacheModule],
+  imports: [ScheduleModule, HttpModule],
   providers: [UpdateService],
   exports: [UpdateService],
 })

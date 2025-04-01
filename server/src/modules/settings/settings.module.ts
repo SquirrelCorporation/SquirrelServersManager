@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { CacheModule } from '@nestjs/cache-manager';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
 import { HttpModule } from '@nestjs/axios';
+import { SETTINGS_SERVICE } from '@modules/settings/application/interfaces/settings-service.interface';
 import { LogsModule } from '../logs/logs.module';
 import { PlaybooksModule } from '../playbooks/playbooks.module';
 import { Playbook, PlaybookSchema } from '../playbooks/infrastructure/schemas/playbook.schema';
@@ -17,9 +17,6 @@ import { SettingsMigrationService } from './infrastructure/migration/settings-mi
 
 @Module({
   imports: [
-    CacheModule.register({
-      isGlobal: true,
-    }),
     EventEmitterModule.forRoot(),
     MongooseModule.forFeature([{ name: Playbook.name, schema: PlaybookSchema }]),
     LogsModule,
@@ -38,10 +35,10 @@ import { SettingsMigrationService } from './infrastructure/migration/settings-mi
       useClass: SettingRepository,
     },
     {
-      provide: 'ISettingsService',
+      provide: SETTINGS_SERVICE,
       useExisting: SettingsService,
     },
   ],
-  exports: [SettingsService, 'ISettingsService', AdvancedOperationsService, InformationService],
+  exports: [SettingsService, SETTINGS_SERVICE, AdvancedOperationsService, InformationService],
 })
 export class SettingsModule {}

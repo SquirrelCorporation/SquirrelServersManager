@@ -17,7 +17,7 @@ import { PLAYBOOKS_REGISTER_SERVICE } from '../../domain/services/playbooks-regi
 /**
  * Controller for managing Git playbooks repositories
  */
-@Controller('playbooks-repository/git')
+@Controller('playbooks/repositories/git')
 export class GitPlaybooksRepositoryController {
   private readonly logger = new Logger(GitPlaybooksRepositoryController.name);
 

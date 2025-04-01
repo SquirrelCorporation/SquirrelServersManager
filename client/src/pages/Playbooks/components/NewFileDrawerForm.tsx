@@ -1,5 +1,5 @@
 import { buildTree } from '@/pages/Playbooks/components/TreeComponent';
-import { getPlaybooksRepositories } from '@/services/rest/playbooks-repositories';
+import { getPlaybooksRepositories } from '@/services/rest/playbooks/repositories';
 import { FileAddOutlined, FolderAddOutlined } from '@ant-design/icons';
 import {
   DrawerForm,

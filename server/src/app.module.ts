@@ -7,6 +7,8 @@ import mongoose from 'mongoose';
 import { LoggerModule } from 'nestjs-pino';
 import { SshModule } from '@modules/ssh';
 import { BullModule } from '@nestjs/bull';
+import { Keyv, createKeyv } from '@keyv/redis';
+import { CacheModule } from '@nestjs/cache-manager';
 import { db, redisConf } from './config';
 import logger, { httpLoggerOptions } from './logger';
 import { AnsibleConfigModule } from './modules/ansible-config/ansible-config.module';
@@ -29,7 +31,6 @@ import { ShellModule } from './modules/shell/shell.module';
 import { SmartFailureModule } from './modules/smart-failure/smart-failure.module';
 import { UpdateModule } from './modules/update/update.module';
 import { UsersModule } from './modules/users/users.module';
-import { CacheModule } from './infrastructure/cache';
 import { SshInfrastructureModule } from './infrastructure/ssh/ssh-infrastructure.module';
 import { HealthModule } from './modules/health/health.module';
 import { StatisticsModule } from './modules/statistics/statistics.module';
@@ -68,13 +69,19 @@ let connectionReady = false;
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: async () => {
+        return {
+          stores: [createKeyv(`redis://${redisConf.host}:${redisConf.port}`, { namespace: 'ssm' })],
+        };
+      },
+    }),
     EventsModule,
     EventEmitterModule.forRoot({
       wildcard: true,
     }),
     ScheduleModule.forRoot(),
-    // Register cache module with default options
-    CacheModule.register(),
     // Register the SSH infrastructure module first - this ensures a single instance of services
     SshInfrastructureModule,
     MongooseModule.forRootAsync({

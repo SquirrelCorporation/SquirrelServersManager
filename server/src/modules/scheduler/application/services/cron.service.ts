@@ -1,6 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ICron } from '../../domain/entities/cron.entity';
-import { CRON_REPOSITORY, ICronRepository } from '../../domain/repositories/cron-repository.interface';
+import {
+  CRON_REPOSITORY,
+  ICronRepository,
+} from '../../domain/repositories/cron-repository.interface';
 import PinoLogger from '../../../../logger';
 
 const logger = PinoLogger.child({ module: 'CronService' });

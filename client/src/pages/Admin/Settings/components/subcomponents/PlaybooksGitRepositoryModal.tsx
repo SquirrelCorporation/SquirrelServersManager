@@ -11,7 +11,7 @@ import {
   postPlaybooksGitRepository,
   putPlaybooksGitRepository,
   syncToDatabasePlaybooksGitRepository,
-} from '@/services/rest/playbooks-repositories';
+} from '@/services/rest/playbooks/repositories';
 import { DeleteOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { ModalForm, ProForm } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
