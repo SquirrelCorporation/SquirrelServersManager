@@ -1,13 +1,16 @@
-import { Logger } from '@nestjs/common';
-import { EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
-import { IPlaybooksRegister } from '@modules/playbooks';
-import { IPlaybook } from '@modules/playbooks';
-import { IFileSystemService, IPlaybookFileService } from '@modules/shell';
 import { directoryTree } from '@infrastructure/common/directory-tree/directory-tree.util';
+import { EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
+import {
+  IPlaybook,
+  IPlaybookRepository,
+  IPlaybooksRegister,
+  IPlaybooksRegisterRepository,
+  ITreeNodeService,
+} from '@modules/playbooks';
+import { PlaybookMapper } from '@modules/playbooks/infrastructure/mappers/playbook.mapper';
+import { IFileSystemService, IPlaybookFileService } from '@modules/shell';
+import { Logger } from '@nestjs/common';
 import { SSM_DATA_PATH } from 'src/config';
-import { IPlaybookRepository, IPlaybooksRegisterRepository } from '@modules/playbooks';
-import { ITreeNodeService } from '@modules/playbooks';
-
 // Using environment variable or default path
 export const DIRECTORY_ROOT = SSM_DATA_PATH ? `${SSM_DATA_PATH}/playbooks` : '/tmp/playbooks';
 export const FILE_PATTERN = /\.yml$/;
@@ -187,10 +190,7 @@ export default abstract class PlaybooksRegisterComponent {
     );
     const isCustomPlaybook = !foundPlaybook.name.startsWith('_');
     const playbookFoundInDatabase = await this.playbookRepository.findOneByPath(foundPlaybook.path);
-    if (!playbookFoundInDatabase) {
-      throw new EntityNotFoundException('Playbook', `path: ${foundPlaybook.path}`);
-    }
-    const playbookData: IPlaybook = {
+    const playbookData: Partial<IPlaybook> = {
       path: foundPlaybook.path,
       name: foundPlaybook.name,
       custom: isCustomPlaybook,
@@ -215,7 +215,7 @@ export default abstract class PlaybooksRegisterComponent {
     }
     this.childLogger.info(`Updating or creating playbook ${playbookData.name}`);
     try {
-      await this.playbookRepository.updateOrCreate(playbookData);
+      await this.playbookRepository.updateOrCreate(PlaybookMapper.toPersistence(playbookData));
     } catch (error: any) {
       this.childLogger.error(
         error,

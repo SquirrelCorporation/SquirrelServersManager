@@ -1,7 +1,7 @@
 import * as fs from 'fs';
+import { BACKUP_VOLUME_EVENTS } from '@modules/containers/constants';
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { v4 as uuidv4 } from 'uuid';
 import {
   CONTAINER_IMAGES_SERVICE,
   IContainerImagesService,
@@ -79,7 +79,6 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
       // Transform volumes to our format
       const currentVolumes = rawVolumes.Volumes.map((volume) => ({
         name: volume.Name,
-        uuid: uuidv4(),
         watcher: this.name,
         deviceUuid: this.configuration.deviceUuid,
         mountPoint: volume.Mountpoint,
@@ -147,17 +146,17 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
     volumeName: string,
     backupPath: string,
     fileName: string,
-    emitEvent: boolean = true,
+    emitEvent: boolean,
   ): Promise<string> {
     try {
       const filePath = `${backupPath}/${fileName}`;
-
+      this.childLogger.info(
+        `Backup of volume "${volumeName}" started (emitEvent: ${emitEvent})...`,
+      );
       // Ensure backup directory exists
       if (!fs.existsSync(backupPath)) {
         fs.mkdirSync(backupPath, { recursive: true });
       }
-
-      this.childLogger.info(`Backup of volume "${volumeName}" started...`);
 
       // Pull Alpine image for the temporary container
       await this.dockerApi.pull('alpine');
@@ -204,7 +203,7 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
             this.childLogger.info(`Backup of volume ${volumeName} has been saved to ${filePath}`);
 
             if (emitEvent) {
-              this.eventEmitter.emit('volume.backup.success', {
+              this.eventEmitter.emit(BACKUP_VOLUME_EVENTS, {
                 success: true,
                 message: 'Backup success',
                 severity: 'info',
@@ -229,7 +228,7 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
             await container.remove();
 
             if (emitEvent) {
-              this.eventEmitter.emit('volume.backup.error', {
+              this.eventEmitter.emit(BACKUP_VOLUME_EVENTS, {
                 success: false,
                 message: 'Backup error',
                 severity: 'error',
@@ -247,7 +246,7 @@ export abstract class AbstractDockerVolumesComponent extends AbstractDockerNetwo
       this.childLogger.error(`Error backing up volume: ${error.message}`);
 
       if (emitEvent) {
-        this.eventEmitter.emit('volume.backup.error', {
+        this.eventEmitter.emit(BACKUP_VOLUME_EVENTS, {
           success: false,
           message: 'Backup error',
           severity: 'error',

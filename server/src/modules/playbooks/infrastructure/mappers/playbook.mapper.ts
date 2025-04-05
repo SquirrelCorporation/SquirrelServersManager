@@ -42,8 +42,8 @@ export class PlaybookMapper {
 
     return {
       ...rest,
-      // Only include playbooksRepository if it exists
-      ...(playbooksRepository && { playbooksRepository }),
+      // Only include playbooksRepository if it exists and use its _id
+      ...(playbooksRepository && { playbooksRepository: playbooksRepository._id }),
       extraVars: extraVars?.map((extraVar) => ({
         extraVar: extraVar.extraVar,
         required: extraVar.required ?? false,

@@ -1,10 +1,9 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { API, SsmAgent, SsmAnsible } from 'ssm-shared-lib';
 import { IExtraVarsService } from '@modules/ansible/doma../../domain/interfaces/extra-vars-service.interface';
 import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
 import { IUserRepository, USER_REPOSITORY } from '@modules/users';
-import { Cache } from '@nestjs/cache-manager';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { API, SsmAgent, SsmAnsible } from 'ssm-shared-lib';
 
 /**
  * Service for managing Ansible extra-vars files
@@ -31,7 +30,7 @@ export class ExtraVarsService implements IExtraVarsService {
     const substitutedExtraVars: API.ExtraVars = [];
 
     for (const e of extraVars) {
-      this.logger.log(`findValueOfExtraVars - ${e.extraVar} (${e.type})`);
+      this.logger.log(`findValueOfExtraVars - ${JSON.stringify(e.extraVar)} (${e.type})`);
       const value = await this.getSubstitutedExtraVar(e, forcedValues, targets);
 
       if (!value && !emptySubstitute) {
@@ -43,7 +42,7 @@ export class ExtraVarsService implements IExtraVarsService {
         substitutedExtraVars.push({ ...e, value: value || undefined });
       }
     }
-    this.logger.debug(`Substituted extra vars: ${JSON.stringify(substitutedExtraVars)}`);
+    this.logger.log(`Substituted extra vars: ${JSON.stringify(substitutedExtraVars)}`);
     return substitutedExtraVars;
   }
 

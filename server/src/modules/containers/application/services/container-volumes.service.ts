@@ -1,9 +1,12 @@
 import { AbstractDockerVolumesComponent } from '@modules/containers/application/services/components/watcher/providers/docker/abstract-docker-volumes.component';
 import { Kind } from '@modules/containers/domain/components/kind.enum';
+import { CreateVolumeDto } from '@modules/containers/presentation/dtos/create-volume.dto';
+import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
+import { IPlaybooksService, PLAYBOOKS_SERVICE } from '@modules/playbooks';
+import { IUser } from '@modules/users';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { SsmContainer } from 'ssm-shared-lib';
+import { API, SsmContainer } from 'ssm-shared-lib';
 import PinoLogger from '../../../../logger';
-import { DevicesService } from '../../../devices/application/services/devices.service';
 import { BROWSER_BACKUP_PATH, FILESYSTEM_BACKUP_PATH, WATCHERS } from '../../constants';
 import { IContainerVolumeEntity } from '../../domain/entities/container-volume.entity';
 import { IContainerVolumesService } from '../../domain/interfaces/container-volumes-service.interface';
@@ -28,7 +31,10 @@ export class ContainerVolumesService implements IContainerVolumesService {
     private readonly volumeRepository: IContainerVolumeRepository,
     @Inject(WATCHER_ENGINE_SERVICE)
     private readonly watcherEngineService: IWatcherEngineService,
-    private readonly devicesService: DevicesService,
+    @Inject(PLAYBOOKS_SERVICE)
+    private readonly playbooksService: IPlaybooksService,
+    @Inject(DEVICES_SERVICE)
+    private readonly devicesService: IDevicesService,
   ) {}
 
   /**
@@ -50,6 +56,44 @@ export class ContainerVolumesService implements IContainerVolumesService {
    */
   async getVolumeByUuid(uuid: string): Promise<IContainerVolumeEntity | null> {
     return this.volumeRepository.findOneByUuid(uuid);
+  }
+
+  /**
+   * Create a new volume on a device
+   */
+  async createVolumeWithPlaybook(
+    createVolumeDto: CreateVolumeDto,
+    user: IUser,
+  ): Promise<{ execId: string }> {
+    try {
+      const { config, target } = createVolumeDto;
+      const playbook =
+        await this.playbooksService.findOneByUniqueQuickReference('createDockerVolume');
+      if (!playbook) {
+        throw new Error(`Playbook 'createDockerVolume' not found`);
+      }
+      const createVolumeConfig: API.ExtraVars = [];
+      Object.keys(config).forEach((key) => {
+        let value = config[key];
+        if (value) {
+          if (typeof value !== 'string') {
+            // If value is an object (including arrays), stringify it
+            value = JSON.stringify(value);
+          }
+          createVolumeConfig.push({ extraVar: key, value: value });
+        }
+      });
+      const execId = await this.playbooksService.executePlaybook(
+        playbook,
+        user,
+        [target],
+        createVolumeConfig,
+      );
+      return { execId: execId };
+    } catch (error: any) {
+      logger.error(`Failed to create volume: ${error.message}`);
+      throw error;
+    }
   }
 
   /**
@@ -87,7 +131,6 @@ export class ContainerVolumesService implements IContainerVolumesService {
       throw error;
     }
   }
-
   /**
    * Update a volume
    */

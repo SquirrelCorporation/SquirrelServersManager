@@ -31,7 +31,11 @@ export interface IContainerNetworksService {
   /**
    * Deploy a network on a device
    */
-  deployNetwork(deviceUuid: string, network: DeployNetworkDto, user: IUser): Promise<string>;
+  createNetworkWithPlaybook(
+    deviceUuid: string,
+    network: DeployNetworkDto,
+    user: IUser,
+  ): Promise<string>;
 
   /**
    * Update a network

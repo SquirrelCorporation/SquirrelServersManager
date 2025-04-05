@@ -5,6 +5,7 @@ import { paginate } from '@infrastructure/common/query/pagination.util';
 import { sortByFields } from '@infrastructure/common/query/sorter.util';
 import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
 import { FileSystemService } from '@modules/shell';
+import { IUser } from '@modules/users';
 import {
   Body,
   Controller,
@@ -14,7 +15,6 @@ import {
   HttpStatus,
   Inject,
   Param,
-  Patch,
   Post,
   Query,
   Req,
@@ -67,6 +67,11 @@ export class ContainerVolumesController {
     });
   }
 
+  @Post()
+  async createVolume(@Body() createVolumeDto: CreateVolumeDto, @Req() req) {
+    return this.volumesService.createVolumeWithPlaybook(createVolumeDto, req.user as IUser);
+  }
+
   @Get('device/:deviceUuid')
   async getVolumesByDevice(@Param('deviceUuid') deviceUuid: string) {
     return this.volumesService.getVolumesByDeviceUuid(deviceUuid);
@@ -75,22 +80,6 @@ export class ContainerVolumesController {
   @Get(':uuid')
   async getVolumeByUuid(@Param('uuid') uuid: string) {
     return this.volumesService.getVolumeByUuid(uuid);
-  }
-
-  @Post('device/:deviceUuid')
-  async createVolume(
-    @Param('deviceUuid') deviceUuid: string,
-    @Body() createVolumeDto: CreateVolumeDto,
-  ) {
-    return this.volumesService.createVolume(deviceUuid, createVolumeDto);
-  }
-
-  @Patch(':uuid')
-  async updateVolume(
-    @Param('uuid') uuid: string,
-    @Body() updateVolumeDto: Partial<CreateVolumeDto>,
-  ) {
-    return this.volumesService.updateVolume(uuid, updateVolumeDto);
   }
 
   @Delete(':uuid')
@@ -114,6 +103,7 @@ export class ContainerVolumesController {
     const { filePath, fileName } = await this.volumesService.backupVolume(
       volume,
       mode as SsmContainer.VolumeBackupMode,
+      true,
     );
 
     return {

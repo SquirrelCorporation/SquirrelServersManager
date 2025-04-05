@@ -94,8 +94,8 @@ describe('PlaybookRepository', () => {
       const result = await repository.updateOrCreate(mockPlaybook);
       expect(model.findOneAndUpdate).toHaveBeenCalledWith(
         { path: mockPlaybook.path },
-        { ...mockPlaybook }, // Expect a copy of the object
-        { upsert: true, new: true }, // Include new: true in expectations
+        { ...mockPlaybook },
+        { upsert: true },
       );
       expect(PlaybookMapper.toDomain).toHaveBeenCalledWith(mockPlaybook);
       expect(result).toEqual(mockPlaybook);

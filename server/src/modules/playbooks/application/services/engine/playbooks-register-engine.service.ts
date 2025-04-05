@@ -1,18 +1,15 @@
-import PlaybooksRegisterComponent
-  from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
-import {
-  GitPlaybooksRegisterComponent
-} from '@modules/playbooks/application/services/components/git-playbooks-register.component';
-import {
-  LocalPlaybooksRegisterComponent
-} from '@modules/playbooks/application/services/components/local-playbooks-repository.component';
+import PlaybooksRegisterComponent from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
+import { GitPlaybooksRegisterComponent } from '@modules/playbooks/application/services/components/git-playbooks-register.component';
+import { LocalPlaybooksRegisterComponent } from '@modules/playbooks/application/services/components/local-playbooks-repository.component';
+import { PLAYBOOKS_REGISTER_ENGINE_EVENT } from '@modules/playbooks/constants';
 import {
   GitComponentOptions,
-  LocalComponentOptions
+  LocalComponentOptions,
 } from '@modules/playbooks/doma../../domain/interfaces/component-options.interface';
 import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import { SsmGit } from 'ssm-shared-lib';
+import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
+import { Repositories, SsmGit } from 'ssm-shared-lib';
 import { PlaybooksRegisterComponentFactory } from '../components/component-factory.service';
 
 /**
@@ -43,7 +40,7 @@ export class PlaybooksRegisterEngineService {
 
       let component: GitPlaybooksRegisterComponent | LocalPlaybooksRegisterComponent;
 
-      if (register.type === 'git') {
+      if (register.type === Repositories.RepositoryType.GIT) {
         const options: GitComponentOptions = {
           uuid: register.uuid,
           name: register.name,
@@ -124,5 +121,18 @@ export class PlaybooksRegisterEngineService {
    */
   getState(): Record<string, PlaybooksRegisterComponent> {
     return this.components;
+  }
+
+  /**
+   * Sync all repository components to the database
+   */
+  @OnEvent(PLAYBOOKS_REGISTER_ENGINE_EVENT.SYNC_ALL_REGISTERS)
+  async syncAllRegisters(): Promise<void> {
+    this.logger.log('Syncing all repository components to the database');
+    await Promise.all(
+      Object.values(this.components).map(async (component) => {
+        await component.syncToDatabase();
+      }),
+    );
   }
 }

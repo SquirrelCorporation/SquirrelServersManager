@@ -40,5 +40,7 @@ export * from './presentation/controllers/playbooks-repository.controller';
 export * from './presentation/controllers/git-playbooks-register.controller';
 export * from './presentation/controllers/local-playbooks-register.controller';
 
+export * from './constants';
+
 // Re-export the module
 export { PlaybooksModule };

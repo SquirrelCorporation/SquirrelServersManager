@@ -225,93 +225,49 @@ describe('SettingsController', () => {
     });
   });
 
-  describe('deletePlaybooksModelAndResync', () => {
+  describe('deletePlaybooksAndResync', () => {
     it('should call advanced operations service', async () => {
       mockAdvancedOperationsService.deletePlaybooksModelAndResync.mockResolvedValue(undefined);
 
-      const mockResponse = {
-        status: vi.fn().mockReturnThis(),
-        json: vi.fn(),
-        sendStatus: vi.fn(),
-        links: vi.fn(),
-        send: vi.fn(),
-        jsonp: vi.fn(),
-      } as unknown as Response;
-
-      await controller.deletePlaybooksAndResync(mockResponse);
+      await controller.deletePlaybooksAndResync();
 
       expect(mockAdvancedOperationsService.deletePlaybooksModelAndResync).toHaveBeenCalled();
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        success: true,
-        message: 'All data purged successfully',
-      });
     });
   });
 
   describe('getMongoDBStats', () => {
     it('should call information service', async () => {
-      const mockStats = { memory: {}, cpu: {}, connections: {}, operations: {} };
+      const mockStats = { some: 'stats' };
       mockInformationService.getMongoDBStats.mockResolvedValue(mockStats);
 
-      const mockResponse = {
-        status: vi.fn().mockReturnThis(),
-        json: vi.fn(),
-      };
-
-      await controller.getMongoDBStats(mockResponse);
+      const result = await controller.getMongoDBStats();
 
       expect(mockInformationService.getMongoDBStats).toHaveBeenCalled();
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        success: true,
-        message: 'Got MongoDB server stats',
-        data: mockStats,
-      });
+      expect(result).toEqual(mockStats);
     });
   });
 
   describe('getRedisStats', () => {
     it('should call information service', async () => {
-      const mockStats = { memory: {}, cpu: {}, stats: {}, server: {} };
+      const mockStats = { some: 'stats' };
       mockInformationService.getRedisStats.mockResolvedValue(mockStats);
 
-      const mockResponse = {
-        status: vi.fn().mockReturnThis(),
-        json: vi.fn(),
-      };
-
-      await controller.getRedisStats(mockResponse);
+      const result = await controller.getRedisStats();
 
       expect(mockInformationService.getRedisStats).toHaveBeenCalled();
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        success: true,
-        message: 'Got Redis server stats',
-        data: mockStats,
-      });
+      expect(result).toEqual(mockStats);
     });
   });
 
   describe('getPrometheusStats', () => {
     it('should call information service', async () => {
-      const mockStats = {};
+      const mockStats = { some: 'stats' };
       mockInformationService.getPrometheusStats.mockResolvedValue(mockStats);
 
-      const mockResponse = {
-        status: vi.fn().mockReturnThis(),
-        json: vi.fn(),
-      };
-
-      await controller.getPrometheusStats(mockResponse);
+      const result = await controller.getPrometheusStats();
 
       expect(mockInformationService.getPrometheusStats).toHaveBeenCalled();
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        success: true,
-        message: 'Got Prometheus server stats',
-        data: mockStats,
-      });
+      expect(result).toEqual(mockStats);
     });
   });
 });

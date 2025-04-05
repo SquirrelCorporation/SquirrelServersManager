@@ -4,6 +4,7 @@ import {
   IServerLogsService,
   SERVER_LOGS_SERVICE,
 } from '@modules/logs';
+import { PLAYBOOKS_REGISTER_ENGINE_EVENT } from '@modules/playbooks';
 import { IAdvancedOperationsService } from '@modules/settings/doma../../domain/interfaces/advanced-operations-service.interface';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -59,7 +60,9 @@ export class AdvancedOperationsService implements IAdvancedOperationsService {
     try {
       // Drop the Playbook collection
       await this.playbookModel.db.collection('playbooks').drop();
-
+      this.eventEmitter.emit(PLAYBOOKS_REGISTER_ENGINE_EVENT.SYNC_ALL_REGISTERS, {
+        force: true,
+      });
       this.logger.log('Playbooks model deleted and resynced successfully');
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);

@@ -26,3 +26,5 @@ export const REGISTRIES = {
 
 export const FILESYSTEM_BACKUP_PATH = SSM_DATA_PATH + '/backup/volumes/';
 export const BROWSER_BACKUP_PATH = os.tmpdir() + '/';
+
+export const BACKUP_VOLUME_EVENTS = 'volume.backup';

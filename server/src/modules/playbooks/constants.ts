@@ -8,3 +8,7 @@ export const PLAYBOOKS_REPOSITORY_DOCUMENT = 'PlaybooksRepository';
 export const PLAYBOOKS_REPOSITORY_COLLECTION = 'playbooksrepository';
 export const DIRECTORY_ROOT = `${SSM_DATA_PATH}/playbooks`;
 export const FILE_PATTERN = /\.yml$/;
+
+export const PLAYBOOKS_REGISTER_ENGINE_EVENT = {
+  SYNC_ALL_REGISTERS: 'syncAllRegisters',
+};

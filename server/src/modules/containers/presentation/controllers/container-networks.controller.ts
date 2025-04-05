@@ -1,10 +1,10 @@
+import { parse } from 'url';
 import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
 import { paginate } from '@infrastructure/common/query/pagination.util';
 import { sortByFields } from '@infrastructure/common/query/sorter.util';
 import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
 import { IUser } from '@modules/users/domain/entities/user.entity';
 import { Body, Controller, Delete, Get, Inject, Param, Post, Req } from '@nestjs/common';
-import { parse } from 'url';
 import {
   CONTAINER_NETWORKS_SERVICE,
   IContainerNetworksService,
@@ -49,13 +49,13 @@ export class ContainerNetworksController {
     });
   }
 
-  @Post('device/:deviceUuid')
+  @Post()
   async createNetwork(
     @Req() req,
     @Param('deviceUuid') deviceUuid: string,
     @Body() networkData: DeployNetworkDto,
   ): Promise<{ execId: string }> {
-    const execId = await this.networksService.deployNetwork(
+    const execId = await this.networksService.createNetworkWithPlaybook(
       deviceUuid,
       networkData,
       req.user as IUser,

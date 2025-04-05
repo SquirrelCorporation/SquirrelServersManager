@@ -1,18 +1,17 @@
 import {
   EntityNotFoundException,
   ForbiddenException,
-  InternalServerException
+  InternalServerException,
 } from '@infrastructure/exceptions/app-exceptions';
-import PlaybooksRegisterComponent
-  from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
+import PlaybooksRegisterComponent from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
 import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
 import {
   IPlaybookRepository,
-  PLAYBOOK_REPOSITORY
+  PLAYBOOK_REPOSITORY,
 } from '@modules/playbooks/domain/repositories/playbook-repository.interface';
 import {
   IPlaybooksRegisterRepository,
-  PLAYBOOKS_REGISTER_REPOSITORY
+  PLAYBOOKS_REGISTER_REPOSITORY,
 } from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
 import { FileSystemService, PlaybookFileService } from '@modules/shell';
 import { Inject, Injectable, Logger } from '@nestjs/common';

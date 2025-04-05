@@ -1,10 +1,21 @@
-import { Body, Controller, Delete, Get, Inject, Param, Post, Res, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  InternalServerErrorException,
+  Param,
+  Post,
+  Res,
+  UsePipes,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { SettingsKeys, SsmAnsible } from 'ssm-shared-lib';
 import {
   ACTIONS,
-  ResourceAction,
   RESOURCES,
+  ResourceAction,
 } from '../../../../infrastructure/security/roles/resource-action.decorator';
 import {
   ISettingsService,
@@ -208,77 +219,46 @@ export class SettingsController {
 
   @Delete('advanced/playbooks-and-resync')
   @ResourceAction(RESOURCES.SETTING, ACTIONS.DELETE)
-  async deletePlaybooksAndResync(@Res() res: Response) {
+  async deletePlaybooksAndResync() {
     try {
       await this.advancedOperationsService.deletePlaybooksModelAndResync();
-      return res.status(200).json({
-        success: true,
-        message: 'All data purged successfully',
-      });
+      return;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      return res.status(500).json({
-        success: false,
-        message: 'Failed to purge playbooks and resync',
-        error: errorMessage,
-      });
+      throw new InternalServerErrorException('Failed to purge playbooks and resync', errorMessage);
     }
   }
 
   @Get('information/mongodb')
-  async getMongoDBStats(@Res() res: Response) {
+  async getMongoDBStats() {
     try {
       const data = await this.informationService.getMongoDBStats();
-      return res.status(200).json({
-        success: true,
-        message: 'Got MongoDB server stats',
-        data,
-      });
+      return data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      return res.status(500).json({
-        success: false,
-        message: 'Failed to get MongoDB server stats',
-        error: errorMessage,
-      });
+      throw new InternalServerErrorException('Failed to get MongoDB server stats', errorMessage);
     }
   }
 
   @Get('information/redis')
-  async getRedisStats(@Res() res: Response) {
+  async getRedisStats() {
     try {
       const data = await this.informationService.getRedisStats();
-      return res.status(200).json({
-        success: true,
-        message: 'Got Redis server stats',
-        data,
-      });
+      return data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      return res.status(500).json({
-        success: false,
-        message: 'Failed to get Redis server stats',
-        error: errorMessage,
-      });
+      throw new InternalServerErrorException('Failed to get Redis server stats', errorMessage);
     }
   }
 
   @Get('information/prometheus')
-  async getPrometheusStats(@Res() res: Response) {
+  async getPrometheusStats() {
     try {
       const data = await this.informationService.getPrometheusStats();
-      return res.status(200).json({
-        success: true,
-        message: 'Got Prometheus server stats',
-        data,
-      });
+      return data;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      return res.status(500).json({
-        success: false,
-        message: 'Failed to get Prometheus server stats',
-        error: errorMessage,
-      });
+      throw new InternalServerErrorException('Failed to get Prometheus server stats', errorMessage);
     }
   }
 }

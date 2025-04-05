@@ -20,6 +20,7 @@ const sftpSocketManager = io('/sftp', socketOptions);
 const containerSocketManager = io('/containers', socketOptions);
 const notificationSocketManager = io('/notifications', socketOptions);
 const diagnosticSocketManager = io('/diagnostic', socketOptions);
+const containerVolumesSocketManager = io('/container-volumes', socketOptions);
 const containerLiveLogsSocketManager = io(
   '/containers-live-logs',
   socketOptions,
@@ -32,6 +33,7 @@ export const containerSocket = containerSocketManager;
 export const notificationSocket = notificationSocketManager;
 export const diagnosticSocket = diagnosticSocketManager;
 export const containerLiveLogsSocket = containerLiveLogsSocketManager;
+export const containerVolumesSocket = containerVolumesSocketManager;
 
 sshSocket.on('connect', () => {
   console.log('SSH socket connected:', {

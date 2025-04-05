@@ -1,12 +1,12 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { DirectoryTree } from 'ssm-shared-lib';
 import { ExtraVarsService } from '@modules/ansible';
+import { FILE_PATTERN } from '@modules/playbooks/constants';
+import { ITreeNodeService } from '@modules/playbooks/doma../../domain/interfaces/tree-node-service.interface';
 import {
   IPlaybookRepository,
   PLAYBOOK_REPOSITORY,
 } from '@modules/playbooks/domain/repositories/playbook-repository.interface';
-import { FILE_PATTERN } from '@modules/playbooks/constants';
-import { ITreeNodeService } from '@modules/playbooks/doma../../domain/interfaces/tree-node-service.interface';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { DirectoryTree } from 'ssm-shared-lib';
 
 /**
  * Service for tree node operations
@@ -35,7 +35,7 @@ export class TreeNodeService implements ITreeNodeService {
     if (!playbook) {
       throw new Error(`Unable to find any playbook for path ${path}`);
     }
-
+    this.logger.log(`Extra vars: ${JSON.stringify(playbook.extraVars)} for node ${path}`);
     const extraVars = playbook?.extraVars
       ? await this.extraVarsService.findValueOfExtraVars(playbook.extraVars, undefined, true)
       : undefined;

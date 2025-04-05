@@ -1,3 +1,5 @@
+import { CreateVolumeDto } from '@modules/containers/presentation/dtos/create-volume.dto';
+import { IUser } from '@modules/users';
 import { SsmContainer } from 'ssm-shared-lib';
 import { IContainerVolumeEntity } from '../../domain/entities/container-volume.entity';
 
@@ -21,6 +23,14 @@ export interface IContainerVolumesService {
    * Get a specific volume by UUID
    */
   getVolumeByUuid(uuid: string): Promise<IContainerVolumeEntity | null>;
+
+  /**
+   * Create a volume on a device
+   */
+  createVolumeWithPlaybook(
+    createVolumeDto: CreateVolumeDto,
+    user: IUser,
+  ): Promise<{ execId: string }>;
 
   /**
    * Create a volume on a device

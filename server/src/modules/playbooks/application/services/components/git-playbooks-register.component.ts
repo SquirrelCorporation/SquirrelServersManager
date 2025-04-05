@@ -1,8 +1,3 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import PlaybooksRegisterComponent, {
-  DIRECTORY_ROOT,
-} from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
 import {
   GitStep,
   IGitUserInfos,
@@ -12,14 +7,19 @@ import { clone } from '@infrastructure/adapters/git/services/clone.service';
 import { commitAndSync } from '@infrastructure/adapters/git/services/commit-and-sync.service';
 import { forcePull } from '@infrastructure/adapters/git/services/force-pull.service';
 import { IInitGitOptionsSyncImmediately } from '@infrastructure/adapters/git/services/init-git.service';
-import { SsmAlert, SsmGit } from 'ssm-shared-lib';
 import { InternalServerException } from '@infrastructure/exceptions/app-exceptions';
-import { IFileSystemService, IPlaybookFileService } from '@modules/shell';
 import {
   IPlaybookRepository,
   IPlaybooksRegisterRepository,
   ITreeNodeService,
 } from '@modules/playbooks';
+import PlaybooksRegisterComponent, {
+  DIRECTORY_ROOT,
+} from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
+import { IFileSystemService, IPlaybookFileService } from '@modules/shell';
+import { Injectable, Logger } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { SsmAlert, SsmGit } from 'ssm-shared-lib';
 import Events from '../../../../../core/events/events';
 
 /**
@@ -205,7 +205,9 @@ export class GitPlaybooksRegisterComponent extends PlaybooksRegisterComponent {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       this.logger.error(`Error committing and syncing Git repository: ${errorMessage}`);
-      throw new InternalServerException(`Error committing and syncing Git repository: ${errorMessage}`);
+      throw new InternalServerException(
+        `Error committing and syncing Git repository: ${errorMessage}`,
+      );
     }
   }
 }

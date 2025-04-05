@@ -74,7 +74,7 @@ export class ContainerNetworksService implements IContainerNetworksService {
     return this.networkRepository.create(networkData);
   }
 
-  async deployNetwork(
+  async createNetworkWithPlaybook(
     deviceUuid: string,
     networkData: DeployNetworkDto,
     user: IUser,

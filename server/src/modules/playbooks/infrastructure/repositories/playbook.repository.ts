@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Playbook, PlaybookDocument } from '../schemas/playbook.schema';
-import { IPlaybookRepository } from '../../domain/repositories/playbook-repository.interface';
-import { IPlaybook } from '../../domain/entities/playbook.entity';
 import { IPlaybooksRegister } from '../..//domain/entities/playbooks-register.entity';
+import { IPlaybook } from '../../domain/entities/playbook.entity';
+import { IPlaybookRepository } from '../../domain/repositories/playbook-repository.interface';
 import { PlaybookMapper } from '../mappers/playbook.mapper';
+import { Playbook, PlaybookDocument } from '../schemas/playbook.schema';
 
 @Injectable()
 export class PlaybookRepository implements IPlaybookRepository {
@@ -23,7 +23,7 @@ export class PlaybookRepository implements IPlaybookRepository {
     const playbookToUpdate = { ...playbook };
 
     const updated = await this.playbookModel
-      .findOneAndUpdate({ path: playbook.path }, playbookToUpdate, { upsert: true, new: true })
+      .findOneAndUpdate({ path: playbook.path }, playbookToUpdate, { upsert: true })
       .lean()
       .exec();
 
