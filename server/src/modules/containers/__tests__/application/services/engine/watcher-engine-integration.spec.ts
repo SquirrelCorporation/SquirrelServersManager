@@ -29,7 +29,6 @@ vi.mock('../../../../application/services/engine/watcher-engine.service', () => 
   };
 });
 
-x;
 describe('WatcherEngineService Integration', () => {
   let watcherEngineService: any;
   let dockerDeviceService: { getDockerDevicesToWatch: any };
