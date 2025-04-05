@@ -1,15 +1,10 @@
-import { getCustomAgent } from '@infrastructure/adapters/ssh';
-import { SSHCredentialsAdapter } from '@infrastructure/adapters/ssh/ssh-credentials.adapter';
 import { WATCHERS } from '@modules/containers/application/services/components/core/constants';
 import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
 import { Kind } from '@modules/containers/domain/components/kind.enum';
 import { IWatcherComponent } from '@modules/containers/domain/components/watcher.interface';
 import { fullName } from '@modules/containers/utils/utils';
-import { DEVICES_SERVICE, IDevice, IDeviceAuth, IDevicesService } from '@modules/devices';
+import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import DockerModem from 'docker-modem';
-import Dockerode from 'dockerode';
-import logger from 'src/logger';
 import { SsmContainer } from 'ssm-shared-lib';
 import {
   DEVICE_AUTH_SERVICE,
@@ -195,39 +190,6 @@ export class ContainerService implements IContainerService {
     return await this.containerRepository.deleteById(id);
   }
 
-  async getDeviceByUuid(uuid: string): Promise<IDevice | null> {
-    return await this.devicesService.findOneByUuid(uuid);
-  }
-
-  async getDeviceAuth(deviceUuid: string): Promise<IDeviceAuth | null> {
-    const res = await this.deviceAuthService.findDeviceAuthByDeviceUuid(deviceUuid);
-    return res?.[0] || null;
-  }
-
-  async getDockerSshConnectionOptions(device: IDevice, deviceAuth: IDeviceAuth): Promise<any> {
-    const sshHelper = new SSHCredentialsAdapter();
-    return await sshHelper.getDockerSshConnectionOptions(device, deviceAuth);
-  }
-
-  async updateDeviceDockerInfo(
-    deviceUuid: string,
-    dockerId: string,
-    version: string,
-  ): Promise<void> {
-    const device = await this.devicesService.findOneByUuid(deviceUuid);
-    if (!device) {
-      throw new NotFoundException(`Device with UUID ${deviceUuid} not found`);
-    }
-    device.updatedAt = new Date();
-    device.dockerId = dockerId;
-    device.dockerVersion = version;
-    await this.devicesService.update(device);
-  }
-
-  async getContainerByUuid(uuid: string): Promise<IContainerEntity | null> {
-    return await this.containerRepository.findOneById(uuid);
-  }
-
   async getRegistryByName(name: string): Promise<AbstractRegistryComponent | null> {
     return (
       (this.watcherEngineService
@@ -242,46 +204,6 @@ export class ContainerService implements IContainerService {
 
   async updateContainerStatusByWatcher(watcherName: string, status: string): Promise<void> {
     return await this.containerRepository.updateStatusByWatcher(watcherName, status);
-  }
-
-  async checkDockerConnection(deviceUuid: string) {
-    const device = await this.devicesService.findOneByUuid(deviceUuid);
-    if (!device) {
-      throw new NotFoundException(`Device with UUID ${deviceUuid} not found`);
-    }
-    const deviceAuth = await this.getDeviceAuth(deviceUuid);
-    if (!deviceAuth) {
-      throw new NotFoundException(`Device auth with UUID ${deviceUuid} not found`);
-    }
-    try {
-      const options = await this.getDockerSshConnectionOptions(device, deviceAuth);
-      const agent = getCustomAgent(logger, {
-        debug: (message: any) => {
-          this.logger.debug(message);
-        },
-        ...options.sshOptions,
-        timeout: 60000,
-      });
-      try {
-        options.modem = new DockerModem({
-          agent: agent,
-        });
-      } catch (error: any) {
-        this.logger.error(error);
-        throw new Error(error.message);
-      }
-      const docker = new Dockerode({ ...options, timeout: 60000 });
-      await docker.ping();
-      await docker.info();
-      return {
-        connectionStatus: 'successful',
-      };
-    } catch (error: any) {
-      return {
-        connectionStatus: 'failed',
-        errorMessage: error.message,
-      };
-    }
   }
 
   async updateContainerName(id: string, customName: string): Promise<IContainerEntity> {

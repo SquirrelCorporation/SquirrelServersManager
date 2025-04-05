@@ -100,6 +100,8 @@ export interface IDockerLogsComponent extends IDockerImagesComponent {
   streamContainerLogs(container: any, options?: any): Promise<any>;
 }
 
+export const DOCKER_WATCHER_COMPONENT_FACTORY = 'IDockerWatcherComponentFactory';
+
 /**
  * Interface for the Docker watcher component factory
  */
