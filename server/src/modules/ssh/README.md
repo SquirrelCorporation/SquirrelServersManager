@@ -76,14 +76,6 @@ ssh/
 └── README.md
 ```
 
-## Dependencies
-- `@nestjs/common`: NestJS framework core
-- `@nestjs/websockets`: WebSocket support
-- `ssh2`: SSH client implementation
-- `uuid`: Unique identifier generation
-- `DevicesModule`: Device management integration
-- `ssm-shared-lib`: Shared events and types
-
 ## API Endpoints (WebSocket)
 ### Events
 - **Client -> Server**

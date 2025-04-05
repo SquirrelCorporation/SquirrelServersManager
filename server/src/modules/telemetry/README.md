@@ -54,12 +54,6 @@ telemetry/
 └── README.md       # Module documentation
 ```
 
-## Dependencies
-- `posthog-node`: PostHog Node.js client
-- `ssm-shared-lib`: Shared settings and types
-- Application configuration
-- Application logger
-
 ## API Methods
 ### Telemetry Service
 - **Initialization**

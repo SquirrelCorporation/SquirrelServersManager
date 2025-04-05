@@ -143,6 +143,7 @@
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.2",
+    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.1.1"
   }
 }

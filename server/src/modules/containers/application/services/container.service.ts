@@ -180,25 +180,35 @@ export class ContainerService implements IContainerService {
     }
 
     try {
-      // Use Docker component to execute action
-      await dockerComponent[`${action}Container`](container.id);
-
       // Update container state if needed based on action
       let newState: string | undefined;
       switch (action) {
         case 'start':
+          await dockerComponent.startContainer(container.id);
           newState = 'running';
           break;
         case 'stop':
+          await dockerComponent.stopContainer(container.id);
+          newState = 'stopped';
+          break;
         case 'kill':
+          await dockerComponent.killContainer(container.id);
           newState = 'stopped';
           break;
         case 'pause':
+          await dockerComponent.pauseContainer(container.id);
           newState = 'paused';
           break;
         case 'unpause':
+          await dockerComponent.unpauseContainer(container.id);
           newState = 'running';
           break;
+        case 'restart':
+          await dockerComponent.restartContainer(container.id);
+          newState = 'running';
+          break;
+        default:
+          throw new Error(`Invalid action: ${action}`);
       }
 
       if (newState) {

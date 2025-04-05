@@ -111,16 +111,6 @@ users/
 └── README.md
 ```
 
-## Dependencies
-
-The module has dependencies on:
-
-- MongoDB for user storage
-- JWT module for authentication
-- Devices module for device access control
-- Ansible module for playbook execution permissions
-- NestJS framework components
-
 ## Integration
 
 The module is integrated through dependency injection:

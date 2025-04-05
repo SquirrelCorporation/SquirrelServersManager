@@ -168,17 +168,6 @@ The module initializes with sensible defaults for critical settings:
 - Statistics Retention Periods
 - Ansible Task Cleanup Intervals
 
-## Dependencies
-
-- `@nestjs/common`: Core NestJS framework
-- `@nestjs/event-emitter`: Event handling
-- `@nestjs/mongoose`: MongoDB integration
-- `@nestjs/cache-manager`: Caching support
-- `@nestjs/axios`: HTTP client
-- `ssm-shared-lib`: Shared types and utilities
-- `mongoose`: MongoDB ODM
-- `cache-manager`: Cache management
-
 ## Integration
 
 Import the module into your NestJS application:
