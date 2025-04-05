@@ -2,20 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { DOCKER_DEVICE_SERVICE } from '../../../../../devices/domain/services/docker-device-service.interface';
 import { PROXMOX_DEVICE_SERVICE } from '../../../../../devices/domain/services/proxmox-device-service.interface';
+import { WatcherEngineService } from '../../../../application/services/engine/watcher-engine.service';
 import { CONTAINER_REGISTRIES_SERVICE } from '../../../../domain/interfaces/container-registries-service.interface';
 
-// Mock Kind enum
-vi.mock('@modules/containers/domain/components/kind.enum', () => {
-  return {
-    Kind: {
-      UNKNOWN: 'unknown',
-      REGISTRY: 'registry',
-      WATCHER: 'watcher',
-      TRIGGER: 'trigger',
-      AUTHENTICATION: 'authentication',
-    },
-  };
-});
 // Mocks
 vi.mock('../../../../application/services/engine/watcher-engine.service', () => {
   return {
