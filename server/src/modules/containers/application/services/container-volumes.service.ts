@@ -1,8 +1,10 @@
+import { AbstractDockerVolumesComponent } from '@modules/containers/application/services/components/watcher/providers/docker/abstract-docker-volumes.component';
 import { Kind } from '@modules/containers/domain/components/kind.enum';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { SsmContainer } from 'ssm-shared-lib';
 import PinoLogger from '../../../../logger';
 import { DevicesService } from '../../../devices/application/services/devices.service';
-import { WATCHERS } from '../../constants';
+import { BROWSER_BACKUP_PATH, FILESYSTEM_BACKUP_PATH, WATCHERS } from '../../constants';
 import { IContainerVolumeEntity } from '../../domain/entities/container-volume.entity';
 import { IContainerVolumesService } from '../../domain/interfaces/container-volumes-service.interface';
 import {
@@ -166,27 +168,33 @@ export class ContainerVolumesService implements IContainerVolumesService {
    */
   async backupVolume(
     volume: IContainerVolumeEntity,
-    mode: string,
+    mode: SsmContainer.VolumeBackupMode,
+    asyncResult = false,
   ): Promise<{ filePath: string; fileName: string }> {
     try {
       logger.info(`Backing up volume ${volume.name} in ${mode} mode`);
 
       // Find the Docker watcher component for this device
-      const dockerComponent = this.watcherEngineService.findRegisteredComponent(
+      const registeredComponent = this.watcherEngineService.findRegisteredComponent(
         Kind.WATCHER,
         WATCHERS.DOCKER,
         volume.watcher,
-      );
+      ) as AbstractDockerVolumesComponent;
 
-      if (!dockerComponent) {
+      if (!registeredComponent) {
         throw new Error(`Docker watcher for device ${volume.deviceUuid} not found`);
       }
+      const filePath =
+        mode === SsmContainer.VolumeBackupMode.FILE_SYSTEM
+          ? FILESYSTEM_BACKUP_PATH
+          : BROWSER_BACKUP_PATH;
+      const fileName = `${volume.name}_${Date.now()}.tar`;
 
-      // Implementation would depend on how Docker volumes are backed up
-      // This is a placeholder that would need to be implemented based on the actual requirements
-
-      const fileName = `${volume.name}-backup-${Date.now()}.tar.gz`;
-      const filePath = mode === 'filesystem' ? '/var/lib/ssm/backup/volumes/' : '/tmp/';
+      if (asyncResult) {
+        void registeredComponent.backupVolume(volume.name, filePath, fileName, true);
+      } else {
+        await registeredComponent.backupVolume(volume.name, filePath, fileName, false);
+      }
 
       logger.info(`Volume ${volume.name} backed up to ${filePath}${fileName}`);
 

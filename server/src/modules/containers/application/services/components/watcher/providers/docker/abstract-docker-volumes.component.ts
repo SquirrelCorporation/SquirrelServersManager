@@ -1,30 +1,30 @@
+import * as fs from 'fs';
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 import {
   CONTAINER_IMAGES_SERVICE,
-  IContainerImagesService
+  IContainerImagesService,
 } from '../../../../../../applicati../../domain/interfaces/container-images-service.interface';
 import {
   CONTAINER_LOGS_SERVICE,
-  IContainerLogsService
+  IContainerLogsService,
 } from '../../../../../../applicati../../domain/interfaces/container-logs-service.interface';
 import {
   CONTAINER_NETWORKS_SERVICE,
-  IContainerNetworksService
+  IContainerNetworksService,
 } from '../../../../../../applicati../../domain/interfaces/container-networks-service.interface';
 import {
   CONTAINER_SERVICE,
-  IContainerService
+  IContainerService,
 } from '../../../../../../applicati../../domain/interfaces/container-service.interface';
 import {
   CONTAINER_STATS_SERVICE,
-  IContainerStatsService
+  IContainerStatsService,
 } from '../../../../../../applicati../../domain/interfaces/container-stats-service.interface';
 import {
   CONTAINER_VOLUMES_SERVICE,
-  IContainerVolumesService
+  IContainerVolumesService,
 } from '../../../../../../applicati../../domain/interfaces/container-volumes-service.interface';
 import { AbstractDockerNetworksComponent } from './abstract-docker-networks.component';
 

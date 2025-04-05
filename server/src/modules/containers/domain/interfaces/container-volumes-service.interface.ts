@@ -1,3 +1,4 @@
+import { SsmContainer } from 'ssm-shared-lib';
 import { IContainerVolumeEntity } from '../../domain/entities/container-volume.entity';
 
 export const CONTAINER_VOLUMES_SERVICE = 'CONTAINER_VOLUMES_SERVICE';
@@ -50,6 +51,7 @@ export interface IContainerVolumesService {
    */
   backupVolume(
     volume: IContainerVolumeEntity,
-    mode: string,
+    mode: SsmContainer.VolumeBackupMode,
+    asyncResult?: boolean,
   ): Promise<{ filePath: string; fileName: string }>;
 }

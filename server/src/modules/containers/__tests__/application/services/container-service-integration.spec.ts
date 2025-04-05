@@ -1,18 +1,18 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Create a mock version of the container service
 const mockContainerService = {
   getDeviceAuth: vi.fn(),
-  getDeviceByUuid: vi.fn()
+  getDeviceByUuid: vi.fn(),
 };
 
 // Mock DevicesService and DeviceAuthService
 const mockDevicesService = {
-  findOneByUuid: vi.fn()
+  findOneByUuid: vi.fn(),
 };
 
 const mockDeviceAuthService = {
-  findDeviceAuthByDeviceUuid: vi.fn()
+  findDeviceAuthByDeviceUuid: vi.fn(),
 };
 
 // Mock the implementation of getDeviceAuth and getDeviceByUuid
@@ -29,17 +29,19 @@ describe('ContainerService Integration', () => {
   beforeEach(() => {
     // Reset mocks before each test
     vi.resetAllMocks();
-    
+
     // Set up mock responses
     mockDevicesService.findOneByUuid.mockResolvedValue({
       _id: 'device-id',
-      uuid: 'device-uuid'
+      uuid: 'device-uuid',
     });
-    
-    mockDeviceAuthService.findDeviceAuthByDeviceUuid.mockResolvedValue([{
-      _id: 'auth-id',
-      device: 'device-id'
-    }]);
+
+    mockDeviceAuthService.findDeviceAuthByDeviceUuid.mockResolvedValue([
+      {
+        _id: 'auth-id',
+        device: 'device-id',
+      },
+    ]);
   });
 
   it('should get device by UUID using DevicesService', async () => {
@@ -47,7 +49,7 @@ describe('ContainerService Integration', () => {
     expect(mockDevicesService.findOneByUuid).toHaveBeenCalledWith('device-uuid');
     expect(device).toEqual({
       _id: 'device-id',
-      uuid: 'device-uuid'
+      uuid: 'device-uuid',
     });
   });
 
@@ -56,7 +58,7 @@ describe('ContainerService Integration', () => {
     expect(mockDeviceAuthService.findDeviceAuthByDeviceUuid).toHaveBeenCalledWith('device-uuid');
     expect(deviceAuth).toEqual({
       _id: 'auth-id',
-      device: 'device-id'
+      device: 'device-id',
     });
   });
 });

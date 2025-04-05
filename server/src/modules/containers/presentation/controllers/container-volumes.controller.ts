@@ -20,6 +20,7 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
+import { SsmContainer } from 'ssm-shared-lib';
 import {
   CONTAINER_VOLUMES_SERVICE,
   IContainerVolumesService,
@@ -102,7 +103,7 @@ export class ContainerVolumesController {
    * Backup a volume
    */
   @Post('backup/:uuid')
-  async postBackupVolume(@Param('uuid') uuid: string, @Body() body: { mode: string }, @Res() res) {
+  async postBackupVolume(@Param('uuid') uuid: string, @Body() body: { mode: string }) {
     const { mode } = body;
 
     const volume = await this.volumesService.getVolumeByUuid(uuid);
@@ -110,17 +111,16 @@ export class ContainerVolumesController {
       throw new HttpException('Volume not found', HttpStatus.NOT_FOUND);
     }
 
-    const { filePath, fileName } = await this.volumesService.backupVolume(volume, mode);
+    const { filePath, fileName } = await this.volumesService.backupVolume(
+      volume,
+      mode as SsmContainer.VolumeBackupMode,
+    );
 
-    return res.status(HttpStatus.OK).json({
-      status: 'success',
-      message: 'Volume backed up',
-      data: {
-        filePath: `${filePath}${fileName}`,
-        fileName,
-        mode,
-      },
-    });
+    return {
+      filePath: `${filePath}${fileName}`,
+      fileName,
+      mode,
+    };
   }
 
   /**

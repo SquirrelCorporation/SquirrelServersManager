@@ -1,5 +1,18 @@
 import { vi } from 'vitest';
 
+// Mock Kind enum
+vi.mock('@modules/containers/domain/components/kind.enum', () => {
+  return {
+    Kind: {
+      UNKNOWN: 'unknown',
+      REGISTRY: 'registry',
+      WATCHER: 'watcher',
+      TRIGGER: 'trigger',
+      AUTHENTICATION: 'authentication',
+    },
+  };
+});
+
 /* Mock registry components */
 vi.mock(
   '@modules/containers/application/services/components/registry/acr-registry.component',

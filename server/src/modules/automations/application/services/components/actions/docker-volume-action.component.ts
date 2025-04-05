@@ -1,5 +1,5 @@
-import { Automations, SsmContainer } from 'ssm-shared-lib';
 import { IContainerVolumesService } from '@modules/containers';
+import { Automations, SsmContainer } from 'ssm-shared-lib';
 import { IAutomationRepository } from '../../../../domain/repositories/automation.repository.interface';
 import { AbstractActionComponent } from './abstract-action.component';
 
@@ -40,7 +40,10 @@ export class DockerVolumeActionComponent extends AbstractActionComponent {
         try {
           switch (this.dockerVolumeAction) {
             case SsmContainer.VolumeActions.BACKUP:
-              await this.containerVolumeUseCases.backupVolume(volume, this.dockerVolumeAction);
+              await this.containerVolumeUseCases.backupVolume(
+                volume,
+                SsmContainer.VolumeBackupMode.FILE_SYSTEM,
+              );
               break;
           }
         } catch (error: any) {

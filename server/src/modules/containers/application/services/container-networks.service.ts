@@ -272,33 +272,6 @@ export class ContainerNetworksService implements IContainerNetworksService {
   }
 
   /**
-   * Helper method to create a Docker network
-   */
-  private async createDockerNetwork(
-    dockerComponent: any,
-    networkData: Partial<IContainerNetworkEntity>,
-  ): Promise<any> {
-    try {
-      return dockerComponent.createNetwork(networkData);
-    } catch (error: any) {
-      logger.error(`Failed to create Docker network: ${error.message}`);
-      throw error;
-    }
-  }
-
-  /**
-   * Helper method to remove a Docker network
-   */
-  private async removeDockerNetwork(dockerComponent: any, networkId: string): Promise<void> {
-    try {
-      await dockerComponent.removeNetwork(networkId);
-    } catch (error: any) {
-      logger.error(`Failed to remove Docker network: ${error.message}`);
-      throw error;
-    }
-  }
-
-  /**
    * Helper method to connect a Docker container to a network
    */
   private async connectDockerContainerToNetwork(
