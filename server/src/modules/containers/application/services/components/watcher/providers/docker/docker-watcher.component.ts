@@ -1,11 +1,6 @@
 import { getCustomAgent } from '@infrastructure/adapters/ssh/custom-agent.adapter';
-import { SSHCredentialsAdapter } from '@infrastructure/adapters/ssh/ssh-credentials.adapter';
 import { IContainerEntity } from '@modules/containers/domain/entities/container.entity';
-import { DEVICES_SERVICE, IDevice, IDeviceAuth, IDevicesService } from '@modules/devices';
-import {
-  DEVICE_AUTH_SERVICE,
-  IDeviceAuthService,
-} from '@modules/devices/domain/services/device-auth-service.interface';
+import { IDevice, IDeviceAuth } from '@modules/devices';
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import debounce from 'debounce';
@@ -85,10 +80,6 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     protected readonly containerVolumesService: IContainerVolumesService,
     @Inject(CONTAINER_NETWORKS_SERVICE)
     protected readonly containerNetworksService: IContainerNetworksService,
-    @Inject(DEVICES_SERVICE)
-    private readonly devicesService: IDevicesService,
-    @Inject(DEVICE_AUTH_SERVICE)
-    private readonly deviceAuthService: IDeviceAuthService,
   ) {
     super(
       eventEmitter,
@@ -110,17 +101,12 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
 
       await this.initWatcher();
       await this.dockerApi.info().then(async (e) => {
-        const device = await this.devicesService.findOneByUuid(this.configuration.deviceUuid);
-        if (!device) {
-          this.childLogger.error(
-            `Device ${this.configuration.deviceUuid} not found during docker info update`,
-          );
-          return;
-        }
-        device.dockerId = e.ID;
-        device.dockerVersion = e.ServerVersion;
-        device.updatedAt = new Date();
-        await this.devicesService.update(device);
+        // In the NestJS version, we use the containerService instead of DeviceUseCases
+        await this.containerService.updateDeviceDockerInfo(
+          this.configuration.deviceUuid,
+          e.ID,
+          e.ServerVersion,
+        );
       });
 
       this.childLogger.info(
@@ -177,20 +163,21 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
    */
   async initWatcher(): Promise<void> {
     try {
-      const device = await this.devicesService.findOneByUuid(this.configuration.deviceUuid);
+      // In NestJS version, we use containerService instead of direct repository access
+      const device = await this.containerService.getDeviceByUuid(this.configuration.deviceUuid);
       if (!device) {
         throw new Error(
           `DeviceID not found: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host}`,
         );
       }
 
-      const deviceAuth = await this.deviceAuthService.findDeviceAuthByDeviceUuid(device.uuid);
-      if (!deviceAuth || !deviceAuth[0]) {
+      const deviceAuth = await this.containerService.getDeviceAuth(device.uuid);
+      if (!deviceAuth) {
         throw new Error(
           `DeviceAuth not found for deviceID ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host}`,
         );
       }
-      const options = await this.getDockerConnectionOptions(device, deviceAuth[0]);
+      const options = await this.getDockerConnectionOptions(device, deviceAuth);
       this.dockerApi = new Dockerode(options);
     } catch (error: any) {
       this.childLogger.error(`Failed to initialize watcher: ${error.message}`);
@@ -203,8 +190,8 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
    */
   async getDockerConnectionOptions(device: IDevice, deviceAuth: IDeviceAuth): Promise<any> {
     try {
-      const sshHelper = new SSHCredentialsAdapter();
-      const options = await sshHelper.getDockerSshConnectionOptions(device, deviceAuth);
+      // In NestJS version, we use containerService to get connection options
+      const options = await this.containerService.getDockerSshConnectionOptions(device, deviceAuth);
 
       const agent = getCustomAgent(this.childLogger, {
         debug: (message: any) => {
@@ -713,8 +700,16 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
       container: containerWithResult,
       changed: false,
     };
+    // In NestJS version, use containerService to get device
+    const device = await this.containerService.getDeviceByUuid(this.configuration.deviceUuid);
+    if (!device) {
+      throw new Error(
+        `DeviceID not found: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host}`,
+      );
+    }
 
     // Find container in db & compare
+    // Find the container in all containers for this device
     const allContainers = await this.containerService.getContainersByDeviceUuid(
       this.configuration.deviceUuid,
     );
@@ -722,46 +717,21 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
 
     // Not found in DB? => Save it
     if (!containerInDb) {
-      const normalizedForCreate = this.containerService.normalizeContainer({
-        ...containerWithResult,
-        watcher: this.name,
-        status: SsmStatus.ContainerStatus.UNREACHABLE,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
       containerReport.container = await this.containerService.createContainer(
         this.configuration.deviceUuid,
-        normalizedForCreate,
+        containerWithResult,
       );
       containerReport.changed = true;
+      // Found in DB? => update it
     } else {
-      const normalizedForUpdate = this.containerService.normalizeContainer({
-        ...containerWithResult,
-        _id: containerInDb._id,
-        id: containerInDb.id,
-        watcher: this.name,
-        updatedAt: new Date(),
-        name: containerWithResult.name || containerInDb.name,
-        createdAt: containerInDb.createdAt,
-        deviceUuid: containerInDb.deviceUuid,
-        status:
-          containerWithResult.status ||
-          containerInDb.status ||
-          SsmStatus.ContainerStatus.UNREACHABLE,
-      });
-
-      const changed = hasResultChanged(containerInDb, normalizedForUpdate);
-      if (changed) {
-        containerReport.container = await this.containerService.updateContainer(
-          containerInDb.id,
-          normalizedForUpdate,
-        );
-        containerReport.changed = true;
-      } else {
-        containerReport.container = containerInDb;
-        containerReport.changed = false;
-      }
-      containerReport.changed = containerReport.changed || !!containerWithResult.updateAvailable;
+      containerReport.container = await this.containerService.updateContainer(
+        containerWithResult.id,
+        containerWithResult,
+      );
+      containerReport.changed = !!(
+        hasResultChanged(containerInDb, containerReport.container) &&
+        containerWithResult.updateAvailable
+      );
     }
 
     return containerReport;
@@ -889,14 +859,7 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     try {
       const containersToRemove = getOldContainers(newContainers, containersFromTheStore);
       containersToRemove.forEach((containerToRemove) => {
-        try {
-          void this.containerService.deleteContainer(containerToRemove.id);
-          this.childLogger.info(`Container ${containerToRemove.name} pruned`);
-        } catch (error: any) {
-          this.childLogger.error(
-            `Error pruning container ${containerToRemove.name}: ${error.message}`,
-          );
-        }
+        void this.containerService.deleteContainerById(containerToRemove.id);
       });
     } catch (error: any) {
       this.childLogger.error(error);
