@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ISmartFailureService } from '../../../application/interfaces/smart-failure.service.interface';
+import { ISmartFailureService } from '../../../domain/interfaces/smart-failure.service.interface';
 import { SmartFailureController } from '../../../presentation/controllers/smart-failure.controller';
 
 describe('SmartFailureController', () => {
@@ -31,11 +31,7 @@ describe('SmartFailureController', () => {
 
       const result = await controller.getSmartFailure({ execId: 'test-exec-id' });
 
-      expect(result).toEqual({
-        status: 'success',
-        message: 'May got Ansible SmartFailure',
-        data: mockSmartFailure,
-      });
+      expect(result).toEqual(mockSmartFailure);
       expect(mockService.parseAnsibleLogsAndMayGetSmartFailure).toHaveBeenCalledWith(
         'test-exec-id',
       );
@@ -46,11 +42,7 @@ describe('SmartFailureController', () => {
 
       const result = await controller.getSmartFailure({ execId: 'test-exec-id' });
 
-      expect(result).toEqual({
-        status: 'success',
-        message: 'May got Ansible SmartFailure',
-        data: undefined,
-      });
+      expect(result).toEqual(undefined);
       expect(mockService.parseAnsibleLogsAndMayGetSmartFailure).toHaveBeenCalledWith(
         'test-exec-id',
       );

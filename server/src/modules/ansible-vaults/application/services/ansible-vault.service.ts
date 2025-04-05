@@ -1,18 +1,22 @@
+import { IAnsibleVaultService } from '@modules/ansible-vaults/doma../../domain/interfaces/ansible-vault-service.interface';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { VAULT_PWD } from '../../../../config';
-import { IAnsibleVault } from '../../domain/entities/ansible-vault.entity';
-import { ANSIBLE_VAULT_REPOSITORY, IAnsibleVaultRepository } from '../../domain/repositories/ansible-vault-repository.interface';
 import PinoLogger from '../../../../logger';
+import { IAnsibleVault } from '../../domain/entities/ansible-vault.entity';
+import {
+  ANSIBLE_VAULT_REPOSITORY,
+  IAnsibleVaultRepository,
+} from '../../domain/repositories/ansible-vault-repository.interface';
 import { DEFAULT_VAULT_ID, VaultCryptoService } from './vault-crypto.service';
 
 const logger = PinoLogger.child({ module: 'AnsibleVaultService' });
 
 @Injectable()
-export class AnsibleVaultService {
+export class AnsibleVaultService implements IAnsibleVaultService {
   constructor(
     @Inject(ANSIBLE_VAULT_REPOSITORY)
     private readonly ansibleVaultRepository: IAnsibleVaultRepository,
-    private readonly vaultCryptoService: VaultCryptoService
+    private readonly vaultCryptoService: VaultCryptoService,
   ) {}
 
   /**

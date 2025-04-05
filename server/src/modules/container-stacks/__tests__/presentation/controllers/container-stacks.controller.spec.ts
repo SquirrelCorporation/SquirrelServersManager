@@ -1,8 +1,11 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Test } from '@nestjs/testing';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  CONTAINER_STACKS_SERVICE,
+  IContainerStacksService,
+} from '../../../applicati../../domain/interfaces/container-stacks-service.interface';
+import { ContainerCustomStack } from '../../../domain/entities/container-custom-stack.entity';
 import { ContainerStacksController } from '../../../presentation/controllers/container-stacks.controller';
-import { CONTAINER_STACKS_SERVICE, IContainerStacksService } from '../../../application/interfaces/container-stacks-service.interface';
-import { ContainerCustomStack, IContainerCustomStackRepositoryEntity } from '../../../domain/entities/container-custom-stack.entity';
 
 // Mock external modules
 vi.mock('@modules/auth/strategies/jwt-auth.guard', () => ({
@@ -22,23 +25,22 @@ describe('ContainerStacksController', () => {
     name: 'Test Stack',
   };
 
-  const mockRepo: IContainerCustomStackRepositoryEntity = {
-    uuid: '123e4567-e89b-12d3-a456-426614174001',
-    name: 'Test Repository',
-  };
-
   beforeEach(async () => {
     mockContainerStacksService = {
+      onModuleInit: vi.fn(),
       getAllStacks: vi.fn().mockResolvedValue([mockStack]),
       getStackByUuid: vi.fn().mockResolvedValue(mockStack),
       createStack: vi.fn().mockResolvedValue(mockStack),
       updateStack: vi.fn().mockResolvedValue(mockStack),
       deleteStackByUuid: vi.fn().mockResolvedValue(true),
-      getAllRepositories: vi.fn().mockResolvedValue([mockRepo]),
-      getRepositoryByUuid: vi.fn().mockResolvedValue(mockRepo),
-      createRepository: vi.fn().mockResolvedValue(mockRepo),
-      updateRepository: vi.fn().mockResolvedValue(mockRepo),
+      getAllRepositories: vi.fn().mockResolvedValue([]),
+      getRepositoryByUuid: vi.fn().mockResolvedValue(null),
+      createRepository: vi.fn().mockResolvedValue({}),
+      updateRepository: vi.fn().mockResolvedValue({}),
       deleteRepositoryByUuid: vi.fn().mockResolvedValue(true),
+      deployStack: vi.fn().mockResolvedValue({ execId: 'exec-123' }),
+      transformStack: vi.fn().mockResolvedValue({ yaml: 'test-yaml' }),
+      dryRunStack: vi.fn().mockResolvedValue({ validating: true }),
     };
 
     const moduleRef = await Test.createTestingModule({
@@ -81,36 +83,37 @@ describe('ContainerStacksController', () => {
     });
   });
 
-  describe('Repository operations', () => {
-    it('should get all repositories', async () => {
-      const result = await controller.getAllRepositories();
-      expect(result).toEqual([mockRepo]);
-      expect(mockContainerStacksService.getAllRepositories).toHaveBeenCalled();
+  describe('Stack deployment operations', () => {
+    it('should deploy a stack', async () => {
+      const mockUser = { id: 'user-123' };
+      const result = await controller.deployStack(
+        '123',
+        { target: 'test-target' },
+        { user: mockUser },
+      );
+      expect(result).toEqual({ execId: 'exec-123' });
+      expect(mockContainerStacksService.deployStack).toHaveBeenCalledWith(
+        '123',
+        'test-target',
+        mockUser,
+      );
     });
 
-    it('should get a repository by UUID', async () => {
-      const result = await controller.getRepositoryByUuid('123');
-      expect(result).toEqual(mockRepo);
-      expect(mockContainerStacksService.getRepositoryByUuid).toHaveBeenCalledWith('123');
+    it('should transform a stack', async () => {
+      const mockContent = { test: 'content' };
+      const result = await controller.transformStack({ content: mockContent });
+      expect(result).toEqual({ yaml: 'test-yaml' });
+      expect(mockContainerStacksService.transformStack).toHaveBeenCalledWith(mockContent);
     });
 
-    it('should create a repository', async () => {
-      const result = await controller.createRepository(mockRepo);
-      expect(result).toEqual(mockRepo);
-      expect(mockContainerStacksService.createRepository).toHaveBeenCalledWith(mockRepo);
-    });
-
-    it('should update a repository', async () => {
-      const updateData = { name: 'Updated Repository' };
-      const result = await controller.updateRepository('123', updateData);
-      expect(result).toEqual(mockRepo);
-      expect(mockContainerStacksService.updateRepository).toHaveBeenCalledWith('123', updateData);
-    });
-
-    it('should delete a repository', async () => {
-      const result = await controller.deleteRepository('123');
-      expect(result).toBe(true);
-      expect(mockContainerStacksService.deleteRepositoryByUuid).toHaveBeenCalledWith('123');
+    it('should dry run a stack', async () => {
+      const mockBody = { json: { test: 'json' }, yaml: 'test-yaml' };
+      const result = await controller.dryRunStack(mockBody);
+      expect(result).toEqual({ validating: true });
+      expect(mockContainerStacksService.dryRunStack).toHaveBeenCalledWith(
+        mockBody.json,
+        mockBody.yaml,
+      );
     });
   });
 });

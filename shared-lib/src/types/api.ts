@@ -33,7 +33,6 @@ export type CurrentUser = {
   avatar?: string;
   email?: string;
   access?: string;
-  systemPerformance: UserSystemPerformance;
   devices?: {
     online?: number;
     offline?: number;

@@ -1,23 +1,16 @@
-import { Inject, Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { SSHCredentialsAdapter } from '@infrastructure/index';
-import {
-  DEVICES_SERVICE,
-  DEVICE_AUTH_SERVICE,
-  IDeviceAuthService,
-  IDevicesService,
-} from '@modules/devices';
+import { DEVICE_AUTH_SERVICE, DEVICES_SERVICE, IDeviceAuthService, IDevicesService } from '@modules/devices';
 import { SSHExecutor } from '@modules/remote-system-information/application/services/remote-ssh-executor.service';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { IDevice } from '../../../devices/domain/entities/device.entity';
-import { IRemoteSystemInformationService } from '../interfaces/remote-system-information-service.interface';
+import { IRemoteSystemInformationService } from '../../domain/interfaces/remote-system-information-service.interface';
 import { RemoteSystemInformationEngineService } from './engine/remote-system-information-engine.service';
 
 /**
  * Service for remote system information collection and management
  */
 @Injectable()
-export class RemoteSystemInformationService
-  implements IRemoteSystemInformationService, OnModuleInit
-{
+export class RemoteSystemInformationService implements IRemoteSystemInformationService {
   private readonly logger = new Logger(RemoteSystemInformationService.name);
 
   constructor(

@@ -12,84 +12,187 @@ Squirrel Servers Manager 🐿️
 ---
 # Statistics Module
 
-The Statistics Module provides a NestJS implementation for device statistics and dashboard metrics functionality.
-
 ## Overview
 
-This module handles:
-- Device performance metrics (CPU, memory, disk usage)
-- Dashboard statistics (system performance, availability)
-- Historical and real-time statistics
+The Statistics Module provides comprehensive functionality for collecting, analyzing, and presenting system statistics within the Squirrel Servers Manager application. It follows Clean Architecture principles to ensure separation of concerns and maintainability.
 
-## Components
+## Features
 
-### Controllers
+- Device statistics collection and analysis
+- Device downtime tracking and reporting
+- Dashboard metrics and visualization
+- Prometheus metrics integration
+- Real-time device monitoring
+- Historical data analysis
+- Performance metrics collection
+- System health monitoring
 
-1. **DashboardController**
-   - Endpoints for dashboard-related statistics
-   - Performance metrics
-   - Availability metrics
-   - Aggregated statistics
+## Architecture
 
-2. **DeviceStatsController**
-   - Device-specific statistics
-   - Historical and current metrics
+The module follows the Clean Architecture pattern with proper separation of concerns:
 
-### Services
+### Domain Layer
 
-1. **DashboardService**
-   - System performance calculations
-   - Availability statistics
-   - Aggregated metrics across devices
+Contains the core business entities and interfaces:
 
-2. **DeviceStatsService**
-   - Device-specific metrics retrieval
-   - Historical data querying
-   - Metric aggregation
+- **Entities**
+  - `device-downtime-event.entity.ts`: Device downtime tracking
+- **Repository Interfaces**
+  - `device-downtime-event-repository.interface.ts`: Downtime data access contract
+- **Service Interfaces**
+  - `metrics-service.interface.ts`: Metrics service contract
+  - `device-stats-service.interface.ts`: Device statistics contract
+  - `dashboard-service.interface.ts`: Dashboard data contract
 
-3. **DeviceDownTimeService**
-   - Device availability calculations
-   - Downtime tracking
+### Application Layer
 
-## Infrastructure Dependencies
+Contains the business logic and services:
 
-The module uses the PrometheusService from the infrastructure layer to query metrics data. This service is injected as a provider rather than being part of the module itself.
+- **Core Services**
+  - `metrics.service.ts`: Core metrics management
+  - `device-stats.service.ts`: Device statistics handling
+  - `device-downtime.service.ts`: Downtime tracking
+  - `dashboard.service.ts`: Dashboard data management
 
-## Usage
+### Infrastructure Layer
 
-Import the StatisticsModule into your AppModule:
+Contains implementations of repositories and external integrations:
+
+- **Repositories**
+  - `device-downtime-event.repository.ts`: MongoDB repository for downtime events
+- **Schemas**
+  - `device-downtime-event.schema.ts`: Mongoose schema for downtime events
+- **Mappers**
+  - `device-downtime-event-repository.mapper.ts`: Maps between domain and database models
+- **External Integration**
+  - `prometheus.provider.ts`: Prometheus metrics integration
+
+### Presentation Layer
+
+Contains controllers for API endpoints:
+
+- **Controllers**
+  - `metrics.controller.ts`: Metrics endpoints
+  - `device-stats.controller.ts`: Device statistics endpoints
+  - `dashboard.controller.ts`: Dashboard data endpoints
+
+## Module Structure
+
+```
+statistics/
+├── domain/
+│   ├── entities/
+│   │   └── device-downtime-event.entity.ts
+│   ├── repositories/
+│   │   └── device-downtime-event-repository.interface.ts
+│   └── interfaces/
+│       ├── metrics-service.interface.ts
+│       ├── device-stats-service.interface.ts
+│       └── dashboard-service.interface.ts
+├── application/
+│   └── services/
+│       ├── metrics.service.ts
+│       ├── device-stats.service.ts
+│       ├── device-downtime.service.ts
+│       └── dashboard.service.ts
+├── infrastructure/
+│   ├── repositories/
+│   │   └── device-downtime-event.repository.ts
+│   ├── schemas/
+│   │   └── device-downtime-event.schema.ts
+│   ├── mappers/
+│   │   └── device-downtime-event-repository.mapper.ts
+│   └── prometheus/
+│       └── prometheus.provider.ts
+├── presentation/
+│   └── controllers/
+│       ├── metrics.controller.ts
+│       ├── device-stats.controller.ts
+│       └── dashboard.controller.ts
+├── __tests__/
+├── statistics.module.ts
+├── index.ts
+└── README.md
+```
+
+## Integration
+
+The module is integrated through dependency injection:
 
 ```typescript
-import { Module } from '@nestjs/common';
-import { StatisticsModule } from './modules/statistics/statistics.module';
-
 @Module({
   imports: [
-    StatisticsModule,
-    // other modules...
+    HttpModule,
+    MongooseModule.forFeature([
+      { name: DEVICE_DOWNTIME_EVENT, schema: DeviceDownTimeEventSchema },
+    ]),
+    DevicesModule,
+    forwardRef(() => ContainersModule),
+  ],
+  controllers: [
+    DashboardController,
+    DeviceStatsController,
+    MetricsController,
+  ],
+  providers: [
+    // Core services
+    PrometheusProvider,
+    DashboardService,
+    DeviceStatsService,
+    DeviceDownTimeService,
+    {
+      provide: METRICS_SERVICE,
+      useClass: MetricsService,
+    },
+    
+    // Mappers and Repositories
+    DeviceDownTimeEventRepositoryMapper,
+    {
+      provide: DEVICE_DOWNTIME_EVENT_REPOSITORY,
+      useClass: DeviceDownTimeEventRepository,
+    },
+  ],
+  exports: [
+    DashboardService,
+    DeviceStatsService,
+    DeviceDownTimeService,
+    {
+      provide: METRICS_SERVICE,
+      useClass: MetricsService,
+    },
+    PrometheusProvider,
   ],
 })
-export class AppModule {}
 ```
 
 ## API Endpoints
 
-### Dashboard Statistics
+### Dashboard
 
-- `GET /dashboard/stats/performances` - Get system performance metrics
-- `GET /dashboard/stats/availability` - Get system availability metrics
-- `POST /dashboard/stats/averaged/:type` - Get averaged stats for specific devices
-- `POST /dashboard/stats/:type` - Get dashboard stats by type
+- `GET /statistics/dashboard`: Get dashboard overview
+- `GET /statistics/dashboard/devices`: Get device statistics
+- `GET /statistics/dashboard/performance`: Get performance metrics
+- `GET /statistics/dashboard/history`: Get historical data
 
 ### Device Statistics
 
-- `GET /devices/:uuid/stats/:type` - Get device stats by type
-- `GET /devices/:uuid/stat/:type` - Get latest device stat by type
+- `GET /statistics/devices/:id`: Get device statistics
+- `GET /statistics/devices/:id/downtime`: Get device downtime history
+- `GET /statistics/devices/:id/performance`: Get device performance metrics
+- `GET /statistics/devices/:id/history`: Get device historical data
 
-## Testing
+### Metrics
 
-Tests for this module are located in the `__tests__` directory. Run them using:
+- `GET /statistics/metrics`: Get all metrics
+- `GET /statistics/metrics/prometheus`: Get Prometheus metrics
+- `GET /statistics/metrics/system`: Get system metrics
+- `GET /statistics/metrics/devices`: Get device metrics
 
-```bash
-npm test -- modules/statistics
-```
+## Recent Changes
+
+- Enhanced metrics collection system
+- Improved device downtime tracking
+- Added dashboard visualizations
+- Enhanced Prometheus integration
+- Improved historical data analysis
+- Added comprehensive test coverage

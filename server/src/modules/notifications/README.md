@@ -337,20 +337,6 @@ The module uses NestJS event emitter for event-driven communication:
 - Listens for system events like `AUTOMATION_FAILED`, `DOCKER_STAT_FAILED`, etc.
 - Emits `UPDATED_NOTIFICATIONS` event when notifications are updated
 
-## Testing Strategy
-
-The module includes comprehensive tests that mirror the clean architecture structure:
-
-1. **Application Layer Tests**
-   - Test business logic in services
-   - Mock repository dependencies
-   - Verify correct behavior and event emissions
-
-2. **Presentation Layer Tests**
-   - Test API endpoints
-   - Mock service dependencies
-   - Verify correct responses
-
 ## Best Practices
 
 When extending or modifying this module, follow these best practices:

@@ -2,7 +2,7 @@ import { Controller, Get, Inject, Query } from '@nestjs/common';
 import {
   ISmartFailureService,
   SMART_FAILURE_SERVICE,
-} from '../../application/interfaces/smart-failure.service.interface';
+} from '../../domain/interfaces/smart-failure.service.interface';
 import { SmartFailureRequestDto } from '../dtos/smart-failure.dto';
 
 /**

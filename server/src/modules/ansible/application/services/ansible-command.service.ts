@@ -1,22 +1,17 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
-import { DEVICE_AUTH_SERVICE, IDeviceAuthService } from '@modules/devices';
-import { IUser } from '@modules/users';
-import { IAnsibleVault } from '@modules/ansible-vaults';
-import {
-  IShellWrapperService,
-  ISshKeyService,
-  SHELL_WRAPPER_SERVICE,
-  SSH_KEY_SERVICE,
-} from '@modules/shell';
-import { IAnsibleCommandService } from '@modules/ansible/application/interfaces/ansible-command-service.interface';
-import {
-  ANSIBLE_TASK_REPOSITORY,
-  IAnsibleTaskRepository,
-} from '../../domain/repositories/ansible-task.repository.interface';
 import { SSM_INSTALL_PATH } from '../../../../config';
 import { Playbooks } from '../../../../types/typings';
+import { IAnsibleVault } from '../../../ansible-vaults';
+import { DEVICE_AUTH_SERVICE, IDeviceAuthService } from '../../../devices';
+import { IShellWrapperService, ISshKeyService, SHELL_WRAPPER_SERVICE, SSH_KEY_SERVICE } from '../../../shell';
+import { IUser } from '../../../users';
+import { IAnsibleCommandService } from '../../domain/interfaces/ansible-command-service.interface';
+import {
+  ANSIBLE_TASK_REPOSITORY,
+  IAnsibleTaskRepository
+} from '../../domain/repositories/ansible-task.repository.interface';
 import { AnsibleCommandBuilderService } from './ansible-command-builder.service';
 import { AnsibleGalaxyCommandService } from './ansible-galaxy-command.service';
 import { InventoryTransformerService } from './inventory-transformer.service';

@@ -13,7 +13,7 @@ import {
 import {
   CONTAINER_STACKS_SERVICE,
   IContainerStacksService,
-} from '../../application/interfaces/container-stacks-service.interface';
+} from '../../applicati../../domain/interfaces/container-stacks-service.interface';
 import { ContainerCustomStack } from '../../domain/entities/container-custom-stack.entity';
 
 @Controller('container-stacks')

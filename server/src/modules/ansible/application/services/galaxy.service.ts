@@ -1,7 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { IGalaxyService } from '@modules/ansible/doma../../domain/interfaces/galaxy-service.interface';
 import { HttpService } from '@nestjs/axios';
+import { Injectable, Logger } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
-import { IGalaxyService } from '@modules/ansible/application/interfaces/galaxy-service.interface';
 import { AnsibleCommandService } from './ansible-command.service';
 
 /**

@@ -14,6 +14,11 @@ import { SESSION_DURATION } from 'src/config';
 import { UnauthorizedException } from '@infrastructure/exceptions/app-exceptions';
 import { JwtService } from '@nestjs/jwt';
 import { Public } from 'src/decorators/public.decorator';
+import {
+  ACTIONS,
+  RESOURCES,
+  ResourceAction,
+} from '../../../../infrastructure/security/roles/resource-action.decorator';
 import { UsersService } from '../../application/services/users.service';
 import { UserMapper } from '../mappers/user.mapper';
 import { IUser } from '../../domain/entities/user.entity';
@@ -38,6 +43,7 @@ export class UsersController {
 
   @Public()
   @Post('login')
+  @ResourceAction(RESOURCES.USER, ACTIONS.EXECUTE)
   async login(
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) response: Response,
@@ -83,6 +89,7 @@ export class UsersController {
 
   @Public()
   @Post()
+  @ResourceAction(RESOURCES.USER, ACTIONS.CREATE)
   async createUser(@Body() userData: Partial<IUser>) {
     try {
       const users = await this.usersService.getAllUsers();
@@ -113,6 +120,7 @@ export class UsersController {
   }
 
   @Put(':email/api-key')
+  @ResourceAction(RESOURCES.USER, ACTIONS.UPDATE)
   async regenerateApiKey(@Param('email') email: string, @User() user) {
     // Only admins can regenerate API keys for other users
     if (user.role !== 'admin' && user.email !== email) {
@@ -144,6 +152,7 @@ export class UsersController {
   }
 
   @Put(':email/logs-level')
+  @ResourceAction(RESOURCES.USER, ACTIONS.UPDATE)
   async updateLogsLevel(
     @Param('email') email: string,
     @Body() logsLevelData: { logsLevel: any },
@@ -179,6 +188,7 @@ export class UsersController {
   }
 
   @Get('current')
+  @ResourceAction(RESOURCES.USER, ACTIONS.READ)
   async getCurrentUser(@User() user) {
     return this.usersService.getCurrentUser(user);
   }

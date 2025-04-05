@@ -1,31 +1,31 @@
-import * as stream from 'stream';
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import Dockerode from 'dockerode';
-import {
-  CONTAINER_SERVICE,
-  IContainerService,
-} from '../../../../../../application/interfaces/container-service.interface';
-import {
-  CONTAINER_STATS_SERVICE,
-  IContainerStatsService,
-} from '../../../../../../application/interfaces/container-stats-service.interface';
-import {
-  CONTAINER_LOGS_SERVICE,
-  IContainerLogsService,
-} from '../../../../../../application/interfaces/container-logs-service.interface';
+import * as stream from 'stream';
 import {
   CONTAINER_IMAGES_SERVICE,
-  IContainerImagesService,
-} from '../../../../../../application/interfaces/container-images-service.interface';
+  IContainerImagesService
+} from '../../../../../../applicati../../domain/interfaces/container-images-service.interface';
 import {
-  CONTAINER_VOLUMES_SERVICE,
-  IContainerVolumesService,
-} from '../../../../../../application/interfaces/container-volumes-service.interface';
+  CONTAINER_LOGS_SERVICE,
+  IContainerLogsService
+} from '../../../../../../applicati../../domain/interfaces/container-logs-service.interface';
 import {
   CONTAINER_NETWORKS_SERVICE,
-  IContainerNetworksService,
-} from '../../../../../../application/interfaces/container-networks-service.interface';
+  IContainerNetworksService
+} from '../../../../../../applicati../../domain/interfaces/container-networks-service.interface';
+import {
+  CONTAINER_SERVICE,
+  IContainerService
+} from '../../../../../../applicati../../domain/interfaces/container-service.interface';
+import {
+  CONTAINER_STATS_SERVICE,
+  IContainerStatsService
+} from '../../../../../../applicati../../domain/interfaces/container-stats-service.interface';
+import {
+  CONTAINER_VOLUMES_SERVICE,
+  IContainerVolumesService
+} from '../../../../../../applicati../../domain/interfaces/container-volumes-service.interface';
 import { AbstractDockerImagesComponent } from './abstract-docker-images.component';
 
 /**

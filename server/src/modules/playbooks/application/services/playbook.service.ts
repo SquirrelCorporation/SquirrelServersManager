@@ -1,19 +1,14 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { API, SsmAnsible } from 'ssm-shared-lib';
-import { AnsibleCommandService, ExtraVarsService } from '@modules/ansible';
+import { AnsibleCommandService, ExtraVarsService, TaskLogsService } from '@modules/ansible';
 import { IAnsibleVault } from '@modules/ansible-vaults';
-import { IUser } from '@modules/users/domain/entities/user.entity';
-import { IShellWrapperService, SHELL_WRAPPER_SERVICE } from '@modules/shell';
+import { IPlaybooksService } from '@modules/playbooks/doma../../domain/interfaces/playbooks-service.interface';
 import { IPlaybook } from '@modules/playbooks/domain/entities/playbook.entity';
+import { IShellWrapperService, SHELL_WRAPPER_SERVICE } from '@modules/shell';
+import { IUser } from '@modules/users/domain/entities/user.entity';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Injectable } from '@nestjs/common';
 import { Playbooks } from 'src/types/typings';
-import { TaskLogsService } from '@modules/ansible';
-import { IPlaybooksService } from '@modules/playbooks/application/interfaces/playbooks-service.interface';
-import { Cache } from '@nestjs/cache-manager';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import {
-  IPlaybookRepository,
-  PLAYBOOK_REPOSITORY,
-} from '../../domain/repositories/playbook-repository.interface';
+import { API, SsmAnsible } from 'ssm-shared-lib';
+import { IPlaybookRepository, PLAYBOOK_REPOSITORY } from '../../domain/repositories/playbook-repository.interface';
 
 /**
  * PlaybookService implements the IPlaybooksService interface

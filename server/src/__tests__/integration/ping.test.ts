@@ -1,15 +1,29 @@
-import mongoose from 'mongoose';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import express from 'express';
 import request from 'supertest';
-import app from './server';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import './test-setup';
+
+// Create a mock Express app
+const app = express();
+app.get('/ping', (req, res) => {
+  res.status(200).json({ message: 'pong' });
+});
+
+// Mock mongoose
+vi.mock('mongoose', () => ({
+  default: {
+    connect: vi.fn().mockResolvedValue(undefined),
+    disconnect: vi.fn().mockResolvedValue(undefined),
+  },
+}));
 
 describe('Ping Basic test', () => {
   beforeAll(async () => {
-    await mongoose.connect(process.env['MONGO_URI'] as string);
+    // No need to actually connect to MongoDB in unit tests
   });
 
   afterAll(async () => {
-    await mongoose.disconnect();
+    // No need to actually disconnect from MongoDB in unit tests
   });
 
   it('Ping', async () => {

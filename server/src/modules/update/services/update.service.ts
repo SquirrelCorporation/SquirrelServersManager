@@ -1,15 +1,16 @@
 import { HttpService } from '@nestjs/axios';
-import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { firstValueFrom } from 'rxjs';
 import * as semver from 'semver';
 import { SettingsKeys } from 'ssm-shared-lib';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from '@nestjs/cache-manager';
+import { IUpdateService } from '@modules/update/doma../../domain/interfaces/update-service.interface';
 import { version } from '../../../../package.json';
 
 @Injectable()
-export class UpdateService implements OnModuleInit {
+export class UpdateService implements IUpdateService {
   private readonly logger = new Logger(UpdateService.name);
   private readonly RELEASE_URL =
     'https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager/refs/heads/master/release.json';

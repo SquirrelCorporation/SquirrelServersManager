@@ -128,12 +128,12 @@ const UpdateModeModal = React.forwardRef<
           path: node?.key?.replace('//', '/'),
           mode: decimalMode,
         }); // Send the chmod request
-      if (response.status === 'OK') {
+      if (response.success) {
         message.success('Permissions updated successfully!');
         return true; // Successful chmod
       } else {
         throw new Error(
-          `Failed to update permissions: ${response.error || 'Unknown error'}`,
+          `Failed to update permissions: ${response.message || 'Unknown error'}`,
         );
       }
     } catch (error: any) {
@@ -234,8 +234,8 @@ const UpdateModeModal = React.forwardRef<
         label="Octal Mode"
         placeholder="e.g., 755"
         fieldProps={{
-          value: Number.parseInt(mode),
-          onChange: (e) => handleModeInputChange(e?.toString() || '0'),
+          value: mode,
+          onChange: (value) => handleModeInputChange(value?.toString() || '0'),
         }}
       />
     </ModalForm>

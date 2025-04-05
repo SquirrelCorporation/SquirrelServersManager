@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { ICronService } from '@modules/scheduler/doma../../domain/interfaces/cron-service.interface';
 import { ICron } from '../../domain/entities/cron.entity';
 import {
   CRON_REPOSITORY,
@@ -9,7 +10,7 @@ import PinoLogger from '../../../../logger';
 const logger = PinoLogger.child({ module: 'CronService' });
 
 @Injectable()
-export class CronService {
+export class CronService implements ICronService {
   constructor(
     @Inject(CRON_REPOSITORY)
     private readonly cronRepository: ICronRepository,

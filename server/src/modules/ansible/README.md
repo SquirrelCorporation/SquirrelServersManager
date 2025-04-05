@@ -1,4 +1,4 @@
-```
+```ascii
   ,;;:;,
    ;;;;;
   ,:;;:;    ,'=.
@@ -12,164 +12,209 @@ Squirrel Servers Manager 🐿️
 ---
 # Ansible Module
 
-The Ansible Module provides functionality for executing Ansible commands and playbooks, as well as managing Ansible tasks and logs.
+## Overview
+
+The Ansible Module provides comprehensive functionality for executing Ansible commands, managing playbooks, and handling Galaxy collections within the Squirrel Servers Manager application. It follows Clean Architecture principles to ensure separation of concerns and maintainability.
 
 ## Features
 
-- Execute Ansible commands and playbooks
-- Transform inventory files
-- Manage extra variables
-- Track Ansible task execution
-- Store and retrieve Ansible logs
+- Ansible command execution and management
+- Inventory transformation and management
+- Extra variables handling
+- Galaxy collection management
+- Task logging and monitoring
+- Ansible hooks integration
+- Command building and validation
+- Secure vault integration
 
 ## Architecture
 
-The module follows the NestJS Clean Architecture pattern with a well-defined layered approach:
+The module follows the Clean Architecture pattern with proper separation of concerns:
 
-- **Domain**: Contains entities, interfaces, and domain logic
-- **Application**: Contains services that implement business logic
-- **Infrastructure**: Contains implementations of repositories and external services
-- **Presentation**: Contains controllers that handle HTTP requests
+### Domain Layer
 
-### Module Structure
+Contains the core business entities and interfaces:
+
+- **Interfaces**
+  - `task-logs-service.interface.ts`: Task logging contract
+  - `ansible-task-repository.interface.ts`: Task data access contract
+  - `ansible-task-status-repository.interface.ts`: Task status contract
+
+### Application Layer
+
+Contains the business logic and services:
+
+- **Command Services**
+  - `ansible-command.service.ts`: Core Ansible command execution
+  - `ansible-command-builder.service.ts`: Command construction
+  - `ansible-galaxy-command.service.ts`: Galaxy command handling
+- **Transformation Services**
+  - `inventory-transformer.service.ts`: Inventory processing
+  - `extra-vars-transformer.service.ts`: Variables transformation
+  - `extra-vars.service.ts`: Variables management
+- **Task Management**
+  - `task-logs.service.ts`: Task logging and monitoring
+  - `ansible-hooks.service.ts`: Hooks management
+- **Galaxy Management**
+  - `galaxy.service.ts`: Galaxy collections handling
+
+### Infrastructure Layer
+
+Contains implementations of repositories and schemas:
+
+- **Repositories**
+  - `ansible-task.repository.ts`: Task data storage
+  - `ansible-task-status.repository.ts`: Task status storage
+- **Schemas**
+  - `ansible-task.schema.ts`: Task MongoDB schema
+  - `ansible-task-status.schema.ts`: Task status schema
+
+### Presentation Layer
+
+Contains controllers for API endpoints:
+
+- **Controllers**
+  - `ansible-task-logs.controller.ts`: Task log endpoints
+  - `ansible-galaxy.controller.ts`: Galaxy management endpoints
+  - `ansible-hooks.controller.ts`: Hooks management endpoints
+
+## Module Structure
 
 ```
 ansible/
-├── domain/            # Domain layer (entities, interfaces)
-├── application/       # Application layer (services)
-├── infrastructure/    # Infrastructure layer (repositories)
-├── presentation/      # Presentation layer (controllers)
-├── __tests__/         # Tests
-├── utils/             # Utility functions
-├── extravars/         # Extra variables management
-├── index.ts           # Barrel file for exports
-├── ansible.module.ts  # Module definition
-└── README.md          # This file
+├── domain/
+│   ├── interfaces/
+│   │   ├── task-logs-service.interface.ts
+│   │   └── repositories/
+│   │       ├── ansible-task-repository.interface.ts
+│   │       └── ansible-task-status-repository.interface.ts
+├── application/
+│   └── services/
+│       ├── ansible-command.service.ts
+│       ├── ansible-command-builder.service.ts
+│       ├── ansible-galaxy-command.service.ts
+│       ├── inventory-transformer.service.ts
+│       ├── extra-vars-transformer.service.ts
+│       ├── extra-vars.service.ts
+│       ├── galaxy.service.ts
+│       ├── ansible-hooks.service.ts
+│       └── task-logs.service.ts
+├── infrastructure/
+│   ├── repositories/
+│   │   ├── ansible-task.repository.ts
+│   │   └── ansible-task-status.repository.ts
+│   └── schemas/
+│       ├── ansible-task.schema.ts
+│       └── ansible-task-status.schema.ts
+├── presentation/
+│   └── controllers/
+│       ├── ansible-task-logs.controller.ts
+│       ├── ansible-galaxy.controller.ts
+│       └── ansible-hooks.controller.ts
+├── __tests__/
+├── ansible.module.ts
+├── index.ts
+└── README.md
 ```
 
-### Dependency Injection
+## Integration
 
-The module uses NestJS dependency injection patterns:
+The module is integrated through dependency injection:
 
-1. **Service-to-Service Injection**: Direct class-based injection
-   ```typescript
-   constructor(
-     private readonly shellWrapperService: ShellWrapperService,
-     private readonly sshKeyService: SshKeyService
-   ) {}
-   ```
-
-2. **Repository Injection**: Token-based injection
-   ```typescript
-   constructor(
-     @Inject('DEVICE_REPOSITORY') private readonly deviceRepository: any,
-     @Inject('ANSIBLE_TASK_REPOSITORY') private readonly ansibleTaskRepository: any
-   ) {}
-   ```
-
-3. **Module Exports**: Each module exports its entities and services through barrel files (index.ts)
-   ```typescript
-   // From a module's index.ts
-   export { IDevice, IDeviceAuth }; // Entities
-   export { DeviceService };        // Services
-   ```
-
-### Domain Entities
-
-The module uses interfaces for domain entities that are imported from their respective modules:
-
-- `IUser` from the users module
-- `IDeviceAuth` from the devices module
-- `IAnsibleVault` from the ansible-vault module
-
-### Services
-
-- **AnsibleCommandService**: Service for executing Ansible commands
-- **AnsibleCommandBuilderService**: Service for building Ansible commands
-- **AnsibleGalaxyCommandService**: Service for executing Ansible Galaxy commands
-- **InventoryTransformerService**: Service for transforming inventory files
-- **ExtraVarsService**: Service for managing extra variables
-- **ExtraVarsTransformerService**: Service for transforming extra variables
-- **GalaxyService**: Service for managing Ansible Galaxy collections
-- **TaskLogsService**: Service for managing Ansible task logs
-
-### Controllers
-
-- `TaskLogsController`: Controller for Ansible task logs operations
-- `GalaxyController`: Controller for Ansible Galaxy operations
-
-## Recent Architectural Improvements
-
-### Migration to NestJS Clean Architecture
-
-- Implemented proper layered architecture (domain, application, infrastructure, presentation)
-- Used barrel files (index.ts) to export entities and services from each module
-- Improved dependency injection with proper NestJS patterns
-- Removed direct database access in services in favor of repository injection
-- Updated imports to use module-level exports rather than direct file paths
-
-### Type Safety Improvements
-
-- Replaced concrete model classes with interfaces from their respective modules
-- Improved error handling and type checking
-- Enhanced service method signatures for better IDE support
+```typescript
+@Module({
+  imports: [
+    HttpModule,
+    ShellModule,
+    LogsModule,
+    AnsibleVaultsModule,
+    UsersModule,
+    forwardRef(() => DevicesModule),
+    MongooseModule.forFeature([
+      { name: AnsibleTask.name, schema: AnsibleTaskSchema },
+      { name: AnsibleTaskStatus.name, schema: AnsibleTaskStatusSchema },
+    ]),
+  ],
+  controllers: [
+    TaskLogsController,
+    GalaxyController,
+    AnsibleHooksController,
+  ],
+  providers: [
+    // Command Services
+    AnsibleCommandService,
+    AnsibleCommandBuilderService,
+    AnsibleGalaxyCommandService,
+    
+    // Transformation Services
+    InventoryTransformerService,
+    ExtraVarsService,
+    ExtraVarsTransformerService,
+    
+    // Task Management
+    TaskLogsService,
+    {
+      provide: TASK_LOGS_SERVICE,
+      useClass: TaskLogsService,
+    },
+    
+    // Galaxy Management
+    GalaxyService,
+    
+    // Hooks
+    AnsibleHooksService,
+    
+    // Repositories
+    AnsibleTaskRepository,
+    AnsibleTaskStatusRepository,
+    {
+      provide: ANSIBLE_TASK_REPOSITORY,
+      useClass: AnsibleTaskRepository,
+    },
+    {
+      provide: ANSIBLE_TASK_STATUS_REPOSITORY,
+      useExisting: AnsibleTaskStatusRepository,
+    },
+  ],
+  exports: [
+    AnsibleCommandService,
+    AnsibleCommandBuilderService,
+    AnsibleGalaxyCommandService,
+    InventoryTransformerService,
+    ExtraVarsService,
+    ExtraVarsTransformerService,
+    TaskLogsService,
+    TASK_LOGS_SERVICE,
+    GalaxyService,
+    AnsibleHooksService,
+  ],
+})
+```
 
 ## API Endpoints
 
-- `GET /ansible/logs/tasks`: Get all Ansible task logs
-- `GET /ansible/logs/tasks/:id/events`: Get events for a specific Ansible task
-- `GET /ansible/galaxy/collections`: Get Ansible Galaxy collections
-- `POST /ansible/galaxy/collections`: Install an Ansible Galaxy collection
+### Task Logs
 
-## Usage
+- `GET /ansible/tasks/:taskId/logs`: Get task logs
+- `GET /ansible/tasks/:taskId/status`: Get task status
+- `POST /ansible/tasks/:taskId/cancel`: Cancel running task
 
-The module is used by importing it into the application module:
+### Galaxy Management
 
-```typescript
-import { AnsibleModule } from './modules/ansible/ansible.module';
+- `GET /ansible/galaxy/collections`: List installed collections
+- `POST /ansible/galaxy/collections/install`: Install collection
+- `DELETE /ansible/galaxy/collections/:name`: Remove collection
 
-@Module({
-  imports: [
-    // ...
-    AnsibleModule,
-    // ...
-  ],
-})
-export class AppModule {}
-```
+### Hooks Management
 
-## Using the Services
+- `GET /ansible/hooks`: List available hooks
+- `POST /ansible/hooks/:hookName`: Execute hook
 
-### Executing Ansible Commands
+## Recent Changes
 
-```typescript
-import { AnsibleCommandService } from './modules/ansible';
-
-@Injectable()
-export class MyService {
-  constructor(private readonly ansibleCommandService: AnsibleCommandService) {}
-
-  async executePlaybook(playbookPath: string, user: IUser, target?: string[]) {
-    return this.ansibleCommandService.executePlaybookFull(playbookPath, user, target);
-  }
-}
-```
-
-### Managing Ansible Task Logs
-
-```typescript
-import { TaskLogsService } from './modules/ansible';
-
-@Injectable()
-export class MyService {
-  constructor(private readonly taskLogsService: TaskLogsService) {}
-
-  async getTaskLogs(params: TaskLogsQueryDto) {
-    return this.taskLogsService.getTaskLogs(params);
-  }
-
-  async getTaskEvents(taskId: string) {
-    return this.taskLogsService.getTaskEvents(taskId);
-  }
-}
-``` 
+- Enhanced command building and validation
+- Improved task logging and monitoring
+- Added Galaxy collection management
+- Enhanced hooks system
+- Improved error handling
+- Added comprehensive test coverage 

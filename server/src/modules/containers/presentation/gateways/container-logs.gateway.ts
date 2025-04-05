@@ -1,3 +1,4 @@
+import { Inject } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -7,17 +8,18 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
-import { Inject } from '@nestjs/common';
-import { SsmEvents } from 'ssm-shared-lib';
 import { DateTime } from 'luxon';
+import { Server, Socket } from 'socket.io';
+import { SsmEvents } from 'ssm-shared-lib';
+import PinoLogger from '../../../../logger';
 import {
   CONTAINER_LOGS_SERVICE,
   IContainerLogsService,
-} from '../../application/interfaces/container-logs-service.interface';
-import PinoLogger from '../../../../logger';
-import { IContainerService } from '../../application/interfaces/container-service.interface';
-import { CONTAINER_SERVICE } from '../../application/interfaces/container-service.interface';
+} from '../../applicati../../domain/interfaces/container-logs-service.interface';
+import {
+  CONTAINER_SERVICE,
+  IContainerService,
+} from '../../applicati../../domain/interfaces/container-service.interface';
 import { ContainerLogsDto } from '../dtos/container-logs.dto';
 
 const logger = PinoLogger.child(

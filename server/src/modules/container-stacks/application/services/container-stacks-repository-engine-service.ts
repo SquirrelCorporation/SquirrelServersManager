@@ -1,19 +1,22 @@
-import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { DEFAULT_VAULT_ID, VaultCryptoService } from '@modules/ansible-vaults';
-import { ContainerCustomStacksRepositoryRepository } from '../../infrastructure/repositories/container-custom-stacks-repository.repository';
-import { ContainerCustomStackRepository } from '../../infrastructure/repositories/container-custom-stack.repository';
+import { IContainerCustomStacksRepositoryEngineService } from '@modules/container-stacks/doma../../domain/interfaces/container-stacks-repository-engine-service.interface';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { EventEmitterService } from '../../../../core/events/event-emitter.service';
 import { ShellWrapperService } from '../../../shell';
 import { IContainerCustomStackRepositoryEntity } from '../../domain/entities/container-custom-stack.entity';
+import { ContainerCustomStackRepository } from '../../infrastructure/repositories/container-custom-stack.repository';
+import { ContainerCustomStacksRepositoryRepository } from '../../infrastructure/repositories/container-custom-stacks-repository.repository';
 import { ContainerRepositoryComponentService } from './container-repository-component.service';
 import { ContainerStacksService } from './container-stacks.service';
-import { EventEmitterService } from '../../../../core/events/event-emitter.service';
 
 type StateType = {
   stackRepository: Record<string, ContainerRepositoryComponentService>;
 };
 
 @Injectable()
-export class ContainerCustomStacksRepositoryEngineService {
+export class ContainerCustomStacksRepositoryEngineService
+  implements IContainerCustomStacksRepositoryEngineService
+{
   private readonly logger = new Logger(ContainerCustomStacksRepositoryEngineService.name);
   private readonly state: StateType = {
     stackRepository: {},

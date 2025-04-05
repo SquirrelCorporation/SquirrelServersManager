@@ -1,20 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { SshConnectionService } from '../../application/services/ssh-connection.service';
-
-// Mock external dependencies
-vi.mock('src/helpers/dns/dns-helper', () => ({
-  tryResolveHost: vi.fn().mockResolvedValue('127.0.0.1'),
-}));
-
-vi.mock('src/helpers/ssh/SSHCredentialsHelper', () => ({
-  default: vi.fn().mockImplementation(() => ({
-    getCredentials: vi.fn().mockResolvedValue({
-      username: 'test-user',
-      password: 'test-password',
-    }),
-  })),
-}));
+import '../test-setup';
+import { SshConnectionService } from '@modules/ssh/application/services/ssh-connection.service';
 
 describe('SshConnectionService', () => {
   let service: SshConnectionService;

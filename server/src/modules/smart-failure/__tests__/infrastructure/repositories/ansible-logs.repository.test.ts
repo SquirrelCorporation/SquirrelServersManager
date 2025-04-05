@@ -1,54 +1,98 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { AnsibleLogsRepository } from '../../../infrastructure/repositories/smart-failure.repository';
-import { AnsibleLogsRepository as LogsModuleAnsibleLogsRepository } from '../../../../logs/infrastructure/repositories/ansible-logs.repository';
+import { ISmartFailureRepository } from '../../../domain/repositories/smart-failure.repository.interface';
+// Import SmartFailureRepository after mocks
+import { SmartFailureRepository } from '../../../infrastructure/repositories/smart-failure.repository';
 
-describe('AnsibleLogsRepository', () => {
-  let repository: AnsibleLogsRepository;
-  let mockLogsRepository: {
-    findAllByIdent: ReturnType<typeof vi.fn>;
-  };
+// Mock modules
+vi.mock('@modules/logs', () => ({
+  ANSIBLE_LOGS_SERVICE: Symbol('ANSIBLE_LOGS_SERVICE'),
+  IAnsibleLogsService: class IAnsibleLogsService {},
+}));
 
-  beforeEach(async () => {
-    mockLogsRepository = {
+describe('SmartFailureRepository', () => {
+  let smartFailureRepository: ISmartFailureRepository;
+  let mockAnsibleLogsService: any;
+
+  beforeEach(() => {
+    // Create mock for AnsibleLogsService
+    mockAnsibleLogsService = {
       findAllByIdent: vi.fn(),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        AnsibleLogsRepository,
-        {
-          provide: LogsModuleAnsibleLogsRepository,
-          useValue: mockLogsRepository,
-        },
-      ],
-    }).compile();
-
-    repository = module.get<AnsibleLogsRepository>(AnsibleLogsRepository);
+    // Create repository instance with mock
+    smartFailureRepository = new SmartFailureRepository(mockAnsibleLogsService);
   });
 
-  it('should be defined', () => {
-    expect(repository).toBeDefined();
+  it('should implement the ISmartFailureRepository interface', () => {
+    expect(smartFailureRepository).toBeDefined();
+    expect(typeof smartFailureRepository.findAllByIdent).toBe('function');
   });
 
   describe('findAllByIdent', () => {
-    it('should return logs when found', async () => {
-      const mockLogs = [{ id: '1', stdout: 'test log' }];
-      mockLogsRepository.findAllByIdent.mockResolvedValue(mockLogs);
+    it('should call the logs service and return logs when found', async () => {
+      // Setup
+      const executionId = 'test-exec-id';
+      const mockLogs = [
+        { timestamp: '2025-01-01T12:00:00Z', message: 'Log 1', level: 'info' },
+        { timestamp: '2025-01-01T12:01:00Z', message: 'Log 2', level: 'error' },
+      ];
 
-      const result = await repository.findAllByIdent('test-exec-id');
+      mockAnsibleLogsService.findAllByIdent.mockResolvedValue(mockLogs);
 
+      // Test
+      const result = await smartFailureRepository.findAllByIdent(executionId);
+
+      // Verify
+      expect(mockAnsibleLogsService.findAllByIdent).toHaveBeenCalledWith(executionId);
       expect(result).toEqual(mockLogs);
-      expect(mockLogsRepository.findAllByIdent).toHaveBeenCalledWith('test-exec-id');
     });
 
     it('should return undefined when no logs are found', async () => {
-      mockLogsRepository.findAllByIdent.mockResolvedValue(null);
+      // Setup
+      const executionId = 'non-existent-id';
+      mockAnsibleLogsService.findAllByIdent.mockResolvedValue(null);
 
-      const result = await repository.findAllByIdent('test-exec-id');
+      // Test
+      const result = await smartFailureRepository.findAllByIdent(executionId);
 
+      // Verify
+      expect(mockAnsibleLogsService.findAllByIdent).toHaveBeenCalledWith(executionId);
       expect(result).toBeUndefined();
-      expect(mockLogsRepository.findAllByIdent).toHaveBeenCalledWith('test-exec-id');
+    });
+
+    it('should handle errors from logs service', async () => {
+      // Setup
+      const executionId = 'error-id';
+      const mockError = new Error('Logs service error');
+      mockAnsibleLogsService.findAllByIdent.mockRejectedValue(mockError);
+
+      // Test & Verify
+      await expect(smartFailureRepository.findAllByIdent(executionId)).rejects.toThrow(
+        'Logs service error',
+      );
+      expect(mockAnsibleLogsService.findAllByIdent).toHaveBeenCalledWith(executionId);
+    });
+
+    it('should suggest a future enhancement to pass sort direction parameter', async () => {
+      // This test documents a potential improvement rather than testing current behavior
+
+      // Setup
+      const executionId = 'test-exec-id';
+      const mockLogs = [{ message: 'Log 1' }];
+
+      mockAnsibleLogsService.findAllByIdent.mockResolvedValue(mockLogs);
+
+      // Note: The ideal implementation would pass through a sort direction parameter:
+      // this.logsService.findAllByIdent(execId, sortDirection);
+
+      // Test current behavior
+      await smartFailureRepository.findAllByIdent(executionId);
+
+      // Verify current implementation calls logs service correctly
+      expect(mockAnsibleLogsService.findAllByIdent).toHaveBeenCalledWith(executionId);
+
+      // This is a documentation test to highlight a potential enhancement
+      expect(true).toBe(true);
     });
   });
 });

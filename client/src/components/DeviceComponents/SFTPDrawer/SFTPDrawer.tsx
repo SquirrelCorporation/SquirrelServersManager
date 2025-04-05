@@ -88,7 +88,7 @@ const SFTPDrawer = React.forwardRef<SFTPDrawerHandles, SFTPDrawerProps>(
       const pathParts = fullPathWithName.split('/');
       const newPath = [...pathParts.slice(0, -1), newName].join('/'); // Construct new full path
       const newTitle = newName; // The title is based on the newName
-
+      console.log('onSuccessRename', fullPathWithName, newPath, newTitle);
       // Update the tree
       setTreeData((prevTreeData) =>
         updateNodeKeyAndTitle(
@@ -98,6 +98,7 @@ const SFTPDrawer = React.forwardRef<SFTPDrawerHandles, SFTPDrawerProps>(
           newTitle,
         ),
       );
+      console.log('updatedTreeData', treeData);
     };
 
     const onSuccessUpdateMode = (
@@ -111,6 +112,7 @@ const SFTPDrawer = React.forwardRef<SFTPDrawerHandles, SFTPDrawerProps>(
     };
 
     const onSuccessDelete = (pathToDelete: string): void => {
+      console.log('onSuccessDelete, pathToDelete:', pathToDelete);
       setTreeData((prevTreeData) =>
         updateTreeData(prevTreeData, pathToDelete, undefined, true),
       );
@@ -303,7 +305,7 @@ const SFTPDrawer = React.forwardRef<SFTPDrawerHandles, SFTPDrawerProps>(
                   path: node.key,
                   isDir: !node?.isLeaf,
                 });
-              if (response.status === 'OK') {
+              if (response.success) {
                 message.success(
                   !node?.isLeaf ? 'Directory deleted' : 'File deleted',
                 );
@@ -312,7 +314,7 @@ const SFTPDrawer = React.forwardRef<SFTPDrawerHandles, SFTPDrawerProps>(
                 }
               } else {
                 message.error(
-                  `Failed to create directory: ${response.error || 'Unknown error'}`,
+                  `Failed to delete: ${response.message || 'Unknown error'}`,
                 );
               }
             },

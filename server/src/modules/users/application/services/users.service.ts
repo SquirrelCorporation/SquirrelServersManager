@@ -12,11 +12,12 @@ import {
 } from '../../domain/repositories/user-repository.interface';
 import PinoLogger from '../../../../logger';
 import { dependencies, version } from '../../../../../package.json';
+import { IUsersService } from '../../domain/interfaces/users-service.interface';
 
 const logger = PinoLogger.child({ module: 'UsersService' });
 
 @Injectable()
-export class UsersService {
+export class UsersService implements IUsersService {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: IUserRepository,
@@ -97,10 +98,7 @@ export class UsersService {
   async getCurrentUser(user: IUser) {
     const { online, offline, totalCpu, totalMem, overview } =
       await this.devicesService.getDevicesOverview();
-    const systemPerformance = {
-      danger: false,
-      message: '',
-    };
+
     const considerDeviceOffline = await this.cacheManager.get(
       SettingsKeys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
     );
@@ -140,10 +138,6 @@ export class UsersService {
         totalCpu: totalCpu,
         totalMem: totalMem,
         overview: overview,
-      },
-      systemPerformance: {
-        danger: systemPerformance.danger,
-        message: systemPerformance.message,
       },
       settings: {
         userSpecific: {

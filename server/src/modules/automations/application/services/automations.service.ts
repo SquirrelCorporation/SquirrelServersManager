@@ -1,5 +1,6 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { IAutomationsService } from '@modules/automations/doma../../domain/interfaces/automations-service.interface';
 import { IPlaybook, IPlaybooksService, PLAYBOOKS_SERVICE } from '@modules/playbooks';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Automations, SsmContainer } from 'ssm-shared-lib';
 import { Automation } from '../../domain/entities/automation.entity';
 import {
@@ -11,7 +12,7 @@ import { UpdateAutomationDto } from '../../presentation/dtos/update-automation.d
 import { AutomationEngine } from './engine/automation-engine.service';
 
 @Injectable()
-export class AutomationsService {
+export class AutomationsService implements IAutomationsService {
   private readonly logger = new Logger(AutomationsService.name);
 
   constructor(

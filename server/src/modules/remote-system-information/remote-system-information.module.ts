@@ -1,14 +1,18 @@
-import { Module, forwardRef } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
+import { forwardRef, Module } from '@nestjs/common';
+import { AnsibleVaultsModule } from '../ansible-vaults/ansible-vaults.module';
 import { DevicesModule } from '../devices/devices.module';
 import { StatisticsModule } from '../statistics/statistics.module';
-import { AnsibleVaultsModule } from '../ansible-vaults/ansible-vaults.module';
+import {
+  REMOTE_SYSTEM_INFORMATION_SERVICE
+} from './applicati../../domain/interfaces/remote-system-information-service.interface';
+import {
+  RemoteSystemInformationEngineService
+} from './application/services/engine/remote-system-information-engine.service';
+import { RemoteSystemInformationService } from './application/services/remote-system-information.service';
 import { JOB_CONCURRENCY, REMOTE_SYSTEM_INFO_QUEUE } from './infrastructure/queue/constants';
 import { RemoteSystemInformationProcessor } from './infrastructure/queue/remote-system-information.processor';
-import { RemoteSystemInformationService } from './application/services/remote-system-information.service';
-import { RemoteSystemInformationEngineService } from './application/services/engine/remote-system-information-engine.service';
 import { RemoteSystemInformationDiagnosticController } from './presentation/controllers/diagnostic';
-import { REMOTE_SYSTEM_INFORMATION_SERVICE } from './application/interfaces/remote-system-information-service.interface';
 
 /**
  * Module for remote system information collection and management

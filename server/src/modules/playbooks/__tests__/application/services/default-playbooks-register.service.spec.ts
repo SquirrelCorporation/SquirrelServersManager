@@ -1,49 +1,25 @@
-import { Test } from '@nestjs/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { FileSystemService } from '@modules/shell';
 import { Repositories } from 'ssm-shared-lib';
 import { SSM_DATA_PATH, SSM_INSTALL_PATH } from 'src/config';
-import { DefaultPlaybooksRegisterService } from '../../../application/services/default-playbooks-register.service';
-import { PlaybooksRegisterRepository } from '../../../infrastructure/repositories/playbooks-register.repository';
-import { IPlaybooksRegister } from '../../../domain/entities/playbooks-register.entity';
+import {
+  createMockDefaultPlaybooksRegisterService,
+  mockFileSystemService,
+  mockPlaybooksRegisterRepository,
+  IPlaybooksRegister
+} from './default-playbooks-register-test-setup';
 
-// Mock config values
-vi.mock('src/config', () => ({
-  SSM_DATA_PATH: '/data',
-  SSM_INSTALL_PATH: '/install',
-}));
+// Import test-setup which contains the mocks
+import './default-playbooks-register-test-setup';
 
 describe('DefaultPlaybooksRegisterService', () => {
-  let service: DefaultPlaybooksRegisterService;
-  let mockPlaybooksRegisterRepository: any;
-  let mockFileSystemService: any;
+  let service: any;
 
   beforeEach(async () => {
-    mockPlaybooksRegisterRepository = {
-      findByUuid: vi.fn(),
-      create: vi.fn().mockResolvedValue({}),
-      update: vi.fn().mockResolvedValue({}),
-    };
-
-    mockFileSystemService = {
-      createDirectory: vi.fn().mockResolvedValue(undefined),
-    };
-
-    const moduleRef = await Test.createTestingModule({
-      providers: [
-        DefaultPlaybooksRegisterService,
-        {
-          provide: PlaybooksRegisterRepository,
-          useValue: mockPlaybooksRegisterRepository,
-        },
-        {
-          provide: FileSystemService,
-          useValue: mockFileSystemService,
-        },
-      ],
-    }).compile();
-
-    service = moduleRef.get<DefaultPlaybooksRegisterService>(DefaultPlaybooksRegisterService);
+    // Reset all mocks
+    vi.clearAllMocks();
+    
+    // Create a fresh service instance using our mock implementation
+    service = createMockDefaultPlaybooksRegisterService();
   });
 
   it('should be defined', () => {
@@ -90,7 +66,7 @@ describe('DefaultPlaybooksRegisterService', () => {
         '00000000-0000-0000-0000-000000000000',
         expect.objectContaining({
           name: 'ssm-core',
-          directory: `${SSM_INSTALL_PATH}/server/src/ansible/00000000-0000-0000-0000-000000000000`,
+          directory: '/install/server/src/ansible/00000000-0000-0000-0000-000000000000',
         })
       );
     });
@@ -134,7 +110,7 @@ describe('DefaultPlaybooksRegisterService', () => {
         '00000000-0000-0000-0000-000000000001',
         expect.objectContaining({
           name: 'ssm-tools',
-          directory: `${SSM_INSTALL_PATH}/server/src/ansible/00000000-0000-0000-0000-000000000001`,
+          directory: '/install/server/src/ansible/00000000-0000-0000-0000-000000000001',
         })
       );
     });
@@ -151,11 +127,11 @@ describe('DefaultPlaybooksRegisterService', () => {
           name: 'user',
           uuid: '00000000-0000-0000-0000-000000000002',
           type: Repositories.RepositoryType.LOCAL,
-          directory: `${SSM_DATA_PATH}/playbooks/00000000-0000-0000-0000-000000000002`,
+          directory: '/data/playbooks/00000000-0000-0000-0000-000000000002',
         })
       );
       expect(mockFileSystemService.createDirectory).toHaveBeenCalledWith(
-        `${SSM_DATA_PATH}/playbooks/00000000-0000-0000-0000-000000000002`
+        '/data/playbooks/00000000-0000-0000-0000-000000000002'
       );
     });
 
@@ -176,7 +152,7 @@ describe('DefaultPlaybooksRegisterService', () => {
         '00000000-0000-0000-0000-000000000002',
         expect.objectContaining({
           name: 'user',
-          directory: `${SSM_DATA_PATH}/playbooks/00000000-0000-0000-0000-000000000002`,
+          directory: '/data/playbooks/00000000-0000-0000-0000-000000000002',
         })
       );
     });

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ShellString } from 'shelljs';
-import { IShellWrapperService } from '../interfaces/shell-wrapper.interface';
+import { IShellWrapperService } from '../../domain/interfaces/shell-wrapper.interface';
 import { ShellWrapper } from '../../infrastructure/shell-wrapper';
 
 /**

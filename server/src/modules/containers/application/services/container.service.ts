@@ -1,22 +1,26 @@
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { getCustomAgent } from '@infrastructure/adapters/ssh';
+import { SSHCredentialsAdapter } from '@infrastructure/adapters/ssh/ssh-credentials.adapter';
 import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
 import { fullName } from '@modules/containers/utils/utils';
-import { SSHCredentialsAdapter } from '@infrastructure/adapters/ssh/ssh-credentials.adapter';
 import { DEVICES_SERVICE, IDevice, IDeviceAuth, IDevicesService } from '@modules/devices';
-import Dockerode from 'dockerode';
-import { getCustomAgent } from '@infrastructure/adapters/ssh';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import DockerModem from 'docker-modem';
+import Dockerode from 'dockerode';
 import logger from 'src/logger';
+import {
+  DEVICE_AUTH_SERVICE,
+  IDeviceAuthService,
+} from '../../../devices/domain/services/device-auth-service.interface';
+import { IContainerEntity } from '../../domain/entities/container.entity';
+import { IContainerService } from '../../domain/interfaces/container-service.interface';
 import {
   IWatcherEngineService,
   WATCHER_ENGINE_SERVICE,
-} from '../interfaces/watcher-engine-service.interface';
-import { IContainerService } from '../interfaces/container-service.interface';
-import { IContainerEntity } from '../../domain/entities/container.entity';
-import { CONTAINER_REPOSITORY } from '../../domain/repositories/container-repository.interface';
-import { IContainerRepository } from '../../domain/repositories/container-repository.interface';
-import { DEVICE_AUTH_SERVICE } from '../../../devices/domain/services/device-auth-service.interface';
-import { IDeviceAuthService } from '../../../devices/domain/services/device-auth-service.interface';
+} from '../../domain/interfaces/watcher-engine-service.interface';
+import {
+  CONTAINER_REPOSITORY,
+  IContainerRepository,
+} from '../../domain/repositories/container-repository.interface';
 
 @Injectable()
 export class ContainerService implements IContainerService {

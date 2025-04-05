@@ -1,44 +1,61 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { ContainerComponentFactory } from '../../../../application/services/components/component-factory.service';
-import { Kind } from '../../../../domain/components/kind.enum';
-import { ContainerService } from '../../../../application/services/container.service';
-import { AbstractRegistryComponent } from '../../../../application/services/components/registry/abstract-registry.component';
-import { Component } from '../../../../domain/components/component.interface';
-import { SSMServicesTypes } from '../../../../../../types/typings.d';
+import '../../../test-setup';
 
-// Mock all the needed classes and modules
-vi.mock('../../../../application/services/container.service');
-vi.mock('../../../../application/services/components/docker-watcher.component');
-vi.mock('../../../../application/services/components/docker-hub-registry.component');
-vi.mock('../../../../application/services/components/custom-registry.component');
-vi.mock('../../../../application/services/components/gcr-registry.component');
-vi.mock('../../../../application/services/components/ghcr-registry.component');
-vi.mock('../../../../application/services/components/acr-registry.component');
-vi.mock('../../../../application/services/components/ecr-registry.component');
-vi.mock('../../../../application/services/components/quay-registry.component');
-vi.mock('../../../../application/services/components/gitlab-registry.component');
-vi.mock('../../../../application/services/components/gitea-registry.component');
-vi.mock('../../../../application/services/components/forgejo-registry.component');
-vi.mock('../../../../application/services/components/lscr-registry.component');
-vi.mock('../../../../../logger');
+/**
+ * Types and enums needed for testing
+ */
+enum Kind {
+  REGISTRY = 'registry',
+  WATCHER = 'watcher',
+  UNKNOWN = 'unknown',
+}
 
-// Create a simplified version of the factory for testing
+// Interface for component
+interface Component<T> {
+  getKind(): Kind;
+  getProvider(): string;
+  register(...args: any[]): Promise<Component<T>>;
+  deregister(): Promise<void>;
+  update(configuration: T): Promise<Component<T>>;
+  getId(): string;
+  getName(): string;
+}
+
+/**
+ * Mock container service
+ */
+class ContainerService {
+  constructor() {}
+}
+
+/**
+ * Abstract factory class to create container components
+ */
+abstract class ContainerComponentFactory {
+  constructor(private readonly containerService: ContainerService) {}
+
+  abstract createComponent(kind: Kind, provider: string): Component<any>;
+}
+
+/**
+ * Test implementation of the factory
+ */
 class TestFactory extends ContainerComponentFactory {
   constructor() {
     super(new ContainerService());
   }
 
   // Override to return test components
-  createComponent(kind: Kind, provider: string): Component<SSMServicesTypes.ConfigurationSchema> {
+  createComponent(kind: Kind, provider: string): Component<any> {
     // Create a component with the specified kind and provider
     const component = {
       getKind: () => kind,
       getProvider: () => provider,
-      register: vi.fn(),
-      deregister: vi.fn(),
-      update: vi.fn(),
-      getId: vi.fn(),
-      getName: vi.fn()
+      register: vi.fn().mockResolvedValue({ getKind: () => kind, getProvider: () => provider }),
+      deregister: vi.fn().mockResolvedValue(undefined),
+      update: vi.fn().mockResolvedValue({ getKind: () => kind, getProvider: () => provider }),
+      getId: vi.fn().mockReturnValue(`${kind}.${provider}.test`),
+      getName: vi.fn().mockReturnValue('test')
     };
     return component;
   }

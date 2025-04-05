@@ -1,22 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IContainerImagesService } from '../interfaces/container-images-service.interface';
 import { IContainerImageEntity } from '../../domain/entities/container-image.entity';
-import { CONTAINER_IMAGE_REPOSITORY } from '../../domain/repositories/container-image-repository.interface';
-import { IContainerImageRepository } from '../../domain/repositories/container-image-repository.interface';
+import { IContainerImagesService } from '../../domain/interfaces/container-images-service.interface';
 import {
-  IWatcherEngineService,
-  WATCHER_ENGINE_SERVICE,
-} from '../interfaces/watcher-engine-service.interface';
-import { DevicesService } from '../../../devices/application/services/devices.service';
+  CONTAINER_IMAGE_REPOSITORY,
+  IContainerImageRepository,
+} from '../../domain/repositories/container-image-repository.interface';
 
 @Injectable()
 export class ContainerImagesService implements IContainerImagesService {
   constructor(
     @Inject(CONTAINER_IMAGE_REPOSITORY)
     private readonly imageRepository: IContainerImageRepository,
-    @Inject(WATCHER_ENGINE_SERVICE)
-    private readonly watcherEngineService: IWatcherEngineService,
-    private readonly devicesService: DevicesService,
   ) {}
 
   /**

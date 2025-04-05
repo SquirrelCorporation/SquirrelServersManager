@@ -1,15 +1,14 @@
 import { EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
-import { DEFAULT_VAULT_ID, VaultCryptoService } from '@modules/ansible-vaults';
+import { DEFAULT_VAULT_ID, VAULT_CRYPTO_SERVICE, VaultCryptoService } from '@modules/ansible-vaults';
+import { PLAYBOOKS_REGISTER_ENGINE_SERVICE } from '@modules/playbooks';
 import {
   IPlaybooksRegisterRepository,
-  PLAYBOOKS_REGISTER_REPOSITORY,
+  PLAYBOOKS_REGISTER_REPOSITORY
 } from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
 import { Body, Controller, Delete, Get, Inject, Logger, Param, Post, Put } from '@nestjs/common';
 import { API, Repositories } from 'ssm-shared-lib';
-import { PLAYBOOKS_REGISTER_ENGINE_SERVICE } from '@modules/playbooks';
-import { VAULT_CRYPTO_SERVICE } from '@modules/ansible-vaults/application/interfaces/vault-crypto-service.interface';
-import { PlaybooksRegisterEngineService } from '../../application/services/engine/playbooks-register-engine.service';
 import { GitPlaybooksRegisterComponent } from '../../application/services/components/git-playbooks-register.component';
+import { PlaybooksRegisterEngineService } from '../../application/services/engine/playbooks-register-engine.service';
 import { PlaybooksRegisterService } from '../../application/services/playbooks-register.service';
 import { IPlaybooksRegister } from '../../domain/entities/playbooks-register.entity';
 import { PLAYBOOKS_REGISTER_SERVICE } from '../../domain/services/playbooks-register-service.interface';

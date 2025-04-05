@@ -1,11 +1,12 @@
-import * as fs from 'fs';
+import { IAnsibleConfigService } from '@modules/ansible-config/domain/interfaces/ansible-config-service.interface';
 import {
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
   Logger,
-  NotFoundException,
+  NotFoundException
 } from '@nestjs/common';
+import * as fs from 'fs';
 import { SSM_DATA_PATH, SSM_INSTALL_PATH } from '../../../../config';
 import { FileSystemService } from '../../../shell';
 import { AnsibleConfig } from '../../presentation/interfaces/config.interface';
@@ -14,7 +15,7 @@ import { AnsibleConfig } from '../../presentation/interfaces/config.interface';
  * Service for managing Ansible configuration
  */
 @Injectable()
-export class AnsibleConfigService {
+export class AnsibleConfigService implements IAnsibleConfigService {
   private readonly logger = new Logger(AnsibleConfigService.name);
   private readonly ANSIBLE_CONFIG_PATH = `${SSM_DATA_PATH}/config`;
   private readonly ANSIBLE_CONFIG_FILE = `${this.ANSIBLE_CONFIG_PATH}/ansible.cfg`;

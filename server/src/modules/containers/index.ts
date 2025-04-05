@@ -11,10 +11,10 @@ export * from './domain/repositories/container-image-repository.interface';
 export * from './domain/repositories/container-volume-repository.interface';
 
 // Application
-export * from './application/interfaces/container-service.interface';
-export * from './application/interfaces/container-logs-service.interface';
-export * from './application/interfaces/watcher-engine-service.interface';
-export * from './application/interfaces/container-volumes-service.interface';
+export * from './applicati../../domain/interfaces/container-service.interface';
+export * from './applicati../../domain/interfaces/container-logs-service.interface';
+export * from './applicati../../domain/interfaces/watcher-engine-service.interface';
+export * from './applicati../../domain/interfaces/container-volumes-service.interface';
 export * from './application/services/container.service';
 export * from './application/services/container-logs.service';
 export * from './application/services/engine/watcher-engine.service';

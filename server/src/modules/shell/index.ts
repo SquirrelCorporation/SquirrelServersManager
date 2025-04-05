@@ -1,10 +1,10 @@
-import { ShellModule } from './shell.module';
+import { IDockerComposeService } from './applicati../../domain/interfaces/docker-compose.interface';
+import { IFileSystemService } from './applicati../../domain/interfaces/file-system.interface';
+import { IPlaybookFileService } from './applicati../../domain/interfaces/playbook-file.interface';
+import { IShellWrapperService } from './applicati../../domain/interfaces/shell-wrapper.interface';
+import { ISshKeyService } from './applicati../../domain/interfaces/ssh-key.interface';
 import { IShellCommand } from './domain/entities/shell-command.entity';
-import { IFileSystemService } from './application/interfaces/file-system.interface';
-import { IShellWrapperService } from './application/interfaces/shell-wrapper.interface';
-import { IDockerComposeService } from './application/interfaces/docker-compose.interface';
-import { IPlaybookFileService } from './application/interfaces/playbook-file.interface';
-import { ISshKeyService } from './application/interfaces/ssh-key.interface';
+import { ShellModule } from './shell.module';
 
 // Re-export the module
 export { ShellModule };

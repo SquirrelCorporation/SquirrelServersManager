@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ShellString } from 'shelljs';
-import { IDockerComposeService } from '../interfaces/docker-compose.interface';
+import { IDockerComposeService } from '../../domain/interfaces/docker-compose.interface';
 import { ShellWrapperService } from './shell-wrapper.service';
 
 /**

@@ -1,12 +1,14 @@
+import { ANSIBLE_CONFIG_FILE } from '@modules/ansible-config';
+import { DEFAULT_VAULT_ID, IAnsibleVault } from '@modules/ansible-vaults';
+import {
+  IAnsibleCommandBuilderService
+} from '@modules/ansible/doma../../domain/interfaces/ansible-command-builder-service.interface';
+import { IUser } from '@modules/users';
 import { Inject, Injectable } from '@nestjs/common';
 import { API, SsmAnsible } from 'ssm-shared-lib';
-import { IAnsibleCommandBuilderService } from '@modules/ansible/application/interfaces/ansible-command-builder-service.interface';
-import { IUser } from '@modules/users';
-import { IAnsibleVault } from '@modules/ansible-vaults';
-import { ANSIBLE_CONFIG_FILE } from '@modules/ansible-config';
-import { DEFAULT_VAULT_ID } from '@modules/ansible-vaults';
 import { Playbooks } from '../../../../types/typings';
 import { ExtraVarsTransformerService } from './extra-vars-transformer.service';
+
 /**
  * Service for building Ansible commands
  */

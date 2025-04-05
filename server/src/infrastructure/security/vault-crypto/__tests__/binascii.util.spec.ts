@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest';
+import './test-setup';
 import binascii from '../../../../helpers/vault-crypto/binascii';
 
 describe('binascii', () => {
@@ -17,9 +18,7 @@ describe('binascii', () => {
 
   test('UNHEXLIFY ', () => {
     expect(binascii.unhexlify(binascii.hexlify('A'))).toStrictEqual('A');
-    expect(binascii.unhexlify('50616d696574616d79203434')).toStrictEqual(
-      'Pamietamy 44',
-    );
+    expect(binascii.unhexlify('50616d696574616d79203434')).toStrictEqual('Pamietamy 44');
   });
 
   test('UNHEXLIFY binary data ', () => {

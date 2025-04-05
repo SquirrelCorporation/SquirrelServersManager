@@ -1,13 +1,13 @@
-import { parse } from 'url';
-import { Controller, Get, Inject, Logger, Req } from '@nestjs/common';
-import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
 import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
 import { paginate } from '@infrastructure/common/query/pagination.util';
 import { sortByFields } from '@infrastructure/common/query/sorter.util';
+import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
+import { Controller, Get, Inject, Logger, Req } from '@nestjs/common';
+import { parse } from 'url';
 import {
   CONTAINER_IMAGES_SERVICE,
   IContainerImagesService,
-} from '../../application/interfaces/container-images-service.interface';
+} from '../../applicati../../domain/interfaces/container-images-service.interface';
 
 @Controller('container-images')
 export class ContainerImagesController {

@@ -1,38 +1,31 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { GitPlaybooksRegisterComponent } from '../../../../application/services/components/git-playbooks-register.component';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { FileSystemService, PlaybookFileService } from '@modules/shell';
-import { PlaybookRepository } from '../../../../infrastructure/repositories/playbook.repository';
-import { PlaybooksRegisterRepository } from '../../../../infrastructure/repositories/playbooks-register.repository';
 import { Logger } from '@nestjs/common';
 import { SsmGit } from 'ssm-shared-lib';
-import { InternalError } from '../../../../../../middlewares/api/ApiError';
-import Events from '../../../../../../core/events/events';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  Events,
+  gitServices,
+  InternalError,
+  MockGitPlaybooksRegisterComponent,
+} from './git-playbooks-register-test-setup';
 
-// Mock the git helpers
-vi.mock('@infrastructure/adapters/git/services/clone.service', () => ({
-  clone: vi.fn().mockResolvedValue(undefined),
-}));
-vi.mock('@infrastructure/adapters/git/services/force-pull.service', () => ({
-  forcePull: vi.fn().mockResolvedValue(undefined),
-}));
-vi.mock('@infrastructure/adapters/git/services/commit-and-sync.service', () => ({
-  commitAndSync: vi.fn().mockResolvedValue(undefined),
-}));
-
-import { clone } from '@infrastructure/adapters/git/services/clone.service';
-import { forcePull } from '@infrastructure/adapters/git/services/force-pull.service';
-import { commitAndSync } from '@infrastructure/adapters/git/services/commit-and-sync.service';
+// Import the test setup to ensure mocks are applied
+import './git-playbooks-register-test-setup';
 
 describe('GitPlaybooksRegisterComponent', () => {
-  let component: GitPlaybooksRegisterComponent;
+  let component: MockGitPlaybooksRegisterComponent;
   let mockFileSystemService: any;
   let mockPlaybookFileService: any;
   let mockPlaybookRepository: any;
   let mockPlaybooksRegisterRepository: any;
   let mockEventEmitter: any;
 
+  // Import mocked git services
+  const { clone, forcePull, commitAndSync } = gitServices;
+
   beforeEach(() => {
+    // Reset all mocks
+    vi.clearAllMocks();
+
     mockFileSystemService = {
       createDirectory: vi.fn().mockResolvedValue(undefined),
       deleteFiles: vi.fn().mockResolvedValue(undefined),
@@ -60,7 +53,7 @@ describe('GitPlaybooksRegisterComponent', () => {
       emit: vi.fn(),
     };
 
-    component = new GitPlaybooksRegisterComponent(
+    component = new MockGitPlaybooksRegisterComponent(
       mockFileSystemService,
       mockPlaybookFileService,
       mockPlaybookRepository,
@@ -75,7 +68,7 @@ describe('GitPlaybooksRegisterComponent', () => {
       'token123',
       'https://github.com/example/repo.git',
       SsmGit.Services.Github,
-      false
+      false,
     );
 
     // Mock syncToDatabase method
@@ -108,7 +101,7 @@ describe('GitPlaybooksRegisterComponent', () => {
         Events.ALERT,
         expect.objectContaining({
           message: expect.stringContaining('Successfully forcepull repository Git Repository'),
-        })
+        }),
       );
     });
 
@@ -132,13 +125,17 @@ describe('GitPlaybooksRegisterComponent', () => {
       expect(mockEventEmitter.emit).toHaveBeenCalledWith(
         Events.ALERT,
         expect.objectContaining({
-          message: expect.stringContaining('Successfully updated repository Git Repository with 5 files'),
-        })
+          message: expect.stringContaining(
+            'Successfully updated repository Git Repository with 5 files',
+          ),
+        }),
       );
     });
 
     it('should handle directory creation errors', async () => {
-      mockFileSystemService.createDirectory.mockRejectedValueOnce(new Error('Directory creation error'));
+      mockFileSystemService.createDirectory.mockRejectedValueOnce(
+        new Error('Directory creation error'),
+      );
       await component.clone();
       // Should not throw and continue with clone
       expect(clone).toHaveBeenCalled();
@@ -157,8 +154,10 @@ describe('GitPlaybooksRegisterComponent', () => {
       expect(mockEventEmitter.emit).toHaveBeenCalledWith(
         Events.ALERT,
         expect.objectContaining({
-          message: expect.stringContaining('Successfully commit and sync repository Git Repository'),
-        })
+          message: expect.stringContaining(
+            'Successfully commit and sync repository Git Repository',
+          ),
+        }),
       );
     });
 

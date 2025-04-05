@@ -17,7 +17,7 @@ describe('SmartFailureService', () => {
       providers: [
         SmartFailureService,
         {
-          provide: 'IAnsibleLogsRepository',
+          provide: 'ISmartFailureRepository',
           useValue: mockAnsibleLogsRepository,
         },
       ],

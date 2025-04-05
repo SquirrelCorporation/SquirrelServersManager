@@ -14,7 +14,7 @@ import {
 import {
   CONTAINER_REGISTRIES_SERVICE,
   IContainerRegistriesService,
-} from '../../application/interfaces/container-registries-service.interface';
+} from '../../applicati../../domain/interfaces/container-registries-service.interface';
 import { CreateCustomRegistryDto, UpdateRegistryAuthDto } from '../dtos/container-registry.dto';
 
 @Controller('container-registries')

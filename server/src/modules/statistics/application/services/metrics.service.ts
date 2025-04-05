@@ -1,16 +1,13 @@
-import {
-  METRICS_DEFINITIONS,
-  MetricDefinition,
-  MetricType,
-} from '@infrastructure/prometheus/prometheus.service';
+import { MetricDefinition, METRICS_DEFINITIONS, MetricType } from '@infrastructure/prometheus/prometheus.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { Registry } from 'prom-client';
+import { IMetricsService } from '../../domain/interfaces/metrics-service.interface';
 
 /**
  * Service for managing device and container metrics using Prometheus
  */
 @Injectable()
-export class MetricsService {
+export class MetricsService implements IMetricsService {
   private readonly logger = new Logger(MetricsService.name);
   private readonly registry: Registry;
   private metrics: Map<MetricType, MetricDefinition>;

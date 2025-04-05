@@ -1,6 +1,12 @@
-import { describe, it, expect, vi } from 'vitest';
-import { CONTAINER_STACKS_SERVICE, IContainerStacksService } from '../../../application/interfaces/container-stacks-service.interface';
-import { ContainerCustomStack, IContainerCustomStackRepositoryEntity } from '../../../domain/entities/container-custom-stack.entity';
+import { describe, expect, it, vi } from 'vitest';
+import {
+  CONTAINER_STACKS_SERVICE,
+  IContainerStacksService,
+} from '../../../applicati../../domain/interfaces/container-stacks-service.interface';
+import {
+  ContainerCustomStack,
+  IContainerCustomStackRepositoryEntity,
+} from '../../../domain/entities/container-custom-stack.entity';
 
 describe('IContainerStacksService Interface', () => {
   it('should have the correct constant value', () => {
@@ -75,4 +81,4 @@ describe('IContainerStacksService Interface', () => {
     expect(await mockService.updateRepository('123', { name: 'Updated' })).toEqual(mockRepo);
     expect(await mockService.deleteRepositoryByUuid('123')).toBe(true);
   });
-}); 
+});

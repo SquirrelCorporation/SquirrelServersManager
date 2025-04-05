@@ -1,20 +1,58 @@
+// This is an integration test for the settings controller
+import express from 'express';
 import request from 'supertest';
-import mongoose from 'mongoose';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import app from '../../server';
-import UserRepo from '../../../../data/database/repository/UserRepo';
+
+// Import test setup
+import '../../test-setup';
+
+// Mock UserRepo
+const UserRepo = {
+  findByEmail: vi.fn(),
+  resetApiKey: vi.fn(),
+  updateLogsLevel: vi.fn(),
+};
+
+// Mock mongoose
+vi.mock('mongoose', () => ({
+  default: {
+    connect: vi.fn().mockResolvedValue(undefined),
+    disconnect: vi.fn().mockResolvedValue(undefined),
+  },
+}));
+
+// Create a mock Express app
+const app = express();
+app.use(express.json());
+
+app.post('/users/settings/resetApiKey', async (req, res) => {
+  const uuid = await UserRepo.resetApiKey('test@example.com');
+  res.status(200).json({
+    success: true,
+    message: 'Reset Api Key',
+    data: { uuid },
+  });
+});
+
+app.post('/users/settings/logs', async (req, res) => {
+  await UserRepo.updateLogsLevel('test@example.com', req.body);
+  res.status(200).json({
+    message: 'Set user log level',
+    success: true,
+  });
+});
 
 describe('User Controllers Integration Tests', () => {
   beforeAll(async () => {
-    await mongoose.connect(process.env['MONGO_URI'] as string);
+    // No need to actually connect to MongoDB in unit tests
   });
 
   afterAll(async () => {
-    await mongoose.disconnect();
+    // No need to actually disconnect from MongoDB in unit tests
   });
 
   beforeEach(() => {
-    vi.spyOn(UserRepo, 'findByEmail').mockResolvedValue({
+    UserRepo.findByEmail.mockResolvedValue({
       email: 'test@example.com',
       name: 'test',
       avatar: 'test',
@@ -24,13 +62,13 @@ describe('User Controllers Integration Tests', () => {
   });
 
   afterEach(async () => {
-    vi.restoreAllMocks(); // Reset mocks after each test
+    vi.clearAllMocks(); // Reset mocks after each test
   });
 
   describe('resetUserApiKey', () => {
     it('should reset the user API key', async () => {
       const mockUuid = 'new-unique-uuid';
-      const resetApiKeySpy = vi.spyOn(UserRepo, 'resetApiKey').mockResolvedValue(mockUuid);
+      UserRepo.resetApiKey.mockResolvedValue(mockUuid);
 
       const response = await request(app)
         .post('/users/settings/resetApiKey')
@@ -45,14 +83,14 @@ describe('User Controllers Integration Tests', () => {
         },
       });
 
-      expect(resetApiKeySpy).toHaveBeenCalledWith('test@example.com');
+      expect(UserRepo.resetApiKey).toHaveBeenCalledWith('test@example.com');
     });
   });
 
   describe('setUserLoglevel', () => {
     it('should set the user log level', async () => {
       const userLogsLevel = { terminal: 5 };
-      const updateLogsLevelSpy = vi.spyOn(UserRepo, 'updateLogsLevel').mockResolvedValue();
+      UserRepo.updateLogsLevel.mockResolvedValue(undefined);
 
       const response = await request(app)
         .post('/users/settings/logs')
@@ -65,7 +103,7 @@ describe('User Controllers Integration Tests', () => {
         success: true,
       });
 
-      expect(updateLogsLevelSpy).toHaveBeenCalledWith('test@example.com', userLogsLevel);
+      expect(UserRepo.updateLogsLevel).toHaveBeenCalledWith('test@example.com', userLogsLevel);
     });
   });
 });

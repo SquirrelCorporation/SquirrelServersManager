@@ -12,9 +12,10 @@ import {
 } from '../../../../infrastructure/prometheus/types/filters.types';
 import { TimeRange } from '../../../../infrastructure/prometheus/types/prometheus.types';
 import PinoLogger from '../../../../logger';
+import { IDeviceStatsService } from '../../domain/interfaces/device-stats-service.interface';
 
 @Injectable()
-export class DeviceStatsService {
+export class DeviceStatsService implements IDeviceStatsService {
   private readonly logger = PinoLogger.child(
     { module: 'DeviceStatsService' },
     { msgPrefix: '[DEVICE_STATS] - ' },

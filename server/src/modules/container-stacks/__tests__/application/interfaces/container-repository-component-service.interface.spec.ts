@@ -1,5 +1,8 @@
-import { describe, it, expect, vi } from 'vitest';
-import { CONTAINER_REPOSITORY_COMPONENT_SERVICE, IContainerRepositoryComponentService } from '../../../application/interfaces/container-repository-component-service.interface';
+import { describe, expect, it, vi } from 'vitest';
+import {
+  CONTAINER_REPOSITORY_COMPONENT_SERVICE,
+  IContainerRepositoryComponentService,
+} from '../../../applicati../../domain/interfaces/container-repository-component-service.interface';
 
 describe('IContainerRepositoryComponentService Interface', () => {
   it('should have the correct constant value', () => {
@@ -39,13 +42,21 @@ describe('IContainerRepositoryComponentService Interface', () => {
     };
 
     // Test the mocked methods
-    expect(await mockService.getComponentDetails('/path/to/repo', 'test-component')).toEqual(mockComponentDetails);
-    expect(await mockService.deployComponent('/path/to/repo', 'test-component', mockConfig)).toBe(true);
+    expect(await mockService.getComponentDetails('/path/to/repo', 'test-component')).toEqual(
+      mockComponentDetails,
+    );
+    expect(await mockService.deployComponent('/path/to/repo', 'test-component', mockConfig)).toBe(
+      true,
+    );
     expect(await mockService.removeComponent('/path/to/repo', 'test-component')).toBe(true);
 
     // Verify the methods were called with the correct arguments
     expect(mockService.getComponentDetails).toHaveBeenCalledWith('/path/to/repo', 'test-component');
-    expect(mockService.deployComponent).toHaveBeenCalledWith('/path/to/repo', 'test-component', mockConfig);
+    expect(mockService.deployComponent).toHaveBeenCalledWith(
+      '/path/to/repo',
+      'test-component',
+      mockConfig,
+    );
     expect(mockService.removeComponent).toHaveBeenCalledWith('/path/to/repo', 'test-component');
   });
-}); 
+});

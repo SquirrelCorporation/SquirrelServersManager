@@ -1,11 +1,11 @@
-import * as path from 'path';
+import { SshConnectionService } from '@infrastructure/ssh/services/ssh-connection.service';
+import { FileSystemService } from '@modules/shell';
 import { Injectable, Logger } from '@nestjs/common';
+import * as path from 'path';
 import { Socket } from 'socket.io';
 import { Client, SFTPWrapper } from 'ssh2';
 import { API, SsmEvents } from 'ssm-shared-lib';
-import { v4 as uuidv4 } from 'uuid';
-import { SshConnectionService } from '@infrastructure/ssh/services/ssh-connection.service';
-import { FileSystemService } from '@modules/shell';
+import { v4 as uuidv4, v4 } from 'uuid';
 import {
   SftpChmodOptions,
   SftpDeleteOptions,
@@ -17,8 +17,8 @@ import {
 } from '../../domain/entities/sftp.entity';
 import { ISftpRepository } from '../../domain/repositories/sftp-repository.interface';
 import { SftpSessionDto } from '../../presentation/dtos/sftp-session.dto';
-import { FileStreamService } from '../services/file-stream.service';
 import { SftpGateway } from '../../presentation/gateways/sftp.gateway';
+import { FileStreamService } from '../services/file-stream.service';
 
 @Injectable()
 export class SftpRepository implements ISftpRepository {
@@ -218,7 +218,7 @@ export class SftpRepository implements ISftpRepository {
   ): Promise<void> {
     const sessionId = this.getSessionIdForClient(clientId);
     if (!sessionId) {
-      callback({ status: 'ERROR', message: 'No active session' });
+      callback({ success: false, message: 'No active session' });
       return;
     }
 
@@ -227,16 +227,16 @@ export class SftpRepository implements ISftpRepository {
       sftp.mkdir(options.path, (err) => {
         if (err) {
           this.logger.error(`Error creating directory: ${err.message}`);
-          callback({ status: 'ERROR', message: err.message });
+          callback({ success: false, message: err.message });
           return;
         }
 
         this.logger.log(`Directory created: ${options.path}`);
-        callback({ status: 'OK' });
+        callback({ success: true });
       });
     } catch (error: any) {
       this.logger.error(`Error in mkdir: ${error.message}`);
-      callback({ status: 'ERROR', message: error.message });
+      callback({ success: false, message: error.message });
     }
   }
 
@@ -250,7 +250,7 @@ export class SftpRepository implements ISftpRepository {
   ): Promise<void> {
     const sessionId = this.getSessionIdForClient(clientId);
     if (!sessionId) {
-      callback({ status: 'ERROR', message: 'No active session' });
+      callback({ success: false, message: 'No active session' });
       return;
     }
 
@@ -260,16 +260,16 @@ export class SftpRepository implements ISftpRepository {
       sftp.rename(options.oldPath, options.newPath, (err) => {
         if (err) {
           this.logger.error(`Error renaming file: ${err.message}`);
-          callback({ status: 'ERROR', message: err.message });
+          callback({ success: false, message: err.message });
           return;
         }
 
         this.logger.log(`File renamed from ${options.oldPath} to ${options.newPath}`);
-        callback({ status: 'OK' });
+        callback({ success: true });
       });
     } catch (error: any) {
       this.logger.error(`Error in rename: ${error.message}`);
-      callback({ status: 'ERROR', message: error.message });
+      callback({ success: false, message: error.message });
     }
   }
 
@@ -283,7 +283,7 @@ export class SftpRepository implements ISftpRepository {
   ): Promise<void> {
     const sessionId = this.getSessionIdForClient(clientId);
     if (!sessionId) {
-      callback({ status: 'ERROR', message: 'No active session' });
+      callback({ success: false, message: 'No active session' });
       return;
     }
 
@@ -293,16 +293,16 @@ export class SftpRepository implements ISftpRepository {
       sftp.chmod(options.path, options.mode, (err) => {
         if (err) {
           this.logger.error(`Error changing permissions: ${err.message}`);
-          callback({ status: 'ERROR', message: err.message });
+          callback({ success: false, message: err.message });
           return;
         }
 
         this.logger.log(`Permissions changed for ${options.path} to ${options.mode}`);
-        callback({ status: 'OK' });
+        callback({ success: true });
       });
     } catch (error: any) {
       this.logger.error(`Error in chmod: ${error.message}`);
-      callback({ status: 'ERROR', message: error.message });
+      callback({ success: false, message: error.message });
     }
   }
 
@@ -316,7 +316,7 @@ export class SftpRepository implements ISftpRepository {
   ): Promise<void> {
     const sessionId = this.getSessionIdForClient(clientId);
     if (!sessionId) {
-      callback({ status: 'ERROR', message: 'No active session' });
+      callback({ success: false, message: 'No active session' });
       return;
     }
 
@@ -327,28 +327,28 @@ export class SftpRepository implements ISftpRepository {
         sftp.rmdir(options.path, (err) => {
           if (err) {
             this.logger.error(`Error removing directory: ${err.message}`);
-            callback({ status: 'ERROR', message: err.message });
+            callback({ success: false, message: err.message });
             return;
           }
 
           this.logger.log(`Directory removed: ${options.path}`);
-          callback({ status: 'OK' });
+          callback({ success: true });
         });
       } else {
         sftp.unlink(options.path, (err) => {
           if (err) {
             this.logger.error(`Error removing file: ${err.message}`);
-            callback({ status: 'ERROR', message: err.message });
+            callback({ success: false, message: err.message });
             return;
           }
 
           this.logger.log(`File removed: ${options.path}`);
-          callback({ status: 'OK' });
+          callback({ success: true });
         });
       }
     } catch (error: any) {
       this.logger.error(`Error in delete: ${error.message}`);
-      callback({ status: 'ERROR', message: error.message });
+      callback({ success: false, message: error.message });
     }
   }
 
@@ -369,12 +369,10 @@ export class SftpRepository implements ISftpRepository {
       }
 
       // Get a unique local download path
-      const fileName = path.basename(filePath);
       const localRootPath = this.fileSystemService.getTempDir();
-      const uniqueId = uuidv4().substring(0, 8);
-      const localFolderPath = path.join(localRootPath, uniqueId);
+      const localFolderPath = path.join(localRootPath, v4());
       this.fileSystemService.createDirectory(localFolderPath);
-
+      const fileName = path.basename(filePath);
       const localPath = path.join(localFolderPath, fileName);
       const remotePath = filePath;
 
@@ -390,12 +388,55 @@ export class SftpRepository implements ISftpRepository {
         }
 
         if (stats.isDirectory()) {
-          this.logger.error('Cannot download a directory');
-          this.sftpGateway.emit(SsmEvents.FileTransfer.ERROR, {
-            status: 'ERROR',
-            message: 'Cannot download a directory',
+          const remoteTempDir = `/tmp/${v4()}`; // A unique
+          const tarPath = `${remoteTempDir}/${path.basename(remotePath)}.tar.gz`;
+          // Create a tarball from the remote directory
+          const tarCommand = `mkdir -p "${remoteTempDir}" && tar -czvf "${tarPath}" "${remotePath}"`;
+          this.logger.log(`Creating tarball: ${tarCommand}`);
+          session.ssh.exec(tarCommand, (err, stream) => {
+            if (err) {
+              this.logger.error(`Error creating tarball: ${err.message}`);
+              this.sftpGateway.emit(SsmEvents.FileTransfer.ERROR, {
+                status: 'ERROR',
+                message: err.message,
+              });
+            } else {
+              stream
+                .on('close', (code, signal) => {
+                  if (code !== 0) {
+                    this.logger.error(`Tarball creation failed with code ${code}`);
+                    this.sftpGateway.emit(SsmEvents.FileTransfer.ERROR, {
+                      status: 'ERROR',
+                      message: `Tarball creation failed with code ${code}`,
+                    });
+                    return;
+                  }
+                  this.logger.log(`Tarball created at ${tarPath}`);
+                  sftp.fastGet(tarPath, `${localPath}.tar.gz`, (err) => {
+                    if (err) {
+                      this.logger.error(err);
+                      this.logger.error(`Error downloading file: ${err.message}`);
+                      this.sftpGateway.emit(SsmEvents.FileTransfer.ERROR, {
+                        status: 'ERROR',
+                        message: err.message,
+                      });
+                    } else {
+                      this.logger.log(`File downloaded from ${tarPath} to ${localPath}`);
+                      this.fileStreamService.sendFile(
+                        this.sftpGateway,
+                        localFolderPath,
+                        tarPath.split('/').pop() as string,
+                      );
+                    }
+                  });
+                })
+                .on('data', (data) => {
+                  this.logger.log(`Tarball creation progress...`);
+                });
+            }
           });
         } else {
+          this.logger.log(`Downloading file: ${filePath} to ${localPath}`);
           sftp.fastGet(filePath, localPath, (err) => {
             if (err) {
               this.logger.error(`Error downloading file: ${err.message}`);
@@ -405,9 +446,12 @@ export class SftpRepository implements ISftpRepository {
               });
             } else {
               this.logger.log(`File downloaded from ${filePath} to ${localPath}`);
+              this.logger.log(
+                `Sending file to client: localRootPath: ${localRootPath}, fileName: ${filePath.split('/').pop()}`,
+              );
               this.fileStreamService.sendFile(
                 this.sftpGateway,
-                localRootPath,
+                localFolderPath,
                 filePath.split('/').pop() as string,
               );
             }

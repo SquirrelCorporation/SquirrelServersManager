@@ -1,20 +1,21 @@
-import CronJob from 'node-cron';
-import { Queue } from 'bull';
-import { SSHExecutor } from '@modules/remote-system-information/application/services/remote-ssh-executor.service';
 import { IDeviceAuthService, IDevicesService } from '@modules/devices';
-import { QueueJobData, UpdateStatsType, UpdateType } from '../../../../domain/types/update.types';
-import { RemoteSystemInformationConfigurationSchema } from '../../../../domain/types/configuration.types';
-import { CpuComponent } from '../../../../domain/system-information/cpu/cpu.component';
-import { MemoryComponent } from '../../../../domain/system-information/memory/MemoryComponent';
-import { OSInformationComponent } from '../../../../domain/system-information/os-information/OSInformationComponent';
-import { FileSystemComponent } from '../../../../domain/system-information/filesystem/FileSystemComponent';
-import { SystemComponent } from '../../../../domain/system-information/system/SystemComponent';
-import { UsersComponent } from '../../../../domain/system-information/users/UsersComponent';
-import { USBComponent } from '../../../../domain/system-information/usb/USBComponent';
-import { WifiComponent } from '../../../../domain/system-information/wifi/WifiComponent';
-import { GraphicsComponent } from '../../../../domain/system-information/graphics/GraphicsComponent';
-import { NetworkComponent } from '../../../../domain/system-information/network/NetworkComponent';
+import { SSHExecutor } from '@modules/remote-system-information/application/services/remote-ssh-executor.service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Queue } from 'bull';
+import CronJob from 'node-cron';
 import { BluetoothComponent } from '../../../../domain/system-information/bluetooth/BluetoothComponent';
+import { CpuComponent } from '../../../../domain/system-information/cpu/cpu.component';
+import { FileSystemComponent } from '../../../../domain/system-information/filesystem/FileSystemComponent';
+import { GraphicsComponent } from '../../../../domain/system-information/graphics/GraphicsComponent';
+import { MemoryComponent } from '../../../../domain/system-information/memory/MemoryComponent';
+import { NetworkComponent } from '../../../../domain/system-information/network/NetworkComponent';
+import { OSInformationComponent } from '../../../../domain/system-information/os-information/OSInformationComponent';
+import { SystemComponent } from '../../../../domain/system-information/system/SystemComponent';
+import { USBComponent } from '../../../../domain/system-information/usb/USBComponent';
+import { UsersComponent } from '../../../../domain/system-information/users/UsersComponent';
+import { WifiComponent } from '../../../../domain/system-information/wifi/WifiComponent';
+import { RemoteSystemInformationConfigurationSchema } from '../../../../domain/types/configuration.types';
+import { QueueJobData, UpdateStatsType, UpdateType } from '../../../../domain/types/update.types';
 
 interface CronWatchers {
   [key: string]: {
@@ -71,9 +72,10 @@ export class RemoteSystemInformationWatcher extends SSHExecutor {
     devicesService: IDevicesService,
     deviceAuthService: IDeviceAuthService,
     private readonly queue: Queue<QueueJobData>,
+    eventEmitter: EventEmitter2,
     config?: Partial<RemoteSystemInformationConfigurationSchema>,
   ) {
-    super(devicesService, deviceAuthService);
+    super(devicesService, deviceAuthService, eventEmitter);
     this.components = {} as any;
     this.watchers = {};
 

@@ -1,16 +1,16 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { RegistryAuthConfig } from '@modules/containers/types';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import PinoLogger from '../../../../logger';
 import { IContainerRegistryEntity } from '../../domain/entities/container-registry.entity';
-import { IContainerRegistriesService } from '../interfaces/container-registries-service.interface';
+import { IContainerRegistriesService } from '../../domain/interfaces/container-registries-service.interface';
+import {
+  IWatcherEngineService,
+  WATCHER_ENGINE_SERVICE,
+} from '../../domain/interfaces/watcher-engine-service.interface';
 import {
   CONTAINER_REGISTRY_REPOSITORY,
   IContainerRegistryRepository,
 } from '../../domain/repositories/container-registry-repository.interface';
-import {
-  IWatcherEngineService,
-  WATCHER_ENGINE_SERVICE,
-} from '../interfaces/watcher-engine-service.interface';
-import PinoLogger from '../../../../logger';
 
 const logger = PinoLogger.child(
   { module: 'ContainerRegistriesService' },

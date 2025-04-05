@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { IDockerWatcherComponentFactory } from '@modules/containers/domain/components/docker-watcher.interface';
-import { IContainerService } from '@modules/containers/application/interfaces/container-service.interface';
-import { IContainerStatsService } from '@modules/containers/application/interfaces/container-stats-service.interface';
-import { IContainerLogsService } from '@modules/containers/application/interfaces/container-logs-service.interface';
-import { IContainerImagesService } from '@modules/containers/application/interfaces/container-images-service.interface';
-import { IContainerVolumesService } from '@modules/containers/application/interfaces/container-volumes-service.interface';
-import { IContainerNetworksService } from '@modules/containers/application/interfaces/container-networks-service.interface';
+import { IContainerService } from '@modules/containers/domain/interfaces/container-service.interface';
+import { IContainerStatsService } from '@modules/containers/domain/interfaces/container-stats-service.interface';
+import { IContainerLogsService } from '@modules/containers/domain/interfaces/container-logs-service.interface';
+import { IContainerImagesService } from '@modules/containers/domain/interfaces/container-images-service.interface';
+import { IContainerVolumesService } from '@modules/containers/domain/interfaces/container-volumes-service.interface';
+import { IContainerNetworksService } from '@modules/containers/domain/interfaces/container-networks-service.interface';
 import PinoLogger from '../../../../../../../../logger';
 import { DockerWatcherComponent } from './docker-watcher.component';
 

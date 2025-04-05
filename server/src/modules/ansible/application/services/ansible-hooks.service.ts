@@ -1,17 +1,20 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ANSIBLE_LOGS_REPOSITORY, IAnsibleLogsRepository } from '@modules/logs';
-import { ISshKeyService, SSH_KEY_SERVICE } from '@modules/shell';
-import { IAnsibleHooksService } from '@modules/ansible/application/interfaces/ansible-hooks-service.interface';
 import { isFinalStatus } from '@infrastructure/common/ansible/ansible-task.util';
 import {
-  ANSIBLE_TASK_REPOSITORY,
-  IAnsibleTaskRepository,
-} from '../../domain/repositories/ansible-task.repository.interface';
+  BadRequestException,
+  EntityNotFoundException,
+} from '@infrastructure/exceptions/app-exceptions';
+import { IAnsibleHooksService } from '@modules/ansible/doma../../domain/interfaces/ansible-hooks-service.interface';
+import { ANSIBLE_LOGS_REPOSITORY, IAnsibleLogsRepository } from '@modules/logs';
+import { ISshKeyService, SSH_KEY_SERVICE } from '@modules/shell';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   ANSIBLE_TASK_STATUS_REPOSITORY,
   IAnsibleTaskStatusRepository,
 } from '../../domain/repositories/ansible-task-status.repository.interface';
-import { BadRequestException, EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
+import {
+  ANSIBLE_TASK_REPOSITORY,
+  IAnsibleTaskRepository,
+} from '../../domain/repositories/ansible-task.repository.interface';
 import { TaskEventDto } from '../../presentation/dtos/task-event.dto';
 import { TaskHookDto } from '../../presentation/dtos/task-hook.dto';
 

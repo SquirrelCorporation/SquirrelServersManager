@@ -1,4 +1,4 @@
-```
+```ascii
   ,;;:;,
    ;;;;;
   ,:;;:;    ,'=.
@@ -12,180 +12,154 @@ Squirrel Servers Manager 🐿️
 ---
 # Diagnostic Module
 
-This module provides diagnostic capabilities for devices in the system. It follows a clean architecture pattern with the following layers:
+## Overview
 
-## Domain Layer
+The Diagnostic Module provides real-time diagnostic capabilities for devices and services within the Squirrel Servers Manager application. It follows Clean Architecture principles to ensure separation of concerns and maintainability.
 
-The core business logic and entities:
+## Features
 
-- `entities/diagnostic.entity.ts`: Contains the core domain entities and types
-- `repositories/diagnostic-repository.interface.ts`: Defines the repository interface for data access
+- Real-time device diagnostics
+- WebSocket-based event streaming
+- Diagnostic event handling
+- Device health monitoring
+- Service status checks
+- Real-time diagnostic updates
+- Event-driven architecture
+- Diagnostic data mapping
 
-## Application Layer
+## Architecture
 
-The application services that orchestrate the use cases:
+The module follows the Clean Architecture pattern with proper separation of concerns:
 
-- `interfaces/diagnostic-service.interface.ts`: Defines the service interface
-- `services/diagnostic.service.ts`: Implements the diagnostic service logic
+### Domain Layer
 
-## Infrastructure Layer
+Contains the core business entities and interfaces:
 
-The implementation of interfaces defined in the domain layer:
+- **Entities**
+  - `diagnostic.entity.ts`: Core diagnostic entity
+  - `diagnostic-event.entity.ts`: Diagnostic event entity
+- **Repository Interfaces**
+  - `diagnostic-repository.interface.ts`: Diagnostic data access contract
+- **Service Interfaces**
+  - `diagnostic-service.interface.ts`: Diagnostic service contract
 
-- `repositories/diagnostic.repository.ts`: Implements the repository interface
+### Application Layer
 
-## Presentation Layer
+Contains the business logic and services:
 
-The controllers, DTOs, and mappers for the API:
+- **Core Services**
+  - `diagnostic.service.ts`: Core diagnostic functionality
+    - Device health checks
+    - Service status monitoring
+    - Event handling
+    - Real-time updates
 
-- `controllers/diagnostic.controller.ts`: Handles HTTP requests
-- `dtos/diagnostic.dto.ts`: Data Transfer Objects for API requests and responses
-- `mappers/diagnostic.mapper.ts`: Maps between domain entities and DTOs
+### Infrastructure Layer
+
+Contains implementations of repositories and external integrations:
+
+- **Repositories**
+  - `diagnostic.repository.ts`: Diagnostic data storage
+- **Event Integration**
+  - Integration with event emitter service
+  - WebSocket event handling
+
+### Presentation Layer
+
+Contains controllers, gateways, and DTOs:
+
+- **Controllers**
+  - `diagnostic.controller.ts`: REST API endpoints
+- **Gateways**
+  - `diagnostic.gateway.ts`: WebSocket gateway for real-time updates
+  - `diagnostic-events.gateway.ts`: Event streaming gateway
+- **Mappers**
+  - `diagnostic.mapper.ts`: Maps between domain entities and DTOs
+- **DTOs**
+  - Request/response data transfer objects
+  - WebSocket event DTOs
 
 ## Module Structure
 
-The module is organized as follows:
-
 ```
 diagnostic/
-├── application/
-│   ├── interfaces/
-│   │   └── diagnostic-service.interface.ts
-│   └── services/
-│       └── diagnostic.service.ts
 ├── domain/
 │   ├── entities/
-│   │   └── diagnostic.entity.ts
-│   └── repositories/
-│       └── diagnostic-repository.interface.ts
+│   │   ├── diagnostic.entity.ts
+│   │   └── diagnostic-event.entity.ts
+│   ├── repositories/
+│   │   └── diagnostic-repository.interface.ts
+│   └── interfaces/
+│       └── diagnostic-service.interface.ts
+├── application/
+│   └── services/
+│       └── diagnostic.service.ts
 ├── infrastructure/
 │   └── repositories/
 │       └── diagnostic.repository.ts
 ├── presentation/
 │   ├── controllers/
 │   │   └── diagnostic.controller.ts
-│   ├── dtos/
-│   │   └── diagnostic.dto.ts
-│   └── mappers/
-│       └── diagnostic.mapper.ts
+│   ├── gateways/
+│   │   ├── diagnostic.gateway.ts
+│   │   └── diagnostic-events.gateway.ts
+│   ├── mappers/
+│   │   └── diagnostic.mapper.ts
+│   └── dtos/
+│       ├── diagnostic.dto.ts
+│       └── diagnostic-event.dto.ts
 ├── __tests__/
-│   ├── application/
-│   │   └── services/
-│   │       └── diagnostic.service.spec.ts
-│   ├── infrastructure/
-│   │   └── repositories/
-│   │       └── diagnostic.repository.spec.ts
-│   └── presentation/
-│       ├── controllers/
-│       │   └── diagnostic.controller.spec.ts
-│       └── mappers/
-│           └── diagnostic.mapper.spec.ts
 ├── diagnostic.module.ts
 ├── index.ts
 └── README.md
 ```
 
-## Usage
+## Integration
 
-The diagnostic module provides functionality to run diagnostic checks on devices. It performs the following checks:
+The module is integrated through dependency injection:
 
-1. SSH connectivity
-2. SSH Docker connectivity
-3. Docker socket availability
-4. Disk space
-5. CPU and memory information
+```typescript
+@Module({
+  imports: [
+    DevicesModule,
+  ],
+  controllers: [
+    DiagnosticController,
+  ],
+  providers: [
+    DiagnosticService,
+    EventEmitterService,
+    DiagnosticMapper,
+    DiagnosticGateway,
+    DiagnosticEventsGateway,
+  ],
+  exports: [
+    DiagnosticService,
+  ],
+})
+```
 
-The diagnostic results are returned as a report containing the status of each check.
+## API Endpoints
+
+### REST Endpoints
+
+- `GET /diagnostic/:deviceId`: Get device diagnostics
+- `POST /diagnostic/:deviceId/check`: Run diagnostic check
+- `GET /diagnostic/:deviceId/status`: Get diagnostic status
+- `GET /diagnostic/:deviceId/history`: Get diagnostic history
+
+### WebSocket Events
+
+- `diagnostic.status`: Real-time diagnostic status updates
+- `diagnostic.event`: Diagnostic event notifications
+- `diagnostic.check`: Diagnostic check results
+- `diagnostic.error`: Error notifications
 
 ## Recent Changes
 
-### Clean Architecture Migration
-
-The module has been migrated to follow the clean architecture pattern:
-
-- **Domain Layer**: Contains the core business entities and repository interfaces
-- **Application Layer**: Contains the service interfaces and implementations
-- **Infrastructure Layer**: Contains the repository implementations
-- **Presentation Layer**: Contains the controllers, DTOs, and mappers
-
-### Test Reorganization
-
-The test structure has been reorganized to mirror the module architecture:
-
-- `__tests__/application/services/diagnostic.service.spec.ts`: Tests for the diagnostic service
-- `__tests__/infrastructure/repositories/diagnostic.repository.spec.ts`: Tests for the repository implementation
-- `__tests__/presentation/controllers/diagnostic.controller.spec.ts`: Tests for the controller
-- `__tests__/presentation/mappers/diagnostic.mapper.spec.ts`: Tests for the mapper
-
-### Device Model Integration
-
-The module now properly integrates with the devices module:
-
-- Uses the `IDevice` and `IDeviceAuth` interfaces from the devices module
-- Injects the device repositories from the devices module
-- Follows proper dependency injection patterns
-
-## Overview
-The Diagnostic Module provides functionality to perform diagnostic checks on connected devices within the Squirrel Servers Manager (SSM) application. It allows administrators to verify connectivity, resource availability, and system health for managed servers.
-
-## Architecture
-The Diagnostic Module follows the NestJS component-based design pattern and has been refactored to improve modularity and testability. It consists of:
-
-- **DiagnosticModule**: The main NestJS module that provides the DiagnosticService.
-- **DiagnosticService**: The core service that performs diagnostic checks.
-- **DiagnosticController**: REST API endpoints for triggering diagnostic operations.
-- **EventEmitterService**: Service for emitting diagnostic check events.
-
-## Components
-
-### DiagnosticService
-The DiagnosticService is responsible for:
-- Executing a sequence of diagnostic checks on target devices
-- Verifying SSH connectivity for both Ansible and Docker operations
-- Checking Docker socket connectivity
-- Monitoring disk space availability
-- Retrieving CPU and memory information
-- Emitting events for each diagnostic check result
-
-### Diagnostic Checks
-The module performs the following diagnostic checks in sequence:
-1. **SSH_CONNECT**: Verifies SSH connectivity for Ansible operations
-2. **SSH_DOCKER_CONNECT**: Verifies SSH connectivity for Docker operations
-3. **DOCKER_SOCKET**: Checks Docker socket connectivity
-4. **DISK_SPACE**: Monitors available disk space
-5. **CPU_MEMORY_INFO**: Retrieves CPU and memory usage information
-
-### Integration with Event System
-The module uses the NestJS event emitter system to publish diagnostic check results:
-```typescript
-this.eventEmitterService.emit(Events.DIAGNOSTIC_CHECK, {
-  success: true,
-  severity: 'success',
-  module: 'DeviceDiagnostic',
-  data: { check },
-  message: `✅ Ssh connect check passed on ${sshOptionsAnsible.host}:${sshOptionsAnsible.port}`,
-});
-```
-
-## Usage
-The Diagnostic Module can be used through the REST API:
-
-```typescript
-// Trigger diagnostic checks for a device
-POST /devices/:uuid/auth/diagnostic
-```
-
-## Testing
-The Diagnostic Module includes comprehensive unit tests that verify:
-- SSH connectivity check functionality
-- Docker socket connectivity verification
-- Disk space and system resource monitoring
-- Event emission for diagnostic results
-
-Tests use Vitest for mocking dependencies such as SSH connections and Docker socket communication.
-
-## Dependencies
-- ssh2: For SSH connection handling
-- docker-modem: For Docker socket connectivity
-- @nestjs/event-emitter: For event management
-- ssm-shared-lib: For shared diagnostic enums
+- Added real-time diagnostic updates
+- Enhanced WebSocket event handling
+- Improved diagnostic checks
+- Added event streaming capabilities
+- Enhanced error handling
+- Added comprehensive test coverage

@@ -1,12 +1,12 @@
+import { SsmAnsible } from 'ssm-shared-lib';
 import { IDevice } from '../entities/device.entity';
 import { IDeviceAuth } from '../entities/device-auth.entity';
-import { SsmAnsible } from 'ssm-shared-lib';
 
 export const DOCKER_DEVICE_SERVICE = 'IDockerDeviceService';
 
 export interface IDockerDeviceService {
   updateDockerAuth(
-    deviceAuth: IDeviceAuth, 
+    deviceAuth: IDeviceAuth,
     updates: {
       customDockerSSH?: boolean;
       dockerCustomAuthType?: SsmAnsible.SSHType;
@@ -19,7 +19,7 @@ export interface IDockerDeviceService {
       customDockerAgentForward?: boolean;
       customDockerTryKeyboard?: boolean;
       customDockerSocket?: string;
-    }
+    },
   ): Promise<IDeviceAuth>;
   getDockerDevicesToWatch(): Promise<IDevice[]>;
 }

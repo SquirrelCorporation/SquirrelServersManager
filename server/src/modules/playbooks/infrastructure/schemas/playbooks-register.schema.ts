@@ -1,8 +1,8 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import * as mongoose from 'mongoose';
-import { Repositories, SsmGit } from 'ssm-shared-lib';
 import { IAnsibleVault } from '@modules/ansible-vaults';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import * as mongoose from 'mongoose';
+import { Document } from 'mongoose';
+import { Repositories, SsmGit } from 'ssm-shared-lib';
 
 export type PlaybooksRegisterDocument = PlaybooksRegister & Document;
 
@@ -14,7 +14,7 @@ export class PlaybooksRegister {
   @Prop({
     type: String,
     required: true,
-    enum: Object.values(Repositories.RepositoryType)
+    enum: Object.values(Repositories.RepositoryType),
   })
   type!: Repositories.RepositoryType;
 
@@ -73,7 +73,7 @@ export class PlaybooksRegister {
   @Prop({
     type: String,
     required: false,
-    enum: Object.values(SsmGit.Services)
+    enum: Object.values(SsmGit.Services),
   })
   gitService?: SsmGit.Services;
 

@@ -1,4 +1,4 @@
-```
+```ascii
   ,;;:;,
    ;;;;;
   ,:;;:;    ,'=.
@@ -10,115 +10,151 @@
 ```
 Squirrel Servers Manager 🐿️
 ---
-# Logs Module - Clean Architecture
+# Logs Module
 
-## Overview
+The Logs module is a NestJS implementation that manages both server and Ansible logs within the Squirrel Servers Manager. It provides comprehensive logging capabilities with features for storage, retrieval, and maintenance of logs.
 
-The Logs module provides a comprehensive system for managing server logs and Ansible task execution logs within the Squirrel Servers Manager application. It allows users to view, search, and manage logs for both server activities and Ansible automation tasks.
+## Features
 
-## Clean Architecture Structure
+- **Server Logs Management**
+  - Log storage and retrieval
+  - Pagination and filtering
+  - Sorting capabilities
+  - Log retention management
+  - Bulk deletion support
 
-The module follows the Clean Architecture pattern with the following layers:
+- **Ansible Logs Management**
+  - Execution-specific logs
+  - Chronological log retrieval
+  - Execution context preservation
+  - Log cleanup utilities
 
-### 1. Domain Layer
+- **Query Capabilities**
+  - Field-based filtering
+  - Multi-parameter queries
+  - Customizable pagination
+  - Flexible sorting options
 
-The core business logic and entities, independent of any framework or external concerns.
+- **Log Maintenance**
+  - Automatic cleanup based on retention policy
+  - Bulk deletion operations
+  - Age-based log pruning
+  - Storage optimization
 
-- **Entities**: Pure domain entities without any framework dependencies
-  - `server-log.entity.ts`
-  - `ansible-log.entity.ts`
-  - `ansible-task.entity.ts`
+## Architecture
 
-- **Repository Interfaces**: Abstractions for data access
-  - `server-logs-repository.interface.ts`
-  - `ansible-logs-repository.interface.ts`
-  - `ansible-task-repository.interface.ts`
+The module follows Clean Architecture principles with clear separation of concerns:
 
-### 2. Application Layer
+### Domain Layer
+- **Interfaces**
+  - `IServerLogsService`: Server logs management contract
+  - `IAnsibleLogsService`: Ansible logs management contract
+  - `IServerLogsRepository`: Server logs data access contract
+  - `IAnsibleLogsRepository`: Ansible logs data access contract
 
-Contains the application-specific business rules and orchestrates the flow of data to and from entities.
+- **Entities**
+  - Server log definitions
+  - Ansible log structures
+  - Log metadata types
 
-- **Services**: Implement use cases that orchestrate the flow of data
-  - `server-logs.service.ts`
+### Application Layer
+- **Services**
+  - `ServerLogsService`: Core server logs management
+    - Log retrieval with filtering
+    - Deletion operations
+    - Retention management
+  - `AnsibleLogsService`: Core Ansible logs management
+    - Execution-specific log handling
+    - Log cleanup operations
+    - Chronological retrieval
 
-- **Interfaces**: Service interfaces for dependency inversion
-  - `server-logs-service.interface.ts`
+### Infrastructure Layer
+- **Repositories**
+  - `ServerLogsRepository`: Server logs persistence
+  - `AnsibleLogsRepository`: Ansible logs persistence
+  - MongoDB schema definitions
+  - Data mapping utilities
 
-### 3. Infrastructure Layer
+- **Mappers**
+  - `ServerLogMapper`: Domain to persistence mapping
+  - `AnsibleLogMapper`: Domain to persistence mapping
+  - `ServerLogPresentationMapper`: Domain to DTO mapping
 
-Implements interfaces defined in the domain layer, providing concrete implementations for external concerns.
+### Presentation Layer
+- **Controllers**
+  - REST endpoints for log access
+  - Query parameter handling
+  - Response formatting
 
-- **Repositories**: Database-specific implementations of repository interfaces
-  - `server-logs.repository.ts`
-  - `ansible-logs.repository.ts`
-  - `ansible-task.repository.ts`
-
-- **Schemas**: Database schemas for MongoDB
-  - `server-log.schema.ts`
-  - `ansible-log.schema.ts`
-  - `ansible-task.schema.ts`
-
-- **Mappers**: Map between domain entities and database schemas
-  - `server-log.mapper.ts`
-  - `ansible-log.mapper.ts`
-  - `ansible-task.mapper.ts`
-
-### 4. Presentation Layer
-
-Handles HTTP requests and responses, converting between the application's internal data format and the format exposed to external clients.
-
-- **Controllers**: Handle HTTP requests and responses
-  - `logs.controller.ts`
-
-- **DTOs**: Data Transfer Objects for API requests/responses
-  - `server-log-response.dto.ts`
-  - `server-logs-query.dto.ts`
-
-- **Mappers**: Map between domain entities and DTOs
-  - `server-log.mapper.ts`
-
-## Testing Structure
-
-The test files mirror the module structure:
-
-```
-__tests__/
-├── application/
-│   └── services/
-│       └── server-logs.service.spec.ts
-├── infrastructure/
-│   └── repositories/
-│       ├── server-logs.repository.spec.ts
-│       ├── ansible-logs.repository.spec.ts
-│       └── ansible-task.repository.spec.ts
-└── presentation/
-    └── controllers/
-        └── logs.controller.spec.ts
-```
-
-## Dependency Rule
-
-The fundamental rule of Clean Architecture is that dependencies can only point inward. This means:
-
-- Presentation depends on Application
-- Application depends on Domain
-- Infrastructure implements interfaces defined in Domain
-
-No inner layer should depend on an outer layer.
-
-## Benefits of Clean Architecture
-
-1. **Separation of Concerns**: Each layer has a specific responsibility
-2. **Testability**: Business logic can be tested independently of external concerns
-3. **Flexibility**: External frameworks and tools can be replaced with minimal impact
-4. **Maintainability**: Changes in one layer have minimal impact on other layers
+- **DTOs**
+  - `ServerLogsQueryDto`: Log query parameters
+  - Response data structures
+  - Pagination metadata
 
 ## API Endpoints
 
-- `GET /logs/server`: Get server logs with filtering and pagination
-  - Query parameters:
-    - `current`: Current page number (default: 1)
-    - `pageSize`: Number of items per page (default: 10)
-    - `search`: Search term to filter logs
-    - `sortField`: Field to sort by
-    - `sortOrder`: Sort order ('ascend' or 'descend')
+### Server Logs
+```typescript
+GET /logs/server
+// Retrieve server logs with filtering and pagination
+// Query Parameters:
+// - current: Current page number (default: 1)
+// - pageSize: Items per page (default: 10)
+// - time: Filter by timestamp
+// - pid: Filter by process ID
+// - level: Filter by log level
+// - msg: Filter by message content
+// - hostname: Filter by hostname
+```
+
+### Ansible Logs
+```typescript
+GET /logs/ansible/:executionId
+// Retrieve logs for specific Ansible execution
+// Parameters:
+// - executionId: The execution identifier
+// Optional:
+// - sortDirection: Sort order (1: ascending, -1: descending)
+```
+
+### Log Management
+```typescript
+DELETE /logs/server
+// Delete all server logs
+
+DELETE /logs/server/old/:days
+// Delete server logs older than specified days
+
+DELETE /logs/ansible
+// Delete all Ansible logs
+```
+
+## Integration
+
+Import the module into your NestJS application:
+
+```typescript
+import { LogsModule } from './modules/logs';
+
+@Module({
+  imports: [LogsModule],
+})
+export class AppModule {}
+```
+
+## Recent Changes
+
+- Enhanced log filtering capabilities
+- Added pagination support for server logs
+- Improved log retention management
+- Added execution-specific Ansible log retrieval
+- Enhanced log cleanup operations
+
+## Future Improvements
+
+- Real-time log streaming
+- Advanced search capabilities
+- Log aggregation features
+- Custom log formatters
+- Log export functionality
+- Log analysis tools

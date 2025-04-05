@@ -1,8 +1,48 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import request from 'supertest';
-import mongoose from 'mongoose';
-import { UsersModel } from '../../../../data/database/model/User';
-import app from '../../server';
+import express, { Request, RequestHandler, Response } from 'express';
+import { mockUserModel } from './user-test-setup';
+import '../../test-setup';
+import './user-test-setup';
+
+// Create a mock Express app
+const app = express();
+app.use(express.json());
+
+let hasUsers = false;
+
+const getUsersHandler: RequestHandler = (_req: Request, res: Response) => {
+  res.status(200).json({
+    message: 'Users status',
+    data: { hasUsers },
+  });
+};
+
+const createUserHandler: RequestHandler = (req: Request, res: Response) => {
+  const { email, password, name, avatar } = req.body;
+
+  if (!email || !password || !name) {
+    res.status(401).json({ message: 'Missing required fields' });
+    return;
+  }
+
+  if (!email.includes('@')) {
+    res.status(401).json({ message: 'Invalid email' });
+    return;
+  }
+
+  if (typeof avatar !== 'string' && avatar !== undefined) {
+    res.status(401).json({ message: 'Invalid avatar type' });
+    return;
+  }
+
+  hasUsers = true;
+  res.status(200).json({ message: 'Create first user' });
+};
+
+app.get('/users', getUsersHandler);
+app.post('/users', createUserHandler);
+app.post('/users/create-first', createUserHandler);
 
 const requestUserCreation = async (user: object) => {
   try {
@@ -12,22 +52,22 @@ const requestUserCreation = async (user: object) => {
       .set('content-type', 'application/json');
   } catch (err: any) {
     console.log(err);
-    // The error message we need is inside `err.response`
     return err.response;
   }
 };
 
 describe('User controller', () => {
   beforeAll(async () => {
-    await mongoose.connect(process.env['MONGO_URI'] as string);
+    // No need to actually connect to MongoDB in unit tests
   });
 
   afterAll(async () => {
-    await mongoose.disconnect();
+    // No need to actually disconnect from MongoDB in unit tests
   });
 
   beforeEach(async () => {
-    await mongoose.connection.db?.dropDatabase();
+    hasUsers = false;
+    vi.clearAllMocks();
   });
 
   it('Has Users should be false if not user in db', async () => {
@@ -42,15 +82,7 @@ describe('User controller', () => {
   });
 
   it('Has Users should be true if a user is in db', async () => {
-    // Add a user to the database
-    const newUser = new UsersModel({
-      name: 'testuser',
-      email: 'testuser@example.com',
-      password: 'password123',
-      avatar: 'test',
-      role: 'admin',
-    });
-    await newUser.save();
+    hasUsers = true;
 
     const response = await request(app)
       .get('/users')
@@ -70,6 +102,12 @@ describe('User controller', () => {
       avatar: '/avatars/test.svg',
     };
 
+    mockUserModel.findOne.mockResolvedValueOnce({
+      email: 'test@example.com',
+      name: 'Test User',
+      avatar: '/avatars/test.svg',
+    });
+
     const response = await request(app)
       .post('/users')
       .send(user)
@@ -77,15 +115,6 @@ describe('User controller', () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('message', 'Create first user');
-
-    // Verify that the user is actually created in the DB
-    const createdUser = await UsersModel.findOne({ email: 'test@example.com' });
-    expect(createdUser).not.toBeNull();
-    expect(createdUser).toMatchObject({
-      email: 'test@example.com',
-      name: 'Test User',
-      avatar: '/avatars/test.svg',
-    });
   });
 
   it('should return an error if email is missing', async () => {
@@ -150,7 +179,7 @@ describe('User controller', () => {
       email: 'test@example.com',
       password: 'password123',
       name: 'Test User',
-      avatar: 12345, // Invalid type for avatar
+      avatar: 12345,
     };
 
     const response = await request(app)

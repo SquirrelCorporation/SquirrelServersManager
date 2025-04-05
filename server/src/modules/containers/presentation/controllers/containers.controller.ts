@@ -9,8 +9,8 @@ import {
 import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
 import { paginate } from '@infrastructure/common/query/pagination.util';
 import { sortByFields } from '@infrastructure/common/query/sorter.util';
-import { IContainerService } from '../../application/interfaces/container-service.interface';
-import { CONTAINER_SERVICE } from '../../application/interfaces/container-service.interface';
+import { IContainerService } from '../../applicati../../domain/interfaces/container-service.interface';
+import { CONTAINER_SERVICE } from '../../applicati../../domain/interfaces/container-service.interface';
 import { ContainersQueryDto } from '../dtos/container-query.dto';
 import { PaginatedResponseDto } from '../dtos/paginated-response.dto';
 

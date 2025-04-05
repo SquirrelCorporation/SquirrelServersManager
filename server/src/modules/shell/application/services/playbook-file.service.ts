@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { IPlaybookFileService } from '../interfaces/playbook-file.interface';
+import { IPlaybookFileService } from '../../domain/interfaces/playbook-file.interface';
 import { ShellWrapperService } from './shell-wrapper.service';
 
 /**

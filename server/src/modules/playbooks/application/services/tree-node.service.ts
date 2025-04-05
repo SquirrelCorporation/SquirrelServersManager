@@ -6,7 +6,7 @@ import {
   PLAYBOOK_REPOSITORY,
 } from '@modules/playbooks/domain/repositories/playbook-repository.interface';
 import { FILE_PATTERN } from '@modules/playbooks/constants';
-import { ITreeNodeService } from '@modules/playbooks/domain/interfaces/tree-node-service.interface';
+import { ITreeNodeService } from '@modules/playbooks/doma../../domain/interfaces/tree-node-service.interface';
 
 /**
  * Service for tree node operations

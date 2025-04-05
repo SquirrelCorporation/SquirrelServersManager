@@ -1,14 +1,11 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
 import { Process, Processor } from '@nestjs/bull';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import { Systeminformation } from 'ssm-shared-lib';
-import { IDevicesService, DEVICES_SERVICE } from '@modules/devices';
-import { QueueJobData, UpdateStatsType, UpdateType } from '../../domain/types/update.types';
 import { MetricsService } from '../../../statistics/application/services/metrics.service';
-import {
-  METRICS_SERVICE,
-  MetricType,
-} from '../../../statistics/application/interfaces/metrics-service.interface';
+import { METRICS_SERVICE, MetricType } from '../../../statistics/doma../../domain/interfaces/metrics-service.interface';
+import { QueueJobData, UpdateStatsType, UpdateType } from '../../domain/types/update.types';
 import { REMOTE_SYSTEM_INFO_QUEUE } from './constants';
 
 /**

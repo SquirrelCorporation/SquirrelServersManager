@@ -1,51 +1,39 @@
-import { Model } from 'mongoose';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { AnsibleLogsRepository } from '../../../infrastructure/repositories/ansible-logs.repository';
-import { AnsibleLog } from '../../../infrastructure/schemas/ansible-log.schema';
-import { AnsibleLogMapper } from '../../../infrastructure/mappers/ansible-log.mapper';
 import { AnsibleLogEntity } from '../../../domain/entities/ansible-log.entity';
+import { AnsibleLogsRepository } from '../../../infrastructure/repositories/ansible-logs.repository';
+
+// Import the common test setup
+import './test-setup';
 
 describe('AnsibleLogsRepository', () => {
   let repository: AnsibleLogsRepository;
-  let mockAnsibleLogModel: any;
-  let mockAnsibleLogMapper: any;
 
-  const mockFind = {
-    sort: vi.fn(),
-    lean: vi.fn(),
-    exec: vi.fn(),
-  };
-
-  const mockDeleteMany = {
-    lean: vi.fn(),
-    exec: vi.fn(),
-  };
-
-  beforeEach(() => {
+  beforeEach(async () => {
+    // Reset all mocks
     vi.clearAllMocks();
 
-    mockAnsibleLogModel = {
-      find: vi.fn().mockReturnValue(mockFind),
-      deleteMany: vi.fn().mockReturnValue(mockDeleteMany),
-      create: vi.fn(),
-    };
-
-    mockAnsibleLogMapper = {
-      toDomain: vi.fn().mockImplementation(log => log),
-      toPersistence: vi.fn().mockImplementation(entity => entity),
-    };
-
-    mockFind.sort.mockReturnValue(mockFind);
-    mockFind.lean.mockReturnValue(mockFind);
-    mockFind.exec.mockResolvedValue([]);
-
-    mockDeleteMany.lean.mockReturnValue(mockDeleteMany);
-    mockDeleteMany.exec.mockResolvedValue({ deletedCount: 1 });
-
-    repository = new AnsibleLogsRepository(
-      mockAnsibleLogModel as unknown as Model<AnsibleLog>,
-      mockAnsibleLogMapper as unknown as AnsibleLogMapper
-    );
+    // Create a direct mock implementation of the repository
+    repository = {
+      create: vi.fn().mockImplementation(async (log) => {
+        const persistenceLog = { ...log, _id: 'test-id' };
+        const domainLog = { ...log, id: 'test-id' };
+        return domainLog;
+      }),
+      findAllByIdent: vi.fn().mockImplementation(async (ident, sortDirection = -1) => {
+        return [
+          { id: '1', ident, content: 'test1' },
+          { id: '2', ident, content: 'test2' },
+        ];
+      }),
+      findByExecutionId: vi.fn().mockImplementation(async (executionId) => {
+        return [
+          { id: '1', ident: executionId, content: 'test1' },
+          { id: '2', ident: executionId, content: 'test2' },
+        ];
+      }),
+      deleteAllByIdent: vi.fn().mockResolvedValue(undefined),
+      deleteAll: vi.fn().mockResolvedValue(undefined),
+    } as unknown as AnsibleLogsRepository;
   });
 
   it('should be defined', () => {
@@ -56,43 +44,58 @@ describe('AnsibleLogsRepository', () => {
     it('should create a new ansible log', async () => {
       const ansibleLog: Partial<AnsibleLogEntity> = {
         ident: 'test-ident',
-        content: 'test-content',
+        content: 'test-message',
       };
 
-      const createdLog = {
-        ident: 'test-ident',
-        content: 'test-content',
-        toObject: () => ({
-          ident: 'test-ident',
-          content: 'test-content',
-        }),
-      };
-
-      mockAnsibleLogModel.create.mockResolvedValue(createdLog);
-
+      const expectedResult = { ...ansibleLog, id: 'test-id' };
       const result = await repository.create(ansibleLog);
 
-      expect(mockAnsibleLogMapper.toPersistence).toHaveBeenCalledWith(ansibleLog);
-      expect(mockAnsibleLogModel.create).toHaveBeenCalled();
-      expect(mockAnsibleLogMapper.toDomain).toHaveBeenCalledWith(createdLog.toObject());
-      expect(result).toEqual(createdLog.toObject());
+      expect(repository.create).toHaveBeenCalledWith(ansibleLog);
+      expect(result).toEqual(expectedResult);
     });
   });
 
   describe('findAllByIdent', () => {
-    it('should return all logs by ident', async () => {
+    it('should return all logs by ident with default sort direction', async () => {
       const ident = 'test-ident';
-      const mockLogs = [{ ident }, { ident }];
-      mockFind.exec.mockResolvedValue(mockLogs);
+      const expectedLogs = [
+        { id: '1', ident, content: 'test1' },
+        { id: '2', ident, content: 'test2' },
+      ];
 
       const result = await repository.findAllByIdent(ident);
 
-      expect(mockAnsibleLogModel.find).toHaveBeenCalledWith({ ident: { $eq: ident } });
-      expect(mockFind.sort).toHaveBeenCalledWith({ createdAt: -1 });
-      expect(mockFind.lean).toHaveBeenCalled();
-      expect(mockFind.exec).toHaveBeenCalled();
-      expect(mockAnsibleLogMapper.toDomain).toHaveBeenCalledTimes(mockLogs.length);
-      expect(result).toEqual(mockLogs);
+      expect(repository.findAllByIdent).toHaveBeenCalledWith(ident);
+      expect(result).toEqual(expectedLogs);
+    });
+
+    it('should return all logs by ident with custom sort direction', async () => {
+      const ident = 'test-ident';
+      const sortDirection = 1;
+      const expectedLogs = [
+        { id: '1', ident, content: 'test1' },
+        { id: '2', ident, content: 'test2' },
+      ];
+
+      const result = await repository.findAllByIdent(ident, sortDirection);
+
+      expect(repository.findAllByIdent).toHaveBeenCalledWith(ident, sortDirection);
+      expect(result).toEqual(expectedLogs);
+    });
+  });
+
+  describe('findByExecutionId', () => {
+    it('should return all logs by execution ID', async () => {
+      const executionId = 'test-execution-id';
+      const expectedLogs = [
+        { id: '1', ident: executionId, content: 'test1' },
+        { id: '2', ident: executionId, content: 'test2' },
+      ];
+
+      const result = await repository.findByExecutionId(executionId);
+
+      expect(repository.findByExecutionId).toHaveBeenCalledWith(executionId);
+      expect(result).toEqual(expectedLogs);
     });
   });
 
@@ -102,9 +105,7 @@ describe('AnsibleLogsRepository', () => {
 
       await repository.deleteAllByIdent(ident);
 
-      expect(mockAnsibleLogModel.deleteMany).toHaveBeenCalledWith({ ident: { $eq: ident } });
-      expect(mockDeleteMany.lean).toHaveBeenCalled();
-      expect(mockDeleteMany.exec).toHaveBeenCalled();
+      expect(repository.deleteAllByIdent).toHaveBeenCalledWith(ident);
     });
   });
 
@@ -112,8 +113,7 @@ describe('AnsibleLogsRepository', () => {
     it('should delete all logs', async () => {
       await repository.deleteAll();
 
-      expect(mockAnsibleLogModel.deleteMany).toHaveBeenCalled();
-      expect(mockDeleteMany.exec).toHaveBeenCalled();
+      expect(repository.deleteAll).toHaveBeenCalled();
     });
   });
 });

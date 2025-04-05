@@ -148,12 +148,6 @@ await fetch('/api/ansible/configuration', {
 });
 ```
 
-## Dependencies
-
-- NestJS framework
-- FileSystemService from ShellModule
-- Node.js fs module
-
 ## Security Considerations
 
 - The module prevents prototype pollution by validating section and key names

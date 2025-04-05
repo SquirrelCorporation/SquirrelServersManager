@@ -1,16 +1,17 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import {
   ANSIBLE_LOGS_SERVICE,
   IAnsibleLogsService,
   IServerLogsService,
   SERVER_LOGS_SERVICE,
 } from '@modules/logs';
+import { IAdvancedOperationsService } from '@modules/settings/doma../../domain/interfaces/advanced-operations-service.interface';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
-export class AdvancedOperationsService {
+export class AdvancedOperationsService implements IAdvancedOperationsService {
   private readonly logger = new Logger(AdvancedOperationsService.name);
 
   constructor(

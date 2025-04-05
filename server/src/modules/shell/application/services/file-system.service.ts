@@ -3,7 +3,7 @@ import os from 'os';
 import { Injectable, Logger } from '@nestjs/common';
 import fs from 'fs-extra';
 import { ShellString, TestOptions } from 'shelljs';
-import { IFileSystemService } from '../interfaces/file-system.interface';
+import { IFileSystemService } from '../../domain/interfaces/file-system.interface';
 import { ShellWrapperService } from './shell-wrapper.service';
 
 /**

@@ -1,11 +1,13 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { IWatcherEngineService } from '@modules/containers/domain/components/watcher.interface';
-import { CONTAINER_REPOSITORY } from '../../domain/repositories/container-repository.interface';
-import { IContainerRepository } from '../../domain/repositories/container-repository.interface';
-import { WATCHER_ENGINE_SERVICE } from '../interfaces/watcher-engine-service.interface';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import PinoLogger from '../../../../logger';
 import { IContainerEntity } from '../../domain/entities/container.entity';
-import { IContainerLogsService } from '../interfaces/container-logs-service.interface';
+import { IContainerLogsService } from '../../domain/interfaces/container-logs-service.interface';
+import { WATCHER_ENGINE_SERVICE } from '../../domain/interfaces/watcher-engine-service.interface';
+import {
+  CONTAINER_REPOSITORY,
+  IContainerRepository,
+} from '../../domain/repositories/container-repository.interface';
 
 const logger = PinoLogger.child(
   { module: 'ContainerLogsService' },

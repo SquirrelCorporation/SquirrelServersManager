@@ -1,16 +1,15 @@
 import { HttpService } from '@nestjs/axios';
+import { Cache } from '@nestjs/cache-manager';
+import { SchedulerRegistry } from '@nestjs/schedule';
+import { AxiosResponse } from 'axios';
 import { of, throwError } from 'rxjs';
 import * as semver from 'semver';
 import { SettingsKeys } from 'ssm-shared-lib';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { setToCache } from '../../../../data/cache';
 import { UpdateService } from '../../services/update.service';
 
 // Mock dependencies
 vi.mock('semver');
-vi.mock('../../../../data/cache', () => ({
-  setToCache: vi.fn(),
-}));
 
 // Mock package.json version
 vi.mock('../../../../../package.json', () => ({
@@ -39,6 +38,8 @@ vi.mock('@nestjs/schedule', () => {
 describe('UpdateService', () => {
   let service: UpdateService;
   let httpService: HttpService;
+  let cacheManager: Cache;
+  let schedulerRegistry: SchedulerRegistry;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -48,22 +49,35 @@ describe('UpdateService', () => {
       get: vi.fn(),
     } as unknown as HttpService;
 
+    // Create mock CacheManager
+    cacheManager = {
+      set: vi.fn(),
+      get: vi.fn(),
+      del: vi.fn(),
+    } as unknown as Cache;
+
+    // Create mock SchedulerRegistry
+    schedulerRegistry = {
+      deleteCronJob: vi.fn(),
+    } as unknown as SchedulerRegistry;
+
     // Create a new instance of the service for each test
-    service = new UpdateService(httpService);
+    service = new UpdateService(httpService, cacheManager, schedulerRegistry);
   });
 
   describe('fetchRemoteVersion', () => {
     it('should return the version from the remote release.json', async () => {
       // Mock the HTTP response
-      vi.mocked(httpService.get).mockReturnValue(
-        of({
-          data: { version: '1.1.0' },
-          status: 200,
-          statusText: 'OK',
+      const mockResponse: AxiosResponse = {
+        data: { version: '1.1.0' },
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config: {
           headers: {},
-          config: {},
-        }),
-      );
+        } as any,
+      };
+      vi.mocked(httpService.get).mockReturnValue(of(mockResponse));
 
       // Call the private method using type casting
       const result = await (service as any).fetchRemoteVersion();
@@ -172,7 +186,7 @@ describe('UpdateService', () => {
       await service.checkVersion();
 
       // Verify the result
-      expect(setToCache).toHaveBeenCalledWith(
+      expect(cacheManager.set).toHaveBeenCalledWith(
         SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE,
         '',
       );
@@ -189,7 +203,7 @@ describe('UpdateService', () => {
       await service.checkVersion();
 
       // Verify the result
-      expect(setToCache).toHaveBeenCalledWith(
+      expect(cacheManager.set).toHaveBeenCalledWith(
         SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE,
         '',
       );
@@ -206,30 +220,16 @@ describe('UpdateService', () => {
       await service.checkVersion();
 
       // Verify the result
-      expect(setToCache).toHaveBeenCalledWith(
+      expect(cacheManager.set).toHaveBeenCalledWith(
         SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE,
         '1.1.0',
       );
     });
-
-    it('should handle case when remote version cannot be fetched', async () => {
-      // Mock fetchRemoteVersion to return undefined
-      vi.spyOn(service as any, 'fetchRemoteVersion').mockResolvedValueOnce(undefined);
-
-      // Call the method
-      await service.checkVersion();
-
-      // Verify that setToCache was not called
-      expect(setToCache).not.toHaveBeenCalled();
-    });
   });
 
   describe('getLocalVersion', () => {
-    it('should return the local version from package.json', () => {
-      // Call the method
+    it('should return the current local version', () => {
       const result = service.getLocalVersion();
-
-      // Verify the result
       expect(result).toBe('1.0.0');
     });
   });

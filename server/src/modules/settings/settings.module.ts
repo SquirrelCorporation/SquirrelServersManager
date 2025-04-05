@@ -1,19 +1,19 @@
+import { SETTINGS_SERVICE } from '@modules/settings/domain/interfaces/settings-service.interface';
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
-import { HttpModule } from '@nestjs/axios';
-import { SETTINGS_SERVICE } from '@modules/settings/application/interfaces/settings-service.interface';
-import { LogsModule } from '../logs/logs.module';
-import { PlaybooksModule } from '../playbooks/playbooks.module';
-import { Playbook, PlaybookSchema } from '../playbooks/infrastructure/schemas/playbook.schema';
 import { PrometheusProvider } from '../../infrastructure/prometheus/prometheus.provider';
-import { SettingsService } from './application/services/settings.service';
+import { LogsModule } from '../logs/logs.module';
+import { Playbook, PlaybookSchema } from '../playbooks/infrastructure/schemas/playbook.schema';
+import { PlaybooksModule } from '../playbooks/playbooks.module';
 import { AdvancedOperationsService } from './application/services/advanced-operations.service';
 import { InformationService } from './application/services/information.service';
-import { SettingsController } from './presentation/controllers/settings.controller';
+import { SettingsService } from './application/services/settings.service';
 import { SETTING_REPOSITORY } from './domain/repositories/setting-repository.interface';
-import { SettingRepository } from './infrastructure/repositories/setting.repository';
 import { SettingsMigrationService } from './infrastructure/migration/settings-migration.service';
+import { SettingRepository } from './infrastructure/repositories/setting.repository';
+import { SettingsController } from './presentation/controllers/settings.controller';
 
 @Module({
   imports: [

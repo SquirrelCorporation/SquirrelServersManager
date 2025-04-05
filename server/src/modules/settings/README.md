@@ -1,3 +1,4 @@
+```ascii
   ,;;:;,
    ;;;;;
   ,:;;:;    ,'=.
@@ -6,74 +7,204 @@
    ';;:;  =./)_
      `"=\_  )_"`
           ``'"`
+```
 Squirrel Servers Manager 🐿️
 ---
 # Settings Module
 
-The Settings module is responsible for managing application settings and configurations within the Squirrel Servers Manager application. It provides a comprehensive set of features for settings management, including CRUD operations, default values, and caching.
+The Settings module is a comprehensive NestJS implementation that manages application-wide configurations, system information, and advanced operations within the Squirrel Servers Manager. It provides a centralized way to handle settings, monitor system metrics, and perform maintenance operations.
 
 ## Features
 
-- Settings management
-- Default settings initialization
-- Settings caching
-- Settings validation
-- Settings persistence
+- **Configuration Management**
+  - Key-value based settings storage
+  - Default values initialization
+  - Type-safe settings retrieval
+  - TTL support for temporary settings
+  - Validation for setting updates
+
+- **System Information**
+  - MongoDB server statistics
+  - Redis server metrics
+  - Prometheus metrics collection
+  - Real-time performance monitoring
+
+- **Advanced Operations**
+  - Server restart capability
+  - Log management (server and Ansible)
+  - Playbook model management
+  - System maintenance tools
+
+- **Dashboard Settings**
+  - Performance thresholds configuration
+  - Resource utilization metrics
+  - Display preferences
+
+- **Device Management**
+  - Device offline detection settings
+  - Device statistics retention
+  - Connection monitoring
 
 ## Architecture
 
-The module follows the Clean Architecture pattern with proper separation of concerns:
+The module follows Clean Architecture principles with clear separation of concerns:
 
 ### Domain Layer
-- **Entities**: Defines the core business entities like `Setting`
-- **Repository Interfaces**: Defines interfaces for data access like `ISettingRepository`
+- **Entities**
+  - `ISetting`: Core setting entity definition
+  - Setting validation interfaces
+  - Type definitions for settings
+
+- **Interfaces**
+  - `ISettingsService`: Core settings management contract
+  - `IInformationService`: System information retrieval contract
+  - `IAdvancedOperationsService`: Advanced operations contract
+
+- **Repositories**
+  - `ISettingRepository`: Data access abstraction
 
 ### Application Layer
-- **Service Interfaces**: Defines interfaces for business logic like `ISettingsService`
-- **Services**: Implements the business logic for settings management
+- **Services**
+  - `SettingsService`: Core settings management
+  - `InformationService`: System metrics collection
+  - `AdvancedOperationsService`: System maintenance operations
 
 ### Infrastructure Layer
-- **Repositories**: Implements the repository interfaces for data access
-- **Cache Integration**: Integrates with the cache system for settings storage
+- **Repositories**
+  - `SettingRepository`: Settings persistence implementation
+  - Integration with MongoDB
+  - Integration with Redis cache
 
 ### Presentation Layer
-- **Controllers**: Handles HTTP requests and responses
-- **DTOs**: Defines the data transfer objects for request/response validation
+- **Controllers**
+  - REST endpoints for settings management
+  - System information retrieval
+  - Advanced operations execution
 
 ## API Endpoints
 
-### POST /settings/dashboard/:key
-Updates a dashboard setting.
+### Settings Management
 
-### POST /settings/devices/:key
-Updates a devices setting.
+#### Dashboard Settings
+```typescript
+POST /settings/dashboard/:key
+// Update dashboard-related settings (CPU/Memory thresholds)
+```
 
-### POST /settings/logs/:key
-Updates a logs setting.
+#### Device Settings
+```typescript
+POST /settings/devices/:key
+// Update device-related settings (offline detection, etc.)
+```
 
-### POST /settings/device-stats/:key
-Updates a device stats setting.
+#### Logs Settings
+```typescript
+POST /settings/logs/:key
+// Update log-related settings (retention, cleanup)
+```
 
-### POST /settings/keys/master-node-url
-Updates the master node URL.
+#### Device Stats Settings
+```typescript
+POST /settings/device-stats/:key
+// Update device statistics settings (retention period)
+```
 
-### POST /settings/advanced/restart
-Restarts the server.
+#### Master Node Configuration
+```typescript
+POST /settings/keys/master-node-url
+// Update master node URL configuration
+```
 
-### DELETE /settings/advanced/logs
-Deletes logs.
+### System Information
 
-### DELETE /settings/advanced/ansible-logs
-Deletes Ansible logs.
+#### MongoDB Stats
+```typescript
+GET /settings/mongodb-stats
+// Retrieve MongoDB server statistics
+```
 
-### DELETE /settings/advanced/playbooks-and-resync
-Deletes playbooks and initiates a resync.
+#### Redis Stats
+```typescript
+GET /settings/redis-stats
+// Retrieve Redis server metrics
+```
 
-### GET /settings/information/mongodb
-Gets MongoDB server stats.
+#### Prometheus Stats
+```typescript
+GET /settings/prometheus-stats
+// Retrieve Prometheus metrics
+```
 
-### GET /settings/information/redis
-Gets Redis server stats.
+### Advanced Operations
 
-### GET /settings/information/prometheus
-Gets Prometheus server stats. 
+#### Server Management
+```typescript
+POST /settings/advanced/restart
+// Initiate server restart
+```
+
+#### Log Management
+```typescript
+DELETE /settings/advanced/logs
+// Purge server logs
+DELETE /settings/advanced/ansible-logs
+// Purge Ansible logs
+```
+
+#### Playbook Management
+```typescript
+DELETE /settings/advanced/playbooks
+// Delete and resync playbooks model
+```
+
+## Default Settings
+
+The module initializes with sensible defaults for critical settings:
+
+- Scheme Version
+- Server Log Retention Period
+- Device Offline Detection Threshold
+- Performance Thresholds (CPU/Memory)
+- Statistics Retention Periods
+- Ansible Task Cleanup Intervals
+
+## Dependencies
+
+- `@nestjs/common`: Core NestJS framework
+- `@nestjs/event-emitter`: Event handling
+- `@nestjs/mongoose`: MongoDB integration
+- `@nestjs/cache-manager`: Caching support
+- `@nestjs/axios`: HTTP client
+- `ssm-shared-lib`: Shared types and utilities
+- `mongoose`: MongoDB ODM
+- `cache-manager`: Cache management
+
+## Integration
+
+Import the module into your NestJS application:
+
+```typescript
+import { SettingsModule } from './modules/settings';
+
+@Module({
+  imports: [SettingsModule],
+})
+export class AppModule {}
+```
+
+## Recent Changes
+
+- Added system information collection capabilities
+- Enhanced settings validation
+- Improved error handling and logging
+- Added support for TTL-based settings
+- Implemented advanced operations for system maintenance
+
+## Future Improvements
+
+- Real-time settings updates via WebSocket
+- Enhanced validation rules
+- Setting categories and grouping
+- Backup and restore functionality
+- Setting change audit logging
+- UI-based configuration management 

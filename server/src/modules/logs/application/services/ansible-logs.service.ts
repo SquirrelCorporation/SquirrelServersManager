@@ -1,17 +1,19 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { IAnsibleLogsService } from '../interfaces/ansible-logs-service.interface';
-import { IAnsibleLogsRepository } from '../../domain/repositories/ansible-logs-repository.interface';
-import { ANSIBLE_LOGS_REPOSITORY } from '../../domain/repositories/ansible-logs-repository.interface';
+import { IAnsibleLogsService } from '../../domain/interfaces/ansible-logs-service.interface';
+import {
+  ANSIBLE_LOGS_REPOSITORY,
+  IAnsibleLogsRepository,
+} from '../../domain/repositories/ansible-logs-repository.interface';
 
 @Injectable()
 export class AnsibleLogsService implements IAnsibleLogsService {
   private readonly logger = new Logger(AnsibleLogsService.name);
-  
+
   constructor(
     @Inject(ANSIBLE_LOGS_REPOSITORY)
-    private readonly ansibleLogsRepository: IAnsibleLogsRepository
+    private readonly ansibleLogsRepository: IAnsibleLogsRepository,
   ) {}
-  
+
   /**
    * Delete all ansible logs
    */
@@ -19,7 +21,7 @@ export class AnsibleLogsService implements IAnsibleLogsService {
     this.logger.log('Deleting all Ansible logs');
     return this.ansibleLogsRepository.deleteAll();
   }
-  
+
   /**
    * Get logs for a specific ansible execution
    * @param executionId The Ansible execution ID
@@ -28,7 +30,7 @@ export class AnsibleLogsService implements IAnsibleLogsService {
     this.logger.log(`Getting logs for Ansible execution: ${executionId}`);
     return this.ansibleLogsRepository.findByExecutionId(executionId);
   }
-  
+
   /**
    * Find all logs for a specific ansible execution
    * @param ident The execution identifier

@@ -1,12 +1,16 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
-import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
-import PinoLogger from '../../../../logger';
-import { DEVICE_DOWNTIME_EVENT_REPOSITORY, IDeviceDownTimeEventRepository } from '../../domain/repositories/device-downtime-event-repository.interface';
+import { OnEvent } from '@nestjs/event-emitter';
 import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
+import { IDeviceDowntimeService } from '@modules/statistics/doma../../domain/interfaces/device-downtime-service.interface';
+import PinoLogger from '../../../../logger';
+import {
+  DEVICE_DOWNTIME_EVENT_REPOSITORY,
+  IDeviceDownTimeEventRepository,
+} from '../../domain/repositories/device-downtime-event-repository.interface';
 
 @Injectable()
-export class DeviceDownTimeService implements OnModuleInit {
+export class DeviceDownTimeService implements IDeviceDowntimeService {
   private readonly logger = PinoLogger.child(
     { module: 'DeviceDownTimeService' },
     { msgPrefix: '[DEVICE_DOWNTIME] - ' },
@@ -17,15 +21,7 @@ export class DeviceDownTimeService implements OnModuleInit {
     private readonly downtimeRepository: IDeviceDownTimeEventRepository,
     @Inject(DEVICES_SERVICE)
     private readonly devicesService: IDevicesService,
-    private readonly eventEmitter: EventEmitter2
   ) {}
-
-  onModuleInit() {
-    // Subscribe to device.came.online event from legacy code
-    this.eventEmitter.on('device.came.online', (deviceUuid: string) => {
-      this.handleDeviceCameOnline(deviceUuid);
-    });
-  }
 
   @OnEvent('device.went.offline')
   async handleDeviceWentOffline(deviceId: string) {
@@ -33,17 +29,18 @@ export class DeviceDownTimeService implements OnModuleInit {
     await this.createDowntimeEvent(deviceId);
   }
 
+  @OnEvent('device.came.online')
   async handleDeviceCameOnline(deviceId: string) {
     this.logger.info(`Received device.came.online event for device: ${deviceId}`);
     await this.closeDowntimeEvent(deviceId);
   }
 
-  async createDowntimeEvent(deviceId: string): Promise<void> {
+  private async createDowntimeEvent(deviceId: string): Promise<void> {
     this.logger.info(`Creating downtime event for device: ${deviceId}`);
     await this.downtimeRepository.create(deviceId);
   }
 
-  async closeDowntimeEvent(deviceId: string): Promise<void> {
+  private async closeDowntimeEvent(deviceId: string): Promise<void> {
     this.logger.info(`Closing downtime event for device: ${deviceId}`);
     await this.downtimeRepository.closeDownTimeEvent(deviceId);
   }
@@ -56,24 +53,29 @@ export class DeviceDownTimeService implements OnModuleInit {
       return [];
     }
 
-    const devicesDownTimeDuration = await this.downtimeRepository.sumTotalDownTimePerDeviceOnPeriod(from, to);
+    const devicesDownTimeDuration = await this.downtimeRepository.sumTotalDownTimePerDeviceOnPeriod(
+      from,
+      to,
+    );
     const period = to.getTime() - from.getTime();
 
     return devices.map((device) => {
       const deviceEntry = devicesDownTimeDuration.find(
-        (downTime) => downTime.deviceId === device.uuid
+        (downTime) => downTime.deviceId === device.uuid,
       );
 
       const downtime = deviceEntry ? deviceEntry.duration : 0;
       const uptime = period - downtime;
 
-      this.logger.debug(`Device ${device.uuid}: Period: ${period}ms, Uptime: ${uptime}ms, Downtime: ${downtime}ms`);
+      this.logger.debug(
+        `Device ${device.uuid}: Period: ${period}ms, Uptime: ${uptime}ms, Downtime: ${downtime}ms`,
+      );
 
       return {
         uuid: device.uuid,
         uptime: uptime < 0 ? 0 : uptime,
         downtime: downtime > period ? period : downtime,
-        availability: ((uptime / (uptime + downtime)) || 0).toFixed(6),
+        availability: (uptime / (uptime + downtime) || 0).toFixed(6),
       };
     });
   }
@@ -91,10 +93,19 @@ export class DeviceDownTimeService implements OnModuleInit {
 
       const lastMonthStart = DateTime.now().minus({ month: 1 }).startOf('month').toJSDate();
       const lastMonthEnd = DateTime.now().minus({ month: 1 }).endOf('month').toJSDate();
-      const lastMonthAvailabilities = await this.getDevicesAvailability(lastMonthStart, lastMonthEnd);
+      const lastMonthAvailabilities = await this.getDevicesAvailability(
+        lastMonthStart,
+        lastMonthEnd,
+      );
 
-      const lastMonthTotalUptime = lastMonthAvailabilities.reduce((acc, curr) => acc + curr.uptime, 0);
-      const lastMonthTotalDowntime = lastMonthAvailabilities.reduce((acc, curr) => acc + curr.downtime, 0);
+      const lastMonthTotalUptime = lastMonthAvailabilities.reduce(
+        (acc, curr) => acc + curr.uptime,
+        0,
+      );
+      const lastMonthTotalDowntime = lastMonthAvailabilities.reduce(
+        (acc, curr) => acc + curr.downtime,
+        0,
+      );
 
       return {
         availability: totalUptime / (totalUptime + totalDowntime) || 0,

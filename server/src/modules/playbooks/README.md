@@ -12,83 +12,242 @@ Squirrel Servers Manager 🐿️
 ---
 # Playbooks Module
 
-This module provides functionality for managing playbooks and playbook repositories in the SSM application.
+## Overview
 
-## Structure
+The Playbooks Module provides comprehensive functionality for managing Ansible playbooks and playbook repositories within the Squirrel Servers Manager application. It follows Clean Architecture principles to ensure separation of concerns and maintainability.
 
-The module is organized into the following components:
+## Features
 
-### Components
-- `PlaybooksRepositoryComponent`: Base component for playbook repositories
-- `GitPlaybooksRepositoryComponent`: Component for Git-based playbook repositories
-- `LocalPlaybooksRepositoryComponent`: Component for local playbook repositories
+- Playbook management and execution
+- Git-based playbook repository management
+- Local playbook repository management
+- Repository tree structure management
+- Extra variables management
+- Repository synchronization
+- Default repository management
+- Diagnostic capabilities
 
-### Services
-- `PlaybooksRepositoryService`: Service for managing playbook repositories
-- `GitPlaybooksRepositoryService`: Service for Git-based playbook repositories
-- `LocalPlaybooksRepositoryService`: Service for local playbook repositories
-- `PlaybooksRepositoryEngineService`: Service for managing playbook repository engines
-- `PlaybookService`: Service for managing individual playbooks
-- `TreeNodeService`: Service for managing tree nodes
-- `DefaultPlaybooksRepositoriesService`: Service for managing default playbook repositories
+## Architecture
 
-### Controllers
-- `PlaybooksRepositoryController`: Controller for playbook repositories
-- `GitPlaybooksRepositoryController`: Controller for Git-based playbook repositories
-- `LocalPlaybooksRepositoryController`: Controller for local playbook repositories
-- `PlaybookController`: Controller for individual playbooks
+The module follows the Clean Architecture pattern with proper separation of concerns:
 
-### Repositories
-- `PlaybooksRepositoryRepository`: Repository for playbook repositories
-- `PlaybookRepository`: Repository for individual playbooks
+### Domain Layer
 
-### Schemas
-- `PlaybookSchema`: Schema for individual playbooks
-- `PlaybooksRepositorySchema`: Schema for playbook repositories
+Contains the core business entities and interfaces:
 
-## Usage
+- **Entities**
+  - `playbook.entity.ts`: Core domain entity for playbooks
+  - `playbooks-register.entity.ts`: Entity for playbook repositories
+- **Repository Interfaces**
+  - `playbook-repository.interface.ts`: Playbook data access contract
+  - `playbooks-register-repository.interface.ts`: Repository data access contract
+- **Service Interfaces**
+  - `playbooks-service.interface.ts`: Playbook service contract
+  - `playbooks-register-service.interface.ts`: Repository service contract
+  - `tree-node-service.interface.ts`: Tree structure contract
 
-To use this module, import it into your application:
+### Application Layer
 
-```typescript
-import { PlaybooksModule } from './modules/playbooks';
+Contains the business logic and services:
+
+- **Core Services**
+  - `playbook.service.ts`: Core playbook management
+  - `playbooks-register.service.ts`: Repository management
+  - `tree-node.service.ts`: Tree structure management
+  - `register-tree.service.ts`: Repository tree management
+  - `default-playbooks-register.service.ts`: Default repository handling
+- **Components**
+  - `component-factory.service.ts`: Factory for repository components
+  - `abstract-playbooks-register.component.ts`: Base repository component
+  - `git-playbooks-register.component.ts`: Git repository handling
+  - `local-playbooks-repository.component.ts`: Local repository handling
+- **Engine**
+  - `playbooks-register-engine.service.ts`: Repository engine management
+
+### Infrastructure Layer
+
+Contains implementations of repositories and schemas:
+
+- **Repositories**
+  - `playbook.repository.ts`: MongoDB repository for playbooks
+  - `playbooks-register.repository.ts`: MongoDB repository for repositories
+- **Schemas**
+  - `playbook.schema.ts`: Mongoose schema for playbooks
+  - `playbooks-register.schema.ts`: Mongoose schema for repositories
+
+### Presentation Layer
+
+Contains controllers for API endpoints:
+
+- **Controllers**
+  - `playbook.controller.ts`: Playbook management endpoints
+  - `playbooks-repository.controller.ts`: Repository management endpoints
+  - `git-playbooks-register.controller.ts`: Git repository endpoints
+  - `local-playbooks-register.controller.ts`: Local repository endpoints
+  - `playbook-diagnostic.controller.ts`: Diagnostic endpoints
+
+## Module Structure
+
+```
+playbooks/
+├── domain/
+│   ├── entities/
+│   │   ├── playbook.entity.ts
+│   │   └── playbooks-register.entity.ts
+│   ├── repositories/
+│   │   ├── playbook-repository.interface.ts
+│   │   └── playbooks-register-repository.interface.ts
+│   ├── services/
+│   │   ├── playbooks-service.interface.ts
+│   │   ├── playbooks-register-service.interface.ts
+│   │   └── tree-node-service.interface.ts
+│   └── interfaces/
+├── application/
+│   └── services/
+│       ├── playbook.service.ts
+│       ├── playbooks-register.service.ts
+│       ├── tree-node.service.ts
+│       ├── register-tree.service.ts
+│       ├── default-playbooks-register.service.ts
+│       ├── components/
+│       │   ├── component-factory.service.ts
+│       │   ├── abstract-playbooks-register.component.ts
+│       │   ├── git-playbooks-register.component.ts
+│       │   └── local-playbooks-repository.component.ts
+│       └── engine/
+│           └── playbooks-register-engine.service.ts
+├── infrastructure/
+│   ├── repositories/
+│   │   ├── playbook.repository.ts
+│   │   └── playbooks-register.repository.ts
+│   └── schemas/
+│       ├── playbook.schema.ts
+│       └── playbooks-register.schema.ts
+├── presentation/
+│   └── controllers/
+│       ├── playbook.controller.ts
+│       ├── playbooks-repository.controller.ts
+│       ├── git-playbooks-register.controller.ts
+│       ├── local-playbooks-register.controller.ts
+│       └── playbook-diagnostic.controller.ts
+├── __tests__/
+├── constants.ts
+├── playbooks.module.ts
+├── index.ts
+└── README.md
 ```
 
-Then, you can inject the services into your controllers or other services:
+## Integration
+
+The module is integrated through dependency injection:
 
 ```typescript
-import { PlaybookService } from './modules/playbooks/services/playbook.service';
-
-@Injectable()
-export class YourService {
-  constructor(private readonly playbookService: PlaybookService) {}
-  
-  // Use the service methods here
-}
+@Module({
+  imports: [
+    MongooseModule.forFeature([
+      { name: Playbook.name, schema: PlaybookSchema },
+      { name: PlaybooksRegister.name, schema: PlaybooksRegisterSchema },
+    ]),
+    ShellModule,
+    AnsibleModule,
+    AnsibleVaultsModule,
+    DevicesModule,
+  ],
+  controllers: [
+    GitPlaybooksRepositoryController,
+    LocalPlaybooksRepositoryController,
+    PlaybookDiagnosticController,
+    PlaybooksRepositoryController,
+    PlaybookController,
+  ],
+  providers: [
+    // Application services
+    PlaybookService,
+    PlaybooksRegisterService,
+    TreeNodeService,
+    RegisterTreeService,
+    DefaultPlaybooksRegisterService,
+    
+    // Infrastructure services
+    PlaybooksRegisterEngineService,
+    
+    // Factory service
+    PlaybooksRegisterComponentFactory,
+    
+    // Infrastructure repositories
+    PlaybooksRegisterRepository,
+    PlaybookRepository,
+  ],
+  exports: [
+    // Application services
+    PlaybookService,
+    PlaybooksRegisterService,
+    TreeNodeService,
+    
+    // Engine service for external use
+    PlaybooksRegisterEngineService,
+  ],
+})
 ```
 
 ## API Endpoints
 
-### Playbooks
-- `GET /playbooks`: Get all playbooks
-- `GET /playbooks/:uuid`: Get a playbook by UUID
-- `PATCH /playbooks/:uuid`: Update a playbook
-- `DELETE /playbooks/:uuid`: Delete a playbook
-- `POST /playbooks/:uuid/extravars`: Add an extra var to a playbook
-- `DELETE /playbooks/:uuid/extravars/:varname`: Delete an extra var from a playbook
-- `POST /playbooks/exec/:uuid`: Execute a playbook
-- `POST /playbooks/exec/quick-ref/:quickRef`: Execute a playbook by quick reference
-- `POST /playbooks/exec/inventory/:uuid`: Execute a playbook on an inventory
+### Playbook Management
 
-### Playbook Repositories
-- Various endpoints for managing playbook repositories
+- `GET /playbooks`: List all playbooks
+- `GET /playbooks/:uuid`: Get playbook by UUID
+- `POST /playbooks`: Create new playbook
+- `PATCH /playbooks/:uuid`: Update playbook
+- `DELETE /playbooks/:uuid`: Delete playbook
 
-## Migration Notes
+### Repository Management
 
-This module was migrated from the legacy Express-based implementation to a NestJS module. The migration involved:
+- `GET /playbooks/repositories`: List repositories
+- `POST /playbooks/repositories`: Create repository
+- `GET /playbooks/repositories/:uuid`: Get repository
+- `PATCH /playbooks/repositories/:uuid`: Update repository
+- `DELETE /playbooks/repositories/:uuid`: Delete repository
+- `POST /playbooks/repositories/:uuid/sync`: Sync repository
+- `GET /playbooks/repositories/:uuid/tree`: Get repository tree
 
-1. Converting the Mongoose models to NestJS schemas
-2. Converting the repository functions to NestJS repository services
-3. Converting the use cases to NestJS services
-4. Converting the Express routes to NestJS controllers
-5. Updating the module to export all necessary components 
+### Git Repository Operations
+
+- `POST /playbooks/repositories/git`: Create Git repository
+- `PATCH /playbooks/repositories/git/:uuid`: Update Git repository
+- `POST /playbooks/repositories/git/:uuid/sync`: Sync Git repository
+
+### Local Repository Operations
+
+- `POST /playbooks/repositories/local`: Create local repository
+- `PATCH /playbooks/repositories/local/:uuid`: Update local repository
+- `POST /playbooks/repositories/local/:uuid/sync`: Sync local repository
+
+### Diagnostics
+
+- `GET /playbooks/diagnostic/:uuid`: Get playbook diagnostics
+- `POST /playbooks/diagnostic/:uuid/check`: Run diagnostic check
+
+## Testing
+
+The module includes comprehensive tests in the `__tests__` directory that verify:
+
+- Service functionality
+- Repository operations
+- Controller endpoints
+- Component behavior
+- Integration with other modules
+
+Run the tests using:
+
+```bash
+npm test -- modules/playbooks
+```
+
+## Recent Changes
+
+- Enhanced repository component system
+- Improved Git repository handling
+- Added local repository support
+- Enhanced tree structure management
+- Improved diagnostic capabilities
+- Added comprehensive test coverage

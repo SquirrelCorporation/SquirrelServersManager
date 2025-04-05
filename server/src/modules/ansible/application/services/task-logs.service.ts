@@ -2,10 +2,10 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { ANSIBLE_LOGS_REPOSITORY, IAnsibleLogsRepository } from '@modules/logs';
 import { IAnsibleTask } from '@modules/ansible/domain/entities/ansible-task.entity';
-import { ITaskLogsService } from '../../application/interfaces/task-logs-service.interface';
-import { filterByQueryParams, filterByFields } from '@infrastructure/common/query/filter.util';
+import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
 import { sortByFields } from '@infrastructure/common/query/sorter.util';
 import { paginate } from '@infrastructure/common/query/pagination.util';
+import { ITaskLogsService } from '../../applicati../../domain/interfaces/task-logs-service.interface';
 import {
   ANSIBLE_TASK_REPOSITORY,
   IAnsibleTaskRepository,
@@ -193,7 +193,7 @@ export class TaskLogsService implements ITaskLogsService {
       throw error;
     }
   }
-  
+
   /**
    * Clean old tasks and logs
    * @param days Number of days to keep tasks and logs for
@@ -203,14 +203,17 @@ export class TaskLogsService implements ITaskLogsService {
     try {
       // Convert days to minutes (86400 minutes in a day)
       const ageInMinutes = days * 24 * 60;
-      
+
       // Call the repository's existing method
       await this.ansibleTaskRepository.deleteAllOldLogsAndStatuses(ageInMinutes);
-      
+
       this.logger.log(`Cleaned old tasks and their logs older than ${days} days`);
       return 0; // Repository method doesn't return count
     } catch (error: any) {
-      this.logger.error(`Error cleaning old tasks and logs: ${error.message || String(error)}`, error);
+      this.logger.error(
+        `Error cleaning old tasks and logs: ${error.message || String(error)}`,
+        error,
+      );
       throw error;
     }
   }

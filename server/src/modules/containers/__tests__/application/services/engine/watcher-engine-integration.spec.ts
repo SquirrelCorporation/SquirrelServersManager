@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { DOCKER_DEVICE_SERVICE } from '../../../../../devices/domain/services/docker-device-service.interface';
 import { PROXMOX_DEVICE_SERVICE } from '../../../../../devices/domain/services/proxmox-device-service.interface';
-import { CONTAINER_REGISTRIES_SERVICE } from '../../../../application/interfaces/container-registries-service.interface';
+import { CONTAINER_REGISTRIES_SERVICE } from '../../../../domain/interfaces/container-registries-service.interface';
 
 // Mocks
 vi.mock('../../../../application/services/engine/watcher-engine.service', () => {

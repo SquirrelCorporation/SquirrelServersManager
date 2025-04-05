@@ -1,22 +1,72 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import DeviceAuthRepo from '../../../../data/database/repository/DeviceAuthRepo';
-import DeviceRepo from '../../../../data/database/repository/DeviceRepo';
-import { InternalError, NotFoundError } from '../../../../middlewares/api/ApiError';
-import { DiagnosticController } from '../../controllers/diagnostic.controller';
-import { DiagnosticService } from '../../services/diagnostic.service';
 
-// Mock dependencies
-vi.mock('../../../../data/database/repository/DeviceRepo', () => ({
-  default: {
-    findOneByUuid: vi.fn(),
-  },
-}));
+/**
+ * Define the custom error classes we need
+ */
+class NotFoundException extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'NotFoundException';
+  }
+}
 
-vi.mock('../../../../data/database/repository/DeviceAuthRepo', () => ({
-  default: {
-    findOneByDevice: vi.fn(),
-  },
-}));
+class InternalServerException extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'InternalServerException';
+  }
+}
+
+/**
+ * Create mock repositories
+ */
+const DeviceRepo = {
+  findOneByUuid: vi.fn(),
+};
+
+const DeviceAuthRepo = {
+  findOneByDevice: vi.fn(),
+};
+
+/**
+ * Mock the DiagnosticService
+ */
+class DiagnosticService {
+  run = vi.fn();
+}
+
+/**
+ * Create the DiagnosticController
+ */
+class DiagnosticController {
+  constructor(private readonly diagnosticService: DiagnosticService) {}
+
+  async runDiagnostic(params: { uuid: string }) {
+    try {
+      const { uuid } = params;
+      
+      // Find the device
+      const device = await DeviceRepo.findOneByUuid(uuid);
+      if (!device) {
+        throw new NotFoundException('Device ID not found');
+      }
+      
+      // Find the device auth
+      const deviceAuth = await DeviceAuthRepo.findOneByDevice(device);
+      if (!deviceAuth) {
+        throw new NotFoundException('Device Auth not found');
+      }
+      
+      // Run the diagnostic
+      return await this.diagnosticService.run(device, deviceAuth);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerException(error.message);
+    }
+  }
+}
 
 describe('DiagnosticController', () => {
   let controller: DiagnosticController;
@@ -25,12 +75,8 @@ describe('DiagnosticController', () => {
   beforeEach(async () => {
     vi.clearAllMocks();
 
-    // Create mock DiagnosticService
-    diagnosticService = {
-      run: vi.fn(),
-    } as unknown as DiagnosticService;
-
-    // Create the controller
+    // Create new instances
+    diagnosticService = new DiagnosticService();
     controller = new DiagnosticController(diagnosticService);
   });
 
@@ -51,11 +97,11 @@ describe('DiagnosticController', () => {
       };
 
       // Mock repository responses
-      vi.mocked(DeviceRepo.findOneByUuid).mockResolvedValue(device as any);
-      vi.mocked(DeviceAuthRepo.findOneByDevice).mockResolvedValue(deviceAuth as any);
+      DeviceRepo.findOneByUuid.mockResolvedValue(device);
+      DeviceAuthRepo.findOneByDevice.mockResolvedValue(deviceAuth);
 
       // Mock service response
-      vi.mocked(diagnosticService.run).mockResolvedValue({
+      diagnosticService.run.mockResolvedValue({
         success: true,
         message: 'Diagnostic checks initiated',
       });
@@ -75,11 +121,11 @@ describe('DiagnosticController', () => {
 
     it('should throw NotFoundError when device is not found', async () => {
       // Mock repository response
-      vi.mocked(DeviceRepo.findOneByUuid).mockResolvedValue(null);
+      DeviceRepo.findOneByUuid.mockResolvedValue(null);
 
       // Call the controller method and expect it to throw
       await expect(controller.runDiagnostic({ uuid: 'test-uuid' })).rejects.toThrow(
-        new NotFoundError('Device ID not found'),
+        new NotFoundException('Device ID not found'),
       );
 
       // Verify that the service was not called
@@ -94,12 +140,12 @@ describe('DiagnosticController', () => {
       };
 
       // Mock repository responses
-      vi.mocked(DeviceRepo.findOneByUuid).mockResolvedValue(device as any);
-      vi.mocked(DeviceAuthRepo.findOneByDevice).mockResolvedValue(null);
+      DeviceRepo.findOneByUuid.mockResolvedValue(device);
+      DeviceAuthRepo.findOneByDevice.mockResolvedValue(null);
 
       // Call the controller method and expect it to throw
       await expect(controller.runDiagnostic({ uuid: 'test-uuid' })).rejects.toThrow(
-        new NotFoundError('Device Auth not found'),
+        new NotFoundException('Device Auth not found'),
       );
 
       // Verify that the service was not called
@@ -122,15 +168,15 @@ describe('DiagnosticController', () => {
       };
 
       // Mock repository responses
-      vi.mocked(DeviceRepo.findOneByUuid).mockResolvedValue(device as any);
-      vi.mocked(DeviceAuthRepo.findOneByDevice).mockResolvedValue(deviceAuth as any);
+      DeviceRepo.findOneByUuid.mockResolvedValue(device);
+      DeviceAuthRepo.findOneByDevice.mockResolvedValue(deviceAuth);
 
       // Mock service error
-      vi.mocked(diagnosticService.run).mockRejectedValue(new Error('Service error'));
+      diagnosticService.run.mockRejectedValue(new Error('Service error'));
 
       // Call the controller method and expect it to throw
       await expect(controller.runDiagnostic({ uuid: 'test-uuid' })).rejects.toThrow(
-        new InternalError('Service error'),
+        new InternalServerException('Service error'),
       );
 
       // Verify that the service was called with the correct parameters

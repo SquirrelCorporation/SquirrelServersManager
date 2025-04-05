@@ -1,10 +1,15 @@
 import { Module } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { MongooseModule } from '@nestjs/mongoose';
+import { AUDIT_LOG_SCHEMA, AuditLogService } from './audit-log.service';
+import { AuditLogSchema } from './schemas/audit-log.schema';
 
-// Empty placeholder module until we properly set up schemas and services
 @Module({
-  imports: [EventEmitterModule.forRoot()],
-  providers: [],
-  exports: [],
+  imports: [
+    EventEmitterModule.forRoot(),
+    MongooseModule.forFeature([{ name: AUDIT_LOG_SCHEMA, schema: AuditLogSchema }]),
+  ],
+  providers: [AuditLogService],
+  exports: [AuditLogService],
 })
 export class AuditLogModule {}

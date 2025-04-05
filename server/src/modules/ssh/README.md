@@ -1,4 +1,4 @@
-```
+```ascii
    ,;;:;,
    ;;;;;
   ,:;;:;    ,'=.
@@ -13,70 +13,93 @@ Squirrel Servers Manager 🐿️
 # SSH Module
 
 ## Overview
+The SSH Module provides secure shell terminal functionality within the Squirrel Servers Manager application. It enables real-time terminal access to remote devices through WebSocket connections, implementing secure SSH protocol handling and terminal management.
 
-The SSH Module provides secure shell connectivity to remote devices. It enables users to establish SSH connections, execute commands, and interact with remote servers through a terminal interface.
+## Features
+- Real-time terminal sessions via WebSocket connections
+- Secure SSH connection management
+- Terminal resizing support
+- Multi-client session handling
+- Automatic session cleanup and resource management
+- Event-based communication system
+- Error handling and recovery mechanisms
+- Integration with device management system
 
-## Architecture
+## Clean Architecture Implementation
 
-The SSH Module follows the Clean Architecture pattern with proper separation of concerns:
+### Domain Layer (`/domain`)
+- **Entities**
+  - `SshSession`: Core entity representing an SSH terminal session
+- **Interfaces**
+  - `ISshTerminalService`: Terminal service contract
+  - `ISshGatewayService`: WebSocket gateway service contract
+  - `ISshConnectionService`: SSH connection management contract
 
-### Domain Layer
+### Application Layer (`/application`)
+- **Services**
+  - `SshTerminalService`: Implements terminal session management
+    - Session creation and termination
+    - Data transmission
+    - Terminal resizing
+    - Client session tracking
 
-Contains the core business entities and repository interfaces:
+### Infrastructure Layer (`/infrastructure`)
+- Utilizes `SshInfrastructureModule` for:
+  - SSH connection handling
+  - Authentication management
+  - Network communication
 
-- `domain/entities/ssh.entity.ts` - Core domain entities like SshSession, SshStatusMessage, etc.
-- `domain/repositories/ssh-repository.interface.ts` - Repository interface defining data access methods
+### Presentation Layer (`/presentation`)
+- **Gateways**
+  - `SshGateway`: WebSocket gateway for real-time communication
+    - Client connection management
+    - Event handling
+    - Data streaming
 
-### Application Layer
-
-Contains the service interfaces and implementations:
-
-- `application/interfaces/ssh-connection-service.interface.ts` - Service interface for SSH connections
-- `application/interfaces/ssh-terminal-service.interface.ts` - Service interface for terminal operations
-- `application/services/ssh-connection.service.ts` - Service implementation for SSH connections
-- `application/services/ssh-terminal.service.ts` - Service implementation for terminal operations
-
-### Infrastructure Layer
-
-Contains the repository implementations:
-
-- `infrastructure/repositories/ssh.repository.ts` - Repository implementation for data access
-
-### Presentation Layer
-
-Contains the gateways and DTOs:
-
-- `presentation/gateways/ssh.gateway.ts` - WebSocket gateway for client communication
-- `presentation/dtos/ssh-session.dto.ts` - Data Transfer Objects for client-server communication
-
-## Key Features
-
-- Secure SSH connections to remote devices
-- Interactive terminal sessions
-- Session management for multiple clients
-- Terminal resizing
-- WebSocket-based real-time communication
-
-## Usage
-
-The SSH Module is used through WebSocket connections. Clients connect to the `/ssh` namespace and can perform various operations:
-
-- Start a terminal session with a remote device
-- Send terminal commands
-- Resize the terminal
-- Close the terminal session
+## Module Structure
+```
+ssh/
+├── __tests__/           # Test files
+├── application/
+│   └── services/
+│       └── ssh-terminal.service.ts
+├── domain/
+│   ├── entities/
+│   ├── interfaces/
+│   └── repositories/
+├── infrastructure/      # SSH infrastructure implementation
+├── presentation/
+│   └── gateways/
+│       └── ssh.gateway.ts
+├── index.ts            # Module exports
+├── ssh.module.ts       # Module definition
+└── README.md
+```
 
 ## Dependencies
+- `@nestjs/common`: NestJS framework core
+- `@nestjs/websockets`: WebSocket support
+- `ssh2`: SSH client implementation
+- `uuid`: Unique identifier generation
+- `DevicesModule`: Device management integration
+- `ssm-shared-lib`: Shared events and types
 
-- Socket.IO: For WebSocket communication
-- ssh2: For SSH functionality
-- Device authentication: For retrieving device credentials
+## API Endpoints (WebSocket)
+### Events
+- **Client -> Server**
+  - `ssh:create`: Create new SSH session
+  - `ssh:data`: Send terminal input
+  - `ssh:resize`: Resize terminal window
+  - `ssh:close`: Close SSH session
 
-## Testing
+- **Server -> Client**
+  - `ssh:new-data`: Terminal output data
+  - `ssh:status`: Connection status updates
+  - `ssh:error`: Error notifications
 
-The module includes tests for each layer:
-
-- `__tests__/application/ssh-connection.service.spec.ts` - Tests for the connection service
-- `__tests__/application/ssh-terminal.service.spec.ts` - Tests for the terminal service
-- `__tests__/infrastructure/ssh.repository.spec.ts` - Tests for the repository implementation
-- `__tests__/presentation/ssh.gateway.spec.ts` - Tests for the WebSocket gateway 
+## Recent Changes
+- Added multi-client session support
+- Improved error handling and recovery
+- Enhanced terminal resize functionality
+- Added automatic session cleanup
+- Implemented connection status monitoring

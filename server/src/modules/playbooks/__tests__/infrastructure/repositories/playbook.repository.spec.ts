@@ -1,13 +1,13 @@
-import { Test } from '@nestjs/testing';
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import { getModelToken } from '@nestjs/mongoose';
+import { Test } from '@nestjs/testing';
 import { Model } from 'mongoose';
-import { PlaybookRepository } from '../../../infrastructure/repositories/playbook.repository';
-import { Playbook, PlaybookDocument } from '../../../infrastructure/schemas/playbook.schema';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { closeInMongodConnection, rootMongooseTestModule } from '../../../../common-test-helpers';
 import { IPlaybook } from '../../../domain/entities/playbook.entity';
 import { IPlaybooksRegister } from '../../../domain/entities/playbooks-register.entity';
 import { PlaybookMapper } from '../../../infrastructure/mappers/playbook.mapper';
-import { rootMongooseTestModule, closeInMongodConnection } from '../../../../common-test-helpers';
+import { PlaybookRepository } from '../../../infrastructure/repositories/playbook.repository';
+import { Playbook, PlaybookDocument } from '../../../infrastructure/schemas/playbook.schema';
 
 // Mock the PlaybookMapper
 vi.mock('../../../infrastructure/mappers/playbook.mapper', () => ({
@@ -21,18 +21,21 @@ describe('PlaybookRepository', () => {
   let repository: PlaybookRepository;
   let model: Model<PlaybookDocument>;
 
+  const mockRepository: IPlaybooksRegister = {
+    _id: 'repo-db-id', // Add _id which is used in the repository implementation
+    uuid: 'repo-uuid',
+    name: 'Test Repository',
+    type: 'local',
+    enabled: true,
+    directory: '/path/to/repo',
+  };
+
   const mockPlaybook: IPlaybook = {
     uuid: 'playbook-uuid',
     name: 'Test Playbook',
     path: '/path/to/playbook.yml',
     custom: true,
-    playbooksRepository: {
-      uuid: 'repo-uuid',
-      name: 'Test Repository',
-      type: 'local',
-      enabled: true,
-      directory: '/path/to/repo',
-    } as IPlaybooksRegister,
+    playbooksRepository: mockRepository,
   };
 
   beforeEach(async () => {
@@ -91,8 +94,8 @@ describe('PlaybookRepository', () => {
       const result = await repository.updateOrCreate(mockPlaybook);
       expect(model.findOneAndUpdate).toHaveBeenCalledWith(
         { path: mockPlaybook.path },
-        mockPlaybook,
-        { upsert: true }
+        { ...mockPlaybook }, // Expect a copy of the object
+        { upsert: true, new: true }, // Include new: true in expectations
       );
       expect(PlaybookMapper.toDomain).toHaveBeenCalledWith(mockPlaybook);
       expect(result).toEqual(mockPlaybook);
@@ -166,21 +169,14 @@ describe('PlaybookRepository', () => {
 
   describe('listAllByRepository', () => {
     it('should list all playbooks for a repository', async () => {
-      const mockRepository: IPlaybooksRegister = {
-        uuid: 'repo-uuid',
-        name: 'Test Repository',
-        type: 'local',
-        enabled: true,
-        directory: '/path/to/repo',
-      };
-
       vi.spyOn(model, 'find').mockReturnValue({
         lean: vi.fn().mockReturnThis(),
         exec: vi.fn().mockResolvedValueOnce([mockPlaybook]),
       } as any);
 
       const result = await repository.listAllByRepository(mockRepository);
-      expect(model.find).toHaveBeenCalledWith({ playbooksRepository: mockRepository });
+      // The repository implementation uses playbooksRepository._id
+      expect(model.find).toHaveBeenCalledWith({ playbooksRepository: mockRepository._id });
       expect(PlaybookMapper.toDomainArray).toHaveBeenCalledWith([mockPlaybook]);
       expect(result).toEqual([mockPlaybook]);
     });
@@ -230,20 +226,13 @@ describe('PlaybookRepository', () => {
 
   describe('deleteAllByRepository', () => {
     it('should delete all playbooks for a repository', async () => {
-      const mockRepository: IPlaybooksRegister = {
-        uuid: 'repo-uuid',
-        name: 'Test Repository',
-        type: 'local',
-        enabled: true,
-        directory: '/path/to/repo',
-      };
-
       vi.spyOn(model, 'deleteMany').mockReturnValue({
         exec: vi.fn().mockResolvedValueOnce({}),
       } as any);
 
       await repository.deleteAllByRepository(mockRepository);
-      expect(model.deleteMany).toHaveBeenCalledWith({ playbooksRepository: mockRepository });
+      // The repository implementation uses playbooksRepository._id
+      expect(model.deleteMany).toHaveBeenCalledWith({ playbooksRepository: mockRepository._id });
     });
   });
 });

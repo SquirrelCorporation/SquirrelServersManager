@@ -1,14 +1,14 @@
-import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { SettingsKeys } from 'ssm-shared-lib';
-import { ISettingsService } from '../interfaces/settings-service.interface';
 import { ISetting } from '../../domain/entities/setting.entity';
+import { ISettingsService } from '../../domain/interfaces/settings-service.interface';
 import {
   ISettingRepository,
   SETTING_REPOSITORY,
 } from '../../domain/repositories/setting-repository.interface';
 
 @Injectable()
-export class SettingsService implements ISettingsService, OnModuleInit {
+export class SettingsService implements ISettingsService {
   private readonly logger = new Logger(SettingsService.name);
 
   // Default values for settings

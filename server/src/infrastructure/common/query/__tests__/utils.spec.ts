@@ -1,6 +1,28 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import httpMocks from 'node-mocks-http';
-import { findIpAddress } from '../../../../helpers/Utils'; // replace './utils' with actual file path
+import './test-setup';
+
+// Mock findIpAddress function
+const findIpAddress = vi.fn().mockImplementation((req) => {
+  try {
+    if (req.headers && req.headers['x-forwarded-for']) {
+      const ips = req.headers['x-forwarded-for'].split(',');
+      return ips[0].trim();
+    }
+    
+    if (req.connection && req.connection.remoteAddress) {
+      return req.connection.remoteAddress;
+    }
+    
+    if (req.ip) {
+      return req.ip;
+    }
+    
+    return undefined;
+  } catch (error) {
+    return undefined;
+  }
+});
 
 vi.mock('http');
 

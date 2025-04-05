@@ -1,22 +1,22 @@
-import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { API } from 'ssm-shared-lib';
-import { FileSystemService } from '@modules/shell';
-import { PlaybookFileService } from '@modules/shell';
-import PlaybooksRegisterComponent from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
-import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
-import {
-  IPlaybooksRegisterRepository,
-  PLAYBOOKS_REGISTER_REPOSITORY,
-} from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
-import {
-  IPlaybookRepository,
-  PLAYBOOK_REPOSITORY,
-} from '@modules/playbooks/domain/repositories/playbook-repository.interface';
 import {
   EntityNotFoundException,
   ForbiddenException,
-  InternalServerException,
+  InternalServerException
 } from '@infrastructure/exceptions/app-exceptions';
+import PlaybooksRegisterComponent
+  from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
+import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
+import {
+  IPlaybookRepository,
+  PLAYBOOK_REPOSITORY
+} from '@modules/playbooks/domain/repositories/playbook-repository.interface';
+import {
+  IPlaybooksRegisterRepository,
+  PLAYBOOKS_REGISTER_REPOSITORY
+} from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
+import { FileSystemService, PlaybookFileService } from '@modules/shell';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { API } from 'ssm-shared-lib';
 import { IPlaybooksRegisterService } from '../../domain/services/playbooks-register-service.interface';
 import { PlaybooksRegisterEngineService } from './engine/playbooks-register-engine.service';
 import { TreeNodeService } from './tree-node.service';
@@ -25,7 +25,7 @@ import { TreeNodeService } from './tree-node.service';
  * Service for managing playbooks repositories
  */
 @Injectable()
-export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnModuleInit {
+export class PlaybooksRegisterService implements IPlaybooksRegisterService {
   private readonly logger = new Logger(PlaybooksRegisterService.name);
 
   constructor(
@@ -92,7 +92,9 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnMo
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       this.logger.error(`Error getting all playbooks repositories: ${errorMessage}`);
-      throw new InternalServerException(`Error getting all playbooks repositories: ${errorMessage}`);
+      throw new InternalServerException(
+        `Error getting all playbooks repositories: ${errorMessage}`,
+      );
     }
   }
 
@@ -111,7 +113,9 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService, OnMo
     ] as PlaybooksRegisterComponent;
 
     if (!playbooksRegisterComponent) {
-      throw new InternalServerException('Repository is not registered, try restarting or force sync');
+      throw new InternalServerException(
+        'Repository is not registered, try restarting or force sync',
+      );
     }
 
     if (!playbooksRegisterComponent.fileBelongToRepository(path)) {

@@ -1,5 +1,5 @@
-import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { SchedulerRegistry } from '@nestjs/schedule';
+import { ITaskLogsService, TASK_LOGS_SERVICE } from '@modules/ansible';
+import { IAutomationEngineService } from '@modules/automations/doma../../domain/interfaces/automation-engine-service.interface';
 import {
   CONTAINER_SERVICE,
   CONTAINER_VOLUMES_SERVICE,
@@ -7,17 +7,18 @@ import {
   IContainerVolumesService,
 } from '@modules/containers';
 import { IPlaybooksService, PLAYBOOKS_SERVICE } from '@modules/playbooks';
-import { ITaskLogsService, TASK_LOGS_SERVICE } from '@modules/ansible';
 import { IUserRepository, USER_REPOSITORY } from '@modules/users';
-import { AutomationComponent } from '../components/automation.component';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { Automation } from '../../../domain/entities/automation.entity';
 import {
   AUTOMATION_REPOSITORY,
   IAutomationRepository,
 } from '../../../domain/repositories/automation.repository.interface';
+import { AutomationComponent } from '../components/automation.component';
 
 @Injectable()
-export class AutomationEngine implements OnModuleInit {
+export class AutomationEngine implements IAutomationEngineService {
   private readonly logger = new Logger(AutomationEngine.name);
   private components: Map<string, AutomationComponent> = new Map();
 

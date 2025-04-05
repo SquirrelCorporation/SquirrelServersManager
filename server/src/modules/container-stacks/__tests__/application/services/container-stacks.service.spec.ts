@@ -1,13 +1,84 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+// Import vitest functions first
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+// Now import real modules after mocks
 import { ContainerStacksService } from '../../../application/services/container-stacks.service';
-import { IContainerCustomStackRepository } from '../../../domain/repositories/container-custom-stack-repository.interface';
+import {
+  ContainerCustomStack,
+  IContainerCustomStackRepositoryEntity,
+} from '../../../domain/entities/container-custom-stack.entity';
 import { IContainerCustomStackRepositoryRepository } from '../../../domain/repositories/container-custom-stack-repository-repository.interface';
-import { ContainerCustomStack, IContainerCustomStackRepositoryEntity } from '../../../domain/entities/container-custom-stack.entity';
+import { IContainerCustomStackRepository } from '../../../domain/repositories/container-custom-stack-repository.interface';
+
+// Mock ContainerCustomStacksRepositoryEngineService before importing actual service
+vi.mock('../../../application/services/container-stacks-repository-engine-service', () => {
+  const ContainerCustomStacksRepositoryEngineService = vi.fn().mockImplementation(() => ({
+    init: vi.fn().mockResolvedValue(undefined),
+    registerRepository: vi.fn().mockResolvedValue(undefined),
+    deregisterRepository: vi.fn().mockResolvedValue(undefined),
+    getState: vi.fn().mockReturnValue({ stackRepository: {} }),
+    clone: vi.fn().mockResolvedValue(undefined),
+  }));
+
+  return {
+    ContainerCustomStacksRepositoryEngineService
+  };
+});
+
+// Use vi.mock before importing any modules
+vi.mock('@modules/playbooks', () => {
+  return {
+    IPlaybooksService: class {},
+    PLAYBOOKS_SERVICE: 'PlaybooksService'
+  };
+});
+
+vi.mock('@modules/shell', () => {
+  return {
+    IFileSystemService: class {},
+    IDockerComposeService: class {},
+    FILE_SYSTEM_SERVICE: 'FileSystemService',
+    DOCKER_COMPOSE_SERVICE: 'DockerComposeService'
+  };
+});
+
+vi.mock('@modules/ansible-vaults', () => {
+  return {
+    AnsibleVaultService: class {
+      encrypt = vi.fn().mockImplementation((value) => `encrypted_${value}`);
+      decrypt = vi.fn().mockImplementation((value) => value.replace('encrypted_', ''));
+    },
+    AnsibleVaultsModule: class {
+      static forRoot() {
+        return {
+          module: class {},
+          providers: []
+        };
+      }
+    }
+  };
+});
+
+vi.mock('@infrastructure/common/docker/docker-compose-json-transformer.util', () => {
+  return {
+    transformToDockerCompose: vi.fn().mockImplementation((json) => 'transformed yaml')
+  };
+});
+
+// Mock additional node modules
+vi.mock('uuid', () => {
+  return {
+    v4: vi.fn().mockReturnValue('mocked-uuid-v4')
+  };
+});
 
 describe('ContainerStacksService', () => {
   let service: ContainerStacksService;
   let mockStackRepository: IContainerCustomStackRepository;
   let mockRepositoryRepository: IContainerCustomStackRepositoryRepository;
+  let mockContainerCustomStacksRepositoryEngine: any;
+  let mockFileSystemService: any;
+  let mockDockerComposeService: any;
+  let mockPlaybooksService: any;
 
   const mockStack: ContainerCustomStack = {
     uuid: '123e4567-e89b-12d3-a456-426614174000',
@@ -37,10 +108,43 @@ describe('ContainerStacksService', () => {
       deleteByUuid: vi.fn().mockResolvedValue(true),
     };
 
+    mockContainerCustomStacksRepositoryEngine = {
+      init: vi.fn().mockResolvedValue(undefined),
+      registerRepository: vi.fn().mockResolvedValue(undefined),
+      deregisterRepository: vi.fn().mockResolvedValue(undefined),
+      getState: vi.fn().mockReturnValue({ stackRepository: {} }),
+      clone: vi.fn().mockResolvedValue(undefined),
+    };
+
+    mockFileSystemService = {
+      createDirectory: vi.fn().mockResolvedValue(undefined),
+      writeFile: vi.fn().mockResolvedValue(undefined),
+      readFile: vi.fn().mockResolvedValue('file content'),
+    };
+
+    mockDockerComposeService = {
+      dockerComposeDryRun: vi.fn().mockReturnValue({ code: 0, stderr: '' }),
+    };
+
+    mockPlaybooksService = {
+      getPlaybookByQuickReference: vi.fn().mockResolvedValue({
+        uuid: 'playbook-uuid',
+        name: 'deploy'
+      }),
+      executePlaybook: vi.fn().mockResolvedValue('exec-id'),
+    };
+
     service = new ContainerStacksService(
       mockStackRepository,
       mockRepositoryRepository,
+      mockContainerCustomStacksRepositoryEngine,
+      mockFileSystemService,
+      mockDockerComposeService,
+      mockPlaybooksService
     );
+
+    // Mock initializeRepositories to prevent it from being called in constructor
+    vi.spyOn(service as any, 'initializeRepositories').mockImplementation(() => {});
   });
 
   describe('Stack operations', () => {
@@ -108,4 +212,4 @@ describe('ContainerStacksService', () => {
       expect(mockRepositoryRepository.deleteByUuid).toHaveBeenCalledWith('123');
     });
   });
-}); 
+});

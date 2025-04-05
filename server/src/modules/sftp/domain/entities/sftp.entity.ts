@@ -11,7 +11,7 @@ export interface SftpSession {
 }
 
 export interface SftpStatusMessage {
-  status: 'OK' | 'ERROR' | 'DISCONNECT';
+  success: boolean;
   message?: string;
 }
 

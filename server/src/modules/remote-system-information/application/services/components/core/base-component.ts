@@ -3,7 +3,7 @@ import Joi from 'joi';
 import _joi from 'joi';
 import pino from 'pino';
 import logger from 'src/logger';
-import { IComponent } from '../../../../domain/interfaces/component.interface';
+import { IComponent } from '../../../../doma../../domain/interfaces/component.interface';
 
 export default class Component implements IComponent {
   public _id: string;

@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { API, SsmAgent, SsmAnsible } from 'ssm-shared-lib';
-import { IExtraVarsService } from '@modules/ansible/application/interfaces/extra-vars-service.interface';
+import { IExtraVarsService } from '@modules/ansible/doma../../domain/interfaces/extra-vars-service.interface';
 import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
 import { IUserRepository, USER_REPOSITORY } from '@modules/users';
 import { Cache } from '@nestjs/cache-manager';

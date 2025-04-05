@@ -1,8 +1,0 @@
-{
-  "id": "greeting-plugin",
-  "name": "Greeting Plugin",
-  "version": "1.0.0",
-  "description": "A simple greeting plugin for Squirrel Servers Manager",
-  "author": "Emmanuel Costa",
-  "entryPoint": "../../index.js"
-} 

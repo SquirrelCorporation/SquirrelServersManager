@@ -1,16 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Test } from '@nestjs/testing';
-import { SsmAnsible } from 'ssm-shared-lib';
 import { DevicesService } from '../../../application/services/devices.service';
 import { DEVICE_REPOSITORY } from '../../../domain/repositories/device-repository.interface';
-import { DEVICE_AUTH_REPOSITORY } from '../../../domain/repositories/device-auth-repository.interface';
 import { IDevice } from '../../../domain/entities/device.entity';
-import { IDeviceAuth } from '../../../domain/entities/device-auth.entity';
 
 describe('DevicesService', () => {
   let service: DevicesService;
   let deviceRepository: any;
-  let deviceAuthRepository: any;
 
   // Mock data
   const mockDevice: IDevice = {
@@ -19,31 +15,12 @@ describe('DevicesService', () => {
     status: 1,
     systemInformation: {},
     capabilities: {
-      containers: {}
+      containers: {},
     },
     configuration: {
-      containers: {}
-    }
+      containers: {},
+    },
   } as IDevice;
-
-  const mockDeviceAuth: IDeviceAuth = {
-    _id: '615f5f4e8f5bca001c8ae456',
-    device: mockDevice,
-    authType: SsmAnsible.SSHType.UserPassword,
-    username: 'testuser',
-    sshPwd: 'password123',
-    host: 'localhost',
-    port: '22'
-  } as IDeviceAuth;
-
-  const mockDeviceAuthWithBecomeMethod: Partial<IDeviceAuth> = {
-    authType: SsmAnsible.SSHType.UserPassword,
-    username: 'testuser',
-    sshPwd: 'password123',
-    host: 'localhost',
-    port: '22',
-    becomeMethod: 'sudo' as any // String value that needs to be converted to enum
-  };
 
   beforeEach(async () => {
     deviceRepository = {
@@ -55,20 +32,7 @@ describe('DevicesService', () => {
       findOneByIp: vi.fn(),
       setDeviceOfflineAfter: vi.fn(),
       deleteByUuid: vi.fn(),
-    };
-
-    deviceAuthRepository = {
-      findOneByDevice: vi.fn(),
-      findOneByDeviceUuid: vi.fn(),
-      updateOrCreateIfNotExist: vi.fn(),
-      update: vi.fn(),
-      deleteByDevice: vi.fn(),
-      deleteCa: vi.fn(),
-      deleteCert: vi.fn(),
-      deleteKey: vi.fn(),
-      findAllPop: vi.fn(),
-      findAllPopWithSshKey: vi.fn(),
-      findManyByDevicesUuid: vi.fn(),
+      findByUuids: vi.fn(),
     };
 
     const module = await Test.createTestingModule({
@@ -78,145 +42,124 @@ describe('DevicesService', () => {
           provide: DEVICE_REPOSITORY,
           useValue: deviceRepository,
         },
-        {
-          provide: DEVICE_AUTH_REPOSITORY,
-          useValue: deviceAuthRepository,
-        },
       ],
     }).compile();
 
     service = module.get<DevicesService>(DevicesService);
   });
 
-  describe('createOrUpdateDeviceAuth', () => {
-    it('should throw error if device not found', async () => {
-      deviceRepository.findOneByUuid.mockResolvedValue(null);
-
-      await expect(
-        service.createOrUpdateDeviceAuth(mockDeviceAuthWithBecomeMethod, 'non-existent-uuid')
-      ).rejects.toThrow('Device with UUID non-existent-uuid not found');
-
-      expect(deviceRepository.findOneByUuid).toBeCalledWith('non-existent-uuid');
-    });
-
-    it('should transform becomeMethod string to enum and call updateOrCreateDeviceAuth', async () => {
-      deviceRepository.findOneByUuid.mockResolvedValue(mockDevice);
-      deviceAuthRepository.updateOrCreateIfNotExist.mockResolvedValue(mockDeviceAuth);
-
-      const result = await service.createOrUpdateDeviceAuth(
-        mockDeviceAuthWithBecomeMethod,
-        mockDevice.uuid
-      );
-
-      expect(deviceRepository.findOneByUuid).toBeCalledWith(mockDevice.uuid);
-      expect(deviceAuthRepository.updateOrCreateIfNotExist).toBeCalledWith(
-        expect.objectContaining({
-          ...mockDeviceAuthWithBecomeMethod,
-          device: mockDevice,
-          becomeMethod: SsmAnsible.AnsibleBecomeMethod.SUDO // Should be converted to enum
-        })
-      );
-      expect(result).toEqual(mockDeviceAuth);
-    });
-
-    it('should handle case when becomeMethod is not provided', async () => {
-      const deviceAuthWithoutBecomeMethod = { ...mockDeviceAuthWithBecomeMethod };
-      delete deviceAuthWithoutBecomeMethod.becomeMethod;
-
-      deviceRepository.findOneByUuid.mockResolvedValue(mockDevice);
-      deviceAuthRepository.updateOrCreateIfNotExist.mockResolvedValue(mockDeviceAuth);
-
-      const result = await service.createOrUpdateDeviceAuth(
-        deviceAuthWithoutBecomeMethod,
-        mockDevice.uuid
-      );
-
-      expect(deviceAuthRepository.updateOrCreateIfNotExist).toBeCalledWith(
-        expect.objectContaining({
-          ...deviceAuthWithoutBecomeMethod,
-          device: mockDevice
-        })
-      );
-      expect(deviceAuthRepository.updateOrCreateIfNotExist).toBeCalledWith(
-        expect.not.objectContaining({
-          becomeMethod: expect.anything()
-        })
-      );
-      expect(result).toEqual(mockDeviceAuth);
+  describe('create', () => {
+    it('should create a device', async () => {
+      deviceRepository.create.mockResolvedValue(mockDevice);
+      const result = await service.create(mockDevice);
+      expect(result).toEqual(mockDevice);
+      expect(deviceRepository.create).toHaveBeenCalledWith(mockDevice);
     });
   });
 
-  describe('updateExistingDeviceAuth', () => {
-    it('should throw error if device not found', async () => {
-      deviceRepository.findOneByUuid.mockResolvedValue(null);
-
-      await expect(
-        service.updateExistingDeviceAuth(mockDeviceAuthWithBecomeMethod, 'non-existent-uuid')
-      ).rejects.toThrow('Device with UUID non-existent-uuid not found');
-
-      expect(deviceRepository.findOneByUuid).toBeCalledWith('non-existent-uuid');
+  describe('update', () => {
+    it('should update a device', async () => {
+      deviceRepository.update.mockResolvedValue(mockDevice);
+      const result = await service.update(mockDevice);
+      expect(result).toEqual(mockDevice);
+      expect(deviceRepository.update).toHaveBeenCalledWith(mockDevice);
     });
+  });
 
-    it('should throw error if device auth not found', async () => {
+  describe('findOneByUuid', () => {
+    it('should find a device by UUID', async () => {
       deviceRepository.findOneByUuid.mockResolvedValue(mockDevice);
-      deviceAuthRepository.findOneByDeviceUuid.mockResolvedValue([]);
-
-      await expect(
-        service.updateExistingDeviceAuth(mockDeviceAuthWithBecomeMethod, mockDevice.uuid)
-      ).rejects.toThrow(`Device Auth for device with UUID ${mockDevice.uuid} not found`);
-
-      expect(deviceRepository.findOneByUuid).toBeCalledWith(mockDevice.uuid);
-      expect(deviceAuthRepository.findOneByDeviceUuid).toBeCalledWith(mockDevice.uuid);
+      const result = await service.findOneByUuid(mockDevice.uuid);
+      expect(result).toEqual(mockDevice);
+      expect(deviceRepository.findOneByUuid).toHaveBeenCalledWith(mockDevice.uuid);
     });
+  });
 
-    it('should transform becomeMethod string to enum and call updateDeviceAuth', async () => {
-      deviceRepository.findOneByUuid.mockResolvedValue(mockDevice);
-      deviceAuthRepository.findOneByDeviceUuid.mockResolvedValue([mockDeviceAuth]);
-      deviceAuthRepository.update.mockResolvedValue(mockDeviceAuth);
-
-      const result = await service.updateExistingDeviceAuth(
-        mockDeviceAuthWithBecomeMethod,
-        mockDevice.uuid
-      );
-
-      expect(deviceRepository.findOneByUuid).toBeCalledWith(mockDevice.uuid);
-      expect(deviceAuthRepository.findOneByDeviceUuid).toBeCalledWith(mockDevice.uuid);
-      expect(deviceAuthRepository.update).toBeCalledWith(
-        expect.objectContaining({
-          ...mockDeviceAuth,
-          ...mockDeviceAuthWithBecomeMethod,
-          becomeMethod: SsmAnsible.AnsibleBecomeMethod.SUDO // Should be converted to enum
-        })
-      );
-      expect(result).toEqual(mockDeviceAuth);
+  describe('findByUuids', () => {
+    it('should find devices by UUIDs', async () => {
+      const devices = [mockDevice];
+      deviceRepository.findByUuids.mockResolvedValue(devices);
+      const result = await service.findByUuids([mockDevice.uuid]);
+      expect(result).toEqual(devices);
+      expect(deviceRepository.findByUuids).toHaveBeenCalledWith([mockDevice.uuid]);
     });
+  });
 
-    it('should preserve existing becomeMethod if not provided in update', async () => {
-      const existingDeviceAuth = {
-        ...mockDeviceAuth,
-        becomeMethod: SsmAnsible.AnsibleBecomeMethod.SU
-      };
+  describe('findOneByIp', () => {
+    it('should find a device by IP', async () => {
+      deviceRepository.findOneByIp.mockResolvedValue(mockDevice);
+      const result = await service.findOneByIp('192.168.1.1');
+      expect(result).toEqual(mockDevice);
+      expect(deviceRepository.findOneByIp).toHaveBeenCalledWith('192.168.1.1');
+    });
+  });
 
-      const updateWithoutBecomeMethod = { ...mockDeviceAuthWithBecomeMethod };
-      delete updateWithoutBecomeMethod.becomeMethod;
+  describe('findAll', () => {
+    it('should find all devices', async () => {
+      const devices = [mockDevice];
+      deviceRepository.findAll.mockResolvedValue(devices);
+      const result = await service.findAll();
+      expect(result).toEqual(devices);
+      expect(deviceRepository.findAll).toHaveBeenCalled();
+    });
+  });
 
-      deviceRepository.findOneByUuid.mockResolvedValue(mockDevice);
-      deviceAuthRepository.findOneByDeviceUuid.mockResolvedValue([existingDeviceAuth]);
-      deviceAuthRepository.update.mockResolvedValue(existingDeviceAuth);
+  describe('setDeviceOfflineAfter', () => {
+    it('should set device offline after specified minutes', async () => {
+      await service.setDeviceOfflineAfter(5);
+      expect(deviceRepository.setDeviceOfflineAfter).toHaveBeenCalledWith(5);
+    });
+  });
 
-      const result = await service.updateExistingDeviceAuth(
-        updateWithoutBecomeMethod,
-        mockDevice.uuid
-      );
+  describe('deleteByUuid', () => {
+    it('should delete a device by UUID', async () => {
+      await service.deleteByUuid(mockDevice.uuid);
+      expect(deviceRepository.deleteByUuid).toHaveBeenCalledWith(mockDevice.uuid);
+    });
+  });
 
-      expect(deviceAuthRepository.update).toBeCalledWith(
-        expect.objectContaining({
-          ...existingDeviceAuth,
-          ...updateWithoutBecomeMethod,
-          becomeMethod: SsmAnsible.AnsibleBecomeMethod.SU // Should preserve existing enum
-        })
-      );
-      expect(result).toEqual(existingDeviceAuth);
+  describe('findWithFilter', () => {
+    it('should find devices with filter', async () => {
+      const filter = { status: 1 };
+      const devices = [mockDevice];
+      deviceRepository.findWithFilter.mockResolvedValue(devices);
+      const result = await service.findWithFilter(filter);
+      expect(result).toEqual(devices);
+      expect(deviceRepository.findWithFilter).toHaveBeenCalledWith(filter);
+    });
+  });
+
+  describe('getDevicesOverview', () => {
+    it('should get devices overview', async () => {
+      const devices = [
+        {
+          ...mockDevice,
+          status: 1,
+          systemInformation: {
+            cpu: { speed: 2.4 },
+            mem: { total: 8192 },
+          },
+        },
+      ];
+      deviceRepository.findAll.mockResolvedValue(devices);
+
+      const result = await service.getDevicesOverview();
+
+      expect(result).toEqual({
+        offline: 0,
+        online: 1,
+        overview: [
+          {
+            name: mockDevice.ip,
+            status: 1,
+            uuid: mockDevice.uuid,
+            cpu: 2.4,
+            mem: 8192,
+          },
+        ],
+        totalCpu: 2.4,
+        totalMem: 8192,
+      });
     });
   });
 });

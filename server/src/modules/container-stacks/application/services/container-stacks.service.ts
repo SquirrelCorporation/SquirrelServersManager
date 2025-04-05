@@ -1,17 +1,20 @@
-import { Inject, Injectable, Logger, OnModuleInit, forwardRef } from '@nestjs/common';
-import { API, SsmGit } from 'ssm-shared-lib';
-import { v4 as uuidv4 } from 'uuid';
+import { transformToDockerCompose } from '@infrastructure/common/docker/docker-compose-json-transformer.util';
 import { IPlaybooksService, PLAYBOOKS_SERVICE } from '@modules/playbooks';
-import { IUser } from '@modules/users';
 import {
   DOCKER_COMPOSE_SERVICE,
   FILE_SYSTEM_SERVICE,
   IDockerComposeService,
   IFileSystemService,
 } from '@modules/shell';
-import { transformToDockerCompose } from '@infrastructure/common/docker/docker-compose-json-transformer.util';
-import { IContainerStacksService } from '../interfaces/container-stacks-service.interface';
-import { ContainerCustomStack } from '../../domain/entities/container-custom-stack.entity';
+import { IUser } from '@modules/users';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { API, SsmGit } from 'ssm-shared-lib';
+import { v4 as uuidv4 } from 'uuid';
+import {
+  ContainerCustomStack,
+  IContainerCustomStackRepositoryEntity,
+} from '../../domain/entities/container-custom-stack.entity';
+import { IContainerStacksService } from '../../domain/interfaces/container-stacks-service.interface';
 import {
   CONTAINER_CUSTOM_STACK_REPOSITORY_REPOSITORY,
   IContainerCustomStackRepositoryRepository,
@@ -20,11 +23,10 @@ import {
   CONTAINER_CUSTOM_STACK_REPOSITORY,
   IContainerCustomStackRepository,
 } from '../../domain/repositories/container-custom-stack-repository.interface';
-import { IContainerCustomStackRepositoryEntity } from '../../domain/entities/container-custom-stack.entity';
 import { ContainerCustomStacksRepositoryEngineService } from './container-stacks-repository-engine-service';
 
 @Injectable()
-export class ContainerStacksService implements IContainerStacksService, OnModuleInit {
+export class ContainerStacksService implements IContainerStacksService {
   private readonly logger = new Logger(ContainerStacksService.name);
 
   constructor(

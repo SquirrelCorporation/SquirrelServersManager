@@ -11,12 +11,13 @@
 import { NetworkInterfaceInfo } from 'node:os';
 import { Systeminformation } from 'ssm-shared-lib';
 import PinoLogger from '../../../../../logger';
-import { RemoteOS } from '../remote-os/remote-os.component';
 import {
   Callback,
   RemoteExecutorType,
   RemoteExecutorTypeWithCallback,
 } from '../../types/remote-executor.types';
+import { RemoteOS } from '../remote-os/remote-os.component';
+import * as util from '../utils/system-utils';
 import {
   stringReplace,
   stringStartWith,
@@ -26,7 +27,6 @@ import {
   stringToString,
   stringTrim,
 } from '../utils/system-utils';
-import * as util from '../utils/system-utils';
 import { getProcessName, parseLinesDarwinNics, splitSectionsNics } from './networks.utils';
 
 export class NetworkComponent extends RemoteOS {
@@ -589,7 +589,7 @@ try {
       util.noop();
     }
     try {
-      result = await this.checkLinuxDCHPInterfaces('/etc/network/interfaces');
+      result = await this.checkLinuxDCHPInterfaces('/etc/netwo../../domain/interfaces');
     } catch (e) {
       this.logger.debug(e);
       util.noop();

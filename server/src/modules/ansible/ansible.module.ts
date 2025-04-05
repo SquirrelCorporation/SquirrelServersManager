@@ -1,5 +1,5 @@
 import { HttpModule } from '@nestjs/axios';
-import { Module, forwardRef } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AnsibleVaultsModule, DEFAULT_VAULT_ID } from '../ansible-vaults';
 import { DevicesModule } from '../devices/devices.module';
@@ -15,19 +15,16 @@ import { ExtraVarsService } from './application/services/extra-vars.service';
 import { GalaxyService } from './application/services/galaxy.service';
 import { InventoryTransformerService } from './application/services/inventory-transformer.service';
 import { TaskLogsService } from './application/services/task-logs.service';
-import { TASK_LOGS_SERVICE } from './application/interfaces/task-logs-service.interface';
-import { AnsibleTaskRepository } from './infrastructure/repositories/ansible-task.repository';
+import { TASK_LOGS_SERVICE } from './domain/interfaces/task-logs-service.interface';
+import { ANSIBLE_TASK_STATUS_REPOSITORY } from './domain/repositories/ansible-task-status.repository.interface';
+import { ANSIBLE_TASK_REPOSITORY } from './domain/repositories/ansible-task.repository.interface';
 import { AnsibleTaskStatusRepository } from './infrastructure/repositories/ansible-task-status.repository';
-import {
-  AnsibleTaskStatus,
-  AnsibleTaskStatusSchema,
-} from './infrastructure/schemas/ansible-task-status.schema';
+import { AnsibleTaskRepository } from './infrastructure/repositories/ansible-task.repository';
+import { AnsibleTaskStatus, AnsibleTaskStatusSchema } from './infrastructure/schemas/ansible-task-status.schema';
 import { AnsibleTask, AnsibleTaskSchema } from './infrastructure/schemas/ansible-task.schema';
 import { GalaxyController } from './presentation/controllers/ansible-galaxy.controller';
 import { AnsibleHooksController } from './presentation/controllers/ansible-hooks.controller';
 import { TaskLogsController } from './presentation/controllers/ansible-task-logs.controller';
-import { ANSIBLE_TASK_STATUS_REPOSITORY } from './domain/repositories/ansible-task-status.repository.interface';
-import { ANSIBLE_TASK_REPOSITORY } from './domain/repositories/ansible-task.repository.interface';
 
 /**
  * AnsibleModule provides services for executing Ansible commands and playbooks

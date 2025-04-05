@@ -8,21 +8,17 @@ import {
   Param,
   Query,
   UsePipes,
-  ValidationPipe,
+  ValidationPipe
 } from '@nestjs/common';
 import {
   CONTAINER_SERVICE,
-  IContainerService,
-} from '../../application/interfaces/container-service.interface';
+  IContainerService
+} from '../../applicati../../domain/interfaces/container-service.interface';
 import {
   CONTAINER_STATS_SERVICE,
-  IContainerStatsService,
-} from '../../application/interfaces/container-stats-service.interface';
-import {
-  ContainerCountParamDto,
-  ContainerStatParamDto,
-  ContainerStatsQueryDto,
-} from '../dtos/container-stats.dto';
+  IContainerStatsService
+} from '../../applicati../../domain/interfaces/container-stats-service.interface';
+import { ContainerCountParamDto, ContainerStatParamDto, ContainerStatsQueryDto } from '../dtos/container-stats.dto';
 
 /**
  * Controller for container statistics

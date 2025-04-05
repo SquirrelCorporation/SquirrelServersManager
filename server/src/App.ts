@@ -1,20 +1,20 @@
-import http from 'http';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { Reflector } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
-import passport from 'passport';
 import helmet from 'helmet';
+import http from 'http';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
+import passport from 'passport';
 import { AppModule } from './app.module';
 import { SECRET } from './config';
 import { ApiExceptionFilter } from './infrastructure/filters/api-exception.filter';
-import { TransformInterceptor } from './infrastructure/interceptors/transform.interceptor';
 import { ErrorTransformerInterceptor } from './infrastructure/interceptors/error-transformer.interceptor';
+import { TransformInterceptor } from './infrastructure/interceptors/transform.interceptor';
+import { AuditLogService } from './infrastructure/security/audit/audit-log.service';
 import { AuditInterceptor } from './infrastructure/security/audit/audit.interceptor';
-import { JwtAuthGuard } from './modules/auth/strategies/jwt-auth.guard';
 import logger from './logger';
+import { JwtAuthGuard } from './modules/auth/strategies/jwt-auth.guard';
 
 // Declare global nestApp for legacy code to access
 declare global {
@@ -100,13 +100,15 @@ class AppWrapper {
       );
       // Apply global interceptors for standardized response format
       const reflector = nestApp.get(Reflector);
-      
+
+      // Get the AuditLogService from the DI container
+      const auditLogService = nestApp.get(AuditLogService);
+
       nestApp.useGlobalInterceptors(
         new TransformInterceptor(),
         new LoggerErrorInterceptor(),
-        new ErrorTransformerInterceptor()
-        // Temporarily disabled AuditInterceptor until we properly set up its dependencies
-        // new AuditInterceptor(auditLogService, reflector)
+        new ErrorTransformerInterceptor(),
+        new AuditInterceptor(auditLogService, reflector),
       );
 
       // Apply global exception filter that handles both HttpExceptions and legacy ApiErrors
@@ -114,13 +116,13 @@ class AppWrapper {
 
       // Apply global authentication guard to protect all endpoints by default
       // Using the reflector that was already defined above
-      
+
       // Apply JWT authentication guard globally
-      nestApp.useGlobalGuards(
-        new JwtAuthGuard(reflector)
+      nestApp.useGlobalGuards(new JwtAuthGuard(reflector));
+
+      logger.info(
+        'Global authentication and authorization guards applied - use @Public() to exclude authentication',
       );
-      
-      logger.info('Global authentication and authorization guards applied - use @Public() to exclude authentication');
 
       // Log that we're initializing NestJS
       logger.info('Initializing NestJS application with WebSocket gateways');

@@ -1,5 +1,6 @@
+import { Response } from 'express';
+import { SettingsKeys, SsmAnsible } from 'ssm-shared-lib';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { SettingsKeys } from 'ssm-shared-lib';
 import { SettingsController } from '../presentation/controllers/settings.controller';
 
 describe('SettingsController', () => {
@@ -37,7 +38,7 @@ describe('SettingsController', () => {
     controller = new SettingsController(
       mockSettingsService,
       mockAdvancedOperationsService,
-      mockInformationService
+      mockInformationService,
     );
   });
 
@@ -52,10 +53,7 @@ describe('SettingsController', () => {
 
       mockSettingsService.setSetting.mockResolvedValue(undefined);
 
-      const result = await controller.updateDashboardSetting(
-        { key },
-        { value },
-      );
+      const result = await controller.updateDashboardSetting({ key }, { value });
 
       expect(mockSettingsService.setSetting).toHaveBeenCalledWith(key, value.toString());
       expect(result).toEqual({ success: true, message: `${key} successfully updated` });
@@ -67,10 +65,7 @@ describe('SettingsController', () => {
 
       mockSettingsService.setSetting.mockResolvedValue(undefined);
 
-      const result = await controller.updateDashboardSetting(
-        { key },
-        { value },
-      );
+      const result = await controller.updateDashboardSetting({ key }, { value });
 
       expect(mockSettingsService.setSetting).toHaveBeenCalledWith(key, value.toString());
       expect(result).toEqual({ success: true, message: `${key} successfully updated` });
@@ -80,10 +75,7 @@ describe('SettingsController', () => {
       const key = 'unknown-key';
       const value = 50;
 
-      const result = await controller.updateDashboardSetting(
-        { key },
-        { value },
-      );
+      const result = await controller.updateDashboardSetting({ key }, { value });
 
       expect(mockSettingsService.setSetting).not.toHaveBeenCalled();
       expect(result).toEqual({ success: false, message: 'Unknown key' });
@@ -97,10 +89,7 @@ describe('SettingsController', () => {
 
       mockSettingsService.setSetting.mockResolvedValue(undefined);
 
-      const result = await controller.updateDevicesSetting(
-        { key },
-        { value },
-      );
+      const result = await controller.updateDevicesSetting({ key }, { value });
 
       expect(mockSettingsService.setSetting).toHaveBeenCalledWith(key, value.toString());
       expect(result).toEqual({ success: true, message: `${key} successfully updated` });
@@ -109,15 +98,13 @@ describe('SettingsController', () => {
 
   describe('updateLogsSetting', () => {
     it('should update ansible cleanup threshold', async () => {
-      const key = SettingsKeys.GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS;
+      const key =
+        SettingsKeys.GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS;
       const value = 3600;
 
       mockSettingsService.setSetting.mockResolvedValue(undefined);
 
-      const result = await controller.updateLogsSetting(
-        { key },
-        { value },
-      );
+      const result = await controller.updateLogsSetting({ key }, { value });
 
       expect(mockSettingsService.setSetting).toHaveBeenCalledWith(key, value.toString());
       expect(result).toEqual({ success: true, message: `${key} successfully updated` });
@@ -129,10 +116,7 @@ describe('SettingsController', () => {
 
       mockSettingsService.setSetting.mockResolvedValue(undefined);
 
-      const result = await controller.updateLogsSetting(
-        { key },
-        { value },
-      );
+      const result = await controller.updateLogsSetting({ key }, { value });
 
       expect(mockSettingsService.setSetting).toHaveBeenCalledWith(key, value.toString());
       expect(result).toEqual({ success: true, message: `${key} successfully updated` });
@@ -146,10 +130,7 @@ describe('SettingsController', () => {
 
       mockSettingsService.setSetting.mockResolvedValue(undefined);
 
-      const result = await controller.updateDeviceStatsSetting(
-        { key },
-        { value },
-      );
+      const result = await controller.updateDeviceStatsSetting({ key }, { value });
 
       expect(mockSettingsService.setSetting).toHaveBeenCalledWith(key, value.toString());
       expect(result).toEqual({ success: true, message: `${key} successfully updated` });
@@ -164,8 +145,11 @@ describe('SettingsController', () => {
 
       const result = await controller.updateMasterNodeUrl({ value });
 
-      expect(mockSettingsService.setSetting).toHaveBeenCalledWith('master-node-url', value);
-      expect(result).toEqual({ success: true, message: 'Master node URL successfully updated' });
+      expect(mockSettingsService.setSetting).toHaveBeenCalledWith(
+        SsmAnsible.DefaultSharedExtraVarsList.MASTER_NODE_URL,
+        value,
+      );
+      expect(result).toBe(value);
     });
   });
 
@@ -176,7 +160,11 @@ describe('SettingsController', () => {
       const mockResponse = {
         status: vi.fn().mockReturnThis(),
         json: vi.fn(),
-      };
+        sendStatus: vi.fn(),
+        links: vi.fn(),
+        send: vi.fn(),
+        jsonp: vi.fn(),
+      } as unknown as Response;
 
       await controller.restartServer(mockResponse);
 
@@ -196,7 +184,11 @@ describe('SettingsController', () => {
       const mockResponse = {
         status: vi.fn().mockReturnThis(),
         json: vi.fn(),
-      };
+        sendStatus: vi.fn(),
+        links: vi.fn(),
+        send: vi.fn(),
+        jsonp: vi.fn(),
+      } as unknown as Response;
 
       await controller.deleteLogs(mockResponse);
 
@@ -216,7 +208,11 @@ describe('SettingsController', () => {
       const mockResponse = {
         status: vi.fn().mockReturnThis(),
         json: vi.fn(),
-      };
+        sendStatus: vi.fn(),
+        links: vi.fn(),
+        send: vi.fn(),
+        jsonp: vi.fn(),
+      } as unknown as Response;
 
       await controller.deleteAnsibleLogs(mockResponse);
 
@@ -236,7 +232,11 @@ describe('SettingsController', () => {
       const mockResponse = {
         status: vi.fn().mockReturnThis(),
         json: vi.fn(),
-      };
+        sendStatus: vi.fn(),
+        links: vi.fn(),
+        send: vi.fn(),
+        jsonp: vi.fn(),
+      } as unknown as Response;
 
       await controller.deletePlaybooksAndResync(mockResponse);
 

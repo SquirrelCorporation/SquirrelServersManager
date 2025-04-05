@@ -1,14 +1,14 @@
-import { Inject, Injectable } from '@nestjs/common';
 import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
 import { paginate } from '@infrastructure/common/query/pagination.util';
 import { sortByFields } from '@infrastructure/common/query/sorter.util';
+import { Inject, Injectable } from '@nestjs/common';
 import logger from '../../../../logger';
+import { IServerLogsService } from '../../domain/interfaces/server-logs-service.interface';
 import {
   IServerLogsRepository,
   SERVER_LOGS_REPOSITORY,
 } from '../../domain/repositories/server-logs-repository.interface';
 import { ServerLogsQueryDto } from '../../presentation/dtos/server-logs-query.dto';
-import { IServerLogsService } from '../interfaces/server-logs-service.interface';
 import { ServerLogPresentationMapper } from '../../presentation/mappers/server-log.mapper';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class ServerLogsService implements IServerLogsService {
     @Inject(SERVER_LOGS_REPOSITORY) private serverLogsRepository: IServerLogsRepository,
     private serverLogPresentationMapper: ServerLogPresentationMapper,
   ) {}
-  
+
   /**
    * Delete all server logs
    */
@@ -25,7 +25,7 @@ export class ServerLogsService implements IServerLogsService {
     logger.info('[SERVICE] - ServerLogsService - deleteAll');
     return this.serverLogsRepository.deleteAll();
   }
-  
+
   /**
    * Delete old server logs
    * @param days Number of days to keep logs for

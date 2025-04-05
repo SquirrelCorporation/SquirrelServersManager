@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { Socket } from 'socket.io';
 import { SsmEvents } from 'ssm-shared-lib';
 import {
@@ -8,9 +8,12 @@ import {
   SftpRenameOptions,
   SftpStatusMessage,
 } from '../../domain/entities/sftp.entity';
+import { ISftpService } from '../../domain/interfaces/sftp-service.interface';
+import {
+  ISftpRepository,
+  SFTP_REPOSITORY,
+} from '../../domain/repositories/sftp-repository.interface';
 import { SftpSessionDto } from '../../presentation/dtos/sftp-session.dto';
-import { ISftpService } from '../interfaces/sftp-service.interface';
-import { ISftpRepository, SFTP_REPOSITORY } from '../../domain/repositories/sftp-repository.interface';
 import { SftpGateway } from '../../presentation/gateways/sftp.gateway';
 
 @Injectable()

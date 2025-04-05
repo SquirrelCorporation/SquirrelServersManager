@@ -1,12 +1,12 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import mongoose from 'mongoose';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cache } from 'cache-manager';
-import { IInformationService } from '../interfaces/information-service.interface';
+import mongoose from 'mongoose';
 import {
   IPrometheusService,
   PROMETHEUS_SERVICE,
 } from '../../../../infrastructure/prometheus/prometheus.interface';
+import { IInformationService } from '../../domain/interfaces/information-service.interface';
 
 @Injectable()
 export class InformationService implements IInformationService {

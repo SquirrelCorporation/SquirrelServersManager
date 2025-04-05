@@ -1,13 +1,13 @@
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { API } from 'ssm-shared-lib';
-import { IUser } from '@modules/users';
-import * as templatesRaw from '../../../../data/static/templates.json';
-import { sortByFields } from '@infrastructure/common/query/sorter.util';
+import { DockerComposeHelper } from '@infrastructure/common/docker/docker-compose.util';
 import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
 import { paginate } from '@infrastructure/common/query/pagination.util';
-import { DockerComposeHelper } from '@infrastructure/common/docker/docker-compose.util';
-import { IContainerTemplatesService } from '../interfaces/container-templates-service.interface';
-import { IPlaybooksService, PLAYBOOKS_SERVICE, PlaybookService } from '@modules/playbooks';
+import { sortByFields } from '@infrastructure/common/query/sorter.util';
+import { IPlaybooksService, PLAYBOOKS_SERVICE } from '@modules/playbooks';
+import { IUser } from '@modules/users';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { API } from 'ssm-shared-lib';
+import * as templatesRaw from '../../../../data/static/templates.json';
+import { IContainerTemplatesService } from '../../domain/interfaces/container-templates-service.interface';
 
 /**
  * Service for managing container templates following clean architecture
@@ -17,7 +17,6 @@ export class ContainerTemplatesService implements IContainerTemplatesService {
   private readonly logger = new Logger(ContainerTemplatesService.name);
 
   constructor(
-    private readonly playbookService: PlaybookService,
     @Inject(PLAYBOOKS_SERVICE)
     private readonly playbooksService: IPlaybooksService,
   ) {}
@@ -87,7 +86,7 @@ export class ContainerTemplatesService implements IContainerTemplatesService {
       }
 
       // Execute the playbook
-      const execId = await this.playbookService.executePlaybook(playbook, user, template.targets, [
+      const execId = await this.playbooksService.executePlaybook(playbook, user, template.targets, [
         { extraVar: 'definition', value: templateToYaml },
         { extraVar: 'project', value: template.name },
       ]);

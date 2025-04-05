@@ -6,7 +6,7 @@ import {
   ISmartFailureRepository,
   SMART_FAILURE_REPOSITORY,
 } from '../../domain/repositories/smart-failure.repository.interface';
-import { ISmartFailureService } from '../interfaces/smart-failure.service.interface';
+import { ISmartFailureService } from '../../domain/interfaces/smart-failure.service.interface';
 
 /**
  * Service for analyzing Ansible logs and providing smart failure analysis

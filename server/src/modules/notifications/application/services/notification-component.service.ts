@@ -1,12 +1,13 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EventEmitterService, Payload } from '../../../../core/events/event-emitter.service';
 import Events from '../../../../core/events/events';
-import pinoLogger from '../../../../logger';
+import PinoLogger from '../../../../logger';
+import { INotificationComponentService } from '../../domain/interfaces/notification-component-service.interface';
 import { NotificationService } from './notification.service';
 
 @Injectable()
-export class NotificationComponentService implements OnModuleInit {
-  private childLogger = pinoLogger.child(
+export class NotificationComponentService implements INotificationComponentService {
+  private childLogger = PinoLogger.child(
     { module: `Notification` },
     { msgPrefix: '[NOTIFICATION] - ' },
   );

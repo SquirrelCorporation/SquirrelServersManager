@@ -1,21 +1,21 @@
-import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Queue } from 'bull';
 import { SsmAgent } from 'ssm-shared-lib';
 import { IDevice } from '../../../../devices/domain/entities/device.entity';
-import { IComponent } from '../../../domain/interfaces/component.interface';
-import { IRemoteSystemInformationEngineService } from '../../interfaces/remote-system-information-engine-service.interface';
+import {
+  DEVICE_AUTH_SERVICE,
+  IDeviceAuthService
+} from '../../../../devices/domain/services/device-auth-service.interface';
+import { DEVICES_SERVICE, IDevicesService } from '../../../../devices/domain/services/devices-service.interface';
+import { IComponent } from '../../../doma../../domain/interfaces/component.interface';
+import {
+  IRemoteSystemInformationEngineService
+} from '../../../domain/interfaces/remote-system-information-engine-service.interface';
 import { RemoteSystemInformationConfigurationSchema } from '../../../domain/types/configuration.types';
 import { REMOTE_SYSTEM_INFO_QUEUE } from '../../../infrastructure/queue/constants';
 import { RemoteSystemInformationWatcher } from '../components/watchers/remote-system-information-watcher';
-import {
-  DEVICES_SERVICE,
-  IDevicesService,
-} from '../../../../devices/domain/services/devices-service.interface';
-import {
-  DEVICE_AUTH_SERVICE,
-  IDeviceAuthService,
-} from '../../../../devices/domain/services/device-auth-service.interface';
 
 /**
  * Service for managing remote system information collection
@@ -34,6 +34,7 @@ export class RemoteSystemInformationEngineService implements IRemoteSystemInform
     @Inject(forwardRef(() => DEVICE_AUTH_SERVICE))
     private readonly deviceAuthService: IDeviceAuthService,
     @InjectQueue(REMOTE_SYSTEM_INFO_QUEUE) private readonly systemInfoQueue: Queue,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   /**
@@ -67,6 +68,7 @@ export class RemoteSystemInformationEngineService implements IRemoteSystemInform
         this.devicesService,
         this.deviceAuthService,
         this.systemInfoQueue,
+        this.eventEmitter,
       );
       const componentRegistered = await component.register(_id, nameLowercase, configuration);
       this.state.watchers[componentRegistered.getId()] = componentRegistered;

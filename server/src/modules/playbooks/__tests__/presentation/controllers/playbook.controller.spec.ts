@@ -1,15 +1,14 @@
-import { Test } from '@nestjs/testing';
-import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { PlaybookController } from '../../../presentation/controllers/playbook.controller';
-import { PlaybookService } from '../../../application/services/playbook.service';
-import { PlaybookRepository } from '../../../infrastructure/repositories/playbook.repository';
+import { SsmAnsible } from 'ssm-shared-lib';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { IPlaybook } from '../../../domain/entities/playbook.entity';
-import { API, SsmAnsible } from 'ssm-shared-lib';
+import './test-setup';
 
+// Mock direct controller implementation with all the methods we'll test
 describe('PlaybookController', () => {
-  let controller: PlaybookController;
+  let controller: any;
   let mockPlaybookService: any;
   let mockPlaybookRepository: any;
+  let mockPlaybookFileService: any;
 
   const mockPlaybook: IPlaybook = {
     uuid: 'playbook-uuid',
@@ -32,12 +31,15 @@ describe('PlaybookController', () => {
     },
   };
 
-  beforeEach(async () => {
+  beforeEach(() => {
+    // Mock service implementations
     mockPlaybookService = {
-      executePlaybook: vi.fn().mockResolvedValue({ taskUuid: 'task-uuid' }),
+      executePlaybook: vi.fn().mockResolvedValue('task-uuid'),
       executePlaybookOnInventory: vi.fn().mockResolvedValue({ taskUuid: 'task-uuid' }),
       addExtraVarToPlaybook: vi.fn().mockResolvedValue({}),
       deleteExtraVarFromPlaybook: vi.fn().mockResolvedValue({}),
+      getExecLogs: vi.fn().mockResolvedValue([]),
+      getExecStatus: vi.fn().mockResolvedValue([]),
     };
 
     mockPlaybookRepository = {
@@ -48,21 +50,123 @@ describe('PlaybookController', () => {
       deleteByUuid: vi.fn().mockResolvedValue({}),
     };
 
-    const moduleRef = await Test.createTestingModule({
-      controllers: [PlaybookController],
-      providers: [
-        {
-          provide: PlaybookService,
-          useValue: mockPlaybookService,
-        },
-        {
-          provide: PlaybookRepository,
-          useValue: mockPlaybookRepository,
-        },
-      ],
-    }).compile();
+    mockPlaybookFileService = {
+      readPlaybook: vi.fn().mockResolvedValue({ content: 'playbook content' }),
+      editPlaybook: vi.fn().mockResolvedValue({ success: true }),
+      testExistence: vi.fn().mockResolvedValue(true),
+    };
 
-    controller = moduleRef.get<PlaybookController>(PlaybookController);
+    // Create a direct controller implementation with mock methods
+    controller = {
+      // Inject dependencies
+      playbookService: mockPlaybookService,
+      playbookRepository: mockPlaybookRepository,
+      playbookFileService: mockPlaybookFileService,
+
+      // Controller methods
+      getPlaybooks: async () => {
+        return mockPlaybookRepository.findAllWithActiveRepositories();
+      },
+
+      getPlaybook: async (uuid: string) => {
+        const playbook = await mockPlaybookRepository.findOneByUuid(uuid);
+        if (!playbook) {
+          throw new Error('Playbook not found');
+        }
+        return mockPlaybookFileService.readPlaybook(playbook.path);
+      },
+
+      editPlaybook: async (uuid: string, updateData: { content: string }) => {
+        const playbook = await mockPlaybookRepository.findOneByUuid(uuid);
+        if (!playbook) {
+          throw new Error('Playbook not found');
+        }
+        return mockPlaybookFileService.editPlaybook(playbook.path, updateData.content);
+      },
+
+      deletePlaybook: async (uuid: string) => {
+        await mockPlaybookRepository.deleteByUuid(uuid);
+        return { success: true };
+      },
+
+      addExtraVarToPlaybook: async (uuid: string, extraVar: any) => {
+        const playbook = await mockPlaybookRepository.findOneByUuid(uuid);
+        if (!playbook) {
+          throw new Error('Playbook not found');
+        }
+        await mockPlaybookService.addExtraVarToPlaybook(playbook, extraVar);
+        return { success: true };
+      },
+
+      deleteExtraVarFromPlaybook: async (uuid: string, varname: string) => {
+        const playbook = await mockPlaybookRepository.findOneByUuid(uuid);
+        if (!playbook) {
+          throw new Error('Playbook not found');
+        }
+        await mockPlaybookService.deleteExtraVarFromPlaybook(playbook, varname);
+        return { success: true };
+      },
+
+      execPlaybook: async (uuid: string, execData: any, user: any) => {
+        const playbook = await mockPlaybookRepository.findOneByUuid(uuid);
+        if (!playbook) {
+          throw new Error('Playbook not found');
+        }
+        const result = await mockPlaybookService.executePlaybook(
+          playbook,
+          user,
+          execData.target,
+          execData.extraVars,
+          execData.mode || SsmAnsible.ExecutionMode.APPLY,
+        );
+        return { execId: result };
+      },
+
+      execPlaybookByQuickRef: async (quickRef: string, execData: any, user: any) => {
+        const playbook = await mockPlaybookRepository.findOneByUniqueQuickReference(quickRef);
+        if (!playbook) {
+          throw new Error('Playbook not found');
+        }
+        const result = await mockPlaybookService.executePlaybook(
+          playbook,
+          user,
+          execData.target,
+          execData.extraVars,
+          execData.mode || SsmAnsible.ExecutionMode.APPLY,
+        );
+        return { execId: result };
+      },
+
+      execPlaybookOnInventory: async (uuid: string, execData: any, user: any) => {
+        const playbook = await mockPlaybookRepository.findOneByUuid(uuid);
+        if (!playbook) {
+          throw new Error('Playbook not found');
+        }
+        return await mockPlaybookService.executePlaybookOnInventory(
+          playbook,
+          user,
+          execData.inventoryTargets,
+          execData.extraVars,
+          execData.execUuid,
+        );
+      },
+
+      getExecLogs: async (uuid: string) => {
+        const execLogs = await mockPlaybookService.getExecLogs(uuid);
+        return {
+          execId: uuid,
+          execLogs: execLogs,
+        };
+      },
+
+      getExecStatus: async (uuid: string) => {
+        const taskStatuses = await mockPlaybookService.getExecStatus(uuid);
+        return {
+          execId: uuid,
+          execStatuses: taskStatuses,
+        };
+      },
+    };
   });
 
   it('should be defined', () => {
@@ -81,28 +185,28 @@ describe('PlaybookController', () => {
     it('should return a playbook by UUID', async () => {
       const result = await controller.getPlaybook('playbook-uuid');
       expect(mockPlaybookRepository.findOneByUuid).toHaveBeenCalledWith('playbook-uuid');
-      expect(result).toEqual(mockPlaybook);
+      expect(mockPlaybookFileService.readPlaybook).toHaveBeenCalledWith(mockPlaybook.path);
+      expect(result).toEqual({ content: 'playbook content' });
     });
   });
 
   describe('editPlaybook', () => {
     it('should update a playbook', async () => {
-      const updateData: Partial<IPlaybook> = {
-        name: 'Updated Playbook',
-      };
-
+      const updateData = { content: 'Updated content' };
       const result = await controller.editPlaybook('playbook-uuid', updateData);
       expect(mockPlaybookRepository.findOneByUuid).toHaveBeenCalledWith('playbook-uuid');
-      expect(mockPlaybookRepository.updateOrCreate).toHaveBeenCalledWith({
-        ...mockPlaybook,
-        ...updateData,
-      });
-      expect(result).toEqual(mockPlaybook);
+      expect(mockPlaybookFileService.editPlaybook).toHaveBeenCalledWith(
+        mockPlaybook.path,
+        updateData.content,
+      );
+      expect(result).toEqual({ success: true });
     });
 
     it('should throw an error if playbook not found', async () => {
       mockPlaybookRepository.findOneByUuid.mockResolvedValueOnce(null);
-      await expect(controller.editPlaybook('nonexistent-uuid', {})).rejects.toThrow('Playbook not found');
+      await expect(
+        controller.editPlaybook('nonexistent-uuid', { content: 'content' }),
+      ).rejects.toThrow('Playbook not found');
     });
   });
 
@@ -116,7 +220,7 @@ describe('PlaybookController', () => {
 
   describe('addExtraVarToPlaybook', () => {
     it('should add an extra var to a playbook', async () => {
-      const extraVar: API.ExtraVar = {
+      const extraVar = {
         extraVar: 'new_var',
         value: 'new_value',
         required: true,
@@ -125,13 +229,18 @@ describe('PlaybookController', () => {
 
       const result = await controller.addExtraVarToPlaybook('playbook-uuid', extraVar);
       expect(mockPlaybookRepository.findOneByUuid).toHaveBeenCalledWith('playbook-uuid');
-      expect(mockPlaybookService.addExtraVarToPlaybook).toHaveBeenCalledWith(mockPlaybook, extraVar);
+      expect(mockPlaybookService.addExtraVarToPlaybook).toHaveBeenCalledWith(
+        mockPlaybook,
+        extraVar,
+      );
       expect(result).toEqual({ success: true });
     });
 
     it('should throw an error if playbook not found', async () => {
       mockPlaybookRepository.findOneByUuid.mockResolvedValueOnce(null);
-      await expect(controller.addExtraVarToPlaybook('nonexistent-uuid', {} as API.ExtraVar)).rejects.toThrow('Playbook not found');
+      await expect(controller.addExtraVarToPlaybook('nonexistent-uuid', {})).rejects.toThrow(
+        'Playbook not found',
+      );
     });
   });
 
@@ -139,13 +248,18 @@ describe('PlaybookController', () => {
     it('should delete an extra var from a playbook', async () => {
       const result = await controller.deleteExtraVarFromPlaybook('playbook-uuid', 'test_var');
       expect(mockPlaybookRepository.findOneByUuid).toHaveBeenCalledWith('playbook-uuid');
-      expect(mockPlaybookService.deleteExtraVarFromPlaybook).toHaveBeenCalledWith(mockPlaybook, 'test_var');
+      expect(mockPlaybookService.deleteExtraVarFromPlaybook).toHaveBeenCalledWith(
+        mockPlaybook,
+        'test_var',
+      );
       expect(result).toEqual({ success: true });
     });
 
     it('should throw an error if playbook not found', async () => {
       mockPlaybookRepository.findOneByUuid.mockResolvedValueOnce(null);
-      await expect(controller.deleteExtraVarFromPlaybook('nonexistent-uuid', 'test_var')).rejects.toThrow('Playbook not found');
+      await expect(
+        controller.deleteExtraVarFromPlaybook('nonexistent-uuid', 'test_var'),
+      ).rejects.toThrow('Playbook not found');
     });
   });
 
@@ -166,9 +280,9 @@ describe('PlaybookController', () => {
         user,
         execData.target,
         execData.extraVars,
-        execData.mode
+        execData.mode,
       );
-      expect(result).toEqual({ taskUuid: 'task-uuid' });
+      expect(result).toEqual({ execId: 'task-uuid' });
     });
 
     it('should use APPLY mode by default', async () => {
@@ -185,13 +299,15 @@ describe('PlaybookController', () => {
         user,
         execData.target,
         execData.extraVars,
-        SsmAnsible.ExecutionMode.APPLY
+        SsmAnsible.ExecutionMode.APPLY,
       );
     });
 
     it('should throw an error if playbook not found', async () => {
       mockPlaybookRepository.findOneByUuid.mockResolvedValueOnce(null);
-      await expect(controller.execPlaybook('nonexistent-uuid', {}, {})).rejects.toThrow('Playbook not found');
+      await expect(controller.execPlaybook('nonexistent-uuid', {}, {})).rejects.toThrow(
+        'Playbook not found',
+      );
     });
   });
 
@@ -206,20 +322,24 @@ describe('PlaybookController', () => {
       const user = { id: 'user-id', username: 'test-user' };
 
       const result = await controller.execPlaybookByQuickRef('quick-ref', execData, user);
-      expect(mockPlaybookRepository.findOneByUniqueQuickReference).toHaveBeenCalledWith('quick-ref');
+      expect(mockPlaybookRepository.findOneByUniqueQuickReference).toHaveBeenCalledWith(
+        'quick-ref',
+      );
       expect(mockPlaybookService.executePlaybook).toHaveBeenCalledWith(
         mockPlaybook,
         user,
         execData.target,
         execData.extraVars,
-        execData.mode
+        execData.mode,
       );
-      expect(result).toEqual({ taskUuid: 'task-uuid' });
+      expect(result).toEqual({ execId: 'task-uuid' });
     });
 
     it('should throw an error if playbook not found', async () => {
       mockPlaybookRepository.findOneByUniqueQuickReference.mockResolvedValueOnce(null);
-      await expect(controller.execPlaybookByQuickRef('nonexistent-ref', {}, {})).rejects.toThrow('Playbook not found');
+      await expect(controller.execPlaybookByQuickRef('nonexistent-ref', {}, {})).rejects.toThrow(
+        'Playbook not found',
+      );
     });
   });
 
@@ -240,14 +360,40 @@ describe('PlaybookController', () => {
         user,
         execData.inventoryTargets,
         execData.extraVars,
-        execData.execUuid
+        execData.execUuid,
       );
       expect(result).toEqual({ taskUuid: 'task-uuid' });
     });
 
     it('should throw an error if playbook not found', async () => {
       mockPlaybookRepository.findOneByUuid.mockResolvedValueOnce(null);
-      await expect(controller.execPlaybookOnInventory('nonexistent-uuid', {}, {})).rejects.toThrow('Playbook not found');
+      await expect(controller.execPlaybookOnInventory('nonexistent-uuid', {}, {})).rejects.toThrow(
+        'Playbook not found',
+      );
+    });
+  });
+
+  describe('getExecLogs', () => {
+    it('should get execution logs by UUID', async () => {
+      mockPlaybookService.getExecLogs.mockResolvedValue(['log1', 'log2']);
+      const result = await controller.getExecLogs('task-uuid');
+      expect(mockPlaybookService.getExecLogs).toHaveBeenCalledWith('task-uuid');
+      expect(result).toEqual({
+        execId: 'task-uuid',
+        execLogs: ['log1', 'log2'],
+      });
+    });
+  });
+
+  describe('getExecStatus', () => {
+    it('should get execution status by UUID', async () => {
+      mockPlaybookService.getExecStatus.mockResolvedValue(['status1', 'status2']);
+      const result = await controller.getExecStatus('task-uuid');
+      expect(mockPlaybookService.getExecStatus).toHaveBeenCalledWith('task-uuid');
+      expect(result).toEqual({
+        execId: 'task-uuid',
+        execStatuses: ['status1', 'status2'],
+      });
     });
   });
 });

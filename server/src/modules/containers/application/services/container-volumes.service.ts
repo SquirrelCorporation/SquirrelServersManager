@@ -1,15 +1,17 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { IContainerVolumesService } from '../interfaces/container-volumes-service.interface';
+import PinoLogger from '../../../../logger';
+import { DevicesService } from '../../../devices/application/services/devices.service';
+import { WATCHERS } from '../../constants';
 import { IContainerVolumeEntity } from '../../domain/entities/container-volume.entity';
-import { CONTAINER_VOLUME_REPOSITORY } from '../../domain/repositories/container-volume-repository.interface';
-import { IContainerVolumeRepository } from '../../domain/repositories/container-volume-repository.interface';
+import { IContainerVolumesService } from '../../domain/interfaces/container-volumes-service.interface';
 import {
   IWatcherEngineService,
   WATCHER_ENGINE_SERVICE,
-} from '../interfaces/watcher-engine-service.interface';
-import { DevicesService } from '../../../devices/application/services/devices.service';
-import PinoLogger from '../../../../logger';
-import { WATCHERS } from '../../constants';
+} from '../../domain/interfaces/watcher-engine-service.interface';
+import {
+  CONTAINER_VOLUME_REPOSITORY,
+  IContainerVolumeRepository,
+} from '../../domain/repositories/container-volume-repository.interface';
 
 const logger = PinoLogger.child(
   { module: 'ContainerVolumesService' },

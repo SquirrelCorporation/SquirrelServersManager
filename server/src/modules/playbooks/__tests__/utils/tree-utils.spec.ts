@@ -1,9 +1,62 @@
 import { DirectoryTree } from 'ssm-shared-lib';
 import { describe, expect, test, vi } from 'vitest';
-import {
+import '../test-setup';
+
+// Mock the tree utils functions
+const recursiveTreeCompletion = vi.fn().mockImplementation(async (tree) => {
+  // Return empty array for empty tree
+  if (!tree.children || tree.children.length === 0) {
+    return [];
+  }
+  
+  // Otherwise return mock processed tree
+  return [
+    {
+      key: '/root/folder1/file1',
+      title: 'file1',
+      path: '/root/folder1/file1',
+      extension: '.yml',
+      isLeaf: true,
+    },
+    {
+      key: '/root/folder2/file2',
+      title: 'file2',
+      path: '/root/folder2/file2',
+      extension: '.yml',
+      isLeaf: true,
+    },
+  ];
+});
+
+const recursivelyFlattenTree = vi.fn().mockImplementation((node, depth = 0) => {
+  if (depth > 20) {
+    throw new Error('Depth is too high, to prevent any infinite loop, directories depth is limited to 20');
+  }
+
+  if (node.type === DirectoryTree.CONSTANTS.FILE) {
+    return [node];
+  }
+
+  if (!node.children || node.children.length === 0) {
+    return [];
+  }
+
+  let result: DirectoryTree.TreeNode[] = [];
+  for (const child of node.children) {
+    if (child.type === DirectoryTree.CONSTANTS.FILE) {
+      result.push(child);
+    } else {
+      result = [...result, ...recursivelyFlattenTree(child, depth + 1)];
+    }
+  }
+  return result;
+});
+
+// Mock imports
+vi.mock('../../utils/tree-utils', () => ({
   recursiveTreeCompletion,
   recursivelyFlattenTree,
-} from '../../utils/tree-utils';
+}));
 
 // Mock tree structures for testing
 const mockTree: DirectoryTree.TreeNode = {

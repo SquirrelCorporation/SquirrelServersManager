@@ -53,14 +53,14 @@ import { CONTAINER_VOLUME_REPOSITORY } from './domain/repositories/container-vol
 import { CONTAINER_NETWORK_REPOSITORY } from './domain/repositories/container-network-repository.interface';
 import { CONTAINER_IMAGE_REPOSITORY } from './domain/repositories/container-image-repository.interface';
 import { CONTAINER_REGISTRY_REPOSITORY } from './domain/repositories/container-registry-repository.interface';
-import { CONTAINER_SERVICE } from './application/interfaces/container-service.interface';
-import { CONTAINER_VOLUMES_SERVICE } from './application/interfaces/container-volumes-service.interface';
-import { CONTAINER_NETWORKS_SERVICE } from './application/interfaces/container-networks-service.interface';
-import { CONTAINER_IMAGES_SERVICE } from './application/interfaces/container-images-service.interface';
-import { CONTAINER_LOGS_SERVICE } from './application/interfaces/container-logs-service.interface';
-import { CONTAINER_STATS_SERVICE } from './application/interfaces/container-stats-service.interface';
-import { CONTAINER_REGISTRIES_SERVICE } from './application/interfaces/container-registries-service.interface';
-import { CONTAINER_TEMPLATES_SERVICE } from './application/interfaces/container-templates-service.interface';
+import { CONTAINER_SERVICE } from './applicati../../domain/interfaces/container-service.interface';
+import { CONTAINER_VOLUMES_SERVICE } from './applicati../../domain/interfaces/container-volumes-service.interface';
+import { CONTAINER_NETWORKS_SERVICE } from './applicati../../domain/interfaces/container-networks-service.interface';
+import { CONTAINER_IMAGES_SERVICE } from './applicati../../domain/interfaces/container-images-service.interface';
+import { CONTAINER_LOGS_SERVICE } from './applicati../../domain/interfaces/container-logs-service.interface';
+import { CONTAINER_STATS_SERVICE } from './applicati../../domain/interfaces/container-stats-service.interface';
+import { CONTAINER_REGISTRIES_SERVICE } from './applicati../../domain/interfaces/container-registries-service.interface';
+import { CONTAINER_TEMPLATES_SERVICE } from './applicati../../domain/interfaces/container-templates-service.interface';
 import { ContainerMapper } from './infrastructure/mappers/container.mapper';
 import { ContainerNetworkMapper } from './infrastructure/mappers/container-network.mapper';
 import { ContainersController } from './presentation/controllers/containers.controller';
@@ -72,7 +72,7 @@ import { ContainerRegistriesController } from './presentation/controllers/contai
 import { ContainerTemplatesController } from './presentation/controllers/container-templates.controller';
 import { ContainerLogsGateway } from './presentation/gateways/container-logs.gateway';
 import { WatcherEngineService } from './application/services/engine/watcher-engine.service';
-import { WATCHER_ENGINE_SERVICE } from './application/interfaces/watcher-engine-service.interface';
+import { WATCHER_ENGINE_SERVICE } from './applicati../../domain/interfaces/watcher-engine-service.interface';
 import { WatcherComponentFactory } from './application/services/components/watcher/watcher-component-factory.service';
 import { DockerWatcherComponent } from './application/services/components/watcher/providers/docker/docker-watcher.component';
 

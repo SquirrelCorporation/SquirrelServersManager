@@ -17,7 +17,7 @@ import PinoLogger from '../../../../../logger';
 import {
   IWatcherEngineService,
   StateType,
-} from '../../interfaces/watcher-engine-service.interface';
+} from '../../../domain/interfaces/watcher-engine-service.interface';
 import { RegistryComponentFactory } from '../components/registry/registry-component-factory.service';
 import { DOCKER_DEVICE_SERVICE } from '../../../../devices/domain/services/docker-device-service.interface';
 import { IDockerDeviceService } from '../../../../devices/domain/services/docker-device-service.interface';
@@ -27,7 +27,7 @@ import { WatcherComponentFactory } from '../components/watcher/watcher-component
 import {
   CONTAINER_REGISTRIES_SERVICE,
   IContainerRegistriesService,
-} from '../../interfaces/container-registries-service.interface';
+} from '../../../domain/interfaces/container-registries-service.interface';
 
 const logger = PinoLogger.child(
   { module: 'WatcherEngineService' },

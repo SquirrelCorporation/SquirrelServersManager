@@ -1,19 +1,19 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ServerLogsService } from './application/services/server-logs.service';
+import { ANSIBLE_LOGS_SERVICE } from './applicati../../domain/interfaces/ansible-logs-service.interface';
+import { SERVER_LOGS_SERVICE } from './applicati../../domain/interfaces/server-logs-service.interface';
 import { AnsibleLogsService } from './application/services/ansible-logs.service';
-import { ServerLog, ServerLogSchema } from './infrastructure/schemas/server-log.schema';
-import { AnsibleLog, AnsibleLogSchema } from './infrastructure/schemas/ansible-log.schema';
-import { ServerLogsRepository } from './infrastructure/repositories/server-logs.repository';
-import { AnsibleLogsRepository } from './infrastructure/repositories/ansible-logs.repository';
-import { LogsController } from './presentation/controllers/logs.controller';
-import { ServerLogMapper } from './infrastructure/mappers/server-log.mapper';
-import { AnsibleLogMapper } from './infrastructure/mappers/ansible-log.mapper';
-import { ServerLogPresentationMapper } from './presentation/mappers/server-log.mapper';
-import { SERVER_LOGS_SERVICE } from './application/interfaces/server-logs-service.interface';
-import { ANSIBLE_LOGS_SERVICE } from './application/interfaces/ansible-logs-service.interface';
-import { SERVER_LOGS_REPOSITORY } from './domain/repositories/server-logs-repository.interface';
+import { ServerLogsService } from './application/services/server-logs.service';
 import { ANSIBLE_LOGS_REPOSITORY } from './domain/repositories/ansible-logs-repository.interface';
+import { SERVER_LOGS_REPOSITORY } from './domain/repositories/server-logs-repository.interface';
+import { AnsibleLogMapper } from './infrastructure/mappers/ansible-log.mapper';
+import { ServerLogMapper } from './infrastructure/mappers/server-log.mapper';
+import { AnsibleLogsRepository } from './infrastructure/repositories/ansible-logs.repository';
+import { ServerLogsRepository } from './infrastructure/repositories/server-logs.repository';
+import { AnsibleLog, AnsibleLogSchema } from './infrastructure/schemas/ansible-log.schema';
+import { ServerLog, ServerLogSchema } from './infrastructure/schemas/server-log.schema';
+import { LogsController } from './presentation/controllers/logs.controller';
+import { ServerLogPresentationMapper } from './presentation/mappers/server-log.mapper';
 
 @Module({
   imports: [

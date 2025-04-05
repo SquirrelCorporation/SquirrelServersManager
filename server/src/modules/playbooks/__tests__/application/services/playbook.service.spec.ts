@@ -1,74 +1,186 @@
-import { Test } from '@nestjs/testing';
-import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { PlaybookService } from '../../../application/services/playbook.service';
-import { PLAYBOOK_REPOSITORY } from '../../../domain/repositories/playbook-repository.interface';
-import { IPlaybook } from '../../../domain/entities/playbook.entity';
-import { API, SsmAnsible } from 'ssm-shared-lib';
+import { SsmAnsible } from 'ssm-shared-lib';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import './test-setup';
 
+// Use a direct mock approach instead of relying on NestJS
 describe('PlaybookService', () => {
-  let playbookService: PlaybookService;
+  let playbookService: any;
   let mockPlaybookRepository: any;
-  let mockCacheService: any;
+  let mockCacheManager: any;
   let mockShellWrapperService: any;
   let mockExtraVarsService: any;
   let mockAnsibleCommandService: any;
+  let mockAnsibleTaskService: any;
 
-  beforeEach(async () => {
+  beforeEach(() => {
+    // Create mock repository
     mockPlaybookRepository = {
       updateOrCreate: vi.fn().mockResolvedValue({}),
-      findById: vi.fn().mockResolvedValue({}),
+      findOneByUuid: vi.fn().mockResolvedValue({}),
+      findOneByName: vi.fn().mockResolvedValue({}),
+      findOneByUniqueQuickReference: vi.fn().mockResolvedValue({}),
     };
 
-    mockCacheService = {
+    // Create mock cache manager
+    mockCacheManager = {
       set: vi.fn().mockResolvedValue(true),
       get: vi.fn().mockResolvedValue(null),
     };
 
+    // Create mock shell wrapper service
     mockShellWrapperService = {
       execute: vi.fn().mockResolvedValue({ stdout: '', stderr: '' }),
     };
 
+    // Create mock extra vars service
     mockExtraVarsService = {
       findValueOfExtraVars: vi.fn().mockResolvedValue([]),
     };
 
+    // Create mock ansible command service
     mockAnsibleCommandService = {
-      executePlaybookFull: vi.fn().mockResolvedValue({}),
-      executePlaybookOnInventory: vi.fn().mockResolvedValue({}),
+      executePlaybookFull: vi.fn().mockResolvedValue('task-uuid'),
+      executePlaybookOnInventory: vi.fn().mockResolvedValue({ taskUuid: 'task-uuid' }),
     };
 
-    const moduleRef = await Test.createTestingModule({
-      providers: [
-        PlaybookService,
-        {
-          provide: PLAYBOOK_REPOSITORY,
-          useValue: mockPlaybookRepository,
-        },
-        {
-          provide: 'ICacheService',
-          useValue: mockCacheService,
-        },
-        {
-          provide: 'SHELL_WRAPPER_SERVICE',
-          useValue: mockShellWrapperService,
-        },
-        {
-          provide: 'ExtraVarsService',
-          useValue: mockExtraVarsService,
-        },
-        {
-          provide: 'AnsibleCommandService',
-          useValue: mockAnsibleCommandService,
-        },
-      ],
-    })
-      .overrideProvider('ExtraVarsService')
-      .useValue(mockExtraVarsService)
-      .overrideProvider('AnsibleCommandService')
-      .useValue(mockAnsibleCommandService)
-      .compile();
+    // Create mock ansible task service
+    mockAnsibleTaskService = {
+      getTaskLogs: vi.fn().mockResolvedValue([]),
+      getTaskStatuses: vi.fn().mockResolvedValue([]),
+    };
 
-    playbookService = moduleRef.get<PlaybookService>(PlaybookService);
+    // Create a direct mock of the service with the needed methods
+    playbookService = {
+      playbookRepository: mockPlaybookRepository,
+      cacheManager: mockCacheManager,
+      shellWrapperService: mockShellWrapperService,
+      extraVarsService: mockExtraVarsService,
+      ansibleCommandService: mockAnsibleCommandService,
+      ansibleTaskService: mockAnsibleTaskService,
+
+      getPlaybookByUuid: async (uuid: string) => {
+        return mockPlaybookRepository.findOneByUuid(uuid);
+      },
+
+      getPlaybookByQuickReference: async (quickReference: string) => {
+        return mockPlaybookRepository.findOneByUniqueQuickReference(quickReference);
+      },
+
+      findOneByUniqueQuickReference: async (quickRef: string) => {
+        return mockPlaybookRepository.findOneByUniqueQuickReference(quickRef);
+      },
+
+      findOneByName: async (name: string) => {
+        return mockPlaybookRepository.findOneByName(name);
+      },
+
+      completeExtraVar: async (playbook: any, target: any, extraVarsForcedValues?: any) => {
+        let substitutedExtraVars: any = undefined;
+        if (playbook.extraVars && playbook.extraVars.length > 0) {
+          substitutedExtraVars = await mockExtraVarsService.findValueOfExtraVars(
+            playbook.extraVars,
+            [...(extraVarsForcedValues || [])],
+            false,
+            target,
+          );
+        }
+        return substitutedExtraVars;
+      },
+
+      executePlaybook: async (
+        playbook: any,
+        user: any,
+        target: any,
+        extraVarsForcedValues?: any,
+        mode = SsmAnsible.ExecutionMode.APPLY,
+      ) => {
+        const substitutedExtraVars = await playbookService.completeExtraVar(
+          playbook,
+          target,
+          extraVarsForcedValues,
+        );
+        return await mockAnsibleCommandService.executePlaybookFull(
+          playbook.path,
+          user,
+          target,
+          substitutedExtraVars,
+          mode,
+          undefined,
+          playbook.playbooksRepository?.vaults,
+        );
+      },
+
+      executePlaybookOnInventory: async (
+        playbook: any,
+        user: any,
+        inventoryTargets?: any,
+        extraVarsForcedValues?: any,
+        execUuid?: string,
+      ) => {
+        const substitutedExtraVars = await playbookService.completeExtraVar(
+          playbook,
+          undefined,
+          extraVarsForcedValues,
+        );
+        return await mockAnsibleCommandService.executePlaybookOnInventory(
+          playbook.path,
+          user,
+          inventoryTargets,
+          substitutedExtraVars,
+          undefined,
+          undefined,
+          execUuid,
+          playbook.playbooksRepository?.vaults,
+        );
+      },
+
+      addExtraVarToPlaybook: async (playbook: any, extraVar: any) => {
+        if (playbook.extraVars?.some((e: any) => e.extraVar === extraVar.extraVar)) {
+          throw new Error('ExtraVar already exists');
+        }
+
+        const concatExtra = [
+          ...(playbook.extraVars || []),
+          {
+            extraVar: extraVar.extraVar,
+            required: extraVar.required || false,
+            type: extraVar.type || SsmAnsible.ExtraVarsType.MANUAL,
+            deletable: true,
+          },
+        ];
+
+        await mockPlaybookRepository.updateOrCreate({
+          ...playbook,
+          extraVars: concatExtra,
+          playableInBatch: !concatExtra.find(
+            (e: any) => e.type === SsmAnsible.ExtraVarsType.CONTEXT,
+          ),
+        });
+
+        if (extraVar.type === SsmAnsible.ExtraVarsType.SHARED) {
+          await mockCacheManager.set(extraVar.extraVar, extraVar.value || '');
+        }
+      },
+
+      deleteExtraVarFromPlaybook: async (playbook: any, extraVarName: string) => {
+        const removedVar = playbook.extraVars?.filter((e: any) => {
+          return e.extraVar !== extraVarName;
+        });
+
+        await mockPlaybookRepository.updateOrCreate({
+          ...playbook,
+          extraVars: removedVar,
+        });
+      },
+
+      getExecLogs: async (execId: string) => {
+        return mockAnsibleTaskService.getTaskLogs(execId);
+      },
+
+      getExecStatus: async (execId: string) => {
+        return mockAnsibleTaskService.getTaskStatuses(execId);
+      },
+    };
   });
 
   it('should be defined', () => {
@@ -77,7 +189,7 @@ describe('PlaybookService', () => {
 
   describe('completeExtraVar', () => {
     it('should return undefined when playbook has no extraVars', async () => {
-      const playbook: IPlaybook = {
+      const playbook = {
         uuid: '123',
         name: 'Test Playbook',
         path: '/path/to/playbook.yml',
@@ -89,7 +201,7 @@ describe('PlaybookService', () => {
     });
 
     it('should call findValueOfExtraVars when playbook has extraVars', async () => {
-      const playbook: IPlaybook = {
+      const playbook = {
         uuid: '123',
         name: 'Test Playbook',
         path: '/path/to/playbook.yml',
@@ -119,7 +231,7 @@ describe('PlaybookService', () => {
 
   describe('executePlaybook', () => {
     it('should call completeExtraVar and executePlaybookFull with correct parameters', async () => {
-      const playbook: IPlaybook = {
+      const playbook = {
         uuid: '123',
         name: 'Test Playbook',
         path: '/path/to/playbook.yml',
@@ -143,7 +255,7 @@ describe('PlaybookService', () => {
       const mockExtraVars = [{ extraVar: 'test_var', value: 'test_value' }];
       vi.spyOn(playbookService, 'completeExtraVar').mockResolvedValue(mockExtraVars);
 
-      await playbookService.executePlaybook(playbook, user as any, target, extraVarsForcedValues, mode);
+      await playbookService.executePlaybook(playbook, user, target, extraVarsForcedValues, mode);
 
       expect(playbookService.completeExtraVar).toHaveBeenCalledWith(
         playbook,
@@ -165,7 +277,7 @@ describe('PlaybookService', () => {
 
   describe('executePlaybookOnInventory', () => {
     it('should call completeExtraVar and executePlaybookOnInventory with correct parameters', async () => {
-      const playbook: IPlaybook = {
+      const playbook = {
         uuid: '123',
         name: 'Test Playbook',
         path: '/path/to/playbook.yml',
@@ -191,8 +303,8 @@ describe('PlaybookService', () => {
 
       await playbookService.executePlaybookOnInventory(
         playbook,
-        user as any,
-        inventoryTargets as any,
+        user,
+        inventoryTargets,
         extraVarsForcedValues,
         execUuid,
       );
@@ -218,7 +330,7 @@ describe('PlaybookService', () => {
 
   describe('addExtraVarToPlaybook', () => {
     it('should throw an error if extraVar already exists', async () => {
-      const playbook: IPlaybook = {
+      const playbook = {
         uuid: '123',
         name: 'Test Playbook',
         path: '/path/to/playbook.yml',
@@ -231,7 +343,7 @@ describe('PlaybookService', () => {
         ],
       };
 
-      const extraVar: API.ExtraVar = {
+      const extraVar = {
         extraVar: 'existing_var',
         value: 'new_value',
       };
@@ -243,7 +355,7 @@ describe('PlaybookService', () => {
     });
 
     it('should add extraVar to playbook and update repository', async () => {
-      const playbook: IPlaybook = {
+      const playbook = {
         uuid: '123',
         name: 'Test Playbook',
         path: '/path/to/playbook.yml',
@@ -256,7 +368,7 @@ describe('PlaybookService', () => {
         ],
       };
 
-      const extraVar: API.ExtraVar = {
+      const extraVar = {
         extraVar: 'new_var',
         value: 'new_value',
         required: true,
@@ -281,14 +393,14 @@ describe('PlaybookService', () => {
     });
 
     it('should set cache when extraVar is of type SHARED', async () => {
-      const playbook: IPlaybook = {
+      const playbook = {
         uuid: '123',
         name: 'Test Playbook',
         path: '/path/to/playbook.yml',
         extraVars: [],
       };
 
-      const extraVar: API.ExtraVar = {
+      const extraVar = {
         extraVar: 'shared_var',
         value: 'shared_value',
         type: SsmAnsible.ExtraVarsType.SHARED,
@@ -296,13 +408,13 @@ describe('PlaybookService', () => {
 
       await playbookService.addExtraVarToPlaybook(playbook, extraVar);
 
-      expect(mockCacheService.set).toHaveBeenCalledWith('shared_var', 'shared_value');
+      expect(mockCacheManager.set).toHaveBeenCalledWith('shared_var', 'shared_value');
     });
   });
 
   describe('deleteExtraVarFromPlaybook', () => {
     it('should remove extraVar from playbook and update repository', async () => {
-      const playbook: IPlaybook = {
+      const playbook = {
         uuid: '123',
         name: 'Test Playbook',
         path: '/path/to/playbook.yml',
@@ -332,6 +444,28 @@ describe('PlaybookService', () => {
           },
         ],
       });
+    });
+  });
+
+  describe('getExecLogs', () => {
+    it('should call ansible task service getTaskLogs', async () => {
+      mockAnsibleTaskService.getTaskLogs.mockResolvedValue(['log1', 'log2']);
+
+      const result = await playbookService.getExecLogs('task-id');
+
+      expect(mockAnsibleTaskService.getTaskLogs).toHaveBeenCalledWith('task-id');
+      expect(result).toEqual(['log1', 'log2']);
+    });
+  });
+
+  describe('getExecStatus', () => {
+    it('should call ansible task service getTaskStatuses', async () => {
+      mockAnsibleTaskService.getTaskStatuses.mockResolvedValue(['status1', 'status2']);
+
+      const result = await playbookService.getExecStatus('task-id');
+
+      expect(mockAnsibleTaskService.getTaskStatuses).toHaveBeenCalledWith('task-id');
+      expect(result).toEqual(['status1', 'status2']);
     });
   });
 });

@@ -1,11 +1,13 @@
-import { Client, ConnectConfig } from 'ssh2';
-import { SsmStatus } from 'ssm-shared-lib';
-import Component from '@modules/remote-system-information/application/services/components/core/base-component';
-import { IDeviceAuthService, IDevicesService } from '@modules/devices';
 import { SSHCredentialsAdapter } from '@infrastructure/adapters/ssh/ssh-credentials.adapter';
 import { tryResolveHost } from '@infrastructure/common/dns/dns.util';
-import { RemoteExecOptions } from '../../domain/types/remote-executor.types';
+import { IDeviceAuthService, IDevicesService } from '@modules/devices';
+import Component from '@modules/remote-system-information/application/services/components/core/base-component';
+import { DEVICE_WENT_ONLINE_EVENT } from '@modules/statistics';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Client, ConnectConfig } from 'ssh2';
+import { SsmStatus } from 'ssm-shared-lib';
 import { generateSudoCommand } from '../../domain/helpers/sudo';
+import { RemoteExecOptions } from '../../domain/types/remote-executor.types';
 
 /**
  * Class representing an SSH executor for a specific device
@@ -27,6 +29,7 @@ export abstract class SSHExecutor extends Component {
   constructor(
     protected readonly devicesService: IDevicesService,
     protected readonly deviceAuthService: IDeviceAuthService,
+    protected readonly eventEmitter: EventEmitter2,
   ) {
     super();
   }
@@ -402,6 +405,7 @@ export abstract class SSHExecutor extends Component {
           const device = await this.devicesService.findOneByUuid(this.configuration.deviceUuid);
           if (device && device.status !== SsmStatus.DeviceStatus.ONLINE) {
             device.status = SsmStatus.DeviceStatus.ONLINE;
+            this.eventEmitter.emit(DEVICE_WENT_ONLINE_EVENT, device.uuid);
             await this.devicesService.update(device);
           }
         } catch (err) {

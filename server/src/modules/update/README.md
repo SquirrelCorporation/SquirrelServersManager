@@ -12,63 +12,133 @@ Squirrel Servers Manager 🐿️
 ---
 # Update Module
 
-## Overview
-The Update Module is responsible for checking if a new version of the Squirrel Servers Manager (SSM) is available. It compares the current installed version with the latest version available in the GitHub repository.
+The Update module is a NestJS implementation that manages version checking and update notifications for the Squirrel Servers Manager. It provides automated version comparison between the local installation and the latest available version from the official repository.
+
+## Features
+
+- **Automated Version Checking**
+  - Periodic version checks (every 30 minutes)
+  - Semantic versioning comparison
+  - Remote version fetching from GitHub
+  - Update notification caching
+
+- **Version Management**
+  - Local version tracking
+  - Remote version fetching
+  - Version comparison using semver
+  - Update availability status
+
+- **Scheduling**
+  - Cron-based version checks
+  - Dynamic job management
+  - Configurable check intervals
+
+- **Error Handling**
+  - Graceful failure handling
+  - Invalid version format detection
+  - Network error management
+  - Comprehensive logging
 
 ## Architecture
-The Update Module follows the NestJS component-based design pattern, similar to other modules in the application. It consists of:
 
-- **UpdateModule**: The main NestJS module that provides the UpdateService.
-- **UpdateService**: The core service that handles version checking and comparison.
-- **Legacy UpdateChecker**: A backward compatibility layer that redirects calls to the new UpdateService.
+The module follows Clean Architecture principles with clear separation of concerns:
 
-## Components
+### Domain Layer
+- **Interfaces**
+  - `IUpdateService`: Core update service contract
+  - Version checking and comparison contracts
+  - Module initialization requirements
 
-### UpdateService
-The UpdateService is responsible for:
-- Fetching the latest version from the GitHub repository
-- Comparing local and remote versions using semver
-- Storing update information in the cache
-- Providing version information to other parts of the application
-- Handling error conditions during version checks
+### Application Layer
+- **Services**
+  - `UpdateService`: Core update management
+    - Version comparison logic
+    - Remote version fetching
+    - Update status caching
+    - Scheduled checks management
 
-### Integration Points
-The Update Module integrates with:
-- **Cron Jobs**: Scheduled to check for updates every 30 minutes
-- **Startup Process**: Checks for updates during application startup
-- **Cache**: Stores update information for other components to access
-- **Event System**: Emits events for update status changes
+### Infrastructure Layer
+- **External Services**
+  - GitHub repository integration
+  - Cache management
+  - HTTP client configuration
 
-## Usage
-The Update Module is designed to work automatically in the background. It's initialized when the application starts and runs periodically to check for updates.
+### Presentation Layer
+- Service-only module (no controllers)
+- Consumed by other modules for update status
 
-### Accessing Update Information
-Other parts of the application can access update information through the cache:
+## Service Methods
+
+### Version Checking
 ```typescript
-import { getFromCache } from '../../data/cache';
-import { SettingsKeys } from 'ssm-shared-lib';
-
-// Get update information
-const updateAvailable = await getFromCache(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE);
+checkVersion(): Promise<void>
+// Checks for available updates by comparing local and remote versions
+// Stores result in cache using SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE
 ```
 
-## Testing
-The Update Module includes comprehensive unit tests that verify:
-- Version comparison logic
-- Remote version fetching
-- Update checking process
-- Error handling for network failures
-- Invalid version format handling
+### Version Retrieval
+```typescript
+getLocalVersion(): string
+// Returns the current local version of the application
+```
 
-## Dependencies
-- axios: For HTTP requests to fetch the latest version
-- semver: For semantic version comparison
-- ssm-shared-lib: For shared enums and constants
-- @nestjs/schedule: For cron job scheduling
+### Version Comparison
+```typescript
+private compareVersions(localVersion: string, remoteVersion: string): number | null
+// Compares versions using semver
+// Returns: 
+//   0: versions are identical
+//   1: local is newer
+//  -1: remote is newer
+// null: invalid version format
+```
+
+### Remote Version Fetching
+```typescript
+private async fetchRemoteVersion(): Promise<string | undefined>
+// Fetches the latest version from GitHub repository
+// Returns undefined if fetch fails
+```
+
+## Configuration
+
+### Release URL
+```typescript
+private readonly RELEASE_URL = 'https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager/refs/heads/master/release.json'
+```
+
+### Cron Schedule
+```typescript
+@Cron(CronExpression.EVERY_30_MINUTES, { name: 'checkVersion' })
+// Runs version check every 30 minutes
+```
+
+## Integration
+
+Import the module into your NestJS application:
+
+```typescript
+import { UpdateModule } from './modules/update';
+
+@Module({
+  imports: [UpdateModule],
+})
+export class AppModule {}
+```
 
 ## Recent Changes
-- Improved error handling for network failures
-- Enhanced version comparison logic
-- Added comprehensive logging for update checks
-- Fixed test cases for various version comparison scenarios
-- Implemented proper error handling for invalid version formats
+
+- Implemented semantic versioning comparison
+- Added caching for update status
+- Enhanced error handling and logging
+- Improved scheduled job management
+- Added comprehensive version comparison logic
+
+## Future Improvements
+
+- Configurable check intervals
+- Multiple release channels support
+- Automated update installation
+- Update progress tracking
+- Release notes fetching
+- Update rollback capability

@@ -5,7 +5,7 @@ import { SsmEvents } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
 import { SshSession } from '../../domain/entities/ssh.entity';
 import { SshGateway } from '../../presentation/gateways/ssh.gateway';
-import { ISshTerminalService } from '../interfaces/ssh-terminal-service.interface';
+import { ISshTerminalService } from '../../domain/interfaces/ssh-terminal-service.interface';
 
 @Injectable()
 export class SshTerminalService implements ISshTerminalService {

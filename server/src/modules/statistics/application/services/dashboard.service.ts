@@ -8,11 +8,12 @@ import {
   PROMETHEUS_SERVICE,
 } from '../../../../infrastructure/prometheus/prometheus.interface';
 import PinoLogger from '../../../../logger';
+import { IDashboardService } from '../../domain/interfaces/dashboard-service.interface';
 import { DeviceDownTimeService } from './device-downtime.service';
 import { DeviceStatsService } from './device-stats.service';
 
 @Injectable()
-export class DashboardService {
+export class DashboardService implements IDashboardService {
   private readonly logger = PinoLogger.child(
     { module: 'DashboardService' },
     { msgPrefix: '[DASHBOARD] - ' },

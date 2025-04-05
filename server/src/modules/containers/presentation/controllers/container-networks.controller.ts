@@ -1,12 +1,14 @@
-import { parse } from 'url';
-import { Body, Controller, Delete, Get, Inject, Param, Post, Req } from '@nestjs/common';
-import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
-import { IUser } from '@modules/users/domain/entities/user.entity';
 import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
 import { paginate } from '@infrastructure/common/query/pagination.util';
 import { sortByFields } from '@infrastructure/common/query/sorter.util';
-import { IContainerNetworksService } from '../../application/interfaces/container-networks-service.interface';
-import { CONTAINER_NETWORKS_SERVICE } from '../../application/interfaces/container-networks-service.interface';
+import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
+import { IUser } from '@modules/users/domain/entities/user.entity';
+import { Body, Controller, Delete, Get, Inject, Param, Post, Req } from '@nestjs/common';
+import { parse } from 'url';
+import {
+  CONTAINER_NETWORKS_SERVICE,
+  IContainerNetworksService,
+} from '../../applicati../../domain/interfaces/container-networks-service.interface';
 import { DeployNetworkDto } from '../dtos/create-network.dto';
 
 @Controller('container-networks')

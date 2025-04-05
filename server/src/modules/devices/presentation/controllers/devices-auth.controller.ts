@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
+import { ResourceAction, RESOURCES, ACTIONS } from '../../../../infrastructure/security/roles/resource-action.decorator';
 import { DEVICES_SERVICE } from '../../domain/services/devices-service.interface';
 import { IDevicesService } from '../../domain/services/devices-service.interface';
 import { DEVICE_AUTH_SERVICE } from '../../domain/services/device-auth-service.interface';
@@ -58,6 +59,7 @@ export class DevicesAuthController {
   ) {}
 
   @Get(':uuid')
+  @ResourceAction(RESOURCES.DEVICE, ACTIONS.READ)
   async getDeviceAuth(@Param('uuid') uuid: string) {
     try {
       const device = await this.devicesService.findOneByUuid(uuid);
@@ -86,6 +88,7 @@ export class DevicesAuthController {
   }
 
   @Post(':uuid')
+  @ResourceAction(RESOURCES.DEVICE, ACTIONS.CREATE)
   async createDeviceAuth(
     @Param('uuid') uuid: string,
     @Body() createDeviceAuthDto: CreateDeviceAuthDto,
@@ -118,6 +121,7 @@ export class DevicesAuthController {
   }
 
   @Patch(':uuid')
+  @ResourceAction(RESOURCES.DEVICE, ACTIONS.UPDATE)
   async updateDeviceAuth(
     @Param('uuid') uuid: string,
     @Body() updateDeviceAuthDto: UpdateDeviceAuthDto,
@@ -184,6 +188,7 @@ export class DevicesAuthController {
   }
 
   @Delete(':uuid')
+  @ResourceAction(RESOURCES.DEVICE, ACTIONS.DELETE)
   async removeDeviceAuth(@Param('uuid') uuid: string) {
     try {
       const device = await this.devicesService.findOneByUuid(uuid);
@@ -206,6 +211,7 @@ export class DevicesAuthController {
   }
 
   @Patch(':uuid/docker')
+  @ResourceAction(RESOURCES.DEVICE, ACTIONS.UPDATE)
   async updateDockerAuth(
     @Param('uuid') uuid: string,
     @Body() updateDockerAuthDto: UpdateDockerAuthDto,
@@ -266,6 +272,7 @@ export class DevicesAuthController {
   }
 
   @Post(':uuid/docker/certs/:type')
+  @ResourceAction(RESOURCES.DEVICE, ACTIONS.UPDATE)
   @UseInterceptors(
     FileInterceptor('file', {
       limits: {
@@ -326,6 +333,7 @@ export class DevicesAuthController {
   }
 
   @Delete(':uuid/docker/certs/:type')
+  @ResourceAction(RESOURCES.DEVICE, ACTIONS.DELETE)
   async deleteDockerAuthCerts(@Param('uuid') uuid: string, @Param('type') type: string) {
     try {
       if (!['ca', 'cert', 'key'].includes(type)) {
@@ -368,6 +376,7 @@ export class DevicesAuthController {
   }
 
   @Patch(':uuid/proxmox')
+  @ResourceAction(RESOURCES.DEVICE, ACTIONS.UPDATE)
   async updateProxmoxAuth(
     @Param('uuid') uuid: string,
     @Body() updateProxmoxAuthDto: UpdateProxmoxAuthDto,

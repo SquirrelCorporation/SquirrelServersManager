@@ -4,14 +4,42 @@ import { InformationService } from '../application/services/information.service'
 describe('InformationService', () => {
   let service: InformationService;
   let mockCacheManager: any;
+  let mockPrometheusService: any;
+  let mockRedisClient: any;
 
   beforeEach(() => {
-    mockCacheManager = {
-      get: vi.fn(),
-      set: vi.fn(),
+    mockRedisClient = {
+      info: vi.fn().mockImplementation((section) => {
+        const mockInfo = {
+          memory: '# Memory\nused_memory:1024\nused_memory_human:1K\n',
+          cpu: '# CPU\nused_cpu_sys:1.00\nused_cpu_user:2.00\n',
+          stats: '# Stats\ntotal_connections_received:100\ntotal_commands_processed:1000\n',
+          server: '# Server\nredis_version:6.2.6\nredis_mode:standalone\n',
+          clients: '# Clients\nconnected_clients:1\nblocked_clients:0\n',
+          replication: '# Replication\nrole:master\nconnected_slaves:0\n',
+          keyspace: '# Keyspace\ndb0:keys=100,expires=10\n',
+        };
+        return Promise.resolve(mockInfo[section] || '');
+      }),
     };
 
-    service = new InformationService(mockCacheManager);
+    mockCacheManager = {
+      stores: [
+        {
+          getClient: () => mockRedisClient,
+        },
+      ],
+    };
+
+    mockPrometheusService = {
+      prometheusServerStats: vi.fn().mockResolvedValue({
+        uptime: '1h',
+        memoryUsage: '100MB',
+        activeTargets: 5,
+      }),
+    };
+
+    service = new InformationService(mockCacheManager, mockPrometheusService);
 
     // Mock the getMongoDBStats method
     vi.spyOn(service, 'getMongoDBStats').mockResolvedValue({
@@ -78,10 +106,32 @@ describe('InformationService', () => {
       const result = await service.getRedisStats();
 
       expect(result).toEqual({
-        memory: {},
-        cpu: {},
-        stats: {},
-        server: {},
+        server: { redis_version: '6.2.6', redis_mode: 'standalone' },
+        clients: { connected_clients: '1', blocked_clients: '0' },
+        memory: { used_memory: '1024', used_memory_human: '1K' },
+        cpu: { used_cpu_sys: '1.00', used_cpu_user: '2.00' },
+        stats: { total_connections_received: '100', total_commands_processed: '1000' },
+        replication: { role: 'master', connected_slaves: '0' },
+        keyspace: { db0: 'keys=100,expires=10' },
+      });
+
+      expect(mockRedisClient.info).toHaveBeenCalledWith('memory');
+      expect(mockRedisClient.info).toHaveBeenCalledWith('cpu');
+      expect(mockRedisClient.info).toHaveBeenCalledWith('stats');
+      expect(mockRedisClient.info).toHaveBeenCalledWith('server');
+      expect(mockRedisClient.info).toHaveBeenCalledWith('clients');
+      expect(mockRedisClient.info).toHaveBeenCalledWith('replication');
+      expect(mockRedisClient.info).toHaveBeenCalledWith('keyspace');
+    });
+
+    it('should handle missing Redis client', async () => {
+      mockCacheManager.stores[0].getClient = () => null;
+
+      const result = await service.getRedisStats();
+
+      expect(result).toEqual({
+        status: 'error',
+        error: 'Could not access Redis INFO command sections.',
       });
     });
   });
@@ -90,7 +140,12 @@ describe('InformationService', () => {
     it('should return Prometheus stats', async () => {
       const result = await service.getPrometheusStats();
 
-      expect(result).toEqual({});
+      expect(result).toEqual({
+        uptime: '1h',
+        memoryUsage: '100MB',
+        activeTargets: 5,
+      });
+      expect(mockPrometheusService.prometheusServerStats).toHaveBeenCalled();
     });
   });
 

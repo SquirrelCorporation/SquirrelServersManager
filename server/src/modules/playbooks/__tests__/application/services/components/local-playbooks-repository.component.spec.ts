@@ -1,13 +1,12 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { LocalPlaybooksRegisterComponent } from '../../../../application/services/components/local-playbooks-repository.component';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { FileSystemService, PlaybookFileService } from '@modules/shell';
-import { PlaybookRepository } from '../../../../infrastructure/repositories/playbook.repository';
-import { PlaybooksRegisterRepository } from '../../../../infrastructure/repositories/playbooks-register.repository';
 import { Logger } from '@nestjs/common';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { MockLocalPlaybooksRegisterComponent } from './local-playbooks-repository-test-setup';
+
+// Import the test setup to ensure mocks are applied
+import './local-playbooks-repository-test-setup';
 
 describe('LocalPlaybooksRegisterComponent', () => {
-  let component: LocalPlaybooksRegisterComponent;
+  let component: MockLocalPlaybooksRegisterComponent;
   let mockFileSystemService: any;
   let mockPlaybookFileService: any;
   let mockPlaybookRepository: any;
@@ -15,6 +14,9 @@ describe('LocalPlaybooksRegisterComponent', () => {
   let mockEventEmitter: any;
 
   beforeEach(() => {
+    // Reset all mocks
+    vi.clearAllMocks();
+
     mockFileSystemService = {
       createDirectory: vi.fn().mockResolvedValue(undefined),
       deleteFiles: vi.fn().mockResolvedValue(undefined),
@@ -53,7 +55,7 @@ describe('LocalPlaybooksRegisterComponent', () => {
       }),
     };
 
-    component = new LocalPlaybooksRegisterComponent(
+    component = new MockLocalPlaybooksRegisterComponent(
       mockFileSystemService,
       mockPlaybookFileService,
       mockPlaybookRepository,
@@ -62,7 +64,7 @@ describe('LocalPlaybooksRegisterComponent', () => {
       'local-123',
       mockLogger,
       'Local Repository',
-      '/path/to/local'
+      '/path/to/local',
     );
 
     // Mock syncToDatabase method
@@ -76,7 +78,9 @@ describe('LocalPlaybooksRegisterComponent', () => {
   describe('init', () => {
     it('should initialize the component by creating the directory', async () => {
       await component.init();
-      expect(mockFileSystemService.createDirectory).toHaveBeenCalledWith('/path/to/local/local-123');
+      expect(mockFileSystemService.createDirectory).toHaveBeenCalledWith(
+        '/path/to/local/local-123',
+      );
     });
   });
 

@@ -12,7 +12,6 @@ import { SSM_DATA_PATH, SSM_INSTALL_PATH } from 'src/config';
 export class DefaultPlaybooksRegisterService {
   private readonly logger = new Logger(DefaultPlaybooksRegisterService.name);
 
-
   private readonly corePlaybooksRepository: Partial<IPlaybooksRegister> = {
     name: 'ssm-core',
     uuid: '00000000-0000-0000-0000-000000000000',
@@ -34,7 +33,7 @@ export class DefaultPlaybooksRegisterService {
   constructor(
     private readonly playbooksRepositoryRepository: PlaybooksRegisterRepository,
     private readonly fileSystemService: FileSystemService,
-  ) {  }
+  ) {}
 
   /**
    * Save the default SSM playbooks repositories

@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { SERVER_LOGS_SERVICE } from '../../../applicati../../domain/interfaces/server-logs-service.interface';
 import { LogsController } from '../../../presentation/controllers/logs.controller';
-import { SERVER_LOGS_SERVICE } from '../../../application/interfaces/server-logs-service.interface';
 
 describe('LogsController', () => {
   let controller: LogsController;

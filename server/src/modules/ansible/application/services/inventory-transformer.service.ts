@@ -1,9 +1,9 @@
+import { IInventoryTransformerService } from '@modules/ansible/doma../../domain/interfaces/inventory-transformer-service.interface';
 import { Injectable, Logger } from '@nestjs/common';
 import { SsmAnsible } from 'ssm-shared-lib';
-import { IInventoryTransformerService } from '@modules/ansible/application/interfaces/inventory-transformer-service.interface';
 import { Playbooks } from '../../../../types/typings';
-import { SshKeyService } from '../../../shell';
 import { IDeviceAuth } from '../../../devices';
+import { SshKeyService } from '../../../shell';
 
 interface Auth {
   ansible_ssh_private_key_file?: string;

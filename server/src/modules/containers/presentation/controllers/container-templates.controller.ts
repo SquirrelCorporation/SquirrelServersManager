@@ -1,3 +1,4 @@
+import { IUser } from '@modules/users';
 import {
   Body,
   Controller,
@@ -9,15 +10,14 @@ import {
   Query,
   Req,
   UsePipes,
-  ValidationPipe,
+  ValidationPipe
 } from '@nestjs/common';
 import { Request } from 'express';
-import { IUser } from '@modules/users';
-import { ContainerTemplatesQueryDto } from '../dtos/container-templates.dto';
 import {
   CONTAINER_TEMPLATES_SERVICE,
-  IContainerTemplatesService,
-} from '../../application/interfaces/container-templates-service.interface';
+  IContainerTemplatesService
+} from '../../applicati../../domain/interfaces/container-templates-service.interface';
+import { ContainerTemplatesQueryDto } from '../dtos/container-templates.dto';
 
 /**
  * Controller for container templates

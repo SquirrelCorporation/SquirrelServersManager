@@ -1,22 +1,15 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Inject,
-  Param,
-  Post,
-  Res,
-  UseGuards,
-  UsePipes,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, Post, Res, UsePipes } from '@nestjs/common';
 import { Response } from 'express';
 import { SettingsKeys, SsmAnsible } from 'ssm-shared-lib';
-import { JwtAuthGuard } from '@modules/auth/strategies/jwt-auth.guard';
+import {
+  ACTIONS,
+  ResourceAction,
+  RESOURCES,
+} from '../../../../infrastructure/security/roles/resource-action.decorator';
 import {
   ISettingsService,
   SETTINGS_SERVICE,
-} from '../../application/interfaces/settings-service.interface';
+} from '../../applicati../../domain/interfaces/settings-service.interface';
 import { AdvancedOperationsService } from '../../application/services/advanced-operations.service';
 import { InformationService } from '../../application/services/information.service';
 import {
@@ -157,6 +150,7 @@ export class SettingsController {
   }
 
   @Post('advanced/restart')
+  @ResourceAction(RESOURCES.SETTING, ACTIONS.EXECUTE)
   async restartServer(@Res() res: Response) {
     try {
       await this.advancedOperationsService.restartServer();
@@ -175,6 +169,7 @@ export class SettingsController {
   }
 
   @Delete('advanced/logs')
+  @ResourceAction(RESOURCES.SETTING, ACTIONS.DELETE)
   async deleteLogs(@Res() res: Response) {
     try {
       await this.advancedOperationsService.deleteLogs();
@@ -193,6 +188,7 @@ export class SettingsController {
   }
 
   @Delete('advanced/ansible-logs')
+  @ResourceAction(RESOURCES.SETTING, ACTIONS.DELETE)
   async deleteAnsibleLogs(@Res() res: Response) {
     try {
       await this.advancedOperationsService.deleteAnsibleLogs();
@@ -211,6 +207,7 @@ export class SettingsController {
   }
 
   @Delete('advanced/playbooks-and-resync')
+  @ResourceAction(RESOURCES.SETTING, ACTIONS.DELETE)
   async deletePlaybooksAndResync(@Res() res: Response) {
     try {
       await this.advancedOperationsService.deletePlaybooksModelAndResync();

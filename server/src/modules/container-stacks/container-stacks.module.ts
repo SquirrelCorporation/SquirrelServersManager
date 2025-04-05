@@ -1,30 +1,46 @@
 import { AnsibleVaultsModule } from '@modules/ansible-vaults';
+import { PlaybooksModule } from '@modules/playbooks/playbooks.module';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PlaybooksModule } from '@modules/playbooks/playbooks.module';
 import { ShellModule } from '../shell/shell.module';
-import { CONTAINER_REPOSITORY_COMPONENT_SERVICE } from './application/interfaces/container-repository-component-service.interface';
-import { CONTAINER_STACKS_REPOSITORY_ENGINE_SERVICE } from './application/interfaces/container-stacks-repository-engine-service.interface';
-import { CONTAINER_STACKS_SERVICE } from './application/interfaces/container-stacks-service.interface';
+import {
+  CONTAINER_REPOSITORY_COMPONENT_SERVICE
+} from './applicati../../domain/interfaces/container-repository-component-service.interface';
+import {
+  CONTAINER_STACKS_REPOSITORY_ENGINE_SERVICE
+} from './applicati../../domain/interfaces/container-stacks-repository-engine-service.interface';
+import { CONTAINER_STACKS_SERVICE } from './applicati../../domain/interfaces/container-stacks-service.interface';
 import { ContainerRepositoryComponentService } from './application/services/container-repository-component.service';
-import { ContainerCustomStacksRepositoryEngineService } from './application/services/container-stacks-repository-engine-service';
+import {
+  ContainerCustomStacksRepositoryEngineService
+} from './application/services/container-stacks-repository-engine-service';
 import { ContainerStacksService } from './application/services/container-stacks.service';
-import { CONTAINER_CUSTOM_STACK_REPOSITORY_REPOSITORY } from './domain/repositories/container-custom-stack-repository-repository.interface';
-import { CONTAINER_CUSTOM_STACK_REPOSITORY as CONTAINER_CUSTOM_STACK_REPOSITORY_TOKEN } from './domain/repositories/container-custom-stack-repository.interface';
-import { ContainerCustomStackRepositoryMapper } from './infrastructure/mappers/container-custom-stack-repository.mapper';
+import {
+  CONTAINER_CUSTOM_STACK_REPOSITORY_REPOSITORY
+} from './domain/repositories/container-custom-stack-repository-repository.interface';
+import {
+  CONTAINER_CUSTOM_STACK_REPOSITORY as CONTAINER_CUSTOM_STACK_REPOSITORY_TOKEN
+} from './domain/repositories/container-custom-stack-repository.interface';
+import {
+  ContainerCustomStackRepositoryMapper
+} from './infrastructure/mappers/container-custom-stack-repository.mapper';
 import { ContainerCustomStackMapper } from './infrastructure/mappers/container-custom-stack.mapper';
 import { ContainerCustomStackRepository } from './infrastructure/repositories/container-custom-stack.repository';
-import { ContainerCustomStacksRepositoryRepository } from './infrastructure/repositories/container-custom-stacks-repository.repository';
+import {
+  ContainerCustomStacksRepositoryRepository
+} from './infrastructure/repositories/container-custom-stacks-repository.repository';
 import {
   CONTAINER_CUSTOM_STACK_REPOSITORY,
-  ContainerCustomStackRepositorySchema,
+  ContainerCustomStackRepositorySchema
 } from './infrastructure/schemas/container-custom-stack-repository.schema';
 import {
   CONTAINER_CUSTOM_STACK,
-  ContainerCustomStackSchema,
+  ContainerCustomStackSchema
 } from './infrastructure/schemas/container-custom-stack.schema';
+import {
+  ContainerStackRepositoriesController
+} from './presentation/controllers/container-stack-repositories.controller';
 import { ContainerStacksController } from './presentation/controllers/container-stacks.controller';
-import { ContainerStackRepositoriesController } from './presentation/controllers/container-stack-repositories.controller';
 
 /**
  * ContainerStacksModule provides services for managing container stacks and repositories

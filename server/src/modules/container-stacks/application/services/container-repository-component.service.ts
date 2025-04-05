@@ -1,10 +1,3 @@
-import { Inject, Injectable } from '@nestjs/common';
-import pino from 'pino';
-import { SsmAlert, SsmGit } from 'ssm-shared-lib';
-import { RepositoryType } from 'ssm-shared-lib/distribution/enums/repositories';
-import { v4 as uuidv4 } from 'uuid';
-import { extractTopLevelName } from '@infrastructure/common/docker/utils';
-import { FileInfo, getMatchingFiles } from '@infrastructure/common/files/recursive-find.util';
 import {
   GitStep,
   IGitUserInfos,
@@ -14,23 +7,31 @@ import { clone } from '@infrastructure/adapters/git/services/clone.service';
 import { commitAndSync } from '@infrastructure/adapters/git/services/commit-and-sync.service';
 import { forcePull } from '@infrastructure/adapters/git/services/force-pull.service';
 import { IInitGitOptionsSyncImmediately } from '@infrastructure/adapters/git/services/init-git.service';
+import { extractTopLevelName } from '@infrastructure/common/docker/utils';
+import { FileInfo, getMatchingFiles } from '@infrastructure/common/files/recursive-find.util';
 import { EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
-import Events from '../../../../core/events/events';
-import { EventEmitterService } from '../../../../core/events/event-emitter.service';
+import { Inject, Injectable } from '@nestjs/common';
+import pino from 'pino';
+import { SsmAlert, SsmGit } from 'ssm-shared-lib';
+import { RepositoryType } from 'ssm-shared-lib/distribution/enums/repositories';
+import { v4 as uuidv4 } from 'uuid';
 import { SSM_DATA_PATH } from '../../../../config';
+import { EventEmitterService } from '../../../../core/events/event-emitter.service';
+import Events from '../../../../core/events/events';
 import logger from '../../../../logger';
 import { ShellWrapperService } from '../../../shell';
 import { IContainerCustomStackRepositoryEntity } from '../../domain/entities/container-custom-stack.entity';
 import { RepositoryConfig } from '../../domain/entities/repository-config.entity';
+import { IContainerRepositoryComponentService } from '../../domain/interfaces/container-repository-component-service.interface';
+import { CONTAINER_STACKS_SERVICE } from '../../domain/interfaces/container-stacks-service.interface';
 import { ContainerCustomStackRepository } from '../../infrastructure/repositories/container-custom-stack.repository';
 import { ContainerCustomStacksRepositoryRepository } from '../../infrastructure/repositories/container-custom-stacks-repository.repository';
-import { CONTAINER_STACKS_SERVICE } from '../interfaces/container-stacks-service.interface';
 import { ContainerStacksService } from './container-stacks.service';
 
 export const DIRECTORY_ROOT = `${SSM_DATA_PATH}/container-stacks`;
 
 @Injectable()
-export class ContainerRepositoryComponentService {
+export class ContainerRepositoryComponentService implements IContainerRepositoryComponentService {
   public name = '';
   public directory = '';
   public uuid = '';

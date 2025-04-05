@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { DateTime } from 'luxon';
 import { SsmStatus } from 'ssm-shared-lib';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { DEVICE_WENT_OFFLINE_EVENT } from '@modules/statistics';
 import { IDeviceRepository } from '../../domain/repositories/device-repository.interface';
 import { IDevice } from '../../domain/entities/device.entity';
 import { DEVICE, DeviceDocument } from '../schemas/device.schema';
@@ -78,7 +79,7 @@ export class DeviceRepository implements IDeviceRepository {
       logger.info(`Device ${device.uuid} seems offline`);
 
       // Emit event for DeviceDownTimeService to handle
-      this.eventEmitter.emit('device.went.offline', device.uuid);
+      this.eventEmitter.emit(DEVICE_WENT_OFFLINE_EVENT, device.uuid);
 
       await this.deviceModel
         .updateOne(

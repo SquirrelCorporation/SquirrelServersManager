@@ -1,5 +1,5 @@
 import { SftpService } from '@modules/sftp/application/services/sftp.service';
-import { Inject, Logger, forwardRef } from '@nestjs/common';
+import { forwardRef, Inject, Logger } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -9,11 +9,10 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsResponse,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SsmEvents } from 'ssm-shared-lib';
-import { ISftpService } from '../../application/interfaces/sftp-service.interface';
+import { ISftpService } from '../../applicati../../domain/interfaces/sftp-service.interface';
 import {
   SftpChmodDto,
   SftpDeleteDto,
@@ -90,12 +89,12 @@ export class SftpGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   async handleMkdir(
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: SftpMkdirDto,
-  ): Promise<WsResponse<any>> {
+  ): Promise<{ success: boolean; message?: string }> {
     return new Promise((resolve) => {
       this.logger.debug(`Creating directory: ${payload.path}`);
       this.logger.debug(`Mkdir payload: ${JSON.stringify(payload)}`);
       this.sftpService.mkdir(client.id, payload, (response) => {
-        resolve({ event: SsmEvents.SFTP.STATUS, data: response });
+        resolve(response);
       });
     });
   }
@@ -104,12 +103,12 @@ export class SftpGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   async handleRename(
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: SftpRenameDto,
-  ): Promise<WsResponse<any>> {
+  ): Promise<{ success: boolean; message?: string }> {
     return new Promise((resolve) => {
       this.logger.debug(`Renaming: ${payload.oldPath} to ${payload.newPath}`);
       this.logger.debug(`Rename payload: ${JSON.stringify(payload)}`);
       this.sftpService.rename(client.id, payload, (response) => {
-        resolve({ event: SsmEvents.SFTP.STATUS, data: response });
+        resolve(response);
       });
     });
   }
@@ -118,12 +117,12 @@ export class SftpGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   async handleChmod(
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: SftpChmodDto,
-  ): Promise<WsResponse<any>> {
+  ): Promise<{ success: boolean; message?: string }> {
     return new Promise((resolve) => {
       this.logger.debug(`Changing permissions: ${payload.path} to ${payload.mode.toString(8)}`);
       this.logger.debug(`Chmod payload: ${JSON.stringify(payload)}`);
       this.sftpService.chmod(client.id, payload, (response) => {
-        resolve({ event: SsmEvents.SFTP.STATUS, data: response });
+        resolve(response);
       });
     });
   }
@@ -132,12 +131,12 @@ export class SftpGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   async handleDelete(
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: SftpDeleteDto,
-  ): Promise<WsResponse<any>> {
+  ): Promise<{ success: boolean; message?: string }> {
     return new Promise((resolve) => {
       this.logger.debug(`Deleting ${payload.isDir ? 'directory' : 'file'}: ${payload.path}`);
       this.logger.debug(`Delete payload: ${JSON.stringify(payload)}`);
       this.sftpService.delete(client.id, payload, (response) => {
-        resolve({ event: SsmEvents.SFTP.STATUS, data: response });
+        resolve(response);
       });
     });
   }

@@ -15,11 +15,11 @@ export * from './domain/entities/playbooks-register.entity';
 export * from './domain/repositories/playbook-repository.interface';
 export * from './domain/repositories/playbooks-register-repository.interface';
 export * from './domain/services/playbooks-register-service.interface';
-export * from './domain/interfaces/tree-node-service.interface';
+export * from './doma../../domain/interfaces/tree-node-service.interface';
 
 // Application exports
-export * from './application/interfaces/playbooks-service.interface';
-export * from './application/interfaces/playbooks-register-engine-service.interface';
+export * from './applicati../../domain/interfaces/playbooks-service.interface';
+export * from './applicati../../domain/interfaces/playbooks-register-engine-service.interface';
 export * from './application/services/playbook.service';
 export * from './application/services/playbooks-register.service';
 export * from './application/services/register-tree.service';

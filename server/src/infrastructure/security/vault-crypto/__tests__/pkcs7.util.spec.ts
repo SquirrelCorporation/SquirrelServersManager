@@ -1,4 +1,5 @@
 import { assert, describe, test } from 'vitest';
+import './test-setup';
 import pkcs7 from '../../../../helpers/vault-crypto/pkcs7';
 
 describe('pkcs#7', function () {

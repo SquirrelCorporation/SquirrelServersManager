@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Inject, Param, Post, Put } from '@nestjs
 import {
   CONTAINER_STACKS_SERVICE,
   IContainerStacksService,
-} from '../../application/interfaces/container-stacks-service.interface';
+} from '../../applicati../../domain/interfaces/container-stacks-service.interface';
 import { IContainerCustomStackRepositoryEntity } from '../../domain/entities/container-custom-stack.entity';
 
 @Controller('container-stacks/repositories')

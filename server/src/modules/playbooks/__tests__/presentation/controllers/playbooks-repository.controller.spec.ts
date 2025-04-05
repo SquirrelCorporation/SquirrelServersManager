@@ -1,71 +1,24 @@
-import { Test } from '@nestjs/testing';
-import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { PlaybooksRepositoryController } from '../../../presentation/controllers/playbooks-repository.controller';
-import { PlaybooksRegisterService } from '../../../application/services/playbooks-register.service';
-import { PlaybooksRegisterRepository } from '../../../infrastructure/repositories/playbooks-register.repository';
-import { IPlaybooksRegister } from '../../../domain/entities/playbooks-register.entity';
-import { API } from 'ssm-shared-lib';
-import { NotFoundError } from '../../../../../middlewares/api/ApiError';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  createMockPlaybooksRepositoryController,
+  EntityNotFoundException,
+  mockPlaybooksRegisterRepository,
+  mockPlaybooksRegisterService,
+  mockRepository,
+} from './playbooks-repository-test-setup';
+
+// Import the test-setup which contains all mocks
+import './playbooks-repository-test-setup';
 
 describe('PlaybooksRepositoryController', () => {
-  let controller: PlaybooksRepositoryController;
-  let mockPlaybooksRegisterService: any;
-  let mockPlaybooksRegisterRepository: any;
+  let controller: any;
 
-  const mockRepository: IPlaybooksRegister = {
-    uuid: 'repo-uuid',
-    name: 'Test Repository',
-    type: 'local',
-    enabled: true,
-    directory: '/path/to/repo',
-  };
+  beforeEach(() => {
+    // Reset all mocks
+    vi.clearAllMocks();
 
-  beforeEach(async () => {
-    mockPlaybooksRegisterService = {
-      getAllPlaybooksRepositories: vi.fn().mockResolvedValue([
-        {
-          name: 'Test Repository',
-          children: [],
-          type: 'local',
-          uuid: 'repo-uuid',
-          path: '/path/to/repo',
-          default: true,
-        },
-      ]),
-      createDirectoryInPlaybookRepository: vi.fn().mockResolvedValue(undefined),
-      createPlaybookInRepository: vi.fn().mockResolvedValue({
-        uuid: 'playbook-uuid',
-        name: 'Test Playbook',
-        path: '/path/to/playbook.yml',
-      }),
-      deletePlaybookFromRepository: vi.fn().mockResolvedValue(undefined),
-      deleteDirectoryFromRepository: vi.fn().mockResolvedValue(undefined),
-      savePlaybook: vi.fn().mockResolvedValue(undefined),
-      syncRepository: vi.fn().mockResolvedValue(undefined),
-    };
-
-    mockPlaybooksRegisterRepository = {
-      findByUuid: vi.fn().mockImplementation((uuid) => {
-        if (uuid === 'repo-uuid') return Promise.resolve(mockRepository);
-        return Promise.resolve(null);
-      }),
-    };
-
-    const moduleRef = await Test.createTestingModule({
-      controllers: [PlaybooksRepositoryController],
-      providers: [
-        {
-          provide: PlaybooksRegisterService,
-          useValue: mockPlaybooksRegisterService,
-        },
-        {
-          provide: PlaybooksRegisterRepository,
-          useValue: mockPlaybooksRegisterRepository,
-        },
-      ],
-    }).compile();
-
-    controller = moduleRef.get<PlaybooksRepositoryController>(PlaybooksRepositoryController);
+    // Create a fresh controller using our mock implementation
+    controller = createMockPlaybooksRepositoryController();
   });
 
   it('should be defined', () => {
@@ -83,29 +36,35 @@ describe('PlaybooksRepositoryController', () => {
 
   describe('addDirectoryToPlaybookRepository', () => {
     it('should add a directory to a playbook repository', async () => {
-      await controller.addDirectoryToPlaybookRepository('repo-uuid', { fullPath: '/path/to/new/dir' });
+      await controller.addDirectoryToPlaybookRepository('repo-uuid', {
+        fullPath: '/path/to/new/dir',
+      });
       expect(mockPlaybooksRegisterRepository.findByUuid).toHaveBeenCalledWith('repo-uuid');
       expect(mockPlaybooksRegisterService.createDirectoryInPlaybookRepository).toHaveBeenCalledWith(
         mockRepository,
-        '/path/to/new/dir'
+        '/path/to/new/dir',
       );
     });
 
-    it('should throw NotFoundError when repository not found', async () => {
+    it('should throw EntityNotFoundException when repository not found', async () => {
       await expect(
-        controller.addDirectoryToPlaybookRepository('nonexistent-uuid', { fullPath: '/path/to/new/dir' })
-      ).rejects.toThrow(NotFoundError);
+        controller.addDirectoryToPlaybookRepository('nonexistent-uuid', {
+          fullPath: '/path/to/new/dir',
+        }),
+      ).rejects.toThrow(EntityNotFoundException);
     });
   });
 
   describe('addPlaybookToRepository', () => {
     it('should add a playbook to a repository', async () => {
-      const result = await controller.addPlaybookToRepository('repo-uuid', 'Test Playbook', { fullPath: '/path/to/playbook' });
+      const result = await controller.addPlaybookToRepository('repo-uuid', 'Test Playbook', {
+        fullPath: '/path/to/playbook',
+      });
       expect(mockPlaybooksRegisterRepository.findByUuid).toHaveBeenCalledWith('repo-uuid');
       expect(mockPlaybooksRegisterService.createPlaybookInRepository).toHaveBeenCalledWith(
         mockRepository,
         '/path/to/playbook',
-        'Test Playbook'
+        'Test Playbook',
       );
       expect(result).toEqual({
         uuid: 'playbook-uuid',
@@ -114,10 +73,12 @@ describe('PlaybooksRepositoryController', () => {
       });
     });
 
-    it('should throw NotFoundError when repository not found', async () => {
+    it('should throw EntityNotFoundException when repository not found', async () => {
       await expect(
-        controller.addPlaybookToRepository('nonexistent-uuid', 'Test Playbook', { fullPath: '/path/to/playbook' })
-      ).rejects.toThrow(NotFoundError);
+        controller.addPlaybookToRepository('nonexistent-uuid', 'Test Playbook', {
+          fullPath: '/path/to/playbook',
+        }),
+      ).rejects.toThrow(EntityNotFoundException);
     });
   });
 
@@ -127,14 +88,14 @@ describe('PlaybooksRepositoryController', () => {
       expect(mockPlaybooksRegisterRepository.findByUuid).toHaveBeenCalledWith('repo-uuid');
       expect(mockPlaybooksRegisterService.deletePlaybookFromRepository).toHaveBeenCalledWith(
         mockRepository,
-        'playbook-uuid'
+        'playbook-uuid',
       );
     });
 
-    it('should throw NotFoundError when repository not found', async () => {
+    it('should throw EntityNotFoundException when repository not found', async () => {
       await expect(
-        controller.deletePlaybookFromRepository('nonexistent-uuid', 'playbook-uuid')
-      ).rejects.toThrow(NotFoundError);
+        controller.deletePlaybookFromRepository('nonexistent-uuid', 'playbook-uuid'),
+      ).rejects.toThrow(EntityNotFoundException);
     });
   });
 
@@ -144,14 +105,14 @@ describe('PlaybooksRepositoryController', () => {
       expect(mockPlaybooksRegisterRepository.findByUuid).toHaveBeenCalledWith('repo-uuid');
       expect(mockPlaybooksRegisterService.deleteDirectoryFromRepository).toHaveBeenCalledWith(
         mockRepository,
-        '/path/to/dir'
+        '/path/to/dir',
       );
     });
 
-    it('should throw NotFoundError when repository not found', async () => {
+    it('should throw EntityNotFoundException when repository not found', async () => {
       await expect(
-        controller.deleteDirectoryFromRepository('nonexistent-uuid', { fullPath: '/path/to/dir' })
-      ).rejects.toThrow(NotFoundError);
+        controller.deleteDirectoryFromRepository('nonexistent-uuid', { fullPath: '/path/to/dir' }),
+      ).rejects.toThrow(EntityNotFoundException);
     });
   });
 
@@ -160,7 +121,7 @@ describe('PlaybooksRepositoryController', () => {
       await controller.savePlaybook('playbook-uuid', { content: 'playbook content' });
       expect(mockPlaybooksRegisterService.savePlaybook).toHaveBeenCalledWith(
         'playbook-uuid',
-        'playbook content'
+        'playbook content',
       );
     });
   });

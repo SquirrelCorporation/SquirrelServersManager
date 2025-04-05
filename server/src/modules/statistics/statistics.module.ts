@@ -18,7 +18,7 @@ import { DeviceDownTimeEventRepositoryMapper } from './infrastructure/mappers/de
 import { DeviceDownTimeEventRepository } from './infrastructure/repositories/device-downtime-event.repository';
 import { DEVICE_DOWNTIME_EVENT_REPOSITORY } from './domain/repositories/device-downtime-event-repository.interface';
 import { MetricsController } from './presentation/controllers/metrics.controller';
-import { METRICS_SERVICE } from './application/interfaces/metrics-service.interface';
+import { METRICS_SERVICE } from './doma../../domain/interfaces/metrics-service.interface';
 
 @Module({
   imports: [

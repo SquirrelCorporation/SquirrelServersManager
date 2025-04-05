@@ -1,93 +1,123 @@
+```ascii
+   ,;;:;,
+   ;;;;;
+  ,:;;:;    ,'=.
+  ;:;:;' .=" ,'_\
+  ':;:;,/  ,__:=@
+   ';;:;  =./)_
+     `"=\_  )_"`
+          ``'"`
+```
+Squirrel Servers Manager 🐿️
+---
 # Shell Module
 
 ## Overview
-The Shell Module provides a reliable interface for executing shell commands and managing file system operations within the application. It serves as a foundation for various operations including Docker Compose management, file system manipulations, and SSH key management.
+The Shell Module provides a comprehensive interface for executing shell commands and managing file system operations within the Squirrel Servers Manager application. It serves as a foundational module that enables secure command execution, file system operations, Docker Compose management, playbook file handling, and SSH key management, all following Clean Architecture principles.
 
-## Architecture
-The Shell Module follows Clean Architecture principles with clear separation of concerns:
+## Features
+- Secure shell command execution and management
+- File system operations (create, read, write, delete)
+- Docker Compose operations management
+- Ansible playbook file handling
+- SSH key generation and management
+- Error handling and recovery mechanisms
+- Integration with Ansible Vaults
+- Cross-platform compatibility
+- Secure file permissions handling
+- Asynchronous operation support
 
-- **Domain Layer**: Contains the core business entities and interfaces.
-- **Application Layer**: Contains the application services and interfaces.
-- **Infrastructure Layer**: Contains the implementation details and external dependencies.
-- **Presentation Layer**: Contains the controllers and DTOs (when applicable).
+## Clean Architecture Implementation
 
-## Directory Structure
+### Domain Layer (`/domain`)
+- **Interfaces**
+  - `IShellWrapperService`: Shell command execution contract
+  - `IFileSystemService`: File system operations contract
+  - `IDockerComposeService`: Docker Compose operations contract
+  - `IPlaybookFileService`: Playbook file operations contract
+  - `ISshKeyService`: SSH key management contract
+
+### Application Layer (`/application`)
+- **Services**
+  - `ShellWrapperService`: Shell command execution implementation
+    - Command execution
+    - Process management
+    - Output handling
+  - `FileSystemService`: File system operations implementation
+    - Directory operations
+    - File operations
+    - Permission management
+  - `DockerComposeService`: Docker Compose operations
+    - Compose file management
+    - Container orchestration
+  - `PlaybookFileService`: Playbook file operations
+    - Playbook validation
+    - File management
+  - `SshKeyService`: SSH key management
+    - Key generation
+    - Key validation
+    - Permission handling
+
+### Infrastructure Layer (`/infrastructure`)
+- Shell command execution implementations
+- File system access implementations
+- External library integrations:
+  - shelljs integration
+  - fs-extra integration
+
+## Module Structure
 ```
 shell/
-├── __tests__/                  # Test files mirroring the module structure
-│   ├── application/            # Application layer tests
-│   │   └── services/           # Service tests
-│   └── infrastructure/         # Infrastructure layer tests
-├── domain/                     # Domain layer (entities, interfaces)
-│   └── entities/               # Domain entities
-├── application/                # Application layer (use cases)
-│   ├── interfaces/             # Service interfaces
-│   └── services/               # Business logic services
-├── infrastructure/             # Infrastructure layer (implementations)
-│   └── shell-wrapper.ts        # Shell command wrapper
-├── shell.module.ts             # NestJS module definition
-├── index.ts                    # Public API exports
-└── README.md                   # Module documentation
+├── __tests__/                  # Test files
+│   ├── application/
+│   │   └── services/          # Service tests
+│   └── infrastructure/        # Infrastructure tests
+├── application/
+│   └── services/
+│       ├── docker-compose.service.ts
+│       ├── file-system.service.ts
+│       ├── playbook-file.service.ts
+│       ├── shell-wrapper.service.ts
+│       └── ssh-key.service.ts
+├── domain/
+│   └── interfaces/
+│       ├── docker-compose.interface.ts
+│       ├── file-system.interface.ts
+│       ├── playbook-file.interface.ts
+│       ├── shell-wrapper.interface.ts
+│       └── ssh-key.interface.ts
+├── infrastructure/            # Implementation details
+├── index.ts                   # Public API exports
+├── shell.module.ts            # Module definition
+└── README.md
 ```
 
-## Components
+## API Endpoints
+### Service Methods
+- **Shell Wrapper Service**
+  - `executeCommand(command: string)`: Execute shell command
+  - `executeCommandWithOutput(command: string)`: Execute with output capture
 
-### Domain Layer
-- **Entities**: Core business entities like `IShellCommand` that represent shell commands in the domain.
+- **File System Service**
+  - `createDirectory(path: string)`: Create directory
+  - `writeFile(path: string, content: string)`: Write file
+  - `readFile(path: string)`: Read file
+  - `deleteFile(path: string)`: Delete file
+  - `chmod(path: string, mode: string)`: Change permissions
 
-### Application Layer
-- **Interfaces**: Defines the contracts for services.
-  - `IFileSystemService`: Interface for file system operations.
-  - `IShellWrapperService`: Interface for shell command operations.
-  - `IDockerComposeService`: Interface for Docker Compose operations.
-  - `IPlaybookFileService`: Interface for playbook file operations.
-  - `ISshKeyService`: Interface for SSH key operations.
+- **Docker Compose Service**
+  - `validateComposeFile(path: string)`: Validate compose file
+  - `executeCompose(command: string)`: Execute compose command
 
-- **Services**: Implements the application logic.
-  - `FileSystemService`: Handles file and directory operations.
-  - `ShellWrapperService`: Provides shell command execution capabilities.
-  - `DockerComposeService`: Manages Docker Compose operations.
-  - `PlaybookFileService`: Handles operations related to playbook files.
-  - `SshKeyService`: Manages SSH key operations.
+- **SSH Key Service**
+  - `generateKey(options: KeyOptions)`: Generate SSH key pair
+  - `validateKey(path: string)`: Validate SSH key
+  - `getPublicKey(path: string)`: Get public key content
 
-### Infrastructure Layer
-- `ShellWrapper`: Provides direct access to shelljs functions, encapsulating the external library.
-
-## Usage
-
-### NestJS Style Usage
-```typescript
-// Import the service
-import { FileSystemService } from './modules/shell';
-
-// Inject in constructor
-constructor(private readonly fileSystemService: FileSystemService) {}
-
-// Use the service
-this.fileSystemService.createDirectory('/path/to/dir');
-```
-
-## Testing
-The Shell Module includes comprehensive unit tests that verify:
-- File system operations
-- Docker Compose operations
-- SSH key management
-- Error handling
-
-The test structure mirrors the module structure, following clean architecture principles:
-- `__tests__/application/services/`: Tests for application services
-- `__tests__/infrastructure/`: Tests for infrastructure components
-
-## Dependencies
-- shelljs: Core library for shell operations
-- fs-extra: Extended file system operations
-- @nestjs/common: NestJS framework
-
-## Migration Notes
-This module was migrated from a traditional singleton-based implementation to a clean architecture implementation with proper separation of concerns. The key changes include:
-
-1. **Separation of Concerns**: Clear separation between domain, application, and infrastructure layers.
-2. **Interface-based Design**: Services implement interfaces defined in the application layer.
-3. **Dependency Injection**: Services are properly injected through NestJS's DI system.
-4. **Testability**: Improved test structure that mirrors the module structure.
-5. **Removal of Bridge Classes**: Eliminated unnecessary abstraction layers.
+## Recent Changes
+- Added Docker Compose service integration
+- Enhanced SSH key management capabilities
+- Improved file system error handling
+- Added playbook file validation
+- Implemented secure permission handling
+- Enhanced cross-platform compatibility

@@ -21,16 +21,21 @@
       "@common/*": ["src/common/*"],
       "@config/*": ["src/config/*"],
       "@infrastructure/*": ["src/infrastructure/*"],
-      "@middlewares/*": ["src/middlewares/*"], 
+      "@middlewares/*": ["src/middlewares/*"]
     },
-    "typeRoots": [
-      "./src/types",
-      "./node_modules/@types/"
-    ],
+    "typeRoots": ["./src/types", "./node_modules/@types/"],
     "incremental": true,
     "declaration": true
   },
-  "include": ["./**/*.d.ts","src/**/*.ts", "src/**/*.json", "../.env", ".eslintrc.json", "typings.d.ts"],
+  "include": [
+    "./**/*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.json",
+    "../.env",
+    ".eslintrc.json",
+    "typings.d.ts"
+  ],
+  "exclude": ["node_modules", "dist", "./**/test-setup.ts"],
   "watchOptions": {
     "watchFile": "priorityPollingInterval",
     "watchDirectory": "dynamicPriorityPolling",

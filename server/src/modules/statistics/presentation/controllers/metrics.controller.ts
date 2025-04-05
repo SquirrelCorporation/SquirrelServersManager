@@ -1,7 +1,7 @@
 import {
+  IMetricsService as MetricsServiceInterface,
   METRICS_SERVICE,
-  MetricsServiceInterface,
-} from '@modules/statistics/application/interfaces/metrics-service.interface';
+} from '@modules/statistics/domain/interfaces/metrics-service.interface';
 import { Controller, Get, Headers, HttpStatus, Inject, Logger, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { prometheusConf } from 'src/config';

@@ -1,16 +1,15 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import { StatsType } from 'ssm-shared-lib';
-import { IContainerEntity } from '../../domain/entities/container.entity';
-import { MetricType } from '../../../statistics/application/interfaces/metrics-service.interface';
-import {
-  IPrometheusService,
-  PROMETHEUS_SERVICE,
-} from '../../../../infrastructure/prometheus/prometheus.interface';
+import { IPrometheusService, PROMETHEUS_SERVICE } from '../../../../infrastructure/prometheus/prometheus.interface';
 import { QueryResult } from '../../../../infrastructure/prometheus/types/prometheus.types';
-import { IContainerStatsService } from '../interfaces/container-stats-service.interface';
-import { METRICS_SERVICE } from '../../../statistics/application/interfaces/metrics-service.interface';
-import { MetricsServiceInterface } from '../../../statistics/application/interfaces/metrics-service.interface';
+import {
+  IMetricsService,
+  METRICS_SERVICE,
+  MetricType
+} from '../../../statistics/doma../../domain/interfaces/metrics-service.interface';
+import { IContainerEntity } from '../../domain/entities/container.entity';
+import { IContainerStatsService } from '../../domain/interfaces/container-stats-service.interface';
 
 /**
  * Service for managing container statistics
@@ -21,7 +20,7 @@ export class ContainerStatsService implements IContainerStatsService {
 
   constructor(
     @Inject(METRICS_SERVICE)
-    private readonly metricsService: MetricsServiceInterface,
+    private readonly metricsService: IMetricsService,
     @Inject(PROMETHEUS_SERVICE)
     private readonly prometheusService: IPrometheusService,
   ) {}

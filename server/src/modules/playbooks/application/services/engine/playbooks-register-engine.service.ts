@@ -1,13 +1,18 @@
-import { GitPlaybooksRegisterComponent } from '@modules/playbooks/application/services/components/git-playbooks-register.component';
-import { LocalPlaybooksRegisterComponent } from '@modules/playbooks/application/services/components/local-playbooks-repository.component';
-import PlaybooksRegisterComponent from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
-import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
-import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
-import { SsmGit } from 'ssm-shared-lib';
+import PlaybooksRegisterComponent
+  from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
+import {
+  GitPlaybooksRegisterComponent
+} from '@modules/playbooks/application/services/components/git-playbooks-register.component';
+import {
+  LocalPlaybooksRegisterComponent
+} from '@modules/playbooks/application/services/components/local-playbooks-repository.component';
 import {
   GitComponentOptions,
-  LocalComponentOptions,
-} from '@modules/playbooks/domain/interfaces/component-options.interface';
+  LocalComponentOptions
+} from '@modules/playbooks/doma../../domain/interfaces/component-options.interface';
+import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { SsmGit } from 'ssm-shared-lib';
 import { PlaybooksRegisterComponentFactory } from '../components/component-factory.service';
 
 /**

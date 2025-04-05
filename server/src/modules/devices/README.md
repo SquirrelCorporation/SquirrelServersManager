@@ -1,3 +1,4 @@
+```ascii
   ,;;:;,
    ;;;;;
   ,:;;:;    ,'=.
@@ -11,132 +12,224 @@ Squirrel Servers Manager 🐿️
 ---
 # Devices Module
 
-The Devices module is responsible for managing device information, connectivity, and status within the Squirrel Servers Manager application. It provides a comprehensive set of features for device management, including CRUD operations, connectivity testing, and status monitoring.
+## Overview
+
+The Devices Module provides comprehensive device management functionality within the Squirrel Servers Manager application. It handles device registration, authentication, configuration, and capabilities for different device types including Docker and Proxmox hosts. The module follows Clean Architecture principles to ensure separation of concerns and maintainability.
 
 ## Features
 
 - Device registration and management
-- Device connectivity testing
-- Device status monitoring
-- Device group management
-- Device authentication management
-- Device metadata management
-- Device search and filtering
+- Device authentication and authorization
+- Docker host management
+- Proxmox host management
+- Device capabilities discovery
+- Device configuration management
+- Sensitive information handling
+- Support for multiple device types
 
 ## Architecture
 
 The module follows the Clean Architecture pattern with proper separation of concerns:
 
 ### Domain Layer
-- **Entities**: Defines the core business entities like `Device`, `DeviceGroup`, and `DeviceAuth`
-- **Repository Interfaces**: Defines interfaces for data access like `IDeviceRepository`
-- **Value Objects**: Defines immutable value objects used by the domain entities
+
+Contains the core business entities and interfaces:
+
+- **Entities**
+  - `device.entity.ts`: Core domain entity for devices
+  - `device-auth.entity.ts`: Entity for device authentication
+- **Repository Interfaces**
+  - `device-repository.interface.ts`
+  - `device-auth-repository.interface.ts`
+- **Service Interfaces**
+  - `devices-service.interface.ts`
+  - `device-auth-service.interface.ts`
+  - `docker-device-service.interface.ts`
+  - `proxmox-device-service.interface.ts`
+  - `sensitive-info-service.interface.ts`
 
 ### Application Layer
-- **Service Interfaces**: Defines interfaces for business logic like `IDeviceService`
-- **Services**: Implements the business logic for device management
-- **Use Cases**: Implements specific use cases for device operations
+
+Contains the business logic and services:
+
+- **Core Services**
+  - `devices.service.ts`: Main device management service
+  - `device-auth.service.ts`: Device authentication service
+  - `docker-device.service.ts`: Docker host management
+  - `proxmox-device.service.ts`: Proxmox host management
+  - `sensitive-info.service.ts`: Sensitive information handling
 
 ### Infrastructure Layer
-- **Repositories**: Implements the repository interfaces for data access
-- **Schemas**: Defines the database schemas for device data
-- **Mappers**: Maps between domain entities and database schemas
+
+Contains implementations of repositories and external services:
+
+- **Repositories**
+  - `device.repository.ts`: MongoDB repository for devices
+  - `device-auth.repository.ts`: MongoDB repository for device authentication
+- **Schemas**
+  - `device.schema.ts`: Mongoose schema for devices
+  - `device-auth.schema.ts`: Mongoose schema for device authentication
+- **Mappers**
+  - `device-repository.mapper.ts`: Maps between domain entities and database models
 
 ### Presentation Layer
-- **Controllers**: Handles HTTP requests and responses
-- **DTOs**: Defines the data transfer objects for request/response validation
-- **Mappers**: Maps between domain entities and DTOs
+
+Contains controllers, DTOs, and mappers:
+
+- **Controllers**
+  - `devices.controller.ts`: Core device management endpoints
+  - `devices-auth.controller.ts`: Device authentication endpoints
+  - `devices-capabilities.controller.ts`: Device capabilities endpoints
+  - `devices-configuration.controller.ts`: Device configuration endpoints
+- **DTOs**
+  - `device.dto.ts`: Device data transfer objects
+  - `device-auth.dto.ts`: Authentication data transfer objects
+  - `device-capabilities.dto.ts`: Capabilities data transfer objects
+  - `device-configuration.dto.ts`: Configuration data transfer objects
+  - `update-docker-auth.dto.ts`: Docker authentication updates
+  - `update-proxmox-auth.dto.ts`: Proxmox authentication updates
+- **Mappers**
+  - `device.mapper.ts`: Maps between domain entities and DTOs
+
+## Module Structure
+
+```
+devices/
+├── domain/
+│   ├── entities/
+│   │   ├── device.entity.ts
+│   │   └── device-auth.entity.ts
+│   ├── repositories/
+│   │   ├── device-repository.interface.ts
+│   │   └── device-auth-repository.interface.ts
+│   └── services/
+│       ├── devices-service.interface.ts
+│       ├── device-auth-service.interface.ts
+│       ├── docker-device-service.interface.ts
+│       ├── proxmox-device-service.interface.ts
+│       └── sensitive-info-service.interface.ts
+├── application/
+│   └── services/
+│       ├── devices.service.ts
+│       ├── device-auth.service.ts
+│       ├── docker-device.service.ts
+│       ├── proxmox-device.service.ts
+│       └── sensitive-info.service.ts
+├── infrastructure/
+│   ├── repositories/
+│   │   ├── device.repository.ts
+│   │   └── device-auth.repository.ts
+│   ├── schemas/
+│   │   ├── device.schema.ts
+│   │   └── device-auth.schema.ts
+│   └── mappers/
+│       └── device-repository.mapper.ts
+├── presentation/
+│   ├── controllers/
+│   │   ├── devices.controller.ts
+│   │   ├── devices-auth.controller.ts
+│   │   ├── devices-capabilities.controller.ts
+│   │   └── devices-configuration.controller.ts
+│   ├── dtos/
+│   │   ├── device.dto.ts
+│   │   ├── device-auth.dto.ts
+│   │   ├── device-capabilities.dto.ts
+│   │   ├── device-configuration.dto.ts
+│   │   ├── update-docker-auth.dto.ts
+│   │   └── update-proxmox-auth.dto.ts
+│   └── mappers/
+│       └── device.mapper.ts
+├── __tests__/
+├── devices.module.ts
+├── index.ts
+└── README.md
+```
+
+## Integration
+
+The module is integrated through dependency injection:
+
+```typescript
+@Module({
+  imports: [
+    MongooseModule.forFeature([
+      { name: DEVICE, schema: DeviceSchema },
+      { name: DEVICE_AUTH, schema: DeviceAuthSchema },
+    ]),
+    AnsibleVaultsModule,
+  ],
+  controllers: [
+    DevicesController,
+    DevicesAuthController,
+    DevicesCapabilitiesController,
+    DevicesConfigurationController,
+  ],
+  providers: [
+    // Core services
+    DevicesService,
+    DeviceAuthService,
+    DockerDeviceService,
+    ProxmoxDeviceService,
+    SensitiveInfoService,
+    
+    // Mappers
+    DeviceMapper,
+    DeviceRepositoryMapper,
+    
+    // Repositories
+    {
+      provide: DEVICE_REPOSITORY,
+      useClass: DeviceRepository,
+    },
+    {
+      provide: DEVICE_AUTH_REPOSITORY,
+      useClass: DeviceAuthRepository,
+    },
+  ],
+  exports: [
+    DevicesService,
+    DeviceAuthService,
+    DockerDeviceService,
+    ProxmoxDeviceService,
+    SENSITIVE_INFO_SERVICE,
+  ],
+})
+```
 
 ## API Endpoints
 
-### GET /devices
-Returns a list of all devices.
+### Device Management
 
-### GET /devices/:id
-Returns a specific device by ID.
+- `GET /devices`: List all devices
+- `GET /devices/:id`: Get device by ID
+- `POST /devices`: Create new device
+- `PATCH /devices/:id`: Update device
+- `DELETE /devices/:id`: Delete device
 
-### POST /devices
-Creates a new device.
+### Device Authentication
 
-### PUT /devices/:id
-Updates an existing device.
+- `GET /devices/auth/:id`: Get device authentication
+- `POST /devices/auth/:id`: Set device authentication
+- `PATCH /devices/auth/:id`: Update device authentication
+- `DELETE /devices/auth/:id`: Delete device authentication
+- `POST /devices/auth/:id/docker`: Set Docker authentication
+- `POST /devices/auth/:id/proxmox`: Set Proxmox authentication
 
-### DELETE /devices/:id
-Deletes a device.
+### Device Capabilities
 
-### GET /devices/groups
-Returns a list of all device groups.
+- `GET /devices/:id/capabilities`: Get device capabilities
+- `POST /devices/:id/capabilities/refresh`: Refresh capabilities
 
-### POST /devices/test-connection
-Tests the connection to a device.
+### Device Configuration
 
-## Data Models
+- `GET /devices/:id/configuration`: Get device configuration
+- `PATCH /devices/:id/configuration`: Update device configuration
 
-### Device
-```typescript
-interface Device {
-  id: string;
-  name: string;
-  ipAddress: string;
-  port: number;
-  description?: string;
-  groupId?: string;
-  status: DeviceStatus;
-  lastSeen?: Date;
-  metadata?: Record<string, any>;
-}
-```
+## Recent Changes
 
-### DeviceGroup
-```typescript
-interface DeviceGroup {
-  id: string;
-  name: string;
-  description?: string;
-  devices?: string[]; // Device IDs
-}
-```
-
-### DeviceAuth
-```typescript
-interface DeviceAuth {
-  id: string;
-  deviceId: string;
-  username: string;
-  authType: 'password' | 'privateKey';
-  authData: string; // Encrypted password or private key
-}
-```
-
-## Usage
-
-To use the Devices module, import it into your NestJS application:
-
-```typescript
-import { DevicesModule } from './modules/devices';
-
-@Module({
-  imports: [
-    // ... other modules
-    DevicesModule,
-  ],
-})
-export class AppModule {}
-```
-
-## Testing
-
-The module includes comprehensive tests that mirror the module structure:
-
-- **Domain Layer Tests**: Tests for domain entities and value objects
-- **Application Layer Tests**: Tests for services and use cases
-- **Infrastructure Layer Tests**: Tests for repositories and mappers
-- **Presentation Layer Tests**: Tests for controllers and DTOs
-
-## Future Improvements
-
-- Add support for device templates
-- Implement device auto-discovery
-- Add support for device metrics collection
-- Improve device grouping and tagging
-- Add support for device provisioning 
+- Added support for Proxmox devices
+- Enhanced Docker host management
+- Improved sensitive information handling
+- Added device capabilities discovery
+- Enhanced authentication flows
+- Added comprehensive test coverage 

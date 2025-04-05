@@ -1,5 +1,8 @@
-import { parse } from 'url';
-import * as os from 'os';
+import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
+import { paginate } from '@infrastructure/common/query/pagination.util';
+import { sortByFields } from '@infrastructure/common/query/sorter.util';
+import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
+import { FileSystemService } from '@modules/shell';
 import {
   Body,
   Controller,
@@ -15,16 +18,13 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import { FileSystemService } from '@modules/shell';
-import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
-import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
-import { paginate } from '@infrastructure/common/query/pagination.util';
-import { sortByFields } from '@infrastructure/common/query/sorter.util';
-import { CreateVolumeDto } from '../dtos/create-volume.dto';
+import * as os from 'os';
+import { parse } from 'url';
 import {
   CONTAINER_VOLUMES_SERVICE,
   IContainerVolumesService,
-} from '../../application/interfaces/container-volumes-service.interface';
+} from '../../applicati../../domain/interfaces/container-volumes-service.interface';
+import { CreateVolumeDto } from '../dtos/create-volume.dto';
 
 @Controller('container-volumes')
 export class ContainerVolumesController {

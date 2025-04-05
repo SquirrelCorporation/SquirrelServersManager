@@ -1,5 +1,5 @@
+import { ISettingsService } from './applicati../../domain/interfaces/settings-service.interface';
 import { SettingsModule } from './settings.module';
-import { ISettingsService } from './application/interfaces/settings-service.interface';
 
 // Re-export the module and interfaces
 export { SettingsModule, ISettingsService };
