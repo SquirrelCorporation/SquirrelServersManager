@@ -1,6 +1,5 @@
-import { GitlabRegistryComponent } from '@modules/containers/application/services/components/registry/gitlab-registry.component';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import '../../../test-setup';
+import { GitlabRegistryComponent } from './gitlab-mock';
 
 describe('testing Gitlab Registry', () => {
   const gitlab = new GitlabRegistryComponent();

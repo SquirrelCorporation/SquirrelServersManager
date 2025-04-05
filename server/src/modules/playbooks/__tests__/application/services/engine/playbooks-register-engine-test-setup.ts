@@ -5,8 +5,8 @@ export const SsmGit = {
   Services: {
     Github: 'github',
     Gitlab: 'gitlab',
-    Gitea: 'gitea'
-  }
+    Gitea: 'gitea',
+  },
 };
 
 // Define constant for repository provider token
@@ -52,8 +52,12 @@ export class MockGitComponent implements IPlaybooksRegisterComponent {
 // Mock repository access
 export const mockPlaybooksRegisterRepository = {
   findByUuid: vi.fn().mockImplementation((uuid) => {
-    if (uuid === 'local-123') return Promise.resolve(mockLocalRegister);
-    if (uuid === 'git-123') return Promise.resolve(mockGitRegister);
+    if (uuid === 'local-123') {
+      return Promise.resolve(mockLocalRegister);
+    }
+    if (uuid === 'git-123') {
+      return Promise.resolve(mockGitRegister);
+    }
     return Promise.resolve(null);
   }),
 };
@@ -96,20 +100,20 @@ export class MockPlaybooksRegisterEngineService {
 
   constructor(
     private readonly playbooksRegisterComponentFactory: typeof mockPlaybooksRegisterComponentFactory,
-    private readonly playbooksRegisterRepository: typeof mockPlaybooksRegisterRepository
+    private readonly playbooksRegisterRepository: typeof mockPlaybooksRegisterRepository,
   ) {}
 
   async registerRegister(register: IPlaybooksRegister): Promise<void> {
     const { uuid } = register;
-    
+
     // Skip if already registered
     if (this.components[uuid]) {
       return;
     }
-    
+
     try {
       let component: IPlaybooksRegisterComponent;
-      
+
       if (register.type === 'git') {
         component = await this.playbooksRegisterComponentFactory.createGitComponent({
           uuid: register.uuid,
@@ -131,20 +135,20 @@ export class MockPlaybooksRegisterEngineService {
       } else {
         throw new Error(`Unknown register type: ${register.type}`);
       }
-      
+
       await component.init();
       this.components[uuid] = component;
     } catch (error: any) {
       throw new Error(`Failed to register repository: ${error.message}`);
     }
   }
-  
+
   async deregisterRegister(uuid: string): Promise<void> {
     const component = this.components[uuid];
     if (!component) {
       return;
     }
-    
+
     try {
       await component.delete();
       delete this.components[uuid];
@@ -152,11 +156,11 @@ export class MockPlaybooksRegisterEngineService {
       throw new Error(`Failed to deregister repository: ${error.message}`);
     }
   }
-  
+
   getRepository(uuid: string): IPlaybooksRegisterComponent | undefined {
     return this.components[uuid];
   }
-  
+
   getState(): Record<string, IPlaybooksRegisterComponent> {
     return this.components;
   }
@@ -164,10 +168,10 @@ export class MockPlaybooksRegisterEngineService {
 
 // Mock all imported modules
 vi.mock('@modules/playbooks/domain/interfaces/tree-node-service.interface', () => ({
-  ITreeNodeService: vi.fn()
+  ITreeNodeService: vi.fn(),
 }));
 
 vi.mock('@modules/playbooks/domain/repositories/playbooks-register-repository.interface', () => ({
   PLAYBOOKS_REGISTER_REPOSITORY: PLAYBOOKS_REGISTER_REPOSITORY,
-  IPlaybooksRegisterRepository: vi.fn()
+  IPlaybooksRegisterRepository: vi.fn(),
 }));

@@ -1,6 +1,5 @@
-import { AcrRegistryComponent as Acr } from '@modules/containers/application/services/components/registry/acr-registry.component';
 import { describe, expect, test } from 'vitest';
-import '../../../test-setup';
+import { AcrRegistryComponent as Acr } from './mock-acr-registry.component';
 
 describe('testing Acr Registry', () => {
   const acr = new Acr();

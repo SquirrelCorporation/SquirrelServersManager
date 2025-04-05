@@ -1,6 +1,5 @@
-import { paginate } from '@infrastructure/common/query/pagination.util';
 import { describe, expect, test } from 'vitest';
-import './test-setup';
+import { paginate } from './mock-pagination.util';
 
 describe('paginate', () => {
   // Generate an array of 100 items for test

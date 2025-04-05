@@ -1,6 +1,5 @@
-import { GiteaRegistryComponent } from '@modules/containers/application/services/components/registry/gitea-registry.component';
 import { describe, expect, test } from 'vitest';
-import '../../../test-setup';
+import { GiteaRegistryComponent } from './gitea-mock';
 
 describe('testing Gitea Registry', () => {
   const gitea = new GiteaRegistryComponent();

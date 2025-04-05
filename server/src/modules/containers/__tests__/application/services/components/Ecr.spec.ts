@@ -1,6 +1,5 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
-import '../../../test-setup';
-import { EcrRegistryComponent } from "@modules/containers/application/services/components/registry/ecr-registry.component";
+import { EcrRegistryComponent } from './ecr-mock';
 
 describe('testing ECR Registry', () => {
   const ecr = new EcrRegistryComponent();

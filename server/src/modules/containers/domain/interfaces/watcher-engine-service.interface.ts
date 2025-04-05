@@ -1,10 +1,10 @@
-import { OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { IDevice } from '@modules/devices';
 import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
 import { AbstractWatcherComponent } from '@modules/containers/application/services/components/watcher/abstract-watcher.component';
-import { ConfigurationSchema } from '@modules/containers/types';
-import { Kind } from '@modules/containers/domain/components/kind.enum';
 import { IComponent } from '@modules/containers/domain/components/component.interface';
+import { Kind } from '@modules/containers/domain/components/kind.enum';
+import { ConfigurationSchema } from '@modules/containers/types';
+import { IDevice } from '@modules/devices';
+import { OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 
 export const WATCHER_ENGINE_SERVICE = 'WATCHER_ENGINE_SERVICE';
 
@@ -101,5 +101,5 @@ export interface IWatcherEngineService extends OnModuleInit, OnModuleDestroy {
   /**
    * Find a registered docker component
    */
-  findRegisteredDockerComponent(watcher: string);
+  findRegisteredComponent(kind: Kind, watcherType: string, watcher: string);
 }

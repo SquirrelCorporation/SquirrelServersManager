@@ -1,11 +1,12 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import '../../../test-setup';
-import * as utils from '@modules/containers/application/services/components/utils/utils';
-import * as WatcherEngine from '@modules/containers/application/services/components/core/WatcherEngine';
-import { AcrRegistryComponent as Acr } from '@modules/containers/application/services/components/registry/acr-registry.component';
-import { EcrRegistryComponent as Ecr } from '@modules/containers/application/services/components/registry/ecr-registry.component';
-import { GcrRegistryComponent as Gcr } from '@modules/containers/application/services/components/registry/gcr-registry.component';
-import { DockerHubRegistryComponent as Hub } from '@modules/containers/application/services/components/registry/docker-hub-registry.component';
+import { AcrRegistryComponent as Acr } from './mock-acr-registry.component';
+import * as WatcherEngine from './mock-registry-components';
+import {
+  EcrRegistryComponent as Ecr,
+  GcrRegistryComponent as Gcr,
+  DockerHubRegistryComponent as Hub,
+} from './mock-registry-components';
+import * as utils from './mock-utils';
 import sampleCoercedSemver from './samples/coercedSemver.json';
 import sampleSemver from './samples/semver.json';
 
@@ -32,7 +33,7 @@ describe('testing utils', () => {
   });
 
   vi.spyOn(WatcherEngine, 'getRegistries');
-  
+
   const getTagCandidatesTestCases = [
     {
       source: sampleSemver,

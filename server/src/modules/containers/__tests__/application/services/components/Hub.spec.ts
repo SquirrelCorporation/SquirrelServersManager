@@ -1,6 +1,5 @@
-import { DockerHubRegistryComponent as Hub } from '@modules/containers/application/services/components/registry/docker-hub-registry.component';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import '../../../test-setup';
+import { DockerHubRegistryComponent as Hub } from './hub-mock';
 
 describe('testing Hub Registry', () => {
   const hub = new Hub();

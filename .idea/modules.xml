@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/SSM.iml" filepath="$PROJECT_DIR$/.idea/SSM.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../SquirrelServersManager-Agent/.idea/SquirrelServersManager-Agent.iml" filepath="$PROJECT_DIR$/../SquirrelServersManager-Agent/.idea/SquirrelServersManager-Agent.iml" />
     </modules>
   </component>
 </project>

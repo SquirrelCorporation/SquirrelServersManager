@@ -8,6 +8,7 @@ import { AnsibleConfigService } from '../../../application/services/ansible-conf
 import { AnsibleConfig } from '../../../presentation/interfaces/config.interface';
 
 // Create a test version of the service for unit testing
+// @ts-expect-error - This is a mock class
 export class MockAnsibleConfigService extends AnsibleConfigService {
   private mockConfig: AnsibleConfig = {
     defaults: {
@@ -39,7 +40,7 @@ export class MockAnsibleConfigService extends AnsibleConfigService {
   readConfig(): AnsibleConfig {
     try {
       return JSON.parse(JSON.stringify(this.mockConfig));
-    } catch (error: any) {
+    } catch {
       throw new InternalServerErrorException('Error reading Ansible configuration file');
     }
   }
@@ -48,7 +49,7 @@ export class MockAnsibleConfigService extends AnsibleConfigService {
   writeConfig(config: AnsibleConfig): void {
     try {
       this.mockConfig = JSON.parse(JSON.stringify(config));
-    } catch (error: any) {
+    } catch {
       throw new InternalServerErrorException('Error writing Ansible configuration file');
     }
   }

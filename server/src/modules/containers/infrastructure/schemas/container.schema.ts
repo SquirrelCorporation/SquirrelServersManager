@@ -1,6 +1,6 @@
 import { Image } from '@modules/containers/types';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Schema as MongooseSchema, SchemaTimestampsConfig } from 'mongoose';
+import { Document, SchemaTimestampsConfig } from 'mongoose';
 
 export const CONTAINER_SCHEMA = 'Container';
 
@@ -12,7 +12,7 @@ export class Container {
     type: String,
     required: true,
     index: true,
-    ref: 'Device'
+    ref: 'Device',
   })
   deviceUuid!: string;
 
@@ -133,5 +133,5 @@ ContainerSchema.virtual('device', {
   ref: 'Device',
   localField: 'deviceUuid',
   foreignField: 'uuid',
-  justOne: true
+  justOne: true,
 });

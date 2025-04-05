@@ -1,7 +1,6 @@
-import { Component } from '@modules/containers/application/services/components/core/component';
-import { Kind } from '@modules/containers/domain/components/kind.enum';
 import { describe, expect, test, vi } from 'vitest';
-import '../../../test-setup';
+import { Component } from './full-component-mock';
+import { Kind } from './kind-mock';
 
 // Create a mock EventEmitterService
 const mockEventEmitterService = {

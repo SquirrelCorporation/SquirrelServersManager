@@ -1,3 +1,4 @@
+import { Kind } from '@modules/containers/domain/components/kind.enum';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import PinoLogger from '../../../../logger';
 import { DevicesService } from '../../../devices/application/services/devices.service';
@@ -124,7 +125,11 @@ export class ContainerVolumesService implements IContainerVolumesService {
       // Find the Docker watcher component for this device
       const deviceUuid = existingVolume.deviceUuid;
       const watcherName = `${WATCHERS.DOCKER}-${deviceUuid}`;
-      const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
+      const dockerComponent = this.watcherEngineService.findRegisteredComponent(
+        Kind.WATCHER,
+        WATCHERS.DOCKER,
+        watcherName,
+      );
 
       if (!dockerComponent) {
         throw new Error(`Docker watcher for device ${deviceUuid} not found`);
@@ -137,34 +142,6 @@ export class ContainerVolumesService implements IContainerVolumesService {
       return this.volumeRepository.deleteByUuid(uuid);
     } catch (error: any) {
       logger.error(`Failed to delete volume ${uuid}: ${error.message}`);
-      throw error;
-    }
-  }
-
-  /**
-   * Prune unused volumes
-   */
-  async pruneVolumes(deviceUuid: string): Promise<{ count: number }> {
-    try {
-      logger.info(`Pruning unused volumes on device ${deviceUuid}`);
-
-      // Find the Docker watcher component for this device
-      const watcherName = `${WATCHERS.DOCKER}-${deviceUuid}`;
-      const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
-
-      if (!dockerComponent) {
-        throw new Error(`Docker watcher for device ${deviceUuid} not found`);
-      }
-
-      // Prune volumes in Docker
-      const result = await dockerComponent.pruneVolumes();
-
-      // Update database to reflect changes
-      // This would ideally sync all volumes to remove pruned ones
-      // For now, we'll just return the count of pruned volumes
-      return result;
-    } catch (error: any) {
-      logger.error(`Failed to prune volumes on device ${deviceUuid}: ${error.message}`);
       throw error;
     }
   }
@@ -195,8 +172,11 @@ export class ContainerVolumesService implements IContainerVolumesService {
       logger.info(`Backing up volume ${volume.name} in ${mode} mode`);
 
       // Find the Docker watcher component for this device
-      const watcherName = `${WATCHERS.DOCKER}-${volume.deviceUuid}`;
-      const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
+      const dockerComponent = this.watcherEngineService.findRegisteredComponent(
+        Kind.WATCHER,
+        WATCHERS.DOCKER,
+        volume.watcher,
+      );
 
       if (!dockerComponent) {
         throw new Error(`Docker watcher for device ${volume.deviceUuid} not found`);

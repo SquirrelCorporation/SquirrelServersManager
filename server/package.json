@@ -19,6 +19,7 @@
   "version": "0.1.31",
   "author": "Squirrel Team",
   "dependencies": {
+    "ssm-shared-lib": "file:../shared-lib/",
     "@aws-sdk/client-ecr": "^3.777.0",
     "@keyv/redis": "^4.3.2",
     "@nestjs/axios": "^4.0.0",
@@ -89,7 +90,6 @@
     "shelljs": "^0.9.2",
     "socket.io": "^4.8.1",
     "ssh2": "^1.16.0",
-    "ssm-shared-lib": "file:../shared-lib/",
     "yaml": "^2.7.1"
   },
   "overrides": {

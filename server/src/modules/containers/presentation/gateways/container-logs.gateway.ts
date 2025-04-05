@@ -84,7 +84,7 @@ export class ContainerLogsGateway implements OnGatewayConnection, OnGatewayDisco
       }
 
       // Get container and check if it exists
-      const container = await this.containerLogsService.findContainerById(payload.containerId);
+      const container = await this.containerLogsService.getContainerById(payload.containerId);
 
       // Set up the from timestamp
       const from = payload.from || DateTime.now().toUnixInteger();

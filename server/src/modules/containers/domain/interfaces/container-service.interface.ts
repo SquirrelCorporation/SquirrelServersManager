@@ -14,11 +14,6 @@ export interface IContainerService {
   getAllContainers(): Promise<IContainerEntity[]>;
 
   /**
-   * Get one container by its UUID
-   */
-  getContainerByUuid(uuid: string): Promise<IContainerEntity | null>;
-
-  /**
    * Get containers by device UUID
    */
   getContainersByDeviceUuid(deviceUuid: string): Promise<IContainerEntity[]>;
@@ -26,7 +21,7 @@ export interface IContainerService {
   /**
    * Find a container by its ID
    */
-  findContainerById(id: string): Promise<IContainerEntity | null>;
+  getContainerById(id: string): Promise<IContainerEntity | null>;
 
   /**
    * Count all containers
@@ -55,36 +50,6 @@ export interface IContainerService {
    * Delete a container by its UUID
    */
   deleteContainer(uuid: string): Promise<boolean>;
-
-  /**
-   * Start a container
-   */
-  startContainer(uuid: string): Promise<boolean>;
-
-  /**
-   * Stop a container
-   */
-  stopContainer(uuid: string): Promise<boolean>;
-
-  /**
-   * Restart a container
-   */
-  restartContainer(uuid: string): Promise<boolean>;
-
-  /**
-   * Pause a container
-   */
-  pauseContainer(uuid: string): Promise<boolean>;
-
-  /**
-   * Unpause a container
-   */
-  unpauseContainer(uuid: string): Promise<boolean>;
-
-  /**
-   * Kill a container
-   */
-  killContainer(uuid: string): Promise<boolean>;
 
   /**
    * Get containers by watcher name
@@ -150,4 +115,9 @@ export interface IContainerService {
    * Check Docker connection
    */
   checkDockerConnection(deviceUuid: string): Promise<any>;
+
+  /**
+   * Update container name
+   */
+  updateContainerName(id: string, customName: string): Promise<IContainerEntity>;
 }

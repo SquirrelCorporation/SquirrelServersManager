@@ -7,7 +7,7 @@ export default defineConfig({
     globals: true,
     include: ['**/__tests__/**/*.spec.ts'],
     exclude: ['**/*.md'],
-    setupFiles: ['./src/__tests__/test-setup.ts'],
+    setupFiles: ['./src/__tests__/test-setup.fixed.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
@@ -16,13 +16,13 @@ export default defineConfig({
     },
   },
   resolve: {
-    alias: {
-      '@modules': resolve(__dirname, './src/modules'),
-      '@infrastructure': resolve(__dirname, './src/infrastructure'),
-      '@common': resolve(__dirname, './src/common'),
-      '@config': resolve(__dirname, './src/config'),
-      '@middlewares': resolve(__dirname, './src/middlewares'),
-      'ssm-shared-lib': resolve(__dirname, '../shared-lib'),
-    },
+    alias: [
+      { find: '@modules', replacement: resolve(__dirname, './src/modules') },
+      { find: '@infrastructure', replacement: resolve(__dirname, './src/infrastructure') },
+      { find: '@common', replacement: resolve(__dirname, './src/common') },
+      { find: '@config', replacement: resolve(__dirname, './src/config') },
+      { find: '@middlewares', replacement: resolve(__dirname, './src/middlewares') },
+      { find: 'ssm-shared-lib', replacement: resolve(__dirname, '../shared-lib') },
+    ],
   },
 });

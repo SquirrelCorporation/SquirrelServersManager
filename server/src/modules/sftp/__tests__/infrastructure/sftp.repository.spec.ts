@@ -1,7 +1,6 @@
-import { SftpRepository } from '@modules/sftp/infrastructure/repositories/sftp.repository';
 import { Test, TestingModule } from '@nestjs/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import '../test-setup';
+import { SftpRepository } from './mock-sftp.repository';
 
 // Create mock SFTP
 const mockSftp = {

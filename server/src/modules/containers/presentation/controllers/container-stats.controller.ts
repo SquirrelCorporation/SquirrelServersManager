@@ -8,17 +8,21 @@ import {
   Param,
   Query,
   UsePipes,
-  ValidationPipe
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   CONTAINER_SERVICE,
-  IContainerService
+  IContainerService,
 } from '../../applicati../../domain/interfaces/container-service.interface';
 import {
   CONTAINER_STATS_SERVICE,
-  IContainerStatsService
+  IContainerStatsService,
 } from '../../applicati../../domain/interfaces/container-stats-service.interface';
-import { ContainerCountParamDto, ContainerStatParamDto, ContainerStatsQueryDto } from '../dtos/container-stats.dto';
+import {
+  ContainerCountParamDto,
+  ContainerStatParamDto,
+  ContainerStatsQueryDto,
+} from '../dtos/container-stats.dto';
 
 /**
  * Controller for container statistics
@@ -42,7 +46,7 @@ export class ContainerStatsController {
    */
   @Get(':id/stat/:type')
   async getContainerStatByContainerId(@Param() params: ContainerStatParamDto) {
-    const container = await this.containerService.findContainerById(params.id);
+    const container = await this.containerService.getContainerById(params.id);
     if (container == null) {
       throw new HttpException(`Container not found ${params.id}`, HttpStatus.NOT_FOUND);
     }
@@ -68,7 +72,7 @@ export class ContainerStatsController {
     @Param() params: ContainerStatParamDto,
     @Query() query: ContainerStatsQueryDto,
   ) {
-    const container = await this.containerService.findContainerById(params.id);
+    const container = await this.containerService.getContainerById(params.id);
     if (container == null) {
       throw new HttpException(`Container not found ${params.id}`, HttpStatus.NOT_FOUND);
     }

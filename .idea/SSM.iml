@@ -23,8 +23,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="SquirrelServersManager-Agent" />
     <orderEntry type="library" name="Python 3.9 (SquirrelServersManager) interpreter library" level="application" />
-    <orderEntry type="module" module-name="SquirrelServersManager-Agent" />
   </component>
 </module>

@@ -1,6 +1,5 @@
-import { GhcrRegistryComponent } from '@modules/containers/application/services/components/registry/ghcr-registry.component';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import '../../../test-setup';
+import { GhcrRegistryComponent } from './ghcr-mock';
 
 describe('testing GHCR Registry', () => {
   const ghcr = new GhcrRegistryComponent();

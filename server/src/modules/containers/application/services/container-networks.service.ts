@@ -1,3 +1,4 @@
+import { Kind } from '@modules/containers/domain/components/kind.enum';
 import { DeployNetworkDto } from '@modules/containers/presentation/dtos/create-network.dto';
 import { IPlaybooksService, PLAYBOOKS_SERVICE, PlaybookService } from '@modules/playbooks';
 import { IUser } from '@modules/users/domain/entities/user.entity';
@@ -158,9 +159,9 @@ export class ContainerNetworksService implements IContainerNetworksService {
   /**
    * Connect a container to a network
    */
-  async connectContainerToNetwork(networkId: string, containerUuid: string): Promise<boolean> {
+  async connectContainerToNetwork(networkId: string, containerId: string): Promise<boolean> {
     try {
-      logger.info(`Connecting container ${containerUuid} to network ${networkId}`);
+      logger.info(`Connecting container ${containerId} to network ${networkId}`);
 
       // Find the network
       const network = await this.networkRepository.findOneById(networkId);
@@ -169,9 +170,9 @@ export class ContainerNetworksService implements IContainerNetworksService {
       }
 
       // Find the container
-      const container = await this.containerService.getContainerByUuid(containerUuid);
+      const container = await this.containerService.getContainerById(containerId);
       if (!container) {
-        throw new NotFoundException(`Container with UUID ${containerUuid} not found`);
+        throw new NotFoundException(`Container with ID ${containerId} not found`);
       }
 
       // Verify they are on the same device
@@ -181,8 +182,11 @@ export class ContainerNetworksService implements IContainerNetworksService {
 
       // Find the Docker watcher component
       const deviceUuid = network.deviceUuid;
-      const watcherName = `${WATCHERS.DOCKER}-${deviceUuid}`;
-      const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
+      const dockerComponent = this.watcherEngineService.findRegisteredComponent(
+        Kind.WATCHER,
+        WATCHERS.DOCKER,
+        container.watcher,
+      );
 
       if (!dockerComponent) {
         throw new Error(`Docker watcher for device ${deviceUuid} not found`);
@@ -220,9 +224,9 @@ export class ContainerNetworksService implements IContainerNetworksService {
   /**
    * Disconnect a container from a network
    */
-  async disconnectContainerFromNetwork(networkId: string, containerUuid: string): Promise<boolean> {
+  async disconnectContainerFromNetwork(networkId: string, containerId: string): Promise<boolean> {
     try {
-      logger.info(`Disconnecting container ${containerUuid} from network ${networkId}`);
+      logger.info(`Disconnecting container ${containerId} from network ${networkId}`);
 
       // Find the network
       const network = await this.networkRepository.findOneById(networkId);
@@ -231,15 +235,18 @@ export class ContainerNetworksService implements IContainerNetworksService {
       }
 
       // Find the container
-      const container = await this.containerService.getContainerByUuid(containerUuid);
+      const container = await this.containerService.getContainerById(containerId);
       if (!container) {
-        throw new NotFoundException(`Container with UUID ${containerUuid} not found`);
+        throw new NotFoundException(`Container with ID ${containerId} not found`);
       }
 
       // Find the Docker watcher component
       const deviceUuid = network.deviceUuid;
-      const watcherName = `${WATCHERS.DOCKER}-${deviceUuid}`;
-      const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
+      const dockerComponent = this.watcherEngineService.findRegisteredComponent(
+        Kind.WATCHER,
+        WATCHERS.DOCKER,
+        container.watcher,
+      );
 
       if (!dockerComponent) {
         throw new Error(`Docker watcher for device ${deviceUuid} not found`);

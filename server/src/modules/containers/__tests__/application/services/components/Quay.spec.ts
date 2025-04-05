@@ -1,6 +1,5 @@
-import { QuayRegistryComponent } from '@modules/containers/application/services/components/registry/quay-registry.component';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import '../../../test-setup';
+import { QuayRegistryComponent } from './quay-mock';
 
 describe('testing Quay Registry', () => {
   const quay = new QuayRegistryComponent();

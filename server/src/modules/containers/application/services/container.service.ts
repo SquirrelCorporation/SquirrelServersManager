@@ -1,12 +1,16 @@
 import { getCustomAgent } from '@infrastructure/adapters/ssh';
 import { SSHCredentialsAdapter } from '@infrastructure/adapters/ssh/ssh-credentials.adapter';
+import { WATCHERS } from '@modules/containers/application/services/components/core/constants';
 import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
+import { Kind } from '@modules/containers/domain/components/kind.enum';
+import { IWatcherComponent } from '@modules/containers/domain/components/watcher.interface';
 import { fullName } from '@modules/containers/utils/utils';
 import { DEVICES_SERVICE, IDevice, IDeviceAuth, IDevicesService } from '@modules/devices';
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import DockerModem from 'docker-modem';
 import Dockerode from 'dockerode';
 import logger from 'src/logger';
+import { SsmContainer } from 'ssm-shared-lib';
 import {
   DEVICE_AUTH_SERVICE,
   IDeviceAuthService,
@@ -50,14 +54,6 @@ export class ContainerService implements IContainerService {
 
   async getContainersByDeviceUuid(deviceUuid: string): Promise<IContainerEntity[]> {
     return this.containerRepository.findAllByDeviceUuid(deviceUuid);
-  }
-
-  async findContainerById(id: string): Promise<IContainerEntity | null> {
-    const container = await this.containerRepository.findOneById(id);
-    if (!container) {
-      return null;
-    }
-    return container;
   }
 
   async countContainers(): Promise<number> {
@@ -120,8 +116,11 @@ export class ContainerService implements IContainerService {
 
     // Find Docker watcher component for this device
     const deviceUuid = container.deviceUuid;
-    const watcherName = `docker-${deviceUuid}`;
-    const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
+    const dockerComponent = this.watcherEngineService.findRegisteredComponent(
+      Kind.WATCHER,
+      WATCHERS.DOCKER,
+      container.watcher,
+    );
 
     if (!dockerComponent) {
       throw new Error(`Docker watcher for device ${deviceUuid} not found`);
@@ -139,85 +138,55 @@ export class ContainerService implements IContainerService {
     }
   }
 
-  async startContainer(id: string): Promise<boolean> {
-    return this.executeContainerAction(id, 'start');
-  }
-
-  async stopContainer(id: string): Promise<boolean> {
-    return this.executeContainerAction(id, 'stop');
-  }
-
-  async restartContainer(id: string): Promise<boolean> {
-    return this.executeContainerAction(id, 'restart');
-  }
-
-  async pauseContainer(id: string): Promise<boolean> {
-    return this.executeContainerAction(id, 'pause');
-  }
-
-  async unpauseContainer(id: string): Promise<boolean> {
-    return this.executeContainerAction(id, 'unpause');
-  }
-
-  async killContainer(id: string): Promise<boolean> {
-    return this.executeContainerAction(id, 'kill');
-  }
-
   // Helper method to execute container actions (start, stop, etc.)
-  public async executeContainerAction(id: string, action: string): Promise<boolean> {
+  public async executeContainerAction(id: string, action: SsmContainer.Actions): Promise<boolean> {
+    this.logger.log(`[CONTAINER] - executeContainerAction - for id: ${id} and action: ${action}`);
     const container = await this.containerRepository.findOneById(id);
     if (!container) {
       throw new NotFoundException(`Container with id ${id} not found`);
     }
 
-    // Find Docker watcher component for this device
-    const deviceUuid = container.deviceUuid;
-    const watcherName = `docker-${deviceUuid}`;
-    const dockerComponent = this.watcherEngineService.findRegisteredDockerComponent(watcherName);
+    const registeredComponent = this.watcherEngineService.findRegisteredComponent(
+      Kind.WATCHER,
+      WATCHERS.DOCKER,
+      container.watcher,
+    ) as IWatcherComponent;
 
-    if (!dockerComponent) {
-      throw new Error(`Docker watcher for device ${deviceUuid} not found`);
+    if (!registeredComponent) {
+      this.logger.error(`Registered watcher for device ${container.deviceUuid} not found`);
+      throw new Error(`Registered watcher for device ${container.deviceUuid} not found`);
     }
 
+    this.logger.log(
+      `[CONTAINER] - executeContainerAction - for registeredComponent: ${registeredComponent?.getId()}`,
+    );
+
     try {
-      // Update container state if needed based on action
-      let newState: string | undefined;
+      this.logger.log(`[CONTAINER] - executeContainerAction - for action: ${action}`);
       switch (action) {
-        case 'start':
-          await dockerComponent.startContainer(container.id);
-          newState = 'running';
+        case SsmContainer.Actions.START:
+          await registeredComponent.startContainer(container);
           break;
-        case 'stop':
-          await dockerComponent.stopContainer(container.id);
-          newState = 'stopped';
+        case SsmContainer.Actions.STOP:
+          await registeredComponent.stopContainer(container);
           break;
-        case 'kill':
-          await dockerComponent.killContainer(container.id);
-          newState = 'stopped';
+        case SsmContainer.Actions.KILL:
+          await registeredComponent.killContainer(container);
           break;
-        case 'pause':
-          await dockerComponent.pauseContainer(container.id);
-          newState = 'paused';
+        case SsmContainer.Actions.PAUSE:
+          await registeredComponent.pauseContainer(container);
           break;
-        case 'unpause':
-          await dockerComponent.unpauseContainer(container.id);
-          newState = 'running';
-          break;
-        case 'restart':
-          await dockerComponent.restartContainer(container.id);
-          newState = 'running';
+        case SsmContainer.Actions.RESTART:
+          await registeredComponent.restartContainer(container);
           break;
         default:
+          this.logger.error(`Invalid action: ${action}`);
           throw new Error(`Invalid action: ${action}`);
-      }
-
-      if (newState) {
-        await this.containerRepository.update(id, { status: newState });
       }
 
       return true;
     } catch (error: any) {
-      this.logger.error(`Failed to ${action} container: ${error.message}`);
+      this.logger.error(error, `Failed to ${action} container: ${error.message}`);
       throw error;
     }
   }
@@ -313,5 +282,14 @@ export class ContainerService implements IContainerService {
         errorMessage: error.message,
       };
     }
+  }
+
+  async updateContainerName(id: string, customName: string): Promise<IContainerEntity> {
+    const container = await this.containerRepository.findOneById(id);
+    if (!container) {
+      throw new NotFoundException(`Container with id ${id} not found`);
+    }
+    container.name = customName;
+    return await this.containerRepository.update(id, container);
   }
 }

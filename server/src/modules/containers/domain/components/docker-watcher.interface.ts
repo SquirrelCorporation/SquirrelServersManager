@@ -50,8 +50,12 @@ export interface IDockerVolumesComponent extends IDockerNetworksComponent {
   /**
    * Backup a Docker volume
    */
-  backupVolume(volumeName: string, backupPath: string, fileName: string, emitEvent: boolean): Promise<string>;
-
+  backupVolume(
+    volumeName: string,
+    backupPath: string,
+    fileName: string,
+    emitEvent: boolean,
+  ): Promise<string>;
 }
 
 /**

@@ -52,9 +52,9 @@ describe('ContainerLogsService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('findContainerById', () => {
+  describe('getContainerById', () => {
     it('should return a container when found', async () => {
-      const result = await service.findContainerById('container-id');
+      const result = await service.getContainerById('container-id');
 
       expect(result).toEqual(mockContainer);
       expect(containerRepository.findOneById).toHaveBeenCalledWith('container-id');
@@ -65,7 +65,7 @@ describe('ContainerLogsService', () => {
         new Error('Database error'),
       );
 
-      await expect(service.findContainerById('container-id')).rejects.toThrow('Database error');
+      await expect(service.getContainerById('container-id')).rejects.toThrow('Database error');
     });
   });
 
@@ -119,7 +119,7 @@ describe('ContainerLogsService', () => {
       );
     });
 
-    it('should propagate errors from findContainerById', async () => {
+    it('should propagate errors from getContainerById', async () => {
       const callback = vi.fn();
       containerRepository.findOneById.mockRejectedValueOnce(new Error('Container not found'));
 

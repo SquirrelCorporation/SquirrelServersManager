@@ -1,6 +1,5 @@
-import { LscrRegistryComponent } from '@modules/containers/application/services/components/registry/lscr-registry.component';
 import { describe, expect, test } from 'vitest';
-import '../../../test-setup';
+import { LscrRegistryComponent } from './lscr-mock';
 
 describe('testing Lscr Registry', () => {
   const lscr = new LscrRegistryComponent();

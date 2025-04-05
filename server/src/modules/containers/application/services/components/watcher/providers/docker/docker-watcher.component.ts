@@ -1,15 +1,39 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import Dockerode from 'dockerode';
-import DockerModem from 'docker-modem';
-import debounce from 'debounce';
-import CronJob from 'node-cron';
-import * as Joi from 'joi';
-import parse from 'parse-docker-image-name';
-import { SsmStatus } from 'ssm-shared-lib';
 import { getCustomAgent } from '@infrastructure/adapters/ssh/custom-agent.adapter';
 import { IContainerEntity } from '@modules/containers/domain/entities/container.entity';
 import { IDevice, IDeviceAuth } from '@modules/devices';
+import { Inject, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import debounce from 'debounce';
+import DockerModem from 'docker-modem';
+import Dockerode from 'dockerode';
+import * as Joi from 'joi';
+import CronJob from 'node-cron';
+import parse from 'parse-docker-image-name';
+import { SsmStatus } from 'ssm-shared-lib';
+import {
+  CONTAINER_IMAGES_SERVICE,
+  IContainerImagesService,
+} from '../../../../../../applicati../../domain/interfaces/container-images-service.interface';
+import {
+  CONTAINER_LOGS_SERVICE,
+  IContainerLogsService,
+} from '../../../../../../applicati../../domain/interfaces/container-logs-service.interface';
+import {
+  CONTAINER_NETWORKS_SERVICE,
+  IContainerNetworksService,
+} from '../../../../../../applicati../../domain/interfaces/container-networks-service.interface';
+import {
+  CONTAINER_SERVICE,
+  IContainerService,
+} from '../../../../../../applicati../../domain/interfaces/container-service.interface';
+import {
+  CONTAINER_STATS_SERVICE,
+  IContainerStatsService,
+} from '../../../../../../applicati../../domain/interfaces/container-stats-service.interface';
+import {
+  CONTAINER_VOLUMES_SERVICE,
+  IContainerVolumesService,
+} from '../../../../../../applicati../../domain/interfaces/container-volumes-service.interface';
 import { Label } from '../../../../../../utils/label';
 import tag from '../../../../../../utils/tag';
 import {
@@ -21,30 +45,6 @@ import {
   isContainerToWatch,
   isDigestToWatch,
 } from '../../../../../../utils/utils';
-import {
-  CONTAINER_SERVICE,
-  IContainerService,
-} from '../../../../../../applicati../../domain/interfaces/container-service.interface';
-import {
-  CONTAINER_STATS_SERVICE,
-  IContainerStatsService,
-} from '../../../../../../applicati../../domain/interfaces/container-stats-service.interface';
-import {
-  CONTAINER_LOGS_SERVICE,
-  IContainerLogsService,
-} from '../../../../../../applicati../../domain/interfaces/container-logs-service.interface';
-import {
-  CONTAINER_IMAGES_SERVICE,
-  IContainerImagesService,
-} from '../../../../../../applicati../../domain/interfaces/container-images-service.interface';
-import {
-  CONTAINER_VOLUMES_SERVICE,
-  IContainerVolumesService,
-} from '../../../../../../applicati../../domain/interfaces/container-volumes-service.interface';
-import {
-  CONTAINER_NETWORKS_SERVICE,
-  IContainerNetworksService,
-} from '../../../../../../applicati../../domain/interfaces/container-networks-service.interface';
 import { AbstractDockerLogsComponent } from './abstract-docker-logs.component';
 
 // The delay before starting the watcher when the app is started
@@ -789,7 +789,7 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
   /**
    * Container action methods - matching original implementation
    */
-  async pauseContainer(container: any): Promise<any> {
+  async pauseContainer(container: IContainerEntity): Promise<any> {
     try {
       return await this.dockerApi.getContainer(container.id).pause();
     } catch (error: any) {
@@ -798,7 +798,7 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     }
   }
 
-  async stopContainer(container: any): Promise<any> {
+  async stopContainer(container: IContainerEntity): Promise<any> {
     try {
       return await this.dockerApi.getContainer(container.id).stop();
     } catch (error: any) {
@@ -807,8 +807,9 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     }
   }
 
-  async startContainer(container: any): Promise<any> {
+  async startContainer(container: IContainerEntity): Promise<any> {
     try {
+      this.childLogger.log(`[CONTAINER] - startContainer - for container: ${container.id}`);
       return await this.dockerApi.getContainer(container.id).start();
     } catch (error: any) {
       this.childLogger.error(`Failed to start container ${container.id}: ${error.message}`);
@@ -816,7 +817,7 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     }
   }
 
-  async restartContainer(container: any): Promise<any> {
+  async restartContainer(container: IContainerEntity): Promise<any> {
     try {
       return await this.dockerApi.getContainer(container.id).restart();
     } catch (error: any) {
@@ -825,7 +826,7 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     }
   }
 
-  async killContainer(container: any): Promise<any> {
+  async killContainer(container: IContainerEntity): Promise<any> {
     this.childLogger.warn(
       `killContainer "${container.id}" (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
     );
@@ -837,7 +838,7 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     }
   }
 
-  async unpauseContainer(container: any): Promise<any> {
+  async unpauseContainer(container: IContainerEntity): Promise<any> {
     try {
       return await this.dockerApi.getContainer(container.id).unpause();
     } catch (error: any) {

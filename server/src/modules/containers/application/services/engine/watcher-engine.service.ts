@@ -1,33 +1,37 @@
-import { Inject, Injectable, OnModuleDestroy, OnModuleInit, forwardRef } from '@nestjs/common';
-import {
-  ConfigurationRegistrySchema,
-  ConfigurationSchema,
-  ConfigurationWatcherSchema,
-} from '@modules/containers/types';
-import { Kind } from '@modules/containers/domain/components/kind.enum';
-import { REGISTRIES, WATCHERS } from '@modules/containers/constants';
-import { IRegistryComponent } from '@modules/containers/domain/components/registry.interface';
-import { IWatcherComponent } from '@modules/containers/domain/components/watcher.interface';
 import {
   AbstractRegistryComponent,
   AbstractWatcherComponent,
   IComponent,
 } from '@modules/containers';
+import { REGISTRIES, WATCHERS } from '@modules/containers/constants';
+import { Kind } from '@modules/containers/domain/components/kind.enum';
+import { IRegistryComponent } from '@modules/containers/domain/components/registry.interface';
+import { IWatcherComponent } from '@modules/containers/domain/components/watcher.interface';
+import {
+  ConfigurationRegistrySchema,
+  ConfigurationSchema,
+  ConfigurationWatcherSchema,
+} from '@modules/containers/types';
+import { Inject, Injectable, OnModuleDestroy, OnModuleInit, forwardRef } from '@nestjs/common';
 import PinoLogger from '../../../../../logger';
+import {
+  DOCKER_DEVICE_SERVICE,
+  IDockerDeviceService,
+} from '../../../../devices/domain/services/docker-device-service.interface';
+import {
+  IProxmoxDeviceService,
+  PROXMOX_DEVICE_SERVICE,
+} from '../../../../devices/domain/services/proxmox-device-service.interface';
+import {
+  CONTAINER_REGISTRIES_SERVICE,
+  IContainerRegistriesService,
+} from '../../../domain/interfaces/container-registries-service.interface';
 import {
   IWatcherEngineService,
   StateType,
 } from '../../../domain/interfaces/watcher-engine-service.interface';
 import { RegistryComponentFactory } from '../components/registry/registry-component-factory.service';
-import { DOCKER_DEVICE_SERVICE } from '../../../../devices/domain/services/docker-device-service.interface';
-import { IDockerDeviceService } from '../../../../devices/domain/services/docker-device-service.interface';
-import { PROXMOX_DEVICE_SERVICE } from '../../../../devices/domain/services/proxmox-device-service.interface';
-import { IProxmoxDeviceService } from '../../../../devices/domain/services/proxmox-device-service.interface';
 import { WatcherComponentFactory } from '../components/watcher/watcher-component-factory.service';
-import {
-  CONTAINER_REGISTRIES_SERVICE,
-  IContainerRegistriesService,
-} from '../../../domain/interfaces/container-registries-service.interface';
 
 const logger = PinoLogger.child(
   { module: 'WatcherEngineService' },
@@ -407,7 +411,11 @@ export class WatcherEngineService implements IWatcherEngineService, OnModuleInit
   /**
    * Find a registered docker component
    */
-  findRegisteredDockerComponent(watcher: string): IComponent<ConfigurationSchema> | undefined {
-    return this.getStates().watcher[this.buildId(Kind.WATCHER, WATCHERS.DOCKER, watcher)];
+  findRegisteredComponent(
+    kind: Kind,
+    watcherType: string,
+    watcher: string,
+  ): IComponent<ConfigurationSchema> | undefined {
+    return this.getStates().watcher[this.buildId(kind, watcherType, watcher)];
   }
 }

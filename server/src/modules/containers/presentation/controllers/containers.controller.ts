@@ -1,16 +1,30 @@
 import { parse } from 'url';
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req } from '@nestjs/common';
-import { Inject } from '@nestjs/common';
+import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
+import { paginate } from '@infrastructure/common/query/pagination.util';
+import { sortByFields } from '@infrastructure/common/query/sorter.util';
 import {
   BadRequestException,
   EntityNotFoundException,
   ServiceUnavailableException,
 } from '@infrastructure/exceptions';
-import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
-import { paginate } from '@infrastructure/common/query/pagination.util';
-import { sortByFields } from '@infrastructure/common/query/sorter.util';
-import { IContainerService } from '../../applicati../../domain/interfaces/container-service.interface';
-import { CONTAINER_SERVICE } from '../../applicati../../domain/interfaces/container-service.interface';
+import { IContainerEntity } from '@modules/containers/domain/entities/container.entity';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+} from '@nestjs/common';
+import { SsmContainer } from 'ssm-shared-lib';
+import {
+  CONTAINER_SERVICE,
+  IContainerService,
+} from '../../applicati../../domain/interfaces/container-service.interface';
 import { ContainersQueryDto } from '../dtos/container-query.dto';
 import { PaginatedResponseDto } from '../dtos/paginated-response.dto';
 
@@ -51,15 +65,15 @@ export class ContainersController {
     });
   }
 
-  @Get(':uuid')
-  async getContainerByUuid(@Param('uuid') uuid: string) {
-    if (!uuid) {
-      throw new BadRequestException('Container UUID is required');
+  @Get(':id')
+  async getContainerById(@Param('id') id: string) {
+    if (!id) {
+      throw new BadRequestException('Container id is required');
     }
 
-    const container = await this.containerService.getContainerByUuid(uuid);
+    const container = await this.containerService.getContainerById(id);
     if (!container) {
-      throw new EntityNotFoundException('Container', uuid);
+      throw new EntityNotFoundException('Container', id);
     }
 
     return container;
@@ -70,73 +84,38 @@ export class ContainersController {
     return this.containerService.getContainersByDeviceUuid(deviceUuid);
   }
 
-  @Patch(':uuid')
-  async updateContainer(@Param('uuid') uuid: string, @Body() containerData: Partial<any>) {
-    return this.containerService.updateContainer(uuid, containerData);
+  @Patch(':id')
+  async updateContainer(@Param('id') id: string, @Body() containerData: Partial<IContainerEntity>) {
+    return this.containerService.updateContainer(id, containerData);
   }
 
-  @Delete(':uuid')
-  async deleteContainer(@Param('uuid') uuid: string) {
-    return { success: await this.containerService.deleteContainer(uuid) };
+  @Post(':id/name')
+  async updateContainerCustomName(@Param('id') id: string, @Body() body: { name: string }) {
+    return this.containerService.updateContainerName(id, body.name);
   }
 
-  @Post(':uuid/start')
-  async startContainer(@Param('uuid') uuid: string) {
-    if (!uuid) {
-      throw new BadRequestException('Container UUID is required');
+  @Delete(':id')
+  async deleteContainer(@Param('id') id: string) {
+    return { success: await this.containerService.deleteContainer(id) };
+  }
+
+  @Post(':id/docker/actions/:action')
+  async startContainer(@Param('id') id: string, @Param('action') action: SsmContainer.Actions) {
+    if (!id) {
+      throw new BadRequestException('Container id is required');
     }
 
     try {
-      const result = await this.containerService.startContainer(uuid);
+      const result = await this.containerService.executeContainerAction(id, action);
       return result;
     } catch (error: any) {
       if (error.message && error.message.includes('not found')) {
-        throw new EntityNotFoundException('Container', uuid);
+        throw new EntityNotFoundException('Container', id);
       } else if (error.message && error.message.includes('connection')) {
         throw new ServiceUnavailableException(`Docker daemon is not available: ${error.message}`);
       } else {
-        throw new BadRequestException(`Failed to start container: ${error.message}`);
+        throw new BadRequestException(`Failed to perform action on container: ${error.message}`);
       }
     }
-  }
-
-  @Post(':uuid/stop')
-  async stopContainer(@Param('uuid') uuid: string) {
-    if (!uuid) {
-      throw new BadRequestException('Container UUID is required');
-    }
-
-    try {
-      const result = await this.containerService.stopContainer(uuid);
-      return result;
-    } catch (error: any) {
-      if (error.message && error.message.includes('not found')) {
-        throw new EntityNotFoundException('Container', uuid);
-      } else if (error.message && error.message.includes('connection')) {
-        throw new ServiceUnavailableException(`Docker daemon is not available: ${error.message}`);
-      } else {
-        throw new BadRequestException(`Failed to stop container: ${error.message}`);
-      }
-    }
-  }
-
-  @Post(':uuid/restart')
-  async restartContainer(@Param('uuid') uuid: string) {
-    return await this.containerService.restartContainer(uuid);
-  }
-
-  @Post(':uuid/pause')
-  async pauseContainer(@Param('uuid') uuid: string) {
-    return await this.containerService.pauseContainer(uuid);
-  }
-
-  @Post(':uuid/unpause')
-  async unpauseContainer(@Param('uuid') uuid: string) {
-    return await this.containerService.unpauseContainer(uuid);
-  }
-
-  @Post(':uuid/kill')
-  async killContainer(@Param('uuid') uuid: string) {
-    return await this.containerService.killContainer(uuid);
   }
 }

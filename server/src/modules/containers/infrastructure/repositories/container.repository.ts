@@ -2,10 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { SsmContainer } from 'ssm-shared-lib';
-import { IContainerRepository } from '../../domain/repositories/container-repository.interface';
 import { IContainerEntity } from '../../domain/entities/container.entity';
-import { CONTAINER_SCHEMA, Container } from '../schemas/container.schema';
+import { IContainerRepository } from '../../domain/repositories/container-repository.interface';
 import { ContainerMapper } from '../mappers/container.mapper';
+import { CONTAINER_SCHEMA, Container } from '../schemas/container.schema';
 
 @Injectable()
 export class ContainerRepository implements IContainerRepository {
@@ -112,8 +112,7 @@ export class ContainerRepository implements IContainerRepository {
     return result.deletedCount > 0;
   }
 
-  // Legacy methods for backward compatibility
-  async findContainerById(id: string): Promise<any> {
+  async getContainerById(id: string): Promise<any> {
     const container = await this.containerModel.findById(id).lean().exec();
     return container;
   }

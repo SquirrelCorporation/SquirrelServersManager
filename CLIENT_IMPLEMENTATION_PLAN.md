@@ -1,0 +1,482 @@
+# Squirrel Servers Manager Client Implementation Plan
+
+This document outlines the detailed implementation plan for refactoring the Squirrel Servers Manager client architecture based on UmiJS Max and Ant Design Pro best practices.
+
+## Phase 1: Infrastructure Setup (2 weeks)
+
+### Week 1: Project Structure and Configuration
+- [ ] **Day 1-2: Project Structure Setup**
+  - [ ] Create the new directory structure according to Ant Design Pro v5 conventions
+    - [ ] Set up `config` directory with configuration files
+    - [ ] Set up `src` directory with proper subdirectories
+    - [ ] Set up `mock` directory for development data
+    - [ ] Set up `tests` directory for test files
+  - [ ] Set up linting and formatting rules
+    - [ ] Configure ESLint with Ant Design Pro recommended rules
+    - [ ] Configure Prettier for code formatting
+    - [ ] Set up pre-commit hooks with husky
+  - [ ] Configure TypeScript settings
+    - [ ] Set up `tsconfig.json` with proper paths and aliases
+    - [ ] Configure strict type checking
+
+- [ ] **Day 3-4: UmiJS Max Configuration**
+  - [ ] Configure UmiJS Max settings in config files
+    - [ ] Set up `config/config.ts` with proper plugins
+    - [ ] Configure `config/routes.ts` for application routing
+    - [ ] Set up `config/defaultSettings.ts` for Pro components
+    - [ ] Configure `config/proxy.ts` for development API proxying
+  - [ ] Set up build and development scripts
+    - [ ] Configure npm scripts in `package.json`
+    - [ ] Set up environment variables for different environments
+  - [ ] Configure routing system
+    - [ ] Define route structure with access control
+    - [ ] Set up layouts for different route groups
+
+- [ ] **Day 5: Request Module Setup**
+  - [ ] Implement request runtime configuration in app.ts
+    - [ ] Set up error handling with proper error types
+    - [ ] Configure response structure
+    - [ ] Set up timeout and other request settings
+  - [ ] Set up error handling for API requests
+    - [ ] Implement `errorThrower` for business errors
+    - [ ] Implement `errorHandler` for HTTP errors
+    - [ ] Set up notification system for errors
+  - [ ] Configure request interceptors
+    - [ ] Set up authentication token handling
+    - [ ] Configure request/response transformations
+
+### Week 2: State Management and Plugin System
+- [ ] **Day 1-2: State Management Setup**
+  - [ ] Configure UmiJS model system
+    - [ ] Set up global models in `src/models`
+    - [ ] Implement `initialState` provider in `app.ts`
+    - [ ] Create model hooks for data access
+  - [ ] Set up dva if needed for complex state management
+    - [ ] Configure dva models for complex features
+    - [ ] Set up effects and reducers
+  - [ ] Create base model templates
+    - [ ] Create reusable model patterns
+    - [ ] Set up model type definitions
+
+- [ ] **Day 3-5: Plugin System Architecture**
+  - [ ] Implement plugin registry
+    - [ ] Create `src/plugins/registry/pluginRegistry.ts`
+    - [ ] Implement plugin registration mechanism
+    - [ ] Set up slot management system
+    - [ ] Implement event system for plugin communication
+  - [ ] Create plugin context provider
+    - [ ] Create `src/plugins/contexts/plugin-context.tsx`
+    - [ ] Implement React Context for plugins
+    - [ ] Set up plugin loading and initialization
+    - [ ] Implement permission checking for plugins
+  - [ ] Define plugin types and interfaces
+    - [ ] Create `src/plugins/types/index.ts`
+    - [ ] Define plugin metadata interface
+    - [ ] Define slot system types
+    - [ ] Create plugin lifecycle hooks
+  - [ ] Set up plugin loading mechanism
+    - [ ] Implement dynamic plugin loading
+    - [ ] Create plugin dependency resolution
+    - [ ] Set up plugin error handling
+    - [ ] Implement plugin hot-reloading for development
+
+## Phase 2: Feature Migration (4-6 weeks)
+
+### Week 1-2: Core Features Migration
+- [ ] **Dashboard Feature**
+  - [ ] Create dashboard model
+    - [ ] Define dashboard data structure
+    - [ ] Implement dashboard state management
+    - [ ] Create dashboard data fetching hooks
+  - [ ] Implement dashboard API services
+    - [ ] Create dashboard API endpoints
+    - [ ] Implement data transformation
+    - [ ] Set up error handling
+  - [ ] Migrate dashboard components
+    - [ ] Create dashboard layout
+    - [ ] Implement dashboard widgets
+    - [ ] Create dashboard cards and charts
+    - [ ] Implement responsive design
+  - [ ] Write tests for dashboard feature
+    - [ ] Create unit tests for components
+    - [ ] Implement integration tests
+    - [ ] Set up snapshot testing
+
+- [ ] **User Authentication**
+  - [ ] Create authentication model
+    - [ ] Implement user state management
+    - [ ] Create login/logout logic
+    - [ ] Set up token management
+    - [ ] Implement permission checking
+  - [ ] Implement authentication API services
+    - [ ] Create login/logout endpoints
+    - [ ] Implement token refresh mechanism
+    - [ ] Set up secure storage for credentials
+  - [ ] Migrate login/logout components
+    - [ ] Create login form
+    - [ ] Implement form validation
+    - [ ] Create user profile components
+    - [ ] Implement password reset flow
+  - [ ] Write tests for authentication
+    - [ ] Test login/logout functionality
+    - [ ] Test token management
+    - [ ] Test permission checking
+
+### Week 3-4: Device Management Migration
+- [ ] **Device Listing and Details**
+  - [ ] Create device model
+    - [ ] Define device data structure and types
+    - [ ] Implement device state management
+    - [ ] Create device selection and filtering logic
+    - [ ] Set up device data caching
+  - [ ] Implement device API services
+    - [ ] Create device CRUD endpoints
+    - [ ] Implement device search and filtering
+    - [ ] Set up pagination for device lists
+    - [ ] Create device status monitoring endpoints
+  - [ ] Migrate device list and detail components
+    - [ ] Create device list with ProTable
+    - [ ] Implement device detail page
+    - [ ] Create device cards and status indicators
+    - [ ] Implement device filtering and search UI
+  - [ ] Write tests for device management
+    - [ ] Test device CRUD operations
+    - [ ] Test device filtering and search
+    - [ ] Test device status monitoring
+
+- [ ] **Device Operations**
+  - [ ] Implement device operations API services
+    - [ ] Create device control endpoints
+    - [ ] Implement device monitoring endpoints
+    - [ ] Set up device logs and history endpoints
+  - [ ] Migrate device operation components
+    - [ ] Create device control panels
+    - [ ] Implement device monitoring dashboards
+    - [ ] Create device logs and history views
+    - [ ] Implement device operation modals
+  - [ ] Write tests for device operations
+    - [ ] Test device control operations
+    - [ ] Test device monitoring components
+    - [ ] Test device logs and history views
+
+### Week 5-6: Container and Playbook Features
+- [ ] **Container Management**
+  - [ ] Create container model
+    - [ ] Define container data structure and types
+    - [ ] Implement container state management
+    - [ ] Create container filtering and grouping logic
+  - [ ] Implement container API services
+    - [ ] Create container CRUD endpoints
+    - [ ] Implement container registry integration
+    - [ ] Set up container monitoring endpoints
+    - [ ] Create container deployment endpoints
+  - [ ] Migrate container management components
+    - [ ] Create container list with ProTable
+    - [ ] Implement container detail page
+    - [ ] Create container deployment forms
+    - [ ] Implement container monitoring UI
+  - [ ] Write tests for container management
+    - [ ] Test container CRUD operations
+    - [ ] Test container registry integration
+    - [ ] Test container deployment
+    - [ ] Test container monitoring
+
+- [ ] **Playbook Management**
+  - [ ] Create playbook model
+    - [ ] Define playbook data structure and types
+    - [ ] Implement playbook state management
+    - [ ] Create playbook execution logic
+  - [ ] Implement playbook API services
+    - [ ] Create playbook CRUD endpoints
+    - [ ] Implement playbook execution endpoints
+    - [ ] Set up playbook history and logs endpoints
+  - [ ] Migrate playbook components
+    - [ ] Create playbook editor
+    - [ ] Implement playbook execution UI
+    - [ ] Create playbook history and logs views
+    - [ ] Implement playbook templates
+  - [ ] Write tests for playbook management
+    - [ ] Test playbook CRUD operations
+    - [ ] Test playbook execution
+    - [ ] Test playbook history and logs
+    - [ ] Test playbook templates
+
+## Phase 3: Component Library Development (3-4 weeks)
+
+### Week 1: Basic Components
+- [ ] **Design System Setup**
+  - [ ] Define design tokens (colors, spacing, typography)
+    - [ ] Create color palette with primary, secondary, and accent colors
+    - [ ] Define spacing scale and grid system
+    - [ ] Set up typography with font families, sizes, and weights
+    - [ ] Define elevation and shadow system
+  - [ ] Create theme configuration
+    - [ ] Set up Ant Design theme customization
+    - [ ] Create dark mode theme
+    - [ ] Define responsive breakpoints
+    - [ ] Create theme switching mechanism
+  - [ ] Set up styled-components integration
+    - [ ] Configure styled-components with Ant Design
+    - [ ] Create global style system
+    - [ ] Set up theme provider
+
+- [ ] **Basic UI Components**
+  - [ ] Implement Button component
+    - [ ] Create different button variants (primary, secondary, text)
+    - [ ] Implement button sizes and states
+    - [ ] Add icon support
+    - [ ] Create button groups
+  - [ ] Implement Input component
+    - [ ] Create different input types
+    - [ ] Implement input validation
+    - [ ] Add prefix and suffix support
+    - [ ] Create input groups
+  - [ ] Implement Card component
+    - [ ] Create different card variants
+    - [ ] Implement card headers and footers
+    - [ ] Add loading states
+    - [ ] Create expandable cards
+  - [ ] Write tests for basic components
+    - [ ] Create unit tests for each component
+    - [ ] Test component variants and states
+    - [ ] Create snapshot tests
+
+### Week 2: Form Components
+- [ ] **Form Components**
+  - [ ] Implement Form component
+    - [ ] Create form layouts (horizontal, vertical, inline)
+    - [ ] Implement form validation
+    - [ ] Add form submission handling
+    - [ ] Create form sections and groups
+  - [ ] Implement Select component
+    - [ ] Create single and multiple select
+    - [ ] Implement search and filtering
+    - [ ] Add custom option rendering
+    - [ ] Create cascading selects
+  - [ ] Implement Checkbox and Radio components
+    - [ ] Create checkbox and radio groups
+    - [ ] Implement indeterminate state
+    - [ ] Add custom rendering
+    - [ ] Create toggle switches
+  - [ ] Implement Date and Time components
+    - [ ] Create date picker
+    - [ ] Implement time picker
+    - [ ] Add range selection
+    - [ ] Create calendar component
+  - [ ] Write tests for form components
+    - [ ] Test form validation
+    - [ ] Test form submission
+    - [ ] Test component interactions
+
+### Week 3: Layout and Navigation Components
+- [ ] **Layout Components**
+  - [ ] Implement Header component
+    - [ ] Create fixed and responsive headers
+    - [ ] Implement header navigation
+    - [ ] Add user profile section
+    - [ ] Create notification area
+  - [ ] Implement Sidebar component
+    - [ ] Create collapsible sidebar
+    - [ ] Implement nested menu items
+    - [ ] Add sidebar footer
+    - [ ] Create mini variant
+  - [ ] Implement Footer component
+    - [ ] Create standard and sticky footers
+    - [ ] Implement footer sections
+    - [ ] Add responsive behavior
+  - [ ] Implement Page Layout components
+    - [ ] Create different page layouts
+    - [ ] Implement responsive behavior
+    - [ ] Add page transitions
+  - [ ] Write tests for layout components
+    - [ ] Test responsive behavior
+    - [ ] Test navigation functionality
+    - [ ] Test layout combinations
+
+- [ ] **Navigation Components**
+  - [ ] Implement Menu component
+    - [ ] Create horizontal and vertical menus
+    - [ ] Implement dropdown menus
+    - [ ] Add icon support
+    - [ ] Create mega menus
+  - [ ] Implement Tabs component
+    - [ ] Create different tab styles
+    - [ ] Implement tab panels
+    - [ ] Add tab animations
+    - [ ] Create scrollable tabs
+  - [ ] Implement Breadcrumb component
+    - [ ] Create auto-generated breadcrumbs
+    - [ ] Implement custom separators
+    - [ ] Add dropdown support
+    - [ ] Create responsive breadcrumbs
+  - [ ] Write tests for navigation components
+    - [ ] Test navigation interactions
+    - [ ] Test keyboard accessibility
+    - [ ] Test responsive behavior
+
+### Week 4: Domain-Specific Components
+- [ ] **Device Components**
+  - [ ] Implement DeviceCard component
+    - [ ] Create different card layouts
+    - [ ] Implement status indicators
+    - [ ] Add action buttons
+    - [ ] Create expandable details
+  - [ ] Implement DeviceStatusBadge component
+    - [ ] Create different status types
+    - [ ] Implement animated statuses
+    - [ ] Add tooltips
+    - [ ] Create status history
+  - [ ] Implement DeviceMetrics component
+    - [ ] Create metric cards
+    - [ ] Implement metric charts
+    - [ ] Add real-time updates
+    - [ ] Create metric alerts
+  - [ ] Write tests for device components
+    - [ ] Test component rendering
+    - [ ] Test status changes
+    - [ ] Test interactions
+
+- [ ] **Container Components**
+  - [ ] Implement ContainerList component
+    - [ ] Create list with filtering
+    - [ ] Implement grouping
+    - [ ] Add search functionality
+    - [ ] Create list actions
+  - [ ] Implement ContainerStatusBadge component
+    - [ ] Create different status types
+    - [ ] Implement status transitions
+    - [ ] Add detailed status information
+  - [ ] Implement ContainerMetrics component
+    - [ ] Create resource usage charts
+    - [ ] Implement logs viewer
+    - [ ] Add performance metrics
+  - [ ] Write tests for container components
+    - [ ] Test list filtering and grouping
+    - [ ] Test status changes
+    - [ ] Test metric calculations
+
+- [ ] **Documentation**
+  - [ ] Set up Storybook for component documentation
+    - [ ] Configure Storybook with Ant Design
+    - [ ] Set up theme switching
+    - [ ] Create documentation template
+    - [ ] Add code examples
+  - [ ] Document all components with examples and usage guidelines
+    - [ ] Create component API documentation
+    - [ ] Add usage examples
+    - [ ] Document accessibility features
+    - [ ] Create interactive examples
+
+## Phase 4: Testing and Optimization (2-3 weeks)
+
+### Week 1: Testing Infrastructure
+- [ ] **Unit Testing Setup**
+  - [ ] Configure Vitest for unit testing
+    - [ ] Set up Jest compatibility mode
+    - [ ] Configure test environment
+    - [ ] Set up test file patterns
+    - [ ] Configure code coverage settings
+  - [ ] Set up test utilities and mocks
+    - [ ] Create test rendering utilities
+    - [ ] Set up MSW for API mocking
+    - [ ] Create common test fixtures
+    - [ ] Implement mock providers
+  - [ ] Implement CI pipeline for tests
+    - [ ] Configure GitHub Actions workflow
+    - [ ] Set up test reporting
+    - [ ] Configure test caching
+    - [ ] Implement test parallelization
+
+- [ ] **Integration Testing**
+  - [ ] Set up integration test environment
+    - [ ] Configure component integration tests
+    - [ ] Set up API integration tests
+    - [ ] Create test database setup
+  - [ ] Create integration tests for key user flows
+    - [ ] Test authentication flow
+    - [ ] Test device management flow
+    - [ ] Test container management flow
+    - [ ] Test playbook execution flow
+  - [ ] Configure test coverage reporting
+    - [ ] Set up coverage thresholds
+    - [ ] Create coverage reports
+    - [ ] Implement coverage badges
+
+### Week 2: E2E Testing and Performance
+- [ ] **E2E Testing**
+  - [ ] Set up Cypress for E2E testing
+    - [ ] Configure Cypress environment
+    - [ ] Set up test fixtures and commands
+    - [ ] Create page object models
+    - [ ] Configure screenshot and video recording
+  - [ ] Create E2E tests for critical user journeys
+    - [ ] Test user login and navigation
+    - [ ] Test device creation and management
+    - [ ] Test container deployment
+    - [ ] Test playbook creation and execution
+  - [ ] Configure E2E tests in CI pipeline
+    - [ ] Set up Cypress GitHub Action
+    - [ ] Configure parallel test execution
+    - [ ] Set up test retries
+    - [ ] Implement test result reporting
+
+- [ ] **Performance Optimization**
+  - [ ] Analyze and optimize bundle size
+    - [ ] Set up bundle analysis
+    - [ ] Optimize dependencies
+    - [ ] Implement tree shaking
+    - [ ] Configure compression
+  - [ ] Implement code splitting
+    - [ ] Set up route-based code splitting
+    - [ ] Implement component lazy loading
+    - [ ] Configure dynamic imports
+    - [ ] Optimize chunk sizes
+  - [ ] Optimize component rendering performance
+    - [ ] Implement memoization
+    - [ ] Optimize re-renders
+    - [ ] Use virtualization for long lists
+    - [ ] Implement performance profiling
+  - [ ] Set up performance monitoring
+    - [ ] Configure Lighthouse CI
+    - [ ] Set up Web Vitals tracking
+    - [ ] Implement performance budgets
+    - [ ] Create performance dashboards
+
+### Week 3: Documentation and Final Polishing
+- [ ] **Documentation**
+  - [ ] Create developer documentation
+    - [ ] Document project setup
+    - [ ] Create API documentation
+    - [ ] Document state management patterns
+    - [ ] Create plugin development guide
+  - [ ] Document architecture and patterns
+    - [ ] Create architecture diagrams
+    - [ ] Document code organization
+    - [ ] Create data flow diagrams
+    - [ ] Document plugin system
+  - [ ] Create onboarding guide for new developers
+    - [ ] Document development workflow
+    - [ ] Create coding standards guide
+    - [ ] Document testing practices
+    - [ ] Create troubleshooting guide
+
+- [ ] **Final Review and Polishing**
+  - [ ] Conduct code review of the entire codebase
+    - [ ] Review code quality
+    - [ ] Check for consistent patterns
+    - [ ] Verify error handling
+    - [ ] Ensure proper typing
+  - [ ] Fix any remaining issues
+    - [ ] Address code review feedback
+    - [ ] Fix edge cases
+    - [ ] Resolve any remaining bugs
+  - [ ] Ensure consistent coding patterns across the application
+    - [ ] Standardize component APIs
+    - [ ] Verify consistent state management
+    - [ ] Check naming conventions
+    - [ ] Ensure proper documentation
+  - [ ] Final performance and accessibility audit
+    - [ ] Run Lighthouse audits
+    - [ ] Verify accessibility compliance
+    - [ ] Check performance metrics
+    - [ ] Test cross-browser compatibility

@@ -7,7 +7,7 @@ export async function getContainers(
   params?: any,
   options?: Record<string, any>,
 ) {
-    return request<API.ContainersResponse>(`${BASE_URL}`, {
+  return request<API.ContainersResponse>(`${BASE_URL}`, {
     method: 'GET',
     params: {
       ...params,
@@ -29,7 +29,6 @@ export async function postRefreshAll(
   });
 }
 
-
 export async function updateContainerCustomName(
   customName: string,
   containerId: string,
@@ -46,7 +45,6 @@ export async function updateContainerCustomName(
   });
 }
 
-
 export async function postDockerContainerAction(
   containerId: string,
   action: SsmContainer.Actions,
@@ -54,7 +52,7 @@ export async function postDockerContainerAction(
   options?: Record<string, any>,
 ): Promise<API.Response<any>> {
   return request<API.Response<any>>(
-    `${BASE_URL}/${containerId}/docker/action/${action}`,
+    `${BASE_URL}/${containerId}/docker/actions/${action}`,
     {
       method: 'POST',
       params: {
@@ -72,7 +70,7 @@ export async function postProxmoxContainerAction(
   options?: Record<string, any>,
 ): Promise<API.Response<any>> {
   return request<API.Response<any>>(
-    `${BASE_URL}/${containerId}/proxmox/action/${action}`,
+    `${BASE_URL}/${containerId}/proxmox/actions/${action}`,
     {
       method: 'POST',
       params: {

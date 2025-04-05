@@ -1,3 +1,5 @@
+import * as os from 'os';
+import { parse } from 'url';
 import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
 import { paginate } from '@infrastructure/common/query/pagination.util';
 import { sortByFields } from '@infrastructure/common/query/sorter.util';
@@ -18,8 +20,6 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import * as os from 'os';
-import { parse } from 'url';
 import {
   CONTAINER_VOLUMES_SERVICE,
   IContainerVolumesService,
@@ -96,11 +96,6 @@ export class ContainerVolumesController {
   async deleteVolume(@Param('uuid') uuid: string) {
     const success = await this.volumesService.deleteVolume(uuid);
     return { success };
-  }
-
-  @Post('prune/device/:deviceUuid')
-  async pruneVolumes(@Param('deviceUuid') deviceUuid: string) {
-    return this.volumesService.pruneVolumes(deviceUuid);
   }
 
   /**

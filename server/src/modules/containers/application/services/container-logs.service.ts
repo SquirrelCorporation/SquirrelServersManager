@@ -26,7 +26,7 @@ export class ContainerLogsService implements IContainerLogsService {
   /**
    * Find a container by UUID
    */
-  async findContainerById(id: string): Promise<IContainerEntity> {
+  async getContainerById(id: string): Promise<IContainerEntity> {
     const container = await this.containerRepository.findOneById(id);
     if (!container) {
       throw new NotFoundException(`Container with id ${id} not found`);
@@ -54,7 +54,7 @@ export class ContainerLogsService implements IContainerLogsService {
     callback: (data: string) => void,
   ): Promise<() => void> {
     try {
-      const container = await this.findContainerById(id);
+      const container = await this.getContainerById(id);
 
       if (!container.watcher) {
         throw new Error(`Container ${id} has no associated watchers`);

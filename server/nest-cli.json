@@ -18,6 +18,6 @@
     "watchDirectory": "dynamicPriorityPolling",
     "fallbackPolling": "dynamicPriority",
     "synchronousWatchDirectory": true,
-    "excludeDirectories": ["node_modules", "dist"]
+    "excludeDirectories": ["node_modules", "dist", "**/__tests__/*.ts"]
   }
 }

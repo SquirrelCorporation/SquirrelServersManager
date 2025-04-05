@@ -1,6 +1,5 @@
-import { GcrRegistryComponent } from '@modules/containers/application/services/components/registry/gcr-registry.component';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import '../../../test-setup';
+import { GcrRegistryComponent } from './gcr-mock';
 
 describe('testing GCR Registry', () => {
   const gcr = new GcrRegistryComponent();

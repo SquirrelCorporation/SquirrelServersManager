@@ -35,7 +35,7 @@
     ".eslintrc.json",
     "typings.d.ts"
   ],
-  "exclude": ["node_modules", "dist", "./**/test-setup.ts"],
+  "exclude": ["node_modules", "dist", "./**/test-setup.ts", "./**/__tests__/**"],
   "watchOptions": {
     "watchFile": "priorityPollingInterval",
     "watchDirectory": "dynamicPriorityPolling",

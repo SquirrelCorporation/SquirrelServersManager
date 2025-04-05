@@ -1,0 +1,24 @@
+export class Registry {
+  name = 'registry';
+  configuration = {};
+  
+  validateConfiguration(config) {
+    return config;
+  }
+  
+  maskConfiguration() {
+    return {};
+  }
+  
+  match() {
+    return true;
+  }
+  
+  normalizeImage(image) {
+    return image;
+  }
+  
+  async authenticate() {
+    return { headers: {} };
+  }
+}

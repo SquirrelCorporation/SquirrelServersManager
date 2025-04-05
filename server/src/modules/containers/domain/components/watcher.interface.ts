@@ -1,3 +1,4 @@
+import { IContainerEntity } from '@modules/containers/domain/entities/container.entity';
 import { ConfigurationSchema, ConfigurationWatcherSchema } from '@modules/containers/types';
 import { IComponent } from './component.interface';
 
@@ -23,37 +24,37 @@ export interface IWatcherComponent extends IComponent<ConfigurationWatcherSchema
   /**
    * Remove a container
    */
-  removeContainer(container: any): Promise<void>;
+  removeContainer(container: IContainerEntity): Promise<void>;
 
   /**
    * Start a container
    */
-  startContainer(container: any): Promise<void>;
+  startContainer(container: IContainerEntity): Promise<void>;
 
   /**
    * Stop a container
    */
-  stopContainer(container: any): Promise<void>;
+  stopContainer(container: IContainerEntity): Promise<void>;
 
   /**
    * Restart a container
    */
-  restartContainer(container: any): Promise<void>;
+  restartContainer(container: IContainerEntity): Promise<void>;
 
   /**
    * Pause a container
    */
-  pauseContainer(container: any): Promise<void>;
+  pauseContainer(container: IContainerEntity): Promise<void>;
 
   /**
    * Unpause a container
    */
-  unpauseContainer(container: any): Promise<void>;
+  unpauseContainer(container: IContainerEntity): Promise<void>;
 
   /**
    * Kill a container
    */
-  killContainer(container: any): Promise<void>;
+  killContainer(container: IContainerEntity): Promise<void>;
 
   /**
    * Get container logs
