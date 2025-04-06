@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "Running pre-commit checks..."
+
+# Change to server directory
+cd server || exit 1
+
+# Run build
+echo "Building project..."
+npm run build || exit 1
+
+# Run tests
+echo "Running tests..."
+npm test || exit 1
+
+# If we get here, everything passed
+echo "✅ Pre-commit checks passed!" 

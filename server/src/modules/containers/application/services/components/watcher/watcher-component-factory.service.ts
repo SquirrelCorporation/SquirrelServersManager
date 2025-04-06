@@ -89,7 +89,8 @@ export class WatcherComponentFactory implements IWatcherComponentFactory {
     logger.info('Creating Proxmox watcher component (mock implementation)');
 
     // Return a mock implementation for Proxmox
-    return new (class extends AbstractWatcherComponent {
+    // eslint-disable-next-line
+    return new(class extends AbstractWatcherComponent {
       async init(): Promise<void> {
         this.childLogger.info('Mock Proxmox watcher initialized');
       }

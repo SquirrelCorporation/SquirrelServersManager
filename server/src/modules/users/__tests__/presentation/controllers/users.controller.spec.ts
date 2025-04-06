@@ -67,22 +67,22 @@ class UsersController {
 
   async login(body: { username: string; password: string }, res: Response) {
     const { username, password } = body;
-    
+
     if (!username || !password) {
       throw new HttpException('Username and password are required', 400);
     }
-    
+
     const user = await this.usersService.findUserByEmailAndPassword(username, password);
     if (!user) {
       throw new Error('Identification is incorrect!');
     }
-    
+
     const token = this.jwtService.sign({ email: user.email, role: user.role });
     res.cookie('jwt', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
     });
-    
+
     return { currentAuthority: user.role };
   }
 
@@ -91,10 +91,10 @@ class UsersController {
     if (users.length > 0) {
       throw new HttpException('Cannot create user: users already exist', 400);
     }
-    
+
     const user = await this.usersService.createUser(userData);
     const mappedUser = this.userMapper.toResponse(user);
-    
+
     return {
       success: true,
       message: 'User created successfully',
@@ -106,12 +106,12 @@ class UsersController {
     if (currentUser.role !== Role.ADMIN && email !== currentUser.email) {
       throw new HttpException('Not authorized to regenerate API key for other users', 403);
     }
-    
+
     const apiKey = await this.usersService.regenerateApiKey(email);
     if (!apiKey) {
       throw new HttpException('User not found', 404);
     }
-    
+
     return {
       success: true,
       message: 'API key regenerated successfully',
@@ -123,14 +123,14 @@ class UsersController {
     if (currentUser.role !== Role.ADMIN && email !== currentUser.email) {
       throw new HttpException('Not authorized to update logs level for other users', 403);
     }
-    
+
     const user = await this.usersService.updateLogsLevel(email, body);
     if (!user) {
       throw new HttpException('User not found', 404);
     }
-    
+
     const mappedUser = this.userMapper.toResponse(user);
-    
+
     return {
       success: true,
       message: 'Logs level updated successfully',
@@ -166,11 +166,7 @@ describe('UsersController', () => {
     mockUserMapper = new UserMapper();
     mockJwtService = new JwtService();
 
-    usersController = new UsersController(
-      mockUsersService,
-      mockUserMapper,
-      mockJwtService,
-    );
+    usersController = new UsersController(mockUsersService, mockUserMapper, mockJwtService);
   });
 
   describe('getAllUsers', () => {

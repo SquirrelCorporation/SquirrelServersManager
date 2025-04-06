@@ -60,6 +60,8 @@ export const transformToDockerCompose = (input: any) => {
         privileged: value.privileged,
         restart: value.restart,
         secrets: value['service-secrets'],
+        command: value.command,
+        attach: value.attach,
       };
 
       // Remove any undefined fields

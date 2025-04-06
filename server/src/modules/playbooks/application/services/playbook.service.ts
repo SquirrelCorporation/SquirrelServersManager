@@ -4,11 +4,14 @@ import { IPlaybooksService } from '@modules/playbooks/doma../../domain/interface
 import { IPlaybook } from '@modules/playbooks/domain/entities/playbook.entity';
 import { IShellWrapperService, SHELL_WRAPPER_SERVICE } from '@modules/shell';
 import { IUser } from '@modules/users/domain/entities/user.entity';
-import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
 import { Playbooks } from 'src/types/typings';
 import { API, SsmAnsible } from 'ssm-shared-lib';
-import { IPlaybookRepository, PLAYBOOK_REPOSITORY } from '../../domain/repositories/playbook-repository.interface';
+import {
+  IPlaybookRepository,
+  PLAYBOOK_REPOSITORY,
+} from '../../domain/repositories/playbook-repository.interface';
 
 /**
  * PlaybookService implements the IPlaybooksService interface

@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "prepare": "husky install"
+  },
   "dependencies": {
     "@nestjs/cache-manager": "^3.0.0",
     "@nestjs/jwt": "^11.0.0",
@@ -10,6 +13,7 @@
     "cache-manager-redis-store": "^2.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.14"
+    "@types/jest": "^29.5.14",
+    "husky": "^9.0.11"
   }
 }
