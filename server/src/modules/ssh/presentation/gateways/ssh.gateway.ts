@@ -1,6 +1,6 @@
 import { SshTerminalService } from '@modules/ssh';
 import { ScreenResizeDto, SshSessionDto } from '@modules/ssh/presentation/dtos/ssh-session.dto';
-import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
+import { Inject, Injectable, Logger, UseGuards, forwardRef } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -13,11 +13,13 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SsmEvents } from 'ssm-shared-lib';
+import { WsAuthGuard } from '@infrastructure/websocket-auth/ws-auth.guard';
 
 @Injectable()
 @WebSocketGateway({
   namespace: '/ssh',
 })
+@UseGuards(WsAuthGuard)
 export class SshGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger = new Logger(SshGateway.name);
   private readonly clientSessions = new Map<string, string>(); // Store client ID -> session ID

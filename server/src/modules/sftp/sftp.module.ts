@@ -1,4 +1,5 @@
 import { SshInfrastructureModule } from '@infrastructure/ssh/ssh-infrastructure.module';
+import { WsAuthModule } from '@infrastructure/websocket-auth/ws-auth.module';
 import { ShellModule } from '@modules/shell';
 import { Module } from '@nestjs/common';
 import { SftpService } from './application/services/sftp.service';
@@ -13,6 +14,7 @@ import { SftpGateway } from './presentation/gateways/sftp.gateway';
     // Import the infrastructure module directly instead of the full SSH module
     SshInfrastructureModule,
     ShellModule,
+    WsAuthModule,
   ],
   providers: [
     SftpGateway,

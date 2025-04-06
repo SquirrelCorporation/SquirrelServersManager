@@ -86,11 +86,7 @@ describe('ContainerStacksController', () => {
   describe('Stack deployment operations', () => {
     it('should deploy a stack', async () => {
       const mockUser = { id: 'user-123' };
-      const result = await controller.deployStack(
-        '123',
-        { target: 'test-target' },
-        { user: mockUser },
-      );
+      const result = await controller.deployStack('123', { target: 'test-target' }, mockUser);
       expect(result).toEqual({ execId: 'exec-123' });
       expect(mockContainerStacksService.deployStack).toHaveBeenCalledWith(
         '123',

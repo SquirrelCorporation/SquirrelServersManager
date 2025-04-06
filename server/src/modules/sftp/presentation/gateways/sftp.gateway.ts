@@ -1,5 +1,5 @@
 import { SftpService } from '@modules/sftp/application/services/sftp.service';
-import { Inject, Logger, forwardRef } from '@nestjs/common';
+import { Inject, Logger, UseGuards, forwardRef } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -12,6 +12,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SsmEvents } from 'ssm-shared-lib';
+import { WsAuthGuard } from '@infrastructure/websocket-auth/ws-auth.guard';
 import { ISftpService } from '../../domain/interfaces/sftp-service.interface';
 import {
   SftpChmodDto,
@@ -26,6 +27,7 @@ import {
 @WebSocketGateway({
   namespace: '/sftp',
 })
+@UseGuards(WsAuthGuard)
 export class SftpGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger = new Logger(SftpGateway.name);
 

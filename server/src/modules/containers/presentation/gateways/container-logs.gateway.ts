@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, UseGuards } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -11,6 +11,7 @@ import {
 import { DateTime } from 'luxon';
 import { Server, Socket } from 'socket.io';
 import { SsmEvents } from 'ssm-shared-lib';
+import { WsAuthGuard } from '@infrastructure/websocket-auth/ws-auth.guard';
 import PinoLogger from '../../../../logger';
 import {
   CONTAINER_LOGS_SERVICE,
@@ -33,6 +34,7 @@ const logger = PinoLogger.child(
     origin: '*',
   },
 })
+@UseGuards(WsAuthGuard)
 export class ContainerLogsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server!: Server;

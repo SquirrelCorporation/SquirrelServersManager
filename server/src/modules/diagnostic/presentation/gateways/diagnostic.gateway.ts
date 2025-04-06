@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UseGuards } from '@nestjs/common';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -7,12 +7,13 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { SsmEvents } from 'ssm-shared-lib';
+import { WsAuthGuard } from '../../../../infrastructure/websocket-auth/ws-auth.guard';
 
 @Injectable()
 @WebSocketGateway({
   namespace: '/diagnostic',
 })
+@UseGuards(WsAuthGuard)
 export class DiagnosticGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger = new Logger(DiagnosticGateway.name);
 
@@ -37,4 +38,4 @@ export class DiagnosticGateway implements OnGatewayInit, OnGatewayConnection, On
   emit(event: string, data: any) {
     this.server.emit(event, data);
   }
-} 
+}

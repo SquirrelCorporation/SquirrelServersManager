@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { WsAuthModule } from '@infrastructure/websocket-auth/ws-auth.module';
 import { NotificationService } from './application/services/notification.service';
 import { NotificationComponentService } from './application/services/notification-component.service';
 import { NOTIFICATION, NotificationSchema } from './infrastructure/schemas/notification.schema';
@@ -9,7 +10,10 @@ import { NotificationsGateway } from './presentation/gateways/notifications.gate
 import { NOTIFICATION_REPOSITORY } from './domain/repositories/notification-repository.interface';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: NOTIFICATION, schema: NotificationSchema }])],
+  imports: [
+    MongooseModule.forFeature([{ name: NOTIFICATION, schema: NotificationSchema }]),
+    WsAuthModule,
+  ],
   controllers: [NotificationController],
   providers: [
     NotificationService,

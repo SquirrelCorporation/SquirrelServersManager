@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { WsAuthModule } from '@infrastructure/websocket-auth/ws-auth.module';
 import { EventEmitterService } from '../../core/events/event-emitter.service';
 import { DevicesModule } from '../devices';
 import { DiagnosticService } from './application/services/diagnostic.service';
@@ -8,9 +9,15 @@ import { DiagnosticGateway } from './presentation/gateways/diagnostic.gateway';
 import { DiagnosticEventsGateway } from './presentation/gateways/diagnostic-events.gateway';
 
 @Module({
-  imports: [DevicesModule],
+  imports: [DevicesModule, WsAuthModule],
   controllers: [DiagnosticController],
-  providers: [DiagnosticService, EventEmitterService, DiagnosticMapper, DiagnosticGateway, DiagnosticEventsGateway],
+  providers: [
+    DiagnosticService,
+    EventEmitterService,
+    DiagnosticMapper,
+    DiagnosticGateway,
+    DiagnosticEventsGateway,
+  ],
   exports: [DiagnosticService],
 })
 export class DiagnosticModule {}

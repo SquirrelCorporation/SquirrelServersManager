@@ -1,8 +1,9 @@
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UseGuards } from '@nestjs/common';
 import { Server } from 'socket.io';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SsmEvents } from 'ssm-shared-lib';
+import { WsAuthGuard } from '@infrastructure/websocket-auth/ws-auth.guard';
 import Events from '../../../../core/events/events';
 
 @Injectable()
@@ -11,6 +12,7 @@ import Events from '../../../../core/events/events';
     origin: '*',
   },
 })
+@UseGuards(WsAuthGuard)
 export class NotificationsGateway {
   private readonly logger = new Logger(NotificationsGateway.name);
 

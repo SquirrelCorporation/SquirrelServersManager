@@ -4,6 +4,7 @@ import { ContainersGateway } from '@modules/containers/presentation/gateways/con
 import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
+import { WsAuthModule } from '@infrastructure/websocket-auth/ws-auth.module';
 import { DevicesModule } from '../devices/devices.module';
 import { PlaybooksModule } from '../playbooks/playbooks.module';
 import { ShellModule } from '../shell/shell.module';
@@ -95,6 +96,7 @@ import { ContainerLogsGateway } from './presentation/gateways/container-logs.gat
     PlaybooksModule,
     forwardRef(() => StatisticsModule),
     DevicesModule,
+    WsAuthModule,
   ],
   controllers: [
     ContainersController,
