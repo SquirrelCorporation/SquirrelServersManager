@@ -1,12 +1,14 @@
 import { PlaybookRepository, PlaybookService } from '@modules/playbooks';
 import { PlaybookFileService } from '@modules/shell';
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Patch, Post } from '@nestjs/common';
 import { User } from 'src/decorators/user.decorator';
 import { Playbooks } from 'src/types/typings';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 
 @Controller('playbooks')
 export class PlaybookController {
+  private readonly logger = new Logger(PlaybookController.name);
+
   constructor(
     private readonly playbookService: PlaybookService,
     private readonly playbookRepository: PlaybookRepository,
@@ -45,13 +47,18 @@ export class PlaybookController {
   }
 
   @Post(':uuid/extravars')
-  async addExtraVarToPlaybook(@Param('uuid') uuid: string, @Body() extraVar: API.ExtraVar) {
+  async addExtraVarToPlaybook(
+    @Param('uuid') uuid: string,
+    @Body() body: { extraVar: API.ExtraVar },
+  ) {
     const playbook = await this.playbookRepository.findOneByUuid(uuid);
     if (!playbook) {
       throw new Error('Playbook not found');
     }
-
-    await this.playbookService.addExtraVarToPlaybook(playbook, extraVar);
+    this.logger.log(
+      `Adding extra var to playbook ${playbook.path} (extraVar: ${JSON.stringify(body.extraVar)})`,
+    );
+    await this.playbookService.addExtraVarToPlaybook(playbook, body.extraVar);
     return { success: true };
   }
 

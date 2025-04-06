@@ -19,7 +19,6 @@
   "version": "0.1.31",
   "author": "Squirrel Team",
   "dependencies": {
-    "ssm-shared-lib": "file:../shared-lib/",
     "@aws-sdk/client-ecr": "^3.777.0",
     "@keyv/redis": "^4.3.2",
     "@nestjs/axios": "^4.0.0",
@@ -90,6 +89,7 @@
     "shelljs": "^0.9.2",
     "socket.io": "^4.8.1",
     "ssh2": "^1.16.0",
+    "ssm-shared-lib": "file:../shared-lib/",
     "yaml": "^2.7.1"
   },
   "overrides": {
@@ -100,6 +100,7 @@
     "@eslint/compat": "^1.2.7",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.23.0",
+    "@jest/globals": "^29.7.0",
     "@nestjs/cli": "^10.3.2",
     "@nestjs/testing": "^11.0.12",
     "@stylistic/eslint-plugin": "^4.2.0",
@@ -109,6 +110,7 @@
     "@types/dockerode-compose": "^1.4.1",
     "@types/express": "^5.0.1",
     "@types/fs-extra": "^11.0.4",
+    "@types/jest": "^29.5.14",
     "@types/js-yaml": "^4.0.9",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/lodash": "^4.17.16",
@@ -139,6 +141,7 @@
     "node-mocks-http": "^1.16.2",
     "nodemon": "^3.1.9",
     "prettier": "^3.5.3",
+    "socket.io-client": "^4.8.1",
     "supertest": "^7.1.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
