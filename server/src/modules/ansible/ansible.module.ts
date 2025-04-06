@@ -1,5 +1,5 @@
 import { HttpModule } from '@nestjs/axios';
-import { forwardRef, Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AnsibleVaultsModule, DEFAULT_VAULT_ID } from '../ansible-vaults';
 import { DevicesModule } from '../devices/devices.module';
@@ -20,7 +20,10 @@ import { ANSIBLE_TASK_STATUS_REPOSITORY } from './domain/repositories/ansible-ta
 import { ANSIBLE_TASK_REPOSITORY } from './domain/repositories/ansible-task.repository.interface';
 import { AnsibleTaskStatusRepository } from './infrastructure/repositories/ansible-task-status.repository';
 import { AnsibleTaskRepository } from './infrastructure/repositories/ansible-task.repository';
-import { AnsibleTaskStatus, AnsibleTaskStatusSchema } from './infrastructure/schemas/ansible-task-status.schema';
+import {
+  AnsibleTaskStatus,
+  AnsibleTaskStatusSchema,
+} from './infrastructure/schemas/ansible-task-status.schema';
 import { AnsibleTask, AnsibleTaskSchema } from './infrastructure/schemas/ansible-task.schema';
 import { GalaxyController } from './presentation/controllers/ansible-galaxy.controller';
 import { AnsibleHooksController } from './presentation/controllers/ansible-hooks.controller';
