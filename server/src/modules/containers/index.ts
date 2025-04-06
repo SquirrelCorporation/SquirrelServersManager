@@ -9,12 +9,11 @@ export * from './domain/components/kind.enum';
 export * from './domain/repositories/container-repository.interface';
 export * from './domain/repositories/container-image-repository.interface';
 export * from './domain/repositories/container-volume-repository.interface';
-
+export * from './domain/interfaces/container-service.interface';
+export * from './domain/interfaces/container-logs-service.interface';
+export * from './domain/interfaces/watcher-engine-service.interface';
+export * from './domain/interfaces/container-volumes-service.interface';
 // Application
-export * from './applicati../../domain/interfaces/container-service.interface';
-export * from './applicati../../domain/interfaces/container-logs-service.interface';
-export * from './applicati../../domain/interfaces/watcher-engine-service.interface';
-export * from './applicati../../domain/interfaces/container-volumes-service.interface';
 export * from './application/services/container.service';
 export * from './application/services/container-logs.service';
 export * from './application/services/engine/watcher-engine.service';

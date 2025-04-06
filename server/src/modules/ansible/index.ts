@@ -1,7 +1,3 @@
-import {
-  ITaskLogsService,
-  TASK_LOGS_SERVICE,
-} from './applicati../../domain/interfaces/task-logs-service.interface';
 import { AnsibleCommandBuilderService } from './application/services/ansible-command-builder.service';
 import { AnsibleCommandService } from './application/services/ansible-command.service';
 import { AnsibleGalaxyCommandService } from './application/services/ansible-galaxy-command.service';
@@ -11,6 +7,10 @@ import { InventoryTransformerService } from './application/services/inventory-tr
 import { TaskLogsService } from './application/services/task-logs.service';
 import { IAnsibleTaskStatus } from './domain/entities/ansible-task-status.interface';
 import { IAnsibleTask } from './domain/entities/ansible-task.interface';
+import {
+  ITaskLogsService,
+  TASK_LOGS_SERVICE,
+} from './domain/interfaces/task-logs-service.interface';
 import {
   ANSIBLE_TASK_STATUS_REPOSITORY,
   IAnsibleTaskStatusRepository,

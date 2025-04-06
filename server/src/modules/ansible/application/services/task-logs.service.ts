@@ -1,19 +1,19 @@
+import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
+import { paginate } from '@infrastructure/common/query/pagination.util';
+import { sortByFields } from '@infrastructure/common/query/sorter.util';
+import { IAnsibleTask } from '@modules/ansible/domain/entities/ansible-task.entity';
+import { ANSIBLE_LOGS_REPOSITORY, IAnsibleLogsRepository } from '@modules/logs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { ANSIBLE_LOGS_REPOSITORY, IAnsibleLogsRepository } from '@modules/logs';
-import { IAnsibleTask } from '@modules/ansible/domain/entities/ansible-task.entity';
-import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
-import { sortByFields } from '@infrastructure/common/query/sorter.util';
-import { paginate } from '@infrastructure/common/query/pagination.util';
-import { ITaskLogsService } from '../../applicati../../domain/interfaces/task-logs-service.interface';
-import {
-  ANSIBLE_TASK_REPOSITORY,
-  IAnsibleTaskRepository,
-} from '../../domain/repositories/ansible-task.repository.interface';
+import { ITaskLogsService } from '../../domain/interfaces/task-logs-service.interface';
 import {
   ANSIBLE_TASK_STATUS_REPOSITORY,
   IAnsibleTaskStatusRepository,
 } from '../../domain/repositories/ansible-task-status.repository.interface';
+import {
+  ANSIBLE_TASK_REPOSITORY,
+  IAnsibleTaskRepository,
+} from '../../domain/repositories/ansible-task.repository.interface';
 import { PaginatedResponseDto } from '../../presentation/dtos/task-response.dto';
 
 /**

@@ -13,11 +13,11 @@ import {
 import {
   CONTAINER_SERVICE,
   IContainerService,
-} from '../../applicati../../domain/interfaces/container-service.interface';
+} from '../../domain/interfaces/container-service.interface';
 import {
   CONTAINER_STATS_SERVICE,
   IContainerStatsService,
-} from '../../applicati../../domain/interfaces/container-stats-service.interface';
+} from '../../domain/interfaces/container-stats-service.interface';
 import {
   ContainerCountParamDto,
   ContainerStatParamDto,

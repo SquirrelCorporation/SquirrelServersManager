@@ -24,7 +24,7 @@ import { SsmContainer } from 'ssm-shared-lib';
 import {
   CONTAINER_SERVICE,
   IContainerService,
-} from '../../applicati../../domain/interfaces/container-service.interface';
+} from '../../domain/interfaces/container-service.interface';
 import { ContainersQueryDto } from '../dtos/container-query.dto';
 import { PaginatedResponseDto } from '../dtos/paginated-response.dto';
 

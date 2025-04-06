@@ -2,7 +2,7 @@ import { Controller, Get, Inject, Query } from '@nestjs/common';
 import {
   IServerLogsService,
   SERVER_LOGS_SERVICE,
-} from '../../applicati../../domain/interfaces/server-logs-service.interface';
+} from '../../domain/interfaces/server-logs-service.interface';
 import { ServerLogsQueryDto } from '../dtos/server-logs-query.dto';
 
 @Controller('logs')

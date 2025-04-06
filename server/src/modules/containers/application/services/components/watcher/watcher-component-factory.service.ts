@@ -1,35 +1,35 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import PinoLogger from '../../../../../../logger';
+import { IDockerWatcherComponentFactory } from '../../../../domain/components/docker-watcher.interface';
 import {
   IWatcherComponent,
   IWatcherComponentFactory,
 } from '../../../../domain/components/watcher.interface';
-import { IDockerWatcherComponentFactory } from '../../../../domain/components/docker-watcher.interface';
-import {
-  CONTAINER_SERVICE,
-  IContainerService,
-} from '../../../../applicati../../domain/interfaces/container-service.interface';
-import {
-  CONTAINER_STATS_SERVICE,
-  IContainerStatsService,
-} from '../../../../applicati../../domain/interfaces/container-stats-service.interface';
-import {
-  CONTAINER_LOGS_SERVICE,
-  IContainerLogsService,
-} from '../../../../applicati../../domain/interfaces/container-logs-service.interface';
 import {
   CONTAINER_IMAGES_SERVICE,
   IContainerImagesService,
-} from '../../../../applicati../../domain/interfaces/container-images-service.interface';
+} from '../../../../domain/interfaces/container-images-service.interface';
 import {
-  CONTAINER_VOLUMES_SERVICE,
-  IContainerVolumesService,
-} from '../../../../applicati../../domain/interfaces/container-volumes-service.interface';
+  CONTAINER_LOGS_SERVICE,
+  IContainerLogsService,
+} from '../../../../domain/interfaces/container-logs-service.interface';
 import {
   CONTAINER_NETWORKS_SERVICE,
   IContainerNetworksService,
-} from '../../../../applicati../../domain/interfaces/container-networks-service.interface';
+} from '../../../../domain/interfaces/container-networks-service.interface';
+import {
+  CONTAINER_SERVICE,
+  IContainerService,
+} from '../../../../domain/interfaces/container-service.interface';
+import {
+  CONTAINER_STATS_SERVICE,
+  IContainerStatsService,
+} from '../../../../domain/interfaces/container-stats-service.interface';
+import {
+  CONTAINER_VOLUMES_SERVICE,
+  IContainerVolumesService,
+} from '../../../../domain/interfaces/container-volumes-service.interface';
 import { AbstractWatcherComponent } from './abstract-watcher.component';
 import { DockerWatcherComponentFactory } from './providers/docker/docker-watcher-factory.service';
 
@@ -89,7 +89,7 @@ export class WatcherComponentFactory implements IWatcherComponentFactory {
     logger.info('Creating Proxmox watcher component (mock implementation)');
 
     // Return a mock implementation for Proxmox
-    return new(class extends AbstractWatcherComponent {
+    return new (class extends AbstractWatcherComponent {
       async init(): Promise<void> {
         this.childLogger.info('Mock Proxmox watcher initialized');
       }

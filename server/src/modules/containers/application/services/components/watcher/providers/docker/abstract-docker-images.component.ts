@@ -3,28 +3,28 @@ import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   CONTAINER_IMAGES_SERVICE,
-  IContainerImagesService
-} from '../../../../../../applicati../../domain/interfaces/container-images-service.interface';
+  IContainerImagesService,
+} from '../../../../../../domain/interfaces/container-images-service.interface';
 import {
   CONTAINER_LOGS_SERVICE,
-  IContainerLogsService
-} from '../../../../../../applicati../../domain/interfaces/container-logs-service.interface';
+  IContainerLogsService,
+} from '../../../../../../domain/interfaces/container-logs-service.interface';
 import {
   CONTAINER_NETWORKS_SERVICE,
-  IContainerNetworksService
-} from '../../../../../../applicati../../domain/interfaces/container-networks-service.interface';
+  IContainerNetworksService,
+} from '../../../../../../domain/interfaces/container-networks-service.interface';
 import {
   CONTAINER_SERVICE,
-  IContainerService
-} from '../../../../../../applicati../../domain/interfaces/container-service.interface';
+  IContainerService,
+} from '../../../../../../domain/interfaces/container-service.interface';
 import {
   CONTAINER_STATS_SERVICE,
-  IContainerStatsService
-} from '../../../../../../applicati../../domain/interfaces/container-stats-service.interface';
+  IContainerStatsService,
+} from '../../../../../../domain/interfaces/container-stats-service.interface';
 import {
   CONTAINER_VOLUMES_SERVICE,
-  IContainerVolumesService
-} from '../../../../../../applicati../../domain/interfaces/container-volumes-service.interface';
+  IContainerVolumesService,
+} from '../../../../../../domain/interfaces/container-volumes-service.interface';
 import { AbstractDockerVolumesComponent } from './abstract-docker-volumes.component';
 
 /**

@@ -17,12 +17,12 @@ import {
   RESOURCES,
   ResourceAction,
 } from '../../../../infrastructure/security/roles/resource-action.decorator';
+import { AdvancedOperationsService } from '../../application/services/advanced-operations.service';
+import { InformationService } from '../../application/services/information.service';
 import {
   ISettingsService,
   SETTINGS_SERVICE,
-} from '../../applicati../../domain/interfaces/settings-service.interface';
-import { AdvancedOperationsService } from '../../application/services/advanced-operations.service';
-import { InformationService } from '../../application/services/information.service';
+} from '../../domain/interfaces/settings-service.interface';
 import {
   DashboardSettingBodyDto,
   DashboardSettingParamDto,

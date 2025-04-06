@@ -2,7 +2,7 @@
 export * from './domain/entities/sftp.entity';
 
 // Application exports
-export * from './applicati../../domain/interfaces/sftp-service.interface';
+export * from './domain/interfaces/sftp-service.interface';
 export * from './application/services/sftp.service';
 
 // Infrastructure exports

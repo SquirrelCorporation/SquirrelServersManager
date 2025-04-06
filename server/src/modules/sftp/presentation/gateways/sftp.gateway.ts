@@ -1,5 +1,5 @@
 import { SftpService } from '@modules/sftp/application/services/sftp.service';
-import { forwardRef, Inject, Logger } from '@nestjs/common';
+import { Inject, Logger, forwardRef } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -12,7 +12,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SsmEvents } from 'ssm-shared-lib';
-import { ISftpService } from '../../applicati../../domain/interfaces/sftp-service.interface';
+import { ISftpService } from '../../domain/interfaces/sftp-service.interface';
 import {
   SftpChmodDto,
   SftpDeleteDto,

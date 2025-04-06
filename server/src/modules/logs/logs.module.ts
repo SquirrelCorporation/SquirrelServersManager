@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ANSIBLE_LOGS_SERVICE } from './applicati../../domain/interfaces/ansible-logs-service.interface';
-import { SERVER_LOGS_SERVICE } from './applicati../../domain/interfaces/server-logs-service.interface';
 import { AnsibleLogsService } from './application/services/ansible-logs.service';
 import { ServerLogsService } from './application/services/server-logs.service';
+import { ANSIBLE_LOGS_SERVICE } from './domain/interfaces/ansible-logs-service.interface';
+import { SERVER_LOGS_SERVICE } from './domain/interfaces/server-logs-service.interface';
 import { ANSIBLE_LOGS_REPOSITORY } from './domain/repositories/ansible-logs-repository.interface';
 import { SERVER_LOGS_REPOSITORY } from './domain/repositories/server-logs-repository.interface';
 import { AnsibleLogMapper } from './infrastructure/mappers/ansible-log.mapper';

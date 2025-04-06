@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   CONTAINER_REPOSITORY_COMPONENT_SERVICE,
   IContainerRepositoryComponentService,
-} from '../../../applicati../../domain/interfaces/container-repository-component-service.interface';
+} from '../../../domain/interfaces/container-repository-component-service.interface';
 
 describe('IContainerRepositoryComponentService Interface', () => {
   it('should have the correct constant value', () => {

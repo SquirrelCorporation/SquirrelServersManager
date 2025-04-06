@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
   CONTAINER_STACKS_REPOSITORY_ENGINE_SERVICE,
-  IContainerStacksRepositoryEngineService,
-} from '../../../applicati../../domain/interfaces/container-stacks-repository-engine-service.interface';
+  IContainerCustomStacksRepositoryEngineService,
+} from '../../../domain/interfaces/container-stacks-repository-engine-service.interface';
 
 describe('IContainerStacksRepositoryEngineService Interface', () => {
   it('should have the correct constant value', () => {
@@ -13,7 +13,7 @@ describe('IContainerStacksRepositoryEngineService Interface', () => {
 
   it('should define the required service methods', () => {
     // Create a mock implementation of the interface
-    const mockService: IContainerStacksRepositoryEngineService = {
+    const mockService: IContainerCustomStacksRepositoryEngineService = {
       cloneRepository: vi.fn(),
       pullRepository: vi.fn(),
       getRepositoryComponents: vi.fn(),
@@ -26,7 +26,7 @@ describe('IContainerStacksRepositoryEngineService Interface', () => {
   });
 
   it('should be able to mock service method implementations', async () => {
-    const mockService: IContainerStacksRepositoryEngineService = {
+    const mockService: IContainerCustomStacksRepositoryEngineService = {
       cloneRepository: vi.fn().mockResolvedValue(true),
       pullRepository: vi.fn().mockResolvedValue(true),
       getRepositoryComponents: vi.fn().mockResolvedValue(['component1', 'component2']),

@@ -10,13 +10,13 @@ import {
   Query,
   Req,
   UsePipes,
-  ValidationPipe
+  ValidationPipe,
 } from '@nestjs/common';
 import { Request } from 'express';
 import {
   CONTAINER_TEMPLATES_SERVICE,
-  IContainerTemplatesService
-} from '../../applicati../../domain/interfaces/container-templates-service.interface';
+  IContainerTemplatesService,
+} from '../../domain/interfaces/container-templates-service.interface';
 import { ContainerTemplatesQueryDto } from '../dtos/container-templates.dto';
 
 /**

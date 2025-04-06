@@ -10,11 +10,11 @@ import {
   Put,
   Req,
 } from '@nestjs/common';
+import { ContainerCustomStack } from '../../domain/entities/container-custom-stack.entity';
 import {
   CONTAINER_STACKS_SERVICE,
   IContainerStacksService,
-} from '../../applicati../../domain/interfaces/container-stacks-service.interface';
-import { ContainerCustomStack } from '../../domain/entities/container-custom-stack.entity';
+} from '../../domain/interfaces/container-stacks-service.interface';
 
 @Controller('container-stacks')
 export class ContainerStacksController {

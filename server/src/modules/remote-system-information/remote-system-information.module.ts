@@ -1,15 +1,11 @@
 import { BullModule } from '@nestjs/bull';
-import { forwardRef, Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { AnsibleVaultsModule } from '../ansible-vaults/ansible-vaults.module';
 import { DevicesModule } from '../devices/devices.module';
 import { StatisticsModule } from '../statistics/statistics.module';
-import {
-  REMOTE_SYSTEM_INFORMATION_SERVICE
-} from './applicati../../domain/interfaces/remote-system-information-service.interface';
-import {
-  RemoteSystemInformationEngineService
-} from './application/services/engine/remote-system-information-engine.service';
+import { RemoteSystemInformationEngineService } from './application/services/engine/remote-system-information-engine.service';
 import { RemoteSystemInformationService } from './application/services/remote-system-information.service';
+import { REMOTE_SYSTEM_INFORMATION_SERVICE } from './domain/interfaces/remote-system-information-service.interface';
 import { JOB_CONCURRENCY, REMOTE_SYSTEM_INFO_QUEUE } from './infrastructure/queue/constants';
 import { RemoteSystemInformationProcessor } from './infrastructure/queue/remote-system-information.processor';
 import { RemoteSystemInformationDiagnosticController } from './presentation/controllers/diagnostic';

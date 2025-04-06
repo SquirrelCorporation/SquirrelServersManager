@@ -1,10 +1,10 @@
 import { Test } from '@nestjs/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { ContainerCustomStack } from '../../../domain/entities/container-custom-stack.entity';
 import {
   CONTAINER_STACKS_SERVICE,
   IContainerStacksService,
-} from '../../../applicati../../domain/interfaces/container-stacks-service.interface';
-import { ContainerCustomStack } from '../../../domain/entities/container-custom-stack.entity';
+} from '../../../domain/interfaces/container-stacks-service.interface';
 import { ContainerStacksController } from '../../../presentation/controllers/container-stacks.controller';
 
 // Mock external modules

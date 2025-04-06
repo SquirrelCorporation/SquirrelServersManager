@@ -6,7 +6,6 @@ import { ShellModule } from '@modules/shell';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { VaultCryptoService } from '../ansible-vaults/application/services/vault-crypto.service';
-import { PLAYBOOKS_SERVICE } from './applicati../../domain/interfaces/playbooks-service.interface';
 import { PlaybooksRegisterComponentFactory } from './application/services/components/component-factory.service';
 import { DefaultPlaybooksRegisterService } from './application/services/default-playbooks-register.service';
 import { PlaybooksRegisterEngineService } from './application/services/engine/playbooks-register-engine.service';
@@ -15,6 +14,7 @@ import { PlaybooksRegisterService } from './application/services/playbooks-regis
 import { RegisterTreeService } from './application/services/register-tree.service';
 import { TreeNodeService } from './application/services/tree-node.service';
 import { TREE_NODE_SERVICE } from './doma../../domain/interfaces/tree-node-service.interface';
+import { PLAYBOOKS_SERVICE } from './domain/interfaces/playbooks-service.interface';
 import { PLAYBOOK_REPOSITORY } from './domain/repositories/playbook-repository.interface';
 import { PLAYBOOKS_REGISTER_REPOSITORY } from './domain/repositories/playbooks-register-repository.interface';
 import { PLAYBOOKS_REGISTER_SERVICE } from './domain/services/playbooks-register-service.interface';

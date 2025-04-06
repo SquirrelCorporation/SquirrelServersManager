@@ -18,8 +18,8 @@ export * from './domain/services/playbooks-register-service.interface';
 export * from './doma../../domain/interfaces/tree-node-service.interface';
 
 // Application exports
-export * from './applicati../../domain/interfaces/playbooks-service.interface';
-export * from './applicati../../domain/interfaces/playbooks-register-engine-service.interface';
+export * from './domain/interfaces/playbooks-service.interface';
+export * from './domain/interfaces/playbooks-register-engine-service.interface';
 export * from './application/services/playbook.service';
 export * from './application/services/playbooks-register.service';
 export * from './application/services/register-tree.service';

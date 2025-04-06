@@ -24,7 +24,7 @@ import { SsmContainer } from 'ssm-shared-lib';
 import {
   CONTAINER_VOLUMES_SERVICE,
   IContainerVolumesService,
-} from '../../applicati../../domain/interfaces/container-volumes-service.interface';
+} from '../../domain/interfaces/container-volumes-service.interface';
 import { CreateVolumeDto } from '../dtos/create-volume.dto';
 
 @Controller('container-volumes')

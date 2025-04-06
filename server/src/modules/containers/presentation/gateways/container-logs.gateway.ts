@@ -15,11 +15,11 @@ import PinoLogger from '../../../../logger';
 import {
   CONTAINER_LOGS_SERVICE,
   IContainerLogsService,
-} from '../../applicati../../domain/interfaces/container-logs-service.interface';
+} from '../../domain/interfaces/container-logs-service.interface';
 import {
   CONTAINER_SERVICE,
   IContainerService,
-} from '../../applicati../../domain/interfaces/container-service.interface';
+} from '../../domain/interfaces/container-service.interface';
 import { ContainerLogsDto } from '../dtos/container-logs.dto';
 
 const logger = PinoLogger.child(

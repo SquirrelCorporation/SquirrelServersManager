@@ -8,7 +8,7 @@ import { Body, Controller, Delete, Get, Inject, Param, Post, Req } from '@nestjs
 import {
   CONTAINER_NETWORKS_SERVICE,
   IContainerNetworksService,
-} from '../../applicati../../domain/interfaces/container-networks-service.interface';
+} from '../../domain/interfaces/container-networks-service.interface';
 import { DeployNetworkDto } from '../dtos/create-network.dto';
 
 @Controller('container-networks')
