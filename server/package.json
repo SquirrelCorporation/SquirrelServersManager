@@ -4,7 +4,6 @@
   "main": "main.ts",
   "license": "AGPL-3.0 license",
   "scripts": {
-    "prepare": "husky",
     "dev": "nodemon",
     "dev:nest": "nest start --watch",
     "dev:fast": "NODE_ENV=development ts-node-dev --respawn --transpile-only --require tsconfig-paths/register --watch src --clear src/main.ts",
@@ -137,7 +136,6 @@
     "eslint-plugin-import-x": "^4.9.4",
     "eslint-plugin-prettier": "^5.2.5",
     "globals": "^16.0.0",
-    "husky": "^9.1.7",
     "memfs": "^4.17.0",
     "mongodb-memory-server": "^10.1.4",
     "node-mocks-http": "^1.16.2",
