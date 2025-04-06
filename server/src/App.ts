@@ -22,6 +22,9 @@ declare global {
   var nestApp: INestApplication | null;
 }
 
+/*
+ * This is a wrapper class for the NestJS application.
+ */
 class AppWrapper {
   private server!: http.Server;
   private readonly refs: any = [];
