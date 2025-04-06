@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { SECRET } from '../../config';
-import { UsersModule } from '../users/users.module';
+import { UsersModule } from '../../modules/users/users.module';
 import { AuthStrategy } from './strategies/auth.strategy';
 import { BearerStrategy } from './strategies/bearer.strategy';
 import { JwtAuthGuard } from './strategies/jwt-auth.guard';

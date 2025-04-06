@@ -13,7 +13,7 @@ import {
   getGitPlaybooksRepositories,
   getPlaybooksLocalRepositories,
 } from '@/services/rest/playbooks/repositories';
-import { postUserLogs } from '@/services/rest/usersettings';
+import { postUserLogs } from '@/services/rest/users/users';
 import { useModel } from '@@/exports';
 import {
   InfoCircleFilled,

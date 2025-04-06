@@ -1,6 +1,6 @@
 // @ts-ignore
 import loginBackground from '@/pages/User/Login/assets/login-background.mp4';
-import { hasUser, user } from '@/services/rest/user';
+import { hasUser, user } from '@/services/rest/users/users';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import {
   LoginFormPage,

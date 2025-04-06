@@ -7,10 +7,8 @@ import {
   InternalServerErrorException,
   Param,
   Post,
-  Res,
   UsePipes,
 } from '@nestjs/common';
-import { Response } from 'express';
 import { SettingsKeys, SsmAnsible } from 'ssm-shared-lib';
 import {
   ACTIONS,
@@ -72,15 +70,15 @@ export class SettingsController {
           SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_CPU_IF_LOWER,
           value.toString(),
         );
-        return { success: true, message: `${key} successfully updated` };
+        return;
       case SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER:
         await this.settingsService.setSetting(
           SettingsKeys.GeneralSettingsKeys.CONSIDER_PERFORMANCE_GOOD_MEM_IF_GREATER,
           value.toString(),
         );
-        return { success: true, message: `${key} successfully updated` };
+        return;
       default:
-        return { success: false, message: 'Unknown key' };
+        throw new InternalServerErrorException('Unknown key');
     }
   }
 
@@ -99,9 +97,9 @@ export class SettingsController {
           SettingsKeys.GeneralSettingsKeys.CONSIDER_DEVICE_OFFLINE_AFTER_IN_MINUTES,
           value.toString(),
         );
-        return { success: true, message: `${key} successfully updated` };
+        return;
       default:
-        return { success: false, message: 'Unknown key' };
+        throw new InternalServerErrorException('Unknown key');
     }
   }
 
@@ -117,15 +115,15 @@ export class SettingsController {
           SettingsKeys.GeneralSettingsKeys.CLEAN_UP_ANSIBLE_STATUSES_AND_TASKS_AFTER_IN_SECONDS,
           value.toString(),
         );
-        return { success: true, message: `${key} successfully updated` };
+        return;
       case SettingsKeys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS:
         await this.settingsService.setSetting(
           SettingsKeys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS,
           value.toString(),
         );
-        return { success: true, message: `${key} successfully updated` };
+        return;
       default:
-        return { success: false, message: 'Unknown key' };
+        throw new InternalServerErrorException('Unknown key');
     }
   }
 
@@ -144,9 +142,9 @@ export class SettingsController {
           SettingsKeys.GeneralSettingsKeys.DEVICE_STATS_RETENTION_IN_DAYS,
           value.toString(),
         );
-        return { success: true, message: `${key} successfully updated` };
+        return;
       default:
-        return { success: false, message: 'Unknown key' };
+        throw new InternalServerErrorException('Unknown key');
     }
   }
 
@@ -162,58 +160,37 @@ export class SettingsController {
 
   @Post('advanced/restart')
   @ResourceAction(RESOURCES.SETTING, ACTIONS.EXECUTE)
-  async restartServer(@Res() res: Response) {
+  async restartServer() {
     try {
       await this.advancedOperationsService.restartServer();
-      return res.status(200).json({
-        success: true,
-        message: 'Server restart initiated',
-      });
+      return;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      return res.status(500).json({
-        success: false,
-        message: 'Failed to restart server',
-        error: errorMessage,
-      });
+      throw new InternalServerErrorException('Failed to restart server', errorMessage);
     }
   }
 
   @Delete('advanced/logs')
   @ResourceAction(RESOURCES.SETTING, ACTIONS.DELETE)
-  async deleteLogs(@Res() res: Response) {
+  async deleteLogs() {
     try {
       await this.advancedOperationsService.deleteLogs();
-      return res.status(200).json({
-        success: true,
-        message: 'Logs Purged Successfully',
-      });
+      return;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      return res.status(500).json({
-        success: false,
-        message: 'Failed to purge logs',
-        error: errorMessage,
-      });
+      throw new InternalServerErrorException('Failed to purge logs', errorMessage);
     }
   }
 
   @Delete('advanced/ansible-logs')
   @ResourceAction(RESOURCES.SETTING, ACTIONS.DELETE)
-  async deleteAnsibleLogs(@Res() res: Response) {
+  async deleteAnsibleLogs() {
     try {
       await this.advancedOperationsService.deleteAnsibleLogs();
-      return res.status(200).json({
-        success: true,
-        message: 'Ansible logs Purged Successfully',
-      });
+      return;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      return res.status(500).json({
-        success: false,
-        message: 'Failed to purge Ansible logs',
-        error: errorMessage,
-      });
+      throw new InternalServerErrorException('Failed to purge Ansible logs', errorMessage);
     }
   }
 

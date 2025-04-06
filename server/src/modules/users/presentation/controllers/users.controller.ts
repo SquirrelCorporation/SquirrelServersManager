@@ -1,3 +1,4 @@
+import { UnauthorizedException } from '@infrastructure/exceptions/app-exceptions';
 import {
   Body,
   Controller,
@@ -9,22 +10,21 @@ import {
   Put,
   Res,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { SESSION_DURATION } from 'src/config';
-import { UnauthorizedException } from '@infrastructure/exceptions/app-exceptions';
-import { JwtService } from '@nestjs/jwt';
 import { Public } from 'src/decorators/public.decorator';
+import { User } from '../../../../decorators/user.decorator';
 import {
   ACTIONS,
   RESOURCES,
   ResourceAction,
 } from '../../../../infrastructure/security/roles/resource-action.decorator';
 import { UsersService } from '../../application/services/users.service';
-import { UserMapper } from '../mappers/user.mapper';
 import { IUser } from '../../domain/entities/user.entity';
-import { User } from '../../../../decorators/user.decorator';
-import { LoginDto } from '../dtos/login.dto';
 import { LoginResponseDto } from '../dtos/login-response.dto';
+import { LoginDto } from '../dtos/login.dto';
+import { UserMapper } from '../mappers/user.mapper';
 
 @Controller('users')
 export class UsersController {
@@ -103,11 +103,7 @@ export class UsersController {
         );
       }
       const user = await this.usersService.createUser(userData as IUser);
-      return {
-        success: true,
-        message: 'User created successfully',
-        data: this.userMapper.toResponse(user),
-      };
+      return this.userMapper.toResponse(user);
     } catch (error: unknown) {
       throw new HttpException(
         {
@@ -119,21 +115,10 @@ export class UsersController {
     }
   }
 
-  @Put(':email/api-key')
+  @Put('api-key')
   @ResourceAction(RESOURCES.USER, ACTIONS.UPDATE)
-  async regenerateApiKey(@Param('email') email: string, @User() user) {
-    // Only admins can regenerate API keys for other users
-    if (user.role !== 'admin' && user.email !== email) {
-      throw new HttpException(
-        {
-          success: false,
-          message: 'Unauthorized',
-        },
-        HttpStatus.FORBIDDEN,
-      );
-    }
-
-    const newApiKey = await this.usersService.regenerateApiKey(email);
+  async regenerateApiKey(@User() user) {
+    const newApiKey = await this.usersService.regenerateApiKey(user.email);
     if (!newApiKey) {
       throw new HttpException(
         {
@@ -144,14 +129,10 @@ export class UsersController {
       );
     }
 
-    return {
-      success: true,
-      message: 'API key regenerated successfully',
-      data: { apiKey: newApiKey },
-    };
+    return { apiKey: newApiKey };
   }
 
-  @Put(':email/logs-level')
+  @Post('logs-level')
   @ResourceAction(RESOURCES.USER, ACTIONS.UPDATE)
   async updateLogsLevel(
     @Param('email') email: string,
@@ -181,8 +162,6 @@ export class UsersController {
     }
 
     return {
-      success: true,
-      message: 'Logs level updated successfully',
       data: this.userMapper.toResponse(updatedUser),
     };
   }

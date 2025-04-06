@@ -1,4 +1,4 @@
-import { IUser } from '../../users/domain/entities/user.entity';
+import { IUser } from '../../../modules/users/domain/entities/user.entity';
 
 export const JWT_STRATEGY = 'JWT_STRATEGY';
 

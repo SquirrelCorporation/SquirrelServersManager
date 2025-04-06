@@ -1,8 +1,8 @@
 import { EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
 import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
 import { IPlaybooksService, PLAYBOOKS_SERVICE } from '@modules/playbooks';
-import { IUser } from '@modules/users';
-import { Controller, Get, Inject, Logger, Param, Req } from '@nestjs/common';
+import { Controller, Get, Inject, Logger, Param } from '@nestjs/common';
+import { User } from 'src/decorators/user.decorator';
 
 @Controller('playbooks/diagnostic')
 export class PlaybookDiagnosticController {
@@ -16,7 +16,7 @@ export class PlaybookDiagnosticController {
   ) {}
 
   @Get(':uuid')
-  async checkDeviceConnection(@Param() params, @Req() req): Promise<{ taskId: string }> {
+  async checkDeviceConnection(@Param() params, @User() user): Promise<{ taskId: string }> {
     const { uuid } = params;
     const device = await this.devicesService.findOneByUuid(uuid);
     if (!device) {
@@ -29,11 +29,9 @@ export class PlaybookDiagnosticController {
       throw new EntityNotFoundException('Playbook', 'checkDeviceBeforeAdd');
     }
     this.logger.log(
-      `Executing playbook ${playbook.name} for device ${device.uuid} for user ${req.user.uuid}`,
+      `Executing playbook ${playbook.name} for device ${device.uuid} for user ${user.uuid}`,
     );
-    const execId = await this.playbookService.executePlaybook(playbook, req.user as IUser, [
-      device.uuid,
-    ]);
+    const execId = await this.playbookService.executePlaybook(playbook, user, [device.uuid]);
     return {
       taskId: execId,
     };

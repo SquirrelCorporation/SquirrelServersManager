@@ -1,11 +1,10 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
-import { Strategy } from 'passport-custom';
-import { Inject } from '@nestjs/common';
-import { Request } from 'express';
-import { IUserRepository, USER_REPOSITORY } from '../../users';
-import { SECRET } from '../../../config';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { PassportStrategy } from '@nestjs/passport';
+import { Request } from 'express';
+import { Strategy } from 'passport-custom';
+import { SECRET } from '../../../config';
+import { IUserRepository, USER_REPOSITORY } from '../../../modules/users';
 
 /**
  * Custom strategy that tries multiple authentication methods in sequence:
@@ -29,7 +28,7 @@ export class AuthStrategy extends PassportStrategy(Strategy, 'auth') {
         const payload = this.jwtService.verify(req.cookies['jwt'], {
           secret: SECRET,
         });
-        
+
         // Check if token is expired
         if (payload.expiration && Date.now() > payload.expiration) {
           throw new UnauthorizedException('Token expired');

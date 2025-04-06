@@ -3,8 +3,8 @@ import { filterByFields, filterByQueryParams } from '@infrastructure/common/quer
 import { paginate } from '@infrastructure/common/query/pagination.util';
 import { sortByFields } from '@infrastructure/common/query/sorter.util';
 import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
-import { IUser } from '@modules/users/domain/entities/user.entity';
 import { Body, Controller, Delete, Get, Inject, Param, Post, Req } from '@nestjs/common';
+import { User } from 'src/decorators/user.decorator';
 import {
   CONTAINER_NETWORKS_SERVICE,
   IContainerNetworksService,
@@ -51,14 +51,14 @@ export class ContainerNetworksController {
 
   @Post()
   async createNetwork(
-    @Req() req,
+    @User() user,
     @Param('deviceUuid') deviceUuid: string,
     @Body() networkData: DeployNetworkDto,
   ): Promise<{ execId: string }> {
     const execId = await this.networksService.createNetworkWithPlaybook(
       deviceUuid,
       networkData,
-      req.user as IUser,
+      user,
     );
     return { execId };
   }

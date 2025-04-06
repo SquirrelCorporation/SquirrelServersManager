@@ -1,20 +1,20 @@
+import http from 'http';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-import http from 'http';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 import passport from 'passport';
 import { AppModule } from './app.module';
 import { SECRET } from './config';
+import { JwtAuthGuard } from './infrastructure/auth/strategies/jwt-auth.guard';
 import { ApiExceptionFilter } from './infrastructure/filters/api-exception.filter';
 import { ErrorTransformerInterceptor } from './infrastructure/interceptors/error-transformer.interceptor';
 import { TransformInterceptor } from './infrastructure/interceptors/transform.interceptor';
 import { AuditLogService } from './infrastructure/security/audit/audit-log.service';
 import { AuditInterceptor } from './infrastructure/security/audit/audit.interceptor';
 import logger from './logger';
-import { JwtAuthGuard } from './modules/auth/strategies/jwt-auth.guard';
 
 // Declare global nestApp for legacy code to access
 declare global {

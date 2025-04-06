@@ -1,4 +1,3 @@
-import { IUser } from '@modules/users';
 import {
   Body,
   Controller,
@@ -8,11 +7,10 @@ import {
   Inject,
   Post,
   Query,
-  Req,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { Request } from 'express';
+import { User } from 'src/decorators/user.decorator';
 import {
   CONTAINER_TEMPLATES_SERVICE,
   IContainerTemplatesService,
@@ -56,12 +54,9 @@ export class ContainerTemplatesController {
    * @returns Execution ID
    */
   @Post('deploy')
-  async deploy(@Body() template: any, @Req() req: Request) {
+  async deploy(@Body() template: any, @User() user) {
     try {
-      const execId = await this.containerTemplatesService.deployTemplate(
-        template,
-        req.user as IUser,
-      );
+      const execId = await this.containerTemplatesService.deployTemplate(template, user);
       return execId;
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to deploy template';

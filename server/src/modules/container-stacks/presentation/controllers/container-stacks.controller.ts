@@ -1,15 +1,5 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Inject,
-  Logger,
-  Param,
-  Post,
-  Put,
-  Req,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Logger, Param, Post, Put } from '@nestjs/common';
+import { User } from 'src/decorators/user.decorator';
 import { ContainerCustomStack } from '../../domain/entities/container-custom-stack.entity';
 import {
   CONTAINER_STACKS_SERVICE,
@@ -51,9 +41,9 @@ export class ContainerStacksController {
   async deployStack(
     @Param('uuid') uuid: string,
     @Body() body: { target: string },
-    @Req() req,
+    @User() user,
   ): Promise<{ execId: string }> {
-    return this.containerStacksService.deployStack(uuid, body.target, req.user);
+    return this.containerStacksService.deployStack(uuid, body.target, user);
   }
 
   @Post('transform')

@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { InternalServerErrorException } from '@nestjs/common';
 import { SettingsKeys, SsmAnsible } from 'ssm-shared-lib';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SettingsController } from '../presentation/controllers/settings.controller';
@@ -56,7 +56,7 @@ describe('SettingsController', () => {
       const result = await controller.updateDashboardSetting({ key }, { value });
 
       expect(mockSettingsService.setSetting).toHaveBeenCalledWith(key, value.toString());
-      expect(result).toEqual({ success: true, message: `${key} successfully updated` });
+      expect(result).toBeUndefined();
     });
 
     it('should update memory performance threshold', async () => {
@@ -68,17 +68,17 @@ describe('SettingsController', () => {
       const result = await controller.updateDashboardSetting({ key }, { value });
 
       expect(mockSettingsService.setSetting).toHaveBeenCalledWith(key, value.toString());
-      expect(result).toEqual({ success: true, message: `${key} successfully updated` });
+      expect(result).toBeUndefined();
     });
 
-    it('should return error for unknown key', async () => {
+    it('should throw InternalServerErrorException for unknown key', async () => {
       const key = 'unknown-key';
       const value = 50;
 
-      const result = await controller.updateDashboardSetting({ key }, { value });
-
+      await expect(controller.updateDashboardSetting({ key }, { value })).rejects.toThrow(
+        InternalServerErrorException,
+      );
       expect(mockSettingsService.setSetting).not.toHaveBeenCalled();
-      expect(result).toEqual({ success: false, message: 'Unknown key' });
     });
   });
 
@@ -92,7 +92,7 @@ describe('SettingsController', () => {
       const result = await controller.updateDevicesSetting({ key }, { value });
 
       expect(mockSettingsService.setSetting).toHaveBeenCalledWith(key, value.toString());
-      expect(result).toEqual({ success: true, message: `${key} successfully updated` });
+      expect(result).toBeUndefined();
     });
   });
 
@@ -107,7 +107,7 @@ describe('SettingsController', () => {
       const result = await controller.updateLogsSetting({ key }, { value });
 
       expect(mockSettingsService.setSetting).toHaveBeenCalledWith(key, value.toString());
-      expect(result).toEqual({ success: true, message: `${key} successfully updated` });
+      expect(result).toBeUndefined();
     });
 
     it('should update server log retention', async () => {
@@ -119,7 +119,7 @@ describe('SettingsController', () => {
       const result = await controller.updateLogsSetting({ key }, { value });
 
       expect(mockSettingsService.setSetting).toHaveBeenCalledWith(key, value.toString());
-      expect(result).toEqual({ success: true, message: `${key} successfully updated` });
+      expect(result).toBeUndefined();
     });
   });
 
@@ -133,7 +133,7 @@ describe('SettingsController', () => {
       const result = await controller.updateDeviceStatsSetting({ key }, { value });
 
       expect(mockSettingsService.setSetting).toHaveBeenCalledWith(key, value.toString());
-      expect(result).toEqual({ success: true, message: `${key} successfully updated` });
+      expect(result).toBeUndefined();
     });
   });
 
@@ -157,23 +157,10 @@ describe('SettingsController', () => {
     it('should call advanced operations service', async () => {
       mockAdvancedOperationsService.restartServer.mockResolvedValue(undefined);
 
-      const mockResponse = {
-        status: vi.fn().mockReturnThis(),
-        json: vi.fn(),
-        sendStatus: vi.fn(),
-        links: vi.fn(),
-        send: vi.fn(),
-        jsonp: vi.fn(),
-      } as unknown as Response;
-
-      await controller.restartServer(mockResponse);
+      const result = await controller.restartServer();
 
       expect(mockAdvancedOperationsService.restartServer).toHaveBeenCalled();
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        success: true,
-        message: 'Server restart initiated',
-      });
+      expect(result).toBeUndefined();
     });
   });
 
@@ -181,23 +168,10 @@ describe('SettingsController', () => {
     it('should call advanced operations service', async () => {
       mockAdvancedOperationsService.deleteLogs.mockResolvedValue(undefined);
 
-      const mockResponse = {
-        status: vi.fn().mockReturnThis(),
-        json: vi.fn(),
-        sendStatus: vi.fn(),
-        links: vi.fn(),
-        send: vi.fn(),
-        jsonp: vi.fn(),
-      } as unknown as Response;
-
-      await controller.deleteLogs(mockResponse);
+      const result = await controller.deleteLogs();
 
       expect(mockAdvancedOperationsService.deleteLogs).toHaveBeenCalled();
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        success: true,
-        message: 'Logs Purged Successfully',
-      });
+      expect(result).toBeUndefined();
     });
   });
 
@@ -205,23 +179,10 @@ describe('SettingsController', () => {
     it('should call advanced operations service', async () => {
       mockAdvancedOperationsService.deleteAnsibleLogs.mockResolvedValue(undefined);
 
-      const mockResponse = {
-        status: vi.fn().mockReturnThis(),
-        json: vi.fn(),
-        sendStatus: vi.fn(),
-        links: vi.fn(),
-        send: vi.fn(),
-        jsonp: vi.fn(),
-      } as unknown as Response;
-
-      await controller.deleteAnsibleLogs(mockResponse);
+      const result = await controller.deleteAnsibleLogs();
 
       expect(mockAdvancedOperationsService.deleteAnsibleLogs).toHaveBeenCalled();
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        success: true,
-        message: 'Ansible logs Purged Successfully',
-      });
+      expect(result).toBeUndefined();
     });
   });
 

@@ -10,7 +10,10 @@ import { HealthWidget } from '@/components/HeaderComponents/HealthWidget';
 import NotificationsWidget from '@/components/HeaderComponents/NotificationsWidget';
 import UpdateAvailableWidget from '@/components/HeaderComponents/UpdateAvailableWidget';
 import NoDeviceModal from '@/components/NoDevice/NoDeviceModal';
-import { currentUser as queryCurrentUser, hasUser } from '@/services/rest/user';
+import {
+  currentUser as queryCurrentUser,
+  hasUser,
+} from '@/services/rest/users/users';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 // @ts-ignore
 import { history, RunTimeLayoutConfig } from '@umijs/max';
@@ -19,9 +22,9 @@ import { API } from 'ssm-shared-lib';
 import defaultSettings from '../config/defaultSettings';
 import { version } from '../package.json';
 import Logo from '../public/logo.svg';
-import { errorConfig } from './requestErrorConfig';
-import { PluginProvider } from './plugins/contexts/plugin-context';
 import PluginRoutes from './plugins/components/PluginRoutes';
+import { PluginProvider } from './plugins/contexts/plugin-context';
+import { errorConfig } from './requestErrorConfig';
 
 const loginPath = '/user/login';
 const onboardingPath = '/user/onboarding';
@@ -127,24 +130,26 @@ export const layout: RunTimeLayoutConfig = ({
     contentStyle: { margin: 0 },
     // @ts-ignore
     childrenRender: (children) => {
-      const versionMismatch = version != initialState?.currentUser?.settings?.server.version;
-      
+      const versionMismatch =
+        version != initialState?.currentUser?.settings?.server.version;
+
       return (
         <PluginProvider>
-          {initialState?.currentUser?.settings?.server.version && versionMismatch && (
-            <Alert
-              style={{ marginTop: 20, marginLeft: 20, marginRight: 20 }}
-              message="Version Mismatch"
-              description={`The server version (${initialState?.currentUser?.settings?.server.version}) does not match the client version (${version}). You may need to retry a docker compose pull to update SSM.`}
-              type="warning"
-              showIcon
-              banner
-            />
-          )}
-          {initialState?.currentUser?.devices?.overview && 
+          {initialState?.currentUser?.settings?.server.version &&
+            versionMismatch && (
+              <Alert
+                style={{ marginTop: 20, marginLeft: 20, marginRight: 20 }}
+                message="Version Mismatch"
+                description={`The server version (${initialState?.currentUser?.settings?.server.version}) does not match the client version (${version}). You may need to retry a docker compose pull to update SSM.`}
+                type="warning"
+                showIcon
+                banner
+              />
+            )}
+          {initialState?.currentUser?.devices?.overview &&
             initialState?.currentUser?.devices?.overview?.length === 0 && (
-            <NoDeviceModal />
-          )}
+              <NoDeviceModal />
+            )}
           {children}
           <PluginRoutes />
           <AlertNotification />

@@ -25,7 +25,8 @@
     "start:no-mock": "cross-env MOCK=none UMI_ENV=dev max dev",
     "start:pre": "cross-env REACT_APP_ENV=pre UMI_ENV=dev max dev",
     "start:test": "cross-env REACT_APP_ENV=test MOCK=none UMI_ENV=dev max dev",
-    "test": "vitest --disable-console-intercept --reporter=basic ",
+    "test": "vitest run",
+    "test:dev": "vitest --disable-console-intercept",   
     "tsc": "tsc --noEmit",
     "serve": "node production-server.js",
     "build-shared": "npm run build ../shared-lib"

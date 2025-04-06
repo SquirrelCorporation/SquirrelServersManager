@@ -1,3 +1,7 @@
+import { createKeyv } from '@keyv/redis';
+import { SshModule } from '@modules/ssh';
+import { BullModule } from '@nestjs/bull';
+import { CacheModule } from '@nestjs/cache-manager';
 import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -5,21 +9,24 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
 import mongoose from 'mongoose';
 import { LoggerModule } from 'nestjs-pino';
-import { SshModule } from '@modules/ssh';
-import { BullModule } from '@nestjs/bull';
-import { createKeyv } from '@keyv/redis';
-import { CacheModule } from '@nestjs/cache-manager';
 import { db, redisConf } from './config';
+import { EventsModule } from './core/events/events.module';
+import { AuthModule } from './infrastructure/auth/auth.module';
+import { PluginsModule } from './infrastructure/plugins/plugins.module';
+// Note: Temporarily commenting out advanced modules until we properly set them up
+// import { ThrottlerModule } from './infrastructure/security/throttler/throttler.module';
+import { AuditLogModule } from './infrastructure/security/audit/audit-log.module';
+import { SshInfrastructureModule } from './infrastructure/ssh/ssh-infrastructure.module';
 import logger, { httpLoggerOptions } from './logger';
 import { AnsibleConfigModule } from './modules/ansible-config/ansible-config.module';
-import { AnsibleModule } from './modules/ansible/ansible.module';
 import { AnsibleVaultsModule } from './modules/ansible-vaults/ansible-vaults.module';
-import { AuthModule } from './modules/auth/auth.module';
+import { AnsibleModule } from './modules/ansible/ansible.module';
 import { AutomationsModule } from './modules/automations/automations.module';
 import { ContainerStacksModule } from './modules/container-stacks/container-stacks.module';
 import { ContainersModule } from './modules/containers/containers.module';
 import { DevicesModule } from './modules/devices/devices.module';
 import { DiagnosticModule } from './modules/diagnostic/diagnostic.module';
+import { HealthModule } from './modules/health/health.module';
 import { LogsModule } from './modules/logs/logs.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { PlaybooksModule } from './modules/playbooks/playbooks.module';
@@ -29,16 +36,9 @@ import { SettingsModule } from './modules/settings/settings.module';
 import { SftpModule } from './modules/sftp/sftp.module';
 import { ShellModule } from './modules/shell/shell.module';
 import { SmartFailureModule } from './modules/smart-failure/smart-failure.module';
+import { StatisticsModule } from './modules/statistics/statistics.module';
 import { UpdateModule } from './modules/update/update.module';
 import { UsersModule } from './modules/users/users.module';
-import { SshInfrastructureModule } from './infrastructure/ssh/ssh-infrastructure.module';
-import { HealthModule } from './modules/health/health.module';
-import { StatisticsModule } from './modules/statistics/statistics.module';
-import { PluginsModule } from './infrastructure/plugins/plugins.module';
-// Note: Temporarily commenting out advanced modules until we properly set them up
-// import { ThrottlerModule } from './infrastructure/security/throttler/throttler.module';
-import { AuditLogModule } from './infrastructure/security/audit/audit-log.module';
-import { EventsModule } from './core/events/events.module';
 
 // Store the connection for legacy code to access
 let sharedConnection: mongoose.Connection | null = null;

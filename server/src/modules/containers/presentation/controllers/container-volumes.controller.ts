@@ -5,7 +5,6 @@ import { paginate } from '@infrastructure/common/query/pagination.util';
 import { sortByFields } from '@infrastructure/common/query/sorter.util';
 import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
 import { FileSystemService } from '@modules/shell';
-import { IUser } from '@modules/users';
 import {
   Body,
   Controller,
@@ -20,6 +19,7 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
+import { User } from 'src/decorators/user.decorator';
 import { SsmContainer } from 'ssm-shared-lib';
 import {
   CONTAINER_VOLUMES_SERVICE,
@@ -68,8 +68,8 @@ export class ContainerVolumesController {
   }
 
   @Post()
-  async createVolume(@Body() createVolumeDto: CreateVolumeDto, @Req() req) {
-    return this.volumesService.createVolumeWithPlaybook(createVolumeDto, req.user as IUser);
+  async createVolume(@Body() createVolumeDto: CreateVolumeDto, @User() user) {
+    return this.volumesService.createVolumeWithPlaybook(createVolumeDto, user);
   }
 
   @Get('device/:deviceUuid')
