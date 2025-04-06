@@ -4,6 +4,7 @@
   "main": "main.ts",
   "license": "AGPL-3.0 license",
   "scripts": {
+    "prepare": "husky",
     "dev": "nodemon",
     "dev:nest": "nest start --watch",
     "dev:fast": "NODE_ENV=development ts-node-dev --respawn --transpile-only --require tsconfig-paths/register --watch src --clear src/main.ts",

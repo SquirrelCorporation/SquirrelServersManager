@@ -3,16 +3,13 @@
 
 echo "Running pre-commit checks..."
 
-# Change to server directory
-cd server || exit 1
-
-# Run build
+# Run build first
 echo "Building project..."
 npm run build || exit 1
 
-# Run tests
+# Then run tests
 echo "Running tests..."
 npm test || exit 1
 
 # If we get here, everything passed
-echo "✅ Pre-commit checks passed!" 
+echo "✅ Pre-commit checks passed!"
