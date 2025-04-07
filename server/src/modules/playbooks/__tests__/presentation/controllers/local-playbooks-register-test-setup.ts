@@ -97,12 +97,9 @@ export const createMockLocalPlaybooksRegisterController = () => {
 
     // Controller methods
     async getLocalRepositories(): Promise<API.LocalPlaybooksRepository[]> {
-      this.logger.log('Getting all local repositories');
-
       const repositories = await this.playbooksRegisterRepository.findAllByType(
         Repositories.RepositoryType.LOCAL,
       );
-
       return repositories as unknown as API.LocalPlaybooksRepository[];
     },
 

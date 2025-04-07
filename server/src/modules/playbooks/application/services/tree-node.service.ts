@@ -35,7 +35,7 @@ export class TreeNodeService implements ITreeNodeService {
     if (!playbook) {
       throw new Error(`Unable to find any playbook for path ${path}`);
     }
-    this.logger.log(`Extra vars: ${JSON.stringify(playbook.extraVars)} for node ${path}`);
+    this.logger.debug(`Extra vars: ${JSON.stringify(playbook.extraVars)} for node ${path}`);
     const extraVars = playbook?.extraVars
       ? await this.extraVarsService.findValueOfExtraVars(playbook.extraVars, undefined, true)
       : undefined;

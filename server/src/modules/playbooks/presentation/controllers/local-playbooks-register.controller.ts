@@ -1,5 +1,5 @@
 import { EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
-import { PlaybooksRegisterService } from '@modules/playbooks';
+import { DIRECTORY_ROOT, PlaybooksRegisterService } from '@modules/playbooks';
 import { IPlaybooksRegisterRepository, PLAYBOOKS_REGISTER_REPOSITORY } from '@modules/playbooks';
 import { Body, Controller, Delete, Get, Inject, Logger, Param, Post, Put } from '@nestjs/common';
 import { API, Repositories } from 'ssm-shared-lib';
@@ -7,7 +7,8 @@ import { PLAYBOOKS_REGISTER_ENGINE_SERVICE } from '@modules/playbooks';
 import { PlaybooksRegisterEngineService } from '../../application/services/engine/playbooks-register-engine.service';
 import { LocalPlaybooksRegisterComponent } from '../../application/services/components/local-playbooks-repository.component';
 import { PLAYBOOKS_REGISTER_SERVICE } from '../../domain/services/playbooks-register-service.interface';
-
+import { v4 } from 'uuid';
+import PlaybooksRegisterComponent from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
 /**
  * Controller for managing local playbooks repositories
  */
@@ -38,12 +39,9 @@ export class LocalPlaybooksRepositoryController {
    */
   @Get()
   async getLocalRepositories(): Promise<API.LocalPlaybooksRepository[]> {
-    this.logger.log('Getting all local repositories');
-
     const repositories = await this.playbooksRegisterRepository.findAllByType(
       Repositories.RepositoryType.LOCAL,
     );
-
     return repositories as unknown as API.LocalPlaybooksRepository[];
   }
 
@@ -100,17 +98,28 @@ export class LocalPlaybooksRepositoryController {
     this.logger.log(`Adding local repository ${repository.name}`);
 
     const { name, directoryExclusionList, vaults } = repository;
+    // TODO: move to service
+    const uuid = v4();
 
-    const register = await this.playbooksRegisterRepository.create({
+    const component = (await this.playbooksRegisterEngineService.registerRegister({
+      uuid,
       name,
       type: Repositories.RepositoryType.LOCAL,
       enabled: true,
-      directory: name,
+      directory: DIRECTORY_ROOT,
+      directoryExclusionList: directoryExclusionList || [],
+      vaults: vaults as string[],
+    })) as PlaybooksRegisterComponent;
+
+    await this.playbooksRegisterRepository.create({
+      uuid,
+      name,
+      type: Repositories.RepositoryType.LOCAL,
+      enabled: true,
+      directory: component.getDirectory(),
       directoryExclusionList: directoryExclusionList || [],
       vaults: vaults as string[],
     });
-
-    await this.playbooksRegisterEngineService.registerRegister(register);
   }
 
   /**

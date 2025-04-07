@@ -3,12 +3,13 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Document } from 'mongoose';
 import { Repositories, SsmGit } from 'ssm-shared-lib';
+import { v4 as uuidv4 } from 'uuid';
 
 export type PlaybooksRegisterDocument = PlaybooksRegister & Document;
 
 @Schema({ timestamps: true, versionKey: false, collection: 'playbooksrepository' })
 export class PlaybooksRegister {
-  @Prop({ required: true, unique: true })
+  @Prop({ type: String, default: uuidv4, required: true, unique: true })
   uuid!: string;
 
   @Prop({

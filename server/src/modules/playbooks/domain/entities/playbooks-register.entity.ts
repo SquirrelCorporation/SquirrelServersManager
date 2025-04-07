@@ -1,4 +1,5 @@
-import { SsmGit } from "ssm-shared-lib";
+import { IAnsibleVault } from '@modules/ansible-vaults';
+import { SsmGit } from 'ssm-shared-lib';
 
 /**
  * Interface for the playbooks repository entity in the domain layer
@@ -18,10 +19,10 @@ export interface IPlaybooksRegister {
   branch?: string;
   userName?: string;
   remoteUrl?: string;
-  directory: string;
+  directory?: string;
   createdAt?: Date;
   updatedAt?: Date;
-  vaults?: string[];
+  vaults?: string[] | IAnsibleVault[] | undefined;
   default?: boolean;
   tree?: any;
 }

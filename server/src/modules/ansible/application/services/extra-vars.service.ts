@@ -30,7 +30,7 @@ export class ExtraVarsService implements IExtraVarsService {
     const substitutedExtraVars: API.ExtraVars = [];
 
     for (const e of extraVars) {
-      this.logger.log(`findValueOfExtraVars - ${JSON.stringify(e.extraVar)} (${e.type})`);
+      this.logger.debug(`findValueOfExtraVars - ${JSON.stringify(e.extraVar)} (${e.type})`);
       const value = await this.getSubstitutedExtraVar(e, forcedValues, targets);
 
       if (!value && !emptySubstitute) {
@@ -42,7 +42,7 @@ export class ExtraVarsService implements IExtraVarsService {
         substitutedExtraVars.push({ ...e, value: value || undefined });
       }
     }
-    this.logger.log(`Substituted extra vars: ${JSON.stringify(substitutedExtraVars)}`);
+    this.logger.debug(`Substituted extra vars: ${JSON.stringify(substitutedExtraVars)}`);
     return substitutedExtraVars;
   }
 

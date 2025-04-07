@@ -67,8 +67,8 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService {
   async getAllPlaybooksRepositories(): Promise<API.PlaybooksRepository[]> {
     try {
       const registers = await this.playbooksRegisterRepository.findAllActive();
-      this.logger.log(`getAllPlaybooksRepositories - found ${registers.length} registers`);
-      this.logger.log(`getAllPlaybooksRepositories - registers: ${JSON.stringify(registers)}`);
+      this.logger.debug(`getAllPlaybooksRepositories - found ${registers.length} registers`);
+      this.logger.debug(`getAllPlaybooksRepositories - registers: ${JSON.stringify(registers)}`);
       if (!registers) {
         return [];
       }
@@ -149,11 +149,18 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService {
       throw new ForbiddenException("The selected path doesn't seem to belong to the repository");
     }
 
+    // First find the actual MongoDB document for the register
+    const registerDoc = await this.playbooksRegisterRepository.findByUuid(register.uuid);
+    if (!registerDoc) {
+      throw new InternalServerException(`PlaybookRepository document not found`);
+    }
+
+    // Create the playbook with the register document as the repository reference
     const playbook = await this.playbookRepository.create({
       name: name,
       custom: true,
       path: fullPath + '.yml',
-      playbooksRepository: register,
+      playbooksRepository: registerDoc, // Use the entire register document
       playableInBatch: true,
     });
 

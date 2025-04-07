@@ -16,7 +16,8 @@ export class AnsibleVaultRepository implements IAnsibleVaultRepository {
   constructor(
     @InjectModel(ANSIBLE_VAULT) private ansibleVaultModel: Model<AnsibleVaultDocument>,
     private readonly mapper: AnsibleVaultRepositoryMapper,
-    @InjectModel(PlaybooksRegister.name) private readonly playbooksRepositoryModel: MongooseModel<any>
+    @InjectModel(PlaybooksRegister.name)
+    private readonly playbooksRepositoryModel: MongooseModel<any>,
   ) {}
 
   async findAll(): Promise<IAnsibleVault[] | null> {
@@ -37,7 +38,7 @@ export class AnsibleVaultRepository implements IAnsibleVaultRepository {
     // Remove the vault reference from any repositories that use it
     await this.playbooksRepositoryModel.updateMany(
       { vaults: ansibleVault._id },
-      { $pull: { vaults: ansibleVault._id } }
+      { $pull: { vaults: ansibleVault._id } },
     );
 
     // Delete the vault
@@ -52,11 +53,10 @@ export class AnsibleVaultRepository implements IAnsibleVaultRepository {
 
   async updateOne(ansibleVault: IAnsibleVault): Promise<IAnsibleVault | null> {
     logger.info(`Updating ansible vault with ID: ${ansibleVault.vaultId}`);
-    const updated = await this.ansibleVaultModel.findOneAndUpdate(
-      { vaultId: ansibleVault.vaultId },
-      ansibleVault,
-      { new: true }
-    ).lean().exec();
+    const updated = await this.ansibleVaultModel
+      .findOneAndUpdate({ vaultId: ansibleVault.vaultId }, ansibleVault, { new: true })
+      .lean()
+      .exec();
 
     return this.mapper.toDomain(updated);
   }

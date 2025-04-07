@@ -1,4 +1,4 @@
-import { IPlaybooksRegister } from "@modules/playbooks/domain/entities/playbooks-register.entity";
+import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
 
 export const PLAYBOOKS_REGISTER_REPOSITORY = 'PLAYBOOKS_REGISTER_REPOSITORY';
 
@@ -19,12 +19,11 @@ export interface IPlaybooksRegisterRepository {
    */
   findAllActive(): Promise<IPlaybooksRegister[]>;
 
-    /**
+  /**
    * Find all active repositories
    * @returns Array of active repositories
    */
   findAllByType(type: any): Promise<IPlaybooksRegister[]>;
-
 
   /**
    * Update a repository
@@ -32,10 +31,7 @@ export interface IPlaybooksRegisterRepository {
    * @param updateData Data to update
    * @returns The updated repository
    */
-  update(
-    uuid: string,
-    updateData: Partial<IPlaybooksRegister>,
-  ): Promise<IPlaybooksRegister | null>;
+  update(uuid: string, updateData: Partial<IPlaybooksRegister>): Promise<IPlaybooksRegister | null>;
 
   /**
    * Create a new repository

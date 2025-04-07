@@ -29,7 +29,7 @@ export class PlaybooksRegisterEngineService {
    * Register a register component
    * @param register Register document to register
    */
-  async registerRegister(register: IPlaybooksRegister): Promise<void> {
+  async registerRegister(register: IPlaybooksRegister): Promise<PlaybooksRegisterComponent | void> {
     try {
       this.logger.log(`Registering repository ${register.name} (${register.uuid})`);
 
@@ -55,6 +55,9 @@ export class PlaybooksRegisterEngineService {
         this.logger.log(`Creating git component ${JSON.stringify(options)}`);
         component = await this.componentFactory.createGitComponent(options);
       } else {
+        if (!register.directory) {
+          throw new Error('Directory is required for local repositories');
+        }
         const options: LocalComponentOptions = {
           uuid: register.uuid,
           name: register.name,
@@ -69,8 +72,10 @@ export class PlaybooksRegisterEngineService {
       this.components[register.uuid] = component;
 
       this.logger.log(`Repository ${register.name} registered successfully`);
+      return component;
     } catch (error: any) {
       this.logger.error(
+        error,
         `Failed to register repository ${register.name}: ${error?.message || 'Unknown error'}`,
       );
       throw new Error(`Failed to register repository: ${error?.message || 'Unknown error'}`);
