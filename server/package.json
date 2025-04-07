@@ -93,8 +93,8 @@
     "yaml": "^2.7.1"
   },
   "overrides": {
-    "minimatch": "5.1.2",
-    "glob": "8.1.0"
+    "minimatch": "^9.0.3",
+    "glob": "^10.3.10"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.7",
