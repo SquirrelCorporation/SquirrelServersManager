@@ -1,7 +1,8 @@
 import { CardHeader } from '@/components/Template/CardHeader';
 import { updateDeviceProxmoxConfiguration } from '@/services/rest/devices/devices';
 import { FieldTimeOutlined } from '@ant-design/icons';
-import { Card, message, Space } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Card, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Cron from 'react-js-cron';
 import { API } from 'ssm-shared-lib';

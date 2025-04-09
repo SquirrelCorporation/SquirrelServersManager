@@ -2,7 +2,8 @@ import SSHConnectionFormElements from '@/components/DeviceConfiguration/SSHConne
 import { getDeviceAuth, putDeviceAuth } from '@/services/rest/devices/device-credentials';
 import { ProFormInstance } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
-import { message, Space } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Space } from 'antd';
 import React, { useRef } from 'react';
 import { API } from 'ssm-shared-lib';
 

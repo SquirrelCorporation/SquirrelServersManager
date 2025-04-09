@@ -25,7 +25,8 @@ import {
   ProDescriptions,
   ProTable,
 } from '@ant-design/pro-components';
-import { Button, Drawer, message, Popconfirm } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Button, Drawer, Popconfirm } from 'antd';
 import React, { useRef, useState } from 'react';
 import { API, SsmAnsible, SsmAgent } from 'ssm-shared-lib';
 import ConfigurationModal from './components/ConfigurationModal';

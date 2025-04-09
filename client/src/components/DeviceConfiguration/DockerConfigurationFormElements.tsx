@@ -6,7 +6,7 @@ import DockerWatchCard from '@/components/DeviceConfiguration/docker/DockerWatch
 import DockerWatcherCronsCard from '@/components/DeviceConfiguration/docker/DockerWatcherCronsCard';
 import { postDeviceCapabilities } from '@/services/rest/devices/devices';
 import { ProFormInstance } from '@ant-design/pro-components';
-import { message } from 'antd';
+import message from '@/components/Message/DynamicMessage';
 import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
 import 'react-js-cron/dist/styles.css';

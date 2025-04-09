@@ -21,7 +21,8 @@ import {
   RequestOptionsType,
 } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
-import { Flex, message, Popover, Tag, Tooltip, Typography } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Flex, Popover, Tag, Tooltip, Typography } from 'antd';
 import React from 'react';
 import { API, SsmContainer } from 'ssm-shared-lib';
 

@@ -17,7 +17,7 @@ import {
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 // @ts-ignore
 import { history, RunTimeLayoutConfig } from '@umijs/max';
-import { Alert } from 'antd';
+import { Alert, message } from 'antd';
 import { API } from 'ssm-shared-lib';
 import defaultSettings from '../config/defaultSettings';
 import { version } from '../package.json';
@@ -94,6 +94,8 @@ export const layout: RunTimeLayoutConfig = ({
   // @ts-ignore
   setInitialState,
 }) => {
+  const [messageApi, contextHolder] = message.useMessage();
+
   return {
     logo: Logo,
     title: 'Squirrel Servers Manager',
@@ -135,6 +137,7 @@ export const layout: RunTimeLayoutConfig = ({
 
       return (
         <PluginProvider>
+          {contextHolder}
           {initialState?.currentUser?.settings?.server.version &&
             versionMismatch && (
               <Alert

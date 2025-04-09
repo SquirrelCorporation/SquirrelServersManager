@@ -6,7 +6,7 @@ import TerminalCore, {
 import { sshSocket as socket } from '@/socket';
 import { useParams } from '@@/exports';
 import { PageContainer } from '@ant-design/pro-components';
-import { message } from 'antd';
+import message from '@/components/Message/DynamicMessage';
 import React, { RefObject, useEffect } from 'react';
 import { SsmEvents } from 'ssm-shared-lib';
 
@@ -22,7 +22,7 @@ const DeviceSSHTerminal = () => {
     React.createRef<TerminalCoreHandles>();
 
   const handleDataOut = (value: string) => {
-    console.log('Sending data to SSH:'+ value);
+    console.log('Sending data to SSH:' + value);
     socket.emit(SsmEvents.SSH.NEW_DATA, value);
   };
 
@@ -33,7 +33,7 @@ const DeviceSSHTerminal = () => {
 
   // Flag to track if we've already initiated a connection
   const connectionInitiated = React.useRef(false);
-  
+
   const setupSocket = (
     onDataIn: (value: string, newLine?: boolean) => void,
   ) => {
@@ -42,10 +42,10 @@ const DeviceSSHTerminal = () => {
       console.log('SSH connection already initiated, ignoring duplicate setup');
       return;
     }
-    
+
     connectionInitiated.current = true;
     console.log('Setting up new SSH connection...');
-    
+
     terminalRef?.current?.resetTerminalContent();
     socket.connect();
     terminalRef?.current?.onDataIn('---', true);
@@ -62,8 +62,8 @@ const DeviceSSHTerminal = () => {
       true,
     );
     terminalRef?.current?.onDataIn('---', true);
-    onDataIn('🛜 Connecting...', true); 
-    
+    onDataIn('🛜 Connecting...', true);
+
     // Remove any existing listeners to prevent duplicates
     socket.off(SsmEvents.SSH.NEW_DATA);
     socket.off(SsmEvents.SSH.STATUS);
@@ -82,7 +82,7 @@ const DeviceSSHTerminal = () => {
         onDataIn(`${value.status} - ${value.message}`);
       }
     });
-    
+
     console.log('Connecting to SSH with device ID:', id);
     socket
       .emitWithAck(SsmEvents.SSH.START_SESSION, { deviceUuid: id, rows, cols })
@@ -94,7 +94,10 @@ const DeviceSSHTerminal = () => {
           });
           connectionInitiated.current = false;
         } else {
-          console.log('SSH connection successful with session ID:', response.sessionId);
+          console.log(
+            'SSH connection successful with session ID:',
+            response.sessionId,
+          );
         }
       })
       .catch((error) => {
@@ -142,7 +145,7 @@ const DeviceSSHTerminal = () => {
       style={{ height: '100%' }}
     >
       <TerminalCore
-        ref={terminalRef} 
+        ref={terminalRef}
         onDataOut={handleDataOut}
         onResize={handleResize}
         cols={cols}

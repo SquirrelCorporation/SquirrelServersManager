@@ -21,8 +21,8 @@ const ListContent: React.FC<Partial<API.DeviceItem>> = React.memo((device) => {
       device.systemInformation?.mem?.total
         ? Math.ceil(device.systemInformation?.mem?.total / (1024 * 1024 * 1024))
         : 'NaN',
-    [device.systemInformation?.mem?.total], 
-  ); 
+    [device.systemInformation?.mem?.total],
+  );
 
   const carouselContent = useMemo(() => {
     if (device.status !== DeviceStatus.UNMANAGED) {
@@ -48,19 +48,40 @@ const ListContent: React.FC<Partial<API.DeviceItem>> = React.memo((device) => {
                 }}
               >
                 <Row style={{ alignItems: 'center' }} justify="center">
-                  <Col span={6}>
+                  <Col
+                    span={6}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
                     <TinyRingProgressDeviceGraph
                       type={StatsType.DeviceStatsType.CPU}
                       deviceUuid={device.uuid as string}
                     />
                   </Col>
-                  <Col span={6}>
+                  <Col
+                    span={6}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
                     <TinyRingProgressDeviceGraph
                       type={StatsType.DeviceStatsType.MEM_USED}
                       deviceUuid={device.uuid as string}
                     />
                   </Col>
-                  <Col span={6}>
+                  <Col
+                    span={6}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
                     <TinyRingProgressDeviceIndicator
                       type={StatsType.DeviceStatsType.CONTAINERS}
                       deviceUuid={device.uuid as string}

@@ -1,6 +1,7 @@
 import { SFTPDataNode } from '@/components/DeviceComponents/SFTPDrawer/SFTPDrawer';
 import { sftpSocket as socket } from '@/socket';
-import { Button, message, Modal, Result, Spin } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Button, Modal, Result, Spin } from 'antd';
 import React, { useEffect, useImperativeHandle, useState } from 'react';
 import { SsmEvents } from 'ssm-shared-lib';
 

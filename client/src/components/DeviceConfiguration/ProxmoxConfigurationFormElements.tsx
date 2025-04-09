@@ -3,7 +3,7 @@ import ProxmoxConnectionCard from '@/components/DeviceConfiguration/proxmox/Prox
 import ProxmoxWatcherCronsCard from '@/components/DeviceConfiguration/proxmox/ProxmoxWatcherCronsCard';
 import { postDeviceCapabilities } from '@/services/rest/devices/devices';
 import { ProFormInstance } from '@ant-design/pro-components';
-import { message } from 'antd';
+import message from '@/components/Message/DynamicMessage';
 import React from 'react';
 import 'react-js-cron/dist/styles.css';
 import { API } from 'ssm-shared-lib';

@@ -134,6 +134,7 @@ const DeviceListPage = memo(() => {
                           : item.systemInformation?.os?.logofile,
                       )}
                       size="large"
+                      className={styles['elevated-avatar']}
                     />
                   </motion.div>
                 ) : (
@@ -144,6 +145,7 @@ const DeviceListPage = memo(() => {
                         : item.systemInformation?.os?.logofile,
                     )}
                     size="large"
+                    className={styles['elevated-avatar']}
                   />
                 )
               }

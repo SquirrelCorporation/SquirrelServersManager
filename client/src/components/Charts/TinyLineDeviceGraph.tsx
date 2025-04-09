@@ -1,14 +1,13 @@
-import { DeviceStatType } from '@/components/Charts/DeviceStatType';
 import { getDeviceStats } from '@/services/rest/stastistics';
 import { Tiny } from '@ant-design/charts';
-import { message } from 'antd';
+import message from '@/components/Message/DynamicMessage';
 import moment from 'moment';
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { API } from 'ssm-shared-lib';
+import { API, StatsType } from 'ssm-shared-lib';
 
 export type TinyLineProps = {
   deviceUuid: string;
-  type: DeviceStatType;
+  type: StatsType.DeviceStatsType;
   from: number;
 };
 
@@ -44,7 +43,7 @@ const TinyLineDeviceGraph: React.FC<TinyLineProps> = ({
   }, [deviceUuid, type, from, formatData]);
 
   useEffect(() => {
-    asyncFetch();
+    void asyncFetch();
   }, [asyncFetch]);
 
   const config = useMemo(
@@ -60,6 +59,9 @@ const TinyLineDeviceGraph: React.FC<TinyLineProps> = ({
       padding: 10,
       tooltip: { channel: 'y', valueFormatter: '.2%' },
       interaction: { tooltip: { mount: 'body' } },
+      style: {
+        lineWidth: 4,
+      },
     }),
     [data],
   );

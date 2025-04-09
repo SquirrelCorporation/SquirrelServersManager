@@ -3,7 +3,8 @@ import { CardHeader } from '@/components/Template/CardHeader';
 import { updateDeviceDockerConfiguration } from '@/services/rest/devices/devices';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { ProForm, ProFormSwitch } from '@ant-design/pro-components';
-import { Card, message, Tooltip } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Card, Tooltip } from 'antd';
 import React, { useState } from 'react';
 import { API } from 'ssm-shared-lib';
 

@@ -16,9 +16,11 @@ export async function getGitPlaybooksRepositories(
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.Response<API.GitPlaybooksRepository[]>>(`${BASE_URL}/git/`, {
-    method: 'GET',
-    params: {
+  return request<API.Response<API.GitPlaybooksRepository[]>>(
+    `${BASE_URL}/git/`,
+    {
+      method: 'GET',
+      params: {
         ...params,
       },
       ...(options || {}),
@@ -30,9 +32,11 @@ export async function getPlaybooksLocalRepositories(
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.Response<API.GitPlaybooksRepository[]>>(`${BASE_URL}/local/`, {
-    method: 'GET',
-    params: {
+  return request<API.Response<API.GitPlaybooksRepository[]>>(
+    `${BASE_URL}/local/`,
+    {
+      method: 'GET',
+      params: {
         ...params,
       },
       ...(options || {}),
@@ -96,9 +100,11 @@ export async function syncToDatabasePlaybooksLocalRepository(
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.SimpleResult>(`${BASE_URL}/local/${uuid}/sync-to-database`, {
-    method: 'POST',
-    params: {
+  return request<API.SimpleResult>(
+    `${BASE_URL}/local/${uuid}/sync-to-database`,
+    {
+      method: 'POST',
+      params: {
         ...params,
       },
       ...(options || {}),
@@ -116,11 +122,10 @@ export async function postPlaybooksGitRepository(
     data: { ...repository },
     method: 'POST',
     params: {
-        ...params,
-      },
-      ...(options || {}),
+      ...params,
     },
-  );
+    ...(options || {}),
+  });
 }
 
 export async function putPlaybooksGitRepository(
@@ -160,11 +165,10 @@ export async function syncToDatabasePlaybooksGitRepository(
   return request<API.SimpleResult>(`${BASE_URL}/git/${uuid}/sync-to-database`, {
     method: 'POST',
     params: {
-        ...params,
-      },
-      ...(options || {}),
+      ...params,
     },
-  );
+    ...(options || {}),
+  });
 }
 
 export async function forcePullPlaybooksGitRepository(
@@ -172,9 +176,11 @@ export async function forcePullPlaybooksGitRepository(
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.SimpleResult>(`${BASE_URL}/git/${uuid}/force-pull-repository`, {
-    method: 'POST',
-    params: {
+  return request<API.SimpleResult>(
+    `${BASE_URL}/git/${uuid}/force-pull-repository`,
+    {
+      method: 'POST',
+      params: {
         ...params,
       },
       ...(options || {}),
@@ -190,11 +196,10 @@ export async function forceClonePlaybooksGitRepository(
   return request<API.SimpleResult>(`${BASE_URL}/git/${uuid}/force-clone`, {
     method: 'POST',
     params: {
-        ...params,
-      },
-      ...(options || {}),
+      ...params,
     },
-  );
+    ...(options || {}),
+  });
 }
 
 export async function commitAndSyncPlaybooksGitRepository(
@@ -205,11 +210,10 @@ export async function commitAndSyncPlaybooksGitRepository(
   return request<API.SimpleResult>(`${BASE_URL}/git/${uuid}/commit-and-sync`, {
     method: 'POST',
     params: {
-        ...params,
-      },
-      ...(options || {}),
+      ...params,
     },
-  );
+    ...(options || {}),
+  });
 }
 
 export async function forceRegisterPlaybooksGitRepository(
@@ -220,11 +224,10 @@ export async function forceRegisterPlaybooksGitRepository(
   return request<API.SimpleResult>(`${BASE_URL}/git/${uuid}/force-register`, {
     method: 'POST',
     params: {
-        ...params,
-      },
-      ...(options || {}),
+      ...params,
     },
-  );
+    ...(options || {}),
+  });
 }
 
 export async function createEmptyPlaybookInRepository(
@@ -235,7 +238,7 @@ export async function createEmptyPlaybookInRepository(
   return request<API.Response<API.PlaybookFile>>(
     `${BASE_URL}/${playbooksRepositoryUuid}/playbook/${playbookName}/`,
     {
-      method: 'PUT',
+      method: 'POST',
       data: { fullPath: fullPath },
       ...{},
     },
@@ -250,7 +253,7 @@ export async function createDirectoryInRepository(
   return request<API.SimpleResult>(
     `${BASE_URL}/${playbooksRepositoryUuid}/directory/${directoryName}/`,
     {
-      method: 'PUT',
+      method: 'POST',
       data: { fullPath: fullPath },
       ...{},
     },

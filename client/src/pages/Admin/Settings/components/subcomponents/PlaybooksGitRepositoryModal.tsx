@@ -15,7 +15,8 @@ import {
 import { DeleteOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { ModalForm, ProForm } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
-import { Avatar, Button, Dropdown, MenuProps, message, Popconfirm } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Avatar, Button, Dropdown, MenuProps, Popconfirm } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 

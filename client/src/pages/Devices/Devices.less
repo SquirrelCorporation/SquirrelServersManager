@@ -36,7 +36,7 @@
 
 .listItemCarousel {
 }
-
+ 
 .carouselCustom {
   color: red;
     ~ .slick-dots li button {
@@ -68,6 +68,13 @@
     .ant-list-pagination {
       margin-top: 24px;
       text-align: right;
+    }
+    .ant-list-item {
+      padding: 16px 24px !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .ant-list-item:last-child {
+      border-bottom: none;
     }
     .ant-avatar-lg {
       width: 48px;
@@ -253,4 +260,9 @@
   [class^='title'] {
     margin-bottom: 8px;
   }
+}
+
+.elevated-avatar {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35); // Slightly stronger shadow for visibility
+  border-radius: 50%; // Ensure shadow follows avatar shape if applied to wrapper
 }

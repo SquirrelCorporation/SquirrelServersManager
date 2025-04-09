@@ -10,7 +10,8 @@ import {
   ProColumns,
   RequestData,
 } from '@ant-design/pro-components';
-import { Button, message, Popconfirm, Spin, Switch } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Button, Popconfirm, Spin, Switch } from 'antd';
 import React, { useRef, useState } from 'react';
 
 interface ConfigEntry {

@@ -3,7 +3,7 @@ import TerminalCore, {
 } from '@/components/Terminal/TerminalCore';
 import { containerLiveLogsSocket as socket } from '@/socket';
 import { useParams } from '@@/exports';
-import { message } from 'antd';
+import message from '@/components/Message/DynamicMessage';
 import React, { useEffect, useImperativeHandle, useRef } from 'react';
 import { SsmEvents } from 'ssm-shared-lib';
 

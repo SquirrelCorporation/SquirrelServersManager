@@ -6,7 +6,7 @@ import {
 import {
   getAllNotifications,
   markAsAllSeen,
-} from '@/services/rest/notifications';
+} from '@/services/rest/notifications/notifications';
 import { notificationSocket as socket } from '@/socket';
 import {
   CheckSquareOutlined,

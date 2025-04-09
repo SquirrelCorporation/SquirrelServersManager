@@ -1,7 +1,8 @@
 import { SFTPDataNode } from '@/components/DeviceComponents/SFTPDrawer/SFTPDrawer';
 import { sftpSocket as socket } from '@/socket';
 import { ModalForm, ProFormDigit } from '@ant-design/pro-components';
-import { Checkbox, message } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Checkbox } from 'antd';
 import React, { useImperativeHandle, useState } from 'react';
 import { SsmEvents } from 'ssm-shared-lib';
 

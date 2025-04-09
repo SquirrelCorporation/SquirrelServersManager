@@ -20,7 +20,8 @@ import {
 import { PlaySquareOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import Editor, { Monaco } from '@monaco-editor/react';
-import { Col, message, Result, Row, Spin, Typography } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Col, Result, Row, Spin, Typography } from 'antd';
 import type { DirectoryTreeProps } from 'antd/es/tree';
 import { editor } from 'monaco-editor';
 import { configureMonacoYaml } from 'monaco-yaml';

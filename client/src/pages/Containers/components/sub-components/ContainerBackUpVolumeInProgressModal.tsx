@@ -4,7 +4,8 @@ import {
   postBackUpVolume,
 } from '@/services/rest/containers/container-volumes';
 import { containerVolumesSocket as socket } from '@/socket';
-import { Button, Flex, message, Modal, Result, Spin } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Button, Flex, Modal, Result, Spin } from 'antd';
 import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import { SsmContainer, SsmEvents } from 'ssm-shared-lib';
 

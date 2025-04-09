@@ -29,7 +29,6 @@ import {
   Col,
   Flex,
   InputNumber,
-  message,
   Popover,
   Row,
   Slider,
@@ -41,6 +40,7 @@ import {
 import { AddCircleOutline } from 'antd-mobile-icons';
 import React, { useEffect, useState } from 'react';
 import { API } from 'ssm-shared-lib';
+import message from '@/components/Message/DynamicMessage';
 
 const PlaybookSettings: React.FC = () => {
   const { initialState } = useModel('@@initialState');

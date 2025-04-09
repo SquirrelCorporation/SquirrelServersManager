@@ -1,5 +1,6 @@
 import '@umijs/max';
-import { Button, message, notification } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Button, notification } from 'antd';
 import defaultSettings from '../config/defaultSettings';
 
 const { pwa } = defaultSettings;

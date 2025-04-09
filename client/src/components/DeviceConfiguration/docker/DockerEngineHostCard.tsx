@@ -15,7 +15,8 @@ import {
   ProFormUploadButton,
 } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
-import { Card, message, Tooltip } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Card, Tooltip } from 'antd';
 import { RcFile } from 'antd/lib/upload/interface';
 import axios from 'axios';
 import { AnimatePresence, motion } from 'framer-motion';

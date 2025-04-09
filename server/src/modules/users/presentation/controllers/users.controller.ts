@@ -134,13 +134,9 @@ export class UsersController {
 
   @Post('logs-level')
   @ResourceAction(RESOURCES.USER, ACTIONS.UPDATE)
-  async updateLogsLevel(
-    @Param('email') email: string,
-    @Body() logsLevelData: { logsLevel: any },
-    @User() user,
-  ) {
+  async updateLogsLevel(@Body() logsLevelData: { logsLevel: any }, @User() user) {
     // Only admins can update logs level for other users
-    if (user.role !== 'admin' && user.email !== email) {
+    if (user.role !== 'admin') {
       throw new HttpException(
         {
           success: false,
@@ -150,7 +146,10 @@ export class UsersController {
       );
     }
 
-    const updatedUser = await this.usersService.updateLogsLevel(email, logsLevelData.logsLevel);
+    const updatedUser = await this.usersService.updateLogsLevel(
+      user.email,
+      logsLevelData.logsLevel,
+    );
     if (!updatedUser) {
       throw new HttpException(
         {

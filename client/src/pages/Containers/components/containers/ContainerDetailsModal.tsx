@@ -13,7 +13,8 @@ import {
   SwapOutlined,
 } from '@ant-design/icons';
 import { history } from '@umijs/max';
-import { Button, Divider, message, Modal, Space } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Button, Divider, Modal, Space } from 'antd';
 import React from 'react';
 import { API, SsmContainer } from 'ssm-shared-lib';
 

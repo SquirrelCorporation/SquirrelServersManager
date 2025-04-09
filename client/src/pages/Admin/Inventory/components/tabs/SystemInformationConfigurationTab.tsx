@@ -22,7 +22,8 @@ import {
   ProFormSelect,
   ProFormSwitch,
 } from '@ant-design/pro-components';
-import { Card, message, Space, Tooltip } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Card, Space, Tooltip } from 'antd';
 import React, { useEffect } from 'react';
 import Cron from 'react-js-cron';
 import { API } from 'ssm-shared-lib';
