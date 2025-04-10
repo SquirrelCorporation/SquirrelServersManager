@@ -43,4 +43,29 @@ export class ContainerStackRepositoriesController {
   async deleteRepository(@Param('uuid') uuid: string): Promise<boolean> {
     return this.containerStacksService.deleteRepositoryByUuid(uuid);
   }
+
+  @Post(':uuid/force-pull')
+  async forcePullRepository(@Param('uuid') uuid: string): Promise<void> {
+    return this.containerStacksService.forcePullRepository(uuid);
+  }
+
+  @Post(':uuid/force-clone')
+  async forceCloneRepository(@Param('uuid') uuid: string): Promise<void> {
+    return this.containerStacksService.forceCloneRepository(uuid);
+  }
+
+  @Post(':uuid/force-register')
+  async forceRegisterRepository(@Param('uuid') uuid: string): Promise<void> {
+    return this.containerStacksService.forceRegisterRepository(uuid);
+  }
+
+  @Post(':uuid/commit-and-sync')
+  async commitAndSyncRepository(@Param('uuid') uuid: string): Promise<void> {
+    return this.containerStacksService.commitAndSyncRepository(uuid);
+  }
+
+  @Post(':uuid/sync-to-database')
+  async syncToDatabaseRepository(@Param('uuid') uuid: string): Promise<void> {
+    return this.containerStacksService.syncToDatabaseRepository(uuid);
+  }
 }

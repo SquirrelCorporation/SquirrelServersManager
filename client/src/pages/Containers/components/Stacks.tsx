@@ -24,7 +24,10 @@ const Stacks: React.FC = () => {
     switch (key) {
       case 'delete':
         await deleteContainerCustomStack(uuid).then(() => {
-          message.success('Successfully deleted stack');
+          message.success({
+            content: 'Successfully deleted stack',
+            duration: 6,
+          });
           actionRef?.current?.reload();
         });
         return;

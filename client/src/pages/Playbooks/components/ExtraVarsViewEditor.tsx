@@ -19,7 +19,6 @@ import {
   Col,
   Collapse,
   Divider,
-  message,
   Row,
   Space,
   Tag,
@@ -27,6 +26,7 @@ import {
 } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';
+import message from '@/components/Message/DynamicMessage';
 
 export type ExtraVarsViewEditionProps = {
   playbook: API.PlaybookFile;

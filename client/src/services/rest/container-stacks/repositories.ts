@@ -19,31 +19,28 @@ export async function getGitContainerStacksRepositories(
   );
 }
 
-export async function postContainerStacksGitRepository(
-  repositoryUuid: string,
-  repository: API.GitContainerStacksRepository,
-  params?: any,
-  options?: Record<string, any>,
-) {
-  return request<API.SimpleResult>(
-    `${API_PATH}/${repositoryUuid}`,
-    {
-      data: { ...repository },
-      method: 'POST',
-      params: {
-        ...params,
-      },
-      ...(options || {}),
-    },
-  );
-}
-
-export async function putContainerStacksGitRepository(
+export async function createContainerStacksGitRepository(
   repository: API.GitContainerStacksRepository,
   params?: any,
   options?: Record<string, any>,
 ) {
   return request<API.SimpleResult>(`${API_PATH}`, {
+    data: { ...repository },
+    method: 'POST',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+export async function updateContainerStacksGitRepository(
+  repositoryUuid: string,
+  repository: API.GitContainerStacksRepository,
+  params?: any,
+  options?: Record<string, any>,
+) {
+  return request<API.SimpleResult>(`${API_PATH}/${repositoryUuid}`, {
     data: { ...repository },
     method: 'PUT',
     params: {
@@ -72,16 +69,13 @@ export async function syncToDatabaseContainerStacksGitRepository(
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.SimpleResult>(
-    `${API_PATH}/${uuid}/sync-to-database`,
-    {
-      method: 'POST',
-      params: {
-        ...params,
-      },
-      ...(options || {}),
+  return request<API.SimpleResult>(`${API_PATH}/${uuid}/sync-to-database`, {
+    method: 'POST',
+    params: {
+      ...params,
     },
-  );
+    ...(options || {}),
+  });
 }
 
 export async function forcePullContainerStacksGitRepository(
@@ -89,16 +83,13 @@ export async function forcePullContainerStacksGitRepository(
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.SimpleResult>(
-    `${API_PATH}/${uuid}/force-pull`,
-    {
-      method: 'POST',
-      params: {
-        ...params,
-      },
-      ...(options || {}),
+  return request<API.SimpleResult>(`${API_PATH}/${uuid}/force-pull`, {
+    method: 'POST',
+    params: {
+      ...params,
     },
-  );
+    ...(options || {}),
+  });
 }
 
 export async function forceCloneContainerStacksGitRepository(
@@ -106,16 +97,13 @@ export async function forceCloneContainerStacksGitRepository(
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.SimpleResult>(
-    `${API_PATH}/${uuid}/force-clone`,
-    {
-      method: 'POST',
-      params: {
-        ...params,
-      },
-      ...(options || {}),
+  return request<API.SimpleResult>(`${API_PATH}/${uuid}/force-clone`, {
+    method: 'POST',
+    params: {
+      ...params,
     },
-  );
+    ...(options || {}),
+  });
 }
 
 export async function commitAndSyncContainerStacksGitRepository(
@@ -123,16 +111,13 @@ export async function commitAndSyncContainerStacksGitRepository(
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.SimpleResult>(
-    `${API_PATH}/${uuid}/commit-and-sync`,
-    {
-      method: 'POST',
-      params: {
-        ...params,
-      },
-      ...(options || {}),
+  return request<API.SimpleResult>(`${API_PATH}/${uuid}/commit-and-sync`, {
+    method: 'POST',
+    params: {
+      ...params,
     },
-  );
+    ...(options || {}),
+  });
 }
 
 export async function forceRegisterContainerStacksGitRepository(
@@ -140,14 +125,11 @@ export async function forceRegisterContainerStacksGitRepository(
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.SimpleResult>(
-    `${API_PATH}/${uuid}/force-register`,
-    {
-      method: 'POST',
-      params: {
-        ...params,
-      },
-      ...(options || {}),
+  return request<API.SimpleResult>(`${API_PATH}/${uuid}/force-register`, {
+    method: 'POST',
+    params: {
+      ...params,
     },
-  );
+    ...(options || {}),
+  });
 }

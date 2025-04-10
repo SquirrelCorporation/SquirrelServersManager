@@ -176,16 +176,13 @@ export async function forcePullPlaybooksGitRepository(
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.SimpleResult>(
-    `${BASE_URL}/git/${uuid}/force-pull-repository`,
-    {
-      method: 'POST',
-      params: {
-        ...params,
-      },
-      ...(options || {}),
+  return request<API.SimpleResult>(`${BASE_URL}/git/${uuid}/force-pull`, {
+    method: 'POST',
+    params: {
+      ...params,
     },
-  );
+    ...(options || {}),
+  });
 }
 
 export async function forceClonePlaybooksGitRepository(

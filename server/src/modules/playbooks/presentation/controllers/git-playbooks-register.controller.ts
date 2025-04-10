@@ -9,7 +9,18 @@ import {
   IPlaybooksRegisterRepository,
   PLAYBOOKS_REGISTER_REPOSITORY,
 } from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
-import { Body, Controller, Delete, Get, Inject, Logger, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  InternalServerErrorException,
+  Logger,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { API, Repositories } from 'ssm-shared-lib';
 import { GitPlaybooksRegisterComponent } from '../../application/services/components/git-playbooks-register.component';
 import { PlaybooksRegisterEngineService } from '../../application/services/engine/playbooks-register-engine.service';
@@ -201,8 +212,18 @@ export class GitPlaybooksRepositoryController {
   @Post(':uuid/force-pull')
   async forcePullRepository(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Force pulling Git repository ${uuid}`);
-    const component = this.getGitComponent(uuid);
-    await component.syncFromRepository();
+    try {
+      const component = this.getGitComponent(uuid);
+      await component.syncFromRepository();
+    } catch (error: any) {
+      this.logger.error(
+        error,
+        `Error force pulling Git repository ${uuid}: ${error?.message || 'Unknown error'}`,
+      );
+      throw new InternalServerErrorException(
+        `Error force pulling Git repository ${uuid}: ${error?.message || 'Unknown error'}`,
+      );
+    }
   }
 
   /**
@@ -212,8 +233,18 @@ export class GitPlaybooksRepositoryController {
   @Post(':uuid/force-clone')
   async forceCloneRepository(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Force cloning Git repository ${uuid}`);
-    const component = this.getGitComponent(uuid);
-    await component.init();
+    try {
+      const component = this.getGitComponent(uuid);
+      await component.init();
+    } catch (error: any) {
+      this.logger.error(
+        error,
+        `Error force cloning Git repository ${uuid}: ${error?.message || 'Unknown error'}`,
+      );
+      throw new InternalServerErrorException(
+        `Error force cloning Git repository ${uuid}: ${error?.message || 'Unknown error'}`,
+      );
+    }
   }
 
   /**
@@ -223,8 +254,18 @@ export class GitPlaybooksRepositoryController {
   @Post(':uuid/commit-and-sync')
   async commitAndSyncRepository(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Committing and syncing Git repository ${uuid}`);
-    const component = this.getGitComponent(uuid);
-    await component.syncFromRepository();
+    try {
+      const component = this.getGitComponent(uuid);
+      await component.syncFromRepository();
+    } catch (error: any) {
+      this.logger.error(
+        error,
+        `Error committing and syncing Git repository ${uuid}: ${error?.message || 'Unknown error'}`,
+      );
+      throw new InternalServerErrorException(
+        `Error committing and syncing Git repository ${uuid}: ${error?.message || 'Unknown error'}`,
+      );
+    }
   }
 
   /**
@@ -241,5 +282,16 @@ export class GitPlaybooksRepositoryController {
     }
 
     await this.playbooksRegisterEngineService.registerRegister(register);
+  }
+
+  /**
+   * Sync a Git repository to the database
+   * @param uuid Repository UUID
+   */
+  @Post(':uuid/sync-to-database')
+  async syncToDatabase(@Param('uuid') uuid: string): Promise<void> {
+    this.logger.log(`Syncing Git repository ${uuid} to database`);
+    const component = this.getGitComponent(uuid);
+    await component.syncToDatabase();
   }
 }

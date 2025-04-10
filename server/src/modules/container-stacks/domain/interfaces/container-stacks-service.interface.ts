@@ -27,4 +27,9 @@ export interface IContainerStacksService extends OnModuleInit {
   transformStack(content: any): Promise<{ yaml: string }>;
   dryRunStack(json: any, yaml: string): Promise<{ validating: boolean; message?: string }>;
   deployStack(uuid: string, target: string, user: IUser): Promise<{ execId: string }>;
+  forcePullRepository(uuid: string): Promise<void>;
+  forceCloneRepository(uuid: string): Promise<void>;
+  forceRegisterRepository(uuid: string): Promise<void>;
+  commitAndSyncRepository(uuid: string): Promise<void>;
+  syncToDatabaseRepository(uuid: string): Promise<void>;
 }

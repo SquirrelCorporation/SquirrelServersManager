@@ -24,7 +24,7 @@ const clearCache = () => {
 if (pwa) {
   // Notify user if offline now
   window.addEventListener('sw.offline', () => {
-    message.warning('You are offline now');
+    message.warning({ content: 'You are offline now', duration: 6 });
   });
 
   // Pop up a prompt on the page asking the user if they want to use the latest version

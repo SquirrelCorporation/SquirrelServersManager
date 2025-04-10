@@ -24,6 +24,8 @@ import {
   IContainerCustomStackRepository,
 } from '../../domain/repositories/container-custom-stack-repository.interface';
 import { ContainerCustomStacksRepositoryEngineService } from './container-stacks-repository-engine-service';
+import { DEFAULT_VAULT_ID, VAULT_CRYPTO_SERVICE } from '@modules/ansible-vaults';
+import { IVaultCryptoService } from '@modules/ansible-vaults';
 
 @Injectable()
 export class ContainerStacksService implements IContainerStacksService {
@@ -42,6 +44,8 @@ export class ContainerStacksService implements IContainerStacksService {
     private readonly dockerComposeService: IDockerComposeService,
     @Inject(PLAYBOOKS_SERVICE)
     private readonly playbooksService: IPlaybooksService,
+    @Inject(VAULT_CRYPTO_SERVICE)
+    private readonly vaultCryptoService: IVaultCryptoService,
   ) {
     this.initializeRepositories();
   }
@@ -54,7 +58,12 @@ export class ContainerStacksService implements IContainerStacksService {
   private async initializeRepositories(): Promise<void> {
     const repositories = await this.containerCustomStackRepositoryRepository.findAll();
     for (const repository of repositories) {
-      await this.registerRepository(repository);
+      try {
+        await this.registerRepository(repository);
+      } catch (error) {
+        this.logger.error(`Error registering repository: ${repository.name}/${repository.uuid}`);
+        this.logger.error(error instanceof Error ? error.message : String(error));
+      }
     }
   }
 
@@ -215,16 +224,17 @@ export class ContainerStacksService implements IContainerStacksService {
     // Write file
     if (json) {
       const transformedYaml = transformToDockerCompose(json);
-      this.fileSystemService.writeFile(fullFilePath, transformedYaml);
+      this.fileSystemService.writeFile(transformedYaml, fullFilePath);
     } else {
-      this.fileSystemService.writeFile(fullFilePath, yaml);
+      this.fileSystemService.writeFile(yaml, fullFilePath);
     }
 
     // Run docker-compose config
     const result = this.dockerComposeService.dockerComposeDryRun(
       `docker-compose -f ${fullFilePath} config`,
     );
-    if (result.code !== 0) {
+
+    if (result.code === 0) {
       return { validating: true };
     } else {
       return { validating: false, message: result.stderr };
@@ -269,6 +279,13 @@ export class ContainerStacksService implements IContainerStacksService {
   async createRepository(
     repository: IContainerCustomStackRepositoryEntity,
   ): Promise<IContainerCustomStackRepositoryEntity> {
+    if (!repository.accessToken) {
+      throw new Error('Access token is required');
+    }
+    repository.accessToken = await this.vaultCryptoService.encrypt(
+      repository.accessToken,
+      DEFAULT_VAULT_ID,
+    );
     return this.containerCustomStackRepositoryRepository.create(repository);
   }
 
@@ -276,6 +293,37 @@ export class ContainerStacksService implements IContainerStacksService {
     uuid: string,
     repository: Partial<IContainerCustomStackRepositoryEntity>,
   ): Promise<IContainerCustomStackRepositoryEntity> {
+    if (!repository.accessToken) {
+      throw new Error('Access token is required');
+    }
+    repository.accessToken = await this.vaultCryptoService.encrypt(
+      repository.accessToken,
+      DEFAULT_VAULT_ID,
+    );
+    const existingRepository = await this.containerCustomStackRepositoryRepository.findByUuid(uuid);
+    if (!existingRepository) {
+      throw new Error(`Repository with UUID ${uuid} not found`);
+    }
     return this.containerCustomStackRepositoryRepository.update(uuid, repository);
+  }
+
+  async forcePullRepository(uuid: string): Promise<void> {
+    return this.containerCustomStacksRepositoryEngine.forcePull(uuid);
+  }
+
+  async forceCloneRepository(uuid: string): Promise<void> {
+    return this.containerCustomStacksRepositoryEngine.clone(uuid);
+  }
+
+  async forceRegisterRepository(uuid: string): Promise<void> {
+    return this.containerCustomStacksRepositoryEngine.forceRegister(uuid);
+  }
+
+  async commitAndSyncRepository(uuid: string): Promise<void> {
+    return this.containerCustomStacksRepositoryEngine.commitAndSync(uuid);
+  }
+
+  async syncToDatabaseRepository(uuid: string): Promise<void> {
+    return this.containerCustomStacksRepositoryEngine.syncToDatabase(uuid);
   }
 }

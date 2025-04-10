@@ -90,7 +90,7 @@ export class WatcherComponentFactory implements IWatcherComponentFactory {
 
     // Return a mock implementation for Proxmox
     // eslint-disable-next-line
-    return new(class extends AbstractWatcherComponent {
+    return new (class extends AbstractWatcherComponent {
       async init(): Promise<void> {
         this.childLogger.info('Mock Proxmox watcher initialized');
       }
@@ -129,6 +129,10 @@ export class WatcherComponentFactory implements IWatcherComponentFactory {
 
       async getContainerLogs(): Promise<any> {
         return 'Mock Proxmox container logs';
+      }
+
+      async watch(): Promise<any> {
+        return 'Mock Proxmox watcher';
       }
     })();
   }

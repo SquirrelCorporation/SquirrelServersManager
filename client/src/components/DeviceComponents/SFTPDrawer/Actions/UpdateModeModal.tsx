@@ -116,7 +116,7 @@ const UpdateModeModal = React.forwardRef<
 
   const updateMode = async (): Promise<boolean> => {
     if (!node) {
-      message.error('No node selected');
+      message.error({ content: 'No node selected', duration: 6 });
       return false;
     }
 
@@ -130,7 +130,10 @@ const UpdateModeModal = React.forwardRef<
           mode: decimalMode,
         }); // Send the chmod request
       if (response.success) {
-        message.success('Permissions updated successfully!');
+        message.success({
+          content: 'Permissions updated successfully!',
+          duration: 6,
+        });
         return true; // Successful chmod
       } else {
         throw new Error(
@@ -138,7 +141,10 @@ const UpdateModeModal = React.forwardRef<
         );
       }
     } catch (error: any) {
-      message.error(`Failed to update permissions (${error.message})`);
+      message.error({
+        content: `Failed to update permissions (${error.message})`,
+        duration: 6,
+      });
       return false;
     }
   };
@@ -235,7 +241,7 @@ const UpdateModeModal = React.forwardRef<
         label="Octal Mode"
         placeholder="e.g., 755"
         fieldProps={{
-          value: mode,
+          value: parseInt(mode, 8),
           onChange: (value) => handleModeInputChange(value?.toString() || '0'),
         }}
       />

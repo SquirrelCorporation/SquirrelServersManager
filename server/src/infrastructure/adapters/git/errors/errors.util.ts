@@ -44,17 +44,7 @@ export class GitPullPushError extends Error {
     super(extraMessages);
     Object.setPrototypeOf(this, GitPullPushError.prototype);
     this.name = 'GitPullPushError';
-    this.message = `E-3 failed to config git to successfully pull from or push to remote with configuration ${JSON.stringify(
-      {
-        ...configuration,
-        userInfo: {
-          ...configuration.userInfo,
-          accessToken: truncate((configuration?.userInfo as IGitUserInfos)?.accessToken, {
-            length: 6,
-          }),
-        },
-      },
-    )}.\nerrorMessages: ${extraMessages}`;
+    this.message = `E-3 failed to config git to successfully pull from or push to remote with configuration.\nerrorMessages: ${extraMessages}`;
   }
 }
 

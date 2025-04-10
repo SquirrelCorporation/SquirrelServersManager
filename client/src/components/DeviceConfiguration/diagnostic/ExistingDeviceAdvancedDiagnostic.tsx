@@ -2,18 +2,10 @@ import { MedicalSearchDiagnosisSolid } from '@/components/Icons/CustomIcons';
 import { postDeviceDiagnostic } from '@/services/rest/diagnostic/diagnostic';
 import { diagnosticSocket as socket } from '@/socket';
 import { history } from '@umijs/max';
-import {
-  Avatar,
-  Button,
-  Card,
-  Col,
-  message,
-  Row,
-  StepProps,
-  Steps,
-} from 'antd';
+import { Avatar, Button, Card, Col, Row, StepProps, Steps } from 'antd';
 import React, { useEffect } from 'react';
 import { API, SsmDeviceDiagnostic, SsmEvents } from 'ssm-shared-lib';
+import message from '@/components/Message/DynamicMessage';
 
 type ExistingDeviceAdvancedDiagnosticProps = {
   device: Partial<API.DeviceItem>;

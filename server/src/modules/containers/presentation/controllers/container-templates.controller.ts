@@ -16,6 +16,7 @@ import {
   IContainerTemplatesService,
 } from '../../domain/interfaces/container-templates-service.interface';
 import { ContainerTemplatesQueryDto } from '../dtos/container-templates.dto';
+import { API } from 'ssm-shared-lib';
 
 /**
  * Controller for container templates
@@ -54,10 +55,10 @@ export class ContainerTemplatesController {
    * @returns Execution ID
    */
   @Post('deploy')
-  async deploy(@Body() template: any, @User() user) {
+  async deploy(@Body() body: { template: API.Template & API.Targets }, @User() user) {
     try {
-      const execId = await this.containerTemplatesService.deployTemplate(template, user);
-      return execId;
+      const execId = await this.containerTemplatesService.deployTemplate(body.template, user);
+      return { execId };
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to deploy template';
       throw new HttpException(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -19,13 +19,13 @@ import {
   Dropdown,
   Form,
   MenuProps,
-  message,
   Tag,
   Tooltip,
   Typography,
 } from 'antd';
 import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';
+import message from '@/components/Message/DynamicMessage';
 
 export type PlaybookSelectionModalProps = {
   isModalOpen: boolean;

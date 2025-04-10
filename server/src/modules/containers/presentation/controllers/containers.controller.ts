@@ -118,4 +118,9 @@ export class ContainersController {
       }
     }
   }
+
+  @Post('refresh-all')
+  async refreshAllContainers() {
+    return this.containerService.refreshAllContainers();
+  }
 }

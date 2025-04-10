@@ -92,8 +92,7 @@
     "ssm-shared-lib": "file:../shared-lib/",
     "yaml": "^2.7.1"
   },
-  "overrides": {
-    "minimatch": "^9.0.3",
+  "overrides": { 
     "glob": "^10.3.10"
   },
   "devDependencies": {

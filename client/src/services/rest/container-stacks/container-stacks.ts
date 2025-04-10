@@ -1,5 +1,5 @@
-import { request } from "@umijs/max";
-import { API } from "ssm-shared-lib";
+import { request } from '@umijs/max';
+import { API } from 'ssm-shared-lib';
 
 const API_PATH = '/api/container-stacks';
 
@@ -15,25 +15,23 @@ export async function postContainerCustomStack(
   params?: any,
   options?: Record<string, any>,
 ): Promise<API.Response<API.ContainerCustomStack>> {
-  return request<API.Response<API.ContainerCustomStack>>(
-    `${API_PATH}/${name}`,
-    {
-      method: 'POST',
-      data: {
-        json,
-        yaml,
-        rawStackValue,
-        lockJson,
-        icon,
-        iconColor,
-        iconBackgroundColor,
-      },
-      params: {
-        ...params,
-      },
-      ...(options || {}),
+  return request<API.Response<API.ContainerCustomStack>>(`${API_PATH}`, {
+    method: 'POST',
+    data: {
+      name,
+      json,
+      yaml,
+      rawStackValue,
+      lockJson,
+      icon,
+      iconColor,
+      iconBackgroundColor,
     },
-  );
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
 }
 
 export async function patchContainerCustomStack(
@@ -91,16 +89,13 @@ export async function getCustomStacks(
   params?: any,
   options?: Record<string, any>,
 ): Promise<API.Response<API.ContainerCustomStack[]>> {
-  return request<API.Response<API.ContainerCustomStack[]>>(
-    `${API_PATH}`,
-    {
-      method: 'GET',
-      params: {
-        ...params,
-      },
-      ...(options || {}),
+  return request<API.Response<API.ContainerCustomStack[]>>(`${API_PATH}`, {
+    method: 'GET',
+    params: {
+      ...params,
     },
-  );
+    ...(options || {}),
+  });
 }
 
 export async function deleteContainerCustomStack(
@@ -145,15 +140,12 @@ export async function postDeployContainerCustomStack(
   params?: any,
   options?: Record<string, any>,
 ): Promise<API.Response<API.ExecId>> {
-  return request<API.Response<API.ExecId>>(
-    `${API_PATH}/deploy/${uuid}`,
-    {
-      method: 'POST',
-      data: { target },
-      params: {
-        ...params,
-      },
-      ...(options || {}),
+  return request<API.Response<API.ExecId>>(`${API_PATH}/deploy/${uuid}`, {
+    method: 'POST',
+    data: { target },
+    params: {
+      ...params,
     },
-  );
+    ...(options || {}),
+  });
 }

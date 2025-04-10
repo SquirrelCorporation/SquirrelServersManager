@@ -15,21 +15,11 @@ import SFTPDropdownMenu, {
 } from '@/components/DeviceComponents/SFTPDrawer/SFTPDropdownMenu';
 import { Restart } from '@/components/Icons/CustomIcons';
 import { sftpSocket as socket } from '@/socket';
-import {
-  Button,
-  Col,
-  Drawer,
-  message,
-  Popconfirm,
-  Row,
-  Space,
-  Spin,
-  Tree,
-} from 'antd';
+import { Button, Col, Drawer, Popconfirm, Row, Space, Spin, Tree } from 'antd';
 import React, { useEffect, useImperativeHandle, useState } from 'react';
 import { API, SsmEvents } from 'ssm-shared-lib';
 import { updateNodeKeyAndTitle, updateNodeMode, updateTreeData } from './utils';
-
+import message from '@/components/Message/DynamicMessage';
 export interface SFTPDrawerHandles {
   showDrawer: () => void;
 }
@@ -195,7 +185,6 @@ const SFTPDrawer = React.forwardRef<SFTPDrawerHandles, SFTPDrawerProps>(
       socket.on('connect', () => {
         console.log('SFTP socket connected successfully!');
         console.log('Socket ID:', socket.id);
-        console.log('Socket namespace:', socket.nsp);
       });
 
       socket.on('connect_error', (error) => {
@@ -306,16 +295,18 @@ const SFTPDrawer = React.forwardRef<SFTPDrawerHandles, SFTPDrawerProps>(
                   isDir: !node?.isLeaf,
                 });
               if (response.success) {
-                message.success(
-                  !node?.isLeaf ? 'Directory deleted' : 'File deleted',
-                );
+                message.success({
+                  content: !node?.isLeaf ? 'Directory deleted' : 'File deleted',
+                  duration: 6,
+                });
                 if (node?.key) {
                   onSuccessDelete(node.key);
                 }
               } else {
-                message.error(
-                  `Failed to delete: ${response.message || 'Unknown error'}`,
-                );
+                message.error({
+                  content: `Failed to delete: ${response.message || 'Unknown error'}`,
+                  duration: 6,
+                });
               }
             },
           });

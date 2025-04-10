@@ -19,6 +19,7 @@ import { API } from 'ssm-shared-lib';
 import { IPlaybooksRegisterService } from '../../domain/services/playbooks-register-service.interface';
 import { PlaybooksRegisterEngineService } from './engine/playbooks-register-engine.service';
 import { TreeNodeService } from './tree-node.service';
+import { PLAYBOOKS_REGISTER_ENGINE_SERVICE } from '@modules/playbooks';
 
 /**
  * Service for managing playbooks repositories
@@ -32,6 +33,7 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService {
     private readonly playbooksRegisterRepository: IPlaybooksRegisterRepository,
     @Inject(PLAYBOOK_REPOSITORY)
     private readonly playbookRepository: IPlaybookRepository,
+    @Inject(PLAYBOOKS_REGISTER_ENGINE_SERVICE)
     private readonly playbooksRegisterEngineService: PlaybooksRegisterEngineService,
     private readonly fileSystemService: FileSystemService,
     private readonly playbookFileService: PlaybookFileService,

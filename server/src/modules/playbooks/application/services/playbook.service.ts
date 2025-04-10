@@ -5,7 +5,7 @@ import { IPlaybook } from '@modules/playbooks/domain/entities/playbook.entity';
 import { IShellWrapperService, SHELL_WRAPPER_SERVICE } from '@modules/shell';
 import { IUser } from '@modules/users/domain/entities/user.entity';
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Playbooks } from 'src/types/typings';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 import {
@@ -18,6 +18,7 @@ import {
  */
 @Injectable()
 export class PlaybookService implements IPlaybooksService {
+  private readonly logger = new Logger(PlaybookService.name);
   constructor(
     @Inject(PLAYBOOK_REPOSITORY)
     private readonly playbookRepository: IPlaybookRepository,
@@ -68,6 +69,12 @@ export class PlaybookService implements IPlaybooksService {
     extraVarsForcedValues?: API.ExtraVars,
     mode: SsmAnsible.ExecutionMode = SsmAnsible.ExecutionMode.APPLY,
   ) {
+    this.logger.log(`Executing playbook: ${playbook.name}`);
+    this.logger.debug(`Playbook: ${JSON.stringify(playbook)}`);
+    this.logger.debug(`User: ${JSON.stringify(user)}`);
+    this.logger.debug(`Target: ${JSON.stringify(target)}`);
+    this.logger.debug(`ExtraVarsForcedValues: ${JSON.stringify(extraVarsForcedValues)}`);
+    this.logger.debug(`Mode: ${JSON.stringify(mode)}`);
     const substitutedExtraVars: API.ExtraVars | undefined = await this.completeExtraVar(
       playbook,
       target,

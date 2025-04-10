@@ -8,6 +8,7 @@ import {
 } from '../../../domain/entities/container-custom-stack.entity';
 import { IContainerCustomStackRepositoryRepository } from '../../../domain/repositories/container-custom-stack-repository-repository.interface';
 import { IContainerCustomStackRepository } from '../../../domain/repositories/container-custom-stack-repository.interface';
+import { VAULT_CRYPTO_SERVICE } from '@modules/ansible-vaults';
 
 // Mock ContainerCustomStacksRepositoryEngineService before importing actual service
 vi.mock('../../../application/services/container-stacks-repository-engine-service', () => {
@@ -20,7 +21,7 @@ vi.mock('../../../application/services/container-stacks-repository-engine-servic
   }));
 
   return {
-    ContainerCustomStacksRepositoryEngineService
+    ContainerCustomStacksRepositoryEngineService,
   };
 });
 
@@ -28,7 +29,8 @@ vi.mock('../../../application/services/container-stacks-repository-engine-servic
 vi.mock('@modules/playbooks', () => {
   return {
     IPlaybooksService: class {},
-    PLAYBOOKS_SERVICE: 'PlaybooksService'
+    PLAYBOOKS_SERVICE: 'PlaybooksService',
+    VAULT_CRYPTO_SERVICE: 'VaultCryptoService',
   };
 });
 
@@ -37,7 +39,8 @@ vi.mock('@modules/shell', () => {
     IFileSystemService: class {},
     IDockerComposeService: class {},
     FILE_SYSTEM_SERVICE: 'FileSystemService',
-    DOCKER_COMPOSE_SERVICE: 'DockerComposeService'
+    DOCKER_COMPOSE_SERVICE: 'DockerComposeService',
+    VAULT_CRYPTO_SERVICE: 'VaultCryptoService',
   };
 });
 
@@ -51,23 +54,25 @@ vi.mock('@modules/ansible-vaults', () => {
       static forRoot() {
         return {
           module: class {},
-          providers: []
+          providers: [],
         };
       }
-    }
+    },
+    VAULT_CRYPTO_SERVICE: 'VAULT_CRYPTO_SERVICE_TOKEN_MOCK',
+    DEFAULT_VAULT_ID: 'DEFAULT_VAULT_ID_MOCK',
   };
 });
 
 vi.mock('@infrastructure/common/docker/docker-compose-json-transformer.util', () => {
   return {
-    transformToDockerCompose: vi.fn().mockImplementation((json) => 'transformed yaml')
+    transformToDockerCompose: vi.fn().mockImplementation((json) => 'transformed yaml'),
   };
 });
 
 // Mock additional node modules
 vi.mock('uuid', () => {
   return {
-    v4: vi.fn().mockReturnValue('mocked-uuid-v4')
+    v4: vi.fn().mockReturnValue('mocked-uuid-v4'),
   };
 });
 
@@ -79,6 +84,7 @@ describe('ContainerStacksService', () => {
   let mockFileSystemService: any;
   let mockDockerComposeService: any;
   let mockPlaybooksService: any;
+  let mockVaultCryptoService: any;
 
   const mockStack: ContainerCustomStack = {
     uuid: '123e4567-e89b-12d3-a456-426614174000',
@@ -88,6 +94,7 @@ describe('ContainerStacksService', () => {
   const mockRepo: IContainerCustomStackRepositoryEntity = {
     uuid: '123e4567-e89b-12d3-a456-426614174001',
     name: 'Test Repository',
+    accessToken: 'dummy-token',
   };
 
   beforeEach(() => {
@@ -129,9 +136,23 @@ describe('ContainerStacksService', () => {
     mockPlaybooksService = {
       getPlaybookByQuickReference: vi.fn().mockResolvedValue({
         uuid: 'playbook-uuid',
-        name: 'deploy'
+        name: 'deploy',
       }),
       executePlaybook: vi.fn().mockResolvedValue('exec-id'),
+    };
+
+    mockVaultCryptoService = {
+      encrypt: vi.fn().mockImplementation(async (value) => `encrypted_${value}`),
+      decrypt: vi
+        .fn()
+        .mockImplementation(async (value) => (value ? value.replace('encrypted_', '') : '')),
+      checkVaultPassword: vi.fn().mockResolvedValue(true),
+      getVaultPassword: vi.fn().mockResolvedValue('password'),
+      setVaultPassword: vi.fn().mockResolvedValue(undefined),
+      listVaults: vi.fn().mockResolvedValue(['default']),
+      vaultExists: vi.fn().mockResolvedValue(true),
+      deleteVault: vi.fn().mockResolvedValue(undefined),
+      updateVaultPassword: vi.fn().mockResolvedValue(undefined),
     };
 
     service = new ContainerStacksService(
@@ -140,7 +161,8 @@ describe('ContainerStacksService', () => {
       mockContainerCustomStacksRepositoryEngine,
       mockFileSystemService,
       mockDockerComposeService,
-      mockPlaybooksService
+      mockPlaybooksService,
+      mockVaultCryptoService,
     );
 
     // Mock initializeRepositories to prevent it from being called in constructor
@@ -200,7 +222,7 @@ describe('ContainerStacksService', () => {
     });
 
     it('should update a repository', async () => {
-      const updateData = { name: 'Updated Repository' };
+      const updateData = { name: 'Updated Repository', accessToken: 'new-dummy-token' };
       const result = await service.updateRepository('123', updateData);
       expect(result).toEqual(mockRepo);
       expect(mockRepositoryRepository.update).toHaveBeenCalledWith('123', updateData);

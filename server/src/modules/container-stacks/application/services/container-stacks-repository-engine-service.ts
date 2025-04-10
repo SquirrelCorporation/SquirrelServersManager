@@ -107,11 +107,16 @@ export class ContainerCustomStacksRepositoryEngineService
     repository: IContainerCustomStackRepositoryEntity,
   ): Promise<ContainerRepositoryComponentService> {
     this.logger.log(`Registering Container Repository: ${repository.name}/${repository.uuid}`);
+    try {
+      const component = await this.createComponent(repository);
+      this.state.stackRepository[repository.uuid] = component;
 
-    const component = await this.createComponent(repository);
-    this.state.stackRepository[repository.uuid] = component;
-
-    return component;
+      return component;
+    } catch (error) {
+      this.logger.error(`Error registering repository: ${repository.name}/${repository.uuid}`);
+      this.logger.error(error instanceof Error ? error.message : String(error));
+      throw error;
+    }
   }
 
   async registerRepositories(): Promise<void> {
@@ -139,6 +144,42 @@ export class ContainerCustomStacksRepositoryEngineService
     }
 
     await gitRepository.clone();
+  }
+
+  async forcePull(uuid: string): Promise<void> {
+    const gitRepository = this.state.stackRepository[uuid];
+    if (!gitRepository) {
+      throw new Error("Repository not registered / doesn't exist");
+    }
+
+    await gitRepository.forcePull();
+  }
+
+  async forceRegister(uuid: string): Promise<void> {
+    const gitRepository = this.state.stackRepository[uuid];
+    if (!gitRepository) {
+      throw new Error("Repository not registered / doesn't exist");
+    }
+
+    await gitRepository.init();
+  }
+
+  async commitAndSync(uuid: string): Promise<void> {
+    const gitRepository = this.state.stackRepository[uuid];
+    if (!gitRepository) {
+      throw new Error("Repository not registered / doesn't exist");
+    }
+
+    await gitRepository.commitAndSync();
+  }
+
+  async syncToDatabase(uuid: string): Promise<void> {
+    const gitRepository = this.state.stackRepository[uuid];
+    if (!gitRepository) {
+      throw new Error("Repository not registered / doesn't exist");
+    }
+
+    await gitRepository.syncToDatabase();
   }
 
   async syncAllRegistered(): Promise<void> {

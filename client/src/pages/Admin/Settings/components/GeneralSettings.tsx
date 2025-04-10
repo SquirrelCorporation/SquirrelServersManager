@@ -24,7 +24,6 @@ import {
   Col,
   Flex,
   InputNumber,
-  message,
   Popconfirm,
   Popover,
   Row,
@@ -33,7 +32,7 @@ import {
 } from 'antd';
 import React, { useState } from 'react';
 import { SettingsKeys } from 'ssm-shared-lib';
-
+import message from '@/components/Message/DynamicMessage';
 const GeneralSettings: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};

@@ -7,6 +7,7 @@ import { StatsType } from 'ssm-shared-lib';
 import CustomRingProgress from './CustomRingProgress';
 import type { RingProgressType } from './CustomRingProgress';
 import { LaptopOutlined, HddOutlined } from '@ant-design/icons';
+import { WhhCpu, WhhRam } from '@/components/Icons/CustomIcons';
 
 export type TinyRingProps = {
   deviceUuid: string;
@@ -60,12 +61,12 @@ const TinyRingProgressDeviceGraph: React.FC<TinyRingProps> = ({
       case StatsType.DeviceStatsType.CPU:
         return {
           ringType: 'cpu' as RingProgressType,
-          icon: <LaptopOutlined />,
+          icon: <WhhCpu />,
         };
       case StatsType.DeviceStatsType.MEM_USED:
         return {
           ringType: 'memory' as RingProgressType,
-          icon: <HddOutlined />,
+          icon: <WhhRam />,
         };
       case StatsType.DeviceStatsType.DISK_USED:
         return { ringType: 'disk' as RingProgressType, icon: <HddOutlined /> };
@@ -88,11 +89,7 @@ const TinyRingProgressDeviceGraph: React.FC<TinyRingProps> = ({
         : `${type === StatsType.DeviceStatsType.CPU ? 'CPU' : type === StatsType.DeviceStatsType.MEM_USED ? 'Memory' : 'Disk'} (Updated at ${date})`;
 
     const errorIcon =
-      type === StatsType.DeviceStatsType.CPU ? (
-        <LaptopOutlined />
-      ) : (
-        <HddOutlined />
-      );
+      type === StatsType.DeviceStatsType.CPU ? <WhhCpu /> : <WhhRam />;
 
     if (value === null || isNaN(value)) {
       return (

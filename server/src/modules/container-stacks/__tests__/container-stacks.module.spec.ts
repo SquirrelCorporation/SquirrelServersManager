@@ -10,6 +10,7 @@ import { CONTAINER_CUSTOM_STACK_REPOSITORY_REPOSITORY } from '../../domain/repos
 import { CONTAINER_CUSTOM_STACK_REPOSITORY as CONTAINER_CUSTOM_STACK_REPOSITORY_TOKEN } from '../../domain/repositories/container-custom-stack-repository.interface';
 import { ContainerStacksModule } from '../container-stacks.module';
 import { CONTAINER_CUSTOM_STACK_REPOSITORY } from '../infrastructure/schemas/container-custom-stack-repository.schema';
+import { VAULT_CRYPTO_SERVICE as REAL_VAULT_TOKEN } from '@modules/ansible-vaults';
 
 // Import constants from mocks instead of directly from modules
 import { CONTAINER_CUSTOM_STACK } from '../infrastructure/schemas/container-custom-stack.schema';
@@ -29,7 +30,7 @@ vi.mock('@modules/auth/strategies/jwt-auth.guard', () => ({
   },
 }));
 
-vi.mock('@modules/ansible-vault', () => ({
+vi.mock('@modules/ansible-vaults', () => ({
   AnsibleVaultModule: class {
     static forRoot() {
       return {
@@ -38,6 +39,7 @@ vi.mock('@modules/ansible-vault', () => ({
       };
     }
   },
+  VAULT_CRYPTO_SERVICE: 'VAULT_CRYPTO_SERVICE_TOKEN_MOCK',
 }));
 
 vi.mock('../shell/shell.module', () => ({

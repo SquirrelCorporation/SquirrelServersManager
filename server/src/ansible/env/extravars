@@ -1,0 +1,1 @@
+{"project": "actual-server", "definition": "services:\n  Actual-Server:\n    container_name: actual-server\n    image: actualbudget/actual-server:latest\n    restart: unless-stopped\n    ports:\n      - 5006:5006/tcp\n    volumes:\n      - /home/docker/actual:/data\n"}

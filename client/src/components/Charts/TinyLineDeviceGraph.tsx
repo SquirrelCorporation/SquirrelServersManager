@@ -38,7 +38,10 @@ const TinyLineDeviceGraph: React.FC<TinyLineProps> = ({
       const list = await getDeviceStats(deviceUuid, type, { from });
       setData(formatData(list));
     } catch (error: any) {
-      message.error(error);
+      message.error({
+        content: error?.message || 'Unknown error',
+        duration: 6,
+      });
     }
   }, [deviceUuid, type, from, formatData]);
 

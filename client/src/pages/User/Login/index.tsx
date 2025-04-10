@@ -43,7 +43,7 @@ const Login: React.FC = () => {
       const res = await user({ ...values });
       if (res.success) {
         const defaultLoginSuccessMessage = 'Success！';
-        message.success(defaultLoginSuccessMessage);
+        message.success({ content: defaultLoginSuccessMessage, duration: 6 });
         await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
@@ -51,7 +51,7 @@ const Login: React.FC = () => {
       }
     } catch (error) {
       const defaultLoginFailureMessage = 'Login failed！';
-      message.error(defaultLoginFailureMessage);
+      message.error({ content: defaultLoginFailureMessage, duration: 6 });
     }
   };
 

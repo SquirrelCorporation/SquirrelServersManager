@@ -292,4 +292,12 @@ export class ContainerService implements IContainerService {
     container.name = customName;
     return await this.containerRepository.update(id, container);
   }
+
+  async refreshAllContainers() {
+    await Promise.all(
+      Object.values(this.watcherEngineService.getStates().watcher).map((watcher) =>
+        watcher.watch(),
+      ),
+    );
+  }
 }

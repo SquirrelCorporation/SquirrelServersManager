@@ -69,7 +69,6 @@ import { PlaybooksRepositoryController } from './presentation/controllers/playbo
     RegisterTreeService,
 
     // Infrastructure services
-    PlaybooksRegisterEngineService,
     {
       provide: PLAYBOOKS_REGISTER_ENGINE_SERVICE,
       useClass: PlaybooksRegisterEngineService,
@@ -105,7 +104,6 @@ import { PlaybooksRepositoryController } from './presentation/controllers/playbo
     TreeNodeService,
 
     // Engine service for external use
-    PlaybooksRegisterEngineService,
     PLAYBOOKS_REGISTER_ENGINE_SERVICE,
     VAULT_CRYPTO_SERVICE,
   ],

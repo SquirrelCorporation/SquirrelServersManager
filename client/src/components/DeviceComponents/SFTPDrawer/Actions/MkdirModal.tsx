@@ -31,7 +31,10 @@ const MkdirModal = React.forwardRef<MkdirModalHandles, MkdirModalProps>(
             path: newDirectory,
           }); // Wait for the response
         if (response.success) {
-          message.success('Directory created successfully!');
+          message.success({
+            content: 'Directory created successfully!',
+            duration: 6,
+          });
           return true; // Indicate success
         } else {
           throw new Error(

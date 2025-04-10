@@ -11,7 +11,10 @@ import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Repositories, SsmGit } from 'ssm-shared-lib';
 import { PlaybooksRegisterComponentFactory } from '../components/component-factory.service';
-
+import { v4 } from 'uuid';
+import { IVaultCryptoService } from '@modules/ansible-vaults/domain/interfaces/vault-crypto-service.interface';
+import { DEFAULT_VAULT_ID } from '@modules/ansible-vaults/application/services/vault-crypto.service';
+import { VAULT_CRYPTO_SERVICE } from '@modules/ansible-vaults';
 /**
  * Service for managing playbooks repository components
  */
@@ -23,6 +26,8 @@ export class PlaybooksRegisterEngineService {
   constructor(
     @Inject(forwardRef(() => PlaybooksRegisterComponentFactory))
     private readonly componentFactory: PlaybooksRegisterComponentFactory,
+    @Inject(VAULT_CRYPTO_SERVICE)
+    private readonly vaultService: IVaultCryptoService,
   ) {}
 
   /**
@@ -41,13 +46,17 @@ export class PlaybooksRegisterEngineService {
       let component: GitPlaybooksRegisterComponent | LocalPlaybooksRegisterComponent;
 
       if (register.type === Repositories.RepositoryType.GIT) {
+        if (!register.accessToken) {
+          throw new Error('Access token is required for Git repositories');
+        }
         const options: GitComponentOptions = {
           uuid: register.uuid,
           name: register.name,
           branch: register.branch || 'main',
           email: register.email || 'squirrel@example.com',
           gitUserName: register.userName || 'Squirrel',
-          accessToken: register.accessToken || '',
+          accessToken:
+            (await this.vaultService.decrypt(register.accessToken, DEFAULT_VAULT_ID)) || '',
           remoteUrl: register.remoteUrl || '',
           gitService: (register.gitService as SsmGit.Services) || SsmGit.Services.Github,
           ignoreSSLErrors: register.ignoreSSLErrors || false,

@@ -64,6 +64,7 @@ export class FileSystemService implements IFileSystemService {
    * @param path The path where to write the content
    */
   writeFile(content: string, path: string): void {
+    this.logger.log(`Writing file: ${path}`);
     this.executeCommand(this.shellWrapper.to, content, path);
   }
 
@@ -103,7 +104,7 @@ export class FileSystemService implements IFileSystemService {
    * @returns The result of the command
    */
   // eslint-disable-next-line prettier/prettier
-  private executeCommand<T extends(...args: any[]) => any>(
+  private executeCommand<T extends (...args: any[]) => any>(
     shellCmd: T,
     ...args: Parameters<T>
   ): ReturnType<T> {

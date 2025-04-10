@@ -3,14 +3,14 @@ import FileMatchesForm from '@/pages/Admin/Settings/components/subcomponents/for
 import GitForm from '@/pages/Admin/Settings/components/subcomponents/forms/GitForm';
 import {
   commitAndSyncContainerStacksGitRepository,
+  createContainerStacksGitRepository,
   deleteContainerStacksGitRepository,
   forceCloneContainerStacksGitRepository,
   forcePullContainerStacksGitRepository,
   forceRegisterContainerStacksGitRepository,
-  postContainerStacksGitRepository,
-  putContainerStacksGitRepository,
+  updateContainerStacksGitRepository,
   syncToDatabaseContainerStacksGitRepository,
-} from '@/services/rest/container-stacks/container-stacks.repositories';
+} from '@/services/rest/container-stacks/repositories';
 import { DeleteOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { ModalForm, ProForm } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
@@ -196,14 +196,14 @@ const ContainerStacksGitRepositoryModal: React.FC<
       }}
       onFinish={async (values) => {
         if (selectedRecord) {
-          await postContainerStacksGitRepository(
+          await updateContainerStacksGitRepository(
             selectedRecord.uuid as string,
             values,
           );
           setModalOpened(false);
           await asyncFetch();
         } else {
-          await putContainerStacksGitRepository(values);
+          await createContainerStacksGitRepository(values);
           message.loading({
             content: 'Repository cloning & processing in process...',
             duration: 6,

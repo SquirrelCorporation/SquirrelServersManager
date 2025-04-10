@@ -170,4 +170,6 @@ export abstract class AbstractWatcherComponent {
    * Get container logs
    */
   abstract getContainerLogs(container: any, options?: any): Promise<any>;
+
+  abstract watch(): Promise<any>;
 }

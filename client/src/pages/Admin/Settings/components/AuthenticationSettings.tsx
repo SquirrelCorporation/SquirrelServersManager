@@ -11,13 +11,13 @@ import {
   Flex,
   Input,
   InputRef,
-  message,
   Popconfirm,
   Popover,
   Row,
   Typography,
 } from 'antd';
 import React, { useState } from 'react';
+import message from '@/components/Message/DynamicMessage';
 
 const AuthenticationSettings: React.FC = () => {
   const { initialState } = useModel('@@initialState');

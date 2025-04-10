@@ -120,4 +120,9 @@ export interface IContainerService {
    * Update container name
    */
   updateContainerName(id: string, customName: string): Promise<IContainerEntity>;
+
+  /**
+   * Refresh all containers
+   */
+  refreshAllContainers(): Promise<void>;
 }

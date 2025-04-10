@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { SsmGit } from 'ssm-shared-lib';
+import { v4 } from 'uuid';
 
 export const CONTAINER_CUSTOM_STACK_REPOSITORY = 'ContainerCustomStackRepository';
 
@@ -10,7 +11,7 @@ export const CONTAINER_CUSTOM_STACK_REPOSITORY = 'ContainerCustomStackRepository
   versionKey: false,
 })
 export class ContainerCustomStackRepositoryDocument extends Document {
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true, unique: true, default: v4 })
   uuid!: string;
 
   @Prop({ required: true })

@@ -28,6 +28,7 @@ The SSM application follows a modular architecture based on NestJS principles:
 4. **Repository Pattern**: Data access is abstracted through repositories.
 5. **Testing**: Each module includes comprehensive unit and integration tests.
 6. **Clean Architecture**: Many modules now follow clean architecture principles with proper separation of concerns.
+7. **Consistent Dependency Injection for Singletons**: To ensure services intended as singletons (like engine services managing state) are instantiated only once across the module or application, **always provide and inject them consistently**. Prefer using injection tokens (`@Inject(TOKEN)`) over direct class injection (`service: ClassName`). Providing a service both by class and by token within the same module, and then injecting it differently in various consumers (e.g., injecting by token in controllers and by class in services), can lead to multiple instances being created by the DI container, causing unexpected behavior and state inconsistencies. This was observed with `PlaybooksRegisterEngineService` where inconsistent provision and injection resulted in multiple instances.
 
 ### Module Structure
 

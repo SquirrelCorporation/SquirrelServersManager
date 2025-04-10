@@ -11,6 +11,7 @@ import { InternalServerException } from '../exceptions/app-exceptions';
 /**
  * Interceptor that ensures all errors are transformed to proper HTTP exceptions
  * Prevents unexpected errors from bypassing the exception filter
+ * Truncates long messages for unexpected errors.
  */
 @Injectable()
 export class ErrorTransformerInterceptor implements NestInterceptor {
@@ -22,11 +23,16 @@ export class ErrorTransformerInterceptor implements NestInterceptor {
           return throwError(() => error);
         }
 
-        // For unexpected errors, wrap in InternalServerException
+        // For unexpected errors, wrap in InternalServerException after truncating the message if needed
+        let message = error?.message || 'Internal server error';
+        if (message.length > 150) {
+          message = message.slice(0, 150) + '...';
+        }
+
         return throwError(
           () =>
-            new InternalServerException(error.message || 'Internal server error', {
-              stack: error.stack,
+            new InternalServerException(message, {
+              stack: error?.stack, // Preserve original stack if available
             }),
         );
       }),

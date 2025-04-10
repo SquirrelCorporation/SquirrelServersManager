@@ -26,6 +26,7 @@ export class LocalPlaybooksRepositoryController {
   ) {}
 
   private getLocalComponent(uuid: string): LocalPlaybooksRegisterComponent {
+    this.logger.log(`Getting local component for ${uuid}`);
     const component = this.playbooksRegisterEngineService.getRepository(uuid);
     if (!component || !(component instanceof LocalPlaybooksRegisterComponent)) {
       throw new EntityNotFoundException('LocalRepository', uuid);
