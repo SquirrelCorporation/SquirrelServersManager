@@ -52,7 +52,7 @@ export class PluginSystem {
 
   public static getInstance(pluginsDir?: string): PluginSystem {
     if (!PluginSystem.instance) {
-      const basePath = '/data/plugins';
+      const basePath = '/data';
       // Following the project structure - plugins at project root
       const resolvedPluginsDir = pluginsDir || path.join(basePath, 'plugins');
       PluginSystem.instance = new PluginSystem(resolvedPluginsDir);

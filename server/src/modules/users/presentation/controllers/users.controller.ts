@@ -1,8 +1,10 @@
 import { UnauthorizedException } from '@infrastructure/exceptions/app-exceptions';
 import { Body, Controller, Get, HttpException, HttpStatus, Post, Put, Res } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { SESSION_DURATION } from 'src/config';
+import Events from 'src/core/events/events';
 import { Public } from 'src/decorators/public.decorator';
 import { User } from '../../../../decorators/user.decorator';
 import {
@@ -22,6 +24,7 @@ export class UsersController {
     private readonly usersService: UsersService,
     private readonly userMapper: UserMapper,
     private readonly jwtService: JwtService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   @Public()
@@ -71,7 +74,9 @@ export class UsersController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
     });
-
+    this.eventEmitter.emit(Events.TELEMETRY_EVENT, {
+      eventName: 'payload',
+    });
     return {
       currentAuthority: user.role,
     };
