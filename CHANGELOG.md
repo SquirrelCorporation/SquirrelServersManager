@@ -17,6 +17,8 @@
 **Merged pull requests:**
 
 - \[CHORE\] Refacto telemetry module for event tracking and monitoring [\#849](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/849) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump vuetify from 3.7.13 to 3.8.0 in /site [\#845](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/845) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @vue-flow/minimap from 1.5.2 to 1.5.3 in /site [\#838](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/838) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Chore refacto nestjs [\#817](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/817) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Ensure async usage in test assertions and update dependencies [\#791](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/791) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Chore refacto frontend props [\#789](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/789) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
