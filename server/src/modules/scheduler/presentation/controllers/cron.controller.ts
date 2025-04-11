@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronService } from '../../application/services/cron.service';
 
-@Controller('admin/crons')
+@Controller('scheduler')
 export class CronController {
   constructor(
     private readonly cronService: CronService,

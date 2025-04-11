@@ -11,12 +11,12 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { User } from 'src/decorators/user.decorator';
+import { API } from 'ssm-shared-lib';
 import {
   CONTAINER_TEMPLATES_SERVICE,
   IContainerTemplatesService,
 } from '../../domain/interfaces/container-templates-service.interface';
 import { ContainerTemplatesQueryDto } from '../dtos/container-templates.dto';
-import { API } from 'ssm-shared-lib';
 
 /**
  * Controller for container templates

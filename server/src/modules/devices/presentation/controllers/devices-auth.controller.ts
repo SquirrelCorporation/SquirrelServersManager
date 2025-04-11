@@ -14,7 +14,11 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
-import { ResourceAction, RESOURCES, ACTIONS } from '../../../../infrastructure/security/roles/resource-action.decorator';
+import {
+  ResourceAction,
+  RESOURCES,
+  ACTIONS,
+} from '../../../../infrastructure/security/roles/resource-action.decorator';
 import { DEVICES_SERVICE } from '../../domain/services/devices-service.interface';
 import { IDevicesService } from '../../domain/services/devices-service.interface';
 import { DEVICE_AUTH_SERVICE } from '../../domain/services/device-auth-service.interface';
@@ -23,7 +27,7 @@ import { DOCKER_DEVICE_SERVICE } from '../../domain/services/docker-device-servi
 import { IDockerDeviceService } from '../../domain/services/docker-device-service.interface';
 import { PROXMOX_DEVICE_SERVICE } from '../../domain/services/proxmox-device-service.interface';
 import { IProxmoxDeviceService } from '../../domain/services/proxmox-device-service.interface';
-import { CreateDeviceAuthDto, UpdateDeviceAuthDto } from '../dtos/device-auth.dto';
+import { UpdateDeviceAuthDto } from '../dtos/device-auth.dto';
 import { UpdateDockerAuthDto } from '../dtos/update-docker-auth.dto';
 import { UpdateProxmoxAuthDto } from '../dtos/update-proxmox-auth.dto';
 import {
@@ -83,39 +87,6 @@ export class DevicesAuthController {
       throw new HttpException(
         error instanceof Error ? error.message : 'An unknown error occurred',
         HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  @Post(':uuid')
-  @ResourceAction(RESOURCES.DEVICE, ACTIONS.CREATE)
-  async createDeviceAuth(
-    @Param('uuid') uuid: string,
-    @Body() createDeviceAuthDto: CreateDeviceAuthDto,
-  ) {
-    try {
-      const device = await this.devicesService.findOneByUuid(uuid);
-      if (!device) {
-        throw new HttpException(`Device with UUID ${uuid} not found`, HttpStatus.NOT_FOUND);
-      }
-
-      const deviceAuth = {
-        ...createDeviceAuthDto,
-        authType: createDeviceAuthDto.authType,
-        becomeMethod: createDeviceAuthDto.becomeMethod,
-        device,
-      };
-
-      const result = await this.deviceAuthService.updateOrCreateDeviceAuth(deviceAuth);
-
-      return { type: result.authType };
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-        error instanceof Error ? error.message : 'Error creating device auth',
-        HttpStatus.BAD_REQUEST,
       );
     }
   }

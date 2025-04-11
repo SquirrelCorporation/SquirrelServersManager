@@ -1,5 +1,5 @@
 import { FluentMdl2Health } from '@/components/Icons/CustomIcons';
-import { getDashboardSystemPerformance } from '@/services/rest/stastistics';
+import { getDashboardSystemPerformance } from '@/services/rest/statistics/stastistics';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { Avatar, Badge, Popover, Spin } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';

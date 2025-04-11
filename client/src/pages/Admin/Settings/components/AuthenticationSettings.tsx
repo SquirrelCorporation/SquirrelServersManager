@@ -1,6 +1,6 @@
 import { LinkAlt, MynauiApi } from '@/components/Icons/CustomIcons';
 import Title, { TitleColors } from '@/components/Template/Title';
-import { postMasterNodeUrlValue } from '@/services/rest/settings';
+import { postMasterNodeUrlValue } from '@/services/rest/settings/settings';
 import { postResetApiKey } from '@/services/rest/users/users';
 import { useModel } from '@@/exports';
 import { InfoCircleFilled, WarningOutlined } from '@ant-design/icons';

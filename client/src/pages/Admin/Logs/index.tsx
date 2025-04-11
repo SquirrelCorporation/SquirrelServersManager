@@ -1,7 +1,7 @@
 import Title, { TitleColors } from '@/components/Template/Title';
 import ServerLogsColumns from '@/pages/Admin/Logs/ServerLogsColums';
 import TaskLogsColumns from '@/pages/Admin/Logs/TaskLogsColumns';
-import { getServerLogs } from '@/services/rest/logs';
+import { getServerLogs } from '@/services/rest/logs/logs';
 import { getTasksLogs } from '@/services/rest/ansible/ansible.logs';
 import { UnorderedListOutlined } from '@ant-design/icons';
 import {

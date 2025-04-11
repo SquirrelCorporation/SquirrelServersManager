@@ -17,7 +17,6 @@ export class CreateCustomRegistryDto {
   @IsNotEmpty()
   auth: any;
 
-  @IsObject()
   @IsNotEmpty()
   authScheme: any;
 }
@@ -37,7 +36,6 @@ export class GetContainerRegistryDto {
   auth?: any;
 
   @IsOptional()
-  @IsObject()
   authScheme?: any;
 
   @IsString()

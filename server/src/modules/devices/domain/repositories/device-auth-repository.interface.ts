@@ -7,6 +7,7 @@ export const DEVICE_AUTH_REPOSITORY = 'DEVICE_AUTH_REPOSITORY';
  * Device Auth repository interface in the domain layer
  */
 export interface IDeviceAuthRepository {
+  create(deviceAuth: Partial<IDeviceAuth>): Promise<IDeviceAuth>;
   updateOrCreateIfNotExist(deviceAuth: IDeviceAuth): Promise<IDeviceAuth>;
   update(deviceAuth: IDeviceAuth): Promise<IDeviceAuth | undefined>;
   findOneByDevice(device: IDevice): Promise<IDeviceAuth | null>;

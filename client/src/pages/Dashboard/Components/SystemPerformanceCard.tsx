@@ -2,7 +2,7 @@ import styles from '@/pages/Dashboard/Analysis.less';
 import ChartCard from '@/pages/Dashboard/ChartComponents/ChartCard';
 import Field from '@/pages/Dashboard/ChartComponents/Field';
 import Trend from '@/pages/Dashboard/ChartComponents/Trend';
-import { getDashboardSystemPerformance } from '@/services/rest/stastistics';
+import { getDashboardSystemPerformance } from '@/services/rest/statistics/stastistics';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { Tooltip, Typography } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';

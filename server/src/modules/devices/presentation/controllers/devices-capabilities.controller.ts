@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Param, Patch } from '@nestjs/common';
 import { DevicesService } from '../../application/services/devices.service';
 import { UpdateDeviceCapabilitiesDto } from '../dtos/device-capabilities.dto';
 import { DeviceMapper } from '../mappers/device.mapper';
@@ -10,7 +10,7 @@ export class DevicesCapabilitiesController {
     private readonly deviceMapper: DeviceMapper,
   ) {}
 
-  @Post(':uuid/capabilities')
+  @Patch(':uuid/capabilities')
   async updateDeviceCapabilities(
     @Param('uuid') uuid: string,
     @Body() updateDeviceCapabilitiesDto: { capabilities: UpdateDeviceCapabilitiesDto },

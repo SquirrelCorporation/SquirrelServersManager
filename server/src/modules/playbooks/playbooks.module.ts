@@ -1,11 +1,14 @@
 import { AnsibleModule } from '@modules/ansible';
-import { AnsibleVaultsModule, VAULT_CRYPTO_SERVICE } from '@modules/ansible-vaults';
+import {
+  AnsibleVaultsModule,
+  VAULT_CRYPTO_SERVICE,
+  VaultCryptoService,
+} from '@modules/ansible-vaults';
 import { DevicesModule } from '@modules/devices';
 import { PLAYBOOKS_REGISTER_ENGINE_SERVICE } from '@modules/playbooks';
 import { ShellModule } from '@modules/shell';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { VaultCryptoService } from '../ansible-vaults/application/services/vault-crypto.service';
 import { PlaybooksRegisterComponentFactory } from './application/services/components/component-factory.service';
 import { DefaultPlaybooksRegisterService } from './application/services/default-playbooks-register.service';
 import { PlaybooksRegisterEngineService } from './application/services/engine/playbooks-register-engine.service';

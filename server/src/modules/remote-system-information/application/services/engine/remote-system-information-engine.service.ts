@@ -1,18 +1,20 @@
 import { InjectQueue } from '@nestjs/bull';
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { Queue } from 'bull';
 import { SsmAgent } from 'ssm-shared-lib';
+import Events from 'src/core/events/events';
 import { IDevice } from '../../../../devices/domain/entities/device.entity';
 import {
   DEVICE_AUTH_SERVICE,
-  IDeviceAuthService
+  IDeviceAuthService,
 } from '../../../../devices/domain/services/device-auth-service.interface';
-import { DEVICES_SERVICE, IDevicesService } from '../../../../devices/domain/services/devices-service.interface';
-import { IComponent } from '../../../doma../../domain/interfaces/component.interface';
 import {
-  IRemoteSystemInformationEngineService
-} from '../../../domain/interfaces/remote-system-information-engine-service.interface';
+  DEVICES_SERVICE,
+  IDevicesService,
+} from '../../../../devices/domain/services/devices-service.interface';
+import { IComponent } from '../../../doma../../domain/interfaces/component.interface';
+import { IRemoteSystemInformationEngineService } from '../../../domain/interfaces/remote-system-information-engine-service.interface';
 import { RemoteSystemInformationConfigurationSchema } from '../../../domain/types/configuration.types';
 import { REMOTE_SYSTEM_INFO_QUEUE } from '../../../infrastructure/queue/constants';
 import { RemoteSystemInformationWatcher } from '../components/watchers/remote-system-information-watcher';
@@ -240,6 +242,23 @@ export class RemoteSystemInformationEngineService implements IRemoteSystemInform
       await this.deregisterWatchers();
     } catch (e: any) {
       throw new Error(`Error when trying to deregister ${e.message}`);
+    }
+  }
+
+  /**
+   * Register a watcher for a device when it is created
+   */
+  @OnEvent(Events.DEVICE_CREATED)
+  async onDeviceCreated(payload: { device: IDevice }): Promise<void> {
+    try {
+      this.logger.log(`Device ${payload.device.uuid} created`);
+      if (payload.device.agentType === SsmAgent.InstallMethods.LESS) {
+        await this.registerWatcher(payload.device);
+      }
+    } catch (error: any) {
+      this.logger.error(
+        `Error when registering watcher for device ${payload.device.uuid}: ${error.message}`,
+      );
     }
   }
 }

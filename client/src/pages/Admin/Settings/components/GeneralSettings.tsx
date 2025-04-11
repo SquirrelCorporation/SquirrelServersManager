@@ -11,7 +11,7 @@ import {
   postDeviceStatsSettings,
   postLogsSetting,
   postResetSettings,
-} from '@/services/rest/settings';
+} from '@/services/rest/settings/settings';
 import { useModel } from '@@/exports';
 import {
   InfoCircleFilled,

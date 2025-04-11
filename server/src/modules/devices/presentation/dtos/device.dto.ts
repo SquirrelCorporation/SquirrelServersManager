@@ -1,7 +1,16 @@
-import { IsBoolean, IsEnum, IsIP, IsNotEmpty, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsIP,
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
-import { SsmStatus } from 'ssm-shared-lib';
-
+import { SsmAgent, SsmAnsible, SsmStatus } from 'ssm-shared-lib';
 // Define all nested DTOs first
 class DockerCapabilityDto {
   @IsBoolean()
@@ -97,60 +106,91 @@ class DeviceConfigurationDto {
   systemInformation?: any; // For simplicity, we're not defining the full structure here
 }
 
+/*
+  authType: string;
+  sshPort: number;
+  sshKey?: string;
+  sshPwd?: string;
+  sshUser?: string;
+  sshKeyPass?: string;
+  sshConnection?: SSHConnection;
+  becomeMethod?: string;
+  becomePass?: string;
+  becomeUser?: string;
+  becomeExe?: string;
+  becomeFlags?: string;
+  strictHostChecking?: boolean;
+  sshCommonArgs?: string;
+  sshExecutable?: string;
+  customDockerSSH?: boolean;
+  dockerCustomAuthType?: SSHType;
+  dockerCustomSshUser?: string;
+  dockerCustomSshPwd?: string;
+  dockerCustomSshKeyPass?: string;
+  dockerCustomSshKey?: string;
+  customDockerForcev6?: boolean;
+  customDockerForcev4?: boolean;
+  customDockerAgentForward?: boolean;
+  customDockerTryKeyboard?: boolean;
+  customDockerSocket?: string;
+*/
 // Now define the main DTOs
 export class CreateDeviceDto {
   @IsString()
-  @IsNotEmpty()
-  uuid!: string;
+  ip!: string;
 
   @IsOptional()
+  @IsEnum(SsmAgent.InstallMethods)
+  installMethod?: SsmAgent.InstallMethods = SsmAgent.InstallMethods.LESS;
+
   @IsBoolean()
-  disabled?: boolean;
-
-  @IsObject()
-  @ValidateNested()
-  @Type(() => DeviceCapabilitiesDto)
-  capabilities!: DeviceCapabilitiesDto;
-
-  @IsObject()
-  @ValidateNested()
-  @Type(() => DeviceConfigurationDto)
-  configuration!: DeviceConfigurationDto;
-
   @IsOptional()
+  unManaged?: boolean = false;
+
+  // SSH
+  @IsEnum(SsmAnsible.SSHType)
+  @IsNotEmpty()
+  authType!: SsmAnsible.SSHType;
+
   @IsString()
-  dockerVersion?: string;
-
   @IsOptional()
+  sshUser?: string;
+
   @IsString()
-  dockerId?: string;
-
   @IsOptional()
+  sshKey?: string;
+
   @IsString()
-  hostname?: string;
-
   @IsOptional()
+  sshKeyPass?: string;
+
   @IsString()
-  fqdn?: string;
-
-  @IsEnum(SsmStatus.DeviceStatus)
-  status!: number;
-
   @IsOptional()
-  @IsIP()
-  ip?: string;
+  sshPwd?: string;
 
+  @IsNumber()
   @IsOptional()
+  sshPort?: number;
+
+  @IsBoolean()
+  @IsOptional()
+  strictHostChecking?: boolean;
+
+  // Ansible
+  @IsOptional()
+  becomeMethod!: string;
+
   @IsString()
-  agentVersion?: string;
-
   @IsOptional()
+  becomeUser?: string;
+
   @IsString()
-  agentLogPath?: string;
-
   @IsOptional()
-  @IsEnum(['node', 'docker', 'less'])
-  agentType?: 'node' | 'docker' | 'less';
+  becomePass?: string;
+
+  @IsEnum(SsmAnsible.SSHConnection)
+  @IsOptional()
+  sshConnection?: string;
 }
 
 export class UpdateDeviceDto {
@@ -203,6 +243,6 @@ export class UpdateDeviceDto {
   agentLogPath?: string;
 
   @IsOptional()
-  @IsEnum(['node', 'docker', 'less'])
-  agentType?: 'node' | 'docker' | 'less';
+  @IsEnum(SsmAgent.InstallMethods)
+  agentType?: SsmAgent.InstallMethods;
 }

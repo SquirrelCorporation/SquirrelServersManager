@@ -21,7 +21,7 @@ export class DeviceRepository implements IDeviceRepository {
     private eventEmitter: EventEmitter2,
   ) {}
 
-  async create(device: IDevice): Promise<IDevice> {
+  async create(device: Partial<IDevice>): Promise<IDevice> {
     const createdDevice = await this.deviceModel.create(device);
     return this.mapper.toDomain(createdDevice.toObject()) as IDevice;
   }

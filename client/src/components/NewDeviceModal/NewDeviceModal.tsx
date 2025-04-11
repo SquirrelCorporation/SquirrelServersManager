@@ -9,7 +9,7 @@ import {
   postCheckAnsibleConnection,
   postCheckDockerConnection,
   postCheckRemoteSystemInformationConnection,
-  putDevice,
+  createDevice,
 } from '@/services/rest/devices/devices';
 import { DownloadOutlined } from '@ant-design/icons';
 import {
@@ -77,7 +77,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = ({
   const handleFinish = async (values: any) => {
     setLoading(true);
     try {
-      const res = await putDevice(
+      const res = await createDevice(
         values.deviceIp,
         {
           authType: values.authType,

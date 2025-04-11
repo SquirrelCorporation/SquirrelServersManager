@@ -27,6 +27,11 @@ export class DeviceAuthRepository implements IDeviceAuthRepository {
       .filter((doc): doc is IDeviceAuth => doc !== null);
   }
 
+  async create(deviceAuth: Partial<IDeviceAuth>): Promise<IDeviceAuth> {
+    const _deviceAuth = await this.deviceAuthModel.create(deviceAuth);
+    return this.toDomainEntity(_deviceAuth) as IDeviceAuth;
+  }
+
   async updateOrCreateIfNotExist(deviceAuth: IDeviceAuth): Promise<IDeviceAuth> {
     const _deviceAuth = await this.deviceAuthModel.findOneAndUpdate(
       { device: deviceAuth.device },

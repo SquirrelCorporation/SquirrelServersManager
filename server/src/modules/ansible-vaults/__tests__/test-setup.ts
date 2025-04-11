@@ -176,9 +176,4 @@ vi.mock('../presentation/controllers/ansible-vaults.controller', () => ({
 }));
 
 // Export the mocks for use in tests
-export { 
-  mockRepository, 
-  MockVaultCryptoService, 
-  VaultService, 
-  mockAnsibleVaultService 
-};
+export { mockRepository, MockVaultCryptoService, VaultService, mockAnsibleVaultService };

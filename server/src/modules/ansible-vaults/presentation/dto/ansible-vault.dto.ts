@@ -1,5 +1,5 @@
+import { DEFAULT_VAULT_ID } from '@modules/ansible-vaults';
 import { IsNotEmpty, IsString, NotEquals } from 'class-validator';
-import { DEFAULT_VAULT_ID } from '../../application/services/vault-crypto.service';
 
 export class CreateVaultDto {
   @IsString()

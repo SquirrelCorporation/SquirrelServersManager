@@ -8,6 +8,7 @@ enum Events {
   ALERT = 'ALERT',
   VOLUME_BACKUP = 'VOLUME_BACKUP',
   DIAGNOSTIC_CHECK = 'DIAGNOSTIC_CHECK',
+  DEVICE_CREATED = 'DEVICE_CREATED',
 }
 
 export default Events;

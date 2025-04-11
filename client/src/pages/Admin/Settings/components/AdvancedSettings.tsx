@@ -10,7 +10,7 @@ import {
   deletePlaybooksAndResync,
   deleteServerLogs,
   postRestartServer,
-} from '@/services/rest/settings';
+} from '@/services/rest/settings/settings';
 import { BugFilled, InfoCircleFilled, RedoOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Popover, Row, Typography } from 'antd';
 import { DeleteOutline } from 'antd-mobile-icons';

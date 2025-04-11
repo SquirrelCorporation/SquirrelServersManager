@@ -4,7 +4,7 @@ import AutomationsColumns from '@/pages/Automations/AutomationsColumns';
 import AutomationEditionDrawer from '@/pages/Automations/components/Drawer/AutomationEditionDrawer';
 import CronColumns from '@/pages/Automations/CronsColumns';
 import { getAutomations } from '@/services/rest/automations/automations';
-import { getCrons } from '@/services/rest/cron';
+import { getCrons } from '@/services/rest/scheduler/scheduler';
 import { InteractionOutlined, LockFilled } from '@ant-design/icons';
 import {
   ActionType,

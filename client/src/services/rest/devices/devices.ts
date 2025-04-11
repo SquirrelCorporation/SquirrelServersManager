@@ -31,7 +31,7 @@ export async function getAllDevices(
   });
 }
 
-export async function putDevice(
+export async function createDevice(
   ip: string,
   deviceAuth: API.DeviceAuthParams,
   unManaged?: boolean,
@@ -47,7 +47,7 @@ export async function putDevice(
       ...deviceAuth,
       installMethod,
     },
-    method: 'PUT',
+    method: 'POST',
     ...(options || {}),
   });
 }
@@ -123,7 +123,7 @@ export async function updateDeviceDockerConfiguration(
   return request<API.Response<API.SimpleResult>>(
     `${BASE_URL}/${uuid}/configuration/containers/docker`,
     {
-      method: 'POST',
+      method: 'PATCH',
       data: {
         ...dockerOptions,
       },
@@ -140,7 +140,7 @@ export async function updateDeviceSystemInformationConfiguration(
   return request<API.Response<API.SimpleResult>>(
     `${BASE_URL}/${uuid}/configuration/system-information`,
     {
-      method: 'POST',
+      method: 'PATCH',
       data: {
         systemInformationConfiguration: { ...systemInformationConfiguration },
       },
@@ -157,30 +157,25 @@ export async function updateDeviceProxmoxConfiguration(
   return request<API.Response<API.SimpleResult>>(
     `${BASE_URL}/${uuid}/configuration/containers/proxmox`,
     {
-      method: 'POST',
+      method: 'PATCH',
       data: proxmoxConfiguration,
       ...(options || {}),
     },
   );
 }
 
-
-
 export async function updateAgentInstallMethod(
   uuid: string,
   installMethod: SsmAgent.InstallMethods,
   options?: { [key: string]: any },
 ) {
-  return request<API.SimpleResult>(
-    `${BASE_URL}/${uuid}/agent-install-method`,
-    {
-      method: 'POST',
-      data: {
-        installMethod,
-      },
-      ...(options || {}),
+  return request<API.SimpleResult>(`${BASE_URL}/${uuid}/agent-install-method`, {
+    method: 'PATCH',
+    data: {
+      installMethod,
     },
-  );
+    ...(options || {}),
+  });
 }
 
 export async function postDeviceCapabilities(
@@ -190,7 +185,7 @@ export async function postDeviceCapabilities(
   options?: { [key: string]: any },
 ) {
   return request<API.DeviceList>(`${BASE_URL}/${uuid}/capabilities`, {
-    method: 'POST',
+    method: 'PATCH',
     data: { capabilities },
     params: {
       ...params,

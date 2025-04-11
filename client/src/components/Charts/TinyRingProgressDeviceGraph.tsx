@@ -1,4 +1,4 @@
-import { getDeviceStat } from '@/services/rest/stastistics';
+import { getDeviceStat } from '@/services/rest/statistics/stastistics';
 import message from '@/components/Message/DynamicMessage';
 import { Skeleton } from 'antd';
 import moment from 'moment';

@@ -241,6 +241,18 @@ vi.mock('@infrastructure/common/query/filter.util', () => {
   };
 });
 
+// Mock Device Auth Repository
+vi.mock('@modules/devices/domain/repositories/device-auth-repository.interface', () => ({
+  DEVICE_AUTH_REPOSITORY: 'DEVICE_AUTH_REPOSITORY_MOCK_TOKEN', // Mock the token
+  IDeviceAuthRepository: vi.fn(), // Mock the interface type if needed
+}));
+
+// Mock Vault Crypto Service & Default ID
+vi.mock('@modules/ansible-vaults', () => ({
+  DEFAULT_VAULT_ID: 'MOCK_DEFAULT_VAULT_ID', // Mock the constant
+  VAULT_CRYPTO_SERVICE: 'VAULT_CRYPTO_SERVICE_MOCK_TOKEN', // Mock the token
+}));
+
 // Mock SFTP repository
 vi.mock('@modules/sftp/infrastructure/repositories/sftp.repository', () => ({
   SftpRepository: class SftpRepository {

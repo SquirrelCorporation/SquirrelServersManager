@@ -32,6 +32,9 @@ import {
 } from '../../../domain/interfaces/watcher-engine-service.interface';
 import { RegistryComponentFactory } from '../components/registry/registry-component-factory.service';
 import { WatcherComponentFactory } from '../components/watcher/watcher-component-factory.service';
+import { OnEvent } from '@nestjs/event-emitter';
+import Events from 'src/core/events/events';
+import { IDevice } from '@modules/devices';
 
 const logger = PinoLogger.child(
   { module: 'WatcherEngineService' },
@@ -259,7 +262,7 @@ export class WatcherEngineService implements IWatcherEngineService, OnModuleInit
   /**
    * Register a single watcher
    */
-  async registerWatcher(device: any): Promise<void> {
+  async registerWatcher(device: IDevice): Promise<void> {
     try {
       await this.registerComponent(
         device._id,
@@ -417,5 +420,22 @@ export class WatcherEngineService implements IWatcherEngineService, OnModuleInit
     watcher: string,
   ): IComponent<ConfigurationSchema> | undefined {
     return this.getStates().watcher[this.buildId(kind, watcherType, watcher)];
+  }
+
+  /**
+   * Register a docker watcher when a device is created
+   */
+  @OnEvent(Events.DEVICE_CREATED)
+  async onDeviceCreated(payload: { device: IDevice }): Promise<void> {
+    logger.info(`Device ${payload.device.uuid} created`);
+    try {
+      if (payload.device.capabilities.containers.docker?.enabled) {
+        await this.registerWatcher(payload.device);
+      }
+    } catch (error: any) {
+      logger.error(
+        `Error when registering watcher for device ${payload.device.uuid}: ${error.message}`,
+      );
+    }
   }
 }

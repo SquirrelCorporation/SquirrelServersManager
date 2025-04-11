@@ -1,8 +1,6 @@
 import { ANSIBLE_CONFIG_FILE } from '@modules/ansible-config';
 import { DEFAULT_VAULT_ID, IAnsibleVault } from '@modules/ansible-vaults';
-import {
-  IAnsibleCommandBuilderService
-} from '@modules/ansible/doma../../domain/interfaces/ansible-command-builder-service.interface';
+import { IAnsibleCommandBuilderService } from '@modules/ansible/doma../../domain/interfaces/ansible-command-builder-service.interface';
 import { IUser } from '@modules/users';
 import { Inject, Injectable } from '@nestjs/common';
 import { API, SsmAnsible } from 'ssm-shared-lib';

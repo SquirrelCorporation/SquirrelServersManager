@@ -1,4 +1,4 @@
-import { getDeviceStats } from '@/services/rest/stastistics';
+import { getDeviceStats } from '@/services/rest/statistics/stastistics';
 import { Tiny } from '@ant-design/charts';
 import message from '@/components/Message/DynamicMessage';
 import moment from 'moment';

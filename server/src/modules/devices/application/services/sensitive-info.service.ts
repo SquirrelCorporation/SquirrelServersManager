@@ -1,10 +1,7 @@
 import { InternalServerException } from '@infrastructure/exceptions/app-exceptions';
 import { Injectable } from '@nestjs/common';
-import {
-  DEFAULT_VAULT_ID,
-  VaultCryptoService,
-} from '../../../ansible-vaults/application/services/vault-crypto.service';
 import { ISensitiveInfoService } from '../../domain/services/sensitive-info.service.interface';
+import { DEFAULT_VAULT_ID, VaultCryptoService } from '@modules/ansible-vaults';
 
 const SENSITIVE_PLACEHOLDER = 'REDACTED';
 

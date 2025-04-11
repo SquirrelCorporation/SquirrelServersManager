@@ -15,37 +15,37 @@ export async function getDeviceAuth(
   });
 }
 
-export async function putDeviceAuth(
+export async function updateDeviceAuth(
   deviceId: string,
   data: API.DeviceAuthParams,
   options?: { [key: string]: any },
 ) {
   return request<API.SimpleResult>(`${BASE_URL}/${deviceId}`, {
-    method: 'POST',
+    method: 'PATCH',
     data: data,
     ...(options || {}),
   });
 }
 
-export async function putDeviceDockerAuth(
+export async function updateDeviceDockerAuth(
   deviceId: string,
   data: API.DeviceDockerAuthParams,
   options?: { [key: string]: any },
 ) {
   return request<API.SimpleResult>(`${BASE_URL}/${deviceId}/docker`, {
-    method: 'POST',
+    method: 'PATCH',
     data: data,
     ...(options || {}),
   });
 }
 
-export async function postDeviceProxmoxAuth(
+export async function updateDeviceProxmoxAuth(
   deviceId: string,
   data: API.ProxmoxAuth,
   options?: { [key: string]: any },
 ) {
   return request<API.SimpleResult>(`${BASE_URL}/${deviceId}/proxmox`, {
-    method: 'POST',
+    method: 'PATCH',
     data: data,
     ...(options || {}),
   });
@@ -71,11 +71,8 @@ export async function deleteDockerCert(
   type: 'ca' | 'cert' | 'key',
   options?: { [key: string]: any },
 ) {
-  return request<API.SimpleResult>(
-    `${BASE_URL}/${deviceId}/upload/${type}`,
-    {
-      method: 'DELETE',
-      ...(options || {}),
-    },
-  );
+  return request<API.SimpleResult>(`${BASE_URL}/${deviceId}/upload/${type}`, {
+    method: 'DELETE',
+    ...(options || {}),
+  });
 }

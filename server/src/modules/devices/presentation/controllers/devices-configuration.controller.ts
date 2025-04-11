@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Param, Patch } from '@nestjs/common';
 import { DevicesService } from '../../application/services/devices.service';
 import {
   DockerConfigurationDto,
@@ -14,7 +14,7 @@ export class DevicesConfigurationController {
     private readonly deviceMapper: DeviceMapper,
   ) {}
 
-  @Post(':uuid/configuration/containers/docker')
+  @Patch(':uuid/configuration/containers/docker')
   async updateDockerConfiguration(
     @Param('uuid') uuid: string,
     @Body() dockerConfigurationDto: DockerConfigurationDto,
@@ -40,7 +40,7 @@ export class DevicesConfigurationController {
     return this.devicesService.update(updatedDevice);
   }
 
-  @Post(':uuid/configuration/containers/proxmox')
+  @Patch(':uuid/configuration/containers/proxmox')
   async updateProxmoxConfiguration(
     @Param('uuid') uuid: string,
     @Body() proxmoxConfigurationDto: ProxmoxConfigurationDto,
@@ -66,7 +66,7 @@ export class DevicesConfigurationController {
     return this.devicesService.update(updatedDevice);
   }
 
-  @Post(':uuid/configuration/system-information')
+  @Patch(':uuid/configuration/system-information')
   async updateSystemInformationConfiguration(
     @Param('uuid') uuid: string,
     @Body()

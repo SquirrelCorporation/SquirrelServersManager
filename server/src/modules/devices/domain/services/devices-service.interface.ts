@@ -1,4 +1,5 @@
 import { IDevice } from '../entities/device.entity';
+import { CreateDeviceDto } from '../../presentation/dtos/device.dto';
 
 export const DEVICES_SERVICE = 'DEVICES_SERVICE';
 
@@ -6,7 +7,7 @@ export const DEVICES_SERVICE = 'DEVICES_SERVICE';
  * Interface for the devices service
  */
 export interface IDevicesService {
-  create(device: IDevice): Promise<IDevice>;
+  create(device: CreateDeviceDto): Promise<IDevice>;
   update(device: IDevice): Promise<IDevice | null>;
   findOneByUuid(uuid: string): Promise<IDevice | null>;
   findByUuids(uuids: string[]): Promise<IDevice[] | null>;

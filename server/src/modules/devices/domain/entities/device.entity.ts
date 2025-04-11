@@ -1,4 +1,4 @@
-import { SsmStatus, Systeminformation } from 'ssm-shared-lib';
+import { SsmAgent, SsmStatus, Systeminformation } from 'ssm-shared-lib';
 
 /**
  * Device entity interface in the domain layer
@@ -118,5 +118,5 @@ export interface IDevice {
   createdAt?: Date;
   updatedAt?: Date;
   agentLogPath?: string;
-  agentType?: 'node' | 'docker' | 'less';
+  agentType?: SsmAgent.InstallMethods;
 }

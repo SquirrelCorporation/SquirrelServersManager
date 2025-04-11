@@ -59,19 +59,21 @@ module-name/
 └── README.md                   # Module documentation
 ```
 
-### Modules Using Clean Architecture
+### Clean Architecture Implementation
 
-The following modules have been refactored to follow the Clean Architecture pattern:
+All modules in the Squirrel Servers Manager follow the Clean Architecture pattern with a strict separation of concerns:
 
-1. **Devices Module**: Manages device information and connectivity
-2. **Logs Module**: Manages server logs and Ansible task execution logs
-3. **Notifications Module**: Manages system notifications for various events
-4. **Ansible Vault Module**: Manages encrypted Ansible vault files
-5. **Shell Module**: Provides shell command execution and file system operations
-6. **Smart Failure Module**: Analyzes Ansible logs for common failure patterns
-7. **Users Module**: Manages user accounts, authentication, and authorization
-8. **SFTP Module**: Provides secure file transfer functionality for remote devices
-9. **SSH Module**: Provides secure shell connectivity to remote devices
+1. **Domain Layer**: Contains core business entities and repository interfaces
+2. **Application Layer**: Contains service interfaces and business logic implementations
+3. **Infrastructure Layer**: Contains concrete implementations of repositories and external services
+4. **Presentation Layer**: Contains controllers, DTOs, and client-facing interfaces
+
+This architectural approach provides several benefits:
+- Improved testability through dependency inversion
+- Better separation of concerns
+- Enhanced maintainability
+- Reduced coupling between components
+- Clearer boundaries between business rules and technical implementation
 
 ## Modules Overview
 
@@ -461,21 +463,23 @@ When working with these modules:
 4. **Comprehensive Testing**: Maintain test coverage for all functionality
 5. **Documentation**: Keep README files updated with architectural changes
 
-## Migration Strategy
+## Current Development Focus
 
-The application is being gradually migrated from a legacy architecture to NestJS:
+With the migration to Clean Architecture complete, our current development focus is on:
 
-1. **Phase 1**: Refactor core modules (Diagnostic, Update, Automations)
-2. **Phase 2**: Refactor remaining modules
-3. **Phase 3**: Migrate legacy code to use NestJS patterns
+1. **Test Coverage**: Improving test coverage and fixing existing test failures
+2. **Error Handling Standardization**: Ensuring consistent error handling across all modules
+3. **API Documentation**: Adding OpenAPI/Swagger documentation for all endpoints
+4. **Performance Optimization**: Optimizing module initialization and execution
+5. **Developer Experience**: Enhancing documentation and tooling for contributors
 
 ## Future Enhancements
 
 Planned improvements for the modular architecture:
 
-1. **Complete NestJS Migration**: Fully migrate all modules to NestJS patterns
-2. **Clean Architecture Adoption**: Continue refactoring modules to follow the Clean Architecture pattern
-3. **Enhanced Event System**: Improve event-driven communication between modules
-4. **Standardized Error Handling**: Implement consistent error handling across modules
-5. **API Documentation**: Add OpenAPI/Swagger documentation for all endpoints
-6. **Performance Optimization**: Optimize module initialization and execution
+1. **Enhanced Event System**: Implement more sophisticated event-driven communication between modules
+2. **Security Enhancements**: Strengthen authentication and authorization mechanisms
+3. **Metric Collection**: Add comprehensive metrics for monitoring and performance analysis
+4. **Containerization Improvements**: Enhance container management capabilities
+5. **Internationalization**: Add support for multiple languages in the API responses
+6. **Plugin System Enhancement**: Expand the capabilities of the plugin system

@@ -1,4 +1,4 @@
-import { getDeviceStat } from '@/services/rest/stastistics';
+import { getDeviceStat } from '@/services/rest/statistics/stastistics';
 import message from '@/components/Message/DynamicMessage';
 import { Skeleton, Tooltip } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';

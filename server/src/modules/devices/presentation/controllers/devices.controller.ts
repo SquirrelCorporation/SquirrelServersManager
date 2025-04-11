@@ -24,13 +24,7 @@ export class DevicesController {
   @Post()
   async createDevice(@Body() createDeviceDto: CreateDeviceDto) {
     try {
-      // Validate input
-      if (!createDeviceDto || !createDeviceDto.hostname) {
-        throw new BadRequestException('Invalid device data. Hostname is required');
-      }
-
-      const device = this.deviceMapper.toEntity(createDeviceDto);
-      return this.devicesService.create(device);
+      return this.devicesService.create(createDeviceDto);
     } catch (error: any) {
       // Re-throw NestJS exceptions
       if (error instanceof BadRequestException || error instanceof ConflictException) {
@@ -133,11 +127,7 @@ export class DevicesController {
 
     try {
       const result = await this.devicesService.deleteByUuid(uuid);
-      return {
-        success: true,
-        message: `Device ${device.hostname} successfully deleted`,
-        data: result,
-      };
+      return result;
     } catch (error: any) {
       throw new BadRequestException(`Failed to delete device: ${error.message}`);
     }

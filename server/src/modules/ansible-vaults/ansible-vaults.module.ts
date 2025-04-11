@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { VAULT_CRYPTO_SERVICE } from '@modules/ansible-vaults';
 import {
   PlaybooksRegister,
   PlaybooksRegisterSchema,
@@ -28,7 +29,11 @@ import { ANSIBLE_VAULT_REPOSITORY } from './domain/repositories/ansible-vault-re
       provide: ANSIBLE_VAULT_REPOSITORY,
       useClass: AnsibleVaultRepository,
     },
+    {
+      provide: VAULT_CRYPTO_SERVICE,
+      useClass: VaultCryptoService,
+    },
   ],
-  exports: [AnsibleVaultService, VaultCryptoService],
+  exports: [VAULT_CRYPTO_SERVICE, AnsibleVaultService, VaultCryptoService],
 })
 export class AnsibleVaultsModule {}

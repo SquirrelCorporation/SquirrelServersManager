@@ -1,5 +1,8 @@
 import { DockerConfigurationFormElements } from '@/components/DeviceConfiguration/DockerConfigurationFormElements';
-import { getDeviceAuth, putDeviceDockerAuth } from '@/services/rest/devices/device-credentials';
+import {
+  getDeviceAuth,
+  updateDeviceDockerAuth,
+} from '@/services/rest/devices/device-credentials';
 import { ProFormInstance } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
 import message from '@/components/Message/DynamicMessage';
@@ -36,7 +39,7 @@ const DockerConfigurationForm: React.FC<DockerConfigurationFormProps> = ({
         }}
         onFinish={async (values) => {
           if (device?.uuid && values) {
-            await putDeviceDockerAuth(device.uuid, {
+            await updateDeviceDockerAuth(device.uuid, {
               customDockerSSH: values.customDockerSSH,
               dockerCustomAuthType: values.dockerCustomAuthType,
               dockerCustomSshUser: values.dockerCustomSshUser,
