@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.30...HEAD)
 
+**Fixed bugs:**
+
+- \[BUG\] Unable to use .de TLD [\#834](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/834)
+
 **Closed issues:**
 
 - \[CHORE\] Optional trigger to force device ip when installing agent 🧹 [\#119](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/119)
@@ -12,6 +16,7 @@
 
 **Merged pull requests:**
 
+- Chore refacto nestjs [\#817](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/817) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Ensure async usage in test assertions and update dependencies [\#791](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/791) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Chore refacto frontend props [\#789](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/789) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump vuetify from 3.7.12 to 3.7.13 in /site [\#778](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/778) ([dependabot[bot]](https://github.com/apps/dependabot))
