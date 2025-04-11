@@ -14,7 +14,7 @@ const SALT_ROUNDS = 8;
 export class UserRepository implements IUserRepository {
   constructor(
     @InjectModel(USER) private userModel: Model<UserDocument>,
-    private readonly mapper: UserRepositoryMapper
+    private readonly mapper: UserRepositoryMapper,
   ) {}
 
   async create(user: IUser): Promise<IUser> {
@@ -28,11 +28,10 @@ export class UserRepository implements IUserRepository {
 
   async update(user: IUser): Promise<IUser | null> {
     user.updatedAt = new Date();
-    const updated = await this.userModel.findOneAndUpdate(
-      { email: user.email },
-      user,
-      { new: true }
-    ).lean().exec();
+    const updated = await this.userModel
+      .findOneAndUpdate({ email: user.email }, user, { new: true })
+      .lean()
+      .exec();
 
     return this.mapper.toDomain(updated);
   }
@@ -50,7 +49,9 @@ export class UserRepository implements IUserRepository {
   async findByEmailAndPassword(email: string, password: string): Promise<IUser | null> {
     const user = await this.userModel.findOne({ email }).exec();
 
-    if (!user) { return null; }
+    if (!user) {
+      return null;
+    }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (isPasswordValid) {
@@ -76,11 +77,10 @@ export class UserRepository implements IUserRepository {
 
   async updateApiKey(email: string): Promise<string | null> {
     const newApiKey = uuidv4();
-    const updated = await this.userModel.findOneAndUpdate(
-      { email },
-      { apiKey: newApiKey },
-      { new: true }
-    ).lean().exec();
+    const updated = await this.userModel
+      .findOneAndUpdate({ email }, { apiKey: newApiKey }, { new: true })
+      .lean()
+      .exec();
 
     if (updated) {
       return newApiKey;
@@ -90,11 +90,10 @@ export class UserRepository implements IUserRepository {
   }
 
   async updateLogsLevel(email: string, logsLevel: any): Promise<IUser | null> {
-    const updated = await this.userModel.findOneAndUpdate(
-      { email },
-      { logsLevel },
-      { new: true }
-    ).lean().exec();
+    const updated = await this.userModel
+      .findOneAndUpdate({ email }, { logsLevel }, { new: true })
+      .lean()
+      .exec();
 
     return this.mapper.toDomain(updated);
   }

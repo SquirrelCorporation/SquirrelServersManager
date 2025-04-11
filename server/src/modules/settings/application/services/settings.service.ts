@@ -14,11 +14,6 @@ export class SettingsService implements ISettingsService {
   // Default values for settings
   private readonly DEFAULT_SETTINGS: ISetting[] = [
     {
-      key: SettingsKeys.GeneralSettingsKeys.SCHEME_VERSION,
-      value: SettingsKeys.DefaultValue.SCHEME_VERSION,
-      nx: false,
-    },
-    {
       key: SettingsKeys.GeneralSettingsKeys.SERVER_LOG_RETENTION_IN_DAYS,
       value: SettingsKeys.DefaultValue.SERVER_LOG_RETENTION_IN_DAYS,
       nx: true,

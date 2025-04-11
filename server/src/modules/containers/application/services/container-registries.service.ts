@@ -11,6 +11,9 @@ import {
   CONTAINER_REGISTRY_REPOSITORY,
   IContainerRegistryRepository,
 } from '../../domain/repositories/container-registry-repository.interface';
+import { DEFAULT_REGISTRIES_CONFIGURATION } from '@modules/containers/application/services/data/providers-default.constants';
+import Events from 'src/core/events/events';
+import { OnEvent } from '@nestjs/event-emitter';
 
 const logger = PinoLogger.child(
   { module: 'ContainerRegistriesService' },
@@ -44,6 +47,16 @@ export class ContainerRegistriesService implements IContainerRegistriesService {
   }
 
   /**
+   * Save default registries configuration
+   */
+  @OnEvent(Events.UPDATED_SCHEME_VERSION)
+  async saveDefaultRegistriesConfiguration() {
+    DEFAULT_REGISTRIES_CONFIGURATION.filter(({ persist }) => persist).forEach((config) => {
+      void this.addIfNotExists(config);
+    });
+  }
+
+  /**
    * Add a registry if it doesn't already exist
    * @param registry Registry configuration
    */
@@ -52,7 +65,7 @@ export class ContainerRegistriesService implements IContainerRegistriesService {
       registry.provider,
     );
     if (!containerRegistry) {
-      const savedRegistry = await this.containerRegistryRepository.create({
+      await this.containerRegistryRepository.create({
         name: registry.name,
         fullName: registry.fullName,
         provider: registry.provider,
@@ -61,7 +74,7 @@ export class ContainerRegistriesService implements IContainerRegistriesService {
         canAnonymous: registry.config.canAnonymous || false,
         canAuth: registry.authScheme !== undefined,
       });
-      logger.info(`Saved registry ${savedRegistry.name}`);
+      logger.info(`Saved registry ${registry.name}`);
     } else {
       logger.info(`Registry ${registry.name} already exists`);
     }

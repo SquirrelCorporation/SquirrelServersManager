@@ -20,6 +20,8 @@ import { IPlaybooksRegisterService } from '../../domain/services/playbooks-regis
 import { PlaybooksRegisterEngineService } from './engine/playbooks-register-engine.service';
 import { TreeNodeService } from './tree-node.service';
 import { PLAYBOOKS_REGISTER_ENGINE_SERVICE } from '@modules/playbooks';
+import Events from 'src/core/events/events';
+import { OnEvent } from '@nestjs/event-emitter';
 
 /**
  * Service for managing playbooks repositories
@@ -43,6 +45,7 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService {
   /**
    * Initialize the service
    */
+  @OnEvent(Events.REGISTER_PLAYBOOK_REGISTERS)
   async onModuleInit(): Promise<void> {
     this.logger.log('Initializing PlaybooksRepositoryService');
     try {
@@ -56,6 +59,7 @@ export class PlaybooksRegisterService implements IPlaybooksRegisterService {
           this.logger.error(`Failed to register repository ${register.name}: ${errorMessage}`);
         }
       }
+      void this.playbooksRegisterEngineService.syncAllRegisters();
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       this.logger.error(`Error initializing repositories: ${errorMessage}`);

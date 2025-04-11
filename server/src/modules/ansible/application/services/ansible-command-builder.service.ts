@@ -2,7 +2,7 @@ import { ANSIBLE_CONFIG_FILE } from '@modules/ansible-config';
 import { DEFAULT_VAULT_ID, IAnsibleVault } from '@modules/ansible-vaults';
 import { IAnsibleCommandBuilderService } from '@modules/ansible/doma../../domain/interfaces/ansible-command-builder-service.interface';
 import { IUser } from '@modules/users';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 import { Playbooks } from '../../../../types/typings';
 import { ExtraVarsTransformerService } from './extra-vars-transformer.service';
@@ -17,6 +17,7 @@ export class AnsibleCommandBuilderService implements IAnsibleCommandBuilderServi
   private static readonly ansibleRunner = 'ssm-ansible-run.py';
   private static readonly ssmApiKeyEnv = 'SSM_API_KEY';
   private static readonly ansibleConfigKeyEnv = 'ANSIBLE_CONFIG';
+  private readonly logger = new Logger(AnsibleCommandBuilderService.name);
 
   constructor(
     private readonly extraVarsTransformer: ExtraVarsTransformerService,

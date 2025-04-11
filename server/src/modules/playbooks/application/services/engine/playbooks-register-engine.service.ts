@@ -11,10 +11,10 @@ import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Repositories, SsmGit } from 'ssm-shared-lib';
 import { PlaybooksRegisterComponentFactory } from '../components/component-factory.service';
-import { v4 } from 'uuid';
 import { IVaultCryptoService } from '@modules/ansible-vaults/domain/interfaces/vault-crypto-service.interface';
 import { DEFAULT_VAULT_ID } from '@modules/ansible-vaults/application/services/vault-crypto.service';
 import { VAULT_CRYPTO_SERVICE } from '@modules/ansible-vaults';
+
 /**
  * Service for managing playbooks repository components
  */

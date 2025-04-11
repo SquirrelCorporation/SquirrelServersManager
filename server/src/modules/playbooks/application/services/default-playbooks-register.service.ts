@@ -4,7 +4,9 @@ import { FileSystemService } from '@modules/shell';
 import { PlaybooksRegisterRepository } from '@modules/playbooks/infrastructure/repositories/playbooks-register.repository';
 import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
 import { SSM_DATA_PATH, SSM_INSTALL_PATH } from 'src/config';
-
+import { OnEvent } from '@nestjs/event-emitter';
+import Events from 'src/core/events/events';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 /**
  * Service for managing default playbooks repositories
  */
@@ -33,11 +35,13 @@ export class DefaultPlaybooksRegisterService {
   constructor(
     private readonly playbooksRepositoryRepository: PlaybooksRegisterRepository,
     private readonly fileSystemService: FileSystemService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   /**
    * Save the default SSM playbooks repositories
    */
+  @OnEvent(Events.UPDATED_SCHEME_VERSION)
   async saveSSMDefaultPlaybooksRepositories(): Promise<void> {
     this.logger.log('Saving default SSM playbooks repositories');
 
@@ -65,11 +69,13 @@ export class DefaultPlaybooksRegisterService {
         this.toolsPlaybooksRepository,
       );
     }
+    this.eventEmitter.emit(Events.REGISTER_PLAYBOOK_REGISTERS);
   }
 
   /**
    * Create a default local user repository
    */
+  @OnEvent(Events.USER_CREATED)
   async createDefaultLocalUserRepository(userEmail: string): Promise<void> {
     this.logger.log('Creating default local user repository');
 
@@ -91,6 +97,7 @@ export class DefaultPlaybooksRegisterService {
       userPlaybooksRepository.uuid!,
     );
     if (!userRepo) {
+      this.fileSystemService.createDirectory(userPlaybooksRepository.directory as string);
       await this.playbooksRepositoryRepository.create(userPlaybooksRepository);
     } else {
       await this.playbooksRepositoryRepository.update(

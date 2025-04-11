@@ -236,13 +236,12 @@ const ContainerMetas = ({
               </>
             ),
             (
-              <Tooltip
+              <Popover
                 key={`info-${row.id}`}
-                color={'transparent'}
-                title={<InfoToolTipCard item={row} />}
+                content={<InfoToolTipCard item={row} />}
               >
                 <InfoCircleOutlined style={{ color: 'rgb(22, 104, 220)' }} />
-              </Tooltip>
+              </Popover>
             ))
           : [],
         <a

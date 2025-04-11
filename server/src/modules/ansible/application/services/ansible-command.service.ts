@@ -5,12 +5,17 @@ import { SSM_INSTALL_PATH } from '../../../../config';
 import { Playbooks } from '../../../../types/typings';
 import { IAnsibleVault } from '../../../ansible-vaults';
 import { DEVICE_AUTH_SERVICE, IDeviceAuthService } from '../../../devices';
-import { IShellWrapperService, ISshKeyService, SHELL_WRAPPER_SERVICE, SSH_KEY_SERVICE } from '../../../shell';
+import {
+  IShellWrapperService,
+  ISshKeyService,
+  SHELL_WRAPPER_SERVICE,
+  SSH_KEY_SERVICE,
+} from '../../../shell';
 import { IUser } from '../../../users';
 import { IAnsibleCommandService } from '../../domain/interfaces/ansible-command-service.interface';
 import {
   ANSIBLE_TASK_REPOSITORY,
-  IAnsibleTaskRepository
+  IAnsibleTaskRepository,
 } from '../../domain/repositories/ansible-task.repository.interface';
 import { AnsibleCommandBuilderService } from './ansible-command-builder.service';
 import { AnsibleGalaxyCommandService } from './ansible-galaxy-command.service';
@@ -118,7 +123,7 @@ export class AnsibleCommandService implements IAnsibleCommandService {
    */
   async getAnsibleVersion() {
     try {
-      this.logger.log(`getAnsibleVersion - Starting...`);
+      this.logger.debug(`getAnsibleVersion - Starting...`);
       return this.shellWrapper.exec('ansible --version').toString();
     } catch (error) {
       this.logger.error(`getAnsibleVersion failed: ${error}`);
@@ -132,7 +137,7 @@ export class AnsibleCommandService implements IAnsibleCommandService {
    */
   async getAnsibleRunnerVersion() {
     try {
-      this.logger.log(`getAnsibleRunnerVersion - Starting...`);
+      this.logger.debug(`getAnsibleRunnerVersion - Starting...`);
       return this.shellWrapper.exec('ansible-runner --version').toString();
     } catch (error) {
       this.logger.error(`getAnsibleRunnerVersion failed: ${error}`);

@@ -69,7 +69,7 @@ const ContainerStatsDetail: React.FC<ContainerStatsDetailProps> = ({
     autoFit: false,
     theme: {
       view: {
-        viewFill: '#1d222e',
+        viewFill: 'transparent',
       },
     },
     width: 280,

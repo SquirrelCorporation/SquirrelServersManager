@@ -23,6 +23,7 @@ export class User {
   @Prop({
     type: String,
     required: true,
+    default: '/avatars/squirrel.svg',
   })
   avatar!: string;
 
@@ -43,6 +44,7 @@ export class User {
     type: String,
     enum: Role,
     required: true,
+    default: Role.ADMIN,
   })
   role!: Role;
 

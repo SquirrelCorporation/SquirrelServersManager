@@ -13,6 +13,8 @@ import {
 import PinoLogger from '../../../../logger';
 import { dependencies, version } from '../../../../../package.json';
 import { IUsersService } from '../../domain/interfaces/users-service.interface';
+import Events from 'src/core/events/events';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 const logger = PinoLogger.child({ module: 'UsersService' });
 
@@ -24,10 +26,12 @@ export class UsersService implements IUsersService {
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     @Inject(DEVICES_SERVICE) private readonly devicesService: IDevicesService,
     private readonly ansibleCommandService: AnsibleCommandService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async createUser(userData: IUser): Promise<IUser> {
     logger.info(`Creating user with email: ${userData.email}`);
+    this.eventEmitter.emit(Events.USER_CREATED, userData.email);
     return this.userRepository.create(userData);
   }
 
@@ -65,9 +69,9 @@ export class UsersService implements IUsersService {
     return this.userRepository.updateApiKey(email);
   }
 
-  async updateLogsLevel(email: string, logsLevel: any): Promise<IUser | null> {
+  async updateLogsLevel(email: string, terminalLogsLevel: number): Promise<IUser | null> {
     logger.info(`Updating logs level for user: ${email}`);
-    return this.userRepository.updateLogsLevel(email, logsLevel);
+    return this.userRepository.updateLogsLevel(email, { terminal: terminalLogsLevel });
   }
 
   async createFirstAdminUser(

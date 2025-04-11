@@ -6,13 +6,14 @@ import {
   CheckCircleFilled,
   CloseCircleFilled,
   InfoCircleFilled,
+  LoadingOutlined,
   WarningFilled,
 } from '@ant-design/icons';
 
 // Reusable MessageContent component with styling and animation
 const MessageContent: React.FC<{
   content: string;
-  type: 'success' | 'error' | 'info' | 'warning';
+  type: 'success' | 'error' | 'info' | 'warning' | 'loading';
   onClose?: () => void; // Provided by antd message.open
 }> = ({ content, type }) => {
   const getBackgroundColorAndIcon = () => {
@@ -31,6 +32,11 @@ const MessageContent: React.FC<{
         return {
           bgColor: 'rgba(234, 179, 8, 0.9)', // Yellow
           icon: <WarningFilled />,
+        };
+      case 'loading':
+        return {
+          bgColor: 'rgba(59, 130, 246, 0.9)', // Blue
+          icon: <LoadingOutlined />,
         };
       default: // Info
         return {
@@ -98,7 +104,7 @@ const MessageContent: React.FC<{
 // Function to show the message using Ant Design's system but with custom content
 const showDynamicMessage = (
   content: string,
-  type: 'success' | 'error' | 'info' | 'warning',
+  type: 'success' | 'error' | 'info' | 'warning' | 'loading',
   duration?: number,
 ) => {
   // Determine default duration based on type if none is provided
@@ -136,6 +142,9 @@ const message = {
   },
   warning({ content, duration }: { content: string; duration?: number }) {
     showDynamicMessage(content, 'warning', duration);
+  },
+  loading({ content, duration }: { content: string; duration?: number }) {
+    showDynamicMessage(content, 'loading', duration);
   },
 };
 

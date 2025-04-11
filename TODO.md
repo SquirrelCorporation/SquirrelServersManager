@@ -8,20 +8,32 @@
 
 The DTOs should reflect those changes, as well as the a frontend objects and shared-lib
 
+---
+
 # Decide whether events name are defined in modules or in core
 - There is a mix of usage here, sometimes define in core, sometimes define in modules
 
+---
+
 # Unify the type of the Component handling variable across engines
+
+---
 
 # Use queues for async treatment for:
 - Statistics gathering. Containers and Remove information modules should send their stats through a bull queue consumed by the statistics module instead of calling directly the modules methods
 
+---
+
 # Vault crypto should be extrated to a standalone module in infrastructure
 It should not import any others module.
+
+---
 
 # Deletion of devices should be an event to broadcast accross module + take appropriat eactions 
 - Delete device auth
 - Deregister watcher for docker, proxmox, remote sys info
+
+---
 
 # Comprehensive Test Mocking System Overhaul
 
@@ -35,6 +47,20 @@ It should not import any others module.
 - **Fixed test files**: The current approach of creating fixed versions (test-setup.fixed.ts) creates duplicate code
 
 ## Comprehensive Solution
+
+### Recommended Libraries
+After evaluation, the following libraries would significantly improve our testing infrastructure:
+
+1. **strong-mock** (https://github.com/NiGhTTraX/strong-mock)
+   - Type-safe mocking of interfaces and functions
+   - Detailed error messages
+   - Powerful argument matching
+   - Perfect for mocking our service interfaces
+
+2. **@golevelup/nestjs** Testing Packages
+   - NestJS-specific testing utilities
+   - Seamless integration with Vitest
+   - Module mocking helpers
 
 ### 1. Centralized Mock Registry
 - Create a central mock registry that manages all mock implementations
@@ -73,6 +99,7 @@ export class MockRegistry {
 ```typescript
 // src/__tests__/mocks/factories/repository-factory.ts
 import { MockRegistry } from '../registry';
+import { mock, when } from 'strong-mock';
 
 export interface RepositoryMockConfig<T, K> {
   findOne?: (id: K) => T | null;
@@ -97,16 +124,17 @@ export function createRepositoryMock<T, K>(
 
   const mergedConfig = { ...defaultConfig, ...config };
   
-  const mock = {
-    findOne: vi.fn().mockImplementation(mergedConfig.findOne),
-    findAll: vi.fn().mockImplementation(mergedConfig.findAll),
-    create: vi.fn().mockImplementation(mergedConfig.create),
-    update: vi.fn().mockImplementation(mergedConfig.update),
-    delete: vi.fn().mockImplementation(mergedConfig.delete),
-  };
+  // Use strong-mock for type-safety
+  const repoMock = mock<any>();
+  
+  when(() => repoMock.findOne).thenReturn(vi.fn().mockImplementation(mergedConfig.findOne));
+  when(() => repoMock.findAll).thenReturn(vi.fn().mockImplementation(mergedConfig.findAll));
+  when(() => repoMock.create).thenReturn(vi.fn().mockImplementation(mergedConfig.create));
+  when(() => repoMock.update).thenReturn(vi.fn().mockImplementation(mergedConfig.update));
+  when(() => repoMock.delete).thenReturn(vi.fn().mockImplementation(mergedConfig.delete));
 
-  MockRegistry.register(token, mock);
-  return mock;
+  MockRegistry.register(token, repoMock);
+  return repoMock;
 }
 ```
 
@@ -244,6 +272,7 @@ export async function setupDeviceServiceTest(config = {}) {
 - Implement the mock registry and factory system
 - Migrate common utility mocks (fs, path, etc.)
 - Create a consistent test module factory
+- Add strong-mock and golevelup/nestjs testing packages
 
 #### Phase 2: Key Domain Modules
 - Migrate device, ansible, and container modules
@@ -269,11 +298,11 @@ export async function setupDeviceServiceTest(config = {}) {
 ## Benefits
 - **Consistency**: All tests use the same mocking approach
 - **Maintainability**: Changes to mocks are made in one place
-- **Type safety**: Mocks are correctly typed
+- **Type safety**: Mocks are correctly typed with strong-mock
 - **Readability**: Tests are concise and focus on what's being tested
 - **Scalability**: New modules can easily adopt the same pattern
 - **Resilience**: Tests are less likely to break due to dependency changes
 - **Performance**: Reduced duplication leads to faster test execution
 
 ## Conclusion
-This comprehensive approach addresses the root causes of the current test issues by creating a structured, consistent, and maintainable mocking system. It provides a clear path forward for new tests and a migration strategy for existing tests, ultimately leading to a more reliable and robust test suite.
+This comprehensive approach addresses the root causes of the current test issues by creating a structured, consistent, and maintainable mocking system. By leveraging strong-mock for type safety and golevelup's NestJS testing utilities, we can create robust, reliable tests that are easier to maintain and extend. This solution provides a clear path forward for new tests and a migration strategy for existing tests, ultimately leading to a more reliable and robust test suite.

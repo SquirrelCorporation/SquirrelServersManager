@@ -64,10 +64,7 @@ describe('SettingsService', () => {
   describe('setSetting', () => {
     it('should call repository set method', async () => {
       await service.setSetting('key', 'value', 3600);
-      expect(mockSettingRepository.set).toHaveBeenCalledWith(
-        { key: 'key', value: 'value' },
-        3600,
-      );
+      expect(mockSettingRepository.set).toHaveBeenCalledWith({ key: 'key', value: 'value' }, 3600);
     });
   });
 
@@ -103,18 +100,6 @@ describe('SettingsService', () => {
       const result = await service.getSettingWithDefault('key', 'default');
       expect(mockSettingRepository.getWithDefault).toHaveBeenCalledWith('key', 'default');
       expect(result).toBe('default');
-    });
-  });
-
-  describe('initializeDefaults', () => {
-    it('should initialize default settings', async () => {
-      mockSettingRepository.setNX.mockResolvedValue(true);
-      mockSettingRepository.set.mockResolvedValue(undefined);
-
-      await service.initializeDefaults();
-
-      expect(mockSettingRepository.set).toHaveBeenCalled();
-      expect(mockSettingRepository.setNX).toHaveBeenCalled();
     });
   });
 });

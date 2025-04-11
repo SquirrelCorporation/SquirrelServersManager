@@ -186,14 +186,6 @@ const DeviceListPage = memo(() => {
           bordered={false}
           style={{ marginTop: 0 }}
           bodyStyle={cardBodyStyle}
-          extra={
-            <DeviceQuickActionDropDown
-              onDropDownClicked={onDropDownClicked}
-              setTerminal={setTerminal}
-            >
-              <Button icon={<CarbonBatchJob />}>Apply to all</Button>
-            </DeviceQuickActionDropDown>
-          }
         >
           <AnimatePresence>
             <ProList

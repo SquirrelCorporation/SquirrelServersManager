@@ -1,15 +1,5 @@
 import { UnauthorizedException } from '@infrastructure/exceptions/app-exceptions';
-import {
-  Body,
-  Controller,
-  Get,
-  HttpException,
-  HttpStatus,
-  Param,
-  Post,
-  Put,
-  Res,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Post, Put, Res } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { SESSION_DURATION } from 'src/config';
@@ -134,7 +124,7 @@ export class UsersController {
 
   @Post('logs-level')
   @ResourceAction(RESOURCES.USER, ACTIONS.UPDATE)
-  async updateLogsLevel(@Body() logsLevelData: { logsLevel: any }, @User() user) {
+  async updateLogsLevel(@Body() logsLevelData: { terminal: any }, @User() user) {
     // Only admins can update logs level for other users
     if (user.role !== 'admin') {
       throw new HttpException(
@@ -146,10 +136,7 @@ export class UsersController {
       );
     }
 
-    const updatedUser = await this.usersService.updateLogsLevel(
-      user.email,
-      logsLevelData.logsLevel,
-    );
+    const updatedUser = await this.usersService.updateLogsLevel(user.email, logsLevelData.terminal);
     if (!updatedUser) {
       throw new HttpException(
         {
@@ -169,5 +156,12 @@ export class UsersController {
   @ResourceAction(RESOURCES.USER, ACTIONS.READ)
   async getCurrentUser(@User() user) {
     return this.usersService.getCurrentUser(user);
+  }
+
+  @Post('logout')
+  @ResourceAction(RESOURCES.USER, ACTIONS.EXECUTE)
+  async logout(@Res({ passthrough: true }) response: Response) {
+    response.clearCookie('jwt');
+    return;
   }
 }

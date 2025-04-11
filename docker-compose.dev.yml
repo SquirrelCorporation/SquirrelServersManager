@@ -77,7 +77,6 @@ services:
     volumes:
       - ./server/src:/opt/squirrelserversmanager/server/src
       - ./.data.dev:/data
-      - ./plugins:/opt/squirrelserversmanager/plugins
     environment:
       NODE_ENV: development
       DEBUG: nodejs-docker-express:*

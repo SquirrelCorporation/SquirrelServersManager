@@ -129,13 +129,13 @@ const MainChartCard: React.FC = () => {
       animate: { enter: { type: 'waveIn' } },
       theme: {
         view: {
-          viewFill: '#151921',
+          viewFill: 'rgba(255,255,255,0.00)',
         },
       },
       loadingTemplate: (
         <Flex
           justify={'center'}
-          style={{ backgroundColor: '#151921', width: '100%', height: '100%' }}
+          style={{ backgroundColor: '#0a0a0a', width: '100%', height: '100%' }}
         >
           <LoadingOutlined style={{ fontSize: '32px' }} />
         </Flex>

@@ -39,6 +39,7 @@ import { PluginsModule } from './infrastructure/plugins/plugins.module';
 // import { ThrottlerModule } from './infrastructure/security/throttler/throttler.module';
 import { AuditLogModule } from './infrastructure/security/audit/audit-log.module';
 import { EventsModule } from './core/events/events.module';
+import { BootstrapModule } from './core/bootstrap/bootstrap.module';
 
 // Store the connection for legacy code to access
 let sharedConnection: mongoose.Connection | null = null;
@@ -91,7 +92,7 @@ let connectionReady = false;
       useFactory: async () => {
         // Create a direct mongoose connection first
         const uri = `mongodb://${db.host}:${db.port}/${db.name}`;
-        logger.info(`Connecting to MongoDB: ${uri}`);
+        logger.debug(`Connecting to MongoDB: ${uri}`);
 
         // If mongoose is already connected, use that connection
         if (mongoose.connection.readyState === 1) {
@@ -192,6 +193,8 @@ let connectionReady = false;
     // ThrottlerModule, // Temporarily disabled
     AuditLogModule,
     RemoteSystemInformationModule,
+    // Last one
+    BootstrapModule,
   ],
 })
 export class AppModule implements OnModuleInit {

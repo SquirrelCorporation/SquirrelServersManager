@@ -11,7 +11,6 @@ import { AdvancedOperationsService } from './application/services/advanced-opera
 import { InformationService } from './application/services/information.service';
 import { SettingsService } from './application/services/settings.service';
 import { SETTING_REPOSITORY } from './domain/repositories/setting-repository.interface';
-import { SettingsMigrationService } from './infrastructure/migration/settings-migration.service';
 import { SettingRepository } from './infrastructure/repositories/setting.repository';
 import { SettingsController } from './presentation/controllers/settings.controller';
 
@@ -28,7 +27,6 @@ import { SettingsController } from './presentation/controllers/settings.controll
     SettingsService,
     AdvancedOperationsService,
     InformationService,
-    SettingsMigrationService,
     PrometheusProvider,
     {
       provide: SETTING_REPOSITORY,

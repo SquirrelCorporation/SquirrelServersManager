@@ -262,9 +262,9 @@ export class WatcherEngineService implements IWatcherEngineService, OnModuleInit
   /**
    * Register a single watcher
    */
-  async registerWatcher(device: IDevice): Promise<void> {
+  async registerWatcher(device: IDevice): Promise<IComponent<ConfigurationSchema>> {
     try {
-      await this.registerComponent(
+      return await this.registerComponent(
         device._id,
         Kind.WATCHER,
         WATCHERS.DOCKER,
@@ -430,7 +430,8 @@ export class WatcherEngineService implements IWatcherEngineService, OnModuleInit
     logger.info(`Device ${payload.device.uuid} created`);
     try {
       if (payload.device.capabilities.containers.docker?.enabled) {
-        await this.registerWatcher(payload.device);
+        const watcher = (await this.registerWatcher(payload.device)) as AbstractWatcherComponent;
+        watcher.watch();
       }
     } catch (error: any) {
       logger.error(
