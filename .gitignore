@@ -10,3 +10,5 @@ CLAUDE.md
 test.json
 /plugins/
 /node_modules/
+.vscode/
+.DS_Store
