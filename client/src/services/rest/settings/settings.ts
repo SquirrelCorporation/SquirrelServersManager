@@ -1,12 +1,14 @@
 import { request } from '@umijs/max';
 import { API } from 'ssm-shared-lib';
 
+const BASE_URL = '/api/settings';
+
 export async function postLogsSetting(
   type: string,
   value: number,
   options?: Record<string, any>,
 ) {
-  return request<API.SimpleResult>(`/api/settings/logs/${type}`, {
+  return request<API.SimpleResult>(`${BASE_URL}/logs/${type}`, {
     method: 'POST',
     ...{},
     data: { value: value },
@@ -19,7 +21,7 @@ export async function postDeviceSetting(
   value: number,
   options?: Record<string, any>,
 ) {
-  return request<API.SimpleResult>(`/api/settings/devices/${type}`, {
+  return request<API.SimpleResult>(`${BASE_URL}/devices/${type}`, {
     method: 'POST',
     ...{},
     data: { value: value },
@@ -32,7 +34,7 @@ export async function postDashboardSetting(
   value: number,
   options?: Record<string, any>,
 ) {
-  return request<API.SimpleResult>(`/api/settings/dashboard/${type}`, {
+  return request<API.SimpleResult>(`${BASE_URL}/dashboard/${type}`, {
     method: 'POST',
     ...{},
     data: { value: value },
@@ -41,7 +43,7 @@ export async function postDashboardSetting(
 }
 
 export async function postResetSettings(options?: Record<string, any>) {
-  return request<API.SimpleResult>(`/api/settings/reset`, {
+  return request<API.SimpleResult>(`${BASE_URL}/reset`, {
     method: 'POST',
     ...{},
     ...(options || {}),
@@ -49,7 +51,7 @@ export async function postResetSettings(options?: Record<string, any>) {
 }
 
 export async function postRestartServer(options?: Record<string, any>) {
-  return request<API.SimpleResult>(`/api/settings/advanced/restart`, {
+  return request<API.SimpleResult>(`${BASE_URL}/advanced/restart`, {
     method: 'POST',
     ...{},
     ...(options || {}),
@@ -57,7 +59,7 @@ export async function postRestartServer(options?: Record<string, any>) {
 }
 
 export async function deleteServerLogs(options?: Record<string, any>) {
-  return request<API.SimpleResult>(`/api/settings/advanced/logs`, {
+  return request<API.SimpleResult>(`${BASE_URL}/advanced/logs`, {
     method: 'DELETE',
     ...{},
     ...(options || {}),
@@ -65,7 +67,7 @@ export async function deleteServerLogs(options?: Record<string, any>) {
 }
 
 export async function deleteAnsibleLogs(options?: Record<string, any>) {
-  return request<API.SimpleResult>(`/api/settings/advanced/ansible-logs`, {
+  return request<API.SimpleResult>(`${BASE_URL}/advanced/ansible-logs`, {
     method: 'DELETE',
     ...{},
     ...(options || {}),
@@ -74,7 +76,7 @@ export async function deleteAnsibleLogs(options?: Record<string, any>) {
 
 export async function deletePlaybooksAndResync(options?: Record<string, any>) {
   return request<API.SimpleResult>(
-    `/api/settings/advanced/playbooks-and-resync`,
+    `${BASE_URL}/advanced/playbooks-and-resync`,
     {
       method: 'DELETE',
       ...{},
@@ -88,7 +90,7 @@ export async function postDeviceStatsSettings(
   value: number,
   options?: Record<string, any>,
 ) {
-  return request<API.SimpleResult>(`/api/settings/device-stats/${type}`, {
+  return request<API.SimpleResult>(`${BASE_URL}/device-stats/${type}`, {
     method: 'POST',
     ...{},
     data: { value: value },
@@ -100,7 +102,7 @@ export async function postMasterNodeUrlValue(
   value: string,
   options?: Record<string, any>,
 ) {
-  return request<API.SimpleResult>(`/api/settings/keys/master-node-url`, {
+  return request<API.SimpleResult>(`${BASE_URL}/keys/master-node-url`, {
     method: 'POST',
     ...{},
     data: { value: value },
@@ -110,7 +112,7 @@ export async function postMasterNodeUrlValue(
 
 export async function getMongoDBServerStats(options?: Record<string, any>) {
   return request<API.Response<API.MongoDBServerStats>>(
-    `/api/settings/information/mongodb`,
+    `${BASE_URL}/information/mongodb`,
     {
       method: 'GET',
       ...{},
@@ -121,7 +123,7 @@ export async function getMongoDBServerStats(options?: Record<string, any>) {
 
 export async function getRedisServerStats(options?: Record<string, any>) {
   return request<API.Response<API.RedisServerStats>>(
-    `/api/settings/information/redis`,
+    `${BASE_URL}/information/redis`,
     {
       method: 'GET',
       ...{},
@@ -132,7 +134,7 @@ export async function getRedisServerStats(options?: Record<string, any>) {
 
 export async function getPrometheusServerStats(options?: Record<string, any>) {
   return request<API.Response<API.PrometheusServerStats>>(
-    `/api/settings/information/prometheus`,
+    `${BASE_URL}/information/prometheus`,
     {
       method: 'GET',
       ...{},
