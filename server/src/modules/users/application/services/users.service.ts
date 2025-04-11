@@ -1,20 +1,20 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
-import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
-import { SSM_DATA_PATH } from 'src/config';
-import { SettingsKeys, SsmAnsible } from 'ssm-shared-lib';
 import { AnsibleCommandService } from '@modules/ansible';
+import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Cache } from 'cache-manager';
+import { SSM_DATA_PATH } from 'src/config';
+import Events from 'src/core/events/events';
+import { SettingsKeys, SsmAnsible } from 'ssm-shared-lib';
+import { dependencies, version } from '../../../../../package.json';
+import PinoLogger from '../../../../logger';
 import { IUser, Role } from '../../domain/entities/user.entity';
+import { IUsersService } from '../../domain/interfaces/users-service.interface';
 import {
   IUserRepository,
   USER_REPOSITORY,
 } from '../../domain/repositories/user-repository.interface';
-import PinoLogger from '../../../../logger';
-import { dependencies, version } from '../../../../../package.json';
-import { IUsersService } from '../../domain/interfaces/users-service.interface';
-import Events from 'src/core/events/events';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 
 const logger = PinoLogger.child({ module: 'UsersService' });
 

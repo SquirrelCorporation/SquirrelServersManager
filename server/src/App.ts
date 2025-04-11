@@ -185,8 +185,6 @@ class AppWrapper {
     logger.info('\n\nSetting up routes ==========================================');
   }
 
-  public async startServer() {}
-
   public async stopServer(callback: () => any) {
     // Close NestJS app
     if (this.nestApp) {

@@ -1,5 +1,5 @@
+import { DEVICES_SERVICE, DEVICE_AUTH_SERVICE, DevicesModule } from '@modules/devices';
 import { Global, Module } from '@nestjs/common';
-import { DevicesModule, DEVICES_SERVICE, DEVICE_AUTH_SERVICE } from '@modules/devices';
 import { SshConnectionService } from './services/ssh-connection.service';
 
 @Global() // Make this module global to ensure single instance
