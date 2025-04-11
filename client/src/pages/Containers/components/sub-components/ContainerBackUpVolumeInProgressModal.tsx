@@ -1,7 +1,11 @@
 import { BackupSolid } from '@/components/Icons/CustomIcons';
-import { getBackUpVolume, postBackUpVolume } from '@/services/rest/services';
-import { socket } from '@/socket';
-import { Button, Flex, message, Modal, Result, Spin } from 'antd';
+import {
+  getBackUpVolume,
+  postBackUpVolume,
+} from '@/services/rest/containers/container-volumes';
+import { containerVolumesSocket as socket } from '@/socket';
+import message from '@/components/Message/DynamicMessage';
+import { Button, Flex, Modal, Result, Spin } from 'antd';
 import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import { SsmContainer, SsmEvents } from 'ssm-shared-lib';
 
@@ -31,6 +35,17 @@ const ContainerBackUpVolumeInProgressModal: React.FC<
   const [backupInfo, setBackupInfo] = React.useState<
     { fileName: string; mode: SsmContainer.VolumeBackupMode } | undefined
   >();
+
+  useEffect(() => {
+    socket.connect();
+    socket.on(SsmEvents.VolumeBackup.PROGRESS, onVolumeBackupProgress);
+
+    return () => {
+      socket.off(SsmEvents.VolumeBackup.PROGRESS, onVolumeBackupProgress);
+      socket.disconnect();
+    };
+  }, []);
+
   useEffect(() => {
     if (inProgress?.visible === true) {
       setBackupInfo(undefined);
@@ -75,16 +90,6 @@ const ContainerBackUpVolumeInProgressModal: React.FC<
       setIsFinished(BackupResult.ERROR);
     }
   };
-
-  useEffect(() => {
-    socket.connect();
-    socket.on(SsmEvents.VolumeBackup.PROGRESS, onVolumeBackupProgress);
-
-    return () => {
-      socket.off(SsmEvents.VolumeBackup.PROGRESS, onVolumeBackupProgress);
-      socket.disconnect();
-    };
-  }, []);
 
   return (
     <Modal

@@ -1,4 +1,4 @@
-import { getContainerStats } from '@/services/rest/containersstats';
+import { getContainerStats } from '@/services/rest/containers/container-statistics';
 import { Line } from '@ant-design/charts';
 import moment from 'moment';
 import React, { useEffect } from 'react';
@@ -69,7 +69,7 @@ const ContainerStatsDetail: React.FC<ContainerStatsDetailProps> = ({
     autoFit: false,
     theme: {
       view: {
-        viewFill: '#1d222e',
+        viewFill: 'transparent',
       },
     },
     width: 280,

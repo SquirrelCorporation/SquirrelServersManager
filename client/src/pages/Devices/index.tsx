@@ -2,7 +2,7 @@ import { OsLogo as OriginalOsLogo } from '@/components/DeviceComponents/OsLogo/O
 import { CarbonBatchJob } from '@/components/Icons/CustomIcons';
 import { TerminalStateProps } from '@/components/PlaybookExecutionModal';
 import Title, { TitleColors } from '@/components/Template/Title';
-import { getDevices } from '@/services/rest/device';
+import { getDevices } from '@/services/rest/devices/devices';
 import {
   AppstoreOutlined,
   ControlOutlined,
@@ -134,6 +134,7 @@ const DeviceListPage = memo(() => {
                           : item.systemInformation?.os?.logofile,
                       )}
                       size="large"
+                      className={styles['elevated-avatar']}
                     />
                   </motion.div>
                 ) : (
@@ -144,6 +145,7 @@ const DeviceListPage = memo(() => {
                         : item.systemInformation?.os?.logofile,
                     )}
                     size="large"
+                    className={styles['elevated-avatar']}
                   />
                 )
               }
@@ -184,14 +186,6 @@ const DeviceListPage = memo(() => {
           bordered={false}
           style={{ marginTop: 0 }}
           bodyStyle={cardBodyStyle}
-          extra={
-            <DeviceQuickActionDropDown
-              onDropDownClicked={onDropDownClicked}
-              setTerminal={setTerminal}
-            >
-              <Button icon={<CarbonBatchJob />}>Apply to all</Button>
-            </DeviceQuickActionDropDown>
-          }
         >
           <AnimatePresence>
             <ProList

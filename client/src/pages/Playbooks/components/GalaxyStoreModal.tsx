@@ -3,9 +3,10 @@ import {
   getCollection,
   getCollections,
   postInstallCollection,
-} from '@/services/rest/playbooks';
+} from '@/services/rest/ansible/ansible.galaxy';
 import { ProDescriptions, ProList, ProTable } from '@ant-design/pro-components';
-import { Avatar, Button, message, Modal, Tag, Typography } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Avatar, Button, Modal, Tag, Typography } from 'antd';
 import React, { Dispatch, SetStateAction } from 'react';
 import { AnsibleAPI } from 'ssm-shared-lib';
 

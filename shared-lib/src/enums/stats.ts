@@ -1,13 +1,12 @@
 export enum ContainerStatsType {
-  CPU = 'containerCpu',
-  MEM = 'containerMem'
+    CPU = "container_cpu_usage",
+    MEM = "container_memory_usage"
 }
-
 export enum DeviceStatsType {
-  CPU = 'cpu',
-  MEM_USED = 'memUsed',
-  MEM_FREE = 'memFree',
-  CONTAINERS = 'containers',
-  DISK_USED = 'diskUsed',
-  DISK_FREE = 'diskFree'
+    CPU = "cpu_usage",
+    MEM_USED = "memory_usage",
+    MEM_FREE = "memory_free",
+    CONTAINERS = "containers",
+    DISK_USED = "storage_usage",
+    DISK_FREE = "storage_free"
 }

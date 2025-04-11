@@ -1,4 +1,4 @@
-import { getContainers } from '@/services/rest/containers';
+import { getContainers } from '@/services/rest/containers/containers';
 import {
   CheckCircleFilled,
   CloseCircleOutlined,

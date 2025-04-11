@@ -1,9 +1,9 @@
 import TerminalCore, {
   TerminalCoreHandles,
 } from '@/components/Terminal/TerminalCore';
-import { socket } from '@/socket';
+import { containerLiveLogsSocket as socket } from '@/socket';
 import { useParams } from '@@/exports';
-import { message } from 'antd';
+import message from '@/components/Message/DynamicMessage';
 import React, { useEffect, useImperativeHandle, useRef } from 'react';
 import { SsmEvents } from 'ssm-shared-lib';
 
@@ -53,10 +53,11 @@ const LiveLogs = React.forwardRef<LiveLogsHandles, LiveLogsProps>(
     const startSocketConnection = () => {
       socket.connect();
       resetTerminalContent();
+      console.log('GET_LOGS', { containerId: id, from });
       socket
         .emitWithAck(SsmEvents.Logs.GET_LOGS, { containerId: id, from })
         .then((response) => {
-          if (response.status === 'OK') {
+          if (response.success) {
             terminalRef?.current?.onDataIn(
               '---\n' +
                 '#  ,;;:;,\n' +

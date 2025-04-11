@@ -1,7 +1,8 @@
 import { SFTPDataNode } from '@/components/DeviceComponents/SFTPDrawer/SFTPDrawer';
-import { socket } from '@/socket';
+import { sftpSocket as socket } from '@/socket';
 import { ModalForm, ProFormDigit } from '@ant-design/pro-components';
-import { Checkbox, message } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Checkbox } from 'antd';
 import React, { useImperativeHandle, useState } from 'react';
 import { SsmEvents } from 'ssm-shared-lib';
 
@@ -115,7 +116,7 @@ const UpdateModeModal = React.forwardRef<
 
   const updateMode = async (): Promise<boolean> => {
     if (!node) {
-      message.error('No node selected');
+      message.error({ content: 'No node selected', duration: 6 });
       return false;
     }
 
@@ -128,16 +129,22 @@ const UpdateModeModal = React.forwardRef<
           path: node?.key?.replace('//', '/'),
           mode: decimalMode,
         }); // Send the chmod request
-      if (response.status === 'OK') {
-        message.success('Permissions updated successfully!');
+      if (response.success) {
+        message.success({
+          content: 'Permissions updated successfully!',
+          duration: 6,
+        });
         return true; // Successful chmod
       } else {
         throw new Error(
-          `Failed to update permissions: ${response.error || 'Unknown error'}`,
+          `Failed to update permissions: ${response.message || 'Unknown error'}`,
         );
       }
     } catch (error: any) {
-      message.error(`Failed to update permissions (${error.message})`);
+      message.error({
+        content: `Failed to update permissions (${error.message})`,
+        duration: 6,
+      });
       return false;
     }
   };
@@ -234,8 +241,8 @@ const UpdateModeModal = React.forwardRef<
         label="Octal Mode"
         placeholder="e.g., 755"
         fieldProps={{
-          value: Number.parseInt(mode),
-          onChange: (e) => handleModeInputChange(e?.toString() || '0'),
+          value: parseInt(mode, 8),
+          onChange: (value) => handleModeInputChange(value?.toString() || '0'),
         }}
       />
     </ModalForm>

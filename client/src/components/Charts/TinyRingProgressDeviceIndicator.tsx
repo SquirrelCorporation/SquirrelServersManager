@@ -1,12 +1,14 @@
-import { DeviceStatType } from '@/components/Charts/DeviceStatType';
-import { getDeviceStat } from '@/services/rest/devicestat';
-import { Tiny, TinyProgressConfig } from '@ant-design/charts';
-import { message, Skeleton } from 'antd';
+import { getDeviceStat } from '@/services/rest/statistics/stastistics';
+import message from '@/components/Message/DynamicMessage';
+import { Skeleton, Tooltip } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { StatsType } from 'ssm-shared-lib';
+import CountDisplay from '@/components/Indicators/CountDisplay';
+import moment from 'moment';
 
 export type TinyRingProps = {
   deviceUuid: string;
-  type: DeviceStatType;
+  type: StatsType.DeviceStatsType;
 };
 
 const TinyRingProgressDeviceIndicator: React.FC<TinyRingProps> = ({
@@ -15,18 +17,31 @@ const TinyRingProgressDeviceIndicator: React.FC<TinyRingProps> = ({
 }) => {
   const [value, setValue] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [date, setDate] = useState<string>('never');
 
   const asyncFetch = useCallback(async () => {
+    setIsLoading(true);
     try {
       const res = await getDeviceStat(deviceUuid, type, {});
-      if (res.data && !isNaN(res.data.value)) {
+
+      if (
+        res.data &&
+        typeof res.data.value === 'number' &&
+        !isNaN(res.data.value)
+      ) {
         setValue(res.data.value);
+        setDate(moment(res.data.date).format('YYYY-MM-DD, HH:mm'));
       } else {
+        console.warn(
+          `Invalid count value received for ${type} on ${deviceUuid}`,
+        );
         setValue(NaN);
+        setDate('invalid data');
       }
     } catch (error: any) {
       message.error({ content: error.message, duration: 8 });
       setValue(NaN);
+      setDate('error');
     } finally {
       setIsLoading(false);
     }
@@ -36,51 +51,20 @@ const TinyRingProgressDeviceIndicator: React.FC<TinyRingProps> = ({
     void asyncFetch();
   }, [asyncFetch]);
 
-  const config: TinyProgressConfig = useMemo(
-    () => ({
-      percent: 0.0,
-      width: 50,
-      height: 50,
-      innerRadius: 0.92,
-      radius: 0.98,
-      color: ['#ffffff', '#1668dc'],
-      annotations: [
-        {
-          type: 'text',
-          style: {
-            text: `${value ?? '0'}`,
-            x: '50%',
-            y: '40%',
-            textAlign: 'center',
-            fontSize: 12,
-            fill: 'rgba(232,237,243,0.9)',
-            fontStyle: 'bold',
-          },
-        },
-        {
-          type: 'text',
-          style: {
-            text: 'Containers',
-            x: '48%',
-            y: '60%',
-            textAlign: 'center',
-            fontSize: 8,
-            fill: 'rgba(232,237,243,0.9)',
-            fillOpacity: 0.95,
-            fontStyle: 'normal',
-          },
-        },
-      ],
-    }),
-    [value, deviceUuid, type],
-  );
+  const tooltipText =
+    date !== 'never' && date !== 'error' && date !== 'invalid data'
+      ? `Updated at ${date}`
+      : 'Failed to load data';
 
-  return isLoading || isNaN(value as number) ? (
-    <Skeleton.Avatar active size="large" shape="circle" />
-  ) : (
-    <>
-      <Tiny.Ring key={`${deviceUuid}-${type}`} {...config} />
-    </>
+  return (
+    <CountDisplay
+      key={`${deviceUuid}-${type}`}
+      count={value}
+      isLoading={isLoading}
+      size={46}
+      tooltipText={tooltipText}
+      label="CTX"
+    />
   );
 };
 

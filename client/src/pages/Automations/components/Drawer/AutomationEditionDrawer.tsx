@@ -7,7 +7,7 @@ import {
   getTemplate,
   postAutomation,
   putAutomation,
-} from '@/services/rest/automations';
+} from '@/services/rest/automations/automations';
 import { ArrowDownOutlined, PlusOutlined, UpOutlined } from '@ant-design/icons';
 import {
   DrawerForm,
@@ -15,7 +15,8 @@ import {
   ProFormInstance,
   ProFormText,
 } from '@ant-design/pro-components';
-import { Button, Dropdown, Flex, MenuProps, message, Space } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Button, Dropdown, Flex, MenuProps, Space } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { API, Automations } from 'ssm-shared-lib';
 

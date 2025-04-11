@@ -59,7 +59,7 @@ const HostCard: React.FC<HostCardProps> = ({ deviceIp, showAdvanced }) => (
           { required: true },
           {
             pattern:
-              /^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$|^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])(\.[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])*$/,
+              /^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$|^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])(\.[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])*(\.[a-zA-Z]{2,})$/,
             message: 'Please enter a valid IP address or hostname',
           },
         ]}

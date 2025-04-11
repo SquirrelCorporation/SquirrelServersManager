@@ -1,5 +1,5 @@
-import { getAllDevices } from '@/services/rest/device';
-import { getImages } from '@/services/rest/services';
+import { getAllDevices } from '@/services/rest/devices/devices';
+import { getImages } from '@/services/rest/containers/container-images';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   ActionType,

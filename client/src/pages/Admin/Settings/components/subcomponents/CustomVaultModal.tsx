@@ -3,10 +3,11 @@ import {
   deleteAnsibleVault,
   postAnsibleVault,
   updateAnsibleVault,
-} from '@/services/rest/ansible';
+} from '@/services/rest/ansible-vaults/ansible-vault';
 import { DeleteOutlined } from '@ant-design/icons';
 import { ModalForm, ProForm, ProFormText } from '@ant-design/pro-components';
-import { Avatar, Button, message, Popconfirm } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Avatar, Button, Popconfirm } from 'antd';
 import React, { FC, useState } from 'react';
 import { API } from 'ssm-shared-lib';
 

@@ -3,7 +3,7 @@ import DeployCustomStackModal from '@/pages/Containers/components/sub-components
 import {
   deleteContainerCustomStack,
   getCustomStacks,
-} from '@/services/rest/containers';
+} from '@/services/rest/container-stacks/container-stacks';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   ActionType,
@@ -12,7 +12,8 @@ import {
   TableDropdown,
 } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
-import { Button, message, Tag } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Button, Tag } from 'antd';
 import React, { useRef } from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -23,7 +24,10 @@ const Stacks: React.FC = () => {
     switch (key) {
       case 'delete':
         await deleteContainerCustomStack(uuid).then(() => {
-          message.success('Successfully deleted stack');
+          message.success({
+            content: 'Successfully deleted stack',
+            duration: 6,
+          });
           actionRef?.current?.reload();
         });
         return;

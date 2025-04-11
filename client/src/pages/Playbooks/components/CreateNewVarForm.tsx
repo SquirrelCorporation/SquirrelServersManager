@@ -2,7 +2,7 @@ import ExtraVarIcon, {
   getExtraVarTooltipTitle,
 } from '@/components/PlaybookSelection/ExtraVarIcon';
 import { ExtraVarsViewEditionProps } from '@/pages/Playbooks/components/ExtraVarsViewEditor';
-import { getPlaybooks, postPlaybookExtraVar } from '@/services/rest/playbooks';
+import { getPlaybooks, postPlaybookExtraVar } from '@/services/rest/playbooks/playbooks';
 import { ProFormDependency } from '@ant-design/pro-components';
 import {
   ProForm,
@@ -10,7 +10,8 @@ import {
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-form';
-import { Button, Col, message, Row, Select, Space, Tooltip } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Button, Col, Row, Select, Space, Tooltip } from 'antd';
 import React, { useEffect } from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 

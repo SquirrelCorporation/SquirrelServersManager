@@ -3,14 +3,15 @@ import {
   getAnsibleConfig,
   postAnsibleConfig,
   putAnsibleConfig,
-} from '@/services/rest/ansible';
+} from '@/services/rest/ansible-config/ansible-config';
 import {
   ActionType,
   EditableProTable,
   ProColumns,
   RequestData,
 } from '@ant-design/pro-components';
-import { Button, message, Popconfirm, Spin, Switch } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Button, Popconfirm, Spin, Switch } from 'antd';
 import React, { useRef, useState } from 'react';
 
 interface ConfigEntry {

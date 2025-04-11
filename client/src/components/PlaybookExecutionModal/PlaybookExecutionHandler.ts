@@ -1,5 +1,5 @@
 import taskStatusTimeline from '@/components/PlaybookExecutionModal/TaskStatusTimeline';
-import { getExecLogs, getTaskStatuses } from '@/services/rest/playbooks';
+import { getExecLogs, getTaskStatuses } from '@/services/rest/playbooks/playbooks';
 import { StepsProps } from 'antd';
 import React, { ReactNode } from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';

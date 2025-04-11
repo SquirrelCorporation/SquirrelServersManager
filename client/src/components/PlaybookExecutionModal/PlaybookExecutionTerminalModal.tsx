@@ -5,7 +5,7 @@ import TerminalHandler, {
 import TerminalCore, {
   TerminalCoreHandles,
 } from '@/components/Terminal/TerminalCore';
-import { getAnsibleSmartFailure } from '@/services/rest/ansible';
+import { getAnsibleSmartFailure } from '@/services/rest/smart-failure/smart-failure';
 import { ClockCircleOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { DotLottie, DotLottieReact } from '@lottiefiles/dotlottie-react';
 

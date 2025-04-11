@@ -1,8 +1,8 @@
 import ContainerDetailsModal from '@/pages/Containers/components/containers/ContainerDetailsModal';
 import ContainerMetas from '@/pages/Containers/components/containers/ContainerMetas';
 import EditContainerNameModal from '@/pages/Containers/components/containers/EditContainerNameModal';
-import { getContainers, postRefreshAll } from '@/services/rest/containers';
-import { socket } from '@/socket';
+import { getContainers, postRefreshAll } from '@/services/rest/containers/containers';
+import { containerSocket as socket } from '@/socket';
 import { ReloadOutlined } from '@ant-design/icons';
 import { ActionType, ProList } from '@ant-design/pro-components';
 import { useSearchParams } from '@umijs/max';

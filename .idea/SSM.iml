@@ -11,11 +11,18 @@
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/.data.dev" />
+      <excludeFolder url="file://$MODULE_DIR$/.data.prod/playbooks/00000000-0000-0000-0000-000000000002" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
+      <excludeFolder url="file://$MODULE_DIR$/client/src/.umi" />
+      <excludeFolder url="file://$MODULE_DIR$/client/src/.umi-test" />
+      <excludeFolder url="file://$MODULE_DIR$/server/src/ansible/artifacts" />
+      <excludeFolder url="file://$MODULE_DIR$/shared-lib/distribution" />
+      <excludeFolder url="file://$MODULE_DIR$/site/.vitepress/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/site/.vitepress/dist" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="SquirrelServersManager-Agent" />
     <orderEntry type="library" name="Python 3.9 (SquirrelServersManager) interpreter library" level="application" />
-    <orderEntry type="module" module-name="SquirrelServersManager-Agent" />
   </component>
 </module>

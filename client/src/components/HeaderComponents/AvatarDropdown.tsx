@@ -1,4 +1,4 @@
-import { outLogin } from '@/services/rest/user';
+import { outLogin } from '@/services/rest/users/users';
 import {
   LogoutOutlined,
   SettingOutlined,

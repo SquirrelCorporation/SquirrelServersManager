@@ -2,11 +2,12 @@ import ProxmoxConfigurationFormElements from '@/components/DeviceConfiguration/P
 import {
   getDeviceAuth,
   postCheckDeviceProxmoxAuth,
-  postDeviceProxmoxAuth,
-} from '@/services/rest/deviceauth';
+  updateDeviceProxmoxAuth,
+} from '@/services/rest/devices/device-credentials';
 import { ProFormInstance } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
-import { Button, message, Space } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Button, Space } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -66,7 +67,10 @@ const ProxmoxConfigurationForm: React.FC<ProxmoxConfigurationFormProps> = ({
         }}
         onFinish={async (values) => {
           if (device?.uuid && values) {
-            await postDeviceProxmoxAuth(device.uuid, values as API.ProxmoxAuth)
+            await updateDeviceProxmoxAuth(
+              device.uuid,
+              values as API.ProxmoxAuth,
+            )
               .then(() => {
                 message.success({
                   content: 'Configuration updated',

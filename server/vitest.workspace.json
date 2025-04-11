@@ -1,3 +1,10 @@
 [
-  "src/tests/*"
+  {"name" :  "integration",
+   "include": "src/__tests__/*"
+  },
+  {
+    "name": "modules",
+    "include": "src/modules/*",
+    "exclude": ["**/*.md"]
+  }
 ]

@@ -10,8 +10,8 @@ import ContainerStatProgress from '@/pages/Containers/components/containers/Cont
 import InfoToolTipCard from '@/pages/Containers/components/containers/InfoToolTipCard';
 import StatusTag from '@/pages/Containers/components/containers/StatusTag';
 import UpdateAvailableTag from '@/pages/Containers/components/containers/UpdateAvailableTag';
-import { postDockerContainerAction } from '@/services/rest/containers';
-import { getAllDevices } from '@/services/rest/device';
+import { postDockerContainerAction } from '@/services/rest/containers/containers';
+import { getAllDevices } from '@/services/rest/devices/devices';
 import { capitalizeFirstLetter } from '@/utils/strings';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import {
@@ -21,7 +21,8 @@ import {
   RequestOptionsType,
 } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
-import { Flex, message, Popover, Tag, Tooltip, Typography } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Flex, Popover, Tag, Tooltip, Typography } from 'antd';
 import React from 'react';
 import { API, SsmContainer } from 'ssm-shared-lib';
 
@@ -235,13 +236,12 @@ const ContainerMetas = ({
               </>
             ),
             (
-              <Tooltip
+              <Popover
                 key={`info-${row.id}`}
-                color={'transparent'}
-                title={<InfoToolTipCard item={row} />}
+                content={<InfoToolTipCard item={row} />}
               >
                 <InfoCircleOutlined style={{ color: 'rgb(22, 104, 220)' }} />
-              </Tooltip>
+              </Popover>
             ))
           : [],
         <a

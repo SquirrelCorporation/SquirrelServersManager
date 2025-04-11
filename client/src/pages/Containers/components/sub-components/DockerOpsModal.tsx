@@ -1,7 +1,7 @@
 import TerminalCoreModal, {
   PlaybookExecutionTerminalModalHandles,
 } from '@/components/PlaybookExecutionModal/PlaybookExecutionTerminalModal';
-import { message } from 'antd';
+import message from '@/components/Message/DynamicMessage';
 import React, { RefObject, useEffect, useState } from 'react';
 
 export type DockerOpsModalProps = {

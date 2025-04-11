@@ -1,5 +1,5 @@
 import ContainerStatsDetail from '@/pages/Containers/components/containers/ContainerStatsDetail';
-import { getContainerStat } from '@/services/rest/containers';
+import { getContainerStat } from '@/services/rest/containers/container-statistics';
 import { Popover, Progress } from 'antd';
 import React from 'react';
 import { StatsType } from 'ssm-shared-lib';

@@ -10,15 +10,20 @@ import { HealthWidget } from '@/components/HeaderComponents/HealthWidget';
 import NotificationsWidget from '@/components/HeaderComponents/NotificationsWidget';
 import UpdateAvailableWidget from '@/components/HeaderComponents/UpdateAvailableWidget';
 import NoDeviceModal from '@/components/NoDevice/NoDeviceModal';
-import { currentUser as queryCurrentUser, hasUser } from '@/services/rest/user';
+import {
+  currentUser as queryCurrentUser,
+  hasUser,
+} from '@/services/rest/users/users';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 // @ts-ignore
 import { history, RunTimeLayoutConfig } from '@umijs/max';
-import { Alert } from 'antd';
+import { Alert, message } from 'antd';
 import { API } from 'ssm-shared-lib';
 import defaultSettings from '../config/defaultSettings';
 import { version } from '../package.json';
 import Logo from '../public/logo.svg';
+import PluginRoutes from './plugins/components/PluginRoutes';
+import { PluginProvider } from './plugins/contexts/plugin-context';
 import { errorConfig } from './requestErrorConfig';
 
 const loginPath = '/user/login';
@@ -89,8 +94,11 @@ export const layout: RunTimeLayoutConfig = ({
   // @ts-ignore
   setInitialState,
 }) => {
+  const [messageApi, contextHolder] = message.useMessage();
+
   return {
     logo: Logo,
+    title: 'Squirrel Servers Manager',
     actionsRender: () => [
       <DocumentationWidget key="doc" />,
       <DevicesHeaderWidget key="online" />,
@@ -121,13 +129,15 @@ export const layout: RunTimeLayoutConfig = ({
     //  403
     // unAccessible: <div>unAccessible</div>,
     //  loading
-    childrenRender: (children: any) => {
-      // if (initialState?.loading) return <PageLoading />;
+    contentStyle: { margin: 0 },
+    // @ts-ignore
+    childrenRender: (children) => {
       const versionMismatch =
         version != initialState?.currentUser?.settings?.server.version;
+
       return (
-        <>
-          <AlertNotification />
+        <PluginProvider>
+          {contextHolder}
           {initialState?.currentUser?.settings?.server.version &&
             versionMismatch && (
               <Alert
@@ -144,7 +154,9 @@ export const layout: RunTimeLayoutConfig = ({
               <NoDeviceModal />
             )}
           {children}
-        </>
+          <PluginRoutes />
+          <AlertNotification />
+        </PluginProvider>
       );
     },
     ...initialState?.settings,

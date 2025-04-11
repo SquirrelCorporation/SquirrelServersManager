@@ -3,7 +3,7 @@ import Field from '@/pages/Dashboard/ChartComponents/Field';
 import {
   getAveragedStats,
   getNbContainersByStatus,
-} from '@/services/rest/containersstats';
+} from '@/services/rest/containers/container-statistics';
 import { Tiny } from '@ant-design/charts';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { Tooltip, Typography } from 'antd';

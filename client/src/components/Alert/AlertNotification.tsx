@@ -1,7 +1,7 @@
-import { socket } from '@/socket';
+import { notificationSocket as socket } from '@/socket';
 import { notification, Typography } from 'antd';
 import React, { useEffect } from 'react';
-import { SsmEvents, SsmAlert } from 'ssm-shared-lib';
+import { SsmAlert, SsmEvents } from 'ssm-shared-lib';
 
 const AlertNotification: React.FC = () => {
   const [api, contextHolder] = notification.useNotification();

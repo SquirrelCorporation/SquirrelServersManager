@@ -2,7 +2,7 @@ import { Callbacks } from '@/pages/Playbooks/components/DirectoryTreeView';
 import {
   commitAndSyncPlaybooksGitRepository,
   forcePullPlaybooksGitRepository,
-} from '@/services/rest/playbooks-repositories';
+} from '@/services/rest/playbooks/repositories';
 import {
   ArrowDownOutlined,
   DeleteOutlined,
@@ -10,7 +10,8 @@ import {
   FolderOpenOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
-import { Dropdown, MenuProps, message, Popconfirm } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Dropdown, MenuProps, Popconfirm } from 'antd';
 import React from 'react';
 import { DirectoryTree } from 'ssm-shared-lib';
 
