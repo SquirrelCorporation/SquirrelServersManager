@@ -75,7 +75,7 @@ export class UsersController {
       secure: process.env.NODE_ENV === 'production',
     });
     this.eventEmitter.emit(Events.TELEMETRY_EVENT, {
-      eventName: 'payload',
+      eventName: 'user login',
     });
     return {
       currentAuthority: user.role,
