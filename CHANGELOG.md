@@ -16,6 +16,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Refacto telemetry module for event tracking and monitoring [\#849](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/849) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Chore refacto nestjs [\#817](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/817) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Ensure async usage in test assertions and update dependencies [\#791](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/791) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Chore refacto frontend props [\#789](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/789) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))

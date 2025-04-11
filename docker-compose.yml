@@ -62,7 +62,6 @@ services:
       NODE_ENV: production
     volumes:
       - ./.data.prod:/data
-      - ./plugins:/opt/squirrelserversmanager/plugins
     labels:
       wud.display.name: "SSM - Server"
       wud.watch.digest: false
