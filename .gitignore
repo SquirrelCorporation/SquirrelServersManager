@@ -8,7 +8,6 @@
 CLAUDE.md
 .idea/SSM.iml
 test.json
-/plugins/
 /node_modules/
 .vscode/
 .DS_Store

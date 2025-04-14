@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo Tasks Manager</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Todo Tasks Manager</h1>
+      <p>A simple plugin for managing your tasks</p>
+    </header>
+    
+    <div class="todo-form">
+      <form id="add-todo-form">
+        <div class="form-group">
+          <input type="text" id="todo-title" placeholder="What needs to be done?" required>
+          <textarea id="todo-description" placeholder="Description (optional)"></textarea>
+        </div>
+        <div class="form-group">
+          <select id="todo-priority">
+            <option value="low">Low Priority</option>
+            <option value="medium" selected>Medium Priority</option>
+            <option value="high">High Priority</option>
+          </select>
+          <input type="date" id="todo-due-date">
+        </div>
+        <button type="submit" id="add-todo-btn">Add Task</button>
+      </form>
+    </div>
+    
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="active">Active</button>
+      <button class="filter-btn" data-filter="completed">Completed</button>
+    </div>
+    
+    <div class="todo-list" id="todo-list">
+      <!-- Todo items will be added here dynamically -->
+      <div class="loading">Loading tasks...</div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html> 

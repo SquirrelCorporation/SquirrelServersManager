@@ -1,0 +1,14 @@
+{
+  "id": "sample-plugin",
+  "name": "sample-plugin",
+  "version": "1.0.0",
+  "description": "A sample plugin for SquirrelServersManager",
+  "entryPoint": "./dist/index.js",
+  "staticDir": "public",
+  "client": {
+    "remoteEntryRelativePath": "public/client/remoteEntry.js",
+    "exposedModule": "./SamplePluginComponent",
+    "componentName": "SamplePluginComponent",
+    "hasDedicatedPage": true
+  }
+}

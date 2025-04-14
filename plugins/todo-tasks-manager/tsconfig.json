@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "commonjs",
+    "lib": ["es2018", "dom"],
+    "declaration": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "../../plugin-types": ["../plugin-types"]
+    }
+  },
+  "include": [
+    "src/index.ts",
+    "src/routes.ts",
+    "src/models/**/*.ts",
+    "src/client/**/*.tsx",
+    "src/plugin-types.ts"
+  ],
+  "exclude": ["node_modules", "dist", "public"]
+}
