@@ -9,10 +9,14 @@ export function isValidUrl(url: string): boolean {
     return false;
   }
   try {
+    console.log('url', url);
     const parsedUrl = new URL(url);
+    console.log('parsedUrl', parsedUrl);
     // Ensure the protocol is either http: or https:
-    return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https://';
-  } catch {
+    console.log('parsedUrl.protocol', parsedUrl.protocol);
+    return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
+  } catch (error) {
+    console.log('error', error);
     // URL constructor throws if the format is invalid
     return false;
   }

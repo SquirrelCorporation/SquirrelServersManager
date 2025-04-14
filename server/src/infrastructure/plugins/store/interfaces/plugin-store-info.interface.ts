@@ -1,7 +1,7 @@
 /**
  * Represents the metadata for a single plugin available in a repository.
  */
-export interface PluginInfo {
+export interface PluginStoreInfo {
   id: string; // Unique plugin ID (kebab-case)
   name: string; // Human-readable name
   version: string; // SemVer version

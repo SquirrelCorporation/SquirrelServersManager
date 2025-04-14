@@ -174,11 +174,11 @@ export class PluginSystem {
             // If we got here, we couldn't find a usable plugin implementation
             logger.error(`No usable plugin implementation found in ${folder}`);
           } catch (importError: any) {
-            logger.error(`Error importing plugin module: ${folder}`, importError);
+            logger.error(importError, `Error importing plugin module: ${folder}`);
             throw importError;
           }
         } catch (error: any) {
-          logger.error(`Failed to load plugin: ${folder}`, error);
+          logger.error(error, `Failed to load plugin: ${folder}`);
         }
       }
     } catch (error: any) {

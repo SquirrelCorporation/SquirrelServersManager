@@ -2,7 +2,7 @@
  * Represents the metadata for a single plugin available in a store repository.
  * Mirrors the backend interface.
  */
-export interface PluginInfo {
+export interface PluginStoreInfo {
   id: string;
   name: string;
   version: string;

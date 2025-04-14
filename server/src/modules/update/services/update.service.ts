@@ -80,30 +80,37 @@ export class UpdateService implements IUpdateService {
    */
   @Cron(CronExpression.EVERY_30_MINUTES, { name: 'checkVersion' })
   public async checkVersion(): Promise<void> {
-    this.logger.log('Checking for updates...');
-    const localVersion = version;
-    const remoteVersion = await this.fetchRemoteVersion();
+    try {
+      this.logger.log('Checking for updates...');
+      const localVersion = version;
+      const remoteVersion = await this.fetchRemoteVersion();
 
-    if (!remoteVersion) {
-      this.logger.error("Couldn't determine the latest remote version.");
-      return;
-    }
+      if (!remoteVersion) {
+        this.logger.error("Couldn't determine the latest remote version.");
+        return;
+      }
 
-    const comparison = this.compareVersions(localVersion, remoteVersion);
+      const comparison = this.compareVersions(localVersion, remoteVersion);
 
-    if (comparison === 0) {
-      this.logger.log('SSM remote and current versions are identical, no update available.');
-      await this.cacheManager.set(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE, '');
-    } else if (comparison === 1) {
-      this.logger.log(
-        `The SSM local version (${localVersion}) is newer than the remote version (${remoteVersion}).`,
-      );
-      await this.cacheManager.set(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE, '');
-    } else if (comparison === -1) {
-      this.logger.log(
-        `The SSM local version ${localVersion} is older than the remote version (${remoteVersion}).`,
-      );
-      await this.cacheManager.set(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE, remoteVersion);
+      if (comparison === 0) {
+        this.logger.log('SSM remote and current versions are identical, no update available.');
+        await this.cacheManager.set(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE, '');
+      } else if (comparison === 1) {
+        this.logger.log(
+          `The SSM local version (${localVersion}) is newer than the remote version (${remoteVersion}).`,
+        );
+        await this.cacheManager.set(SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE, '');
+      } else if (comparison === -1) {
+        this.logger.log(
+          `The SSM local version ${localVersion} is older than the remote version (${remoteVersion}).`,
+        );
+        await this.cacheManager.set(
+          SettingsKeys.GeneralSettingsKeys.UPDATE_AVAILABLE,
+          remoteVersion,
+        );
+      }
+    } catch (error) {
+      this.logger.error(error, 'Failed to check for updates');
     }
   }
 

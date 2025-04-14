@@ -1,7 +1,7 @@
 // server/src/infrastructure/plugins/store/plugin-store.controller.ts
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { IsOptional, IsString, IsUrl } from 'class-validator';
-import { PluginInfo } from './interfaces/plugin-store-info.interface';
+import { PluginStoreInfo } from './interfaces/plugin-store-info.interface';
 import { PluginStoreService } from './plugin-store.service';
 
 class RepositoryDto {
@@ -44,7 +44,7 @@ export class PluginStoreController {
   }
 
   @Get('available')
-  async getAvailablePlugins(): Promise<PluginInfo[]> {
+  async getAvailablePlugins(): Promise<PluginStoreInfo[]> {
     return this.pluginStoreService.getAvailablePlugins();
   }
 

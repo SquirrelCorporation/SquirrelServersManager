@@ -104,3 +104,16 @@ export class ValidationException extends BadRequestException {
     super(message, { validationErrors });
   }
 }
+
+/**
+ * Database connection exception - used when database connection is lost or unavailable
+ */
+export class DatabaseConnectionException extends ServiceUnavailableException {
+  constructor(message = 'Database connection is unavailable', errorData?: any) {
+    super(message, {
+      ...errorData,
+      retryable: true,
+      retryAfter: 5000, // Suggest retry after 5 seconds
+    });
+  }
+}

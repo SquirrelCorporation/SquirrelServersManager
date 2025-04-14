@@ -2,19 +2,19 @@ import {
   addCustomRepository,
   getCustomRepositories,
   removeCustomRepository,
-} from '@/services/api';
+} from '@/services/rest/plugin-store.service';
 import { DeleteOutlined } from '@ant-design/icons';
 import { Alert, Button, Form, Input, List, message, Modal, Spin } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 interface RepositoryManagementModalProps {
-  visible: boolean;
+  open: boolean;
   onClose: () => void;
-  onRepositoriesUpdate: () => void; // Callback to trigger refresh in parent
+  onRepositoriesUpdate: () => void;
 }
 
 const RepositoryManagementModal: React.FC<RepositoryManagementModalProps> = ({
-  visible,
+  open,
   onClose,
   onRepositoriesUpdate,
 }) => {
@@ -24,16 +24,16 @@ const RepositoryManagementModal: React.FC<RepositoryManagementModalProps> = ({
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if (visible) {
+    if (open) {
       fetchRepos();
     }
-  }, [visible]);
+  }, [open]);
 
   const fetchRepos = async () => {
     setLoading(true);
     setError(null);
     try {
-      const repos = await getCustomRepositories();
+      const { data: repos } = await getCustomRepositories();
       setRepositories(repos);
     } catch (err: any) {
       setError(err.message || 'Failed to load repositories.');
@@ -46,10 +46,10 @@ const RepositoryManagementModal: React.FC<RepositoryManagementModalProps> = ({
   const handleRemove = async (urlToRemove: string) => {
     setLoading(true);
     try {
-      const updatedRepos = await removeCustomRepository(urlToRemove);
+      const { data: updatedRepos } = await removeCustomRepository(urlToRemove);
       setRepositories(updatedRepos);
       message.success('Repository removed successfully.');
-      onRepositoriesUpdate(); // Notify parent
+      onRepositoriesUpdate();
     } catch (err: any) {
       message.error(err.message || 'Failed to remove repository.');
     } finally {
@@ -60,11 +60,11 @@ const RepositoryManagementModal: React.FC<RepositoryManagementModalProps> = ({
   const handleAdd = async (values: { url: string }) => {
     setLoading(true);
     try {
-      const updatedRepos = await addCustomRepository(values.url);
+      const { data: updatedRepos } = await addCustomRepository(values.url);
       setRepositories(updatedRepos);
       message.success('Repository added successfully.');
-      form.resetFields(); // Clear the input field
-      onRepositoriesUpdate(); // Notify parent
+      form.resetFields();
+      onRepositoriesUpdate();
     } catch (err: any) {
       message.error(err.message || 'Failed to add repository.');
     } finally {
@@ -75,7 +75,7 @@ const RepositoryManagementModal: React.FC<RepositoryManagementModalProps> = ({
   return (
     <Modal
       title="Manage Custom Repositories"
-      visible={visible}
+      open={open}
       onCancel={onClose}
       footer={[
         <Button key="close" onClick={onClose}>

