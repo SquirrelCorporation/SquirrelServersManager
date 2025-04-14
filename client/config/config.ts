@@ -1,10 +1,10 @@
 // https://umijs.org/config/
 import { defineConfig } from '@umijs/max';
+import MonacoEditorWebpackPlugin from 'monaco-editor-webpack-plugin';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
 const { REACT_APP_ENV = 'dev' } = process.env;
-import MonacoEditorWebpackPlugin from 'monaco-editor-webpack-plugin';
 
 export default defineConfig({
   /**
@@ -184,21 +184,30 @@ export default defineConfig({
     },
   ],
   //================ pro =================
-  presets: ['umi-presets-pro'],
+  presets: ['umi-presets-pro'], // Re-enabled preset
   /**
    * @doc https://pro.ant.design/zh-cn/docs/openapi/
    */
   mfsu: {
     strategy: 'normal',
+    shared: {
+      react: { singleton: true, eager: true, requiredVersion: false },
+      'react-dom': { singleton: true, eager: true, requiredVersion: false },
+      antd: { singleton: true, eager: true, requiredVersion: false },
+    },
   },
   esbuildMinifyIIFE: true,
-  requestRecord: {},
-  clientLoader: {},
+  requestRecord: {}, // Re-enabled
+  clientLoader: {}, // Re-enabled
   chainWebpack(memo: any) {
+    // Re-enabled
+    // Ensure MonacoWebpackPlugin is imported if uncommenting chainWebpack
+    // import MonacoEditorWebpackPlugin from 'monaco-editor-webpack-plugin';
     memo.plugin('monaco-editor').use(MonacoEditorWebpackPlugin, []);
     return memo;
   },
   codeSplitting: {
+    // Re-enabled
     jsStrategy: 'granularChunks',
   },
 });

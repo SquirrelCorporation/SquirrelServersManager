@@ -1,8 +1,8 @@
-import * as fs from 'fs';
-import * as path from 'path';
 import { DynamicModule, INestApplication } from '@nestjs/common';
 import express from 'express';
+import * as fs from 'fs';
 import mongoose from 'mongoose';
+import * as path from 'path';
 import logger from '../../logger';
 
 export interface PluginManifest {
@@ -52,7 +52,7 @@ export class PluginSystem {
 
   public static getInstance(pluginsDir?: string): PluginSystem {
     if (!PluginSystem.instance) {
-      const basePath = '/data/plugins';
+      const basePath = '/data';
       // Following the project structure - plugins at project root
       const resolvedPluginsDir = pluginsDir || path.join(basePath, 'plugins');
       PluginSystem.instance = new PluginSystem(resolvedPluginsDir);
@@ -368,18 +368,23 @@ export class PluginSystem {
           const pluginLogger = this.pluginLoggers.get(pluginName);
 
           if (manifest.staticDir) {
-            const staticPath = path.join(
+            // Serve the 'client' subdirectory within the staticDir
+            const staticClientPath = path.join(
               this.pluginsDir,
-              pluginName.toLowerCase(),
-              manifest.staticDir,
+              pluginName, // Use original case from manifest
+              manifest.staticDir, // e.g., 'public'
+              'client', // Serve the client build output specifically
             );
-
-            if (fs.existsSync(staticPath)) {
-              const staticUrl = `/static-plugins/${pluginName.toLowerCase()}`;
-              expressInstance.use(staticUrl, express.static(staticPath));
-              pluginLogger?.info(`Serving static files from ${staticPath} at ${staticUrl}`);
+            logger.info(`Static client path: ${staticClientPath}`);
+            if (fs.existsSync(staticClientPath)) {
+              // Keep the URL prefix simple, matching the loader's expectation
+              const staticUrl = `/static-plugins/client/${pluginName}`; // Use original case
+              expressInstance.use(staticUrl, express.static(staticClientPath));
+              pluginLogger?.info(
+                `Serving static client files from ${staticClientPath} at ${staticUrl}`,
+              );
             } else {
-              pluginLogger?.warn(`Static directory ${staticPath} does not exist`);
+              pluginLogger?.warn(`Static client directory ${staticClientPath} does not exist`);
             }
           }
         }

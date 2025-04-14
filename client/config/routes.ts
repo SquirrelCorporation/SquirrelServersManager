@@ -121,4 +121,9 @@ export default [
     path: '/manage/devices/ssh/:id',
     component: './Devices/DeviceSSHTerminal',
   },
+  {
+    path: '/plugins/:pluginId',
+    hideInMenu: true,
+    component: '@/plugins/components/PluginPageRenderer',
+  },
 ];

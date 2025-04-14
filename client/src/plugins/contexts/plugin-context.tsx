@@ -34,6 +34,12 @@ interface PluginContextType {
 
   // Get plugin routes
   getPluginRoutes: () => any[];
+
+  // Added: Function to load a specific component
+  loadRemoteComponentFromPlugin: (
+    pluginId: string,
+    exposedModule: string,
+  ) => Promise<React.ComponentType<any>>; // Return type is a React component
 }
 
 // Create the context
@@ -83,38 +89,43 @@ export const PluginProvider: React.FC<{ children: React.ReactNode }> = ({
     setError(null);
 
     try {
-      // Fetch plugin metadata from the server
-      const metadata = await fetchPluginMetadata();
+      const metadataArray = await fetchPluginMetadata();
       console.log(
         'Fetched plugin metadata:',
-        JSON.stringify(metadata, null, 2),
+        JSON.stringify(metadataArray, null, 2),
       );
-      setPluginMetadata(metadata);
+      setPluginMetadata(metadataArray);
 
       if (!appComponent) {
         console.error('Cannot register plugins: App component not initialized');
         return;
       }
 
-      // Load plugins using the metadata from the server
-      console.log(`Loading ${metadata.length} plugins...`);
-      const plugins = await pluginLoader.loadPlugins(metadata);
+      const loadedPlugins = await pluginLoader.loadPlugins(metadataArray);
 
-      if (plugins.length === 0 && metadata.length > 0) {
+      if (loadedPlugins.length === 0 && metadataArray.length > 0) {
         console.warn(
           'No plugins could be loaded, but metadata was found. Check plugin paths and server configuration.',
         );
       }
 
       // Register plugins
-      console.log(`Registering ${plugins.length} plugins...`);
-      for (const plugin of plugins) {
+      console.log(`Registering ${loadedPlugins.length} plugins...`);
+      for (const plugin of loadedPlugins) {
         try {
-          console.log(`Registering plugin: ${plugin.name} (${plugin.id})`);
-          pluginRegistry.registerPlugin(plugin, appComponent);
-          console.log(
-            `Successfully loaded plugin: ${plugin.name} (${plugin.id})`,
-          );
+          // Find the corresponding metadata object for this plugin
+          const metadata = metadataArray.find((m) => m.id === plugin.id);
+          if (!metadata) {
+            console.warn(
+              `Metadata not found for loaded plugin with id: ${plugin.id}. Skipping registration.`,
+            );
+            continue; // Skip registration if metadata not found
+          }
+
+          // Use the correct 3-argument call now
+          console.log(`Registering plugin: ${plugin.id} (using metadata)`);
+          pluginRegistry.registerPlugin(plugin, metadata, appComponent!);
+          console.log(`Successfully registered plugin: ${plugin.id}`);
         } catch (error) {
           console.error(`Failed to register plugin: ${plugin.id}`, error);
         }
@@ -151,8 +162,23 @@ export const PluginProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Register a plugin manually
   const registerPlugin = (plugin: IClientPlugin): void => {
+    if (!plugin.id) {
+      console.error(
+        'Manual plugin registration failed: Plugin is missing an ID.',
+        plugin,
+      );
+      return;
+    }
     if (appComponent) {
-      pluginRegistry.registerPlugin(plugin, appComponent);
+      // Find metadata for the manually provided plugin
+      const metadata = pluginMetadata.find((m) => m.id === plugin.id);
+      if (!metadata) {
+        console.error(
+          `Cannot manually register plugin ${plugin.id}: Metadata not found. Ensure metadata is loaded first.`,
+        );
+        return;
+      }
+      pluginRegistry.registerPlugin(plugin, metadata, appComponent);
     } else {
       console.error('Cannot register plugin: App component not initialized');
     }
@@ -181,6 +207,26 @@ export const PluginProvider: React.FC<{ children: React.ReactNode }> = ({
     return pluginRegistry.getRoutes();
   };
 
+  // Added: Function to load a remote component using the loader instance
+  const loadRemoteComponentFromPlugin = async (
+    pluginId: string,
+    exposedModule: string,
+  ): Promise<React.ComponentType<any>> => {
+    const metadata = pluginMetadata.find((m) => m.id === pluginId);
+    if (!metadata) {
+      throw new Error(`Metadata not found for plugin ID: ${pluginId}`);
+    }
+    const kebabToCamelCase = (str: string) =>
+      str.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+    const federationName = kebabToCamelCase(pluginId);
+
+    // Use the method from the pluginLoader instance
+    return pluginLoader.loadRemoteComponentHelper(
+      federationName,
+      exposedModule,
+    );
+  };
+
   // Load plugins when component mounts and app component is set
   useEffect(() => {
     if (appComponent) {
@@ -200,6 +246,7 @@ export const PluginProvider: React.FC<{ children: React.ReactNode }> = ({
     executeHook,
     getSlotRenderer,
     getPluginRoutes,
+    loadRemoteComponentFromPlugin,
   };
 
   return (

@@ -9,6 +9,9 @@ import { SlotRegistry } from './slot-registry';
  */
 export class PluginRegistry {
   private plugins: Map<string, IClientPlugin> = new Map();
+  // Store registered components: Map<pluginName, Record<componentName, ComponentType>>
+  private components: Map<string, Record<string, React.ComponentType<any>>> =
+    new Map();
   private routeRegistry: RouteRegistry;
   private slotRegistry: SlotRegistry;
   private hookRegistry: HookRegistry;
@@ -22,22 +25,31 @@ export class PluginRegistry {
   /**
    * Register a plugin
    * @param plugin Plugin instance
+   * @param manifest Plugin manifest/metadata object from server
    * @param app React application component
    */
-  registerPlugin(plugin: IClientPlugin, app: React.Component): void {
-    if (this.plugins.has(plugin.id)) {
-      console.warn(
-        `Plugin already registered: ${plugin.id}. Unregistering and re-registering.`,
+  registerPlugin(
+    plugin: IClientPlugin,
+    manifest: any,
+    app: React.Component,
+  ): void {
+    const pluginId = plugin.id;
+    if (!pluginId) {
+      console.error(
+        'Plugin registration failed: Plugin is missing an ID.',
+        plugin,
       );
-      this.unregisterPlugin(plugin.id);
+      return;
+    }
+    if (this.plugins.has(pluginId)) {
+      console.warn(
+        `Plugin already registered: ${pluginId}. Unregistering and re-registering.`,
+      );
+      this.unregisterPlugin(pluginId);
     }
 
-    // Initialize the plugin
     plugin.initialize(app);
-
-    // Register components and routes
     this.registerPluginComponents(plugin);
-    this.registerPluginRoutes(plugin);
 
     // Register slots if implemented
     if (plugin.registerSlots) {
@@ -49,33 +61,24 @@ export class PluginRegistry {
       this.registerPluginHooks(plugin);
     }
 
-    // Store the plugin instance
-    this.plugins.set(plugin.id, plugin);
+    // Store the plugin instance using its ID
+    this.plugins.set(pluginId, plugin);
 
-    console.log(
-      `Registered plugin: ${plugin.name} (${plugin.id}) v${plugin.version}`,
-    );
+    console.log(`Registered plugin: ${pluginId} v${plugin.version}`);
   }
 
   /**
-   * Register plugin components
+   * Register and store plugin components
    * @param plugin Plugin instance
    */
   private registerPluginComponents(plugin: IClientPlugin): void {
-    // Components are not stored in a registry, they are just used by routes and slots
-    // But we need to call registerComponents to ensure the plugin has initialized them
-    plugin.registerComponents();
-  }
-
-  /**
-   * Register plugin routes
-   * @param plugin Plugin instance
-   */
-  private registerPluginRoutes(plugin: IClientPlugin): void {
-    const routes = plugin.registerRoutes();
-
-    for (const route of routes) {
-      this.routeRegistry.registerRoute(plugin.id, route);
+    const pluginComponents = plugin.registerComponents();
+    if (pluginComponents && Object.keys(pluginComponents).length > 0) {
+      // Store components using plugin.id as the key
+      this.components.set(plugin.id, pluginComponents);
+      console.log(
+        `Registered ${Object.keys(pluginComponents).length} components for plugin: ${plugin.id}`,
+      );
     }
   }
 
@@ -140,6 +143,9 @@ export class PluginRegistry {
     this.slotRegistry.clearPluginSlots(pluginId);
     this.hookRegistry.clearPluginHooks(pluginId);
 
+    // Clear stored components for this plugin
+    this.components.delete(pluginId);
+
     // Remove plugin from registry
     this.plugins.delete(pluginId);
 
@@ -148,14 +154,14 @@ export class PluginRegistry {
 
   /**
    * Get all registered plugins
-   * @returns Map of plugin ID to plugin instance
+   * @returns Map of plugin name to plugin instance
    */
   getPlugins(): Map<string, IClientPlugin> {
     return this.plugins;
   }
 
   /**
-   * Get a plugin by ID
+   * Get a plugin by name
    * @param pluginId Plugin ID
    * @returns Plugin instance or undefined if not found
    */
@@ -212,5 +218,13 @@ export class PluginRegistry {
    */
   getRoutes(): any[] {
     return this.routeRegistry.getRoutes();
+  }
+
+  /**
+   * Get all registered components, keyed by plugin name.
+   * @returns Map<pluginName, Record<componentName, ComponentType>>
+   */
+  getAllComponents(): Map<string, Record<string, React.ComponentType<any>>> {
+    return this.components;
   }
 }

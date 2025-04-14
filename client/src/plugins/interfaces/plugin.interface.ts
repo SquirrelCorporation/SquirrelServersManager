@@ -78,4 +78,9 @@ export interface IClientPlugin extends PluginMetadata {
    * Cleanup plugin resources
    */
   cleanup?: () => void;
+
+  /**
+   * Unique kebab-case identifier from manifest
+   */
+  id: string;
 }
