@@ -16,6 +16,7 @@
 
 **Merged pull requests:**
 
+- \[FEATURE\] Feat plugins system [\#859](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/859) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump vuetify from 3.8.0 to 3.8.1 in /site [\#854](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/854) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @typescript-eslint/eslint-plugin from 8.28.0 to 8.29.1 in /client [\#853](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/853) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump lint-staged from 15.5.0 to 15.5.1 in /client [\#852](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/852) ([dependabot[bot]](https://github.com/apps/dependabot))
