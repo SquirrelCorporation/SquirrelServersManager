@@ -16,6 +16,22 @@
 
 **Merged pull requests:**
 
+- Bump vuetify from 3.8.0 to 3.8.1 in /site [\#854](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/854) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @typescript-eslint/eslint-plugin from 8.28.0 to 8.29.1 in /client [\#853](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/853) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump lint-staged from 15.5.0 to 15.5.1 in /client [\#852](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/852) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint-plugin-react from 7.37.4 to 7.37.5 in /client [\#851](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/851) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[CHORE\] Refacto telemetry module for event tracking and monitoring [\#849](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/849) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump @babel/helpers from 7.24.0 to 7.27.0 in /client in the npm\_and\_yarn group [\#848](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/848) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump the npm\_and\_yarn group in /site with 2 updates [\#847](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/847) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump typescript from 5.7.3 to 5.8.3 in /shared-lib [\#846](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/846) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vuetify from 3.7.13 to 3.8.0 in /site [\#845](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/845) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.8.0-alpine to 23.11.0-alpine in /client [\#844](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/844) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.8.0-alpine to 23.11.0-alpine in /server [\#842](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/842) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @vue-flow/core from 1.42.1 to 1.42.5 in /site [\#840](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/840) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @vue-flow/minimap from 1.5.2 to 1.5.3 in /site [\#838](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/838) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vite from 6.2.0 to 6.2.3 in /server in the npm\_and\_yarn group [\#832](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/832) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump swiper from 11.2.4 to 11.2.6 in /site [\#830](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/830) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump axios from 1.7.9 to 1.8.4 in /site [\#827](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/827) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Chore refacto nestjs [\#817](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/817) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Ensure async usage in test assertions and update dependencies [\#791](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/791) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Chore refacto frontend props [\#789](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/789) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
