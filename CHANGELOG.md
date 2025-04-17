@@ -18,6 +18,8 @@
 
 - Bump the npm\_and\_yarn group across 2 directories with 1 update [\#860](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/860) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[FEATURE\] Feat plugins system [\#859](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/859) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump @types/node from 22.14.0 to 22.14.1 in /server [\#857](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/857) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint-plugin-import-x from 4.10.2 to 4.10.3 in /server [\#856](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/856) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump vuetify from 3.8.0 to 3.8.1 in /site [\#854](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/854) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @typescript-eslint/eslint-plugin from 8.28.0 to 8.29.1 in /client [\#853](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/853) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump lint-staged from 15.5.0 to 15.5.1 in /client [\#852](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/852) ([dependabot[bot]](https://github.com/apps/dependabot))
