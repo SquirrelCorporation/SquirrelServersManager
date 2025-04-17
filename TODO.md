@@ -1,4 +1,7 @@
-# Refactored Device & DeviceAuth models
+# TODO
+
+
+### Refactored Device & DeviceAuth models
 - The Device Auth model should have sub-objects:
     - SSH Configuration
     - Ansible specific configuration
@@ -10,32 +13,32 @@ The DTOs should reflect those changes, as well as the a frontend objects and sha
 
 ---
 
-# Decide whether events name are defined in modules or in core
+### Decide whether events name are defined in modules or in core
 - There is a mix of usage here, sometimes define in core, sometimes define in modules
 
 ---
 
-# Unify the type of the Component handling variable across engines
+### Unify the type of the Component handling variable across engines
 
 ---
 
-# Use queues for async treatment for:
+### Use queues for async treatment for:
 - Statistics gathering. Containers and Remove information modules should send their stats through a bull queue consumed by the statistics module instead of calling directly the modules methods
 
 ---
 
-# Vault crypto should be extrated to a standalone module in infrastructure
+### Vault crypto should be extrated to a standalone module in infrastructure
 It should not import any others module.
 
 ---
 
-# Deletion of devices should be an event to broadcast accross module + take appropriat eactions 
+### Deletion of devices should be an event to broadcast accross module + take appropriat eactions 
 - Delete device auth
 - Deregister watcher for docker, proxmox, remote sys info
 
 ---
 
-# Comprehensive Test Mocking System Overhaul
+## Comprehensive Test Mocking System Overhaul
 
 ## Current Problems
 - **Inconsistent mocking approach**: Multiple test-setup.ts files with duplicated code scattered across modules

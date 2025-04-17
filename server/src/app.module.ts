@@ -35,6 +35,7 @@ import { SshInfrastructureModule } from './infrastructure/ssh/ssh-infrastructure
 import { HealthModule } from './modules/health/health.module';
 import { StatisticsModule } from './modules/statistics/statistics.module';
 import { PluginsModule } from './infrastructure/plugins/plugins.module';
+import { TelemetryModule } from './modules/telemetry';
 // Note: Temporarily commenting out advanced modules until we properly set them up
 // import { ThrottlerModule } from './infrastructure/security/throttler/throttler.module';
 import { AuditLogModule } from './infrastructure/security/audit/audit-log.module';
@@ -223,6 +224,7 @@ let connectionReady = false;
     SettingsModule,
     HealthModule,
     PluginsModule,
+    TelemetryModule,
     // ThrottlerModule, // Temporarily disabled
     AuditLogModule,
     RemoteSystemInformationModule,
