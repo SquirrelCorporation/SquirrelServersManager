@@ -39,6 +39,11 @@ vi.mock('@modules/containers', () => ({
   CONTAINER_SERVICE: Symbol('CONTAINER_SERVICE'),
 }));
 
+vi.mock('@infrastructure/models/api-response.model', () => ({
+  ApiSuccessResponse: vi.fn(),
+  ApiErrorResponse: vi.fn(),
+}));
+
 // Mock the prometheus service
 export const MockPrometheusService = {
   queryRange: vi.fn().mockResolvedValue([

@@ -41,6 +41,7 @@ import { TelemetryModule } from './modules/telemetry';
 import { AuditLogModule } from './infrastructure/security/audit/audit-log.module';
 import { EventsModule } from './core/events/events.module';
 import { BootstrapModule } from './core/bootstrap/bootstrap.module';
+import { DatabaseConnectionException } from './infrastructure/exceptions/app-exceptions';
 
 // Store the connection for legacy code to access
 let sharedConnection: mongoose.Connection | null = null;
@@ -107,6 +108,10 @@ let connectionReady = false;
             maxPoolSize: db.maxPoolSize,
             connectTimeoutMS: 10000,
             socketTimeoutMS: 45000,
+            retryWrites: true,
+            retryReads: true,
+            serverSelectionTimeoutMS: 30000,
+            heartbeatFrequencyMS: 10000,
           };
         }
 
@@ -118,6 +123,10 @@ let connectionReady = false;
             maxPoolSize: db.maxPoolSize,
             connectTimeoutMS: 10000,
             socketTimeoutMS: 45000,
+            retryWrites: true,
+            retryReads: true,
+            serverSelectionTimeoutMS: 30000,
+            heartbeatFrequencyMS: 10000,
           });
 
           sharedConnection = mongoose.connection;
@@ -131,11 +140,31 @@ let connectionReady = false;
           mongoose.connection.on('error', (err) => {
             logger.error(`Mongoose connection error: ${err}`);
             connectionReady = false;
+            // Attempt to reconnect
+            setTimeout(() => {
+              logger.info('Attempting to reconnect to MongoDB...');
+              mongoose.connect(uri).catch((error) => {
+                logger.error(`Failed to reconnect to MongoDB: ${error}`);
+                throw new DatabaseConnectionException('Failed to reconnect to MongoDB', {
+                  error: error.message,
+                });
+              });
+            }, 5000);
           });
 
           mongoose.connection.on('disconnected', () => {
             logger.warn('Mongoose disconnected from MongoDB');
             connectionReady = false;
+            // Attempt to reconnect
+            setTimeout(() => {
+              logger.info('Attempting to reconnect to MongoDB...');
+              mongoose.connect(uri).catch((error) => {
+                logger.error(`Failed to reconnect to MongoDB: ${error}`);
+                throw new DatabaseConnectionException('Failed to reconnect to MongoDB', {
+                  error: error.message,
+                });
+              });
+            }, 5000);
           });
 
           logger.info('Direct mongoose connection established');
@@ -152,6 +181,10 @@ let connectionReady = false;
           maxPoolSize: db.maxPoolSize,
           connectTimeoutMS: 10000,
           socketTimeoutMS: 45000,
+          retryWrites: true,
+          retryReads: true,
+          serverSelectionTimeoutMS: 30000,
+          heartbeatFrequencyMS: 10000,
           // Use the existing mongoose connection
           connectionFactory: () => {
             logger.info('NestJS using the same mongoose connection');

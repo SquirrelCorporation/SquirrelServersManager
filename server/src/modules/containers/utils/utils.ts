@@ -1,5 +1,5 @@
 import Dockerode from 'dockerode';
-import { IContainerEntity } from '@modules/containers/domain/entities/container.entity';
+import { IContainer } from '@modules/containers/domain/entities/container.entity';
 import logger from '../../../logger';
 import Tag from './tag';
 import tagUtil from './tag';
@@ -10,7 +10,7 @@ import tagUtil from './tag';
  * @param tags
  * @returns {*}
  */
-export function getTagCandidates(container: IContainerEntity, tags: string[]) {
+export function getTagCandidates(container: IContainer, tags: string[]) {
   logger.debug(`[UTILS] - getTagCandidates ${tags?.join(', ')}`);
   let filteredTags = tags;
 
@@ -56,7 +56,7 @@ export function getTagCandidates(container: IContainerEntity, tags: string[]) {
   return filteredTags;
 }
 
-export function fullName(container: IContainerEntity) {
+export function fullName(container: IContainer) {
   return `${container.watcher}_${container.name}`;
 }
 
@@ -67,8 +67,8 @@ export function fullName(container: IContainerEntity) {
  * @returns {*[]|*}
  */
 export function getOldContainers(
-  newContainers: (IContainerEntity | undefined)[] | undefined,
-  containersFromTheStore?: IContainerEntity[] | null,
+  newContainers: (IContainer | undefined)[] | undefined,
+  containersFromTheStore?: IContainer[] | null,
 ) {
   if (!containersFromTheStore || !newContainers) {
     return [];
@@ -151,7 +151,7 @@ export function hasResultChanged(container, otherContainer) {
   );
 }
 
-export function isUpdateAvailable(container: IContainerEntity) {
+export function isUpdateAvailable(container: IContainer) {
   if (container.image === undefined || container.result === undefined) {
     return false;
   }
@@ -214,7 +214,7 @@ function getLink(linkTemplate: string | undefined, tagValue: string, isSemver: b
  * @returns {undefined|*}
  */
 //TODO that is not correct
-export function addLinkProperty(container: IContainerEntity) {
+export function addLinkProperty(container: IContainer) {
   if (container.linkTemplate) {
     return getLink(
       container.linkTemplate,
@@ -231,7 +231,7 @@ export function addLinkProperty(container: IContainerEntity) {
   }
 }
 
-export function getKindProperty(container: IContainerEntity) {
+export function getKindProperty(container: IContainer) {
   const updateKind: {
     kind: 'unknown' | 'tag' | 'digest';
     localValue?: string;

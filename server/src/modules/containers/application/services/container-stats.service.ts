@@ -1,14 +1,17 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import { StatsType } from 'ssm-shared-lib';
-import { IPrometheusService, PROMETHEUS_SERVICE } from '../../../../infrastructure/prometheus/prometheus.interface';
+import {
+  IPrometheusService,
+  PROMETHEUS_SERVICE,
+} from '../../../../infrastructure/prometheus/prometheus.interface';
 import { QueryResult } from '../../../../infrastructure/prometheus/types/prometheus.types';
 import {
   IMetricsService,
   METRICS_SERVICE,
-  MetricType
+  MetricType,
 } from '../../../statistics/doma../../domain/interfaces/metrics-service.interface';
-import { IContainerEntity } from '../../domain/entities/container.entity';
+import { IContainer } from '../../domain/entities/container.entity';
 import { IContainerStatsService } from '../../domain/interfaces/container-stats-service.interface';
 
 /**
@@ -30,7 +33,7 @@ export class ContainerStatsService implements IContainerStatsService {
    * @param container The container entity
    * @param stats The container stats from Dockerode
    */
-  async createStats(container: IContainerEntity, stats: any) {
+  async createStats(container: IContainer, stats: any) {
     const { cpu_stats, precpu_stats, memory_stats } = stats;
 
     try {
@@ -73,7 +76,7 @@ export class ContainerStatsService implements IContainerStatsService {
    * @returns The container stat
    */
   async getStatByDeviceAndType(
-    container: IContainerEntity,
+    container: IContainer,
     type?: string,
   ): Promise<[{ _id?: string; value: number; date?: string }] | null> {
     this.logger.debug(
@@ -114,7 +117,7 @@ export class ContainerStatsService implements IContainerStatsService {
    * @returns The container stats
    */
   async getStatsByDeviceAndType(
-    container: IContainerEntity,
+    container: IContainer,
     from: number,
     type?: string,
   ): Promise<{ date: string; value: number; name?: string }[] | null> {

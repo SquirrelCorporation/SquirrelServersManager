@@ -1,5 +1,5 @@
 import { getCustomAgent } from '@infrastructure/adapters/ssh/custom-agent.adapter';
-import { IContainerEntity } from '@modules/containers/domain/entities/container.entity';
+import { IContainer } from '@modules/containers/domain/entities/container.entity';
 import { IDevice, IDeviceAuth } from '@modules/devices';
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -789,7 +789,7 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
   /**
    * Container action methods - matching original implementation
    */
-  async pauseContainer(container: IContainerEntity): Promise<any> {
+  async pauseContainer(container: IContainer): Promise<any> {
     try {
       return await this.dockerApi.getContainer(container.id).pause();
     } catch (error: any) {
@@ -798,7 +798,7 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     }
   }
 
-  async stopContainer(container: IContainerEntity): Promise<any> {
+  async stopContainer(container: IContainer): Promise<any> {
     try {
       return await this.dockerApi.getContainer(container.id).stop();
     } catch (error: any) {
@@ -807,7 +807,7 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     }
   }
 
-  async startContainer(container: IContainerEntity): Promise<any> {
+  async startContainer(container: IContainer): Promise<any> {
     try {
       this.childLogger.log(`[CONTAINER] - startContainer - for container: ${container.id}`);
       return await this.dockerApi.getContainer(container.id).start();
@@ -817,7 +817,7 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     }
   }
 
-  async restartContainer(container: IContainerEntity): Promise<any> {
+  async restartContainer(container: IContainer): Promise<any> {
     try {
       return await this.dockerApi.getContainer(container.id).restart();
     } catch (error: any) {
@@ -826,7 +826,7 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     }
   }
 
-  async killContainer(container: IContainerEntity): Promise<any> {
+  async killContainer(container: IContainer): Promise<any> {
     this.childLogger.warn(
       `killContainer "${container.id}" (deviceID: ${this.configuration.deviceUuid}, deviceIP: ${this.configuration.host})`,
     );
@@ -838,7 +838,7 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
     }
   }
 
-  async unpauseContainer(container: IContainerEntity): Promise<any> {
+  async unpauseContainer(container: IContainer): Promise<any> {
     try {
       return await this.dockerApi.getContainer(container.id).unpause();
     } catch (error: any) {
@@ -853,8 +853,8 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
    * @param containersFromTheStore
    */
   pruneOldContainers(
-    newContainers: (IContainerEntity | undefined)[] | undefined,
-    containersFromTheStore: IContainerEntity[] | null,
+    newContainers: (IContainer | undefined)[] | undefined,
+    containersFromTheStore: IContainer[] | null,
   ) {
     try {
       const containersToRemove = getOldContainers(newContainers, containersFromTheStore);

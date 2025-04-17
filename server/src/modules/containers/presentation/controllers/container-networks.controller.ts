@@ -5,12 +5,26 @@ import { sortByFields } from '@infrastructure/common/query/sorter.util';
 import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
 import { Body, Controller, Delete, Get, Inject, Param, Post, Req } from '@nestjs/common';
 import { User } from 'src/decorators/user.decorator';
+import { ApiTags } from '@nestjs/swagger';
 import {
   CONTAINER_NETWORKS_SERVICE,
   IContainerNetworksService,
 } from '../../domain/interfaces/container-networks-service.interface';
 import { DeployNetworkDto } from '../dtos/create-network.dto';
+import {
+  CONTAINER_NETWORKS_TAG,
+  CreateNetworkDoc,
+  DeleteNetworkDoc,
+  GetNetworksDoc,
+} from '../decorators/container-networks.decorators';
 
+/**
+ * Container Networks Controller
+ *
+ * This controller handles operations related to container networks, including
+ * fetching, creating, and deleting networks.
+ */
+@ApiTags(CONTAINER_NETWORKS_TAG)
 @Controller('container-networks')
 export class ContainerNetworksController {
   constructor(
@@ -22,6 +36,7 @@ export class ContainerNetworksController {
    * Get all networks with pagination, sorting, and filtering
    */
   @Get()
+  @GetNetworksDoc()
   async getNetworks(@Req() req) {
     const realUrl = req.url;
     const { current, pageSize } = req.query;
@@ -50,6 +65,7 @@ export class ContainerNetworksController {
   }
 
   @Post()
+  @CreateNetworkDoc()
   async createNetwork(
     @User() user,
     @Param('deviceUuid') deviceUuid: string,
@@ -64,6 +80,7 @@ export class ContainerNetworksController {
   }
 
   @Delete(':uuid')
+  @DeleteNetworkDoc()
   async deleteNetwork(@Param('uuid') uuid: string) {
     const success = await this.networksService.deleteNetwork(uuid);
     return { success };

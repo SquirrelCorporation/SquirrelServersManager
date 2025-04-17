@@ -1,6 +1,6 @@
 import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
 import { IDevice, IDeviceAuth } from '@modules/devices';
-import { IContainerEntity } from '../../domain/entities/container.entity';
+import { IContainer } from '../../domain/entities/container.entity';
 
 export const CONTAINER_SERVICE = 'CONTAINER_SERVICE';
 
@@ -11,17 +11,17 @@ export interface IContainerService {
   /**
    * Get all containers
    */
-  getAllContainers(): Promise<IContainerEntity[]>;
+  getAllContainers(): Promise<IContainer[]>;
 
   /**
    * Get containers by device UUID
    */
-  getContainersByDeviceUuid(deviceUuid: string): Promise<IContainerEntity[]>;
+  getContainersByDeviceUuid(deviceUuid: string): Promise<IContainer[]>;
 
   /**
    * Find a container by its ID
    */
-  getContainerById(id: string): Promise<IContainerEntity | null>;
+  getContainerById(id: string): Promise<IContainer | null>;
 
   /**
    * Count all containers
@@ -36,30 +36,27 @@ export interface IContainerService {
   /**
    * Create a container on a device
    */
-  createContainer(deviceUuid: string, containerData: IContainerEntity): Promise<IContainerEntity>;
+  createContainer(deviceUuid: string, containerData: IContainer): Promise<IContainer>;
 
   /**
    * Update a container's details
    */
-  updateContainer(
-    uuid: string,
-    containerData: Partial<IContainerEntity>,
-  ): Promise<IContainerEntity>;
+  updateContainer(id: string, container: IContainer): Promise<IContainer>;
 
   /**
    * Delete a container by its UUID
    */
-  deleteContainer(uuid: string): Promise<boolean>;
+  deleteContainer(id: string): Promise<boolean>;
 
   /**
    * Get containers by watcher name
    */
-  getContainersByWatcher(watcherName: string): Promise<IContainerEntity[]>;
+  getContainersByWatcher(watcherName: string): Promise<IContainer[]>;
 
   /**
    * Get a container by its Docker ID
    */
-  getContainerById(id: string): Promise<IContainerEntity | null>;
+  getContainerById(id: string): Promise<IContainer>;
 
   /**
    * Update container status for all containers associated with a watcher
@@ -89,7 +86,7 @@ export interface IContainerService {
   /**
    * Normalize a container
    */
-  normalizeContainer(container: IContainerEntity): IContainerEntity;
+  normalizeContainer(container: IContainer): IContainer;
 
   /**
    * Delete a container by its ID
@@ -119,7 +116,7 @@ export interface IContainerService {
   /**
    * Update container name
    */
-  updateContainerName(id: string, customName: string): Promise<IContainerEntity>;
+  updateContainerName(id: string, name: string): Promise<IContainer>;
 
   /**
    * Refresh all containers

@@ -9,6 +9,7 @@ import {
   Post,
   UsePipes,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { SettingsKeys, SsmAnsible } from 'ssm-shared-lib';
 import {
   ACTIONS,
@@ -45,7 +46,29 @@ import {
   MasterNodeUrlBodyDto,
   MasterNodeUrlValidator,
 } from '../validators/master-node-url.validator';
+import {
+  DeleteAnsibleLogsDoc,
+  DeleteLogsDoc,
+  DeletePlaybooksAndResyncDoc,
+  GetMongoDBStatsDoc,
+  GetPrometheusStatsDoc,
+  GetRedisStatsDoc,
+  RestartServerDoc,
+  SETTINGS_TAG,
+  UpdateDashboardSettingDoc,
+  UpdateDeviceStatsSettingDoc,
+  UpdateDevicesSettingDoc,
+  UpdateLogsSettingDoc,
+  UpdateMasterNodeUrlDoc,
+} from '../decorators/settings.decorators';
 
+/**
+ * Settings Controller
+ *
+ * This controller handles operations related to system settings, including
+ * updating various settings and performing advanced operations.
+ */
+@ApiTags(SETTINGS_TAG)
 @Controller('settings')
 export class SettingsController {
   constructor(
@@ -57,6 +80,7 @@ export class SettingsController {
 
   @Post('dashboard/:key')
   @UsePipes(DashboardSettingsValidator)
+  @UpdateDashboardSettingDoc()
   async updateDashboardSetting(
     @Param() params: DashboardSettingParamDto,
     @Body() body: DashboardSettingBodyDto,
@@ -84,6 +108,7 @@ export class SettingsController {
 
   @Post('devices/:key')
   @UsePipes(DevicesSettingsValidator)
+  @UpdateDevicesSettingDoc()
   async updateDevicesSetting(
     @Param() params: DevicesSettingParamDto,
     @Body() body: DevicesSettingBodyDto,
@@ -105,6 +130,7 @@ export class SettingsController {
 
   @Post('logs/:key')
   @UsePipes(LogsSettingsValidator)
+  @UpdateLogsSettingDoc()
   async updateLogsSetting(@Param() params: LogsSettingParamDto, @Body() body: LogsSettingBodyDto) {
     const { key } = params;
     const { value } = body;
@@ -129,6 +155,7 @@ export class SettingsController {
 
   @Post('device-stats/:key')
   @UsePipes(DeviceStatsSettingsValidator)
+  @UpdateDeviceStatsSettingDoc()
   async updateDeviceStatsSetting(
     @Param() params: DeviceStatsSettingParamDto,
     @Body() body: DeviceStatsSettingBodyDto,
@@ -150,6 +177,7 @@ export class SettingsController {
 
   @Post('keys/master-node-url')
   @UsePipes(MasterNodeUrlValidator)
+  @UpdateMasterNodeUrlDoc()
   async updateMasterNodeUrl(@Body() body: MasterNodeUrlBodyDto) {
     await this.settingsService.setSetting(
       SsmAnsible.DefaultSharedExtraVarsList.MASTER_NODE_URL,
@@ -160,6 +188,7 @@ export class SettingsController {
 
   @Post('advanced/restart')
   @ResourceAction(RESOURCES.SETTING, ACTIONS.EXECUTE)
+  @RestartServerDoc()
   async restartServer() {
     try {
       await this.advancedOperationsService.restartServer();
@@ -172,6 +201,7 @@ export class SettingsController {
 
   @Delete('advanced/logs')
   @ResourceAction(RESOURCES.SETTING, ACTIONS.DELETE)
+  @DeleteLogsDoc()
   async deleteLogs() {
     try {
       await this.advancedOperationsService.deleteLogs();
@@ -184,6 +214,7 @@ export class SettingsController {
 
   @Delete('advanced/ansible-logs')
   @ResourceAction(RESOURCES.SETTING, ACTIONS.DELETE)
+  @DeleteAnsibleLogsDoc()
   async deleteAnsibleLogs() {
     try {
       await this.advancedOperationsService.deleteAnsibleLogs();
@@ -196,6 +227,7 @@ export class SettingsController {
 
   @Delete('advanced/playbooks-and-resync')
   @ResourceAction(RESOURCES.SETTING, ACTIONS.DELETE)
+  @DeletePlaybooksAndResyncDoc()
   async deletePlaybooksAndResync() {
     try {
       await this.advancedOperationsService.deletePlaybooksModelAndResync();
@@ -207,6 +239,7 @@ export class SettingsController {
   }
 
   @Get('information/mongodb')
+  @GetMongoDBStatsDoc()
   async getMongoDBStats() {
     try {
       const data = await this.informationService.getMongoDBStats();
@@ -218,6 +251,7 @@ export class SettingsController {
   }
 
   @Get('information/redis')
+  @GetRedisStatsDoc()
   async getRedisStats() {
     try {
       const data = await this.informationService.getRedisStats();
@@ -229,6 +263,7 @@ export class SettingsController {
   }
 
   @Get('information/prometheus')
+  @GetPrometheusStatsDoc()
   async getPrometheusStats() {
     try {
       const data = await this.informationService.getPrometheusStats();

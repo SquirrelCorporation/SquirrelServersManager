@@ -35,7 +35,7 @@ export * from './infrastructure/schemas/playbook.schema';
 export * from './infrastructure/schemas/playbooks-register.schema';
 
 // Presentation exports
-export * from './presentation/controllers/playbook.controller';
+export * from './presentation/controllers/playbooks.controller';
 export * from './presentation/controllers/playbooks-repository.controller';
 export * from './presentation/controllers/git-playbooks-register.controller';
 export * from './presentation/controllers/local-playbooks-register.controller';

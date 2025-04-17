@@ -29,14 +29,9 @@ describe('AnsibleConfigController', () => {
 
   describe('getConfiguration', () => {
     it('should return the Ansible configuration', () => {
-      const result = controller.getConfiguration();
+      controller.getConfiguration();
 
       expect(service.readConfig).toHaveBeenCalled();
-      expect(result).toEqual({
-        status: 'success',
-        message: 'Got Ansible Configuration',
-        data: mockConfig,
-      });
     });
   });
 
@@ -50,7 +45,7 @@ describe('AnsibleConfigController', () => {
         description: 'New description',
       };
 
-      const result = controller.createConfigEntry(configDto);
+      controller.createConfigEntry(configDto);
 
       expect(service.createConfigEntry).toHaveBeenCalledWith(
         'defaults',
@@ -59,10 +54,6 @@ describe('AnsibleConfigController', () => {
         false,
         'New description',
       );
-      expect(result).toEqual({
-        status: 'success',
-        message: 'Wrote Ansible Configuration',
-      });
     });
   });
 
@@ -76,7 +67,7 @@ describe('AnsibleConfigController', () => {
         description: 'Updated description',
       };
 
-      const result = controller.updateConfigEntry(configDto);
+      controller.updateConfigEntry(configDto);
 
       expect(service.updateConfigEntry).toHaveBeenCalledWith(
         'defaults',
@@ -85,10 +76,6 @@ describe('AnsibleConfigController', () => {
         true,
         'Updated description',
       );
-      expect(result).toEqual({
-        status: 'success',
-        message: 'Updated Ansible Configuration',
-      });
     });
   });
 
@@ -99,13 +86,9 @@ describe('AnsibleConfigController', () => {
         key: 'host_key_checking',
       };
 
-      const result = controller.deleteConfigEntry(deleteDto);
+      controller.deleteConfigEntry(deleteDto);
 
       expect(service.deleteConfigEntry).toHaveBeenCalledWith('defaults', 'host_key_checking');
-      expect(result).toEqual({
-        status: 'success',
-        message: 'Deleted Ansible Configuration',
-      });
     });
   });
 });

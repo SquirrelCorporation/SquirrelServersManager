@@ -9,10 +9,22 @@ import {
   IPlaybooksRegisterService,
   PLAYBOOKS_REGISTER_SERVICE,
 } from '@modules/playbooks/domain/services/playbooks-register-service.interface';
+import { ApiTags } from '@nestjs/swagger';
+import {
+  AddDirectoryToPlaybookRepositoryDoc,
+  AddPlaybookToRepositoryDoc,
+  DeleteDirectoryFromRepositoryDoc,
+  DeletePlaybookFromRepositoryDoc,
+  GetPlaybooksRepositoriesDoc,
+  PLAYBOOKS_REPOSITORIES_TAG,
+  SavePlaybookDoc,
+  SyncRepositoryDoc,
+} from '../decorators/playbooks-repository.decorators';
 
 /**
  * Controller for managing playbooks repositories
  */
+@ApiTags(PLAYBOOKS_REPOSITORIES_TAG)
 @Controller('playbooks/repositories')
 export class PlaybooksRepositoryController {
   private readonly logger = new Logger(PlaybooksRepositoryController.name);
@@ -28,6 +40,7 @@ export class PlaybooksRepositoryController {
    * Get all playbooks repositories
    * @returns List of playbooks repositories
    */
+  @GetPlaybooksRepositoriesDoc()
   @Get()
   async getPlaybooksRepositories(): Promise<API.PlaybooksRepository[]> {
     this.logger.log('Getting all playbooks repositories');
@@ -39,6 +52,7 @@ export class PlaybooksRepositoryController {
    * @param uuid Repository UUID
    * @param fullPath Directory path
    */
+  @AddDirectoryToPlaybookRepositoryDoc()
   @Post(':uuid/directory/:directoryName')
   async addDirectoryToPlaybookRepository(
     @Param('uuid') uuid: string,
@@ -64,6 +78,7 @@ export class PlaybooksRepositoryController {
    * @param fullPath Playbook path
    * @returns Created playbook
    */
+  @AddPlaybookToRepositoryDoc()
   @Post(':uuid/playbook/:playbookName')
   async addPlaybookToRepository(
     @Param('uuid') uuid: string,
@@ -89,6 +104,7 @@ export class PlaybooksRepositoryController {
    * @param uuid Repository UUID
    * @param playbookUuid Playbook UUID
    */
+  @DeletePlaybookFromRepositoryDoc()
   @Post(':uuid/playbook/:playbookUuid/delete')
   async deletePlaybookFromRepository(
     @Param('uuid') uuid: string,
@@ -112,6 +128,7 @@ export class PlaybooksRepositoryController {
    * @param uuid Repository UUID
    * @param fullPath Directory path
    */
+  @DeleteDirectoryFromRepositoryDoc()
   @Post(':uuid/directory/delete')
   async deleteDirectoryFromRepository(
     @Param('uuid') uuid: string,
@@ -132,6 +149,7 @@ export class PlaybooksRepositoryController {
    * @param playbookUuid Playbook UUID
    * @param content Playbook content
    */
+  @SavePlaybookDoc()
   @Post('playbook/:playbookUuid/save')
   async savePlaybook(
     @Param('playbookUuid') playbookUuid: string,
@@ -145,6 +163,7 @@ export class PlaybooksRepositoryController {
    * Sync a repository
    * @param uuid Repository UUID
    */
+  @SyncRepositoryDoc()
   @Post(':uuid/sync')
   async syncRepository(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Syncing repository ${uuid}`);

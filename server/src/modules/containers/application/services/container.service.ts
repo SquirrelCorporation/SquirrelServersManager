@@ -15,7 +15,7 @@ import {
   DEVICE_AUTH_SERVICE,
   IDeviceAuthService,
 } from '../../../devices/domain/services/device-auth-service.interface';
-import { IContainerEntity } from '../../domain/entities/container.entity';
+import { IContainer } from '../../domain/entities/container.entity';
 import { IContainerService } from '../../domain/interfaces/container-service.interface';
 import {
   IWatcherEngineService,
@@ -40,19 +40,19 @@ export class ContainerService implements IContainerService {
     private readonly deviceAuthService: IDeviceAuthService,
   ) {}
 
-  async getAllContainers(): Promise<IContainerEntity[]> {
+  async getAllContainers(): Promise<IContainer[]> {
     return this.containerRepository.findAll();
   }
 
-  async getContainerById(id: string): Promise<IContainerEntity | null> {
+  async getContainerById(id: string): Promise<IContainer> {
     const container = await this.containerRepository.findOneById(id);
     if (!container) {
-      return null;
+      throw new NotFoundException(`Container with ID ${id} not found`);
     }
     return container;
   }
 
-  async getContainersByDeviceUuid(deviceUuid: string): Promise<IContainerEntity[]> {
+  async getContainersByDeviceUuid(deviceUuid: string): Promise<IContainer[]> {
     return this.containerRepository.findAllByDeviceUuid(deviceUuid);
   }
 
@@ -68,10 +68,7 @@ export class ContainerService implements IContainerService {
     return this.containerRepository.countByDeviceUuid(deviceUuid);
   }
 
-  async createContainer(
-    deviceUuid: string,
-    containerData: IContainerEntity,
-  ): Promise<IContainerEntity> {
+  async createContainer(deviceUuid: string, containerData: IContainer): Promise<IContainer> {
     const device = await this.devicesService.findOneByUuid(deviceUuid);
     if (!device) {
       throw new NotFoundException(`Device with UUID ${deviceUuid} not found`);
@@ -80,10 +77,7 @@ export class ContainerService implements IContainerService {
     return this.containerRepository.create(containerData);
   }
 
-  async updateContainer(
-    id: string,
-    containerData: Partial<IContainerEntity>,
-  ): Promise<IContainerEntity> {
+  async updateContainer(id: string, containerData: Partial<IContainer>): Promise<IContainer> {
     const container = await this.containerRepository.findOneById(id);
     if (!container) {
       throw new NotFoundException(`Container with ID ${id} not found`);
@@ -92,7 +86,7 @@ export class ContainerService implements IContainerService {
     return this.containerRepository.update(id, containerData);
   }
 
-  normalizeContainer(container: IContainerEntity) {
+  normalizeContainer(container: IContainer) {
     const containerWithNormalizedImage = container;
     this.logger.log(`[UTILS] - normalizeContainer - for name: ${container.image?.name}`);
     const registryProvider = Object.values(this.watcherEngineService.getRegistries()).find(
@@ -224,7 +218,7 @@ export class ContainerService implements IContainerService {
     await this.devicesService.update(device);
   }
 
-  async getContainerByUuid(uuid: string): Promise<IContainerEntity | null> {
+  async getContainerByUuid(uuid: string): Promise<IContainer | null> {
     return await this.containerRepository.findOneById(uuid);
   }
 
@@ -236,7 +230,7 @@ export class ContainerService implements IContainerService {
     );
   }
 
-  async getContainersByWatcher(watcherName: string): Promise<IContainerEntity[]> {
+  async getContainersByWatcher(watcherName: string): Promise<IContainer[]> {
     return await this.containerRepository.findAllByWatcher(watcherName);
   }
 
@@ -284,7 +278,7 @@ export class ContainerService implements IContainerService {
     }
   }
 
-  async updateContainerName(id: string, customName: string): Promise<IContainerEntity> {
+  async updateContainerName(id: string, customName: string): Promise<IContainer> {
     const container = await this.containerRepository.findOneById(id);
     if (!container) {
       throw new NotFoundException(`Container with id ${id} not found`);

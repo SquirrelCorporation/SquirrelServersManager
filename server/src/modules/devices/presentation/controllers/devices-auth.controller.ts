@@ -13,11 +13,12 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 import { Express } from 'express';
 import {
-  ResourceAction,
-  RESOURCES,
   ACTIONS,
+  RESOURCES,
+  ResourceAction,
 } from '../../../../infrastructure/security/roles/resource-action.decorator';
 import { DEVICES_SERVICE } from '../../domain/services/devices-service.interface';
 import { IDevicesService } from '../../domain/services/devices-service.interface';
@@ -34,6 +35,16 @@ import {
   ISensitiveInfoService,
   SENSITIVE_INFO_SERVICE,
 } from '../../domain/services/sensitive-info.service.interface';
+import {
+  DEVICE_CREDENTIALS_TAG,
+  DeleteDeviceAuthDoc,
+  DeleteDockerAuthCertsDoc,
+  GetDeviceAuthDoc,
+  UpdateDeviceAuthDoc,
+  UpdateDockerAuthDoc,
+  UpdateProxmoxAuthDoc,
+  UploadDockerAuthCertsDoc,
+} from '../decorators/devices-auth.decorators';
 
 // Configure multer for file uploads
 const fileFilter = (req: any, file: Express.Multer.File, callback: any) => {
@@ -47,6 +58,14 @@ const fileFilter = (req: any, file: Express.Multer.File, callback: any) => {
   callback(null, true);
 };
 
+/**
+ * Devices Auth Controller
+ *
+ * This controller handles operations related to device authentication, including
+ * retrieving, updating, and deleting device authentication details.
+ *
+ */
+@ApiTags(DEVICE_CREDENTIALS_TAG)
 @Controller('device-credentials')
 export class DevicesAuthController {
   constructor(
@@ -63,6 +82,7 @@ export class DevicesAuthController {
   ) {}
 
   @Get(':uuid')
+  @GetDeviceAuthDoc()
   @ResourceAction(RESOURCES.DEVICE, ACTIONS.READ)
   async getDeviceAuth(@Param('uuid') uuid: string) {
     try {
@@ -78,8 +98,58 @@ export class DevicesAuthController {
           HttpStatus.NOT_FOUND,
         );
       }
+      const deviceAuthDecrypted = {
+        authType: deviceAuth.authType,
+        sshKey: this.sensitiveInfoService.redactSensitiveInfo(deviceAuth.sshKey),
+        sshUser: deviceAuth.sshUser,
+        sshPwd: this.sensitiveInfoService.redactSensitiveInfo(deviceAuth.sshPwd),
+        sshPort: deviceAuth.sshPort,
+        becomeMethod: deviceAuth.becomeMethod,
+        sshConnection: deviceAuth.sshConnection,
+        becomePass: this.sensitiveInfoService.redactSensitiveInfo(deviceAuth.becomePass),
+        becomeUser: deviceAuth.becomeUser,
+        sshKeyPass: this.sensitiveInfoService.redactSensitiveInfo(deviceAuth.sshKeyPass),
+        customDockerSSH: deviceAuth.customDockerSSH,
+        dockerCustomAuthType: deviceAuth.dockerCustomAuthType,
+        dockerCustomSshUser: deviceAuth.dockerCustomSshUser,
+        dockerCustomSshPwd: this.sensitiveInfoService.redactSensitiveInfo(
+          deviceAuth.dockerCustomSshPwd,
+        ),
+        dockerCustomSshKeyPass: this.sensitiveInfoService.redactSensitiveInfo(
+          deviceAuth.dockerCustomSshKeyPass,
+        ),
+        dockerCustomSshKey: this.sensitiveInfoService.redactSensitiveInfo(
+          deviceAuth.dockerCustomSshKey,
+        ),
+        customDockerForcev6: deviceAuth.customDockerForcev6,
+        customDockerForcev4: deviceAuth.customDockerForcev4,
+        customDockerAgentForward: deviceAuth.customDockerAgentForward,
+        customDockerTryKeyboard: deviceAuth.customDockerTryKeyboard,
+        customDockerSocket: deviceAuth.customDockerSocket,
+        dockerCa: deviceAuth.dockerCa ? 'MY_CA.pem' : undefined,
+        dockerCert: deviceAuth.dockerCert ? 'MY_CERT.cert' : undefined,
+        dockerKey: deviceAuth.dockerKey ? 'MY_KEY.key' : undefined,
+        proxmoxAuth: {
+          remoteConnectionMethod: deviceAuth.proxmoxAuth?.remoteConnectionMethod,
+          connectionMethod: deviceAuth.proxmoxAuth?.connectionMethod,
+          port: deviceAuth.proxmoxAuth?.port,
+          ignoreSslErrors: deviceAuth.proxmoxAuth?.ignoreSslErrors,
+          tokens: {
+            tokenId: deviceAuth.proxmoxAuth?.tokens?.tokenId,
+            tokenSecret: this.sensitiveInfoService.redactSensitiveInfo(
+              deviceAuth.proxmoxAuth?.tokens?.tokenSecret,
+            ),
+          },
+          userPwd: {
+            username: deviceAuth.proxmoxAuth?.userPwd?.username,
+            password: this.sensitiveInfoService.redactSensitiveInfo(
+              deviceAuth.proxmoxAuth?.userPwd?.password,
+            ),
+          },
+        },
+      };
 
-      return deviceAuth;
+      return deviceAuthDecrypted;
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
@@ -92,6 +162,7 @@ export class DevicesAuthController {
   }
 
   @Patch(':uuid')
+  @UpdateDeviceAuthDoc()
   @ResourceAction(RESOURCES.DEVICE, ACTIONS.UPDATE)
   async updateDeviceAuth(
     @Param('uuid') uuid: string,
@@ -159,6 +230,7 @@ export class DevicesAuthController {
   }
 
   @Delete(':uuid')
+  @DeleteDeviceAuthDoc()
   @ResourceAction(RESOURCES.DEVICE, ACTIONS.DELETE)
   async removeDeviceAuth(@Param('uuid') uuid: string) {
     try {
@@ -182,6 +254,7 @@ export class DevicesAuthController {
   }
 
   @Patch(':uuid/docker')
+  @UpdateDockerAuthDoc()
   @ResourceAction(RESOURCES.DEVICE, ACTIONS.UPDATE)
   async updateDockerAuth(
     @Param('uuid') uuid: string,
@@ -243,15 +316,9 @@ export class DevicesAuthController {
   }
 
   @Post(':uuid/docker/certs/:type')
+  @UseInterceptors(FileInterceptor('file', { fileFilter }))
+  @UploadDockerAuthCertsDoc()
   @ResourceAction(RESOURCES.DEVICE, ACTIONS.UPDATE)
-  @UseInterceptors(
-    FileInterceptor('file', {
-      limits: {
-        fileSize: 1024 * 1024, // 1MB
-      },
-      fileFilter,
-    }),
-  )
   async uploadDockerAuthCerts(
     @Param('uuid') uuid: string,
     @Param('type') type: string,
@@ -304,6 +371,7 @@ export class DevicesAuthController {
   }
 
   @Delete(':uuid/docker/certs/:type')
+  @DeleteDockerAuthCertsDoc()
   @ResourceAction(RESOURCES.DEVICE, ACTIONS.DELETE)
   async deleteDockerAuthCerts(@Param('uuid') uuid: string, @Param('type') type: string) {
     try {
@@ -347,6 +415,7 @@ export class DevicesAuthController {
   }
 
   @Patch(':uuid/proxmox')
+  @UpdateProxmoxAuthDoc()
   @ResourceAction(RESOURCES.DEVICE, ACTIONS.UPDATE)
   async updateProxmoxAuth(
     @Param('uuid') uuid: string,

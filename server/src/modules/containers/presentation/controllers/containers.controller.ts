@@ -1,13 +1,4 @@
 import { parse } from 'url';
-import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
-import { paginate } from '@infrastructure/common/query/pagination.util';
-import { sortByFields } from '@infrastructure/common/query/sorter.util';
-import {
-  BadRequestException,
-  EntityNotFoundException,
-  ServiceUnavailableException,
-} from '@infrastructure/exceptions';
-import { IContainerEntity } from '@modules/containers/domain/entities/container.entity';
 import {
   Body,
   Controller,
@@ -15,19 +6,41 @@ import {
   Get,
   Inject,
   Param,
-  Patch,
   Post,
+  Put,
   Query,
   Req,
 } from '@nestjs/common';
-import { SsmContainer } from 'ssm-shared-lib';
+import { ApiTags } from '@nestjs/swagger';
+import { ContainersQueryDto } from '@modules/containers/presentation/dtos/container-query.dto';
+import { ContainerResponseDto } from '@modules/containers/presentation/dtos/container-response.dto';
+import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
+import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
+import { paginate } from '@infrastructure/common/query/pagination.util';
+import { sortByFields } from '@infrastructure/common/query/sorter.util';
+import {
+  ContainerActionDoc,
+  DeleteContainerDoc,
+  GetContainerByIdDoc,
+  GetContainersByDeviceUuidDoc,
+  GetContainersDoc,
+  RefreshContainersDoc,
+  UpdateContainerDoc,
+  UpdateContainerNameDoc,
+} from '../decorators/container.decorators';
 import {
   CONTAINER_SERVICE,
   IContainerService,
 } from '../../domain/interfaces/container-service.interface';
-import { ContainersQueryDto } from '../dtos/container-query.dto';
-import { PaginatedResponseDto } from '../dtos/paginated-response.dto';
+import { CONTAINER_TAG } from '../decorators/container.decorators';
 
+/**
+ * Containers Controller
+ *
+ * This controller handles operations related to containers, including
+ * fetching, creating, updating, and deleting containers.
+ */
+@ApiTags(CONTAINER_TAG)
 @Controller('containers')
 export class ContainersController {
   constructor(
@@ -36,6 +49,7 @@ export class ContainersController {
   ) {}
 
   @Get()
+  @GetContainersDoc()
   async getAllContainers(@Req() req, @Query() query: ContainersQueryDto) {
     const realUrl = req.url;
     const { current = 1, pageSize = 10 } = query;
@@ -66,61 +80,54 @@ export class ContainersController {
   }
 
   @Get(':id')
-  async getContainerById(@Param('id') id: string) {
-    if (!id) {
-      throw new BadRequestException('Container id is required');
-    }
-
+  @GetContainerByIdDoc()
+  async getContainerById(@Param('id') id: string): Promise<ContainerResponseDto> {
     const container = await this.containerService.getContainerById(id);
-    if (!container) {
-      throw new EntityNotFoundException('Container', id);
-    }
-
-    return container;
+    return container as ContainerResponseDto;
   }
 
   @Get('device/:deviceUuid')
-  async getContainersByDeviceUuid(@Param('deviceUuid') deviceUuid: string) {
-    return this.containerService.getContainersByDeviceUuid(deviceUuid);
+  @GetContainersByDeviceUuidDoc()
+  async getContainersByDeviceUuid(
+    @Param('deviceUuid') deviceUuid: string,
+  ): Promise<ContainerResponseDto[]> {
+    const containers = await this.containerService.getContainersByDeviceUuid(deviceUuid);
+    return containers as ContainerResponseDto[];
   }
 
-  @Patch(':id')
-  async updateContainer(@Param('id') id: string, @Body() containerData: Partial<IContainerEntity>) {
-    return this.containerService.updateContainer(id, containerData);
+  @Put(':id')
+  @UpdateContainerDoc()
+  async updateContainer(
+    @Param('id') id: string,
+    @Body() container: ContainerResponseDto,
+  ): Promise<void> {
+    await this.containerService.updateContainer(id, container);
   }
 
-  @Post(':id/name')
-  async updateContainerCustomName(@Param('id') id: string, @Body() body: { name: string }) {
-    return this.containerService.updateContainerName(id, body.name);
+  @Put(':id/name')
+  @UpdateContainerNameDoc()
+  async updateContainerCustomName(
+    @Param('id') id: string,
+    @Body('name') name: string,
+  ): Promise<void> {
+    await this.containerService.updateContainerName(id, name);
   }
 
   @Delete(':id')
-  async deleteContainer(@Param('id') id: string) {
-    return { success: await this.containerService.deleteContainer(id) };
+  @DeleteContainerDoc()
+  async deleteContainer(@Param('id') id: string): Promise<void> {
+    await this.containerService.deleteContainer(id);
   }
 
-  @Post(':id/docker/actions/:action')
-  async startContainer(@Param('id') id: string, @Param('action') action: SsmContainer.Actions) {
-    if (!id) {
-      throw new BadRequestException('Container id is required');
-    }
-
-    try {
-      const result = await this.containerService.executeContainerAction(id, action);
-      return result;
-    } catch (error: any) {
-      if (error.message && error.message.includes('not found')) {
-        throw new EntityNotFoundException('Container', id);
-      } else if (error.message && error.message.includes('connection')) {
-        throw new ServiceUnavailableException(`Docker daemon is not available: ${error.message}`);
-      } else {
-        throw new BadRequestException(`Failed to perform action on container: ${error.message}`);
-      }
-    }
+  @Post(':id/:action')
+  @ContainerActionDoc()
+  async containerAction(@Param('id') id: string, @Param('action') action: string): Promise<void> {
+    await this.containerService.executeContainerAction(id, action);
   }
 
-  @Post('refresh-all')
-  async refreshAllContainers() {
-    return this.containerService.refreshAllContainers();
+  @Post('refresh')
+  @RefreshContainersDoc()
+  async refreshAllContainers(): Promise<void> {
+    await this.containerService.refreshAllContainers();
   }
 }

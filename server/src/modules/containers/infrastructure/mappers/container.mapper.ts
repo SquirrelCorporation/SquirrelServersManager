@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { IContainerEntity } from '../../domain/entities/container.entity';
+import { IContainer } from '../../domain/entities/container.entity';
 
 @Injectable()
 export class ContainerMapper {
   /**
    * Maps a database document to a container entity
    */
-  toEntity(document: any): IContainerEntity {
+  toEntity(document: any): IContainer {
     return {
       ...document,
       _id: document._id?.toString(),
@@ -16,7 +16,7 @@ export class ContainerMapper {
   /**
    * Maps a container entity to a database document
    */
-  toDocument(entity: Partial<IContainerEntity>): any {
+  toDocument(entity: Partial<IContainer>): any {
     const document: any = { ...entity };
     return document;
   }

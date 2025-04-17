@@ -4,10 +4,26 @@ import { Body, Controller, Delete, Get, Logger, Param, Patch, Post } from '@nest
 import { User } from 'src/decorators/user.decorator';
 import { Playbooks } from 'src/types/typings';
 import { API, SsmAnsible } from 'ssm-shared-lib';
+import { ApiTags } from '@nestjs/swagger';
+import {
+  AddExtraVarToPlaybookDoc,
+  DeleteExtraVarFromPlaybookDoc,
+  DeletePlaybookDoc,
+  EditPlaybookDoc,
+  ExecPlaybookByQuickRefDoc,
+  ExecPlaybookDoc,
+  ExecPlaybookOnInventoryDoc,
+  GetExecLogsDoc,
+  GetExecStatusDoc,
+  GetPlaybookDoc,
+  GetPlaybooksDoc,
+  PLAYBOOKS_TAG,
+} from '../decorators/playbook.decorators';
 
+@ApiTags(PLAYBOOKS_TAG)
 @Controller('playbooks')
-export class PlaybookController {
-  private readonly logger = new Logger(PlaybookController.name);
+export class PlaybooksController {
+  private readonly logger = new Logger(PlaybooksController.name);
 
   constructor(
     private readonly playbookService: PlaybookService,
@@ -15,11 +31,13 @@ export class PlaybookController {
     private readonly playbookFileService: PlaybookFileService,
   ) {}
 
+  @GetPlaybooksDoc()
   @Get()
   async getPlaybooks() {
     return this.playbookRepository.findAllWithActiveRepositories();
   }
 
+  @GetPlaybookDoc()
   @Get(':uuid')
   async getPlaybook(@Param('uuid') uuid: string) {
     const playbook = await this.playbookRepository.findOneByUuid(uuid);
@@ -30,6 +48,7 @@ export class PlaybookController {
     return this.playbookFileService.readPlaybook(playbook.path);
   }
 
+  @EditPlaybookDoc()
   @Patch(':uuid')
   async editPlaybook(@Param('uuid') uuid: string, @Body() updateData: { content: string }) {
     const playbook = await this.playbookRepository.findOneByUuid(uuid);
@@ -40,12 +59,14 @@ export class PlaybookController {
     return this.playbookFileService.editPlaybook(playbook.path, updateData.content);
   }
 
+  @DeletePlaybookDoc()
   @Delete(':uuid')
   async deletePlaybook(@Param('uuid') uuid: string) {
     await this.playbookRepository.deleteByUuid(uuid);
     return { success: true };
   }
 
+  @AddExtraVarToPlaybookDoc()
   @Post(':uuid/extravars')
   async addExtraVarToPlaybook(
     @Param('uuid') uuid: string,
@@ -62,6 +83,7 @@ export class PlaybookController {
     return { success: true };
   }
 
+  @DeleteExtraVarFromPlaybookDoc()
   @Delete(':uuid/extravars/:varname')
   async deleteExtraVarFromPlaybook(@Param('uuid') uuid: string, @Param('varname') varname: string) {
     const playbook = await this.playbookRepository.findOneByUuid(uuid);
@@ -73,6 +95,7 @@ export class PlaybookController {
     return { success: true };
   }
 
+  @ExecPlaybookDoc()
   @Post('exec/:uuid')
   async execPlaybook(
     @Param('uuid') uuid: string,
@@ -95,6 +118,7 @@ export class PlaybookController {
     return { execId: result };
   }
 
+  @ExecPlaybookByQuickRefDoc()
   @Post('exec/quick-ref/:quickRef')
   async execPlaybookByQuickRef(
     @Param('quickRef') quickRef: string,
@@ -117,6 +141,7 @@ export class PlaybookController {
     return { execId: result };
   }
 
+  @ExecPlaybookOnInventoryDoc()
   @Post('exec/inventory/:uuid')
   async execPlaybookOnInventory(
     @Param('uuid') uuid: string,
@@ -142,6 +167,7 @@ export class PlaybookController {
     );
   }
 
+  @GetExecLogsDoc()
   @Get('exec/:uuid/logs')
   async getExecLogs(@Param('uuid') uuid: string) {
     const execLogs = await this.playbookService.getExecLogs(uuid);
@@ -151,6 +177,7 @@ export class PlaybookController {
     };
   }
 
+  @GetExecStatusDoc()
   @Get('exec/:uuid/status')
   async getExecStatus(@Param('uuid') uuid: string) {
     const taskStatuses = await this.playbookService.getExecStatus(uuid);

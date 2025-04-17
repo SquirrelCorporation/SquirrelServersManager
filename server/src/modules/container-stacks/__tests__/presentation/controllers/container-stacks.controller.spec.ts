@@ -16,6 +16,11 @@ vi.mock('@modules/auth/strategies/jwt-auth.guard', () => ({
   },
 }));
 
+vi.mock('@infrastructure/models/api-response.model', () => ({
+  ApiSuccessResponse: vi.fn(),
+  ApiErrorResponse: vi.fn(),
+}));
+
 describe('ContainerStacksController', () => {
   let controller: ContainerStacksController;
   let mockContainerStacksService: IContainerStacksService;

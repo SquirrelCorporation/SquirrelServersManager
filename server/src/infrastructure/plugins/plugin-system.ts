@@ -174,11 +174,11 @@ export class PluginSystem {
             // If we got here, we couldn't find a usable plugin implementation
             logger.error(`No usable plugin implementation found in ${folder}`);
           } catch (importError: any) {
-            logger.error(`Error importing plugin module: ${folder}`, importError);
+            logger.error(importError, `Error importing plugin module: ${folder}`);
             throw importError;
           }
         } catch (error: any) {
-          logger.error(`Failed to load plugin: ${folder}`, error);
+          logger.error(error, `Failed to load plugin: ${folder}`);
         }
       }
     } catch (error: any) {
@@ -368,18 +368,23 @@ export class PluginSystem {
           const pluginLogger = this.pluginLoggers.get(pluginName);
 
           if (manifest.staticDir) {
-            const staticPath = path.join(
+            // Serve the 'client' subdirectory within the staticDir
+            const staticClientPath = path.join(
               this.pluginsDir,
-              pluginName.toLowerCase(),
-              manifest.staticDir,
+              pluginName, // Use original case from manifest
+              manifest.staticDir, // e.g., 'public'
+              'client', // Serve the client build output specifically
             );
-
-            if (fs.existsSync(staticPath)) {
-              const staticUrl = `/static-plugins/${pluginName.toLowerCase()}`;
-              expressInstance.use(staticUrl, express.static(staticPath));
-              pluginLogger?.info(`Serving static files from ${staticPath} at ${staticUrl}`);
+            logger.info(`Static client path: ${staticClientPath}`);
+            if (fs.existsSync(staticClientPath)) {
+              // Keep the URL prefix simple, matching the loader's expectation
+              const staticUrl = `/static-plugins/client/${pluginName}`; // Use original case
+              expressInstance.use(staticUrl, express.static(staticClientPath));
+              pluginLogger?.info(
+                `Serving static client files from ${staticClientPath} at ${staticUrl}`,
+              );
             } else {
-              pluginLogger?.warn(`Static directory ${staticPath} does not exist`);
+              pluginLogger?.warn(`Static client directory ${staticClientPath} does not exist`);
             }
           }
         }
@@ -407,6 +412,68 @@ export class PluginSystem {
         pluginLogger?.error(`Error closing database connection: ${error.message}`);
       }
     }
+  }
+
+  /**
+   * Uninstalls a plugin based on its name (which corresponds to its folder name).
+   * Removes the plugin from the system, drops its database (if applicable),
+   * and deletes its directory.
+   */
+  public async uninstallPlugin(pluginName: string): Promise<void> {
+    logger.info(`Starting uninstall process for plugin: ${pluginName}`);
+
+    const manifest = this.manifests.get(pluginName);
+    if (!manifest) {
+      logger.error(`Plugin ${pluginName} not found or not loaded.`);
+      throw new Error(`Plugin ${pluginName} not found or not loaded.`);
+    }
+
+    // Step 1: Unregister plugin from internal state
+    this.plugins.delete(pluginName);
+    this.manifests.delete(pluginName);
+    this.pluginLoggers.delete(pluginName);
+    logger.info(`Unregistered plugin ${pluginName} from internal state.`);
+
+    // Step 2: Drop database if it exists
+    const dbConnection = this.dbConnections.get(pluginName);
+    if (manifest.database && dbConnection) {
+      try {
+        logger.info(`Dropping database ${manifest.database} for plugin ${pluginName}...`);
+        await dbConnection.dropDatabase();
+        await dbConnection.close(); // Close the specific connection
+        this.dbConnections.delete(pluginName);
+        logger.info(`Database ${manifest.database} dropped and connection closed.`);
+      } catch (dbError: any) {
+        logger.error(
+          `Failed to drop database ${manifest.database} for plugin ${pluginName}: ${dbError.message}`,
+        );
+        // Decide if we should proceed or re-throw. For now, log and continue.
+      }
+    } else {
+      logger.info(`No database associated with plugin ${pluginName}.`);
+    }
+
+    // Step 3: Delete plugin directory
+    const pluginPath = path.join(this.pluginsDir, pluginName);
+    if (fs.existsSync(pluginPath)) {
+      try {
+        logger.info(`Deleting plugin directory: ${pluginPath}`);
+        await fs.promises.rm(pluginPath, { recursive: true, force: true });
+        logger.info(`Plugin directory ${pluginPath} deleted successfully.`);
+      } catch (fsError: any) {
+        logger.error(`Failed to delete plugin directory ${pluginPath}: ${fsError.message}`);
+        // Log error but consider the uninstall partially successful as state is cleaned
+        throw new Error(
+          `Failed to delete plugin directory ${pluginPath}, but plugin was unregistered.`,
+        );
+      }
+    } else {
+      logger.warn(`Plugin directory ${pluginPath} not found, skipping deletion.`);
+    }
+
+    logger.info(`Uninstall process completed for plugin: ${pluginName}`);
+    // Note: This does NOT unregister routes or static serving.
+    // A server restart is typically required for full effect.
   }
 }
 

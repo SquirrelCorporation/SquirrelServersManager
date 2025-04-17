@@ -2,6 +2,7 @@ import http from 'http';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
@@ -56,6 +57,22 @@ class AppWrapper {
 
       // Enable CORS
       nestApp.enableCors();
+
+      // Set up Swagger documentation
+      const config = new DocumentBuilder()
+        .setTitle('Squirrel Servers Manager API')
+        .setDescription('API documentation for Squirrel Servers Manager')
+        .setVersion('1.0')
+        .addBearerAuth()
+        .build();
+
+      const document = SwaggerModule.createDocument(nestApp, config);
+      SwaggerModule.setup('docs', nestApp, document, {
+        swaggerOptions: {
+          persistAuthorization: true,
+        },
+      });
+      logger.info('Swagger documentation initialized at /api/docs');
 
       // Apply Helmet security headers
       nestApp.use(

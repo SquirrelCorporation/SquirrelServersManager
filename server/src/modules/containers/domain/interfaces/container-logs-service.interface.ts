@@ -1,4 +1,4 @@
-import { IContainerEntity } from '@modules/containers/domain/entities/container.entity';
+import { IContainer } from '@modules/containers/domain/entities/container.entity';
 
 export const CONTAINER_LOGS_SERVICE = 'CONTAINER_LOGS_SERVICE';
 
@@ -6,7 +6,7 @@ export const CONTAINER_LOGS_SERVICE = 'CONTAINER_LOGS_SERVICE';
  * Interface for the Container Logs Service
  */
 export interface IContainerLogsService {
-  getContainerById(id: string): Promise<IContainerEntity>;
+  getContainerById(id: string): Promise<IContainer>;
 
   getContainerLiveLogs(
     containerId: string,

@@ -1,4 +1,4 @@
-import { IContainerEntity } from '@modules/containers/domain/entities/container.entity';
+import { IContainer } from '@modules/containers/domain/entities/container.entity';
 import { ConfigurationSchema, ConfigurationWatcherSchema } from '@modules/containers/types';
 import { IComponent } from './component.interface';
 
@@ -24,37 +24,37 @@ export interface IWatcherComponent extends IComponent<ConfigurationWatcherSchema
   /**
    * Remove a container
    */
-  removeContainer(container: IContainerEntity): Promise<void>;
+  removeContainer(container: IContainer): Promise<void>;
 
   /**
    * Start a container
    */
-  startContainer(container: IContainerEntity): Promise<void>;
+  startContainer(container: IContainer): Promise<void>;
 
   /**
    * Stop a container
    */
-  stopContainer(container: IContainerEntity): Promise<void>;
+  stopContainer(container: IContainer): Promise<void>;
 
   /**
    * Restart a container
    */
-  restartContainer(container: IContainerEntity): Promise<void>;
+  restartContainer(container: IContainer): Promise<void>;
 
   /**
    * Pause a container
    */
-  pauseContainer(container: IContainerEntity): Promise<void>;
+  pauseContainer(container: IContainer): Promise<void>;
 
   /**
    * Unpause a container
    */
-  unpauseContainer(container: IContainerEntity): Promise<void>;
+  unpauseContainer(container: IContainer): Promise<void>;
 
   /**
    * Kill a container
    */
-  killContainer(container: IContainerEntity): Promise<void>;
+  killContainer(container: IContainer): Promise<void>;
 
   /**
    * Get container logs

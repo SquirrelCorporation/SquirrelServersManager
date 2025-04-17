@@ -1,8 +1,14 @@
 import { Body, Controller, Param, Patch } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { DevicesService } from '../../application/services/devices.service';
 import { UpdateDeviceCapabilitiesDto } from '../dtos/device-capabilities.dto';
 import { DeviceMapper } from '../mappers/device.mapper';
+import {
+  DEVICES_CAPABILITIES_TAG,
+  UpdateDeviceCapabilitiesDoc,
+} from '../decorators/devices-capabilities.decorators';
 
+@ApiTags(DEVICES_CAPABILITIES_TAG)
 @Controller('devices')
 export class DevicesCapabilitiesController {
   constructor(
@@ -11,6 +17,7 @@ export class DevicesCapabilitiesController {
   ) {}
 
   @Patch(':uuid/capabilities')
+  @UpdateDeviceCapabilitiesDoc()
   async updateDeviceCapabilities(
     @Param('uuid') uuid: string,
     @Body() updateDeviceCapabilitiesDto: { capabilities: UpdateDeviceCapabilitiesDto },

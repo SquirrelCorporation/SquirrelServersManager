@@ -10,6 +10,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import {
   CONTAINER_SERVICE,
   IContainerService,
@@ -23,10 +24,22 @@ import {
   ContainerStatParamDto,
   ContainerStatsQueryDto,
 } from '../dtos/container-stats.dto';
+import {
+  CONTAINER_STATS_TAG,
+  GetAveragedStatsDoc,
+  GetContainerCountDoc,
+  GetContainerStatDoc,
+  GetContainerStatsDoc,
+} from '../decorators/container-stats.decorators';
 
 /**
- * Controller for container statistics
+ * Container Statistics Controller
+ *
+ * This controller handles operations related to container statistics, including
+ * fetching container stats by ID and type, getting container stats by container ID and type,
+ * getting the number of containers by status, and getting averaged container stats.
  */
+@ApiTags(CONTAINER_STATS_TAG)
 @Controller('container-statistics')
 @UsePipes(new ValidationPipe({ transform: true }))
 export class ContainerStatsController {
@@ -45,6 +58,7 @@ export class ContainerStatsController {
    * @returns Container stat
    */
   @Get(':id/stat/:type')
+  @GetContainerStatDoc()
   async getContainerStatByContainerId(@Param() params: ContainerStatParamDto) {
     const container = await this.containerService.getContainerById(params.id);
     if (container == null) {
@@ -68,6 +82,7 @@ export class ContainerStatsController {
    * @returns Container stats
    */
   @Get(':id/stats/:type')
+  @GetContainerStatsDoc()
   async getContainerStatsByContainerId(
     @Param() params: ContainerStatParamDto,
     @Query() query: ContainerStatsQueryDto,
@@ -98,6 +113,7 @@ export class ContainerStatsController {
    * @returns Number of containers
    */
   @Get('count/:status')
+  @GetContainerCountDoc()
   async getNbContainersByStatus(@Param() params: ContainerCountParamDto) {
     try {
       let nbContainers: number;
@@ -119,6 +135,7 @@ export class ContainerStatsController {
    * @returns Averaged container stats
    */
   @Get('averaged')
+  @GetAveragedStatsDoc()
   async getAveragedStats() {
     try {
       const stats = await this.containerStatsService.getCpuAndMemAveragedStats();

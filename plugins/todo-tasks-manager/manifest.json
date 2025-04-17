@@ -1,0 +1,15 @@
+{
+  "id": "todo-tasks-manager",
+  "name": "todo-tasks-manager",
+  "version": "1.0.0",
+  "description": "A simple todo tasks manager plugin with its own database",
+  "entryPoint": "dist/index.js",
+  "staticDir": "public",
+  "database": "todo_plugin",
+  "client": {
+    "remoteEntryRelativePath": "public/client/remoteEntry.js",
+    "exposedModule": "./TodoPluginComponent",
+    "componentName": "TodoPluginComponent",
+    "hasDedicatedPage": true
+  }
+} 
