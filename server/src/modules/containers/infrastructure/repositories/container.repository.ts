@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { SsmContainer } from 'ssm-shared-lib';
-import { IContainerEntity } from '../../domain/entities/container.entity';
+import { IContainer } from '../../domain/entities/container.entity';
 import { IContainerRepository } from '../../domain/repositories/container-repository.interface';
 import { ContainerMapper } from '../mappers/container.mapper';
 import { CONTAINER_SCHEMA, Container } from '../schemas/container.schema';
@@ -16,7 +16,7 @@ export class ContainerRepository implements IContainerRepository {
     private readonly containerMapper: ContainerMapper,
   ) {}
 
-  async findAll(): Promise<IContainerEntity[]> {
+  async findAll(): Promise<IContainer[]> {
     const containers = await this.containerModel
       .aggregate([
         {
@@ -43,7 +43,7 @@ export class ContainerRepository implements IContainerRepository {
     return containers.map((container) => this.containerMapper.toEntity(container));
   }
 
-  async findAllByDeviceUuid(deviceUuid: string): Promise<IContainerEntity[]> {
+  async findAllByDeviceUuid(deviceUuid: string): Promise<IContainer[]> {
     const containers = await this.containerModel
       .find({ deviceUuid })
       .populate('device')
@@ -52,15 +52,12 @@ export class ContainerRepository implements IContainerRepository {
     return containers.map((container) => this.containerMapper.toEntity(container));
   }
 
-  async findOneById(id: string): Promise<IContainerEntity | null> {
+  async findOneById(id: string): Promise<IContainer | null> {
     const container = await this.containerModel.findOne({ id }).populate('device').lean().exec();
     return container ? this.containerMapper.toEntity(container) : null;
   }
 
-  async findOneByNameAndDeviceUuid(
-    name: string,
-    deviceUuid: string,
-  ): Promise<IContainerEntity | null> {
+  async findOneByNameAndDeviceUuid(name: string, deviceUuid: string): Promise<IContainer | null> {
     const container = await this.containerModel
       .findOne({ name, deviceUuid })
       .populate('device')
@@ -69,7 +66,7 @@ export class ContainerRepository implements IContainerRepository {
     return container ? this.containerMapper.toEntity(container) : null;
   }
 
-  async save(container: IContainerEntity): Promise<IContainerEntity> {
+  async save(container: IContainer): Promise<IContainer> {
     const document = this.containerMapper.toDocument(container);
 
     if (container.id) {
@@ -83,14 +80,14 @@ export class ContainerRepository implements IContainerRepository {
     }
   }
 
-  async create(container: Partial<IContainerEntity>): Promise<IContainerEntity> {
+  async create(container: Partial<IContainer>): Promise<IContainer> {
     const document = this.containerMapper.toDocument(container);
     const createdContainer = await this.containerModel.create(document);
     return this.containerMapper.toEntity(createdContainer);
   }
 
-  async update(id: string, containerData: Partial<IContainerEntity>): Promise<IContainerEntity> {
-    const document = this.containerMapper.toDocument(containerData as IContainerEntity);
+  async update(id: string, containerData: Partial<IContainer>): Promise<IContainer> {
+    const document = this.containerMapper.toDocument(containerData as IContainer);
     const updatedContainer = await this.containerModel
       .findOneAndUpdate({ id }, { $set: document }, { new: true })
       .exec();
@@ -122,7 +119,7 @@ export class ContainerRepository implements IContainerRepository {
     return this.containerModel.find({ deviceUuid }).populate('device').lean().exec();
   }
 
-  async findAllByWatcher(watcher: string): Promise<IContainerEntity[]> {
+  async findAllByWatcher(watcher: string): Promise<IContainer[]> {
     const containers = await this.containerModel
       .find({ watcher: watcher })
       .populate('device')

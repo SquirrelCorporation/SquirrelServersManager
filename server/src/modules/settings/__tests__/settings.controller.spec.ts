@@ -3,6 +3,15 @@ import { SettingsKeys, SsmAnsible } from 'ssm-shared-lib';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SettingsController } from '../presentation/controllers/settings.controller';
 
+vi.mock('@infrastructure/models/api-response.model', () => ({
+  ApiSuccessResponse: vi.fn(),
+  ApiErrorResponse: vi.fn(),
+}));
+
+vi.mock('@infrastructure/decorators/api-standard-response.decorator', () => ({
+  ApiStandardResponse: () => vi.fn(),
+}));
+
 describe('SettingsController', () => {
   let controller: SettingsController;
   let mockSettingsService: any;

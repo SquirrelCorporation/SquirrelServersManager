@@ -1,7 +1,7 @@
 import { IWatcherEngineService } from '@modules/containers/domain/components/watcher.interface';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import PinoLogger from '../../../../logger';
-import { IContainerEntity } from '../../domain/entities/container.entity';
+import { IContainer } from '../../domain/entities/container.entity';
 import { IContainerLogsService } from '../../domain/interfaces/container-logs-service.interface';
 import { WATCHER_ENGINE_SERVICE } from '../../domain/interfaces/watcher-engine-service.interface';
 import {
@@ -26,7 +26,7 @@ export class ContainerLogsService implements IContainerLogsService {
   /**
    * Find a container by UUID
    */
-  async getContainerById(id: string): Promise<IContainerEntity> {
+  async getContainerById(id: string): Promise<IContainer> {
     const container = await this.containerRepository.findOneById(id);
     if (!container) {
       throw new NotFoundException(`Container with id ${id} not found`);

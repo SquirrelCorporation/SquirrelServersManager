@@ -30,8 +30,8 @@ import {
 } from './infrastructure/schemas/playbooks-register.schema';
 import { GitPlaybooksRepositoryController } from './presentation/controllers/git-playbooks-register.controller';
 import { LocalPlaybooksRepositoryController } from './presentation/controllers/local-playbooks-register.controller';
-import { PlaybookDiagnosticController } from './presentation/controllers/playbook-diagnostic.controller';
-import { PlaybookController } from './presentation/controllers/playbook.controller';
+import { PlaybooksDiagnosticController } from './presentation/controllers/playbooks-diagnostic.controller';
+import { PlaybooksController } from './presentation/controllers/playbooks.controller';
 import { PlaybooksRepositoryController } from './presentation/controllers/playbooks-repository.controller';
 
 @Module({
@@ -48,9 +48,9 @@ import { PlaybooksRepositoryController } from './presentation/controllers/playbo
   controllers: [
     GitPlaybooksRepositoryController,
     LocalPlaybooksRepositoryController,
-    PlaybookDiagnosticController,
+    PlaybooksDiagnosticController,
     PlaybooksRepositoryController,
-    PlaybookController,
+    PlaybooksController,
   ],
   providers: [
     // Application services

@@ -78,6 +78,7 @@ vi.mock('@modules/ansible-vaults', () => {
       decrypt = vi.fn().mockImplementation((value) => value.replace('encrypted_', ''));
     },
     VAULT_CRYPTO_SERVICE: 'VAULT_CRYPTO_SERVICE_TOKEN_MOCK',
+    DEFAULT_VAULT_ID: 'DEFAULT_VAULT_ID_MOCK',
   };
 });
 

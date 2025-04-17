@@ -74,6 +74,3 @@ export interface IContainer {
   createdAt?: Date;
   updatedAt?: Date;
 }
-
-// For backward compatibility, keep the old interface name as a type alias
-export type IContainerEntity = IContainer;

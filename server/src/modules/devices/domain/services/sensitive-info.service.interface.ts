@@ -17,4 +17,4 @@ export interface ISensitiveInfoService {
    * @returns The prepared sensitive information
    */
   prepareSensitiveInfoForWrite(newKey: string, originalKey?: string): Promise<string>;
-} 
+}

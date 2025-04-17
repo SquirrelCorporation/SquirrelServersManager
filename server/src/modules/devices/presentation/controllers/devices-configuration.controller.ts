@@ -1,4 +1,5 @@
 import { Body, Controller, Param, Patch } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { DevicesService } from '../../application/services/devices.service';
 import {
   DockerConfigurationDto,
@@ -6,7 +7,14 @@ import {
   SystemInformationConfigurationDto,
 } from '../dtos/device-configuration.dto';
 import { DeviceMapper } from '../mappers/device.mapper';
+import {
+  DEVICES_CONFIGURATION_TAG,
+  UpdateDockerConfigurationDoc,
+  UpdateProxmoxConfigurationDoc,
+  UpdateSystemInformationConfigurationDoc,
+} from '../decorators/devices-configuration.decorators';
 
+@ApiTags(DEVICES_CONFIGURATION_TAG)
 @Controller('devices')
 export class DevicesConfigurationController {
   constructor(
@@ -15,6 +23,7 @@ export class DevicesConfigurationController {
   ) {}
 
   @Patch(':uuid/configuration/containers/docker')
+  @UpdateDockerConfigurationDoc()
   async updateDockerConfiguration(
     @Param('uuid') uuid: string,
     @Body() dockerConfigurationDto: DockerConfigurationDto,
@@ -41,6 +50,7 @@ export class DevicesConfigurationController {
   }
 
   @Patch(':uuid/configuration/containers/proxmox')
+  @UpdateProxmoxConfigurationDoc()
   async updateProxmoxConfiguration(
     @Param('uuid') uuid: string,
     @Body() proxmoxConfigurationDto: ProxmoxConfigurationDto,
@@ -67,6 +77,7 @@ export class DevicesConfigurationController {
   }
 
   @Patch(':uuid/configuration/system-information')
+  @UpdateSystemInformationConfigurationDoc()
   async updateSystemInformationConfiguration(
     @Param('uuid') uuid: string,
     @Body()

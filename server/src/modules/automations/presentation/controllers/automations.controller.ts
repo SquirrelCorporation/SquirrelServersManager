@@ -1,26 +1,40 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AutomationsService } from '../../application/services/automations.service';
 import { Automation } from '../../domain/entities/automation.entity';
 import { CreateAutomationDto } from '../dtos/create-automation.dto';
 import { UpdateAutomationDto } from '../dtos/update-automation.dto';
+import {
+  CreateAutomationDoc,
+  DeleteAutomationDoc,
+  ExecuteAutomationDoc,
+  GetAllAutomationsDoc,
+  GetAutomationDoc,
+  GetAutomationTemplateDoc,
+  UpdateAutomationDoc,
+} from '../decorators/automations.decorators';
 
+@ApiTags('Automations')
 @Controller('automations')
 export class AutomationsController {
   constructor(private readonly automationsService: AutomationsService) {}
 
   @Get()
+  @GetAllAutomationsDoc()
   async findAll() {
     const automations = await this.automationsService.findAll();
     return automations;
   }
 
   @Get('template/:templateId')
+  @GetAutomationTemplateDoc()
   async getTemplate(@Param('templateId') templateId: string) {
     const template = await this.automationsService.getTemplate(templateId);
     return template;
   }
 
   @Get(':uuid')
+  @GetAutomationDoc()
   async findOne(@Param('uuid') uuid: string): Promise<Automation> {
     const automation = await this.automationsService.findByUuid(uuid);
     if (!automation) {
@@ -30,6 +44,7 @@ export class AutomationsController {
   }
 
   @Put(':name')
+  @CreateAutomationDoc()
   async create(@Param('name') name: string, @Body('rawChain') rawChain: any): Promise<Automation> {
     const createDto: CreateAutomationDto = {
       name,
@@ -40,6 +55,7 @@ export class AutomationsController {
   }
 
   @Post(':uuid')
+  @UpdateAutomationDoc()
   async update(
     @Param('uuid') uuid: string,
     @Body('name') name: string,
@@ -59,6 +75,7 @@ export class AutomationsController {
   }
 
   @Post(':uuid/execute')
+  @ExecuteAutomationDoc()
   async execute(@Param('uuid') uuid: string): Promise<void> {
     const automation = await this.automationsService.findByUuid(uuid);
     if (!automation) {
@@ -69,6 +86,7 @@ export class AutomationsController {
   }
 
   @Delete(':uuid')
+  @DeleteAutomationDoc()
   async delete(@Param('uuid') uuid: string): Promise<void> {
     const automation = await this.automationsService.findByUuid(uuid);
     if (!automation) {

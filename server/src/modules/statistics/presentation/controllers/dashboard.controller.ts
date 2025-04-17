@@ -1,13 +1,22 @@
 import { Body, Controller, Get, Inject, Param, Post, Query } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
+import { ApiTags } from '@nestjs/swagger';
 import {
   BadRequestException,
   EntityNotFoundException,
 } from '../../../../infrastructure/exceptions';
 import { DashboardService } from '../../application/services/dashboard.service';
 import { DashboardStatQueryDto } from '../dto/dashboard-stats.dto';
+import {
+  DASHBOARD_TAG,
+  GetDashboardAvailabilityStatsDoc,
+  GetDashboardPerformanceStatsDoc,
+  GetSingleAveragedStatsByDevicesAndTypeDoc,
+  GetStatsByDevicesAndTypeDoc,
+} from '../decorators/dashboard.decorators';
 
+@ApiTags(DASHBOARD_TAG)
 @Controller('statistics/dashboard')
 export class DashboardController {
   constructor(
@@ -16,12 +25,14 @@ export class DashboardController {
   ) {}
 
   @Get('performances')
+  @GetDashboardPerformanceStatsDoc()
   async getDashboardPerformanceStats() {
     const result = await this.dashboardService.getSystemPerformance();
     return result;
   }
 
   @Get('availability')
+  @GetDashboardAvailabilityStatsDoc()
   async getDashboardAvailabilityStats() {
     const result = await this.dashboardService.getDevicesAvailability();
     return {
@@ -32,6 +43,7 @@ export class DashboardController {
   }
 
   @Post('averaged/:type')
+  @GetSingleAveragedStatsByDevicesAndTypeDoc()
   async getSingleAveragedStatsByDevicesAndType(
     @Param('type') type: string,
     @Query() query: DashboardStatQueryDto,
@@ -80,6 +92,7 @@ export class DashboardController {
   }
 
   @Post('stats/:type')
+  @GetStatsByDevicesAndTypeDoc()
   async getStatsByDevicesAndType(
     @Param('type') type: string,
     @Body() body: { devices: string[] },

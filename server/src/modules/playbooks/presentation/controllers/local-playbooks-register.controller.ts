@@ -1,17 +1,27 @@
+import { Body, Controller, Delete, Get, Inject, Logger, Param, Post, Put } from '@nestjs/common';
+import { API, Repositories } from 'ssm-shared-lib';
+import { v4 } from 'uuid';
 import { EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
 import { DIRECTORY_ROOT, PlaybooksRegisterService } from '@modules/playbooks';
 import { IPlaybooksRegisterRepository, PLAYBOOKS_REGISTER_REPOSITORY } from '@modules/playbooks';
-import { Body, Controller, Delete, Get, Inject, Logger, Param, Post, Put } from '@nestjs/common';
-import { API, Repositories } from 'ssm-shared-lib';
 import { PLAYBOOKS_REGISTER_ENGINE_SERVICE } from '@modules/playbooks';
-import { PlaybooksRegisterEngineService } from '../../application/services/engine/playbooks-register-engine.service';
-import { LocalPlaybooksRegisterComponent } from '../../application/services/components/local-playbooks-repository.component';
-import { PLAYBOOKS_REGISTER_SERVICE } from '../../domain/services/playbooks-register-service.interface';
-import { v4 } from 'uuid';
 import PlaybooksRegisterComponent from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
+import { ApiTags } from '@nestjs/swagger';
+import { LocalPlaybooksRegisterComponent } from '../../application/services/components/local-playbooks-repository.component';
+import { PlaybooksRegisterEngineService } from '../../application/services/engine/playbooks-register-engine.service';
+import { PLAYBOOKS_REGISTER_SERVICE } from '../../domain/services/playbooks-register-service.interface';
+import {
+  AddLocalRepositoryDoc,
+  DeleteLocalRepositoryDoc,
+  GetLocalRepositoriesDoc,
+  LOCAL_PLAYBOOKS_REPOSITORIES_TAG,
+  SyncToDatabaseLocalRepositoryDoc,
+  UpdateLocalRepositoryDoc,
+} from '../decorators/local-playbooks-repository.decorators';
 /**
  * Controller for managing local playbooks repositories
  */
+@ApiTags(LOCAL_PLAYBOOKS_REPOSITORIES_TAG)
 @Controller('playbooks/repositories/local')
 export class LocalPlaybooksRepositoryController {
   private readonly logger = new Logger(LocalPlaybooksRepositoryController.name);
@@ -38,6 +48,7 @@ export class LocalPlaybooksRepositoryController {
    * Get all local repositories
    * @returns List of local repositories
    */
+  @GetLocalRepositoriesDoc()
   @Get()
   async getLocalRepositories(): Promise<API.LocalPlaybooksRepository[]> {
     const repositories = await this.playbooksRegisterRepository.findAllByType(
@@ -51,6 +62,7 @@ export class LocalPlaybooksRepositoryController {
    * @param uuid Repository UUID
    * @param repository Repository data
    */
+  @UpdateLocalRepositoryDoc()
   @Post(':uuid')
   async updateLocalRepository(
     @Param('uuid') uuid: string,
@@ -78,6 +90,7 @@ export class LocalPlaybooksRepositoryController {
    * Delete a local repository
    * @param uuid Repository UUID
    */
+  @DeleteLocalRepositoryDoc()
   @Delete(':uuid')
   async deleteLocalRepository(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Deleting local repository ${uuid}`);
@@ -94,6 +107,7 @@ export class LocalPlaybooksRepositoryController {
    * Add a local repository
    * @param repository Repository data
    */
+  @AddLocalRepositoryDoc()
   @Put()
   async addLocalRepository(@Body() repository: API.LocalPlaybooksRepository): Promise<void> {
     this.logger.log(`Adding local repository ${repository.name}`);
@@ -127,6 +141,7 @@ export class LocalPlaybooksRepositoryController {
    * Sync a local repository to the database
    * @param uuid Repository UUID
    */
+  @SyncToDatabaseLocalRepositoryDoc()
   @Post(':uuid/sync-to-database')
   async syncToDatabaseLocalRepository(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Syncing local repository ${uuid} to database`);

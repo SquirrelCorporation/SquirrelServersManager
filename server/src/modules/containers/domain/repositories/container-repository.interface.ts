@@ -1,4 +1,4 @@
-import { IContainerEntity } from '../entities/container.entity';
+import { IContainer } from '../entities/container.entity';
 
 export const CONTAINER_REPOSITORY = 'CONTAINER_REPOSITORY';
 
@@ -9,32 +9,32 @@ export interface IContainerRepository {
   /**
    * Find all containers
    */
-  findAll(): Promise<IContainerEntity[]>;
+  findAll(): Promise<IContainer[]>;
 
   /**
    * Find one container by ID
    */
-  findOneById(id: string): Promise<IContainerEntity | null>;
+  findOneById(id: string): Promise<IContainer | null>;
 
   /**
    * Find all containers by device UUID
    */
-  findAllByDeviceUuid(deviceUuid: string): Promise<IContainerEntity[]>;
+  findAllByDeviceUuid(deviceUuid: string): Promise<IContainer[]>;
 
   /**
    * Find all containers by watcher name
    */
-  findAllByWatcher(watcher: string): Promise<IContainerEntity[]>;
+  findAllByWatcher(watcher: string): Promise<IContainer[]>;
 
   /**
    * Create a new container
    */
-  create(container: IContainerEntity): Promise<IContainerEntity>;
+  create(container: IContainer): Promise<IContainer>;
 
   /**
    * Update a container by UUID
    */
-  update(uuid: string, data: Partial<IContainerEntity>): Promise<IContainerEntity>;
+  update(uuid: string, data: Partial<IContainer>): Promise<IContainer>;
 
   /**
    * Delete a container by UUID

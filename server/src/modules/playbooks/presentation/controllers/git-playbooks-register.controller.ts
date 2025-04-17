@@ -1,14 +1,4 @@
-import { EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
-import {
-  DEFAULT_VAULT_ID,
-  VAULT_CRYPTO_SERVICE,
-  VaultCryptoService,
-} from '@modules/ansible-vaults';
-import { PLAYBOOKS_REGISTER_ENGINE_SERVICE } from '@modules/playbooks';
-import {
-  IPlaybooksRegisterRepository,
-  PLAYBOOKS_REGISTER_REPOSITORY,
-} from '@modules/playbooks/domain/repositories/playbooks-register-repository.interface';
+import { ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -21,18 +11,42 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 import { API, Repositories } from 'ssm-shared-lib';
+import { EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
+import {
+  DEFAULT_VAULT_ID,
+  VAULT_CRYPTO_SERVICE,
+  VaultCryptoService,
+} from '@modules/ansible-vaults';
+import { PLAYBOOKS_REGISTER_ENGINE_SERVICE } from '@modules/playbooks';
+import PlaybooksRegisterComponent from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
 import { GitPlaybooksRegisterComponent } from '../../application/services/components/git-playbooks-register.component';
 import { PlaybooksRegisterEngineService } from '../../application/services/engine/playbooks-register-engine.service';
 import { PlaybooksRegisterService } from '../../application/services/playbooks-register.service';
 import { IPlaybooksRegister } from '../../domain/entities/playbooks-register.entity';
+import {
+  IPlaybooksRegisterRepository,
+  PLAYBOOKS_REGISTER_REPOSITORY,
+} from '../../domain/repositories/playbooks-register-repository.interface';
 import { PLAYBOOKS_REGISTER_SERVICE } from '../../domain/services/playbooks-register-service.interface';
-import { v4 } from 'uuid';
-import PlaybooksRegisterComponent from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
+import {
+  AddGitRepository,
+  CommitAndSyncRepository,
+  DeleteGitRepository,
+  ForceCloneRepository,
+  ForcePullRepository,
+  ForceRegisterRepository,
+  GIT_REPOSITORIES_TAG,
+  GetGitRepositories,
+  SyncToDatabaseRepository,
+  UpdateGitRepository,
+} from '../decorators/git-repository.decorators';
 
 /**
  * Controller for managing Git playbooks repositories
  */
+@ApiTags(GIT_REPOSITORIES_TAG)
 @Controller('playbooks/repositories/git')
 export class GitPlaybooksRepositoryController {
   private readonly logger = new Logger(GitPlaybooksRepositoryController.name);
@@ -61,6 +75,7 @@ export class GitPlaybooksRepositoryController {
    * @param repository Repository data
    */
   @Put()
+  @AddGitRepository()
   async addGitRepository(@Body() repository: API.GitPlaybooksRepository): Promise<void> {
     this.logger.log(`Adding Git repository ${repository.name}`);
 
@@ -77,7 +92,7 @@ export class GitPlaybooksRepositoryController {
       ignoreSSLErrors,
     } = repository;
     // TODO: move to service
-    const uuid = v4();
+    const uuid = uuidv4();
     // Create the Git repository
     const encryptedToken = await this.vaultCryptoService.encrypt(
       accessToken as string,
@@ -121,6 +136,7 @@ export class GitPlaybooksRepositoryController {
    * @returns List of Git repositories
    */
   @Get()
+  @GetGitRepositories()
   async getGitRepositories(): Promise<API.GitPlaybooksRepository[]> {
     this.logger.log('Getting all Git repositories');
 
@@ -140,6 +156,7 @@ export class GitPlaybooksRepositoryController {
    * @param repository Repository data
    */
   @Post(':uuid')
+  @UpdateGitRepository()
   async updateGitRepository(
     @Param('uuid') uuid: string,
     @Body() repository: API.GitPlaybooksRepository,
@@ -194,6 +211,7 @@ export class GitPlaybooksRepositoryController {
    * @param uuid Repository UUID
    */
   @Delete(':uuid')
+  @DeleteGitRepository()
   async deleteGitRepository(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Deleting Git repository ${uuid}`);
 
@@ -210,6 +228,7 @@ export class GitPlaybooksRepositoryController {
    * @param uuid Repository UUID
    */
   @Post(':uuid/force-pull')
+  @ForcePullRepository()
   async forcePullRepository(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Force pulling Git repository ${uuid}`);
     try {
@@ -231,6 +250,7 @@ export class GitPlaybooksRepositoryController {
    * @param uuid Repository UUID
    */
   @Post(':uuid/force-clone')
+  @ForceCloneRepository()
   async forceCloneRepository(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Force cloning Git repository ${uuid}`);
     try {
@@ -252,6 +272,7 @@ export class GitPlaybooksRepositoryController {
    * @param uuid Repository UUID
    */
   @Post(':uuid/commit-and-sync')
+  @CommitAndSyncRepository()
   async commitAndSyncRepository(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Committing and syncing Git repository ${uuid}`);
     try {
@@ -273,6 +294,7 @@ export class GitPlaybooksRepositoryController {
    * @param uuid Repository UUID
    */
   @Post(':uuid/force-register')
+  @ForceRegisterRepository()
   async forceRegister(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Force registering Git repository ${uuid}`);
 
@@ -285,10 +307,11 @@ export class GitPlaybooksRepositoryController {
   }
 
   /**
-   * Sync a Git repository to the database
+   * Sync a Git repository to database
    * @param uuid Repository UUID
    */
   @Post(':uuid/sync-to-database')
+  @SyncToDatabaseRepository()
   async syncToDatabase(@Param('uuid') uuid: string): Promise<void> {
     this.logger.log(`Syncing Git repository ${uuid} to database`);
     const component = this.getGitComponent(uuid);

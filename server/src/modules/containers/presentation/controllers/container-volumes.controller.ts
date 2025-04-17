@@ -21,12 +21,31 @@ import {
 } from '@nestjs/common';
 import { User } from 'src/decorators/user.decorator';
 import { SsmContainer } from 'ssm-shared-lib';
+import { Response } from 'express';
+import { ApiTags } from '@nestjs/swagger';
 import {
   CONTAINER_VOLUMES_SERVICE,
   IContainerVolumesService,
 } from '../../domain/interfaces/container-volumes-service.interface';
 import { CreateVolumeDto } from '../dtos/create-volume.dto';
+import {
+  BackupVolumeDoc,
+  CONTAINER_VOLUMES_TAG,
+  CreateVolumeDoc,
+  DeleteVolumeDoc,
+  DownloadBackupDoc,
+  GetVolumeByUuidDoc,
+  GetVolumesByDeviceDoc,
+  GetVolumesDoc,
+} from '../decorators/container-volumes.decorators';
 
+/**
+ * Container Volumes Controller
+ *
+ * This controller handles operations related to container volumes, including
+ * fetching, creating, and deleting volumes.
+ */
+@ApiTags(CONTAINER_VOLUMES_TAG)
 @Controller('container-volumes')
 export class ContainerVolumesController {
   constructor(
@@ -39,6 +58,7 @@ export class ContainerVolumesController {
    * Get all volumes with pagination, sorting, and filtering
    */
   @Get()
+  @GetVolumesDoc()
   async getVolumes(@Req() req) {
     const realUrl = req.url;
     const { current, pageSize } = req.query;
@@ -68,21 +88,25 @@ export class ContainerVolumesController {
   }
 
   @Post()
+  @CreateVolumeDoc()
   async createVolume(@Body() createVolumeDto: CreateVolumeDto, @User() user) {
     return this.volumesService.createVolumeWithPlaybook(createVolumeDto, user);
   }
 
   @Get('device/:deviceUuid')
+  @GetVolumesByDeviceDoc()
   async getVolumesByDevice(@Param('deviceUuid') deviceUuid: string) {
     return this.volumesService.getVolumesByDeviceUuid(deviceUuid);
   }
 
   @Get(':uuid')
+  @GetVolumeByUuidDoc()
   async getVolumeByUuid(@Param('uuid') uuid: string) {
     return this.volumesService.getVolumeByUuid(uuid);
   }
 
   @Delete(':uuid')
+  @DeleteVolumeDoc()
   async deleteVolume(@Param('uuid') uuid: string) {
     const success = await this.volumesService.deleteVolume(uuid);
     return { success };
@@ -92,6 +116,7 @@ export class ContainerVolumesController {
    * Backup a volume
    */
   @Post('backup/:uuid')
+  @BackupVolumeDoc()
   async postBackupVolume(@Param('uuid') uuid: string, @Body() body: { mode: string }) {
     const { mode } = body;
 
@@ -117,7 +142,8 @@ export class ContainerVolumesController {
    * Download a volume backup
    */
   @Get('backup')
-  async getBackupVolume(@Query('fileName') fileName: string, @Res() res) {
+  @DownloadBackupDoc()
+  async getBackupVolume(@Query('fileName') fileName: string, @Res() res: Response) {
     const filePath = os.tmpdir() + '/';
 
     if (!this.fileSystemService.test('-f', `${filePath}${fileName}`)) {

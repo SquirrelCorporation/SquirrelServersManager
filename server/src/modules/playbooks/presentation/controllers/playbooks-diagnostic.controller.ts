@@ -3,10 +3,16 @@ import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
 import { IPlaybooksService, PLAYBOOKS_SERVICE } from '@modules/playbooks';
 import { Controller, Get, Inject, Logger, Param } from '@nestjs/common';
 import { User } from 'src/decorators/user.decorator';
+import { ApiTags } from '@nestjs/swagger';
+import {
+  CheckDeviceConnectionDoc,
+  PLAYBOOK_DIAGNOSTIC_TAG,
+} from '../decorators/playbook-diagnostic.decorators';
 
+@ApiTags(PLAYBOOK_DIAGNOSTIC_TAG)
 @Controller('playbooks/diagnostic')
-export class PlaybookDiagnosticController {
-  private readonly logger = new Logger(PlaybookDiagnosticController.name);
+export class PlaybooksDiagnosticController {
+  private readonly logger = new Logger(PlaybooksDiagnosticController.name);
 
   constructor(
     @Inject(DEVICES_SERVICE)
@@ -15,6 +21,7 @@ export class PlaybookDiagnosticController {
     private readonly playbookService: IPlaybooksService,
   ) {}
 
+  @CheckDeviceConnectionDoc()
   @Get(':uuid')
   async checkDeviceConnection(@Param() params, @User() user): Promise<{ taskId: string }> {
     const { uuid } = params;

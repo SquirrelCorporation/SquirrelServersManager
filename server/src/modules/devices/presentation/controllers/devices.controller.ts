@@ -1,19 +1,31 @@
 import { parse } from 'url';
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { API } from 'ssm-shared-lib';
 import { paginate } from '@infrastructure/common/query/pagination.util';
 import { sortByFields } from '@infrastructure/common/query/sorter.util';
 import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
-import { IDevice } from '@modules/devices';
 import {
   BadRequestException,
   ConflictException,
   EntityNotFoundException,
 } from '@infrastructure/exceptions';
+import { IDevice } from '@modules/devices';
 import { DeviceMapper } from '../mappers/device.mapper';
 import { CreateDeviceDto, UpdateDeviceDto } from '../dtos/device.dto';
 import { DevicesService } from '../../application/services/devices.service';
+import {
+  CreateDeviceDoc,
+  DEVICES_TAG,
+  DeleteDeviceDoc,
+  GetAllDevicesDoc,
+  GetDeviceByUuidDoc,
+  GetDevicesDoc,
+  GetDevicesWithFilterDoc,
+  UpdateDeviceDoc,
+} from '../decorators/devices.decorators';
 
+@ApiTags(DEVICES_TAG)
 @Controller('devices')
 export class DevicesController {
   constructor(
@@ -22,6 +34,7 @@ export class DevicesController {
   ) {}
 
   @Post()
+  @CreateDeviceDoc()
   async createDevice(@Body() createDeviceDto: CreateDeviceDto) {
     try {
       return this.devicesService.create(createDeviceDto);
@@ -36,6 +49,7 @@ export class DevicesController {
   }
 
   @Get()
+  @GetDevicesDoc()
   async findDevices(@Req() req) {
     const realUrl = req.url;
     const { current = 1, pageSize = 10 } = req.query;
@@ -68,16 +82,19 @@ export class DevicesController {
   }
 
   @Get('/all')
+  @GetAllDevicesDoc()
   async findAllDevices() {
     return this.devicesService.findAll();
   }
 
   @Get('filter')
+  @GetDevicesWithFilterDoc()
   async findDevicesWithFilter(@Query() filter: any) {
     return this.devicesService.findWithFilter(filter);
   }
 
   @Get(':uuid')
+  @GetDeviceByUuidDoc()
   async findOneDevice(@Param('uuid') uuid: string) {
     if (!uuid) {
       throw new BadRequestException('Device UUID is required');
@@ -92,6 +109,7 @@ export class DevicesController {
   }
 
   @Patch(':uuid')
+  @UpdateDeviceDoc()
   async updateDevice(@Param('uuid') uuid: string, @Body() updateDeviceDto: UpdateDeviceDto) {
     if (!uuid) {
       throw new BadRequestException('Device UUID is required');
@@ -115,6 +133,7 @@ export class DevicesController {
   }
 
   @Delete(':uuid')
+  @DeleteDeviceDoc()
   async removeDevice(@Param('uuid') uuid: string) {
     if (!uuid) {
       throw new BadRequestException('Device UUID is required');

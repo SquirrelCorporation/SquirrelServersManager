@@ -14,6 +14,11 @@ describe('SmartFailureController', () => {
     controller = new SmartFailureController(mockService as unknown as ISmartFailureService);
   });
 
+  vi.mock('@infrastructure/models/api-response.model', () => ({
+    ApiSuccessResponse: vi.fn(),
+    ApiErrorResponse: vi.fn(),
+  }));
+
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });

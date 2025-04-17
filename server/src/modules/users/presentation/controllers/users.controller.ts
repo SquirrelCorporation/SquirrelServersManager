@@ -1,6 +1,7 @@
 import { UnauthorizedException } from '@infrastructure/exceptions/app-exceptions';
 import { Body, Controller, Get, HttpException, HttpStatus, Post, Put, Res } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { SESSION_DURATION } from 'src/config';
 import { Public } from 'src/decorators/public.decorator';
@@ -15,7 +16,19 @@ import { IUser } from '../../domain/entities/user.entity';
 import { LoginResponseDto } from '../dtos/login-response.dto';
 import { LoginDto } from '../dtos/login.dto';
 import { UserMapper } from '../mappers/user.mapper';
+import {
+  CheckUsersExistenceDoc,
+  CreateUserDoc,
+  GetCurrentUserDoc,
+  LoginDoc,
+  LogoutDoc,
+  RegenerateApiKeyDoc,
+  USERS_TAG,
+  UpdateLogsLevelDoc,
+} from '../decorators/users.decorators';
 
+@ApiTags(USERS_TAG)
+@ApiBearerAuth()
 @Controller('users')
 export class UsersController {
   constructor(
@@ -26,6 +39,7 @@ export class UsersController {
 
   @Public()
   @Get()
+  @CheckUsersExistenceDoc()
   async getAllUsers() {
     const users = await this.usersService.getAllUsers();
     return { hasUsers: users?.length && users.length > 0 };
@@ -34,6 +48,7 @@ export class UsersController {
   @Public()
   @Post('login')
   @ResourceAction(RESOURCES.USER, ACTIONS.EXECUTE)
+  @LoginDoc()
   async login(
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) response: Response,
@@ -66,7 +81,6 @@ export class UsersController {
 
     const token = this.jwtService.sign(payload);
 
-    // Set the cookie using passthrough response
     response.cookie('jwt', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -80,6 +94,7 @@ export class UsersController {
   @Public()
   @Post()
   @ResourceAction(RESOURCES.USER, ACTIONS.CREATE)
+  @CreateUserDoc()
   async createUser(@Body() userData: Partial<IUser>) {
     try {
       const users = await this.usersService.getAllUsers();
@@ -107,6 +122,7 @@ export class UsersController {
 
   @Put('api-key')
   @ResourceAction(RESOURCES.USER, ACTIONS.UPDATE)
+  @RegenerateApiKeyDoc()
   async regenerateApiKey(@User() user) {
     const newApiKey = await this.usersService.regenerateApiKey(user.email);
     if (!newApiKey) {
@@ -124,8 +140,8 @@ export class UsersController {
 
   @Post('logs-level')
   @ResourceAction(RESOURCES.USER, ACTIONS.UPDATE)
+  @UpdateLogsLevelDoc()
   async updateLogsLevel(@Body() logsLevelData: { terminal: any }, @User() user) {
-    // Only admins can update logs level for other users
     if (user.role !== 'admin') {
       throw new HttpException(
         {
@@ -154,12 +170,14 @@ export class UsersController {
 
   @Get('current')
   @ResourceAction(RESOURCES.USER, ACTIONS.READ)
+  @GetCurrentUserDoc()
   async getCurrentUser(@User() user) {
     return this.usersService.getCurrentUser(user);
   }
 
   @Post('logout')
   @ResourceAction(RESOURCES.USER, ACTIONS.EXECUTE)
+  @LogoutDoc()
   async logout(@Res({ passthrough: true }) response: Response) {
     response.clearCookie('jwt');
     return;

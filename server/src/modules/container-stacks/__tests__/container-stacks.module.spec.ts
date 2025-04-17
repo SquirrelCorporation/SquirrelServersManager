@@ -1,8 +1,9 @@
 import { Controller, Injectable, Module } from '@nestjs/common';
-import { getModelToken, MongooseModule } from '@nestjs/mongoose';
+import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import './test-setup';
 import { Test } from '@nestjs/testing';
 import { describe, expect, it, vi } from 'vitest';
+import { VAULT_CRYPTO_SERVICE as REAL_VAULT_TOKEN } from '@modules/ansible-vaults';
 import { CONTAINER_REPOSITORY_COMPONENT_SERVICE } from '../../domain/interfaces/container-repository-component-service.interface';
 import { CONTAINER_STACKS_REPOSITORY_ENGINE_SERVICE } from '../../domain/interfaces/container-stacks-repository-engine-service.interface';
 import { CONTAINER_STACKS_SERVICE } from '../../domain/interfaces/container-stacks-service.interface';
@@ -10,7 +11,6 @@ import { CONTAINER_CUSTOM_STACK_REPOSITORY_REPOSITORY } from '../../domain/repos
 import { CONTAINER_CUSTOM_STACK_REPOSITORY as CONTAINER_CUSTOM_STACK_REPOSITORY_TOKEN } from '../../domain/repositories/container-custom-stack-repository.interface';
 import { ContainerStacksModule } from '../container-stacks.module';
 import { CONTAINER_CUSTOM_STACK_REPOSITORY } from '../infrastructure/schemas/container-custom-stack-repository.schema';
-import { VAULT_CRYPTO_SERVICE as REAL_VAULT_TOKEN } from '@modules/ansible-vaults';
 
 // Import constants from mocks instead of directly from modules
 import { CONTAINER_CUSTOM_STACK } from '../infrastructure/schemas/container-custom-stack.schema';
@@ -21,6 +21,11 @@ const ContainerStacksService = {};
 const ContainerCustomStackRepository = {};
 const ContainerCustomStackRepositoryMapper = {};
 const ContainerCustomStackMapper = {};
+
+vi.mock('@infrastructure/models/api-response.model', () => ({
+  ApiSuccessResponse: vi.fn(),
+  ApiErrorResponse: vi.fn(),
+}));
 
 vi.mock('@modules/auth/strategies/jwt-auth.guard', () => ({
   JwtAuthGuard: class {
@@ -40,6 +45,7 @@ vi.mock('@modules/ansible-vaults', () => ({
     }
   },
   VAULT_CRYPTO_SERVICE: 'VAULT_CRYPTO_SERVICE_TOKEN_MOCK',
+  DEFAULT_VAULT_ID: 'DEFAULT_VAULT_ID_MOCK',
 }));
 
 vi.mock('../shell/shell.module', () => ({
