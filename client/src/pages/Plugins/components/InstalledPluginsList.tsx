@@ -91,7 +91,7 @@ const InstalledPluginsList: React.FC<InstalledPluginsListProps> = ({
           </Paragraph>
         )}
         <List
-          itemLayout="vertical"
+          itemLayout="horizontal"
           dataSource={plugins}
           renderItem={(plugin) => {
             const hasPage = plugin.client?.hasDedicatedPage;
@@ -103,19 +103,6 @@ const InstalledPluginsList: React.FC<InstalledPluginsListProps> = ({
               <List.Item
                 key={plugin.id}
                 actions={[
-                  <Space key="status">
-                    <Text>Status:</Text>
-                    {plugin.enabled ? (
-                      <Tag color="success" icon={<CheckCircleOutlined />}>
-                        Enabled
-                      </Tag>
-                    ) : (
-                      <Tag color="error" icon={<CloseCircleOutlined />}>
-                        Disabled
-                      </Tag>
-                    )}
-                  </Space>,
-                  <Text key="version">Version: {plugin.version}</Text>,
                   plugin.author && (
                     <Text key="author">Author: {plugin.author}</Text>
                   ),
@@ -126,7 +113,13 @@ const InstalledPluginsList: React.FC<InstalledPluginsListProps> = ({
                   ),
                   <Button
                     key="uninstall"
-                    icon={isUninstalling ? <Spin size="small" /> : <DeleteOutlined />}
+                    icon={
+                      isUninstalling ? (
+                        <Spin size="small" />
+                      ) : (
+                        <DeleteOutlined />
+                      )
+                    }
                     danger
                     onClick={() => handleUninstall(plugin)}
                     disabled={isUninstalling}
@@ -142,7 +135,6 @@ const InstalledPluginsList: React.FC<InstalledPluginsListProps> = ({
                   title={`${plugin.name} (${plugin.id})`}
                   description={plugin.description}
                 />
-
                 {plugin.permissions && plugin.permissions.length > 0 && (
                   <div style={{ marginTop: 16 }}>
                     <Text strong>Permissions:</Text>
@@ -155,6 +147,7 @@ const InstalledPluginsList: React.FC<InstalledPluginsListProps> = ({
                     </div>
                   </div>
                 )}
+                <Text key="version">Version: {plugin.version}</Text>
               </List.Item>
             );
           }}
@@ -169,4 +162,4 @@ const InstalledPluginsList: React.FC<InstalledPluginsListProps> = ({
   );
 };
 
-export default InstalledPluginsList; 
+export default InstalledPluginsList;
