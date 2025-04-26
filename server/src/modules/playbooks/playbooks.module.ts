@@ -33,6 +33,7 @@ import { LocalPlaybooksRepositoryController } from './presentation/controllers/l
 import { PlaybooksDiagnosticController } from './presentation/controllers/playbooks-diagnostic.controller';
 import { PlaybooksController } from './presentation/controllers/playbooks.controller';
 import { PlaybooksRepositoryController } from './presentation/controllers/playbooks-repository.controller';
+import { PlaybooksMicroserviceController } from './presentation/controllers/playbooks-microservice.controller';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { PlaybooksRepositoryController } from './presentation/controllers/playbo
     PlaybooksDiagnosticController,
     PlaybooksRepositoryController,
     PlaybooksController,
+    PlaybooksMicroserviceController,
   ],
   providers: [
     // Application services

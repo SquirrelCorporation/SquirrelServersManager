@@ -112,6 +112,7 @@ export class ContainerComponentFactory {
    */
   private createMockRegistryComponent(provider: string): IComponent<ConfigurationSchema> {
     logger.info(`Creating mock registry component for provider: ${provider}`);
+    // prettier-ignore
     return new(class extends AbstractRegistryComponent {
       async init(): Promise<void> {
         logger.info(`Mock setup for ${provider} registry`);

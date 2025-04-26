@@ -101,5 +101,9 @@ export interface IWatcherEngineService extends OnModuleInit, OnModuleDestroy {
   /**
    * Find a registered docker component
    */
-  findRegisteredComponent(kind: Kind, watcherType: string, watcher: string);
+  findRegisteredComponent(
+    kind: Kind,
+    watcherType: string,
+    watcher: string,
+  ): IComponent<ConfigurationSchema> | undefined;
 }

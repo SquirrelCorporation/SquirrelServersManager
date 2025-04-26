@@ -111,7 +111,11 @@ const showDynamicMessage = (
   const defaultDuration = type === 'error' ? 6 : 3;
   const finalDuration = duration !== undefined ? duration : defaultDuration;
 
+  // Generate random id
+  const key = Math.random().toString(36).substring(2, 15);
+
   antMessage.open({
+    key,
     content: <MessageContent content={content} type={type} />,
     duration: finalDuration,
     icon: <></>, // Explicitly remove the default icon
@@ -125,6 +129,7 @@ const showDynamicMessage = (
       justifyContent: 'center',
     },
   });
+  return key;
 };
 
 // Create enhanced message API
@@ -132,19 +137,19 @@ const message = {
   ...antMessage, // Include standard antd methods
   // Implement our custom dynamic methods
   success({ content, duration }: { content: string; duration?: number }) {
-    showDynamicMessage(content, 'success', duration);
+    return showDynamicMessage(content, 'success', duration);
   },
   error({ content, duration }: { content: string; duration?: number }) {
-    showDynamicMessage(content, 'error', duration);
+    return showDynamicMessage(content, 'error', duration);
   },
   info({ content, duration }: { content: string; duration?: number }) {
-    showDynamicMessage(content, 'info', duration);
+    return showDynamicMessage(content, 'info', duration);
   },
   warning({ content, duration }: { content: string; duration?: number }) {
-    showDynamicMessage(content, 'warning', duration);
+    return showDynamicMessage(content, 'warning', duration);
   },
   loading({ content, duration }: { content: string; duration?: number }) {
-    showDynamicMessage(content, 'loading', duration);
+    return showDynamicMessage(content, 'loading', duration);
   },
 };
 

@@ -6,12 +6,18 @@ import GeneralSettings from '@/pages/Admin/Settings/components/GeneralSettings';
 import Information from '@/pages/Admin/Settings/components/Information';
 import PlaybookSettings from '@/pages/Admin/Settings/components/PlaybooksSettings';
 import RegistrySettings from '@/pages/Admin/Settings/components/RegistrySettings';
-import { InfoCircleOutlined, SettingOutlined, AppstoreOutlined } from '@ant-design/icons';
+import {
+  InfoCircleOutlined,
+  SettingOutlined,
+  AppstoreOutlined,
+  BulbOutlined,
+} from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import React, { useEffect } from 'react';
 import { TabsProps } from 'antd';
 import { history, useLocation } from '@umijs/max';
 import { useSlot } from '@/plugins/contexts/plugin-context';
+import MCPSettings from './components/MCPSettings';
 
 const Settings: React.FC = () => {
   const location = useLocation();
@@ -65,6 +71,15 @@ const Settings: React.FC = () => {
       children: <RegistrySettings />,
     },
     {
+      key: 'mcp-settings',
+      label: (
+        <div>
+          <SettingOutlined /> MCP
+        </div>
+      ),
+      children: <MCPSettings />,
+    },
+    {
       key: 'advanced',
       label: (
         <div>
@@ -93,8 +108,8 @@ const Settings: React.FC = () => {
         <div>
           <Title.MainTitle
             title="Plugins"
-            subtitle="Configure installed plugins"
             backgroundColor={TitleColors.SETTINGS}
+            icon={<AppstoreOutlined />}
           />
           <SettingsPanelsSlot />
         </div>

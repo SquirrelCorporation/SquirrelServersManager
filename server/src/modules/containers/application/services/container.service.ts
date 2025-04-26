@@ -11,6 +11,7 @@ import DockerModem from 'docker-modem';
 import Dockerode from 'dockerode';
 import logger from 'src/logger';
 import { SsmContainer } from 'ssm-shared-lib';
+import { GetContainersPayloadDto } from '@modules/mcp/application/dto/get-containers.payload.dto';
 import {
   DEVICE_AUTH_SERVICE,
   IDeviceAuthService,
@@ -45,11 +46,29 @@ export class ContainerService implements IContainerService {
   }
 
   async getContainerById(id: string): Promise<IContainer> {
-    const container = await this.containerRepository.findOneById(id);
-    if (!container) {
-      throw new NotFoundException(`Container with ID ${id} not found`);
+    this.logger.log(`Service: Getting container by ID: ${id}`);
+    if (!id) {
+      this.logger.warn('Service: Missing containerId in getContainerById call');
+      throw new NotFoundException('Missing containerId');
     }
-    return container;
+    try {
+      const container = await this.containerRepository.findOneById(id);
+      if (!container) {
+        this.logger.warn(`Service: Container with ID ${id} not found in repository.`);
+        throw new NotFoundException(`Container with ID ${id} not found`);
+      }
+      return container;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn(`Service: Caught NotFoundException for container ID ${id}.`);
+        throw error;
+      }
+      this.logger.error(
+        `Service: Error getting container by ID ${id}: ${error}`,
+        error instanceof Error ? error.stack : undefined,
+      );
+      throw error;
+    }
   }
 
   async getContainersByDeviceUuid(deviceUuid: string): Promise<IContainer[]> {
@@ -108,26 +127,25 @@ export class ContainerService implements IContainerService {
       throw new NotFoundException(`Container with ID ${id} not found`);
     }
 
-    // Find Docker watcher component for this device
-    const deviceUuid = container.deviceUuid;
+    // Find Docker watcher component for this container's watcher
     const dockerComponent = this.watcherEngineService.findRegisteredComponent(
       Kind.WATCHER,
       WATCHERS.DOCKER,
       container.watcher,
-    );
+    ) as IWatcherComponent;
 
     if (!dockerComponent) {
-      throw new Error(`Docker watcher for device ${deviceUuid} not found`);
+      throw new Error(`Docker watcher component for watcher ${container.watcher} not found`);
     }
 
     try {
-      // Use Docker component to delete container
-      await dockerComponent.removeContainer(container.id);
+      // Use Docker component to delete container - Pass full container object
+      await dockerComponent.removeContainer(container);
 
       // Delete from database
       return this.containerRepository.deleteById(id);
     } catch (error: any) {
-      this.logger.error(`Failed to delete container: ${error.message}`);
+      this.logger.error(`Failed to delete container ${id}: ${error.message}`);
       throw error;
     }
   }
@@ -293,5 +311,22 @@ export class ContainerService implements IContainerService {
         watcher.watch(),
       ),
     );
+  }
+
+  async getAllContainersFiltered(payload: GetContainersPayloadDto): Promise<IContainer[]> {
+    this.logger.log(
+      `Service: Getting all containers (filtered - placeholder): ${JSON.stringify(payload)}`,
+    );
+    try {
+      const containers = await this.getAllContainers();
+      // TODO: Add filtering logic based on payload if required
+      return containers;
+    } catch (error) {
+      this.logger.error(
+        `Service: Error handling getAllContainersFiltered: ${error}`,
+        (error as Error).stack,
+      );
+      throw error;
+    }
   }
 }

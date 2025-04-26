@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Repositories } from 'ssm-shared-lib';
 import { IPlaybooksRegisterRepository } from '../../domain/repositories/playbooks-register-repository.interface';
 import { IPlaybooksRegister } from '../../domain/entities/playbooks-register.entity';
 import { PlaybooksRegister, PlaybooksRegisterDocument } from '../schemas/playbooks-register.schema';
-import { Repositories } from 'ssm-shared-lib';
 
 /**
  * Repository for accessing playbooks repository data in the database

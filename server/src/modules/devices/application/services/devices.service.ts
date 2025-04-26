@@ -1,9 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { SsmStatus, SsmAnsible } from 'ssm-shared-lib';
-import { IDevicesService } from '../../domain/services/devices-service.interface';
-import { DEVICE_REPOSITORY } from '../../domain/repositories/device-repository.interface';
-import { IDeviceRepository } from '../../domain/repositories/device-repository.interface';
-import { IDevice } from '../../domain/entities/device.entity';
+import { SsmAnsible, SsmStatus } from 'ssm-shared-lib';
 import { CreateDeviceDto } from '@modules/devices/presentation/dtos/device.dto';
 import { DEVICE_AUTH_REPOSITORY } from '@modules/devices/domain/repositories/device-auth-repository.interface';
 import { IDeviceAuthRepository } from '@modules/devices/domain/repositories/device-auth-repository.interface';
@@ -11,6 +7,10 @@ import { DEFAULT_VAULT_ID, VAULT_CRYPTO_SERVICE } from '@modules/ansible-vaults'
 import { IVaultCryptoService } from '@modules/ansible-vaults';
 import Events from 'src/core/events/events';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { IDevice } from '../../domain/entities/device.entity';
+import { IDeviceRepository } from '../../domain/repositories/device-repository.interface';
+import { DEVICE_REPOSITORY } from '../../domain/repositories/device-repository.interface';
+import { IDevicesService } from '../../domain/services/devices-service.interface';
 
 /**
  * Implementation of the devices service
@@ -68,7 +68,20 @@ export class DevicesService implements IDevicesService {
   }
 
   async findOneByUuid(uuid: string): Promise<IDevice | null> {
-    return this.deviceRepository.findOneByUuid(uuid);
+    if (!uuid) {
+      this.logger.warn('Service: Missing UUID in findOneByUuid call');
+      return null;
+    }
+    try {
+      const device = await this.deviceRepository.findOneByUuid(uuid);
+      return device;
+    } catch (error) {
+      this.logger.error(
+        `Service: Error in findOneByUuid for UUID ${uuid}: ${error}`,
+        (error as Error).stack,
+      );
+      throw error;
+    }
   }
 
   async findByUuids(uuids: string[]): Promise<IDevice[] | null> {
@@ -80,7 +93,14 @@ export class DevicesService implements IDevicesService {
   }
 
   async findAll(): Promise<IDevice[] | null> {
-    return this.deviceRepository.findAll();
+    this.logger.log(`Service: Getting all devices`);
+    try {
+      const devices = await this.deviceRepository.findAll();
+      return devices;
+    } catch (error: any) {
+      this.logger.error(error, `Service: Error in findAll: ${error.message}`);
+      throw error;
+    }
   }
 
   async setDeviceOfflineAfter(inactivityInMinutes: number): Promise<void> {

@@ -69,6 +69,10 @@ import {
   ContainerVolumeSchema,
 } from './infrastructure/schemas/container-volume.schema';
 import { CONTAINER_SCHEMA, ContainerSchema } from './infrastructure/schemas/container.schema';
+import {
+  PROXMOX_CONTAINER_MODEL_TOKEN,
+  ProxmoxContainerSchema,
+} from './infrastructure/schemas/proxmox-container.schema';
 import { ContainerImagesController } from './presentation/controllers/container-images.controller';
 import { ContainerNetworksController } from './presentation/controllers/container-networks.controller';
 import { ContainerRegistriesController } from './presentation/controllers/container-registries.controller';
@@ -77,6 +81,9 @@ import { ContainerTemplatesController } from './presentation/controllers/contain
 import { ContainerVolumesController } from './presentation/controllers/container-volumes.controller';
 import { ContainersController } from './presentation/controllers/containers.controller';
 import { ContainerLogsGateway } from './presentation/gateways/container-logs.gateway';
+import { PROXMOX_CONTAINER_REPOSITORY } from './domain/repositories/proxmox-container.repository.interface';
+import { ProxmoxContainerRepository } from './infrastructure/repositories/proxmox-container.repository';
+import { ContainersMicroserviceController } from './presentation/controllers/containers-microservice.controller';
 
 /**
  * ContainersModule provides services for managing Docker containers, volumes, networks, images, and registries
@@ -90,6 +97,7 @@ import { ContainerLogsGateway } from './presentation/gateways/container-logs.gat
       { name: CONTAINER_NETWORK_SCHEMA, schema: ContainerNetworkSchema },
       { name: CONTAINER_IMAGE, schema: ContainerImageSchema },
       { name: CONTAINER_REGISTRY_SCHEMA, schema: ContainerRegistrySchema },
+      { name: PROXMOX_CONTAINER_MODEL_TOKEN, schema: ProxmoxContainerSchema },
     ]),
     ScheduleModule.forRoot(),
     ShellModule,
@@ -107,6 +115,7 @@ import { ContainerLogsGateway } from './presentation/gateways/container-logs.gat
     ContainerRegistriesController,
     ContainerTemplatesController,
     ContainerDiagnosticController,
+    ContainersMicroserviceController,
   ],
   providers: [
     // Mappers
@@ -133,6 +142,10 @@ import { ContainerLogsGateway } from './presentation/gateways/container-logs.gat
     {
       provide: CONTAINER_REGISTRY_REPOSITORY,
       useClass: ContainerRegistryRepository,
+    },
+    {
+      provide: PROXMOX_CONTAINER_REPOSITORY,
+      useClass: ProxmoxContainerRepository,
     },
 
     // Services
@@ -232,6 +245,10 @@ import { ContainerLogsGateway } from './presentation/gateways/container-logs.gat
     {
       provide: CONTAINER_TEMPLATES_SERVICE,
       useClass: ContainerTemplatesService,
+    },
+    {
+      provide: PROXMOX_CONTAINER_REPOSITORY,
+      useClass: ProxmoxContainerRepository,
     },
     // Export only modules and services, not repositories
     ScheduleModule,

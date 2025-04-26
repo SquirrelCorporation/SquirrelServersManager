@@ -1,5 +1,5 @@
 import { Module, OnModuleInit } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -9,6 +9,7 @@ import { SshModule } from '@modules/ssh';
 import { BullModule } from '@nestjs/bull';
 import { createKeyv } from '@keyv/redis';
 import { CacheModule } from '@nestjs/cache-manager';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { db, redisConf } from './config';
 import logger, { httpLoggerOptions } from './logger';
 import { AnsibleConfigModule } from './modules/ansible-config/ansible-config.module';
@@ -42,6 +43,8 @@ import { AuditLogModule } from './infrastructure/security/audit/audit-log.module
 import { EventsModule } from './core/events/events.module';
 import { BootstrapModule } from './core/bootstrap/bootstrap.module';
 import { DatabaseConnectionException } from './infrastructure/exceptions/app-exceptions';
+import { SystemService } from './infrastructure/system/system.service';
+import { McpModule } from './modules/mcp/mcp.module';
 
 // Store the connection for legacy code to access
 let sharedConnection: mongoose.Connection | null = null;
@@ -201,6 +204,34 @@ let connectionReady = false;
         },
       }),
     }),
+    // ---- Conditionally Register MCP Client ---- Start ----
+    ClientsModule.registerAsync([
+      {
+        name: 'MCP_SERVICE', // Injection token
+        imports: [ConfigModule], // Import ConfigModule to use ConfigService in factory
+        useFactory: (configService: ConfigService) => {
+          const isMcpEnabled = configService.get<boolean>('MCP_ENABLED');
+          if (isMcpEnabled) {
+            const mcpPort = configService.get<number>('MCP_PORT') || 3001;
+            return {
+              transport: Transport.TCP,
+              options: {
+                host: 'localhost',
+                port: mcpPort,
+              },
+            };
+          } else {
+            // Return a configuration that effectively disables the client
+            // or handle injection sites with @Optional()
+            // Returning null/undefined might cause issues depending on NestJS version
+            // A safer approach might be to return a dummy config or rely on @Optional
+            return {}; // Return empty object - injection sites MUST use @Optional()
+          }
+        },
+        inject: [ConfigService],
+      },
+    ]),
+    // ---- Conditionally Register MCP Client ---- End ----
     AuthModule,
     StatisticsModule,
     AutomationsModule,
@@ -225,12 +256,12 @@ let connectionReady = false;
     HealthModule,
     PluginsModule,
     TelemetryModule,
-    // ThrottlerModule, // Temporarily disabled
     AuditLogModule,
     RemoteSystemInformationModule,
-    // Last one
+    McpModule.registerAsync(),
     BootstrapModule,
   ],
+  providers: [SystemService],
 })
 export class AppModule implements OnModuleInit {
   onModuleInit() {

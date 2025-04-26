@@ -1,6 +1,7 @@
 [
-  {"name" :  "integration",
-   "include": "src/__tests__/*"
+  {
+    "name": "integration",
+    "include": "src/__tests__/*"
   },
   {
     "name": "modules",

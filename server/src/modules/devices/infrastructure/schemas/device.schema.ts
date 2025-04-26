@@ -23,7 +23,7 @@ export class Device {
     type: {
       containers: {
         docker: {
-          enabled: { type: Boolean, default: false },
+          enabled: { type: Boolean, default: true },
         },
         proxmox: {
           enabled: { type: Boolean, default: false },
@@ -35,7 +35,7 @@ export class Device {
     },
     default: {
       containers: {
-        docker: { enabled: false },
+        docker: { enabled: true },
         proxmox: { enabled: false },
         lxd: { enabled: false },
       },

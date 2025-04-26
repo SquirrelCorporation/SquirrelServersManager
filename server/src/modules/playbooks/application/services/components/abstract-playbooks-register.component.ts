@@ -94,7 +94,7 @@ export default abstract class PlaybooksRegisterComponent {
   public async syncToDatabase() {
     this.childLogger.info('saving to database...');
     const playbooksRegister = await this.getPlaybooksRegister();
-    this.childLogger.info(`getting directories tree...`);
+    this.childLogger.info(`getting directories tree... (${this.directory})`);
     const filteredTree = await this.updateDirectoriesTree();
     if (!filteredTree) {
       this.childLogger.warn('No playbooks found in directory');
@@ -117,7 +117,7 @@ export default abstract class PlaybooksRegisterComponent {
       });
     this.childLogger.debug(playbooksListFromDirectory);
     this.childLogger.info(
-      `Found ${playbooksListFromDirectory?.length || 0} playbooks from directory`,
+      `Found ${playbooksListFromDirectory?.length || 0} playbooks from directory (${this.directory})`,
     );
     const playbooksListToDelete = playbooksListFromDatabase?.filter((playbook) => {
       return !playbooksListFromDirectory?.some((p) => p?.path === playbook.path);

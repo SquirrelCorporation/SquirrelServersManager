@@ -72,7 +72,6 @@ export class PluginStoreController {
     await this.pluginStoreService.installPlugin(body.packageUrl, body.checksum);
   }
 
-  // --- Installed Plugin Endpoint --- //
   @Delete('installed/:pluginId')
   @HttpCode(HttpStatus.OK) // Or maybe 204 No Content?
   async uninstallPlugin(@Param('pluginId') pluginId: string): Promise<void> {

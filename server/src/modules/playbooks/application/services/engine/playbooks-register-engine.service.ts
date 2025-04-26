@@ -1,19 +1,17 @@
 import PlaybooksRegisterComponent from '@modules/playbooks/application/services/components/abstract-playbooks-register.component';
 import { GitPlaybooksRegisterComponent } from '@modules/playbooks/application/services/components/git-playbooks-register.component';
 import { LocalPlaybooksRegisterComponent } from '@modules/playbooks/application/services/components/local-playbooks-repository.component';
-import { PLAYBOOKS_REGISTER_ENGINE_EVENT } from '@modules/playbooks/constants';
 import {
   GitComponentOptions,
   LocalComponentOptions,
 } from '@modules/playbooks/doma../../domain/interfaces/component-options.interface';
 import { IPlaybooksRegister } from '@modules/playbooks/domain/entities/playbooks-register.entity';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
 import { Repositories, SsmGit } from 'ssm-shared-lib';
-import { PlaybooksRegisterComponentFactory } from '../components/component-factory.service';
 import { IVaultCryptoService } from '@modules/ansible-vaults/domain/interfaces/vault-crypto-service.interface';
 import { DEFAULT_VAULT_ID } from '@modules/ansible-vaults/application/services/vault-crypto.service';
 import { VAULT_CRYPTO_SERVICE } from '@modules/ansible-vaults';
+import { PlaybooksRegisterComponentFactory } from '../components/component-factory.service';
 
 /**
  * Service for managing playbooks repository components
@@ -140,11 +138,11 @@ export class PlaybooksRegisterEngineService {
   /**
    * Sync all repository components to the database
    */
-  @OnEvent(PLAYBOOKS_REGISTER_ENGINE_EVENT.SYNC_ALL_REGISTERS)
   async syncAllRegisters(): Promise<void> {
     this.logger.log('Syncing all repository components to the database');
     await Promise.all(
       Object.values(this.components).map(async (component) => {
+        this.logger.log(`Syncing repository ${component.name} to the database`);
         await component.syncToDatabase();
       }),
     );

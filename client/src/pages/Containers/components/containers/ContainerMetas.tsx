@@ -37,6 +37,11 @@ type ContainerMetasProps = {
   reload: () => void;
 };
 
+const tagStyle: React.CSSProperties = {
+  color: '#FFFFFF',
+  fontWeight: 500,
+};
+
 const ContainerMetas = ({
   selectedRecord,
   setSelectedRecord,
@@ -196,7 +201,9 @@ const ContainerMetas = ({
                   }
                 >
                   <a href={`?deviceUuid=${row.device?.uuid}`}>
-                    <Tag color="black">{row.device?.ip}</Tag>
+                    <Tag color="black" style={tagStyle}>
+                      {row.device?.ip}
+                    </Tag>
                   </a>
                 </Popover>
                 {row.displayType === SsmContainer.ContainerTypes.DOCKER && (
