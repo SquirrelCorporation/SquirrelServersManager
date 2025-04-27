@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.30...HEAD)
 
+**Implemented enhancements:**
+
+- MCP Server, \(Back Proxmox\) [\#873](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/873) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Fixed bugs:**
 
 - \[BUG\] Unable to use .de TLD [\#834](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/834)
