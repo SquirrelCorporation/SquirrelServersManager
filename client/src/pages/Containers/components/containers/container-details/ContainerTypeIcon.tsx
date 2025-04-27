@@ -18,7 +18,7 @@ const ContainerTypeIcon: React.FC<ContainerTypeIconProps> = ({
   if (displayType === SsmContainer.ContainerTypes.PROXMOX) {
     icon = <Proxmox />;
   }
-  return <Tag color="geekblue" icon={icon} />;
+  return <Tag icon={icon} />;
 };
 
 export default ContainerTypeIcon;

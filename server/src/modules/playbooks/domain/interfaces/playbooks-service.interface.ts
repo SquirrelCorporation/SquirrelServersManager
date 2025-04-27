@@ -68,4 +68,32 @@ export interface IPlaybooksService {
     extraVarsForcedValues?: API.ExtraVars,
     execUuid?: string,
   ): Promise<string>;
+
+  /**
+   * Add an extra variable to a playbook
+   * @param playbook Playbook
+   * @param extraVar Extra variable
+   */
+  addExtraVarToPlaybook(playbook: IPlaybook, extraVar: API.ExtraVar): Promise<void>;
+
+  /**
+   * Delete an extra variable from a playbook
+   * @param playbook Playbook
+   * @param extraVarName Extra variable name
+   */
+  deleteExtraVarFromPlaybook(playbook: IPlaybook, extraVarName: string): Promise<void>;
+
+  /**
+   * Get execution logs
+   * @param execId Execution ID
+   * @returns Execution logs
+   */
+  getExecLogs(execId: string): Promise<any>;
+
+  /**
+   * Get execution status
+   * @param execId Execution ID
+   * @returns Execution status
+   */
+  getExecStatus(execId: string): Promise<any>;
 }

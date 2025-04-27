@@ -23,6 +23,7 @@ import { DevicesCapabilitiesController } from './presentation/controllers/device
 import { DevicesConfigurationController } from './presentation/controllers/devices-configuration.controller';
 import { DevicesController } from './presentation/controllers/devices.controller';
 import { DeviceMapper } from './presentation/mappers/device.mapper';
+import { DevicesMicroserviceController } from './presentation/controllers/devices-microservice.controller';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { DeviceMapper } from './presentation/mappers/device.mapper';
     DevicesAuthController,
     DevicesCapabilitiesController,
     DevicesConfigurationController,
+    DevicesMicroserviceController,
   ],
   providers: [
     // Core services

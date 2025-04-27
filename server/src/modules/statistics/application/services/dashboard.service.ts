@@ -9,6 +9,7 @@ import {
 } from '../../../../infrastructure/prometheus/prometheus.interface';
 import PinoLogger from '../../../../logger';
 import { IDashboardService } from '../../domain/interfaces/dashboard-service.interface';
+import { DEVICE_STATS_SERVICE } from '../../domain/interfaces/device-stats-service.interface';
 import { DeviceDownTimeService } from './device-downtime.service';
 import { DeviceStatsService } from './device-stats.service';
 
@@ -20,6 +21,7 @@ export class DashboardService implements IDashboardService {
   );
 
   constructor(
+    @Inject(DEVICE_STATS_SERVICE)
     private readonly deviceStatsService: DeviceStatsService,
     private readonly deviceDownTimeService: DeviceDownTimeService,
     @Inject(PROMETHEUS_SERVICE)

@@ -13,6 +13,9 @@ import {
   ConfigurationWatcherSchema,
 } from '@modules/containers/types';
 import { Inject, Injectable, OnModuleDestroy, OnModuleInit, forwardRef } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
+import Events from 'src/core/events/events';
+import { IDevice } from '@modules/devices';
 import PinoLogger from '../../../../../logger';
 import {
   DOCKER_DEVICE_SERVICE,
@@ -32,9 +35,6 @@ import {
 } from '../../../domain/interfaces/watcher-engine-service.interface';
 import { RegistryComponentFactory } from '../components/registry/registry-component-factory.service';
 import { WatcherComponentFactory } from '../components/watcher/watcher-component-factory.service';
-import { OnEvent } from '@nestjs/event-emitter';
-import Events from 'src/core/events/events';
-import { IDevice } from '@modules/devices';
 
 const logger = PinoLogger.child(
   { module: 'WatcherEngineService' },
@@ -432,6 +432,8 @@ export class WatcherEngineService implements IWatcherEngineService, OnModuleInit
       if (payload.device.capabilities.containers.docker?.enabled) {
         const watcher = (await this.registerWatcher(payload.device)) as AbstractWatcherComponent;
         watcher.watch();
+      } else {
+        logger.info(`Device ${payload.device.uuid} does not have docker enabled`);
       }
     } catch (error: any) {
       logger.error(

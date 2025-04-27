@@ -7,22 +7,43 @@ export type StatusTagProps = {
   status?: string;
 };
 
+const tagStyle: React.CSSProperties = {
+  color: '#FFFFFF',
+  fontWeight: 500,
+};
+
 const StatusTag: React.FC<StatusTagProps> = (props: StatusTagProps) => {
   switch (props.status) {
     case SsmStatus.ContainerStatus.RUNNING:
-      return <Tag color="success">Running</Tag>;
+      return (
+        <Tag color="#38A169" style={tagStyle}>
+          Running
+        </Tag>
+      );
     case SsmStatus.ContainerStatus.PAUSED:
-      return <Tag color="warning">Paused</Tag>;
+      return (
+        <Tag color="#DD6B20" style={tagStyle}>
+          Paused
+        </Tag>
+      );
     case SsmStatus.ContainerStatus.UNREACHABLE:
       return (
         <Tooltip title={props.status}>
-          <Tag icon={<ExclamationCircleOutlined />} color="error" />
+          <Tag
+            icon={<ExclamationCircleOutlined />}
+            color="#E53E3E"
+            style={tagStyle}
+          />
         </Tooltip>
       );
     case SsmStatus.ContainerStatus.STOPPED:
-      return <Tag color="default">Stopped</Tag>;
+      return (
+        <Tag color="#4A5568" style={tagStyle}>
+          Stopped
+        </Tag>
+      );
     default:
-      return <Tag>{props.status}</Tag>;
+      return <Tag style={tagStyle}>{props.status}</Tag>;
   }
 };
 

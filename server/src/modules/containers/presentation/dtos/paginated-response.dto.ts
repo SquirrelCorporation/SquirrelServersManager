@@ -25,11 +25,11 @@ export class PaginatedResponseDto<T> {
   data: T[];
 
   @ApiProperty({ description: 'Pagination metadata', type: PaginationMetadata })
-  pagination: PaginationMetadata;
+  metadata: PaginationMetadata;
 
   constructor(data: T[], pagination: { total: number; pageSize: number; current: number }) {
     this.data = data;
-    this.pagination = new PaginationMetadata(
+    this.metadata = new PaginationMetadata(
       pagination.total,
       pagination.pageSize,
       pagination.current,

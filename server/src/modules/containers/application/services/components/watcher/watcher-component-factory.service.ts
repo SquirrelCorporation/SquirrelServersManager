@@ -1,5 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { IProxmoxContainerRepository } from '@modules/containers/domain/repositories/proxmox-container.repository.interface';
+import { PROXMOX_CONTAINER_REPOSITORY } from '@modules/containers/domain/repositories/proxmox-container.repository.interface';
 import PinoLogger from '../../../../../../logger';
 import { IDockerWatcherComponentFactory } from '../../../../domain/components/docker-watcher.interface';
 import {
@@ -30,8 +32,8 @@ import {
   CONTAINER_VOLUMES_SERVICE,
   IContainerVolumesService,
 } from '../../../../domain/interfaces/container-volumes-service.interface';
-import { AbstractWatcherComponent } from './abstract-watcher.component';
 import { DockerWatcherComponentFactory } from './providers/docker/docker-watcher-factory.service';
+import ProxmoxWatcherComponent from './providers/proxmox/proxmox-watcher.component';
 
 const logger = PinoLogger.child(
   { module: 'WatcherComponentFactory' },
@@ -60,6 +62,8 @@ export class WatcherComponentFactory implements IWatcherComponentFactory {
     private readonly containerVolumesService: IContainerVolumesService,
     @Inject(CONTAINER_NETWORKS_SERVICE)
     private readonly containerNetworksService: IContainerNetworksService,
+    @Inject(PROXMOX_CONTAINER_REPOSITORY)
+    private readonly proxmoxContainerRepository: IProxmoxContainerRepository,
   ) {
     // Initialize the Docker watcher factory
     this.dockerWatcherFactory = new DockerWatcherComponentFactory(
@@ -83,58 +87,15 @@ export class WatcherComponentFactory implements IWatcherComponentFactory {
   }
 
   /**
-   * Create a Proxmox watcher component (placeholder for future implementation)
+   * Create a Proxmox watcher component
    */
   createProxmoxComponent(): IWatcherComponent {
-    logger.info('Creating Proxmox watcher component (mock implementation)');
-
-    // Return a mock implementation for Proxmox
-    // eslint-disable-next-line
-    return new (class extends AbstractWatcherComponent {
-      async init(): Promise<void> {
-        this.childLogger.info('Mock Proxmox watcher initialized');
-      }
-
-      async deregisterComponent(): Promise<void> {
-        this.childLogger.info('Mock Proxmox watcher deregistered');
-      }
-
-      getConfigurationSchema() {
-        return this.joi.object().optional();
-      }
-
-      maskConfiguration() {
-        return { ...this.configuration };
-      }
-
-      async getContainer(containerId: string): Promise<any> {
-        return { id: containerId, name: 'mock-proxmox-container' };
-      }
-
-      async listContainers(): Promise<any[]> {
-        return [{ id: 'mock-id', name: 'mock-proxmox-container' }];
-      }
-
-      async createContainer(): Promise<any> {
-        return { id: 'new-mock-id', name: 'new-mock-proxmox-container' };
-      }
-
-      async removeContainer(): Promise<void> {}
-      async startContainer(): Promise<void> {}
-      async stopContainer(): Promise<void> {}
-      async restartContainer(): Promise<void> {}
-      async pauseContainer(): Promise<void> {}
-      async unpauseContainer(): Promise<void> {}
-      async killContainer(): Promise<void> {}
-
-      async getContainerLogs(): Promise<any> {
-        return 'Mock Proxmox container logs';
-      }
-
-      async watch(): Promise<any> {
-        return 'Mock Proxmox watcher';
-      }
-    })();
+    logger.info('Creating Proxmox watcher component');
+    return new ProxmoxWatcherComponent(
+      this.eventEmitter,
+      this.proxmoxContainerRepository,
+      this.containerService,
+    );
   }
 
   /**

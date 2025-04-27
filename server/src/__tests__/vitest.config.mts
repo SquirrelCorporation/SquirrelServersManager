@@ -1,5 +1,5 @@
-import { defineConfig } from 'vitest/config';
 import path from 'path';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
@@ -15,6 +15,7 @@ export default defineConfig({
       '@core': path.resolve(__dirname, '../core'),
       '@common': path.resolve(__dirname, '../common'),
       '@config': path.resolve(__dirname, '../config'),
+      '@middlewares': path.resolve(__dirname, '../middlewares'),
     },
   },
 });

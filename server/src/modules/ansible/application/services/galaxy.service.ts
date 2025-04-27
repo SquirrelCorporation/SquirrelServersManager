@@ -34,7 +34,6 @@ export class GalaxyService implements IGalaxyService {
           `${this.galaxyApiUrl}/v3/plugin/ansible/search/collection-versions/?${namespace ? 'namespace=' + encodeURIComponent(namespace) + '&' : ''}${content ? 'keywords=' + encodeURIComponent(content) + '&' : ''}is_deprecated=false&repository_label=!hide_from_search&is_highest=true&offset=${offset}&limit=${pageSize}&order_by=name`,
         ),
       );
-      this.logger.log(response);
       return {
         data: response.data?.data || [],
         metadata: {

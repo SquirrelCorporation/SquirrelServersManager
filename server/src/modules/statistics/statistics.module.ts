@@ -19,6 +19,8 @@ import { DeviceDownTimeEventRepository } from './infrastructure/repositories/dev
 import { DEVICE_DOWNTIME_EVENT_REPOSITORY } from './domain/repositories/device-downtime-event-repository.interface';
 import { MetricsController } from './presentation/controllers/metrics.controller';
 import { METRICS_SERVICE } from './doma../../domain/interfaces/metrics-service.interface';
+import { StatisticsMicroserviceController } from './presentation/controllers/statistics-microservice.controller';
+import { DEVICE_STATS_SERVICE } from './domain/interfaces/device-stats-service.interface';
 
 @Module({
   imports: [
@@ -27,11 +29,19 @@ import { METRICS_SERVICE } from './doma../../domain/interfaces/metrics-service.i
     DevicesModule,
     forwardRef(() => ContainersModule),
   ],
-  controllers: [DashboardController, DeviceStatsController, MetricsController],
+  controllers: [
+    DashboardController,
+    DeviceStatsController,
+    MetricsController,
+    StatisticsMicroserviceController,
+  ],
   providers: [
     PrometheusProvider,
     DashboardService,
-    DeviceStatsService,
+    {
+      provide: DEVICE_STATS_SERVICE,
+      useClass: DeviceStatsService,
+    },
     DeviceDownTimeService,
     {
       provide: METRICS_SERVICE,
@@ -45,11 +55,14 @@ import { METRICS_SERVICE } from './doma../../domain/interfaces/metrics-service.i
   ],
   exports: [
     DashboardService,
-    DeviceStatsService,
     DeviceDownTimeService,
     {
       provide: METRICS_SERVICE,
       useClass: MetricsService,
+    },
+    {
+      provide: DEVICE_STATS_SERVICE,
+      useClass: DeviceStatsService,
     },
     PrometheusProvider,
   ],

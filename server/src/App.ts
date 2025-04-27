@@ -7,6 +7,8 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 import passport from 'passport';
+import { ConfigService } from '@nestjs/config';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 import { SECRET } from './config';
 import { JwtAuthGuard } from './infrastructure/auth/strategies/jwt-auth.guard';
@@ -53,6 +55,7 @@ class AppWrapper {
       const nestApp = await NestFactory.create<NestExpressApplication>(AppModule, {
         bufferLogs: true,
       });
+
       nestApp.useLogger(nestApp.get(Logger));
 
       // Enable CORS
@@ -181,9 +184,32 @@ class AppWrapper {
       await nestApp.init();
       this.nestApp = nestApp;
 
-      // Start listening on port 3000
+      // Start listening on HTTP port 3000
       await nestApp.listen(3000);
-      logger.info('NestJS application listening on port 3000');
+      logger.info('NestJS application listening on HTTP port 3000');
+
+      // ---- Conditionally Start Internal Microservice Listener ---- Start ----
+      const configService = nestApp.get(ConfigService);
+      const isMcpEnabled = configService.get<boolean>('MCP_ENABLED');
+
+      if (isMcpEnabled) {
+        const coreServicePort = configService.get<number>('CORE_SERVICE_PORT') || 3002;
+        nestApp.connectMicroservice<MicroserviceOptions>({
+          transport: Transport.TCP,
+          options: {
+            host: 'localhost',
+            port: coreServicePort, // Use CORE_SERVICE_PORT (3002)
+          },
+        });
+        // Start all configured microservices (including the TCP one)
+        await nestApp.startAllMicroservices();
+        logger.info(
+          `Internal TCP Microservice listener connected on port ${coreServicePort} for MCP module communication`,
+        );
+      } else {
+        logger.info('MCP is disabled, internal TCP listener not started');
+      }
+      // ---- Conditionally Start Internal Microservice Listener ---- End ----
 
       return nestApp;
     } catch (error) {
@@ -219,8 +245,8 @@ class AppWrapper {
     });
   }
 
-  public getExpressApp() {
-    // Return the express app if needed
+  public getApp() {
+    return this.nestApp;
   }
 }
 

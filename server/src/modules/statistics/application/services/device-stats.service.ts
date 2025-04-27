@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { StatsType } from 'ssm-shared-lib';
 import { DEVICES_SERVICE, IDevice, IDevicesService } from '@modules/devices';
 import { CONTAINER_SERVICE, IContainerService } from '@modules/containers';
+import { TimeseriesDataPointDto } from '@modules/mcp/application/dto/timeseries-stats.response.dto';
 import {
   IPrometheusService,
   PROMETHEUS_SERVICE,
@@ -193,8 +194,12 @@ export class DeviceStatsService implements IDeviceStatsService {
     }
   }
 
-  async getAveragedStatsByType(from: Date, to: Date, type?: string) {
-    this.logger.info(`getAveragedStatsByType - Type: ${type}`);
+  async getAveragedStatsByType(
+    from: Date,
+    to: Date,
+    type?: string,
+  ): Promise<TimeseriesDataPointDto[] | null> {
+    this.logger.info(`Service: Getting averaged stats by type: ${type}`);
 
     try {
       if (!type) {
@@ -207,12 +212,39 @@ export class DeviceStatsService implements IDeviceStatsService {
       const result = await this.prometheusService.queryAveragedStatsByType(statsType, range);
 
       if (!result.success || !result.data) {
-        return null;
+        this.logger.warn(`Service: No averaged data found for type ${type}`);
+        return []; // Return empty array if no data
       }
 
-      return result.data;
+      // Map the result data to TimeseriesDataPointDto
+      const formattedData = result.data
+        .map((point) => {
+          let timestamp: string;
+          try {
+            // Assume point.date is either Date, string, or number (timestamp)
+            timestamp = new Date(point.date).toISOString();
+          } catch {
+            this.logger.warn(`Invalid date format encountered for type ${type}: ${point.date}`);
+            return null; // Skip point on date error
+          }
+
+          const value = typeof point.value === 'string' ? parseFloat(point.value) : point.value;
+
+          if (isNaN(value)) {
+            this.logger.warn(`Invalid numeric value encountered for type ${type}: ${point.value}`);
+            return null; // Skip point on value error
+          }
+
+          return {
+            timestamp: timestamp,
+            value: value,
+          };
+        })
+        .filter((point) => point !== null) as TimeseriesDataPointDto[]; // Filter out null points
+
+      return formattedData;
     } catch (error) {
-      this.logger.error(error, 'Error getting averaged stats by type');
+      this.logger.error(`Service: Error getting averaged stats by type ${type}: ${error}`);
       return null;
     }
   }

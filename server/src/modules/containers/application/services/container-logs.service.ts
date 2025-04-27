@@ -1,5 +1,7 @@
-import { IWatcherEngineService } from '@modules/containers/domain/components/watcher.interface';
+import { IWatcherEngineService } from '@modules/containers/domain/interfaces/watcher-engine-service.interface';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Kind } from '@modules/containers/domain/components/kind.enum';
+import { WATCHERS } from '@modules/containers/constants';
 import PinoLogger from '../../../../logger';
 import { IContainer } from '../../domain/entities/container.entity';
 import { IContainerLogsService } from '../../domain/interfaces/container-logs-service.interface';
@@ -37,8 +39,15 @@ export class ContainerLogsService implements IContainerLogsService {
   /**
    * Find the Docker component for a watcher
    */
-  async findRegisteredComponent(watcher: string): Promise<any> {
-    const component = this.watcherEngineService.findRegisteredDockerComponent(watcher);
+  async findRegisteredWatcherComponent(
+    watcher: string,
+    watcherType: (typeof WATCHERS)[keyof typeof WATCHERS],
+  ): Promise<any> {
+    const component = this.watcherEngineService.findRegisteredComponent(
+      Kind.WATCHER,
+      watcherType,
+      watcher,
+    );
     if (!component) {
       throw new Error(`Docker watcher ${watcher} not found`);
     }
@@ -60,7 +69,10 @@ export class ContainerLogsService implements IContainerLogsService {
         throw new Error(`Container ${id} has no associated watchers`);
       }
 
-      const dockerComponent = await this.findRegisteredComponent(container.watcher);
+      const dockerComponent = await this.findRegisteredWatcherComponent(
+        container.watcher,
+        WATCHERS.DOCKER,
+      );
 
       return dockerComponent.getContainerLiveLogs(container.id, from, callback);
     } catch (error: any) {

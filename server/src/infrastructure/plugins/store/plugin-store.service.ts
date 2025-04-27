@@ -1,3 +1,7 @@
+import * as crypto from 'crypto';
+import * as os from 'os';
+import * as path from 'path';
+import * as fs from 'fs-extra';
 import {
   BadRequestException,
   Inject,
@@ -8,14 +12,13 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import axios from 'axios';
-import * as crypto from 'crypto';
-import * as fs from 'fs-extra';
 import { Model } from 'mongoose';
-import * as os from 'os';
-import * as path from 'path';
 import * as tar from 'tar';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { isValidUrl } from '../../../utils/url-validation';
 import { PluginSystem } from '../plugin-system';
+import { RestartServerEvent } from '../../../core/events/restart-server.event';
+import Events from '../../../core/events/events';
 import { PluginStoreInfo } from './interfaces/plugin-store-info.interface';
 import { PluginStoreConfig, PluginStoreConfigDocument } from './schemas/plugin-store-config.schema';
 
@@ -32,7 +35,8 @@ export class PluginStoreService {
     private readonly configService: ConfigService<any>,
     @InjectModel(PluginStoreConfig.name)
     private readonly configModel: Model<PluginStoreConfigDocument>,
-    @Inject('PLUGIN_SYSTEM') private readonly pluginSystem: PluginSystem, // Inject PluginSystem
+    @Inject('PLUGIN_SYSTEM') private readonly pluginSystem: PluginSystem,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   // Helper to get or create the single config document
@@ -130,9 +134,11 @@ export class PluginStoreService {
     const customRepoUrls = await this.getCustomRepositories();
 
     // Combine URLs and filter out invalid/empty ones
-    const allUrls = [defaultRepoUrl, ...customRepoUrls, 'https://pastebin.com/raw/s34aeCEv'].filter(
-      (url): url is string => typeof url === 'string' && url.length > 0 && isValidUrl(url),
-    );
+    const allUrls = [
+      defaultRepoUrl,
+      ...customRepoUrls,
+      'https://raw.githubusercontent.com/SquirrelCorporation/SquirrelServersManager-Plugins/refs/heads/master/plugins.json',
+    ].filter((url): url is string => typeof url === 'string' && url.length > 0 && isValidUrl(url));
 
     if (allUrls.length === 0) {
       this.logger.warn('No valid plugin repository URLs configured.');
@@ -223,7 +229,7 @@ export class PluginStoreService {
     }
 
     const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'ssm-plugin-'));
-    const downloadPath = path.join(tempDir, 'plugin.tar.gz'); // Path to save download
+    const downloadPath = path.join(tempDir, 'plugin.tar.gz');
     this.logger.debug(`Created temporary directory: ${tempDir}`);
 
     try {
@@ -260,7 +266,7 @@ export class PluginStoreService {
         }
         this.logger.log('Checksum verified successfully.');
       } else {
-        this.logger.warn('No checksum provided, skipping verification.');
+        this.logger.debug('No checksum provided, skipping verification.');
       }
 
       // 3. Extract Package File
@@ -269,17 +275,16 @@ export class PluginStoreService {
       this.logger.debug(`Extracting ${downloadPath} to ${extractDir}`);
       await tar.x({
         file: downloadPath, // Extract from the downloaded file
-        strip: 1,
         C: extractDir,
       });
-      this.logger.debug(`Package extracted successfully to ${extractDir}`);
+      this.logger.log(`Package extracted successfully to ${extractDir}`);
 
       // 4. Validate Manifest
       const manifestPath = path.join(extractDir, 'manifest.json');
+      this.logger.log(`Manifest path: ${manifestPath}`);
       if (!(await fs.pathExists(manifestPath))) {
         throw new Error('manifest.json not found in package root.');
       }
-      // Read manifest just for validation and getting ID
       const manifest = await fs.readJson(manifestPath);
       if (
         !manifest ||
@@ -315,14 +320,14 @@ export class PluginStoreService {
       await fs.move(extractDir, destinationPath);
       this.logger.log(`Moved plugin files to ${destinationPath}`);
 
-      // 9. Trigger Plugin Reload
-      this.logger.log('Triggering plugin reload via PluginSystem...');
-      await this.pluginSystem.scanAndLoadPlugins(); // Call the actual method
-      // Optionally call initializePlugins if needed, depends on its idempotency
-      // await this.pluginSystem.initializePlugins(app); // Need app instance if required
+      // 9. Log completion and Emit Restart Event
+      this.logger.log(
+        `Plugin ${manifest.id} installed successfully. Server restart is required to load it.`,
+      );
+      this.logger.log('Plugin installation successful. Emitting restart request event...');
+      this.eventEmitter.emit(Events.SERVER_RESTART_REQUEST, new RestartServerEvent());
 
-      this.logger.log(`Plugin ${manifest.id} installed and loaded successfully.`);
-      // No return value needed on success
+      // Return control to the controller immediately so it can send the response
     } catch (error: any) {
       this.logger.error(`Installation failed: ${error.message}`, error.stack);
       if (error instanceof BadRequestException) {

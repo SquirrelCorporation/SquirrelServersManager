@@ -2,6 +2,8 @@ import 'reflect-metadata';
 import app from './App';
 import logger from './logger';
 
+const iApp = app;
+
 const start = async () => {
   logger.info(`
     ,;;:;,
@@ -16,7 +18,7 @@ Starting Squirrel Servers Manager server...`);
 
   try {
     // Initialize NestJS (this will also set up Express routes)
-    await app.setupNestJS();
+    await iApp.setupNestJS();
 
     // Start the server
   } catch (err: any) {
@@ -30,5 +32,9 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 export const restart = async () => {
-  await app.stopServer(start);
+  await iApp.stopServer(start);
+};
+
+export const getApp = () => {
+  return iApp.getApp();
 };

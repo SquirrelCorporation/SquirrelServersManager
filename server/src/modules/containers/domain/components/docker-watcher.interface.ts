@@ -105,31 +105,6 @@ export interface IDockerLogsComponent extends IDockerImagesComponent {
  */
 export interface IDockerWatcherComponentFactory {
   /**
-   * Create a Docker listener component
-   */
-  createDockerListenerComponent();
-
-  /**
-   * Create a Docker networks component
-   */
-  createDockerNetworksComponent();
-
-  /**
-   * Create a Docker volumes component
-   */
-  createDockerVolumesComponent();
-
-  /**
-   * Create a Docker images component
-   */
-  createDockerImagesComponent();
-
-  /**
-   * Create a Docker logs component
-   */
-  createDockerLogsComponent();
-
-  /**
    * Create a complete Docker watcher component
    */
   createDockerWatcherComponent();

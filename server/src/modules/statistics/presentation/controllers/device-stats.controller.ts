@@ -3,10 +3,12 @@ import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
 import { DateTime } from 'luxon';
 import { DeviceStatsService } from '../../application/services/device-stats.service';
 import { DeviceStatsParamsDto, DeviceStatsQueryDto } from '../dto/device-stats.dto';
+import { DEVICE_STATS_SERVICE } from '../../domain/interfaces/device-stats-service.interface';
 
 @Controller('statistics/devices')
 export class DeviceStatsController {
   constructor(
+    @Inject(DEVICE_STATS_SERVICE)
     private readonly deviceStatsService: DeviceStatsService,
     @Inject(DEVICES_SERVICE) private readonly devicesService: IDevicesService,
   ) {}

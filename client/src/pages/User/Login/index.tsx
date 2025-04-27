@@ -1,5 +1,5 @@
 // @ts-ignore
-import loginBackground from '@/pages/User/Login/assets/login-background.mp4';
+import loginBackground from '@/pages/User/Login/assets/background.png';
 import { hasUser, user } from '@/services/rest/users/users';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import {
@@ -64,8 +64,7 @@ const Login: React.FC = () => {
         }}
       >
         <LoginFormPage
-          backgroundImageUrl="https://mdn.alipayobjects.com/huamei_gcee1x/afts/img/A*y0ZTS6WLwvgAAAAAAAAAAAAADml6AQ/fmt.webp"
-          backgroundVideoUrl={loginBackground}
+          backgroundImageUrl={loginBackground}
           logo={<img alt="logo" src="/logo.svg" />}
           containerStyle={{
             backgroundColor: 'rgba(0, 0, 0,0.65)',
