@@ -20,6 +20,9 @@
 
 **Merged pull requests:**
 
+- Bump vuetify from 3.8.1 to 3.8.2 in /site [\#871](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/871) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump nginx from 1.27.4 to 1.27.5 in /proxy [\#868](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/868) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @umijs/lint from 4.4.6 to 4.4.8 in /client [\#863](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/863) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump the npm\_and\_yarn group across 2 directories with 1 update [\#860](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/860) ([dependabot[bot]](https://github.com/apps/dependabot))
 - \[FEATURE\] Feat plugins system [\#859](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/859) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @types/node from 22.14.0 to 22.14.1 in /server [\#857](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/857) ([dependabot[bot]](https://github.com/apps/dependabot))
