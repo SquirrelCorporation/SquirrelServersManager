@@ -20,6 +20,10 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Refactor NewDeviceModal to use pre-check functions for Docker, Ansibl… [\#881](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/881) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump @vue-flow/core from 1.42.5 to 1.43.1 in /site [\#880](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/880) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump axios from 1.8.4 to 1.9.0 in /site [\#879](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/879) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump antd from 5.24.6 to 5.24.8 in /client [\#878](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/878) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump vuetify from 3.8.1 to 3.8.2 in /site [\#871](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/871) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump nginx from 1.27.4 to 1.27.5 in /proxy [\#868](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/868) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @umijs/lint from 4.4.6 to 4.4.8 in /client [\#863](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/863) ([dependabot[bot]](https://github.com/apps/dependabot))

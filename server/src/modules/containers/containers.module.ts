@@ -5,6 +5,7 @@ import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
 import { WsAuthModule } from '@infrastructure/websocket-auth/ws-auth.module';
+import { AnsibleVaultsModule } from '@modules/ansible-vaults';
 import { DevicesModule } from '../devices/devices.module';
 import { PlaybooksModule } from '../playbooks/playbooks.module';
 import { ShellModule } from '../shell/shell.module';
@@ -84,7 +85,6 @@ import { ContainerLogsGateway } from './presentation/gateways/container-logs.gat
 import { PROXMOX_CONTAINER_REPOSITORY } from './domain/repositories/proxmox-container.repository.interface';
 import { ProxmoxContainerRepository } from './infrastructure/repositories/proxmox-container.repository';
 import { ContainersMicroserviceController } from './presentation/controllers/containers-microservice.controller';
-
 /**
  * ContainersModule provides services for managing Docker containers, volumes, networks, images, and registries
  * following Clean Architecture principles
@@ -105,6 +105,7 @@ import { ContainersMicroserviceController } from './presentation/controllers/con
     forwardRef(() => StatisticsModule),
     DevicesModule,
     WsAuthModule,
+    AnsibleVaultsModule,
   ],
   controllers: [
     ContainersController,

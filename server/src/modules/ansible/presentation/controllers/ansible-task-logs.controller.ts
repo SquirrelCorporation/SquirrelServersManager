@@ -1,12 +1,15 @@
 import { parse } from 'url';
-import { Controller, Get, Param, Query, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, Param, Query, Req } from '@nestjs/common';
 import { Request } from 'express';
-import { TaskLogsService } from '../../application/services/task-logs.service';
 import { TaskLogsQueryDto } from '../dtos/task-logs-query.dto';
+import {
+  ITaskLogsService,
+  TASK_LOGS_SERVICE,
+} from '../../domain/interfaces/task-logs-service.interface';
 
 @Controller('ansible/logs')
 export class TaskLogsController {
-  constructor(private readonly taskLogsService: TaskLogsService) {}
+  constructor(@Inject(TASK_LOGS_SERVICE) private readonly taskLogsService: ITaskLogsService) {}
 
   @Get('tasks')
   async getAllTasks(@Req() req: Request, @Query() queryDto: TaskLogsQueryDto) {

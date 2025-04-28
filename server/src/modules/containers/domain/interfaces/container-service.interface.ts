@@ -1,5 +1,6 @@
 import { AbstractRegistryComponent } from '@modules/containers/application/services/components/registry/abstract-registry.component';
 import { IDevice, IDeviceAuth } from '@modules/devices';
+import { PreCheckDockerConnectionDto } from '@modules/containers/presentation/dtos/pre-check-docker-connection.dto';
 import { IContainer } from '../../domain/entities/container.entity';
 
 export const CONTAINER_SERVICE = 'CONTAINER_SERVICE';
@@ -112,6 +113,11 @@ export interface IContainerService {
    * Check Docker connection
    */
   checkDockerConnection(deviceUuid: string): Promise<any>;
+
+  /**
+   * Precheck Docker connection
+   */
+  preCheckDockerConnection(preCheckDto: PreCheckDockerConnectionDto): Promise<any>;
 
   /**
    * Update container name

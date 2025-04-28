@@ -252,6 +252,7 @@ vi.mock('@modules/shell', () => {
     SHELL_SERVICE: 'ShellService',
     SSH_KEY_SERVICE: 'SshKeyService',
     PLAYBOOK_FILE_SERVICE: 'PlaybookFileService',
+    SHELL_WRAPPER_SERVICE: 'SHELL_WRAPPER_SERVICE_TOKEN_MOCK',
   };
 });
 

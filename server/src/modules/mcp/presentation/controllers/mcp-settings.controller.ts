@@ -5,7 +5,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { IsBoolean } from 'class-validator';
 import { Logger } from '@nestjs/common';
-import { RestartServerEvent } from 'src/core/events/restart-server.event';
+import { RestartServerEvent } from '../../../../core/events/restart-server.event';
 import Events from '../../../../core/events/events';
 import { ACTIONS, RESOURCES, ResourceAction } from '../../../../infrastructure/security';
 

@@ -17,9 +17,9 @@ import { FileSystemService, PlaybookFileService } from '@modules/shell';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { API } from 'ssm-shared-lib';
 import { PLAYBOOKS_REGISTER_ENGINE_SERVICE } from '@modules/playbooks';
-import Events from 'src/core/events/events';
 import { OnEvent } from '@nestjs/event-emitter';
 import { IPlaybooksRegisterService } from '../../domain/services/playbooks-register-service.interface';
+import Events from '../../../../core/events/events';
 import { PlaybooksRegisterEngineService } from './engine/playbooks-register-engine.service';
 import { TreeNodeService } from './tree-node.service';
 
