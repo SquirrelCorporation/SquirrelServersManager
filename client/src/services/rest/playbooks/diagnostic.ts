@@ -1,4 +1,3 @@
-
 import { request } from '@umijs/max';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 
@@ -15,4 +14,17 @@ export async function getCheckDeviceAnsibleConnection(
       ...(options || {}),
     },
   );
+}
+
+export async function postPreCheckAnsibleConnection(
+  ip: string,
+  deviceAuth: API.DeviceAuthParams,
+  masterNodeUrl?: string,
+  options?: { [key: string]: any },
+) {
+  return request<API.Response<API.CheckAnsibleConnection>>(`${BASE_URL}`, {
+    data: { ip: ip, masterNodeUrl: masterNodeUrl, ...deviceAuth },
+    method: 'POST',
+    ...(options || {}),
+  });
 }

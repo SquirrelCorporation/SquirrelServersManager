@@ -1,9 +1,19 @@
 import { SSHCredentialsAdapter } from '@infrastructure/index';
-import { DEVICE_AUTH_SERVICE, DEVICES_SERVICE, IDeviceAuthService, IDevicesService } from '@modules/devices';
+import {
+  DEVICES_SERVICE,
+  DEVICE_AUTH_SERVICE,
+  IDeviceAuthService,
+  IDevicesService,
+} from '@modules/devices';
 import { SSHExecutor } from '@modules/remote-system-information/application/services/remote-ssh-executor.service';
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { IDevice } from '../../../devices/domain/entities/device.entity';
+import { VAULT_CRYPTO_SERVICE } from '@modules/ansible-vaults';
+import { IVaultCryptoService } from '@modules/ansible-vaults/domain/interfaces/vault-crypto-service.interface';
+import { DEFAULT_VAULT_ID } from '@modules/ansible-vaults';
+import { SsmStatus } from 'ssm-shared-lib';
 import { IRemoteSystemInformationService } from '../../domain/interfaces/remote-system-information-service.interface';
+import { IDevice } from '../../../devices/domain/entities/device.entity';
+import { PreCheckRemoteSystemInformationDto } from '../../presentation/dtos/pre-check-remote-system-information.dto';
 import { RemoteSystemInformationEngineService } from './engine/remote-system-information-engine.service';
 
 /**
@@ -19,6 +29,8 @@ export class RemoteSystemInformationService implements IRemoteSystemInformationS
     private readonly devicesService: IDevicesService,
     @Inject(DEVICE_AUTH_SERVICE)
     private readonly deviceAuthService: IDeviceAuthService,
+    @Inject(VAULT_CRYPTO_SERVICE)
+    private readonly vaultCryptoService: IVaultCryptoService,
   ) {}
 
   /**
@@ -104,6 +116,54 @@ export class RemoteSystemInformationService implements IRemoteSystemInformationS
       return {
         connectionStatus: 'failed',
         errorMessage: error.message,
+      };
+    }
+  }
+
+  async preCheckRemoteSystemInformationConnection(preCheckDto: PreCheckRemoteSystemInformationDto) {
+    const { ip, authType, sshKey, sshUser, sshPwd, sshPort, becomeMethod, becomePass, sshKeyPass } =
+      preCheckDto;
+
+    const sshHelper = new SSHCredentialsAdapter();
+    try {
+      const mockedDeviceAuth = {
+        device: {
+          _id: 'tmp',
+          ip,
+          uuid: 'tmp',
+          status: SsmStatus.DeviceStatus.REGISTERING,
+          capabilities: { containers: {} },
+          systemInformation: {},
+          configuration: { containers: {}, systemInformation: {} },
+        },
+        authType,
+        sshKey: sshKey
+          ? await this.vaultCryptoService.encrypt(sshKey, DEFAULT_VAULT_ID)
+          : undefined,
+        sshUser,
+        sshPwd: sshPwd
+          ? await this.vaultCryptoService.encrypt(sshPwd, DEFAULT_VAULT_ID)
+          : undefined,
+        sshPort: sshPort || 22,
+        becomeMethod,
+        becomePass: becomePass
+          ? await this.vaultCryptoService.encrypt(becomePass, DEFAULT_VAULT_ID)
+          : undefined,
+        sshKeyPass: sshKeyPass
+          ? await this.vaultCryptoService.encrypt(sshKeyPass, DEFAULT_VAULT_ID)
+          : undefined,
+      };
+      await SSHExecutor.testConnection(
+        await sshHelper.getSShConnection(mockedDeviceAuth.device, mockedDeviceAuth),
+      );
+
+      return {
+        status: 'successful',
+      };
+    } catch (error: any) {
+      return {
+        status: 'failed',
+        message: error.message,
       };
     }
   }

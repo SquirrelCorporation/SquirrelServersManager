@@ -1,5 +1,6 @@
 import { OnModuleInit } from '@nestjs/common';
 import { IDevice } from '../../../../modules/devices/domain/entities/device.entity';
+import { PreCheckRemoteSystemInformationDto } from '../../presentation/dtos/pre-check-remote-system-information.dto';
 // Add injection token
 export const REMOTE_SYSTEM_INFORMATION_SERVICE = 'REMOTE_SYSTEM_INFORMATION_SERVICE';
 
@@ -34,4 +35,12 @@ export interface IRemoteSystemInformationService extends OnModuleInit {
    * @param uuid The UUID of the device to test connection to
    */
   testConnection(uuid: string): Promise<any>;
+
+  /**
+   * Pre-check connection to a remote system using provided credentials
+   * @param preCheckDto DTO containing connection details (IP, auth, etc.)
+   */
+  preCheckRemoteSystemInformationConnection(
+    preCheckDto: PreCheckRemoteSystemInformationDto,
+  ): Promise<any>;
 }

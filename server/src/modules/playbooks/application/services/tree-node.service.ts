@@ -1,4 +1,3 @@
-import { ExtraVarsService } from '@modules/ansible';
 import { FILE_PATTERN } from '@modules/playbooks/constants';
 import { ITreeNodeService } from '@modules/playbooks/doma../../domain/interfaces/tree-node-service.interface';
 import {
@@ -7,6 +6,7 @@ import {
 } from '@modules/playbooks/domain/repositories/playbook-repository.interface';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DirectoryTree } from 'ssm-shared-lib';
+import { EXTRA_VARS_SERVICE, IExtraVarsService } from '@modules/ansible';
 
 /**
  * Service for tree node operations
@@ -18,7 +18,7 @@ export class TreeNodeService implements ITreeNodeService {
   constructor(
     @Inject(PLAYBOOK_REPOSITORY)
     private readonly playbookRepository: IPlaybookRepository,
-    private readonly extraVarsService: ExtraVarsService,
+    @Inject(EXTRA_VARS_SERVICE) private readonly extraVarsService: IExtraVarsService,
   ) {}
 
   /**

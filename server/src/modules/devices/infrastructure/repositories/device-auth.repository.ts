@@ -80,7 +80,7 @@ export class DeviceAuthRepository implements IDeviceAuthRepository {
 
   async findAllPop(): Promise<IDeviceAuth[] | null> {
     const results = await this.deviceAuthModel.find().populate({ path: 'device' }).exec();
-    return this.toDomainEntities(results);
+    return this.toDomainEntities(results).filter((deviceAuth) => deviceAuth.device != null);
   }
 
   async findAllPopWithSshKey(): Promise<IDeviceAuth[] | null> {

@@ -1,4 +1,4 @@
-import { AnsibleCommandService } from '@modules/ansible';
+// import { AnsibleCommandService } from '@modules/ansible';
 import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
@@ -7,6 +7,7 @@ import { Cache } from 'cache-manager';
 import { SSM_DATA_PATH } from 'src/config';
 import Events from 'src/core/events/events';
 import { SettingsKeys, SsmAnsible } from 'ssm-shared-lib';
+import { ANSIBLE_COMMAND_SERVICE, IAnsibleCommandService } from '@modules/ansible';
 import { dependencies, version } from '../../../../../package.json';
 import PinoLogger from '../../../../logger';
 import { IUser, Role } from '../../domain/entities/user.entity';
@@ -25,7 +26,8 @@ export class UsersService implements IUsersService {
     private readonly userRepository: IUserRepository,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
     @Inject(DEVICES_SERVICE) private readonly devicesService: IDevicesService,
-    private readonly ansibleCommandService: AnsibleCommandService,
+    @Inject(ANSIBLE_COMMAND_SERVICE)
+    private readonly ansibleCommandService: IAnsibleCommandService,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 

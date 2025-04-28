@@ -1,17 +1,33 @@
-import { AnsibleCommandService, ExtraVarsService, TaskLogsService } from '@modules/ansible';
-import { IAnsibleVault } from '@modules/ansible-vaults';
+// import { AnsibleCommandService, ExtraVarsService, TaskLogsService } from '@modules/ansible';
+import {
+  DEFAULT_VAULT_ID,
+  IAnsibleVault,
+  IVaultCryptoService,
+  VAULT_CRYPTO_SERVICE,
+} from '@modules/ansible-vaults';
 import { IPlaybooksService } from '@modules/playbooks/doma../../domain/interfaces/playbooks-service.interface';
 import { IPlaybook } from '@modules/playbooks/domain/entities/playbook.entity';
-import { IShellWrapperService, SHELL_WRAPPER_SERVICE } from '@modules/shell';
 import { IUser } from '@modules/users/domain/entities/user.entity';
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Playbooks } from 'src/types/typings';
-import { API, SsmAnsible } from 'ssm-shared-lib';
+import { API, SsmAnsible, SsmStatus } from 'ssm-shared-lib';
+import { v4 } from 'uuid';
+import { PreCheckDeviceConnectionDto } from '@modules/playbooks/presentation/dtos/pre-check-device-connection.dto';
+import {
+  ANSIBLE_COMMAND_SERVICE,
+  EXTRA_VARS_SERVICE,
+  IAnsibleCommandService,
+  IExtraVarsService,
+  IInventoryTransformerService,
+  INVENTORY_TRANSFORMER_SERVICE,
+  ITaskLogsService,
+  TASK_LOGS_SERVICE,
+} from '@modules/ansible';
 import {
   IPlaybookRepository,
   PLAYBOOK_REPOSITORY,
 } from '../../domain/repositories/playbook-repository.interface';
+import { Playbooks } from '../../../../types/typings';
 
 /**
  * PlaybookService implements the IPlaybooksService interface
@@ -23,10 +39,14 @@ export class PlaybookService implements IPlaybooksService {
     @Inject(PLAYBOOK_REPOSITORY)
     private readonly playbookRepository: IPlaybookRepository,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
-    @Inject(SHELL_WRAPPER_SERVICE) private readonly shellWrapperService: IShellWrapperService,
-    private readonly extraVarsService: ExtraVarsService,
-    private readonly ansibleCommandService: AnsibleCommandService,
-    private readonly ansibleTaskService: TaskLogsService,
+    @Inject(EXTRA_VARS_SERVICE) private readonly extraVarsService: IExtraVarsService,
+    @Inject(ANSIBLE_COMMAND_SERVICE)
+    private readonly ansibleCommandService: IAnsibleCommandService,
+    @Inject(TASK_LOGS_SERVICE) private readonly ansibleTaskService: ITaskLogsService,
+    @Inject(INVENTORY_TRANSFORMER_SERVICE)
+    private readonly inventoryService: IInventoryTransformerService,
+    @Inject(VAULT_CRYPTO_SERVICE)
+    private readonly vaultCryptoService: IVaultCryptoService,
   ) {}
 
   async getPlaybookByUuid(uuid: string): Promise<IPlaybook | null> {
@@ -158,5 +178,73 @@ export class PlaybookService implements IPlaybooksService {
 
   async getExecStatus(execId: string) {
     return this.ansibleTaskService.getTaskStatuses(execId);
+  }
+
+  async preCheckDeviceConnection(
+    preCheckDeviceConnectionDto: PreCheckDeviceConnectionDto,
+    user: IUser,
+  ) {
+    const {
+      masterNodeUrl,
+      ip,
+      authType,
+      sshKey,
+      sshUser,
+      sshPwd,
+      sshPort,
+      sshConnection,
+      becomeMethod,
+      becomePass,
+      sshKeyPass,
+    } = preCheckDeviceConnectionDto;
+    if (masterNodeUrl) {
+      await this.cacheManager.set(
+        SsmAnsible.DefaultSharedExtraVarsList.MASTER_NODE_URL,
+        masterNodeUrl,
+      );
+    }
+    const execUuid = v4();
+    const mockedInventoryTarget = await this.inventoryService.inventoryBuilderForTarget(
+      [
+        {
+          device: {
+            _id: 'tmp',
+            ip,
+            uuid: 'tmp',
+            status: SsmStatus.DeviceStatus.REGISTERING,
+            capabilities: { containers: {} },
+            systemInformation: {},
+            configuration: { containers: {}, systemInformation: {} },
+          },
+          authType,
+          sshKey: sshKey
+            ? await this.vaultCryptoService.encrypt(sshKey, DEFAULT_VAULT_ID)
+            : undefined,
+          sshUser,
+          sshPwd: sshPwd
+            ? await this.vaultCryptoService.encrypt(sshPwd, DEFAULT_VAULT_ID)
+            : undefined,
+          sshPort: sshPort || 22,
+          becomeMethod,
+          sshConnection,
+          becomePass: becomePass
+            ? await this.vaultCryptoService.encrypt(becomePass, DEFAULT_VAULT_ID)
+            : undefined,
+          sshKeyPass: sshKeyPass
+            ? await this.vaultCryptoService.encrypt(sshKeyPass, DEFAULT_VAULT_ID)
+            : undefined,
+        },
+      ],
+      execUuid,
+    );
+    const playbook =
+      await this.playbookRepository.findOneByUniqueQuickReference('checkDeviceBeforeAdd');
+    if (!playbook) {
+      throw new Error('_checkDeviceBeforeAdd.yml not found.');
+    }
+    const taskId = await this.executePlaybookOnInventory(playbook, user, mockedInventoryTarget);
+    return {
+      taskId: taskId,
+    };
   }
 }

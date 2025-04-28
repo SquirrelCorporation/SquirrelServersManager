@@ -1,7 +1,8 @@
 import { IUser } from '@modules/users';
-import { Playbooks } from 'src/types/typings';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 import { IPlaybook } from '../../domain/entities/playbook.entity';
+import { Playbooks } from '../../../../types/typings';
+import { PreCheckDeviceConnectionDto } from '../../presentation/dtos/pre-check-device-connection.dto';
 
 export const PLAYBOOKS_SERVICE = 'PLAYBOOKS_SERVICE';
 
@@ -96,4 +97,14 @@ export interface IPlaybooksService {
    * @returns Execution status
    */
   getExecStatus(execId: string): Promise<any>;
+
+  /**
+   * Pre-check device connection
+   * @param dto Pre-check device connection DTO
+   * @param user User
+   */
+  preCheckDeviceConnection(
+    dto: PreCheckDeviceConnectionDto,
+    user: IUser,
+  ): Promise<{ taskId: string }>;
 }

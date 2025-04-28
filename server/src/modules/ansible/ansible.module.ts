@@ -28,6 +28,10 @@ import { AnsibleTask, AnsibleTaskSchema } from './infrastructure/schemas/ansible
 import { GalaxyController } from './presentation/controllers/ansible-galaxy.controller';
 import { AnsibleHooksController } from './presentation/controllers/ansible-hooks.controller';
 import { TaskLogsController } from './presentation/controllers/ansible-task-logs.controller';
+import { AnsibleInventoryController } from './presentation/controllers/ansible-inventory.controller';
+import { ANSIBLE_COMMAND_SERVICE } from './domain/interfaces/ansible-command-service.interface';
+import { INVENTORY_TRANSFORMER_SERVICE } from './domain/interfaces/inventory-transformer-service.interface';
+import { EXTRA_VARS_SERVICE } from './domain/interfaces/extra-vars-service.interface';
 
 /**
  * AnsibleModule provides services for executing Ansible commands and playbooks
@@ -45,15 +49,28 @@ import { TaskLogsController } from './presentation/controllers/ansible-task-logs
       { name: AnsibleTaskStatus.name, schema: AnsibleTaskStatusSchema },
     ]),
   ],
-  controllers: [TaskLogsController, GalaxyController, AnsibleHooksController],
+  controllers: [
+    TaskLogsController,
+    GalaxyController,
+    AnsibleHooksController,
+    AnsibleInventoryController,
+  ],
   providers: [
-    AnsibleCommandService,
+    {
+      provide: ANSIBLE_COMMAND_SERVICE,
+      useClass: AnsibleCommandService,
+    },
     AnsibleCommandBuilderService,
     AnsibleGalaxyCommandService,
-    InventoryTransformerService,
-    ExtraVarsService,
+    {
+      provide: INVENTORY_TRANSFORMER_SERVICE,
+      useClass: InventoryTransformerService,
+    },
+    {
+      provide: EXTRA_VARS_SERVICE,
+      useClass: ExtraVarsService,
+    },
     ExtraVarsTransformerService,
-    TaskLogsService,
     {
       provide: TASK_LOGS_SERVICE,
       useClass: TaskLogsService,
@@ -76,14 +93,12 @@ import { TaskLogsController } from './presentation/controllers/ansible-task-logs
     },
   ],
   exports: [
-    // Export only services, not repositories
-    AnsibleCommandService,
+    ANSIBLE_COMMAND_SERVICE,
     AnsibleCommandBuilderService,
     AnsibleGalaxyCommandService,
-    InventoryTransformerService,
-    ExtraVarsService,
+    INVENTORY_TRANSFORMER_SERVICE,
+    EXTRA_VARS_SERVICE,
     ExtraVarsTransformerService,
-    TaskLogsService,
     TASK_LOGS_SERVICE,
     GalaxyService,
     AnsibleHooksService,

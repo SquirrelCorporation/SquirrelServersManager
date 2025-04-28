@@ -52,52 +52,6 @@ export async function createDevice(
   });
 }
 
-export async function postCheckAnsibleConnection(
-  ip: string,
-  deviceAuth: API.DeviceAuthParams,
-  masterNodeUrl?: string,
-  options?: { [key: string]: any },
-) {
-  return request<API.Response<API.CheckAnsibleConnection>>(
-    `${BASE_URL}/check-connection/ansible`,
-    {
-      data: { ip: ip, masterNodeUrl: masterNodeUrl, ...deviceAuth },
-      method: 'POST',
-      ...(options || {}),
-    },
-  );
-}
-
-export async function postCheckDockerConnection(
-  ip: string,
-  deviceAuth: API.DeviceAuthParams,
-  options?: { [key: string]: any },
-) {
-  return request<API.Response<API.CheckDockerConnection>>(
-    `${BASE_URL}/check-connection/docker`,
-    {
-      data: { ip: ip, ...deviceAuth },
-      method: 'POST',
-      ...(options || {}),
-    },
-  );
-}
-
-export async function postCheckRemoteSystemInformationConnection(
-  ip: string,
-  deviceAuth: API.DeviceAuthParams,
-  options?: { [key: string]: any },
-) {
-  return request<API.Response<API.CheckRemoteSystemInformationConnection>>(
-    `${BASE_URL}/check-connection/remote-system-information`,
-    {
-      data: { ip: ip, ...deviceAuth },
-      method: 'POST',
-      ...(options || {}),
-    },
-  );
-}
-
 export async function deleteDevice(
   uuid: string,
   options?: { [key: string]: any },

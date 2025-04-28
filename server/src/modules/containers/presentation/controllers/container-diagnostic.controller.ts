@@ -1,8 +1,12 @@
 import { CONTAINER_SERVICE } from '@modules/containers';
 import { IContainerService } from '@modules/containers/domain/interfaces/container-service.interface';
-import { Controller, Get, Inject, Param } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { CheckDockerConnectionDoc } from '../decorators/container-diagnostic.decorators';
+import {
+  CheckDockerConnectionDoc,
+  PreCheckDockerConnectionDoc,
+} from '../decorators/container-diagnostic.decorators';
+import { PreCheckDockerConnectionDto } from '../dtos/pre-check-docker-connection.dto';
 
 @ApiTags('ContainerDiagnostic')
 @Controller('containers/diagnostic')
@@ -16,5 +20,15 @@ export class ContainerDiagnosticController {
   @CheckDockerConnectionDoc()
   async checkDockerConnection(@Param('uuid') uuid: string) {
     return this.containerService.checkDockerConnection(uuid);
+  }
+
+  @Post()
+  @PreCheckDockerConnectionDoc()
+  async preCheckDockerConnection(@Body() preCheckDto: PreCheckDockerConnectionDto) {
+    const result = await this.containerService.preCheckDockerConnection(preCheckDto);
+    return {
+      connectionStatus: result.status,
+      errorMessage: result.message,
+    };
   }
 }
