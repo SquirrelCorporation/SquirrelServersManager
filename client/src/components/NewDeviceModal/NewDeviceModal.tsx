@@ -5,12 +5,7 @@ import {
   GrommetIconsInstall,
   StreamlineComputerConnection,
 } from '@/components/Icons/CustomIcons';
-import {
-  postCheckAnsibleConnection,
-  postCheckDockerConnection,
-  postCheckRemoteSystemInformationConnection,
-  createDevice,
-} from '@/services/rest/devices/devices';
+import { createDevice } from '@/services/rest/devices/devices';
 import { DownloadOutlined } from '@ant-design/icons';
 import {
   ProFormDependency,
@@ -25,6 +20,9 @@ import { API, SsmAgent, SsmAnsible } from 'ssm-shared-lib';
 import AnimationPlayer from './AnimationPlayer';
 import StepFormCard from './StepFormCard';
 import SummaryCard from './SummaryCard';
+import { postPreCheckDockerConnection } from '@/services/rest/containers/containers-diagnostic';
+import { postPreCheckRemoteSystemInformationConnection } from '@/services/rest/remote-system-information/diagnostic';
+import { postPreCheckAnsibleConnection } from '@/services/rest/playbooks/diagnostic';
 
 export type NewDeviceModalProps = {
   isModalOpen: boolean;
@@ -118,7 +116,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = ({
       setRsiConnectionStatus(undefined);
       setRsiConnectionErrorMessage(undefined);
       setExecId(undefined);
-      postCheckAnsibleConnection(
+      postPreCheckAnsibleConnection(
         sshFormValues.deviceIp,
         {
           authType: sshFormValues.authType,
@@ -137,7 +135,7 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = ({
       ).then((e) => {
         setExecId(e.data.taskId);
       });
-      postCheckDockerConnection(
+      postPreCheckDockerConnection(
         sshFormValues.deviceIp,
         {
           authType: sshFormValues.authType,
@@ -151,14 +149,14 @@ const NewDeviceModal: React.FC<NewDeviceModalProps> = ({
           strictHostChecking: sshFormValues.strictHostChecking ?? true,
         },
         installMethodFormValues?.controlNodeURL,
-      ).then((e) => {
+      ).then((e: any) => {
         setDockerConnectionStatus(e.data.connectionStatus);
         setDockerConnectionErrorMessage(e.data.errorMessage);
       });
       if (
         installMethodFormValues?.installMethod === SsmAgent.InstallMethods.LESS
       ) {
-        postCheckRemoteSystemInformationConnection(
+        postPreCheckRemoteSystemInformationConnection(
           sshFormValues.deviceIp,
           {
             authType: sshFormValues.authType,

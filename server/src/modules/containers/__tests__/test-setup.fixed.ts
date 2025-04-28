@@ -13,6 +13,89 @@ vi.mock('@modules/containers/domain/components/kind.enum', () => {
   };
 });
 
+// Mock playbooks module to avoid schema issues
+vi.mock('@modules/playbooks', () => {
+  return {
+    PlaybooksModule: class {
+      static forRoot() {
+        return {
+          module: class {},
+          providers: [],
+        };
+      }
+    },
+    PlaybooksService: class {
+      findAll = vi.fn().mockResolvedValue([]);
+      findOneByUuid = vi.fn().mockResolvedValue(null);
+      create = vi.fn().mockResolvedValue({});
+    },
+    PLAYBOOKS_SERVICE: 'PlaybooksService',
+  };
+});
+
+vi.mock('@modules/playbooks/infrastructure/schemas/playbooks-register.schema', () => {
+  return {
+    PlaybooksRegister: class {
+      uuid = 'mock-uuid';
+      name = 'mock-name';
+      path = 'mock-path';
+      repository = 'mock-repository';
+      playbooks = [];
+    },
+    PlaybooksRegisterSchema: {},
+    PLAYBOOKS_REGISTER: 'PlaybooksRegister',
+  };
+});
+
+// Mock the problematic infrastructure adapter
+vi.mock('@infrastructure/adapters/ssh/axios-ssh.adapter', () => {
+  return {
+    createSshFetch: vi.fn(() => {
+      // Return a mock fetch function or necessary structure
+      // For now, just return a dummy function to satisfy the import
+      return vi.fn();
+    }),
+  };
+});
+
+// Mock mongoose
+vi.mock('mongoose', () => {
+  return {
+    Schema: class Schema {
+      constructor() {}
+      plugin() {
+        return this;
+      }
+    },
+    model: vi.fn().mockReturnValue({}),
+    Types: {
+      ObjectId: class {
+        constructor(id) {
+          this.id = id;
+        }
+        toString() {
+          return this.id;
+        }
+      }
+    }
+  };
+});
+
+// Mock @nestjs/mongoose
+vi.mock('@nestjs/mongoose', () => {
+  return {
+    Prop: () => jest.fn(),
+    Schema: () => jest.fn(),
+    SchemaFactory: {
+      createForClass: () => ({
+        plugin: () => ({})
+      })
+    },
+    InjectModel: () => jest.fn(),
+    getModelToken: () => 'MockModelToken'
+  };
+});
+
 /* Mock registry components */
 vi.mock(
   '@modules/containers/application/services/components/registry/acr-registry.component',

@@ -1,8 +1,11 @@
 import { IGalaxyService } from '@modules/ansible/doma../../domain/interfaces/galaxy-service.interface';
 import { HttpService } from '@nestjs/axios';
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
-import { AnsibleCommandService } from './ansible-command.service';
+import {
+  ANSIBLE_COMMAND_SERVICE,
+  IAnsibleCommandService,
+} from '../../domain/interfaces/ansible-command-service.interface';
 
 /**
  * Service for managing Ansible Galaxy collections and roles
@@ -10,11 +13,12 @@ import { AnsibleCommandService } from './ansible-command.service';
 @Injectable()
 export class GalaxyService implements IGalaxyService {
   private readonly logger = new Logger(GalaxyService.name);
-  private readonly galaxyApiUrl = 'https://galaxy.ansible.com/api';
+  private readonly GALAXY_API_URL = 'https://galaxy.ansible.com/api';
 
   constructor(
     private readonly httpService: HttpService,
-    private readonly ansibleCommandService: AnsibleCommandService,
+    @Inject(ANSIBLE_COMMAND_SERVICE)
+    private readonly ansibleCommandService: IAnsibleCommandService,
   ) {}
 
   /**
@@ -31,7 +35,7 @@ export class GalaxyService implements IGalaxyService {
     try {
       const response = await lastValueFrom(
         this.httpService.get(
-          `${this.galaxyApiUrl}/v3/plugin/ansible/search/collection-versions/?${namespace ? 'namespace=' + encodeURIComponent(namespace) + '&' : ''}${content ? 'keywords=' + encodeURIComponent(content) + '&' : ''}is_deprecated=false&repository_label=!hide_from_search&is_highest=true&offset=${offset}&limit=${pageSize}&order_by=name`,
+          `${this.GALAXY_API_URL}/v3/plugin/ansible/search/collection-versions/?${namespace ? 'namespace=' + encodeURIComponent(namespace) + '&' : ''}${content ? 'keywords=' + encodeURIComponent(content) + '&' : ''}is_deprecated=false&repository_label=!hide_from_search&is_highest=true&offset=${offset}&limit=${pageSize}&order_by=name`,
         ),
       );
       return {
@@ -59,7 +63,7 @@ export class GalaxyService implements IGalaxyService {
 
     const response = await lastValueFrom(
       this.httpService.get(
-        `${this.galaxyApiUrl}/pulp/api/v3/content/ansible/collection_versions/?namespace=${encodeURIComponent(namespace)}&name=${encodeURIComponent(name)}${version ? '&version=' + encodeURIComponent(version) : ''}&offset=0&limit=10`,
+        `${this.GALAXY_API_URL}/pulp/api/v3/content/ansible/collection_versions/?namespace=${encodeURIComponent(namespace)}&name=${encodeURIComponent(name)}${version ? '&version=' + encodeURIComponent(version) : ''}&offset=0&limit=10`,
       ),
     );
     return response.data?.results ? response.data.results[0] : undefined;

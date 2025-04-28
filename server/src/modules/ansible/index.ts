@@ -50,6 +50,22 @@ export {
 
 // Domain exports
 export * from './domain/repositories/ansible-task.repository.interface';
+export * from './domain/interfaces/task-logs-service.interface';
+export * from './domain/interfaces/ansible-command-service.interface';
+export * from './domain/interfaces/inventory-transformer-service.interface';
+export * from './domain/interfaces/extra-vars-service.interface';
+export * from './domain/entities/ansible-task.entity';
+export * from './domain/entities/ansible-task-status.entity';
 
 // Module export
+export * from './ansible.module';
+
+export * from './application/services/ansible-command.service';
+export * from './application/services/ansible-command-builder.service';
+export * from './application/services/ansible-galaxy-command.service';
+export * from './application/services/extra-vars.service';
+export * from './application/services/extra-vars-transformer.service';
+export * from './application/services/galaxy.service';
+export * from './application/services/inventory-transformer.service';
+export * from './application/services/task-logs.service';
 export * from './ansible.module';

@@ -29,10 +29,18 @@ export class McpTransportService implements OnModuleInit {
     private readonly usersService: UsersService,
   ) {
     this.app.use(express.json());
-    this.server = new McpServer({
-      name: 'squirrel-servers-manager',
-      version: '1.0.0',
-    });
+    this.server = new McpServer(
+      {
+        name: 'squirrel-servers-manager',
+        version: '1.0.0',
+      },
+      {
+        capabilities: {
+          resources: {},
+          tools: {},
+        },
+      },
+    );
   }
 
   async onModuleInit() {

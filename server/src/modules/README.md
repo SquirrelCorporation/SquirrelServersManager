@@ -356,6 +356,12 @@ Manages shell command execution on remote systems.
 #### Repository Module
 Handles Git repository operations for playbooks and configurations.
 
+#### MCP Module
+Manages the Model Context Protocol server for AI agent interaction.
+
+#### Notifications Module
+Manages system notifications and alerts.
+
 ## NestJS Integration
 
 The refactored modules follow NestJS patterns:

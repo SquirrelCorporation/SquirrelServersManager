@@ -1,13 +1,14 @@
 import { EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
 import { DEVICES_SERVICE, IDevicesService } from '@modules/devices';
 import { IPlaybooksService, PLAYBOOKS_SERVICE } from '@modules/playbooks';
-import { Controller, Get, Inject, Logger, Param } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Logger, Param, Post } from '@nestjs/common';
 import { User } from 'src/decorators/user.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import {
   CheckDeviceConnectionDoc,
   PLAYBOOK_DIAGNOSTIC_TAG,
 } from '../decorators/playbook-diagnostic.decorators';
+import { PreCheckDeviceConnectionDto } from '../dtos/pre-check-device-connection.dto';
 
 @ApiTags(PLAYBOOK_DIAGNOSTIC_TAG)
 @Controller('playbooks/diagnostic')
@@ -42,5 +43,10 @@ export class PlaybooksDiagnosticController {
     return {
       taskId: execId,
     };
+  }
+
+  @Post()
+  async preCheckDeviceConnection(@Body() dto: PreCheckDeviceConnectionDto, @User() user) {
+    return this.playbookService.preCheckDeviceConnection(dto, user);
   }
 }

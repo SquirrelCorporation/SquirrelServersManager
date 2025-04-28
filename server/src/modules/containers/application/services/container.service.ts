@@ -10,8 +10,12 @@ import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import DockerModem from 'docker-modem';
 import Dockerode from 'dockerode';
 import logger from 'src/logger';
-import { SsmContainer } from 'ssm-shared-lib';
+import { SsmContainer, SsmStatus } from 'ssm-shared-lib';
 import { GetContainersPayloadDto } from '@modules/mcp/application/dto/get-containers.payload.dto';
+import { VAULT_CRYPTO_SERVICE } from '@modules/ansible-vaults';
+import { IVaultCryptoService } from '@modules/ansible-vaults/domain/interfaces/vault-crypto-service.interface';
+import { DEFAULT_VAULT_ID } from '@modules/ansible-vaults';
+import { PreCheckDockerConnectionDto } from '@modules/containers/presentation/dtos/pre-check-docker-connection.dto';
 import {
   DEVICE_AUTH_SERVICE,
   IDeviceAuthService,
@@ -39,6 +43,8 @@ export class ContainerService implements IContainerService {
     private readonly devicesService: IDevicesService,
     @Inject(DEVICE_AUTH_SERVICE)
     private readonly deviceAuthService: IDeviceAuthService,
+    @Inject(VAULT_CRYPTO_SERVICE)
+    private readonly vaultCryptoService: IVaultCryptoService,
   ) {}
 
   async getAllContainers(): Promise<IContainer[]> {
@@ -296,6 +302,69 @@ export class ContainerService implements IContainerService {
     }
   }
 
+  async preCheckDockerConnection(preCheckDto: PreCheckDockerConnectionDto) {
+    const { ip, authType, sshKey, sshUser, sshPwd, sshPort, becomeMethod, becomePass, sshKeyPass } =
+      preCheckDto;
+    try {
+      const mockedDeviceAuth = {
+        device: {
+          _id: 'tmp',
+          ip,
+          uuid: 'tmp',
+          status: SsmStatus.DeviceStatus.REGISTERING,
+          capabilities: { containers: {} },
+          systemInformation: {},
+          configuration: { containers: {}, systemInformation: {} },
+        },
+        authType,
+        sshKey: sshKey
+          ? await this.vaultCryptoService.encrypt(sshKey, DEFAULT_VAULT_ID)
+          : undefined,
+        sshUser,
+        sshPwd: sshPwd
+          ? await this.vaultCryptoService.encrypt(sshPwd, DEFAULT_VAULT_ID)
+          : undefined,
+        sshPort: sshPort || 22,
+        becomeMethod,
+        becomePass: becomePass
+          ? await this.vaultCryptoService.encrypt(becomePass, DEFAULT_VAULT_ID)
+          : undefined,
+        sshKeyPass: sshKeyPass
+          ? await this.vaultCryptoService.encrypt(sshKeyPass, DEFAULT_VAULT_ID)
+          : undefined,
+      };
+      const options = await this.getDockerSshConnectionOptions(
+        mockedDeviceAuth.device,
+        mockedDeviceAuth,
+      );
+      const agent = getCustomAgent(logger, {
+        debug: (message: any) => {
+          this.logger.debug(message);
+        },
+        ...options.sshOptions,
+        timeout: 60000,
+      });
+      try {
+        options.modem = new DockerModem({
+          agent: agent,
+        });
+      } catch (error: any) {
+        this.logger.error(error);
+        throw new Error(error.message);
+      }
+      const docker = new Dockerode({ ...options, timeout: 60000 });
+      await docker.ping();
+      await docker.info();
+      return {
+        status: 'successful',
+      };
+    } catch (error: any) {
+      return {
+        status: 'failed',
+        message: error.message,
+      };
+    }
+  }
   async updateContainerName(id: string, customName: string): Promise<IContainer> {
     const container = await this.containerRepository.findOneById(id);
     if (!container) {

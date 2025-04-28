@@ -21,7 +21,8 @@
       "@common/*": ["src/common/*"],
       "@config/*": ["src/config/*"],
       "@infrastructure/*": ["src/infrastructure/*"],
-      "@middlewares/*": ["src/middlewares/*"]
+      "@middlewares/*": ["src/middlewares/*"],
+      "@core/*": ["src/core/*"]
     },
     "typeRoots": ["./src/types", "./node_modules/@types/"],
     "incremental": true,

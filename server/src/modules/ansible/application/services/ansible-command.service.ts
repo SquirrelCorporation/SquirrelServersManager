@@ -17,9 +17,12 @@ import {
   ANSIBLE_TASK_REPOSITORY,
   IAnsibleTaskRepository,
 } from '../../domain/repositories/ansible-task.repository.interface';
+import {
+  IInventoryTransformerService,
+  INVENTORY_TRANSFORMER_SERVICE,
+} from '../../domain/interfaces/inventory-transformer-service.interface';
 import { AnsibleCommandBuilderService } from './ansible-command-builder.service';
 import { AnsibleGalaxyCommandService } from './ansible-galaxy-command.service';
-import { InventoryTransformerService } from './inventory-transformer.service';
 
 /**
  * AnsibleCommandService provides a NestJS injectable service for executing Ansible commands.
@@ -36,7 +39,8 @@ export class AnsibleCommandService implements IAnsibleCommandService {
     @Inject(ANSIBLE_TASK_REPOSITORY) private readonly ansibleTaskRepository: IAnsibleTaskRepository,
     private readonly ansibleCommandBuilder: AnsibleCommandBuilderService,
     private readonly ansibleGalaxyCommand: AnsibleGalaxyCommandService,
-    private readonly inventoryTransformer: InventoryTransformerService,
+    @Inject(INVENTORY_TRANSFORMER_SERVICE)
+    private readonly inventoryTransformer: IInventoryTransformerService,
   ) {}
 
   /**

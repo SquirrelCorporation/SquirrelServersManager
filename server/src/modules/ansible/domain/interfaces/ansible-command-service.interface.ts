@@ -1,6 +1,7 @@
 import { API, SsmAnsible } from 'ssm-shared-lib';
 import { IAnsibleVault } from '../../../ansible-vaults';
 import { IUser } from '../../../users';
+import { Playbooks } from '../../../../types/typings';
 
 export const ANSIBLE_COMMAND_SERVICE = 'ANSIBLE_COMMAND_SERVICE';
 
@@ -74,6 +75,21 @@ export interface IAnsibleCommandService {
     target?: string[],
     extraVars?: API.ExtraVars,
     mode?: SsmAnsible.ExecutionMode,
+    execUuid?: string,
+    vaults?: IAnsibleVault[],
+  ): Promise<any>;
+
+  /**
+     * Execute a playbook on an inventory
+
+    */
+  executePlaybookOnInventory(
+    playbookPath: string,
+    user: IUser,
+    inventoryTargets?: Playbooks.All & Playbooks.HostGroups,
+    extraVars?: API.ExtraVars,
+    mode?: SsmAnsible.ExecutionMode,
+    target?: string[],
     execUuid?: string,
     vaults?: IAnsibleVault[],
   ): Promise<any>;
