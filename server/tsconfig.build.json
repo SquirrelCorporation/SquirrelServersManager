@@ -6,6 +6,7 @@
     "**/*.spec.ts",
     "**/*.test.ts",
     "**/obsolete/**",
-    "**/__tests__/**"
+    "**/__tests__/**",
+    "src/modules/common-test-helpers.ts"
   ]
 }

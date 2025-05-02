@@ -40,6 +40,9 @@ jobs:
     - name: Install
       working-directory: ./server
       run: npm ci
+    - name: Type Check
+      working-directory: ./server
+      run: npx tsc --noEmit
     - name: Build
       working-directory: ./server
       run: NODE_ENV=production npm run build --if-present
