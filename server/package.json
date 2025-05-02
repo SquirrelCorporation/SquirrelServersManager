@@ -18,7 +18,7 @@
     "lint": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "lint:check": "eslint \"src/**/*.{ts,tsx}\""
   },
-  "version": "0.1.31",
+  "version": "0.5.0",
   "author": "Squirrel Team",
   "dependencies": {
     "@aws-sdk/client-ecr": "^3.800.0",
