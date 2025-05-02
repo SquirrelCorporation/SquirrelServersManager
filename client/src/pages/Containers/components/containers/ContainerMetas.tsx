@@ -181,38 +181,26 @@ const ContainerMetas = ({
       search: false,
       render: (_, row) => {
         return (
-          <div
-            style={{
-              flex: 1,
-            }}
-          >
-            <div
-              style={{
-                width: 300,
-              }}
-            >
-              <>
-                <Popover content={capitalizeFirstLetter(row.displayType)}>
-                  <ContainerTypeIcon displayType={row.displayType} />
-                </Popover>
-                <Popover
-                  content={
-                    <>{row.device?.fqdn} (click to filter on this device)</>
-                  }
-                >
-                  <a href={`?deviceUuid=${row.device?.uuid}`}>
-                    <Tag color="black" style={tagStyle}>
-                      {row.device?.ip}
-                    </Tag>
-                  </a>
-                </Popover>
-                {row.displayType === SsmContainer.ContainerTypes.DOCKER && (
-                  <Flex gap="middle">
-                    <ContainerStatProgress containerId={row.id} />
-                  </Flex>
-                )}
-              </>
-            </div>
+          <div style={{ flex: 1 }}>
+            <>
+              <Popover content={capitalizeFirstLetter(row.displayType)}>
+                <ContainerTypeIcon displayType={row.displayType} />
+              </Popover>
+              <Popover
+                content={
+                  <>{row.device?.fqdn} (click to filter on this device)</>
+                }
+              >
+                <a href={`?deviceUuid=${row.device?.uuid}`}>
+                  <Tag color="black" style={tagStyle}>
+                    {row.device?.ip}
+                  </Tag>
+                </a>
+              </Popover>
+              {row.displayType === SsmContainer.ContainerTypes.DOCKER && (
+                <ContainerStatProgress containerId={row.id} />
+              )}
+            </>
           </div>
         );
       },

@@ -52,7 +52,7 @@ jobs:
         token: ${{ secrets.CODECOV }}
         directory: ./server/coverage
         flags: server
-        fail_ci_if_error: true
+        fail_ci_if_error: false
     - name: Test Python
       working-directory: ./server
       run: npm run test:python

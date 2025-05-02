@@ -3,6 +3,7 @@ import * as path from 'path';
 import { DynamicModule, INestApplication } from '@nestjs/common';
 import express from 'express';
 import mongoose from 'mongoose';
+import { db } from 'src/config';
 import logger from '../../logger';
 
 export interface PluginManifest {
@@ -84,6 +85,8 @@ export class PluginSystem {
       if (!fs.existsSync(this.pluginsDir)) {
         logger.warn(`Plugins directory not found: ${this.pluginsDir}`);
         return;
+      } else {
+        fs.mkdirSync(this.pluginsDir, { recursive: true });
       }
 
       const pluginFolders = fs
@@ -193,14 +196,17 @@ export class PluginSystem {
           const pluginLogger = this.pluginLoggers.get(pluginName);
           pluginLogger?.info(`Setting up database connection for plugin`);
 
-          const dbName = manifest.database;
-          // Use the existing mongoose connection and create a new connection with the same options
-          // but for the plugin's database
-          const connection = mongoose.connection.useDb(dbName, {
-            useCache: true, // Use connection caching for better performance
-          });
-
-          this.dbConnections.set(pluginName, connection);
+          const uri = `mongodb://${db.host}:${db.port}/${manifest.database}`;
+          const pluginConn = await mongoose
+            .createConnection(uri, {
+              autoIndex: true,
+              minPoolSize: db.minPoolSize, // Maintain up to x socket connections
+              maxPoolSize: db.maxPoolSize, // Maintain up to x socket connections
+              connectTimeoutMS: 10000, // Give up initial connection after 10 seconds
+              socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+            })
+            .asPromise();
+          this.dbConnections.set(pluginName, pluginConn);
           pluginLogger?.info(`Database connection established using existing NestJS connection`);
         } catch (error: any) {
           const pluginLogger = this.pluginLoggers.get(pluginName);
@@ -315,11 +321,14 @@ export class PluginSystem {
 
                 // Register the route with the router
                 if (typeof router[route.method] === 'function') {
-                  router[route.method](relativePath, (req, res, next) => {
+                  // Wrap async handler so promise rejections are caught
+                  router[route.method](relativePath, async (req, res, next) => {
                     try {
-                      route.handler(req, res);
+                      await Promise.resolve(route.handler(req, res));
                     } catch (error: any) {
-                      pluginLogger?.error(`Error in route handler: ${error.message}`);
+                      pluginLogger?.error(
+                        `Plugin route error [${route.method.toUpperCase()} ${relativePath}]: ${error.message}`,
+                      );
                       next(error);
                     }
                   });
@@ -343,6 +352,16 @@ export class PluginSystem {
             // Mount the router on the express app
             expressInstance.use(basePath, router);
             pluginLogger?.info(`Mounted routes at ${basePath}`);
+
+            // Add error handling for this plugin namespace so errors don't bubble up
+            expressInstance.use(basePath, (err: any, req: any, res: any, next: any) => {
+              pluginLogger?.error(`Unhandled error in plugin ${pluginName}: ${err.stack || err}`);
+              // Send a generic 500 response for plugin errors
+              if (!res.headersSent) {
+                res.status(500).json({ success: false, message: 'Internal plugin error' });
+              }
+              // swallow the error
+            });
           } else {
             pluginLogger?.error(`Express instance not available from HTTP adapter`);
           }
@@ -433,7 +452,6 @@ export class PluginSystem {
     this.manifests.delete(pluginName);
     this.pluginLoggers.delete(pluginName);
     logger.info(`Unregistered plugin ${pluginName} from internal state.`);
-
     // Step 2: Drop database if it exists
     const dbConnection = this.dbConnections.get(pluginName);
     if (manifest.database && dbConnection) {

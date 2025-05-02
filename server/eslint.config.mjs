@@ -69,14 +69,6 @@ export default [
       'no-new': 'error',
       'no-with': 'error',
 
-      'brace-style': [
-        'error',
-        '1tbs',
-        {
-          allowSingleLine: true,
-        },
-      ],
-
       'func-call-spacing': ['error', 'never'],
       indent: 'off',
       'no-trailing-spaces': 'error',

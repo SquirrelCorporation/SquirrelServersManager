@@ -119,7 +119,7 @@ export class ContainersController {
     await this.containerService.deleteContainer(id);
   }
 
-  @Post(':id/:action')
+  @Post(':id/docker/actions/:action')
   @ContainerActionDoc()
   async containerAction(@Param('id') id: string, @Param('action') action: string): Promise<void> {
     await this.containerService.executeContainerAction(id, action);

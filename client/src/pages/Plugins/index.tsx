@@ -5,21 +5,29 @@ import {
   AppstoreOutlined,
   CloudDownloadOutlined,
 } from '@ant-design/icons';
-import { PageContainer } from '@ant-design/pro-components';
-import { Tabs } from 'antd';
-import type { TabsProps } from 'antd';
 import React from 'react';
 import InstalledPluginsList from './components/InstalledPluginsList';
 import PluginStoreTab from './components/PluginStoreTab';
+import StyledTabContainer, {
+  TabLabel,
+  IconWrapper,
+} from '@/components/Layout/StyledTabContainer';
 
 const PluginsPage: React.FC = () => {
   const { pluginMetadata, loading, error, refreshPlugins } = usePlugins();
 
-  const tabItems: TabsProps['items'] = [
+  const tabItems = [
     {
       key: 'installed',
-      label: 'Installed',
-      icon: <AppstoreOutlined />,
+      label: (
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #0A84FF, #007AFF)">
+            {' '}
+            <AppstoreOutlined />
+          </IconWrapper>
+          Installed
+        </TabLabel>
+      ),
       children: (
         <InstalledPluginsList
           plugins={pluginMetadata || []}
@@ -31,8 +39,15 @@ const PluginsPage: React.FC = () => {
     },
     {
       key: 'store',
-      icon: <CloudDownloadOutlined />,
-      label: 'Store',
+      label: (
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #30D158, #28A745)">
+            {' '}
+            <CloudDownloadOutlined />
+          </IconWrapper>
+          Store
+        </TabLabel>
+      ),
       children: (
         <PluginStoreTab
           installedPlugins={pluginMetadata || []}
@@ -43,7 +58,7 @@ const PluginsPage: React.FC = () => {
   ];
 
   return (
-    <PageContainer
+    <StyledTabContainer
       header={{
         title: (
           <Title.MainTitle
@@ -53,9 +68,9 @@ const PluginsPage: React.FC = () => {
           />
         ),
       }}
-    >
-      <Tabs defaultActiveKey="installed" items={tabItems} />
-    </PageContainer>
+      tabItems={tabItems}
+      defaultActiveKey="installed"
+    />
   );
 };
 

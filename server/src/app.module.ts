@@ -1,5 +1,5 @@
 import { Module, OnModuleInit } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -209,26 +209,15 @@ let connectionReady = false;
       {
         name: 'MCP_SERVICE', // Injection token
         imports: [ConfigModule], // Import ConfigModule to use ConfigService in factory
-        useFactory: (configService: ConfigService) => {
-          const isMcpEnabled = configService.get<boolean>('MCP_ENABLED');
-          if (isMcpEnabled) {
-            const mcpPort = configService.get<number>('MCP_PORT') || 3001;
-            return {
-              transport: Transport.TCP,
-              options: {
-                host: 'localhost',
-                port: mcpPort,
-              },
-            };
-          } else {
-            // Return a configuration that effectively disables the client
-            // or handle injection sites with @Optional()
-            // Returning null/undefined might cause issues depending on NestJS version
-            // A safer approach might be to return a dummy config or rely on @Optional
-            return {}; // Return empty object - injection sites MUST use @Optional()
-          }
+        useFactory: () => {
+          return {
+            transport: Transport.TCP,
+            options: {
+              host: 'localhost',
+              port: 3001,
+            },
+          };
         },
-        inject: [ConfigService],
       },
     ]),
     // ---- Conditionally Register MCP Client ---- End ----

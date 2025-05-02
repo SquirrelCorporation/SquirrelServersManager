@@ -200,6 +200,7 @@ const RegistrySettings: React.FC = () => {
               style={{
                 marginRight: 4,
                 backgroundColor: 'rgba(41,70,147,0.51)',
+                flexShrink: 0,
               }}
               src={<RegistryLogo provider={item.provider} />}
             />

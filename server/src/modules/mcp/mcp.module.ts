@@ -1,8 +1,10 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { UsersModule } from '@modules/users/users.module';
 import { McpTransportService } from './infrastructure/transport/mcp-transport.service';
+import { McpHandlerRegistryService } from './application/services/mcp-handler-registry.service';
+import { McpNotificationService } from './application/services/mcp-notification.service';
 import { McpSettingsController } from './presentation/controllers/mcp-settings.controller';
 
 @Module({})
@@ -17,21 +19,19 @@ export class McpModule {
           {
             name: 'CORE_SERVICE_CLIENT',
             imports: [ConfigModule],
-            useFactory: (configService: ConfigService) => {
-              const coreServicePort = configService.get<number>('CORE_SERVICE_PORT') || 3002;
+            useFactory: () => {
               return {
                 transport: Transport.TCP,
                 options: {
                   host: 'localhost',
-                  port: coreServicePort,
+                  port: 3002,
                 },
               };
             },
-            inject: [ConfigService],
           },
         ]),
       ],
-      providers: [McpTransportService],
+      providers: [McpHandlerRegistryService, McpNotificationService, McpTransportService],
       controllers: [McpSettingsController],
       exports: [],
     };

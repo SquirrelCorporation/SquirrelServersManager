@@ -60,6 +60,39 @@ describe('SmartFailureRepository', () => {
       expect(result).toBeUndefined();
     });
 
+    it('should return empty array when logs service returns empty array', async () => {
+      // Setup
+      const executionId = 'empty-logs-id';
+      mockAnsibleLogsService.findAllByIdent.mockResolvedValue([]);
+
+      // Test
+      const result = await smartFailureRepository.findAllByIdent(executionId);
+
+      // Verify
+      expect(mockAnsibleLogsService.findAllByIdent).toHaveBeenCalledWith(executionId);
+      expect(result).toEqual([]);
+    });
+
+    it('should handle various log formats', async () => {
+      // Setup
+      const executionId = 'mixed-formats-id';
+      const mockLogs = [
+        { timestamp: '2025-01-01T12:00:00Z', message: null, level: 'info', stdout: 'some output' },
+        { timestamp: '2025-01-01T12:01:00Z', level: 'error' }, // missing message
+        { message: 'Log 3', level: 'debug' }, // missing timestamp
+        {} // empty log entry
+      ];
+
+      mockAnsibleLogsService.findAllByIdent.mockResolvedValue(mockLogs);
+
+      // Test
+      const result = await smartFailureRepository.findAllByIdent(executionId);
+
+      // Verify
+      expect(mockAnsibleLogsService.findAllByIdent).toHaveBeenCalledWith(executionId);
+      expect(result).toEqual(mockLogs);
+    });
+
     it('should handle errors from logs service', async () => {
       // Setup
       const executionId = 'error-id';

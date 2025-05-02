@@ -7,102 +7,137 @@ import Information from '@/pages/Admin/Settings/components/Information';
 import PlaybookSettings from '@/pages/Admin/Settings/components/PlaybooksSettings';
 import RegistrySettings from '@/pages/Admin/Settings/components/RegistrySettings';
 import {
-  InfoCircleOutlined,
+  UserOutlined,
   SettingOutlined,
   AppstoreOutlined,
-  BulbOutlined,
+  InfoCircleOutlined,
+  CloudServerOutlined,
+  SafetyCertificateOutlined,
+  CodeOutlined,
+  ControlOutlined,
+  DatabaseOutlined,
 } from '@ant-design/icons';
-import { PageContainer } from '@ant-design/pro-components';
-import React, { useEffect } from 'react';
-import { TabsProps } from 'antd';
-import { history, useLocation } from '@umijs/max';
+import React from 'react';
 import { useSlot } from '@/plugins/contexts/plugin-context';
 import MCPSettings from './components/MCPSettings';
+import StyledTabContainer, {
+  TabLabel,
+  IconWrapper,
+} from '@/components/Layout/StyledTabContainer';
+import {
+  AiBusinessImpactAssessment,
+  SkillLevelAdvanced,
+} from '@/components/Icons/CustomIcons';
 
 const Settings: React.FC = () => {
-  const location = useLocation();
-  // Get the settings panels slot renderer
   const SettingsPanelsSlot = useSlot('settings-panels');
 
-  const settingsTabItems: TabsProps['items'] = [
+  const settingsTabItems = [
     {
       key: 'general-settings',
       label: (
-        <div>
-          <SettingOutlined /> General settings
-        </div>
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #6B8CEA, #6A44E4)">
+            <SettingOutlined />
+          </IconWrapper>
+          General settings
+        </TabLabel>
       ),
       children: <GeneralSettings />,
     },
     {
       key: 'authentication',
       label: (
-        <div>
-          <SettingOutlined /> Authentication
-        </div>
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #5856D6, #3634A3)">
+            <SafetyCertificateOutlined />
+          </IconWrapper>
+          Authentication
+        </TabLabel>
       ),
       children: <AuthenticationSettings />,
     },
     {
       key: 'playbooks',
       label: (
-        <div>
-          <SettingOutlined /> Playbooks
-        </div>
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #FF9500, #E67C22)">
+            <CodeOutlined />
+          </IconWrapper>
+          Playbooks
+        </TabLabel>
       ),
       children: <PlaybookSettings />,
     },
     {
       key: 'container-stacks',
       label: (
-        <div>
-          <SettingOutlined /> Container Stacks
-        </div>
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #32D74B, #27AE60)">
+            <CloudServerOutlined />
+          </IconWrapper>
+          Container Stacks
+        </TabLabel>
       ),
       children: <ContainerStacksSettings />,
     },
     {
       key: 'container-registries',
       label: (
-        <div>
-          <SettingOutlined /> Container Registries
-        </div>
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #64D2FF, #5AC8FA)">
+            <DatabaseOutlined />
+          </IconWrapper>
+          Container Registries
+        </TabLabel>
       ),
       children: <RegistrySettings />,
     },
     {
       key: 'mcp-settings',
       label: (
-        <div>
-          <SettingOutlined /> MCP
-        </div>
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #FF375F, #E31B4E)">
+            <AiBusinessImpactAssessment />
+          </IconWrapper>
+          MCP
+        </TabLabel>
       ),
       children: <MCPSettings />,
     },
     {
       key: 'advanced',
       label: (
-        <div>
-          <SettingOutlined /> Advanced
-        </div>
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #BF5AF2, #9D4ECA)">
+            <SkillLevelAdvanced />
+          </IconWrapper>
+          Advanced
+        </TabLabel>
       ),
       children: <AdvancedSettings />,
     },
     {
       key: 'system-information',
       label: (
-        <div>
-          <InfoCircleOutlined /> System Information
-        </div>
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #FF2D55, #FF375F)">
+            <InfoCircleOutlined />
+          </IconWrapper>
+          System Information
+        </TabLabel>
       ),
       children: <Information />,
     },
     {
       key: 'plugins',
       label: (
-        <div>
-          <AppstoreOutlined /> Plugins
-        </div>
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #30B0C7, #2891A5)">
+            <AppstoreOutlined />
+          </IconWrapper>
+          Plugins
+        </TabLabel>
       ),
       children: (
         <div>
@@ -117,21 +152,8 @@ const Settings: React.FC = () => {
     },
   ];
 
-  // Function to handle tab change
-  const handleTabChange = (key: string) => {
-    history.replace(`#${key}`);
-  };
-
-  // Sync active tab with the hash in the URL
-  useEffect(() => {
-    const hash = location.hash.replace('#', '');
-    if (!settingsTabItems.some((item) => item.key === hash)) return;
-    // Sync the initially selected tab with the hash in the URL
-    handleTabChange(hash);
-  }, [location.hash]);
-
   return (
-    <PageContainer
+    <StyledTabContainer
       header={{
         title: (
           <Title.MainTitle
@@ -141,9 +163,7 @@ const Settings: React.FC = () => {
           />
         ),
       }}
-      tabList={settingsTabItems}
-      onTabChange={handleTabChange}
-      tabActiveKey={location.hash.replace('#', '') || settingsTabItems[0].key}
+      tabItems={settingsTabItems}
     />
   );
 };

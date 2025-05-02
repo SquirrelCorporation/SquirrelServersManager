@@ -30,16 +30,16 @@ export class DeviceAuth {
   })
   authType?: SsmAnsible.SSHType;
 
-  @Prop()
+  @Prop({ type: String })
   sshUser?: string;
 
-  @Prop()
+  @Prop({ type: String })
   sshPwd?: string;
 
-  @Prop()
+  @Prop({ type: String })
   sshKey?: string;
 
-  @Prop()
+  @Prop({ type: String })
   sshKeyPass?: string;
 
   @Prop({
@@ -49,10 +49,10 @@ export class DeviceAuth {
   })
   sshConnection?: SsmAnsible.SSHConnection;
 
-  @Prop()
+  @Prop({ type: String })
   becomeUser?: string;
 
-  @Prop()
+  @Prop({ type: String })
   becomePass?: string;
 
   @Prop({
@@ -61,25 +61,25 @@ export class DeviceAuth {
   })
   becomeMethod?: SsmAnsible.AnsibleBecomeMethod;
 
-  @Prop()
+  @Prop({ type: String })
   becomeExe?: string;
 
-  @Prop()
+  @Prop({ type: String })
   becomeFlags?: string;
 
-  @Prop()
+  @Prop({ type: Boolean })
   strictHostKeyChecking?: boolean;
 
-  @Prop({ required: true })
+  @Prop({ type: Number, required: true })
   sshPort?: number;
 
-  @Prop()
+  @Prop({ type: String })
   sshCommonArgs?: string;
 
-  @Prop()
+  @Prop({ type: String })
   sshExecutable?: string;
 
-  @Prop({ default: false })
+  @Prop({ type: Boolean, default: false })
   customDockerSSH?: boolean;
 
   @Prop({
@@ -88,31 +88,31 @@ export class DeviceAuth {
   })
   dockerCustomAuthType?: SsmAnsible.SSHType;
 
-  @Prop()
+  @Prop({ type: String })
   dockerCustomSshUser?: string;
 
-  @Prop()
+  @Prop({ type: String })
   dockerCustomSshPwd?: string;
 
-  @Prop()
+  @Prop({ type: String })
   dockerCustomSshKeyPass?: string;
 
-  @Prop()
+  @Prop({ type: String })
   dockerCustomSshKey?: string;
 
-  @Prop({ default: false })
+  @Prop({ type: Boolean, default: false })
   customDockerForcev6?: boolean;
 
-  @Prop({ default: false })
+  @Prop({ type: Boolean, default: false })
   customDockerForcev4?: boolean;
 
-  @Prop({ default: false })
+  @Prop({ type: Boolean, default: false })
   customDockerAgentForward?: boolean;
 
-  @Prop({ default: false })
+  @Prop({ type: Boolean, default: false })
   customDockerTryKeyboard?: boolean;
 
-  @Prop()
+  @Prop({ type: String })
   customDockerSocket?: string;
 
   @Prop({
@@ -165,10 +165,10 @@ export class DeviceAuth {
     };
   };
 
-  @Prop()
+  @Prop({ type: Date })
   createdAt?: Date;
 
-  @Prop()
+  @Prop({ type: Date })
   updatedAt?: Date;
 
   @Prop({ type: MongooseSchema.Types.Buffer })

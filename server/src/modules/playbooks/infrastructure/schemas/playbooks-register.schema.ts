@@ -19,31 +19,31 @@ export class PlaybooksRegister {
   })
   type!: Repositories.RepositoryType;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   name!: string;
 
-  @Prop({ required: false })
+  @Prop({ type: String, required: false })
   accessToken?: string;
 
-  @Prop({ required: false })
+  @Prop({ type: String, required: false })
   branch?: string;
 
-  @Prop({ required: false })
+  @Prop({ type: String, required: false })
   email?: string;
 
-  @Prop({ required: false })
+  @Prop({ type: String, required: false })
   userName?: string;
 
-  @Prop({ required: false })
+  @Prop({ type: String, required: false })
   remoteUrl?: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   directory!: string;
 
-  @Prop({ required: true, default: true })
+  @Prop({ type: Boolean, required: true, default: true })
   enabled: boolean = true;
 
-  @Prop({ required: false, default: false })
+  @Prop({ type: Boolean, required: false, default: false })
   default: boolean = false;
 
   @Prop({ type: Object })
@@ -65,10 +65,10 @@ export class PlaybooksRegister {
   })
   directoryExclusionList?: string[];
 
-  @Prop({ default: false })
+  @Prop({ type: Boolean, default: false })
   onError?: boolean;
 
-  @Prop({ required: false })
+  @Prop({ type: String, required: false })
   onErrorMessage?: string;
 
   @Prop({
@@ -78,7 +78,7 @@ export class PlaybooksRegister {
   })
   gitService?: SsmGit.Services;
 
-  @Prop({ default: false })
+  @Prop({ type: Boolean, default: false })
   ignoreSSLErrors?: boolean;
 
   @Prop({
@@ -88,10 +88,10 @@ export class PlaybooksRegister {
   })
   vaults?: IAnsibleVault[] | string[];
 
-  @Prop()
+  @Prop({ type: Date })
   createdAt?: Date;
 
-  @Prop()
+  @Prop({ type: Date })
   updatedAt?: Date;
 }
 

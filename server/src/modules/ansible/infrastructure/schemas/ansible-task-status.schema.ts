@@ -1,4 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, SchemaTimestampsConfig } from 'mongoose';
+
+export type AnsibleTaskStatusDocument = AnsibleTaskStatus & Document & SchemaTimestampsConfig;
 
 @Schema({
   collection: 'ansibletaskstatuses',
@@ -6,10 +9,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
   versionKey: false,
 })
 export class AnsibleTaskStatus {
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   taskIdent!: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   status!: string;
 
   @Prop({ type: Date })
