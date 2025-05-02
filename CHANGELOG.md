@@ -1,8 +1,8 @@
 # Changelog
 
-## [v0.5.0-alpha](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha) (2025-05-02)
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.30...v0.5.0-alpha)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.30...HEAD)
 
 **Implemented enhancements:**
 
@@ -20,6 +20,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Chore fix v050 [\#889](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/889) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] V0.5.0 - Alpha [\#886](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/886) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - fix\(proxy\): change to `error_log /dev/null` [\#885](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/885) ([Bergruebe](https://github.com/Bergruebe))
 - \[FEATURE/CORE/BUG\] Prepare 0.5.0 [\#883](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/883) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
@@ -1011,15 +1012,15 @@
 
 ## [v0.1.10](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.10) (2024-06-07)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.10)
-
-## [v0.1.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.8) (2024-06-06)
-
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.8)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.10)
 
 ## [v0.1.9](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.9) (2024-06-06)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.9)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.9)
+
+## [v0.1.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.8) (2024-06-06)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.8)
 
 ## [v0.1.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.7) (2024-06-06)
 
