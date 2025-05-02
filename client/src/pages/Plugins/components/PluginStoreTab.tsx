@@ -32,6 +32,7 @@ import PluginDetailModal from './PluginDetailModal';
 import RepositoryManagementModal from './RepositoryManagementModal';
 import message from '@/components/Message/DynamicMessage'; // Restore custom message import
 import FullScreenLoader from '@/components/FullScreenLoader/FullScreenLoader'; // Updated import path
+import ReactDOM from 'react-dom'; // Add ReactDOM import
 
 const { Text, Paragraph } = Typography;
 
@@ -186,12 +187,17 @@ const PluginStoreTab: React.FC<PluginStoreTabProps> = ({
       {/* Inject keyframes into the document head */}
       <style>{highlightShimmerKeyframes}</style>
 
-      <FullScreenLoader
-        isVisible={isRestarting}
-        message="Restarting server..."
-        onPollSuccess={handlePollSuccess}
-        onPollTimeout={handlePollTimeout}
-      />
+      {/* Loader rendered via Portal - minimal change */}
+      {isRestarting && // Conditionally render the portal
+        ReactDOM.createPortal(
+          <FullScreenLoader
+            isVisible={isRestarting} // Pass the state to the loader
+            message="Restarting server..."
+            onPollSuccess={handlePollSuccess}
+            onPollTimeout={handlePollTimeout}
+          />,
+          document.body, // Target the document body
+        )}
 
       <ProList<PluginStoreInfo>
         actionRef={actionRef}
@@ -207,7 +213,7 @@ const PluginStoreTab: React.FC<PluginStoreTabProps> = ({
         }}
         showActions="hover"
         rowKey="id"
-        grid={{ gutter: 16, xs: 1, sm: 2, md: 2, lg: 2, xl: 3, xxl: 3 }}
+        grid={{ gutter: 16, xs: 1, sm: 2, md: 2, lg: 2, xl: 2, xxl: 3 }}
         request={fetchPluginsForProList}
         onItem={(record: any) => {
           return {
@@ -260,6 +266,7 @@ const PluginStoreTab: React.FC<PluginStoreTabProps> = ({
                 size={50}
                 style={{
                   marginRight: 8,
+                  flexShrink: 0,
                 }}
               />
             ),

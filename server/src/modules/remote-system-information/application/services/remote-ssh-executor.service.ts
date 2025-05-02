@@ -67,34 +67,75 @@ export abstract class SSHExecutor extends Component {
     return new Promise((resolve, reject) => {
       const conn = new Client();
       this.sshClient = conn;
-      conn
+
+      const connectTimeout = setTimeout(() => {
+        this.logger.error('SSH Connection attempt timed out.');
+        conn.end(); // Attempt to clean up the connection object
+        reject(new Error('SSH Connection attempt timed out.'));
+      }, this.connectionConfig.readyTimeout || 30000); // Use configured timeout or default to 30s
+
+      // Explicitly cast to Client to help TS resolve overloads
+      (conn as Client)
         .on('ready', async () => {
+          clearTimeout(connectTimeout); // Clear the timeout timer on successful connection
           this.logger.info('SSH Connection established');
           retryAttempt = 0;
           this.startKeepAlive();
           resolve(); // Connection successful
         })
         .on('error', (err) => {
+          clearTimeout(connectTimeout); // Clear timeout on error as well
           this.logger.error(`SSH Connection error: ${err?.message}`);
+          // Ensure cleanup happens before potentially triggering reconnect
+          if (this.sshClient === conn) {
+            this.sshClient = null; // Prevent further operations on this failed client
+          }
+          conn.end(); // Explicitly end the connection on error
           void this.reconnect(retryAttempt); // Attempt reconnection on error
           reject(err);
         })
         .on('end', () => {
+          clearTimeout(connectTimeout);
           this.logger.warn('SSH Connection ended');
+          if (this.sshClient === conn) {
+            this.sshClient = null;
+          }
         })
         .on('close', () => {
-          this.logger.warn('SSH Connection closed');
+          clearTimeout(connectTimeout);
+          this.logger.warn(`SSH Connection closed`);
+          if (this.sshClient === conn) {
+            this.sshClient = null;
+          }
+          // Optional: Trigger reconnect on close if it wasn't due to an explicit 'end' call
+          // if (!conn.writable) { // Check if closure was unexpected
+          //   void this.reconnect(retryAttempt);
+          // }
         });
 
       // Connect using the provided configuration
       (async () => {
         try {
-          conn.connect({
+          const host = await tryResolveHost(this.connectionConfig.host as string);
+          this.logger.debug(
+            `Attempting SSH connection to ${host}:${this.connectionConfig.port || 22}...`,
+          );
+          (conn as Client).connect({
             ...this.connectionConfig,
-            host: await tryResolveHost(this.connectionConfig.host as string),
+            host,
           });
         } catch (error: any) {
-          this.logger.error(`Connection setup failed: ${error.message}`);
+          clearTimeout(connectTimeout); // Clear timeout on immediate connect error
+          this.logger.error(`Initial SSH connection setup failed: ${error.message}`, error.stack);
+          // Ensure cleanup
+          if (this.sshClient === conn) {
+            this.sshClient = null;
+          }
+          try {
+            conn.end();
+          } catch {
+            /* Ignore errors during cleanup */
+          }
           reject(error); // Propagate the error to the Promise
         }
       })();

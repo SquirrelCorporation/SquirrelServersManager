@@ -20,10 +20,30 @@ export const getCustomAgent = (childLogger: any, opt: any) => {
       try {
         const conn = new Client();
 
+        const connectTimeout = setTimeout(() => {
+          this.logger.error(`SSH Connection attempt timed out - (host: ${opt.host})`);
+          try {
+            conn.end();
+          } catch {
+            /* ignore */
+          }
+          fn(new Error('SSH Connection attempt timed out.'));
+        }, opt.readyTimeout || 30000);
+
         const handleError = (err: any) => {
-          conn.end();
-          this.destroy();
-          throw err;
+          clearTimeout(connectTimeout);
+          this.logger.error(`Handling SSH error - (host: ${opt.host}): ${err.message}`);
+          try {
+            conn.end();
+          } catch {
+            /* ignore */
+          }
+          try {
+            this.destroy();
+          } catch {
+            /* ignore */
+          }
+          fn(err);
         };
         const decorateHttpStream = (stream) => {
           stream.setKeepAlive = () => {};
@@ -34,13 +54,14 @@ export const getCustomAgent = (childLogger: any, opt: any) => {
           stream.destroySoon = stream.destroy;
           return stream;
         };
-        conn
+        (conn as Client)
           .once('ready', () => {
+            clearTimeout(connectTimeout);
             conn.exec('docker system dial-stdio', (err, stream) => {
               if (err) {
                 this.logger.error(`Encountering an exec SSH error - (host: ${opt.host})`);
                 this.logger.error(err);
-                handleError(err);
+                return handleError(err);
               }
               stream.addListener('error', (err) => {
                 this.logger.error(`Encountering an stream SSH error - (host: ${opt.host})`);
@@ -49,30 +70,65 @@ export const getCustomAgent = (childLogger: any, opt: any) => {
               });
               stream.once('close', () => {
                 this.logger.warn(`Stream closed - (host: ${opt.host})`);
-                conn.end();
-                this.destroy();
+                try {
+                  conn.end();
+                } catch {
+                  /* ignore */
+                }
+                try {
+                  this.destroy();
+                } catch {
+                  /* ignore */
+                }
               });
               return fn(null, decorateHttpStream(stream));
             });
           })
           .on('error', (err) => {
-            this.logger.error(`Error connecting to ${opt.host} : ${err.message}`);
-            fn(err);
+            handleError(err);
           })
           .once('end', () => {
+            clearTimeout(connectTimeout);
             this.logger.warn(`Agent destroy for ${opt.host}`);
-            conn.end();
-            this.destroy();
+            try {
+              conn.end();
+            } catch {
+              /* ignore */
+            }
+            try {
+              this.destroy();
+            } catch {
+              /* ignore */
+            }
           });
+
         (async () => {
-          const resolvedHost = await tryResolveHost(opt.host as string);
-          const connectConfig = { ...opt, host: resolvedHost };
-          this.logger.info(`Connecting to ${connectConfig.host}`);
-          conn.connect(connectConfig);
+          try {
+            const resolvedHost = await tryResolveHost(opt.host as string);
+            const connectConfig = { ...opt, host: resolvedHost };
+            this.logger.info(`Connecting to ${connectConfig.host}:${connectConfig.port || 22}...`);
+            conn.connect(connectConfig);
+          } catch (connectErr: any) {
+            clearTimeout(connectTimeout);
+            this.logger.error(
+              `Initial SSH connection setup failed - (host: ${opt.host}): ${connectErr.message}`,
+            );
+            try {
+              conn.end();
+            } catch {
+              /* ignore */
+            }
+            fn(connectErr);
+          }
         })();
       } catch (error: any) {
-        this.logger.error(`Error connecting to ${opt.host} : ${error.message}`);
+        this.logger.error(`Error setting up SSH connection for ${opt.host}: ${error.message}`);
         this.logger.error(error);
+        if (typeof fn === 'function') {
+          fn(error);
+        } else {
+          console.error('SSH Agent setup failed, callback function invalid', error);
+        }
       }
     }
   }

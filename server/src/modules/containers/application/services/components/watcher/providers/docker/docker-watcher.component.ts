@@ -10,6 +10,7 @@ import * as Joi from 'joi';
 import CronJob from 'node-cron';
 import parse from 'parse-docker-image-name';
 import { SsmStatus } from 'ssm-shared-lib';
+import { IWatcherComponent } from '@modules/containers/domain/components/watcher.interface';
 import {
   CONTAINER_IMAGES_SERVICE,
   IContainerImagesService,
@@ -58,7 +59,10 @@ const DEBOUNCED_WATCH_CRON_MS = 5000;
  * Following the playbooks module pattern, all dependencies are injected through constructor
  */
 @Injectable()
-export class DockerWatcherComponent extends AbstractDockerLogsComponent {
+export class DockerWatcherComponent
+  extends AbstractDockerLogsComponent
+  implements IWatcherComponent
+{
   watchCron!: CronJob.ScheduledTask | undefined;
   watchCronStat!: CronJob.ScheduledTask | undefined;
   watchCronTimeout: any;
@@ -809,7 +813,7 @@ export class DockerWatcherComponent extends AbstractDockerLogsComponent {
 
   async startContainer(container: IContainer): Promise<any> {
     try {
-      this.childLogger.log(`[CONTAINER] - startContainer - for container: ${container.id}`);
+      this.childLogger.info(`[CONTAINER] - startContainer - for container: ${container.id}`);
       return await this.dockerApi.getContainer(container.id).start();
     } catch (error: any) {
       this.childLogger.error(`Failed to start container ${container.id}: ${error.message}`);

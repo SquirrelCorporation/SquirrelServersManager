@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as Joi from 'joi';
 import { ConfigurationWatcherSchema } from '@modules/containers/types';
+import { Logger } from 'pino';
 import { IComponent } from '../../../../domain/components/component.interface';
 import { Kind } from '../../../../domain/components/kind.enum';
 import PinoLogger from '../../../../../../logger';
@@ -21,7 +22,7 @@ export abstract class AbstractWatcherComponent {
   protected provider: string = 'unknown';
   protected kind: Kind = Kind.WATCHER;
   protected configuration!: ConfigurationWatcherSchema;
-  protected childLogger: any;
+  protected childLogger: Logger<never>;
   protected joi = Joi;
 
   constructor() {

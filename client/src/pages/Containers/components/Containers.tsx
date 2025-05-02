@@ -1,7 +1,10 @@
 import ContainerDetailsModal from '@/pages/Containers/components/containers/ContainerDetailsModal';
 import ContainerMetas from '@/pages/Containers/components/containers/ContainerMetas';
 import EditContainerNameModal from '@/pages/Containers/components/containers/EditContainerNameModal';
-import { getContainers, postRefreshAll } from '@/services/rest/containers/containers';
+import {
+  getContainers,
+  postRefreshAll,
+} from '@/services/rest/containers/containers';
 import { containerSocket as socket } from '@/socket';
 import { ReloadOutlined } from '@ant-design/icons';
 import { ActionType, ProList } from '@ant-design/pro-components';
@@ -109,7 +112,7 @@ const Containers: React.FC = () => {
         }}
         showActions="hover"
         rowSelection={false}
-        grid={{ gutter: 16, xs: 1, sm: 2, md: 2, lg: 2, xl: 3, xxl: 3 }}
+        grid={{ gutter: 16, xs: 1, sm: 2, md: 2, lg: 2, xl: 2, xxl: 3 }}
         onItem={(record: any) => {
           return {
             onMouseEnter: () => {
