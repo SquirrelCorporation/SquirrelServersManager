@@ -20,6 +20,7 @@
 
 **Merged pull requests:**
 
+- \[FEATURE/CORE/BUG\] Prepare 0.5.0 [\#883](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/883) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor NewDeviceModal to use pre-check functions for Docker, Ansibl… [\#881](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/881) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @vue-flow/core from 1.42.5 to 1.43.1 in /site [\#880](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/880) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump axios from 1.8.4 to 1.9.0 in /site [\#879](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/879) ([dependabot[bot]](https://github.com/apps/dependabot))
