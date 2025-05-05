@@ -48,9 +48,11 @@ export class TelemetryService implements OnModuleInit, OnApplicationShutdown {
       this.logger.log(`Install ID found in cache: ${installId}`);
     }
 
-    this._id = installId;
-    this.client.identify({ distinctId: this._id });
-    this.logger.log(`Telemetry identified with distinct ID: ${this._id}`);
+    this._id = installId as string;
+    if (this._id) {
+      this.client.identify({ distinctId: this._id as string });
+      this.logger.log(`Telemetry identified with distinct ID: ${this._id}`);
+    }
   }
 
   @OnEvent(Events.TELEMETRY_EVENT)

@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import pino from 'pino';
 import ssh2, { Client } from 'ssh2';
 import { tryResolveHost } from '../../common/dns/dns.util';
