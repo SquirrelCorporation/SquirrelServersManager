@@ -4,6 +4,7 @@ import { HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { ToolAnnotations } from '@modelcontextprotocol/sdk/types.js';
 import { z } from 'zod';
+import { ContainerAction } from '../../application/dto/container-action.payload.dto';
 
 interface Dependencies {
   server: McpServer;
@@ -68,4 +69,49 @@ export function registerContainerHandlers({ server, coreServiceClient, logger }:
     },
   );
   logger.log('Registered MCP Handler: findContainerById');
+
+  const containerActionAnnotations: ToolAnnotations = {
+    title: 'Container Action',
+    readOnlyHint: false,
+    openWorldHint: false,
+  };
+  server.tool(
+    'containerAction',
+    'Perform an action (start/stop/restart/pause/kill) on a container',
+    {
+      containerId: z.string().describe('ID of the container to perform action on'),
+      action: z
+        .enum([
+          ContainerAction.START,
+          ContainerAction.STOP,
+          ContainerAction.RESTART,
+          ContainerAction.PAUSE,
+          ContainerAction.KILL,
+        ])
+        .describe('Action to perform on the container'),
+    },
+    containerActionAnnotations,
+    async (params) => {
+      try {
+        await firstValueFrom(coreServiceClient.send({ cmd: 'core_container_action' }, params));
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Successfully performed ${params.action} action on container ${params.containerId}`,
+            },
+          ],
+        };
+      } catch (err) {
+        logger.error(
+          `Failed to perform ${params.action} action on container ${params.containerId}:`,
+          err,
+        );
+        throw new Error(
+          `Failed to perform ${params.action} action on container ${params.containerId}`,
+        );
+      }
+    },
+  );
+  logger.log('Registered MCP Handler: containerAction');
 }

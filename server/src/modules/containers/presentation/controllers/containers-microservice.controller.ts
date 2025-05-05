@@ -6,6 +6,7 @@ import {
 } from '@modules/containers/domain/interfaces/container-service.interface';
 import { GetContainerPayloadDto } from '@modules/mcp/application/dto/get-container.payload.dto';
 import { GetContainersPayloadDto } from '@modules/mcp/application/dto/get-containers.payload.dto';
+import { ContainerActionPayloadDto } from '@modules/mcp/application/dto/container-action.payload.dto';
 import { IContainer } from '@modules/containers/domain/entities/container.entity';
 
 @Controller()
@@ -16,37 +17,31 @@ export class ContainersMicroserviceController {
 
   @MessagePattern({ cmd: 'core_find_all_containers' })
   async findAllContainers(@Payload() payload: GetContainersPayloadDto): Promise<IContainer[]> {
-    this.logger.log(
-      `Handling core_find_all_containers via MessagePattern: ${JSON.stringify(payload)}`,
-    );
-    // Delegate to the service method (assuming it's named getAllContainers now or needs renaming)
-    // We might need to adjust the service method name or signature if needed
-    return this.containerService.getAllContainers(); // Assuming getAllContainers exists and takes no payload or payload is handled inside
+    this.logger.debug(`Finding all containers with payload: ${JSON.stringify(payload)}`);
+    return this.containerService.getAllContainers();
   }
 
   @MessagePattern({ cmd: 'core_find_container_by_id' })
   async findContainerById(@Payload() payload: GetContainerPayloadDto): Promise<IContainer | null> {
-    // Adjusted return type
-    this.logger.log(
-      `Handling core_find_container_by_id via MessagePattern for ID: ${payload.containerId}`,
-    );
-    if (!payload.containerId) {
-      this.logger.warn('Missing containerId in core_find_container_by_id payload');
-      throw new Error('Missing containerId in request payload'); // Or RpcException
-    }
-    // Delegate to the service method
-    // Note: getContainerById might throw NotFoundException which should be handled appropriately
-    // by the caller or converted to an RpcException if needed for microservice communication.
+    this.logger.debug(`Finding container by ID with payload: ${JSON.stringify(payload)}`);
     return this.containerService.getContainerById(payload.containerId);
   }
 
-  // Add other message patterns here for other container-related core commands
-  // For example, if core needs to trigger actions:
-  /*
-  @MessagePattern({ cmd: 'core_start_container' })
-  async startContainer(@Payload() payload: { containerId: string }): Promise<boolean> {
-    this.logger.log(`Handling core_start_container for ID: ${payload.containerId}`);
-    return this.containerService.executeContainerAction(payload.containerId, SsmContainer.Actions.START);
+  @MessagePattern({ cmd: 'core_container_action' })
+  async performContainerAction(@Payload() payload: ContainerActionPayloadDto): Promise<void> {
+    this.logger.debug(`Performing container action with payload: ${JSON.stringify(payload)}`);
+    const { containerId, action } = payload;
+
+    switch (action) {
+      case 'start':
+      case 'stop':
+      case 'restart':
+      case 'pause':
+      case 'kill':
+        await this.containerService.executeContainerAction(containerId, action);
+        break;
+      default:
+        throw new Error(`Unsupported container action: ${action}`);
+    }
   }
-  */
 }

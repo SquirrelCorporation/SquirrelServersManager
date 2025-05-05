@@ -38,6 +38,13 @@ interface PlaybookResponse {
   status?: string;
 }
 
+interface ContainerActionResponse {
+  content: Array<{
+    type: string;
+    text: string;
+  }>;
+}
+
 describe("MCP Client Tests", () => {
   let transport: StreamableHTTPClientTransport;
   let client: Client;
@@ -475,4 +482,126 @@ describe("MCP Client Tests", () => {
     },
     TEST_TIMEOUT
   );
+
+  // --- containerAction ---
+  describe("containerAction tool", () => {
+    const TEST_CONTAINER_ID = process.env.TEST_CONTAINER_ID || "test-container";
+
+    beforeEach(() => {
+      if (TEST_CONTAINER_ID === "test-container") {
+        console.warn(
+          "Test 'containerAction': Using placeholder container ID. Set TEST_CONTAINER_ID in .env for a real test."
+        );
+      }
+    });
+
+    const testAction = async (action: string) => {
+      expect(transport.sessionId).toBeDefined(); // Ensure connection
+      console.log(
+        `Test 'containerAction': Testing ${action} action on container ${TEST_CONTAINER_ID}`
+      );
+
+      const response = (await client.callTool({
+        name: "containerAction",
+        arguments: {
+          containerId: TEST_CONTAINER_ID,
+          action: action,
+        },
+      })) as ContainerActionResponse;
+
+      console.log(
+        `Test 'containerAction': ${action} response:`,
+        JSON.stringify(response, null, 2)
+      );
+      expect(response).toBeDefined();
+      expect(response.content).toBeInstanceOf(Array);
+      expect(response.content.length).toBe(1);
+
+      const messagePart = response.content[0];
+      expect(messagePart.type).toBe("text");
+      expect(messagePart.text).toContain(
+        `Successfully performed ${action} action on container ${TEST_CONTAINER_ID}`
+      );
+    };
+
+    it(
+      "should start a container",
+      async () => {
+        await testAction("start");
+      },
+      TEST_TIMEOUT
+    );
+
+    it(
+      "should stop a container",
+      async () => {
+        await testAction("stop");
+      },
+      TEST_TIMEOUT
+    );
+
+    it(
+      "should restart a container",
+      async () => {
+        await testAction("restart");
+      },
+      TEST_TIMEOUT
+    );
+
+    it(
+      "should pause a container",
+      async () => {
+        await testAction("pause");
+      },
+      TEST_TIMEOUT
+    );
+
+    it(
+      "should kill a container",
+      async () => {
+        await testAction("kill");
+      },
+      TEST_TIMEOUT
+    );
+
+    it(
+      "should fail with invalid container ID",
+      async () => {
+        expect(transport.sessionId).toBeDefined();
+        console.log(
+          "Test 'containerAction': Testing with invalid container ID"
+        );
+
+        await expect(
+          client.callTool({
+            name: "containerAction",
+            arguments: {
+              containerId: "non-existent-container",
+              action: "start",
+            },
+          })
+        ).rejects.toThrow();
+      },
+      TEST_TIMEOUT
+    );
+
+    it(
+      "should fail with invalid action",
+      async () => {
+        expect(transport.sessionId).toBeDefined();
+        console.log("Test 'containerAction': Testing with invalid action");
+
+        await expect(
+          client.callTool({
+            name: "containerAction",
+            arguments: {
+              containerId: TEST_CONTAINER_ID,
+              action: "invalid-action",
+            },
+          })
+        ).rejects.toThrow();
+      },
+      TEST_TIMEOUT
+    );
+  });
 });

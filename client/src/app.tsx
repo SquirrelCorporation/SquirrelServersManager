@@ -25,6 +25,7 @@ import Logo from '../public/logo.svg';
 import PluginRoutes from './plugins/components/PluginRoutes';
 import { PluginProvider } from './plugins/contexts/plugin-context';
 import { errorConfig } from './requestErrorConfig';
+import PlaybookExecutionWidget from '@/components/HeaderComponents/PlaybookExecutionWidget';
 
 const loginPath = '/user/login';
 const onboardingPath = '/user/onboarding';
@@ -104,6 +105,7 @@ export const layout: RunTimeLayoutConfig = ({
       <DevicesHeaderWidget key="online" />,
       <HealthWidget key="health" />,
       <NotificationsWidget key="notifications" />,
+      <PlaybookExecutionWidget key="playbook" />,
       <UpdateAvailableWidget key={'update'} />,
     ],
     avatarProps: {
