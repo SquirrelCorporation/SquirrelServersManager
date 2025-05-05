@@ -1,4 +1,4 @@
-FROM node:23.8.0-alpine AS base
+FROM node:23.11.0-alpine AS base
 LABEL org.opencontainers.image.source=https://github.com/SquirrelCorporation/SquirrelServersManager
 LABEL org.opencontainers.image.description="SSM Server"
 LABEL org.opencontainers.image.licenses="GNU AFFERO GENERAL PUBLIC LICENSE"
@@ -14,6 +14,7 @@ RUN rm -f /usr/lib/python3.12/EXTERNALLY-MANAGED
 RUN pip install ansible-runner \
     ansible-runner-http
 RUN npm install -g typescript
+RUN npm i -g @nestjs/cli
 COPY ./package*.json .
 COPY ./tsconfig.json .
 RUN mkdir /opt/squirrelserversmanager/shared-lib
@@ -29,7 +30,7 @@ RUN npm ci --verbose --no-audit
 COPY . .
 RUN npm run build
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["node", "./dist/src/index.js"]
+CMD ["node", "./dist/src/main.js"]
 
 FROM base AS dev
 ENV NODE_ENV=development

@@ -5,9 +5,11 @@
 /yarn.lock
 /src/ansible/artifacts
 /src/ansible/inventory/hosts.json
-
+/coverage
 # production
 /dist
 
 # misc
 .DS_Store
+./node_modules/*
+/node_modules/*

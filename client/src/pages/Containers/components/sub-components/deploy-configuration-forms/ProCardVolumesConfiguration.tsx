@@ -10,9 +10,13 @@ import { Space } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
-const ProCardVolumesConfiguration: React.FC<{ template: API.Template }> = (
-  props,
-) => {
+type ProCardVolumesConfigurationProps = {
+  template: API.Template;
+};
+
+const ProCardVolumesConfiguration: React.FC<
+  ProCardVolumesConfigurationProps
+> = ({ template }) => {
   return (
     <ProCard
       title={
@@ -32,7 +36,7 @@ const ProCardVolumesConfiguration: React.FC<{ template: API.Template }> = (
             creatorButtonText: 'Add a new volume',
           }}
           copyIconProps={false}
-          initialValue={props.template?.volumes?.map((e) => {
+          initialValue={template?.volumes?.map((e) => {
             return {
               bind: e.bind,
               container: e.container,

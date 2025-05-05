@@ -89,7 +89,10 @@ const TerminalCore = React.forwardRef<TerminalCoreHandles, TerminalCoreProps>(
         terminal.open(terminalElement);
         terminal.loadAddon(fitAddon);
         if (onDataOut) {
-          terminal.onData(onDataOut);
+          terminal.onData((value) => {
+            console.log('Received data from terminal:', value);
+            onDataOut(value);
+          });
         }
         fitAddon.fit();
         terminal.focus();

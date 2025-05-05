@@ -4,23 +4,25 @@ import DiagnosticTab from '@/pages/Admin/Inventory/components/tabs/DiagnosticTab
 import SSHConfigurationFormTab from '@/pages/Admin/Inventory/components/tabs/SSHConfigurationFormTab';
 import SystemInformationConfigurationTab from '@/pages/Admin/Inventory/components/tabs/SystemInformationConfigurationTab';
 import { Modal, Tabs, TabsProps } from 'antd';
-import React from 'react';
-import { API } from 'ssm-shared-lib';
-import { SsmStatus } from 'ssm-shared-lib';
+import React, { Dispatch, SetStateAction } from 'react';
+import { API, SsmStatus } from 'ssm-shared-lib';
 
 export type ConfigurationModalProps = {
   updateModalOpen: boolean;
-  handleUpdateModalOpen: any;
+  handleUpdateModalOpen: Dispatch<SetStateAction<boolean>>;
   device: Partial<API.DeviceItem>;
 };
 
-const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
-  const { updateModalOpen, handleUpdateModalOpen, device } = props;
+const ConfigurationModal: React.FC<ConfigurationModalProps> = ({
+  updateModalOpen,
+  handleUpdateModalOpen,
+  device,
+}) => {
   const items: TabsProps['items'] = [
     {
       key: 'ssh',
       label: 'SSH',
-      children: <SSHConfigurationFormTab values={device} />,
+      children: <SSHConfigurationFormTab device={device} />,
     },
     {
       key: 'system-information',

@@ -1,4 +1,4 @@
-import { Avatar } from 'antd';
+import { Avatar, Grid } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -37,23 +37,28 @@ type ContainerAvatarProps = {
 };
 const ContainerAvatar: React.FC<ContainerAvatarProps> = (props) => {
   const { row } = props;
+  const screens = Grid.useBreakpoint();
 
   const getName = () => {
     try {
       return row.customName?.slice(0, 3) || row.name?.slice(0, 3);
-    } catch (error: any) {
+    } catch {
       return 'undefined';
     }
   };
+
+  const currentFontSize = screens.sm ? 15 : 10;
+
   return (
     <Avatar
       size={{ xs: 24, sm: 50, md: 50, lg: 50, xl: 50, xxl: 50 }}
       shape="square"
       style={{
         marginRight: 4,
-        fontSize: 15,
+        fontSize: currentFontSize,
         backgroundColor:
           colorPalette[(row.id ? hashCode(row.id) : 0) % colorPalette.length],
+        flexShrink: 0,
       }}
     >
       {getName()}

@@ -2,9 +2,8 @@ import { Linuxcontainers, Proxmox } from '@/components/Icons/CustomIcons';
 import DockerConfigurationForm from '@/pages/Admin/Inventory/components/tabs/containers/DockerConfigurationForm';
 import ProxmoxConfigurationForm from '@/pages/Admin/Inventory/components/tabs/containers/ProxmoxConfigurationForm';
 import { DockerOutlined } from '@ant-design/icons';
-import { AnimatePresence, motion } from 'framer-motion';
-import React from 'react';
 import { Col, Row, Segmented } from 'antd';
+import React from 'react';
 import { API } from 'ssm-shared-lib';
 
 type ContainersConfigurationTabProps = {

@@ -1,16 +1,8 @@
 import { GameIconsAcorn } from '@/components/Icons/CustomIcons';
 import CreateUserForm from '@/pages/User/FirstTime/CreateUserForm';
-import { createUser } from '@/services/rest/user';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import {
-  PageContainer,
-  ProConfigProvider,
-  ProFormDependency,
-  ProFormText,
-} from '@ant-design/pro-components';
-import { ProForm } from '@ant-design/pro-form/lib';
-import { history } from '@umijs/max';
-import { Grid, message, Modal, Typography } from 'antd';
+import { PageContainer, ProConfigProvider } from '@ant-design/pro-components';
+import { Grid, Modal, Typography } from 'antd';
 import { Header } from 'antd/es/layout/layout';
 import BannerAnim, { Element } from 'rc-banner-anim';
 import QueueAnim from 'rc-queue-anim';

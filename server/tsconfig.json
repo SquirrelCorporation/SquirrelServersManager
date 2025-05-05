@@ -12,11 +12,35 @@
     "resolveJsonModule": true,
     "noImplicitAny": false,
     "skipLibCheck": true,
-    "typeRoots": [
-      "./src/types",
-      "./node_modules/@types/"
-    ]
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "paths": {
+      "@modules/*": ["src/modules/*"],
+      "@common/*": ["src/common/*"],
+      "@config/*": ["src/config/*"],
+      "@infrastructure/*": ["src/infrastructure/*"],
+      "@middlewares/*": ["src/middlewares/*"],
+      "@core/*": ["src/core/*"]
+    },
+    "typeRoots": ["./src/types", "./node_modules/@types/"],
+    "incremental": true,
+    "declaration": true
   },
-  "include": ["./**/*.d.ts","src//*.ts", "src//*.json",
-    "../.env", ".eslintrc.json", "typings.d.ts"]
+  "include": [
+    "./**/*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.json",
+    "../.env",
+    ".eslintrc.json",
+    "typings.d.ts"
+  ],
+  "exclude": ["node_modules", "dist", "./**/test-setup.ts", "./**/__tests__/**"],
+  "watchOptions": {
+    "watchFile": "priorityPollingInterval",
+    "watchDirectory": "dynamicPriorityPolling",
+    "fallbackPolling": "dynamicPriority",
+    "synchronousWatchDirectory": true
+  }
 }

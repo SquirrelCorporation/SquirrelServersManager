@@ -3,49 +3,36 @@ import {
   getCollection,
   getCollections,
   postInstallCollection,
-} from '@/services/rest/playbooks';
-import {
-  ProDescriptions,
-  ProForm,
-  ProList,
-  ProTable,
-} from '@ant-design/pro-components';
-import {
-  Avatar,
-  Button,
-  Input,
-  message,
-  Modal,
-  Space,
-  Tag,
-  Typography,
-} from 'antd';
-import Link from 'antd/lib/typography/Link';
-import React from 'react';
+} from '@/services/rest/ansible/ansible.galaxy';
+import { ProDescriptions, ProList, ProTable } from '@ant-design/pro-components';
+import message from '@/components/Message/DynamicMessage';
+import { Avatar, Button, Modal, Tag, Typography } from 'antd';
+import React, { Dispatch, SetStateAction } from 'react';
 import { AnsibleAPI } from 'ssm-shared-lib';
 
 export type GalaxyStoreModalProps = {
   open: boolean;
-  setOpen: any;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const GalaxyStoreModal: React.FC<GalaxyStoreModalProps> = (
-  props: GalaxyStoreModalProps,
-) => {
+const GalaxyStoreModal: React.FC<GalaxyStoreModalProps> = ({
+  open,
+  setOpen,
+}) => {
   const [selectedRow, setSelectedRow] = React.useState<AnsibleAPI.Data>();
   const [loading, setLoading] = React.useState(false);
   return (
     <Modal
       title="Ansible Galaxy Collections"
       centered
-      open={props.open}
+      open={open}
       onOk={() => {
         setSelectedRow(undefined);
-        props.setOpen(false);
+        setOpen(false);
       }}
       onCancel={() => {
         setSelectedRow(undefined);
-        props.setOpen(false);
+        setOpen(false);
       }}
       width={1500}
     >

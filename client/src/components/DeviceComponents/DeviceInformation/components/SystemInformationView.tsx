@@ -107,7 +107,7 @@ const SystemInformationView: React.FC<SystemInformationViewProps> = ({
               <div style={{ fontWeight: 500, fontSize: '16px' }}>
                 {info.title}
               </div>
-              <div style={{ fontSize: '14px', color: '#595959' }}>
+              <div style={{ fontSize: '14px', color: '#DCDCDC' }}>
                 {info.value}
               </div>
             </div>

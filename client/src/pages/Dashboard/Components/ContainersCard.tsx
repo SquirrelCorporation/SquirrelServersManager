@@ -3,19 +3,19 @@ import Field from '@/pages/Dashboard/ChartComponents/Field';
 import {
   getAveragedStats,
   getNbContainersByStatus,
-} from '@/services/rest/containersstats';
+} from '@/services/rest/containers/container-statistics';
 import { Tiny } from '@ant-design/charts';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { Tooltip, Typography } from 'antd';
+import moment from 'moment';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { API, SsmStatus } from 'ssm-shared-lib';
-import moment from 'moment';
 
 const ContainersCard: React.FC = () => {
   const [loading, setLoading] = useState(false);
-  const [nbRunning, setNbRunning] = useState(0);
-  const [nbTotal, setNbTotal] = useState(0);
-  const [stats, setStats] = useState<API.ContainerStat[]>([]);
+  const [nbRunning, setNbRunning] = useState<number>(0);
+  const [nbTotal, setNbTotal] = useState<number>(0);
+  const [stats, setStats] = useState<{ date: string; value: string }[]>([]);
 
   const asyncFetch = useCallback(async () => {
     setLoading(true);
@@ -89,7 +89,6 @@ const ContainersCard: React.FC = () => {
 
   return (
     <ChartCard
-      bordered={false}
       loading={loading}
       title={<Typography.Title level={5}>Containers</Typography.Title>}
       action={

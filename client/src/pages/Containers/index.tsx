@@ -12,68 +12,90 @@ import Stacks from '@/pages/Containers/components/Stacks';
 import Templates from '@/pages/Containers/components/Templates';
 import Volumes from '@/pages/Containers/components/Volumes';
 import { ApartmentOutlined, AppstoreOutlined } from '@ant-design/icons';
-import { PageContainer } from '@ant-design/pro-components';
-import { history, useLocation } from '@umijs/max';
-import { TabsProps } from 'antd';
-import React, { useEffect } from 'react';
+import React from 'react';
+import StyledTabContainer, {
+  TabLabel,
+  IconWrapper,
+} from '@/components/Layout/StyledTabContainer';
 
 const Index: React.FC = () => {
-  const location = useLocation();
-
-  const items: TabsProps['items'] = [
+  const items = [
     {
-      label: 'Containers',
+      label: (
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #32D74B, #27AE60)">
+            <AppstoreOutlined />
+          </IconWrapper>
+          Containers
+        </TabLabel>
+      ),
       key: 'containers',
-      icon: <AppstoreOutlined />,
       children: <Containers />,
     },
     {
-      label: 'Store',
+      label: (
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #5856D6, #3634A3)">
+            <Templatetoolkit />
+          </IconWrapper>
+          Store
+        </TabLabel>
+      ),
       key: 'store',
-      icon: <Templatetoolkit />,
       children: <Templates />,
     },
     {
-      label: 'Stacks',
+      label: (
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #FF9500, #E67C22)">
+            <ApartmentOutlined />
+          </IconWrapper>
+          Stacks
+        </TabLabel>
+      ),
       key: 'stacks',
-      icon: <ApartmentOutlined />,
       children: <Stacks />,
     },
     {
-      label: 'Images',
+      label: (
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #64D2FF, #5AC8FA)">
+            <ContainerImage />
+          </IconWrapper>
+          Images
+        </TabLabel>
+      ),
       key: 'images',
-      icon: <ContainerImage />,
       children: <Images />,
     },
     {
-      label: 'Volumes',
+      label: (
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #BF5AF2, #9D4ECA)">
+            <ContainerVolumeSolid />
+          </IconWrapper>
+          Volumes
+        </TabLabel>
+      ),
       key: 'volumes',
-      icon: <ContainerVolumeSolid />,
       children: <Volumes />,
     },
     {
-      label: 'Networks',
+      label: (
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #FF375F, #E31B4E)">
+            <ElNetwork />
+          </IconWrapper>
+          Networks
+        </TabLabel>
+      ),
       key: 'networks',
-      icon: <ElNetwork />,
       children: <Networks />,
     },
   ];
 
-  // Function to handle tab change
-  const handleTabChange = (key: string) => {
-    history.replace(`#${key}`);
-  };
-
-  // Sync active tab with the hash in the URL
-  useEffect(() => {
-    const hash = location.hash.replace('#', '');
-    if (!items.some((item) => item.key === hash)) return;
-    // Sync the initially selected tab with the hash in the URL
-    handleTabChange(hash);
-  }, [location.hash]);
-
   return (
-    <PageContainer
+    <StyledTabContainer
       header={{
         title: (
           <Title.MainTitle
@@ -83,9 +105,7 @@ const Index: React.FC = () => {
           />
         ),
       }}
-      tabList={items}
-      onTabChange={handleTabChange}
-      tabActiveKey={location.hash.replace('#', '') || items[0].key}
+      tabItems={items}
     />
   );
 };

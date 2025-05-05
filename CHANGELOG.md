@@ -1,5 +1,77 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.1...HEAD)
+
+**Implemented enhancements:**
+
+- \[FEAT\] Feat new execution playbook design [\#902](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/902) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+## [v0.5.0-alpha.1](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.1) (2025-05-02)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.30...v0.5.0-alpha.1)
+
+**Implemented enhancements:**
+
+- MCP Server, \(Back Proxmox\) [\#873](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/873) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Fixed bugs:**
+
+- \[BUG\] Unable to use .de TLD [\#834](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/834)
+
+**Closed issues:**
+
+- \[CHORE\] Optional trigger to force device ip when installing agent 🧹 [\#119](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/119)
+- Fix code scanning alert - Database query built from user-controlled sources [\#118](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/118)
+- \[CHORE\] Use system information in agent for mem & cpu, drop node-os-utils, and dont take into account swap for used meme 🧹 [\#101](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/101)
+
+**Merged pull requests:**
+
+- \[CHORE\] Chore fix v050 [\#889](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/889) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] V0.5.0 - Alpha [\#886](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/886) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- fix\(proxy\): change to `error_log /dev/null` [\#885](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/885) ([Bergruebe](https://github.com/Bergruebe))
+- \[FEATURE/CORE/BUG\] Prepare 0.5.0 [\#883](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/883) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Refactor NewDeviceModal to use pre-check functions for Docker, Ansibl… [\#881](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/881) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump @vue-flow/core from 1.42.5 to 1.43.1 in /site [\#880](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/880) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump axios from 1.8.4 to 1.9.0 in /site [\#879](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/879) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump antd from 5.24.6 to 5.24.8 in /client [\#878](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/878) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node-mocks-http from 1.16.2 to 1.17.0 in /server [\#877](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/877) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @typescript-eslint/eslint-plugin from 8.29.1 to 8.31.0 in /client [\#875](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/875) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vuetify from 3.8.1 to 3.8.2 in /site [\#871](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/871) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump nginx from 1.27.4 to 1.27.5 in /proxy [\#868](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/868) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @umijs/lint from 4.4.6 to 4.4.8 in /client [\#863](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/863) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @umijs/max from 4.4.6 to 4.4.8 in /client [\#862](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/862) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump the npm\_and\_yarn group across 2 directories with 1 update [\#860](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/860) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[FEATURE\] Feat plugins system [\#859](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/859) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump @types/node from 22.14.0 to 22.14.1 in /server [\#857](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/857) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint-plugin-import-x from 4.10.2 to 4.10.3 in /server [\#856](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/856) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vuetify from 3.8.0 to 3.8.1 in /site [\#854](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/854) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @typescript-eslint/eslint-plugin from 8.28.0 to 8.29.1 in /client [\#853](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/853) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump lint-staged from 15.5.0 to 15.5.1 in /client [\#852](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/852) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump eslint-plugin-react from 7.37.4 to 7.37.5 in /client [\#851](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/851) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[CHORE\] Refacto telemetry module for event tracking and monitoring [\#849](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/849) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump @babel/helpers from 7.24.0 to 7.27.0 in /client in the npm\_and\_yarn group [\#848](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/848) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump the npm\_and\_yarn group in /site with 2 updates [\#847](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/847) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump typescript from 5.7.3 to 5.8.3 in /shared-lib [\#846](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/846) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vuetify from 3.7.13 to 3.8.0 in /site [\#845](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/845) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.8.0-alpine to 23.11.0-alpine in /client [\#844](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/844) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.8.0-alpine to 23.11.0-alpine in /server [\#842](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/842) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @vue-flow/core from 1.42.1 to 1.42.5 in /site [\#840](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/840) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @vue-flow/minimap from 1.5.2 to 1.5.3 in /site [\#838](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/838) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vite from 6.2.0 to 6.2.3 in /server in the npm\_and\_yarn group [\#832](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/832) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump swiper from 11.2.4 to 11.2.6 in /site [\#830](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/830) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump axios from 1.7.9 to 1.8.4 in /site [\#827](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/827) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Chore refacto nestjs [\#817](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/817) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Ensure async usage in test assertions and update dependencies [\#791](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/791) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Chore refacto frontend props [\#789](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/789) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump vuetify from 3.7.12 to 3.7.13 in /site [\#778](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/778) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump swiper from 11.2.2 to 11.2.4 in /site [\#756](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/756) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v0.1.30](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.30) (2025-02-22)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/V0.1.30...v0.1.30)
+
 ## [V0.1.30](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/V0.1.30) (2025-02-22)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.29...V0.1.30)
@@ -23,11 +95,13 @@
 
 **Merged pull requests:**
 
-- \[CHORE\] Set a minimum height for NewDeviceModal components [\#770](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/770) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
-- \[CHORE\] Update dependencies and bump package version to 0.1.29 [\#764](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/764) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump vuetify from 3.7.11 to 3.7.12 in /site [\#755](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/755) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 23.7.0-alpine to 23.8.0-alpine in /client [\#754](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/754) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 23.7.0-alpine to 23.8.0-alpine in /server [\#753](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/753) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[DOC\] Refactor playbooks documentation and improve update instructions [\#786](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/786) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Delete unused animation JSON file & bump libs [\#777](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/777) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Set a minimum height for NewDeviceModal components [\#770](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/770) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Update dependencies and bump package version to 0.1.29 [\#764](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/764) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.1.29](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.29) (2025-02-18)
 
@@ -560,6 +634,7 @@
 - \[CHORE\] Refacto ExtraVars 🧹 [\#263](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/263)
 - \[FEATURE\] Compatibility for docker environments with a TLS Configuration [\#218](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/218)
 - \[FEAT\] Enhanced services: Create Network, Volumes & deploy single image 🔥 [\#179](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/179)
+- \[TEST\] Unit tests for Directory Tree util 🧪 [\#55](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/55)
 - \[FEAT\] Create docker network & volume [\#287](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/287) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Add Ansible SmartFailure detection and handling [\#251](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/251) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[FEAT\] Feat ansible configuration mgt [\#236](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/236) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
@@ -945,15 +1020,15 @@
 
 ## [v0.1.10](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.10) (2024-06-07)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.10)
-
-## [v0.1.9](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.9) (2024-06-06)
-
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.9)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.10)
 
 ## [v0.1.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.8) (2024-06-06)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.8)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.8)
+
+## [v0.1.9](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.9) (2024-06-06)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.9)
 
 ## [v0.1.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.7) (2024-06-06)
 

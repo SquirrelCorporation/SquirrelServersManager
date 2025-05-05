@@ -48,7 +48,7 @@ export default [
   },
   {
     path: '/stack',
-    name: 'Stack',
+    name: 'Stacks',
     icon: 'BuildOutlined',
     access: 'canAdmin',
     routes: [
@@ -67,6 +67,20 @@ export default [
         icon: 'ApartmentOutlined',
         path: '/stack/compose',
         component: './ComposeEditor',
+      },
+    ],
+  },
+  {
+    path: '/plugins',
+    name: 'Extensions',
+    icon: 'PartitionOutlined',
+    access: 'canAdmin',
+    routes: [
+      {
+        path: '/plugins',
+        name: 'Plugins',
+        icon: 'AppstoreAddOutlined',
+        component: './Plugins',
       },
     ],
   },
@@ -114,5 +128,10 @@ export default [
   {
     path: '/manage/devices/ssh/:id',
     component: './Devices/DeviceSSHTerminal',
+  },
+  {
+    path: '/plugins/:pluginId',
+    hideInMenu: true,
+    component: '@/plugins/components/PluginPageRenderer',
   },
 ];

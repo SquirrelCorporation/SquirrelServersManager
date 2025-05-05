@@ -24,15 +24,16 @@ import {
 import moment from 'moment';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
+import { ContainerTypes } from 'ssm-shared-lib/distribution/enums/container';
 
 export type ContainerDetailsProps = {
-  container: API.Container;
+  container: API.Container & { displayType: ContainerTypes.DOCKER };
 };
 
 const DockerContainerDetails: React.FC<ContainerDetailsProps> = ({
   container,
 }) => (
-  <ProDescriptions<API.Container>
+  <ProDescriptions<API.Container & { displayType: ContainerTypes.DOCKER }>
     style={{ marginBottom: 30 }}
     column={2}
     // bordered
@@ -231,7 +232,8 @@ const DockerContainerDetails: React.FC<ContainerDetailsProps> = ({
         title: 'Bindings',
         span: 2,
         render: (_, entity) =>
-          (entity?.ports?.length > 0 &&
+          (entity?.ports?.length &&
+            entity?.ports?.length > 0 &&
             entity?.ports
               ?.filter((e) => e.IP === '0.0.0.0')
               ?.map((e) => (

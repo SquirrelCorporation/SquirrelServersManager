@@ -82,3 +82,26 @@ Set `TELEMETRY_ENABLED` to `false` in your `.env` file.
 **Note:**
 This is an Alpha version. It may not work on your system. We are looking for testers and contributors.
 Absolutely no warranties.
+
+# Git Hooks
+
+This project uses Husky to run pre-commit checks. Before each commit:
+- The project will be built
+- All tests will be run
+
+This ensures that no broken code is committed to the repository.
+
+## Setup
+
+The hooks will be installed automatically when you run:
+```bash
+npm install
+```
+
+## Skipping Hooks
+
+In rare cases where you need to skip the pre-commit checks (not recommended), you can use:
+```bash
+git commit --no-verify
+```
+Or uncheck "Run Git hooks" in WebStorm's commit dialog.

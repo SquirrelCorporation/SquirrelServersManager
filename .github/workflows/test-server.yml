@@ -35,15 +35,27 @@ jobs:
     - name: Build
       working-directory: ./shared-lib
       run: NODE_ENV=production npm run build --if-present
+    - name: Install NestJS CLI
+      run: npm install -g @nestjs/cli
     - name: Install
       working-directory: ./server
       run: npm ci
+    - name: Type Check
+      working-directory: ./server
+      run: npx tsc --noEmit
     - name: Build
       working-directory: ./server
       run: NODE_ENV=production npm run build --if-present
-    - name: Test
+    - name: Test with Coverage
       working-directory: ./server
-      run: npm test
+      run: npm run coverage
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV }}
+        directory: ./server/coverage
+        flags: server
+        fail_ci_if_error: false
     - name: Test Python
       working-directory: ./server
       run: npm run test:python

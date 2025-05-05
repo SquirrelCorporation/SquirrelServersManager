@@ -1,45 +1,26 @@
-import { API } from 'ssm-shared-lib';
+import taskStatusTimeline from '@/components/PlaybookExecutionModal/TaskStatusTimeline';
+// Import the mocked modules
 import {
-  beforeEach,
-  describe,
-  expect,
-  it,
-  Mock,
-  MockedFunction,
-  vi,
-} from 'vitest';
+  getExecLogs,
+  getTaskStatuses,
+} from '@/services/rest/playbooks/playbooks';
+import { API } from 'ssm-shared-lib';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import PlaybookExecutionHandler, {
   TaskStatusTimelineType,
 } from '../src/components/PlaybookExecutionModal/PlaybookExecutionHandler';
-import mockTransformToTaskStatusTimeline from '../src/components/PlaybookExecutionModal/TaskStatusTimeline';
-import {
-  getExecLogs,
-  getExecLogs as mockGetExecLogs,
-  getTaskStatuses,
-  getTaskStatuses as mockGetTaskStatuses,
-} from '../src/services/rest/playbooks';
 
 // Mock the external dependencies
-vi.mock('../src/services/rest/playbooks', () => ({
+vi.mock('@/services/rest/playbooks/playbooks', () => ({
   getExecLogs: vi.fn(),
   getTaskStatuses: vi.fn(),
 }));
 
-vi.mock('../src/components/PlaybookExecutionModal/TaskStatusTimeline', () => ({
-  __esModule: true,
-  default: vi.fn(),
+vi.mock('@/components/PlaybookExecutionModal/TaskStatusTimeline', () => ({
+  default: {
+    transformToTaskStatusTimeline: vi.fn(),
+  },
 }));
-
-// Cast the mock functions appropriately
-const mockedGetExecLogs = mockGetExecLogs as MockedFunction<typeof getExecLogs>;
-const mockedGetTaskStatuses = mockGetTaskStatuses as MockedFunction<
-  typeof getTaskStatuses
->;
-const mockedTransformToTaskStatusTimeline =
-  mockTransformToTaskStatusTimeline as unknown as MockedFunction<
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (execStatus: API.ExecStatus) => TaskStatusTimelineType
-  >;
 
 // Helper functions to create mock data
 const createExecStatus = (status: string, createdAt: Date): API.ExecStatus => ({
@@ -75,9 +56,8 @@ describe('PlaybookExecutionHandler', () => {
     execLogsCallBack = vi.fn();
     statusChangedCallBack = vi.fn();
 
-    mockedGetExecLogs.mockClear();
-    mockedGetTaskStatuses.mockClear();
-    mockedTransformToTaskStatusTimeline.mockClear();
+    // Clear all mocks
+    vi.clearAllMocks();
   });
 
   it('should reset the terminal', () => {
@@ -92,14 +72,20 @@ describe('PlaybookExecutionHandler', () => {
       createExecStatus('pending', new Date('2023-01-01T12:00:00Z')),
       createExecStatus('running', new Date('2023-01-01T12:01:00Z')),
     ];
-    // Proper mock setup with a Promise
-    mockedGetTaskStatuses.mockResolvedValue({
+
+    vi.mocked(getTaskStatuses).mockResolvedValue({
       success: true,
       message: '',
       data: { execId: 'execId', execStatuses: statuses },
     });
-    //@ts-ignore
-    mockedTransformToTaskStatusTimeline.mockReturnValue({});
+
+    vi.mocked(taskStatusTimeline.transformToTaskStatusTimeline).mockReturnValue(
+      {
+        _status: 'pending',
+        icon: 'icon',
+        title: 'Task Status',
+      } as TaskStatusTimelineType,
+    );
 
     const handler = new PlaybookExecutionHandler(
       setIsPollingEnabled,
@@ -110,6 +96,13 @@ describe('PlaybookExecutionHandler', () => {
     );
 
     await handler.pollingCallback('execId');
+
+    // Each unique status should trigger one call
+    expect(setSavedStatuses).toHaveBeenCalledTimes(2);
+    expect(statusChangedCallBack).toHaveBeenCalledTimes(2);
+
+    // Second call should not trigger additional callbacks since statuses are already in the set
+    await handler.pollingCallback('execId');
     expect(setSavedStatuses).toHaveBeenCalledTimes(2);
     expect(statusChangedCallBack).toHaveBeenCalledTimes(2);
   });
@@ -119,8 +112,8 @@ describe('PlaybookExecutionHandler', () => {
       createExecLog('logRunnerId1', new Date('2023-01-01T12:00:00Z'), 'log 1'),
       createExecLog('logRunnerId2', new Date('2023-01-01T12:01:00Z'), 'log 2'),
     ];
-    // Proper mock setup with a Promise
-    mockedGetExecLogs.mockResolvedValue({
+
+    vi.mocked(getExecLogs).mockResolvedValue({
       success: true,
       message: '',
       data: { execId: 'execId', execLogs: logs },
@@ -134,6 +127,12 @@ describe('PlaybookExecutionHandler', () => {
       setSavedStatuses,
     );
 
+    await handler.pollingCallback('execId');
+
+    // Each unique log should trigger one call
+    expect(execLogsCallBack).toHaveBeenCalledTimes(2);
+
+    // Second call should not trigger additional callbacks since logs are already in the set
     await handler.pollingCallback('execId');
     expect(execLogsCallBack).toHaveBeenCalledTimes(2);
   });

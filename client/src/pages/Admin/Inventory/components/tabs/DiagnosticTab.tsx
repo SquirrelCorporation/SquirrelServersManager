@@ -7,10 +7,10 @@ export type ConnectionTestTabProps = {
   device: Partial<API.DeviceItem>;
 };
 
-const DiagnosticTab: React.FC<ConnectionTestTabProps> = (props) => (
+const DiagnosticTab: React.FC<ConnectionTestTabProps> = ({ device }) => (
   <>
-    <ExistingDeviceConnectionTest device={props.device} />
-    <ExistingDeviceAdvancedDiagnostic device={props.device} />
+    <ExistingDeviceConnectionTest device={device} />
+    <ExistingDeviceAdvancedDiagnostic device={device} />
   </>
 );
 

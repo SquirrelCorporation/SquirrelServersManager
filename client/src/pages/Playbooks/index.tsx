@@ -10,17 +10,18 @@ import {
   deletePlaybook,
   patchPlaybook,
   readPlaybookContent,
-} from '@/services/rest/playbooks';
+} from '@/services/rest/playbooks/playbooks';
 import {
   createDirectoryInRepository,
   createEmptyPlaybookInRepository,
   deleteAnyInRepository,
   getPlaybooksRepositories,
-} from '@/services/rest/playbooks-repositories';
+} from '@/services/rest/playbooks/repositories';
 import { PlaySquareOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import Editor, { Monaco } from '@monaco-editor/react';
-import { Col, message, Result, Row, Spin, Typography } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Col, Result, Row, Spin, Typography } from 'antd';
 import type { DirectoryTreeProps } from 'antd/es/tree';
 import { editor } from 'monaco-editor';
 import { configureMonacoYaml } from 'monaco-yaml';
@@ -77,9 +78,11 @@ const Index: React.FC = () => {
             setIsLoading(false);
           });
       } else {
-        message.error(
-          'Selected file has no uuid - try to synchronize again the repo',
-        );
+        message.error({
+          content:
+            'Selected file has no uuid - try to synchronize again the repo',
+          duration: 6,
+        });
       }
     }
     setIsLoading(false);
@@ -124,7 +127,7 @@ const Index: React.FC = () => {
     setIsLoading(true);
     await deleteAnyInRepository(playbooksRepositoryUuid, path)
       .then(async () => {
-        message.warning(`File deleted`);
+        message.warning({ content: 'File deleted', duration: 6 });
         if (selectedFile?.path === path) {
           setSelectedFile(undefined);
         }
@@ -202,7 +205,10 @@ const Index: React.FC = () => {
       setIsLoading(true);
       await deletePlaybook(selectedFile.uuid)
         .then(async () => {
-          message.warning(`Playbook '${selectedFile.name}' deleted`);
+          message.warning({
+            content: `Playbook '${selectedFile.name}' deleted`,
+            duration: 6,
+          });
           setSelectedFile(undefined);
           await asyncFetch();
           setIsLoading(false);
@@ -211,7 +217,7 @@ const Index: React.FC = () => {
           setIsLoading(false);
         });
     } else {
-      message.error(`Internal Error`);
+      message.error({ content: 'Internal Error', duration: 6 });
     }
   };
 
@@ -222,14 +228,17 @@ const Index: React.FC = () => {
       // @ts-ignore
       await patchPlaybook(selectedFile.uuid, editorRef.current.getValue())
         .then(() => {
-          message.success(`Playbook '${selectedFile.name}' saved`);
+          message.success({
+            content: `Playbook '${selectedFile.name}' saved`,
+            duration: 6,
+          });
           setIsLoading(false);
         })
         .catch(() => {
           setIsLoading(false);
         });
     } else {
-      message.error(`Internal - onClickSavePlaybook`);
+      message.error({ content: 'Internal - onClickSavePlaybook', duration: 6 });
     }
   };
 
@@ -238,7 +247,7 @@ const Index: React.FC = () => {
       // @ts-ignore
       editorRef?.current.setValue(downloadedContent);
     } else {
-      message.error(`Internal - Error editorRef`);
+      message.error({ content: 'Internal - Error editorRef', duration: 6 });
     }
   };
 
@@ -256,7 +265,10 @@ const Index: React.FC = () => {
         fullPath,
       )
         .then(async (e) => {
-          message.success(`Playbook '${fileName}' successfully created`);
+          message.success({
+            content: `Playbook '${fileName}' successfully created`,
+            duration: 6,
+          });
           await asyncFetch(e.data);
           setIsLoading(false);
           return true;
@@ -274,7 +286,10 @@ const Index: React.FC = () => {
         fullPath,
       )
         .then(async () => {
-          message.success(`Directory '${fileName}' successfully created`);
+          message.success({
+            content: `Directory '${fileName}' successfully created`,
+            duration: 6,
+          });
           await asyncFetch();
           setIsLoading(false);
           return true;

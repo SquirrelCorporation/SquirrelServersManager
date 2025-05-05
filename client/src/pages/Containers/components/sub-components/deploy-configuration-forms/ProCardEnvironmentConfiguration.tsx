@@ -10,9 +10,13 @@ import { Space } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
-const ProCardEnvironmentConfiguration: React.FC<{ template: API.Template }> = (
-  props,
-) => {
+type ProCardEnvironmentConfigurationProps = {
+  template: API.Template;
+};
+
+const ProCardEnvironmentConfiguration: React.FC<
+  ProCardEnvironmentConfigurationProps
+> = ({ template }) => {
   return (
     <ProCard
       title={
@@ -32,7 +36,7 @@ const ProCardEnvironmentConfiguration: React.FC<{ template: API.Template }> = (
             creatorButtonText: 'Add a new env',
           }}
           copyIconProps={false}
-          initialValue={props.template?.env?.map((e) => {
+          initialValue={template?.env?.map((e) => {
             return {
               name: e.name,
               label: e.label,
