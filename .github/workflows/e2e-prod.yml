@@ -1,0 +1,52 @@
+name: '[E2E] Fullstack Production Health Check'
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  e2e-health:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      - name: Build and start stack
+        run: |
+          docker compose -f docker-compose.prod.yml up -d --build
+
+      - name: Wait for server health
+        run: |
+          for i in {1..20}; do
+            if curl -fs http://localhost:3000/ping; then
+              echo "Server is healthy!"
+              exit 0
+            fi
+            echo "Waiting for server... ($i/20)"
+            sleep 10
+          done
+          echo "Server did not become healthy in time." && exit 1
+
+      - name: Wait for client UI
+        run: |
+          for i in {1..20}; do
+            if curl -fs http://localhost:8000; then
+              echo "Client UI is reachable!"
+              exit 0
+            fi
+            echo "Waiting for client UI... ($i/20)"
+            sleep 10
+          done
+          echo "Client UI did not become reachable in time." && exit 1
+
+      - name: Tear down stack
+        if: always()
+        run: |
+          docker compose -f docker-compose.prod.yml down 
