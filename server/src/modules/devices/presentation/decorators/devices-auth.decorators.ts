@@ -1,7 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { ApiErrorResponse, ApiSuccessResponse } from '@infrastructure/models/api-response.model';
-import { ApiStandardResponse } from '@infrastructure/decorators/api-standard-response.decorator';
 import { UpdateDeviceAuthDto } from '../dtos/device-auth.dto';
 import { UpdateDockerAuthDto } from '../dtos/update-docker-auth.dto';
 import { UpdateProxmoxAuthDto } from '../dtos/update-proxmox-auth.dto';
@@ -13,7 +12,11 @@ export function GetDeviceAuthDoc() {
   return applyDecorators(
     ApiOperation({ summary: 'Get device authentication details' }),
     ApiParam({ name: 'uuid', description: 'Device UUID' }),
-    ApiStandardResponse(DeviceAuthResponseDto),
+    ApiResponse({
+      status: 200,
+      description: 'Device authentication details',
+      type: DeviceAuthResponseDto,
+    }),
     ApiResponse({
       status: 404,
       description: 'Device or device authentication not found',
@@ -26,8 +29,15 @@ export function UpdateDeviceAuthDoc() {
   return applyDecorators(
     ApiOperation({ summary: 'Update device authentication details' }),
     ApiParam({ name: 'uuid', description: 'Device UUID' }),
-    ApiBody({ type: UpdateDeviceAuthDto }),
-    ApiStandardResponse(DeviceAuthResponseDto),
+    ApiBody({
+      type: UpdateDeviceAuthDto,
+      description: 'Device authentication update data',
+    }),
+    ApiResponse({
+      status: 200,
+      description: 'Device authentication updated successfully',
+      type: DeviceAuthResponseDto,
+    }),
     ApiResponse({
       status: 404,
       description: 'Device or device authentication not found',
@@ -57,11 +67,14 @@ export function UpdateDockerAuthDoc() {
   return applyDecorators(
     ApiOperation({ summary: 'Update Docker authentication details' }),
     ApiParam({ name: 'uuid', description: 'Device UUID' }),
-    ApiBody({ type: UpdateDockerAuthDto }),
+    ApiBody({
+      type: UpdateDockerAuthDto,
+      description: 'Docker authentication update data',
+    }),
     ApiResponse({
       status: 200,
       description: 'Docker authentication updated successfully',
-      schema: { $ref: '#/components/schemas/IDockerAuth' },
+      type: DeviceAuthResponseDto,
     }),
     ApiResponse({
       status: 404,
@@ -75,11 +88,16 @@ export function UploadDockerAuthCertsDoc() {
   return applyDecorators(
     ApiOperation({ summary: 'Upload Docker authentication certificates' }),
     ApiParam({ name: 'uuid', description: 'Device UUID' }),
-    ApiParam({ name: 'type', description: 'Certificate type (ca, cert, key)' }),
+    ApiParam({
+      name: 'type',
+      description: 'Certificate type',
+      enum: ['ca', 'cert', 'key'],
+    }),
     ApiConsumes('multipart/form-data'),
     ApiBody({
       schema: {
         type: 'object',
+        required: ['file'],
         properties: {
           file: {
             type: 'string',
@@ -111,7 +129,11 @@ export function DeleteDockerAuthCertsDoc() {
   return applyDecorators(
     ApiOperation({ summary: 'Delete Docker authentication certificates' }),
     ApiParam({ name: 'uuid', description: 'Device UUID' }),
-    ApiParam({ name: 'type', description: 'Certificate type (ca, cert, key)' }),
+    ApiParam({
+      name: 'type',
+      description: 'Certificate type',
+      enum: ['ca', 'cert', 'key'],
+    }),
     ApiResponse({
       status: 200,
       description: 'Docker certificate deleted successfully',
@@ -129,11 +151,14 @@ export function UpdateProxmoxAuthDoc() {
   return applyDecorators(
     ApiOperation({ summary: 'Update Proxmox authentication details' }),
     ApiParam({ name: 'uuid', description: 'Device UUID' }),
-    ApiBody({ type: UpdateProxmoxAuthDto }),
+    ApiBody({
+      type: UpdateProxmoxAuthDto,
+      description: 'Proxmox authentication update data',
+    }),
     ApiResponse({
       status: 200,
       description: 'Proxmox authentication updated successfully',
-      schema: { $ref: '#/components/schemas/IProxmoxAuth' },
+      type: DeviceAuthResponseDto,
     }),
     ApiResponse({
       status: 404,
