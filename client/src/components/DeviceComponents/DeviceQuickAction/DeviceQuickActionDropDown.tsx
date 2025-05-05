@@ -12,23 +12,29 @@ import { TerminalStateProps } from '@/components/PlaybookExecutionModal';
 import PlaybookSelectionModal from '@/components/PlaybookSelection/PlaybookSelectionModal';
 import { DownOutlined } from '@ant-design/icons';
 import { history } from '@umijs/max';
-import { Dropdown, MenuProps, Popconfirm, Space } from 'antd';
+import { Dropdown, MenuProps, Popconfirm, Space, message } from 'antd';
 import { ItemType } from 'rc-menu/es/interface';
 import React, { Dispatch, ReactNode, RefObject, SetStateAction } from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';
+import {
+  playbookExecutionEvents,
+  PLAYBOOK_EXECUTION_START,
+} from '@/components/HeaderComponents/PlaybookExecutionWidget';
+import {
+  executePlaybook,
+  executePlaybookByQuickRef,
+} from '@/services/rest/playbooks/playbooks';
 
 export type QuickActionProps = {
   onDropDownClicked: any;
   advancedMenu?: boolean;
-  setTerminal: Dispatch<SetStateAction<TerminalStateProps>>;
   target?: API.DeviceItem;
-  children?: ReactNode;
+  children?: React.ReactNode;
 };
 
 const DeviceQuickActionDropDown: React.FC<QuickActionProps> = ({
   onDropDownClicked,
   advancedMenu,
-  setTerminal,
   target,
   children,
 }) => {
@@ -42,14 +48,13 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = ({
     React.createRef<SFTPDrawerHandles>();
   const deviceInformationRef: RefObject<DeviceInformationModalHandles> =
     React.createRef<DeviceInformationModalHandles>();
-  const onClick: MenuProps['onClick'] = ({ key }) => {
+  const onClick: MenuProps['onClick'] = async ({ key }) => {
     const idx = parseInt(key);
     if (idx >= 0) {
       if (idx >= DeviceQuickActionReference.length) {
         alert('Internal Error');
         return;
       }
-
       if (DeviceQuickActionReference[idx].action === Actions.CONNECT) {
         history.push({
           pathname: `/manage/devices/ssh/${target?.uuid}`,
@@ -69,24 +74,44 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = ({
         return;
       }
       if (DeviceQuickActionReference[idx].type === Types.PLAYBOOK) {
+        const quickRef = DeviceQuickActionReference[idx].playbookQuickRef;
+        const displayName = DeviceQuickActionReference[idx].label;
+        const doExecute = async () => {
+          try {
+            if (!quickRef) {
+              message.error({
+                type: 'error',
+                content: 'Internal error: playbook reference is missing',
+                duration: 8,
+              });
+              return;
+            }
+            const res = await executePlaybookByQuickRef(
+              quickRef,
+              target ? [target.uuid] : [],
+              undefined,
+              undefined,
+            );
+            playbookExecutionEvents.emit(PLAYBOOK_EXECUTION_START, {
+              execId: res.data.execId,
+              displayName,
+            });
+          } catch (error) {
+            message.error({
+              type: 'error',
+              content: 'Error running playbook',
+              duration: 8,
+            });
+          }
+        };
         if (DeviceQuickActionReference[idx].needConfirmation) {
           setShowConfirmation({
             visible: true,
-            onConfirm: () => {
-              setTerminal({
-                isOpen: true,
-                quickRef: DeviceQuickActionReference[idx].playbookQuickRef,
-                target: target ? [target] : undefined,
-              });
-            },
+            onConfirm: doExecute,
           });
           return;
         }
-        setTerminal({
-          isOpen: true,
-          quickRef: DeviceQuickActionReference[idx].playbookQuickRef,
-          target: target ? [target] : undefined,
-        });
+        doExecute();
         return;
       }
       if (DeviceQuickActionReference[idx].type === Types.PLAYBOOK_SELECTION) {
@@ -124,21 +149,31 @@ const DeviceQuickActionDropDown: React.FC<QuickActionProps> = ({
     }
   }) as ItemType[];
 
-  const onSelectPlaybook = (
+  const onSelectPlaybook = async (
     playbook: string,
     playbookName: string,
     _target: API.DeviceItem[] | undefined,
     extraVars?: API.ExtraVars,
     mode?: SsmAnsible.ExecutionMode,
   ) => {
-    setTerminal({
-      isOpen: true,
-      command: playbook,
-      target: _target,
-      extraVars: extraVars,
-      playbookName: playbookName,
-      mode: mode,
-    });
+    try {
+      const res = await executePlaybook(
+        playbook,
+        _target ? _target.map((e) => e.uuid) : [],
+        extraVars,
+        mode,
+      );
+      playbookExecutionEvents.emit(PLAYBOOK_EXECUTION_START, {
+        execId: res.data.execId,
+        displayName: playbookName,
+      });
+    } catch (error) {
+      message.error({
+        type: 'error',
+        content: 'Error running playbook',
+        duration: 8,
+      });
+    }
   };
 
   return (

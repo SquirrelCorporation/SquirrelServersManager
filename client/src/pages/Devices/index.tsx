@@ -3,6 +3,7 @@ import { CarbonBatchJob } from '@/components/Icons/CustomIcons';
 import { TerminalStateProps } from '@/components/PlaybookExecutionModal';
 import Title, { TitleColors } from '@/components/Template/Title';
 import { getDevices } from '@/services/rest/devices/devices';
+import { executePlaybook } from '@/services/rest/playbooks/playbooks';
 import {
   AppstoreOutlined,
   ControlOutlined,
@@ -15,6 +16,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import React, { memo, Suspense, useCallback, useMemo, useState } from 'react';
 import { API, SsmStatus } from 'ssm-shared-lib';
 import styles from './Devices.less';
+import {
+  playbookExecutionEvents,
+  PLAYBOOK_EXECUTION_START,
+} from '@/components/HeaderComponents/PlaybookExecutionWidget';
 
 const DeviceQuickActionDropDown = React.lazy(
   () =>
@@ -33,13 +38,6 @@ const OsLogo = (logoFile: string | undefined): string => {
   return OriginalOsLogo(logoFile);
 };
 
-const initialTerminalState: TerminalStateProps = {
-  isOpen: false,
-  command: undefined,
-  target: undefined,
-  playbookName: undefined,
-};
-
 const shineAnimation = {
   initial: {
     backgroundPosition: '200% 0',
@@ -55,14 +53,26 @@ const shineAnimation = {
   },
 };
 
+const executePlaybookWithTarget = async (
+  playbook: string,
+  displayName: string,
+  target: API.DeviceItem[],
+) => {
+  try {
+    const res = await executePlaybook(
+      playbook,
+      target.map((e) => e.uuid),
+    );
+    playbookExecutionEvents.emit(PLAYBOOK_EXECUTION_START, {
+      execId: res.data.execId,
+      displayName,
+    });
+  } catch (error) {
+    // Handle error (e.g., show notification)
+  }
+};
+
 const DeviceListPage = memo(() => {
-  const [terminal, setTerminal] =
-    useState<TerminalStateProps>(initialTerminalState);
-
-  const openOrCloseTerminalModal = useCallback((open: boolean) => {
-    setTerminal((prevState) => ({ ...prevState, isOpen: open }));
-  }, []);
-
   const onDropDownClicked = useCallback((key: string) => {
     switch (
       key
@@ -107,7 +117,6 @@ const DeviceListPage = memo(() => {
               <DeviceQuickActionDropDown
                 key={`quickAction-${item.uuid}`}
                 onDropDownClicked={onDropDownClicked}
-                setTerminal={setTerminal}
                 target={item}
               />,
             ]}
@@ -202,11 +211,6 @@ const DeviceListPage = memo(() => {
           </AnimatePresence>
         </Card>
       </div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <TerminalModal
-          terminalProps={{ ...terminal, setIsOpen: openOrCloseTerminalModal }}
-        />
-      </Suspense>
     </PageContainer>
   );
 });

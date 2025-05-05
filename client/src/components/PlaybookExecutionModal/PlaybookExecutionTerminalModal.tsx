@@ -5,13 +5,24 @@ import TerminalHandler, {
 import TerminalCore, {
   TerminalCoreHandles,
 } from '@/components/Terminal/TerminalCore';
-import { getAnsibleSmartFailure } from '@/services/rest/smart-failure/smart-failure';
-import { ClockCircleOutlined, ThunderboltOutlined } from '@ant-design/icons';
-import { DotLottie, DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { getExecLogs } from '@/services/rest/playbooks/playbooks';
+import styles from '../HeaderComponents/PlaybookExecutionWidget.less';
+import { Spin } from 'antd';
+import PlaybookExecutionHandler from '@/components/PlaybookExecutionModal/PlaybookExecutionHandler';
+import {
+  PLAYBOOK_EXECUTION_START,
+  playbookExecutionEvents,
+} from '../HeaderComponents/PlaybookExecutionWidget';
 
 import { Button, Col, Modal, notification, Row, Steps, Typography } from 'antd';
 import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { API, SsmAnsible } from 'ssm-shared-lib';
+import { API } from 'ssm-shared-lib';
+
+declare global {
+  interface Window {
+    setPlaybookWidgetRetry?: () => void;
+  }
+}
 
 export interface PlaybookExecutionTerminalModalHandles {
   resetTerminal: () => void;
@@ -54,9 +65,7 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
     ref,
   ) => {
     const taskInit: TaskStatusTimelineType = {
-      _status: 'created',
-      status: 'finish',
-      icon: <ClockCircleOutlined />,
+      status: 'created',
       title: 'created',
     };
     const statusesType: TaskStatusTimelineType[] = [taskInit];
@@ -64,13 +73,11 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
     const timerIdRef = useRef();
     const [hasReachedFinalStatus, setHasReachedFinalStatus] = useState(false);
     const terminalRef = useRef<TerminalCoreHandles>(null);
-    const [dotLottie, setDotLottie] = useState<DotLottie | null>(null);
     const [api, contextHolder] = notification.useNotification();
 
     useEffect(() => {
       if (hasReachedFinalStatus) {
         terminalRef?.current?.onDataIn('# Playbook execution finished', true);
-        dotLottie?.stop();
       }
     }, [hasReachedFinalStatus]);
 
@@ -94,51 +101,21 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
 
     const convertRunningStatusToFinish = () => {
       const hasRunning = savedStatuses.findIndex(
-        (status) => status._status === 'running',
+        (status) => status.status === 'running',
       );
       if (hasRunning !== -1 && hasRunning < savedStatuses.length - 1) {
-        savedStatuses[hasRunning].icon = <ThunderboltOutlined />;
         savedStatuses[hasRunning].status = 'finish';
-      }
-    };
-
-    const isFinalStatusFailed = async () => {
-      if (
-        savedStatuses?.find(
-          (status) => status._status === SsmAnsible.AnsibleTaskStatus.FAILED,
-        )
-      ) {
-        const res = await getAnsibleSmartFailure({ execId: execId });
-        if (res.data) {
-          api.open({
-            key: 'notification-failed',
-            message: 'The playbook execution failed',
-            duration: 0,
-            description: (
-              <>
-                <Typography.Paragraph>
-                  <b>Probable cause</b>: {res.data.cause}
-                  <br />
-                  <b>Probable Resolution</b>: {res.data.resolution}
-                </Typography.Paragraph>
-              </>
-            ),
-            icon: <Smart />,
-          });
-        }
       }
     };
 
     useEffect(() => {
       convertRunningStatusToFinish();
-      void isFinalStatusFailed();
     }, [savedStatuses]);
 
     useEffect(() => {
       const pollingCallback = () => terminalHandler.pollingCallback(execId);
 
       const startPolling = () => {
-        dotLottie?.play();
         terminalRef?.current?.onDataIn(
           '---\n' +
             '#  ,;;:;,\n' +
@@ -195,30 +172,38 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
       resetScreen,
     }));
 
+    // Fetch all logs once if modal is opened after execution is finished
+    useEffect(() => {
+      if (isOpen && !isPollingEnabled && execId) {
+        setHasReachedFinalStatus(true);
+        getExecLogs(execId).then((logs) => {
+          if (logs?.data?.execLogs) {
+            logs.data.execLogs.sort(
+              (a: API.ExecLog, b: API.ExecLog) =>
+                new Date(a.createdAt).getTime() -
+                new Date(b.createdAt).getTime(),
+            );
+            logs.data.execLogs.forEach((execLog: API.ExecLog) => {
+              if (execLog.stdout) {
+                terminalRef?.current?.onDataIn(execLog.stdout as string, true);
+              }
+            });
+          }
+        });
+      }
+    }, [isOpen, isPollingEnabled, execId]);
+
+    // Compute current status and isFinal for reactivity
     return (
       <>
         {contextHolder}
         <Modal
           open={isOpen}
           title={
-            <div style={{ verticalAlign: 'center' }}>
-              <DotLottieReact
-                dotLottieRefCallback={setDotLottie}
-                src="/lotties/running_squirrel.lottie"
-                autoplay
-                loop
-                style={{ height: '8%', width: '8%', display: 'inline-block' }}
-              />
-              <div
-                style={{
-                  display: 'inline-block',
-                  transform: 'translate(0, -50%)',
-                }}
-              >
-                Executing playbook {displayName}
-                ...{' '}
-              </div>
-            </div>
+            <>
+              Executing playbook {displayName}
+              ...{' '}
+            </>
           }
           onOk={handleOk}
           onCancel={handleCancel}
@@ -229,7 +214,14 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
               <Button
                 disabled={!hasReachedFinalStatus}
                 onClick={() => {
-                  void startTerminal();
+                  if (window.setPlaybookWidgetRetry) {
+                    window.setPlaybookWidgetRetry();
+                  }
+                  playbookExecutionEvents.emit(PLAYBOOK_EXECUTION_START, {
+                    execId,
+                    displayName,
+                  });
+                  setIsOpen(false);
                   api.destroy('notification-failed');
                 }}
               >
@@ -259,9 +251,41 @@ const PlaybookExecutionTerminalModal = React.forwardRef<
               </div>
             </Col>
           </Row>
-          <Row style={{ marginTop: '10px' }}>
+          <Row
+            style={{
+              marginTop: '10px',
+              textAlign: 'center',
+              flexDirection: 'column',
+              alignItems: 'center',
+              width: '100%',
+            }}
+          >
             <Col span={24}>
-              <Steps size="small" items={savedStatuses} />
+              <img
+                src="/squirrels/happy-fox.svg"
+                alt="Happy Fox"
+                style={{ height: 60, margin: '0 auto', display: 'block' }}
+              />
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: 8,
+                }}
+              >
+                {!hasReachedFinalStatus && (
+                  <Spin size="small" style={{ marginRight: 8 }} />
+                )}
+                <span
+                  className={
+                    !hasReachedFinalStatus ? styles['shimmer-text'] : ''
+                  }
+                >
+                  Playbook execution:{' '}
+                  {savedStatuses[savedStatuses.length - 1]?.title}
+                </span>
+              </div>
             </Col>
           </Row>
         </Modal>

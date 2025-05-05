@@ -30,7 +30,7 @@ RUN npm ci --verbose --no-audit
 COPY . .
 RUN npm run build
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["node", "./dist/src/index.js"]
+CMD ["node", "./dist/src/main.js"]
 
 FROM base AS dev
 ENV NODE_ENV=development
