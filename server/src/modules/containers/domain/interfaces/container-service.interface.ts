@@ -3,7 +3,7 @@ import { IDevice, IDeviceAuth } from '@modules/devices';
 import { PreCheckDockerConnectionDto } from '@modules/containers/presentation/dtos/pre-check-docker-connection.dto';
 import { IContainer } from '../../domain/entities/container.entity';
 
-export const CONTAINER_SERVICE = 'CONTAINER_SERVICE';
+export const CONTAINER_SERVICE = Symbol('CONTAINER_SERVICE');
 
 /**
  * Service interface for container operations

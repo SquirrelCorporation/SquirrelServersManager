@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
-import { Express } from 'express';
+import { Request } from 'express';
 import {
   ACTIONS,
   RESOURCES,
@@ -46,16 +46,30 @@ import {
   UploadDockerAuthCertsDoc,
 } from '../decorators/devices-auth.decorators';
 
+interface MulterFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  size: number;
+  destination: string;
+  filename: string;
+  path: string;
+  buffer: Buffer;
+}
+
 // Configure multer for file uploads
-const fileFilter = (req: any, file: Express.Multer.File, callback: any) => {
+const fileFilter = (
+  req: Request,
+  file: MulterFile,
+  callback: (error: Error | null, acceptFile: boolean) => void,
+) => {
   const allowedExtensions = /\.(pem|crt|key)$/;
   if (!file.originalname.match(allowedExtensions)) {
-    return callback(
-      new HttpException('Only .pem, .crt, or .key files are allowed', HttpStatus.BAD_REQUEST),
-      false,
-    );
+    callback(new Error('Only .pem, .crt, or .key files are allowed'), false);
+  } else {
+    callback(null, true);
   }
-  callback(null, true);
 };
 
 /**
@@ -316,13 +330,13 @@ export class DevicesAuthController {
   }
 
   @Post(':uuid/docker/certs/:type')
-  @UseInterceptors(FileInterceptor('file', { fileFilter }))
   @UploadDockerAuthCertsDoc()
+  @UseInterceptors(FileInterceptor('file', { fileFilter }))
   @ResourceAction(RESOURCES.DEVICE, ACTIONS.UPDATE)
   async uploadDockerAuthCerts(
     @Param('uuid') uuid: string,
     @Param('type') type: string,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file: MulterFile,
   ) {
     try {
       if (!['ca', 'cert', 'key'].includes(type)) {

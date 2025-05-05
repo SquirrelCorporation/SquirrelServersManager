@@ -146,3 +146,14 @@ To manually build the project your self, see this [section](/docs/technical-guid
 By default, SSM automatically reports anonymized basic usage statistics. This helps us understand how SSM is used and track its overall usage and growth. This data does not include any sensitive information. To disable anonymized telemetry, follow these steps:
 
 Set `TELEMETRY_ENABLED` to `false` in your `.env` file.
+
+## Next Steps
+
+After installing SSM, you'll need to set up your administrator account and get familiar with the system.
+
+<a href="/docs/getting-started/first-steps" class="next-step-card">
+  <div class="next-step-icon">👉</div>
+  <h2>First Time Setup</h2>
+  <div class="next-step-separator"></div>
+  <p>Create your admin account and get started with SSM</p>
+</a>

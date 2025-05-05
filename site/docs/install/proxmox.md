@@ -25,3 +25,14 @@ Wait several minutes until the script finishes the installation of SSM on a new 
 When the installation is complete, you should see a message like this:
 ![proxmox4](/install/proxmox-install-4.png)
 Access the UI by entering the provided address in your browser.
+
+## Next Steps
+
+After installing SSM on Proxmox, you'll need to set up your administrator account and get familiar with the system.
+
+<a href="/docs/getting-started/first-steps" class="next-step-card">
+  <div class="next-step-icon">👉</div>
+  <h2>First Time Setup</h2>
+  <div class="next-step-separator"></div>
+  <p>Create your admin account and get started with SSM</p>
+</a>

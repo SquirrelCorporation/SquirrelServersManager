@@ -18,6 +18,7 @@ Once authenticated and connected, agents can interact with SSM using the defined
 | Resource | List Devices                 | `devices://`           | Retrieves a list of managed devices.                               |
 | Tool     | Find All Containers        | `findAllContainers`    | Gets a list of all running containers.                             |
 | Tool     | Find Container By ID       | `findContainerById`    | Gets details for a specific container by its ID.                   |
+| Tool     | Container Action           | `containerAction`      | Performs actions (start/stop/restart/pause/kill) on a container.   |
 
 ### Tools vs. Resources
 

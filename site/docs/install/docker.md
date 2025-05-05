@@ -97,3 +97,14 @@ In some cases, you may need to delete the directory `./.data.prod` to completely
 :::
 
 - Once started, SSM will listen on port `8000` of your machine, where you can access the UI.
+
+## Next Steps
+
+After installing SSM, you'll need to set up your administrator account and get familiar with the system.
+
+<a href="/docs/getting-started/first-steps" class="next-step-card">
+  <div class="next-step-icon">👉</div>
+  <h2>First Time Setup</h2>
+  <div class="next-step-separator"></div>
+  <p>Create your admin account and get started with SSM</p>
+</a>

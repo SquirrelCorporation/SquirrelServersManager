@@ -105,118 +105,148 @@ export default defineConfig({
       '/docs/': [
         { text: 'Overview', link: '/docs/' },
         {
-          text: '→ ⚡ Quick Start', link: '/docs/quickstart.md', items: [
-            {
-              text: '📋 Requirements', link: '/docs/requirements.md'
-            },
-            {
-              text: '↪️ Updating SSM', link: '/docs/install/update.md'
-            },
-            {
-              text: '⛑️ Troubleshoot', link: '/docs/troubleshoot/troubleshoot.md'
-            }
-          ]
-        },
-        {text: 'Advanced', items: [
-            {
-              text: '📀 Alternative installs', link: '/docs/install/install.md'
-            },
-
-            {
-              text: '🛠 Development mode', link: '/docs/devmode.md'
-            },
+          text: 'Getting Started', link: '/docs/getting-started/', items: [
+            { text: 'Installation', link: '/docs/getting-started/installation' },
+            { text: 'First Steps', link: '/docs/getting-started/first-steps' },
+            { text: 'Requirements', link: '/docs/requirements' },
+            { text: 'Updating SSM', link: '/docs/install/update' },
+            { text: 'Troubleshooting', link: '/docs/troubleshoot/troubleshoot' }
           ]
         },
         {
-          text: 'User Guide', link: '/docs/userguide.md', items: [
-            { text: 'First time using SSM', link: '/docs/first-time.md' },
+          text: 'User Guides', link: '/docs/user-guides/', items: [
             {
-              text: 'Devices', items: [
-                {
-                  text: 'Adding a device', link: '/docs/devices/add-device.md'
-                },
-                {
-                  text: 'Deleting a device', link: '/docs/devices/delete-device.md'
-                },
-                {
-                  text: 'Device configuration', link: '/docs/devices/configuration/', items: [
-                    {text: 'SSH', link: '/docs/devices/configuration/ssh.md'},
-                    {text: 'Containers: Docker', link: '/docs/devices/configuration/docker.md'},
-                    {text: 'Containers: Proxmox', link: '/docs/devices/configuration/proxmox.md'},
-                    {text: 'Diagnostic', link: '/docs/devices/configuration/diagnostic.md'}
+              text: 'Devices', collapsed: false, items: [
+                { text: 'Adding Devices', link: '/docs/user-guides/devices/adding-devices' },
+                { text: 'Device Management', link: '/docs/user-guides/devices/management' },
+                { 
+                  text: 'Device Configuration', link: '/docs/user-guides/devices/configuration/', items: [
+                    { text: 'SSH', link: '/docs/user-guides/devices/configuration/ssh' },
+                    { text: 'Docker', link: '/docs/user-guides/devices/configuration/docker' },
+                    { text: 'Proxmox', link: '/docs/user-guides/devices/configuration/proxmox' },
+                    { text: 'Diagnostic', link: '/docs/user-guides/devices/configuration/diagnostic' }
                   ]
                 }
               ]
             },
             {
-              text: 'Containers', items: [
-                {text: 'Overview', link: '/docs/containers/containers.md'},
-                {text: 'Docker', items: [
-                  {text: 'Deploy from the Store', link: '/docs/containers/deploy-store.md'}
+              text: 'Containers', collapsed: false, items: [
+                { text: 'Overview', link: '/docs/user-guides/containers/management' },
+                { 
+                  text: 'Docker', items: [
+                    { text: 'Deploy from Store', link: '/docs/user-guides/containers/deploy-store' }
                   ]
                 },
                 {
                   text: 'Proxmox', items: [
-                    { text: 'Qemu/LXC Containers', link: '/docs/containers/qemu-lxc-containers.md' }
+                    { text: 'Qemu/LXC Containers', link: '/docs/user-guides/containers/qemu-lxc-containers' }
+                  ]
+                }
+              ]
+            },
+            {
+              text: 'Automations', collapsed: false, items: [
+                { text: 'Overview', link: '/docs/user-guides/automations/overview' },
+                { text: 'Creating Automations', link: '/docs/user-guides/automations/creating' },
+                { text: 'Managing Schedules', link: '/docs/user-guides/automations/schedules' }
+              ]
+            },
+            {
+              text: 'Stacks', collapsed: false, items: [
+                { text: 'Playbooks', items: [
+                    { text: 'Overview', link: '/docs/user-guides/stacks/playbooks/overview' },
+                    { text: 'Variables', link: '/docs/user-guides/stacks/playbooks/variables' },
+                    { text: 'Executing a Playbook', link: '/docs/user-guides/stacks/playbooks/executing' }
                   ]
                 },
-                ]
-            },
-            {
-              text: 'Automations',  items: [{text: 'Overview',link: '/docs/automations/automations.md'}]
-            },
-            {
-              text: 'Stacks - Playbooks', items: [
-                { text: 'Overview', link: '/docs/playbooks/playbooks.md' },
-                { text: 'Variables', link: '/docs/playbooks/playbooks-variables.md' },
-                { text: 'Executing a playbook', link: '/docs/playbooks/exec-playbook.md' },
-                ]
-            },
-            {
-              text: 'Stacks - Container', items: [
-                { text: 'Overview', link: '/docs/compose/editor.md' },
-                { text: 'Remote Container Stacks Repositories', link: '/docs/compose/remote-stacks.md' }
+                { text: 'Container Stacks', items: [
+                    { text: 'Compose Editor', link: '/docs/user-guides/stacks/containers/editor' },
+                    { text: 'Remote Stack Repositories', link: '/docs/user-guides/stacks/containers/remote-stacks' }
+                  ]
+                }
               ]
             },
             {
-              text: 'Playbooks Repositories', items: [
-
-                { text: 'Local Playbooks Repositories', link: '/docs/playbooks-repositories/local-playbooks.md' },
-                { text: 'Remote Playbooks Repositories', link: '/docs/playbooks-repositories/remote-playbooks.md' }
+              text: 'Repositories', collapsed: true, items: [
+                { text: 'Local Playbooks', link: '/docs/user-guides/repositories/local-playbooks' },
+                { text: 'Remote Playbooks', link: '/docs/user-guides/repositories/remote-playbooks' }
               ]
             },
             {
-              text: 'Settings', items: [
-                { text: 'Overview', link: '/docs/settings/settings.md' },
-                { text: 'Configuring a Registry', link: '/docs/settings/registry.md' }]
+              text: 'Settings', collapsed: true, items: [
+                { text: 'Overview', link: '/docs/user-guides/settings/overview' },
+                { text: 'Configuring a Registry', link: '/docs/user-guides/settings/registry' },
+                { text: 'MCP Settings', link: '/docs/user-guides/settings/mcp' }
+              ]
             }
           ]
         },
         {
-          text: 'Technical Guide', items: [
-            {
-              text: 'Manually installing SSM', link: '/docs/technical-guide/manual-install-ssm.md'
-            },
-            {
-              text: 'Manually installing the agent', link: '/docs/technical-guide/manual-install-agent.md'
-            },
-            { text: 'SSH/Connection' , link: '/docs/technical-guide/ssh.md'},
-            { text: 'Ansible', items: [
-                { text: 'Principles', link: '/docs/technical-guide/ansible.md'},
-                { text: 'SSH/Connection', link: '/docs/technical-guide/ansible-connection.md'},
-                { text: 'Configuration', link: '/docs/technical-guide/ansible-configuration.md'},
-              ]
-            },
-            { text: 'Docker/Containers Management', items: [
-                { text: 'Principles', link: '/docs/technical-guide/docker.md'},
-                { text: 'SSH/Connection', link: '/docs/technical-guide/docker-connection.md'},
-                { text: 'Labels', link: '/docs/technical-guide/containers-labelling.md'}
-              ]
-            },
+          text: 'Advanced Guides', collapsed: true, items: [
+            { text: 'Development Mode', link: '/docs/advanced-guides/devmode' },
+            { text: 'Advanced Automation', link: '/docs/advanced-guides/advanced-automation' },
+            { text: 'Security Hardening', link: '/docs/advanced-guides/security' },
+            { text: 'Alternative Installs', link: '/docs/advanced-guides/alternative-installs' }
           ]
         },
         {
-          text: 'Credits', link: '/docs/credits.md'
+          text: 'Concepts', collapsed: false, items: [
+            { text: 'Architecture Overview', link: '/docs/concepts/architecture' },
+            { text: 'Agentless Operation', link: '/docs/concepts/agentless' },
+            { text: 'Device Data Model', link: '/docs/concepts/device-model' },
+            { text: 'Security Model', link: '/docs/concepts/security' },
+            { text: 'Plugin System', link: '/docs/concepts/plugins' },
+            { text: 'Mental Models', items: [
+                { text: 'Devices', link: '/docs/concepts/models/devices' },
+                { text: 'Containers', link: '/docs/concepts/models/containers' },
+                { text: 'Automation', link: '/docs/concepts/models/automation' },
+                { text: 'Playbooks', link: '/docs/concepts/models/playbooks' }
+              ]
+            }
+          ]
+        },
+        {
+          text: 'Reference', collapsed: true, items: [
+            { text: 'Environment Variables', link: '/docs/reference/environment-variables' },
+            { text: 'SSH Configuration', link: '/docs/reference/ssh-configuration' },
+            { text: 'Docker Configuration', link: '/docs/reference/docker-configuration' },
+            { text: 'Technical Guide', items: [
+                { text: 'Manual Installation', link: '/docs/reference/technical-guide/manual-install-ssm' },
+                { text: 'Manual Agent Installation', link: '/docs/reference/technical-guide/manual-install-agent' },
+                { text: 'SSH/Connection', link: '/docs/reference/technical-guide/ssh' },
+                { text: 'Ansible', items: [
+                    { text: 'Principles', link: '/docs/reference/technical-guide/ansible' },
+                    { text: 'SSH/Connection', link: '/docs/reference/technical-guide/ansible-connection' },
+                    { text: 'Configuration', link: '/docs/reference/technical-guide/ansible-configuration' }
+                  ]
+                },
+                { text: 'Docker/Containers', items: [
+                    { text: 'Principles', link: '/docs/reference/technical-guide/docker' },
+                    { text: 'SSH/Connection', link: '/docs/reference/technical-guide/docker-connection' },
+                    { text: 'Labels', link: '/docs/reference/technical-guide/containers-labelling' }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          text: 'Developer', collapsed: true, items: [
+            { text: 'Plugins Overview', link: '/docs/developer/plugins' },
+            { text: 'Why Create a Plugin', link: '/docs/developer/why-create-a-plugin' },
+            { text: 'API Integration', link: '/docs/developer/api-integration' },
+            { text: 'Documentation Template', link: '/docs/developer/documentation-template' }
+          ]
+        },
+        {
+          text: 'Community', collapsed: true, items: [
+            { text: 'Contributing', link: '/docs/community/contributing' },
+            { text: 'Support', link: '/docs/community/support' },
+            { text: 'Roadmap', link: '/docs/community/roadmap' }
+          ]
+        },
+        {
+          text: 'Credits', link: '/docs/credits'
         }
       ]
     },
@@ -232,9 +262,5 @@ export default defineConfig({
       copyright: 'Copyright © 2025-present Squirrel Team & Contributors'
     }
   },
-  ignoreDeadLinks: [
-    // ignore all localhost links
-    /^https?:\/\/localhost/,
-    /^https:\/\/localhost/
-  ]
+  ignoreDeadLinks: true
 });

@@ -1,15 +1,12 @@
-import DefaultTheme from 'vitepress/theme';
-import 'vuetify/styles';
-import { createVuetify } from 'vuetify';
-import * as components from 'vuetify/components';
-import * as directives from 'vuetify/directives';
-import './custom.css';
-
-const vuetify = createVuetify({ components, directives })
+import DefaultTheme from 'vitepress/theme'
+import './custom.css'
+import QuickStartHeader from '../../components/QuickStartHeader.vue'
+import PageHeader from '../../components/PageHeader.vue'
 
 export default {
-  ...DefaultTheme,
+  extends: DefaultTheme,
   enhanceApp({ app }) {
-    app.use(vuetify)
-  },
+    app.component('QuickStartHeader', QuickStartHeader)
+    app.component('PageHeader', PageHeader)
+  }
 }
