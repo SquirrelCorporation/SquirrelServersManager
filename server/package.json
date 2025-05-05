@@ -22,7 +22,7 @@
   "author": "Squirrel Team",
   "dependencies": {
     "@aws-sdk/client-ecr": "^3.800.0",
-    "@keyv/redis": "^4.3.4",
+    "@keyv/redis": "^4.4.0",
     "@modelcontextprotocol/sdk": "1.11.0",
     "@nestjs/axios": "^4.0.0",
     "@nestjs/bull": "^11.0.2",
