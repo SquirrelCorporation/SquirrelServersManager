@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.1...HEAD)
+
+**Implemented enhancements:**
+
+- \[FEAT\] Feat new execution playbook design [\#902](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/902) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 ## [v0.5.0-alpha.1](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.1) (2025-05-02)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.30...v0.5.0-alpha.1)
