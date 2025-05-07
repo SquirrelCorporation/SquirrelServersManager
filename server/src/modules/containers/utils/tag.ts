@@ -74,7 +74,7 @@ function transformTag(transformFormula: string | undefined, originalTag: string)
     placeholders?.forEach((placeholder) => {
       const placeholderIndex = Number.parseInt(placeholder.substring(1), 10);
       transformedTag = transformedTag.replace(
-        new RegExp(placeholder.replace('$', '\\$'), 'g'),
+        new RegExp(placeholder.replace(/\$/g, '\\$'), 'g'),
         originalTagMatches[placeholderIndex],
       );
     });
