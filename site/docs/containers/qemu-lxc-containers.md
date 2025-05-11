@@ -1,1 +1,0 @@
-# QEMU / LXC Containers
