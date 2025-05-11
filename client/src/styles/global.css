@@ -1,0 +1,22 @@
+/* Add shimmer effect for notifications */
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0%,
+    #d0d0d0 20%,
+    #f0f0f0 40%,
+    #d0d0d0 60%,
+    #f0f0f0 80%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: shimmer 1.5s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
+} 

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="720" viewBox="0 0 900 720">
+  <defs>
+    <style>
+      /* .box class removed as styling is more direct now */
+      /* Specific strokes like .server-box, .client-box removed, handled by left border */
+      
+      .header { /* Main diagram title */
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-size: 16px; /* As per guide */
+        font-weight: bold;
+        text-anchor: middle;
+        fill: #dfdfd6;
+      }
+      
+      .subheader { /* Titles within nodes / major sections */
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-size: 16px;
+        font-weight: bold;
+        text-anchor: middle; /* Will be overridden by x adjustment for left-aligned titles in bordered nodes */
+        fill: #dfdfd6;
+      }
+      
+      .label { /* Subtext */
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-size: 13px;
+        text-anchor: middle; /* Will be overridden by x adjustment for left-aligned subtext in bordered nodes */
+        font-weight: 400;
+        fill: #98989f;
+      }
+      
+      .code { /* Subtext, specific for code blocks */
+        font-family: 'Courier New', monospace; /* Retain monospace for code examples */
+        font-size: 13px;
+        text-anchor: start;
+        font-weight: 400;
+        fill: #98989f;
+      }
+      
+      .arrow, .dashed-arrow {
+        stroke: #666666;
+        stroke-width: 1.5px;
+        fill: none;
+        marker-end: url(#arrowhead);
+      }
+      
+      .dashed-arrow {
+        stroke-dasharray: 5,5;
+      }
+      
+      /* .endpoint and .http-* classes removed, new styling applied directly */
+      
+      .method-label {
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-size: 13px;
+        font-weight: bold;
+        text-anchor: middle;
+        fill: #1b1b1f; /* Dark text for light #a8b1ff background */
+      }
+    </style>
+    
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666666" /> <!-- Arrowhead fill updated -->
+    </marker>
+    <!-- Shadow filter definition removed -->
+  </defs>
+  
+  <rect x="0" y="0" width="900" height="720" fill="#1e1e1e" rx="8" ry="8"/> <!-- Canvas background -->
+
+  <text x="450" y="30" class="header">Squirrel Servers Manager API Architecture</text>
+  
+  <!-- Client Side -->
+  <rect x="100" y="80" width="300" height="200" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="100" y="80" width="4" height="200" fill="#ff9800" rx="0" ry="0" /> <!-- Left border Orange -->
+  <text x="180" y="100" class="subheader" text-anchor="start">Client Application</text>
+  
+  <!-- API Service Layer (Nested) -->
+  <rect x="120" y="120" width="260" height="140" rx="8" ry="8" fill="#1b1b1f" />
+  <text x="220" y="140" class="subheader" text-anchor="start">REST Service Layer</text>
+  <text x="230" y="160" class="label" text-anchor="start">API Endpoint Services</text>
+  
+  <rect x="230" y="150" width="200" height="30" rx="8" ry="8" fill="#1b1b1f" />
+  <text x="230" y="190" class="label" text-anchor="start">Request</text>
+  
+  <rect x="260" y="190" width="90" height="30" rx="8" ry="8" fill="#1b1b1f" />
+  <text x="270" y="210" class="label" text-anchor="start">Error Handler</text>
+  
+  <rect x="150" y="230" width="200" height="20" rx="8" ry="8" fill="#1b1b1f" />
+  <text x="170" y="244" class="label" style="font-size: 13px;" text-anchor="start">@umijs/max Request Framework</text>
+  
+  <!-- Server Side -->
+  <rect x="500" y="80" width="300" height="440" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="500" y="80" width="4" height="440" fill="#3498db" rx="0" ry="0"/> <!-- Left border Blue -->
+  <text x="620" y="100" class="subheader" text-anchor="start">Server Application (NestJS)</text>
+  
+  <!-- Controller Layer (Nested) -->
+  <rect x="520" y="120" width="260" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <text x="640" y="140" class="subheader" text-anchor="start">Controller Layer</text>
+  
+  <rect x="540" y="150" width="100" height="20" rx="8" ry="8" fill="#1b1b1f" />
+  <text x="640" y="164" class="label" style="font-size: 13px;" text-anchor="start">Request Validation</text>
+  
+  <!-- Service Layer (Nested) -->
+  <rect x="520" y="190" width="260" height="50" rx="8" ry="8" fill="#1b1b1f" />
+  <text x="640" y="210" class="subheader" text-anchor="start">Service Layer</text>
+  
+  <rect x="540" y="220" width="220" height="20" rx="8" ry="8" fill="#1b1b1f" />
+  <text x="640" y="234" class="label" style="font-size: 13px;" text-anchor="start">Business Logic</text>
+  
+  <!-- Repository Layer (Nested) -->
+  <rect x="520" y="250" width="260" height="50" rx="8" ry="8" fill="#1b1b1f" />
+  <text x="640" y="270" class="subheader" text-anchor="start">Repository Layer</text>
+  
+  <rect x="540" y="280" width="220" height="20" rx="8" ry="8" fill="#1b1b1f" />
+  <text x="640" y="294" class="label" style="font-size: 13px;" text-anchor="start">Data Access</text>
+  
+  <!-- Infrastructure Layer (Nested) -->
+  <rect x="520" y="310" width="260" height="110" rx="8" ry="8" fill="#1b1b1f" />
+  <text x="640" y="330" class="subheader" text-anchor="start">Infrastructure Layer</text>
+  
+  <rect x="530" y="340" width="240" height="30" rx="8" ry="8" fill="#1b1b1f" />
+  <text x="640" y="360" class="label" style="font-size: 13px;" text-anchor="start">API Response Standardization</text>
+  
+  <rect x="530" y="380" width="110" height="30" rx="8" ry="8" fill="#1b1b1f" />
+  <text x="640" y="400" class="label" style="font-size: 13px;" text-anchor="start">Error Handling</text>
+  
+
+  <!-- Plugin System (Nested within Server) -->
+  <rect x="520" y="430" width="260" height="80" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="520" y="430" width="4" height="80" fill="#4caf50" rx="0" ry="0"/> <!-- Left border Green for nested plugin system -->
+  <text x="590" y="450" class="subheader" text-anchor="start">Plugin System</text>
+  
+  <rect x="530" y="460" width="240" height="20" rx="8" ry="8" fill="#1b1b1f" />
+  <text x="620" y="474" class="label" style="font-size: 13px;" text-anchor="start">Dynamic Plugin API Routes</text>
+  
+  <rect x="530" y="490" width="240" height="20" rx="8" ry="8" fill="#1b1b1f" />
+  <text x="620" y="504" class="label" style="font-size: 13px;" text-anchor="start">Custom Plugin Endpoints</text>
+  
+  <!-- Database -->
+  <rect x="600" y="540" width="100" height="40" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="600" y="540" width="4" height="40" fill="#1abc9c" rx="0" ry="0"/> <!-- Left border Teal -->
+  <text x="640" y="565" class="label" text-anchor="start">MongoDB</text>
+  
+  <!-- HTTP Request Example -->
+  <rect x="100" y="320" width="300" height="200" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="100" y="320" width="4" height="200" fill="#9b59b6" rx="0" ry="0"/> <!-- Left border Purple -->
+  <text x="200" y="340" class="subheader" text-anchor="start">HTTP Request Format</text>
+  
+  <rect x="110" y="350" width="280" height="160" rx="8" ry="8" fill="#1b1b1f" />
+  <text x="130" y="370" class="code">// Example GET Request</text>
+  <text x="130" y="390" class="code">GET /api/devices</text>
+  <text x="130" y="410" class="code">Authorization: Bearer {token}</text>
+  <text x="130" y="430" class="code">Accept: application/json</text>
+  <text x="130" y="470" class="code">// Query parameters</text>
+  <text x="130" y="490" class="code">?current=1&amp;pageSize=10</text>
+  
+  <!-- HTTP Response Example -->
+  <rect x="100" y="540" width="300" height="160" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="100" y="540" width="4" height="160" fill="#9b59b6" rx="0" ry="0"/> <!-- Left border Purple -->
+  <text x="200" y="560" class="subheader" text-anchor="start">HTTP Response Format</text>
+  
+  <rect x="110" y="570" width="280" height="120" rx="8" ry="8" fill="#1b1b1f" />
+  <text x="130" y="590" class="code">// Example JSON Response</text>
+  <text x="130" y="610" class="code">{</text>
+  <text x="130" y="630" class="code">  "success": true,</text>
+  <text x="130" y="650" class="code">  "message": "Operation successful",</text>
+  <text x="130" y="670" class="code">  "data": { ... }</text>
+  <text x="130" y="690" class="code">}</text>
+  
+  <!-- API Endpoints (Branch Nodes with #a8b1ff background) -->
+  <g transform="translate(0, 330)">
+    <rect x="420" y="0" width="60" height="25" rx="8" ry="8" fill="#a8b1ff" />
+    <text x="450" y="17" class="method-label">GET</text>
+    
+    <rect x="420" y="35" width="60" height="25" rx="8" ry="8" fill="#a8b1ff" />
+    <text x="450" y="52" class="method-label">POST</text>
+    
+    <rect x="420" y="70" width="60" height="25" rx="8" ry="8" fill="#a8b1ff" />
+    <text x="450" y="87" class="method-label">PUT</text>
+    
+    <rect x="420" y="105" width="60" height="25" rx="8" ry="8" fill="#a8b1ff" />
+    <text x="450" y="122" class="method-label">DELETE</text>
+  </g>
+  
+  <!-- Arrows -->
+  <path d="M 400 180 L 500 180" class="arrow" />
+  <text x="450" y="170" class="label" style="font-size: 13px; text-anchor: middle;">HTTP Requests</text>
+  
+  <path d="M 500 210 L 400 210" class="arrow" />
+  <text x="450" y="230" class="label" style="font-size: 13px; text-anchor: middle;">HTTP Responses</text>
+  
+  <!-- Vertical arrows within server block (simplified - may need y adjustments based on final layout) -->
+  <path d="M 650 180 L 650 190" class="arrow" /> <!-- Controller to Service -->
+  <path d="M 650 240 L 650 250" class="arrow" /> <!-- Service to Repository -->
+  <path d="M 650 300 L 650 310" class="arrow" /> <!-- Repository to Infrastructure -->
+  
+  <path d="M 650 420 L 650 430" class="dashed-arrow" /> <!-- Infrastructure to Plugin System -->
+  <path d="M 650 510 L 650 540" class="arrow" /> <!-- Plugin System to DB -->
+  
+  <!-- Client-Server Integration -->
+  <path d="M 400 250 C 430 260, 470 260, 500 250" class="dashed-arrow" />
+  <text x="450" y="270" class="label" style="font-size: 13px; text-anchor: middle;">Shared Library</text>
+</svg>
