@@ -1,344 +1,467 @@
-# Documentation Template
+---
+layout: FeatureGuideLayout
+title: Documentation Templates
+icon: 📄
+time: 15 min read
+signetColor: '#23233e'
+nextStep:
+  icon: 📝
+  title: Contribution Guide
+  description: Learn how to contribute documentation
+  link: /docs/community/contributing
+credits: false
+---
 
-<script setup>
-// You can use Vue components 
-import { ref } from 'vue'
-const count = ref(0)
-</script>
-
-:::tip 🌰 In a Nutshell
-- This is a template file showing VitePress features
-- Use it as a reference when creating new documentation
-- Copy elements from here to maintain style consistency
+:::tip In a Nutshell (🌰)
+- All SSM documentation must use one of our official templates
+- Templates enforce consistent structure, required frontmatter, and styling
+- Vue components provide interactive elements like diagrams and code examples
+- Following documentation standards ensures a cohesive user experience
 :::
 
-## Introduction
+# Documentation Templates
 
-This template demonstrates the recommended documentation style for Squirrel Servers Manager. It includes examples of various VitePress elements and formatting guidelines.
+The Squirrel Servers Manager documentation system uses a set of standardized templates, components, and styling to create a consistent, professional documentation experience. This guide provides a comprehensive overview of all documentation elements and how to use them effectively.
 
-## Writing Style Examples
+## Why Use Templates?
 
-### Clear & Concise Sentences
+Templates provide several benefits:
 
-✅ **Good**: SSM connects to your server using SSH.
+- **Consistent Structure**: Users can navigate any page with familiar patterns
+- **Complete Information**: Ensure all necessary sections are included
+- **Professional Appearance**: Uniform styling across all documentation
+- **Developer Experience**: Focus on content creation, not formatting details
+- **Accessibility**: Templates include built-in accessibility features
 
-❌ **Avoid**: The connection from the Squirrel Servers Manager application to your server infrastructure is established utilizing the Secure Shell protocol.
+## Available Templates
 
-### Direct Instructions
+<FeatureGrid>
+  <FeatureCard title="Feature Guide" description="Step-by-step feature documentation with prerequisites, instructions, and examples." icon="🛠️" />
+</FeatureGrid>
 
-✅ **Good**: Click the Add Device button.
+### Feature Guide Template
 
-❌ **Avoid**: Users should proceed to click on the button labeled "Add Device" when they want to add a new device.
+The Feature Guide template is ideal for:
 
-## VitePress Elements
+- Step-by-step feature usage instructions
+- Configuration guides
+- User-facing functionality documentation
 
-### Tabbed Content
+```md
+---
+layout: FeatureGuideLayout
+title: "Feature Name"
+icon: 🛠️
+time: 5 min read
+signetColor: '#3a5ccc'
+nextStep:
+  icon: 📖
+  title: Next Guide
+  description: Learn about the next feature
+  link: /docs/next-guide
+credits: true
+---
+
+:::tip In a Nutshell (🌰)
+- Key summary points for this feature
+:::
+
+## Overview
+
+Describe the feature, its purpose, and when to use it.
+
+## Configuration
+
+Provide step-by-step configuration instructions, using code blocks and screenshots as needed.
+
+```bash
+# Example command
+ssm feature enable
+```
+
+## Overview
+
+Explain the purpose and context of this reference information.
+
+## Details
+
+Provide detailed reference information, often in table format:
+
+| Parameter | Description | Default | Required |
+|-----------|-------------|---------|----------|
+| `HOST` | Host address for the service | `localhost` | Yes |
+| `PORT` | Port to listen on | `3000` | No |
+
+## Examples
+
+Show practical examples of usage:
+
+```bash
+# Example configuration
+HOST=0.0.0.0 PORT=8080 ssm start
+```
+
+## Notes
+
+Additional important information, tips, or caveats.
+```
+
+## Required Frontmatter
+
+All documentation pages **must** include the following frontmatter:
+
+```md
+---
+layout: FeatureGuideLayout    # Always use this layout
+title: "Page Title"           # Concise, descriptive title
+icon: 🛠️                      # Relevant emoji for the page
+time: 5 min read              # Estimated reading time
+signetColor: '#3a5ccc'        # Section color (see below)
+nextStep:                     # Optional, but recommended
+  icon: 📖
+  title: Next Guide
+  description: Learn about the next topic
+  link: /docs/next-guide
+credits: true                 # Shows credits footer
+---
+```
+
+### Signet Colors by Section
+
+Each documentation section has a designated color to maintain visual consistency:
+
+<RequirementsGrid :requirements="[
+  { header: 'Section Colors', items: [
+    'Devices: #3a5ccc (blue)',
+    'Containers: #27ae60 (green)',
+    'Automations: #e67e22 (orange)',
+    'Playbooks: #8e44ad (purple)',
+    'Reference: #23233e (dark blue)',
+    'Community: #00bcd4 (cyan)',
+    'Advanced Guides: #c0392b (red)',
+    'Getting Started: #f1c40f (yellow)'
+  ]}
+]" />
+
+## Essential Components
+
+The SSM documentation uses a variety of Vue components to enhance the user experience. Here are the most commonly used components:
+
+### PageHeader
+
+Automatically generated from frontmatter, but can be used manually if needed:
+
+```md
+<PageHeader title="Demo Title" icon="🧩" time="5 min read" signetColor="#00bcd4" />
+```
+<PageHeader title="Demo Title" icon="🧩" time="5 min read" signetColor="#00bcd4" />
+
+---
+
+### PlatformNote
+
+Used for platform-specific instructions:
+
+```md
+<PlatformNote platform="macOS">
+This is a macOS-specific note.
+</PlatformNote>
+```
+
+<PlatformNote platform="macOS">
+This is a macOS-specific note.
+</PlatformNote>
+
+---
+
+### CopyButton
+
+Provides a copy-to-clipboard button for code snippets:
+
+```md
+<CopyButton :code="'npm install squirrel-servers-manager'" />
+```
+
+<CopyButton :code="'npm install squirrel-servers-manager'" />
+
+---
+
+### NextStepCard
+
+Guides users to the next logical documentation page:
+
+```md
+<NextStepCard icon="👉" title="Next Step" description="Go to the next guide" link="/docs/next-guide" />
+```
+
+<NextStepCard icon="👉" title="Next Step" description="Go to the next guide" link="/docs/next-guide" />
+
+---
+
+### SectionHeader
+
+Creates consistent section headers:
+
+```md
+<SectionHeader title="Section Title" />
+```
+
+<SectionHeader title="Section Title" />
+
+---
+
+### FeatureGrid & FeatureCard
+
+Displays a grid of features with icons and descriptions:
+
+```md
+<FeatureGrid>
+  <FeatureCard title="Feature 1" description="Description for feature 1." icon="🛠️" />
+  <FeatureCard title="Feature 2" description="Description for feature 2." icon="💡" />
+</FeatureGrid>
+```
+
+<FeatureGrid>
+  <FeatureCard title="Feature 1" description="Description for feature 1." icon="🛠️" />
+  <FeatureCard title="Feature 2" description="Description for feature 2." icon="💡" />
+</FeatureGrid>
+
+---
+
+### RequirementsGrid
+
+Shows system or software requirements in a grid format:
+
+```md
+<RequirementsGrid :requirements="[
+  { header: 'Docker Host', items: ['Docker 20.10+', '2GB RAM'] },
+  { header: 'Target Devices', items: ['SSH access', 'Python 3.8+'] }
+]" />
+```
+
+<RequirementsGrid :requirements="[
+  { header: 'Docker Host', items: ['Docker 20.10+', '2GB RAM'] },
+  { header: 'Target Devices', items: ['SSH access', 'Python 3.8+'] }
+]" />
+
+---
+
+### StepPath
+
+Visualizes a multi-step process with connecting lines:
+
+```md
+<StepPath :steps="[
+  { number: 1, title: 'Step One', description: 'First step', link: '#', linkText: 'Learn more' },
+  { number: 2, title: 'Step Two', description: 'Second step', link: '#', linkText: 'Next' }
+]" />
+```
+
+<StepPath :steps="[
+  { number: 1, title: 'Step One', description: 'First step', link: '#', linkText: 'Learn more' },
+  { number: 2, title: 'Step Two', description: 'Second step', link: '#', linkText: 'Next' }
+]" />
+
+---
+
+### PlaybookCodeExample
+
+Displays Ansible playbook code with proper syntax highlighting:
+
+```md
+<PlaybookCodeExample :code="'---\n- name: Example\n  hosts: all\n  tasks:\n    - debug: msg=\'Hello\''" language="yaml" />
+```
+
+<PlaybookCodeExample :code="'---\n- name: Example\n  hosts: all\n  tasks:\n    - debug: msg=\'Hello\''" language="yaml" />
+
+---
+
+### MentalModelDiagram
+
+Displays a mental model diagram with caption:
+
+```md
+<MentalModelDiagram title="Device Architecture" imagePath="/images/device-architecture.svg" altText="Device Architecture Diagram" caption="Figure 1: The Device Architecture in SSM" />
+```
+
+<MentalModelDiagram title="Device Architecture" imagePath="/images/device-architecture.svg" altText="Device Architecture Diagram" caption="Figure 1: The Device Architecture in SSM" />
+
+---
+
+### ProcessSteps
+
+Displays a sequence of numbered steps:
+
+```md
+<ProcessSteps :steps="[
+  { number: 1, title: 'Step 1', description: 'Do this first.' },
+  { number: 2, title: 'Step 2', description: 'Then do this.' }
+]" />
+```
+
+<ProcessSteps :steps="[
+  { number: 1, title: 'Step 1', description: 'Do this first.' },
+  { number: 2, title: 'Step 2', description: 'Then do this.' }
+]" />
+
+---
+
+
+## VitePress Features
+
+The SSM documentation leverages standard VitePress features for enhanced content presentation:
+
+### Tabs
+
+Use tabs for platform-specific or alternative instructions:
+
+```md
+::: code-group
+```bash [npm]
+npm install squirrel-servers-manager
+```
+
+```bash [yarn]
+yarn add squirrel-servers-manager
+```
+:::
+```
 
 ::: code-group
-```bash [Docker]
-# Install SSM with Docker
-curl -s install.squirrelserversmanager.io | bash
+```bash [npm]
+npm install squirrel-servers-manager
 ```
 
-```bash [Proxmox]
-# Install SSM on Proxmox
-bash -c "$(wget -qLO - install.squirrelserversmanager.io/proxmox)"
-```
-
-```bash [Custom]
-# Custom installation options
-curl -s install.squirrelserversmanager.io | bash -s -- --no-telemetry
+```bash [yarn]
+yarn add squirrel-servers-manager
 ```
 :::
 
-### Callouts / Admonitions
+### Callouts
 
-:::tip 💡 Helpful Tip
-You can use SSH keys for passwordless authentication.
+Use callouts for important information:
+
+```md
+:::tip
+Helpful tip or trick.
 :::
 
-:::warning ⚠️ Important
-Always back up your data before upgrading SSM.
+:::warning
+Important caution or warning.
 :::
 
-:::danger 🔥 Critical Warning
-Never expose your installation to the internet without proper security measures.
+:::danger
+Critical warning about potential data loss.
 :::
 
-:::info ℹ️ Note
-SSM requires Docker 20.10+ for all features.
+:::info
+Neutral information.
+:::
+```
+
+:::tip
+Helpful tip or trick.
+:::
+
+:::warning
+Important caution or warning.
+:::
+
+:::danger
+Critical warning about potential data loss.
+:::
+
+:::info
+Neutral information.
 :::
 
 ### Collapsible Details
 
+Use details for optional or verbose information:
+
+```md
 <details>
-<summary>Click to view advanced configuration options</summary>
+<summary>Advanced Configuration Options</summary>
 
-## Advanced Configuration
-
-You can customize SSM with these environment variables:
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `SECRET` | JWT secret key | *required* |
-| `SALT` | Encryption salt (16 chars) | *required* |
-| `DB_HOST` | MongoDB hostname | mongo |
-
+Additional content here...
 </details>
-
-## Visual Elements
-
-### Emojis as Visual Markers
-
-- 🔑 **Security**: Store credentials securely with Ansible Vault
-- 🚀 **Performance**: Enable caching for faster dashboard loading
-- 🔄 **Workflow**: Create your first automation in three steps
-- 🧩 **Plugins**: Extend SSM functionality with custom plugins
-- 🛠️ **Configuration**: Adjust settings to match your infrastructure
-
-### Color-Coded Information
-
-:::info ℹ️ Information
-SSM works with any SSH-enabled Linux device.
-:::
-
-:::warning ⚠️ Caution
-Verify connection settings before saving.
-:::
-
-:::tip 🌟 Success Path
-Follow this recommended setup for optimal performance.
-:::
-
-<!-- For more custom styling that works with both light/dark themes:
-<div class="custom-callout info">
-  <p class="custom-callout-title">ℹ️ Information</p>
-  <p class="custom-callout-content">SSM works with any SSH-enabled Linux device.</p>
-</div>
-
-<div class="custom-callout warning">
-  <p class="custom-callout-title">⚠️ Caution</p>
-  <p class="custom-callout-content">Verify connection settings before saving.</p>
-</div>
-
-<div class="custom-callout success">
-  <p class="custom-callout-title">🌟 Success Path</p>
-  <p class="custom-callout-content">Follow this recommended setup for optimal performance.</p>
-</div>
-
-<style>
-.custom-callout {
-  padding: 12px 16px;
-  margin: 16px 0;
-  border-radius: 4px;
-  border-left: 4px solid;
-}
-.custom-callout-title {
-  margin: 0;
-  font-weight: bold;
-}
-.custom-callout-content {
-  margin: 8px 0 0 0;
-}
-.custom-callout.info {
-  border-color: var(--vp-c-info-1);
-  background-color: var(--vp-c-info-soft);
-}
-.custom-callout.info .custom-callout-title {
-  color: var(--vp-c-info-1);
-}
-.custom-callout.warning {
-  border-color: var(--vp-c-warning-1);
-  background-color: var(--vp-c-warning-soft);
-}
-.custom-callout.warning .custom-callout-title {
-  color: var(--vp-c-warning-1);
-}
-.custom-callout.success {
-  border-color: var(--vp-c-success-1);
-  background-color: var(--vp-c-success-soft);
-}
-.custom-callout.success .custom-callout-title {
-  color: var(--vp-c-success-1);
-}
-</style>
--->
-
-## Interactive Elements
-
-### Step-by-Step Guide with Screenshots
-
-<div class="steps-container">
-  <div class="step">
-    <div class="step-number">1</div>
-    <div class="step-content">
-      <h4>Log in to SSM Dashboard</h4>
-      <p>Navigate to your SSM instance and log in with your credentials.</p>
-      <div class="screenshot-placeholder">
-        [Screenshot: Login screen would be placed here]
-      </div>
-    </div>
-  </div>
-  
-  <div class="step">
-    <div class="step-number">2</div>
-    <div class="step-content">
-      <h4>Navigate to Devices</h4>
-      <p>Click on "Devices" in the left sidebar menu.</p>
-      <div class="screenshot-placeholder">
-        [Screenshot: Sidebar navigation would be placed here]
-      </div>
-    </div>
-  </div>
-  
-  <div class="step">
-    <div class="step-number">3</div>
-    <div class="step-content">
-      <h4>Add New Device</h4>
-      <p>Click the "Add Device" button and enter your connection details.</p>
-      <div class="screenshot-placeholder">
-        [Screenshot: Add device form would be placed here]
-      </div>
-    </div>
-  </div>
-</div>
-
-<style>
-.steps-container {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin: 24px 0;
-}
-
-.step {
-  display: flex;
-  gap: 16px;
-  padding: 16px;
-  border-radius: 8px;
-  background-color: rgba(0, 0, 0, 0.02);
-}
-
-.step-number {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: #1890ff;
-  color: white;
-  font-weight: bold;
-}
-
-.step-content {
-  flex: 1;
-}
-
-.step-content h4 {
-  margin-top: 0;
-  margin-bottom: 8px;
-}
-
-.screenshot-placeholder {
-  margin-top: 12px;
-  padding: 24px;
-  background-color: rgba(0, 0, 0, 0.04);
-  border-radius: 4px;
-  text-align: center;
-  color: rgba(0, 0, 0, 0.45);
-}
-</style>
-
-## Code Examples
-
-### Properly Formatted Code with Comments
-
-```yaml
-# Docker compose configuration for SSM
-services:
-  # Database service
-  mongo:
-    container_name: mongo-ssm
-    image: mongo
-    restart: unless-stopped
-    volumes:
-      - ./.data.prod/db:/data/db
-    command: --quiet
-    
-  # SSM server component
-  server:
-    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-server:latest"
-    restart: unless-stopped
-    depends_on:
-      - mongo
-      - redis
-    environment:
-      NODE_ENV: production
 ```
 
-## Tables
+<details>
+<summary>Advanced Configuration Options</summary>
 
-### Feature Comparison
+Additional content here...
+</details>
 
-| Feature | Basic | Advanced | Enterprise |
-|---------|:-----:|:--------:|:----------:|
-| Device Management | ✅ | ✅ | ✅ |
-| Container Management | ✅ | ✅ | ✅ |
-| Statistics | Limited | ✅ | ✅ |
-| Custom Playbooks | ❌ | ✅ | ✅ |
-| Multi-user Support | ❌ | ❌ | ✅ |
+## Writing Guidelines
 
-## Next Steps Navigation
+### Core Writing Principles
 
-<div class="next-steps">
-  <div class="next-step-card">
-    <h3>🔍 Learn About Devices</h3>
-    <p>Discover how to add and manage your devices in SSM.</p>
-    <a href="../user-guides/devices/adding-devices">Continue →</a>
-  </div>
-  
-  <div class="next-step-card">
-    <h3>🐳 Container Management</h3>
-    <p>Learn how to deploy and monitor containers.</p>
-    <a href="../user-guides/containers/management">Continue →</a>
-  </div>
-  
-  <div class="next-step-card">
-    <h3>🤖 Set Up Automations</h3>
-    <p>Create automated tasks for your infrastructure.</p>
-    <a href="../user-guides/automations">Continue →</a>
-  </div>
-</div>
+- **Clear & Concise**: Use short sentences (15-20 words max). Break complex ideas into multiple sentences.
+- **Active Voice**: Write "SSM connects to your server" instead of "Your server is connected to by SSM."
+- **Direct Instructions**: Use imperative mood for tasks: "Click the Add button" not "You should click the Add button."
+- **Consistent Terminology**: Use the same term for the same concept throughout (e.g., always "device" not sometimes "server").
 
-<style>
-.next-steps {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 16px;
-  margin: 32px 0;
-}
+### Page Structure Standards
 
-.next-step-card {
-  padding: 16px;
-  border-radius: 8px;
-  background-color: rgba(0, 0, 0, 0.02);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  transition: all 0.3s ease;
-}
+- **"In a Nutshell" Section**: Every complex document should begin with a summary section:
+  ```md
+  :::tip In a Nutshell (🌰)
+  - Connect SSH with password or key
+  - Enable sudo if needed for container management
+  - Test connection before saving
+  :::
+  ```
+- **Progressive Disclosure**: Start with simple concepts, then introduce advanced options.
+- **Step Numbering**: Always number sequential steps using ordered lists (1. 2. 3.).
+- **Chunking**: Group related information under clear headings.
 
-.next-step-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
+### Visual Enhancement Guidelines
 
-.next-step-card h3 {
-  margin-top: 0;
-}
+- **Be Graphical**: Every major feature should include at least one screenshot or diagram.
+- **Be Colorful**: Use consistent color coding in diagrams and callouts:
+  - Green: Success paths, recommended options
+  - Blue: Information, neutral options
+  - Yellow: Caution, requires attention
+  - Red: Critical warnings, potential data loss
+- **Icons & Emojis**: Use consistent icons/emojis as visual markers for repeated elements:
+  - 🔑 Security-related information
+  - 🚀 Performance tips
+  - 🔄 Workflow processes
+  - 🧩 Plugins and extensions
+  - 🛠️ Configuration options
 
-.next-step-card a {
-  display: inline-block;
-  margin-top: 8px;
-  font-weight: bold;
-}
-</style>
+## Creating Documentation Diagrams
+
+The SSM documentation uses SVG diagrams to visualize complex concepts. These should be created as follows:
+
+1. Design the diagram using a tool like Figma, Inkscape, or a diagramming tool
+2. Export as SVG with optimized settings
+3. Save in the `/site/public/images/` directory
+4. Reference using the `MentalModelDiagram` component
+
+For code-based diagrams (e.g., flowcharts or architecture diagrams), consider using:
+
+1. Vue Flow (for interactive diagrams in development)
+2. Mermaid syntax (when supported by VitePress)
+3. Pre-rendered SVG (most compatible option)
+
+## Testing Your Documentation
+
+Before submitting documentation:
+
+1. **Local Preview**: Run the docs site locally with `cd site && npm run dev`
+2. **Mobile Responsiveness**: Verify the layout works on small screens
+3. **Component Functionality**: Test interactive components
+4. **Link Validation**: Ensure all internal and external links work
+5. **Code Example Verification**: Test that all code examples work as described
+
+## Next Steps
+
+Ready to contribute? Follow these steps:
+
+1. Choose the appropriate template for your documentation type
+2. Copy the template file as a starting point
+3. Fill in all required frontmatter and sections
+4. Add appropriate components and illustrations
+5. Submit your documentation following the contribution guidelines

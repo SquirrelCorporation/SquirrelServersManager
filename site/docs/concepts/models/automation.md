@@ -1,12 +1,15 @@
-<script setup>
-import NextStepCard from '/components/NextStepCard.vue';
-</script>
+---
+layout: FeatureGuideLayout
+title: "Automation Mental Model"
+icon: 🔄 # Clockwise arrows icon
+time: 8 min read
+signetColor: '#3498db' # Blue for Concepts
+credits: true
+---
 
 <style src="./styles.css"></style>
 
-# Automation Mental Model
-
-:::tip 🌰 In a Nutshell
+:::tip In a Nutshell (🌰)
 - Automations in SSM allow you to create event-driven workflows
 - Triggers initiate automations based on events, schedules, or conditions
 - Actions define what happens when an automation is triggered
@@ -18,134 +21,24 @@ import NextStepCard from '/components/NextStepCard.vue';
 
 In Squirrel Servers Manager, **automation** refers to the system that allows you to create event-driven workflows that respond to triggers and perform actions across your infrastructure. Automations help you reduce manual work, ensure consistency, and respond quickly to events.
 
-<div class="concept-diagram">
-  <img src="/home/ibm-event-automation.svg" alt="Automation Flow Diagram" class="diagram-image" />
-  <div class="diagram-caption">Figure 1: Event-Driven Automation Flow in SSM</div>
-</div>
-
 ## Key Components of the Automation Model
 
 ### 1. Triggers
 
 Triggers are events or conditions that initiate an automation:
 
-- **Event Triggers**: Respond to specific events in the system
-  - Container events (start, stop, update, failure)
-  - Device events (connection, disconnection, resource thresholds)
-  - System events (updates, backups, errors)
-
 - **Schedule Triggers**: Run at specified times
-  - One-time execution
-  - Recurring schedules (hourly, daily, weekly, monthly)
-  - Cron expressions for complex scheduling
+  - Cron expressions 
 
-- **Condition Triggers**: Activate when specific conditions are met
-  - Resource thresholds (CPU, memory, disk usage)
-  - Service status changes
-  - External API responses
 
 ### 2. Actions
 
 Actions define what happens when an automation is triggered:
 
-- **Device Actions**
-  - Reboot or shutdown
-  - Run commands
-  - Update system packages
-  - Change configuration
-
-- **Container Actions**
-  - Start, stop, or restart containers
-  - Update container images
-  - Modify container configuration
-  - Deploy new containers
-
 - **Playbook Actions**
   - Execute Ansible playbooks
   - Pass variables to playbooks
   - Target specific devices or groups
-
-- **Notification Actions**
-  - Send email alerts
-  - Push notifications
-  - Webhook integrations
-  - Log events
-
-### 3. Conditions
-
-Conditions allow for more complex decision-making within automations:
-
-- **Filters**: Limit when actions are performed
-  - Device properties (type, tags, status)
-  - Container properties (image, status, resource usage)
-  - Time-based conditions
-
-- **Branching Logic**: Different actions based on conditions
-  - If-then-else logic
-  - Multiple outcome paths
-
-### 4. Variables
-
-Variables provide dynamic data to automations:
-
-- **System Variables**: Built-in data about the environment
-  - Current time and date
-  - Trigger information
-  - System status
-
-- **Event Data**: Information from the triggering event
-  - Container or device details
-  - Error messages
-  - Resource metrics
-
-- **Custom Variables**: User-defined values
-  - Configuration parameters
-  - Thresholds
-  - Target identifiers
-
-## How the Automation Model Works
-
-<div class="steps-container">
-  <div class="step">
-    <div class="step-number">1</div>
-    <div class="step-content">
-      <h4>Trigger Definition</h4>
-      <p>Define what event, schedule, or condition will initiate the automation.</p>
-    </div>
-  </div>
-  
-  <div class="step">
-    <div class="step-number">2</div>
-    <div class="step-content">
-      <h4>Condition Evaluation</h4>
-      <p>When triggered, evaluate any conditions to determine if actions should proceed.</p>
-    </div>
-  </div>
-  
-  <div class="step">
-    <div class="step-number">3</div>
-    <div class="step-content">
-      <h4>Variable Resolution</h4>
-      <p>Resolve any variables needed for the actions from system data, event data, or custom values.</p>
-    </div>
-  </div>
-  
-  <div class="step">
-    <div class="step-number">4</div>
-    <div class="step-content">
-      <h4>Action Execution</h4>
-      <p>Execute the defined actions in sequence or based on branching logic.</p>
-    </div>
-  </div>
-  
-  <div class="step">
-    <div class="step-number">5</div>
-    <div class="step-content">
-      <h4>Result Handling</h4>
-      <p>Process the results of actions, potentially triggering notifications or additional automations.</p>
-    </div>
-  </div>
-</div>
 
 ## Automation Lifecycle
 
@@ -153,12 +46,13 @@ Automations in SSM follow a defined lifecycle:
 
 1. **Creation**: Automation is defined with triggers, conditions, and actions
 2. **Activation**: Automation is enabled and ready to respond to triggers
-3. **Triggering**: An event, schedule, or condition activates the automation
+3. **Triggering**: A schedule activates the automation
 4. **Execution**: Actions are performed according to the automation definition
 5. **Completion**: Automation finishes executing all actions
 6. **Logging**: Results and execution details are recorded
 7. **Maintenance**: Automation is updated or modified as needed
 
+<!--
 ## Real-World Examples
 
 ### Example 1: Automatic Container Updates
@@ -172,9 +66,9 @@ Automations in SSM follow a defined lifecycle:
   <div class="example-solution">
     <h4>Solution using the Automation Model:</h4>
     
-    <p><strong>Trigger:</strong> Schedule (every day at 2:00 AM)</p>
+<p><strong>Trigger:</strong> Schedule (every day at 2:00 AM)</p>
     
-    <p><strong>Conditions:</strong></p>
+<p><strong>Conditions:</strong></p>
     <ul>
       <li>Day of week is Tuesday or Thursday (maintenance window)</li>
       <li>Container has updates available</li>
@@ -647,7 +541,7 @@ actions:
 - Don't overuse conditions that could make automations hard to understand
 - Don't forget to monitor and maintain your automations
 :::
-
+-->
 ## Common Misconceptions
 
 ### Misconception 1: Automations eliminate the need for monitoring
@@ -664,35 +558,46 @@ actions:
 
 ## Related Concepts
 
-<div class="related-concepts">
-  <div class="related-concept-card">
-    <h3>💻 Device Model</h3>
-    <p>How devices are managed and monitored in SSM</p>
-    <a href="./devices">Learn more →</a>
-  </div>
-  
-  <div class="related-concept-card">
-    <h3>📦 Container Model</h3>
-    <p>How containers are deployed and managed</p>
-    <a href="./containers">Learn more →</a>
-  </div>
-  
-  <div class="related-concept-card">
-    <h3>📋 Playbooks Model</h3>
-    <p>Using Ansible playbooks for infrastructure automation</p>
-    <a href="./playbooks">Learn more →</a>
-  </div>
-</div>
+<FeatureGrid>
+  <FeatureCard
+    icon="💻"
+    title="Device Model"
+    description="How devices are managed and monitored in SSM"
+    link="./devices"
+  />
+  <FeatureCard
+    icon="📦"
+    title="Container Model"
+    description="How containers are deployed and managed"
+    link="./containers"
+  />
+  <FeatureCard
+    icon="📋"
+    title="Playbooks Model"
+    description="Using Ansible playbooks for infrastructure automation"
+    link="./playbooks"
+  />
+</FeatureGrid>
 
 ## Further Reading
 
-- [Creating Automations](/docs/user-guides/automations/creating) - Step-by-step guide to creating automations
-- [Automation Schedules](/docs/user-guides/automations/schedules) - Detailed guide to scheduling automations
-- [Advanced Automation](/docs/advanced-guides/advanced-automation) - Complex automation patterns and techniques
-- [Automation API](/docs/developer/api-integration) - Programmatically creating and managing automations
-
-<NextStepCard 
-  title="Playbooks Model" 
-  description="Learn how to use Ansible playbooks for powerful infrastructure automation" 
-  link="/docs/concepts/models/playbooks" 
-/>
+<FeatureGrid>
+  <FeatureCard
+    icon="🛠️"
+    title="Creating Automations"
+    description="Step-by-step guide to creating automations"
+    link="/docs/user-guides/automations/creating"
+  />
+  <FeatureCard
+    icon="⏰"
+    title="Automation Schedules"
+    description="Detailed guide to scheduling automations"
+    link="/docs/user-guides/automations/schedules"
+  />
+  <FeatureCard
+    icon="🔗"
+    title="Automation API"
+    description="Programmatically creating and managing automations"
+    link="/docs/developer/api-integration"
+  />
+</FeatureGrid>

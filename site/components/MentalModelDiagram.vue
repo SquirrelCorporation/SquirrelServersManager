@@ -25,12 +25,12 @@ defineProps({
 
 <template>
   <div class="mental-model-diagram">
-    <h2 v-if="title" class="diagram-title">{{ title }}</h2>
+    <div v-if="title" class="diagram-title">{{ title }}</div>
     
     <div class="diagram-container">
       <img :src="imagePath" :alt="altText" class="diagram-image" />
       
-      <div v-if="!imagePath.endsWith('.svg')" class="diagram-placeholder">
+      <div v-if="!imagePath" class="diagram-placeholder">
         {{ placeholderText }}
       </div>
     </div>
@@ -54,6 +54,7 @@ defineProps({
   margin-bottom: 16px;
   color: var(--vp-c-brand);
   font-size: 20px;
+  font-weight: bold;
 }
 
 .diagram-container {

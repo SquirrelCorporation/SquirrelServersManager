@@ -351,3 +351,99 @@
   padding-top: 0;
   margin-top: 2rem;
 }
+
+/* Styles for screenshot containers in documentation */
+.screenshot-container {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  padding: 1em;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  text-align: center;
+  background-color: var(--vp-c-bg-soft);
+}
+
+.screenshot-container .screenshot {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid var(--vp-c-divider);
+  margin-bottom: 0.5em;
+}
+
+.screenshot-container .screenshot-caption {
+  font-size: 0.875em;
+  color: var(--vp-c-text-2);
+  margin-top: 0.5em;
+}
+
+/* Platform-Specific Notes Styles */
+.platform-notes {
+  display: flex;
+  gap: 1rem;
+  background-color: var(--vp-c-bg-soft);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.platform-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.platform-content {
+  flex: 1;
+}
+
+.platform-content h4 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.code-with-copy {
+  position: relative;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.code-with-copy pre {
+  margin: 0;
+  padding: 1rem;
+  background-color: var(--vp-c-bg);
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.copy-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: var(--vp-c-brand);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.copy-button:hover {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .decision-options {
+    flex-direction: column;
+  }
+  
+  .platform-notes {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .platform-content {
+    width: 100%;
+  }
+}

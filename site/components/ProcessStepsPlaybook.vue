@@ -73,26 +73,29 @@ const steps = [
   margin: 2rem 0;
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid #e9ecef;
-  background-color: #f8f9fa;
+  border: 1px solid var(--vp-c-divider);
+  background-color: var(--vp-c-bg);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  font-family: var(--vp-font-family-base);
 }
 
 .process-steps-header {
-  background-color: #3a5ccc;
-  color: white;
+  background-color: var(--vp-c-brand);
+  color: var(--vp-c-bg);
   padding: 1rem;
 }
 
 .process-steps-header h3 {
   margin: 0 0 0.5rem 0;
   font-size: 1.2rem;
+  font-family: var(--vp-font-family-base);
 }
 
 .process-steps-header p {
   margin: 0;
   font-size: 0.9rem;
   opacity: 0.9;
+  font-family: var(--vp-font-family-base);
 }
 
 .process-steps {
@@ -107,8 +110,8 @@ const steps = [
 }
 
 .step-number {
-  background-color: #3a5ccc;
-  color: white;
+  background-color: var(--vp-c-brand);
+  color: var(--vp-c-bg);
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -118,11 +121,12 @@ const steps = [
   font-weight: bold;
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
+  font-family: var(--vp-font-family-base);
 }
 
 .step-content {
   display: flex;
-  background-color: white;
+  background-color: var(--vp-c-bg-soft);
   border-radius: 8px;
   padding: 1rem;
   width: 100%;
@@ -142,13 +146,15 @@ const steps = [
 
 .step-details h4 {
   margin: 0 0 0.5rem 0;
-  color: #3a5ccc;
+  color: var(--vp-c-brand);
+  font-family: var(--vp-font-family-base);
 }
 
 .step-details p {
   margin: 0;
-  color: #495057;
+  color: var(--vp-c-text-2);
   font-size: 0.9rem;
+  font-family: var(--vp-font-family-base);
 }
 
 .step-connector {
@@ -162,11 +168,11 @@ const steps = [
 .connector-line {
   width: 2px;
   height: 20px;
-  background-color: #3a5ccc;
+  background-color: var(--vp-c-brand);
 }
 
 .connector-arrow {
-  color: #3a5ccc;
+  color: var(--vp-c-brand);
   font-size: 1.2rem;
   line-height: 1;
 }
@@ -177,7 +183,6 @@ const steps = [
     align-items: center;
     text-align: center;
   }
-  
   .step-icon {
     margin-right: 0;
     margin-bottom: 0.5rem;

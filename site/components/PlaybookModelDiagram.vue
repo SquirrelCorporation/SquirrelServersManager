@@ -2,7 +2,7 @@
   <div class="playbook-model-diagram">
     <div class="diagram-container">
       <div class="diagram-header">
-        <h3>Playbook Model Architecture</h3>
+        <div class="diagram-title">Playbook Model Architecture</div>
       </div>
       <div class="diagram">
         <div class="playbook-node central-node">
@@ -84,23 +84,26 @@
 }
 
 .diagram-container {
-  background-color: #f8f9fa;
+  background-color: var(--vp-c-bg);
   border-radius: 8px;
-  border: 1px solid #e9ecef;
+  border: 1px solid var(--vp-c-divider);
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  font-family: var(--vp-font-family-base);
 }
 
 .diagram-header {
-  background-color: #3a5ccc;
-  color: white;
+  background-color: var(--vp-c-brand);
+  color: var(--vp-c-bg);
   padding: 1rem;
   text-align: center;
 }
 
-.diagram-header h3 {
+.diagram-title {
   margin: 0;
   font-size: 1.2rem;
+  font-family: var(--vp-font-family-base);
+  font-weight: bold;
 }
 
 .diagram {
@@ -113,17 +116,18 @@
 }
 
 .playbook-node {
-  background-color: white;
+  background-color: var(--vp-c-bg-soft);
   border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   width: 180px;
   z-index: 2;
+  font-family: var(--vp-font-family-base);
 }
 
 .central-node {
-  border: 2px solid #3a5ccc;
+  border: 2px solid var(--vp-c-brand);
 }
 
 .node-icon {
@@ -134,12 +138,14 @@
 .node-title {
   font-weight: bold;
   margin-bottom: 0.5rem;
-  color: #3a5ccc;
+  color: var(--vp-c-brand);
+  font-family: var(--vp-font-family-base);
 }
 
 .node-description {
   font-size: 0.9rem;
-  color: #495057;
+  color: var(--vp-c-text-2);
+  font-family: var(--vp-font-family-base);
 }
 
 .node-description ul {
@@ -209,46 +215,47 @@
 
 .connection-line {
   position: absolute;
-  background-color: #e9ecef;
+  background-color: var(--vp-c-divider);
   z-index: 1;
 }
 
-.top-left .connection-line {
-  width: 100px;
-  height: 2px;
-  right: 0;
-  bottom: 50%;
-}
-
-.top-right .connection-line {
-  width: 100px;
-  height: 2px;
-  left: 0;
-  bottom: 50%;
-}
-
-.bottom-left .connection-line {
-  width: 100px;
-  height: 2px;
-  right: 0;
-  top: 50%;
-}
-
+.top-left .connection-line,
+.top-right .connection-line,
+.bottom-left .connection-line,
 .bottom-right .connection-line {
   width: 100px;
   height: 2px;
+}
+
+.top-left .connection-line,
+.bottom-left .connection-line {
+  right: 0;
+}
+
+.top-right .connection-line,
+.bottom-right .connection-line {
   left: 0;
+}
+
+.top-left .connection-line,
+.top-right .connection-line {
+  bottom: 50%;
+}
+
+.bottom-left .connection-line,
+.bottom-right .connection-line {
   top: 50%;
 }
 
 .connection-node {
-  background-color: white;
+  background-color: var(--vp-c-bg-soft);
   border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   width: 160px;
   z-index: 2;
+  font-family: var(--vp-font-family-base);
 }
 
 @media (max-width: 768px) {
@@ -256,42 +263,34 @@
     padding: 1rem;
     min-height: 800px;
   }
-  
   .connection-container {
     grid-template-columns: 1fr;
     grid-template-rows: repeat(4, 1fr);
   }
-  
   .top-left, .top-right, .bottom-left, .bottom-right {
     justify-content: center;
     align-items: center;
     padding: 0;
   }
-  
   .top-left {
     grid-column: 1;
     grid-row: 1;
   }
-  
   .top-right {
     grid-column: 1;
     grid-row: 2;
   }
-  
   .bottom-left {
     grid-column: 1;
     grid-row: 3;
   }
-  
   .bottom-right {
     grid-column: 1;
     grid-row: 4;
   }
-  
   .connection-line {
     display: none;
   }
-  
   .playbook-node {
     position: absolute;
     top: 10px;

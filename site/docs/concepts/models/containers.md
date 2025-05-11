@@ -1,11 +1,16 @@
-<script setup>
-import DeviceModelDiagram from '/components/DeviceModelDiagram.vue';
-import NextStepCard from '/components/NextStepCard.vue';
-</script>
+---
+layout: FeatureGuideLayout
+title: "Container Mental Model"
+icon: 📦 # Box icon for containers
+time: 7 min read
+signetColor: '#3498db' # Blue for Concepts
+credits: true
+---
 
-# Container Mental Model
+<style src="./styles.css"></style>
 
-:::tip 🌰 In a Nutshell
+
+:::tip In a Nutshell (🌰)
 - Containers in SSM represent isolated, portable application environments
 - SSM manages Docker containers across all your devices from a central interface
 - Container stacks (Docker Compose) allow multi-container application deployment
@@ -17,9 +22,9 @@ import NextStepCard from '/components/NextStepCard.vue';
 
 In Squirrel Servers Manager, a **container** is a standardized, isolated package that includes an application and all its dependencies. SSM primarily works with Docker containers, providing a unified interface to manage containers across your entire infrastructure.
 
-<div class="concept-diagram">
-  <img src="/home/services.png" alt="Container Services Management Interface" class="screenshot" />
-  <div class="diagram-caption">Figure 1: Container Services Management in SSM</div>
+<div class="screenshot-container">
+  <img src="/images/home-services.png" alt="Container Services Management Interface" class="screenshot" />
+  <div class="screenshot-caption">Figure 1: Container Services Management in SSM</div>
 </div>
 
 ## Key Components of the Container Model
@@ -52,7 +57,7 @@ Container stacks (based on Docker Compose) allow you to define and run multi-con
 - **Volumes**: Shared storage between containers
 
 <div class="concept-diagram">
-  <img src="/home/stacks.png" alt="Container Stacks Management Interface" class="screenshot" />
+  <img src="/images/home-stacks.png" alt="Container Stacks Management Interface" class="screenshot" />
   <div class="diagram-caption">Figure 2: Container Stacks Management in SSM</div>
 </div>
 
@@ -65,7 +70,7 @@ SSM provides pre-configured templates for common applications:
 - **Template Variables**: Customizable parameters for flexible deployment
 
 <div class="concept-diagram">
-  <img src="/home/store.png" alt="Container Templates Store Interface" class="screenshot" />
+  <img src="/images/home-store.png" alt="Container Templates Store Interface" class="screenshot" />
   <div class="diagram-caption">Figure 3: Container Templates Store in SSM</div>
 </div>
 
@@ -79,53 +84,19 @@ SSM connects with container registries to access and manage images:
 - **Image Pulling**: Automatic or manual image retrieval
 
 <div class="concept-diagram">
-  <img src="/home/registries.png" alt="Container Registry Management Interface" class="screenshot" />
+  <img src="/images/home-registries.png" alt="Container Registry Management Interface" class="screenshot" />
   <div class="diagram-caption">Figure 4: Container Registry Management in SSM</div>
 </div>
 
 ## How the Container Model Works
 
-<div class="steps-container">
-  <div class="step">
-    <div class="step-number">1</div>
-    <div class="step-content">
-      <h4>Image Selection</h4>
-      <p>Choose a container image from a registry or template that contains your desired application.</p>
-    </div>
-  </div>
-  
-  <div class="step">
-    <div class="step-number">2</div>
-    <div class="step-content">
-      <h4>Configuration</h4>
-      <p>Configure container settings including ports, volumes, environment variables, and resource limits.</p>
-    </div>
-  </div>
-  
-  <div class="step">
-    <div class="step-number">3</div>
-    <div class="step-content">
-      <h4>Deployment</h4>
-      <p>Deploy the container to one or more devices in your infrastructure.</p>
-    </div>
-  </div>
-  
-  <div class="step">
-    <div class="step-number">4</div>
-    <div class="step-content">
-      <h4>Monitoring</h4>
-      <p>SSM automatically begins monitoring the container's health, resource usage, and status.</p>
-    </div>
-  </div>
-  
-  <div class="step">
-    <div class="step-number">5</div>
-    <div class="step-content">
-      <h4>Management</h4>
-      <p>Perform ongoing management tasks like updates, backups, scaling, and configuration changes.</p>
-    </div>
-  </div>
-</div>
+<ProcessSteps :steps="[
+  { title: 'Image Selection', description: 'Choose a container image from a registry or template that contains your desired application.' },
+  { title: 'Configuration', description: 'Configure container settings including ports, volumes, environment variables, and resource limits.' },
+  { title: 'Deployment', description: 'Deploy the container to one or more devices in your infrastructure.' },
+  { title: 'Monitoring', description: 'SSM automatically begins monitoring the container\'s health, resource usage, and status.' },
+  { title: 'Management', description: 'Perform ongoing management tasks like updates, backups, scaling, and configuration changes.' }
+]" />
 
 ## Container Lifecycle
 
@@ -189,7 +160,7 @@ volumes:
   db_data:
 ```
     
-    <p>Deploy this stack to your target device, and SSM will:</p>
+<p>Deploy this stack to your target device, and SSM will:</p>
     <ol>
       <li>Pull all required images</li>
       <li>Create the defined volumes</li>
@@ -259,7 +230,7 @@ volumes:
   grafana_data:
 ```
     
-    <p>Key features of this configuration:</p>
+ <p>Key features of this configuration:</p>
     <ul>
       <li>CPU limits prevent containers from using more than their allocated CPU share</li>
       <li>Memory limits protect the host from out-of-memory conditions</li>
@@ -359,7 +330,7 @@ volumes:
   cache_data:
 ```
     
-    <p>Key features of this configuration:</p>
+<p>Key features of this configuration:</p>
     <ul>
       <li>Custom networks isolate traffic between service groups</li>
       <li>The backend network is marked as internal, preventing direct internet access</li>
@@ -386,15 +357,15 @@ Manage containers across all your devices from a single interface:
 
 Keep containers up-to-date with minimal effort:
 - Detect available image updates
-- Schedule automatic updates
-- Roll back problematic updates
+- Schedule automatic updates (Coming soon)
+- Roll back problematic updates  (Coming soon)
 
 ### 3. Resource Monitoring
 
 Track container performance and resource usage:
 - CPU and memory utilization
-- Network traffic
-- Disk I/O
+- Network traffic (Coming soon)
+- Disk I/O (Coming soon)
 - Log monitoring
 
 ### 4. Health Checks
@@ -478,25 +449,26 @@ Ensure containers are functioning correctly:
 
 ## Related Concepts
 
-<div class="related-concepts">
-  <div class="related-concept-card">
-    <h3>💻 Device Model</h3>
-    <p>How devices host and run containers in SSM</p>
-    <a href="./devices">Learn more →</a>
-  </div>
-  
-  <div class="related-concept-card">
-    <h3>🔄 Automation Model</h3>
-    <p>How to automate container management tasks</p>
-    <a href="./automation">Learn more →</a>
-  </div>
-  
-  <div class="related-concept-card">
-    <h3>📋 Playbooks Model</h3>
-    <p>Using Ansible playbooks for advanced container orchestration</p>
-    <a href="./playbooks">Learn more →</a>
-  </div>
-</div>
+<FeatureGrid>
+  <FeatureCard
+    icon="💻"
+    title="Device Model"
+    description="How devices host and run containers in SSM"
+    link="./devices"
+  />
+  <FeatureCard
+    icon="🔄"
+    title="Automation Model"
+    description="How to automate container management tasks"
+    link="./automation"
+  />
+  <FeatureCard
+    icon="📋"
+    title="Playbooks Model"
+    description="Using Ansible playbooks for advanced container orchestration"
+    link="./playbooks"
+  />
+</FeatureGrid>
 
 ## Further Reading
 
@@ -504,9 +476,3 @@ Ensure containers are functioning correctly:
 - [Deploy from Store](/docs/user-guides/containers/deploy-store) - Using container templates
 - [Compose Editor](/docs/user-guides/stacks/containers/editor) - Creating and editing container stacks
 - [Docker Configuration](/docs/reference/docker-configuration) - Detailed Docker configuration reference
-
-<NextStepCard 
-  title="Automation Model" 
-  description="Learn how to automate container and device management tasks" 
-  link="/docs/concepts/models/automation" 
-/>

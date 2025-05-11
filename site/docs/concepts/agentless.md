@@ -1,11 +1,13 @@
-# Agentless Architecture
+---
+layout: FeatureGuideLayout
+title: "Agentless Architecture"
+icon: 🔌 # Plug icon
+time: 7 min read # From existing header
+signetColor: '#3498db' # Blue for Concepts
+credits: true
+---
 
-<div class="quick-start-header">
-  <div class="quick-start-icon">🔌</div>
-  <div class="quick-start-time">⏱️ Reading time: 7 minutes</div>
-</div>
-
-:::tip 🌰 In a Nutshell
+:::tip In a Nutshell (🌰)
 - SSM uses SSH for communication with managed devices
 - No permanent agent software runs on target devices
 - Connections are made only when needed for specific operations
@@ -17,46 +19,53 @@
 
 Squirrel Servers Manager (SSM) is designed with an agentless architecture, which means it doesn't require permanent software agents installed on the devices it manages. Instead, SSM communicates with devices through secure SSH connections, executing commands remotely when needed.
 
-<div class="architecture-diagram">
-  <img src="/overview/reference-architecture.svg" alt="Agentless Architecture Diagram" />
-  <div class="diagram-caption">Figure 1: SSM's agentless connection model</div>
-</div>
 
 ### Key Advantages
 
 The agentless approach offers several significant benefits:
 
-#### 1. Simplified Deployment
-
-Without agents to install and maintain, adding new devices to SSM is straightforward:
-- No pre-installation steps on target devices
-- No agent software to update or troubleshoot
-- No compatibility issues with different OS versions
-- Faster onboarding of new devices
-
-#### 2. Reduced System Footprint
-
-Agentless operation means minimal impact on your managed devices:
-- No continuous resource consumption
-- No background processes running permanently
-- No disk space used for agent software
-- Lower memory and CPU overhead
-
-#### 3. Enhanced Security
-
-The agentless architecture improves security in several ways:
-- Fewer installed components means a smaller attack surface
-- No need to maintain and patch agent software
-- Secure SSH communication with key-based authentication
-- No persistent connections that could be exploited
-
-#### 4. Streamlined Maintenance
-
-Without agents, there's less to maintain over time:
-- No agent updates to deploy across your infrastructure
-- No version compatibility issues to manage
-- Simpler troubleshooting when issues arise
-- Less complexity in the overall system
+<ComponentInfoGrid>
+  <ComponentInfoCard
+    headerTitle="Simplified Deployment"
+    subText="Advantages:" 
+    :storesItems="[
+      'No pre-installation steps on target devices',
+      'No agent software to update or troubleshoot',
+      'No compatibility issues with different OS versions',
+      'Faster onboarding of new devices'
+    ]"
+  />
+  <ComponentInfoCard
+    headerTitle="Reduced System Footprint"
+        subText="Advantages:" 
+    :storesItems="[
+      'No continuous resource consumption',
+      'No background processes running permanently',
+      'No disk space used for agent software',
+      'Lower memory and CPU overhead'
+    ]"
+  />
+  <ComponentInfoCard
+    headerTitle="Enhanced Security"
+        subText="Advantages:" 
+    :storesItems="[
+      'Fewer installed components means a smaller attack surface',
+      'No need to maintain and patch agent software',
+      'Secure SSH communication with key-based authentication',
+      'No persistent connections that could be exploited'
+    ]"
+  />
+  <ComponentInfoCard
+    headerTitle="Streamlined Maintenance"
+        subText="Advantages:" 
+    :storesItems="[
+      'No agent updates to deploy across your infrastructure',
+      'No version compatibility issues to manage',
+      'Simpler troubleshooting when issues arise',
+      'Less complexity in the overall system'
+    ]"
+  />
+</ComponentInfoGrid>
 
 ## How Agentless Architecture Works
 
@@ -109,14 +118,3 @@ To get the most out of SSM's agentless architecture:
 3. **Manage Permissions Carefully**: Use the principle of least privilege
 4. **Regular Credential Rotation**: Change SSH keys and passwords periodically
 5. **Network Security**: Ensure SSH access is properly secured at the network level
-
-## Next Steps
-
-Now that you understand SSM's agentless architecture, learn more about:
-
-<a href="/docs/concepts/security" class="next-step-card">
-  <div class="next-step-icon">🔒</div>
-  <h2>Security Model</h2>
-  <div class="next-step-separator"></div>
-  <p>Understand how SSM secures communication with devices</p>
-</a>

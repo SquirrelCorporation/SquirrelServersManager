@@ -1,6 +1,15 @@
+---
+layout: FeatureGuideLayout
+title: "Community & Contributing"
+icon: 👋 # Waving hand icon
+time: 4 min read
+signetColor: '#1abc9c' # Teal for Community
+credits: true
+---
+
 # Community & Contributing
 
-:::tip 🌰 In a Nutshell
+:::tip In a Nutshell (🌰)
 - Join the SSM community to get help and share ideas
 - Learn how to contribute to the project
 - Find resources for developers and contributors

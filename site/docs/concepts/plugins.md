@@ -1,14 +1,18 @@
-<script setup>
-import PageHeader from '/components/PageHeader.vue';
-</script>
+---
+layout: FeatureGuideLayout
+title: "Plugins System"
+icon: "✨"
+time: "8 min read"
+signetColor: '#00bcd4'
+nextStep:
+  icon: "🛠️"
+  title: "Plugin Development Guide"
+  description: "Learn how to create, test, and distribute your own SSM plugins"
+  link: "/docs/developer/plugins"
+credits: true
+---
 
-<PageHeader 
-  title="Plugin System" 
-  icon="🧩" 
-  time="Reading time: 8 minutes" 
-/>
-
-:::tip 🌰 In a Nutshell
+:::tip In a Nutshell (🌰)
 - SSM has a flexible plugin architecture for extending functionality
 - Plugins can add new UI components, data models, and backend services
 - The system uses a modular approach with clearly defined extension points
@@ -30,26 +34,19 @@ The Plugin Registry is the central component that:
 - Discovers and loads available plugins
 - Manages plugin lifecycle (activation/deactivation)
 - Provides access to plugin metadata
-- Resolves dependencies between plugins
 
 ### Extension Points
 
 SSM offers several extension points where plugins can integrate:
 
 1. **UI Components**
-   - Add new pages to the navigation menu
-   - Extend existing pages with additional sections
-   - Provide custom dashboard widgets
-   - Create new visualization components
+   - Add new pages
 
 2. **API Extensions**
    - Add new API endpoints
-   - Extend existing API functionality
-   - Implement custom data processors
 
 3. **Data Models**
    - Define new data structures
-   - Extend existing models with additional properties
    - Create custom storage solutions
 
 4. **Event Handlers**
@@ -154,7 +151,6 @@ The event system allows plugins to:
 ### Shared Services
 
 Plugins can register and consume services through the plugin registry:
-- Share functionality with other plugins
 - Access core system services
 - Implement dependency injection patterns
 
@@ -162,7 +158,6 @@ Plugins can register and consume services through the plugin registry:
 
 Plugins can store and share data using:
 - Plugin-specific storage in the database
-- Shared data stores for cross-plugin functionality
 - Temporary caches for performance optimization
 
 ## Plugin Development Workflow
@@ -176,19 +171,8 @@ Plugins can store and share data using:
 ## Security Considerations
 
 When developing or installing plugins, consider these security aspects:
-
 - **Permissions**: Plugins run with the same permissions as the SSM application
 - **Data Access**: Plugins can access and modify system data
 - **Resource Usage**: Poorly written plugins can impact system performance
 - **Code Review**: Always review plugin code before installation in production environments
 
-## Next Steps
-
-Now that you understand the plugin system, learn more about developing your own plugins:
-
-<a href="/docs/developer/plugins" class="next-step-card">
-  <div class="next-step-icon">🛠️</div>
-  <h2>Plugin Development Guide</h2>
-  <div class="next-step-separator"></div>
-  <p>Learn how to create, test, and distribute your own SSM plugins</p>
-</a>

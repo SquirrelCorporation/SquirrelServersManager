@@ -11,39 +11,58 @@ defineProps({
   time: {
     type: String,
     default: null
+  },
+  signetColor: {
+    type: String,
+    default: null // e.g. '#3a5ccc' or 'var(--vp-c-brand)'
   }
 });
 </script>
 
 <template>
-  <div class="page-header">
-    <div class="header-left">
-      <div class="icon-avatar">{{ icon }}</div>
-      <h1 class="title">{{ title }}</h1>
+  <div class="vp-doc">
+    <div class="page-header-with-signet">
+      <div v-if="signetColor" class="signet" :style="{ backgroundColor: signetColor }"></div>
+      <div class="page-header">
+        <div class="header-left">
+          <div class="icon-avatar">{{ icon }}</div>
+          <h1 class="title">{{ title }}</h1>
+        </div>
+        <div v-if="time" class="time-estimation">
+          <span class="time-icon">⏱️</span> {{ time }}
+        </div>
+      </div>
     </div>
-    <div v-if="time" class="time-estimation">
-      <span class="time-icon">⏱️</span> {{ time }}
-    </div>
+    <slot></slot>
   </div>
-  <slot></slot>
 </template>
 
 <style scoped>
+.page-header-with-signet {
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 24px;
+} 
+.signet {
+  width: 8px;
+  min-width: 8px;
+  border-radius: 6px;
+  margin-right: 20px;
+  background: var(--vp-c-brand);
+}
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
   flex-wrap: wrap;
   gap: 12px;
+  flex: 1;
 }
-
 .header-left {
   display: flex;
   align-items: center;
   gap: 16px;
 }
-
 .icon-avatar {
   display: flex;
   align-items: center;
@@ -56,12 +75,10 @@ defineProps({
   border: 1px solid rgba(100, 100, 100, 0.1);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
-
 .title {
   margin: 0;
   padding: 0;
 }
-
 .time-estimation {
   display: inline-flex;
   align-items: center;
@@ -74,17 +91,26 @@ defineProps({
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(100, 100, 100, 0.1);
 }
-
 .time-icon {
   margin-right: 4px;
 }
-
 @media (max-width: 640px) {
+  .page-header-with-signet {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .signet {
+    width: 100%;
+    height: 6px;
+    min-width: 0;
+    margin-right: 0;
+    margin-bottom: 12px;
+    border-radius: 6px;
+  }
   .page-header {
     flex-direction: column;
     align-items: flex-start;
   }
-  
   .time-estimation {
     margin-top: 8px;
   }

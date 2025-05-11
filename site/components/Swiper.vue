@@ -8,35 +8,35 @@
       :modules="modules"
   >
     <swiper-slide class="slide">
-      <img src="/devices.png" alt="Devices" class="background-image"/>
+      <img src="/images/devices.png" alt="Devices" class="background-image"/>
       <div class="text-overlay">
         <div class="title">Devices</div>
         <div class="subtitle">Manage all your devices effortlessly</div>
       </div>
     </swiper-slide>
     <swiper-slide class="slide">
-      <img src="/services.png" alt="Containers" class="background-image"/>
+      <img src="/images/services.png" alt="Containers" class="background-image"/>
       <div class="text-overlay">
         <div class="title">Containers</div>
         <div class="subtitle">Monitor and manage your containers seamlessly</div>
       </div>
     </swiper-slide>
     <swiper-slide class="slide">
-      <img src="/home/dashboard.png" alt="Dashboard" class="background-image"/>
+      <img src="/images/home-dashboard.png" alt="Dashboard" class="background-image"/>
       <div class="text-overlay">
         <div class="title">Dashboard</div>
         <div class="subtitle">Track CPU and memory usage efficiently</div>
       </div>
     </swiper-slide>
     <swiper-slide class="slide">
-      <img src="/services/deploy-store.png" alt="Deploy" class="background-image"/>
+      <img src="/images/services-deploy-store.png" alt="Deploy" class="background-image"/>
       <div class="text-overlay">
         <div class="title">Deploy</div>
         <div class="subtitle">Deploy containers to your devices effortlessly</div>
       </div>
     </swiper-slide>
     <swiper-slide class="slide">
-      <img src="/add-device/add-device-2.png" alt="Add Device" class="background-image"/>
+      <img src="/images/add-device-add-device-2.png" alt="Add Device" class="background-image"/>
       <div class="text-overlay">
         <div class="title">Add Device</div>
         <div class="subtitle">Add devices with ease</div>

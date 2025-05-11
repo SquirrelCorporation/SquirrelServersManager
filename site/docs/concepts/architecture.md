@@ -1,16 +1,18 @@
-<script setup>
-import NextStepCard from '/components/NextStepCard.vue';
-import ProcessSteps from '/components/ProcessSteps.vue';
-import PageHeader from '/components/PageHeader.vue';
-</script>
+---
+layout: FeatureGuideLayout
+title: "Architecture Overview"
+icon: 🏗️ # From PageHeader
+time: 10 minutes # From PageHeader (simplified)
+signetColor: '#3498db' # Blue for Concepts
+nextStep:
+  icon: 🛠️
+  title: Agentless Architecture
+  description: Understand how SSM manages devices without permanent agents
+  link: /docs/concepts/agentless
+credits: true
+---
 
-<PageHeader 
-  title="Architecture Overview" 
-  icon="🏗️" 
-  time="Reading time: 10 minutes" 
-/>
-
-:::tip 🌰 In a Nutshell
+:::tip In a Nutshell (🌰)
 - SSM uses an agentless architecture with SSH as the primary connection method
 - Components include a server, client frontend, database, and cache
 - Secure, lightweight approach with minimal requirements on target devices
@@ -21,11 +23,6 @@ import PageHeader from '/components/PageHeader.vue';
 ## System Architecture
 
 Squirrel Servers Manager (SSM) is designed with a modern, microservices-based architecture that prioritizes security, flexibility, and ease of use. This document provides an overview of how SSM works and how its components interact.
-
-<div class="architecture-diagram">
-  <img src="/overview/reference-architecture.svg" alt="SSM Architecture Overview" />
-  <div class="diagram-caption">Figure 1: High-level architecture of SSM</div>
-</div>
 
 ## Core Components
 
@@ -39,10 +36,12 @@ The SSM server is the central component that:
 - Provides the REST API for the frontend client
 
 **Technologies Used**:
-- Node.js with NestJS framework
-- TypeScript for type safety
-- WebSockets for real-time updates
-- JWT for authentication
+| Technology   | Purpose                        |
+|-------------|-------------------------------|
+| Node.js + NestJS | Backend framework and runtime |
+| TypeScript  | Type safety and better tooling  |
+| WebSockets  | Real-time updates               |
+| JWT         | Authentication                  |
 
 ### Client Component
 
@@ -54,45 +53,60 @@ The web-based frontend client provides:
 - Configuration tools for devices and services
 
 **Technologies Used**:
-- React with TypeScript
-- Ant Design component library
-- WebSockets for real-time updates
-- Chart libraries for metrics visualization
+| Technology   | Purpose                                 |
+|-------------|-----------------------------------------|
+| React + TypeScript | Frontend framework and type safety     |
+| Ant Design  | UI component library                      |
+| WebSockets  | Real-time updates                         |
+| Chart libraries | Metrics visualization                  |
 
 ### Storage Components
 
 SSM uses two primary storage mechanisms:
 
-<div class="component-cards">
-  <div class="component-card">
-    <div class="component-card-header">MongoDB</div>
-    <div class="component-card-content">
-      <p><strong>Purpose:</strong> Primary database for persistent data storage</p>
-      <p><strong>Stores:</strong></p>
-      <ul>
-        <li>User accounts and preferences</li>
-        <li>Device configurations</li>
-        <li>Container definitions</li>
-        <li>Playbook execution history</li>
-        <li>System settings and credentials</li>
-      </ul>
-    </div>
-  </div>
-  
-  <div class="component-card">
-    <div class="component-card-header">Redis</div>
-    <div class="component-card-content">
-      <p><strong>Purpose:</strong> In-memory data store for queue management and settings</p>
-      <p><strong>Stores:</strong></p>
-      <ul>
-        <li>Session data</li>
-        <li>Task execution queues</li>
-        <li>Settings storage</li>
-        <li>WebSocket subscription data</li>
-      </ul>
-    </div>
-  </div>
-</div>
+<ComponentInfoGrid>
+  <ComponentInfoCard
+    headerTitle="MongoDB"
+    purpose="Primary database for persistent data storage"
+    :storesItems="[
+      'User accounts and preferences',
+      'Device configurations',
+      'Container definitions',
+      'Playbook execution history',
+      'System settings and credentials'
+    ]"
+  />
+  <ComponentInfoCard
+    headerTitle="Redis"
+    purpose="In-memory data store for queue management and settings"
+    :storesItems="[
+      'Session data',
+      'Task execution queues',
+      'Settings storage',
+      'WebSocket subscription data'
+    ]"
+  />
+  <ComponentInfoCard
+    headerTitle="Prometheus"
+    purpose="Collects and stores metrics from devices and containers"
+    :storesItems="[
+      'Time-series metrics',
+      'Alerting rules',
+      'Service discovery configurations'
+    ]"
+  />
+  <ComponentInfoCard
+    headerTitle="Local Filesystem Storage"
+    purpose="Stores underlying data for databases and other persistent application files"
+    :storesItems="[
+      'MongoDB data files',
+      'Redis RDB/AOF files',
+      'Application logs',
+      'Uploaded user content',
+      'Backup archives'
+    ]"
+  />
+</ComponentInfoGrid>
 
 
 ### Monitoring Components
@@ -127,97 +141,62 @@ Security is a core principle of SSM's design:
 ### Authentication & Authorization
 
 - JWT-based authentication for API access
-- Role-based access control for operations
 - Session management with configurable expiration
 - Secure credential storage and transmission
 
 ### Network Security
 
 - SSH connections with strict host key verification
-- No permanent open ports on managed devices
+- No permanent open ports on managed devices (except SSH)
 - SSH connections closed after command execution
 
 ## Agentless Architecture Benefits
 
 SSM's agentless approach offers several advantages:
 
-<div class="benefits-grid">
-  <div class="benefit-card">
-    <h4>🛡️ Lower Attack Surface</h4>
-    <p>No permanent agents running on devices means a reduced attack surface and fewer potential vulnerabilities.</p>
-  </div>
-  
-  <div class="benefit-card">
-    <h4>🧰 Simple Maintenance</h4>
-    <p>No agent updates or patching required on managed devices, simplifying long-term maintenance.</p>
-  </div>
-  
-  <div class="benefit-card">
-    <h4>⚡ Resource Efficiency</h4>
-    <p>Minimal resource usage on managed devices since there's no resident agent consuming memory or CPU.</p>
-  </div>
-  
-  <div class="benefit-card">
-    <h4>🔄 Instant Compatibility</h4>
-    <p>Works with any device that supports SSH, without requiring complex agent installation procedures.</p>
-  </div>
-</div>
-
-
-## Deployment Options
-
-SSM supports various deployment configurations:
-
-### Standard Deployment
-
-The recommended deployment with all components:
-- Server for backend functionality
-- Client for frontend interface
-- MongoDB for data storage
-- Redis for queue management and settings
-
-### Minimal Deployment
-
-A lightweight configuration for resource-constrained environments:
-- Combined server and client
-- MongoDB for storage
-- No Redis (reduced queue management capabilities)
-
-### Enterprise Deployment
-
-For larger installations managing many devices:
-- Load-balanced server instances
-- Replicated MongoDB for high availability
-- Redis cluster for distributed queue management
-- Separate metrics storage for long-term data
+<FeatureGrid>
+  <FeatureCard
+    icon="🛡️"
+    title="Lower Attack Surface"
+    description="No permanent agents running on devices means a reduced attack surface and fewer potential vulnerabilities."
+  />
+  <FeatureCard
+    icon="🧰"
+    title="Simple Maintenance"
+    description="No agent updates or patching required on managed devices, simplifying long-term maintenance."
+  />
+  <FeatureCard
+    icon="⚡"
+    title="Resource Efficiency"
+    description="Minimal resource usage on managed devices since there's no resident agent consuming memory or CPU."
+  />
+  <FeatureCard
+    icon="🔄"
+    title="Instant Compatibility"
+    description="Works with any device that supports SSH, without requiring complex agent installation procedures."
+  />
+</FeatureGrid>
 
 ## Related Concepts
 
-<div class="related-concepts">
-  <a href="/docs/concepts/agentless" class="related-concept">
-    <h3>🔄 Agentless Architecture</h3>
-    <p>Deep dive into SSM's agentless approach</p>
-  </a>
-  
-  <a href="/docs/concepts/security" class="related-concept">
-    <h3>🔐 Security Model</h3>
-    <p>How SSM protects your infrastructure</p>
-  </a>
-  
-  <a href="/docs/concepts/plugins" class="related-concept">
-    <h3>🧩 Plugin System</h3>
-    <p>Extending SSM with custom functionality</p>
-  </a>
-</div>
+<FeatureGrid>
+  <FeatureCard
+    icon="🔄"
+    title="Agentless Architecture"
+    description="Deep dive into SSM's agentless approach"
+    link="/docs/concepts/agentless"
+  />
+  <FeatureCard
+    icon="🔐"
+    title="Security Model"
+    description="How SSM protects your infrastructure"
+    link="/docs/concepts/security"
+  />
+  <FeatureCard
+    icon="🧩"
+    title="Plugin System"
+    description="Extending SSM with custom functionality"
+    link="/docs/concepts/plugins"
+  />
+</FeatureGrid>
 
-
-## Next Steps
-
-Now that you understand SSM's architecture, learn more about its agentless approach:
-
-<NextStepCard 
-  icon="🛠️" 
-  title="Agentless Architecture" 
-  description="Understand how SSM manages devices without permanent agents" 
-  link="/docs/concepts/agentless" 
-/>

@@ -1,17 +1,15 @@
-<script setup>
-import PageHeader from '/components/PageHeader.vue';
-</script>
+---
+layout: FeatureGuideLayout
+title: "Security Model"
+icon: "✨"
+time: "5 min read"
+signetColor: '#c0392b'
+credits: true
+---
 
-<PageHeader 
-  title="Security Model" 
-  icon="🔒" 
-  time="Reading time: 7 minutes" 
-/>
-
-:::tip 🌰 In a Nutshell
+:::tip In a Nutshell (🌰)
 - SSM implements a comprehensive security model for device management
 - Credentials are securely stored with encryption
-- Role-based access controls (RBAC) protect sensitive operations
 - SSH provides secure device connections with strict key verification
 - No permanent agents run on managed devices, reducing the attack surface
 :::
@@ -27,8 +25,7 @@ Squirrel Servers Manager (SSM) was designed with security as a core principle. T
 SSM uses several layers of security to protect sensitive credentials:
 
 - **Ansible Vault Encryption**: SSH keys and passwords are encrypted using Ansible Vault
-- **Database Encryption**: Credentials stored in MongoDB use additional encryption
-- **Memory Safety**: No permanent storage of plain-text secrets in memory
+- **Database Encryption**: Credentials stored in MongoDB use additional encryption (bcrypt)
 
 ### SSH Key Management
 
@@ -50,15 +47,6 @@ SSM implements secure user authentication:
 - Protection against brute force attacks
 - Session management with configurable expiration
 
-### Role-Based Access Control
-
-RBAC protects sensitive operations:
-
-- Admin users have full system access
-- Regular users have limited permissions
-- Permissions for device management, container operations, and playbook execution can be customized
-- Actions are logged for audit purposes
-
 ## Network Security
 
 ### SSH Connection Security
@@ -75,7 +63,6 @@ All device connections use secure SSH:
 SSM ensures all connections are encrypted:
 
 - SSH connections use industry-standard encryption
-- WebSocket connections use TLS when configured with a proxy
 
 ## Agentless Security Benefits
 
@@ -90,12 +77,6 @@ The agentless architecture provides significant security advantages:
 
 When deploying SSM, follow these security best practices:
 
-### Access Control
-
-- Create individual user accounts rather than sharing credentials
-- Use the principle of least privilege when assigning roles
-- Regularly review user access and permissions
-
 ### Network Configuration
 
 - Deploy behind a reverse proxy for TLS termination if public access is required
@@ -107,23 +88,3 @@ When deploying SSM, follow these security best practices:
 - Use SSH keys instead of passwords where possible
 - Generate unique SSH keys for SSM rather than sharing existing keys
 - Implement a key rotation policy for sensitive environments
-
-## Security Model Diagram
-
-<div class="security-diagram">
-  <div class="diagram-placeholder">
-    [Diagram: SSM Security Layers from User Interface to Managed Devices]
-  </div>
-  <div class="diagram-caption">SSM Security Layers from User Interface to Managed Devices</div>
-</div>
-
-## Next Steps
-
-Now that you understand SSM's security model, learn more about advanced security hardening:
-
-<a href="/docs/advanced-guides/security" class="next-step-card">
-  <div class="next-step-icon">🛡️</div>
-  <h2>Security Hardening</h2>
-  <div class="next-step-separator"></div>
-  <p>Learn how to further strengthen SSM's security for production deployments</p>
-</a>

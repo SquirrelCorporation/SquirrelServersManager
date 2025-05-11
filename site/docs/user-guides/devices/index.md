@@ -1,11 +1,20 @@
-# Device Management Guide
+---
+layout: FeatureGuideLayout
+title: "Devices"
+icon: "💻" # Computer icon
+time: "5 min read"
+signetColor: '#3a5ccc'
+nextStep:
+  icon: "➡️"
+  title: "Next Topic"
+  description: "Continue to the next relevant section."
+  link: "#"
+credits: true
+---
 
-<div class="quick-start-header">
-  <div class="quick-start-icon">🖥️</div>
-  <div class="quick-start-time">⏱️ Guide Overview</div>
-</div>
+<PageHeader title="Device Management Guide" icon="🖥️" time="Guide Overview" />
 
-:::tip 🌰 In a Nutshell
+:::tip In a Nutshell (🌰)
 - Learn how to add, configure, and manage devices in SSM
 - Understand SSH, Docker, and Proxmox connectivity options
 - Discover how to monitor device health and performance

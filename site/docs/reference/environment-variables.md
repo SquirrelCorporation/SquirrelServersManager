@@ -1,11 +1,13 @@
-# Environment Variables Reference
+---
+layout: FeatureGuideLayout
+title: "Environment Variables"
+icon: "🔧" # Wrench/settings icon
+time: "5 min read"
+signetColor: '#23233e'
+credits: true
+---
 
-<div class="quick-start-header">
-  <div class="quick-start-icon">🔧</div>
-  <div class="quick-start-time">⏱️ Reference</div>
-</div>
-
-:::tip 🌰 In a Nutshell
+:::tip In a Nutshell (🌰)
 - Environment variables configure SSM server behavior
 - Security-related variables control encryption and authentication
 - Database connection variables configure MongoDB and Redis
@@ -173,14 +175,3 @@ set VAULT_PWD=your-secure-vault-password
 $env:SECRET="your-very-long-and-secure-random-string"
 $env:VAULT_PWD="your-secure-vault-password"
 ```
-
-## Next Steps
-
-Now that you understand SSM's environment variables, check out:
-
-<a href="/docs/reference/ssh-configuration" class="next-step-card">
-  <div class="next-step-icon">🔑</div>
-  <h2>SSH Configuration</h2>
-  <div class="next-step-separator"></div>
-  <p>Learn how to configure SSH connections for devices</p>
-</a>

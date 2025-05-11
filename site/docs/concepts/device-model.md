@@ -1,11 +1,13 @@
-# Device Data Model
+---
+layout: FeatureGuideLayout
+title: "Device Data Model"
+icon: 📊 # Bar chart icon
+time: 5 min read # From existing header
+signetColor: '#3498db' # Blue for Concepts
+credits: true
+---
 
-<div class="quick-start-header">
-  <div class="quick-start-icon">📊</div>
-  <div class="quick-start-time">⏱️ Reading time: 5 minutes</div>
-</div>
-
-:::tip 🌰 In a Nutshell
+:::tip In a Nutshell (🌰)
 - Each device in SSM is represented by a DeviceItem data structure
 - Devices contain information about capabilities, configuration, and system information
 - The model includes authentication, network, and hardware details
@@ -159,8 +161,10 @@ Devices have a numeric status code that represents their current state:
 
 ```typescript
 // Example of interpreting device status
-const isDeviceOnline = device.status === 1; // Online status
-const isDeviceOffline = device.status === 0; // Offline status
+import { SSMStatus } from '@shared-lib'; // Adjust path if namespace is deeper
+
+const isDeviceOnline = device.status === SSMStatus.DeviceStatus.Online;
+const isDeviceOffline = device.status === SSMStatus.DeviceStatus.Offline;
 ```
 
 ### Checking Capabilities
@@ -174,14 +178,3 @@ const hasDocker = device.capabilities.containers.docker.enabled;
 // Example of checking if Proxmox is enabled
 const hasProxmox = device.capabilities.containers.proxmox.enabled;
 ```
-
-## Next Steps
-
-Now that you understand the Device Data Model, learn more about how to authenticate and connect to devices:
-
-<a href="/docs/concepts/device-authentication" class="next-step-card">
-  <div class="next-step-icon">🔑</div>
-  <h2>Device Authentication</h2>
-  <div class="next-step-separator"></div>
-  <p>Understand how SSM securely connects to devices</p>
-</a>

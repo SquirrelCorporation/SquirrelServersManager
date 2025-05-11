@@ -1,16 +1,18 @@
-<script setup>
-import NextStepCard from '/components/NextStepCard.vue';
-import SectionHeader from '/components/SectionHeader.vue';
-import PageHeader from '/components/PageHeader.vue';
-</script>
+---
+layout: FeatureGuideLayout
+title: "Adding Devices"
+icon: "🖥️"
+time: "5 min read"
+signetColor: '#3a5ccc'
+nextStep:
+  icon: "🔧"
+  title: "Device Management"
+  description: "Learn how to configure, monitor, and manage your devices"
+  link: "/docs/user-guides/devices/management"
+credits: true
+---
 
-<PageHeader 
-  title="Adding Devices" 
-  icon="🖥️" 
-  time="Estimated time: 5-10 minutes" 
-/>
-
-:::tip 🌰 In a Nutshell
+:::tip In a Nutshell (🌰)
 - Navigate to the Inventory screen and click "Install Agent on New Device"
 - Enter SSH connection info (hostname/IP, port, authentication)
 - Configure sudo settings if needed for elevated permissions
@@ -24,7 +26,7 @@ import PageHeader from '/components/PageHeader.vue';
 Before adding a device to SSM, ensure:
 
 - You have SSH access to the target device
-- The device meets the [system requirements](/docs/requirements)
+- The device meets the [system requirements](/docs/getting-started/requirements)
 - You have valid credentials (password or SSH key)
 - If using key-based authentication, your private key is accessible
 - For Docker management, Docker is installed on the target device
@@ -36,7 +38,7 @@ Before adding a device to SSM, ensure:
 Navigate to the Inventory panel in the Configuration Section on the left sidebar and click "Install Agent on New Device".
 
 <div class="screenshot-container">
-  <img src="/add-device/add-device-1.png" alt="SSM Inventory Panel" class="screenshot" />
+  <img src="/images/add-device-add-device-1.png" alt="SSM Inventory Panel" class="screenshot" />
   <div class="screenshot-caption">The Inventory panel with Add Device button</div>
 </div>
 
@@ -45,7 +47,7 @@ Navigate to the Inventory panel in the Configuration Section on the left sidebar
 In the modal that appears, enter the SSH connection information:
 
 <div class="screenshot-container">
-  <img src="/add-device/add-device-2.png" alt="SSH Connection Screen" class="screenshot" />
+  <img src="/images/add-device-add-device-2.png" alt="SSH Connection Screen" class="screenshot" />
   <div class="screenshot-caption">SSH connection configuration screen</div>
 </div>
 
@@ -68,7 +70,7 @@ If your user requires sudo for elevated permissions:
 SSM will automatically test the connection using your provided details.
 
 <div class="screenshot-container">
-  <img src="/add-device/add-device-6.png" alt="Connection Tests" class="screenshot" />
+  <img src="/images/add-device-add-device-6.png" alt="Connection Tests" class="screenshot" />
   <div class="screenshot-caption">SSM connection test results</div>
 </div>
 
@@ -79,7 +81,7 @@ Wait for the tests to complete and address any issues that arise. Successful tes
 Select the preferred installation method. We recommend using the default Agentless method.
 
 <div class="screenshot-container">
-  <img src="/add-device/add-device-7.png" alt="Installation Method" class="screenshot" />
+  <img src="/images/add-device-add-device-7.png" alt="Installation Method" class="screenshot" />
   <div class="screenshot-caption">Device installation method selection</div>
 </div>
 
@@ -95,7 +97,7 @@ Select the preferred installation method. We recommend using the default Agentle
 Verify all information is correct on the confirmation screen.
 
 <div class="screenshot-container">
-  <img src="/add-device/add-device-4.png" alt="Confirmation Screen" class="screenshot" />
+  <img src="/images/add-device-add-device-4.png" alt="Confirmation Screen" class="screenshot" />
   <div class="screenshot-caption">Device configuration confirmation screen</div>
 </div>
 
@@ -167,13 +169,41 @@ sudo usermod -aG docker username
 ```
 </details>
 
-## Next Steps
+## Deleting a Device
 
-After adding your first device, you'll need to manage its configuration and deploy containers:
+When a device is no longer needed or managed by SSM, you can remove it from your inventory.
 
-<NextStepCard 
-  icon="🔧" 
-  title="Device Management" 
-  description="Learn how to configure, monitor, and manage your devices" 
-  link="/docs/user-guides/devices/management" 
-/>
+**Steps to Delete a Device:**
+
+1.  Navigate to the **Inventory** panel (usually found under the Configuration section in the sidebar).
+2.  Locate the device you wish to remove in the list.
+3.  Click on the action menu (often represented by a drop-down arrow or a settings icon ⚙️) for that device.
+4.  Select the **"Delete device"** option from the menu.
+
+<div class="screenshot-container">
+  <img src="/images/delete-device-1.png" alt="Deleting a device from inventory" class="screenshot" />
+  <div class="screenshot-caption">Device action menu with "Delete device" option</div>
+</div>
+
+:::warning Important Considerations Before Deletion
+- **Irreversible Action**: Deleting a device from SSM is an irreversible action. All statistics, monitoring data, and metadata associated with the device will be permanently removed from SSM.
+- **Agent Uninstall**: Deleting a device from SSM does **not** automatically uninstall any agent software (e.g., Node Agent, Dockerized Agent if installed via a deprecated method) from the actual target server. You must manually remove these agents from the device itself if they are no longer needed.
+:::
+
+**Confirmation**
+
+After selecting "Delete device", a confirmation prompt will appear. This prompt will reiterate that the action is irreversible and that any installed agents should be manually uninstalled.
+
+To proceed, confirm the deletion.
+
+**What Happens After Deletion?**
+
+- The device will be removed from your SSM inventory list.
+- All historical data, metrics, and configuration specific to that device within SSM will be deleted.
+- The actual server/device itself is **not** affected (e.g., it's not shut down, and no files are deleted from it by SSM through this action, other than potentially agent-related files if an uninstall playbook were run *prior* to deletion).
+
+**Uninstalling Agents (If Applicable)**
+
+If you were using an agent-based installation method (now deprecated), ensure you uninstall the agent from the device to free up resources and remove unnecessary software.
+
+For guidance on removing installed agents, please refer to the [Manual Agent Installation guide](/docs/reference/installation/manual-agent-install#uninstalling-the-agent).

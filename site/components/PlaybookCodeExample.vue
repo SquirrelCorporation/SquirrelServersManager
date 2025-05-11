@@ -47,15 +47,16 @@ defineProps({
   margin: 2rem 0;
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid #e9ecef;
-  background-color: #f8f9fa;
+  border: 1px solid var(--vp-c-divider);
+  background-color: var(--vp-c-bg);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  font-family: var(--vp-font-family-base);
 }
 
 .code-example-header {
   padding: 1rem;
-  background-color: #3a5ccc;
-  color: white;
+  background-color: var(--vp-c-brand);
+  color: var(--vp-c-bg);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -74,19 +75,22 @@ defineProps({
 .code-example-title h3 {
   margin: 0;
   font-size: 1.2rem;
+  color: var(--vp-c-text-1);
 }
 
 .code-example-title p {
   margin: 0.25rem 0 0 0;
   font-size: 0.9rem;
   opacity: 0.9;
+  color: var(--vp-c-text-2);
 }
 
 .code-example-filename {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-2);
   padding: 0.25rem 0.75rem;
   border-radius: 4px;
-  font-family: monospace;
+  font-family: var(--vp-font-family-mono);
   font-size: 0.9rem;
 }
 
@@ -103,28 +107,30 @@ defineProps({
 
 .code-block {
   padding: 1rem;
-  background-color: #1e1e1e;
-  color: #e9ecef;
+  background-color: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-1);
   overflow-x: auto;
+  font-family: var(--vp-font-family-mono);
 }
 
 .code-block pre {
   margin: 0;
-  font-family: monospace;
+  font-family: var(--vp-font-family-mono);
   font-size: 0.9rem;
   line-height: 1.5;
 }
 
 .code-example-explanation {
   padding: 1rem;
-  background-color: #fff;
-  border-left: 1px solid #e9ecef;
+  background-color: var(--vp-c-bg);
+  border-left: 1px solid var(--vp-c-divider);
+  color: var(--vp-c-text-2);
 }
 
 @media (max-width: 767px) {
   .code-example-explanation {
     border-left: none;
-    border-top: 1px solid #e9ecef;
+    border-top: 1px solid var(--vp-c-divider);
   }
 }
 
@@ -135,6 +141,6 @@ defineProps({
 
 .code-example-explanation :deep(li) {
   margin-bottom: 0.5rem;
-  color: #495057;
+  color: var(--vp-c-text-2);
 }
 </style>

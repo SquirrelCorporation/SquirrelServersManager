@@ -1,474 +1,463 @@
-# Developing Plugins
+---
+layout: FeatureGuideLayout
+title: "Plugin System"
+icon: 🧩
+time: 15 min read
+signetColor: '#3a5ccc'
+nextStep:
+  icon: 💡
+  title: Why Create a Plugin
+  description: Learn about the benefits of creating plugins
+  link: /docs/developer/why-create-a-plugin
+credits: true
+---
 
-:::info Latest Documentation
-This guide provides comprehensive instructions for developing SSM plugins. However, for the absolute latest updates, examples, and potential template changes, please refer to the canonical documentation within the [SquirrelServersManager-Plugins repository](https://github.com/SquirrelCorporation/SquirrelServersManager-Plugins).
+:::tip In a Nutshell (🌰)
+- Squirrel Servers Manager supports extensibility through a robust plugin system
+- Plugins can add both backend functionality (API endpoints, services) and frontend UI components
+- Frontend components integrate through Module Federation for seamless UI integration
+- Built-in tools like the Plugin Generator CLI simplify plugin creation
 :::
 
-Squirrel Servers Manager (SSM) supports plugins to extend its functionality. You can create plugins to add new backend features, custom API endpoints, and integrate custom user interfaces directly into the main application.
+:::info Latest Documentation
+For the absolute latest updates, examples, and potential template changes, please refer to the canonical documentation within the [SquirrelServersManager-Plugins repository](https://github.com/SquirrelCorporation/SquirrelServersManager-Plugins).
+:::
 
-This guide provides instructions for developers who want to create and distribute their own SSM plugins.
+## Overview
 
-## Prerequisites
+The Squirrel Servers Manager Plugin System allows developers to extend the application's functionality with custom features. Plugins can add new server-side capabilities, API endpoints, and client-side user interfaces that integrate seamlessly with the main application.
 
-Before you begin, ensure you have the following installed:
+The plugin architecture follows a modular design that separates concerns between:
 
-*   **Node.js:** LTS version 18.x or higher is recommended.
-*   **npm** (usually included with Node.js) or **yarn**.
+1. **Server-side logic**: Implemented using a simple adapter pattern with support for custom API routes
+2. **Client-side UI**: Implemented using React components integrated via Module Federation
+3. **Database access**: Optional MongoDB integration for plugins that need persistent storage
 
-## Getting Started: Project Setup
+![Plugin Architecture](/images/plugin-architecture.svg)
 
-1.  **Create Plugin Folder:**
-    *   Choose a unique name for your plugin using **kebab-case** (e.g., `my-awesome-plugin`). This name is important as it will be used for the plugin ID.
-    *   Create a directory with this name:
-        ```bash
-        mkdir my-awesome-plugin
-        cd my-awesome-plugin
-        ```
+## Plugin Structure
 
-2.  **Initialize npm Package:**
-    *   Create a `package.json` file:
-        ```bash
-        npm init -y
-        ```
-    *   You can edit the details (author, license, etc.) later. The `name` field should match your kebab-case folder name.
+A typical plugin follows this structure:
 
-3.  **Install Core Dependencies:**
-    *   Add TypeScript and essential Node.js types:
-        ```bash
-        npm install --save-dev typescript @types/node
-        ```
-    *   Add NestJS core dependencies (even if not creating complex NestJS modules internally, the host uses them):
-        ```bash
-        npm install --save-dev @nestjs/common @nestjs/core reflect-metadata rxjs
-        ```
-        :::tip Peer Dependencies
-        Consider moving `@nestjs/common`, `@nestjs/core`, `reflect-metadata`, and `rxjs` to `peerDependencies` in your `package.json` later to avoid bundling them if the host provides them.
-        :::
-
-4.  **Install Frontend Dependencies (Optional):**
-    *   If your plugin will have a UI component, install React, ReactDOM, and Ant Design:
-        ```bash
-        npm install react react-dom antd
-        npm install --save-dev @types/react @types/react-dom webpack webpack-cli ts-loader copy-webpack-plugin @babel/core babel-loader @babel/preset-react @babel/preset-typescript
-        ```
-        :::tip Peer Dependencies (Frontend)
-        `react`, `react-dom`, and `antd` should also be listed in `peerDependencies` to use the versions provided by the host application.
-        :::
-
-## Project Structure and Configuration
-
-Set up the essential configuration files and the basic folder layout.
-
-1.  **Create Directory Structure:**
-    ```bash
-    mkdir src public dist
-    touch src/index.ts # Server entry point
-    # If creating a UI:
-    mkdir src/client
-    touch src/client/index.tsx # Client entry point
-    touch src/client/MyPluginComponent.tsx # Example UI component
-    touch public/icon.svg # Placeholder for plugin icon
-    ```
-
-2.  **Create `manifest.json` (Required):**
-    *   This file is critical for SSM to recognize and load your plugin. Create it in the root of your plugin folder.
-    ```json
-    {
-      "id": "my-awesome-plugin",
-      "name": "My Awesome Plugin",
-      "version": "0.0.1",
-      "description": "A brief description.",
-      "entryPoint": "dist/index.js",
-      "icon": "client/icon.svg", // Path relative to the 'public/' dir in the package
-      "client": {
-        "remoteEntryRelativePath": "public/client/remoteEntry.js",
-        "exposedModule": "./MyPluginComponent",
-        "componentName": "MyPluginComponent",
-        "hasDedicatedPage": true
-      }
-    }
-    ```
-    *   **`id` (string, required):** Unique identifier in **kebab-case**. MUST match the folder name ideally. Used for URLs (`/plugins/<id>`).
-    *   **`name` (string, required):** Human-readable name.
-    *   **`version` (string, required):** SemVer version string.
-    *   **`description` (string, required):** Brief description.
-    *   **`entryPoint` (string, required):** Path to the compiled server entry point (relative to the package root). Almost always `"dist/index.js"`.
-    *   **`icon` (string, optional):** Path to the plugin's icon (SVG recommended) relative to the `public/` directory within the packaged plugin. This icon is copied during the build process.
-    *   **`client` (object, optional):** Include *only* if your plugin provides a UI component.
-        *   **`remoteEntryRelativePath` (string, required):** Path to the Webpack Module Federation entry file. Use `"public/client/remoteEntry.js"`.
-        *   **`exposedModule` (string, required):** The key used in the `exposes` section of your `webpack.config.js`. Typically `./YourComponentName`.
-        *   **`componentName` (string, required):** The exported name of your main React component.
-        *   **`hasDedicatedPage` (boolean, optional):** If `true`, creates a dedicated page for your plugin at `/plugins/<id>`.
-    *   **`database` (string, optional):** If your plugin needs its own isolated database, specify a *unique* database name here (e.g., `"my_plugin_db"`). Cannot be the main SSM database name.
-
-3.  **Create `tsconfig.json` (Required):**
-    *   Configure the TypeScript compiler.
-    ```json
-    {
-      "compilerOptions": {
-        "module": "CommonJS",
-        "target": "ES2017",
-        "outDir": "./dist",
-        "rootDir": "./src",
-        "strict": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "declaration": true, // Recommended for better type checking
-        "sourceMap": true    // Recommended for debugging
-      },
-      "include": ["src/**/*"],
-      "exclude": ["node_modules", "dist", "src/client/**/*"] // Exclude client files from server build
-    }
-    ```
-
-4.  **Create `webpack.config.js` (Required for UI):**
-    *   Configure Webpack for bundling the client-side code using Module Federation. See the "Client-Side Implementation" section for the specific configuration details.
-
-5.  **Create `.gitignore`:**
-    *   Prevent committing unnecessary files.
-    ```
-    node_modules
-    dist
-    public/client
-    *.tsbuildinfo
-    *.tar.gz
-    *.sha256
-    .DS_Store
-    ```
-
-## Server-Side Implementation (Backend)
-
-Every plugin needs a server-side entry point, even if it only provides a frontend UI.
-
-1.  **Entry Point (`src/index.ts`):**
-    *   This file **must** export an object named `Plugin`. The host application looks for this export.
-    *   Implement the `register` method, which is called by the host during plugin loading.
-    *   Optionally implement `registerRoutes` to provide API endpoints.
-
-    ```typescript
-    // src/index.ts
-    import { INestApplication } from '@nestjs/common';
-    import { Connection } from 'mongoose'; // Example if using database
-
-    // Define types expected from the host context
-    interface PluginLogger {
-      info: (message: string, ...meta: any[]) => void;
-      warn: (message: string, ...meta: any[]) => void;
-      error: (message: string, ...meta: any[]) => void;
-      debug: (message: string, ...meta: any[]) => void;
-    }
-
-    interface PluginContext {
-      logger: PluginLogger;
-      dbConnection?: Connection; // Only provided if "database" is in manifest.json
-    }
-
-    // Define structure for API routes
-    interface RouteDefinition {
-      path: string;
-      method: 'get' | 'post' | 'put' | 'delete' | 'patch';
-      handler: (req: any, res: any, logger: PluginLogger) => void;
-      description?: string;
-    }
-
-    // --- Your Plugin's Implementation ---
-    const pluginImplementation = {
-      loggerInstance: null as PluginLogger | null,
-      dbConnectionInstance: null as Connection | null,
-
-      /**
-       * Called by the host when the plugin loads. Use for initialization.
-       */
-      async register(app: INestApplication, context: PluginContext): Promise<void> {
-        this.loggerInstance = context.logger;
-        if (!this.loggerInstance) {
-            this.loggerInstance = console as any; // Fallback
-            this.loggerInstance.warn('Logger not found in context, using console.');
-        }
-
-        this.loggerInstance.info(`Registering ${'my-awesome-plugin'}...`);
-
-        // Store DB connection if provided
-        if (context.dbConnection) {
-            this.loggerInstance.info('Database connection provided.');
-            this.dbConnectionInstance = context.dbConnection;
-            // Initialize Mongoose models here using this.dbConnectionInstance
-            // e.g., this.myModel = createMyModel(this.dbConnectionInstance);
-        }
-
-        // Add other initialization logic (e.g., setup internal services)
-
-        this.loggerInstance.info(`${'my-awesome-plugin'} registered successfully!`);
-      },
-
-      /**
-       * Optional: Called by the host to get API routes.
-       */
-      registerRoutes(): RouteDefinition[] {
-        if (!this.loggerInstance) {
-            console.error("Cannot register routes: logger not initialized!");
-            return [];
-        }
-        const logger = this.loggerInstance; // Use closure to pass logger to handlers
-
-        this.loggerInstance.info('Providing API routes...');
-        return [
-          {
-            path: '/my-data', // Route becomes /plugins/my-awesome-plugin/my-data
-            method: 'get',
-            handler: (req, res) => { // Access logger via closure
-                logger.info('Handling GET /my-data');
-                // Access DB models via this.myModel if initialized
-                res.json({ message: 'Data from my awesome plugin!' });
-            },
-            description: 'Get awesome data.'
-          }
-          // Add more routes...
-        ];
-      }
-    };
-
-    // Export the implementation object AS 'Plugin' for the host to find
-    export const Plugin = pluginImplementation;
-    ```
-
-    :::important Logger Usage
-    Always use the logger provided in the `context` (e.g., `this.loggerInstance.info(...)`) instead of `console.log` for server-side logging. This ensures logs are integrated with the host application's logging system.
-    :::
-
-2.  **API Routes (Optional):**
-    *   If you implement `registerRoutes`, the function should return an array of `RouteDefinition` objects.
-    *   The `path` you define is relative to `/plugins/<your-plugin-id>/`.
-    *   Use the `logger` instance passed via closure within your handler functions.
-    *   Access any initialized database models or services via `this`.
-
-3.  **Database Usage (Optional):**
-    *   If you add the `"database"` field to your `manifest.json`, the host will create an isolated MongoDB database for your plugin and pass the Mongoose `Connection` object in `context.dbConnection`.
-    *   Use this connection within the `register` method to initialize your Mongoose models.
-    *   Access your models within your route handlers (e.g., `this.myModel.find(...)`).
-
-## Client-Side Implementation (Frontend UI - Optional)
-
-If your plugin needs a UI integrated into SSM, you must use **React** and **Webpack with Module Federation**.
-
-1.  **Create UI Component:**
-    *   Build your main React component (e.g., `src/client/MyPluginComponent.tsx`).
-    *   You can use Ant Design components (`antd`), as it's shared by the host.
-    *   Fetch data from your plugin's backend API routes using relative URLs like `/plugins/<your-plugin-id>/your-route`.
-
-    ```typescript
-    // src/client/MyPluginComponent.tsx (Example)
-    import React, { useState, useEffect } from 'react';
-    import { Spin, message, Card } from 'antd';
-
-    const API_BASE_URL = '/plugins/my-awesome-plugin'; // Use your plugin ID
-
-    const MyPluginComponent: React.FC = () => {
-        const [data, setData] = useState<any>(null);
-        const [loading, setLoading] = useState(true);
-
-        useEffect(() => {
-            fetch(`${API_BASE_URL}/my-data`)
-                .then(res => {
-                    if (!res.ok) throw new Error('Network response was not ok');
-                    return res.json();
-                })
-                .then(setData)
-                .catch(err => message.error(`Failed to load plugin data: ${err.message}`))
-                .finally(() => setLoading(false));
-        }, []);
-
-        if (loading) return <Spin />;
-        if (!data) return <p>Error loading data.</p>;
-
-        return (
-            <Card title="My Awesome Plugin">
-                <p>Data from backend: {data.message}</p>
-            </Card>
-        );
-    };
-
-    // MUST be the default export
-    export default MyPluginComponent;
-    ```
-
-2.  **Create Client Entry Point:**
-    *   Create `src/client/index.tsx` that simply exports your main component as the default export.
-    ```typescript
-    // src/client/index.tsx
-    import MyPluginComponent from './MyPluginComponent';
-    export default MyPluginComponent;
-    ```
-
-3.  **Configure `webpack.config.js` (Critical):**
-    *   This file tells Webpack how to bundle your client code and expose it correctly for the host application via Module Federation.
-    *   **Pay close attention to the required naming conventions and paths.**
-
-    ```javascript
-    // webpack.config.js
-    const path = require("path");
-    const webpack = require("webpack");
-    const { ModuleFederationPlugin } = webpack.container;
-    const CopyPlugin = require("copy-webpack-plugin");
-
-    // ---!!! MUST CONFIGURE THESE !!!---
-    const pluginKebabCaseId = "my-awesome-plugin"; // Must match manifest.json 'id'
-    const pluginCamelCaseName = "myAwesomePlugin"; // Convert kebab-case to camelCase
-    const exposedComponentPath = "./src/client/MyPluginComponent.tsx"; // Path to your main React component file
-    const exposedComponentKey = "./MyPluginComponent"; // Key for exposes (MUST match manifest.json 'client.exposedModule')
-    // ------------------------------------
-
-    const sharedConfig = {
-      react: { singleton: true, requiredVersion: false },
-      "react-dom": { singleton: true, requiredVersion: false },
-      antd: { singleton: true, requiredVersion: false },
-      // Add other libraries shared with the host if needed
-    };
-
-    module.exports = {
-      mode: "production", // Use 'development' for easier debugging if needed
-      entry: "./src/client/index.tsx", // Client entry point
-      output: {
-        // CRITICAL: Output MUST be to 'public/client' relative to package root
-        path: path.resolve(__dirname, "public/client"),
-        // CRITICAL: publicPath structure MUST follow this pattern
-        publicPath: `/static-plugins/client/${pluginKebabCaseId}/`,
-        filename: 'bundle.[contenthash].js', // Use contenthash for caching
-        chunkFilename: '[name].[contenthash].js',
-        clean: true, // Clean the output directory before build
-      },
-      resolve: {
-        extensions: [".tsx", ".ts", ".js", ".jsx"],
-      },
-      module: {
-        rules: [
-          {
-            test: /\.(ts|tsx)$/,
-            exclude: /node_modules/,
-            use: ["ts-loader"], // Or babel-loader with presets
-          },
-          // Add loaders for CSS, images, etc. if needed
-        ],
-      },
-      plugins: [
-        new ModuleFederationPlugin({
-          // CRITICAL: 'name' MUST be the camelCase version of your plugin ID
-          name: pluginCamelCaseName,
-          // CRITICAL: 'library' config is required for the host to find the module
-          library: { type: "window", name: pluginCamelCaseName }, // Must match 'name'
-          // CRITICAL: 'filename' MUST be 'remoteEntry.js'
-          filename: "remoteEntry.js",
-          exposes: {
-            // CRITICAL: Key MUST match 'exposedModule' in manifest.json
-            // CRITICAL: Value is the relative path to your component file from root
-            [exposedComponentKey]: exposedComponentPath,
-          },
-          shared: sharedConfig, // Share dependencies with the host
-        }),
-        // CRITICAL: Copy the required icon from public/ source to public/client/ output
-        new CopyPlugin({
-          patterns: [
-            { from: "public/icon.svg", to: "icon.svg", noErrorOnMissing: false },
-            // Copy other static assets if needed
-          ],
-        }),
-      ],
-      devtool: "source-map", // Optional: 'source-map' for production, 'eval-source-map' for dev
-    };
-    ```
-
-    :::danger Webpack Configuration
-    The `output.path`, `output.publicPath`, `ModuleFederationPlugin.name`, `ModuleFederationPlugin.library.name`, `ModuleFederationPlugin.filename`, and the key in `ModuleFederationPlugin.exposes` **must** follow the exact patterns and conventions shown. Mismatches will prevent the host application from loading your plugin's UI.
-    :::
-
-4.  **Add Plugin Icon (Required for UI):**
-    *   Place an SVG icon for your plugin at `public/icon.svg`.
-    *   The `CopyPlugin` in `webpack.config.js` copies this to the build output (`public/client/icon.svg`).
-    *   Ensure the `icon` field in `manifest.json` points to `"client/icon.svg"`.
-    *   The build will fail if `public/icon.svg` is missing when the `CopyPlugin` runs.
-
-## Building the Plugin
-
-Add scripts to your `package.json` to streamline the build process.
-
-```json
-// package.json (scripts section)
-"scripts": {
-  "build:server": "tsc -p tsconfig.json",
-  "build:client": "webpack --mode production", // Or --mode development
-  "build": "npm run build:server && npm run build:client", // Adjust if no client needed
-  // Add clean script (see Packaging section)
-  // ... other scripts ...
-},
+```
+your-plugin-name/
+├── dist/                     # Compiled server-side code
+├── public/
+│   └── client/               # Bundled client-side assets
+│       ├── remoteEntry.js    # Module Federation entry point
+│       └── icon.svg          # Plugin icon
+├── src/
+│   ├── client/               # Source files for client-side components
+│   │   ├── index.tsx         # Entry point for webpack client build
+│   │   └── YourComponent.tsx # Main plugin UI component
+│   └── index.ts              # Server-side entry point
+├── manifest.json             # Plugin metadata
+├── package.json              # Node.js package definition
+├── tsconfig.json             # TypeScript configuration
+└── webpack.config.js         # Webpack configuration for client-side
 ```
 
-Run the build:
+### The Manifest File
+
+The `manifest.json` file is the cornerstone of every plugin, defining its identity and capabilities:
+
+```json
+{
+  "id": "my-plugin",           // Required: Unique kebab-case identifier
+  "name": "My Plugin",         // Required: Human-readable name
+  "version": "1.0.0",          // Required: SemVer version
+  "description": "Plugin description",  // Required: Brief description
+  "entryPoint": "dist/index.js",  // Required: Server entry point path
+  "staticDir": "public",       // Optional: Static files directory
+  "database": "my_plugin_db",  // Optional: Custom database name
+  "client": {                  // Optional: Include only for UI plugins
+    "remoteEntryRelativePath": "public/client/remoteEntry.js",
+    "exposedModule": "./MyPluginComponent",
+    "componentName": "MyPluginComponent",
+    "hasDedicatedPage": true   // Creates a route at /plugins/<id>
+  }
+}
+```
+
+## Creating Your First Plugin
+
+The easiest way to create a new plugin is to use the included Plugin Generator CLI:
+
+1. **Install the generator** (one-time setup):
+
+```bash
+cd plugins/plugin-generator
+npm install
+npm run build
+npm link
+```
+
+2. **Generate a new plugin**:
+
+```bash
+generate-ssm-plugin create-plugin my-first-plugin
+```
+
+This creates a new plugin with the basic structure and boilerplate code. You can also specify options like `--no-frontend` or `--no-backend` depending on your needs.
+
+## Backend Implementation
+
+The server-side plugin must export an object named `Plugin` that implements two main methods:
+
+1. **`register(app, context)`**: Called when the plugin is loaded, used for initialization
+2. **`registerRoutes()`**: Returns an array of route definitions for the plugin's API endpoints
+
+Here's a minimal server-side implementation:
+
+```typescript
+// src/index.ts
+import { INestApplication } from '@nestjs/common';
+
+interface PluginLogger {
+  info: (message: string, ...meta: any[]) => void;
+  warn: (message: string, ...meta: any[]) => void;
+  error: (message: string, ...meta: any[]) => void;
+  debug: (message: string, ...meta: any[]) => void;
+}
+
+interface PluginContext {
+  logger: PluginLogger;
+  dbConnection?: any; // Available if database is specified in manifest
+}
+
+interface RouteDefinition {
+  path: string;
+  method: 'get' | 'post' | 'put' | 'delete' | 'patch';
+  handler: (req: any, res: any) => void;
+  description?: string;
+}
+
+export const Plugin = {
+  loggerInstance: null as PluginLogger | null,
+
+  async register(app: INestApplication, context: PluginContext): Promise<void> {
+    this.loggerInstance = context.logger;
+    this.loggerInstance.info('Plugin initialized');
+  },
+
+  registerRoutes(): RouteDefinition[] {
+    const logger = this.loggerInstance;
+    return [
+      {
+        path: '/',
+        method: 'get',
+        handler: (req, res) => {
+          logger?.info('Handling request');
+          res.json({ status: 'ok', message: 'Hello from plugin' });
+        },
+        description: 'Root endpoint'
+      }
+    ];
+  }
+};
+```
+
+### API Endpoints
+
+Plugin API endpoints are automatically mounted at `/plugins/{plugin-id}/{route-path}`. For example, a route with path `/status` in a plugin with ID `my-plugin` would be accessible at `/plugins/my-plugin/status`.
+
+## Frontend Implementation
+
+To add a UI component to your plugin:
+
+1. Create a React component:
+
+```tsx
+// src/client/MyPluginComponent.tsx
+import React from 'react';
+
+const MyPluginComponent: React.FC = () => {
+  return (
+    <div>
+      <h2>My Plugin UI</h2>
+      <p>This component is loaded via Module Federation.</p>
+    </div>
+  );
+};
+
+export default MyPluginComponent;
+```
+
+2. Create an entry point:
+
+```tsx
+// src/client/index.tsx
+import MyPluginComponent from './MyPluginComponent';
+export default MyPluginComponent;
+```
+
+3. Configure webpack for Module Federation:
+
+```javascript
+// webpack.config.js
+const path = require("path");
+const webpack = require("webpack");
+const { ModuleFederationPlugin } = webpack.container;
+
+// IMPORTANT: These values must match your manifest.json
+const pluginKebabCaseId = "my-plugin";
+const pluginCamelCaseName = "myPlugin";
+
+module.exports = {
+  mode: "production",
+  entry: "./src/client/index.tsx",
+  output: {
+    path: path.resolve(__dirname, "public/client"),
+    publicPath: `/static-plugins/client/${pluginKebabCaseId}/`,
+    clean: true,
+  },
+  resolve: { extensions: [".tsx", ".ts", ".js", ".jsx"] },
+  module: {
+    rules: [{ test: /\.(ts|tsx)$/, exclude: /node_modules/, use: ["ts-loader"] }]
+  },
+  plugins: [
+    new ModuleFederationPlugin({
+      name: pluginCamelCaseName,
+      library: { type: "window", name: pluginCamelCaseName },
+      filename: "remoteEntry.js",
+      exposes: {
+        "./MyPluginComponent": "./src/client/MyPluginComponent.tsx",
+      },
+      shared: {
+        react: { singleton: true, requiredVersion: false },
+        "react-dom": { singleton: true, requiredVersion: false },
+        antd: { singleton: true, requiredVersion: false },
+      },
+    }),
+  ],
+};
+```
+
+## Using Database Storage
+
+If your plugin needs persistent storage, add a `database` field to your `manifest.json`:
+
+```json
+{
+  "id": "my-plugin",
+  "name": "My Plugin",
+  "version": "1.0.0",
+  "description": "Plugin with database storage",
+  "entryPoint": "dist/index.js",
+  "database": "my_plugin_db"
+}
+```
+
+The plugin system will automatically:
+- Create a dedicated MongoDB database for your plugin
+- Provide a Mongoose connection in the `context.dbConnection` object passed to your `register` method
+
+Example usage:
+
+```typescript
+import mongoose from 'mongoose';
+
+// Define your schema
+const TaskSchema = new mongoose.Schema({
+  title: String,
+  completed: Boolean,
+  createdAt: { type: Date, default: Date.now }
+});
+
+export const Plugin = {
+  // ...
+  taskModel: null,
+
+  async register(app, context) {
+    this.loggerInstance = context.logger;
+    
+    // Initialize model if database connection is available
+    if (context.dbConnection) {
+      this.taskModel = context.dbConnection.model('Task', TaskSchema);
+      this.loggerInstance.info('Task model initialized');
+    } else {
+      this.loggerInstance.warn('No database connection provided');
+    }
+  },
+
+  registerRoutes() {
+    const logger = this.loggerInstance;
+    const taskModel = this.taskModel;
+    
+    return [
+      {
+        path: '/tasks',
+        method: 'get',
+        handler: async (req, res) => {
+          try {
+            const tasks = await taskModel.find();
+            res.json(tasks);
+          } catch (error) {
+            logger.error('Error fetching tasks', error);
+            res.status(500).json({ error: 'Failed to fetch tasks' });
+          }
+        }
+      },
+      // Add other routes...
+    ];
+  }
+};
+```
+
+## The Client-Side Plugin Lifecycle
+
+On the client side, the plugin system follows these steps:
+
+1. **Discovery**: The client fetches plugin metadata from the server
+2. **Loading**: For plugins with UI components, the Module Federation loader loads the remote entry
+3. **Initialization**: The plugin component is created and registered
+4. **Rendering**: The plugin component is rendered either in a dedicated page or in extension slots
+
+The client-side plugin loader handles:
+- Dynamically loading JavaScript modules
+- Sharing dependencies to avoid duplicate code
+- Creating plugin instances that register components, routes, and hooks
+- Rendering plugins in the appropriate locations
+
+## Building and Packaging
+
+To build your plugin:
+
+1. Add build scripts to your `package.json`:
+
+```json
+"scripts": {
+  "build:server": "tsc -p tsconfig.json",
+  "build:client": "webpack --mode production",
+  "build": "npm run build:server && npm run build:client",
+  "package": "tar czf my-plugin-v1.0.0.tar.gz manifest.json package.json dist public"
+}
+```
+
+2. Run the build:
 
 ```bash
 npm run build
 ```
 
-This compiles the server code to `dist/` and bundles the client code (if any) to `public/client/`.
-
-## Packaging for Distribution
-
-Plugins are distributed as `.tar.gz` archives containing the compiled code, assets, manifest, and production dependencies.
-
-Add standardized packaging scripts to `package.json`:
-
-```json
-// package.json (scripts section additions)
-"scripts": {
-  // ... build scripts ...
-  "clean": "rm -rf dist public/client ${npm_package_name}-*.tar.gz ${npm_package_name}-*.sha256",
-  "prepackage": "npm run clean && npm run build && npm install --omit=dev",
-  "package": "tar czf ${npm_package_name}-v${npm_package_version}.tar.gz --exclude='src' --exclude='*.tsbuildinfo' --exclude='webpack.config.js' --exclude='tsconfig.json' --exclude='.git' --exclude='.gitignore' --exclude='${npm_package_name}-*.tar.gz' --exclude='${npm_package_name}-*.sha256' manifest.json package.json dist public node_modules && shasum -a 256 ${npm_package_name}-v${npm_package_version}.tar.gz > ${npm_package_name}-v${npm_package_version}.tar.gz.sha256",
-  "postpackage": "npm install"
-},
-```
-
-Run the package command:
+3. Package for distribution:
 
 ```bash
 npm run package
 ```
 
-This generates:
-*   `<plugin-name>-v<version>.tar.gz`: The distributable plugin archive.
-*   `<plugin-name>-v<version>.tar.gz.sha256`: A checksum file for integrity verification.
+The resulting `.tar.gz` file can be installed in any Squirrel Servers Manager instance.
 
-The archive will contain `manifest.json`, `package.json`, `dist/`, `public/`, and `node_modules/` (production dependencies only).
+## Plugin Installation
+
+Plugins can be installed via the SSM web interface:
+
+1. Go to Settings > Plugins
+2. Click "Upload Plugin"
+3. Select your `.tar.gz` package
+4. The system will validate, install, and activate your plugin
+
+## Advanced Topics
+
+### Accessing Core Services
+
+Plugins can access core SSM services through the NestJS application instance passed to the `register` method:
+
+```typescript
+async register(app: INestApplication, context: PluginContext): Promise<void> {
+  // Get a core service from the NestJS container
+  const devicesService = app.get('DevicesService');
+  
+  // Use the service
+  const devices = await devicesService.findAll();
+  context.logger.info(`Found ${devices.length} devices`);
+}
+```
+
+### Sharing State Between Frontend and Backend
+
+To share state between your plugin's backend and frontend components:
+
+1. Create API endpoints in your backend to expose data
+2. Use the fetch API in your React component to retrieve data
+
+```tsx
+import React, { useState, useEffect } from 'react';
+
+const MyPluginComponent: React.FC = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/plugins/my-plugin/data');
+        const result = await response.json();
+        setData(result);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  
+  return (
+    <div>
+      <h2>Plugin Data</h2>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
+    </div>
+  );
+};
+
+export default MyPluginComponent;
+```
 
 ## Testing During Development
 
-To test your plugin with a running SSM instance:
+To test your plugin during development:
 
-1.  **Build Your Plugin:** Run `npm run build` in your plugin's directory.
-2.  **Link Your Plugin (Recommended):**
-    *   In your plugin directory: `npm link`
-    *   In the SSM project directory: `npm link <your-plugin-package-name>`
-    *   Restart the SSM server. Changes require rebuilding the plugin (`npm run build`) and potentially restarting SSM.
-3.  **Direct Development (Alternative):**
-    *   Develop your plugin directly inside the SSM project's `.data.dev/plugins/` directory.
-    *   Run `npm install` and `npm run build` within that directory.
-    *   Restart the SSM server.
-4.  **Manual Copy (Less Convenient):**
-    *   Build your plugin (`npm run build`).
-    *   Manually copy `dist/`, `public/`, `manifest.json`, `package.json`, and production `node_modules/` into a new folder inside SSM's `.data.dev/plugins/`.
-    *   Restart the SSM server.
+1. **Build Your Plugin:** Run `npm run build` in your plugin's directory.
+2. **Link Your Plugin (Recommended):**
+   - In your plugin directory: `npm link`
+   - In the SSM project directory: `npm link <your-plugin-package-name>`
+   - Restart the SSM server
 
-**Testing Steps:**
+3. **Direct Development (Alternative):**
+   - Develop your plugin directly inside the SSM project's `.data.dev/plugins/` directory
+   - Run `npm run build` within that directory
+   - Restart the SSM server
 
-*   Check SSM server logs for registration messages or errors.
-*   If you have a UI:
-    *   Visit the "Plugins" page in SSM to see if your plugin is listed.
-    *   If `hasDedicatedPage: true`, navigate to `/plugins/<your-plugin-id>`.
-    *   Use browser developer tools to check the console and network requests.
-*   Test backend API endpoints using your UI or tools like `curl`.
+Always check server logs and browser developer tools to troubleshoot any issues.
+
+## Best Practices
+
+1. **Use kebab-case for plugin IDs**: Ensures compatibility with URLs and file paths
+2. **Keep dependencies minimal**: Leverage shared dependencies when possible
+3. **Handle errors gracefully**: Use try/catch blocks and provide helpful error messages
+4. **Clean up resources**: Implement cleanup logic for database connections and timers
+5. **Use TypeScript**: Type definitions improve code quality and development experience
+6. **Follow SSM UI patterns**: Match the main application's look and feel for a seamless user experience
+
+## Troubleshooting
+
+### Common Issues
+
+- **Plugin not loading**: Check that your `manifest.json` is valid and `entryPoint` path is correct
+- **Frontend component not appearing**: Verify webpack configuration, especially `name` and `library.name`
+- **API endpoints not working**: Ensure route handlers return responses and handle errors properly
+
+### Debugging
+
+1. Check server logs for errors during plugin loading
+2. Look for console errors in the browser developer tools
+3. Verify that the plugin's `remoteEntry.js` file is being loaded correctly (Network tab)
+4. Test API endpoints directly using tools like Postman or curl
 
 ## Example Plugins
 
-Refer to the `sample-plugin` and `todo-tasks-manager` within the `plugins/` directory of the main SSM repository for more complete examples. 
+Refer to the `sample-plugin` and `todo-tasks-manager` within the `plugins/` directory of the main SSM repository for more complete examples.

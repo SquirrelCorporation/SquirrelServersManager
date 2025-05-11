@@ -1,11 +1,14 @@
-# User Guides
+---
+layout: FeatureGuideLayout
+title: "User Guides"
+icon: "📚"
+time: "5 min read"
+signetColor: '#f1c40f'
+credits: true
+feedbackSupport: true
+---
 
-<div class="quick-start-header">
-  <div class="quick-start-icon">📚</div>
-  <div class="quick-start-time">⏱️ Guide Overview</div>
-</div>
-
-:::tip 🌰 In a Nutshell
+:::tip In a Nutshell (🌰)
 - Comprehensive guides for all major SSM features
 - Step-by-step instructions with screenshots
 - Organized by functional areas (devices, containers, etc.)
@@ -17,128 +20,155 @@
 
 The User Guides section provides detailed instructions for using all major features of Squirrel Servers Manager, organized by functional area.
 
-<div class="features-grid">
-  <a href="/docs/user-guides/devices/" class="feature-card">
-    <div class="feature-icon">🖥️</div>
-    <div class="feature-content">
-      <h3>Devices</h3>
-      <p>Add, configure, manage, and monitor your servers and devices</p>
-      <div class="feature-links">
-        <a href="/docs/user-guides/devices/adding-devices">Adding devices</a> · 
-        <a href="/docs/user-guides/devices/management">Management</a>
-      </div>
-    </div>
-  </a>
-  
-  <a href="/docs/user-guides/containers/" class="feature-card">
-    <div class="feature-icon">🐳</div>
-    <div class="feature-content">
-      <h3>Containers</h3>
-      <p>Deploy and manage Docker containers across your infrastructure</p>
-      <div class="feature-links">
-        <a href="/docs/user-guides/containers/management">Container basics</a> · 
-        <a href="/docs/user-guides/containers/deploy-store">Deploy from store</a>
-      </div>
-    </div>
-  </a>
-  
-  <a href="/docs/user-guides/automations/" class="feature-card">
-    <div class="feature-icon">⏱️</div>
-    <div class="feature-content">
-      <h3>Automations</h3>
-      <p>Set up scheduled tasks and automated workflows</p>
-      <div class="feature-links">
-        <a href="/docs/user-guides/automations/overview">Automation basics</a> · 
-        <a href="/docs/user-guides/automations/schedules">Schedules</a>
-      </div>
-    </div>
-  </a>
-  
-  <a href="/docs/user-guides/stacks/" class="feature-card">
-    <div class="feature-icon">📦</div>
-    <div class="feature-content">
-      <h3>Stacks</h3>
-      <p>Deploy multi-container applications and run Ansible playbooks</p>
-      <div class="feature-links">
-        <a href="/docs/user-guides/stacks/playbooks/overview">Playbooks</a> · 
-        <a href="/docs/user-guides/stacks/containers/editor">Container Stacks</a>
-      </div>
-    </div>
-  </a>
-</div>
+<FeatureGrid>
+  <SubLinkFeatureCard
+    v-for="feature in mainFeatures"
+    :key="feature.title"
+    :icon="feature.icon"
+    :title="feature.title"
+    :description="feature.description"
+    :link="feature.link"
+    :subLinks="feature.subLinks"
+  />
+</FeatureGrid>
 
 ## Getting Started
 
 If you're new to SSM, we recommend following this learning path:
-
-1. **First Steps**: Begin with [adding your first device](/docs/user-guides/devices/adding-devices)
-2. **Container Basics**: Learn [container management](/docs/user-guides/containers/management)
-3. **Simple Deployment**: Try [deploying from the template store](/docs/user-guides/containers/deploy-store)
-4. **Automate**: Set up [automations](/docs/user-guides/automations/overview) for routine tasks
+<StepPath :steps="gettingStartedSteps" />
 
 ## User Paths
 
 Depending on your role and goals, you might want to explore the documentation in different orders:
 
+<script setup>
+import StepPath from '/components/StepPath.vue';
+import FeatureGrid from '/components/FeatureGrid.vue';
+import SubLinkFeatureCard from '/components/SubLinkFeatureCard.vue';
+
+const devOpsSteps = [
+  { number: 1, title: "Container Management", description: "Master deploying and managing Docker containers.", link: "/docs/user-guides/containers/management", linkText: "Explore Management" },
+  { number: 2, title: "Container Stacks", description: "Define and run multi-container applications using Docker Compose.", link: "/docs/user-guides/stacks/containers/editor", linkText: "Explore Stacks" },
+  { number: 3, title: "Automations", description: "Automate routine tasks and workflows for your servers.", link: "/docs/user-guides/automations/overview", linkText: "Explore Automations" },
+  { number: 4, title: "Remote Stack Repositories", description: "Manage and use remote repositories for container stacks.", link: "/docs/user-guides/stacks/containers/remote-stacks", linkText: "Explore Repositories" }
+];
+
+const adminSteps = [
+  { number: 1, title: "Device Management", description: "Add, configure, and monitor your physical or virtual devices.", link: "/docs/user-guides/devices/management", linkText: "Explore Devices" },
+  { number: 2, title: "SSH Configuration", description: "Set up secure SSH connections for device management.", link: "/docs/user-guides/devices/configuration/ssh", linkText: "Explore SSH Config" },
+  { number: 3, title: "Playbooks", description: "Use Ansible playbooks for advanced server configuration.", link: "/docs/user-guides/stacks/playbooks/overview", linkText: "Explore Playbooks" },
+  { number: 4, title: "Scheduled Tasks", description: "Configure and manage scheduled automations.", link: "/docs/user-guides/automations/schedules", linkText: "Explore Schedules" }
+];
+
+const homeLabSteps = [
+  { number: 1, title: "Adding Devices", description: "Get your first server or device connected to SSM.", link: "/docs/user-guides/devices/adding-devices", linkText: "Learn Adding Devices" },
+  { number: 2, title: "Deploying from Store", description: "Quickly deploy common applications from the template store.", link: "/docs/user-guides/containers/deploy-store", linkText: "Explore Store" },
+  { number: 3, title: "Container Basics", description: "Understand the fundamentals of container management.", link: "/docs/user-guides/containers/management", linkText: "Learn Container Basics" },
+  { number: 4, title: "Simple Automations", description: "Create basic automations to simplify your lab tasks.", link: "/docs/user-guides/automations/creating", linkText: "Explore Creating Automations" }
+];
+
+const gettingStartedSteps = [
+  { number: 1, title: "First Steps", description: "Begin with adding your first device to SSM.", link: "/docs/user-guides/devices/adding-devices", linkText: "Add a Device" },
+  { number: 2, title: "Container Basics", description: "Learn the fundamentals of managing containers.", link: "/docs/user-guides/containers/management", linkText: "Manage Containers" },
+  { number: 3, title: "Simple Deployment", description: "Try deploying an application from the template store.", link: "/docs/user-guides/containers/deploy-store", linkText: "Deploy from Store" },
+  { number: 4, title: "Automate", description: "Set up basic automations for your routine tasks.", link: "/docs/user-guides/automations/overview", linkText: "Setup Automations" }
+];
+
+const mainFeatures = [
+  {
+    icon: "🖥️",
+    title: "Devices",
+    description: "Add, configure, manage, and monitor your servers and devices",
+    link: "/docs/user-guides/devices/",
+    subLinks: [
+      { text: "Adding devices", href: "/docs/user-guides/devices/adding-devices" },
+      { text: "Management", href: "/docs/user-guides/devices/management" }
+    ]
+  },
+  {
+    icon: "🐳",
+    title: "Containers",
+    description: "Deploy and manage Docker containers across your infrastructure",
+    link: "/docs/user-guides/containers/",
+    subLinks: [
+      { text: "Container basics", href: "/docs/user-guides/containers/management" },
+      { text: "Deploy from store", href: "/docs/user-guides/containers/deploy-store" }
+    ]
+  },
+  {
+    icon: "⏱️",
+    title: "Automations",
+    description: "Set up scheduled tasks and automated workflows",
+    link: "/docs/user-guides/automations/",
+    subLinks: [
+      { text: "Automation basics", href: "/docs/user-guides/automations/overview" },
+      { text: "Schedules", href: "/docs/user-guides/automations/schedules" }
+    ]
+  },
+  {
+    icon: "📦",
+    title: "Stacks",
+    description: "Deploy multi-container applications and run Ansible playbooks",
+    link: "/docs/user-guides/stacks/",
+    subLinks: [
+      { text: "Playbooks", href: "/docs/user-guides/stacks/playbooks/overview" },
+      { text: "Container Stacks", href: "/docs/user-guides/stacks/containers/editor" }
+    ]
+  }
+];
+
+const advancedFeaturesData = [
+  {
+    icon: "🗄️",
+    title: "Repository Management",
+    description: "Work with local and remote repositories for playbooks and container stacks.",
+    link: "/docs/user-guides/repositories/", // General link for the category
+    subLinks: [
+      { text: "Local Repositories", href: "/docs/user-guides/repositories/local-playbooks" },
+      { text: "Remote Repositories", href: "/docs/user-guides/repositories/remote-playbooks" }
+    ]
+  },
+  {
+    icon: "⚙️",
+    title: "System Settings",
+    description: "Configure global system settings and integrations.",
+    link: "/docs/user-guides/settings/", // General link for the category
+    subLinks: [
+      { text: "General Settings", href: "/docs/user-guides/settings/overview" },
+      { text: "Container Registries", href: "/docs/user-guides/settings/registry" },
+      { text: "MCP Settings", href: "/docs/user-guides/settings/mcp" }
+    ]
+  }
+];
+</script>
+
 ### For DevOps Engineers
 
 Focus on container orchestration and automation:
-
-1. [Container Management](/docs/user-guides/containers/management)
-2. [Container Stacks](/docs/user-guides/stacks/containers/editor)
-3. [Automations](/docs/user-guides/automations/overview)
-4. [Remote Stack Repositories](/docs/user-guides/stacks/containers/remote-stacks)
+<StepPath :steps="devOpsSteps" />
 
 ### For System Administrators
 
 Prioritize device management and playbooks:
-
-1. [Device Management](/docs/user-guides/devices/management)
-2. [SSH Configuration](/docs/user-guides/devices/configuration/ssh)
-3. [Playbooks](/docs/user-guides/stacks/playbooks/overview)
-4. [Scheduled Tasks](/docs/user-guides/automations/schedules)
+<StepPath :steps="adminSteps" />
 
 ### For Home Lab Users
 
 Start with the basics and build up:
-
-1. [Adding Devices](/docs/user-guides/devices/adding-devices)
-2. [Deploying from Store](/docs/user-guides/containers/deploy-store)
-3. [Container Basics](/docs/user-guides/containers/management)
-4. [Simple Automations](/docs/user-guides/automations/creating)
+<StepPath :steps="homeLabSteps" />
 
 ## Advanced Features
 
 Beyond the basics, SSM offers advanced capabilities for power users:
 
-<div class="advanced-features">
-  <div class="advanced-feature">
-    <h3>Repository Management</h3>
-    <p>Work with local and remote repositories for playbooks and container stacks</p>
-    <div class="advanced-feature-links">
-      <a href="/docs/user-guides/repositories/local-playbooks">Local Repositories</a> ·
-      <a href="/docs/user-guides/repositories/remote-playbooks">Remote Repositories</a>
-    </div>
-  </div>
-  
-  <div class="advanced-feature">
-    <h3>System Settings</h3>
-    <p>Configure global system settings and integrations</p>
-    <div class="advanced-feature-links">
-      <a href="/docs/user-guides/settings/overview">General Settings</a> ·
-      <a href="/docs/user-guides/settings/registry">Container Registries</a> ·
-      <a href="/docs/user-guides/settings/mcp">MCP Settings</a>
-    </div>
-  </div>
-</div>
-
-## Next Steps
-
-Ready to get started? Begin by setting up your first device:
-
-<a href="/docs/user-guides/devices/adding-devices" class="next-step-card">
-  <div class="next-step-icon">➕</div>
-  <h2>Adding Devices</h2>
-  <div class="next-step-separator"></div>
-  <p>Learn how to connect your servers and devices to SSM</p>
-</a>
+<FeatureGrid>
+  <SubLinkFeatureCard
+    v-for="feature in advancedFeaturesData"
+    :key="feature.title"
+    :icon="feature.icon"
+    :title="feature.title"
+    :description="feature.description"
+    :link="feature.link"
+    :subLinks="feature.subLinks"
+  />
+</FeatureGrid>

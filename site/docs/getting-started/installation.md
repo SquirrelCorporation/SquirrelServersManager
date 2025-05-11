@@ -1,16 +1,28 @@
+---
+layout: FeatureGuideLayout
+title: "Installation"
+icon: "📥" # Download/installation icon
+time: "5 min read"
+signetColor: '#f1c40f'
+nextStep:
+  icon: "👉"
+  title: "First Time Setup"
+  description: "Create your admin account and get started with SSM"
+  link: "/docs/getting-started/first-steps"
+credits: true
+feedbackSupport: true
+--- 
+
 <script setup>
 import NextStepCard from '/components/NextStepCard.vue';
 import SectionHeader from '/components/SectionHeader.vue';
-import PageHeader from '/components/PageHeader.vue';
+import FeatureGrid from '/components/FeatureGrid.vue';
+import FeatureCard from '/components/FeatureCard.vue';
+import FeedbackSupportSection from '/components/FeedbackSupportSection.vue';
 </script>
 
-<PageHeader 
-  title="Installation Guide" 
-  icon="🚀" 
-  time="Estimated time: 5-10 minutes" 
-/>
 
-:::tip 🌰 In a Nutshell
+:::tip In a Nutshell (🌰)
 - Install SSM using one-line scripts for Docker or Proxmox
 - Set up required environment variables for security
 - Access the web interface on port 8000
@@ -18,7 +30,7 @@ import PageHeader from '/components/PageHeader.vue';
 
 
 :::warning ⚠️ System Requirements
-Before proceeding, ensure your system meets all [requirements](/docs/requirements)
+Before proceeding, ensure your system meets all [requirements](/docs/getting-started/requirements)
 :::
 
 ## Installation Methods
@@ -39,10 +51,21 @@ bash -c "$(wget -qLO - https://getssm.io/proxmox)"
 ```
 :::
 
-<div class="method-links">
-  <a href="/docs/install/docker" class="method-link">Detailed Docker instructions →</a>
-  <a href="/docs/install/proxmox" class="method-link">Detailed Proxmox instructions →</a>
-</div>
+### Alternatives:
+<FeatureGrid>
+  <FeatureCard
+    icon="🐳"
+    title="Docker Installation"
+    description="Step-by-step guide for installing SSM using Docker."
+    link="/docs/getting-started/installation/docker"
+  />
+  <FeatureCard
+    icon="🖥️"
+    title="Proxmox Installation"
+    description="Detailed instructions for installing SSM on Proxmox."
+    link="/docs/getting-started/installation/proxmox"
+  />
+</FeatureGrid>
 
 ## Manual Installation with Docker Compose
 
@@ -203,37 +226,40 @@ To disable telemetry:
 <details>
 <summary>What data does telemetry collect?</summary>
 
-The anonymized telemetry includes:
+The **anonymized** telemetry includes:
 - SSM version
 - Number of devices connected
 - Number of containers managed
 - Operating system type
 - General usage patterns
 
-No personal information, credentials, or identifying data is collected.
+**No personal information, credentials, or identifying data is collected.**
 </details>
 
-## Alternative Installation Methods
+## Other Alternative Installation Methods (Advanced)
 
-<div class="alt-install-methods">
-  <div class="alt-method">
-    <h3>🔧 Manual Build</h3>
-    <p>Build SSM from source code for complete customization.</p>
-    <a href="/docs/technical-guide/manual-install-ssm">Manual build instructions →</a>
-  </div>
+<FeatureGrid>
+  <FeatureCard
+    icon="🔧"
+    title="Manual Build"
+    description="Build SSM from source code for complete customization."
+    link="/docs/reference/installation/manual-ssm-from-source"
+  />
   
-  <div class="alt-method">
-    <h3>🛡️ Dockerless Setup</h3>
-    <p>Install SSM without Docker for specialized environments.</p>
-    <a href="/docs/install/dockerless">Dockerless installation →</a>
-  </div>
+  <FeatureCard
+    icon="🛡️"
+    title="Dockerless Setup"
+    description="Install SSM without Docker for specialized environments."
+    link="/docs/getting-started/installation/dockerless"
+  />
   
-  <div class="alt-method">
-    <h3>📡 Proxy-Free Setup</h3>
-    <p>Install SSM without the proxy component.</p>
-    <a href="/docs/install/proxy-free">Proxy-free configuration →</a>
-  </div>
-</div>
+  <FeatureCard
+    icon="📡"
+    title="Proxy-Free Setup"
+    description="Install SSM without the proxy component."
+    link="/docs/getting-started/installation/proxy-free"
+  />
+</FeatureGrid>
 
 ## Troubleshooting
 
@@ -273,27 +299,3 @@ DB_PORT=27017
 sudo chown -R 1000:1000 ./.data.prod
 ```
 </details>
-
-## Next Steps
-
-<NextStepCard 
-  icon="👉" 
-  title="First Time Setup" 
-  description="Create your admin account and get started with SSM" 
-  link="/docs/getting-started/first-steps" 
-/>
-
-<div class="feedback-section">
-  <div class="feedback-header">Was this guide helpful?</div>
-  <div class="feedback-content">
-    <p>Help us improve our documentation by sharing your feedback!</p>
-    <div class="feedback-links">
-      <a href="https://github.com/SquirrelCorporation/SquirrelServersManager/issues/new?template=doc_feedback.md&title=Installation+Guide+Feedback" class="feedback-link">
-        <span>📝</span> Submit Feedback
-      </a>
-      <a href="https://discord.gg/cnQjsFCGKJ" class="feedback-link">
-        <span>💬</span> Join Discord
-      </a>
-    </div>
-  </div>
-</div>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="600" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient Definitions -->
+  <defs>
+    <linearGradient id="checkGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3498db" />
+      <stop offset="100%" stop-color="#2980b9" />
+    </linearGradient>
+    <linearGradient id="installGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2ecc71" />
+      <stop offset="100%" stop-color="#27ae60" />
+    </linearGradient>
+    <linearGradient id="configGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f1c40f" />
+      <stop offset="100%" stop-color="#f39c12" />
+    </linearGradient>
+    <linearGradient id="deviceGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#9b59b6" />
+      <stop offset="100%" stop-color="#8e44ad" />
+    </linearGradient>
+    <linearGradient id="containerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#e74c3c" />
+      <stop offset="100%" stop-color="#c0392b" />
+    </linearGradient>
+    <filter id="shadowFilter" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="600" fill="#f9f9f9" rx="10" ry="10" />
+  
+  <!-- Title -->
+  <text x="450" y="50" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#333">SSM Installation Flow & Requirements</text>
+  
+  <!-- Flow Diagram Connections -->
+  <path d="M250,170 L370,170" stroke="#666" stroke-width="3" fill="none" marker-end="url(#arrowhead)" />
+  <path d="M550,170 L650,170" stroke="#666" stroke-width="3" fill="none" marker-end="url(#arrowhead)" />
+  <path d="M250,290 L370,290" stroke="#666" stroke-width="3" fill="none" marker-end="url(#arrowhead)" />
+  <path d="M550,290 L650,290" stroke="#666" stroke-width="3" fill="none" marker-end="url(#arrowhead)" />
+  <path d="M450,210 L450,250" stroke="#666" stroke-width="3" fill="none" marker-end="url(#arrowhead)" />
+  <path d="M450,330 L450,370" stroke="#666" stroke-width="3" fill="none" marker-end="url(#arrowhead)" />
+  <path d="M450,450 L450,490" stroke="#666" stroke-width="3" fill="none" marker-end="url(#arrowhead)" />
+  
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666" />
+    </marker>
+  </defs>
+  
+  <!-- Step 1: Requirements Check -->
+  <rect x="100" y="120" width="150" height="100" rx="10" ry="10" fill="url(#checkGradient)" filter="url(#shadowFilter)" />
+  <text x="175" y="160" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Requirements</text>
+  <text x="175" y="185" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Check</text>
+  
+  <!-- Step 2: SSM Installation -->
+  <rect x="370" y="120" width="180" height="100" rx="10" ry="10" fill="url(#installGradient)" filter="url(#shadowFilter)" />
+  <text x="460" y="160" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">SSM</text>
+  <text x="460" y="185" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Installation</text>
+  
+  <!-- Step 3: SSL, Docker Check -->
+  <rect x="650" y="120" width="150" height="100" rx="10" ry="10" fill="url(#installGradient)" filter="url(#shadowFilter)" />
+  <text x="725" y="160" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">SSL & Docker</text>
+  <text x="725" y="185" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Configuration</text>
+  
+  <!-- Step 4: Environment Setup -->
+  <rect x="100" y="240" width="150" height="100" rx="10" ry="10" fill="url(#configGradient)" filter="url(#shadowFilter)" />
+  <text x="175" y="280" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Environment</text>
+  <text x="175" y="305" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Setup</text>
+  
+  <!-- Step 5: Admin Setup -->
+  <rect x="370" y="240" width="180" height="100" rx="10" ry="10" fill="url(#configGradient)" filter="url(#shadowFilter)" />
+  <text x="460" y="280" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Admin User</text>
+  <text x="460" y="305" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Creation</text>
+  
+  <!-- Step 6: Network Setup -->
+  <rect x="650" y="240" width="150" height="100" rx="10" ry="10" fill="url(#configGradient)" filter="url(#shadowFilter)" />
+  <text x="725" y="280" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Network</text>
+  <text x="725" y="305" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Configuration</text>
+  
+  <!-- Step 7: Device Addition -->
+  <rect x="370" y="370" width="180" height="80" rx="10" ry="10" fill="url(#deviceGradient)" filter="url(#shadowFilter)" />
+  <text x="460" y="410" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Device Addition</text>
+  
+  <!-- Step 8: Container Deployment -->
+  <rect x="370" y="490" width="180" height="80" rx="10" ry="10" fill="url(#containerGradient)" filter="url(#shadowFilter)" />
+  <text x="460" y="515" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Container</text>
+  <text x="460" y="540" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Deployment</text>
+  
+  <!-- Requirements for each step -->
+  <rect x="100" y="440" width="180" height="130" rx="5" ry="5" fill="#fff" stroke="#3498db" stroke-width="2" />
+  <text x="190" y="460" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#3498db">Install Requirements</text>
+  <text x="110" y="485" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" fill="#333">• Docker 20.10+</text>
+  <text x="110" y="505" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" fill="#333">• Docker Compose V2</text>
+  <text x="110" y="525" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" fill="#333">• 2GB RAM/10GB disk</text>
+  <text x="110" y="545" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" fill="#333">• CPU with AVX support*</text>
+  <text x="110" y="565" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" fill="#333">• Internet access</text>
+  
+  <rect x="640" y="370" width="180" height="110" rx="5" ry="5" fill="#fff" stroke="#9b59b6" stroke-width="2" />
+  <text x="730" y="390" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#9b59b6">Device Requirements</text>
+  <text x="650" y="415" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" fill="#333">• SSH access</text>
+  <text x="650" y="435" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" fill="#333">• Sudo/root privileges</text>
+  <text x="650" y="455" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" fill="#333">• Python 3.8+ (for Ansible)</text>
+  <text x="650" y="475" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" fill="#333">• Docker (for containers)</text>
+  
+  <rect x="640" y="500" width="180" height="90" rx="5" ry="5" fill="#fff" stroke="#e74c3c" stroke-width="2" />
+  <text x="730" y="520" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#e74c3c">Container Deploy</text>
+  <text x="650" y="545" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" fill="#333">• Docker on target device</text>
+  <text x="650" y="565" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" fill="#333">• Registry access</text>
+  <text x="650" y="585" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" fill="#333">• Sufficient disk space</text>
+</svg>

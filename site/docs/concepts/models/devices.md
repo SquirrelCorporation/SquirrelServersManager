@@ -1,11 +1,18 @@
+---
+layout: FeatureGuideLayout
+title: "Device Mental Model"
+icon: "💻" # Computer icon
+time: "5 min read"
+signetColor: '#23233e'
+credits: true
+---
+
+
 <script setup>
 import DeviceModelDiagram from '/components/DeviceModelDiagram.vue';
-import NextStepCard from '/components/NextStepCard.vue';
 </script>
 
-# Device Mental Model
-
-:::tip 🌰 In a Nutshell
+:::tip In a Nutshell (🌰)
 - Devices are the core entities in SSM representing physical or virtual servers
 - Each device connects via SSH and optionally manages Docker containers
 - Devices maintain their own configuration, metrics, and connection status
@@ -22,9 +29,9 @@ Unlike traditional management systems that require agent software to be installe
 
 The device data model consists of several key components that define its identity, connection methods, and capabilities:
 
-<div class="concept-diagram">
-  <img src="/home/device-info.png" alt="Device Data Model Diagram" class="screenshot" />
-  <div class="diagram-caption">Figure 1: The Device Data Model in SSM</div>
+<div class="screenshot-container">
+  <img src="/images/home-device-info.png" alt="Device Data Model Diagram" class="screenshot" />
+  <div class="screenshot-caption">Figure 1: The Device Data Model in SSM</div>
 </div>
 
 ### Core Properties
@@ -32,44 +39,12 @@ The device data model consists of several key components that define its identit
 | Property | Type | Description |
 |----------|------|-------------|
 | `id` | String | Unique identifier for the device |
-| `name` | String | Human-readable name for the device |
 | `ip` | String | IP address or hostname for connecting to the device |
 | `status` | Enum | Current connection status (online, offline, error) |
-| `type` | Enum | Device type (server, VM, container, etc.) |
-| `os` | Object | Operating system information (name, version, etc.) |
-| `tags` | Array | User-defined tags for organizing devices |
 
 ### Connection Configuration
 
 Each device maintains configuration for how SSM connects to and interacts with it:
-
-#### SSH Configuration
-
-```json
-{
-  "host": "192.168.1.100",
-  "port": 22,
-  "username": "admin",
-  "authMethod": "key", // or "password"
-  "password": "", // stored encrypted
-  "privateKey": "-----BEGIN RSA PRIVATE KEY-----\n...", // stored encrypted
-  "passphrase": "", // stored encrypted
-  "sudo": true // whether to use sudo for privileged operations
-}
-```
-
-#### Docker Configuration
-
-```json
-{
-  "enabled": true,
-  "version": "20.10.12",
-  "socketPath": "/var/run/docker.sock", // for Unix socket connections
-  "tcpEndpoint": "tcp://192.168.1.100:2375", // for TCP connections
-  "tlsVerify": true,
-  "certPath": "/path/to/certs" // for TLS connections
-}
-```
 
 ## Device Lifecycle
 
@@ -77,8 +52,8 @@ Devices in SSM follow a specific lifecycle from creation to deletion:
 
 1. **Creation**: A device is added to SSM with basic connection information
 2. **Connection**: SSM establishes an SSH connection to the device
-3. **Discovery**: System information and capabilities are detected
-4. **Configuration**: Additional settings like Docker access are configured
+3. **Discovery**: System information  are detected
+4. **Configuration**: Additional settings like Docker access are checked
 5. **Monitoring**: The device is continuously monitored for status and metrics
 6. **Management**: Operations like container deployment are performed
 7. **Deletion**: The device is removed from SSM (with no impact on the actual server)
@@ -91,9 +66,9 @@ SSM supports multiple connection methods to devices:
 
 The primary connection method is SSH, which provides secure access to the device's shell. SSM supports both password and key-based authentication:
 
-<div class="concept-diagram">
-  <img src="/home/new-device.png" alt="Device Connection Flow" class="screenshot" />
-  <div class="diagram-caption">Figure 2: SSH Connection Flow in SSM</div>
+<div class="screenshot-container">
+  <img src="/images/home-new-device.png" alt="Device Connection Flow" class="screenshot" />
+  <div class="screenshot-caption">Figure 2: SSH Connection Flow in SSM</div>
 </div>
 
 #### Connection Process
@@ -123,12 +98,12 @@ The primary connection method is SSH, which provides secure access to the device
 
 ### Docker API Connection
 
-For container management, SSM connects to the Docker API on the device. This can be done through:
 
-<div class="concept-diagram">
-  <img src="/home/dashboard.png" alt="Docker Connection Dashboard" class="screenshot" />
-  <div class="diagram-caption">Figure 3: Docker Management in SSM</div>
+<div class="screenshot-container">
+  <img src="/images/home-services.png" alt="Docker Connection Dashboard" class="screenshot" />
+  <div class="screenshot-caption">Figure 3: Docker Management in SSM</div>
 </div>
+For container management, SSM connects to the Docker API on the device. This can be done through:
 
 #### Docker Connection Methods
 
@@ -141,33 +116,6 @@ For container management, SSM connects to the Docker API on the device. This can
      ```json
      {
        "socketPath": "/var/run/docker.sock",
-       "enabled": true
-     }
-     ```
-
-2. **TCP Connection**:
-   - Direct connection to Docker daemon exposed over TCP
-   - Typically used when SSH access is not available
-   - Less secure unless TLS encryption is used
-   - Requires Docker daemon to be configured to listen on a TCP port
-   - Example configuration:
-     ```json
-     {
-       "tcpEndpoint": "tcp://192.168.1.100:2375",
-       "enabled": true
-     }
-     ```
-
-3. **TLS Connection**:
-   - Secure TCP connection with certificate authentication
-   - Provides encryption and authentication
-   - Requires proper certificate setup on both SSM and Docker host
-   - Example configuration:
-     ```json
-     {
-       "tcpEndpoint": "tcp://192.168.1.100:2376",
-       "tlsVerify": true,
-       "certPath": "/path/to/certs",
        "enabled": true
      }
      ```
@@ -193,16 +141,15 @@ Devices support various operations:
 
 - **Ping**: Check if the device is reachable
 - **Connect**: Establish an SSH connection
-- **Disconnect**: Close the SSH connection
 - **Reboot**: Restart the device
 - **Shutdown**: Power off the device
 
 ### Management Operations
 
-- **Execute Command**: Run a shell command on the device
+- **Execute Command**: Run a shell command on the device (Manually, through Connect or through Playbooks)
 - **Transfer File**: Upload or download files
-- **Install Package**: Install software packages
-- **Update System**: Apply system updates
+- **Install Package**: Install software packages (Manually, through Connect or through Playbooks)
+- **Update System**: Apply system updates (Manually, through Connect or through Playbooks)
 
 ### Container Operations
 
@@ -219,7 +166,6 @@ SSM collects and displays various metrics from devices:
 - **System Metrics**: CPU, memory, disk usage, network traffic
 - **Process Metrics**: Running processes, resource usage
 - **Container Metrics**: Container-specific resource usage
-- **Service Metrics**: Status of system services
 - **Update Status**: Available system and package updates
 
 ## Security Considerations
@@ -237,28 +183,27 @@ Device management involves several security considerations:
 For optimal device management:
 
 1. **Use Descriptive Names**: Give devices clear, meaningful names
-2. **Apply Tags**: Use tags to organize devices by function, environment, etc.
-3. **Group Related Devices**: Create logical groups for batch operations
-4. **Regular Testing**: Periodically verify connection settings
-5. **Monitor Status**: Set up alerts for device status changes
-6. **Backup Configurations**: Export device configurations regularly
-7. **Use SSH Keys**: Prefer key-based authentication over passwords
+2. **Group Related Devices**: Create logical groups for batch operations
+3. **Regular Testing**: Periodically verify connection settings
+4. **Monitor Status**: Set up alerts for device status changes
+5. **Backup Configurations**: Export device configurations regularly
+6. **Use SSH Keys**: Prefer key-based authentication over passwords
 
 ## Device Types Comparison
 
 SSM supports various types of devices, each with its own capabilities and use cases:
 
-| Feature | Standard Linux Server | Docker Host | Proxmox Host | Unmanaged Device |
-|---------|----------------------|-------------|--------------|------------------|
-| **SSH Access** | ✅ Required | ✅ Required | ✅ Required | ❌ Optional |
-| **Container Management** | ❌ No | ✅ Yes (Docker) | ✅ Yes (LXC) | ❌ No |
-| **VM Management** | ❌ No | ❌ No | ✅ Yes | ❌ No |
-| **System Metrics** | ✅ Yes | ✅ Yes | ✅ Yes | ❌ Limited |
-| **Command Execution** | ✅ Yes | ✅ Yes | ✅ Yes | ❌ No |
-| **File Transfer** | ✅ Yes | ✅ Yes | ✅ Yes | ❌ No |
-| **Playbook Execution** | ✅ Yes | ✅ Yes | ✅ Yes | ❌ No |
-| **Automation Support** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Limited |
-| **Typical Use Case** | General-purpose servers | Container workloads | Virtualization hosts | Monitoring-only devices |
+| Feature | Standard Linux Server | Docker Host | Proxmox Host |
+|---------|----------------------|-------------|--------------|
+| **SSH Access** | ✅ Required | ✅ Required | ✅ Required |
+| **Container Management** | ❌ No | ✅ Yes (Docker) | ✅ Yes (LXC) |
+| **VM Management** | ❌ No | ❌ No | ✅ Yes | 
+| **System Metrics** | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Command Execution** | ✅ Yes | ✅ Yes | ✅ Yes |
+| **File Transfer** | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Playbook Execution** | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Automation Support** | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Typical Use Case** | General-purpose servers | Container workloads | Virtualization hosts |
 
 ### Real-World Examples
 
@@ -375,8 +320,4 @@ Under the hood, SSM uses several technologies to manage devices:
 | Docker Connection Failed | Docker not running or not accessible | Check Docker daemon status and socket permissions |
 | High Resource Usage | Resource-intensive operations | Monitor and optimize resource-intensive tasks |
 
-<NextStepCard 
-  title="Container Management" 
-  description="Learn how to deploy and manage containers on your devices" 
-  link="/docs/concepts/models/containers" 
-/>
+

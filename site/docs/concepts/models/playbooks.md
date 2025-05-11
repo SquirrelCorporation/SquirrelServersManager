@@ -1,17 +1,16 @@
-<script setup>
-import DeviceModelDiagram from '/components/DeviceModelDiagram.vue';
-import NextStepCard from '/components/NextStepCard.vue';
-import ProcessStepsPlaybook from '/components/ProcessStepsPlaybook.vue';
-import SectionHeader from '/components/SectionHeader.vue';
-import FeatureGrid from '/components/FeatureGrid.vue';
-import FeatureCard from '/components/FeatureCard.vue';
-</script>
+---
+layout: FeatureGuideLayout
+title: "Playbooks"
+icon: "📚" # Books icon
+time: "5 min read"
+signetColor: '#8e44ad'
+credits: true
+---
 
 <style src="./styles.css"></style>
 
-# Playbooks Mental Model
 
-:::tip 🌰 In a Nutshell
+:::tip In a Nutshell (🌰)
 - Playbooks in SSM are Ansible-based automation scripts for infrastructure management
 - They provide idempotent, declarative configuration across multiple devices
 - Playbooks can be stored locally or in remote repositories
@@ -24,7 +23,7 @@ import FeatureCard from '/components/FeatureCard.vue';
 In Squirrel Servers Manager, **playbooks** are Ansible-based automation scripts that define a series of tasks to be executed across your infrastructure. Playbooks allow you to automate complex operations, ensure consistent configurations, and manage your devices at scale.
 
 <div class="concept-diagram">
-  <img src="/home/playbook.png" alt="Playbook Architecture Diagram" class="screenshot" />
+  <img src="/images/home-playbook.png" alt="Playbook Architecture Diagram" class="screenshot" />
   <div class="diagram-caption">Figure 1: The Playbook Architecture in SSM</div>
 </div>
 
@@ -70,34 +69,6 @@ Playbooks can be executed in several ways:
   - Off-hours operations
   - Recurring configurations
 
-- **Triggered Execution**: Run in response to events
-  - Device status changes
-  - Container events
-  - System alerts
-  - External triggers
-
-### 4. Playbook Variables
-
-Variables make playbooks flexible and reusable:
-
-- **Inventory Variables**: Specific to devices or groups
-  - Hardware capabilities
-  - Network configuration
-  - Role assignments
-
-- **Playbook Variables**: Defined within the playbook
-  - Configuration options
-  - Default values
-  - Internal state
-
-- **Extra Variables**: Provided at runtime
-  - User inputs
-  - Dynamic values from automations
-  - Override defaults
-
-## How the Playbooks Model Works
-
-<ProcessStepsPlaybook />
 
 ## Playbook Lifecycle
 
@@ -179,7 +150,7 @@ Playbooks in SSM follow a defined lifecycle:
       when: reboot_if_needed and ansible_os_family == "Debian"
 ```
     
-    <p>This playbook:</p>
+<p>This playbook:</p>
     <ul>
       <li>Updates the package cache</li>
       <li>Upgrades all installed packages</li>
@@ -189,7 +160,7 @@ Playbooks in SSM follow a defined lifecycle:
       <li>Optionally reboots the system if needed</li>
     </ul>
     
-    <p>You can schedule this playbook to run weekly across all your devices, ensuring consistent security practices.</p>
+<p>You can schedule this playbook to run weekly across all your devices, ensuring consistent security practices.</p>
   </div>
 </div>
 
@@ -274,9 +245,9 @@ Playbooks in SSM follow a defined lifecycle:
         name: myapp
         state: restarted
 ```
-    
-    <p>This playbook:</p>
-    <ul>
+
+<p>This playbook:</p>
+<ul>
       <li>Installs required dependencies</li>
       <li>Creates the application directory</li>
       <li>Downloads and extracts the application package</li>
@@ -285,8 +256,8 @@ Playbooks in SSM follow a defined lifecycle:
       <li>Starts and enables the service</li>
     </ul>
     
-    <p>You can use this playbook to deploy your application to different environments by changing the variables.</p>
-  </div>
+<p>You can use this playbook to deploy your application to different environments by changing the variables.</p>
+</div>
 </div>
 
 ## Playbook Patterns
@@ -469,14 +440,12 @@ File: `provision_webserver.yml`
       description="How devices are managed and monitored in SSM"
       link="./devices"
     />
-    
     <FeatureCard
       icon="📦"
       title="Container Model"
       description="How containers are deployed and managed"
       link="./containers"
     />
-    
     <FeatureCard
       icon="🔄"
       title="Automation Model"
@@ -486,116 +455,31 @@ File: `provision_webserver.yml`
   </FeatureGrid>
 </SectionHeader>
 
-<SectionHeader title="Further Reading">
-  <ul>
-    <li><a href="/docs/user-guides/stacks/playbooks/overview">Playbooks Overview</a> - Introduction to using playbooks in SSM</li>
-    <li><a href="/docs/user-guides/stacks/playbooks/variables">Playbook Variables</a> - Working with variables in playbooks</li>
-    <li><a href="/docs/user-guides/stacks/playbooks/executing">Executing Playbooks</a> - Running playbooks on your devices</li>
-    <li><a href="https://docs.ansible.com/ansible/latest/index.html">Ansible Documentation</a> - Official Ansible documentation</li>
-  </ul>
-</SectionHeader>
+### References:
 
-<SectionHeader title="Next Steps">
-  <NextStepCard 
-    title="Device Management" 
-    description="Learn how to effectively manage your devices in SSM" 
-    link="/docs/user-guides/devices/management" 
+<FeatureGrid>
+  <FeatureCard
+    icon="📚"
+    title="Playbooks Overview"
+    description="Introduction to using playbooks in SSM"
+    link="/docs/user-guides/stacks/playbooks/overview"
   />
-</SectionHeader>
-
-<style>
-.example-container {
-  margin: 2rem 0;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid #e9ecef;
-  background-color: #f8f9fa;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.example-scenario {
-  padding: 1rem;
-  background-color: #3a5ccc;
-  color: white;
-}
-
-.example-scenario h4 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.2rem;
-}
-
-.example-scenario p {
-  margin: 0;
-  font-size: 0.9rem;
-  opacity: 0.9;
-}
-
-.example-solution {
-  padding: 1rem;
-}
-
-.example-solution h4 {
-  margin: 0 0 1rem 0;
-  font-size: 1.1rem;
-  color: #3a5ccc;
-}
-
-.example-solution ul {
-  margin-top: 1rem;
-  padding-left: 1.5rem;
-}
-
-.example-solution li {
-  margin-bottom: 0.5rem;
-  color: #495057;
-}
-
-.related-concepts {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin: 2rem 0;
-}
-
-.related-concept-card {
-  padding: 1.5rem;
-  border-radius: 8px;
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-}
-
-.related-concept-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.related-concept-card h3 {
-  margin-top: 0;
-  font-size: 1.2rem;
-  color: #3a5ccc;
-}
-
-.related-concept-card p {
-  color: #495057;
-  margin-bottom: 1rem;
-}
-
-.related-concept-card a {
-  color: #ff5d13;
-  text-decoration: none;
-  font-weight: bold;
-  display: inline-block;
-}
-
-.related-concept-card a:hover {
-  text-decoration: underline;
-}
-
-@media (max-width: 768px) {
-  .related-concepts {
-    grid-template-columns: 1fr;
-  }
-}
-</style>
+  <FeatureCard
+    icon="🔧"
+    title="Playbook Variables"
+    description="Working with variables in playbooks"
+    link="/docs/user-guides/stacks/playbooks/variables"
+  />
+  <FeatureCard
+    icon="▶️"
+    title="Executing Playbooks"
+    description="Running playbooks on your devices"
+    link="/docs/user-guides/stacks/playbooks/executing"
+  />
+  <FeatureCard
+    icon="🌐"
+    title="Ansible Documentation"
+    description="Official Ansible documentation"
+    link="https://docs.ansible.com/ansible/latest/index.html"
+  />
+</FeatureGrid>

@@ -1,130 +1,200 @@
-<script setup>
-import NextStepCard from '/components/NextStepCard.vue';
-import SectionHeader from '/components/SectionHeader.vue';
-import FeatureGrid from '/components/FeatureGrid.vue';
-import FeatureCard from '/components/FeatureCard.vue';
-</script>
+---
+layout: FeatureGuideLayout
+title: "Getting Started with SSM"
+icon: 🚀
+time: 10 min read
+signetColor: '#f1c40f'
+nextStep:
+  icon: 🛠️
+  title: Installation Guide
+  description: Choose your installation method and get SSM up and running
+  link: /docs/getting-started/installation
+credits: true
+feedbackSupport: true
+---
+Squirrel Servers Manager (SSM) is a powerful yet simple platform that allows you to manage servers, containers, and automate tasks without installing agents on your devices. This guide will walk you through getting started with SSM, from installation to deploying your first container.
 
-# Getting Started with SSM
-
-:::tip 🌰 In a Nutshell
-- Install SSM and create your admin account
-- Add your first device using SSH
-- Deploy and manage your first container
-- Monitor device health and performance
+:::tip In a Nutshell (🌰)
+- Squirrel Servers Manager (SSM) is an agentless DevOps tool for managing servers
+- The 10-minute onboarding process: install, create admin account, add device, deploy container
+- Multiple installation options available (Docker, Proxmox, manual)
+- No agents required - SSM uses SSH to securely connect to your devices
+- All key features are accessible through an intuitive web interface
 :::
 
-Welcome to Squirrel Servers Manager (SSM)! This section will guide you through the installation process, initial setup, and basic usage of SSM.
+## Welcome to Squirrel Servers Manager
+
+<p align="center">
+  <img src="/images/squirrels-happy-fox.svg" alt="firsttime2" width="102.4" height="153.6">
+</p>
+
+> I built Squirrel Servers Manager to make infrastructure management simple, secure, and accessible for everyone. I wanted a tool that could automate complex server and container operations without requiring agents or heavyweight platforms—just SSH. My goal was to empower users to manage their devices, containers, and automations with confidence, using a modern, open-source solution that’s easy to deploy, extend, and maintain. - Squirel Dev.
+
+## SSM Architecture Overview
+
+SSM uses an agentless architecture, which means you don't need to install any software on your target devices. Instead, SSM connects to your servers using secure SSH connections, allowing you to manage them remotely. This approach makes SSM lightweight, secure, and easy to deploy.
+
+<MentalModelDiagram 
+  title="SSM System Architecture" 
+  imagePath="/images/getting-started-system-architecture.svg" 
+  altText="SSM System Architecture" 
+  caption="Figure 1: SSM's agentless architecture" 
+/> 
+
+## Core Features
+
+SSM offers four main feature areas that work together to provide a comprehensive server management solution:
+
+<MentalModelDiagram 
+  title="SSM Core Features" 
+  imagePath="/images/getting-started-feature-highlights.svg" 
+  altText="SSM Feature Highlights" 
+  caption="Figure 2: The four pillars of SSM" 
+/>
 
 ## Quick Start Path
 
-<div class="quickstart-path">
-  <div class="path-step">
-    <div class="step-number">1</div>
-    <div class="step-content">
-      <h3>Installation</h3>
-      <p>Install SSM using Docker or on Proxmox</p>
-      <a href="/docs/getting-started/installation" class="step-link">Installation Guide →</a>
-    </div>
-  </div>
-  
-  <div class="path-step">
-    <div class="step-number">2</div>
-    <div class="step-content">
-      <h3>First-Time Setup</h3>
-      <p>Create admin account and log in</p>
-      <a href="/docs/getting-started/first-steps" class="step-link">First Steps Guide →</a>
-    </div>
-  </div>
-  
-  <div class="path-step">
-    <div class="step-number">3</div>
-    <div class="step-content">
-      <h3>Add a Device</h3>
-      <p>Connect your first server or device</p>
-      <a href="/docs/devices/add-device" class="step-link">Device Setup →</a>
-    </div>
-  </div>
-  
-  <div class="path-step">
-    <div class="step-number">4</div>
-    <div class="step-content">
-      <h3>Deploy a Container</h3>
-      <p>Deploy and manage your first container</p>
-      <a href="/docs/containers/containers" class="step-link">Container Guide →</a>
-    </div>
-  </div>
-</div>
+Follow these four steps to get up and running with SSM:
 
+<StepPath :steps="[
+  {
+    number: 1,
+    title: 'Installation',
+    description: 'Install SSM using Docker or on Proxmox',
+    link: '/docs/getting-started/installation',
+    linkText: 'Installation Guide →'
+  },
+  {
+    number: 2,
+    title: 'First-Time Setup',
+    description: 'Create admin account and log in',
+    link: '/docs/getting-started/first-steps',
+    linkText: 'First Steps Guide →'
+  },
+  {
+    number: 3,
+    title: 'Add a Device',
+    description: 'Connect your first server or device',
+    link: '/docs/user-guides/devices/adding-devices',
+    linkText: 'Device Setup →'
+  },
+  {
+    number: 4,
+    title: 'Deploy a Container',
+    description: 'Deploy and manage your first container',
+    link: '/docs/user-guides/containers/management',
+    linkText: 'Container Guide →'
+  }
+]" />
 
 ## System Requirements
 
-Before installing SSM, ensure your system meets the following requirements:
+Before you begin, make sure your environment meets these requirements:
 
-<div class="requirements-grid">
-  <div class="requirement-card">
-    <div class="requirement-header">Docker Host</div>
-    <div class="requirement-content">
-      <div class="req-item"><span class="req-check">✓</span> Docker 20.10+ or Docker Engine</div>
-      <div class="req-item"><span class="req-check">✓</span> Docker Compose V2</div>
-      <div class="req-item"><span class="req-check">✓</span> 2GB RAM (minimum)</div>
-      <div class="req-item"><span class="req-check">✓</span> 10GB free disk space</div>
-      <div class="req-item"><span class="req-check">✓</span> Linux-based OS</div>
-    </div>
-  </div>
-  
-  <div class="requirement-card">
-    <div class="requirement-header">Target Devices</div>
-    <div class="requirement-content">
-      <div class="req-item"><span class="req-check">✓</span> SSH access (password or key)</div>
-      <div class="req-item"><span class="req-check">✓</span> Python 3.8+ for Ansible features</div>
-      <div class="req-item"><span class="req-check">✓</span> Sudo privileges for container management</div>
-      <div class="req-item"><span class="req-check">✓</span> Docker for container features</div>
-    </div>
-  </div>
-
-  <div class="requirement-card">
-    <div class="requirement-header">Browser Support</div>
-    <div class="requirement-content">
-      <div class="req-item"><span class="req-check">✓</span> Chrome 90+</div>
-      <div class="req-item"><span class="req-check">✓</span> Firefox 90+</div>
-      <div class="req-item"><span class="req-check">✓</span> Safari 15+</div>
-      <div class="req-item"><span class="req-check">✓</span> Edge 90+</div>
-    </div>
-  </div>
-  
-  <div class="requirement-card">
-    <div class="requirement-header">Network</div>
-    <div class="requirement-content">
-      <div class="req-item"><span class="req-check">✓</span> Open port 8000 for web interface</div>
-      <div class="req-item"><span class="req-check">✓</span> Outbound SSH access to devices</div>
-      <div class="req-item"><span class="req-check">✓</span> Internet access for updates</div>
-    </div>
-  </div>
-</div>
-
-
+<RequirementsGrid :requirements="[
+  {
+    header: 'Docker Host',
+    items: [
+      'Docker 20.10+ or Docker Engine',
+      'Docker Compose V2',
+      '2GB RAM (minimum)',
+      '10GB free disk space',
+      'Linux-based OS'
+    ]
+  },
+  {
+    header: 'Target Devices',
+    items: [
+      'SSH access (password or key)',
+      'Python 3.8+ for Ansible features',
+      'Sudo privileges for container management',
+      'Docker for container features'
+    ]
+  },
+  {
+    header: 'Browser Support',
+    items: [
+      'Chrome 90+',
+      'Firefox 90+',
+      'Safari 15+',
+      'Edge 90+'
+    ]
+  },
+  {
+    header: 'Network',
+    items: [
+      'Open port 8000 for web interface',
+      'Outbound SSH access to devices',
+      'Internet access for updates'
+    ]
+  }
+]" />
 
 ## Installation Methods
 
 SSM offers multiple installation methods to fit your needs:
 
-1. **Docker Installation** - The recommended method using Docker and Docker Compose
-2. **Proxmox Installation** - Optimized for Proxmox Virtual Environment hosts
-3. **Manual Installation** - For advanced users who want to customize the setup
-4. **Dockerless Setup** - For environments where Docker is not available
+<FeatureGrid>
+  <FeatureCard
+    icon="🐳"
+    title="Docker Installation"
+    description="Recommended method using Docker and Docker Compose for quick setup."
+    link="/docs/getting-started/installation#docker-installation"
+  />
+  <FeatureCard
+    icon="🖥️"
+    title="Proxmox Installation"
+    description="Optimized setup for Proxmox Virtual Environment hosts."
+    link="/docs/getting-started/installation#proxmox-installation"
+  />
+  <FeatureCard
+    icon="⚙️"
+    title="Manual Installation"
+    description="For advanced users wanting full control over the setup."
+    link="/docs/reference/installation/manual-ssm-from-source"
+  />
+  <FeatureCard
+    icon="📦"
+    title="Dockerless Setup"
+    description="For environments where Docker is not available or preferred."
+    link="/docs/getting-started/installation#dockerless-setup"
+  />
+</FeatureGrid>
 
-See the [Installation Guide](/docs/getting-started/installation) for detailed instructions.
+## Key Advantages of SSM
 
-## Next Steps
-
-<NextStepCard 
-  icon="👉" 
-  title="First Time Setup" 
-  description="Create your admin account and get started with SSM" 
-  link="/docs/getting-started/first-steps" 
-/>
-
+<AdvantagesSection :advantagesData="[
+  {
+    icon: '🔐',
+    title: 'Agentless Architecture',
+    description: 'No need to install agents on your servers. SSM uses SSH for secure, lightweight management.',
+  },
+  {
+    icon: '🧩',
+    title: 'Plugin System',
+    description: 'Extend SSM\'s functionality with plugins to meet your specific needs.',
+  },
+  {
+    icon: '🔄',
+    title: 'Container Orchestration',
+    description: 'Easily deploy and manage Docker containers across multiple servers.',
+  },
+  {
+    icon: '📊',
+    title: 'Monitoring & Statistics',
+    description: 'Track server performance and health with built-in monitoring tools.',
+  },
+  {
+    icon: '⚙️',
+    title: 'Automations',
+    description: 'Create powerful automation workflows triggered by events or schedules.',
+  },
+  {
+    icon: '📘',
+    title: 'Ansible Playbooks',
+    description: 'Use Ansible playbooks for sophisticated configuration management.',
+  },
+]" />
 
 ## Where to Go Next
 
@@ -159,12 +229,3 @@ After completing the initial setup, explore these areas to get the most out of S
     link="/docs/user-guides/playbooks/"
   />
 </FeatureGrid>
-
-
-## Getting Help
-
-If you encounter any issues during installation or setup:
-
-- Check the <a href="/docs/troubleshoot/troubleshoot">Troubleshooting Guide</a> for common solutions
-- Join our <a href="https://discord.gg/cnQjsFCGKJ">Discord community</a> for real-time support
-- Open an issue on <a href="https://github.com/SquirrelCorporation/SquirrelServersManager/issues">GitHub</a> for bug reports
