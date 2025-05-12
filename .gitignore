@@ -47,3 +47,6 @@ README-task-master.md
 .claude/settings.local.json
 **/.claude/settings.local.json
 /.mcp.json
+
+**/.claude/settings.local.json
+/.mcp.json
