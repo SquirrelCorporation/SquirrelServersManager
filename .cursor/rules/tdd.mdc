@@ -1,0 +1,30 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+- **Write tests before implementing new features or bug fixes**
+  - Every new line of code must be accompanied by a corresponding test written first
+  - Tests should be committed before or with the implementation
+- **Follow the architecture and style of existing tests**
+  - Use the same test frameworks, patterns, and directory structure as current tests
+  - Reference actual test files for examples (e.g., `__tests__` directories, `*.spec.ts` files)
+- **Test Coverage**
+  - New code should not decrease overall test coverage
+  - Edge cases and error handling must be tested
+- **Examples**
+  ```typescript
+  // ✅ DO: Write a failing test before implementing a new service method
+  it('should return the correct result for valid input', async () => {
+    // Arrange
+    // ...
+    // Act
+    // ...
+    // Assert
+    // ...
+  });
+  // Then implement the method to make the test pass
+  ```
+- **References**
+  - See [self_improve.mdc](mdc:self_improve.mdc) for continuous improvement of test patterns
+  - See [cursor_rules.mdc](mdc:cursor_rules.mdc) for rule formatting and structure
