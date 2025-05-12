@@ -1,0 +1,34 @@
+---
+description: 
+globs: site/docs/**/*.md
+alwaysApply: false
+---
+- **Always use standard Markdown code blocks for code examples**
+  - Use triple backticks and specify the language (e.g., ```bash, ```yaml)
+  - Do not use <pre> or <code> HTML tags for code snippets
+  - Example:
+    ```bash
+    ssh-keygen -t rsa -b 4096 -C 'your_email@example.com'
+    ```
+  - Reference: [ssh-configuration.md](mdc:site/docs/reference/ssh-configuration.md)
+
+---
+description: Do not insert empty lines inside HTML blocks in Markdown files
+globs: site/docs/**/*.md
+yes: true
+---
+
+- **No empty lines inside HTML blocks**
+  - Keep all HTML tags and content tightly formatted
+  - Do not add blank lines between opening/closing tags or between elements inside a block
+  - Example:
+    ```html
+    <div class="platform-notes">
+      <div class="platform-icon">🍎</div>
+      <div class="platform-content">
+        <h3>macOS</h3>
+        ...
+      </div>
+    </div>
+    ```
+  - Reference: [ssh-configuration.md](mdc:site/docs/reference/ssh-configuration.md)

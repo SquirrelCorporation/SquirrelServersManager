@@ -27,7 +27,7 @@ The `TelemetryModule` provides anonymous usage data collection capabilities for 
     - If no ID exists, generates a new UUID v4 and stores it in the cache.
     - Uses this `INSTALL_ID` as the `distinctId` for all telemetry events.
 - **Configurable:** Telemetry collection can be enabled or disabled via the `TELEMETRY_ENABLED` environment variable (read via `ConfigService`). If disabled, the module opts out of PostHog tracking.
-- **Event Capture:** Provides a `capture(eventName: string, properties?: Record<string, any>)` method in `TelemetryService` to send events to PostHog.
+- **Event Capture:** Provides a `capture(payload: TelemetryEventPayload)` method in `TelemetryService` to send events to PostHog. The `TelemetryEventPayload` interface is exported from `dto/telemetry-event-payload.dto` for type safety and to follow best practices (DTOs are always kept in their own files).
 
 ## Configuration
 
@@ -57,7 +57,7 @@ The `TelemetryModule` provides anonymous usage data collection capabilities for 
 
     ```typescript
     import { Injectable } from '@nestjs/common';
-    import { TelemetryService } from '@modules/telemetry'; // Adjust path if necessary
+    import { TelemetryService, TelemetryEventPayload } from '@modules/telemetry'; // Adjust path if necessary
 
     @Injectable()
     export class MyService {
@@ -66,10 +66,13 @@ The `TelemetryModule` provides anonymous usage data collection capabilities for 
       doSomethingImportant() {
         // ... perform action ...
 
-        // Capture a telemetry event
-        this.telemetryService.capture('important_action_completed', {
-          userId: 'some-user-id', // Optional properties
-          durationMs: 500,
+        // Capture a telemetry event using the interface
+        this.telemetryService.capture({
+          eventName: 'important_action_completed',
+          properties: {
+            userId: 'some-user-id', // Optional properties
+            durationMs: 500,
+          }
         });
       }
     }

@@ -1,12 +1,12 @@
+import * as fs from 'fs';
 import { IAnsibleConfigService } from '@modules/ansible-config/domain/interfaces/ansible-config-service.interface';
 import {
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
   Logger,
-  NotFoundException
+  NotFoundException,
 } from '@nestjs/common';
-import * as fs from 'fs';
 import { SSM_DATA_PATH, SSM_INSTALL_PATH } from '../../../../config';
 import { FileSystemService } from '../../../shell';
 import { AnsibleConfig } from '../../presentation/interfaces/config.interface';
