@@ -12,10 +12,14 @@ nextStep:
 credits: true
 feedbackSupport: true
 ---
+Squirrel Servers Manager (SSM) is designed to be extensible and developer-friendly. This section provides everything you need to build plugins, integrate with the API, and contribute to the documentation or core project.
+
+<p align="center">
+  <img src="/images/squirrel-developper.png" alt="firsttime2" width="102.4" height="153.6">
+</p>
+
 
 ## Welcome to SSM Developer Documentation!
-
-Squirrel Servers Manager (SSM) is designed to be extensible and developer-friendly. This section provides everything you need to build plugins, integrate with the API, and contribute to the documentation or core project.
 
 Whether you're building a custom integration, contributing to the open source project, or just exploring how SSM works under the hood, you'll find all the technical resources you need here.
 

@@ -194,41 +194,8 @@ Here are some significant features we've recently completed:
 
 The complete, up-to-date roadmap is available in our GitHub Projects:
 
-<div class="cta-container">
-  <a href="https://github.com/orgs/SquirrelCorporation/projects/2/views/1" class="cta-button" target="_blank">
-    <span class="cta-icon">🗺️</span>
-    <span class="cta-text">View Full Roadmap on GitHub</span>
-  </a>
-</div>
+[View Full Roadmap on GitHub](https://github.com/orgs/SquirrelCorporation/projects/2/views/1)
 
-<style>
-.cta-container {
-  margin: 30px 0;
-  text-align: center;
-}
-
-.cta-button {
-  display: inline-flex;
-  align-items: center;
-  padding: 12px 24px;
-  background-color: var(--vp-c-brand);
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: 500;
-  transition: transform 0.2s, background-color 0.2s;
-}
-
-.cta-button:hover {
-  background-color: var(--vp-c-brand-dark);
-  transform: translateY(-2px);
-}
-
-.cta-icon {
-  font-size: 20px;
-  margin-right: 8px;
-}
-</style>
 
 ## Provide Feedback
 

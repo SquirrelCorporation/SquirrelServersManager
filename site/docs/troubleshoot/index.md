@@ -29,10 +29,10 @@ credits: true
   :steps="[
     { title: 'Start', description: 'Begin troubleshooting your SSM issue.' },
     { title: 'What type of issue are you having?', description: 'Choose the category that best matches your problem.' },
-    { title: 'SSM Installation Issues', description: 'Common symptoms: Install errors, MongoDB AVX issues. Solutions: See installation section, check prerequisites, review Docker logs.' },
-    { title: 'Device Connectivity Issues', description: 'Common symptoms: SSH connection fails, device shows as offline. Solutions: See devices section, verify network connectivity, check SSH credentials.' },
-    { title: 'Container/Docker Issues', description: 'Common symptoms: Containers won\'t start, socket hangup errors. Solutions: See container section, check Docker permissions, review container logs.' },
-    { title: 'Performance Issues', description: 'Common symptoms: Resource limits, database optimization. Solutions: See performance section.' }
+    { title: 'SSM Installation Issues', description: 'Common symptoms: Install errors, MongoDB AVX issues. Solutions: See [Installation Guide](/docs/getting-started/installation), check prerequisites, review Docker logs.' },
+    { title: 'Device Connectivity Issues', description: 'Common symptoms: SSH connection fails, device shows as offline. Solutions: See [Device Management](/docs/user-guides/devices/management), verify network connectivity, check SSH credentials.' },
+    { title: 'Container/Docker Issues', description: 'Common symptoms: Containers won\'t start, socket hangup errors. Solutions: See [Container Management](/docs/user-guides/containers/management), check Docker permissions, review container logs.' },
+    { title: 'Performance Issues', description: 'Common symptoms: Resource limits, database optimization. Solutions: See [Performance Optimization Tips](/docs/reference/docker-configuration#performance-optimization-tips).' }
   ]"
   />
 
@@ -239,6 +239,26 @@ When reporting an issue, include:
 - SSM version and installation method
 - Device information (OS, Docker version, etc.)
 
+## Admin Password Recovery
+
+If you are unable to log in as the administrator and need to reset your password, you can do so by accessing the MongoDB database directly:
+
+```bash
+# Connect to the MongoDB container
+docker exec -it mongo-ssm mongosh
+
+# Switch to the SSM database
+use ssm
+
+# Reset password (replace with your email)
+db.users.updateOne(
+  { email: "your.email@example.com" },
+  { $set: { password: "$2b$10$CZt6MqBEVu8abVXel6mnn.A6AJuWlI8qKpPyTZ6TYWLm2jCr7HvdG" } }
+)
+```
+
+This will reset the password to `Password123!`. Be sure to change it immediately after logging in.
+
 ## Related Resources
 
 <FeatureGrid>
@@ -267,3 +287,4 @@ When reporting an issue, include:
     link="/docs/user-guides/devices/management"
   />
 </FeatureGrid>
+

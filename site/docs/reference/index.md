@@ -13,7 +13,11 @@ credits: true
 feedbackSupport: true
 ---
 
-# Reference Documentation
+This section provides comprehensive technical reference documentation for Squirrel Servers Manager. Use these resources when you need detailed information about specific components, configuration parameters, or technical specifications.
+
+<p align="center">
+  <img src="/images/squirrel-reference.png" alt="firsttime2" width="102.4" height="153.6">
+</p>
 
 :::tip In a Nutshell (🌰)
 - Technical reference materials for SSM
@@ -22,7 +26,6 @@ feedbackSupport: true
 - Reference materials for developers and system administrators
 :::
 
-This section provides comprehensive technical reference documentation for Squirrel Servers Manager. Use these resources when you need detailed information about specific components, configuration parameters, or technical specifications.
 
 ## Technical Guides
 

@@ -406,6 +406,7 @@ export default defineConfig({
           collapsed: true,
           link: "/docs/developer/",
           items: [
+            { text: "Tech Stack", link: "/docs/developer/stack" },
             { text: "Plugins Overview", link: "/docs/developer/plugins" },
             {
               text: "Why Create a Plugin",
@@ -420,7 +421,7 @@ export default defineConfig({
               link: "/docs/developer/documentation-template",
             },
             {
-              text: "Deveopment Mode",
+              text: "Development Mode",
               link: "/docs/developer/development-mode",
             },
           ],
@@ -428,6 +429,7 @@ export default defineConfig({
         {
           text: "Community",
           collapsed: true,
+          link: "/docs/community/",
           items: [
             { text: "Contributing", link: "/docs/community/contributing" },
             { text: "Support", link: "/docs/community/support" },
