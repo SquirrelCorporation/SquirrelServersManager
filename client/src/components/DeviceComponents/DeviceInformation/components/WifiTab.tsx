@@ -1,9 +1,10 @@
 import SystemInformationView, {
   DetailInfo,
 } from '@/components/DeviceComponents/DeviceInformation/components/SystemInformationView';
-import { FlatPlatform } from '@/components/Icons/CustomIcons';
+import { FlatPlatform, Wifi } from '@/components/Icons/CustomIcons';
 import React, { useEffect } from 'react';
 import { API } from 'ssm-shared-lib';
+import { ACCENT_COLORS } from '../../../../styles/colors';
 
 type WifiTabProps = {
   device: API.DeviceItem;
@@ -16,7 +17,12 @@ const WifiTab: React.FC<WifiTabProps> = ({ device }) => {
   const [detailedInfo, setDetailedInfo] = React.useState<DetailInfo[]>([]);
 
   // Detailed info with associated icons
-
+  const importantInfo = [];
+  importantInfo.push({
+    title: 'Wifi',
+    value: '',
+    icon: <Wifi />,
+  });
   useEffect(() => {
     if (device?.systemInformation?.wifi && selectedInterface !== undefined) {
       const _detailedInfo = [];
@@ -25,7 +31,6 @@ const WifiTab: React.FC<WifiTabProps> = ({ device }) => {
           key: 'Iface',
           value: `${device?.systemInformation?.wifi[selectedInterface]?.iface}`,
           icon: <FlatPlatform />,
-          color: '#518523',
         });
       }
       if (device?.systemInformation?.wifi[selectedInterface]?.model) {
@@ -33,7 +38,6 @@ const WifiTab: React.FC<WifiTabProps> = ({ device }) => {
           key: 'Model',
           value: `${device?.systemInformation?.wifi[selectedInterface]?.model}`,
           icon: <FlatPlatform />,
-          color: '#1b2547',
         });
       }
       if (device?.systemInformation?.wifi[selectedInterface]?.vendor) {
@@ -41,7 +45,6 @@ const WifiTab: React.FC<WifiTabProps> = ({ device }) => {
           key: 'Vendor',
           value: `${device?.systemInformation?.wifi[selectedInterface]?.vendor}`,
           icon: <FlatPlatform />,
-          color: '#1b2547',
         });
       }
       if (device?.systemInformation?.wifi[selectedInterface]?.mac) {
@@ -49,16 +52,20 @@ const WifiTab: React.FC<WifiTabProps> = ({ device }) => {
           key: 'Mac',
           value: `${device?.systemInformation?.wifi[selectedInterface]?.mac}`,
           icon: <FlatPlatform />,
-          color: '#df713e',
         });
       }
-      setDetailedInfo(_detailedInfo);
+      const coloredDetailedInfo = _detailedInfo.map((item, idx) => ({
+        ...item,
+        color: ACCENT_COLORS[idx % ACCENT_COLORS.length],
+      }));
+      setDetailedInfo(coloredDetailedInfo);
     }
   }, [selectedInterface]);
 
   return (
     <SystemInformationView
       name={'Wifi'}
+      importantInfo={importantInfo}
       detailedInfo={detailedInfo}
       selectedInterface={selectedInterface}
       setSelectedInterface={setSelectedInterface}

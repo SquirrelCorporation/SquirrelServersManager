@@ -10,6 +10,7 @@ import {
 import { capitalizeFirstLetter } from '@/utils/strings';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
+import { ACCENT_COLORS } from '../../../../styles/colors';
 
 type SystemTabProps = {
   device: API.DeviceItem;
@@ -34,55 +35,53 @@ const SystemTab: React.FC<SystemTabProps> = ({ device }) => {
   }
 
   // Detailed info with associated icons
-  const detailedInfo = [];
+  const rawDetailedInfo = [];
   if (device?.systemInformation?.system?.model) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Model',
       value: `${capitalizeFirstLetter(device.systemInformation.system.model)}`,
       icon: <FlatPlatform />,
-      color: '#979347',
     });
   }
   if (device?.systemInformation?.system?.version) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Version',
       value: `${device.systemInformation.system.version}`,
       icon: <Version />,
-      color: '#252987',
     });
   }
   if (device?.systemInformation?.system?.serial) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Serial',
       value: `${device.systemInformation.system.serial}`,
       icon: <Number />,
-      color: '#1e2e4c',
     });
   }
   if (device?.systemInformation?.system?.raspberry?.manufacturer) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Raspberry Pi Manufacturer',
       value: `${device?.systemInformation?.system?.raspberry?.manufacturer}`,
       icon: <Raspberrypi />,
-      color: '#1e2e4c',
     });
   }
   if (device?.systemInformation?.system?.raspberry?.processor) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Raspberry Pi Processor',
       value: `${device?.systemInformation?.system?.raspberry?.processor}`,
       icon: <Raspberrypi />,
-      color: '#1e2e4c',
     });
   }
   if (device?.systemInformation?.system?.raspberry?.revision) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Raspberry Pi Revision',
       value: `${device?.systemInformation?.system?.raspberry?.revision}`,
       icon: <Raspberrypi />,
-      color: '#1e2e4c',
     });
   }
+  const detailedInfo = rawDetailedInfo.map((item, idx) => ({
+    ...item,
+    color: ACCENT_COLORS[idx % ACCENT_COLORS.length],
+  }));
 
   return (
     <SystemInformationView
