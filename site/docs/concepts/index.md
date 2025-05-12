@@ -8,10 +8,12 @@ credits: true
 feedbackSupport: true
 ---
 
-
-## Understanding SSM's Core Concepts
-
 Welcome to the Concepts section of the Squirrel Servers Manager documentation. This area is designed to help you understand the fundamental ideas and mental models that power SSM.
+
+<p align="center">
+  <img src="/images/squirrel-concepts.png" alt="firsttime2" width="102.4" height="153.6">
+</p>
+
 
 :::tip In a Nutshell (🌰)
 Understanding these core concepts will help you get the most out of SSM and make better decisions about how to structure your server management workflow.

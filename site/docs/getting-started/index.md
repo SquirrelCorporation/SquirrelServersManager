@@ -28,7 +28,7 @@ Squirrel Servers Manager (SSM) is a powerful yet simple platform that allows you
   <img src="/images/squirrels-happy-fox.svg" alt="firsttime2" width="102.4" height="153.6">
 </p>
 
-> I built Squirrel Servers Manager to make infrastructure management simple, secure, and accessible for everyone. I wanted a tool that could automate complex server and container operations without requiring agents or heavyweight platforms—just SSH. My goal was to empower users to manage their devices, containers, and automations with confidence, using a modern, open-source solution that’s easy to deploy, extend, and maintain. - Squirel Dev.
+> I built Squirrel Servers Manager to make infrastructure management simple, secure, and accessible for everyone. I wanted a tool that could automate complex server and container operations without requiring agents or heavyweight platforms—just SSH. My goal was to empower users to manage their devices, containers, and automations with confidence, using a modern, open-source solution that’s easy to deploy, extend, and maintain. - Squirrel Dev.
 
 ## SSM Architecture Overview
 
