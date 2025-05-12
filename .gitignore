@@ -43,3 +43,6 @@ README-task-master.md
 .cursor/mcp.json
 .idea/
 .junie/
+
+**/.claude/settings.local.json
+/.mcp.json
