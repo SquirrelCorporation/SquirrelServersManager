@@ -10,6 +10,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Chore/improve testing [\#913](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/913) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Doc/fix documentation v2 [\#911](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/911) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Doc new doc [\#905](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/905) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
