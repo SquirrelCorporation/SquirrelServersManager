@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.3...HEAD)
 
+**Fixed bugs:**
+
+- \[BUG/CHORE\] Update UI styles, enhance tab functionality, and streamline data [\#912](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/912) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Merged pull requests:**
 
 - Doc/fix documentation v2 [\#911](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/911) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
