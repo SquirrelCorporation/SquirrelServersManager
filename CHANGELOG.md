@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- Doc/fix documentation v2 [\#911](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/911) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Doc new doc [\#905](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/905) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.5.0-alpha.3](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.3) (2025-05-05)
