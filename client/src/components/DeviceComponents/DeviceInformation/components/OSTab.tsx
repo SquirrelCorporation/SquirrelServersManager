@@ -14,6 +14,7 @@ import { capitalizeFirstLetter } from '@/utils/strings';
 import { Avatar } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
+import { ACCENT_COLORS } from '../../../../styles/colors';
 
 type OSTabProps = {
   device: API.DeviceItem;
@@ -46,9 +47,9 @@ const OSTab: React.FC<OSTabProps> = ({ device }) => {
     });
   }
   // Detailed info with associated icons
-  const detailedInfo = [];
+  const rawDetailedInfo = [];
   if (device?.systemInformation?.os?.platform) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Platform',
       value: (
         <>
@@ -57,57 +58,54 @@ const OSTab: React.FC<OSTabProps> = ({ device }) => {
         </>
       ),
       icon: <FlatPlatform />,
-      color: '#979347',
     });
   }
   if (device?.systemInformation?.os?.arch) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Arch',
       value: `${device.systemInformation.os.arch}`,
       icon: <GrommetIconsSystem />,
-      color: '#252987',
     });
   }
   if (device?.systemInformation?.os?.distro) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Distro',
       value: `${device.systemInformation.os.distro}`,
-      color: '#874725',
       icon: <GrommetIconsSystem />,
     });
   }
   if (device?.systemInformation?.os?.codename) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Codename',
       value: `${device.systemInformation.os.codename}`,
       icon: <Version />,
-      color: '#8e165e',
     });
   }
   if (device?.systemInformation?.os?.codepage) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Codepage',
       value: `${device.systemInformation.os.codepage}`,
       icon: <Binary />,
-      color: '#288725',
     });
   }
   if (device?.systemInformation?.os?.serial) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Serial',
       value: `${device.systemInformation.os.serial}`,
       icon: <Number />,
-      color: '#1e2e4c',
     });
   }
   if (device?.systemInformation?.os?.uefi !== undefined) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'UEFI',
       value: `${device.systemInformation.os.uefi}`,
       icon: <BoltCircleOutline />,
-      color: '#272729',
     });
   }
+  const detailedInfo = rawDetailedInfo.map((item, idx) => ({
+    ...item,
+    color: ACCENT_COLORS[idx % ACCENT_COLORS.length],
+  }));
   return (
     <SystemInformationView
       name={'Operating System'}
