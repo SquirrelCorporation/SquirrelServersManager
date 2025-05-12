@@ -8,92 +8,86 @@
      `"=\_  )_"`
           ``'"`
 ```
-Squirrel Servers Manager 🐿️
----
 # Smart Failure Module
 
-The Smart Failure module is a sophisticated NestJS implementation that analyzes Ansible execution logs to identify common failure patterns. It provides detailed error messages and resolution steps to help users quickly diagnose and fix issues in their Ansible deployments.
+The Smart Failure module analyzes Ansible execution logs to identify common failure patterns, providing detailed error messages and resolution steps to help users quickly diagnose and fix issues in their Ansible deployments.
 
 ## Features
 
-- **Pattern-Based Analysis**: Analyzes Ansible logs using predefined regex patterns to identify common failure scenarios
-- **Detailed Error Information**: Provides comprehensive error messages with:
-  - Root cause analysis
-  - Step-by-step resolution instructions
-  - Context-specific troubleshooting tips
-- **Docker-Specific Detection**: Specialized patterns for Docker-related issues including:
-  - Docker daemon connectivity
-  - Container management
-  - Image pulling problems
-  - Container configuration issues
-- **Efficient Log Processing**: Processes logs line by line with duplicate detection
-- **Comprehensive Error Coverage**: Detects over 20 common failure patterns
-- **Clean Architecture Implementation**: Follows SOLID principles and Clean Architecture patterns
+- **Pattern Matching**: Uses regex patterns to detect known failure scenarios in log outputs
+- **Actionable Resolution Steps**: Provides specific troubleshooting guidance for each detected issue
+- **Docker Integration**: Specialized patterns for Docker-related failures with container-specific resolutions
+- **Error Categorization**: Organizes failures by type (network, permission, system, Docker, Ansible)
+- **Efficient Processing**: Processes logs line-by-line with duplicate detection to avoid redundant results
 
 ## Architecture
 
 The module follows Clean Architecture principles with clear separation of concerns:
 
 ### Domain Layer
-- **Entities**: 
-  - `IFailurePattern`: Defines the structure of failure patterns
-- **Constants**: 
-  - `FAILURE_PATTERNS`: Contains all predefined failure patterns with regex, causes, and resolutions
-- **Interfaces**: 
-  - Repository interfaces for data access abstraction
-  - Service interfaces defining the business logic contract
+
+- **Entities and Interfaces**:
+  - `FailurePattern`: Defines structure for failure detection patterns
+  - `SmartFailure`: Interface for the structured response
+  - Service interfaces defining the business logic contracts
+
+- **Constants**:
+  - `FAILURE_PATTERNS`: Collection of predefined regex patterns with causes and resolutions
 
 ### Application Layer
-- **Services**: 
-  - `SmartFailureService`: Implements log analysis logic
-  - Pattern matching and failure detection algorithms
-  - Duplicate detection to prevent redundant results
+
+- **Services**:
+  - `SmartFailureService`: Implements core log analysis and pattern matching logic
+  - Processes log data line-by-line against defined patterns
+  - Uses duplicate detection to prevent redundant results
 
 ### Infrastructure Layer
-- **Repositories**: 
-  - Implementation of repository interfaces
-  - Integration with the Logs module for data access
+
+- **Repositories**:
+  - Implementations to access log data from storage
+  - Integration with the logs module for data access
 
 ### Presentation Layer
-- **Controllers**: 
-  - REST endpoints for log analysis
-  - Request validation and response formatting
 
-## Failure Pattern Categories
+- **Controller**:
+  - REST API endpoints for requesting smart failure analysis
+  - Validation and response formatting
 
-The module detects failures in the following categories:
+## Failure Categories
 
-1. **Network Issues**
-   - Unreachable hosts
-   - Connection timeouts
-   - SSL certificate problems
+The module detects failures across several categories:
 
-2. **Permission Issues**
-   - SSH authentication failures
-   - Permission denied errors
-   - User not found errors
+### Network Issues
+- Host unreachability
+- Connection timeouts
+- SSL certificate validation problems
 
-3. **System Issues**
-   - Disk space problems
-   - Package management errors
-   - Service availability issues
+### Permission Issues
+- SSH authentication failures
+- Permission denied errors
+- User not found errors
 
-4. **Docker-Specific Issues**
-   - Daemon connectivity problems
-   - Container not found errors
-   - Image pull failures
-   - Container execution errors
-   - Configuration problems
+### System Issues
+- Disk space problems
+- Package management errors
+- Service availability issues
 
-5. **Ansible-Specific Issues**
-   - Syntax errors
-   - Module not found errors
-   - Variable undefined errors
-   - Playbook execution failures
+### Docker-Specific Issues
+- Docker daemon connectivity problems
+- Container not found errors
+- Image pull failures
+- Container execution errors
 
-## API Endpoints
+### Ansible-Specific Issues
+- Syntax errors
+- Module not found errors
+- Variable undefined errors
 
-### GET /ansible/smart-failure
+## Usage
+
+### API Endpoint
+
+#### GET /ansible/smart-failure
 Analyzes Ansible logs for a specific execution ID.
 
 **Query Parameters:**
@@ -126,17 +120,17 @@ import { SmartFailureModule } from './modules/smart-failure';
 export class AppModule {}
 ```
 
-## Recent Changes
+## Recent Enhancements
 
-- Added specialized Docker failure detection patterns
-- Improved log processing efficiency with duplicate detection
-- Enhanced error messages with more detailed resolution steps
-- Added comprehensive Docker-related troubleshooting guidance
+- Added Docker-specific failure patterns for container management issues
+- Improved log processing efficiency with pattern caching
+- Enhanced duplicate detection to prevent redundant results
+- Added detailed step-by-step resolution guidance for Docker failures
 
-## Future Improvements
+## Future Development
 
 - Machine learning-based pattern detection
-- Support for custom failure patterns
+- Custom user-defined failure patterns
 - Real-time log analysis capabilities
-- Integration with external monitoring systems
-- Pattern effectiveness tracking and optimization
+- Severity classification for detected issues
+- Resolution success tracking
