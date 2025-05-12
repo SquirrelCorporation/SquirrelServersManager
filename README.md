@@ -62,13 +62,13 @@ See [Troubleshoot](https://squirrelserversmanager.io/docs/troubleshoot/troublesh
 
 ## 💌 Screenshots
 
-![Dashboard](./site/public/home/dashboard.png)
-![Devices](./site/public/home/devices.png)
-![Services](./site/public/home/services.png)
-![Store](./site/public/home/store.png)
-![Playbook](./site/public/home/playbook.png)
-![Device Info](./site/public/home/device-info.png)
-![New Device](./site/public/home/new-device.png)
+![Dashboard](./site/public/images/home-dashboard.png)
+![Devices](./site/public/images/home-devices.png)
+![Services](./site/public/images/home-services.png)
+![Store](./site/public/images/home-/store.png)
+![Playbook](./site/public/images/home-playbook.png)
+![Device Info](./site/public/images/home-device-info.png)
+![New Device](./site/public/images/home-new-device.png)
 
 ---
 ## Disabling Anonymized Telemetry
