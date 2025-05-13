@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Add Discord notification job to Docker publish workflow and remove de… [\#921](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/921) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add last updated timestamps to system information tabs [\#920](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/920) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.5.0-alpha.5](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.5) (2025-05-13)
