@@ -4,7 +4,10 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import { Systeminformation } from 'ssm-shared-lib';
 import { MetricsService } from '../../../statistics/application/services/metrics.service';
-import { METRICS_SERVICE, MetricType } from '../../../statistics/doma../../domain/interfaces/metrics-service.interface';
+import {
+  METRICS_SERVICE,
+  MetricType,
+} from '../../../statistics/doma../../domain/interfaces/metrics-service.interface';
 import { QueueJobData, UpdateStatsType, UpdateType } from '../../domain/types/update.types';
 import { REMOTE_SYSTEM_INFO_QUEUE } from './constants';
 
@@ -101,7 +104,7 @@ export class RemoteSystemInformationProcessor {
         await this.devicesService.update(device);
       }
 
-      this.logger.debug(`Successfully updated ${updateType} for device ${deviceUuid}`);
+      this.logger.log(`Successfully updated ${updateType} for device ${deviceUuid} (${device.ip})`);
     } catch (error: any) {
       this.logger.error(
         error.stack,

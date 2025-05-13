@@ -32,6 +32,9 @@ export class ServerLog {
 
   @Prop({ type: Object, required: false })
   err?: any;
+
+  @Prop({ type: String, required: false })
+  context?: string;
 }
 
 export const ServerLogSchema = SchemaFactory.createForClass(ServerLog);
