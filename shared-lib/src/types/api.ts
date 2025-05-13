@@ -276,6 +276,7 @@ export type DeviceSystemInformation = {
   bluetooth?: Systeminformation.BluetoothDeviceData[];
   graphics?: Systeminformation.GraphicsData;
   fileSystems?: Systeminformation.DiskLayoutData[];
+  memLayout?: Systeminformation.MemLayoutData[];
 };
 
 export type DeviceItem = {

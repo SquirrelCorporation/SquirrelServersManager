@@ -108,9 +108,10 @@ const OSTab: React.FC<OSTabProps> = ({ device }) => {
   }));
   return (
     <SystemInformationView
-      name={'Operating System'}
+      name={'OS'}
       importantInfo={importantInfo}
       detailedInfo={detailedInfo}
+      lastUpdatedAt={device.systemInformation.os?.lastUpdatedAt}
     />
   );
 };

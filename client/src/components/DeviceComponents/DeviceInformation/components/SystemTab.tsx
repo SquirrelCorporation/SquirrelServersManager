@@ -86,8 +86,9 @@ const SystemTab: React.FC<SystemTabProps> = ({ device }) => {
   return (
     <SystemInformationView
       name={'System'}
-      detailedInfo={detailedInfo}
       importantInfo={importantInfo}
+      detailedInfo={detailedInfo}
+      lastUpdatedAt={device.systemInformation.system?.lastUpdatedAt}
     />
   );
 };

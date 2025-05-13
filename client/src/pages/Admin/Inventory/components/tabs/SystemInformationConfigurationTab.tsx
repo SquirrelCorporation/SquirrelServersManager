@@ -23,7 +23,7 @@ import {
   ProFormSwitch,
 } from '@ant-design/pro-components';
 import message from '@/components/Message/DynamicMessage';
-import { Card, Space, Tooltip } from 'antd';
+import { Card, Divider, Space, Tag, Tooltip } from 'antd';
 import React, { useEffect } from 'react';
 import Cron from 'react-js-cron';
 import { API } from 'ssm-shared-lib';
@@ -43,6 +43,9 @@ const SystemInformationConfigurationTab: React.FC<
   );
   const [isFeatureEnabled, setIsFeatureEnabled] = React.useState<boolean>();
   const [cron, setCron] = React.useState<string>('');
+  const [lastUpdatedAt, setLastUpdatedAt] = React.useState<
+    string | undefined
+  >();
 
   useEffect(() => {
     if (device.configuration?.systemInformation) {
@@ -55,6 +58,11 @@ const SystemInformationConfigurationTab: React.FC<
         device.configuration?.systemInformation?.[
           selectedFeature as keyof typeof device.configuration.systemInformation
         ]?.cron ?? '',
+      );
+      setLastUpdatedAt(
+        device.systemInformation?.[
+          selectedFeature as keyof typeof device.systemInformation
+        ]?.lastUpdatedAt ?? undefined,
       );
     }
   }, [selectedFeature]);
@@ -181,6 +189,12 @@ const SystemInformationConfigurationTab: React.FC<
             />
           </ProForm.Item>
         </ProForm.Group>
+        <Divider>
+          Last updated at:{' '}
+          <Tag>
+            {lastUpdatedAt ? new Date(lastUpdatedAt).toLocaleString() : 'never'}
+          </Tag>
+        </Divider>
       </Card>
     </ProForm>
   );
