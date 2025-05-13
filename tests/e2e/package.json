@@ -1,0 +1,21 @@
+{
+  "name": "ssm-e2e-tests",
+  "version": "1.0.0",
+  "description": "End-to-end tests for Squirrel Servers Manager",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "axios": "latest",
+    "pactum": "latest",
+    "vitest": "latest",
+    "@vitest/ui": "latest",
+    "cross-env": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "typescript": "latest"
+  }
+}

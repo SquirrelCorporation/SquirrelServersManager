@@ -6,7 +6,8 @@
     "dev": "node scripts/dev.js",
     "list": "node scripts/dev.js list",
     "generate": "node scripts/dev.js generate",
-    "parse-prd": "node scripts/dev.js parse-prd"
+    "parse-prd": "node scripts/dev.js parse-prd",
+    "test:e2e": "tests/e2e/run.sh"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.18.6",

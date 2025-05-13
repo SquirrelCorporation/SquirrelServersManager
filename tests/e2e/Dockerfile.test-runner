@@ -1,0 +1,21 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install curl for healthcheck
+RUN apk add --no-cache curl
+
+# Copy package files
+COPY package*.json ./
+
+# Install latest versions of all dependencies
+RUN npm install pactum@latest vitest@latest @vitest/ui@latest cross-env@latest axios@latest @types/node@latest typescript@latest
+
+# Set working directory for tests
+WORKDIR /app/tests/e2e
+
+# Create test results directory
+RUN mkdir -p /app/test-results
+
+# Command to run tests
+CMD ["npx", "vitest", "run", "--config", "vitest.config.ts"]

@@ -1,0 +1,114 @@
+version: '3.8'
+
+services:
+  # SERVER CONFIGURATION - IDENTICAL TO PRODUCTION
+  server:
+    # CRITICAL: Build configuration identical to production
+    build:
+      context: ../../server
+      additional_contexts:
+        - shared-lib=../../shared-lib
+      target: production
+    restart: unless-stopped
+    command: sh -c "NODE_ENV=production node ./dist/src/main.js 2>/tmp/server-error.log || (echo 'Server startup failed:' && cat /tmp/server-error.log && sleep 30)"
+    ports:
+      - "13000:3000"  # Only change: Map to different external port
+    environment:
+      # Basic configuration
+      NODE_ENV: production
+      # Database
+      MONGODB_URI: mongodb://mongo:27017/ssm-test
+      DB_HOST: mongo
+      DB_PORT: 27017
+      DB_NAME: ssm-test
+      # Redis
+      REDIS_URI: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      # Server
+      SERVER_PORT: 3000
+      # Auth
+      SECRET: test-secret-for-e2e-testing
+      JWT_SECRET: test-secret-for-e2e-testing
+      SECRET_KEY: test-secret-key-for-e2e-testing
+      SALT: 1234567890123456
+      # Paths
+      SSM_INSTALL_PATH: /opt/squirrelserversmanager
+      SSM_DATA_PATH: /data
+      # Features
+      TELEMETRY_ENABLED: "false"
+      # Prometheus
+      PROMETHEUS_HOST: http://prometheus:9090
+      PROMETHEUS_BASE_URL: /api/v1
+      PROMETHEUS_USERNAME: user
+      PROMETHEUS_PASSWORD: pass
+      # Additional environment variables from .env that may be needed
+      ANSIBLE_BECOME_METHOD: sudo
+      ANSIBLE_BECOME_USER: root
+    volumes:
+      - ../../tests/e2e/fixtures:/data/fixtures
+      - ../../tests/e2e/fixtures/init-test-data.js:/opt/squirrelserversmanager/server/dist/src/init-test-data.js
+      - ../../tests/e2e/fixtures/e2e-main.js:/opt/squirrelserversmanager/server/dist/src/main.js
+      - test-data:/data
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--quiet", "http://localhost:3000/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    depends_on:
+      - mongo
+      - redis
+
+  # Testing-specific services below
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27018:27017"
+    command: --quiet --dbpath /data/db
+    environment:
+      MONGO_INITDB_DATABASE: ssm-test
+    volumes:
+      - ./fixtures/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    tmpfs:
+      - /data/db:exec,rw
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "16379:6379"
+    command: redis-server --save ""
+    tmpfs:
+      - /data:exec,rw
+
+  test-device:
+    build:
+      context: ../../tests/server
+    ports:
+      - "2222:22"
+
+  test-runner:
+    build:
+      context: ../../tests/e2e
+      dockerfile: Dockerfile.test-runner
+    depends_on:
+      server:
+        condition: service_healthy
+      test-device:
+        condition: service_started
+    command: ["./wait-for-server.sh", "npx", "vitest", "run", "--config", "vitest.config.ts"]
+    environment:
+      SERVER_URL: http://server:3000
+      API_URL: http://server:3000
+      TEST_DEVICE_HOST: test-device
+      TEST_DEVICE_PORT: 22
+      TEST_DEVICE_USERNAME: testuser
+      TEST_DEVICE_PASSWORD: testpassword
+      TEST_USERNAME: admin
+      TEST_PASSWORD: admin
+    volumes:
+      - ../../tests/e2e:/app/tests/e2e
+      - ./test-results:/app/test-results
+
+volumes:
+  test-data:
