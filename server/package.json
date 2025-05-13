@@ -141,7 +141,7 @@
     "eslint-plugin-import-x": "^4.11.0",
     "eslint-plugin-prettier": "^5.2.6",
     "globals": "^16.0.0",
-    "memfs": "^4.17.0",
+    "memfs": "^4.17.1",
     "mongodb-memory-server": "^10.1.4",
     "node-mocks-http": "^1.17.2",
     "nodemon": "^3.1.10",
