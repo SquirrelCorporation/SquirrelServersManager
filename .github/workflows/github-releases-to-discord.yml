@@ -3,26 +3,33 @@ name: '[RELEASE] Post on Discord on new release'
 on:
   workflow_run:
     workflows: ["[RELEASE] Publish Containers to Ghcr.io"]
-    types:
-      - completed
+    types: [completed]
+    branches: [master]
 
 jobs:
-  github-releases-to-discord:
+  discord-notification:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
-      - name: Github Releases To Discord
-        uses: SethCohen/github-releases-to-discord@v1.15.1
         with:
-          webhook_url: ${{ secrets.WEBHOOK_URL }}
-          color: "2105893"
-          username: "Release Changelog"
-          avatar_url: "https://cdn.discordapp.com/avatars/487431320314576937/bd64361e4ba6313d561d54e78c9e7171.png"
-          content: "||@everyone||"
-          footer_title: "Changelog"
-          footer_icon_url: "https://cdn.discordapp.com/avatars/487431320314576937/bd64361e4ba6313d561d54e78c9e7171.png"
-          footer_timestamp: true
-          max_description: '4096'
-          reduce_headings: true
+          ref: ${{ github.event.workflow_run.head_branch }}
+          
+      - name: Get latest tag
+        id: latestTag
+        run: |
+          echo "TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
+          
+      - name: Discord notification
+        uses: rjstone/discord-webhook-notify@v1
+        with:
+          severity: info
+          username: Release Bot
+          description: |
+            **New version released!** 🚀
+            Version: ${{ steps.latestTag.outputs.TAG }}
+            
+            Check out the latest release: https://github.com/${{ github.repository }}/releases/latest
+          footer: "Squirrel Servers Manager"
+          webhookUrl: ${{ secrets.WEBHOOK_URL }}
