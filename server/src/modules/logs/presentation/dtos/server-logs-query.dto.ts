@@ -31,4 +31,16 @@ export class ServerLogsQueryDto {
   @IsOptional()
   @IsString()
   context?: string;
+
+  @IsOptional()
+  @IsString()
+  level?: string;
+
+  @IsOptional()
+  @IsString()
+  message?: string;
+
+  @IsOptional()
+  @IsString()
+  pid?: string;
 }
