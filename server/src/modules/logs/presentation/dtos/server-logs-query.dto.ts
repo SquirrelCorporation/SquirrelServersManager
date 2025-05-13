@@ -27,4 +27,8 @@ export class ServerLogsQueryDto {
   @IsOptional()
   @IsString()
   search?: string;
+
+  @IsOptional()
+  @IsString()
+  context?: string;
 }
