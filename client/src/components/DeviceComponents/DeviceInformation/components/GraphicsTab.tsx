@@ -122,6 +122,7 @@ const GraphicsTab: React.FC<USBTabProps> = ({ device }) => {
           value: index,
         }),
       )}
+      lastUpdatedAt={device.systemInformation.graphics?.lastUpdatedAt}
     />
   );
 };

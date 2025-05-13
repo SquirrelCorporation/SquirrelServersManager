@@ -36,6 +36,7 @@ const MemoryTab: React.FC<MemoryTabProps> = ({ device }) => {
       name={'Memory'}
       importantInfo={importantInfo}
       detailedInfo={detailedInfo}
+      lastUpdatedAt={device.systemInformation.mem?.lastUpdatedAt}
     />
   );
 };

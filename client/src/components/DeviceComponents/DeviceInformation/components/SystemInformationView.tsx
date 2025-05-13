@@ -1,7 +1,8 @@
 import { ProFormSelect } from '@ant-design/pro-components';
-import { Avatar, Card, Col, List, Row, Typography } from 'antd';
+import { Avatar, Card, Col, List, Row, Typography, Tooltip } from 'antd';
 import { motion } from 'framer-motion';
 import React from 'react';
+import { ClockCircleOutlined } from '@ant-design/icons';
 
 export type ImportantInfo = {
   icon: React.ReactNode;
@@ -27,6 +28,7 @@ export type SystemInformationViewProps = {
   }[];
   selectedInterface?: number;
   setSelectedInterface?: (value: any) => void;
+  lastUpdatedAt?: string;
 };
 const SystemInformationView: React.FC<SystemInformationViewProps> = ({
   importantInfo,
@@ -35,6 +37,7 @@ const SystemInformationView: React.FC<SystemInformationViewProps> = ({
   setSelectedInterface,
   selectedInterface,
   name,
+  lastUpdatedAt,
 }) => {
   // Framer Motion Variants for Animations
   const listItemVariants = {
@@ -57,8 +60,20 @@ const SystemInformationView: React.FC<SystemInformationViewProps> = ({
         borderRadius: '8px',
         paddingTop: '8px',
         paddingBottom: '8px',
+        position: 'relative',
       }}
     >
+      {/* Top right update icon */}
+      {lastUpdatedAt && (
+        <div style={{ position: 'absolute', top: 8, right: 16, zIndex: 10 }}>
+          <Tooltip
+            title={`Last updated: ${new Date(lastUpdatedAt).toLocaleString()}`}
+            placement="left"
+          >
+            <ClockCircleOutlined style={{ fontSize: 18, color: '#aaa' }} />
+          </Tooltip>
+        </div>
+      )}
       {/* Left Column: Important Info */}
       <Col
         span={8}

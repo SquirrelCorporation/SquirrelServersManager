@@ -125,6 +125,7 @@ const CPUTab: React.FC<CPUTabProps> = ({ device }) => {
       name={'CPU'}
       importantInfo={importantInfo}
       detailedInfo={detailedInfo}
+      lastUpdatedAt={device.systemInformation.cpu?.lastUpdatedAt}
     />
   );
 };

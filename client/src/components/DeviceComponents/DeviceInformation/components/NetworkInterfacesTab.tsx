@@ -169,6 +169,10 @@ const NetworkInterfacesTab: React.FC<NetworkInterfacesTabProps> = ({
           value: index,
         };
       })}
+      lastUpdatedAt={
+        device.systemInformation.networkInterfaces?.[selectedInterface]
+          ?.lastUpdatedAt
+      }
     />
   );
 };

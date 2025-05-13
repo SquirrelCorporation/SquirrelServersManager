@@ -49,42 +49,90 @@ export class RemoteSystemInformationProcessor {
       switch (updateType) {
         case UpdateType.CPU:
           device.systemInformation.cpu = data as Systeminformation.CpuData;
+          if (device.systemInformation.cpu) {
+            device.systemInformation.cpu.lastUpdatedAt = new Date().toISOString();
+          }
           break;
         case UpdateType.Memory:
           device.systemInformation.mem = data as Systeminformation.MemData;
+          if (device.systemInformation.mem) {
+            (device.systemInformation.mem as any).lastUpdatedAt = new Date().toISOString();
+          }
           break;
         case UpdateType.FileSystems:
           device.systemInformation.fileSystems = data as Systeminformation.DiskLayoutData[];
+          if (Array.isArray(device.systemInformation.fileSystems)) {
+            device.systemInformation.fileSystems.forEach((fs) => {
+              fs.lastUpdatedAt = new Date().toISOString();
+            });
+          }
           break;
         case UpdateType.Network:
           device.systemInformation.networkInterfaces =
             data as Systeminformation.NetworkInterfacesData[];
+          if (Array.isArray(device.systemInformation.networkInterfaces)) {
+            device.systemInformation.networkInterfaces.forEach((ni) => {
+              ni.lastUpdatedAt = new Date().toISOString();
+            });
+          }
           break;
         case UpdateType.Graphics:
           device.systemInformation.graphics = data as Systeminformation.GraphicsData;
+          if (device.systemInformation.graphics) {
+            device.systemInformation.graphics.lastUpdatedAt = new Date().toISOString();
+          }
           break;
         case UpdateType.WiFi:
           device.systemInformation.wifi = data as Systeminformation.WifiInterfaceData[];
+          if (Array.isArray(device.systemInformation.wifi)) {
+            device.systemInformation.wifi.forEach((w) => {
+              w.lastUpdatedAt = new Date().toISOString();
+            });
+          }
           break;
         case UpdateType.USB:
-          device.systemInformation.usb = data as Systeminformation.UsbData;
+          device.systemInformation.usb = data as Systeminformation.UsbData[];
+          if (Array.isArray(device.systemInformation.usb)) {
+            device.systemInformation.usb.forEach((u) => {
+              u.lastUpdatedAt = new Date().toISOString();
+            });
+          }
           break;
         case UpdateType.OS:
           device.systemInformation.os = data as Systeminformation.OsData;
+          if (device.systemInformation.os) {
+            device.systemInformation.os.lastUpdatedAt = new Date().toISOString();
+          }
           device.fqdn = (data as Systeminformation.OsData)?.fqdn;
           device.hostname = (data as Systeminformation.OsData)?.hostname;
           break;
         case UpdateType.System:
           device.systemInformation.system = data as Systeminformation.SystemData;
+          if (device.systemInformation.system) {
+            device.systemInformation.system.lastUpdatedAt = new Date().toISOString();
+          }
           break;
         case UpdateType.Versions:
           device.systemInformation.versions = data as Systeminformation.VersionData;
+          if (device.systemInformation.versions) {
+            device.systemInformation.versions.lastUpdatedAt = new Date().toISOString();
+          }
           break;
         case UpdateType.MemoryLayout:
           device.systemInformation.memLayout = data as Systeminformation.MemLayoutData[];
+          if (Array.isArray(device.systemInformation.memLayout)) {
+            device.systemInformation.memLayout.forEach((m) => {
+              m.lastUpdatedAt = new Date().toISOString();
+            });
+          }
           break;
         case UpdateType.Bluetooth:
           device.systemInformation.bluetooth = data as Systeminformation.BluetoothDeviceData[];
+          if (Array.isArray(device.systemInformation.bluetooth)) {
+            device.systemInformation.bluetooth.forEach((b) => {
+              b.lastUpdatedAt = new Date().toISOString();
+            });
+          }
           break;
         case UpdateStatsType.CPU_STATS:
           await this.processCpuStatistics(data, deviceUuid);
