@@ -2,7 +2,32 @@
 
 ## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.3...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.4...HEAD)
+
+**Fixed bugs:**
+
+- \[CHORE/BUG\] Chore/improve logging rsi [\#919](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/919) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Merged pull requests:**
+
+- Revert "Bump node from 23.11.0-alpine to 24.0.1-alpine in /client" [\#918](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/918) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Chore/fix discord notif [\#917](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/917) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump vuetify from 3.8.2 to 3.8.4 in /site [\#910](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/910) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump framer-motion from 12.9.2 to 12.10.5 in /client [\#909](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/909) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @typescript-eslint/eslint-plugin from 8.31.0 to 8.32.0 in /client [\#908](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/908) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.11.0-alpine to 24.0.1-alpine in /server [\#907](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/907) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.11.0-alpine to 24.0.1-alpine in /client [\#906](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/906) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump class-validator from 0.14.1 to 0.14.2 in /server [\#900](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/900) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump memfs from 4.17.0 to 4.17.1 in /server [\#899](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/899) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node-mocks-http from 1.17.1 to 1.17.2 in /server [\#898](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/898) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @keyv/redis from 4.3.4 to 4.4.0 in /server [\#897](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/897) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @babel/plugin-proposal-decorators from 7.25.9 to 7.27.1 in /client [\#894](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/894) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump ts-jest from 29.3.0 to 29.3.2 in /client [\#893](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/893) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @eslint/js from 9.23.0 to 9.26.0 in /client [\#892](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/892) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v0.5.0-alpha.4](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.4) (2025-05-12)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.3...v0.5.0-alpha.4)
 
 **Fixed bugs:**
 
