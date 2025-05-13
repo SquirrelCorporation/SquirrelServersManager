@@ -4,6 +4,7 @@ export class ServerLogEntity {
   time?: Date;
   pid?: number;
   hostname?: string;
+  context?: string;
   msg?: string;
   req?: any;
   res?: any;

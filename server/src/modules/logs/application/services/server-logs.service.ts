@@ -50,6 +50,7 @@ export class ServerLogsService implements IServerLogsService {
       'level',
       'msg',
       'hostname',
+      'context',
     ]);
 
     const totalBeforePaginate = dataSource?.length || 0;
