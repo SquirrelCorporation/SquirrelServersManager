@@ -6,8 +6,10 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Chore/add debug mode for rsi [\#922](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/922) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add Discord notification job to Docker publish workflow and remove de… [\#921](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/921) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Add last updated timestamps to system information tabs [\#920](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/920) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump vite from 5.4.18 to 5.4.19 in /site in the npm\_and\_yarn group [\#884](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/884) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [v0.5.0-alpha.5](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.5) (2025-05-13)
 
