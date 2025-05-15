@@ -64,17 +64,20 @@ const WifiTab: React.FC<WifiTabProps> = ({ device }) => {
 
   return (
     <SystemInformationView
-      name={'Wifi'}
+      name={'WiFi'}
       importantInfo={importantInfo}
       detailedInfo={detailedInfo}
       selectedInterface={selectedInterface}
       setSelectedInterface={setSelectedInterface}
       options={device?.systemInformation?.wifi?.map((e, index) => {
         return {
-          label: `${e.iface} (${e.id})`,
+          label: `${e.iface} (${e.model})`,
           value: index,
         };
       })}
+      lastUpdatedAt={
+        device.systemInformation.wifi?.[selectedInterface]?.lastUpdatedAt
+      }
     />
   );
 };

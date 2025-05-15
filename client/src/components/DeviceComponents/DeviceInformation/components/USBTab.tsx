@@ -98,10 +98,15 @@ const USBTab: React.FC<USBTabProps> = ({ device }) => {
       detailedInfo={detailedInfo}
       selectedInterface={selectedInterface}
       setSelectedInterface={setSelectedInterface}
-      options={device?.systemInformation?.usb?.map((e, index) => ({
-        label: `${e.name} (${e.bus})`,
-        value: index,
-      }))}
+      options={device?.systemInformation?.usb?.map((e, index) => {
+        return {
+          label: `${e.name} (${e.manufacturer})`,
+          value: index,
+        };
+      })}
+      lastUpdatedAt={
+        device.systemInformation.usb?.[selectedInterface]?.lastUpdatedAt
+      }
     />
   );
 };
