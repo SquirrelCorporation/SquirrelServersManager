@@ -2,7 +2,19 @@
 
 ## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.5...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.6...HEAD)
+
+**Closed issues:**
+
+- Support running container in read-only mode [\#914](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/914)
+
+**Merged pull requests:**
+
+- \[CHORE\] Add support for CPU, Memory, and File System stats monitoring. [\#925](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/925) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+## [v0.5.0-alpha.6](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.6) (2025-05-15)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.5...v0.5.0-alpha.6)
 
 **Merged pull requests:**
 
