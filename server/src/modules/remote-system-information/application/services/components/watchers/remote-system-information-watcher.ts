@@ -583,6 +583,15 @@ export class RemoteSystemInformationWatcher extends SSHExecutor {
           case 'versions':
             await this.getVersions(debugCallback);
             break;
+          case 'cpustats':
+            await this.getCpuStats(debugCallback);
+            break;
+          case 'memstats':
+            await this.getMemoryStats(debugCallback);
+            break;
+          case 'filesystemstats':
+            await this.getFileSystemStats(debugCallback);
+            break;
           default:
             throw new Error(`Component ${componentName} not supported for debug execution`);
         }

@@ -298,6 +298,9 @@ const RemoteSystemInformationTerminal: React.FC<
     { label: 'Bluetooth', value: 'bluetooth' },
     { label: 'Network Interfaces', value: 'networkinterfaces' },
     { label: 'Versions', value: 'versions' },
+    { label: 'CPU Stats', value: 'cpuStats' },
+    { label: 'Memory Stats', value: 'memStats' },
+    { label: 'File System Stats', value: 'fileSystemStats' },
   ];
 
   return (
