@@ -16,6 +16,7 @@ import { capitalizeFirstLetter } from '@/utils/strings';
 import {
   BugOutlined,
   CheckCircleFilled,
+  ClockCircleOutlined,
   FieldTimeOutlined,
   InfoCircleFilled,
 } from '@ant-design/icons';
@@ -25,10 +26,11 @@ import {
   ProFormSwitch,
 } from '@ant-design/pro-components';
 import message from '@/components/Message/DynamicMessage';
-import { Button, Card, Divider, Space, Tag, Tooltip } from 'antd';
+import { Avatar, Button, Card, Divider, Space, Tag, Tooltip } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Cron from 'react-js-cron';
 import { API } from 'ssm-shared-lib';
+import AnimatedInfoText from '@/components/AnimatedInfoText';
 
 export type SystemInformationConfigurationTabProps = {
   device: Partial<API.DeviceItem>;
@@ -62,11 +64,26 @@ const SystemInformationConfigurationTab: React.FC<
           selectedFeature as keyof typeof device.configuration.systemInformation
         ]?.cron ?? '',
       );
-      setLastUpdatedAt(
+      const info =
         device.systemInformation?.[
           selectedFeature as keyof typeof device.systemInformation
-        ]?.lastUpdatedAt ?? undefined,
-      );
+        ];
+      let updatedAt: string | undefined = undefined;
+      if (Array.isArray(info)) {
+        const firstWithLastUpdated = info.find(
+          (el) =>
+            el &&
+            typeof el === 'object' &&
+            'lastUpdatedAt' in el &&
+            (el as any).lastUpdatedAt,
+        );
+        updatedAt = firstWithLastUpdated
+          ? (firstWithLastUpdated as { lastUpdatedAt?: string }).lastUpdatedAt
+          : undefined;
+      } else if (info && typeof info === 'object' && 'lastUpdatedAt' in info) {
+        updatedAt = (info as { lastUpdatedAt?: string }).lastUpdatedAt;
+      }
+      setLastUpdatedAt(updatedAt);
     }
   }, [selectedFeature]);
 
@@ -140,10 +157,24 @@ const SystemInformationConfigurationTab: React.FC<
           body: { paddingBottom: 0 },
         }}
         extra={
-          <Space>
-            <Tooltip title="Remote system information are collected through SSH at regular intervals. You can configure the frequency for each collections.">
-              <InfoCircleFilled />
+          <Space size={'middle'}>
+            {lastUpdatedAt && (
+              <>
+                <AnimatedInfoText
+                  text={`Last updated at: ${lastUpdatedAt ? new Date(lastUpdatedAt).toLocaleString() : 'never'}`}
+                />
+              </>
+            )}
+            <Tooltip
+              title={`Last updated at: ${
+                lastUpdatedAt
+                  ? new Date(lastUpdatedAt).toLocaleString()
+                  : 'never'
+              }`}
+            >
+              <Avatar icon={<ClockCircleOutlined />} />
             </Tooltip>
+
             <Tooltip title="Debug mode - Execute commands in real-time and view output">
               <Button
                 icon={<BugOutlined />}
@@ -151,6 +182,9 @@ const SystemInformationConfigurationTab: React.FC<
                 type="primary"
                 ghost
               />
+            </Tooltip>
+            <Tooltip title="Remote system information are collected through SSH at regular intervals. You can configure the frequency for each collections.">
+              <InfoCircleFilled />
             </Tooltip>
           </Space>
         }
@@ -202,12 +236,6 @@ const SystemInformationConfigurationTab: React.FC<
             />
           </ProForm.Item>
         </ProForm.Group>
-        <Divider>
-          Last updated at:{' '}
-          <Tag>
-            {lastUpdatedAt ? new Date(lastUpdatedAt).toLocaleString() : 'never'}
-          </Tag>
-        </Divider>
       </Card>
 
       {/* Debug Terminal Modal */}

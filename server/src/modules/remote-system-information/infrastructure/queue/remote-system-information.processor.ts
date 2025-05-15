@@ -136,12 +136,27 @@ export class RemoteSystemInformationProcessor {
           break;
         case UpdateStatsType.CPU_STATS:
           await this.processCpuStatistics(data, deviceUuid);
+          if (!device.systemInformation.cpuStats) {
+            device.systemInformation.cpuStats = {
+              lastUpdatedAt: new Date().toISOString(),
+            };
+          }
           break;
         case UpdateStatsType.MEM_STATS:
           await this.processMemoryStatistics(data, deviceUuid);
+          if (!device.systemInformation.memStats) {
+            device.systemInformation.memStats = {
+              lastUpdatedAt: new Date().toISOString(),
+            };
+          }
           break;
         case UpdateStatsType.FILE_SYSTEM_STATS:
           await this.processFileStorageStatistics(data as any[], deviceUuid);
+          if (!device.systemInformation.fileSystemsStats) {
+            device.systemInformation.fileSystemsStats = {
+              lastUpdatedAt: new Date().toISOString(),
+            };
+          }
           break;
         default:
           throw new Error(`Unknown update type: ${updateType}`);
