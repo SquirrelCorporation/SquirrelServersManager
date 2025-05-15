@@ -34,3 +34,11 @@ export type RemoteExecutorTypeWithCallback = (
  * Generic callback type
  */
 export type Callback = (...values: any[]) => void;
+
+/**
+ * Debug callback for command execution
+ * @param command The command being executed
+ * @param response The response from the command
+ * @param success Whether the command executed successfully
+ */
+export type DebugCallback = (command: string, response: string, success: boolean) => void;

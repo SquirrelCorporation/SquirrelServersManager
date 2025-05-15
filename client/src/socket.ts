@@ -12,6 +12,7 @@ const socketOptions: Partial<ManagerOptions & SocketOptions> = {
   // Add explicit multiplexing options for Socket.IO
   forceNew: false, // Don't force new manager for namespaces
   multiplex: true, // Enable multiplexing (default, but explicit for clarity)
+  withCredentials: true, // Send cookies with request for auth
 };
 
 // Create a single instance to share across the application
@@ -25,6 +26,10 @@ const containerLiveLogsSocketManager = io(
   '/containers-live-logs',
   socketOptions,
 );
+const rsiDebugSocketManager = io(
+  '/remote-system-information-debug',
+  socketOptions,
+);
 
 // Export the socket instances
 export const sshSocket = sshSocketManager;
@@ -34,6 +39,7 @@ export const notificationSocket = notificationSocketManager;
 export const diagnosticSocket = diagnosticSocketManager;
 export const containerLiveLogsSocket = containerLiveLogsSocketManager;
 export const containerVolumesSocket = containerVolumesSocketManager;
+export const rsiDebugSocket = rsiDebugSocketManager;
 
 sshSocket.on('connect', () => {
   console.log('SSH socket connected:', {

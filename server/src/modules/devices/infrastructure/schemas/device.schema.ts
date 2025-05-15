@@ -265,6 +265,9 @@ export class Device {
     graphics?: Systeminformation.GraphicsData;
     memLayout?: Systeminformation.MemLayoutData[];
     fileSystems?: Systeminformation.DiskLayoutData[];
+    cpuStats?: { lastUpdatedAt?: string };
+    memStats?: { lastUpdatedAt?: string };
+    fileSystemsStats?: { lastUpdatedAt?: string };
   };
 
   @Prop({ type: String })
