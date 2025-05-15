@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.7...HEAD)
+
+**Fixed bugs:**
+
+- \[BUG\] Refactor Dockerfile to reorganize dependency installation [\#926](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/926) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 ## [v0.5.0-alpha.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.7) (2025-05-15)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.6...v0.5.0-alpha.7)
