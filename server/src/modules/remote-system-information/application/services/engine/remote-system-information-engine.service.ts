@@ -1,5 +1,5 @@
 import { InjectQueue } from '@nestjs/bull';
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { Queue } from 'bull';
 import { SsmAgent } from 'ssm-shared-lib';
@@ -16,6 +16,7 @@ import {
 import { IComponent } from '../../../doma../../domain/interfaces/component.interface';
 import { IRemoteSystemInformationEngineService } from '../../../domain/interfaces/remote-system-information-engine-service.interface';
 import { RemoteSystemInformationConfigurationSchema } from '../../../domain/types/configuration.types';
+import { DebugCallback } from '../../../domain/types/remote-executor.types';
 import { REMOTE_SYSTEM_INFO_QUEUE } from '../../../infrastructure/queue/constants';
 import { RemoteSystemInformationWatcher } from '../components/watchers/remote-system-information-watcher';
 
@@ -259,6 +260,48 @@ export class RemoteSystemInformationEngineService implements IRemoteSystemInform
       this.logger.error(
         `Error when registering watcher for device ${payload.device.uuid}: ${error.message}`,
       );
+    }
+  }
+
+  /**
+   * Execute a specific component in debug mode
+   * @param deviceUuid Device UUID
+   * @param componentName Component name (e.g., 'cpu', 'mem')
+   * @param debugCallback Callback for command execution details
+   */
+  async executeComponentInDebugMode(
+    deviceUuid: string,
+    componentName: string,
+    debugCallback: DebugCallback,
+  ): Promise<void> {
+    try {
+      this.logger.log(
+        `Executing ${componentName} component in debug mode for device ${deviceUuid}`,
+      );
+
+      // Find the watcher for this device by looking at deviceUuid in configuration
+      const watcherKeys = Object.keys(this.state.watchers);
+      const watcherKey = watcherKeys.find(
+        (key) => this.state.watchers[key].configuration.deviceUuid === deviceUuid,
+      );
+
+      if (!watcherKey) {
+        throw new Error(`No watcher found for device ${deviceUuid}`);
+      } else {
+        this.logger.log(`Found watcher for device ${deviceUuid}: ${watcherKey}`);
+      }
+
+      const watcher = this.state.watchers[watcherKey];
+
+      // Execute the component in debug mode using the watcher
+      await watcher.executeComponentDebug(componentName, debugCallback);
+
+      this.logger.log(`Successfully executed ${componentName} component in debug mode`);
+    } catch (error: any) {
+      this.logger.error(
+        `Error executing ${componentName} component in debug mode: ${error.message}`,
+      );
+      throw error;
     }
   }
 }

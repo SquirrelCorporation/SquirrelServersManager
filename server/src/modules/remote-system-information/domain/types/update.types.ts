@@ -33,3 +33,10 @@ export interface QueueJobData {
   updateType: UpdateType | UpdateStatsType;
   data: unknown;
 }
+
+/**
+ * Debug callback for command execution
+ * @param command The command being executed
+ * @param response The response from the command
+ * @param success Whether the command executed successfully
+ */

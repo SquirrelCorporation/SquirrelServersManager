@@ -9,10 +9,12 @@ import {
   WhhRam,
   Wifi,
 } from '@/components/Icons/CustomIcons';
+import RemoteSystemInformationTerminal from '@/components/Terminal/RemoteSystemInformationTerminal';
 import { CardHeader } from '@/components/Template/CardHeader';
 import { updateDeviceSystemInformationConfiguration } from '@/services/rest/devices/devices';
 import { capitalizeFirstLetter } from '@/utils/strings';
 import {
+  BugOutlined,
   CheckCircleFilled,
   FieldTimeOutlined,
   InfoCircleFilled,
@@ -23,8 +25,8 @@ import {
   ProFormSwitch,
 } from '@ant-design/pro-components';
 import message from '@/components/Message/DynamicMessage';
-import { Card, Space, Tooltip } from 'antd';
-import React, { useEffect } from 'react';
+import { Button, Card, Space, Tooltip } from 'antd';
+import React, { useEffect, useState } from 'react';
 import Cron from 'react-js-cron';
 import { API } from 'ssm-shared-lib';
 
@@ -38,11 +40,12 @@ const SystemInformationConfigurationTab: React.FC<
   const options = Object.keys(device.configuration?.systemInformation || {})
     .sort((e: string, f: string) => e.localeCompare(f))
     .map((e) => ({ label: capitalizeFirstLetter(e), value: e }));
-  const [selectedFeature, setSelectedFeature] = React.useState<string>(
+  const [selectedFeature, setSelectedFeature] = useState<string>(
     options?.[0]?.value,
   );
-  const [isFeatureEnabled, setIsFeatureEnabled] = React.useState<boolean>();
-  const [cron, setCron] = React.useState<string>('');
+  const [isFeatureEnabled, setIsFeatureEnabled] = useState<boolean>();
+  const [cron, setCron] = useState<string>('');
+  const [debugModalVisible, setDebugModalVisible] = useState<boolean>(false);
 
   useEffect(() => {
     if (device.configuration?.systemInformation) {
@@ -129,9 +132,19 @@ const SystemInformationConfigurationTab: React.FC<
           body: { paddingBottom: 0 },
         }}
         extra={
-          <Tooltip title="Remote system information are collected through SSH at regular intervals. You can configure the frequency for each collections.">
-            <InfoCircleFilled />
-          </Tooltip>
+          <Space>
+            <Tooltip title="Remote system information are collected through SSH at regular intervals. You can configure the frequency for each collections.">
+              <InfoCircleFilled />
+            </Tooltip>
+            <Tooltip title="Debug mode - Execute commands in real-time and view output">
+              <Button
+                icon={<BugOutlined />}
+                onClick={() => setDebugModalVisible(true)}
+                type="primary"
+                ghost
+              />
+            </Tooltip>
+          </Space>
         }
       >
         <ProForm.Group>
@@ -182,6 +195,13 @@ const SystemInformationConfigurationTab: React.FC<
           </ProForm.Item>
         </ProForm.Group>
       </Card>
+
+      {/* Debug Terminal Modal */}
+      <RemoteSystemInformationTerminal
+        visible={debugModalVisible}
+        onClose={() => setDebugModalVisible(false)}
+        device={device}
+      />
     </ProForm>
   );
 };
