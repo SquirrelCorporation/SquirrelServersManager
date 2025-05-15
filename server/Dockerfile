@@ -10,11 +10,10 @@ RUN npm run build
 # 2. Install server dependencies (including built shared-lib)
 FROM node:24.0.1-alpine AS deps
 WORKDIR /opt/squirrelserversmanager/server
-RUN apk update && apk add ansible nmap sudo openssh sshpass py3-pip expect gcompat libcurl curl
-RUN apk add docker docker-cli-compose
+
 RUN npm install -g npm@latest
-RUN rm -f /usr/lib/python3.12/EXTERNALLY-MANAGED || true
-RUN pip install ansible-runner ansible-runner-http
+
+
 RUN npm install -g typescript
 RUN npm i -g @nestjs/cli
 COPY ./package*.json ./
@@ -36,6 +35,10 @@ FROM node:24.0.1-alpine AS production
 LABEL org.opencontainers.image.source=https://github.com/SquirrelCorporation/SquirrelServersManager
 LABEL org.opencontainers.image.description="SSM Server"
 LABEL org.opencontainers.image.licenses="GNU AFFERO GENERAL PUBLIC LICENSE"
+RUN apk update && apk add ansible nmap sudo openssh sshpass py3-pip expect gcompat libcurl curl
+RUN apk add docker docker-cli-compose
+RUN rm -f /usr/lib/python3.12/EXTERNALLY-MANAGED || true
+RUN pip install ansible-runner ansible-runner-http
 WORKDIR /opt/squirrelserversmanager/server
 ENV NODE_ENV=production
 COPY --from=deps /opt/squirrelserversmanager/server/node_modules ./node_modules
@@ -51,6 +54,10 @@ CMD ["node", "./dist/src/main.js"]
 # 5. (Optional) Dev image for local development
 FROM node:24.0.1-alpine AS dev
 WORKDIR /opt/squirrelserversmanager/server
+RUN apk update && apk add ansible nmap sudo openssh sshpass py3-pip expect gcompat libcurl curl
+RUN apk add docker docker-cli-compose
+RUN rm -f /usr/lib/python3.12/EXTERNALLY-MANAGED || true
+RUN pip install ansible-runner ansible-runner-http
 COPY . .
 COPY --from=shared-lib-builder /opt/squirrelserversmanager/shared-lib ../shared-lib
 RUN npm install -g nodemon && npm ci --legacy-peer-deps --no-audit
