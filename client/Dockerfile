@@ -1,9 +1,7 @@
 # 1. Build shared-lib (TypeScript to JS)
 FROM node:23.11.0-alpine AS shared-lib-builder
 WORKDIR /opt/squirrelserversmanager/shared-lib
-COPY --from=shared-lib /package*.json ./
-COPY --from=shared-lib /tsconfig.json ./
-COPY --from=shared-lib /src ./src
+COPY --from=shared-lib /. ./
 RUN npm ci --legacy-peer-deps --no-audit
 RUN npm run build
 
@@ -46,6 +44,6 @@ CMD ["npm", "run", "serve"]
 FROM node:23.11.0-alpine AS dev
 WORKDIR /opt/squirrelserversmanager/client
 COPY . .
-COPY --from=shared-lib-builder /opt/squirrelserversmanager/shared-lib /opt/squirrelserversmanager/shared-lib
+COPY --from=shared-lib-builder /opt/squirrelserversmanager/shared-lib ../shared-lib
 RUN npm ci --legacy-peer-deps --no-audit
 CMD ["npm", "run", "start:pre"]
