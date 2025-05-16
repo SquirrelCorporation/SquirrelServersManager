@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.6...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.7...HEAD)
+
+**Fixed bugs:**
+
+- \[BUG\] Refactor Dockerfile to reorganize dependency installation [\#926](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/926) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+## [v0.5.0-alpha.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.7) (2025-05-15)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.6...v0.5.0-alpha.7)
 
 **Closed issues:**
 
@@ -11,6 +19,7 @@
 **Merged pull requests:**
 
 - \[CHORE\] Add support for CPU, Memory, and File System stats monitoring. [\#925](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/925) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Refactor Dockerfiles for optimized multi-stage builds. [\#923](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/923) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.5.0-alpha.6](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.6) (2025-05-15)
 
