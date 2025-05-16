@@ -6,6 +6,7 @@
 
 **Fixed bugs:**
 
+- \[BUG\] Revert npm v [\#927](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/927) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUG\] Refactor Dockerfile to reorganize dependency installation [\#926](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/926) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.5.0-alpha.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.7) (2025-05-15)
