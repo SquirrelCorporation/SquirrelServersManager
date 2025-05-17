@@ -2,6 +2,9 @@
 
 Thank you for your interest in contributing! SSM is a community-driven project, and we welcome contributions in code, documentation, testing, and design.
 
+## "Adopt me!" tasks
+A list of pre-identified tasks to improve SMM are available here: [Adopt me!](https://github.com/SquirrelCorporation/SquirrelServersManager/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22adopt%20me!%22)
+
 ## 🚦 Quick Start
 
 1. **Fork the repository** on GitHub.
