@@ -45,7 +45,7 @@ sshSocket.on('connect', () => {
   console.log('SSH socket connected:', {
     id: sshSocket.id,
     connected: sshSocket.connected,
-    namespace: sshSocket.nsp,
+    namespace: (sshSocket as any).nsp,
   });
 });
 
@@ -53,7 +53,7 @@ sftpSocket.on('connect', () => {
   console.log('SFTP socket connected:', {
     id: sftpSocket.id,
     connected: sftpSocket.connected,
-    namespace: sftpSocket.nsp,
+    namespace: (sftpSocket as any).nsp,
   });
 });
 
@@ -83,5 +83,6 @@ sshSocket.emit = function (...args: any[]) {
     console.log('Starting SSH session...');
   }
 
+  // @ts-ignore
   return originalEmit.apply(this, args);
 } as any;

@@ -137,7 +137,7 @@ git checkout -b feature/my-contribution
 
 Use these branch naming conventions:
 - `feature/` for new features
-- `fix/` for bug fixes
+- `bugfix/` for bug fixes
 - `docs/` for documentation changes
 - `refactor/` for code refactoring
 
