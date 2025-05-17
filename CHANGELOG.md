@@ -23,6 +23,7 @@
 **Merged pull requests:**
 
 - \[DOC\] Doc/put adopt me issues [\#934](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/934) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump formidable from 3.5.2 to 3.5.4 in /server in the npm\_and\_yarn group [\#882](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/882) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [v0.5.0-alpha.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.8) (2025-05-16)
 
