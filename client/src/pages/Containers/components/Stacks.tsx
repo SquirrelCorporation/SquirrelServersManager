@@ -16,6 +16,7 @@ import message from '@/components/Message/DynamicMessage';
 import { Button, Tag } from 'antd';
 import React, { useRef } from 'react';
 import { API } from 'ssm-shared-lib';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 const Stacks: React.FC = () => {
   const actionRef = useRef<ActionType>();
@@ -127,6 +128,10 @@ const Stacks: React.FC = () => {
         >
           Add a custom stack
         </Button>,
+        <InfoLinkWidget
+          tooltipTitle="Help for containers."
+          documentationLink="https://squirrelserversmanager.io/docs/user-guides/containers/management"
+        />,
       ]}
     />
   );

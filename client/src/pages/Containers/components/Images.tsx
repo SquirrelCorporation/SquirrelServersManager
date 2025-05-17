@@ -12,6 +12,7 @@ import { Button, Tag, Tooltip } from 'antd';
 import moment from 'moment';
 import React, { useRef } from 'react';
 import { API } from 'ssm-shared-lib';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 const Images: React.FC = () => {
   const actionRef = useRef<ActionType>();
@@ -135,6 +136,10 @@ const Images: React.FC = () => {
         >
           Add an image
         </Button>,
+        <InfoLinkWidget
+          tooltipTitle="Help for containers."
+          documentationLink="https://squirrelserversmanager.io/docs/user-guides/containers/management"
+        />,
       ]}
     />
   );

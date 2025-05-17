@@ -59,13 +59,13 @@ export class Device {
     type: {
       containers: {
         proxmox: {
-          watchContainersCron: { type: String, default: '*/30 * * * * *' },
+          watchContainersCron: { type: String, default: '* * * * *' },
         },
         docker: {
           watchContainers: { type: Boolean, default: true },
-          watchContainersCron: { type: String, default: '*/30 * * * * *' },
+          watchContainersCron: { type: String, default: '* * * * *' },
           watchContainersStats: { type: Boolean, default: true },
-          watchContainersStatsCron: { type: String, default: '*/30 * * * * *' },
+          watchContainersStatsCron: { type: String, default: '* * * * *' },
           watchEvents: { type: Boolean, default: true },
           watchAll: { type: Boolean, default: true },
         },
@@ -85,7 +85,7 @@ export class Device {
         },
         cpuStats: {
           watch: { type: Boolean, default: true },
-          cron: { type: String, default: '*/30 * * * * *' },
+          cron: { type: String, default: '* * * * *' },
         },
         mem: {
           watch: { type: Boolean, default: true },
@@ -93,7 +93,7 @@ export class Device {
         },
         memStats: {
           watch: { type: Boolean, default: true },
-          cron: { type: String, default: '*/30 * * * * *' },
+          cron: { type: String, default: '* * * * *' },
         },
         networkInterfaces: {
           watch: { type: Boolean, default: true },
@@ -125,18 +125,18 @@ export class Device {
         },
         fileSystemsStats: {
           watch: { type: Boolean, default: true },
-          cron: { type: String, default: '*/30 * * * * *' },
+          cron: { type: String, default: '* * * * *' },
         },
       },
     },
     default: {
       containers: {
-        proxmox: { watchContainersCron: '*/30 * * * * *' },
+        proxmox: { watchContainersCron: '* * * * *' },
         docker: {
           watchContainers: true,
-          watchContainersCron: '*/30 * * * * *',
+          watchContainersCron: '* * * * *',
           watchContainersStats: true,
-          watchContainersStatsCron: '*/30 * * * * *',
+          watchContainersStatsCron: '* * * * *',
           watchEvents: true,
           watchAll: true,
         },
@@ -145,9 +145,9 @@ export class Device {
         system: { watch: true, cron: '0 0 1 * *' },
         os: { watch: true, cron: '0 */12 * * *' },
         cpu: { watch: true, cron: '0 0 1 * *' },
-        cpuStats: { watch: true, cron: '*/30 * * * * *' },
+        cpuStats: { watch: true, cron: '* * * * *' },
         mem: { watch: true, cron: '0 0 1 * *' },
-        memStats: { watch: true, cron: '*/30 * * * * *' },
+        memStats: { watch: true, cron: '* * * * *' },
         networkInterfaces: { watch: true, cron: '0 0 1 * *' },
         versions: { watch: true, cron: '0 */6 * * *' },
         usb: { watch: true, cron: '0 */8 * * *' },
@@ -155,7 +155,7 @@ export class Device {
         bluetooth: { watch: true, cron: '0 */12 * * *' },
         graphics: { watch: true, cron: '0 0 1 * *' },
         fileSystems: { watch: true, cron: '0 0 1 * *' },
-        fileSystemsStats: { watch: true, cron: '*/30 * * * * *' },
+        fileSystemsStats: { watch: true, cron: '* * * * *' },
       },
     },
   })

@@ -12,6 +12,9 @@ nextStep:
 feedbackSupport: true
 credits: true
 ---
+<p align="center">
+  <img src="/images/squirrels-squirrel-troubleshoot.png" alt="firsttime2" width="102.4" height="153.6">
+</p>
 
 :::tip In a Nutshell (🌰)
 - Follow structured diagnostic approaches to identify issues quickly
@@ -21,7 +24,6 @@ credits: true
 - Use SSM's built-in diagnostic tools for troubleshooting
 :::
 
-![squirrels-squirrel-troubleshoot.png](/images/squirrels-squirrel-troubleshoot.png)
 
 ## Diagnostic Process
 

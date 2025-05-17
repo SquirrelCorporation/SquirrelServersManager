@@ -2,7 +2,7 @@ import { Linuxcontainers, Proxmox } from '@/components/Icons/CustomIcons';
 import DockerConfigurationForm from '@/pages/Admin/Inventory/components/tabs/containers/DockerConfigurationForm';
 import ProxmoxConfigurationForm from '@/pages/Admin/Inventory/components/tabs/containers/ProxmoxConfigurationForm';
 import { DockerOutlined } from '@ant-design/icons';
-import { Col, Row, Segmented } from 'antd';
+import { Card, Col, Row, Segmented, Tabs } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -19,36 +19,38 @@ const ContainersConfigurationTab: React.FC<ContainersConfigurationTabProps> = ({
   };
 
   return (
-    <Row>
-      <Col span={4}>
-        <Segmented
-          style={{ marginRight: 10 }}
-          onChange={onChange}
-          vertical
-          size="middle"
-          defaultValue={'docker'}
-          options={[
-            { label: 'Docker', value: 'docker', icon: <DockerOutlined /> },
-            { label: 'Proxmox', value: 'proxmox', icon: <Proxmox /> },
-            {
-              label: 'LXD',
-              value: 'lxd',
-              icon: <Linuxcontainers />,
-              disabled: true,
-            },
-          ]}
-          block
-        />
-      </Col>
-      <Col span={20}>
-        {selectedKey === 'docker' && (
-          <DockerConfigurationForm device={device} />
-        )}
-        {selectedKey === 'proxmox' && (
-          <ProxmoxConfigurationForm device={device} />
-        )}
-      </Col>
-    </Row>
+    <>
+      <Tabs
+        items={[
+          { label: 'Docker', key: 'docker', icon: <DockerOutlined /> },
+          { label: 'Proxmox', key: 'proxmox', icon: <Proxmox /> },
+          {
+            label: 'LXD',
+            key: 'lxd',
+            icon: <Linuxcontainers />,
+            disabled: true,
+          },
+        ]}
+        onChange={onChange}
+        tabBarStyle={{
+          width: '100%',
+          padding: 0,
+          margin: 0,
+          borderBottom: 'none',
+        }}
+        style={{
+          width: '100%',
+          padding: 0,
+          margin: 0,
+          borderBottom: 'none',
+          borderTop: 'none',
+        }}
+      />
+      {selectedKey === 'docker' && <DockerConfigurationForm device={device} />}
+      {selectedKey === 'proxmox' && (
+        <ProxmoxConfigurationForm device={device} />
+      )}
+    </>
   );
 };
 

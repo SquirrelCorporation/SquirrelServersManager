@@ -305,7 +305,7 @@ const RemoteSystemInformationTerminal: React.FC<
 
   return (
     <Modal
-      title={`Debug System Information - ${device.fqdn}`}
+      title={`Debug System Information - ${device.fqdn || 'Unknown Device'}`}
       open={visible}
       onCancel={onClose}
       width={800}
@@ -313,46 +313,52 @@ const RemoteSystemInformationTerminal: React.FC<
       destroyOnClose
       styles={modalStyles}
     >
-      <Space direction="vertical" style={{ width: '100%' }}>
-        <Space>
-          <Text strong>Component:</Text>
-          <Select
-            value={componentName}
-            onChange={setComponentName}
-            style={{ width: 200 }}
-            disabled={isExecuting}
-          >
-            {componentOptions.map((option) => (
-              <Option key={option.value} value={option.value}>
-                {option.label}
-              </Option>
-            ))}
-          </Select>
-          <Button
-            type="primary"
-            onClick={executeDebug}
-            loading={isExecuting}
-            disabled={!socket.connected}
-          >
-            Execute
-          </Button>
-        </Space>
+      {(device && (
+        <Space direction="vertical" style={{ width: '100%' }}>
+          <Space>
+            <Text strong>Component:</Text>
+            <Select
+              value={componentName}
+              onChange={setComponentName}
+              style={{ width: 200 }}
+              disabled={isExecuting}
+            >
+              {componentOptions.map((option) => (
+                <Option key={option.value} value={option.value}>
+                  {option.label}
+                </Option>
+              ))}
+            </Select>
+            <Button
+              type="primary"
+              onClick={executeDebug}
+              loading={isExecuting}
+              disabled={!socket.connected}
+            >
+              Execute
+            </Button>
+          </Space>
 
-        <div
-          style={{
-            height: '500px',
-            width: '100%',
-          }}
-        >
-          <TerminalCore
-            ref={terminalRef}
-            disableStdin={true}
-            convertEol={true}
-            rows={35}
-            cols={130}
-          />
+          <div
+            style={{
+              height: '500px',
+              width: '100%',
+            }}
+          >
+            <TerminalCore
+              ref={terminalRef}
+              disableStdin={true}
+              convertEol={true}
+              rows={35}
+              cols={130}
+            />
+          </div>
+        </Space>
+      )) || (
+        <div>
+          <Typography.Text>No device?</Typography.Text>
         </div>
-      </Space>
+      )}
     </Modal>
   );
 };

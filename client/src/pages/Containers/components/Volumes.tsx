@@ -13,6 +13,7 @@ import { history } from '@umijs/max';
 import { Tag, Tooltip } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 const Volumes: React.FC = () => {
   const columns: ProColumns<API.ContainerVolume>[] = [
@@ -125,7 +126,13 @@ const Volumes: React.FC = () => {
         defaultPageSize: 20,
         showSizeChanger: true,
       }}
-      toolBarRender={() => [<CreateVolumeModal key={'create-volume'} />]}
+      toolBarRender={() => [
+        <CreateVolumeModal key={'create-volume'} />,
+        <InfoLinkWidget
+          tooltipTitle="Help for containers."
+          documentationLink="https://squirrelserversmanager.io/docs/user-guides/containers/management"
+        />,
+      ]}
     />
   );
 };

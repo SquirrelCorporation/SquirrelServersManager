@@ -6,6 +6,7 @@ import { getCheckDeviceAnsibleConnection } from '@/services/rest/playbooks/diagn
 import { Avatar, Button, Card, Col, Row } from 'antd';
 import React, { useState } from 'react';
 import { API, SsmAgent } from 'ssm-shared-lib';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 type ConnectionTestTabProps = {
   device: Partial<API.DeviceItem>;
@@ -81,6 +82,12 @@ const ExistingDeviceConnectionTest: React.FC<ConnectionTestTabProps> = ({
         header: { height: 55, minHeight: 55, paddingLeft: 15 },
         body: { paddingBottom: 0 },
       }}
+      extra={
+        <InfoLinkWidget
+          tooltipTitle="Help for connection tests."
+          documentationLink="https://squirrelserversmanager.io/docs/user-guides/devices/configuration/diagnostic"
+        />
+      }
     >
       {testStarted && (
         <CheckDeviceConnection

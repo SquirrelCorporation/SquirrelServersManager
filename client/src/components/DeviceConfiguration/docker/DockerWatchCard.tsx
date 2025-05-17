@@ -7,6 +7,7 @@ import message from '@/components/Message/DynamicMessage';
 import { Card, Tooltip } from 'antd';
 import React, { useState } from 'react';
 import { API } from 'ssm-shared-lib';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 interface DockerWatchCardProps {
   device: Partial<API.DeviceItem>;
@@ -122,9 +123,10 @@ const DockerWatchCard: React.FC<DockerWatchCardProps> = ({
         body: { paddingBottom: 0 },
       }}
       extra={
-        <Tooltip title="Activate or deactivate cronjobs on this device.">
-          <InfoCircleFilled />
-        </Tooltip>
+        <InfoLinkWidget
+          tooltipTitle="Activate or deactivate the cronjobs on this device."
+          documentationLink="https://squirrelserversmanager.io/docs/user-guides/devices/configuration/docker#watch-settings"
+        />
       }
     >
       <ProForm.Group>

@@ -19,6 +19,7 @@ import message from '@/components/Message/DynamicMessage';
 import { Button, Dropdown, Flex, MenuProps, Space } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { API, Automations } from 'ssm-shared-lib';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 type AutomationEditProps = {
   reload: () => void;
@@ -112,6 +113,10 @@ const AutomationEditionDrawer: React.FC<AutomationEditProps> = ({
                     },
                   ]}
                   placeholder={'Automation name'}
+                />
+                <InfoLinkWidget
+                  tooltipTitle="Help for creating automations."
+                  documentationLink="https://squirrelserversmanager.io/docs/user-guides/automations/creating"
                 />
               </ProForm>
             </Space>

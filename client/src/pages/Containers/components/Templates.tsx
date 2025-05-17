@@ -1,4 +1,5 @@
 import { Deploy } from '@/components/Icons/CustomIcons';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 import DeployModal from '@/pages/Containers/components/sub-components/DeployModal';
 import { getTemplates } from '@/services/rest/containers/container-templates';
 import { ProList } from '@ant-design/pro-components';
@@ -123,6 +124,12 @@ const Templates: React.FC = () => {
           },
         }}
         request={getTemplates}
+        toolBarRender={() => [
+          <InfoLinkWidget
+            tooltipTitle="Help for containers."
+            documentationLink="https://squirrelserversmanager.io/docs/user-guides/containers/management"
+          />,
+        ]}
       />
     </>
   );
