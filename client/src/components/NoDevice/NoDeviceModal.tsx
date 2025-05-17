@@ -4,10 +4,12 @@ import TerminalModal, {
   TerminalStateProps,
 } from '@/components/PlaybookExecutionModal';
 import { Button, Modal, Typography } from 'antd';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { API, SsmAgent, SsmAnsible } from 'ssm-shared-lib';
+import { history } from '@umijs/max';
 
 const MODAL_WIDTH = 800;
+const MANAGE_DEVICES_PATH = '/manage/devices';
 
 const NoDeviceModal = () => {
   const [addNewDeviceModalIsOpen, setAddNewDeviceModalIsOpen] = useState(false);
@@ -34,6 +36,8 @@ const NoDeviceModal = () => {
         quickRef: 'installAgent',
         extraVars: [{ extraVar: '_ssm_installMethod', value: installMethod }],
       });
+    } else {
+      history.push(MANAGE_DEVICES_PATH);
     }
   };
 
