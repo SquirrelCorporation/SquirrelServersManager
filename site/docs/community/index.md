@@ -76,6 +76,10 @@ There are many ways to contribute to Squirrel Servers Manager, regardless of you
   />
 </FeatureGrid>
 
+
+### "Adopt me!" tasks
+A list of pre-identified tasks to improve SMM are available here [Adopt me!](https://github.com/SquirrelCorporation/SquirrelServersManager/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22adopt%20me!%22)
+
 ## Development Resources
 
 <FeatureGrid>
