@@ -7,7 +7,9 @@
 **Implemented enhancements:**
 
 - \[FEAT\] Custom dashboard.🔥 [\#785](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/785)
+- \[FEATURE\] In-Context Documentation Links  🔥 [\#781](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/781)
 - \[FEATURE\] API to add devices [\#731](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/731)
+- \[FEAT\] Add InfoLinkWidget for contextual documentation links [\#939](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/939) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Fixed bugs:**
 
