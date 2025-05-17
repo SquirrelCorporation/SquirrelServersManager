@@ -274,10 +274,58 @@ export abstract class SSHExecutor extends Component {
           try {
             this.sshClient.exec(finalCommand, (err, stream) => {
               if (err) {
+                this.logger.warn(
+                  `Command "${finalCommand}" failed directly in sshClient.exec callback: ${err.message}`,
+                );
                 if (this.debugCallback) {
-                  this.debugCallback(finalCommand, err.message, false);
+                  this.debugCallback(finalCommand, `Exec callback error: ${err.message}`, false);
                 }
-                return reject({ err, result: '' });
+
+                // Check for specific connection-related errors that might indicate a stale client
+                if (
+                  err.message &&
+                  (err.message.includes('Unable to exec') ||
+                    err.message.includes('Not connected') ||
+                    err.message.includes('Channel open failed') ||
+                    err.message.includes('session is not active')) // Common for dead/closed sessions
+                ) {
+                  this.logger.error(
+                    `Detected critical SSH exec error for "${finalCommand}": ${err.message}. This usually indicates the SSH session died. Attempting to reset connection for future use.`,
+                  );
+                  const clientThatFailed = this.sshClient; // Capture the client instance that reported the error
+
+                  // Attempt to clean up the problematic client instance
+                  if (clientThatFailed) {
+                    try {
+                      clientThatFailed.end(); // Gracefully end this specific client
+                    } catch (e: any) {
+                      this.logger.warn(
+                        `Error while trying to end the failed sshClient for "${finalCommand}": ${e.message}`,
+                      );
+                    }
+                    // If the current this.sshClient is indeed the one that failed, nullify it.
+                    // This forces the next command (or reconnect logic) to establish a fresh client.
+                    if (this.sshClient === clientThatFailed) {
+                      this.sshClient = null;
+                    }
+                  } else {
+                    // If sshClient was already null (e.g., by an 'end' event that raced with this error), ensure it remains null.
+                    this.sshClient = null;
+                  }
+
+                  this.logger.info(
+                    `Triggering background reconnect for device ${this.configuration.deviceUuid} after exec error on "${finalCommand}".`,
+                  );
+                  // We don't await this; it's for future commands.
+                  this.reconnect().catch((reconnectError) => {
+                    this.logger.error(
+                      `Background reconnect attempt after exec error for "${finalCommand}" also failed: ${reconnectError.message}`,
+                    );
+                  });
+                }
+                // Still reject the current command's promise.
+                // 'result' is defined in the outer scope of runCommand, initialized to ''.
+                return reject({ err, result });
               }
 
               const resolveOrReject = () => {
