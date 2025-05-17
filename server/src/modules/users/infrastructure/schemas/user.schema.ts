@@ -57,16 +57,20 @@ export class User {
   apiKey?: string;
 
   @Prop({
-    type: Object,
+    type: Object as unknown as UserLogsLevel,
     required: false,
     default: UserLogsDefaults,
   })
   logsLevel?: UserLogsLevel;
 
-  @Prop()
+  @Prop({
+    type: Date,
+  })
   createdAt?: Date;
 
-  @Prop()
+  @Prop({
+    type: Date,
+  })
   updatedAt?: Date;
 }
 

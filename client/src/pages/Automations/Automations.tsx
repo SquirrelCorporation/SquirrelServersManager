@@ -13,15 +13,21 @@ import {
 } from '@ant-design/pro-components';
 import '@umijs/max';
 import { history, useLocation } from '@umijs/max';
-import { TabsProps } from 'antd';
+import { TabsProps, ConfigProvider, theme } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { API } from 'ssm-shared-lib';
+import styled from 'styled-components';
+import StyledTabContainer, {
+  TabLabel,
+  IconWrapper,
+} from '@/components/Layout/StyledTabContainer';
 
 const Automations: React.FC = () => {
   const [currentRow, setCurrentRow] = useState<API.Automation | undefined>();
   const actionRef = useRef<ActionType | undefined>(null);
   const [drawerOpened, setDrawerOpened] = useState(false);
   const location = useLocation();
+  const { darkAlgorithm } = theme;
 
   const reload = () => {
     actionRef.current?.reload();
@@ -30,37 +36,45 @@ const Automations: React.FC = () => {
   const automationsTabItems: TabsProps['items'] = [
     {
       key: 'automations',
-      label: 'Automations',
-      icon: <CarbonIbmEventAutomation />,
-      animated: true,
+      label: (
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #32D74B, #27AE60)">
+            <CarbonIbmEventAutomation />
+          </IconWrapper>
+          Automations
+        </TabLabel>
+      ),
       children: (
-        <>
-          <ProTable<API.Automation>
-            actionRef={actionRef}
-            rowKey="name"
-            request={getAutomations}
-            columns={AutomationsColumns(setCurrentRow, reload, setDrawerOpened)}
-            search={false}
-            dateFormatter="string"
-            toolBarRender={() => [
-              <AutomationEditionDrawer
-                key={'automation-edit'}
-                open={drawerOpened}
-                setOpen={setDrawerOpened}
-                reload={reload}
-                selectedRow={currentRow}
-                setSelectedRow={setCurrentRow}
-              />,
-            ]}
-          />
-        </>
+        <ProTable<API.Automation>
+          actionRef={actionRef}
+          rowKey="name"
+          request={getAutomations}
+          columns={AutomationsColumns(setCurrentRow, reload, setDrawerOpened)}
+          search={false}
+          dateFormatter="string"
+          toolBarRender={() => [
+            <AutomationEditionDrawer
+              key={'automation-edit'}
+              open={drawerOpened}
+              setOpen={setDrawerOpened}
+              reload={reload}
+              selectedRow={currentRow}
+              setSelectedRow={setCurrentRow}
+            />,
+          ]}
+        />
       ),
     },
     {
       key: 'system-automations',
-      label: 'System Automations',
-      icon: <LockFilled />,
-      animated: true,
+      label: (
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #FF375F, #E31B4E)">
+            <LockFilled />
+          </IconWrapper>
+          System Automations
+        </TabLabel>
+      ),
       children: (
         <ProTable<API.Cron>
           rowKey="name"
@@ -87,22 +101,31 @@ const Automations: React.FC = () => {
   }, [location.hash]);
 
   return (
-    <PageContainer
-      header={{
-        title: (
-          <Title.MainTitle
-            title={'Automations'}
-            backgroundColor={TitleColors.CRONS}
-            icon={<InteractionOutlined />}
-          />
-        ),
+    <ConfigProvider
+      theme={{
+        algorithm: darkAlgorithm,
+        components: {
+          Tabs: {
+            itemSelectedColor: '#fff',
+            itemHoverColor: 'rgba(255, 255, 255, 0.85)',
+            inkBarColor: 'transparent',
+          },
+        },
       }}
-      tabList={automationsTabItems}
-      onTabChange={handleTabChange}
-      tabActiveKey={
-        location.hash.replace('#', '') || automationsTabItems[0].key
-      }
-    />
+    >
+      <StyledTabContainer
+        header={{
+          title: (
+            <Title.MainTitle
+              title={'Automations'}
+              backgroundColor={TitleColors.CRONS}
+              icon={<InteractionOutlined />}
+            />
+          ),
+        }}
+        tabItems={automationsTabItems}
+      />
+    </ConfigProvider>
   );
 };
 

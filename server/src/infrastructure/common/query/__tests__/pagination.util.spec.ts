@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { paginate } from './mock-pagination.util';
+import { paginate } from '../pagination.util';
 
 describe('paginate', () => {
   // Generate an array of 100 items for test

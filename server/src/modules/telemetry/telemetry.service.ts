@@ -7,6 +7,7 @@ import { SettingsKeys } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
 import { OnEvent } from '@nestjs/event-emitter';
 import Events from 'src/core/events/events';
+import { TelemetryEventPayload } from './dto/telemetry-event-payload.dto';
 
 @Injectable()
 export class TelemetryService implements OnModuleInit, OnApplicationShutdown {
@@ -48,13 +49,15 @@ export class TelemetryService implements OnModuleInit, OnApplicationShutdown {
       this.logger.log(`Install ID found in cache: ${installId}`);
     }
 
-    this._id = installId;
-    this.client.identify({ distinctId: this._id });
-    this.logger.log(`Telemetry identified with distinct ID: ${this._id}`);
+    this._id = installId as string;
+    if (this._id) {
+      this.client.identify({ distinctId: this._id as string });
+      this.logger.log(`Telemetry identified with distinct ID: ${this._id}`);
+    }
   }
 
   @OnEvent(Events.TELEMETRY_EVENT)
-  public capture(payload: { eventName: string; properties?: Record<string, any> }) {
+  public capture(payload: TelemetryEventPayload) {
     const telemetryEnabled = this.configService.get<boolean>('TELEMETRY_ENABLED');
     if (telemetryEnabled && this.client && this._id) {
       this.client.capture({

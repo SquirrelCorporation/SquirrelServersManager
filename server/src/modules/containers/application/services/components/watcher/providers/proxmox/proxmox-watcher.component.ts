@@ -14,11 +14,15 @@ import {
 } from '@modules/containers/domain/interfaces/container-service.interface';
 import { IProxmoxContainerRepository } from '@modules/containers/domain/repositories/proxmox-container.repository.interface';
 import { PROXMOX_CONTAINER_REPOSITORY } from '@modules/containers/domain/repositories/proxmox-container.repository.interface';
+import { IWatcherComponent } from '@modules/containers/domain/components/watcher.interface';
 import { AbstractWatcherComponent } from '../../abstract-watcher.component';
 
 const DEBOUNCED_WATCH_CRON_MS = 5000;
 
-export default class ProxmoxWatcherComponent extends AbstractWatcherComponent {
+export default class ProxmoxWatcherComponent
+  extends AbstractWatcherComponent
+  implements IWatcherComponent
+{
   watchCron!: CronJob.ScheduledTask | undefined;
   watchCronStat!: CronJob.ScheduledTask | undefined;
   watchCronTimeout: any;

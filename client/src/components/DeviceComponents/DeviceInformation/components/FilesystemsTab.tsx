@@ -12,6 +12,7 @@ import {
 } from '@/components/Icons/CustomIcons';
 import React, { useEffect } from 'react';
 import { API } from 'ssm-shared-lib';
+import { ACCENT_COLORS } from '../../../../styles/colors';
 
 type FilesystemsTabProps = {
   device: API.DeviceItem;
@@ -39,6 +40,12 @@ const FilesystemsTab: React.FC<FilesystemsTabProps> = ({ device }) => {
       icon: <FileSystem />,
       color: '#406471',
     });
+  } else {
+    importantInfo.push({
+      title: 'Disk Space',
+      value: '',
+      icon: <FileSystem />,
+    });
   }
   // Detailed info with associated icons
 
@@ -53,7 +60,6 @@ const FilesystemsTab: React.FC<FilesystemsTabProps> = ({ device }) => {
           key: 'Name',
           value: `${device?.systemInformation?.fileSystems[selectedInterface]?.name}`,
           icon: <Nametag />,
-          color: '#518523',
         });
       }
       if (device?.systemInformation?.fileSystems[selectedInterface]?.type) {
@@ -61,7 +67,6 @@ const FilesystemsTab: React.FC<FilesystemsTabProps> = ({ device }) => {
           key: 'Type',
           value: `${device?.systemInformation?.fileSystems[selectedInterface]?.type}`,
           icon: <InterfaceArrowsNetwork />,
-          color: '#1b2547',
         });
       }
       if (device?.systemInformation?.fileSystems[selectedInterface]?.device) {
@@ -69,7 +74,6 @@ const FilesystemsTab: React.FC<FilesystemsTabProps> = ({ device }) => {
           key: 'Device',
           value: `${device?.systemInformation?.fileSystems[selectedInterface]?.device}`,
           icon: <FlatPlatform />,
-          color: '#1b2547',
         });
       }
       if (device?.systemInformation?.fileSystems[selectedInterface]?.size) {
@@ -77,7 +81,6 @@ const FilesystemsTab: React.FC<FilesystemsTabProps> = ({ device }) => {
           key: 'Size',
           value: `~${Math.ceil(device?.systemInformation?.fileSystems[selectedInterface]?.size / (1024 * 1024 * 1024))} GB`,
           icon: <Size />,
-          color: '#df713e',
         });
       }
       if (
@@ -87,7 +90,6 @@ const FilesystemsTab: React.FC<FilesystemsTabProps> = ({ device }) => {
           key: 'Serial',
           value: `${device?.systemInformation?.fileSystems[selectedInterface]?.serialNum}`,
           icon: <Number />,
-          color: '#1b672b',
         });
       }
       if (
@@ -97,10 +99,13 @@ const FilesystemsTab: React.FC<FilesystemsTabProps> = ({ device }) => {
           key: 'Interface Type',
           value: `${device?.systemInformation?.fileSystems[selectedInterface]?.interfaceType}`,
           icon: <PciCard />,
-          color: '#671b58',
         });
       }
-      setDetailedInfo(_detailedInfo);
+      const coloredDetailedInfo = _detailedInfo.map((item, idx) => ({
+        ...item,
+        color: ACCENT_COLORS[idx % ACCENT_COLORS.length],
+      }));
+      setDetailedInfo(coloredDetailedInfo);
     }
   }, [selectedInterface]);
 
@@ -117,6 +122,9 @@ const FilesystemsTab: React.FC<FilesystemsTabProps> = ({ device }) => {
           value: index,
         };
       })}
+      lastUpdatedAt={
+        device.systemInformation.fileSystems?.[selectedInterface]?.lastUpdatedAt
+      }
     />
   );
 };

@@ -3,22 +3,25 @@ import ServerLogsColumns from '@/pages/Admin/Logs/ServerLogsColums';
 import TaskLogsColumns from '@/pages/Admin/Logs/TaskLogsColumns';
 import { getServerLogs } from '@/services/rest/logs/logs';
 import { getTasksLogs } from '@/services/rest/ansible/ansible.logs';
-import { UnorderedListOutlined } from '@ant-design/icons';
 import {
-  ColumnsState,
-  PageContainer,
-  ProTable,
-} from '@ant-design/pro-components';
+  UnorderedListOutlined,
+  FileTextOutlined,
+  RobotOutlined,
+} from '@ant-design/icons';
+import { ColumnsState, ProTable } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
-import { history, useLocation, useSearchParams } from '@umijs/max';
+import { useSearchParams } from '@umijs/max';
 import { TabsProps } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { API } from 'ssm-shared-lib';
+import StyledTabContainer, {
+  TabLabel,
+  IconWrapper,
+} from '@/components/Layout/StyledTabContainer';
 
 const Index: React.FC = () => {
   const [form] = ProForm.useForm<any>();
   const [searchParams] = useSearchParams();
-  const location = useLocation();
 
   const [columnsStateMap, setColumnsStateMap] = useState<
     Record<string, ColumnsState>
@@ -47,7 +50,14 @@ const Index: React.FC = () => {
   const logsTabItems: TabsProps['items'] = [
     {
       key: 'server-logs',
-      label: <div>Server Logs</div>,
+      label: (
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #32D74B, #27AE60)">
+            <FileTextOutlined />
+          </IconWrapper>
+          Server Logs
+        </TabLabel>
+      ),
       children: (
         <ProTable<API.ServerLog>
           rowKey="_id"
@@ -68,7 +78,14 @@ const Index: React.FC = () => {
     },
     {
       key: 'task-logs',
-      label: <div>Task Logs</div>,
+      label: (
+        <TabLabel>
+          <IconWrapper $bgColor="linear-gradient(145deg, #FF375F, #E31B4E)">
+            <RobotOutlined />
+          </IconWrapper>
+          Task Logs
+        </TabLabel>
+      ),
       children: (
         <ProTable<API.Task>
           rowKey="ident"
@@ -84,36 +101,19 @@ const Index: React.FC = () => {
     },
   ];
 
-  // Function to handle tab change
-  const handleTabChange = (key: string) => {
-    history.replace(`#${key}`);
-  };
-
-  // Sync active tab with the hash in the URL
-  useEffect(() => {
-    const hash = location.hash.replace('#', '');
-    if (!logsTabItems.some((item) => item.key === hash)) return;
-    // Sync the initially selected tab with the hash in the URL
-    handleTabChange(hash);
-  }, [location.hash]);
-
   return (
-    <>
-      <PageContainer
-        header={{
-          title: (
-            <Title.MainTitle
-              title={'Logs'}
-              backgroundColor={TitleColors.LOGS}
-              icon={<UnorderedListOutlined />}
-            />
-          ),
-        }}
-        tabList={logsTabItems}
-        onTabChange={handleTabChange}
-        tabActiveKey={location.hash.replace('#', '') || logsTabItems[0].key}
-      />
-    </>
+    <StyledTabContainer
+      header={{
+        title: (
+          <Title.MainTitle
+            title={'Logs'}
+            backgroundColor={TitleColors.LOGS}
+            icon={<UnorderedListOutlined />}
+          />
+        ),
+      }}
+      tabItems={logsTabItems}
+    />
   );
 };
 

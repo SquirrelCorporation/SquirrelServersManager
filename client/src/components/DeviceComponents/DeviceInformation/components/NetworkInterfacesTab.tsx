@@ -13,6 +13,7 @@ import {
 } from '@/components/Icons/CustomIcons';
 import React, { useEffect } from 'react';
 import { API } from 'ssm-shared-lib';
+import { ACCENT_COLORS } from '../../../../styles/colors';
 
 type NetworkInterfacesTabProps = {
   device: API.DeviceItem;
@@ -59,7 +60,6 @@ const NetworkInterfacesTab: React.FC<NetworkInterfacesTabProps> = ({
           key: 'Iface Name',
           value: `${device?.systemInformation?.networkInterfaces[selectedInterface]?.ifaceName}`,
           icon: <FlatPlatform />,
-          color: '#1b2547',
         });
       }
       if (
@@ -69,7 +69,6 @@ const NetworkInterfacesTab: React.FC<NetworkInterfacesTabProps> = ({
           key: 'Type',
           value: `${device?.systemInformation?.networkInterfaces[selectedInterface]?.type}`,
           icon: <InterfaceArrowsNetwork />,
-          color: '#3c6e70',
         });
       }
       if (
@@ -80,7 +79,6 @@ const NetworkInterfacesTab: React.FC<NetworkInterfacesTabProps> = ({
           key: 'State',
           value: `${device?.systemInformation?.networkInterfaces[selectedInterface]?.operstate}`,
           icon: <State />,
-          color: '#673a70',
         });
       }
       if (
@@ -90,7 +88,6 @@ const NetworkInterfacesTab: React.FC<NetworkInterfacesTabProps> = ({
           key: 'Ipv4',
           value: `${device?.systemInformation?.networkInterfaces[selectedInterface]?.ip4}`,
           icon: <Ip />,
-          color: '#479754',
         });
       }
       if (
@@ -101,7 +98,6 @@ const NetworkInterfacesTab: React.FC<NetworkInterfacesTabProps> = ({
           key: 'Ipv4 Subnet',
           value: `${device?.systemInformation?.networkInterfaces[selectedInterface]?.ip4subnet}`,
           icon: <SubsetProperOfBold />,
-          color: '#850668',
         });
       }
       if (
@@ -111,7 +107,6 @@ const NetworkInterfacesTab: React.FC<NetworkInterfacesTabProps> = ({
           key: 'Ipv6',
           value: `${device?.systemInformation?.networkInterfaces[selectedInterface]?.ip6}`,
           icon: <Ip />,
-          color: '#4c9747',
         });
       }
       if (
@@ -122,7 +117,6 @@ const NetworkInterfacesTab: React.FC<NetworkInterfacesTabProps> = ({
           key: 'Ipv6 Subnet',
           value: `${device?.systemInformation?.networkInterfaces[selectedInterface]?.ip6subnet}`,
           icon: <SubsetProperOfBold />,
-          color: '#bc943a',
         });
       }
       if (
@@ -132,7 +126,6 @@ const NetworkInterfacesTab: React.FC<NetworkInterfacesTabProps> = ({
           key: 'Mac',
           value: `${device?.systemInformation?.networkInterfaces[selectedInterface]?.mac}`,
           icon: <FlatPlatform />,
-          color: '#1b5754',
         });
       }
       if (
@@ -143,7 +136,6 @@ const NetworkInterfacesTab: React.FC<NetworkInterfacesTabProps> = ({
           key: 'Internal',
           value: `${device?.systemInformation?.networkInterfaces[selectedInterface]?.internal}`,
           icon: <Internal />,
-          color: '#055c09',
         });
       }
       if (
@@ -154,10 +146,13 @@ const NetworkInterfacesTab: React.FC<NetworkInterfacesTabProps> = ({
           key: 'Virtual',
           value: `${device?.systemInformation?.networkInterfaces[selectedInterface]?.virtual}`,
           icon: <VirtualNetwork20Regular />,
-          color: '#979347',
         });
       }
-      setDetailedInfo(_detailedInfo);
+      const coloredDetailedInfo = _detailedInfo.map((item, idx) => ({
+        ...item,
+        color: ACCENT_COLORS[idx % ACCENT_COLORS.length],
+      }));
+      setDetailedInfo(coloredDetailedInfo);
     }
   }, [selectedInterface]);
 
@@ -174,6 +169,10 @@ const NetworkInterfacesTab: React.FC<NetworkInterfacesTabProps> = ({
           value: index,
         };
       })}
+      lastUpdatedAt={
+        device.systemInformation.networkInterfaces?.[selectedInterface]
+          ?.lastUpdatedAt
+      }
     />
   );
 };

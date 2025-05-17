@@ -8,9 +8,11 @@ import {
   Nametag,
   Number,
   Speedometer,
+  Usb,
 } from '@/components/Icons/CustomIcons';
 import React, { useEffect } from 'react';
 import { API } from 'ssm-shared-lib';
+import { ACCENT_COLORS } from '../../../../styles/colors';
 
 type USBTabProps = {
   device: API.DeviceItem;
@@ -23,7 +25,12 @@ const USBTab: React.FC<USBTabProps> = ({ device }) => {
   const [detailedInfo, setDetailedInfo] = React.useState<DetailInfo[]>([]);
 
   // Detailed info with associated icons
-
+  const importantInfo = [];
+  importantInfo.push({
+    title: 'USB',
+    value: '',
+    icon: <Usb />,
+  });
   useEffect(() => {
     if (device?.systemInformation?.usb && selectedInterface !== undefined) {
       const _detailedInfo = [];
@@ -32,7 +39,6 @@ const USBTab: React.FC<USBTabProps> = ({ device }) => {
           key: 'ID',
           value: `${device?.systemInformation?.usb[selectedInterface]?.id}`,
           icon: <FlatPlatform />,
-          color: '#518523',
         });
       }
       if (device?.systemInformation?.usb[selectedInterface]?.name) {
@@ -40,7 +46,6 @@ const USBTab: React.FC<USBTabProps> = ({ device }) => {
           key: 'Name',
           value: `${device?.systemInformation?.usb[selectedInterface]?.name}`,
           icon: <Nametag />,
-          color: '#d36d5a',
         });
       }
       if (device?.systemInformation?.usb[selectedInterface]?.type) {
@@ -48,7 +53,6 @@ const USBTab: React.FC<USBTabProps> = ({ device }) => {
           key: 'Type',
           value: `${device?.systemInformation?.usb[selectedInterface]?.type}`,
           icon: <InterfaceArrowsNetwork />,
-          color: '#1b2547',
         });
       }
       if (device?.systemInformation?.usb[selectedInterface]?.vendor) {
@@ -56,7 +60,6 @@ const USBTab: React.FC<USBTabProps> = ({ device }) => {
           key: 'Vendor',
           value: `${device?.systemInformation?.usb[selectedInterface]?.vendor}`,
           icon: <FlatPlatform />,
-          color: '#df713e',
         });
       }
       if (device?.systemInformation?.usb[selectedInterface]?.manufacturer) {
@@ -64,7 +67,6 @@ const USBTab: React.FC<USBTabProps> = ({ device }) => {
           key: 'Manufacturer',
           value: `${device?.systemInformation?.usb[selectedInterface]?.manufacturer}`,
           icon: <HardwareCircuit />,
-          color: '#99a31f',
         });
       }
       if (device?.systemInformation?.usb[selectedInterface]?.maxPower) {
@@ -72,7 +74,6 @@ const USBTab: React.FC<USBTabProps> = ({ device }) => {
           key: 'Max Power',
           value: `${device?.systemInformation?.usb[selectedInterface]?.maxPower}`,
           icon: <Speedometer />,
-          color: '#df713e',
         });
       }
       if (device?.systemInformation?.usb[selectedInterface]?.serialNumber) {
@@ -80,23 +81,32 @@ const USBTab: React.FC<USBTabProps> = ({ device }) => {
           key: 'Serial',
           value: `${device?.systemInformation?.usb[selectedInterface]?.serialNumber}`,
           icon: <Number />,
-          color: '#2b2524',
         });
       }
-      setDetailedInfo(_detailedInfo);
+      const coloredDetailedInfo = _detailedInfo.map((item, idx) => ({
+        ...item,
+        color: ACCENT_COLORS[idx % ACCENT_COLORS.length],
+      }));
+      setDetailedInfo(coloredDetailedInfo);
     }
   }, [selectedInterface]);
 
   return (
     <SystemInformationView
       name={'USB'}
+      importantInfo={importantInfo}
       detailedInfo={detailedInfo}
       selectedInterface={selectedInterface}
       setSelectedInterface={setSelectedInterface}
-      options={device?.systemInformation?.usb?.map((e, index) => ({
-        label: `${e.name} (${e.bus})`,
-        value: index,
-      }))}
+      options={device?.systemInformation?.usb?.map((e, index) => {
+        return {
+          label: `${e.name} (${e.manufacturer})`,
+          value: index,
+        };
+      })}
+      lastUpdatedAt={
+        device.systemInformation.usb?.[selectedInterface]?.lastUpdatedAt
+      }
     />
   );
 };

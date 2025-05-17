@@ -31,10 +31,10 @@ export class DeviceDownTimeEvent {
   })
   duration?: number;
 
-  @Prop()
+  @Prop({ type: Date })
   createdAt?: Date;
 
-  @Prop()
+  @Prop({ type: Date })
   updatedAt?: Date;
 }
 

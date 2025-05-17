@@ -106,12 +106,15 @@ export interface IDevice {
     mem?: Partial<Systeminformation.MemData>;
     networkInterfaces?: Systeminformation.NetworkInterfacesData[];
     versions?: Systeminformation.VersionData;
-    usb?: Systeminformation.UsbData;
+    usb?: Systeminformation.UsbData[];
     wifi?: Systeminformation.WifiInterfaceData[];
     bluetooth?: Systeminformation.BluetoothDeviceData[];
     graphics?: Systeminformation.GraphicsData;
     memLayout?: Systeminformation.MemLayoutData[];
     fileSystems?: Systeminformation.DiskLayoutData[];
+    cpuStats?: { lastUpdatedAt: string };
+    memStats?: { lastUpdatedAt: string };
+    fileSystemsStats?: { lastUpdatedAt: string };
   };
   ip?: string;
   agentVersion?: string;

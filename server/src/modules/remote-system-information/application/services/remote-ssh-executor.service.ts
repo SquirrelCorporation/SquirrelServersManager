@@ -7,7 +7,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Client, ConnectConfig } from 'ssh2';
 import { SsmStatus } from 'ssm-shared-lib';
 import { generateSudoCommand } from '../../domain/helpers/sudo';
-import { RemoteExecOptions } from '../../domain/types/remote-executor.types';
+import { DebugCallback, RemoteExecOptions } from '../../domain/types/remote-executor.types';
 
 /**
  * Class representing an SSH executor for a specific device
@@ -25,7 +25,7 @@ export abstract class SSHExecutor extends Component {
     resolve: (result: string) => void;
     reject: ({ err, result }: { err: Error; result?: string }) => void;
   }[] = []; // Queue to store pending commands
-
+  public debugCallback?: DebugCallback;
   constructor(
     protected readonly devicesService: IDevicesService,
     protected readonly deviceAuthService: IDeviceAuthService,
@@ -67,34 +67,75 @@ export abstract class SSHExecutor extends Component {
     return new Promise((resolve, reject) => {
       const conn = new Client();
       this.sshClient = conn;
-      conn
+
+      const connectTimeout = setTimeout(() => {
+        this.logger.error('SSH Connection attempt timed out.');
+        conn.end(); // Attempt to clean up the connection object
+        reject(new Error('SSH Connection attempt timed out.'));
+      }, this.connectionConfig.readyTimeout || 30000); // Use configured timeout or default to 30s
+
+      // Explicitly cast to Client to help TS resolve overloads
+      (conn as Client)
         .on('ready', async () => {
+          clearTimeout(connectTimeout); // Clear the timeout timer on successful connection
           this.logger.info('SSH Connection established');
           retryAttempt = 0;
           this.startKeepAlive();
           resolve(); // Connection successful
         })
         .on('error', (err) => {
+          clearTimeout(connectTimeout); // Clear timeout on error as well
           this.logger.error(`SSH Connection error: ${err?.message}`);
+          // Ensure cleanup happens before potentially triggering reconnect
+          if (this.sshClient === conn) {
+            this.sshClient = null; // Prevent further operations on this failed client
+          }
+          conn.end(); // Explicitly end the connection on error
           void this.reconnect(retryAttempt); // Attempt reconnection on error
           reject(err);
         })
         .on('end', () => {
+          clearTimeout(connectTimeout);
           this.logger.warn('SSH Connection ended');
+          if (this.sshClient === conn) {
+            this.sshClient = null;
+          }
         })
         .on('close', () => {
-          this.logger.warn('SSH Connection closed');
+          clearTimeout(connectTimeout);
+          this.logger.warn(`SSH Connection closed`);
+          if (this.sshClient === conn) {
+            this.sshClient = null;
+          }
+          // Optional: Trigger reconnect on close if it wasn't due to an explicit 'end' call
+          // if (!conn.writable) { // Check if closure was unexpected
+          //   void this.reconnect(retryAttempt);
+          // }
         });
 
       // Connect using the provided configuration
       (async () => {
         try {
-          conn.connect({
+          const host = await tryResolveHost(this.connectionConfig.host as string);
+          this.logger.debug(
+            `Attempting SSH connection to ${host}:${this.connectionConfig.port || 22}...`,
+          );
+          (conn as Client).connect({
             ...this.connectionConfig,
-            host: await tryResolveHost(this.connectionConfig.host as string),
+            host,
           });
         } catch (error: any) {
-          this.logger.error(`Connection setup failed: ${error.message}`);
+          clearTimeout(connectTimeout); // Clear timeout on immediate connect error
+          this.logger.error(`Initial SSH connection setup failed: ${error.message}`, error.stack);
+          // Ensure cleanup
+          if (this.sshClient === conn) {
+            this.sshClient = null;
+          }
+          try {
+            conn.end();
+          } catch {
+            /* Ignore errors during cleanup */
+          }
           reject(error); // Propagate the error to the Promise
         }
       })();
@@ -188,6 +229,9 @@ export abstract class SSHExecutor extends Component {
           if (!this.sshClient) {
             await this.reconnect();
             if (!this.sshClient) {
+              if (this.debugCallback) {
+                this.debugCallback(command, 'SSH Client not connected', false);
+              }
               return reject(new Error('SSH Client not connected'));
             }
           }
@@ -206,8 +250,16 @@ export abstract class SSHExecutor extends Component {
               finalCommand = sudoCmd.replace('%command%', command);
             } catch (error) {
               this.logger.error('Failed to generate sudo command:', error);
+              if (this.debugCallback) {
+                this.debugCallback(command, 'Failed to generate sudo command', false);
+              }
               return reject(new Error('Failed to generate sudo command'));
             }
+          }
+
+          // Send command to debug callback if available
+          if (this.debugCallback) {
+            this.debugCallback(finalCommand, '', true);
           }
 
           this.logger.debug(`Running command: ${finalCommand}`);
@@ -222,6 +274,9 @@ export abstract class SSHExecutor extends Component {
           try {
             this.sshClient.exec(finalCommand, (err, stream) => {
               if (err) {
+                if (this.debugCallback) {
+                  this.debugCallback(finalCommand, err.message, false);
+                }
                 return reject({ err, result: '' });
               }
 
@@ -233,12 +288,18 @@ export abstract class SSHExecutor extends Component {
 
                 if (exitCode === 0) {
                   this.logger.debug(`Command executed successfully: ${finalCommand}`);
+                  if (this.debugCallback) {
+                    this.debugCallback(finalCommand, result.trim(), true);
+                  }
                   resolve(result.trim());
                 } else {
                   const error = new Error(
                     `Command "${finalCommand}" failed with code ${exitCode}, signal: ${exitSignal}, stderr: "${errorOutput.trim()}"`,
                   );
                   this.logger.debug(error.message);
+                  if (this.debugCallback) {
+                    this.debugCallback(finalCommand, errorOutput.trim() || result.trim(), false);
+                  }
                   reject({ err: error, result: result.trim() });
                 }
               };
@@ -308,10 +369,16 @@ export abstract class SSHExecutor extends Component {
             });
           } catch (error: any) {
             this.logger.error(`Error occurred during execution: ${error.message}`);
+            if (this.debugCallback) {
+              this.debugCallback(finalCommand, error.message, false);
+            }
             await this.reconnect();
           }
         } catch (error: any) {
           this.logger.error(`Error occurred during execution: ${error.message}`);
+          if (this.debugCallback) {
+            this.debugCallback(command, error.message, false);
+          }
           reject(error);
         }
       });
@@ -334,7 +401,7 @@ export abstract class SSHExecutor extends Component {
     const { command, options, resolve, reject } = this.commandQueue.shift()!;
 
     try {
-      // Execute the command
+      // Execute the command with debug callback if provided
       const result = await this.runCommand(command, options);
       resolve(result); // Resolve the promise if successful
     } catch (error: any) {
@@ -363,7 +430,7 @@ export abstract class SSHExecutor extends Component {
           reject(err);
         }
       };
-      // Push the command into the queue
+      // Push the command into the queue with debug callback if provided
       this.commandQueue.push({ command, options, resolve, reject: _reject });
       void this.processQueue(); // Process the queue if not currently executing
     });

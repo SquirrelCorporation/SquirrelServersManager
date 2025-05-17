@@ -18,69 +18,98 @@ The MCP (Model Context Protocol) Module provides the core functionality for enab
 
 ## Features
 
-*   **MCP Server Management:** Enables/disables the MCP server.
-*   **Agent Interaction:** Handles requests from connected agents.
-*   **Context Provision:** Provides relevant system context to agents.
-*   **Command Execution:** Facilitates execution of commands initiated by agents (delegating to relevant modules like Playbooks, Devices, etc.).
-*   **Security:** (Potential future feature) Manages authentication/authorization for agents.
+*   **MCP Server Management:** Enables/disables the MCP server via API and cache settings (`mcp.enabled`).
+*   **Agent Authentication:** Authenticates agents using Bearer API keys associated with users.
+*   **Agent Interaction:** Handles requests from connected agents according to the Model Context Protocol.
+*   **Context Provision:** Provides relevant system context to agents via registered resource resolvers.
+*   **Tool Execution:** Facilitates execution of commands (tools) initiated by agents (delegating to relevant modules like Playbooks, Devices, etc.), subject to permissions.
+*   **Playbook Execution Permissions:** Controls which Ansible playbooks agents are allowed to execute via cache settings (`mcp.allowed_playbooks`) managed through the API.
 
 ## Architecture
 
 This module adheres to Clean Architecture principles:
 
-*   **Domain:** Contains core MCP concepts, entities (like MCP Settings), and interfaces.
-*   **Application:** Implements use cases like enabling/disabling the server, handling agent requests, and coordinating with other modules.
-*   **Infrastructure:** Handles specific implementations, such as the MCP server itself (e.g., using Express or a dedicated library), persistence for MCP settings (if needed), and communication bridges to other modules.
-*   **Presentation:** Exposes MCP management endpoints (e.g., via REST API for the frontend) and potentially handles the low-level details of the MCP server's communication protocol.
+*   **Application:** Contains core logic, services (like handler registration), DTOs, constants (`mcp.constants.ts`), and interfaces.
+*   **Infrastructure:** Handles specific implementations:
+    *   `handlers/`: Contains the logic for specific MCP tools and resource resolvers (e.g., `playbook.handler.ts`).
+    *   `transport/`: Manages the underlying MCP server connection, authentication, and session handling (`mcp-transport.service.ts`).
+*   **Presentation:** Exposes MCP management endpoints via a REST API controller (`mcp-settings.controller.ts`) and includes related DTOs and Swagger decorators.
 
 ## Module Structure
 
 ```
 server/src/modules/mcp
-├── application/         # Application layer (use cases, services, DTOs, interfaces)
-├── infrastructure/      # Infrastructure layer (transport, persistence, external integrations)
-│   └── transport/         # Contains MCP server transport logic (e.g., mcp-transport.service.ts)
-├── presentation/        # Presentation layer (API controllers, potentially gateways)
-└── mcp.module.ts        # NestJS module definition
+├── application/
+│   ├── constants/         # Constants (e.g., cache keys)
+│   └── services/          # Application services (handler registration, etc.)
+├── infrastructure/
+│   ├── handlers/          # Tool and resource resolver implementations
+│   └── transport/         # MCP server transport, auth, session logic
+├── presentation/
+│   ├── controllers/       # REST API controllers for MCP management
+│   ├── decorators/        # Swagger/API documentation decorators
+│   └── dtos/              # Data Transfer Objects for the API
+├── mcp.module.ts        # NestJS module definition
 └── README.md            # This file
 ```
 
-(Note: A dedicated `domain` layer is not present at the root level based on current structure. Domain entities/interfaces might reside within `application` or other layers.)
-
 ## Integration
 
-*   **Imports:** `ConfigModule`, potentially modules like `DevicesModule`, `PlaybooksModule`, `ContainersModule` to interact with their services.
-*   **Exports:** `McpService` (or similar application service), potentially specific MCP management controllers or services.
+*   **Imports:** `CacheModule`, `ConfigModule`, `UsersModule`, `EventsModule`, and modules required by specific handlers (e.g., `PlaybooksModule`, `DevicesModule`).
+*   **Exports:** None currently. The module sets up the MCP transport and handlers internally.
 
 ```typescript
 // mcp.module.ts
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-// ... other imports like McpController, McpService, etc.
+import { Module, Global } from '@nestjs/common';
+import { CacheModule } from '@nestjs/cache-manager';
+import { McpSettingsController } from './presentation/controllers/mcp-settings.controller.ts';
+import { McpHandlerRegistryService } from './application/services/mcp-handler-registry.service';
+import { McpTransportService } from './infrastructure/transport/mcp-transport.service.ts';
+import { UsersModule } from '@modules/users/users.module';
+import { registerDeviceHandlers } from './infrastructure/handlers/device.handler';
+// ... other handler imports ...
 
+@Global() // If services need to be globally available
 @Module({
   imports: [
-    ConfigModule,
-    // Potentially DevicesModule, PlaybooksModule, etc.
+    CacheModule.register(),
+    UsersModule,
+    // Import modules needed by handlers
   ],
-  controllers: [/* McpApiController */],
-  providers: [/* McpService, McpServerProvider, etc. */],
-  exports: [/* McpService */],
+  controllers: [McpSettingsController],
+  providers: [
+    McpHandlerRegistryService,
+    McpTransportService,
+    // Potentially provide handlers if they have dependencies
+  ],
+  exports: [],
 })
-export class McpModule {}
+export class McpModule {
+  constructor(private readonly registryService: McpHandlerRegistryService) {}
+  // Handler registration logic often happens in onModuleInit or constructor
+}
 ```
 
 ## API Endpoints (Management API)
 
-*(Example - Adapt based on actual implementation)*
+Managed by `McpSettingsController`:
 
-*   `GET /api/mcp/settings`: Retrieves the current MCP server settings (e.g., enabled status).
-*   `PUT /api/mcp/settings`: Updates the MCP server settings.
+*   `POST /api/settings/mcp/status`: Updates the MCP server enabled status (requires server restart). Body: `{ "enabled": boolean }`
+*   `GET /api/settings/mcp/status`: Retrieves the current MCP server enabled status.
+*   `PUT /api/settings/mcp/allowed-playbooks`: Updates the list of allowed playbooks. Body: `{ "allowed": string[] | "all" }`
+*   `GET /api/settings/mcp/allowed-playbooks`: Retrieves the current allowed playbooks setting.
 
-## MCP Protocol Endpoints
+## MCP Protocol Handlers
 
-*(Example - These are handled by the MCP server implementation, not the management API)*
+These are registered within the `infrastructure/handlers/` directory and exposed via the MCP server transport. Examples:
 
-*   `mcp_get_tasks`: Request handled by the MCP server to retrieve task list.
-*   `mcp_set_task_status`: Request handled by the MCP server to update a task status.
-*   *(... other MCP tool endpoints defined in mcp.mdc)* 
+*   `executePlaybook`: Executes an Ansible playbook (subject to permissions configured via the API).
+*   `getPlaybookExecutionStatus`: Checks the status of a playbook run.
+*   `list_resources` (for `devices://`): Lists available devices.
+*   *(... other MCP tools and resource resolvers)*
+
+## Configuration
+
+*   **Cache:** MCP enabled status (`mcp.enabled`) and allowed playbooks (`mcp.allowed_playbooks`) are stored in the cache. Use constants `MCP_ENABLED_CACHE_KEY` and `MCP_ALLOWED_PLAYBOOKS_CACHE_KEY`.
+*   **Authentication:** Requires a valid User API key passed as a Bearer token in the `Authorization` header of MCP requests.
+*   **Port:** The MCP server listens on port 3001 by default (defined in `mcp-transport.service.ts`).

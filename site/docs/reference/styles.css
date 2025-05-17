@@ -1,0 +1,73 @@
+.quick-start-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  background-color: var(--vp-c-bg-soft);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.quick-start-icon {
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+
+.quick-start-time {
+  font-size: 0.9rem;
+  color: var(--vp-c-text-2);
+}
+
+.screenshot-container {
+  margin: 1.5rem 0;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.screenshot {
+  width: 100%;
+  display: block;
+}
+
+.screenshot-caption {
+  background-color: var(--vp-c-bg-soft);
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--vp-c-text-2);
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+.next-steps {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.next-step-card {
+  display: block;
+  padding: 1.5rem;
+  background-color: var(--vp-c-bg-soft);
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid var(--vp-c-divider);
+}
+
+.next-step-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.next-step-card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--vp-c-brand);
+}
+
+.next-step-card-description {
+  font-size: 0.9rem;
+  color: var(--vp-c-text-2);
+} 

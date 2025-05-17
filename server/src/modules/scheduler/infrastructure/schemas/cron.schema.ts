@@ -38,10 +38,10 @@ export class Cron {
   })
   expression!: string;
 
-  @Prop()
+  @Prop({ type: Date })
   createdAt?: Date;
 
-  @Prop()
+  @Prop({ type: Date })
   updatedAt?: Date;
 }
 

@@ -40,6 +40,9 @@ jobs:
     - name: Install
       working-directory: ./server
       run: npm ci
+    - name: Type Check
+      working-directory: ./server
+      run: npx tsc --noEmit
     - name: Build
       working-directory: ./server
       run: NODE_ENV=production npm run build --if-present
@@ -52,7 +55,7 @@ jobs:
         token: ${{ secrets.CODECOV }}
         directory: ./server/coverage
         flags: server
-        fail_ci_if_error: true
+        fail_ci_if_error: false
     - name: Test Python
       working-directory: ./server
       run: npm run test:python

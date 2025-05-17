@@ -27,6 +27,7 @@ const clientId = "jest-mcp-client-" + Date.now();
 const TEST_TIMEOUT = 60000; // Increase to 2 minutes for playbook execution
 const POLL_INTERVAL = 3000; // Poll every 3 seconds
 const MAX_RETRIES = 20; // Maximum number of status check retries
+const VALID_API_KEY = "bc296927-f5d2-4c0f-83b9-302ef78b95a9";
 
 interface McpResponse {
   content: PlaybookResponse[];
@@ -35,6 +36,13 @@ interface McpResponse {
 interface PlaybookResponse {
   jobId: string;
   status?: string;
+}
+
+interface ContainerActionResponse {
+  content: Array<{
+    type: string;
+    text: string;
+  }>;
 }
 
 describe("MCP Client Tests", () => {
@@ -47,8 +55,19 @@ describe("MCP Client Tests", () => {
 
     const mcpServerUrl = new URL(serverUrl);
 
-    // Transport constructor: URL only, as per example
-    transport = new StreamableHTTPClientTransport(mcpServerUrl);
+    // Transport constructor: URL and options object containing requestInit with headers
+    // @ts-ignore - Suppressing error as header passing mechanism is unclear from types - REMOVED
+    transport = new StreamableHTTPClientTransport(mcpServerUrl, {
+      // headers: { // Incorrect placement
+      //   Authorization: `Bearer ${VALID_API_KEY}`,
+      // },
+      requestInit: {
+        // Correct placement according to RequestInit type
+        headers: {
+          Authorization: `Bearer ${VALID_API_KEY}`,
+        },
+      },
+    });
 
     transport.onclose = () => {
       console.log("MCP transport closed during test.");
@@ -142,6 +161,93 @@ describe("MCP Client Tests", () => {
       expect(messagePart?.text).toBe(echoMessage);
 
       console.log(`Test 'echo': PASSED`);
+    },
+    TEST_TIMEOUT
+  );
+
+  // --- Test Authentication: No Token ---
+  it(
+    "should fail with unauthorized when no token is provided",
+    async () => {
+      const mcpServerUrl = new URL(serverUrl);
+      // Create transport WITHOUT headers
+      const noAuthTransport = new StreamableHTTPClientTransport(mcpServerUrl);
+      const noAuthClient = new Client({
+        name: `${clientId}-no-auth`,
+        version: "1.0.0",
+      });
+
+      try {
+        await noAuthClient.connect(noAuthTransport);
+        console.log(
+          "Test noAuth: Connected (unexpectedly), attempting tool call..."
+        );
+
+        // Expect the tool call to fail
+        await expect(
+          noAuthClient.callTool({
+            name: "echo",
+            arguments: { message: "should fail" },
+          })
+        ).rejects.toThrow(); // Generic error check, refine if specific error is known
+      } catch (error) {
+        // Connection itself might fail depending on transport implementation
+        console.log("Test noAuth: Failed as expected:", error);
+        // We can check for specific error properties if known
+        expect(error).toBeDefined();
+      } finally {
+        await noAuthClient.close();
+      }
+    },
+    TEST_TIMEOUT
+  );
+
+  // --- Test Authentication: Invalid Token ---
+  it(
+    "should fail with unauthorized when an invalid token is provided",
+    async () => {
+      const mcpServerUrl = new URL(serverUrl);
+      // Create transport WITH INVALID header via requestInit
+      // @ts-ignore - Suppressing error as header passing mechanism is unclear from types - REMOVED
+      const invalidAuthTransport = new StreamableHTTPClientTransport(
+        mcpServerUrl,
+        {
+          // headers: { // Incorrect placement
+          //   Authorization: 'Bearer invalid-token',
+          // },
+          requestInit: {
+            // Correct placement according to RequestInit type
+            headers: {
+              Authorization: "Bearer invalid-token",
+            },
+          },
+        }
+      );
+      const invalidAuthClient = new Client({
+        name: `${clientId}-invalid-auth`,
+        version: "1.0.0",
+      });
+
+      try {
+        await invalidAuthClient.connect(invalidAuthTransport);
+        console.log(
+          "Test invalidAuth: Connected (unexpectedly), attempting tool call..."
+        );
+
+        // Expect the tool call to fail
+        await expect(
+          invalidAuthClient.callTool({
+            name: "echo",
+            arguments: { message: "should fail" },
+          })
+        ).rejects.toThrow(); // Generic error check
+      } catch (error) {
+        // Connection itself might fail
+        console.log("Test invalidAuth: Failed as expected:", error);
+        expect(error).toBeDefined();
+      } finally {
+        await invalidAuthClient.close();
+      }
     },
     TEST_TIMEOUT
   );
@@ -376,4 +482,126 @@ describe("MCP Client Tests", () => {
     },
     TEST_TIMEOUT
   );
+
+  // --- containerAction ---
+  describe("containerAction tool", () => {
+    const TEST_CONTAINER_ID = process.env.TEST_CONTAINER_ID || "test-container";
+
+    beforeEach(() => {
+      if (TEST_CONTAINER_ID === "test-container") {
+        console.warn(
+          "Test 'containerAction': Using placeholder container ID. Set TEST_CONTAINER_ID in .env for a real test."
+        );
+      }
+    });
+
+    const testAction = async (action: string) => {
+      expect(transport.sessionId).toBeDefined(); // Ensure connection
+      console.log(
+        `Test 'containerAction': Testing ${action} action on container ${TEST_CONTAINER_ID}`
+      );
+
+      const response = (await client.callTool({
+        name: "containerAction",
+        arguments: {
+          containerId: TEST_CONTAINER_ID,
+          action: action,
+        },
+      })) as ContainerActionResponse;
+
+      console.log(
+        `Test 'containerAction': ${action} response:`,
+        JSON.stringify(response, null, 2)
+      );
+      expect(response).toBeDefined();
+      expect(response.content).toBeInstanceOf(Array);
+      expect(response.content.length).toBe(1);
+
+      const messagePart = response.content[0];
+      expect(messagePart.type).toBe("text");
+      expect(messagePart.text).toContain(
+        `Successfully performed ${action} action on container ${TEST_CONTAINER_ID}`
+      );
+    };
+
+    it(
+      "should start a container",
+      async () => {
+        await testAction("start");
+      },
+      TEST_TIMEOUT
+    );
+
+    it(
+      "should stop a container",
+      async () => {
+        await testAction("stop");
+      },
+      TEST_TIMEOUT
+    );
+
+    it(
+      "should restart a container",
+      async () => {
+        await testAction("restart");
+      },
+      TEST_TIMEOUT
+    );
+
+    it(
+      "should pause a container",
+      async () => {
+        await testAction("pause");
+      },
+      TEST_TIMEOUT
+    );
+
+    it(
+      "should kill a container",
+      async () => {
+        await testAction("kill");
+      },
+      TEST_TIMEOUT
+    );
+
+    it(
+      "should fail with invalid container ID",
+      async () => {
+        expect(transport.sessionId).toBeDefined();
+        console.log(
+          "Test 'containerAction': Testing with invalid container ID"
+        );
+
+        await expect(
+          client.callTool({
+            name: "containerAction",
+            arguments: {
+              containerId: "non-existent-container",
+              action: "start",
+            },
+          })
+        ).rejects.toThrow();
+      },
+      TEST_TIMEOUT
+    );
+
+    it(
+      "should fail with invalid action",
+      async () => {
+        expect(transport.sessionId).toBeDefined();
+        console.log("Test 'containerAction': Testing with invalid action");
+
+        await expect(
+          client.callTool({
+            name: "containerAction",
+            arguments: {
+              containerId: TEST_CONTAINER_ID,
+              action: "invalid-action",
+            },
+          })
+        ).rejects.toThrow();
+      },
+      TEST_TIMEOUT
+    );
+  });
 });

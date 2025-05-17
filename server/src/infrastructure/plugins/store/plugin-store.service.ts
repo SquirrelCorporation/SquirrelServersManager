@@ -329,7 +329,7 @@ export class PluginStoreService {
 
       // Return control to the controller immediately so it can send the response
     } catch (error: any) {
-      this.logger.error(`Installation failed: ${error.message}`, error.stack);
+      this.logger.error(error, `Installation failed: ${error.message}`);
       if (error instanceof BadRequestException) {
         throw error;
       }

@@ -48,7 +48,7 @@ export default [
   },
   {
     path: '/stack',
-    name: 'Stack',
+    name: 'Stacks',
     icon: 'BuildOutlined',
     access: 'canAdmin',
     routes: [
@@ -72,9 +72,17 @@ export default [
   },
   {
     path: '/plugins',
-    name: 'Plugins',
-    icon: 'AppstoreAddOutlined',
-    component: './Plugins',
+    name: 'Extensions',
+    icon: 'PartitionOutlined',
+    access: 'canAdmin',
+    routes: [
+      {
+        path: '/plugins',
+        name: 'Plugins',
+        icon: 'AppstoreAddOutlined',
+        component: './Plugins',
+      },
+    ],
   },
   {
     path: '/admin',

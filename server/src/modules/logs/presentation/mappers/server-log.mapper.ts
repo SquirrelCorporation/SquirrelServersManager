@@ -14,6 +14,7 @@ export class ServerLogPresentationMapper {
     dto.req = entity.req;
     dto.res = entity.res;
     dto.err = entity.err;
+    dto.context = entity.context;
     return dto;
   }
 }

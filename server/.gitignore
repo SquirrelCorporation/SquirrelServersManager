@@ -13,3 +13,4 @@
 .DS_Store
 ./node_modules/*
 /node_modules/*
+/documentation/SECURITY_SCANNER_PLUGIN_PLAN.md

@@ -2,7 +2,92 @@
 
 ## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.30...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.7...HEAD)
+
+**Fixed bugs:**
+
+- \[BUG\] Revert npm v [\#927](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/927) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\] Refactor Dockerfile to reorganize dependency installation [\#926](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/926) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+## [v0.5.0-alpha.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.7) (2025-05-15)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.6...v0.5.0-alpha.7)
+
+**Closed issues:**
+
+- Support running container in read-only mode [\#914](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/914)
+
+**Merged pull requests:**
+
+- \[CHORE\] Add support for CPU, Memory, and File System stats monitoring. [\#925](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/925) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Refactor Dockerfiles for optimized multi-stage builds. [\#923](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/923) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+## [v0.5.0-alpha.6](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.6) (2025-05-15)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.5...v0.5.0-alpha.6)
+
+**Merged pull requests:**
+
+- \[CHORE\] Chore/add debug mode for rsi [\#922](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/922) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Add Discord notification job to Docker publish workflow and remove de… [\#921](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/921) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Add last updated timestamps to system information tabs [\#920](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/920) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump vite from 5.4.18 to 5.4.19 in /site in the npm\_and\_yarn group [\#884](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/884) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v0.5.0-alpha.5](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.5) (2025-05-13)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.4...v0.5.0-alpha.5)
+
+**Fixed bugs:**
+
+- \[CHORE/BUG\] Chore/improve logging rsi [\#919](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/919) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Merged pull requests:**
+
+- Revert "Bump node from 23.11.0-alpine to 24.0.1-alpine in /client" [\#918](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/918) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Chore/fix discord notif [\#917](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/917) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump vuetify from 3.8.2 to 3.8.4 in /site [\#910](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/910) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump framer-motion from 12.9.2 to 12.10.5 in /client [\#909](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/909) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @typescript-eslint/eslint-plugin from 8.31.0 to 8.32.0 in /client [\#908](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/908) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.11.0-alpine to 24.0.1-alpine in /server [\#907](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/907) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.11.0-alpine to 24.0.1-alpine in /client [\#906](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/906) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump class-validator from 0.14.1 to 0.14.2 in /server [\#900](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/900) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump memfs from 4.17.0 to 4.17.1 in /server [\#899](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/899) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node-mocks-http from 1.17.1 to 1.17.2 in /server [\#898](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/898) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @keyv/redis from 4.3.4 to 4.4.0 in /server [\#897](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/897) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @babel/plugin-proposal-decorators from 7.25.9 to 7.27.1 in /client [\#894](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/894) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump ts-jest from 29.3.0 to 29.3.2 in /client [\#893](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/893) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @eslint/js from 9.23.0 to 9.26.0 in /client [\#892](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/892) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v0.5.0-alpha.4](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.4) (2025-05-12)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.3...v0.5.0-alpha.4)
+
+**Fixed bugs:**
+
+- \[BUG/CHORE\] Update UI styles, enhance tab functionality, and streamline data [\#912](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/912) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Merged pull requests:**
+
+- \[CHORE\] Chore/remove entry point [\#916](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/916) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Chore/improve testing [\#913](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/913) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Doc/fix documentation v2 [\#911](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/911) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Doc new doc [\#905](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/905) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+## [v0.5.0-alpha.3](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.3) (2025-05-05)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.2...v0.5.0-alpha.3)
+
+## [v0.5.0-alpha.2](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.2) (2025-05-05)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.1...v0.5.0-alpha.2)
+
+**Implemented enhancements:**
+
+- \[FEAT\] Feat new execution playbook design [\#902](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/902) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+## [v0.5.0-alpha.1](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.1) (2025-05-02)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.30...v0.5.0-alpha.1)
 
 **Implemented enhancements:**
 
@@ -20,6 +105,10 @@
 
 **Merged pull requests:**
 
+- \[CHORE\] Chore fix v050 [\#889](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/889) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] V0.5.0 - Alpha [\#886](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/886) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- fix\(proxy\): change to `error_log /dev/null` [\#885](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/885) ([Bergruebe](https://github.com/Bergruebe))
+- \[FEATURE/CORE/BUG\] Prepare 0.5.0 [\#883](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/883) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[CHORE\] Refactor NewDeviceModal to use pre-check functions for Docker, Ansibl… [\#881](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/881) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump @vue-flow/core from 1.42.5 to 1.43.1 in /site [\#880](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/880) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump axios from 1.8.4 to 1.9.0 in /site [\#879](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/879) ([dependabot[bot]](https://github.com/apps/dependabot))
@@ -1008,15 +1097,15 @@
 
 ## [v0.1.10](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.10) (2024-06-07)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.10)
-
-## [v0.1.9](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.9) (2024-06-06)
-
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.9)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.10)
 
 ## [v0.1.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.8) (2024-06-06)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.8)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.8)
+
+## [v0.1.9](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.9) (2024-06-06)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.9)
 
 ## [v0.1.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.7) (2024-06-06)
 

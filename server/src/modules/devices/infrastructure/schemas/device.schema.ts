@@ -13,10 +13,10 @@ export const DEVICE = 'Device';
   versionKey: false,
 })
 export class Device {
-  @Prop({ required: true, default: () => uuidv4() })
+  @Prop({ type: String, required: true, default: () => uuidv4() })
   uuid!: string;
 
-  @Prop({ default: false })
+  @Prop({ type: Boolean, default: false })
   disabled?: boolean;
 
   @Prop({
@@ -233,22 +233,22 @@ export class Device {
     };
   };
 
-  @Prop()
+  @Prop({ type: String })
   dockerVersion?: string;
 
-  @Prop()
+  @Prop({ type: String })
   dockerId?: string;
 
-  @Prop()
+  @Prop({ type: String })
   hostname?: string;
 
-  @Prop()
+  @Prop({ type: String })
   fqdn?: string;
 
-  @Prop({ default: SsmStatus.DeviceStatus.REGISTERING })
+  @Prop({ type: Number, default: SsmStatus.DeviceStatus.REGISTERING })
   status!: number;
 
-  @Prop()
+  @Prop({ type: Number })
   uptime?: number;
 
   @Prop({ type: Object, default: {} })
@@ -265,24 +265,27 @@ export class Device {
     graphics?: Systeminformation.GraphicsData;
     memLayout?: Systeminformation.MemLayoutData[];
     fileSystems?: Systeminformation.DiskLayoutData[];
+    cpuStats?: { lastUpdatedAt?: string };
+    memStats?: { lastUpdatedAt?: string };
+    fileSystemsStats?: { lastUpdatedAt?: string };
   };
 
-  @Prop()
+  @Prop({ type: String })
   ip?: string;
 
-  @Prop()
+  @Prop({ type: String })
   agentVersion?: string;
 
-  @Prop()
+  @Prop({ type: Date })
   createdAt?: Date;
 
-  @Prop()
+  @Prop({ type: Date })
   updatedAt?: Date;
 
-  @Prop()
+  @Prop({ type: String })
   agentLogPath?: string;
 
-  @Prop({ enum: ['node', 'docker', 'less'] })
+  @Prop({ type: String, enum: ['node', 'docker', 'less'] })
   agentType?: 'node' | 'docker' | 'less';
 }
 

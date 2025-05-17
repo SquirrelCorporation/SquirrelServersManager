@@ -7,7 +7,6 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 import passport from 'passport';
-import { ConfigService } from '@nestjs/config';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 import { SECRET } from './config';
@@ -25,14 +24,17 @@ declare global {
   var nestApp: INestApplication | null;
 }
 
+const STATIC_CONFIG = {
+  HTTP_PORT: 3000,
+  CORE_SERVICE_PORT: 3002,
+};
+
 /*
  * This is a wrapper class for the NestJS application.
  */
 class AppWrapper {
   private server!: http.Server;
-  private readonly refs: any = [];
   private nestApp!: INestApplication;
-  private readonly logger = logger;
 
   constructor() {
     this.setup();
@@ -185,30 +187,23 @@ class AppWrapper {
       this.nestApp = nestApp;
 
       // Start listening on HTTP port 3000
-      await nestApp.listen(3000);
-      logger.info('NestJS application listening on HTTP port 3000');
+      await nestApp.listen(STATIC_CONFIG.HTTP_PORT);
+      logger.info(`NestJS application listening on HTTP port ${STATIC_CONFIG.HTTP_PORT}`);
 
       // ---- Conditionally Start Internal Microservice Listener ---- Start ----
-      const configService = nestApp.get(ConfigService);
-      const isMcpEnabled = configService.get<boolean>('MCP_ENABLED');
 
-      if (isMcpEnabled) {
-        const coreServicePort = configService.get<number>('CORE_SERVICE_PORT') || 3002;
-        nestApp.connectMicroservice<MicroserviceOptions>({
-          transport: Transport.TCP,
-          options: {
-            host: 'localhost',
-            port: coreServicePort, // Use CORE_SERVICE_PORT (3002)
-          },
-        });
-        // Start all configured microservices (including the TCP one)
-        await nestApp.startAllMicroservices();
-        logger.info(
-          `Internal TCP Microservice listener connected on port ${coreServicePort} for MCP module communication`,
-        );
-      } else {
-        logger.info('MCP is disabled, internal TCP listener not started');
-      }
+      nestApp.connectMicroservice<MicroserviceOptions>({
+        transport: Transport.TCP,
+        options: {
+          host: 'localhost',
+          port: STATIC_CONFIG.CORE_SERVICE_PORT,
+        },
+      });
+      // Start all configured microservices (including the TCP one)
+      await nestApp.startAllMicroservices();
+      logger.info(
+        `Internal TCP Microservice listener connected on port ${STATIC_CONFIG.CORE_SERVICE_PORT} for MCP module communication`,
+      );
       // ---- Conditionally Start Internal Microservice Listener ---- End ----
 
       return nestApp;

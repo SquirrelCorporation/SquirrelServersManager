@@ -13,20 +13,16 @@ const logger = PinoLogger.child({ module: 'CronRepository' });
 export class CronRepository implements ICronRepository {
   constructor(
     @InjectModel(CRON) private cronModel: Model<CronDocument>,
-    private readonly mapper: CronRepositoryMapper
+    private readonly mapper: CronRepositoryMapper,
   ) {}
 
   async updateOrCreateIfNotExist(cron: ICron): Promise<ICron> {
     logger.info(`Updating or creating cron job: ${cron.name}`);
 
-    const createdCron = await this.cronModel.findOneAndUpdate(
-      { name: cron.name },
-      cron,
-      {
-        upsert: true,
-        new: true
-      }
-    );
+    const createdCron = await this.cronModel.findOneAndUpdate({ name: cron.name }, cron, {
+      upsert: true,
+      new: true,
+    });
 
     return this.mapper.toDomain(createdCron.toObject())!;
   }
@@ -34,10 +30,7 @@ export class CronRepository implements ICronRepository {
   async updateCron(cron: ICron): Promise<void> {
     logger.info(`Updating cron job: ${cron.name}`);
 
-    await this.cronModel.findOneAndUpdate(
-      { name: cron.name },
-      cron
-    ).lean().exec();
+    await this.cronModel.findOneAndUpdate({ name: cron.name }, cron).lean().exec();
   }
 
   async findAll(): Promise<ICron[] | null> {

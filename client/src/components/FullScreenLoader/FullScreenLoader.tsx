@@ -14,7 +14,7 @@ const DEFAULT_INITIAL_POLL_DELAY_MS = 5000; // Wait 5 seconds before starting
 
 interface FullScreenLoaderProps {
   isVisible: boolean;
-  message: string;
+  message?: string;
   iconUrl?: string;
   iconAlt?: string;
   onPollSuccess?: () => void; // Callback on successful poll
@@ -26,8 +26,8 @@ const overlayStyle: React.CSSProperties = {
   position: 'fixed',
   top: 0,
   left: 0,
-  width: '100%',
-  height: '100%',
+  width: '100vw',
+  height: '100vh',
   backgroundColor: 'rgba(255, 255, 255, 0.7)', // White transparent background
   display: 'flex',
   justifyContent: 'center',
@@ -61,12 +61,27 @@ const loadingIconStyle: React.CSSProperties = {
   marginBottom: '15px',
 };
 
+// Define keyframes for shimmer effect
+const shimmerKeyframes = `
+  @keyframes shimmer {
+    0% { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+  }
+`;
+
 const messageStyle: React.CSSProperties = {
-  color: 'white', // Ensure message is white
+  // Shimmer effect properties
+  backgroundImage:
+    'linear-gradient(to right, #ffffff 0%, #aaaaaa 40%, #ffffff 60%, #ffffff 100%)',
+  backgroundSize: '800px 100%', // Make background wider than text area
+  backgroundClip: 'text',
+  color: 'transparent', // Make text transparent to show gradient
+  animation: 'shimmer 2.5s linear infinite', // Apply shimmer animation
+
+  // Existing styles
+  // color: 'white', // Ensure message is white - Overridden by shimmer
   fontSize: '16px',
   marginTop: '15px',
-  // Add any text styling like shimmer if needed globally here,
-  // or pass it via props if it should be configurable
 };
 
 const FullScreenLoader: React.FC<FullScreenLoaderProps> = ({
@@ -146,8 +161,9 @@ const FullScreenLoader: React.FC<FullScreenLoaderProps> = ({
           style={iconStyle}
         ></img>
         <LoadingOutlined style={loadingIconStyle} />
-        <Text style={messageStyle}>{message}</Text>
+        <Text style={messageStyle}>{message || 'Restarting Server'}</Text>
       </div>
+      <style>{shimmerKeyframes}</style>
     </div>
   );
 };
