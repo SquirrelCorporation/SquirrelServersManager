@@ -1,8 +1,6 @@
 import { uninstallPlugin } from '@/services/rest/plugin-store.service';
 import { InstalledPluginMetadata } from '@/types/plugin.types';
 import {
-  CheckCircleOutlined,
-  CloseCircleOutlined,
   DeleteOutlined,
   LinkOutlined,
 } from '@ant-design/icons';
