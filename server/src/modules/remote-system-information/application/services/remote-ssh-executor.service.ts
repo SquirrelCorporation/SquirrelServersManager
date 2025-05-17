@@ -204,11 +204,12 @@ export abstract class SSHExecutor extends Component {
             this.reconnectPromise = null;
             reject(err);
           } else {
-            // Existing retry logic from user's file:
-            this.reconnectPromise = null; // Clear current promise before retrying
-            this.reconnect(retryAttempt + 1)
-              .then(resolve)
-              .catch(reject);
+            try {
+              await this.reconnect(retryAttempt + 1);
+              resolve();
+            } catch (error) {
+              reject(error);
+            }
           }
         }
       }, this.reconnectDelay);
@@ -224,27 +225,22 @@ export abstract class SSHExecutor extends Component {
     return new Promise((resolve, reject) => {
       process.nextTick(async () => {
         try {
-          // Initial check: If sshClient is null, attempt to reconnect.
+          // If we're not connected, wait for reconnection
           if (!this.sshClient) {
-            this.logger.warn(
-              `SSH client is null before command "${command}". Attempting initial reconnect.`,
-            );
-            await this.reconnect(); // This has its own retry logic.
+            await this.reconnect();
             if (!this.sshClient) {
-              const errMsg = `SSH client is still null after initial reconnect for command "${command}". Failing.`;
-              this.logger.error(errMsg);
               if (this.debugCallback) {
-                this.debugCallback(command, errMsg, false);
+                this.debugCallback(command, 'SSH Client not connected', false);
               }
-              return reject(new Error(errMsg)); // processQueue will handle this Error object.
+              return reject(new Error('SSH Client not connected'));
             }
-            this.logger.info(`SSH client reconnected. Proceeding with command "${command}".`);
           }
 
           const maxBuffer = options?.maxBuffer ?? Infinity;
           const encoding: BufferEncoding = options?.encoding ?? 'utf8';
-          let finalCommand = command;
 
+          // Get the sudo command and prepend it to the actual command if needed
+          let finalCommand = command;
           if (options?.elevatePrivilege) {
             try {
               const sudoCmd = await generateSudoCommand(
@@ -253,234 +249,185 @@ export abstract class SSHExecutor extends Component {
               );
               finalCommand = sudoCmd.replace('%command%', command);
             } catch (error) {
-              const typedError = error instanceof Error ? error : new Error(String(error));
-              this.logger.error(
-                `Failed to generate sudo command for "${command}": ${typedError.message}`,
-                typedError.stack,
-              );
+              this.logger.error('Failed to generate sudo command:', error);
               if (this.debugCallback) {
-                this.debugCallback(command, `Sudo generation error: ${typedError.message}`, false);
+                this.debugCallback(command, 'Failed to generate sudo command', false);
               }
-              return reject(new Error(`Failed to generate sudo command: ${typedError.message}`));
+              return reject(new Error('Failed to generate sudo command'));
             }
           }
 
+          // Send command to debug callback if available
           if (this.debugCallback) {
-            this.debugCallback(finalCommand, 'Preparing to execute', true);
+            this.debugCallback(finalCommand, '', true);
           }
-          this.logger.debug(`Preparing to run command: "${finalCommand}"`);
 
-          let attempts = 0;
-          const maxAttempts = 2; // Original attempt + 1 retry
+          this.logger.debug(`Running command: ${finalCommand}`);
 
-          const executeOrRetry = () => {
-            // These variables are scoped per attempt to ensure clean state for retries.
-            let result = '';
-            let errorOutput = '';
-            let resultSize = 0;
-            let exitCode: number | null = null;
-            let exitSignal: any = null;
-            let isResolved = false;
+          let result = '';
+          let errorOutput = '';
+          let resultSize = 0;
+          let exitCode: number | null = null; // Exit code from the process
+          let exitSignal: any = null; // Exit signal
+          let isResolved = false; // To ensure no double resolve/reject
 
-            // Check client status before each execution attempt inside executeOrRetry.
-            if (!this.sshClient) {
-              const errMsg = `SSH client became null before exec attempt ${attempts + 1} for "${finalCommand}".`;
-              this.logger.error(errMsg);
-              if (this.debugCallback) {
-                this.debugCallback(finalCommand, errMsg, false);
-              }
-              // Reject with an Error object; processQueue will normalize it.
-              if (!isResolved) {
-                // Ensure reject is only called once
-                isResolved = true;
-                reject(new Error(errMsg));
-              }
-              return;
-            }
-
-            this.logger.debug(
-              `Executing command (attempt ${attempts + 1}/${maxAttempts}): "${finalCommand}"`,
-            );
-
-            this.sshClient.exec(finalCommand, async (err, stream) => {
-              if (isResolved && err) {
-                this.logger.warn(
-                  `Ignoring exec error for "${finalCommand}" as command was already handled: ${err.message}`,
-                );
-                return;
-              }
-              if (isResolved) {
-                return;
-              } // Already handled (resolved or rejected)
-
+          try {
+            this.sshClient.exec(finalCommand, (err, stream) => {
               if (err) {
-                // err here is from sshClient.exec callback, typically Error type
                 this.logger.warn(
-                  `SSH exec callback error for "${finalCommand}" (attempt ${attempts + 1}/${maxAttempts}): ${err.message}`,
+                  `Command "${finalCommand}" failed directly in sshClient.exec callback: ${err.message}`,
                 );
-                attempts++;
-                const isRetryableSshError =
-                  err.message.includes('Unable to exec') ||
-                  err.message.includes('Not connected') ||
-                  err.message.includes('Channel open failed') ||
-                  err.message.includes('No response from server');
+                if (this.debugCallback) {
+                  this.debugCallback(finalCommand, `Exec callback error: ${err.message}`, false);
+                }
 
-                if (isRetryableSshError && attempts < maxAttempts) {
-                  this.logger.info(
-                    `Attempting reconnect and retry for "${finalCommand}" (next attempt: ${attempts + 1}).`,
+                // Check for specific connection-related errors that might indicate a stale client
+                if (
+                  err.message &&
+                  (err.message.includes('Unable to exec') ||
+                    err.message.includes('Not connected') ||
+                    err.message.includes('Channel open failed') ||
+                    err.message.includes('session is not active')) // Common for dead/closed sessions
+                ) {
+                  this.logger.error(
+                    `Detected critical SSH exec error for "${finalCommand}": ${err.message}. This usually indicates the SSH session died. Attempting to reset connection for future use.`,
                   );
-                  if (this.sshClient) {
+                  const clientThatFailed = this.sshClient; // Capture the client instance that reported the error
+
+                  // Attempt to clean up the problematic client instance
+                  if (clientThatFailed) {
                     try {
-                      this.sshClient.end();
+                      clientThatFailed.end(); // Gracefully end this specific client
                     } catch (e: any) {
                       this.logger.warn(
-                        `Error ending old client during retry prep for "${finalCommand}": ${e.message}`,
+                        `Error while trying to end the failed sshClient for "${finalCommand}": ${e.message}`,
                       );
                     }
+                    // If the current this.sshClient is indeed the one that failed, nullify it.
+                    // This forces the next command (or reconnect logic) to establish a fresh client.
+                    if (this.sshClient === clientThatFailed) {
+                      this.sshClient = null;
+                    }
+                  } else {
+                    // If sshClient was already null (e.g., by an 'end' event that raced with this error), ensure it remains null.
+                    this.sshClient = null;
                   }
-                  this.sshClient = null; // Nullify to force reconnect to establish a new client
 
-                  try {
-                    await this.reconnect(); // Attempt to re-establish the connection
-                    if (this.sshClient) {
-                      this.logger.info(
-                        `Reconnect successful. Retrying exec for "${finalCommand}".`,
-                      );
-                      executeOrRetry(); // Perform the retry
-                    } else {
-                      const reconFailMsg = `Reconnect failed after exec error. Cannot retry command "${finalCommand}".`;
-                      this.logger.error(reconFailMsg);
-                      if (this.debugCallback) {
-                        this.debugCallback(finalCommand, reconFailMsg, false);
-                      }
-                      if (!isResolved) {
-                        isResolved = true;
-                        reject({ err: new Error(reconFailMsg), result: '' });
-                      }
-                    }
-                  } catch (reconnectError: any) {
-                    const typedReconnectError =
-                      reconnectError instanceof Error
-                        ? reconnectError
-                        : new Error(String(reconnectError));
-                    const reconErrMsg = `Exception during reconnect attempt for "${finalCommand}": ${typedReconnectError.message}`;
-                    this.logger.error(reconErrMsg, typedReconnectError.stack);
-                    if (this.debugCallback) {
-                      this.debugCallback(finalCommand, reconErrMsg, false);
-                    }
-                    if (!isResolved) {
-                      isResolved = true;
-                      reject({ err: typedReconnectError, result: '' });
-                    }
-                  }
-                } else {
-                  const finalErrMsg = `SSH exec failed permanently for "${finalCommand}" after ${attempts} attempt(s): ${err.message}`;
-                  this.logger.error(finalErrMsg);
-                  if (this.debugCallback) {
-                    this.debugCallback(finalCommand, finalErrMsg, false);
-                  }
-                  if (!isResolved) {
-                    isResolved = true;
-                    // Explicitly create payload for reject to help linter/parser
-                    const rejectionPayload = { err: err, result: result };
-                    reject(rejectionPayload);
-                  }
+                  this.logger.info(
+                    `Triggering background reconnect for device ${this.configuration.deviceUuid} after exec error on "${finalCommand}".`,
+                  );
+                  // We don't await this; it's for future commands.
+                  this.reconnect().catch((reconnectError) => {
+                    this.logger.error(
+                      `Background reconnect attempt after exec error for "${finalCommand}" also failed: ${reconnectError.message}`,
+                    );
+                  });
                 }
-                return;
+                // Still reject the current command's promise.
+                // 'result' is defined in the outer scope of runCommand, initialized to ''.
+                return reject({ err, result });
               }
 
-              // If exec call itself was successful (no immediate err), set up stream handlers:
               const resolveOrReject = () => {
                 if (isResolved) {
                   return;
-                }
+                } // Prevent double resolution/rejection
                 isResolved = true;
+
                 if (exitCode === 0) {
-                  this.logger.debug(
-                    `Command "${finalCommand}" completed successfully (exit code 0).`,
-                  );
+                  this.logger.debug(`Command executed successfully: ${finalCommand}`);
                   if (this.debugCallback) {
                     this.debugCallback(finalCommand, result.trim(), true);
                   }
                   resolve(result.trim());
                 } else {
-                  const errorMsg = `Command "${finalCommand}" failed. Exit code: ${exitCode}, signal: ${exitSignal}, stderr: "${errorOutput.trim()}"`;
-                  const cmdError = new Error(errorMsg);
-                  this.logger.debug(errorMsg);
+                  const error = new Error(
+                    `Command "${finalCommand}" failed with code ${exitCode}, signal: ${exitSignal}, stderr: "${errorOutput.trim()}"`,
+                  );
+                  this.logger.debug(error.message);
                   if (this.debugCallback) {
                     this.debugCallback(finalCommand, errorOutput.trim() || result.trim(), false);
                   }
-                  reject({ err: cmdError, result: result.trim() });
+                  reject({ err: error, result: result.trim() });
                 }
               };
 
               stream
-                .on('data', (data: Buffer) => {
-                  if (isResolved) {
-                    return;
-                  }
+                .on('data', (data: any) => {
                   result += data.toString(encoding);
-                  resultSize += data.length;
+                  resultSize += Buffer.byteLength(data, encoding);
+
+                  // Check if output exceeds max buffer
                   if (resultSize > maxBuffer) {
-                    const bufferErrMsg = `Command output for "${finalCommand}" exceeded maxBuffer size of ${maxBuffer} bytes.`;
-                    this.logger.error(bufferErrMsg);
+                    this.logger.error(
+                      `Command output exceeded maxBuffer size of ${maxBuffer} bytes`,
+                    );
                     stream.removeAllListeners();
                     if (!isResolved) {
                       isResolved = true;
-                      reject({ err: new Error(bufferErrMsg), result });
+                      return reject({
+                        err: new Error(
+                          `Command output exceeded maxBuffer size of ${maxBuffer} bytes`,
+                        ),
+                        result,
+                      });
                     }
                   }
                 })
-                .on('exit', (code: number | null, signalName: string | null) => {
-                  if (isResolved) {
-                    return;
-                  }
+                .on('exit', (code: number, signal: any) => {
                   exitCode = code;
-                  exitSignal = signalName;
+                  exitSignal = signal;
                   this.logger.debug(
-                    `Command "${finalCommand}" stream: exit event (code: ${code}, signal: ${signalName}). Awaiting 'close'.`,
+                    `Command "${finalCommand}" exited with code ${code} and signal ${signal}. Awaiting close event to finalize...`,
                   );
                 })
                 .on('close', () => {
-                  if (isResolved) {
-                    return;
+                  this.logger.debug(`Command "${finalCommand}" stream closed. Finalizing...`);
+
+                  if (exitCode === null) {
+                    // If `exit` signal was not received before `close`
+                    if (!isResolved) {
+                      isResolved = true;
+                      this.logger.warn(
+                        `Command "${finalCommand}" closed without receiving an exit event. Assuming output is complete...`,
+                      );
+                      reject({
+                        err: new Error(
+                          'Stream closed without exit signal. Possible premature closure.',
+                        ),
+                        result: result.trim(),
+                      });
+                    }
+                  } else {
+                    // Resolve/reject based on exit code, now that close has occurred
+                    resolveOrReject();
                   }
-                  this.logger.debug(`Command "${finalCommand}" stream: close event. Finalizing.`);
-                  resolveOrReject();
                 })
-                .on('error', (streamErr: Error) => {
-                  // streamErr is Error type
-                  if (isResolved) {
-                    return;
+                .on('error', (err) => {
+                  // Immediate rejection if an error occurs
+                  this.logger.error(`Error occurred during execution: ${err.message}`);
+                  if (!isResolved) {
+                    isResolved = true;
+                    reject(err);
                   }
-                  isResolved = true;
-                  const streamErrMsg = `Stream error during command "${finalCommand}": ${streamErr.message}`;
-                  this.logger.error(streamErrMsg, streamErr.stack);
-                  if (this.debugCallback) {
-                    this.debugCallback(finalCommand, streamErrMsg, false);
-                  }
-                  reject({ err: streamErr, result });
                 })
-                .stderr.on('data', (data: Buffer) => {
-                  if (isResolved) {
-                    return;
-                  }
+                .stderr.on('data', (data: any) => {
                   errorOutput += data.toString(encoding);
                 });
             });
-          };
-
-          executeOrRetry(); // Initial invocation of the execution logic
-        } catch (outerError: any) {
-          // Catches errors from initial client checks, sudo generation, or other synchronous setup issues.
-          const typedOuterError =
-            outerError instanceof Error ? outerError : new Error(String(outerError));
-          const outerErrMsg = `Critical error in runCommand setup for "${command}": ${typedOuterError.message}`;
-          this.logger.error(outerErrMsg, typedOuterError.stack);
-          if (this.debugCallback) {
-            this.debugCallback(command, outerErrMsg, false);
+          } catch (error: any) {
+            this.logger.error(`Error occurred during execution: ${error.message}`);
+            if (this.debugCallback) {
+              this.debugCallback(finalCommand, error.message, false);
+            }
+            await this.reconnect();
           }
-          reject(typedOuterError); // processQueue will handle this Error object.
+        } catch (error: any) {
+          this.logger.error(`Error occurred during execution: ${error.message}`);
+          if (this.debugCallback) {
+            this.debugCallback(command, error.message, false);
+          }
+          reject(error);
         }
       });
     });
