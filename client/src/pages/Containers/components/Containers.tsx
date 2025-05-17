@@ -1,3 +1,4 @@
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 import ContainerDetailsModal from '@/pages/Containers/components/containers/ContainerDetailsModal';
 import ContainerMetas from '@/pages/Containers/components/containers/ContainerMetas';
 import EditContainerNameModal from '@/pages/Containers/components/containers/EditContainerNameModal';
@@ -97,6 +98,10 @@ const Containers: React.FC = () => {
             >
               Refresh
             </Button>,
+            <InfoLinkWidget
+              tooltipTitle="Help for containers."
+              documentationLink="https://squirrelserversmanager.io/docs/user-guides/containers/management"
+            />,
           ];
         }}
         actionRef={actionRef}

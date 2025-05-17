@@ -11,6 +11,7 @@ import {
 import { Avatar, Tag, Tooltip } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 const Networks: React.FC = () => {
   const columns: ProColumns<API.ContainerNetwork>[] = [
@@ -118,7 +119,13 @@ const Networks: React.FC = () => {
         defaultPageSize: 20,
         showSizeChanger: true,
       }}
-      toolBarRender={() => [<CreateNetworkModal key={'create-network'} />]}
+      toolBarRender={() => [
+        <CreateNetworkModal key={'create-network'} />,
+        <InfoLinkWidget
+          tooltipTitle="Help for containers."
+          documentationLink="https://squirrelserversmanager.io/docs/user-guides/containers/management"
+        />,
+      ]}
     />
   );
 };

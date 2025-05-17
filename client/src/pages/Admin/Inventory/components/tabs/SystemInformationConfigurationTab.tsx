@@ -31,6 +31,7 @@ import React, { useEffect, useState } from 'react';
 import Cron from 'react-js-cron';
 import { API } from 'ssm-shared-lib';
 import AnimatedInfoText from '@/components/AnimatedInfoText';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 export type SystemInformationConfigurationTabProps = {
   device: Partial<API.DeviceItem>;
@@ -47,7 +48,6 @@ const SystemInformationConfigurationTab: React.FC<
   );
   const [isFeatureEnabled, setIsFeatureEnabled] = useState<boolean>();
   const [cron, setCron] = useState<string>('');
-  const [debugModalVisible, setDebugModalVisible] = useState<boolean>(false);
   const [lastUpdatedAt, setLastUpdatedAt] = React.useState<
     string | undefined
   >();
@@ -175,17 +175,10 @@ const SystemInformationConfigurationTab: React.FC<
               <Avatar icon={<ClockCircleOutlined />} />
             </Tooltip>
 
-            <Tooltip title="Debug mode - Execute commands in real-time and view output">
-              <Button
-                icon={<BugOutlined />}
-                onClick={() => setDebugModalVisible(true)}
-                type="primary"
-                ghost
-              />
-            </Tooltip>
-            <Tooltip title="Remote system information are collected through SSH at regular intervals. You can configure the frequency for each collections.">
-              <InfoCircleFilled />
-            </Tooltip>
+            <InfoLinkWidget
+              tooltipTitle="Remote system information are collected through SSH at regular intervals. You can configure the frequency for each collections."
+              documentationLink="https://squirrelserversmanager.io/docs/user-guides/devices/configuration/system-information"
+            />
           </Space>
         }
       >
@@ -237,13 +230,6 @@ const SystemInformationConfigurationTab: React.FC<
           </ProForm.Item>
         </ProForm.Group>
       </Card>
-
-      {/* Debug Terminal Modal */}
-      <RemoteSystemInformationTerminal
-        visible={debugModalVisible}
-        onClose={() => setDebugModalVisible(false)}
-        device={device}
-      />
     </ProForm>
   );
 };

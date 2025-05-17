@@ -1,4 +1,5 @@
 import { StreamlineLockRotationSolid } from '@/components/Icons/CustomIcons';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 import {
   EyeInvisibleOutlined,
   EyeTwoTone,
@@ -47,13 +48,10 @@ const AuthenticationCard: React.FC<AuthenticationCardProps> = ({ formRef }) => (
     }
     style={{ marginBottom: 10 }}
     extra={
-      <Tooltip
-        title={
-          'Fill the ssh connection information, User/Password or SSH key to allow SSM to connect to your device. Passwords are saved using Vault.'
-        }
-      >
-        <InfoCircleFilled />
-      </Tooltip>
+      <InfoLinkWidget
+        tooltipTitle="Fill the ssh connection information, User/Password or SSH key to allow SSM to connect to your device. Passwords are saved using Vault."
+        documentationLink="https://squirrelserversmanager.io/docs/user-guides/devices/configuration/ssh#authentication-methods"
+      />
     }
   >
     <ProForm.Group>
