@@ -2,7 +2,31 @@
 
 ## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.7...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.8...HEAD)
+
+**Implemented enhancements:**
+
+- \[FEAT\] Custom dashboard.🔥 [\#785](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/785)
+- \[FEATURE\] API to add devices [\#731](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/731)
+
+**Fixed bugs:**
+
+- \[BUG\] The steps progress during playbook execution is buggy 🐛 [\#773](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/773)
+- \[BUG\] Fix potential null coalescing issue in FilesystemsTab [\#929](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/929) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\] Bugfix/potential fix to ssh crash [\#928](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/928) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Closed issues:**
+
+- \[BUG\] Tiny rings on Devices page are buggy 🐛 [\#780](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/780)
+- \[CHORE\] Refacto the whole project - module/plugin architecture oriented  🧹 [\#772](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/772)
+
+**Merged pull requests:**
+
+- \[DOC\] Doc/put adopt me issues [\#934](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/934) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+## [v0.5.0-alpha.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-alpha.8) (2025-05-16)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.7...v0.5.0-alpha.8)
 
 **Fixed bugs:**
 
