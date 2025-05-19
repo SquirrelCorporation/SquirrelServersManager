@@ -11,7 +11,7 @@
     "lint:docs": "node ./scripts/check-doc-layouts.cjs"
   },
   "devDependencies": {
-    "@vue-flow/core": "^1.43.1",
+    "@vue-flow/core": "^1.43.2",
     "vitepress": "^1.6.3"
   },
   "dependencies": {
