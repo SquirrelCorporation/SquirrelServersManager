@@ -9,15 +9,16 @@ import { Divider, Tag, Tooltip, Typography } from 'antd';
 import moment from 'moment';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
+import { ContainerTypes } from 'ssm-shared-lib/distribution/enums/container';
 
 export type ContainerDetailsProps = {
-  container: API.Container;
+  container: API.Container & { displayType: ContainerTypes.PROXMOX };
 };
 
 const ProxmoxContainerDetails: React.FC<ContainerDetailsProps> = ({
   container,
 }) => (
-  <ProDescriptions<API.Container>
+  <ProDescriptions<API.Container & { displayType: ContainerTypes.PROXMOX }>
     style={{ marginBottom: 30 }}
     column={2}
     // bordered

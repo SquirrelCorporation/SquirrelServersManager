@@ -1,93 +1,125 @@
-import { DeviceStatType } from '@/components/Charts/DeviceStatType';
-import { getDeviceStat } from '@/services/rest/devicestat';
-import { Tiny } from '@ant-design/charts';
-import { TinyRingConfig } from '@ant-design/plots/es/components/tiny';
-import { Skeleton, Tooltip } from 'antd';
+import { getDeviceStat } from '@/services/rest/statistics/stastistics';
+import message from '@/components/Message/DynamicMessage';
+import { Skeleton } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { StatsType } from 'ssm-shared-lib';
+import CustomRingProgress from './CustomRingProgress';
+import type { RingProgressType } from './CustomRingProgress';
+import { LaptopOutlined, HddOutlined } from '@ant-design/icons';
+import { WhhCpu, WhhRam } from '@/components/Icons/CustomIcons';
 
 export type TinyRingProps = {
   deviceUuid: string;
-  type: DeviceStatType;
+  type: StatsType.DeviceStatsType;
 };
 
 const TinyRingProgressDeviceGraph: React.FC<TinyRingProps> = ({
   deviceUuid,
   type,
 }) => {
-  const [value, setValue] = useState<{ percent: number; date: string }>({
-    percent: 0,
-    date: 'never',
-  });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [value, setValue] = useState<number | null>(null);
+  const [date, setDate] = useState<string>('never');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const asyncFetch = useCallback(async () => {
+    setIsLoading(true);
     try {
-      const res = await getDeviceStat(deviceUuid, type);
-      if (res.data && res.data.value) {
-        setValue({
-          percent: parseFloat((res.data.value / 100).toFixed(2)),
-          date: moment(res.data.date).format('YYYY-MM-DD, HH:mm'),
-        });
+      const res = await getDeviceStat(deviceUuid, type, {});
+
+      if (res.data && typeof res.data.value === 'number') {
+        const percentValue = res.data.value;
+        if (!isNaN(percentValue)) {
+          setValue(percentValue);
+          setDate(moment(res.data.date).format('YYYY-MM-DD, HH:mm'));
+        } else {
+          console.warn(`NaN value received for ${type} on ${deviceUuid}`);
+          setValue(NaN);
+          setDate('invalid data');
+        }
+      } else {
+        console.warn(`Invalid data structure for ${type} on ${deviceUuid}`);
+        setValue(NaN);
+        setDate('invalid data');
       }
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      console.error(`Error fetching ${type} for ${deviceUuid}:`, error);
+      message.error({ content: `Failed to fetch ${type} stats`, duration: 5 });
+      setValue(NaN);
+      setDate('error');
     } finally {
       setIsLoading(false);
     }
   }, [deviceUuid, type]);
 
   useEffect(() => {
-    setIsLoading(true);
     void asyncFetch();
   }, [asyncFetch]);
 
-  const config: TinyRingConfig = useMemo(
-    () => ({
-      percent: value.percent,
-      width: 50,
-      height: 50,
-      color: ['rgb(255,255,255)', value.percent < 0.8 ? '#1668dc' : '#dc4446'],
-      innerRadius: 0.92,
-      radius: 0.98,
-      annotations: [
-        {
-          type: 'text',
-          style: {
-            text: `${((value.percent ?? 0) * 100).toFixed(0)}%`,
-            x: '50%',
-            y: '45%',
-            textAlign: 'center',
-            fontSize: 12,
-            fill: `${value.percent < 0.8 ? 'rgba(232,237,243,0.9)' : '#dc4446'}`,
-            fontStyle: 'bold',
-          },
-        },
-        {
-          type: 'text',
-          style: {
-            text: `${type === DeviceStatType.CPU ? 'cpu' : 'mem'}`,
-            x: '48%',
-            y: '68%',
-            textAlign: 'center',
-            fontSize: 8,
-            fill: 'rgba(232,237,243,0.9)',
-            fillOpacity: 0.95,
-            fontStyle: 'normal',
-          },
-        },
-      ],
-    }),
-    [value, type, deviceUuid],
-  );
+  const { ringType, icon } = useMemo(() => {
+    switch (type) {
+      case StatsType.DeviceStatsType.CPU:
+        return {
+          ringType: 'cpu' as RingProgressType,
+          icon: <WhhCpu />,
+        };
+      case StatsType.DeviceStatsType.MEM_USED:
+        return {
+          ringType: 'memory' as RingProgressType,
+          icon: <WhhRam />,
+        };
+      case StatsType.DeviceStatsType.DISK_USED:
+        return { ringType: 'disk' as RingProgressType, icon: <HddOutlined /> };
+      default:
+        return {
+          ringType: 'cpu' as RingProgressType,
+          icon: <LaptopOutlined />,
+        };
+    }
+  }, [type]);
 
-  return isLoading ? (
-    <Skeleton.Avatar active size="large" shape="circle" />
-  ) : (
-    <Tooltip title={`Updated at ${value.date}`}>
-      <Tiny.Ring key={`${deviceUuid}-${type}`} {...config} />
-    </Tooltip>
-  );
+  const renderContent = () => {
+    if (isLoading) {
+      return <Skeleton.Avatar active size={50} shape="circle" />;
+    }
+
+    const tooltipText =
+      value === null || isNaN(value)
+        ? 'Failed to load data'
+        : `${type === StatsType.DeviceStatsType.CPU ? 'CPU' : type === StatsType.DeviceStatsType.MEM_USED ? 'Memory' : 'Disk'} (Updated at ${date})`;
+
+    const errorIcon =
+      type === StatsType.DeviceStatsType.CPU ? <WhhCpu /> : <WhhRam />;
+
+    if (value === null || isNaN(value)) {
+      return (
+        <CustomRingProgress
+          percent={0}
+          type="disk"
+          size={50}
+          strokeWidth={4}
+          showText={true}
+          tooltipText={tooltipText}
+          icon={errorIcon}
+        />
+      );
+    }
+
+    return (
+      <CustomRingProgress
+        key={`${deviceUuid}-${type}`}
+        percent={value}
+        type={ringType}
+        size={50}
+        strokeWidth={4}
+        showText={true}
+        tooltipText={tooltipText}
+        icon={icon}
+      />
+    );
+  };
+
+  return renderContent();
 };
 
 export default React.memo(TinyRingProgressDeviceGraph);

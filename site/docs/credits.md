@@ -1,3 +1,12 @@
+---
+layout: FeatureGuideLayout
+title: "Credits"
+icon: "✨"
+time: "5 min read"
+signetColor: '#00bcd4'
+credits: true
+---
+
 # Credits / Special thanks
 
 Parts of SSM code came from:

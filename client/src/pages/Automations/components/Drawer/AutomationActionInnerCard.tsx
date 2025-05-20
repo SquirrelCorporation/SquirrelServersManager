@@ -14,7 +14,7 @@ import {
 import { ProFormDependency, ProFormSelect } from '@ant-design/pro-components';
 import { Card, Space } from 'antd';
 import { FormInstance } from 'antd/lib';
-import React from 'react';
+import React, { Dispatch } from 'react';
 import { Automations } from 'ssm-shared-lib';
 
 const options = [
@@ -36,12 +36,14 @@ const options = [
 ];
 
 type AutomationActionProps = {
-  setOverrideExtraVars: any;
-  overrideExtraVars: any;
+  setOverrideExtraVars: Dispatch<React.SetStateAction<any>>;
   formRef: FormInstance<any>;
 };
 
-const AutomationActionInnerCard: React.FC<AutomationActionProps> = (props) => {
+const AutomationActionInnerCard: React.FC<AutomationActionProps> = ({
+  setOverrideExtraVars,
+  formRef,
+}) => {
   return (
     <Card
       type="inner"
@@ -70,7 +72,9 @@ const AutomationActionInnerCard: React.FC<AutomationActionProps> = (props) => {
           labelRender: (props) => (
             <Space>
               <span role="img" aria-label={props.label as string}>
-                {options.find((option) => option.value === props.value)?.icon}{' '}
+                {
+                  options.find((option) => option.value === props.value)?.icon
+                }{' '}
               </span>
               {props.label}
             </Space>
@@ -91,9 +95,8 @@ const AutomationActionInnerCard: React.FC<AutomationActionProps> = (props) => {
           if (action === Automations.Actions.PLAYBOOK) {
             return (
               <PlaybookActionSubForm
-                overrideExtraVars={props.overrideExtraVars}
-                setOverrideExtraVars={props.setOverrideExtraVars}
-                formRef={props.formRef}
+                setOverrideExtraVars={setOverrideExtraVars}
+                formRef={formRef}
               />
             );
           }

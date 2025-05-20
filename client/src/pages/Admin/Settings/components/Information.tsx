@@ -2,7 +2,7 @@ import {
   getMongoDBServerStats,
   getPrometheusServerStats,
   getRedisServerStats,
-} from '@/services/rest/settings';
+} from '@/services/rest/settings/settings';
 import { useModel } from '@umijs/max';
 import { Descriptions, Flex, Popover, Spin } from 'antd';
 import React, { useEffect, useState } from 'react';

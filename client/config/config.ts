@@ -1,10 +1,10 @@
 // https://umijs.org/config/
 import { defineConfig } from '@umijs/max';
+import MonacoEditorWebpackPlugin from 'monaco-editor-webpack-plugin';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
 const { REACT_APP_ENV = 'dev' } = process.env;
-import MonacoEditorWebpackPlugin from 'monaco-editor-webpack-plugin';
 
 export default defineConfig({
   /**
@@ -23,12 +23,50 @@ export default defineConfig({
   theme: {
     'root-entry-name': 'variable',
     token: {
-      colorBgSpotlight: '#1d222e',
+      colorPrimary: '#0A84FF',
+      colorInfo: '#0A84FF',
+      colorBgBase: '#0a0a0a', // Matte black base instead of gradient
+      colorBgContainer: 'rgba(255,255,255,0.05)', // Soft frosted look for surfaces
+      colorText: '#ffffff',
+      colorTextSecondary: '#a6a6a6',
+      fontFamily:
+        "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+      borderRadius: 12,
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
     },
     components: {
+      Layout: {
+        colorBgLayout: '#0a0a0a', // Kill the background gradient
+      },
+      Card: {
+        colorBgContainer: 'rgba(255,255,255,0.04)',
+        borderRadius: 12,
+        boxShadow: '0 6px 24px rgba(0,0,0,0.45)',
+      },
       Modal: {
-        contentBg: '#1d222e',
-        headerBg: '#1d222e',
+        colorBgContainer: 'rgba(255,255,255,0.06)',
+        borderRadius: 16,
+        borderColor: 'rgba(255,255,255,0.1)',
+        borderWidth: 1,
+        boxShadow: '0 10px 40px rgba(0,0,0,0.65)',
+      },
+      Button: {
+        borderRadius: 50,
+        colorPrimaryBg: '#0A84FF',
+        colorPrimaryBgHover: '#409CFF',
+      },
+      Input: {
+        borderRadius: 50,
+        colorBgContainer: 'rgba(255,255,255,0.08)',
+        colorBorder: 'rgba(255,255,255,0.2)',
+        borderWidth: 1,
+      },
+      Tabs: {
+        borderRadius: 999,
+        colorBgContainer: 'rgba(255,255,255,0.06)',
+        itemSelectedColor: '#0A84FF',
+        itemHoverColor: '#0A84FF',
+        itemActiveColor: '#0A84FF',
       },
     },
   },
@@ -83,19 +121,50 @@ export default defineConfig({
   antd: {
     theme: {
       token: {
-        colorBgElevated: '#1d222e',
-        colorBgContainer: '#151921',
+        colorPrimary: '#0A84FF',
+        colorInfo: '#0A84FF',
+        colorBgBase: '#0a0a0a', // Matte black base instead of gradient
+        colorBgContainer: 'rgba(255,255,255,0.05)', // Soft frosted look for surfaces
+        colorText: '#ffffff',
+        colorTextSecondary: '#a6a6a6',
+        fontFamily:
+          "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+        borderRadius: 12,
+        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
       },
       components: {
-        Message: {
-          contentBg: 'white',
+        Layout: {
+          colorBgLayout: '#0a0a0a', // Kill the background gradient
+        },
+        Card: {
+          colorBgContainer: 'rgba(255,255,255,0.04)',
+          borderRadius: 12,
+          boxShadow: '0 6px 24px rgba(0,0,0,0.45)',
         },
         Modal: {
-          contentBg: '#1d222e',
-          headerBg: '#1d222e',
+          colorBgContainer: 'rgba(255,255,255,0.06)',
+          borderRadius: 16,
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          boxShadow: '0 10px 40px rgba(0,0,0,0.65)',
+        },
+        Button: {
+          borderRadius: 50,
+          colorPrimaryBg: '#0A84FF',
+          colorPrimaryBgHover: '#409CFF',
         },
         Input: {
-          activeBg: '#1d222e',
+          borderRadius: 50,
+          colorBgContainer: 'rgba(255,255,255,0.08)',
+          colorBorder: 'rgba(255,255,255,0.2)',
+          borderWidth: 1,
+        },
+        Tabs: {
+          borderRadius: 999,
+          colorBgContainer: 'rgba(255,255,255,0.06)',
+          itemSelectedColor: '#0A84FF',
+          itemHoverColor: '#0A84FF',
+          itemActiveColor: '#0A84FF',
         },
       },
     },
@@ -115,21 +184,30 @@ export default defineConfig({
     },
   ],
   //================ pro =================
-  presets: ['umi-presets-pro'],
+  presets: ['umi-presets-pro'], // Re-enabled preset
   /**
    * @doc https://pro.ant.design/zh-cn/docs/openapi/
    */
   mfsu: {
     strategy: 'normal',
+    shared: {
+      react: { singleton: true, eager: true, requiredVersion: false },
+      'react-dom': { singleton: true, eager: true, requiredVersion: false },
+      antd: { singleton: true, eager: true, requiredVersion: false },
+    },
   },
   esbuildMinifyIIFE: true,
-  requestRecord: {},
-  clientLoader: {},
+  requestRecord: {}, // Re-enabled
+  clientLoader: {}, // Re-enabled
   chainWebpack(memo: any) {
+    // Re-enabled
+    // Ensure MonacoWebpackPlugin is imported if uncommenting chainWebpack
+    // import MonacoEditorWebpackPlugin from 'monaco-editor-webpack-plugin';
     memo.plugin('monaco-editor').use(MonacoEditorWebpackPlugin, []);
     return memo;
   },
   codeSplitting: {
+    // Re-enabled
     jsStrategy: 'granularChunks',
   },
 });

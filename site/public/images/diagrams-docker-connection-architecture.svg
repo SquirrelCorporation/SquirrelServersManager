@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666666" />
+    </marker>
+    <marker id="datahead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#3498db" />
+    </marker>
+  </defs>
+  
+  <!-- Canvas Background -->
+  <rect width="800" height="500" fill="#1e1e1e" />
+  
+  <!-- Title -->
+  <text x="400" y="40" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="22" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Docker Connection Architecture</text>
+  
+  <!-- SSM Server Box -->
+  <rect x="50" y="100" width="220" height="300" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="50" y="100" width="4" height="300" fill="#3498db" />
+  <text x="160" y="130" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="18" fill="#dfdfd6" text-anchor="middle" font-weight="bold">SSM Server</text>
+  
+  <!-- SSM Components -->
+  <rect x="70" y="150" width="180" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="70" y="150" width="4" height="60" fill="#4caf50" />
+  <text x="160" y="170" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">ContainerService</text>
+  <text x="160" y="190" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">Docker Connection Logic</text>
+  
+  <rect x="70" y="220" width="180" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="70" y="220" width="4" height="60" fill="#9b59b6" />
+  <text x="160" y="240" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">SSHCredentialsAdapter</text>
+  <text x="160" y="260" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">Authentication Handler</text>
+  
+  <rect x="70" y="290" width="180" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="70" y="290" width="4" height="60" fill="#ff9800" />
+  <text x="160" y="310" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">SsmSshAgent</text>
+  <text x="160" y="330" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">Custom SSH Tunnel</text>
+  
+  <!-- SSH Tunnel -->
+  <rect x="320" y="100" width="160" height="300" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="320" y="100" width="4" height="300" fill="#9b59b6" />
+  <text x="400" y="130" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="18" fill="#dfdfd6" text-anchor="middle" font-weight="bold">SSH Tunnel</text>
+  
+  <!-- SSH Tunnel Components -->
+  <rect x="340" y="150" width="120" height="40" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="340" y="150" width="4" height="40" fill="#4caf50" />
+  <text x="400" y="175" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Authentication</text>
+  
+  <rect x="340" y="200" width="120" height="40" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="340" y="200" width="4" height="40" fill="#1abc9c" />
+  <text x="400" y="225" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Encryption</text>
+  
+  <rect x="340" y="250" width="120" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="340" y="250" width="4" height="60" fill="#ff9800" />
+  <text x="400" y="275" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">docker system</text>
+  <text x="400" y="295" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle">dial-stdio</text>
+  
+  <rect x="340" y="320" width="120" height="40" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="340" y="320" width="4" height="40" fill="#3498db" />
+  <text x="400" y="345" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">stdio Forwarding</text>
+  
+  <!-- Remote Server Box -->
+  <rect x="530" y="100" width="220" height="300" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="530" y="100" width="4" height="300" fill="#4caf50" />
+  <text x="640" y="130" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="18" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Remote Server</text>
+  
+  <!-- Remote Server Components -->
+  <rect x="550" y="150" width="180" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="550" y="150" width="4" height="60" fill="#9b59b6" />
+  <text x="640" y="170" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">SSH Server</text>
+  <text x="640" y="190" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">Authentication &amp; Encryption</text>
+  
+  <rect x="550" y="220" width="180" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="550" y="220" width="4" height="60" fill="#1abc9c" />
+  <text x="640" y="240" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Docker Daemon</text>
+  <text x="640" y="260" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">/var/run/docker.sock</text>
+  
+  <rect x="550" y="290" width="180" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="550" y="290" width="4" height="60" fill="#ff9800" />
+  <text x="640" y="310" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Containers</text>
+  <text x="640" y="330" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">Images, Volumes, Networks</text>
+  
+  <!-- Connection Flows -->
+  <!-- SSM to SSH Tunnel -->
+  <line x1="270" y1="180" x2="320" y2="180" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)" />
+  <line x1="270" y1="250" x2="320" y2="250" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)" />
+  <line x1="270" y1="320" x2="320" y2="320" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)" />
+  
+  <!-- SSH Tunnel to Remote Server -->
+  <line x1="480" y1="180" x2="530" y2="180" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)" />
+  <line x1="480" y1="280" x2="530" y2="250" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)" />
+  
+  <!-- Docker API Flow -->
+  <path d="M 160 370 C 160 400 400 400 400 370" stroke="#3498db" stroke-width="3" fill="none" stroke-dasharray="8,4" />
+  <path d="M 400 370 C 400 400 640 400 640 370" stroke="#3498db" stroke-width="3" fill="none" stroke-dasharray="8,4" />
+  <text x="400" y="425" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle">Docker API Communication</text>
+  <text x="400" y="445" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">(tunneled through SSH)</text>
+  
+  <!-- Docker Daemon to Containers -->
+  <line x1="640" y1="280" x2="640" y2="290" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)" />
+  
+  <!-- Legend -->
+  <rect x="100" y="460" width="20" height="10" fill="#1b1b1f" />
+  <rect x="100" y="460" width="4" height="10" fill="#3498db" />
+  <text x="130" y="468" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#dfdfd6">SSM Components</text>
+  
+  <rect x="240" y="460" width="20" height="10" fill="#1b1b1f" />
+  <rect x="240" y="460" width="4" height="10" fill="#9b59b6" />
+  <text x="270" y="468" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#dfdfd6">SSH Tunnel</text>
+  
+  <rect x="380" y="460" width="20" height="10" fill="#1b1b1f" />
+  <rect x="380" y="460" width="4" height="10" fill="#4caf50" />
+  <text x="410" y="468" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#dfdfd6">Remote Server</text>
+  
+  <line x1="500" y1="465" x2="520" y2="465" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)" />
+  <text x="550" y="468" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#dfdfd6">Control Flow</text>
+  
+  <line x1="620" y1="465" x2="640" y2="465" stroke="#3498db" stroke-width="2" stroke-dasharray="8,4" />
+  <text x="690" y="468" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#dfdfd6">Docker API Flow</text>
+  
+  <!-- Security Icon -->
+  <text x="400" y="90" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="24" fill="#ff9800" text-anchor="middle">🔒</text>
+</svg>

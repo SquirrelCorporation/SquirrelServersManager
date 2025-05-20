@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="500" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="dockerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#27ae60;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2ecc71;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="proxmoxGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#e67e22;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f39c12;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="manualGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3498db;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2980b9;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="successGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2ecc71;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#27ae60;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="3" stdDeviation="5" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="40" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="24" text-anchor="middle" font-weight="bold">SSM Update Process</text>
+  
+  <!-- Starting point -->
+  <circle cx="400" cy="90" r="20" fill="#3498db" filter="url(#shadow)"/>
+  <text x="400" y="95" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle" fill="white">Start</text>
+  
+  <!-- Decision point: Installation Method -->
+  <path d="M400,110 L400,140" stroke="#95a5a6" stroke-width="2" stroke-dasharray="5,3"/>
+  <polygon points="400,155 380,140 420,140" fill="#9b59b6" filter="url(#shadow)"/>
+  <text x="400" y="150" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle" fill="white">Installation Method?</text>
+  
+  <!-- Docker path -->
+  <path d="M380,140 L200,200" stroke="#95a5a6" stroke-width="2"/>
+  <text x="280" y="160" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle">Docker</text>
+  <rect x="120" y="200" width="160" height="60" rx="10" ry="10" fill="url(#dockerGradient)" filter="url(#shadow)"/>
+  <text x="200" y="230" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle" fill="white">1. Update docker-compose.yml</text>
+  <text x="200" y="250" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle" fill="white">curl -o docker-compose.yml URL</text>
+  
+  <path d="M200,260 L200,290" stroke="#95a5a6" stroke-width="2"/>
+  <rect x="120" y="290" width="160" height="60" rx="10" ry="10" fill="url(#dockerGradient)" filter="url(#shadow)"/>
+  <text x="200" y="320" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle" fill="white">2. Stop and pull new images</text>
+  <text x="200" y="340" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle" fill="white">docker-compose stop/pull</text>
+  
+  <path d="M200,350 L200,380" stroke="#95a5a6" stroke-width="2"/>
+  <rect x="120" y="380" width="160" height="60" rx="10" ry="10" fill="url(#dockerGradient)" filter="url(#shadow)"/>
+  <text x="200" y="410" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle" fill="white">3. Start updated services</text>
+  <text x="200" y="430" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle" fill="white">docker-compose up</text>
+  
+  <!-- Proxmox path -->
+  <path d="M400,155 L400,200" stroke="#95a5a6" stroke-width="2"/>
+  <text x="400" y="185" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle">Proxmox</text>
+  <rect x="320" y="200" width="160" height="70" rx="10" ry="10" fill="url(#proxmoxGradient)" filter="url(#shadow)"/>
+  <text x="400" y="225" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle" fill="white">1. Increase container memory</text>
+  <text x="400" y="245" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle" fill="white">to 4096MB for update</text>
+  <text x="400" y="265" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="10" text-anchor="middle" fill="white">(Recommended)</text>
+  
+  <path d="M400,270 L400,300" stroke="#95a5a6" stroke-width="2"/>
+  <rect x="320" y="300" width="160" height="70" rx="10" ry="10" fill="url(#proxmoxGradient)" filter="url(#shadow)"/>
+  <text x="400" y="320" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle" fill="white">2. Run update script</text>
+  <text x="400" y="340" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle" fill="white">from LXC shell</text>
+  <text x="400" y="360" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="10" text-anchor="middle" fill="white">bash -c "$(wget -qLO - getssm.io/proxmox)"</text>
+  
+  <!-- Manual path -->
+  <path d="M420,140 L600,200" stroke="#95a5a6" stroke-width="2"/>
+  <text x="520" y="160" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle">Manual Install</text>
+  <rect x="520" y="200" width="160" height="60" rx="10" ry="10" fill="url(#manualGradient)" filter="url(#shadow)"/>
+  <text x="600" y="230" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle" fill="white">1. Navigate to SSM directory</text>
+  <text x="600" y="250" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle" fill="white">cd path/to/ssm</text>
+  
+  <path d="M600,260 L600,290" stroke="#95a5a6" stroke-width="2"/>
+  <rect x="520" y="290" width="160" height="60" rx="10" ry="10" fill="url(#manualGradient)" filter="url(#shadow)"/>
+  <text x="600" y="320" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle" fill="white">2. Pull latest changes</text>
+  <text x="600" y="340" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle" fill="white">git pull</text>
+  
+  <path d="M600,350 L600,380" stroke="#95a5a6" stroke-width="2"/>
+  <rect x="520" y="380" width="160" height="60" rx="10" ry="10" fill="url(#manualGradient)" filter="url(#shadow)"/>
+  <text x="600" y="410" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle" fill="white">3. Rebuild and start services</text>
+  <text x="600" y="430" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="12" text-anchor="middle" fill="white">docker-compose up --build</text>
+  
+  <!-- All paths converge -->
+  <path d="M200,440 L200,470 L400,470" stroke="#95a5a6" stroke-width="2"/>
+  <path d="M400,370 L400,470" stroke="#95a5a6" stroke-width="2"/>
+  <path d="M600,440 L600,470 L400,470" stroke="#95a5a6" stroke-width="2"/>
+  
+  <rect x="320" y="450" width="160" height="40" rx="10" ry="10" fill="url(#successGradient)" filter="url(#shadow)"/>
+  <text x="400" y="475" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle" fill="white">Update Complete!</text>
+</svg>

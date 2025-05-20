@@ -1,5 +1,9 @@
 import { GrommetIconsHost } from '@/components/Icons/CustomIcons';
-import { InfoCircleFilled } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  SettingOutlined,
+} from '@ant-design/icons';
 import {
   ProForm,
   ProFormDigit,
@@ -7,10 +11,20 @@ import {
   ProFormSwitch,
   ProFormText,
 } from '@ant-design/pro-components';
-import { Avatar, Card, Col, Row, Tooltip } from 'antd';
+import {
+  Avatar,
+  Card,
+  Col,
+  Row,
+  Skeleton,
+  Switch,
+  Tag,
+  Typography,
+} from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
 import { SsmAnsible } from 'ssm-shared-lib';
+import InfoLinkWidget from '../../Shared/InfoLinkWidget';
 
 export type HostCardProps = {
   deviceIp?: string;
@@ -38,13 +52,10 @@ const HostCard: React.FC<HostCardProps> = ({ deviceIp, showAdvanced }) => (
     }
     style={{ marginBottom: 10 }}
     extra={
-      <Tooltip
-        title={
-          'Enter the IP/Hostname and SSH port. Please note that Ipv6 is not supported yet.'
-        }
-      >
-        <InfoCircleFilled />
-      </Tooltip>
+      <InfoLinkWidget
+        tooltipTitle="Enter the IP/Hostname and SSH port. Please note that Ipv6 is not supported yet."
+        documentationLink="https://squirrelserversmanager.io/docs/user-guides/devices/adding-devices"
+      />
     }
   >
     <ProForm.Group>
@@ -59,7 +70,7 @@ const HostCard: React.FC<HostCardProps> = ({ deviceIp, showAdvanced }) => (
           { required: true },
           {
             pattern:
-              /^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$|^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])(\.[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])*$/,
+              /^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$|^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])(\.[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])*(\.[a-zA-Z]{2,})$/,
             message: 'Please enter a valid IP address or hostname',
           },
         ]}

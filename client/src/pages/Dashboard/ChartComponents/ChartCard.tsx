@@ -3,6 +3,17 @@ import classNames from 'classnames';
 import React, { useMemo } from 'react';
 import styles from './ChartCard.less';
 
+type ChartCardProps = {
+  title: string | React.ReactNode;
+  avatar?: React.ReactNode;
+  action: React.ReactNode;
+  total: number | string | React.ReactNode;
+  footer: React.ReactNode;
+  loading: boolean;
+  contentHeight?: number;
+  children?: React.ReactNode;
+};
+
 const renderTotal = (total: any) => {
   if (total === undefined) {
     return null;
@@ -16,7 +27,7 @@ const renderTotal = (total: any) => {
   );
 };
 
-const ChartCard: React.FC<any> = ({
+const ChartCard: React.FC<ChartCardProps> = ({
   contentHeight,
   title,
   avatar,

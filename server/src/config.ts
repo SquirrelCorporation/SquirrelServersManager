@@ -1,3 +1,7 @@
+/*
+ Configuration
+*/
+// TODO: use embeded NestJS
 export const db = {
   name: process.env.DB_NAME || 'ssm',
   host: process.env.DB_HOST || 'mongo',
@@ -20,7 +24,10 @@ export const prometheusConf = {
   password: process.env.PROMETHEUS_PASSWORD || 'pass',
 };
 
-export const SECRET = process.env.SECRET || '';
+// Ensure SECRET has a default value for development environments
+export const SECRET =
+  process.env.SECRET ||
+  (process.env.NODE_ENV === 'development' ? 'WLZBQ9UozypQJ8p8LLHIMZ0ZuSyY6uTY' : '');
 export const VAULT_PWD = process.env.VAULT_PWD || '';
 export const SESSION_DURATION = parseInt(process.env.SESSION_DURATION || '86400000');
 export const SSM_INSTALL_PATH = process.env.SSM_INSTALL_PATH || '/opt/squirrelserversmanager';

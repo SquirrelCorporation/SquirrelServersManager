@@ -1,7 +1,7 @@
 import {
   deleteAutomation,
   executeAutomation,
-} from '@/services/rest/automations';
+} from '@/services/rest/automations/automations';
 import {
   DeleteOutlined,
   DownOutlined,
@@ -9,7 +9,8 @@ import {
   UnorderedListOutlined,
 } from '@ant-design/icons';
 import { history } from '@umijs/max';
-import { Dropdown, MenuProps, message, Space } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Dropdown, MenuProps, Space } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -36,11 +37,14 @@ const items = [
   },
 ];
 
-const AutomationQuickAction: React.FC<AutomationQuickActionProps> = (props) => {
+const AutomationQuickAction: React.FC<AutomationQuickActionProps> = ({
+  record,
+  reload,
+}) => {
   const onClick: MenuProps['onClick'] = async ({ key }) => {
     switch (key) {
       case '1':
-        await executeAutomation(props.record.uuid).then(() => {
+        await executeAutomation(record.uuid).then(() => {
           message.loading({
             content: 'Execution in progress',
             duration: 6,
@@ -48,8 +52,8 @@ const AutomationQuickAction: React.FC<AutomationQuickActionProps> = (props) => {
         });
         break;
       case '3':
-        await deleteAutomation(props.record.uuid).then(() => {
-          props.reload();
+        await deleteAutomation(record.uuid).then(() => {
+          reload();
           message.warning({
             content: 'Automation deleted',
             duration: 6,
@@ -60,7 +64,7 @@ const AutomationQuickAction: React.FC<AutomationQuickActionProps> = (props) => {
         history.push({
           pathname: '/admin/logs',
           // @ts-expect-error lib missing type
-          search: `?module=automation&moduleId=${props.record.uuid}`,
+          search: `?module=automation&moduleId=${record.uuid}`,
         });
     }
   };

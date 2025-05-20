@@ -1,7 +1,7 @@
 import { ContainerVolumeSolid, Target } from '@/components/Icons/CustomIcons';
 import DockerOpsModal from '@/pages/Containers/components/sub-components/DockerOpsModal';
-import { getAllDevices } from '@/services/rest/device';
-import { postVolume } from '@/services/rest/services';
+import { getAllDevices } from '@/services/rest/devices/devices';
+import { postVolume } from '@/services/rest/containers/container-volumes';
 import { CheckCircleFilled, PlusOutlined } from '@ant-design/icons';
 import {
   ModalForm,

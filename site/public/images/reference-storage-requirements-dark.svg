@@ -1,0 +1,57 @@
+<svg width="600" height="400" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" style="background-color: #1e1e1e; color: #d4d4d4; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+
+  <title>SSM Storage Requirements (Dark Mode)</title>
+
+  <!-- Style Definitions -->
+  <style>
+    .host-box { fill: #2a2a2a; stroke: #666; stroke-width: 1; }
+    .app-box { fill: #333; stroke: #888; stroke-width: 1; rx: 5; ry: 5; }
+    .folder-icon { fill: #3a3a3a; stroke: #999; stroke-width: 1; }
+    .data-box { fill: #444; stroke: #aaa; stroke-width: 0.5; rx: 3; ry: 3; }
+    .connection-line { stroke: #777; stroke-width: 1; stroke-dasharray: 3,3; }
+    .label-text { font-size: 14px; fill: #d4d4d4; text-anchor: middle; }
+    .sub-label-text { font-size: 11px; fill: #aaa; text-anchor: middle; }
+    .data-text { font-size: 11px; fill: #ccc; text-anchor: middle; }
+  </style>
+
+  <!-- Host System Boundary -->
+  <rect x="10" y="10" width="580" height="380" class="host-box" rx="10" ry="10"/>
+  <text x="300" y="35" class="label-text" font-weight="bold">Host System</text>
+
+  <!-- SSM Application -->
+  <rect x="50" y="70" width="180" height="100" class="app-box"/>
+  <text x="140" y="125" class="label-text">SSM Application</text>
+  <text x="140" y="145" class="sub-label-text">(Server, Client, etc.)</text>
+
+  <!-- Mounted Data Directory -->
+  <g transform="translate(300, 70)">
+    <!-- Folder Icon -->
+    <path d="M10,20 L10,290 L240,290 L240,40 L130,40 L110,20 Z" class="folder-icon"/>
+    <rect x="10" y="20" width="100" height="20" class="folder-icon" stroke-width="0"/> <!-- Folder Tab -->
+
+    <text x="125" y="55" class="label-text">Mounted Data Directory</text>
+    <text x="125" y="75" class="sub-label-text">(e.g., ./.data.prod/)</text>
+
+    <!-- Data Components inside Folder -->
+    <rect x="30" y="95" width="80" height="40" class="data-box"/>
+    <text x="70" y="120" class="data-text">MongoDB</text>
+
+    <rect x="140" y="95" width="80" height="40" class="data-box"/>
+    <text x="180" y="120" class="data-text">Redis</text>
+
+    <rect x="30" y="165" width="80" height="40" class="data-box"/>
+    <text x="70" y="190" class="data-text">Playbooks</text>
+
+    <rect x="140" y="165" width="80" height="40" class="data-box"/>
+    <text x="180" y="190" class="data-text">Config</text>
+
+    <rect x="85" y="235" width="80" height="40" class="data-box"/>
+    <text x="125" y="260" class="data-text">Prometheus</text>
+
+  </g>
+
+  <!-- Connection Line -->
+   <line x1="200" y1="170" x2="310" y2="130" class="connection-line"/>
+   <text x="255" y="160" class="sub-label-text" transform="rotate(-15 255,160)">Stores Data In</text>
+
+</svg> 

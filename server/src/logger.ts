@@ -1,4 +1,5 @@
 import pino from 'pino';
+import { Options } from 'pino-http';
 import { db } from './config';
 
 const transport = pino.transport({
@@ -20,7 +21,7 @@ const transport = pino.transport({
   ],
 });
 
-export const httpLoggerOptions = {
+export const httpLoggerOptions: Options = {
   // Define a custom logger level
   customLogLevel: function (req, res, err) {
     if (res.statusCode >= 400 && res.statusCode < 500) {
@@ -30,7 +31,7 @@ export const httpLoggerOptions = {
     } else if (res.statusCode >= 300 && res.statusCode < 400) {
       return 'silent';
     }
-    return 'info';
+    return 'debug';
   },
   // Define a custom success message
   customSuccessMessage: function (req, res) {

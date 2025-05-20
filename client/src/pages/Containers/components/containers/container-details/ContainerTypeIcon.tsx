@@ -1,8 +1,8 @@
-import { ExternalLink, Proxmox } from '@/components/Icons/CustomIcons';
+import { Proxmox } from '@/components/Icons/CustomIcons';
 import { DockerOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
 import React from 'react';
-import { API, SsmContainer } from 'ssm-shared-lib';
+import { SsmContainer } from 'ssm-shared-lib';
 
 export type ContainerTypeIconProps = {
   displayType: SsmContainer.ContainerTypes;
@@ -18,7 +18,7 @@ const ContainerTypeIcon: React.FC<ContainerTypeIconProps> = ({
   if (displayType === SsmContainer.ContainerTypes.PROXMOX) {
     icon = <Proxmox />;
   }
-  return <Tag color="geekblue" icon={icon} />;
+  return <Tag icon={icon} />;
 };
 
 export default ContainerTypeIcon;

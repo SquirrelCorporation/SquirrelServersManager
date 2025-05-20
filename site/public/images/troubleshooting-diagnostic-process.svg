@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="600" height="700" viewBox="0 0 600 700" xmlns="http://www.w3.org/2000/svg" style="background-color: #1e1e1e; color: #d4d4d4; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+
+  <title>SSM Diagnostic Process (Dark Mode)</title>
+
+  <!-- Style Definitions -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ff7e17" />
+    </marker>
+  </defs>
+  <style>
+    .process-box { /* Base style for all boxes */
+        stroke: #888; stroke-width: 1; rx: 8; ry: 8; fill: #333; /* Default fallback fill */
+    }
+    /* Unique colors for each step box */
+    #step1 .process-box { fill: #2A4A7D; } /* Deep Blue */
+    #step2 .process-box { fill: #2E8B57; } /* SeaGreen */
+    #step3 .process-box { fill: #006400; } /* DarkGreen */
+    #step4 .process-box { fill: #A0522D; } /* Sienna */
+    #step5 .process-box { fill: #4B0082; } /* Indigo */
+    #step6 .process-box { fill: #005A7D; } /* Darker Cerulean Blue */
+
+    .arrow-line { stroke: #aaa; stroke-width: 2; marker-end: url(#arrowhead); }
+    .step-number { font-size: 16px; fill: #ff7e17; font-weight: bold; text-anchor: middle; } /* Defined but not used in this SVG structure */
+    .step-text { font-size: 14px; fill: #d4d4d4; text-anchor: middle; }
+    .sub-text { font-size: 11px; fill: #aaa; text-anchor: middle; }
+  </style>
+
+  <!-- Boxes for each step -->
+  <g id="step1">
+    <rect x="150" y="30" width="300" height="60" class="process-box"/>
+    <text x="300" y="55" class="step-text">1. Identify the Symptom</text>
+    <text x="300" y="75" class="sub-text">(Error, unexpected behavior)</text>
+  </g>
+
+  <g id="step2">
+    <rect x="150" y="146" width="300" height="60" class="process-box"/>
+    <text x="300" y="171" class="step-text">2. Isolate the Component</text>
+    <text x="300" y="191" class="sub-text">(Device, Container, Playbook, etc.)</text>
+  </g>
+
+  <g id="step3">
+    <rect x="150" y="262" width="300" height="60" class="process-box"/>
+    <text x="300" y="287" class="step-text">3. Check Logs</text>
+    <text x="300" y="307" class="sub-text">(SSM Server, Docker, Device Syslog)</text>
+  </g>
+
+  <g id="step4">
+    <rect x="150" y="378" width="300" height="60" class="process-box"/>
+    <text x="300" y="403" class="step-text">4. Test Connectivity</text>
+    <text x="300" y="423" class="sub-text">(Network, SSH, API)</text>
+  </g>
+
+   <g id="step5">
+    <rect x="150" y="494" width="300" height="60" class="process-box"/>
+    <text x="300" y="519" class="step-text">5. Apply Solution</text>
+    <text x="300" y="539" class="sub-text">(Configuration change, fix permissions, etc.)</text>
+  </g>
+
+   <g id="step6">
+    <rect x="150" y="610" width="300" height="60" class="process-box"/>
+    <text x="300" y="635" class="step-text">6. Verify Resolution</text>
+    <text x="300" y="655" class="sub-text">(Confirm issue is gone)</text>
+  </g>
+
+  <!-- Connecting Arrows -->
+  <line x1="300" y1="90" x2="300" y2="146" class="arrow-line"/>
+  <line x1="300" y1="206" x2="300" y2="262" class="arrow-line"/>
+  <line x1="300" y1="322" x2="300" y2="378" class="arrow-line"/>
+  <line x1="300" y1="438" x2="300" y2="494" class="arrow-line"/>
+  <line x1="300" y1="554" x2="300" y2="610" class="arrow-line"/>
+
+</svg>

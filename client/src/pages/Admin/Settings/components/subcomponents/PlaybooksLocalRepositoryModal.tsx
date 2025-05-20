@@ -6,11 +6,16 @@ import {
   postPlaybooksLocalRepositories,
   putPlaybooksLocalRepositories,
   syncToDatabasePlaybooksLocalRepository,
-} from '@/services/rest/playbooks-repositories';
-import { DeleteOutlined, UnorderedListOutlined } from '@ant-design/icons';
+} from '@/services/rest/playbooks/repositories';
+import {
+  DeleteOutlined,
+  QuestionCircleOutlined,
+  UnorderedListOutlined,
+} from '@ant-design/icons';
 import { ModalForm, ProForm, ProFormText } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
-import { Avatar, Button, Dropdown, MenuProps, message, Popconfirm } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Avatar, Button, Dropdown, MenuProps, Popconfirm } from 'antd';
 import React, { FC, useState } from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -161,7 +166,11 @@ const PlaybooksLocalRepositoryModal: FC<LocalRepositoryModalProps> = (
           submitText: 'Save',
         },
         render: (_, defaultDoms) => {
-          return [...editionMode, ...defaultDoms];
+          return [
+            ...editionMode,
+            <Button icon={<QuestionCircleOutlined />} />,
+            ...defaultDoms,
+          ];
         },
       }}
     >

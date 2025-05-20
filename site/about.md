@@ -7,7 +7,7 @@ import Swiper from './components/Swiper.vue';
 
 # About Squirrel Servers Manager
 
-## <span style="display: flex; align-items: center;"><img src="/about/tldraw.svg" alt="tldr" style="margin-right: 8px;" /> TL;DR</span>
+## <span style="display: flex; align-items: center;"><img src="/images/about-tldraw.svg" alt="tldr" style="margin-right: 8px;" /> TL;DR</span>
 Squirrel Servers Manager (SSM) is a <b>configuration & container manager</b>, powered by Ansible, Docker and Prometheus, **to manage all your servers in one place**! It focuses on UI/UX and ease of use.
 
 :::info ℹ️ Some examples of what you can do with it:
@@ -21,12 +21,12 @@ Squirrel Servers Manager (SSM) is a <b>configuration & container manager</b>, po
 - ...
 :::
 
-## <span style="display: flex; align-items: center;"><img src="/about/square-star.svg" alt="tldr" style="margin-right: 8px;" />Showcase</span>
+## <span style="display: flex; align-items: center;"><img src="/images/about-square-star.svg" alt="tldr" style="margin-right: 8px;" />Showcase</span>
 
 <Swiper/>
 See SSM in action with this [demo](https://demo.squirrelserversmanager.io).
 
-## <span style="display: flex; align-items: center;"><img src="/about/squarelike.svg" alt="tldr" style="margin-right: 8px;" />Welcome to SSM!</span>
+## <span style="display: flex; align-items: center;"><img src="/images/about-squarelike.svg" alt="tldr" style="margin-right: 8px;" />Welcome to SSM!</span>
 
 SSM blends the automation powerhouse of Ansible with the portable setup of Docker in a clean and engaging interface.
 
@@ -38,25 +38,27 @@ Rediscover Ansible and Docker as they unite under one intuitive, open-source int
 
 Welcome to simplicity and power in perfect harmony.
 
-![simple](/about/simple.gif)
+![simple](/images/about-simple.gif)
 
-## <span style="display: flex; align-items: center;"><img src="/about/ecosystem.svg" alt="tldr" style="margin-right: 8px;" />Ecosystem</span>
+## <span style="display: flex; align-items: center;"><img src="/images/about-ecosystem.svg" alt="tldr" style="margin-right: 8px;" />Ecosystem</span>
 
-<Diagram/>
+<ClientOnly>
+  <Diagram/>
+</ClientOnly>
 
-## <span style="display: flex; align-items: center;"><img src="/about/goal.svg" alt="tldr" style="margin-right: 8px;" /> Why build SSM?</span>
+## <span style="display: flex; align-items: center;"><img src="/images/about-goal.svg" alt="tldr" style="margin-right: 8px;" /> Why build SSM?</span>
 
 I couldn't find any tools for my homelab that allowed me to manage my 5 Raspberry Pis and 3 Ubuntu servers with a nice UI. So, I decided to code it!
 
-## <span style="display: flex; align-items: center;"><img src="/about/squirrel.svg" height="30px" width="30px" alt="tldr" style="margin-right: 8px;" />Why Squirrel?</span>
+## <span style="display: flex; align-items: center;"><img src="/images/about-squirrel.svg" height="30px" width="30px" alt="tldr" style="margin-right: 8px;" />Why Squirrel?</span>
 
 Consider all your devices as nuts 🌰🌰🌰. A squirrel 🐿 loves to gather them all in some hole in a tree. That's what we are doing here! Also, squirrels are cute!
 
-## <span style="display: flex; align-items: center;"><img src="/about/arrow-roadmap-solid.svg" alt="tldr" style="margin-right: 8px;" />Roadmap</span>
+## <span style="display: flex; align-items: center;"><img src="/images/about-arrow-roadmap-solid.svg" alt="tldr" style="margin-right: 8px;" />Roadmap</span>
 
 Check out the [Roadmap](https://github.com/orgs/SquirrelCorporation/projects/2) on GitHub.
 
-## <span style="display: flex; align-items: center;"><img src="/about/handshake-outline-rounded.svg" alt="tldr" style="margin-right: 8px;" /> Join Us (Me)!</span>
+## <span style="display: flex; align-items: center;"><img src="/images/about-handshake-outline-rounded.svg" alt="tldr" style="margin-right: 8px;" /> Join Us (Me)!</span>
 
 SSM is still in its early stages. I have a lot of ground to cover, and I won't be able to do this without help from community contributors. I am also actively looking for more team members with long-term commitment.
 

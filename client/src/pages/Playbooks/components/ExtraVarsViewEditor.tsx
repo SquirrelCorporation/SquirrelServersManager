@@ -9,7 +9,7 @@ import CreateNewVarForm from '@/pages/Playbooks/components/CreateNewVarForm';
 import {
   deletePlaybookExtraVar,
   postExtraVarSharedValue,
-} from '@/services/rest/playbooks';
+} from '@/services/rest/playbooks/playbooks';
 import { LockOutlined, PlusOutlined, UnlockOutlined } from '@ant-design/icons';
 import { ProFormInstance, ProFormText } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
@@ -19,7 +19,6 @@ import {
   Col,
   Collapse,
   Divider,
-  message,
   Row,
   Space,
   Tag,
@@ -27,6 +26,7 @@ import {
 } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';
+import message from '@/components/Message/DynamicMessage';
 
 export type ExtraVarsViewEditionProps = {
   playbook: API.PlaybookFile;
