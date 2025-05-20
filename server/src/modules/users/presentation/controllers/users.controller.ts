@@ -86,7 +86,7 @@ export class UsersController {
 
     response.cookie('jwt', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: false,
     });
     this.eventEmitter.emit(Events.TELEMETRY_EVENT, {
       eventName: 'user login',
