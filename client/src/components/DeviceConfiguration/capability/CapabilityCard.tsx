@@ -1,4 +1,5 @@
 import { AutoFocus } from '@/components/Icons/CustomIcons';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 import { CardHeader } from '@/components/Template/CardHeader';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { ProFormSwitch } from '@ant-design/pro-components';
@@ -29,9 +30,10 @@ const CapabilityCard: React.FC<CapabilityCardProps> = ({
         body: { paddingBottom: 0 },
       }}
       extra={
-        <Tooltip title="Activate or deactivate the capability on this device.">
-          <InfoCircleFilled />
-        </Tooltip>
+        <InfoLinkWidget
+          tooltipTitle="Activate or deactivate the capability on this device."
+          documentationLink="https://squirrelserversmanager.io/docs/user-guides/devices/configuration/docker"
+        />
       }
     >
       <Row justify="center" align="middle" style={{ height: '100%' }}>

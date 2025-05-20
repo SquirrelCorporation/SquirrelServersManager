@@ -21,6 +21,9 @@ Thank you for your interest in contributing to Squirrel Servers Manager (SSM)! T
 - Join our Discord community for real-time help and discussions
 :::
 
+## "Adopt me!" tasks
+A list of pre-identified tasks to improve SMM are available here: [Adopt me!](https://github.com/SquirrelCorporation/SquirrelServersManager/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22adopt%20me!%22)
+
 ## Contribution Workflow Overview
 
 <MentalModelDiagram 
@@ -137,7 +140,7 @@ git checkout -b feature/my-contribution
 
 Use these branch naming conventions:
 - `feature/` for new features
-- `fix/` for bug fixes
+- `bugfix/` for bug fixes
 - `docs/` for documentation changes
 - `refactor/` for code refactoring
 

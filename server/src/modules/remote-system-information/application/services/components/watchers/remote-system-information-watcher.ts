@@ -16,6 +16,38 @@ import { UsersComponent } from '../../../../domain/system-information/users/User
 import { WifiComponent } from '../../../../domain/system-information/wifi/WifiComponent';
 import { RemoteSystemInformationConfigurationSchema } from '../../../../domain/types/configuration.types';
 import { QueueJobData, UpdateStatsType, UpdateType } from '../../../../domain/types/update.types';
+import { DebugCallback } from '../../../../domain/types/remote-executor.types';
+
+export enum RemoteSystemComponent {
+  CPU = 'CPU',
+  Memory = 'Memory',
+  OSInformation = 'OSInformation',
+  FileSystem = 'FileSystem',
+  Users = 'Users',
+  USB = 'USB',
+  WIFI = 'WIFI',
+  Graphics = 'Graphics',
+  Network = 'Network',
+  System = 'System',
+  Bluetooth = 'Bluetooth',
+}
+
+export enum RemoteSystemWatcher {
+  CPU = 'cpu',
+  CPU_STATS = 'cpuStats',
+  MEMORY = 'memory',
+  MEMORY_STATS = 'memoryStats',
+  FILE_SYSTEM = 'fileSystem',
+  FILE_SYSTEM_STATS = 'fileSystemStats',
+  NETWORK = 'network',
+  GRAPHICS = 'graphics',
+  USB = 'usb',
+  SYSTEM = 'system',
+  WIFI = 'wifi',
+  OS = 'os',
+  VERSIONS = 'versions',
+  BLUETOOTH = 'bluetooth',
+}
 
 interface CronWatchers {
   [key: string]: {
@@ -143,41 +175,77 @@ export class RemoteSystemInformationWatcher extends SSHExecutor {
       this.logger.debug('Initializing RemoteSystemInformationWatcher...');
       await super.init();
       // Initialize components
-      await this.setupComponent('CPU', CpuComponent, this.configuration.deviceUuid);
-      await this.setupComponent('Memory', MemoryComponent);
-      await this.setupComponent('OSInformation', OSInformationComponent);
-      await this.setupComponent('FileSystem', FileSystemComponent);
-      await this.setupComponent('Users', UsersComponent);
-      await this.setupComponent('USB', USBComponent);
-      await this.setupComponent('WIFI', WifiComponent);
-      await this.setupComponent('Graphics', GraphicsComponent);
-      await this.setupComponent('Network', NetworkComponent);
-      await this.setupComponent('System', SystemComponent);
-      await this.setupComponent('Bluetooth', BluetoothComponent);
+      await this.setupComponent(
+        RemoteSystemComponent.CPU,
+        CpuComponent,
+        this.configuration.deviceUuid,
+      );
+      await this.setupComponent(RemoteSystemComponent.Memory, MemoryComponent);
+      await this.setupComponent(RemoteSystemComponent.OSInformation, OSInformationComponent);
+      await this.setupComponent(RemoteSystemComponent.FileSystem, FileSystemComponent);
+      await this.setupComponent(RemoteSystemComponent.Users, UsersComponent);
+      await this.setupComponent(RemoteSystemComponent.USB, USBComponent);
+      await this.setupComponent(RemoteSystemComponent.WIFI, WifiComponent);
+      await this.setupComponent(RemoteSystemComponent.Graphics, GraphicsComponent);
+      await this.setupComponent(RemoteSystemComponent.Network, NetworkComponent);
+      await this.setupComponent(RemoteSystemComponent.System, SystemComponent);
+      await this.setupComponent(RemoteSystemComponent.Bluetooth, BluetoothComponent);
 
       // Setup watchers
-      this.setupWatcher('cpu', () => this.getCPU(), this.configuration.cpu);
-      this.setupWatcher('cpuStats', () => this.getCpuStats(), this.configuration.cpuStats);
-      this.setupWatcher('memory', () => this.getMemory(), this.configuration.mem);
-      this.setupWatcher('memoryStats', () => this.getMemoryStats(), this.configuration.memStats);
-      this.setupWatcher('fileSystem', () => this.getFileSystems(), this.configuration.fileSystem);
+      this.setupWatcher(RemoteSystemWatcher.CPU, () => this.getCPU(), this.configuration.cpu);
       this.setupWatcher(
-        'fileSystemStats',
+        RemoteSystemWatcher.CPU_STATS,
+        () => this.getCpuStats(),
+        this.configuration.cpuStats,
+      );
+      this.setupWatcher(RemoteSystemWatcher.MEMORY, () => this.getMemory(), this.configuration.mem);
+      this.setupWatcher(
+        RemoteSystemWatcher.MEMORY_STATS,
+        () => this.getMemoryStats(),
+        this.configuration.memStats,
+      );
+      this.setupWatcher(
+        RemoteSystemWatcher.FILE_SYSTEM,
+        () => this.getFileSystems(),
+        this.configuration.fileSystem,
+      );
+      this.setupWatcher(
+        RemoteSystemWatcher.FILE_SYSTEM_STATS,
         () => this.getFileSystemStats(),
         this.configuration.fileSystemStats,
       );
       this.setupWatcher(
-        'network',
+        RemoteSystemWatcher.NETWORK,
         () => this.getNetworkInterfaces(),
         this.configuration.networkInterfaces,
       );
-      this.setupWatcher('graphics', () => this.getGraphics(), this.configuration.graphics);
-      this.setupWatcher('usb', () => this.getUSB(), this.configuration.usb);
-      this.setupWatcher('system', () => this.getSystem(), this.configuration.system);
-      this.setupWatcher('wifi', () => this.getWifi(), this.configuration.wifi);
-      this.setupWatcher('os', () => this.getOSInformation(), this.configuration.os);
-      this.setupWatcher('versions', () => this.getVersions(), this.configuration.versions);
-      this.setupWatcher('bluetooth', () => this.getBluetooth(), this.configuration.bluetooth);
+      this.setupWatcher(
+        RemoteSystemWatcher.GRAPHICS,
+        () => this.getGraphics(),
+        this.configuration.graphics,
+      );
+      this.setupWatcher(RemoteSystemWatcher.USB, () => this.getUSB(), this.configuration.usb);
+      this.setupWatcher(
+        RemoteSystemWatcher.SYSTEM,
+        () => this.getSystem(),
+        this.configuration.system,
+      );
+      this.setupWatcher(RemoteSystemWatcher.WIFI, () => this.getWifi(), this.configuration.wifi);
+      this.setupWatcher(
+        RemoteSystemWatcher.OS,
+        () => this.getOSInformation(),
+        this.configuration.os,
+      );
+      this.setupWatcher(
+        RemoteSystemWatcher.VERSIONS,
+        () => this.getVersions(),
+        this.configuration.versions,
+      );
+      this.setupWatcher(
+        RemoteSystemWatcher.BLUETOOTH,
+        () => this.getBluetooth(),
+        this.configuration.bluetooth,
+      );
 
       this.logger.debug('RemoteSystemInformationWatcher initialized');
     } catch (error) {
@@ -235,65 +303,89 @@ export class RemoteSystemInformationWatcher extends SSHExecutor {
   /**
    * Get CPU information
    */
-  public async getCPU() {
+  public async getCPU(debugCallback?: DebugCallback) {
     this.logger.debug('Getting CPU information');
     const cpu = await this.components.CPU.cpu();
+    if (debugCallback) {
+      debugCallback(JSON.stringify(cpu, null, 2), 'CPU information', true);
+    }
     await this.enqueueUpdate(this.configuration.deviceUuid, UpdateType.CPU, cpu);
   }
 
   /**
    * Get CPU statistics
    */
-  public async getCpuStats() {
+  public async getCpuStats(debugCallback?: DebugCallback) {
     this.logger.debug('Getting CPU statistics');
     const cputStats = await this.components.CPU.currentLoad();
+    if (debugCallback) {
+      debugCallback(JSON.stringify(cputStats, null, 2), 'CPU statistics', true);
+    }
     await this.enqueueUpdate(this.configuration.deviceUuid, UpdateStatsType.CPU_STATS, cputStats);
   }
 
   /**
    * Get memory information
    */
-  public async getMemory() {
+  public async getMemory(debugCallback?: DebugCallback) {
     this.logger.debug('Getting memory information');
     const memoryInfo = await this.components.Memory.mem();
+    if (debugCallback) {
+      debugCallback(JSON.stringify(memoryInfo, null, 2), 'Memory information', true);
+    }
     await this.enqueueUpdate(this.configuration.deviceUuid, UpdateType.Memory, memoryInfo);
     const memoryLayout = await this.components.Memory.memLayout();
+    if (debugCallback) {
+      debugCallback(JSON.stringify(memoryLayout, null, 2), 'Memory layout', true);
+    }
     await this.enqueueUpdate(this.configuration.deviceUuid, UpdateType.MemoryLayout, memoryLayout);
   }
 
   /**
    * Get OS information
    */
-  public async getOSInformation() {
+  public async getOSInformation(debugCallback?: DebugCallback) {
     this.logger.debug('Getting OS information');
     const os = await this.components.OSInformation.osInfo();
+    if (debugCallback) {
+      debugCallback(JSON.stringify(os, null, 2), 'OS information', true);
+    }
     await this.enqueueUpdate(this.configuration.deviceUuid, UpdateType.OS, os);
   }
 
   /**
    * Get filesystem information
    */
-  public async getFileSystems() {
+  public async getFileSystems(debugCallback?: DebugCallback) {
     this.logger.debug('Getting filesystem information');
     const diskLayout = await this.components.FileSystem.diskLayout();
+    if (debugCallback) {
+      debugCallback(JSON.stringify(diskLayout, null, 2), 'Filesystem information', true);
+    }
     await this.enqueueUpdate(this.configuration.deviceUuid, UpdateType.FileSystems, diskLayout);
   }
 
   /**
    * Get memory statistics
    */
-  public async getMemoryStats() {
+  public async getMemoryStats(debugCallback?: DebugCallback) {
     this.logger.debug('Getting memory statistics');
     const memoryStats = await this.components.Memory.mem();
+    if (debugCallback) {
+      debugCallback(JSON.stringify(memoryStats, null, 2), 'Memory statistics', true);
+    }
     await this.enqueueUpdate(this.configuration.deviceUuid, UpdateStatsType.MEM_STATS, memoryStats);
   }
 
   /**
    * Get filesystem statistics
    */
-  public async getFileSystemStats() {
+  public async getFileSystemStats(debugCallback?: DebugCallback) {
     this.logger.debug('Getting filesystem statistics');
     const fileSystemsStats = await this.components.FileSystem.fsSize();
+    if (debugCallback) {
+      debugCallback(JSON.stringify(fileSystemsStats, null, 2), 'Filesystem statistics', true);
+    }
     await this.enqueueUpdate(
       this.configuration.deviceUuid,
       UpdateStatsType.FILE_SYSTEM_STATS,
@@ -304,66 +396,87 @@ export class RemoteSystemInformationWatcher extends SSHExecutor {
   /**
    * Get network interface information
    */
-  public async getNetworkInterfaces() {
+  public async getNetworkInterfaces(debugCallback?: DebugCallback) {
     this.logger.debug('Getting network interfaces');
     const _networkInterfaces = await this.components.Network.networkInterfaces();
     const networkInterfaces = Array.isArray(_networkInterfaces)
       ? _networkInterfaces
       : [_networkInterfaces];
+    if (debugCallback) {
+      debugCallback(JSON.stringify(networkInterfaces, null, 2), 'Network interfaces', true);
+    }
     await this.enqueueUpdate(this.configuration.deviceUuid, UpdateType.Network, networkInterfaces);
   }
 
   /**
    * Get graphics information
    */
-  public async getGraphics() {
+  public async getGraphics(debugCallback?: DebugCallback) {
     this.logger.debug('Getting graphics information');
     const graphics = await this.components.Graphics.graphics();
+    if (debugCallback) {
+      debugCallback(JSON.stringify(graphics, null, 2), 'Graphics information', true);
+    }
     await this.enqueueUpdate(this.configuration.deviceUuid, UpdateType.Graphics, graphics);
   }
 
   /**
    * Get USB information
    */
-  public async getUSB() {
+  public async getUSB(debugCallback?: DebugCallback) {
     this.logger.debug('Getting USB information');
     const usb = await this.components.USB.usb();
+    if (debugCallback) {
+      debugCallback(JSON.stringify(usb, null, 2), 'USB information', true);
+    }
     await this.enqueueUpdate(this.configuration.deviceUuid, UpdateType.USB, usb);
   }
 
   /**
    * Get system information
    */
-  public async getSystem() {
+  public async getSystem(debugCallback?: DebugCallback) {
     this.logger.debug('Getting system information');
     const system = await this.components.System.system();
+    if (debugCallback) {
+      debugCallback(JSON.stringify(system, null, 2), 'System information', true);
+    }
     await this.enqueueUpdate(this.configuration.deviceUuid, UpdateType.System, system);
   }
 
   /**
    * Get WiFi information
    */
-  public async getWifi() {
+  public async getWifi(debugCallback?: DebugCallback) {
     this.logger.debug('Getting WiFi information');
     const wifi = await this.components.WIFI.wifiInterfaces();
+    if (debugCallback) {
+      debugCallback(JSON.stringify(wifi, null, 2), 'WiFi information', true);
+    }
     await this.enqueueUpdate(this.configuration.deviceUuid, UpdateType.WiFi, wifi);
   }
 
   /**
    * Get version information
    */
-  public async getVersions() {
+  public async getVersions(debugCallback?: DebugCallback) {
     this.logger.debug('Getting version information');
     const versions = await this.components.OSInformation.versions('*');
+    if (debugCallback) {
+      debugCallback(JSON.stringify(versions, null, 2), 'Version information', true);
+    }
     await this.enqueueUpdate(this.configuration.deviceUuid, UpdateType.Versions, versions);
   }
 
   /**
    * Get bluetooth device information
    */
-  public async getBluetooth() {
+  public async getBluetooth(debugCallback?: DebugCallback) {
     this.logger.debug('Getting bluetooth device information');
     const devices = await this.components.Bluetooth.bluetoothDevices();
+    if (debugCallback) {
+      debugCallback(JSON.stringify(devices, null, 2), 'Bluetooth devices', true);
+    }
     await this.enqueueUpdate(this.configuration.deviceUuid, UpdateType.Bluetooth, devices);
   }
 
@@ -419,5 +532,78 @@ export class RemoteSystemInformationWatcher extends SSHExecutor {
       },
       {} as Record<string, any>,
     );
+  }
+
+  /**
+   * Execute a component in debug mode
+   * @param componentName Component to execute (e.g., 'cpu', 'mem')
+   * @param debugCallback Callback to receive debug information
+   */
+  public async executeComponentDebug(
+    componentName: string,
+    debugCallback: DebugCallback,
+  ): Promise<void> {
+    try {
+      // Enable debug mode and set the callback
+      this.debugCallback = debugCallback;
+
+      // Execute the component based on the name
+      try {
+        switch (componentName.toLowerCase()) {
+          case 'cpu':
+            await this.getCPU(debugCallback);
+            break;
+          case 'mem':
+            await this.getMemory(debugCallback);
+            break;
+          case 'filesystem':
+            await this.getFileSystems(debugCallback);
+            break;
+          case 'system':
+            await this.getSystem(debugCallback);
+            break;
+          case 'os':
+            await this.getOSInformation(debugCallback);
+            break;
+          case 'wifi':
+            await this.getWifi(debugCallback);
+            break;
+          case 'usb':
+            await this.getUSB(debugCallback);
+            break;
+          case 'graphics':
+            await this.getGraphics(debugCallback);
+            break;
+          case 'bluetooth':
+            await this.getBluetooth(debugCallback);
+            break;
+          case 'networkinterfaces':
+            await this.getNetworkInterfaces(debugCallback);
+            break;
+          case 'versions':
+            await this.getVersions(debugCallback);
+            break;
+          case 'cpustats':
+            await this.getCpuStats(debugCallback);
+            break;
+          case 'memstats':
+            await this.getMemoryStats(debugCallback);
+            break;
+          case 'filesystemstats':
+            await this.getFileSystemStats(debugCallback);
+            break;
+          default:
+            throw new Error(`Component ${componentName} not supported for debug execution`);
+        }
+      } finally {
+        // Disable debug mode
+        this.debugCallback = undefined;
+      }
+    } catch (error: any) {
+      this.logger.error(
+        `Error executing component ${componentName} in debug mode: ${error.message}`,
+      );
+      throw error;
+    }
   }
 }

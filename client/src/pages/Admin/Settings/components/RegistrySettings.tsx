@@ -17,6 +17,7 @@ import { Avatar, Button, Card, Popconfirm, Tag, Tooltip } from 'antd';
 import { AddCircleOutline, DeleteOutline } from 'antd-mobile-icons';
 import React, { useEffect, useState } from 'react';
 import { API } from 'ssm-shared-lib';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 const addRecord = {
   name: 'custom',
@@ -115,6 +116,10 @@ const RegistrySettings: React.FC = () => {
           >
             Add a custom registry
           </Button>,
+          <InfoLinkWidget
+            tooltipTitle="Help for registries."
+            documentationLink="https://squirrelserversmanager.io/docs/user-guides/settings/registry"
+          />,
         ]}
         showActions="hover"
         rowSelection={false}

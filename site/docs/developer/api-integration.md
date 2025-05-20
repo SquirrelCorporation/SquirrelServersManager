@@ -27,6 +27,10 @@ credits: true
 Swagger Document of the API is available in SSM at http://localhost:8000/api/docs
 :::
 
+:::warning
+The data input or output of the Swagger doc are very WIP. Help us improve it by [contributing](/docs/community)
+:::
+
 ## API Architecture
 
 Squirrel Servers Manager (SSM) follows a clean, layered architecture for its API implementation. The backend uses NestJS to provide a structured, maintainable API with comprehensive documentation, while the frontend uses a unified request interface to communicate with these endpoints.

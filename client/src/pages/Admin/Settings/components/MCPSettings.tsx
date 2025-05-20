@@ -36,6 +36,7 @@ import { API } from 'ssm-shared-lib';
 import message from '@/components/Message/DynamicMessage';
 import { AiBusinessImpactAssessment } from '@/components/Icons/CustomIcons';
 import ReactDOM from 'react-dom';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 interface PlaybookOption {
   label: string;
@@ -194,15 +195,21 @@ const MCPSettings: React.FC = () => {
             />
           }
           extra={
-            isMcpEnabled ? (
-              <Tag color="#008000" style={tagStyle}>
-                MCP Enabled
-              </Tag>
-            ) : (
-              <Tag color="#FF0000" style={tagStyle}>
-                MCP Disabled
-              </Tag>
-            )
+            <Space>
+              {isMcpEnabled ? (
+                <Tag color="#008000" style={tagStyle}>
+                  MCP Enabled
+                </Tag>
+              ) : (
+                <Tag color="#FF0000" style={tagStyle}>
+                  MCP Disabled
+                </Tag>
+              )}
+              <InfoLinkWidget
+                tooltipTitle="Help for MCP settings."
+                documentationLink="https://squirrelserversmanager.io/docs/user-guides/settings/mcp"
+              />
+            </Space>
           }
         >
           {generalError && !isLoading && (

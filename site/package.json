@@ -11,7 +11,7 @@
     "lint:docs": "node ./scripts/check-doc-layouts.cjs"
   },
   "devDependencies": {
-    "@vue-flow/core": "^1.43.1",
+    "@vue-flow/core": "^1.43.2",
     "vitepress": "^1.6.3"
   },
   "dependencies": {
@@ -19,7 +19,7 @@
     "@vue-flow/minimap": "^1.5.3",
     "axios": "^1.9.0",
     "swiper": "^11.2.6",
-    "vuetify": "^3.8.2"
+    "vuetify": "^3.8.5"
   }
 }
  

@@ -9,11 +9,14 @@ import {
   WhhRam,
   Wifi,
 } from '@/components/Icons/CustomIcons';
+import RemoteSystemInformationTerminal from '@/components/Terminal/RemoteSystemInformationTerminal';
 import { CardHeader } from '@/components/Template/CardHeader';
 import { updateDeviceSystemInformationConfiguration } from '@/services/rest/devices/devices';
 import { capitalizeFirstLetter } from '@/utils/strings';
 import {
+  BugOutlined,
   CheckCircleFilled,
+  ClockCircleOutlined,
   FieldTimeOutlined,
   InfoCircleFilled,
 } from '@ant-design/icons';
@@ -23,10 +26,12 @@ import {
   ProFormSwitch,
 } from '@ant-design/pro-components';
 import message from '@/components/Message/DynamicMessage';
-import { Card, Space, Tooltip } from 'antd';
-import React, { useEffect } from 'react';
+import { Avatar, Button, Card, Divider, Space, Tag, Tooltip } from 'antd';
+import React, { useEffect, useState } from 'react';
 import Cron from 'react-js-cron';
 import { API } from 'ssm-shared-lib';
+import AnimatedInfoText from '@/components/AnimatedInfoText';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 export type SystemInformationConfigurationTabProps = {
   device: Partial<API.DeviceItem>;
@@ -38,11 +43,14 @@ const SystemInformationConfigurationTab: React.FC<
   const options = Object.keys(device.configuration?.systemInformation || {})
     .sort((e: string, f: string) => e.localeCompare(f))
     .map((e) => ({ label: capitalizeFirstLetter(e), value: e }));
-  const [selectedFeature, setSelectedFeature] = React.useState<string>(
+  const [selectedFeature, setSelectedFeature] = useState<string>(
     options?.[0]?.value,
   );
-  const [isFeatureEnabled, setIsFeatureEnabled] = React.useState<boolean>();
-  const [cron, setCron] = React.useState<string>('');
+  const [isFeatureEnabled, setIsFeatureEnabled] = useState<boolean>();
+  const [cron, setCron] = useState<string>('');
+  const [lastUpdatedAt, setLastUpdatedAt] = React.useState<
+    string | undefined
+  >();
 
   useEffect(() => {
     if (device.configuration?.systemInformation) {
@@ -56,6 +64,26 @@ const SystemInformationConfigurationTab: React.FC<
           selectedFeature as keyof typeof device.configuration.systemInformation
         ]?.cron ?? '',
       );
+      const info =
+        device.systemInformation?.[
+          selectedFeature as keyof typeof device.systemInformation
+        ];
+      let updatedAt: string | undefined = undefined;
+      if (Array.isArray(info)) {
+        const firstWithLastUpdated = info.find(
+          (el) =>
+            el &&
+            typeof el === 'object' &&
+            'lastUpdatedAt' in el &&
+            (el as any).lastUpdatedAt,
+        );
+        updatedAt = firstWithLastUpdated
+          ? (firstWithLastUpdated as { lastUpdatedAt?: string }).lastUpdatedAt
+          : undefined;
+      } else if (info && typeof info === 'object' && 'lastUpdatedAt' in info) {
+        updatedAt = (info as { lastUpdatedAt?: string }).lastUpdatedAt;
+      }
+      setLastUpdatedAt(updatedAt);
     }
   }, [selectedFeature]);
 
@@ -129,9 +157,29 @@ const SystemInformationConfigurationTab: React.FC<
           body: { paddingBottom: 0 },
         }}
         extra={
-          <Tooltip title="Remote system information are collected through SSH at regular intervals. You can configure the frequency for each collections.">
-            <InfoCircleFilled />
-          </Tooltip>
+          <Space size={'middle'}>
+            {lastUpdatedAt && (
+              <>
+                <AnimatedInfoText
+                  text={`Last updated at: ${lastUpdatedAt ? new Date(lastUpdatedAt).toLocaleString() : 'never'}`}
+                />
+              </>
+            )}
+            <Tooltip
+              title={`Last updated at: ${
+                lastUpdatedAt
+                  ? new Date(lastUpdatedAt).toLocaleString()
+                  : 'never'
+              }`}
+            >
+              <Avatar icon={<ClockCircleOutlined />} />
+            </Tooltip>
+
+            <InfoLinkWidget
+              tooltipTitle="Remote system information are collected through SSH at regular intervals. You can configure the frequency for each collections."
+              documentationLink="https://squirrelserversmanager.io/docs/user-guides/devices/configuration/system-information"
+            />
+          </Space>
         }
       >
         <ProForm.Group>

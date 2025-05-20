@@ -122,6 +122,10 @@ const FilesystemsTab: React.FC<FilesystemsTabProps> = ({ device }) => {
           value: index,
         };
       })}
+      lastUpdatedAt={
+        device.systemInformation.fileSystems?.[selectedInterface ?? 0]
+          ?.lastUpdatedAt
+      }
     />
   );
 };

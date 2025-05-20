@@ -1,7 +1,7 @@
 services:
   proxy:
     restart: unless-stopped
-    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-proxy:latest"
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-proxy:v0.1.30"
     ports:
       - "8000:8000"
     depends_on:
@@ -14,7 +14,7 @@ services:
       wud.display.name: "SSM - Proxy"
       wud.watch.digest: false
   prometheus:
-    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-prometheus:latest"
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-prometheus:v0.1.30"
     container_name: prometheus-ssm
     restart: unless-stopped
     env_file: .env
@@ -41,7 +41,7 @@ services:
     labels:
       wud.display.name: "SSM - Redis"
   server:
-    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-server:latest"
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-server:v0.1.30"
     restart: unless-stopped
     healthcheck:
       test: curl --fail http://localhost:3000/ping || exit 1
@@ -66,7 +66,7 @@ services:
       wud.display.name: "SSM - Server"
       wud.watch.digest: false
   client:
-    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-client:latest"
+    image: "ghcr.io/squirrelcorporation/squirrelserversmanager-client:v0.1.30"
     restart: unless-stopped
     depends_on:
       - server

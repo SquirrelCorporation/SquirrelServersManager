@@ -12,6 +12,7 @@ const socketOptions: Partial<ManagerOptions & SocketOptions> = {
   // Add explicit multiplexing options for Socket.IO
   forceNew: false, // Don't force new manager for namespaces
   multiplex: true, // Enable multiplexing (default, but explicit for clarity)
+  withCredentials: true, // Send cookies with request for auth
 };
 
 // Create a single instance to share across the application
@@ -25,6 +26,10 @@ const containerLiveLogsSocketManager = io(
   '/containers-live-logs',
   socketOptions,
 );
+const rsiDebugSocketManager = io(
+  '/remote-system-information-debug',
+  socketOptions,
+);
 
 // Export the socket instances
 export const sshSocket = sshSocketManager;
@@ -34,12 +39,13 @@ export const notificationSocket = notificationSocketManager;
 export const diagnosticSocket = diagnosticSocketManager;
 export const containerLiveLogsSocket = containerLiveLogsSocketManager;
 export const containerVolumesSocket = containerVolumesSocketManager;
+export const rsiDebugSocket = rsiDebugSocketManager;
 
 sshSocket.on('connect', () => {
   console.log('SSH socket connected:', {
     id: sshSocket.id,
     connected: sshSocket.connected,
-    namespace: sshSocket.nsp,
+    namespace: (sshSocket as any).nsp,
   });
 });
 
@@ -47,7 +53,7 @@ sftpSocket.on('connect', () => {
   console.log('SFTP socket connected:', {
     id: sftpSocket.id,
     connected: sftpSocket.connected,
-    namespace: sftpSocket.nsp,
+    namespace: (sftpSocket as any).nsp,
   });
 });
 
@@ -77,5 +83,6 @@ sshSocket.emit = function (...args: any[]) {
     console.log('Starting SSH session...');
   }
 
+  // @ts-ignore
   return originalEmit.apply(this, args);
 } as any;

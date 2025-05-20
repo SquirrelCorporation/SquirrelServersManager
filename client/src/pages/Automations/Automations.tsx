@@ -21,6 +21,7 @@ import StyledTabContainer, {
   TabLabel,
   IconWrapper,
 } from '@/components/Layout/StyledTabContainer';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 const Automations: React.FC = () => {
   const [currentRow, setCurrentRow] = useState<API.Automation | undefined>();
@@ -60,6 +61,10 @@ const Automations: React.FC = () => {
               reload={reload}
               selectedRow={currentRow}
               setSelectedRow={setCurrentRow}
+            />,
+            <InfoLinkWidget
+              tooltipTitle="Help for automations."
+              documentationLink="https://squirrelserversmanager.io/docs/user-guides/automations/overview"
             />,
           ]}
         />

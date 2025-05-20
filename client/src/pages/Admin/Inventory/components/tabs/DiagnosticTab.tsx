@@ -1,5 +1,6 @@
 import ExistingDeviceAdvancedDiagnostic from '@/components/DeviceConfiguration/diagnostic/ExistingDeviceAdvancedDiagnostic';
 import ExistingDeviceConnectionTest from '@/components/DeviceConfiguration/diagnostic/ExistingDeviceConnectionTest';
+import SystemInformationDebug from '@/components/DeviceConfiguration/diagnostic/SystemInformationDebug';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -11,6 +12,7 @@ const DiagnosticTab: React.FC<ConnectionTestTabProps> = ({ device }) => (
   <>
     <ExistingDeviceConnectionTest device={device} />
     <ExistingDeviceAdvancedDiagnostic device={device} />
+    <SystemInformationDebug device={device} />
   </>
 );
 

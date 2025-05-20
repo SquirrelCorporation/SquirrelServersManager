@@ -7,7 +7,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Client, ConnectConfig } from 'ssh2';
 import { SsmStatus } from 'ssm-shared-lib';
 import { generateSudoCommand } from '../../domain/helpers/sudo';
-import { RemoteExecOptions } from '../../domain/types/remote-executor.types';
+import { DebugCallback, RemoteExecOptions } from '../../domain/types/remote-executor.types';
 
 /**
  * Class representing an SSH executor for a specific device
@@ -25,7 +25,7 @@ export abstract class SSHExecutor extends Component {
     resolve: (result: string) => void;
     reject: ({ err, result }: { err: Error; result?: string }) => void;
   }[] = []; // Queue to store pending commands
-
+  public debugCallback?: DebugCallback;
   constructor(
     protected readonly devicesService: IDevicesService,
     protected readonly deviceAuthService: IDeviceAuthService,
@@ -229,6 +229,9 @@ export abstract class SSHExecutor extends Component {
           if (!this.sshClient) {
             await this.reconnect();
             if (!this.sshClient) {
+              if (this.debugCallback) {
+                this.debugCallback(command, 'SSH Client not connected', false);
+              }
               return reject(new Error('SSH Client not connected'));
             }
           }
@@ -247,8 +250,16 @@ export abstract class SSHExecutor extends Component {
               finalCommand = sudoCmd.replace('%command%', command);
             } catch (error) {
               this.logger.error('Failed to generate sudo command:', error);
+              if (this.debugCallback) {
+                this.debugCallback(command, 'Failed to generate sudo command', false);
+              }
               return reject(new Error('Failed to generate sudo command'));
             }
+          }
+
+          // Send command to debug callback if available
+          if (this.debugCallback) {
+            this.debugCallback(finalCommand, '', true);
           }
 
           this.logger.debug(`Running command: ${finalCommand}`);
@@ -263,7 +274,58 @@ export abstract class SSHExecutor extends Component {
           try {
             this.sshClient.exec(finalCommand, (err, stream) => {
               if (err) {
-                return reject({ err, result: '' });
+                this.logger.warn(
+                  `Command "${finalCommand}" failed directly in sshClient.exec callback: ${err.message}`,
+                );
+                if (this.debugCallback) {
+                  this.debugCallback(finalCommand, `Exec callback error: ${err.message}`, false);
+                }
+
+                // Check for specific connection-related errors that might indicate a stale client
+                if (
+                  err.message &&
+                  (err.message.includes('Unable to exec') ||
+                    err.message.includes('Not connected') ||
+                    err.message.includes('Channel open failed') ||
+                    err.message.includes('session is not active')) // Common for dead/closed sessions
+                ) {
+                  this.logger.error(
+                    `Detected critical SSH exec error for "${finalCommand}": ${err.message}. This usually indicates the SSH session died. Attempting to reset connection for future use.`,
+                  );
+                  const clientThatFailed = this.sshClient; // Capture the client instance that reported the error
+
+                  // Attempt to clean up the problematic client instance
+                  if (clientThatFailed) {
+                    try {
+                      clientThatFailed.end(); // Gracefully end this specific client
+                    } catch (e: any) {
+                      this.logger.warn(
+                        `Error while trying to end the failed sshClient for "${finalCommand}": ${e.message}`,
+                      );
+                    }
+                    // If the current this.sshClient is indeed the one that failed, nullify it.
+                    // This forces the next command (or reconnect logic) to establish a fresh client.
+                    if (this.sshClient === clientThatFailed) {
+                      this.sshClient = null;
+                    }
+                  } else {
+                    // If sshClient was already null (e.g., by an 'end' event that raced with this error), ensure it remains null.
+                    this.sshClient = null;
+                  }
+
+                  this.logger.info(
+                    `Triggering background reconnect for device ${this.configuration.deviceUuid} after exec error on "${finalCommand}".`,
+                  );
+                  // We don't await this; it's for future commands.
+                  this.reconnect().catch((reconnectError) => {
+                    this.logger.error(
+                      `Background reconnect attempt after exec error for "${finalCommand}" also failed: ${reconnectError.message}`,
+                    );
+                  });
+                }
+                // Still reject the current command's promise.
+                // 'result' is defined in the outer scope of runCommand, initialized to ''.
+                return reject({ err, result });
               }
 
               const resolveOrReject = () => {
@@ -274,12 +336,18 @@ export abstract class SSHExecutor extends Component {
 
                 if (exitCode === 0) {
                   this.logger.debug(`Command executed successfully: ${finalCommand}`);
+                  if (this.debugCallback) {
+                    this.debugCallback(finalCommand, result.trim(), true);
+                  }
                   resolve(result.trim());
                 } else {
                   const error = new Error(
                     `Command "${finalCommand}" failed with code ${exitCode}, signal: ${exitSignal}, stderr: "${errorOutput.trim()}"`,
                   );
                   this.logger.debug(error.message);
+                  if (this.debugCallback) {
+                    this.debugCallback(finalCommand, errorOutput.trim() || result.trim(), false);
+                  }
                   reject({ err: error, result: result.trim() });
                 }
               };
@@ -349,10 +417,16 @@ export abstract class SSHExecutor extends Component {
             });
           } catch (error: any) {
             this.logger.error(`Error occurred during execution: ${error.message}`);
+            if (this.debugCallback) {
+              this.debugCallback(finalCommand, error.message, false);
+            }
             await this.reconnect();
           }
         } catch (error: any) {
           this.logger.error(`Error occurred during execution: ${error.message}`);
+          if (this.debugCallback) {
+            this.debugCallback(command, error.message, false);
+          }
           reject(error);
         }
       });
@@ -375,7 +449,7 @@ export abstract class SSHExecutor extends Component {
     const { command, options, resolve, reject } = this.commandQueue.shift()!;
 
     try {
-      // Execute the command
+      // Execute the command with debug callback if provided
       const result = await this.runCommand(command, options);
       resolve(result); // Resolve the promise if successful
     } catch (error: any) {
@@ -404,7 +478,7 @@ export abstract class SSHExecutor extends Component {
           reject(err);
         }
       };
-      // Push the command into the queue
+      // Push the command into the queue with debug callback if provided
       this.commandQueue.push({ command, options, resolve, reject: _reject });
       void this.processQueue(); // Process the queue if not currently executing
     });
