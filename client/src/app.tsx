@@ -26,6 +26,8 @@ import PluginRoutes from './plugins/components/PluginRoutes';
 import { PluginProvider } from './plugins/contexts/plugin-context';
 import { errorConfig } from './requestErrorConfig';
 import PlaybookExecutionWidget from '@/components/HeaderComponents/PlaybookExecutionWidget';
+// Import MF compatibility fix
+import './utils/mf-compat';
 
 const loginPath = '/user/login';
 const onboardingPath = '/user/onboarding';

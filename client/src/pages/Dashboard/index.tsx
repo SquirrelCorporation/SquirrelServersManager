@@ -17,6 +17,7 @@ import {
   EyeOutlined,
   BugOutlined,
   UserOutlined,
+  LayoutOutlined,
 } from '@ant-design/icons';
 
 // Layout Components
@@ -44,6 +45,10 @@ import FeaturedAppCard from '@/pages/Dashboard/Components/FeaturedAppCard';
 import CompactStatCard from '@/pages/Dashboard/Components/CompactStatCard';
 import DownloadsByOSDonutCard from '@/pages/Dashboard/Components/DownloadsByOSDonutCard';
 import AreaInstalledBarChartCard from '@/pages/Dashboard/Components/AreaInstalledBarChartCard';
+
+// Customizable Dashboard Engine
+import DashboardLayoutEngine from '@/pages/Dashboard/Components/DashboardLayoutEngine';
+import { createDashboardItems } from '@/pages/Dashboard/Components/DashboardItemsFactory';
 
 // --- Placeholder Data for Demo Components ---
 
@@ -142,6 +147,8 @@ const areaInstallData = [
 const Index: React.FC = () => {
   // Get the dashboard widgets slot renderer
   const DashboardWidgetsSlot = useSlot('dashboard-widgets');
+  // Create available dashboard items for the customizable dashboard
+  const availableDashboardItems = createDashboardItems();
 
   const tabItems = [
     {
@@ -178,6 +185,8 @@ const Index: React.FC = () => {
       children: (
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
           {/* Welcome Header */}
+          <Row gutter={[24, 24]}>
+           <Col xs={24} lg={16}>
           <WelcomeHeaderSection
             userName="Jaydon Frankie"
             subtitle="If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything."
@@ -185,7 +194,16 @@ const Index: React.FC = () => {
             onButtonClick={() => console.log('Button clicked')}
             illustrationUrl="/assets/images/dashboard/welcome-illustration.png" // Replace with actual path
           />
-
+            </Col>
+            <Col xs={24} lg={8}>
+          <FeaturedAppCard
+            tagText="FEATURED APP"
+            title="Mental Health in the Digital Age: Navi..."
+            description="He carefully crafted a beautiful sculpture out of clay, ..."
+            imageUrl="/assets/images/dashboard/featured-app-image.png" // Replace with actual path
+          />
+            </Col>
+          </Row>
           {/* Top Row Stat Cards (Screenshot 1 Style) */}
           <Row gutter={[24, 24]}>
             <Col xs={24} sm={12} lg={8}>
@@ -335,20 +353,6 @@ const Index: React.FC = () => {
               />
             </Col>
           </Row>
-
-          {/* Featured App (Screenshot 4 Style) */}
-          <Row gutter={[24, 24]}>
-            <Col xs={24} lg={8}>
-              <FeaturedAppCard
-                tagText="FEATURED APP"
-                title="Mental Health in the Digital Age: Navi..."
-                description="He carefully crafted a beautiful sculpture out of clay, ..."
-                imageUrl="/assets/images/dashboard/featured-app-image.jpg" // Replace with actual path
-              />
-            </Col>
-            {/* Add more content here if needed for this row */}
-          </Row>
-
           {/* Compact Stats (Screenshot 4 Style) */}
           <Row gutter={[24, 24]}>
             <Col xs={24} sm={12} lg={8}>
@@ -411,6 +415,20 @@ const Index: React.FC = () => {
             </Col>
           </Row>
         </Space>
+      ),
+    },
+    {
+      key: 'customizable',
+      label: (
+        <TabLabel>
+          <IconWrapper $bgColor="#722ed1">
+            <LayoutOutlined />
+          </IconWrapper>
+          <span>Customizable Dashboard</span>
+        </TabLabel>
+      ),
+      children: (
+        <DashboardLayoutEngine availableItems={availableDashboardItems} />
       ),
     },
   ];
