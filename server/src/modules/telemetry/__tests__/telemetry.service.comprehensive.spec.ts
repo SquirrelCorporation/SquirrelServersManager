@@ -142,7 +142,7 @@ describe('TelemetryService (Comprehensive)', () => {
       expect(mockPostHogClient.capture).not.toHaveBeenCalled();
     });
 
-    it('should log warning when client is not initialized', async () => {
+    it('should silently ignore when client is not initialized', async () => {
       // Setup
       const payload: TelemetryEventPayload = {
         eventName: 'test_event',
@@ -159,20 +159,17 @@ describe('TelemetryService (Comprehensive)', () => {
       // Spy on logger
       const warnSpy = vi.spyOn((service as any).logger, 'warn');
 
-      // Execute
-      service.capture(payload);
+      // Execute - should not throw
+      expect(() => service.capture(payload)).not.toThrow();
 
-      // Assert
-      expect(warnSpy).toHaveBeenCalled();
-      expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Telemetry client not initialized')
-      );
+      // Assert - no warnings should be logged for missing client
+      expect(warnSpy).not.toHaveBeenCalled();
 
       // Restore the client
       (service as any).client = savedClient;
     });
 
-    it('should log warning when ID is not set', async () => {
+    it('should silently ignore when ID is not set', async () => {
       // Setup
       const payload: TelemetryEventPayload = {
         eventName: 'test_event',
@@ -188,14 +185,11 @@ describe('TelemetryService (Comprehensive)', () => {
       // Spy on logger
       const warnSpy = vi.spyOn((service as any).logger, 'warn');
 
-      // Execute
-      service.capture(payload);
+      // Execute - should not throw
+      expect(() => service.capture(payload)).not.toThrow();
 
-      // Assert
-      expect(warnSpy).toHaveBeenCalled();
-      expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining('Telemetry distinct ID not set')
-      );
+      // Assert - no warnings should be logged for missing ID
+      expect(warnSpy).not.toHaveBeenCalled();
 
       // Restore the ID
       (service as any)._id = savedId;
