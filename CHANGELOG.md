@@ -1,11 +1,12 @@
 # Changelog
 
-## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+## [v0.5.0-beta.3](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-beta.3) (2025-05-25)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-beta.2...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-beta.2...v0.5.0-beta.3)
 
 **Fixed bugs:**
 
+- \[BUGFIX\] Fix potential permission issues for /data in prometheus container [\#960](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/960) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - \[BUGFIX\] Bugfix/fix potential telemetry crash [\#959](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/959) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 ## [v0.5.0-beta.2](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-beta.2) (2025-05-20)
