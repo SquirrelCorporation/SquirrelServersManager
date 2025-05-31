@@ -1,5 +1,22 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-beta.3...HEAD)
+
+**Fixed bugs:**
+
+- \[BUG\] MongoDB authentication not used [\#972](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/972)
+- \[BUG\] Bugfix/use auth db when provided [\#973](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/973) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Closed issues:**
+
+- \[BUG\] Fresh container install doesn't result in a usable setup [\#958](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/958)
+
+**Merged pull requests:**
+
+- Bump swiper from 11.2.6 to 11.2.8 in /site [\#971](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/971) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v0.5.0-beta.3](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-beta.3) (2025-05-25)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-beta.2...v0.5.0-beta.3)
