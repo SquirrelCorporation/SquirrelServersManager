@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-rc.1...HEAD)
+
+**Merged pull requests:**
+
+- \[CHORE\] RELEASE V0.5.0 [\#974](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/974) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 ## [v0.5.0-rc.1](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-rc.1) (2025-05-31)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-beta.3...v0.5.0-rc.1)
