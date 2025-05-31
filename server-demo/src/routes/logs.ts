@@ -6,7 +6,7 @@ import asyncHandler from "../utils/AsyncHandler";
 
 const router = express.Router();
 
-router.route("/logs/tasks").get(
+router.route("/ansible/logs/tasks").get(
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got task logs", tasksLogs).send(res);
   }),

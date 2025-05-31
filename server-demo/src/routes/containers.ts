@@ -15,41 +15,41 @@ router.get(
 );
 
 router.get(
-  "/containers/registries",
+  "/container-registries",
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got running containers", registries).send(res);
   }),
 );
 
 router.get(
-  "/containers/custom-stacks/dry-run",
+  "/custom-stacks/dry-run",
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got custom stacks", stacks).send(res);
   }),
 );
 
 router.get(
-  "/containers/custom-stacks",
+  "/container-stacks",
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got custom stacks", stacks).send(res);
   }),
 );
 
 router.get(
-  `/containers/stats/count/running`,
+  `/container-statistics/count/running`,
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got running containers", 25).send(res);
   }),
 );
 router.get(
-  `/containers/stats/count/all`,
+  `/container-statistics/count/all`,
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got all containers", 30).send(res);
   }),
 );
 
 router.get(
-  "/containers/stats/averaged",
+  "/container-statistics/averaged",
   asyncHandler(async (req, res) => {
     const statsCpu: any = [];
     for (let i = 0; i < 24 * 5; i++) {
