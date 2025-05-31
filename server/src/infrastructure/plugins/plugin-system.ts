@@ -196,7 +196,9 @@ export class PluginSystem {
           const pluginLogger = this.pluginLoggers.get(pluginName);
           pluginLogger?.info(`Setting up database connection for plugin`);
 
-          const uri = `mongodb://${db.host}:${db.port}/${manifest.database}`;
+          const uri = db.user && db.password
+            ? `mongodb://${db.user}:${db.password}@${db.host}:${db.port}/${manifest.database}`
+            : `mongodb://${db.host}:${db.port}/${manifest.database}`;
           const pluginConn = await mongoose
             .createConnection(uri, {
               autoIndex: true,

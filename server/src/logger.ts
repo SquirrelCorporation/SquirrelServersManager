@@ -16,6 +16,14 @@ const transport = pino.transport({
         uri: `mongodb://${db.host}:${db.port}/`,
         database: `${db.name}`,
         collection: 'logs',
+        ...(db.user && db.password && {
+          mongoOptions: {
+            auth: {
+              username: db.user,
+              password: db.password,
+            },
+          },
+        }),
       },
     },
   ],
