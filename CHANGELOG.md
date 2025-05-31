@@ -1,5 +1,24 @@
 # Changelog
 
+## [v0.5.0-rc.1](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-rc.1) (2025-05-31)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-beta.3...v0.5.0-rc.1)
+
+**Fixed bugs:**
+
+- \[BUG\] MongoDB authentication not used [\#972](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/972)
+- \[BUG\] Bugfix/use auth db when provided [\#973](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/973) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Closed issues:**
+
+- \[BUG\] Fresh container install doesn't result in a usable setup [\#958](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/958)
+
+**Merged pull requests:**
+
+- Bump swiper from 11.2.6 to 11.2.8 in /site [\#971](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/971) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @vue-flow/core from 1.43.2 to 1.44.0 in /site [\#970](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/970) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vuetify from 3.8.5 to 3.8.6 in /site [\#969](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/969) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v0.5.0-beta.3](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-beta.3) (2025-05-25)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-beta.2...v0.5.0-beta.3)
@@ -1157,15 +1176,15 @@
 
 ## [v0.1.10](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.10) (2024-06-07)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.10)
-
-## [v0.1.9](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.9) (2024-06-06)
-
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.9)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.10)
 
 ## [v0.1.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.8) (2024-06-06)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.8)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.8)
+
+## [v0.1.9](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.9) (2024-06-06)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.9)
 
 ## [v0.1.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.7) (2024-06-06)
 
