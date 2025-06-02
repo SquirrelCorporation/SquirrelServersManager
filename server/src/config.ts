@@ -8,6 +8,7 @@ export const db = {
   port: process.env.DB_PORT || '27017',
   user: process.env.DB_USER || '',
   password: process.env.DB_USER_PWD || '',
+  authSource: process.env.DB_AUTH_SOURCE || 'admin',
   minPoolSize: parseInt(process.env.DB_MIN_POOL_SIZE || '5'),
   maxPoolSize: parseInt(process.env.DB_MAX_POOL_SIZE || '10'),
 };
