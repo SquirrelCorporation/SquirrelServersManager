@@ -53,6 +53,7 @@ These variables configure database connections:
 | `DB_NAME` | | `ssm` | MongoDB database name |
 | `DB_USER` | | ` ` (empty string) | MongoDB username (if authentication is enabled) |
 | `DB_USER_PWD` | | ` ` (empty string) | MongoDB password (if authentication is enabled) |
+| `DB_AUTH_SOURCE` | | `admin` | MongoDB authentication database |
 | `DB_MIN_POOL_SIZE` | | `5` | Minimum MongoDB connection pool size |
 | `DB_MAX_POOL_SIZE` | | `10` | Maximum MongoDB connection pool size |
 | `REDIS_HOST` | | ` ` (empty string) | Redis hostname |
@@ -66,10 +67,20 @@ DB_HOST=mongo
 DB_NAME=ssm
 DB_PORT=27017
 
+# MongoDB Authentication (optional)
+# Leave empty for no authentication
+DB_USER=ssm_user
+DB_USER_PWD=secure_password
+DB_AUTH_SOURCE=admin
+
 # Redis Configuration
 REDIS_HOST=redis
 REDIS_PORT=6379
 ```
+
+:::info MongoDB Authentication
+SSM supports both authenticated and non-authenticated MongoDB connections. When `DB_USER` and `DB_USER_PWD` are empty, SSM connects without authentication. For more details, see the [MongoDB Authentication Guide](/docs/reference/mongodb-authentication).
+:::
 
 ## System Paths
 
