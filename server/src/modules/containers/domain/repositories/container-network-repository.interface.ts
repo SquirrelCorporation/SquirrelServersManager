@@ -24,10 +24,7 @@ export interface IContainerNetworkRepository {
   /**
    * Find one network by its name and device UUID
    */
-  findOneByNameAndDeviceUuid(
-    name: string,
-    deviceUuid: string,
-  ): Promise<IContainerNetwork | null>;
+  findOneByNameAndDeviceUuid(name: string, deviceUuid: string): Promise<IContainerNetwork | null>;
 
   /**
    * Save a network

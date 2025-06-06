@@ -2,7 +2,10 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { SsmDeviceDiagnostic } from 'ssm-shared-lib';
 import { DiagnosticReport, DiagnosticResult } from '../../../domain/entities/diagnostic.entity';
 import { DiagnosticMapper } from '../../../presentation/mappers/diagnostic.mapper';
-import { DiagnosticReportDto, DiagnosticResultDto } from '../../../presentation/dtos/diagnostic.dto';
+import {
+  DiagnosticReportDto,
+  DiagnosticResultDto,
+} from '../../../presentation/dtos/diagnostic.dto';
 
 describe('DiagnosticMapper', () => {
   let mapper: DiagnosticMapper;
@@ -17,7 +20,7 @@ describe('DiagnosticMapper', () => {
       success: true,
       severity: 'success',
       message: 'Test message',
-      data: { test: 'data' }
+      data: { test: 'data' },
     };
 
     // Create a mock diagnostic report
@@ -25,8 +28,8 @@ describe('DiagnosticMapper', () => {
       deviceId: 'test-device-id',
       timestamp: new Date('2023-01-01T00:00:00Z'),
       results: {
-        [SsmDeviceDiagnostic.Checks.SSH_CONNECT]: mockResult
-      } as Record<SsmDeviceDiagnostic.Checks, DiagnosticResult>
+        [SsmDeviceDiagnostic.Checks.SSH_CONNECT]: mockResult,
+      } as Record<SsmDeviceDiagnostic.Checks, DiagnosticResult>,
     };
 
     // Create a mock diagnostic result DTO
@@ -41,7 +44,7 @@ describe('DiagnosticMapper', () => {
     mockReportDto.deviceId = 'test-device-id';
     mockReportDto.timestamp = new Date('2023-01-01T00:00:00Z');
     mockReportDto.results = {
-      [SsmDeviceDiagnostic.Checks.SSH_CONNECT]: mockResultDto
+      [SsmDeviceDiagnostic.Checks.SSH_CONNECT]: mockResultDto,
     } as Record<SsmDeviceDiagnostic.Checks, DiagnosticResultDto>;
   });
 

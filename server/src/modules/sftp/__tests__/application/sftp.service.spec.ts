@@ -18,10 +18,26 @@ interface SftpStatusMessage {
 interface ISftpRepository {
   createSession(client: Socket, sessionDto: any): Promise<string>;
   listDirectory(clientId: string, directoryPath: string): Promise<void>;
-  mkdir(clientId: string, options: any, callback: (response: SftpStatusMessage) => void): Promise<void>;
-  rename(clientId: string, options: any, callback: (response: SftpStatusMessage) => void): Promise<void>;
-  chmod(clientId: string, options: any, callback: (response: SftpStatusMessage) => void): Promise<void>;
-  delete(clientId: string, options: any, callback: (response: SftpStatusMessage) => void): Promise<void>;
+  mkdir(
+    clientId: string,
+    options: any,
+    callback: (response: SftpStatusMessage) => void,
+  ): Promise<void>;
+  rename(
+    clientId: string,
+    options: any,
+    callback: (response: SftpStatusMessage) => void,
+  ): Promise<void>;
+  chmod(
+    clientId: string,
+    options: any,
+    callback: (response: SftpStatusMessage) => void,
+  ): Promise<void>;
+  delete(
+    clientId: string,
+    options: any,
+    callback: (response: SftpStatusMessage) => void,
+  ): Promise<void>;
   download(clientId: string, filePath: string): Promise<void>;
   closeSession(sessionId: string): void;
   closeClientSessions(clientId: string): void;
@@ -33,7 +49,7 @@ class SftpService {
 
   constructor(
     private readonly sftpRepository: ISftpRepository,
-    private readonly sftpGateway: { emit: (event: string, data: any) => void }
+    private readonly sftpGateway: { emit: (event: string, data: any) => void },
   ) {}
 
   async createSession(client: Socket, sessionDto: any): Promise<string> {
@@ -116,18 +132,18 @@ describe('SftpService', () => {
       delete: vi.fn(),
       download: vi.fn(),
       closeSession: vi.fn(),
-      closeClientSessions: vi.fn()
+      closeClientSessions: vi.fn(),
     };
 
     mockSftpGateway = {
-      emit: vi.fn()
+      emit: vi.fn(),
     };
 
     mockSocket = {
       id: 'socket-123',
       emit: vi.fn(),
       join: vi.fn(),
-      on: vi.fn()
+      on: vi.fn(),
     } as unknown as Socket;
 
     // Mock logger
@@ -150,7 +166,7 @@ describe('SftpService', () => {
         deviceUuid: 'device-123',
         port: 22,
         username: 'testuser',
-        privateKey: 'test-key'
+        privateKey: 'test-key',
       };
 
       const sessionId = 'session-123';
@@ -174,15 +190,16 @@ describe('SftpService', () => {
         deviceUuid: 'device-123',
         port: 22,
         username: 'testuser',
-        privateKey: 'test-key'
+        privateKey: 'test-key',
       };
 
       const error = new Error('Connection failed');
       mockSftpRepository.createSession.mockRejectedValue(error);
 
       // Test & Verify
-      await expect(sftpService.createSession(mockSocket, sessionDto))
-        .rejects.toThrow('Connection failed');
+      await expect(sftpService.createSession(mockSocket, sessionDto)).rejects.toThrow(
+        'Connection failed',
+      );
       expect(mockSftpRepository.createSession).toHaveBeenCalledWith(mockSocket, sessionDto);
       expect(mockSftpGateway.emit).not.toHaveBeenCalled();
     });
@@ -221,7 +238,7 @@ describe('SftpService', () => {
       const clientId = 'client-123';
       const options = {
         oldPath: '/home/user/oldname',
-        newPath: '/home/user/newname'
+        newPath: '/home/user/newname',
       };
       const callback = vi.fn();
 
@@ -237,7 +254,7 @@ describe('SftpService', () => {
       const clientId = 'client-123';
       const options = {
         path: '/home/user/file.txt',
-        mode: 0o644
+        mode: 0o644,
       };
       const callback = vi.fn();
 
@@ -253,7 +270,7 @@ describe('SftpService', () => {
       const clientId = 'client-123';
       const options = {
         path: '/home/user/file.txt',
-        isDir: false
+        isDir: false,
       };
       const callback = vi.fn();
 

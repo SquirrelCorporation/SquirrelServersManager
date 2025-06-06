@@ -62,11 +62,11 @@ export interface IDevicesService {
   /**
    * Get overview of all devices with summary statistics
    */
-  getDevicesOverview(): Promise<{ 
-    online?: number; 
-    offline?: number; 
-    totalCpu?: number; 
-    totalMem?: number; 
-    overview?: any 
+  getDevicesOverview(): Promise<{
+    online?: number;
+    offline?: number;
+    totalCpu?: number;
+    totalMem?: number;
+    overview?: any;
   }>;
 }

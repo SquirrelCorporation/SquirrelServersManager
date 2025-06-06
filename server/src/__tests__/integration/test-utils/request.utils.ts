@@ -14,7 +14,7 @@ import * as request from 'supertest';
 export function createAuthenticatedRequest(app: INestApplication, authToken: string) {
   const req = request(app.getHttpServer());
   const authHeader = { Authorization: `Bearer ${authToken}` };
-  
+
   return {
     /**
      * Makes an authenticated GET request
@@ -23,11 +23,12 @@ export function createAuthenticatedRequest(app: INestApplication, authToken: str
      * @returns SuperTest request
      */
     get: (url: string, additionalHeaders = {}) => {
-      return req.get(url)
+      return req
+        .get(url)
         .set({ ...authHeader, ...additionalHeaders })
         .set('Content-Type', 'application/json');
     },
-    
+
     /**
      * Makes an authenticated POST request
      * @param url API endpoint URL
@@ -36,12 +37,13 @@ export function createAuthenticatedRequest(app: INestApplication, authToken: str
      * @returns SuperTest request
      */
     post: (url: string, data: any, additionalHeaders = {}) => {
-      return req.post(url)
+      return req
+        .post(url)
         .set({ ...authHeader, ...additionalHeaders })
         .set('Content-Type', 'application/json')
         .send(data);
     },
-    
+
     /**
      * Makes an authenticated PUT request
      * @param url API endpoint URL
@@ -50,12 +52,13 @@ export function createAuthenticatedRequest(app: INestApplication, authToken: str
      * @returns SuperTest request
      */
     put: (url: string, data: any, additionalHeaders = {}) => {
-      return req.put(url)
+      return req
+        .put(url)
         .set({ ...authHeader, ...additionalHeaders })
         .set('Content-Type', 'application/json')
         .send(data);
     },
-    
+
     /**
      * Makes an authenticated PATCH request
      * @param url API endpoint URL
@@ -64,12 +67,13 @@ export function createAuthenticatedRequest(app: INestApplication, authToken: str
      * @returns SuperTest request
      */
     patch: (url: string, data: any, additionalHeaders = {}) => {
-      return req.patch(url)
+      return req
+        .patch(url)
         .set({ ...authHeader, ...additionalHeaders })
         .set('Content-Type', 'application/json')
         .send(data);
     },
-    
+
     /**
      * Makes an authenticated DELETE request
      * @param url API endpoint URL
@@ -77,10 +81,11 @@ export function createAuthenticatedRequest(app: INestApplication, authToken: str
      * @returns SuperTest request
      */
     delete: (url: string, additionalHeaders = {}) => {
-      return req.delete(url)
+      return req
+        .delete(url)
         .set({ ...authHeader, ...additionalHeaders })
         .set('Content-Type', 'application/json');
-    }
+    },
   };
 }
 
@@ -91,7 +96,7 @@ export function createAuthenticatedRequest(app: INestApplication, authToken: str
  */
 export function createPublicRequest(app: INestApplication) {
   const req = request(app.getHttpServer());
-  
+
   return {
     /**
      * Makes a public GET request
@@ -100,11 +105,9 @@ export function createPublicRequest(app: INestApplication) {
      * @returns SuperTest request
      */
     get: (url: string, additionalHeaders = {}) => {
-      return req.get(url)
-        .set(additionalHeaders)
-        .set('Content-Type', 'application/json');
+      return req.get(url).set(additionalHeaders).set('Content-Type', 'application/json');
     },
-    
+
     /**
      * Makes a public POST request
      * @param url API endpoint URL
@@ -113,12 +116,13 @@ export function createPublicRequest(app: INestApplication) {
      * @returns SuperTest request
      */
     post: (url: string, data: any, additionalHeaders = {}) => {
-      return req.post(url)
+      return req
+        .post(url)
         .set(additionalHeaders)
         .set('Content-Type', 'application/json')
         .send(data);
     },
-    
+
     /**
      * Makes a public PUT request
      * @param url API endpoint URL
@@ -127,12 +131,9 @@ export function createPublicRequest(app: INestApplication) {
      * @returns SuperTest request
      */
     put: (url: string, data: any, additionalHeaders = {}) => {
-      return req.put(url)
-        .set(additionalHeaders)
-        .set('Content-Type', 'application/json')
-        .send(data);
+      return req.put(url).set(additionalHeaders).set('Content-Type', 'application/json').send(data);
     },
-    
+
     /**
      * Makes a public PATCH request
      * @param url API endpoint URL
@@ -141,12 +142,13 @@ export function createPublicRequest(app: INestApplication) {
      * @returns SuperTest request
      */
     patch: (url: string, data: any, additionalHeaders = {}) => {
-      return req.patch(url)
+      return req
+        .patch(url)
         .set(additionalHeaders)
         .set('Content-Type', 'application/json')
         .send(data);
     },
-    
+
     /**
      * Makes a public DELETE request
      * @param url API endpoint URL
@@ -154,21 +156,19 @@ export function createPublicRequest(app: INestApplication) {
      * @returns SuperTest request
      */
     delete: (url: string, additionalHeaders = {}) => {
-      return req.delete(url)
-        .set(additionalHeaders)
-        .set('Content-Type', 'application/json');
-    }
+      return req.delete(url).set(additionalHeaders).set('Content-Type', 'application/json');
+    },
   };
 }
 
 /**
- * Validates common API response properties 
+ * Validates common API response properties
  * @param response API response object
  */
 export function validateApiResponse(response: any) {
   expect(response.status).toBeDefined();
   expect([200, 201, 400, 401, 403, 404, 500]).toContain(response.status);
-  
+
   if (response.status >= 200 && response.status < 300) {
     // Success response should have data or metadata
     if (response.body) {

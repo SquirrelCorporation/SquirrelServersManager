@@ -5,7 +5,10 @@ import { AbstractRegistryComponent } from '@modules/containers/application/servi
 import { Image, RequestOptionsType } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
 
-const logger = PinoLogger.child({ module: 'EcrRegistryComponent' }, { msgPrefix: '[ECR_REGISTRY] - ' });
+const logger = PinoLogger.child(
+  { module: 'EcrRegistryComponent' },
+  { msgPrefix: '[ECR_REGISTRY] - ' },
+);
 const ECR_PUBLIC_GALLERY_HOSTNAME = 'public.ecr.aws';
 
 /**
@@ -13,7 +16,6 @@ const ECR_PUBLIC_GALLERY_HOSTNAME = 'public.ecr.aws';
  */
 @Injectable()
 export class EcrRegistryComponent extends AbstractRegistryComponent {
-
   /**
    * Initialize the ECR registry component
    */

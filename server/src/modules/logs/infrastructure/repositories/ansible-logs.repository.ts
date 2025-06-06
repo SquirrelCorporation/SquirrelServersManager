@@ -41,7 +41,7 @@ export class AnsibleLogsRepository implements IAnsibleLogsRepository {
   async deleteAll(): Promise<void> {
     await this.ansibleLogModel.deleteMany().exec();
   }
-  
+
   /**
    * Find logs by execution ID (aliased to findAllByIdent as they use the same field)
    * @param executionId The execution ID to search for

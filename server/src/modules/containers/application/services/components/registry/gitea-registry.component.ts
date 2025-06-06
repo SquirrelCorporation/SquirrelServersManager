@@ -3,14 +3,16 @@ import { CustomRegistryComponent } from '@modules/containers/application/service
 import { Image } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
 
-const logger = PinoLogger.child({ module: 'GiteaRegistryComponent' }, { msgPrefix: '[GITEA_REGISTRY] - ' });
+const logger = PinoLogger.child(
+  { module: 'GiteaRegistryComponent' },
+  { msgPrefix: '[GITEA_REGISTRY] - ' },
+);
 
 /**
  * Gitea Container Registry integration.
  */
 @Injectable()
 export class GiteaRegistryComponent extends CustomRegistryComponent {
-
   /**
    * Custom init behavior.
    */
@@ -31,29 +33,23 @@ export class GiteaRegistryComponent extends CustomRegistryComponent {
       name: this.joi.string().optional(),
       provider: this.joi.string().optional(),
       url: this.joi.string().uri().required(),
-      login: this.joi
-        .alternatives()
-        .conditional('password', {
-          not: undefined,
-          then: this.joi.string().required(),
-          otherwise: this.joi.any().forbidden(),
-        }),
-      password: this.joi
-        .alternatives()
-        .conditional('login', {
-          not: undefined,
-          then: this.joi.string().required(),
-          otherwise: this.joi.any().forbidden(),
-        }),
-      auth: this.joi
-        .alternatives()
-        .conditional('login', {
-          not: undefined,
-          then: this.joi.any().forbidden(),
-          otherwise: this.joi
-            .alternatives()
-            .try(this.joi.string().base64(), this.joi.string().valid('')),
-        }),
+      login: this.joi.alternatives().conditional('password', {
+        not: undefined,
+        then: this.joi.string().required(),
+        otherwise: this.joi.any().forbidden(),
+      }),
+      password: this.joi.alternatives().conditional('login', {
+        not: undefined,
+        then: this.joi.string().required(),
+        otherwise: this.joi.any().forbidden(),
+      }),
+      auth: this.joi.alternatives().conditional('login', {
+        not: undefined,
+        then: this.joi.any().forbidden(),
+        otherwise: this.joi
+          .alternatives()
+          .try(this.joi.string().base64(), this.joi.string().valid('')),
+      }),
     });
   }
 

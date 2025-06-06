@@ -76,8 +76,8 @@ vi.mock('mongoose', () => {
         toString() {
           return this.id;
         }
-      }
-    }
+      },
+    },
   };
 });
 
@@ -88,11 +88,11 @@ vi.mock('@nestjs/mongoose', () => {
     Schema: () => jest.fn(),
     SchemaFactory: {
       createForClass: () => ({
-        plugin: () => ({})
-      })
+        plugin: () => ({}),
+      }),
     },
     InjectModel: () => jest.fn(),
-    getModelToken: () => 'MockModelToken'
+    getModelToken: () => 'MockModelToken',
   };
 });
 

@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { RepositoryConfig } from '../../../domain/entities/repository-config.entity';
+import { describe, expect, it } from 'vitest';
 import { SsmGit } from 'ssm-shared-lib';
+import { RepositoryConfig } from '../../../domain/entities/repository-config.entity';
 
 describe('RepositoryConfig Entity', () => {
   it('should create a valid RepositoryConfig entity', () => {
@@ -41,4 +41,4 @@ describe('RepositoryConfig Entity', () => {
     expect(config.uuid).toBe('123e4567-e89b-12d3-a456-426614174001');
     expect(config.ignoreSSLErrors).toBeUndefined();
   });
-}); 
+});

@@ -13,7 +13,7 @@ export interface IPlaybooksRegisterComponentFactory {
    * @returns Git component instance
    */
   createGitComponent(options: GitComponentOptions): Promise<IPlaybooksRegisterComponent>;
-  
+
   /**
    * Create a local playbooks register component
    * @param options Local component options

@@ -5,8 +5,13 @@ import {
   GitPullPushError,
   SyncScriptIsInDeadLoopError,
 } from '../errors';
+import {
+  GitStep,
+  IGitUserInfos,
+  IGitUserInfosWithoutToken,
+  ILogger,
+} from '../interfaces/git.interface';
 import { getGitRepositoryState } from './inspect.service';
-import { GitStep, IGitUserInfos, IGitUserInfosWithoutToken, ILogger } from '../interfaces/git.interface';
 
 /**
  * Git add and commit all file

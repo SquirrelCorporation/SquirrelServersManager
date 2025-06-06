@@ -80,7 +80,7 @@ describe('SmartFailureRepository', () => {
         { timestamp: '2025-01-01T12:00:00Z', message: null, level: 'info', stdout: 'some output' },
         { timestamp: '2025-01-01T12:01:00Z', level: 'error' }, // missing message
         { message: 'Log 3', level: 'debug' }, // missing timestamp
-        {} // empty log entry
+        {}, // empty log entry
       ];
 
       mockAnsibleLogsService.findAllByIdent.mockResolvedValue(mockLogs);

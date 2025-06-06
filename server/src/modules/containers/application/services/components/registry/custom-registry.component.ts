@@ -4,14 +4,16 @@ import { AbstractRegistryComponent } from '@modules/containers/application/servi
 import { Image, RequestOptionsType } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
 
-const logger = PinoLogger.child({ module: 'CustomRegistryComponent' }, { msgPrefix: '[CUSTOM_REGISTRY] - ' });
+const logger = PinoLogger.child(
+  { module: 'CustomRegistryComponent' },
+  { msgPrefix: '[CUSTOM_REGISTRY] - ' },
+);
 
 /**
  * Docker Custom Registry V2 integration.
  */
 @Injectable()
 export class CustomRegistryComponent extends AbstractRegistryComponent {
-
   /**
    * Set up the registry on initialization
    */
@@ -114,7 +116,10 @@ export class CustomRegistryComponent extends AbstractRegistryComponent {
       return this.configuration.auth;
     }
     if (this.configuration.login && this.configuration.password) {
-      return AbstractRegistryComponent.base64Encode(this.configuration.login, this.configuration.password);
+      return AbstractRegistryComponent.base64Encode(
+        this.configuration.login,
+        this.configuration.password,
+      );
     }
     return undefined;
   }

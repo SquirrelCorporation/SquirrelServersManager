@@ -77,14 +77,24 @@ describe('PlaybooksModule', () => {
   beforeEach(async () => {
     const moduleRef = {
       get: vi.fn().mockImplementation((token) => {
-        if (token === MockPlaybooksModule) return new MockPlaybooksModule();
-        if (token === MockPlaybookService) return new MockPlaybookService();
-        if (token === MockPlaybooksRegisterService) return new MockPlaybooksRegisterService();
-        if (token === MockPlaybooksRegisterEngineService)
+        if (token === MockPlaybooksModule) {
+          return new MockPlaybooksModule();
+        }
+        if (token === MockPlaybookService) {
+          return new MockPlaybookService();
+        }
+        if (token === MockPlaybooksRegisterService) {
+          return new MockPlaybooksRegisterService();
+        }
+        if (token === MockPlaybooksRegisterEngineService) {
           return new MockPlaybooksRegisterEngineService();
-        if (token === MockPlaybookController) return new MockPlaybookController();
-        if (token === MockPlaybooksRepositoryController)
+        }
+        if (token === MockPlaybookController) {
+          return new MockPlaybookController();
+        }
+        if (token === MockPlaybooksRepositoryController) {
           return new MockPlaybooksRepositoryController();
+        }
         return undefined;
       }),
     };

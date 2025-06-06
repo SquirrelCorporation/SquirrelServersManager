@@ -2,9 +2,9 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Logger } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import Events from 'src/core/events/events';
 import { NotificationRepository } from '../../../infrastructure/repositories/notification.repository';
 import { NOTIFICATION } from '../../../infrastructure/schemas/notification.schema';
-import Events from 'src/core/events/events';
 
 // Mock Logger
 vi.mock('@nestjs/common', async () => {
@@ -56,37 +56,37 @@ describe('NotificationRepository', () => {
     const sortFn = vi.fn().mockReturnValue({
       limit: vi.fn().mockReturnValue({
         lean: vi.fn().mockReturnValue({
-          exec: findExec
-        })
-      })
+          exec: findExec,
+        }),
+      }),
     });
 
     const leanFindFn = vi.fn().mockReturnValue({
-      exec: findExec
+      exec: findExec,
     });
 
     const limitFn = vi.fn().mockReturnValue({
-      lean: leanFindFn
+      lean: leanFindFn,
     });
 
     const leanCountFn = vi.fn().mockReturnValue({
-      exec: countExec
+      exec: countExec,
     });
 
     const leanUpdateFn = vi.fn().mockReturnValue({
-      exec: updateExec
+      exec: updateExec,
     });
 
     mockModel.find = vi.fn().mockReturnValue({
-      sort: sortFn
+      sort: sortFn,
     });
 
     mockModel.countDocuments = vi.fn().mockReturnValue({
-      lean: leanCountFn
+      lean: leanCountFn,
     });
 
     mockModel.updateMany = vi.fn().mockReturnValue({
-      lean: leanUpdateFn
+      lean: leanUpdateFn,
     });
 
     const module: TestingModule = await Test.createTestingModule({
@@ -136,7 +136,7 @@ describe('NotificationRepository', () => {
       await repository.create(newNotification);
 
       expect(logSpy).toHaveBeenCalledWith(
-        expect.stringContaining(`Creating notification - (event: ${newNotification.event})`)
+        expect.stringContaining(`Creating notification - (event: ${newNotification.event})`),
       );
     });
   });
@@ -163,10 +163,7 @@ describe('NotificationRepository', () => {
     it('should mark all unseen notifications as seen', async () => {
       await repository.markAllSeen();
 
-      expect(mockModel.updateMany).toHaveBeenCalledWith(
-        { seen: false },
-        { seen: true }
-      );
+      expect(mockModel.updateMany).toHaveBeenCalledWith({ seen: false }, { seen: true });
     });
   });
 });

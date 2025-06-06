@@ -4,7 +4,9 @@ import { IDeviceDownTimeEvent } from '../../domain/entities/device-downtime-even
 @Injectable()
 export class DeviceDownTimeEventRepositoryMapper {
   toDomain(persistenceModel: any): IDeviceDownTimeEvent | null {
-    if (!persistenceModel) { return null; }
+    if (!persistenceModel) {
+      return null;
+    }
 
     return {
       _id: persistenceModel._id?.toString(),
@@ -17,7 +19,9 @@ export class DeviceDownTimeEventRepositoryMapper {
   }
 
   toDomainList(persistenceModels: any[]): IDeviceDownTimeEvent[] | null {
-    if (!persistenceModels) { return null; }
+    if (!persistenceModels) {
+      return null;
+    }
 
     return persistenceModels
       .map((model) => this.toDomain(model))

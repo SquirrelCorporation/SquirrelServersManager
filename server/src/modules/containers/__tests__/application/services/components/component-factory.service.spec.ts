@@ -55,7 +55,7 @@ class TestFactory extends ContainerComponentFactory {
       deregister: vi.fn().mockResolvedValue(undefined),
       update: vi.fn().mockResolvedValue({ getKind: () => kind, getProvider: () => provider }),
       getId: vi.fn().mockReturnValue(`${kind}.${provider}.test`),
-      getName: vi.fn().mockReturnValue('test')
+      getName: vi.fn().mockReturnValue('test'),
     };
     return component;
   }

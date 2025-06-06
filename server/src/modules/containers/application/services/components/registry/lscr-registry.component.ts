@@ -3,7 +3,6 @@ import { GhcrRegistryComponent } from '@modules/containers/application/services/
 import Joi from 'joi';
 import { Image } from '@modules/containers/types';
 
-
 /**
  * Linux-Server Container Registry integration.
  */
@@ -12,7 +11,7 @@ export class LscrRegistryComponent extends GhcrRegistryComponent {
   /**
    * Get the configuration schema for validation
    */
-  getConfigurationSchema(): Joi.ObjectSchema<any> | Joi.AlternativesSchema<any>  {
+  getConfigurationSchema(): Joi.ObjectSchema<any> | Joi.AlternativesSchema<any> {
     return this.joi.object().keys({
       username: this.joi.string().required(),
       token: this.joi.string().required(),

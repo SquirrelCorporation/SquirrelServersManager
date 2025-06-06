@@ -66,7 +66,9 @@ export const mockPlaybooksRegisterService = {
 export const mockPlaybooksRegisterRepository = {
   findAllByType: vi.fn().mockResolvedValue([mockLocalRegister]),
   findByUuid: vi.fn().mockImplementation((uuid) => {
-    if (uuid === 'local-uuid') return Promise.resolve(mockLocalRegister);
+    if (uuid === 'local-uuid') {
+      return Promise.resolve(mockLocalRegister);
+    }
     return Promise.resolve(null);
   }),
   create: vi.fn().mockResolvedValue(mockLocalRegister),

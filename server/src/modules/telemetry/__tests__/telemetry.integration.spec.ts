@@ -1,4 +1,4 @@
-import { beforeEach, describe, it, expect, vi, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SettingsKeys } from 'ssm-shared-lib';
 import Events from 'src/core/events/events';
 
@@ -16,7 +16,7 @@ class MockEventEmitter {
 
   emit(event: string, payload: any) {
     if (this.handlers[event]) {
-      this.handlers[event].forEach(handler => handler(payload));
+      this.handlers[event].forEach((handler) => handler(payload));
     }
     return true;
   }
@@ -49,7 +49,7 @@ class MockTelemetryService {
 
     this.client = undefined; // Start with undefined client
     this.eventEmitter = new MockEventEmitter();
-    
+
     // Register event handler
     this.eventEmitter.on(Events.TELEMETRY_EVENT, (payload) => this.capture(payload));
   }
@@ -85,7 +85,7 @@ class MockTelemetryService {
 
   capture(payload: { eventName: string; properties?: Record<string, any> }) {
     const telemetryEnabled = this.configService.get('TELEMETRY_ENABLED');
-    
+
     if (telemetryEnabled && this.client && this._id) {
       this.client.capture({
         distinctId: this._id,
@@ -93,7 +93,9 @@ class MockTelemetryService {
         properties: payload.properties,
       });
     } else if (!this.client) {
-      this.logger.warn(`Telemetry client not initialized, cannot capture event: ${payload.eventName}`);
+      this.logger.warn(
+        `Telemetry client not initialized, cannot capture event: ${payload.eventName}`,
+      );
     }
   }
 
@@ -120,11 +122,11 @@ describe('Telemetry Integration', () => {
     // Reset mock cache data
     mockCacheData = {};
     vi.clearAllMocks();
-    
+
     // Create services
     service = new MockTelemetryService();
     eventEmitter = service.getEventEmitter();
-    
+
     // Mock cache functionality
     service['cacheManager'].get.mockImplementation(async (key) => mockCacheData[key] || null);
     service['cacheManager'].set.mockImplementation(async (key, value) => {
@@ -148,7 +150,7 @@ describe('Telemetry Integration', () => {
       // Check if Installation ID was generated and stored in cache
       expect(service['cacheManager'].set).toHaveBeenCalledWith(
         SettingsKeys.GeneralSettingsKeys.INSTALL_ID,
-        'test-uuid-v4'
+        'test-uuid-v4',
       );
 
       // Verify PostHog identification
@@ -158,8 +160,8 @@ describe('Telemetry Integration', () => {
 
       // Emit a telemetry event
       eventEmitter.emit(Events.TELEMETRY_EVENT, {
-        eventName: 'user_login', 
-        properties: { success: true }
+        eventName: 'user_login',
+        properties: { success: true },
       });
 
       // Verify event was captured by PostHog
@@ -183,7 +185,7 @@ describe('Telemetry Integration', () => {
       // Emit a telemetry event (should be ignored)
       eventEmitter.emit(Events.TELEMETRY_EVENT, {
         eventName: 'container_created',
-        properties: { container_id: 'test-id' }
+        properties: { container_id: 'test-id' },
       });
 
       // Verify no events were captured
@@ -199,7 +201,7 @@ describe('Telemetry Integration', () => {
     it('should use existing installation ID from cache', async () => {
       // Set up existing installation ID in cache
       mockCacheData[SettingsKeys.GeneralSettingsKeys.INSTALL_ID] = 'existing-installation-id';
-      
+
       // Configure telemetry as enabled
       service['configService'].get.mockReturnValue(true);
 
@@ -207,7 +209,9 @@ describe('Telemetry Integration', () => {
       await service.onModuleInit();
 
       // Verify existing ID was retrieved and no new ID was generated
-      expect(service['cacheManager'].get).toHaveBeenCalledWith(SettingsKeys.GeneralSettingsKeys.INSTALL_ID);
+      expect(service['cacheManager'].get).toHaveBeenCalledWith(
+        SettingsKeys.GeneralSettingsKeys.INSTALL_ID,
+      );
       expect(service['cacheManager'].set).not.toHaveBeenCalled();
 
       // Verify PostHog identification with existing ID
@@ -218,7 +222,7 @@ describe('Telemetry Integration', () => {
       // Emit an event
       eventEmitter.emit(Events.TELEMETRY_EVENT, {
         eventName: 'playbook_executed',
-        properties: { playbook: 'test-playbook' }
+        properties: { playbook: 'test-playbook' },
       });
 
       // Verify event capture with existing ID
@@ -231,38 +235,38 @@ describe('Telemetry Integration', () => {
 
     it('should handle configuration changes during runtime', async () => {
       const configValueMock = vi.fn();
-      
+
       // Initially enabled
       configValueMock.mockReturnValue(true);
       service['configService'].get = configValueMock;
-      
+
       // Initialize
       await service.onModuleInit();
-      
+
       // Emit an event (should be captured)
       eventEmitter.emit(Events.TELEMETRY_EVENT, {
         eventName: 'event1',
-        properties: { test: 1 }
+        properties: { test: 1 },
       });
-      
+
       expect(service['client'].capture).toHaveBeenCalledWith({
         distinctId: 'test-uuid-v4',
         event: 'event1',
         properties: { test: 1 },
       });
-      
+
       // Change configuration to disabled
       configValueMock.mockReturnValue(false);
-      
+
       // Clear previous calls
       service['client'].capture.mockClear();
-      
+
       // Emit another event (should not be captured)
       eventEmitter.emit(Events.TELEMETRY_EVENT, {
         eventName: 'event2',
-        properties: { test: 2 }
+        properties: { test: 2 },
       });
-      
+
       // Verify no capture occurred
       expect(service['client'].capture).not.toHaveBeenCalled();
     });

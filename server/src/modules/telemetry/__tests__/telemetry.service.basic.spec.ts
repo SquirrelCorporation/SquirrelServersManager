@@ -19,7 +19,9 @@ class MockTelemetryService {
 
     this.configService = {
       get: vi.fn((key) => {
-        if (key === 'TELEMETRY_ENABLED') return true;
+        if (key === 'TELEMETRY_ENABLED') {
+          return true;
+        }
         return null;
       }),
     };
@@ -67,7 +69,9 @@ class MockTelemetryService {
         properties: payload.properties,
       });
     } else if (!this.client) {
-      this.logger.warn(`Telemetry client not initialized, cannot capture event: ${payload.eventName}`);
+      this.logger.warn(
+        `Telemetry client not initialized, cannot capture event: ${payload.eventName}`,
+      );
     }
   }
 
@@ -86,7 +90,7 @@ describe('TelemetryService Basic Tests', () => {
   beforeEach(() => {
     // Reset mocks
     vi.clearAllMocks();
-    
+
     // Create mock service
     service = new MockTelemetryService();
   });
@@ -95,10 +99,10 @@ describe('TelemetryService Basic Tests', () => {
     it('should initialize PostHog client with correct configuration', async () => {
       // Set up mock for telemetry enabled
       service['configService'].get.mockReturnValue(true);
-      
+
       // Call onModuleInit
       await service.onModuleInit();
-      
+
       // Verify client initialization
       expect(service['configService'].get).toHaveBeenCalledWith('TELEMETRY_ENABLED');
       expect(service['client'].identify).toHaveBeenCalledWith({
@@ -109,10 +113,10 @@ describe('TelemetryService Basic Tests', () => {
     it('should opt out if telemetry is disabled', async () => {
       // Set up mock for telemetry disabled
       service['configService'].get.mockReturnValue(false);
-      
+
       // Call onModuleInit
       await service.onModuleInit();
-      
+
       // Verify client opted out
       expect(service['client'].optOut).toHaveBeenCalled();
       expect(service['cacheManager'].get).not.toHaveBeenCalled();
@@ -122,10 +126,10 @@ describe('TelemetryService Basic Tests', () => {
       // Set up mock for existing ID
       service['configService'].get.mockReturnValue(true);
       service['cacheManager'].get.mockResolvedValue('existing-id');
-      
+
       // Call onModuleInit
       await service.onModuleInit();
-      
+
       // Verify existing ID is used
       expect(service['client'].identify).toHaveBeenCalledWith({
         distinctId: 'existing-id',
@@ -136,10 +140,10 @@ describe('TelemetryService Basic Tests', () => {
       // Set up mock for no existing ID
       service['configService'].get.mockReturnValue(true);
       service['cacheManager'].get.mockResolvedValue(null);
-      
+
       // Call onModuleInit
       await service.onModuleInit();
-      
+
       // Verify new ID is generated and stored
       expect(service['cacheManager'].set).toHaveBeenCalledWith('INSTALL_ID', 'test-uuid-v4');
       expect(service['client'].identify).toHaveBeenCalledWith({
@@ -153,13 +157,13 @@ describe('TelemetryService Basic Tests', () => {
       // Set up mock for telemetry enabled
       service['configService'].get.mockReturnValue(true);
       service['_id'] = 'test-id';
-      
+
       // Call capture
       service.capture({
         eventName: 'test_event',
         properties: { test: 'value' },
       });
-      
+
       // Verify event is captured
       expect(service['client'].capture).toHaveBeenCalledWith({
         distinctId: 'test-id',
@@ -172,13 +176,13 @@ describe('TelemetryService Basic Tests', () => {
       // Set up mock for telemetry disabled
       service['configService'].get.mockReturnValue(false);
       service['_id'] = 'test-id';
-      
+
       // Call capture
       service.capture({
         eventName: 'test_event',
         properties: { test: 'value' },
       });
-      
+
       // Verify event is not captured
       expect(service['client'].capture).not.toHaveBeenCalled();
     });
@@ -187,13 +191,13 @@ describe('TelemetryService Basic Tests', () => {
       // Set up mock for telemetry enabled but client not initialized
       service['configService'].get.mockReturnValue(true);
       service['client'] = undefined;
-      
+
       // Call capture
       service.capture({
         eventName: 'test_event',
         properties: { test: 'value' },
       });
-      
+
       // Verify warning is logged
       expect(service['logger'].warn).toHaveBeenCalled();
     });
@@ -205,10 +209,10 @@ describe('TelemetryService Basic Tests', () => {
       service['client'] = {
         shutdown: vi.fn().mockResolvedValue(undefined),
       };
-      
+
       // Call onApplicationShutdown
       await service.onApplicationShutdown();
-      
+
       // Verify client shutdown is called
       expect(service['client'].shutdown).toHaveBeenCalled();
       expect(service['logger'].log).toHaveBeenCalledWith('PostHog client shut down successfully.');
@@ -217,10 +221,10 @@ describe('TelemetryService Basic Tests', () => {
     it('should handle shutdown gracefully when client is not initialized', async () => {
       // Set up mock for no client
       service['client'] = undefined;
-      
+
       // Call onApplicationShutdown
       await service.onApplicationShutdown();
-      
+
       // Verify no errors occur
       expect(service['logger'].log).toHaveBeenCalledWith('Shutting down TelemetryService');
     });

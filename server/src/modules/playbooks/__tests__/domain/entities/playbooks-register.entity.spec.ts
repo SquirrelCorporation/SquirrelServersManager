@@ -11,7 +11,7 @@ describe('PlaybooksRegister Entity', () => {
       enabled: true,
       directory: '/path/to/playbooks',
       directoryExclusionList: ['.git', 'node_modules'],
-      default: true
+      default: true,
     };
 
     expect(localRegister).toBeDefined();
@@ -40,7 +40,7 @@ describe('PlaybooksRegister Entity', () => {
       ignoreSSLErrors: false,
       directoryExclusionList: ['.git'],
       vaults: ['vault1', 'vault2'],
-      default: false
+      default: false,
     };
 
     expect(gitRegister).toBeDefined();

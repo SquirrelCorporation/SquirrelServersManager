@@ -7,16 +7,16 @@ export const mockUserModel = {
     _id: 'user-id',
     email: 'test@example.com',
     name: 'Test User',
-    avatar: '/avatars/test.svg'
+    avatar: '/avatars/test.svg',
   }),
   save: vi.fn().mockResolvedValue(true),
-  exec: vi.fn().mockResolvedValue(null)
+  exec: vi.fn().mockResolvedValue(null),
 };
 
 // Mock mongoose model
 vi.mock('mongoose', () => {
   return {
-    model: vi.fn().mockReturnValue(mockUserModel)
+    model: vi.fn().mockReturnValue(mockUserModel),
   };
 });
 

@@ -8,5 +8,8 @@ export const DEVICE_DOWNTIME_EVENT_REPOSITORY = 'DEVICE_DOWNTIME_EVENT_REPOSITOR
 export interface IDeviceDownTimeEventRepository {
   create(deviceId: string): Promise<IDeviceDownTimeEvent>;
   closeDownTimeEvent(deviceId: string): Promise<void>;
-  sumTotalDownTimePerDeviceOnPeriod(from: Date, to: Date): Promise<{ deviceId: string; duration: number }[]>;
+  sumTotalDownTimePerDeviceOnPeriod(
+    from: Date,
+    to: Date,
+  ): Promise<{ deviceId: string; duration: number }[]>;
 }

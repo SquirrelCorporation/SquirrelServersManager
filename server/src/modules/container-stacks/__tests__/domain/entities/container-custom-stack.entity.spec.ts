@@ -1,5 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { ContainerCustomStack, IContainerCustomStackRepositoryEntity } from '../../../domain/entities/container-custom-stack.entity';
+import { describe, expect, it } from 'vitest';
+import {
+  ContainerCustomStack,
+  IContainerCustomStackRepositoryEntity,
+} from '../../../domain/entities/container-custom-stack.entity';
 
 describe('ContainerCustomStack Entity', () => {
   it('should create a valid ContainerCustomStack entity', () => {
@@ -50,4 +53,4 @@ describe('ContainerCustomStack Entity', () => {
     expect(repo.url).toBe('https://github.com/test/repo');
     expect(repo.matchesList).toHaveLength(2);
   });
-}); 
+});

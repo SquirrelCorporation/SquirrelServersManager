@@ -5,8 +5,11 @@ import { DirectoryTree } from 'ssm-shared-lib';
  */
 export interface ITreeNodeService {
   completeNode(node: DirectoryTree.ExtendedTreeNode): Promise<any>;
-  recursivelyFlattenTree(tree: DirectoryTree.TreeNode, depth?: number): (DirectoryTree.TreeNode | undefined)[];
+  recursivelyFlattenTree(
+    tree: DirectoryTree.TreeNode,
+    depth?: number,
+  ): (DirectoryTree.TreeNode | undefined)[];
   recursiveTreeCompletion(tree: DirectoryTree.TreeNode, depth?: number): Promise<any>;
 }
 
-export const TREE_NODE_SERVICE = 'TREE_NODE_SERVICE'; 
+export const TREE_NODE_SERVICE = 'TREE_NODE_SERVICE';

@@ -34,7 +34,7 @@ class SshGateway {
         client,
         data.deviceUuid,
         data.cols,
-        data.rows
+        data.rows,
       );
       return {
         event: SsmEvents.SSH.START_SESSION,
@@ -155,7 +155,7 @@ describe('SshGateway', () => {
         mockSocket,
         mockSessionDto.deviceUuid,
         mockSessionDto.cols,
-        mockSessionDto.rows
+        mockSessionDto.rows,
       );
       expect(result).toEqual({
         event: SsmEvents.SSH.START_SESSION,
@@ -195,7 +195,7 @@ describe('SshGateway', () => {
       expect(mockSshTerminalService.resizeTerminal).toHaveBeenCalledWith(
         'test-session-id',
         mockScreenResizeDto.cols,
-        mockScreenResizeDto.rows
+        mockScreenResizeDto.rows,
       );
     });
   });

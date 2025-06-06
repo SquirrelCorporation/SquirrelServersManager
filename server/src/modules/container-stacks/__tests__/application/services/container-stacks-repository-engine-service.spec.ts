@@ -24,7 +24,7 @@ vi.mock('@infrastructure/exceptions/app-exceptions', () => {
 
   return {
     BadRequestException,
-    NotFoundException
+    NotFoundException,
   };
 });
 
@@ -34,7 +34,7 @@ vi.mock('@modules/ansible-vaults', () => {
     AnsibleVaultService: class {
       encrypt = vi.fn().mockImplementation((value) => `encrypted_${value}`);
       decrypt = vi.fn().mockImplementation((value) => value.replace('encrypted_', ''));
-    }
+    },
   };
 });
 
@@ -53,7 +53,7 @@ vi.mock('@modules/playbooks', () => {
       findOneByUuid = vi.fn().mockResolvedValue(null);
       create = vi.fn().mockResolvedValue({});
     },
-    PLAYBOOKS_SERVICE: 'PlaybooksService'
+    PLAYBOOKS_SERVICE: 'PlaybooksService',
   };
 });
 
@@ -61,7 +61,7 @@ vi.mock('@modules/shell', () => {
   return {
     ShellService: class {
       executeCommand = vi.fn().mockResolvedValue({ stdout: 'success', stderr: '', exitCode: 0 });
-    }
+    },
   };
 });
 
@@ -70,7 +70,7 @@ vi.mock('@infrastructure/adapters/git/services/clone.service', () => {
     GitCloneService: class {
       clone = vi.fn().mockResolvedValue({ success: true, path: '/tmp/repo' });
       pull = vi.fn().mockResolvedValue({ success: true });
-    }
+    },
   };
 });
 
@@ -79,7 +79,7 @@ vi.mock('@infrastructure/adapters/git/services/commit-and-sync.service', () => {
     GitCommitAndSyncService: class {
       commit = vi.fn().mockResolvedValue({ success: true, hash: '123456' });
       commitAndPush = vi.fn().mockResolvedValue({ success: true, hash: '123456' });
-    }
+    },
   };
 });
 
@@ -88,7 +88,7 @@ vi.mock('@infrastructure/adapters/git/services/force-pull.service', () => {
     GitForcePullService: class {
       pull = vi.fn().mockResolvedValue({ success: true });
       forcePull = vi.fn().mockResolvedValue({ success: true });
-    }
+    },
   };
 });
 
@@ -99,8 +99,8 @@ vi.mock('@infrastructure/common/docker/utils', () => {
       domain: 'registry.example.com',
       owner: 'owner',
       repo: 'repo',
-      valid: true
-    }))
+      valid: true,
+    })),
   };
 });
 
@@ -114,11 +114,15 @@ vi.mock('@infrastructure/common/files/recursive-find.util', () => {
 
 vi.mock('@infrastructure/common/docker/docker-compose-json-transformer.util', () => {
   return {
-    transformToDockerCompose: vi.fn().mockImplementation(() => 'version: "3"\nservices:\n  app:\n    image: test'),
-    transformDockerComposeJsonToYaml: vi.fn().mockImplementation(() => 'version: "3"\nservices:\n  app:\n    image: test'),
-    transformYamlToDockerComposeJson: vi.fn().mockImplementation(() => (
-      { version: '3', services: { app: { image: 'test' } } }
-    ))
+    transformToDockerCompose: vi
+      .fn()
+      .mockImplementation(() => 'version: "3"\nservices:\n  app:\n    image: test'),
+    transformDockerComposeJsonToYaml: vi
+      .fn()
+      .mockImplementation(() => 'version: "3"\nservices:\n  app:\n    image: test'),
+    transformYamlToDockerComposeJson: vi
+      .fn()
+      .mockImplementation(() => ({ version: '3', services: { app: { image: 'test' } } })),
   };
 });
 
@@ -163,14 +167,20 @@ describe('ContainerCustomStacksRepositoryEngineService', () => {
   describe('cloneRepository', () => {
     it('should clone a repository successfully', async () => {
       // Our mock function already returns true
-      const result = await service.cloneRepository('https://github.com/test/repo.git', '/path/to/repo');
+      const result = await service.cloneRepository(
+        'https://github.com/test/repo.git',
+        '/path/to/repo',
+      );
       expect(result).toBe(true);
     });
 
     it('should handle clone failure', async () => {
       // Override mock to return false for this test
       vi.spyOn(service, 'cloneRepository').mockResolvedValueOnce(false);
-      const result = await service.cloneRepository('https://github.com/test/repo.git', '/path/to/repo');
+      const result = await service.cloneRepository(
+        'https://github.com/test/repo.git',
+        '/path/to/repo',
+      );
       expect(result).toBe(false);
     });
   });
@@ -193,7 +203,11 @@ describe('ContainerCustomStacksRepositoryEngineService', () => {
   describe('getRepositoryComponents', () => {
     it('should get repository components successfully', async () => {
       // Override mock to return expected components
-      vi.spyOn(service, 'getRepositoryComponents').mockResolvedValueOnce(['component1', 'component2', 'component3']);
+      vi.spyOn(service, 'getRepositoryComponents').mockResolvedValueOnce([
+        'component1',
+        'component2',
+        'component3',
+      ]);
       const result = await service.getRepositoryComponents('/path/to/repo');
       expect(result).toEqual(['component1', 'component2', 'component3']);
     });

@@ -8,7 +8,7 @@ const recursiveTreeCompletion = vi.fn().mockImplementation(async (tree) => {
   if (!tree.children || tree.children.length === 0) {
     return [];
   }
-  
+
   // Otherwise return mock processed tree
   return [
     {
@@ -30,7 +30,9 @@ const recursiveTreeCompletion = vi.fn().mockImplementation(async (tree) => {
 
 const recursivelyFlattenTree = vi.fn().mockImplementation((node, depth = 0) => {
   if (depth > 20) {
-    throw new Error('Depth is too high, to prevent any infinite loop, directories depth is limited to 20');
+    throw new Error(
+      'Depth is too high, to prevent any infinite loop, directories depth is limited to 20',
+    );
   }
 
   if (node.type === DirectoryTree.CONSTANTS.FILE) {

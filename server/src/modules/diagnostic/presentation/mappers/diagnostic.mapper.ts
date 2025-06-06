@@ -28,7 +28,7 @@ export class DiagnosticMapper {
     const entity: DiagnosticReport = {
       deviceId: dto.deviceId,
       timestamp: dto.timestamp,
-      results: {} as Record<any, DiagnosticResult>
+      results: {} as Record<any, DiagnosticResult>,
     };
 
     // Map each result
@@ -37,7 +37,7 @@ export class DiagnosticMapper {
         success: value.success,
         severity: value.severity,
         message: value.message,
-        data: value.data
+        data: value.data,
       };
     });
 

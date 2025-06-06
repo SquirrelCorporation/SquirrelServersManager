@@ -49,58 +49,68 @@ class DeviceStatsService {
     if (!device?.uuid) {
       throw new Error('Invalid device: missing UUID');
     }
-    
+
     if (!type) {
       return null;
     }
-    
+
     const result = await this.prometheusService.queryMetrics?.({
       deviceUuid: device.uuid,
       fromDate,
       toDate,
       type,
     });
-    
+
     return result?.success ? result.data : null;
   }
 
-  async getStatsByDevicesAndType(devices: IDevice[], fromDate?: Date, toDate?: Date, type?: string) {
+  async getStatsByDevicesAndType(
+    devices: IDevice[],
+    fromDate?: Date,
+    toDate?: Date,
+    type?: string,
+  ) {
     if (!devices || devices.length === 0) {
       throw new Error('Invalid devices: empty array');
     }
-    
+
     if (!type) {
       return null;
     }
-    
-    const deviceUuids = devices.map(device => device.uuid);
+
+    const deviceUuids = devices.map((device) => device.uuid);
     const result = await this.prometheusService.queryMetrics?.({
       deviceUuids,
       fromDate,
       toDate,
       type,
     });
-    
+
     return result?.success ? result.data : null;
   }
 
-  async getSingleAveragedStatsByDevicesAndType(deviceIds: string[], fromDate: Date, toDate: Date, type?: string) {
+  async getSingleAveragedStatsByDevicesAndType(
+    deviceIds: string[],
+    fromDate: Date,
+    toDate: Date,
+    type?: string,
+  ) {
     if (!deviceIds || deviceIds.length === 0) {
       throw new Error('Invalid device IDs: empty array');
     }
-    
+
     const devices = await this.devicesService.findByUuids?.(deviceIds);
     if (!devices || devices.length === 0) {
       throw new Error('Some devices were not found');
     }
-    
+
     const result = await this.prometheusService.queryAggregatedMetrics?.({
       deviceUuids: deviceIds,
       fromDate,
       toDate,
       type,
     });
-    
+
     return result?.success ? result.data : null;
   }
 
@@ -108,17 +118,17 @@ class DeviceStatsService {
     if (!device?.uuid) {
       throw new Error('Invalid device: missing UUID');
     }
-    
+
     if (type === StatsType.DeviceStatsType.CONTAINERS) {
       const count = await this.containerService.countByDeviceUuid?.(device.uuid);
       return { value: count };
     }
-    
+
     const result = await this.prometheusService.queryLatestMetric?.({
       deviceUuid: device.uuid,
       type,
     });
-    
+
     return result?.success ? result.data : null;
   }
 
@@ -126,13 +136,13 @@ class DeviceStatsService {
     if (!type) {
       return null;
     }
-    
+
     const result = await this.prometheusService.queryAveragedStatByType?.({
       days,
       hours,
       type,
     });
-    
+
     return result?.success ? [{ value: result.data.value }] : null;
   }
 
@@ -140,13 +150,13 @@ class DeviceStatsService {
     if (!type) {
       return null;
     }
-    
+
     const result = await this.prometheusService.queryAveragedStatsByType?.({
       fromDate,
       toDate,
       type,
     });
-    
+
     return result?.success ? result.data : null;
   }
 }

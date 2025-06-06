@@ -23,9 +23,9 @@ describe('DiagnosticRepository', () => {
   describe('getDeviceById', () => {
     it('should return a device with the correct uuid', async () => {
       const uuid = 'test-uuid';
-      
+
       const result = await repository.getDeviceById(uuid);
-      
+
       expect(repository.getDeviceById).toHaveBeenCalledWith(uuid);
       expect(result).toEqual({ uuid });
     });
@@ -34,9 +34,9 @@ describe('DiagnosticRepository', () => {
   describe('getDeviceAuthByDevice', () => {
     it('should return auth data for the provided device', async () => {
       const mockDevice = { uuid: 'test-uuid' };
-      
+
       const result = await repository.getDeviceAuthByDevice(mockDevice);
-      
+
       expect(repository.getDeviceAuthByDevice).toHaveBeenCalledWith(mockDevice);
       expect(result).toEqual({ id: 'auth-id', device: mockDevice });
     });
@@ -47,12 +47,12 @@ describe('DiagnosticRepository', () => {
       const mockReport: DiagnosticReport = {
         deviceId: 'test-device',
         timestamp: new Date(),
-        results: {}
+        results: {},
       };
-      
+
       await repository.saveDiagnosticReport(mockReport);
-      
+
       expect(repository.saveDiagnosticReport).toHaveBeenCalledWith(mockReport);
     });
   });
-}); 
+});

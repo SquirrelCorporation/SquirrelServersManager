@@ -1,10 +1,10 @@
-import { vi } from 'vitest';
 import * as fs from 'fs';
+import { vi } from 'vitest';
 
 // Create directories in memory for testing
 const directories = {
   '/data': { isDirectory: true, isFile: false },
-  '/data/config': { isDirectory: true, isFile: false }
+  '/data/config': { isDirectory: true, isFile: false },
 };
 
 // Mock fs module
@@ -27,7 +27,7 @@ key3=value3
     mkdirSync: vi.fn().mockImplementation((path, options) => {
       directories[path] = { isDirectory: true, isFile: false };
       return true;
-    })
+    }),
   };
 });
 
@@ -35,7 +35,7 @@ key3=value3
 vi.mock('../../../../config', () => ({
   SSM_DATA_PATH: '/data',
   SSM_CONFIG_PATH: '/data/config',
-  SSM_ANSIBLE_CONFIG_FILE: '/data/config/ansible.cfg'
+  SSM_ANSIBLE_CONFIG_FILE: '/data/config/ansible.cfg',
 }));
 
 // Ensure the directories exist in our mocked structure

@@ -20,16 +20,16 @@ vi.mock('@nestjs/mongoose', () => {
       createForClass: (documentClass: any) => {
         return {
           // Return a mock schema
-          schema: {}
+          schema: {},
         };
-      }
+      },
     },
     InjectModel: () => {
       return (target: any, key: string) => {
         // Do nothing, just a mock decorator
       };
     },
-    getModelToken: (name: string) => `${name}Model`
+    getModelToken: (name: string) => `${name}Model`,
   };
 });
 
@@ -43,7 +43,7 @@ vi.mock('../../../infrastructure/schemas/container-custom-stack.schema', () => {
     lockJson: boolean;
     path?: string;
     containerCustomStackRepository?: any;
-    
+
     constructor() {
       super();
       this.uuid = 'mock-uuid';
@@ -52,13 +52,13 @@ vi.mock('../../../infrastructure/schemas/container-custom-stack.schema', () => {
       this.lockJson = false;
     }
   }
-  
+
   return {
     CONTAINER_CUSTOM_STACK: 'ContainerCustomStack',
     ContainerCustomStackDocument: MockContainerCustomStackDocument,
     ContainerCustomStackSchema: {
       // Return a mock schema with proper typing
-    }
+    },
   };
 });
 
@@ -77,7 +77,7 @@ vi.mock('../../../infrastructure/schemas/container-custom-stack-repository.schem
     onErrorMessage?: string;
     gitService?: string;
     ignoreSSLErrors?: boolean;
-    
+
     constructor() {
       super();
       this.uuid = 'mock-repo-uuid';
@@ -85,13 +85,13 @@ vi.mock('../../../infrastructure/schemas/container-custom-stack-repository.schem
       this.enabled = true;
     }
   }
-  
+
   return {
     CONTAINER_CUSTOM_STACK_REPOSITORY: 'ContainerCustomStackRepository',
     ContainerCustomStackRepositoryDocument: MockContainerCustomStackRepositoryDocument,
     ContainerCustomStackRepositorySchema: {
       // Return a mock schema with proper typing
-    }
+    },
   };
 });
 
@@ -103,21 +103,21 @@ vi.mock('../../../domain/entities/container-custom-stack.entity', () => {
     yaml?: string;
     json?: any;
     lockJson?: boolean;
-    
+
     constructor() {
       this.uuid = 'mock-uuid';
       this.name = 'Mock Stack';
     }
   }
-  
+
   interface MockContainerCustomStackRepositoryEntity {
     uuid: string;
     name: string;
   }
-  
+
   return {
     ContainerCustomStack: MockContainerCustomStack,
-    IContainerCustomStackRepositoryEntity: {}
+    IContainerCustomStackRepositoryEntity: {},
   };
 });
 
@@ -126,29 +126,33 @@ vi.mock('../../../infrastructure/mappers/container-custom-stack.mapper', () => {
   return {
     ContainerCustomStackMapper: class {
       toDomain(entity: any) {
-        if (!entity) return null;
+        if (!entity) {
+          return null;
+        }
         return {
           uuid: entity.uuid || 'mock-uuid',
-          name: entity.name || 'Mock Stack'
+          name: entity.name || 'Mock Stack',
         };
       }
-      
+
       toDomainList(entities: any[]) {
-        if (!entities || !Array.isArray(entities)) return [];
-        return entities.map(entity => this.toDomain(entity));
+        if (!entities || !Array.isArray(entities)) {
+          return [];
+        }
+        return entities.map((entity) => this.toDomain(entity));
       }
-      
+
       toPersistence(domain: any) {
         return {
           uuid: domain.uuid || 'mock-uuid',
           name: domain.name || 'Mock Stack',
           toObject: () => ({
             uuid: domain.uuid || 'mock-uuid',
-            name: domain.name || 'Mock Stack'
-          })
+            name: domain.name || 'Mock Stack',
+          }),
         };
       }
-    }
+    },
   };
 });
 
@@ -156,28 +160,32 @@ vi.mock('../../../infrastructure/mappers/container-custom-stack-repository.mappe
   return {
     ContainerCustomStackRepositoryMapper: class {
       toDomain(entity: any) {
-        if (!entity) return null;
+        if (!entity) {
+          return null;
+        }
         return {
           uuid: entity.uuid || 'mock-repo-uuid',
-          name: entity.name || 'Mock Repository'
+          name: entity.name || 'Mock Repository',
         };
       }
-      
+
       toDomainList(entities: any[]) {
-        if (!entities || !Array.isArray(entities)) return [];
-        return entities.map(entity => this.toDomain(entity));
+        if (!entities || !Array.isArray(entities)) {
+          return [];
+        }
+        return entities.map((entity) => this.toDomain(entity));
       }
-      
+
       toPersistence(domain: any) {
         return {
           uuid: domain.uuid || 'mock-repo-uuid',
           name: domain.name || 'Mock Repository',
           toObject: () => ({
             uuid: domain.uuid || 'mock-repo-uuid',
-            name: domain.name || 'Mock Repository'
-          })
+            name: domain.name || 'Mock Repository',
+          }),
         };
       }
-    }
+    },
   };
 });

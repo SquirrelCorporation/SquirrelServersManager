@@ -6,6 +6,7 @@ import {
   GitPullPushError,
   SyncParameterMissingError,
 } from '../errors/errors.util';
+import { GitStep, IGitUserInfos, ILogger } from '../interfaces/git.interface';
 import {
   assumeSync,
   getDefaultBranchName,
@@ -14,8 +15,13 @@ import {
   getSyncState,
   haveLocalChanges,
 } from './inspect.service';
-import { GitStep, IGitUserInfos, ILogger } from '../interfaces/git.interface';
-import { commitFiles, continueRebase, fetchRemote, mergeUpstream, pushUpstream } from './sync.service';
+import {
+  commitFiles,
+  continueRebase,
+  fetchRemote,
+  mergeUpstream,
+  pushUpstream,
+} from './sync.service';
 
 export interface ICommitAndSyncOptions {
   /** the commit message */

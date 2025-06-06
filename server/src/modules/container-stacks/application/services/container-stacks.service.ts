@@ -10,6 +10,8 @@ import { IUser } from '@modules/users';
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { API, SsmGit } from 'ssm-shared-lib';
 import { v4 as uuidv4 } from 'uuid';
+import { DEFAULT_VAULT_ID, VAULT_CRYPTO_SERVICE } from '@modules/ansible-vaults';
+import { IVaultCryptoService } from '@modules/ansible-vaults';
 import {
   ContainerCustomStack,
   IContainerCustomStackRepositoryEntity,
@@ -24,8 +26,6 @@ import {
   IContainerCustomStackRepository,
 } from '../../domain/repositories/container-custom-stack-repository.interface';
 import { ContainerCustomStacksRepositoryEngineService } from './container-stacks-repository-engine-service';
-import { DEFAULT_VAULT_ID, VAULT_CRYPTO_SERVICE } from '@modules/ansible-vaults';
-import { IVaultCryptoService } from '@modules/ansible-vaults';
 
 @Injectable()
 export class ContainerStacksService implements IContainerStacksService {

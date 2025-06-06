@@ -1,12 +1,12 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { EventEmitterModule, EventEmitter2 } from '@nestjs/event-emitter';
-import { beforeEach, describe, expect, it, vi, afterEach } from 'vitest';
-import { TelemetryService } from '../telemetry.service';
-import { TelemetryEventPayload } from '../dto/telemetry-event-payload.dto';
+import { EventEmitter2, EventEmitterModule } from '@nestjs/event-emitter';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SettingsKeys } from 'ssm-shared-lib';
 import Events from 'src/core/events/events';
+import { TelemetryService } from '../telemetry.service';
+import { TelemetryEventPayload } from '../dto/telemetry-event-payload.dto';
 
 // Mock PostHog
 vi.mock('posthog-node', () => {
@@ -107,7 +107,7 @@ describe('TelemetryService (Comprehensive)', () => {
       // Setup
       const payload: TelemetryEventPayload = {
         eventName: 'test_event',
-        properties: { test: 'value' }
+        properties: { test: 'value' },
       };
 
       vi.spyOn(configService, 'get').mockReturnValue(true);
@@ -121,7 +121,7 @@ describe('TelemetryService (Comprehensive)', () => {
       expect(mockPostHogClient.capture).toHaveBeenCalledWith({
         distinctId: 'test-id',
         event: 'test_event',
-        properties: { test: 'value' }
+        properties: { test: 'value' },
       });
     });
 
@@ -129,7 +129,7 @@ describe('TelemetryService (Comprehensive)', () => {
       // Setup
       const payload: TelemetryEventPayload = {
         eventName: 'test_event',
-        properties: { test: 'value' }
+        properties: { test: 'value' },
       };
 
       vi.spyOn(configService, 'get').mockReturnValue(false);
@@ -146,7 +146,7 @@ describe('TelemetryService (Comprehensive)', () => {
       // Setup
       const payload: TelemetryEventPayload = {
         eventName: 'test_event',
-        properties: { test: 'value' }
+        properties: { test: 'value' },
       };
 
       vi.spyOn(configService, 'get').mockReturnValue(true);
@@ -173,7 +173,7 @@ describe('TelemetryService (Comprehensive)', () => {
       // Setup
       const payload: TelemetryEventPayload = {
         eventName: 'test_event',
-        properties: { test: 'value' }
+        properties: { test: 'value' },
       };
 
       vi.spyOn(configService, 'get').mockReturnValue(true);
@@ -203,7 +203,7 @@ describe('TelemetryService (Comprehensive)', () => {
       // Manually inject the event handler method to make it testable
       const payload: TelemetryEventPayload = {
         eventName: 'test_event',
-        properties: { source: 'event_system' }
+        properties: { source: 'event_system' },
       };
 
       // We can't easily test @OnEvent with the testing module,

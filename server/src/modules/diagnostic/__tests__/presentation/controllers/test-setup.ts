@@ -50,8 +50,8 @@ vi.mock('../../../presentation/mappers/diagnostic.mapper', () => {
   return {
     DiagnosticMapper: vi.fn().mockImplementation(() => {
       return {
-        toDto: vi.fn(entity => entity),
-        toEntity: vi.fn(dto => dto),
+        toDto: vi.fn((entity) => entity),
+        toEntity: vi.fn((dto) => dto),
       };
     }),
   };

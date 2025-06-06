@@ -3,9 +3,9 @@ import { SsmGit } from 'ssm-shared-lib';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   Events,
-  gitServices,
   InternalError,
   MockGitPlaybooksRegisterComponent,
+  gitServices,
 } from './git-playbooks-register-test-setup';
 
 // Import the test setup to ensure mocks are applied

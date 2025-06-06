@@ -7,11 +7,13 @@ import { CONTAINER_CUSTOM_STACK_REPOSITORY } from '../../infrastructure/schemas/
 import { ContainerCustomStackRepositoryMapper } from '../mappers/container-custom-stack-repository.mapper';
 
 @Injectable()
-export class ContainerCustomStacksRepositoryRepository implements IContainerCustomStackRepositoryRepository {
+export class ContainerCustomStacksRepositoryRepository
+  implements IContainerCustomStackRepositoryRepository
+{
   constructor(
     @InjectModel(CONTAINER_CUSTOM_STACK_REPOSITORY)
     private readonly containerCustomStackRepositoryModel: Model<any>,
-    private readonly mapper: ContainerCustomStackRepositoryMapper
+    private readonly mapper: ContainerCustomStackRepositoryMapper,
   ) {}
 
   async findAll(): Promise<IContainerCustomStackRepositoryEntity[]> {
@@ -29,14 +31,19 @@ export class ContainerCustomStacksRepositoryRepository implements IContainerCust
     return this.mapper.toDomainList(entities);
   }
 
-  async create(repository: IContainerCustomStackRepositoryEntity): Promise<IContainerCustomStackRepositoryEntity> {
+  async create(
+    repository: IContainerCustomStackRepositoryEntity,
+  ): Promise<IContainerCustomStackRepositoryEntity> {
     const persistenceEntity = this.mapper.toPersistence(repository);
     const newRepository = new this.containerCustomStackRepositoryModel(persistenceEntity);
     const savedEntity = await newRepository.save();
     return this.mapper.toDomain(savedEntity.toObject()) as IContainerCustomStackRepositoryEntity;
   }
 
-  async update(uuid: string, repository: Partial<IContainerCustomStackRepositoryEntity>): Promise<IContainerCustomStackRepositoryEntity> {
+  async update(
+    uuid: string,
+    repository: Partial<IContainerCustomStackRepositoryEntity>,
+  ): Promise<IContainerCustomStackRepositoryEntity> {
     const updatedEntity = await this.containerCustomStackRepositoryModel
       .findOneAndUpdate({ uuid: uuid }, repository, { new: true })
       .lean();

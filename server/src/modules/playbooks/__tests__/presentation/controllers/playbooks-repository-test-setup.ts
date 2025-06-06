@@ -64,7 +64,9 @@ export const mockPlaybooksRegisterService = {
 
 export const mockPlaybooksRegisterRepository = {
   findByUuid: vi.fn().mockImplementation((uuid) => {
-    if (uuid === 'repo-uuid') return Promise.resolve(mockRepository);
+    if (uuid === 'repo-uuid') {
+      return Promise.resolve(mockRepository);
+    }
     return Promise.resolve(null);
   }),
 };

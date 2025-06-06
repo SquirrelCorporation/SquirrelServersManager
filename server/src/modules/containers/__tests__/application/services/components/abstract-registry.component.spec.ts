@@ -89,9 +89,7 @@ abstract class AbstractRegistryComponent {
     // Base implementation
   }
 
-  async update(
-    configuration: ConfigurationRegistrySchema,
-  ): Promise<AbstractRegistryComponent> {
+  async update(configuration: ConfigurationRegistrySchema): Promise<AbstractRegistryComponent> {
     this.configuration = { ...configuration };
     await this.init();
     return this;

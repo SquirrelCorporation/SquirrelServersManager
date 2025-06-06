@@ -24,10 +24,10 @@ key3=value3
   return {
     default: {
       readFileSync: mockReadFileSync,
-      writeFileSync: mockWriteFileSync
+      writeFileSync: mockWriteFileSync,
     },
     readFileSync: mockReadFileSync,
-    writeFileSync: mockWriteFileSync
+    writeFileSync: mockWriteFileSync,
   };
 });
 

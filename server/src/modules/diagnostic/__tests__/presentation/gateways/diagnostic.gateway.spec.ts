@@ -13,7 +13,7 @@ describe('DiagnosticGateway', () => {
     }).compile();
 
     gateway = module.get<DiagnosticGateway>(DiagnosticGateway);
-    
+
     // Mock server
     gateway.server = {
       emit: vi.fn(),
@@ -28,7 +28,7 @@ describe('DiagnosticGateway', () => {
     // Mock logger
     const logSpy = vi.spyOn(gateway['logger'], 'log');
     const debugSpy = vi.spyOn(gateway['logger'], 'debug');
-    
+
     // Mock socket
     const client = {
       id: 'test-client-id',
@@ -46,7 +46,7 @@ describe('DiagnosticGateway', () => {
   it('should log when client disconnects', () => {
     // Mock logger
     const logSpy = vi.spyOn(gateway['logger'], 'log');
-    
+
     // Mock socket
     const client = {
       id: 'test-client-id',
@@ -67,9 +67,6 @@ describe('DiagnosticGateway', () => {
     gateway.emit(SsmEvents.Diagnostic.PROGRESS, data);
 
     // Verify server.emit was called
-    expect(gateway.server.emit).toHaveBeenCalledWith(
-      SsmEvents.Diagnostic.PROGRESS,
-      data
-    );
+    expect(gateway.server.emit).toHaveBeenCalledWith(SsmEvents.Diagnostic.PROGRESS, data);
   });
-}); 
+});

@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { IRegistryComponent, IRegistryComponentFactory } from '../../../../domain/components/registry.interface';
+import {
+  IRegistryComponent,
+  IRegistryComponentFactory,
+} from '../../../../domain/components/registry.interface';
+import PinoLogger from '../../../../../../logger';
 import { DockerHubRegistryComponent } from './docker-hub-registry.component';
 import { CustomRegistryComponent } from './custom-registry.component';
 import { GcrRegistryComponent } from './gcr-registry.component';
@@ -11,9 +15,11 @@ import { GitLabRegistryComponent } from './gitlab-registry.component';
 import { GiteaRegistryComponent } from './gitea-registry.component';
 import { ForgejoRegistryComponent } from './forgejo-registry.component';
 import { LscrRegistryComponent } from './lscr-registry.component';
-import PinoLogger from '../../../../../../logger';
 
-const logger = PinoLogger.child({ module: 'RegistryComponentFactory' }, { msgPrefix: '[REGISTRY_FACTORY] - ' });
+const logger = PinoLogger.child(
+  { module: 'RegistryComponentFactory' },
+  { msgPrefix: '[REGISTRY_FACTORY] - ' },
+);
 
 /**
  * Factory for creating registry components
@@ -32,7 +38,7 @@ export class RegistryComponentFactory implements IRegistryComponentFactory {
     private readonly gitlabRegistry: GitLabRegistryComponent,
     private readonly giteaRegistry: GiteaRegistryComponent,
     private readonly forgejoRegistry: ForgejoRegistryComponent,
-    private readonly lscrRegistry: LscrRegistryComponent
+    private readonly lscrRegistry: LscrRegistryComponent,
   ) {}
 
   /**

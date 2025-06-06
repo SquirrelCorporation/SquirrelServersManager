@@ -19,10 +19,26 @@ interface SftpStatusMessage {
 interface ISftpService {
   createSession(client: Socket, sessionDto: any): Promise<string>;
   listDirectory(clientId: string, directoryPath: string): Promise<void>;
-  mkdir(clientId: string, options: any, callback: (response: SftpStatusMessage) => void): Promise<void>;
-  rename(clientId: string, options: any, callback: (response: SftpStatusMessage) => void): Promise<void>;
-  chmod(clientId: string, options: any, callback: (response: SftpStatusMessage) => void): Promise<void>;
-  delete(clientId: string, options: any, callback: (response: SftpStatusMessage) => void): Promise<void>;
+  mkdir(
+    clientId: string,
+    options: any,
+    callback: (response: SftpStatusMessage) => void,
+  ): Promise<void>;
+  rename(
+    clientId: string,
+    options: any,
+    callback: (response: SftpStatusMessage) => void,
+  ): Promise<void>;
+  chmod(
+    clientId: string,
+    options: any,
+    callback: (response: SftpStatusMessage) => void,
+  ): Promise<void>;
+  delete(
+    clientId: string,
+    options: any,
+    callback: (response: SftpStatusMessage) => void,
+  ): Promise<void>;
   download(clientId: string, filePath: string): Promise<void>;
   closeSession(sessionId: string): void;
   closeClientSessions(clientId: string): void;
@@ -130,7 +146,7 @@ describe('SftpGateway', () => {
       delete: vi.fn(),
       download: vi.fn(),
       closeSession: vi.fn(),
-      closeClientSessions: vi.fn()
+      closeClientSessions: vi.fn(),
     };
 
     mockSocket = {
@@ -140,18 +156,18 @@ describe('SftpGateway', () => {
       on: vi.fn(),
       handshake: {
         address: '127.0.0.1',
-        headers: {}
+        headers: {},
       },
       nsp: {
-        name: '/sftp'
-      }
+        name: '/sftp',
+      },
     } as unknown as Socket;
 
     mockServer = {
       emit: vi.fn(),
       engine: {
-        on: vi.fn()
-      }
+        on: vi.fn(),
+      },
     } as unknown as Server;
 
     // Mock logger
@@ -174,10 +190,7 @@ describe('SftpGateway', () => {
       sftpGateway.afterInit(mockServer);
 
       // Verify
-      expect(mockServer.engine?.on).toHaveBeenCalledWith(
-        'connection_error',
-        expect.any(Function)
-      );
+      expect(mockServer.engine?.on).toHaveBeenCalledWith('connection_error', expect.any(Function));
     });
 
     it('should handle client connection', () => {
@@ -205,7 +218,7 @@ describe('SftpGateway', () => {
         deviceUuid: 'device-123',
         port: 22,
         username: 'testuser',
-        privateKey: 'test-key'
+        privateKey: 'test-key',
       };
 
       const sessionId = 'session-abc';
@@ -225,7 +238,7 @@ describe('SftpGateway', () => {
         deviceUuid: 'device-123',
         port: 22,
         username: 'testuser',
-        privateKey: 'test-key'
+        privateKey: 'test-key',
       };
 
       const error = new Error('Authentication failed');
@@ -269,11 +282,11 @@ describe('SftpGateway', () => {
       expect(mockSftpService.mkdir).toHaveBeenCalledWith(
         mockSocket.id,
         payload,
-        expect.any(Function)
+        expect.any(Function),
       );
       expect(result).toEqual({
         event: SsmEvents.SFTP.STATUS,
-        data: statusResponse
+        data: statusResponse,
       });
     });
   });
@@ -283,7 +296,7 @@ describe('SftpGateway', () => {
       // Setup
       const payload = {
         oldPath: '/home/user/oldname.txt',
-        newPath: '/home/user/newname.txt'
+        newPath: '/home/user/newname.txt',
       };
       const statusResponse = { success: true, message: 'File renamed' };
 
@@ -299,7 +312,7 @@ describe('SftpGateway', () => {
       expect(mockSftpService.rename).toHaveBeenCalledWith(
         mockSocket.id,
         payload,
-        expect.any(Function)
+        expect.any(Function),
       );
       expect(result).toEqual(statusResponse);
     });
@@ -308,7 +321,7 @@ describe('SftpGateway', () => {
       // Setup
       const payload = {
         path: '/home/user/file.txt',
-        mode: 0o644
+        mode: 0o644,
       };
       const statusResponse = { success: true, message: 'Permissions updated' };
 
@@ -324,7 +337,7 @@ describe('SftpGateway', () => {
       expect(mockSftpService.chmod).toHaveBeenCalledWith(
         mockSocket.id,
         payload,
-        expect.any(Function)
+        expect.any(Function),
       );
       expect(result).toEqual(statusResponse);
     });
@@ -333,7 +346,7 @@ describe('SftpGateway', () => {
       // Setup
       const payload = {
         path: '/home/user/file.txt',
-        isDir: false
+        isDir: false,
       };
       const statusResponse = { success: true, message: 'File deleted' };
 
@@ -349,7 +362,7 @@ describe('SftpGateway', () => {
       expect(mockSftpService.delete).toHaveBeenCalledWith(
         mockSocket.id,
         payload,
-        expect.any(Function)
+        expect.any(Function),
       );
       expect(result).toEqual(statusResponse);
     });

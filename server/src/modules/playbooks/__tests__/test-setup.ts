@@ -261,28 +261,31 @@ vi.mock('@modules/playbooks/domain/interfaces/playbooks-register-engine-service.
 }));
 
 // Mock componenent services
-vi.mock('@modules/playbooks/application/services/components/abstract-playbooks-register.component', () => ({
-  AbstractPlaybooksRegisterComponent: class MockAbstractPlaybooksRegisterComponent {
-    constructor() {}
-    init = vi.fn().mockResolvedValue(true);
-    sync = vi.fn().mockResolvedValue(true);
-    getFiles = vi.fn().mockResolvedValue(['file1', 'file2']);
-    getFileTree = vi.fn().mockResolvedValue({
-      root: {
-        name: 'root',
-        children: [],
-        type: 'directory',
-        key: 'root',
-        title: 'root',
-      },
-    });
-    getFileContent = vi.fn().mockResolvedValue('file content');
-    writeFileContent = vi.fn().mockResolvedValue(true);
-    deleteFile = vi.fn().mockResolvedValue(true);
-    createDirectory = vi.fn().mockResolvedValue(true);
-    fileExists = vi.fn().mockResolvedValue(true);
-  },
-}));
+vi.mock(
+  '@modules/playbooks/application/services/components/abstract-playbooks-register.component',
+  () => ({
+    AbstractPlaybooksRegisterComponent: class MockAbstractPlaybooksRegisterComponent {
+      constructor() {}
+      init = vi.fn().mockResolvedValue(true);
+      sync = vi.fn().mockResolvedValue(true);
+      getFiles = vi.fn().mockResolvedValue(['file1', 'file2']);
+      getFileTree = vi.fn().mockResolvedValue({
+        root: {
+          name: 'root',
+          children: [],
+          type: 'directory',
+          key: 'root',
+          title: 'root',
+        },
+      });
+      getFileContent = vi.fn().mockResolvedValue('file content');
+      writeFileContent = vi.fn().mockResolvedValue(true);
+      deleteFile = vi.fn().mockResolvedValue(true);
+      createDirectory = vi.fn().mockResolvedValue(true);
+      fileExists = vi.fn().mockResolvedValue(true);
+    },
+  }),
+);
 
 vi.mock('@modules/playbooks', () => ({
   PlaybooksModule: class MockPlaybooksModule {},

@@ -4,14 +4,16 @@ import { AbstractRegistryComponent } from '@modules/containers/application/servi
 import { Image, RequestOptionsType } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
 
-const logger = PinoLogger.child({ module: 'GcrRegistryComponent' }, { msgPrefix: '[GCR_REGISTRY] - ' });
+const logger = PinoLogger.child(
+  { module: 'GcrRegistryComponent' },
+  { msgPrefix: '[GCR_REGISTRY] - ' },
+);
 
 /**
  * Google Container Registry integration.
  */
 @Injectable()
 export class GcrRegistryComponent extends AbstractRegistryComponent {
-
   /**
    * Set up the registry component
    */

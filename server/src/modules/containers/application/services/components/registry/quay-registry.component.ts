@@ -4,14 +4,16 @@ import { AbstractRegistryComponent } from '@modules/containers/application/servi
 import { Image, RequestOptionsType } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
 
-const logger = PinoLogger.child({ module: 'QuayRegistryComponent' }, { msgPrefix: '[QUAY_REGISTRY] - ' });
+const logger = PinoLogger.child(
+  { module: 'QuayRegistryComponent' },
+  { msgPrefix: '[QUAY_REGISTRY] - ' },
+);
 
 /**
  * Quay.io Registry integration.
  */
 @Injectable()
 export class QuayRegistryComponent extends AbstractRegistryComponent {
-
   /**
    * Initialize the component
    */

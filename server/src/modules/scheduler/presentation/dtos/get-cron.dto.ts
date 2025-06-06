@@ -1,7 +1,7 @@
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 /**
- * DTO for cron job response 
+ * DTO for cron job response
  */
 export class GetCronResponseDto {
   @IsString()

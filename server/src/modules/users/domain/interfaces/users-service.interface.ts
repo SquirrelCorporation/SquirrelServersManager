@@ -84,10 +84,10 @@ export interface IUsersService {
    * @returns Created admin user
    */
   createFirstAdminUser(
-    name: string, 
-    email: string, 
-    password: string, 
-    avatar?: string
+    name: string,
+    email: string,
+    password: string,
+    avatar?: string,
   ): Promise<IUser>;
 
   /**

@@ -1,11 +1,11 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { v4 as uuidv4 } from 'uuid';
 
 // Mock entities and utils
-const filterByFields = vi.fn(data => data);
-const filterByQueryParams = vi.fn(data => data);
-const sortByFields = vi.fn(data => data);
-const paginate = vi.fn(data => data);
+const filterByFields = vi.fn((data) => data);
+const filterByQueryParams = vi.fn((data) => data);
+const sortByFields = vi.fn((data) => data);
+const paginate = vi.fn((data) => data);
 
 // Mock repository tokens
 const ANSIBLE_TASK_REPOSITORY = Symbol('ANSIBLE_TASK_REPOSITORY');
@@ -180,7 +180,7 @@ class TaskLogsService {
 }
 
 vi.mock('uuid', () => ({
-  v4: () => 'mock-uuid-v4'
+  v4: () => 'mock-uuid-v4',
 }));
 
 describe('TaskLogsService', () => {
@@ -193,34 +193,34 @@ describe('TaskLogsService', () => {
     mockAnsibleTaskRepository = {
       findAll: vi.fn().mockResolvedValue([
         { id: '1', name: 'Task 1', status: 'completed' },
-        { id: '2', name: 'Task 2', status: 'running' }
+        { id: '2', name: 'Task 2', status: 'running' },
       ]),
-      create: vi.fn().mockImplementation(task => ({ ...task, id: '123' })),
+      create: vi.fn().mockImplementation((task) => ({ ...task, id: '123' })),
       update: vi.fn().mockImplementation((id, data) => ({ id, ...data })),
       delete: vi.fn().mockResolvedValue(true),
-      deleteAllOldLogsAndStatuses: vi.fn().mockResolvedValue(undefined)
+      deleteAllOldLogsAndStatuses: vi.fn().mockResolvedValue(undefined),
     };
 
     mockAnsibleLogsRepository = {
       findAllByIdent: vi.fn().mockResolvedValue([
         { id: '1', ident: 'task-1', content: 'Log 1' },
-        { id: '2', ident: 'task-1', content: 'Log 2' }
+        { id: '2', ident: 'task-1', content: 'Log 2' },
       ]),
-      create: vi.fn().mockImplementation(log => ({ ...log, id: '456' })),
-      deleteAllByIdent: vi.fn().mockResolvedValue(undefined)
+      create: vi.fn().mockImplementation((log) => ({ ...log, id: '456' })),
+      deleteAllByIdent: vi.fn().mockResolvedValue(undefined),
     };
 
     mockAnsibleTaskStatusRepository = {
       findByTaskIdent: vi.fn().mockResolvedValue([
         { id: '1', ident: 'task-1', status: 'started' },
-        { id: '2', ident: 'task-1', status: 'completed' }
-      ])
+        { id: '2', ident: 'task-1', status: 'completed' },
+      ]),
     };
 
     service = new TaskLogsService(
       mockAnsibleTaskRepository,
       mockAnsibleLogsRepository,
-      mockAnsibleTaskStatusRepository
+      mockAnsibleTaskStatusRepository,
     );
   });
 
@@ -231,7 +231,7 @@ describe('TaskLogsService', () => {
   describe('getAllTasks', () => {
     it('should return all tasks with pagination', async () => {
       const result = await service.getAllTasks({ pageSize: 10, current: 1 });
-      
+
       expect(mockAnsibleTaskRepository.findAll).toHaveBeenCalled();
       expect(result).toBeInstanceOf(PaginatedResponseDto);
       expect(result.data).toHaveLength(2);
@@ -241,7 +241,7 @@ describe('TaskLogsService', () => {
 
     it('should handle errors when getting tasks', async () => {
       mockAnsibleTaskRepository.findAll.mockRejectedValueOnce(new Error('Database error'));
-      
+
       await expect(service.getAllTasks()).rejects.toThrow('Database error');
     });
   });
@@ -249,7 +249,7 @@ describe('TaskLogsService', () => {
   describe('getTaskLogs', () => {
     it('should return logs for a specific task', async () => {
       const result = await service.getTaskLogs('task-1');
-      
+
       expect(mockAnsibleLogsRepository.findAllByIdent).toHaveBeenCalledWith('task-1');
       expect(result).toHaveLength(2);
       expect(result[0].content).toBe('Log 1');
@@ -257,7 +257,7 @@ describe('TaskLogsService', () => {
 
     it('should handle errors when getting logs', async () => {
       mockAnsibleLogsRepository.findAllByIdent.mockRejectedValueOnce(new Error('Database error'));
-      
+
       await expect(service.getTaskLogs('task-1')).rejects.toThrow('Database error');
     });
   });
@@ -265,7 +265,7 @@ describe('TaskLogsService', () => {
   describe('getTaskStatuses', () => {
     it('should return statuses for a specific task', async () => {
       const result = await service.getTaskStatuses('task-1');
-      
+
       expect(mockAnsibleTaskStatusRepository.findByTaskIdent).toHaveBeenCalledWith('task-1');
       expect(result).toHaveLength(2);
       expect(result[0].status).toBe('started');
@@ -273,8 +273,10 @@ describe('TaskLogsService', () => {
     });
 
     it('should handle errors when getting statuses', async () => {
-      mockAnsibleTaskStatusRepository.findByTaskIdent.mockRejectedValueOnce(new Error('Database error'));
-      
+      mockAnsibleTaskStatusRepository.findByTaskIdent.mockRejectedValueOnce(
+        new Error('Database error'),
+      );
+
       await expect(service.getTaskStatuses('task-1')).rejects.toThrow('Database error');
     });
   });
@@ -282,19 +284,21 @@ describe('TaskLogsService', () => {
   describe('createLog', () => {
     it('should create a new log entry for a task', async () => {
       const result = await service.createLog('task-1', 'New log content');
-      
+
       expect(mockAnsibleLogsRepository.create).toHaveBeenCalledWith({
         ident: 'task-1',
         content: 'New log content',
-        logRunnerId: 'mock-uuid-v4'
+        logRunnerId: 'mock-uuid-v4',
       });
       expect(result.id).toBe('456');
     });
 
     it('should handle errors when creating a log', async () => {
       mockAnsibleLogsRepository.create.mockRejectedValueOnce(new Error('Database error'));
-      
-      await expect(service.createLog('task-1', 'New log content')).rejects.toThrow('Database error');
+
+      await expect(service.createLog('task-1', 'New log content')).rejects.toThrow(
+        'Database error',
+      );
     });
   });
 
@@ -302,13 +306,13 @@ describe('TaskLogsService', () => {
     it('should create a new task', async () => {
       const taskData = { name: 'New Task', status: 'pending', target: ['device-1'] };
       const result = await service.createTask(taskData);
-      
+
       expect(mockAnsibleTaskRepository.create).toHaveBeenCalledWith({
         name: 'New Task',
         status: 'pending',
         ident: 'mock-uuid-v4',
         target: ['device-1'],
-        options: undefined
+        options: undefined,
       });
       expect(result.id).toBe('123');
     });
@@ -316,39 +320,47 @@ describe('TaskLogsService', () => {
     it('should use provided ident if available', async () => {
       const taskData = { name: 'New Task', status: 'pending', ident: 'custom-ident' };
       await service.createTask(taskData);
-      
-      expect(mockAnsibleTaskRepository.create).toHaveBeenCalledWith(expect.objectContaining({
-        ident: 'custom-ident'
-      }));
+
+      expect(mockAnsibleTaskRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          ident: 'custom-ident',
+        }),
+      );
     });
 
     it('should handle errors when creating a task', async () => {
       mockAnsibleTaskRepository.create.mockRejectedValueOnce(new Error('Database error'));
-      
-      await expect(service.createTask({ name: 'New Task', status: 'pending' })).rejects.toThrow('Database error');
+
+      await expect(service.createTask({ name: 'New Task', status: 'pending' })).rejects.toThrow(
+        'Database error',
+      );
     });
   });
 
   describe('updateTask', () => {
     it('should update an existing task', async () => {
       const result = await service.updateTask('task-1', { status: 'completed' });
-      
-      expect(mockAnsibleTaskRepository.update).toHaveBeenCalledWith('task-1', { status: 'completed' });
+
+      expect(mockAnsibleTaskRepository.update).toHaveBeenCalledWith('task-1', {
+        status: 'completed',
+      });
       expect(result.id).toBe('task-1');
       expect(result.status).toBe('completed');
     });
 
     it('should handle errors when updating a task', async () => {
       mockAnsibleTaskRepository.update.mockRejectedValueOnce(new Error('Database error'));
-      
-      await expect(service.updateTask('task-1', { status: 'completed' })).rejects.toThrow('Database error');
+
+      await expect(service.updateTask('task-1', { status: 'completed' })).rejects.toThrow(
+        'Database error',
+      );
     });
   });
 
   describe('deleteTask', () => {
     it('should delete a task and its logs', async () => {
       const result = await service.deleteTask('task-1');
-      
+
       expect(mockAnsibleLogsRepository.deleteAllByIdent).toHaveBeenCalledWith('task-1');
       expect(mockAnsibleTaskRepository.delete).toHaveBeenCalledWith('task-1');
       expect(result).toBe(true);
@@ -356,7 +368,7 @@ describe('TaskLogsService', () => {
 
     it('should handle errors when deleting a task', async () => {
       mockAnsibleTaskRepository.delete.mockRejectedValueOnce(new Error('Database error'));
-      
+
       await expect(service.deleteTask('task-1')).rejects.toThrow('Database error');
     });
   });
@@ -364,14 +376,18 @@ describe('TaskLogsService', () => {
   describe('cleanOldTasksAndLogs', () => {
     it('should clean old tasks and logs', async () => {
       const result = await service.cleanOldTasksAndLogs(30);
-      
-      expect(mockAnsibleTaskRepository.deleteAllOldLogsAndStatuses).toHaveBeenCalledWith(30 * 24 * 60);
+
+      expect(mockAnsibleTaskRepository.deleteAllOldLogsAndStatuses).toHaveBeenCalledWith(
+        30 * 24 * 60,
+      );
       expect(result).toBe(0);
     });
 
     it('should handle errors when cleaning old tasks and logs', async () => {
-      mockAnsibleTaskRepository.deleteAllOldLogsAndStatuses.mockRejectedValueOnce(new Error('Database error'));
-      
+      mockAnsibleTaskRepository.deleteAllOldLogsAndStatuses.mockRejectedValueOnce(
+        new Error('Database error'),
+      );
+
       await expect(service.cleanOldTasksAndLogs(30)).rejects.toThrow('Database error');
     });
   });

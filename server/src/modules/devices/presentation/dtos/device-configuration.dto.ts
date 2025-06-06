@@ -130,4 +130,4 @@ export class SystemInformationConfigurationDto {
     watch?: boolean;
     cron?: string;
   };
-} 
+}

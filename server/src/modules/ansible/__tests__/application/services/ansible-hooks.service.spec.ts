@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock utilities
-const isFinalStatus = vi.fn(status => ['success', 'failed', 'error'].includes(status));
+const isFinalStatus = vi.fn((status) => ['success', 'failed', 'error'].includes(status));
 
 // Mock repository tokens
 const ANSIBLE_TASK_REPOSITORY = Symbol('ANSIBLE_TASK_REPOSITORY');
@@ -112,34 +112,36 @@ describe('AnsibleHooksService', () => {
   beforeEach(() => {
     mockTaskRepository = {
       updateStatus: vi.fn().mockImplementation((ident, status) => {
-        if (ident === 'non-existent') return null;
+        if (ident === 'non-existent') {
+          return null;
+        }
         return {
           id: '123',
           ident,
           status,
-          target: ident === 'with-targets' ? ['target1', 'target2'] : []
+          target: ident === 'with-targets' ? ['target1', 'target2'] : [],
         };
-      })
+      }),
     };
 
     mockTaskStatusRepository = {
-      create: vi.fn().mockImplementation(data => ({ ...data, id: '456' }))
+      create: vi.fn().mockImplementation((data) => ({ ...data, id: '456' })),
     };
 
     mockLogsRepository = {
-      create: vi.fn().mockImplementation(data => ({ ...data, id: '789' }))
+      create: vi.fn().mockImplementation((data) => ({ ...data, id: '789' })),
     };
 
     mockSshKeyService = {
       removeAnsibleTemporaryPrivateKey: vi.fn(),
-      removeAllAnsibleExecTemporaryPrivateKeys: vi.fn()
+      removeAllAnsibleExecTemporaryPrivateKeys: vi.fn(),
     };
 
     service = new AnsibleHooksService(
       mockTaskRepository,
       mockTaskStatusRepository,
       mockLogsRepository,
-      mockSshKeyService
+      mockSshKeyService,
     );
   });
 
@@ -153,10 +155,12 @@ describe('AnsibleHooksService', () => {
       const result = await service.addTaskStatus(taskHookDto);
 
       expect(mockTaskRepository.updateStatus).toHaveBeenCalledWith('task-1', 'running');
-      expect(mockTaskStatusRepository.create).toHaveBeenCalledWith(expect.objectContaining({
-        taskIdent: 'task-1',
-        status: 'running'
-      }));
+      expect(mockTaskStatusRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          taskIdent: 'task-1',
+          status: 'running',
+        }),
+      );
       expect(result.message).toBe('Task status updated successfully');
     });
 
@@ -181,8 +185,14 @@ describe('AnsibleHooksService', () => {
       await service.addTaskStatus(taskHookDto);
 
       expect(mockSshKeyService.removeAnsibleTemporaryPrivateKey).toHaveBeenCalledTimes(2);
-      expect(mockSshKeyService.removeAnsibleTemporaryPrivateKey).toHaveBeenCalledWith('target1', 'with-targets');
-      expect(mockSshKeyService.removeAnsibleTemporaryPrivateKey).toHaveBeenCalledWith('target2', 'with-targets');
+      expect(mockSshKeyService.removeAnsibleTemporaryPrivateKey).toHaveBeenCalledWith(
+        'target1',
+        'with-targets',
+      );
+      expect(mockSshKeyService.removeAnsibleTemporaryPrivateKey).toHaveBeenCalledWith(
+        'target2',
+        'with-targets',
+      );
       expect(mockSshKeyService.removeAllAnsibleExecTemporaryPrivateKeys).not.toHaveBeenCalled();
     });
 
@@ -193,7 +203,9 @@ describe('AnsibleHooksService', () => {
       await service.addTaskStatus(taskHookDto);
 
       expect(mockSshKeyService.removeAnsibleTemporaryPrivateKey).not.toHaveBeenCalled();
-      expect(mockSshKeyService.removeAllAnsibleExecTemporaryPrivateKeys).toHaveBeenCalledWith('task-1');
+      expect(mockSshKeyService.removeAllAnsibleExecTemporaryPrivateKeys).toHaveBeenCalledWith(
+        'task-1',
+      );
     });
   });
 
@@ -202,33 +214,37 @@ describe('AnsibleHooksService', () => {
       const taskEventDto = {
         runner_ident: 'task-1',
         uuid: 'event-1',
-        stdout: 'line 1\n\nline 2\n'
+        stdout: 'line 1\n\nline 2\n',
       };
 
       const result = await service.addTaskEvent(taskEventDto);
 
-      expect(mockLogsRepository.create).toHaveBeenCalledWith(expect.objectContaining({
-        ident: 'task-1',
-        content: 'line 1\nline 2',
-        logRunnerId: 'event-1',
-        stdout: 'line 1\n\nline 2\n'
-      }));
+      expect(mockLogsRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          ident: 'task-1',
+          content: 'line 1\nline 2',
+          logRunnerId: 'event-1',
+          stdout: 'line 1\n\nline 2\n',
+        }),
+      );
       expect(result.message).toBe('Task event logged successfully');
     });
 
     it('should log task event with stringify if no stdout', async () => {
       const taskEventDto = {
         runner_ident: 'task-1',
-        uuid: 'event-1'
+        uuid: 'event-1',
       };
 
       await service.addTaskEvent(taskEventDto);
 
-      expect(mockLogsRepository.create).toHaveBeenCalledWith(expect.objectContaining({
-        ident: 'task-1',
-        content: JSON.stringify(taskEventDto),
-        logRunnerId: 'event-1'
-      }));
+      expect(mockLogsRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          ident: 'task-1',
+          content: JSON.stringify(taskEventDto),
+          logRunnerId: 'event-1',
+        }),
+      );
     });
 
     it('should throw BadRequestException if runner_ident is missing', async () => {
