@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="800" height="400" fill="#1e1e1e" rx="10" ry="10"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="24" font-weight="bold" fill="#dfdfd6" text-anchor="middle">Container Update Detection Flow</text>
+  
+  <!-- Top Row - Tag-Based Monitoring -->
+  <rect x="50" y="80" width="700" height="120" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="50" y="80" width="4" height="120" fill="#3498db" rx="0" ry="0" />
+  <text x="400" y="100" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="16" font-weight="bold" fill="#dfdfd6" text-anchor="middle">Tag-Based Update Detection</text>
+  
+  <!-- Tag Detection Workflow -->
+  <!-- Current Image -->
+  <rect x="80" y="130" width="120" height="50" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="80" y="130" width="4" height="50" fill="#3498db" rx="0" ry="0" />
+  <text x="140" y="155" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="13" fill="#98989f" text-anchor="middle">Current Image</text>
+  <text x="140" y="170" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="13" fill="#98989f" text-anchor="middle">nginx:1.21.0</text>
+  
+  <!-- Parse Version -->
+  <rect x="250" y="130" width="120" height="50" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="250" y="130" width="4" height="50" fill="#3498db" rx="0" ry="0" />
+  <text x="310" y="155" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="13" fill="#98989f" text-anchor="middle">Parse Version</text>
+  <text x="310" y="170" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="13" fill="#98989f" text-anchor="middle">1.21.0</text>
+  
+  <!-- Check Registry -->
+  <rect x="420" y="130" width="120" height="50" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="420" y="130" width="4" height="50" fill="#3498db" rx="0" ry="0" />
+  <text x="480" y="155" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="13" fill="#98989f" text-anchor="middle">Check Registry</text>
+  <text x="480" y="170" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="13" fill="#98989f" text-anchor="middle">Latest: 1.23.1</text>
+  
+  <!-- Compare Versions -->
+  <rect x="590" y="130" width="120" height="50" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="590" y="130" width="4" height="50" fill="#3498db" rx="0" ry="0" />
+  <text x="650" y="155" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="13" fill="#98989f" text-anchor="middle">Compare Versions</text>
+  <text x="650" y="170" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="13" fill="#98989f" text-anchor="middle">Update Available</text>
+  
+  <!-- Arrows -->
+  <line x1="200" y1="155" x2="250" y2="155" stroke="#666666" stroke-width="2" />
+  <line x1="370" y1="155" x2="420" y2="155" stroke="#666666" stroke-width="2" />
+  <line x1="540" y1="155" x2="590" y2="155" stroke="#666666" stroke-width="2" />
+  
+  <!-- Bottom Row - Digest-Based Monitoring -->
+  <rect x="50" y="230" width="700" height="120" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="50" y="230" width="4" height="120" fill="#ff9800" rx="0" ry="0" />
+  <text x="400" y="250" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="16" font-weight="bold" fill="#dfdfd6" text-anchor="middle">Digest-Based Update Detection</text>
+  
+  <!-- Digest Detection Workflow -->
+  <!-- Current Image -->
+  <rect x="80" y="280" width="120" height="50" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="80" y="280" width="4" height="50" fill="#ff9800" rx="0" ry="0" />
+  <text x="140" y="305" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="13" fill="#98989f" text-anchor="middle">Current Image</text>
+  <text x="140" y="320" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="13" fill="#98989f" text-anchor="middle">nginx:latest</text>
+  
+  <!-- Current Digest -->
+  <rect x="250" y="280" width="120" height="50" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="250" y="280" width="4" height="50" fill="#ff9800" rx="0" ry="0" />
+  <text x="310" y="305" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="13" fill="#98989f" text-anchor="middle">Current Digest</text>
+  <text x="310" y="320" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="13" fill="#98989f" text-anchor="middle">sha256:a2c...</text>
+  
+  <!-- Check Registry -->
+  <rect x="420" y="280" width="120" height="50" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="420" y="280" width="4" height="50" fill="#ff9800" rx="0" ry="0" />
+  <text x="480" y="305" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="13" fill="#98989f" text-anchor="middle">Check Registry</text>
+  <text x="480" y="320" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="13" fill="#98989f" text-anchor="middle">Latest: sha256:b3f...</text>
+  
+  <!-- Compare Digests -->
+  <rect x="590" y="280" width="120" height="50" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="590" y="280" width="4" height="50" fill="#ff9800" rx="0" ry="0" />
+  <text x="650" y="305" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="13" fill="#98989f" text-anchor="middle">Compare Digests</text>
+  <text x="650" y="320" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="13" fill="#98989f" text-anchor="middle">Update Available</text>
+  
+  <!-- Arrows -->
+  <line x1="200" y1="305" x2="250" y2="305" stroke="#666666" stroke-width="2" />
+  <line x1="370" y1="305" x2="420" y2="305" stroke="#666666" stroke-width="2" />
+  <line x1="540" y1="305" x2="590" y2="305" stroke="#666666" stroke-width="2" />
+ </svg>

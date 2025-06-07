@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1040" height="560" viewBox="0 0 1040 560" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ssmGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3498db" />
+      <stop offset="100%" stop-color="#2980b9" />
+    </linearGradient>
+    <linearGradient id="deviceGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2ecc71" />
+      <stop offset="100%" stop-color="#27ae60" />
+    </linearGradient>
+    <filter id="shadowFilter" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity="0.3" />
+    </filter>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#e0e0e0" />
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1040" height="560" fill="#2d2d2d" rx="16" ry="16"/>
+
+  <!-- Title -->
+  <text x="520" y="60" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="32" font-weight="bold" fill="#e0e0e0" text-anchor="middle">SSH Connection Flow</text>
+  <text x="520" y="105" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="22" fill="#c0c0c0" text-anchor="middle">How SSM securely communicates with your devices</text>
+
+  <!-- Step Labels (now with more vertical space) -->
+  <text x="370" y="155" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="18" fill="#e0e0e0" text-anchor="middle">Authentication</text>
+  <text x="520" y="135" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="18" fill="#e0e0e0" text-anchor="middle">Secure Channel</text>
+  <text x="670" y="155" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="18" fill="#e0e0e0" text-anchor="middle">Command Execution</text>
+
+  <!-- SSM Server (moved left) -->
+  <rect x="70" y="200" width="180" height="110" fill="url(#ssmGradient)" rx="14" ry="14" filter="url(#shadowFilter)"/>
+  <text x="160" y="260" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="20" fill="#fff" text-anchor="middle">SSM Server</text>
+
+  <!-- Remote Device (moved right) -->
+  <rect x="650" y="200" width="180" height="110" fill="url(#deviceGradient)" rx="14" ry="14" filter="url(#shadowFilter)"/>
+  <text x="740" y="260" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="20" fill="#fff" text-anchor="middle">Remote Device</text>
+
+  <!-- SSH Connection Flow -->
+  <!-- Arrow from SSM to Device (higher arc) -->
+  <path d="M 250 230 C 350 140, 550 140, 650 230" stroke="#3498db" stroke-width="3" fill="none" marker-end="url(#arrowhead)" filter="url(#shadowFilter)"/>
+  <!-- Arrow from Device to SSM (lower arc) -->
+  <path d="M 650 280 C 550 370, 350 370, 250 280" stroke="#2ecc71" stroke-width="3" fill="none" marker-end="url(#arrowhead)" filter="url(#shadowFilter)"/>
+
+  <!-- Flow steps: Authentication -->
+  <circle cx="320" cy="135" r="28" fill="#f1c40f" filter="url(#shadowFilter)"/>
+  <text x="320" y="142" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="18" fill="#232946" font-weight="bold" text-anchor="middle">1</text>
+
+  <!-- Flow steps: Secure Channel -->
+  <circle cx="450" cy="115" r="28" fill="#f1c40f" filter="url(#shadowFilter)"/>
+  <text x="450" y="122" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="18" fill="#232946" font-weight="bold" text-anchor="middle">2</text>
+
+  <!-- Flow steps: Command Execution -->
+  <circle cx="580" cy="135" r="28" fill="#f1c40f" filter="url(#shadowFilter)"/>
+  <text x="580" y="142" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="18" fill="#232946" font-weight="bold" text-anchor="middle">3</text>
+
+  <!-- Flow steps: Data Return (lower arc) -->
+  <circle cx="450" cy="380" r="28" fill="#17a2b8" filter="url(#shadowFilter)"/>
+  <text x="450" y="387" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="18" fill="#fff" font-weight="bold" text-anchor="middle">4</text>
+  <text x="450" y="420" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="15" fill="#e0e0e0" text-anchor="middle">Data Return</text>
+
+  <!-- Encryption Indicators (spread out) -->
+  <rect x="390" y="155" width="24" height="28" fill="#8e44ad" filter="url(#shadowFilter)"/>
+  <rect x="510" y="155" width="24" height="28" fill="#8e44ad" filter="url(#shadowFilter)"/>
+  <rect x="390" y="312" width="24" height="28" fill="#8e44ad" filter="url(#shadowFilter)"/>
+  <rect x="510" y="312" width="24" height="28" fill="#8e44ad" filter="url(#shadowFilter)"/>
+
+  <!-- Legend (spaced out, smaller font) -->
+  <rect x="60" y="440" width="24" height="24" fill="url(#ssmGradient)" filter="url(#shadowFilter)"/>
+  <text x="100" y="457" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="13" fill="#e0e0e0">SSM Server</text>
+  <rect x="210" y="440" width="24" height="24" fill="url(#deviceGradient)" filter="url(#shadowFilter)"/>
+  <text x="250" y="457" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="13" fill="#e0e0e0">Remote Device</text>
+  <rect x="360" y="440" width="24" height="24" fill="#8e44ad" filter="url(#shadowFilter)"/>
+  <text x="400" y="457" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="13" fill="#e0e0e0">Encrypted Data</text>
+  <circle cx="510" cy="452" r="12" fill="#f1c40f" filter="url(#shadowFilter)"/>
+  <text x="535" y="457" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="13" fill="#e0e0e0">Outbound Flow</text>
+  <circle cx="610" cy="452" r="12" fill="#17a2b8" filter="url(#shadowFilter)"/>
+  <text x="635" y="457" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="13" fill="#e0e0e0">Return Flow</text>
+</svg>

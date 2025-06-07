@@ -2,9 +2,10 @@ import {
   ErrorCircleSettings20Regular,
   SimpleIconsGit,
 } from '@/components/Icons/CustomIcons';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 import Title, { TitleColors } from '@/components/Template/Title';
 import ContainerStacksGitRepositoryModal from '@/pages/Admin/Settings/components/subcomponents/ContainerStacksGitRepositoryModal';
-import { getGitContainerStacksRepositories } from '@/services/rest/container-stacks-repositories';
+import { getGitContainerStacksRepositories } from '@/services/rest/container-stacks/repositories';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
 import {
@@ -71,11 +72,10 @@ const ContainerStacksSettings: React.FC = () => {
             >
               Add a new remote repository
             </Button>
-            <Tooltip
-              title={'Add & update your Git repositories for synchronization'}
-            >
-              <InfoCircleFilled />
-            </Tooltip>
+            <InfoLinkWidget
+              tooltipTitle="Help for remote container stacks repositories."
+              documentationLink="https://squirrelserversmanager.io/docs/user-guides/stacks/containers/remote-stacks"
+            />
           </Space>
         }
       >

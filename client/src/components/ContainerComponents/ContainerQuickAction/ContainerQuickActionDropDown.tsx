@@ -13,9 +13,11 @@ export type ServiceQuickActionProps = {
   container: API.Container;
 };
 
-const ContainerQuickActionDropDown: React.FC<ServiceQuickActionProps> = (
-  props,
-) => {
+const ContainerQuickActionDropDown: React.FC<ServiceQuickActionProps> = ({
+  onDropDownClicked,
+  children,
+  container,
+}) => {
   const onClick: MenuProps['onClick'] = ({ key }) => {
     const idx = parseInt(key);
     if (idx >= 0) {
@@ -24,11 +26,11 @@ const ContainerQuickActionDropDown: React.FC<ServiceQuickActionProps> = (
         return;
       }
     }
-    void props.onDropDownClicked(idx);
+    void onDropDownClicked(idx);
   };
 
   const items = ServiceQuickActionReference.filter((e) =>
-    e.supportedBy.includes(props.container.displayType),
+    e.supportedBy.includes(container.displayType),
   ).map((e, index) => {
     if (e.type === ServiceQuickActionReferenceTypes.DIVIDER)
       return { type: 'divider' };
@@ -46,7 +48,7 @@ const ContainerQuickActionDropDown: React.FC<ServiceQuickActionProps> = (
     <>
       <Dropdown menu={{ items, onClick }} placement="bottom">
         <a onClick={(e) => e.preventDefault()}>
-          <Space>{props.children ? props.children : <DownOutlined />}</Space>
+          <Space>{children ? children : <DownOutlined />}</Space>
         </a>
       </Dropdown>
     </>

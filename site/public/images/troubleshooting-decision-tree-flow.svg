@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect x="0" y="0" width="800" height="600" fill="#1e1e1e"/>
+  <style>
+    .main-title {
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-size: 24px;
+      font-weight: bold;
+      fill: #dfdfd6;
+      text-anchor: middle;
+    }
+    .node-title {
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-size: 16px;
+      font-weight: bold;
+      fill: #dfdfd6;
+      text-anchor: middle;
+    }
+    .node-subtext {
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-size: 13px;
+      font-weight: 400;
+      fill: #98989f;
+      text-anchor: middle;
+    }
+    .node-box {
+      fill: #1b1b1f;
+      rx: 8;
+      ry: 8;
+    }
+    .left-border-install { fill: #ff9800; }
+    .left-border-container { fill: #4caf50; }
+    .left-border-device { fill: #9b59b6; }
+    .left-border-performance { fill: #b07c0f; }
+    .left-border-question { fill: #3498db; }
+    .left-border-root { fill: #3498db; }
+    .connection { stroke: #666666; stroke-width: 2; fill: none; }
+    .dashed { stroke-dasharray: 5,3; }
+  </style>
+  <text x="400" y="40" class="main-title">SSM Troubleshooting Decision Tree</text>
+  
+  <!-- Root Node -->
+  <rect x="370" y="60" width="60" height="40" class="node-box"/>
+  <rect x="370" y="60" width="4" height="40" class="left-border-root"/>
+  <text x="400" y="85" class="node-title">Start</text>
+
+  <!-- Question Node -->
+  <rect x="240" y="120" width="320" height="50" class="node-box"/>
+  <rect x="240" y="120" width="4" height="50" class="left-border-question"/>
+  <text x="400" y="150" class="node-title">What type of issue are you having?</text>
+  
+  <!-- Connections from root to question -->
+  <path d="M400,100 L400,120" class="connection"/>
+
+  <!-- Installation Node -->
+  <rect x="60" y="190" width="180" height="40" class="node-box"/>
+  <rect x="60" y="190" width="4" height="40" class="left-border-install"/>
+  <text x="150" y="215" class="node-title">SSM Installation</text>
+  <path d="M260,145 L150,190" class="connection"/>
+
+  <!-- Installation Symptoms -->
+  <rect x="60" y="240" width="180" height="50" class="node-box"/>
+  <rect x="60" y="240" width="4" height="50" class="left-border-install"/>
+  <text x="150" y="260" class="node-subtext">Common symptoms:</text>
+  <text x="150" y="278" class="node-subtext">• Install errors</text>
+  <text x="150" y="296" class="node-subtext">• MongoDB AVX issues</text>
+  <path d="M150,230 L150,240" class="connection"/>
+
+  <!-- Installation Solutions -->
+  <rect x="60" y="300" width="180" height="60" class="node-box"/>
+  <rect x="60" y="300" width="4" height="60" class="left-border-install"/>
+  <text x="150" y="320" class="node-subtext" fill="#4caf50">See installation section</text>
+  <text x="150" y="340" class="node-subtext">• Check prerequisites</text>
+  <text x="150" y="358" class="node-subtext">• Review Docker logs</text>
+  <path d="M150,290 L150,300" class="connection"/>
+
+  <!-- Device Node -->
+  <rect x="310" y="190" width="180" height="40" class="node-box"/>
+  <rect x="310" y="190" width="4" height="40" class="left-border-device"/>
+  <text x="400" y="215" class="node-title">Device Connectivity</text>
+  <path d="M400,170 L400,190" class="connection"/>
+
+  <!-- Device Symptoms -->
+  <rect x="310" y="240" width="180" height="50" class="node-box"/>
+  <rect x="310" y="240" width="4" height="50" class="left-border-device"/>
+  <text x="400" y="260" class="node-subtext">Common symptoms:</text>
+  <text x="400" y="278" class="node-subtext">• SSH connection fails</text>
+  <text x="400" y="296" class="node-subtext">• Device shows as offline</text>
+  <path d="M400,230 L400,240" class="connection"/>
+
+  <!-- Device Solutions -->
+  <rect x="310" y="300" width="180" height="60" class="node-box"/>
+  <rect x="310" y="300" width="4" height="60" class="left-border-device"/>
+  <text x="400" y="320" class="node-subtext" fill="#4caf50">See devices section</text>
+  <text x="400" y="340" class="node-subtext">• Verify network connectivity</text>
+  <text x="400" y="358" class="node-subtext">• Check SSH credentials</text>
+  <path d="M400,290 L400,300" class="connection"/>
+
+  <!-- Container Node -->
+  <rect x="560" y="190" width="180" height="40" class="node-box"/>
+  <rect x="560" y="190" width="4" height="40" class="left-border-container"/>
+  <text x="650" y="215" class="node-title">Container/Docker</text>
+  <path d="M540,145 L650,190" class="connection"/>
+
+  <!-- Container Symptoms -->
+  <rect x="560" y="240" width="180" height="50" class="node-box"/>
+  <rect x="560" y="240" width="4" height="50" class="left-border-container"/>
+  <text x="650" y="260" class="node-subtext">Common symptoms:</text>
+  <text x="650" y="278" class="node-subtext">• Containers won't start</text>
+  <text x="650" y="296" class="node-subtext">• Socket hangup errors</text>
+  <path d="M650,230 L650,240" class="connection"/>
+
+  <!-- Container Solutions -->
+  <rect x="560" y="300" width="180" height="60" class="node-box"/>
+  <rect x="560" y="300" width="4" height="60" class="left-border-container"/>
+  <text x="650" y="320" class="node-subtext" fill="#4caf50">See container section</text>
+  <text x="650" y="340" class="node-subtext">• Check Docker permissions</text>
+  <text x="650" y="358" class="node-subtext">• Review container logs</text>
+  <path d="M650,290 L650,300" class="connection"/>
+
+  <!-- Performance Node -->
+  <rect x="310" y="400" width="180" height="40" class="node-box"/>
+  <rect x="310" y="400" width="4" height="40" class="left-border-performance"/>
+  <text x="400" y="425" class="node-title">Performance</text>
+  <path d="M150,360 C150,400 400,400 400,400" class="connection dashed"/>
+  <path d="M400,360 C400,400 400,400 400,400" class="connection dashed"/>
+  <path d="M650,360 C650,400 400,400 400,400" class="connection dashed"/>
+
+  <!-- Performance Solutions -->
+  <rect x="310" y="450" width="180" height="60" class="node-box"/>
+  <rect x="310" y="450" width="4" height="60" class="left-border-performance"/>
+  <text x="400" y="470" class="node-subtext" fill="#4caf50">See performance section</text>
+  <text x="400" y="490" class="node-subtext">• Resource limits</text>
+  <text x="400" y="508" class="node-subtext">• Database optimization</text>
+  <path d="M400,440 L400,450" class="connection"/>
+</svg>

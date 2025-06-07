@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="500" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="800" height="500" fill="#1e1e1e" rx="10" ry="10"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="24" font-weight="bold" fill="#dfdfd6" text-anchor="middle">Docker Integration Architecture</text>
+  
+  <!-- SSM Server -->
+  <rect x="50" y="100" width="180" height="100" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="50" y="100" width="4" height="100" fill="#3498db" rx="0" ry="0" />
+  <text x="140" y="150" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="16" font-weight="bold" fill="#dfdfd6" text-anchor="middle">SSM Server</text>
+  <text x="140" y="170" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="13" fill="#98989f" text-anchor="middle">Container Management</text>
+  
+  <!-- SSH Tunnel -->
+  <rect x="270" y="120" width="250" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="270" y="120" width="4" height="60" fill="#ff9800" rx="0" ry="0" />
+  <text x="395" y="155" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="16" font-weight="bold" fill="#dfdfd6" text-anchor="middle">Encrypted SSH Tunnel</text>
+  
+  <!-- Remote Device -->
+  <rect x="560" y="100" width="180" height="300" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="560" y="100" width="4" height="300" fill="#4caf50" rx="0" ry="0" />
+  <text x="650" y="130" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="16" font-weight="bold" fill="#dfdfd6" text-anchor="middle">Remote Device</text>
+  
+  <!-- Docker Daemon -->
+  <rect x="580" y="150" width="140" height="80" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="580" y="150" width="4" height="80" fill="#9b59b6" rx="0" ry="0" />
+  <text x="650" y="180" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="16" font-weight="bold" fill="#dfdfd6" text-anchor="middle">Docker Daemon</text>
+  <text x="650" y="200" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="13" fill="#98989f" text-anchor="middle">API/Socket</text>
+  
+  <!-- Containers -->
+  <rect x="590" y="250" width="35" height="45" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="590" y="250" width="4" height="45" fill="#9b59b6" rx="0" ry="0" />
+  <rect x="632" y="250" width="35" height="45" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="632" y="250" width="4" height="45" fill="#9b59b6" rx="0" ry="0" />
+  <rect x="674" y="250" width="35" height="45" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="674" y="250" width="4" height="45" fill="#9b59b6" rx="0" ry="0" />
+  <rect x="600" y="240" width="35" height="45" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="600" y="240" width="4" height="45" fill="#9b59b6" rx="0" ry="0" />
+  <rect x="642" y="240" width="35" height="45" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="642" y="240" width="4" height="45" fill="#9b59b6" rx="0" ry="0" />
+  <rect x="684" y="240" width="35" height="45" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="684" y="240" width="4" height="45" fill="#9b59b6" rx="0" ry="0" />
+  <text x="650" y="315" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="16" font-weight="bold" fill="#dfdfd6" text-anchor="middle">Containers</text>
+  
+  <!-- Docker Socket -->
+  <circle cx="650" cy="350" r="20" fill="#9b59b6"/>
+  <text x="650" y="355" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="13" fill="#98989f" text-anchor="middle">Socket</text>
+  
+  <!-- Connection Lines -->
+  <line x1="230" y1="150" x2="270" y2="150" stroke="#666666" stroke-width="2" />
+  <line x1="520" y1="150" x2="580" y2="185" stroke="#666666" stroke-width="2" />
+  <line x1="650" y1="230" x2="650" y2="240" stroke="#666666" stroke-width="2" />
+  <line x1="650" y1="330" x2="650" y2="230" stroke="#9b59b6" stroke-width="2" stroke-dasharray="5,5" />
+  
+  <!-- Monitoring Features -->
+  <!-- Container Stats -->
+  <rect x="60" y="285" width="160" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="60" y="285" width="4" height="60" fill="#1abc9c" rx="0" ry="0" />
+  <text x="140" y="315" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="16" font-weight="bold" fill="#dfdfd6" text-anchor="middle">Container Stats</text>
+  <text x="140" y="335" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="13" fill="#98989f" text-anchor="middle">Resource Monitoring</text>
+  
+  <!-- Container Events -->
+  <rect x="60" y="355" width="160" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="60" y="355" width="4" height="60" fill="#9b59b6" rx="0" ry="0" />
+  <text x="140" y="385" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="16" font-weight="bold" fill="#dfdfd6" text-anchor="middle">Container Events</text>
+  <text x="140" y="405" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="13" fill="#98989f" text-anchor="middle">Real-time Notifications</text>
+  
+  <!-- Container Updates -->
+  <rect x="60" y="215" width="160" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="60" y="215" width="4" height="60" fill="#ff9800" rx="0" ry="0" />
+  <text x="140" y="245" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="16" font-weight="bold" fill="#dfdfd6" text-anchor="middle">Container Updates</text>
+  <text x="140" y="265" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="13" fill="#98989f" text-anchor="middle">Version Monitoring</text>
+  
+  <!-- Data Flow Lines -->
+  <line x1="560" y1="190" x2="220" y2="315" stroke="#666666" stroke-width="2" />
+  <line x1="560" y1="200" x2="220" y2="385" stroke="#666666" stroke-width="2" />
+  <line x1="560" y1="180" x2="220" y2="245" stroke="#666666" stroke-width="2" />
+  
+  <!-- Legend -->
+  <rect x="50" y="450" width="15" height="15" fill="#3498db" />
+  <text x="75" y="463" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="12" fill="#dfdfd6">SSM Server</text>
+  <rect x="180" y="450" width="15" height="15" fill="#4caf50" />
+  <text x="205" y="463" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="12" fill="#dfdfd6">Remote Device</text>
+  <rect x="325" y="450" width="15" height="15" fill="#9b59b6" />
+  <text x="350" y="463" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="12" fill="#dfdfd6">Docker Containers</text>
+  <rect x="495" y="450" width="15" height="15" fill="#ff9800" />
+  <text x="520" y="463" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="12" fill="#dfdfd6">SSH Tunnel</text>
+  <rect x="50" y="475" width="15" height="15" fill="#9b59b6" />
+  <text x="75" y="488" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="12" fill="#dfdfd6">Docker Socket</text>
+  <circle cx="180" cy="483" r="7" fill="#9b59b6" /> 
+  <text x="205" y="488" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="12" fill="#dfdfd6">Docker Daemon</text>
+</svg>

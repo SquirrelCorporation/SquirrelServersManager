@@ -2,7 +2,6 @@
 // Project: https://github.com/sebhildebrandt/systeminformation
 // Definitions by: sebhildebrandt <https://github.com/sebhildebrandt>
 
-
 export namespace Systeminformation {
   // 1. General
 
@@ -32,6 +31,7 @@ export namespace Systeminformation {
     virtualHost?: string;
     raspberry?: RaspberryRevisionData;
     type?: string;
+    lastUpdatedAt?: string;
   }
 
   export interface BiosData {
@@ -44,7 +44,7 @@ export namespace Systeminformation {
     features?: string[];
   }
 
-  export  interface BaseboardData {
+  export interface BaseboardData {
     manufacturer: string;
     model: string;
     version: string;
@@ -66,7 +66,7 @@ export namespace Systeminformation {
 
   // 3. CPU, Memory, Disks, Battery, Graphics
 
-  export  interface CpuData {
+  export interface CpuData {
     manufacturer: string;
     brand: string;
     vendor: string;
@@ -88,9 +88,10 @@ export namespace Systeminformation {
     flags: string;
     virtualization: boolean;
     cache: CpuCacheData;
+    lastUpdatedAt?: string;
   }
 
-  export  interface CpuCacheData {
+  export interface CpuCacheData {
     l1d: number | string | null;
     l1i: number | string | null;
     l2: number | string | null;
@@ -98,14 +99,14 @@ export namespace Systeminformation {
     cache?: any;
   }
 
-  export  interface CpuCurrentSpeedData {
+  export interface CpuCurrentSpeedData {
     min: number;
     max: number;
     avg: number;
     cores: number[];
   }
 
-  export  interface CpuTemperatureData {
+  export interface CpuTemperatureData {
     main: number | null;
     cores: number[];
     max: number | null;
@@ -113,7 +114,7 @@ export namespace Systeminformation {
     chipset?: number | null;
   }
 
-  export  interface MemData {
+  export interface MemData {
     total: number;
     free: number;
     used: number;
@@ -128,6 +129,7 @@ export namespace Systeminformation {
     swapfree: number;
     writeback: number | null;
     dirty: number | null;
+    lastUpdatedAt?: string;
   }
 
   export interface MemLayoutData {
@@ -143,6 +145,7 @@ export namespace Systeminformation {
     voltageConfigured: number | null;
     voltageMin: number | null;
     voltageMax: number | null;
+    lastUpdatedAt?: string;
   }
 
   export interface SmartData {
@@ -259,7 +262,7 @@ export namespace Systeminformation {
     };
   }
 
-  export  interface DiskLayoutData {
+  export interface DiskLayoutData {
     device: string;
     type: string;
     name: string;
@@ -279,6 +282,7 @@ export namespace Systeminformation {
     temperature: null | number;
     smartData?: SmartData;
     BSDName?: string;
+    lastUpdatedAt?: string;
   }
 
   export interface BatteryData {
@@ -300,12 +304,13 @@ export namespace Systeminformation {
     additionalBatteries?: BatteryData[];
   }
 
-  export  interface GraphicsData {
+  export interface GraphicsData {
     controllers: GraphicsControllerData[];
     displays: GraphicsDisplayData[];
+    lastUpdatedAt?: string;
   }
 
-  export  interface GraphicsControllerData {
+  export interface GraphicsControllerData {
     vendor: string;
     subVendor?: string;
     vendorId?: string;
@@ -362,7 +367,7 @@ export namespace Systeminformation {
 
   // 4. Operating System
 
-  export  interface OsData {
+  export interface OsData {
     platform: string;
     distro: string;
     release: string;
@@ -379,9 +384,10 @@ export namespace Systeminformation {
     uefi: boolean | null;
     hypervizor?: boolean;
     remoteSession?: boolean;
+    lastUpdatedAt?: string;
   }
 
-  export  interface UuidData {
+  export interface UuidData {
     os: string;
     hardware: string;
     macs: string[];
@@ -425,6 +431,7 @@ export namespace Systeminformation {
     fish?: string;
     bun?: string;
     deno?: string;
+    lastUpdatedAt?: string;
   }
 
   export interface UserData {
@@ -456,7 +463,7 @@ export namespace Systeminformation {
     available: number | null;
   }
 
-  export  interface BlockDevicesData {
+  export interface BlockDevicesData {
     name: string;
     identifier: string;
     type: string;
@@ -530,9 +537,10 @@ export namespace Systeminformation {
     netEnabled?: boolean;
     vendor?: string;
     model?: string;
+    lastUpdatedAt?: string;
   }
 
-  export  interface NetworkStatsData {
+  export interface NetworkStatsData {
     iface: string;
     operstate: string;
     rx_bytes: number;
@@ -578,12 +586,13 @@ export namespace Systeminformation {
     rsnFlags: string[];
   }
 
-  export  interface WifiInterfaceData {
+  export interface WifiInterfaceData {
     id: string;
     iface: string;
     model: string;
     vendor: string;
     mac: string;
+    lastUpdatedAt?: string;
   }
 
   export interface WifiConnectionData {
@@ -624,7 +633,7 @@ export namespace Systeminformation {
     cpus: CurrentLoadCpuData[];
   }
 
-  export  interface CurrentLoadCpuData {
+  export interface CurrentLoadCpuData {
     load: number;
     loadUser: number;
     loadSystem: number;
@@ -643,7 +652,7 @@ export namespace Systeminformation {
     rawLoadGuest: number;
   }
 
-  export  interface ProcessesData {
+  export interface ProcessesData {
     all: number;
     running: number;
     blocked: number;
@@ -652,7 +661,7 @@ export namespace Systeminformation {
     list: ProcessesProcessData[];
   }
 
-  export  interface ProcessesProcessData {
+  export interface ProcessesProcessData {
     pid: number;
     parentPid: number;
     name: string;
@@ -673,7 +682,7 @@ export namespace Systeminformation {
     path: string;
   }
 
-  export  interface ProcessesProcessLoadData {
+  export interface ProcessesProcessLoadData {
     proc: string;
     pid: number;
     pids: number[];
@@ -681,7 +690,7 @@ export namespace Systeminformation {
     mem: number;
   }
 
-  export  interface ServicesData {
+  export interface ServicesData {
     name: string;
     running: boolean;
     startmode: string;
@@ -762,7 +771,7 @@ export namespace Systeminformation {
     rootFS: any;
   }
 
-  export  interface DockerContainerData {
+  export interface DockerContainerData {
     id: string;
     name: string;
     image: string;
@@ -782,7 +791,7 @@ export namespace Systeminformation {
     mounts: DockerContainerMountData[];
   }
 
-  export  interface DockerContainerMountData {
+  export interface DockerContainerMountData {
     Type: string;
     Source: string;
     Destination: string;
@@ -791,7 +800,7 @@ export namespace Systeminformation {
     Propagation: string;
   }
 
-  export  interface DockerContainerStatsData {
+  export interface DockerContainerStatsData {
     id: string;
     memUsage: number;
     memLimit: number;
@@ -830,7 +839,7 @@ export namespace Systeminformation {
     command: string;
   }
 
-  export  interface DockerVolumeData {
+  export interface DockerVolumeData {
     name: string;
     driver: string;
     labels: any;
@@ -842,7 +851,7 @@ export namespace Systeminformation {
 
   // 9. Virtual Box
 
-  export  interface VboxInfoData {
+  export interface VboxInfoData {
     id: string;
     name: string;
     running: boolean;
@@ -881,7 +890,7 @@ export namespace Systeminformation {
     rtc: string;
   }
 
-  export  interface PrinterData {
+  export interface PrinterData {
     id: number;
     name: string;
     model: string;
@@ -904,6 +913,7 @@ export namespace Systeminformation {
     manufacturer: string;
     maxPower: string | null;
     serialNumber: string | number | null;
+    lastUpdatedAt?: string;
   }
 
   export interface AudioData {
@@ -920,7 +930,7 @@ export namespace Systeminformation {
     status: string;
   }
 
-  export  interface BluetoothDeviceData {
+  export interface BluetoothDeviceData {
     device: string | null;
     name: string | null;
     macDevice: string | null;
@@ -929,6 +939,7 @@ export namespace Systeminformation {
     manufacturer: string | null;
     type: string;
     connected: boolean | null;
+    lastUpdatedAt?: string;
   }
 
   // 10. "Get All at once" - functions
@@ -968,5 +979,33 @@ export namespace Systeminformation {
     disksIO: DisksIoData;
     wifiNetworks: WifiNetworkData;
     inetLatency: number;
+  }
+
+  export interface SystemInformation {
+    cpu?: CpuData;
+    cpuUpdatedAt?: string;
+    mem?: Partial<MemData>;
+    memUpdatedAt?: string;
+    fileSystems?: DiskLayoutData[];
+    fileSystemsUpdatedAt?: string;
+    networkInterfaces?: NetworkInterfacesData[];
+    networkInterfacesUpdatedAt?: string;
+    graphics?: GraphicsData;
+    graphicsUpdatedAt?: string;
+    wifi?: WifiInterfaceData[];
+    wifiUpdatedAt?: string;
+    usb?: UsbData[];
+    usbUpdatedAt?: string;
+    os?: OsData;
+    osUpdatedAt?: string;
+    system?: SystemData;
+    systemUpdatedAt?: string;
+    versions?: VersionData;
+    versionsUpdatedAt?: string;
+    memLayout?: MemLayoutData[];
+    memLayoutUpdatedAt?: string;
+    bluetooth?: BluetoothDeviceData[];
+    bluetoothUpdatedAt?: string;
+    // ...other fields as before
   }
 }

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="500" viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient Definitions -->
+  <defs>
+    <linearGradient id="headerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#34495e" />
+      <stop offset="100%" stop-color="#2c3e50" />
+    </linearGradient>
+    <linearGradient id="supportedGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2ecc71" />
+      <stop offset="100%" stop-color="#27ae60" />
+    </linearGradient>
+    <linearGradient id="limitedGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f1c40f" />
+      <stop offset="100%" stop-color="#f39c12" />
+    </linearGradient>
+    <linearGradient id="unsupportedGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#e74c3c" />
+      <stop offset="100%" stop-color="#c0392b" />
+    </linearGradient>
+    <filter id="shadowFilter" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="500" fill="#f9f9f9" rx="10" ry="10" />
+  
+  <!-- Title -->
+  <text x="450" y="50" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#333">SSM Compatibility Matrix</text>
+  
+  <!-- Matrix Header -->
+  <rect x="100" y="100" width="150" height="50" rx="5" ry="5" fill="url(#headerGradient)" filter="url(#shadowFilter)" />
+  <text x="175" y="130" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Platform / Browser</text>
+  
+  <rect x="250" y="100" width="120" height="50" rx="5" ry="5" fill="url(#headerGradient)" filter="url(#shadowFilter)" />
+  <text x="310" y="130" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Chrome 90+</text>
+  
+  <rect x="370" y="100" width="120" height="50" rx="5" ry="5" fill="url(#headerGradient)" filter="url(#shadowFilter)" />
+  <text x="430" y="130" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Firefox 90+</text>
+  
+  <rect x="490" y="100" width="120" height="50" rx="5" ry="5" fill="url(#headerGradient)" filter="url(#shadowFilter)" />
+  <text x="550" y="130" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Safari 15+</text>
+  
+  <rect x="610" y="100" width="120" height="50" rx="5" ry="5" fill="url(#headerGradient)" filter="url(#shadowFilter)" />
+  <text x="670" y="130" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Edge 90+</text>
+  
+  <!-- Windows Row -->
+  <rect x="100" y="150" width="150" height="50" rx="5" ry="5" fill="url(#headerGradient)" filter="url(#shadowFilter)" />
+  <text x="175" y="180" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Windows</text>
+  
+  <rect x="250" y="150" width="120" height="50" rx="5" ry="5" fill="url(#supportedGradient)" filter="url(#shadowFilter)" />
+  <text x="310" y="180" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">✓</text>
+  
+  <rect x="370" y="150" width="120" height="50" rx="5" ry="5" fill="url(#supportedGradient)" filter="url(#shadowFilter)" />
+  <text x="430" y="180" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">✓</text>
+  
+  <rect x="490" y="150" width="120" height="50" rx="5" ry="5" fill="url(#unsupportedGradient)" filter="url(#shadowFilter)" />
+  <text x="550" y="180" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">✗</text>
+  
+  <rect x="610" y="150" width="120" height="50" rx="5" ry="5" fill="url(#supportedGradient)" filter="url(#shadowFilter)" />
+  <text x="670" y="180" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">✓</text>
+  
+  <!-- macOS Row -->
+  <rect x="100" y="200" width="150" height="50" rx="5" ry="5" fill="url(#headerGradient)" filter="url(#shadowFilter)" />
+  <text x="175" y="230" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">macOS</text>
+  
+  <rect x="250" y="200" width="120" height="50" rx="5" ry="5" fill="url(#supportedGradient)" filter="url(#shadowFilter)" />
+  <text x="310" y="230" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">✓</text>
+  
+  <rect x="370" y="200" width="120" height="50" rx="5" ry="5" fill="url(#supportedGradient)" filter="url(#shadowFilter)" />
+  <text x="430" y="230" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">✓</text>
+  
+  <rect x="490" y="200" width="120" height="50" rx="5" ry="5" fill="url(#supportedGradient)" filter="url(#shadowFilter)" />
+  <text x="550" y="230" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">✓</text>
+  
+  <rect x="610" y="200" width="120" height="50" rx="5" ry="5" fill="url(#supportedGradient)" filter="url(#shadowFilter)" />
+  <text x="670" y="230" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">✓</text>
+  
+  <!-- Linux Row -->
+  <rect x="100" y="250" width="150" height="50" rx="5" ry="5" fill="url(#headerGradient)" filter="url(#shadowFilter)" />
+  <text x="175" y="280" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Linux</text>
+  
+  <rect x="250" y="250" width="120" height="50" rx="5" ry="5" fill="url(#supportedGradient)" filter="url(#shadowFilter)" />
+  <text x="310" y="280" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">✓</text>
+  
+  <rect x="370" y="250" width="120" height="50" rx="5" ry="5" fill="url(#supportedGradient)" filter="url(#shadowFilter)" />
+  <text x="430" y="280" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">✓</text>
+  
+  <rect x="490" y="250" width="120" height="50" rx="5" ry="5" fill="url(#unsupportedGradient)" filter="url(#shadowFilter)" />
+  <text x="550" y="280" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">✗</text>
+  
+  <rect x="610" y="250" width="120" height="50" rx="5" ry="5" fill="url(#supportedGradient)" filter="url(#shadowFilter)" />
+  <text x="670" y="280" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">✓</text>
+  
+  <!-- Mobile Row -->
+  <rect x="100" y="300" width="150" height="50" rx="5" ry="5" fill="url(#headerGradient)" filter="url(#shadowFilter)" />
+  <text x="175" y="330" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">Mobile Devices</text>
+  
+  <rect x="250" y="300" width="120" height="50" rx="5" ry="5" fill="url(#limitedGradient)" filter="url(#shadowFilter)" />
+  <text x="310" y="330" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">⚠</text>
+  
+  <rect x="370" y="300" width="120" height="50" rx="5" ry="5" fill="url(#limitedGradient)" filter="url(#shadowFilter)" />
+  <text x="430" y="330" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">⚠</text>
+  
+  <rect x="490" y="300" width="120" height="50" rx="5" ry="5" fill="url(#limitedGradient)" filter="url(#shadowFilter)" />
+  <text x="550" y="330" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">⚠</text>
+  
+  <rect x="610" y="300" width="120" height="50" rx="5" ry="5" fill="url(#limitedGradient)" filter="url(#shadowFilter)" />
+  <text x="670" y="330" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">⚠</text>
+  
+  <!-- Legend -->
+  <rect x="250" y="400" width="400" height="80" rx="10" ry="10" fill="#fff" stroke="#ddd" stroke-width="2" />
+  <text x="450" y="425" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#333">Legend</text>
+  
+  <circle cx="280" cy="450" r="12" fill="url(#supportedGradient)" />
+  <text x="280" y="455" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">✓</text>
+  <text x="350" y="455" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="#333">Fully Supported</text>
+  
+  <circle cx="500" cy="450" r="12" fill="url(#limitedGradient)" />
+  <text x="500" y="455" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">⚠</text>
+  <text x="575" y="455" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="#333">Limited Support</text>
+  
+  <circle cx="280" cy="480" r="12" fill="url(#unsupportedGradient)" />
+  <text x="280" y="485" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">✗</text>
+  <text x="355" y="485" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="#333">Not Supported</text>
+</svg>

@@ -1,5 +1,6 @@
 ﻿import type { RequestConfig } from '@umijs/max';
-import { message, notification } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { notification } from 'antd';
 
 enum ErrorShowType {
   SILENT = 0,

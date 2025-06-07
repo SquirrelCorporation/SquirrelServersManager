@@ -16,7 +16,7 @@ const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
     dataIndex: 'time',
     key: 'time',
     valueType: 'dateTime',
-    width: '8%',
+    width: '10%',
   },
   {
     title: 'Level',
@@ -32,7 +32,7 @@ const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
       50: { text: 'error', status: 'Error' },
       60: { text: 'fatal', status: 'Error' },
     },
-    width: '5%',
+    width: '10%',
   },
   {
     title: 'PID',
@@ -68,9 +68,9 @@ const ServerLogsColumns: ProColumns<API.ServerLog>[] = [
     responsive: ['xs'],
   },
   {
-    title: 'Module ID',
-    dataIndex: 'moduleId',
-    key: 'moduleId',
+    title: 'Context',
+    dataIndex: 'context',
+    key: 'context',
     filters: true,
     onFilter: true,
     width: '10%',

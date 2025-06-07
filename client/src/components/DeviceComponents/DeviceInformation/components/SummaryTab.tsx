@@ -14,6 +14,7 @@ import {
 import { capitalizeFirstLetter } from '@/utils/strings';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
+import { ACCENT_COLORS } from '../../../../styles/colors';
 
 type SummaryTabProps = {
   device: API.DeviceItem;
@@ -58,16 +59,15 @@ const SummaryTab: React.FC<SummaryTabProps> = ({ device }) => {
     });
   }
   // Detailed info with associated icons
-  const detailedInfo = [];
+  const rawDetailedInfo = [];
   if (
     device?.systemInformation?.cpu?.vendor ||
     device?.systemInformation?.cpu?.manufacturer
   ) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Processor',
       value: `${device.systemInformation.cpu.vendor ?? device.systemInformation.cpu.manufacturer ?? ''} - ${device.systemInformation.cpu.brand ?? ''}`,
       icon: <WhhCpu />,
-      color: '#979347',
     });
   }
   if (device?.systemInformation?.cpu?.cores) {
@@ -83,11 +83,10 @@ const SummaryTab: React.FC<SummaryTabProps> = ({ device }) => {
     const coreDetails = [efficiency, performance, physical]
       .filter(Boolean)
       .join(' + ');
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Cores',
       value: `${device.systemInformation.cpu.cores}-Cores (${coreDetails})`,
       icon: <HardwareCircuit />,
-      color: '#9a1010',
     });
   }
   if (
@@ -98,11 +97,10 @@ const SummaryTab: React.FC<SummaryTabProps> = ({ device }) => {
       (acc: any, disk: { size: any }) => acc + disk.size,
       0,
     );
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Disk Space',
       value: `~${Math.ceil(totalDiskSpace / (1024 * 1024 * 1024))} GB`,
       icon: <FileSystem />,
-      color: '#406471',
     });
   }
   if (
@@ -116,19 +114,17 @@ const SummaryTab: React.FC<SummaryTabProps> = ({ device }) => {
             `${controller.vendor} ${controller?.model ? '-' : ''} ${controller?.model}`,
         )
         .join(', ');
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Graphics',
       value: `${graphicsControllersSummary}`,
       icon: <GraphicsCard />,
-      color: '#412d47',
     });
   }
   if (device?.systemInformation?.os?.arch) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Arch',
       value: `${device.systemInformation.os.arch}`,
       icon: <GrommetIconsSystem />,
-      color: '#252987',
     });
   }
   if (device?.systemInformation?.networkInterfaces) {
@@ -136,14 +132,17 @@ const SummaryTab: React.FC<SummaryTabProps> = ({ device }) => {
       (e: { default: boolean }) => e.default,
     );
     if (defaultInterface) {
-      detailedInfo.push({
+      rawDetailedInfo.push({
         key: 'Network',
         value: `Default: ${defaultInterface.type ? capitalizeFirstLetter(defaultInterface.type) : ''}, ${defaultInterface.ip4 ?? ''}`,
         icon: <ElNetwork />,
-        color: '#4c4e51',
       });
     }
   }
+  const detailedInfo = rawDetailedInfo.map((item, idx) => ({
+    ...item,
+    color: ACCENT_COLORS[idx % ACCENT_COLORS.length],
+  }));
   return (
     <SystemInformationView
       name={'Summary'}

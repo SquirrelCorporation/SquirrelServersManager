@@ -1,18 +1,22 @@
 import SSHConnectionFormElements from '@/components/DeviceConfiguration/SSHConnectionFormElements';
-import { getDeviceAuth, putDeviceAuth } from '@/services/rest/deviceauth';
+import {
+  getDeviceAuth,
+  updateDeviceAuth,
+} from '@/services/rest/devices/device-credentials';
 import { ProFormInstance } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
-import { message, Space } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Space } from 'antd';
 import React, { useRef } from 'react';
 import { API } from 'ssm-shared-lib';
 
 export type ConfigurationFormSSHProps = {
-  values: Partial<API.DeviceItem>;
+  device: Partial<API.DeviceItem>;
 };
 
-const SSHConfigurationFormTab: React.FC<ConfigurationFormSSHProps> = (
-  props,
-) => {
+const SSHConfigurationFormTab: React.FC<ConfigurationFormSSHProps> = ({
+  device,
+}) => {
   const formRef = useRef<ProFormInstance | undefined>();
   return (
     <>
@@ -33,8 +37,8 @@ const SSHConfigurationFormTab: React.FC<ConfigurationFormSSHProps> = (
           },
         }}
         onFinish={async (values) => {
-          if (props?.values?.uuid && values) {
-            await putDeviceAuth(props.values.uuid, {
+          if (device?.uuid && values) {
+            await updateDeviceAuth(device.uuid, {
               sshPort: values.sshPort,
               authType: values.authType,
               sshUser: values.sshUser,
@@ -67,8 +71,8 @@ const SSHConfigurationFormTab: React.FC<ConfigurationFormSSHProps> = (
           }
         }}
         request={async () => {
-          if (props?.values?.uuid) {
-            return await getDeviceAuth(props.values.uuid).then((res) => {
+          if (device?.uuid) {
+            return await getDeviceAuth(device.uuid).then((res) => {
               return {
                 sshPort: res.data.sshPort,
                 authType: res.data.authType,
@@ -91,10 +95,7 @@ const SSHConfigurationFormTab: React.FC<ConfigurationFormSSHProps> = (
           }
         }}
       >
-        <SSHConnectionFormElements
-          deviceIp={props.values.ip}
-          formRef={formRef}
-        />
+        <SSHConnectionFormElements deviceIp={device.ip} formRef={formRef} />
       </ProForm>
     </>
   );

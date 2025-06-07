@@ -1,12 +1,13 @@
 import ProxmoxConfigurationFormElements from '@/components/DeviceConfiguration/ProxmoxConfigurationFormElements';
 import {
   getDeviceAuth,
-  postDeviceProxmoxAuth,
   postCheckDeviceProxmoxAuth,
-} from '@/services/rest/deviceauth';
+  updateDeviceProxmoxAuth,
+} from '@/services/rest/devices/device-credentials';
 import { ProFormInstance } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
-import { Button, message, Space } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Button, Space } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -14,15 +15,15 @@ export type ProxmoxConfigurationFormProps = {
   device: Partial<API.DeviceItem>;
 };
 
-const ProxmoxConfigurationForm: React.FC<ProxmoxConfigurationFormProps> = (
-  props,
-) => {
+const ProxmoxConfigurationForm: React.FC<ProxmoxConfigurationFormProps> = ({
+  device,
+}) => {
   const formRef = React.useRef<ProFormInstance | undefined>();
 
   const handleOnClickTestConnection = async () => {
     message.loading({ key: 'loading', content: 'Testing connection...' });
     await postCheckDeviceProxmoxAuth(
-      props?.device?.uuid as string,
+      device?.uuid as string,
       formRef.current?.getFieldsValue(),
     )
       .then((res) => {
@@ -65,9 +66,9 @@ const ProxmoxConfigurationForm: React.FC<ProxmoxConfigurationFormProps> = (
           },
         }}
         onFinish={async (values) => {
-          if (props?.device?.uuid && values) {
-            await postDeviceProxmoxAuth(
-              props.device.uuid,
+          if (device?.uuid && values) {
+            await updateDeviceProxmoxAuth(
+              device.uuid,
               values as API.ProxmoxAuth,
             )
               .then(() => {
@@ -90,8 +91,8 @@ const ProxmoxConfigurationForm: React.FC<ProxmoxConfigurationFormProps> = (
           }
         }}
         request={async () => {
-          if (props?.device?.uuid) {
-            return await getDeviceAuth(props.device.uuid).then((res) => {
+          if (device?.uuid) {
+            return await getDeviceAuth(device.uuid).then((res) => {
               return res.data?.proxmoxAuth || {};
             });
           } else {
@@ -102,10 +103,7 @@ const ProxmoxConfigurationForm: React.FC<ProxmoxConfigurationFormProps> = (
           }
         }}
       >
-        <ProxmoxConfigurationFormElements
-          device={props.device}
-          formRef={formRef}
-        />
+        <ProxmoxConfigurationFormElements device={device} formRef={formRef} />
       </ProForm>
     </>
   );

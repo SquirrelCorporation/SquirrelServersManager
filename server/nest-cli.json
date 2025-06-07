@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": false,
+    "tsConfigPath": "tsconfig.build.json",
+    "assets": [
+      { "include": "**/*.py", "outDir": "dist" },
+      { "include": "**/*.yml", "outDir": "dist" },
+      { "include": "**/*.yaml", "outDir": "dist" },
+      { "include": "**/*.json", "outDir": "dist" }
+    ]
+  },
+  "watchOptions": {
+    "watchFile": "priorityPollingInterval",
+    "watchDirectory": "dynamicPriorityPolling",
+    "fallbackPolling": "dynamicPriority",
+    "synchronousWatchDirectory": true,
+    "excludeDirectories": ["node_modules", "dist", "**/__tests__/*.ts"]
+  }
+}

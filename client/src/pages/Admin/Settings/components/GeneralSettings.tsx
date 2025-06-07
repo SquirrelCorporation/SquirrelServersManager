@@ -11,7 +11,7 @@ import {
   postDeviceStatsSettings,
   postLogsSetting,
   postResetSettings,
-} from '@/services/rest/settings';
+} from '@/services/rest/settings/settings';
 import { useModel } from '@@/exports';
 import {
   InfoCircleFilled,
@@ -24,7 +24,6 @@ import {
   Col,
   Flex,
   InputNumber,
-  message,
   Popconfirm,
   Popover,
   Row,
@@ -33,7 +32,7 @@ import {
 } from 'antd';
 import React, { useState } from 'react';
 import { SettingsKeys } from 'ssm-shared-lib';
-
+import message from '@/components/Message/DynamicMessage';
 const GeneralSettings: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};

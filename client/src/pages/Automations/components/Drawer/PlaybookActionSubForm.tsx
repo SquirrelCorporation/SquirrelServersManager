@@ -1,27 +1,29 @@
 import ExtraVarView from '@/components/PlaybookSelection/ExtraVarView';
-import { getAllDevices } from '@/services/rest/device';
-import { getPlaybooks } from '@/services/rest/playbooks';
+import { getAllDevices } from '@/services/rest/devices/devices';
+import { getPlaybooks } from '@/services/rest/playbooks/playbooks';
 import { CheckCircleFilled, FileOutlined, LockFilled } from '@ant-design/icons';
 import { ProFormSelect } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
 import { Collapse, Space } from 'antd';
 import { FormInstance } from 'antd/lib';
-import React, { useEffect } from 'react';
+import React, { Dispatch, useEffect } from 'react';
 import { API } from 'ssm-shared-lib';
 
 type PlaybookActionSubFormProps = {
-  setOverrideExtraVars: any;
-  overrideExtraVars: any;
+  setOverrideExtraVars: Dispatch<React.SetStateAction<any>>;
   formRef: FormInstance<any>;
 };
 
-const PlaybookActionSubForm: React.FC<PlaybookActionSubFormProps> = (props) => {
-  const newPlaybookValue = ProForm.useWatch('playbook', props.formRef);
+const PlaybookActionSubForm: React.FC<PlaybookActionSubFormProps> = ({
+  setOverrideExtraVars,
+  formRef,
+}) => {
+  const newPlaybookValue = ProForm.useWatch('playbook', formRef);
   const [listOfPlaybooks, setListOfPlaybooks] = React.useState<
     API.PlaybookFile[] | undefined
   >();
   const [selectedPlaybookExtraVars, setSelectedPlaybookExtraVars] =
-    React.useState<any>();
+    React.useState<any[]>();
 
   useEffect(() => {
     if (newPlaybookValue) {
@@ -29,7 +31,7 @@ const PlaybookActionSubForm: React.FC<PlaybookActionSubFormProps> = (props) => {
         (e) => e.uuid === newPlaybookValue.value,
       );
       if (selectedPlaybook) {
-        props.setOverrideExtraVars(
+        setOverrideExtraVars(
           selectedPlaybook.extraVars?.map((e) => {
             return { overrideVar: e.extraVar };
           }),
@@ -45,8 +47,7 @@ const PlaybookActionSubForm: React.FC<PlaybookActionSubFormProps> = (props) => {
                   <ExtraVarView
                     key={e.extraVar}
                     extraVar={e}
-                    setOverrideExtraVars={props.setOverrideExtraVars}
-                    overrideExtraVars={props.overrideExtraVars}
+                    setOverrideExtraVars={setOverrideExtraVars}
                     smallView
                   />
                 ))) ||

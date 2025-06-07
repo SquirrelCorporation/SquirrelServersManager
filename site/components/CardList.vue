@@ -28,7 +28,7 @@
 
                 </v-card-text>
                 <template v-slot:actions>
-                  <a href="/docs/quickstart/">
+                  <a href="/docs/getting-started/">
                   <v-btn text="Deploy using SSM"></v-btn>
                   </a>
                 </template>

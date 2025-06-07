@@ -1,0 +1,100 @@
+/* Migrated from PlaybookExecutionWidget.css */
+.playbook-execution-indicator {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inner-circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.pulse-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background-color: var(--pulse-color);
+  opacity: 0.6;
+  z-index: 1;
+}
+
+.pulse-ring.pulsating {
+  animation: pulse 1.5s ease-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  70% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
+
+.shimmer-text {
+  display: inline-block;
+  position: relative;
+  color: #bfbfbf; /* fallback for browsers without background-clip */
+  background: linear-gradient(
+    90deg,
+    #222 0%,
+    #bfbfbf 20%,
+    #fff 40%,
+    #bfbfbf 80%,
+    #222 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  animation: shimmer-accent 2.5s linear infinite;
+  filter: brightness(1.2) contrast(2.5);
+}
+
+@keyframes shimmer-accent {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.32);
+  border-radius: 999px;
+  padding: 0 12px;
+  height: 28px;
+  min-width: 36px;
+  cursor: pointer;
+  transition: background 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.status-label {
+  color: #fff;
+  font-size: 14px;
+  margin-left: 8px;
+  font-weight: 500;
+  user-select: none;
+} 

@@ -1,5 +1,5 @@
 import { ProFormSelect } from '@ant-design/pro-form';
-import { message } from 'antd';
+import message from '@/components/Message/DynamicMessage';
 import React, { useState } from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -32,7 +32,10 @@ const DirectoryExclusionForm: React.FC<DirectoryExclusionFormProps> = (
   const handleTagsChange = (newTags: string[]) => {
     const invalidTag = newTags.find((tag) => !validateTag(tag));
     if (invalidTag) {
-      void message.error('Characters / and \\ are not authorized');
+      void message.error({
+        content: 'Characters / and \\ are not authorized',
+        duration: 6,
+      });
     } else {
       setTags(newTags);
     }
