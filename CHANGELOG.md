@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-rc.1...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-rc.2...HEAD)
+
+**Merged pull requests:**
+
+- Bump vitest from 3.1.2 to 3.1.4 in /client [\#966](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/966) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v0.5.0-rc.2](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-rc.2) (2025-06-02)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-rc.1...v0.5.0-rc.2)
 
 **Fixed bugs:**
 
@@ -1188,15 +1196,15 @@
 
 ## [v0.1.10](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.10) (2024-06-07)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.10)
-
-## [v0.1.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.8) (2024-06-06)
-
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.8)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.9...v0.1.10)
 
 ## [v0.1.9](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.9) (2024-06-06)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.9)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.8...v0.1.9)
+
+## [v0.1.8](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.8) (2024-06-06)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.1.7...v0.1.8)
 
 ## [v0.1.7](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.1.7) (2024-06-06)
 
