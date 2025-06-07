@@ -6,6 +6,7 @@
 
 **Merged pull requests:**
 
+- \[BUG\] Bugfix/missing authsource [\#984](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/984) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump vitest from 3.1.2 to 3.1.4 in /client [\#966](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/966) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [v0.5.0-rc.2](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-rc.2) (2025-06-02)
