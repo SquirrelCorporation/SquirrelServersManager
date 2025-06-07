@@ -1,13 +1,13 @@
 import { Repositories } from 'ssm-shared-lib';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+  NotFoundError,
   createMockLocalPlaybooksRegisterController,
   mockLocalComponent,
   mockLocalRegister,
   mockPlaybooksRegisterEngineService,
   mockPlaybooksRegisterRepository,
   mockPlaybooksRegisterService,
-  NotFoundError,
 } from './local-playbooks-register-test-setup';
 
 // Import the test-setup which contains all mocks

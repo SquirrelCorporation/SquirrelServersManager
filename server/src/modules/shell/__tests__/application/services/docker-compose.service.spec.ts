@@ -26,9 +26,9 @@ describe('DockerComposeService', () => {
     it('should execute the command and return the ShellString result', async () => {
       const mockResult = { stdout: 'test output', code: 0 };
       (shellWrapperService.exec as any).mockReturnValue(mockResult);
-      
+
       const result = await service.dockerComposeDryRun('docker-compose up');
-      
+
       expect(shellWrapperService.exec).toHaveBeenCalledWith('docker-compose up');
       expect(result).toEqual(mockResult);
     });
@@ -38,9 +38,10 @@ describe('DockerComposeService', () => {
         throw new Error('Command failed');
       });
 
-      await expect(() => service.dockerComposeDryRun('docker-compose up'))
-        .toThrow('Docker Compose command failed due to Error: Command failed');
-        
+      await expect(() => service.dockerComposeDryRun('docker-compose up')).toThrow(
+        'Docker Compose command failed due to Error: Command failed',
+      );
+
       expect(shellWrapperService.exec).toHaveBeenCalledWith('docker-compose up');
     });
   });

@@ -10,56 +10,50 @@ describe('HealthController (Integration)', () => {
           if (path === '/ping') {
             return {
               status: 200,
-              body: { status: 'ok' }
+              body: { status: 'ok' },
             };
           } else if (path === '/health') {
             return {
               status: 200,
-              body: { 
+              body: {
                 status: 'ok',
                 services: {
                   database: 'ok',
-                  ssh: 'ok'
+                  ssh: 'ok',
                 },
-                version: '1.0.0'
-              }
+                version: '1.0.0',
+              },
             };
           }
           return {
             status: 404,
-            body: { error: 'Not found' }
+            body: { error: 'Not found' },
           };
-        })
+        }),
       };
-    })
+    }),
   };
-  
+
   describe('GET /ping', () => {
     it('should return a status of "ok"', async () => {
-      const response = await app
-        .get('/ping')
-        .set('Content-Type', 'application/json');
-      
+      const response = await app.get('/ping').set('Content-Type', 'application/json');
+
       expect(response.status).toBe(200);
       expect(response.body).toEqual({ status: 'ok' });
     });
-    
+
     it('should be accessible without authentication', async () => {
-      const response = await app
-        .get('/ping')
-        .set();
-      
+      const response = await app.get('/ping').set();
+
       expect(response.status).toBe(200);
       expect(response.body).toEqual({ status: 'ok' });
     });
   });
-  
+
   describe('GET /health', () => {
     it('should return the application health status', async () => {
-      const response = await app
-        .get('/health')
-        .set('Content-Type', 'application/json');
-      
+      const response = await app.get('/health').set('Content-Type', 'application/json');
+
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('status', 'ok');
       expect(response.body).toHaveProperty('services');

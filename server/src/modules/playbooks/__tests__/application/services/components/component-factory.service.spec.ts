@@ -1,13 +1,13 @@
 import { SsmGit } from 'ssm-shared-lib';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  createMockComponentFactory,
   GitPlaybooksRegisterComponent,
   LocalPlaybooksRegisterComponent,
+  PlaybooksRegisterComponent,
+  createMockComponentFactory,
   mockPlaybookRepository,
   mockPlaybooksRegisterRepository,
   mockTreeNodeService,
-  PlaybooksRegisterComponent,
 } from './component-factory-test-setup';
 
 // Import the test-setup which contains all mocks

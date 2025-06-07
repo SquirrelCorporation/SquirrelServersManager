@@ -1,5 +1,5 @@
-import { vi } from 'vitest';
 import * as fs from 'fs';
+import { vi } from 'vitest';
 import * as fsExtra from 'fs-extra';
 import * as memfs from 'memfs';
 import { Volume } from 'memfs';
@@ -15,7 +15,7 @@ host_key_checking=False
 [ssh_connection]
 # SSH pipelining
 pipelining=True
-`
+`,
 });
 
 // Mock fs module
@@ -42,11 +42,11 @@ const mockFs = {
 };
 
 // Make mockReturnValue available on the mocks
-mockFs.readFileSync.mockReturnValue = function(value) {
+mockFs.readFileSync.mockReturnValue = function (value) {
   return this.mockImplementation(() => value);
 };
 
-mockFs.writeFileSync.mockReturnValue = function(value) {
+mockFs.writeFileSync.mockReturnValue = function (value) {
   return this.mockImplementation(() => value);
 };
 
@@ -178,7 +178,7 @@ pipelining=True
         if (!vol.existsSync(dirPath)) {
           vol.mkdirSync(dirPath, { recursive: true });
         }
-        
+
         vol.writeFileSync(dest, defaultContent);
         return { code: 0, toString: () => 'Copied' };
       } catch (error) {
@@ -226,7 +226,7 @@ host_key_checking=False
 [ssh_connection]
 # SSH pipelining
 pipelining=True
-`
+`,
   );
 }
 

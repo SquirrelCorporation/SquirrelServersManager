@@ -2,10 +2,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Repositories } from 'ssm-shared-lib';
 import { SSM_DATA_PATH, SSM_INSTALL_PATH } from 'src/config';
 import {
+  IPlaybooksRegister,
   createMockDefaultPlaybooksRegisterService,
   mockFileSystemService,
   mockPlaybooksRegisterRepository,
-  IPlaybooksRegister
 } from './default-playbooks-register-test-setup';
 
 // Import test-setup which contains the mocks
@@ -17,7 +17,7 @@ describe('DefaultPlaybooksRegisterService', () => {
   beforeEach(async () => {
     // Reset all mocks
     vi.clearAllMocks();
-    
+
     // Create a fresh service instance using our mock implementation
     service = createMockDefaultPlaybooksRegisterService();
   });
@@ -35,7 +35,7 @@ describe('DefaultPlaybooksRegisterService', () => {
       await service.saveSSMDefaultPlaybooksRepositories();
 
       expect(mockPlaybooksRegisterRepository.findByUuid).toHaveBeenCalledWith(
-        '00000000-0000-0000-0000-000000000000'
+        '00000000-0000-0000-0000-000000000000',
       );
       expect(mockPlaybooksRegisterRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -43,7 +43,7 @@ describe('DefaultPlaybooksRegisterService', () => {
           uuid: '00000000-0000-0000-0000-000000000000',
           type: Repositories.RepositoryType.LOCAL,
           default: true,
-        })
+        }),
       );
     });
 
@@ -67,7 +67,7 @@ describe('DefaultPlaybooksRegisterService', () => {
         expect.objectContaining({
           name: 'ssm-core',
           directory: '/install/server/src/ansible/00000000-0000-0000-0000-000000000000',
-        })
+        }),
       );
     });
 
@@ -79,7 +79,7 @@ describe('DefaultPlaybooksRegisterService', () => {
       await service.saveSSMDefaultPlaybooksRepositories();
 
       expect(mockPlaybooksRegisterRepository.findByUuid).toHaveBeenCalledWith(
-        '00000000-0000-0000-0000-000000000001'
+        '00000000-0000-0000-0000-000000000001',
       );
       expect(mockPlaybooksRegisterRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -87,7 +87,7 @@ describe('DefaultPlaybooksRegisterService', () => {
           uuid: '00000000-0000-0000-0000-000000000001',
           type: Repositories.RepositoryType.LOCAL,
           default: true,
-        })
+        }),
       );
     });
 
@@ -111,7 +111,7 @@ describe('DefaultPlaybooksRegisterService', () => {
         expect.objectContaining({
           name: 'ssm-tools',
           directory: '/install/server/src/ansible/00000000-0000-0000-0000-000000000001',
-        })
+        }),
       );
     });
   });
@@ -128,10 +128,10 @@ describe('DefaultPlaybooksRegisterService', () => {
           uuid: '00000000-0000-0000-0000-000000000002',
           type: Repositories.RepositoryType.LOCAL,
           directory: '/data/playbooks/00000000-0000-0000-0000-000000000002',
-        })
+        }),
       );
       expect(mockFileSystemService.createDirectory).toHaveBeenCalledWith(
-        '/data/playbooks/00000000-0000-0000-0000-000000000002'
+        '/data/playbooks/00000000-0000-0000-0000-000000000002',
       );
     });
 
@@ -153,7 +153,7 @@ describe('DefaultPlaybooksRegisterService', () => {
         expect.objectContaining({
           name: 'user',
           directory: '/data/playbooks/00000000-0000-0000-0000-000000000002',
-        })
+        }),
       );
     });
 
@@ -167,7 +167,9 @@ describe('DefaultPlaybooksRegisterService', () => {
 
     it('should handle directory creation errors gracefully', async () => {
       mockPlaybooksRegisterRepository.findByUuid.mockResolvedValueOnce(null);
-      mockFileSystemService.createDirectory.mockRejectedValueOnce(new Error('Directory creation failed'));
+      mockFileSystemService.createDirectory.mockRejectedValueOnce(
+        new Error('Directory creation failed'),
+      );
 
       // Should not throw
       await service.createDefaultLocalUserRepository('user@example.com');

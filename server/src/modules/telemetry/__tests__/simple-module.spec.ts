@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { TelemetryModule } from '../telemetry.module';
 import { TelemetryService } from '../telemetry.service';
 

@@ -21,7 +21,7 @@ describe('CronRepositoryMapper', () => {
         expression: '* * * * *',
         createdAt: now,
         updatedAt: now,
-        extraField: 'should be ignored'
+        extraField: 'should be ignored',
       };
 
       // Act
@@ -35,7 +35,7 @@ describe('CronRepositoryMapper', () => {
         lastExecution: now,
         expression: '* * * * *',
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
       });
       // Verify the extra field is not included
       expect(result).not.toHaveProperty('extraField');
@@ -46,7 +46,7 @@ describe('CronRepositoryMapper', () => {
       const persistenceModel = {
         _id: { toString: () => '123' },
         name: 'test-cron',
-        expression: '* * * * *'
+        expression: '* * * * *',
       };
 
       // Act
@@ -82,14 +82,14 @@ describe('CronRepositoryMapper', () => {
           _id: '1',
           name: 'cron1',
           expression: '* * * * *',
-          createdAt: now
+          createdAt: now,
         },
         {
           _id: '2',
           name: 'cron2',
           expression: '0 0 * * *',
-          disabled: true
-        }
+          disabled: true,
+        },
       ];
 
       // Act
@@ -101,14 +101,14 @@ describe('CronRepositoryMapper', () => {
           _id: '1',
           name: 'cron1',
           expression: '* * * * *',
-          createdAt: now
+          createdAt: now,
         },
         {
           _id: '2',
           name: 'cron2',
           expression: '0 0 * * *',
-          disabled: true
-        }
+          disabled: true,
+        },
       ]);
     });
 
@@ -118,24 +118,26 @@ describe('CronRepositoryMapper', () => {
         {
           _id: '1',
           name: 'cron1',
-          expression: '* * * * *'
+          expression: '* * * * *',
         },
         null, // This should be filtered out
         {
           _id: '2',
           name: 'cron2',
-          expression: '0 0 * * *'
-        }
+          expression: '0 0 * * *',
+        },
       ];
 
       // Use vi instead of jest for mocking
       const toDomainSpy = vi.spyOn(mapper, 'toDomain');
       toDomainSpy.mockImplementation((model) => {
-        if (model === null) return null;
+        if (model === null) {
+          return null;
+        }
         return {
           _id: model._id,
           name: model.name,
-          expression: model.expression
+          expression: model.expression,
         };
       });
 

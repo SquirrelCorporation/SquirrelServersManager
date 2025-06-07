@@ -185,7 +185,7 @@ export class PrometheusService implements IPrometheusService {
   }
 
   private handleError(message: string, error: unknown): QueryResult<never> {
-    this.logger.error(error, message);
+    this.logger.warn(message, error instanceof Error ? error.message : 'Unknown error');
     return {
       success: false,
       data: null,
@@ -388,8 +388,11 @@ export class PrometheusService implements IPrometheusService {
         tsdb: tsdbStats.data.data,
       };
     } catch (error) {
-      logger.error(error, 'Failed to fetch Prometheus stats');
-      throw error;
+      logger.warn(
+        'Failed to fetch Prometheus stats, continuing silently:',
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+      return null;
     }
   }
 }

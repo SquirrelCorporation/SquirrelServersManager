@@ -67,7 +67,7 @@ describe('SSHCredentialsHelper', () => {
         privateKey: 'sshkey-decrypted',
       },
     }); */
-    
+
     // We'll skip assertions about vaultDecrypt since we're mocking differently now
     // expect(vault.vaultDecrypt).toHaveBeenCalledTimes(1);
   });

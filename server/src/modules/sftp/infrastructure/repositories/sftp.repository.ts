@@ -1,7 +1,7 @@
+import * as path from 'path';
 import { SshConnectionService } from '@infrastructure/ssh/services/ssh-connection.service';
 import { FileSystemService } from '@modules/shell';
 import { Injectable, Logger } from '@nestjs/common';
-import * as path from 'path';
 import { Socket } from 'socket.io';
 import { Client, SFTPWrapper } from 'ssh2';
 import { API, SsmEvents } from 'ssm-shared-lib';

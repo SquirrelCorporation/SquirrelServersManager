@@ -1,10 +1,10 @@
 import { GitProcess } from 'dugite';
-import { syncPreflightCheck } from './commit-and-sync.service';
 import { credentialOff, credentialOn } from '../utils/credential.util';
 import { defaultGitInfo as defaultDefaultGitInfo } from '../utils/default-info.util';
 import { CantForcePullError, SyncParameterMissingError } from '../errors/errors.util';
-import { getDefaultBranchName, getRemoteName, getSyncState } from './inspect.service';
 import { GitStep, IGitUserInfos, ILogger } from '../interfaces/git.interface';
+import { getDefaultBranchName, getRemoteName, getSyncState } from './inspect.service';
+import { syncPreflightCheck } from './commit-and-sync.service';
 import { fetchRemote } from './sync.service';
 
 export interface IForcePullOptions {

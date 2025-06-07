@@ -83,8 +83,12 @@ describe('PlaybooksRegisterRepository', () => {
         providers: [],
         compile: vi.fn().mockResolvedValue({
           get: vi.fn().mockImplementation((token) => {
-            if (token === MockPlaybooksRegisterRepository) return repository;
-            if (token === getModelToken('PlaybooksRegister')) return model;
+            if (token === MockPlaybooksRegisterRepository) {
+              return repository;
+            }
+            if (token === getModelToken('PlaybooksRegister')) {
+              return model;
+            }
             return undefined;
           }),
         }),

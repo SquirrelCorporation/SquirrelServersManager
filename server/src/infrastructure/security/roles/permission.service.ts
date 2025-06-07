@@ -64,7 +64,11 @@ export class PermissionService {
   /**
    * Check if a role has permission to perform an action on a resource
    */
-  hasPermission(role: Role, resource: keyof typeof RESOURCES, action: keyof typeof ACTIONS): boolean {
+  hasPermission(
+    role: Role,
+    resource: keyof typeof RESOURCES,
+    action: keyof typeof ACTIONS,
+  ): boolean {
     if (!this.permissionMatrix[role]) {
       return false;
     }

@@ -34,3 +34,9 @@ export const SESSION_DURATION = parseInt(process.env.SESSION_DURATION || '864000
 export const SSM_INSTALL_PATH = process.env.SSM_INSTALL_PATH || '/opt/squirrelserversmanager';
 export const SSM_DATA_PATH = process.env.SSM_DATA_PATH || '/data';
 export const TELEMETRY_ENABLED = process.env.TELEMETRY_ENABLED === 'true';
+
+export function getMongoUri(): string {
+  return db.user && db.password
+    ? `mongodb://${encodeURIComponent(db.user)}:${encodeURIComponent(db.password)}@${db.host}:${db.port}/${db.name}?authSource=${encodeURIComponent(db.authSource)}`
+    : `mongodb://${db.host}:${db.port}/${db.name}`;
+}

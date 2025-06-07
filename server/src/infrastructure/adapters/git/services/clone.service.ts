@@ -4,8 +4,8 @@ import { credentialOff, credentialOn } from '../utils/credential.util';
 import { defaultGitInfo as defaultDefaultGitInfo } from '../utils/default-info.util';
 import { GitPullPushError, SyncParameterMissingError } from '../errors';
 import { initGitWithBranch } from '../utils/init.util';
-import { getRemoteName } from './inspect.service';
 import { GitStep, IGitUserInfos, ILogger } from '../interfaces/git.interface';
+import { getRemoteName } from './inspect.service';
 
 export async function clone(options: {
   /** Optional fallback of userInfo. If some info is missing in userInfo, will use defaultGitInfo instead. */

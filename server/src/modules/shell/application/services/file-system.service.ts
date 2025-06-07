@@ -103,7 +103,7 @@ export class FileSystemService implements IFileSystemService {
    * @param args Arguments for the command
    * @returns The result of the command
    */
-  // eslint-disable-next-line prettier/prettier
+
   private executeCommand<T extends (...args: any[]) => any>(
     shellCmd: T,
     ...args: Parameters<T>

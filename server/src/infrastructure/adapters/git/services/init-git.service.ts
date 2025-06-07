@@ -1,9 +1,14 @@
 import { truncate } from 'lodash';
-import { commitAndSync } from './commit-and-sync.service';
 import { defaultGitInfo as defaultDefaultGitInfo } from '../utils/default-info.util';
 import { SyncParameterMissingError } from '../errors/errors.util';
 import { initGitWithBranch } from '../utils/init.util';
-import { GitStep, IGitUserInfos, IGitUserInfosWithoutToken, ILogger } from '../interfaces/git.interface';
+import {
+  GitStep,
+  IGitUserInfos,
+  IGitUserInfosWithoutToken,
+  ILogger,
+} from '../interfaces/git.interface';
+import { commitAndSync } from './commit-and-sync.service';
 import { commitFiles } from './sync.service';
 
 export interface IInitGitOptionsSyncImmediately {

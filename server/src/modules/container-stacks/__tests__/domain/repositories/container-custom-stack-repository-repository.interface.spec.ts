@@ -1,10 +1,15 @@
-import { describe, it, expect, vi } from 'vitest';
-import { CONTAINER_CUSTOM_STACK_REPOSITORY_REPOSITORY, IContainerCustomStackRepositoryRepository } from '../../../domain/repositories/container-custom-stack-repository-repository.interface';
+import { describe, expect, it, vi } from 'vitest';
+import {
+  CONTAINER_CUSTOM_STACK_REPOSITORY_REPOSITORY,
+  IContainerCustomStackRepositoryRepository,
+} from '../../../domain/repositories/container-custom-stack-repository-repository.interface';
 import { IContainerCustomStackRepositoryEntity } from '../../../domain/entities/container-custom-stack.entity';
 
 describe('IContainerCustomStackRepositoryRepository Interface', () => {
   it('should have the correct constant value', () => {
-    expect(CONTAINER_CUSTOM_STACK_REPOSITORY_REPOSITORY).toBe('CONTAINER_CUSTOM_STACK_REPOSITORY_REPOSITORY');
+    expect(CONTAINER_CUSTOM_STACK_REPOSITORY_REPOSITORY).toBe(
+      'CONTAINER_CUSTOM_STACK_REPOSITORY_REPOSITORY',
+    );
   });
 
   it('should define the required repository methods', () => {
@@ -46,4 +51,4 @@ describe('IContainerCustomStackRepositoryRepository Interface', () => {
     expect(await mockRepository.update('123', { name: 'Updated' })).toEqual(mockRepo);
     expect(await mockRepository.deleteByUuid('123')).toBe(true);
   });
-}); 
+});

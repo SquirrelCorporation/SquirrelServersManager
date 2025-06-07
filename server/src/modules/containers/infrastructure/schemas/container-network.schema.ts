@@ -23,7 +23,7 @@ export class ContainerNetwork {
     type: String,
     required: true,
     index: true,
-    ref: 'Device'
+    ref: 'Device',
   })
   deviceUuid!: string;
 
@@ -42,7 +42,7 @@ export class ContainerNetwork {
   @Prop({ type: Boolean })
   attachable!: boolean;
 
-  @Prop({ type: Boolean})
+  @Prop({ type: Boolean })
   ingress!: boolean;
 
   @Prop({ type: Boolean })
@@ -74,5 +74,5 @@ ContainerNetworkSchema.virtual('device', {
   ref: 'Device',
   localField: 'deviceUuid',
   foreignField: 'uuid',
-  justOne: true
+  justOne: true,
 });

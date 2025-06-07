@@ -27,7 +27,7 @@ export class ContainerVolume {
     type: String,
     required: true,
     index: true,
-    ref: 'Device'
+    ref: 'Device',
   })
   deviceUuid!: string;
 
@@ -59,14 +59,12 @@ export class ContainerVolume {
   createdAt!: Date;
 }
 
-
 export const ContainerVolumeSchema = SchemaFactory.createForClass(ContainerVolume);
-
 
 // Set up the relationship with Device model
 ContainerVolumeSchema.virtual('device', {
   ref: 'Device',
   localField: 'deviceUuid',
   foreignField: 'uuid',
-  justOne: true
+  justOne: true,
 });

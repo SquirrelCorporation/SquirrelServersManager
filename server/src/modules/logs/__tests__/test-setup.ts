@@ -2,17 +2,17 @@ import { vi } from 'vitest';
 
 // Mock the infrastructure/common/query utilities
 vi.mock('@infrastructure/common/query/filter.util', () => ({
-  filterByFields: vi.fn().mockImplementation(data => data),
+  filterByFields: vi.fn().mockImplementation((data) => data),
   filterByQueryParams: vi.fn().mockImplementation((data, params) => {
     if (params.search === 'error') {
-      return data.filter(item => item.msg.includes('error'));
+      return data.filter((item) => item.msg.includes('error'));
     }
     return data;
   }),
 }));
 
 vi.mock('@infrastructure/common/query/sorter.util', () => ({
-  sortByFields: vi.fn().mockImplementation(data => data),
+  sortByFields: vi.fn().mockImplementation((data) => data),
 }));
 
 vi.mock('@infrastructure/common/query/pagination.util', () => ({
@@ -39,16 +39,16 @@ vi.mock('@nestjs/mongoose', () => {
       createForClass: (documentClass: any) => {
         return {
           // Return a mock schema
-          schema: {}
+          schema: {},
         };
-      }
+      },
     },
     InjectModel: () => {
       return (target: any, key: string) => {
         // Do nothing, just a mock decorator
       };
     },
-    getModelToken: (name: string) => `${name}Model`
+    getModelToken: (name: string) => `${name}Model`,
   };
 });
 
@@ -76,8 +76,10 @@ vi.mock('mongoose', () => {
       };
     }),
     Types: {
-      ObjectId: function(id) { return id; }
-    }
+      ObjectId: function (id) {
+        return id;
+      },
+    },
   };
   return mockMongoose;
 });
@@ -91,7 +93,7 @@ vi.mock('fs', () => ({
     readFile: vi.fn().mockResolvedValue('{"data": "mocked data"}'),
     writeFile: vi.fn().mockResolvedValue(undefined),
     access: vi.fn().mockResolvedValue(undefined),
-  }
+  },
 }));
 
 // Mock path module

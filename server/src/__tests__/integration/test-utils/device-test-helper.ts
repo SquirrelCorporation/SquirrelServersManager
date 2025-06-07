@@ -29,7 +29,7 @@ export async function setupDeviceTests(helper: TestHelper) {
  */
 export async function createTestDevice(
   helper: TestHelper,
-  deviceData: Partial<TestDevice> = {}
+  deviceData: Partial<TestDevice> = {},
 ): Promise<TestDevice> {
   const defaultData = {
     name: `Test Device ${Date.now()}`,
@@ -37,15 +37,13 @@ export async function createTestDevice(
     port: parseInt(process.env.TEST_SSH_PORT || '2223'),
     type: 'SSH',
     username: process.env.TEST_SSH_USER || 'testuser',
-    password: process.env.TEST_SSH_PASSWORD || 'testpassword'
+    password: process.env.TEST_SSH_PASSWORD || 'testpassword',
   };
-  
+
   const data = { ...defaultData, ...deviceData };
-  
-  const response = await helper.request()
-    .post('/devices')
-    .withJson(data);
-  
+
+  const response = await helper.request().post('/devices').withJson(data);
+
   return response.body;
 }
 
@@ -55,8 +53,7 @@ export async function createTestDevice(
  * @param deviceId Device ID
  */
 export async function deleteTestDevice(helper: TestHelper, deviceId: string): Promise<void> {
-  await helper.request()
-    .delete(`/devices/${deviceId}`);
+  await helper.request().delete(`/devices/${deviceId}`);
 }
 
 /**
@@ -66,9 +63,8 @@ export async function deleteTestDevice(helper: TestHelper, deviceId: string): Pr
  * @returns Device data
  */
 export async function getDevice(helper: TestHelper, deviceId: string): Promise<TestDevice> {
-  const response = await helper.request()
-    .get(`/devices/${deviceId}`);
-  
+  const response = await helper.request().get(`/devices/${deviceId}`);
+
   return response.body;
 }
 
@@ -78,8 +74,7 @@ export async function getDevice(helper: TestHelper, deviceId: string): Promise<T
  * @returns Array of devices
  */
 export async function listDevices(helper: TestHelper): Promise<TestDevice[]> {
-  const response = await helper.request()
-    .get('/devices');
-  
+  const response = await helper.request().get('/devices');
+
   return response.body;
 }

@@ -9,7 +9,7 @@ import { IDeviceAuth } from '../../../domain/entities/device-auth.entity';
 
 // This is to avoid loading the actual schema which causes errors
 vi.mock('../../../infrastructure/schemas/device-auth.schema', () => ({
-  DEVICE_AUTH: 'DeviceAuth'
+  DEVICE_AUTH: 'DeviceAuth',
 }));
 
 describe('DeviceAuthRepository', () => {
@@ -23,11 +23,11 @@ describe('DeviceAuthRepository', () => {
     status: 1,
     systemInformation: {},
     capabilities: {
-      containers: {}
+      containers: {},
     },
     configuration: {
-      containers: {}
-    }
+      containers: {},
+    },
   } as IDevice;
 
   const mockDeviceAuth: IDeviceAuth = {
@@ -37,24 +37,24 @@ describe('DeviceAuthRepository', () => {
     username: 'testuser',
     sshPwd: 'password123',
     host: 'localhost',
-    port: '22'
+    port: '22',
   } as IDeviceAuth;
 
   const mockDeviceAuthDocument = {
     ...mockDeviceAuth,
-    toObject: vi.fn().mockReturnValue(mockDeviceAuth)
+    toObject: vi.fn().mockReturnValue(mockDeviceAuth),
   };
 
   const mockDeviceAuthPopulatedDocument = {
     ...mockDeviceAuth,
     device: {
       ...mockDevice,
-      _id: mockDevice._id
+      _id: mockDevice._id,
     },
     toObject: vi.fn().mockReturnValue({
       ...mockDeviceAuth,
-      device: mockDevice
-    })
+      device: mockDevice,
+    }),
   };
 
   // Setup for the test module
@@ -132,7 +132,7 @@ describe('DeviceAuthRepository', () => {
       expect(deviceAuthModel.findOneAndUpdate).toBeCalledWith(
         { device: mockDeviceAuth.device },
         mockDeviceAuth,
-        { upsert: true, new: true }
+        { upsert: true, new: true },
       );
       expect(result).toEqual(mockDeviceAuth);
     });
@@ -141,7 +141,7 @@ describe('DeviceAuthRepository', () => {
       vi.spyOn(deviceAuthModel, 'findOneAndUpdate').mockResolvedValue(null);
 
       await expect(repository.updateOrCreateIfNotExist(mockDeviceAuth)).rejects.toThrow(
-        'Failed to create or update device auth'
+        'Failed to create or update device auth',
       );
     });
   });
@@ -155,7 +155,7 @@ describe('DeviceAuthRepository', () => {
       expect(deviceAuthModel.findOneAndUpdate).toBeCalledWith(
         { device: mockDeviceAuth.device },
         mockDeviceAuth,
-        { new: true }
+        { new: true },
       );
       expect(result).toEqual(mockDeviceAuth);
     });
@@ -172,7 +172,9 @@ describe('DeviceAuthRepository', () => {
   describe('findOneByDevice', () => {
     it('should find device auth by device and return transformed result', async () => {
       const leanMock = { exec: vi.fn().mockResolvedValue(mockDeviceAuth) };
-      const findOneMock = vi.spyOn(deviceAuthModel, 'findOne').mockReturnValue({ lean: () => leanMock });
+      const findOneMock = vi
+        .spyOn(deviceAuthModel, 'findOne')
+        .mockReturnValue({ lean: () => leanMock });
 
       const result = await repository.findOneByDevice(mockDevice);
 
@@ -192,7 +194,10 @@ describe('DeviceAuthRepository', () => {
 
   describe('findOneByDeviceUuid', () => {
     it('should find device auth by uuid and return transformed result', async () => {
-      const populatedResults = [mockDeviceAuthPopulatedDocument, { ...mockDeviceAuthPopulatedDocument, device: null }];
+      const populatedResults = [
+        mockDeviceAuthPopulatedDocument,
+        { ...mockDeviceAuthPopulatedDocument, device: null },
+      ];
       const execMock = vi.fn().mockResolvedValue(populatedResults);
       const populateMock = vi.fn().mockReturnValue({ exec: execMock });
       vi.spyOn(deviceAuthModel, 'find').mockReturnValue({ populate: populateMock });
@@ -202,7 +207,7 @@ describe('DeviceAuthRepository', () => {
       expect(deviceAuthModel.find).toBeCalled();
       expect(populateMock).toBeCalledWith({
         path: 'device',
-        match: { uuid: { $eq: mockDevice.uuid } }
+        match: { uuid: { $eq: mockDevice.uuid } },
       });
       expect(result).toHaveLength(1);
       expect(result![0]).toEqual(mockDeviceAuth);
@@ -211,7 +216,10 @@ describe('DeviceAuthRepository', () => {
 
   describe('findManyByDevicesUuid', () => {
     it('should find device auths by uuids and return transformed results', async () => {
-      const populatedResults = [mockDeviceAuthPopulatedDocument, { ...mockDeviceAuthPopulatedDocument, device: null }];
+      const populatedResults = [
+        mockDeviceAuthPopulatedDocument,
+        { ...mockDeviceAuthPopulatedDocument, device: null },
+      ];
       const execMock = vi.fn().mockResolvedValue(populatedResults);
       const populateMock = vi.fn().mockReturnValue({ exec: execMock });
       vi.spyOn(deviceAuthModel, 'find').mockReturnValue({ populate: populateMock });
@@ -222,7 +230,7 @@ describe('DeviceAuthRepository', () => {
       expect(deviceAuthModel.find).toBeCalled();
       expect(populateMock).toBeCalledWith({
         path: 'device',
-        match: { uuid: { $in: uuids } }
+        match: { uuid: { $in: uuids } },
       });
       expect(result).toHaveLength(1);
       expect(result![0]).toEqual(mockDeviceAuth);
@@ -280,7 +288,7 @@ describe('DeviceAuthRepository', () => {
 
       expect(deviceAuthModel.updateOne).toBeCalledWith(
         { device: mockDeviceAuth.device },
-        { $unset: { dockerCa: 1 } }
+        { $unset: { dockerCa: 1 } },
       );
       expect(execMock).toBeCalled();
     });
@@ -293,7 +301,7 @@ describe('DeviceAuthRepository', () => {
 
       expect(deviceAuthModel.updateOne).toBeCalledWith(
         { device: mockDeviceAuth.device },
-        { $unset: { dockerCert: 1 } }
+        { $unset: { dockerCert: 1 } },
       );
       expect(execMock).toBeCalled();
     });
@@ -306,7 +314,7 @@ describe('DeviceAuthRepository', () => {
 
       expect(deviceAuthModel.updateOne).toBeCalledWith(
         { device: mockDeviceAuth.device },
-        { $unset: { dockerKey: 1 } }
+        { $unset: { dockerKey: 1 } },
       );
       expect(execMock).toBeCalled();
     });

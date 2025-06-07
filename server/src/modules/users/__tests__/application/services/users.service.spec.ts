@@ -107,7 +107,7 @@ class UsersService {
   }
 
   async getCurrentUser(user: IUser): Promise<any> {
-    const deviceOverview = await this.devicesService.getDevicesOverview?.() || {
+    const deviceOverview = (await this.devicesService.getDevicesOverview?.()) || {
       online: 0,
       offline: 0,
       totalCpu: 0,

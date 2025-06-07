@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import '../../../test-setup';
-import { CustomRegistryComponent } from "@modules/containers/application/services/components/registry/custom-registry.component";
+import { CustomRegistryComponent } from '@modules/containers/application/services/components/registry/custom-registry.component';
 
 describe('testing Custom Registry', () => {
   const custom = new CustomRegistryComponent();

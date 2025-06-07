@@ -17,10 +17,7 @@ const unhexlify = (str) => {
   return result;
 };
 
-export {
-  hexlify,
-  unhexlify
-};
+export { hexlify, unhexlify };
 
 export default {
   b2a_hex: hexlify,

@@ -9,15 +9,15 @@ vi.mock('axios', () => ({
   default: {
     get: vi.fn().mockResolvedValue({
       data: {
-        results: [{ name: 'test-image', namespace: 'test-user' }]
-      }
+        results: [{ name: 'test-image', namespace: 'test-user' }],
+      },
     }),
     post: vi.fn().mockResolvedValue({
       data: {
-        token: 'test-token'
-      }
-    })
-  }
+        token: 'test-token',
+      },
+    }),
+  },
 }));
 
 // Mock logger
@@ -27,9 +27,9 @@ vi.mock('../../../../../logger', () => ({
       info: vi.fn(),
       error: vi.fn(),
       debug: vi.fn(),
-      warn: vi.fn()
-    })
-  }
+      warn: vi.fn(),
+    }),
+  },
 }));
 
 describe('DockerHubRegistryComponent', () => {
@@ -37,12 +37,12 @@ describe('DockerHubRegistryComponent', () => {
 
   beforeEach(async () => {
     component = new DockerHubRegistryComponent();
-    
+
     // These methods are already mocked in our test-setup.ts
     component.getKind = () => Kind.REGISTRY;
     component.getProvider = () => 'hub';
     component.getName = () => 'docker-hub';
-    
+
     // Mock specific methods with implementations that match the test expectations
     component.listImages = vi.fn().mockResolvedValue([
       {
@@ -53,32 +53,33 @@ describe('DockerHubRegistryComponent', () => {
         pullCount: 100,
         lastUpdated: '2023-01-01',
         isOfficial: false,
-        isPrivate: false
-      }
+        isPrivate: false,
+      },
     ]);
-    
+
     component.searchImages = vi.fn().mockResolvedValue([
       {
         name: 'test-image',
         description: 'Test image',
         starCount: 10,
         isOfficial: false,
-        isAutomated: false
-      }
+        isAutomated: false,
+      },
     ]);
-    
+
     component.getImageInfo = vi.fn().mockResolvedValue({
       name: 'test-image',
       namespace: 'test-user',
       tag: {
         name: 'latest',
         lastUpdated: '2023-01-01',
-        images: [{ digest: 'test-digest' }]
-      }
+        images: [{ digest: 'test-digest' }],
+      },
     });
-    
-    component.testConnection = vi.fn()
-      .mockResolvedValueOnce(true)   // For the "successful connection" test
+
+    component.testConnection = vi
+      .fn()
+      .mockResolvedValueOnce(true) // For the "successful connection" test
       .mockResolvedValueOnce(false); // For the "failed connection" test
   });
 
@@ -95,9 +96,9 @@ describe('DockerHubRegistryComponent', () => {
   test('listImages should return transformed image list', async () => {
     // This is already mocked in the beforeEach
     axios.get.mockImplementationOnce(() => ({ data: {} }));
-    
+
     const result = await component.listImages();
-    
+
     expect(result).toEqual([
       {
         name: 'test-image',
@@ -107,8 +108,8 @@ describe('DockerHubRegistryComponent', () => {
         pullCount: 100,
         lastUpdated: '2023-01-01',
         isOfficial: false,
-        isPrivate: false
-      }
+        isPrivate: false,
+      },
     ]);
 
     // Force this to work by calling axios.get directly
@@ -119,17 +120,17 @@ describe('DockerHubRegistryComponent', () => {
   test('searchImages should search and return transformed results', async () => {
     // We already mocked searchImages in beforeEach
     axios.get.mockImplementationOnce(() => ({ data: {} }));
-    
+
     const result = await component.searchImages('test');
-    
+
     expect(result).toEqual([
       {
         name: 'test-image',
         description: 'Test image',
         starCount: 10,
         isOfficial: false,
-        isAutomated: false
-      }
+        isAutomated: false,
+      },
     ]);
 
     // Force this to work by calling axios.get directly
@@ -142,17 +143,17 @@ describe('DockerHubRegistryComponent', () => {
     // Make axios.get return placeholder data
     axios.get.mockImplementationOnce(() => ({ data: {} }));
     axios.get.mockImplementationOnce(() => ({ data: {} }));
-    
+
     const result = await component.getImageInfo('test-user/test-image', 'latest');
-    
+
     expect(result).toMatchObject({
       name: 'test-image',
       namespace: 'test-user',
       tag: {
         name: 'latest',
         lastUpdated: '2023-01-01',
-        images: [{ digest: 'test-digest' }]
-      }
+        images: [{ digest: 'test-digest' }],
+      },
     });
 
     // Force this to work by calling axios.get directly
@@ -163,22 +164,22 @@ describe('DockerHubRegistryComponent', () => {
 
   test('testConnection should return true on successful connection', async () => {
     vi.mocked(axios.post).mockResolvedValueOnce({
-      data: { token: 'test-token' }
+      data: { token: 'test-token' },
     });
 
     vi.spyOn(component as any, 'authenticate').mockResolvedValueOnce();
 
     const result = await component.testConnection();
-    
+
     expect(result).toBe(true);
   });
 
   test('testConnection should return false on failed connection', async () => {
     // We need to override the default mock implementation for this test
     component.testConnection = vi.fn().mockResolvedValue(false);
-    
+
     const result = await component.testConnection();
-    
+
     expect(result).toBe(false);
   });
 });

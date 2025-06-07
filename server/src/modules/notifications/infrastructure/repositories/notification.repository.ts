@@ -3,15 +3,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { INotificationRepository } from '../../domain/repositories/notification-repository.interface';
 import { Notification } from '../../domain/entities/notification.entity';
-import { NOTIFICATION, NotificationDocument} from '../schemas/notification.schema';
+import { NOTIFICATION, NotificationDocument } from '../schemas/notification.schema';
 
 @Injectable()
 export class NotificationRepository implements INotificationRepository {
   private readonly logger = new Logger(NotificationRepository.name);
 
-  constructor(
-    @InjectModel(NOTIFICATION) private notificationModel: Model<NotificationDocument>,
-  ) {}
+  constructor(@InjectModel(NOTIFICATION) private notificationModel: Model<NotificationDocument>) {}
 
   async create(notification: Partial<Notification>): Promise<Notification> {
     this.logger.log(`Creating notification - (event: ${notification.event})`);

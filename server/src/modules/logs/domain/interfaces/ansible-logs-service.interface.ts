@@ -5,13 +5,13 @@ export interface IAnsibleLogsService {
    * Delete all ansible logs
    */
   deleteAll(): Promise<void>;
-  
+
   /**
    * Get logs for a specific ansible execution
    * @param executionId The Ansible execution ID
    */
   getExecutionLogs(executionId: string): Promise<any>;
-  
+
   /**
    * Find all logs for a specific ansible execution
    * @param ident The execution identifier

@@ -13,7 +13,7 @@ vi.mock('@nestjs/common', async () => {
       warn = vi.fn();
       debug = vi.fn();
       verbose = vi.fn();
-    }
+    },
   };
 });
 
@@ -29,11 +29,11 @@ vi.mock('@nestjs/config', () => {
           'auth.jwtSecret': 'test-secret',
           'ansible.configDir': '/etc/ansible',
           'app.port': 3000,
-          'app.apiVersion': 'v1'
+          'app.apiVersion': 'v1',
         };
         return config[key];
       });
-    }
+    },
   };
 });
 
@@ -49,14 +49,20 @@ vi.mock('mongoose', () => {
         create: vi.fn().mockReturnThis(),
         updateOne: vi.fn().mockReturnThis(),
         deleteOne: vi.fn().mockReturnThis(),
-        exec: vi.fn().mockResolvedValue({})
-      })
+        exec: vi.fn().mockResolvedValue({}),
+      }),
     },
     Schema: class MockSchema {
       constructor() {}
-      index() { return this; }
-      pre() { return this; }
-      set() { return this; }
+      index() {
+        return this;
+      }
+      pre() {
+        return this;
+      }
+      set() {
+        return this;
+      }
     },
     model: vi.fn().mockReturnValue({
       find: vi.fn().mockReturnThis(),
@@ -64,8 +70,8 @@ vi.mock('mongoose', () => {
       create: vi.fn().mockReturnThis(),
       updateOne: vi.fn().mockReturnThis(),
       deleteOne: vi.fn().mockReturnThis(),
-      exec: vi.fn().mockResolvedValue({})
-    })
+      exec: vi.fn().mockResolvedValue({}),
+    }),
   };
 });
 
@@ -105,14 +111,14 @@ vi.mock('fs', () => {
       mkdir: vi.fn().mockResolvedValue(undefined),
       readdir: vi.fn().mockResolvedValue(['file1', 'file2']),
       stat: vi.fn().mockResolvedValue({ isDirectory: () => true }),
-      access: vi.fn().mockResolvedValue(true)
+      access: vi.fn().mockResolvedValue(true),
     },
     readFileSync: vi.fn().mockReturnValue('{"test": "data"}'),
     writeFileSync: vi.fn().mockReturnValue(undefined),
     existsSync: vi.fn().mockReturnValue(true),
     mkdirSync: vi.fn().mockReturnValue(undefined),
     readdirSync: vi.fn().mockReturnValue(['file1', 'file2']),
-    statSync: vi.fn().mockReturnValue({ isDirectory: () => true })
+    statSync: vi.fn().mockReturnValue({ isDirectory: () => true }),
   };
 });
 
@@ -132,9 +138,9 @@ vi.mock('@modules/devices/application/services/devices.service', () => {
           hostname: 'test-device-2',
           ip: '192.168.1.101',
           status: 'offline',
-        }
+        },
       ]);
-      
+
       findOne = vi.fn().mockImplementation((uuid) => {
         if (uuid === '12345678-1234-1234-1234-123456789012') {
           return Promise.resolve({
@@ -146,14 +152,14 @@ vi.mock('@modules/devices/application/services/devices.service', () => {
         }
         return Promise.resolve(null);
       });
-      
+
       create = vi.fn().mockImplementation((device) => {
         return Promise.resolve({
           ...device,
-          uuid: device.uuid || '12345678-1234-1234-1234-123456789012'
+          uuid: device.uuid || '12345678-1234-1234-1234-123456789012',
         });
       });
-      
+
       update = vi.fn().mockImplementation((uuid, data) => {
         if (uuid === '12345678-1234-1234-1234-123456789012') {
           return Promise.resolve({
@@ -165,13 +171,13 @@ vi.mock('@modules/devices/application/services/devices.service', () => {
         }
         throw new Error('Device not found');
       });
-      
+
       delete = vi.fn().mockImplementation((uuid) => {
         if (uuid === '12345678-1234-1234-1234-123456789012') {
           return Promise.resolve({ deleted: true });
         }
         throw new Error('Device not found');
       });
-    }
+    },
   };
 });

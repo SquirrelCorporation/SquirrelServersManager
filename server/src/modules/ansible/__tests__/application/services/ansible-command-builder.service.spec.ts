@@ -17,7 +17,9 @@ class AnsibleCommandBuilderService {
   }
 
   getInventoryTargets(inventory?: any): string {
-    if (!inventory) return '';
+    if (!inventory) {
+      return '';
+    }
     return `--specific-host ${this.sanitizeInventory(inventory)}`;
   }
 
@@ -26,19 +28,27 @@ class AnsibleCommandBuilderService {
   }
 
   getExtraVars(extraVars?: any): string {
-    if (!extraVars) return '';
+    if (!extraVars) {
+      return '';
+    }
     const extraVarsObj = this.extraVarsTransformer?.transformExtraVars?.(extraVars) || {};
     return `--extra-vars '${JSON.stringify(extraVarsObj)}'`;
   }
 
   getDryRun(mode?: string): string {
-    if (mode === ExecutionMode.CHECK) return '--check';
-    if (mode === ExecutionMode.CHECK_AND_DIFF) return '--check --diff ';
+    if (mode === ExecutionMode.CHECK) {
+      return '--check';
+    }
+    if (mode === ExecutionMode.CHECK_AND_DIFF) {
+      return '--check --diff ';
+    }
     return '';
   }
 
   getVaults(vaults?: any[]): string {
-    if (!vaults || !vaults.length) return '';
+    if (!vaults || !vaults.length) {
+      return '';
+    }
     return `--vault-id default@ssm-ansible-vault-password-client.py`;
   }
 

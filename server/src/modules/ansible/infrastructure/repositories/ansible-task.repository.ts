@@ -82,7 +82,7 @@ export class AnsibleTaskRepository implements IAnsibleTaskRepository {
       .exec();
     return tasks.map(this.mapToIAnsibleTask);
   }
-  
+
   /**
    * Find all tasks older than the specified date
    * @param date Date to compare against

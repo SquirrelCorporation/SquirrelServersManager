@@ -5,7 +5,7 @@ export class AcrRegistryComponent {
     clientsecret: 'clientsecret',
   };
   name = 'acr';
-  
+
   validateConfiguration(config: any) {
     if (!config.clientid) {
       throw new Error('"clientid" is required');
@@ -15,18 +15,18 @@ export class AcrRegistryComponent {
     }
     return config;
   }
-  
+
   maskConfiguration() {
     return {
       clientid: 'clientid',
       clientsecret: 'c**********t',
     };
   }
-  
+
   match(container: any) {
     return container?.registry?.url?.includes('azurecr.io') || false;
   }
-  
+
   normalizeImage(image: any) {
     return {
       ...image,
@@ -36,7 +36,7 @@ export class AcrRegistryComponent {
       },
     };
   }
-  
+
   async authenticate() {
     return {
       headers: {

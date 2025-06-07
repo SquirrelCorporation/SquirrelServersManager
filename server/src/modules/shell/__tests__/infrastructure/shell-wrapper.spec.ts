@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ShellWrapper } from '../../infrastructure/shell-wrapper';
 import shell from 'shelljs';
+import { ShellWrapper } from '../../infrastructure/shell-wrapper';
 
 // Mock ShellJS
 vi.mock('shelljs', () => ({
@@ -20,7 +20,7 @@ vi.mock('shelljs', () => ({
       to: vi.fn(),
       toString: () => content,
     })),
-  }
+  },
 }));
 
 describe('ShellWrapper', () => {
@@ -78,18 +78,18 @@ describe('ShellWrapper', () => {
       const content = 'Hello world';
       const path = '/tmp/test/file.txt';
       const shellStringToSpy = vi.fn();
-      
+
       // Mock ShellString for this specific test
       (shell.ShellString as any).mockReturnValueOnce({
         to: shellStringToSpy,
         toString: () => content,
       });
-      
+
       ShellWrapper.to(content, path);
-      
+
       // Verify ShellString was created with content
       expect(shell.ShellString).toHaveBeenCalledWith(content);
-      
+
       // Verify .to() was called on the ShellString
       expect(shellStringToSpy).toHaveBeenCalledWith(path);
     });

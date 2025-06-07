@@ -4,14 +4,16 @@ import Joi from 'joi';
 import { Image, RequestOptionsType } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
 
-const logger = PinoLogger.child({ module: 'GhcrRegistryComponent' }, { msgPrefix: '[GHCR_REGISTRY] - ' });
+const logger = PinoLogger.child(
+  { module: 'GhcrRegistryComponent' },
+  { msgPrefix: '[GHCR_REGISTRY] - ' },
+);
 
 /**
  * Github Container Registry integration.
  */
 @Injectable()
 export class GhcrRegistryComponent extends AbstractRegistryComponent {
-
   /**
    * Initialize the component
    */
@@ -22,7 +24,7 @@ export class GhcrRegistryComponent extends AbstractRegistryComponent {
   /**
    * Get the configuration schema for validation
    */
-  getConfigurationSchema(): Joi.ObjectSchema<any> | Joi.AlternativesSchema<any>  {
+  getConfigurationSchema(): Joi.ObjectSchema<any> | Joi.AlternativesSchema<any> {
     return this.joi.alternatives().try(
       this.joi.object().optional().keys({
         username: this.joi.string().required(),

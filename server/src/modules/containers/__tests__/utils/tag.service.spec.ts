@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import tag from '../../utils/tag';
 import semver from 'semver';
+import tag from '../../utils/tag';
 
 // Extract the specific functions we need for testing
 const { parseSemver } = tag;
@@ -9,35 +9,39 @@ const { parseSemver } = tag;
  * Test helper to check if a tag is a valid semver
  */
 function semverOf(version) {
-  if (!version) return false;
-  
-  // Special cases - we want to explicitly reject these
-  if (version === '1' || version === '1.2' || 
-      version === 'latest' || version === 'main' || 
-      version === 'alpha') {
+  if (!version) {
     return false;
   }
-  
+
+  // Special cases - we want to explicitly reject these
+  if (
+    version === '1' ||
+    version === '1.2' ||
+    version === 'latest' ||
+    version === 'main' ||
+    version === 'alpha'
+  ) {
+    return false;
+  }
+
   // Special case for versions like 'nginx-1.2.3'
   if (version.includes('-') && !version.match(/\d+\.\d+\.\d+-/)) {
     return false;
   }
-  
+
   // Extract the version part from container image format
   // e.g., 'nginx:1.2.3' -> '1.2.3'
   let versionToCheck = version;
   if (version.includes(':')) {
     versionToCheck = version.split(':')[1];
   }
-  
+
   // We only want proper semver versions with major.minor.patch
   try {
     const parsed = semver.parse(versionToCheck, { loose: true });
     if (parsed) {
       // Must have major, minor, and patch defined as numbers
-      return parsed.major !== undefined && 
-             parsed.minor !== undefined && 
-             parsed.patch !== undefined;
+      return parsed.major !== undefined && parsed.minor !== undefined && parsed.patch !== undefined;
     }
     return false;
   } catch {

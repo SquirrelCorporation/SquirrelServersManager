@@ -1,8 +1,8 @@
 import Dockerode from 'dockerode';
 import { ConnectConfig } from 'ssh2';
 import { SsmAnsible, SsmProxmox } from 'ssm-shared-lib';
-import { ProxmoxEngineOptions } from '../proxmox/services/proxmox-engine.service';
 import { IDevice, IDeviceAuth } from 'src/modules/devices';
+import { ProxmoxEngineOptions } from '../proxmox/services/proxmox-engine.service';
 
 const DEFAULT_VAULT_ID = 'ssm';
 
@@ -61,7 +61,7 @@ export class SSHCredentialsAdapter {
         password: deviceAuth.proxmoxAuth.userPwd?.password + '-decrypted',
       };
     }
-    
+
     if (deviceAuth.proxmoxAuth?.connectionMethod === SsmProxmox.ConnectionMethod.TOKENS) {
       return {
         ignoreSslErrors: !!deviceAuth.proxmoxAuth.ignoreSslErrors,
@@ -71,7 +71,7 @@ export class SSHCredentialsAdapter {
         tokenSecret: deviceAuth.proxmoxAuth.tokens?.tokenSecret + '-decrypted',
       };
     }
-    
+
     throw new Error(
       `Unsupported Proxmox connection method: ${deviceAuth.proxmoxAuth?.connectionMethod}`,
     );
@@ -114,7 +114,7 @@ export class SSHCredentialsAdapter {
       case SsmAnsible.SSHType.KeyBased:
         sshCredentials = {
           username: sshUsername,
-          privateKey: sshKey ? sshKey + '-decrypted' : undefined, 
+          privateKey: sshKey ? sshKey + '-decrypted' : undefined,
           passphrase: sshKeyPass ? sshKeyPass + '-decrypted' : undefined,
         };
         break;

@@ -3,14 +3,16 @@ import { AbstractRegistryComponent } from '@modules/containers/application/servi
 import { Image, RequestOptionsType } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
 
-const logger = PinoLogger.child({ module: 'AcrRegistryComponent' }, { msgPrefix: '[ACR_REGISTRY] - ' });
+const logger = PinoLogger.child(
+  { module: 'AcrRegistryComponent' },
+  { msgPrefix: '[ACR_REGISTRY] - ' },
+);
 
 /**
  * Azure Container Registry integration.
  */
 @Injectable()
 export class AcrRegistryComponent extends AbstractRegistryComponent {
-
   /**
    * Initialize the component
    */
@@ -75,7 +77,7 @@ export class AcrRegistryComponent extends AbstractRegistryComponent {
     ) {
       requestOptionsWithAuth.headers.Authorization = `Basic ${AbstractRegistryComponent.base64Encode(
         this.configuration.clientid,
-        this.configuration.clientsecret
+        this.configuration.clientsecret,
       )}`;
     }
     return requestOptionsWithAuth;

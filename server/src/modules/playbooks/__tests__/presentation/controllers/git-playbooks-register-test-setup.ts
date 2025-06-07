@@ -83,7 +83,9 @@ export const mockPlaybooksRegisterService = {
 export const mockPlaybooksRegisterRepository = {
   findAllByType: vi.fn().mockResolvedValue([mockGitRegister]),
   findByUuid: vi.fn().mockImplementation((uuid) => {
-    if (uuid === 'git-uuid') return Promise.resolve(mockGitRegister);
+    if (uuid === 'git-uuid') {
+      return Promise.resolve(mockGitRegister);
+    }
     return Promise.resolve(null);
   }),
   create: vi.fn().mockResolvedValue(mockGitRegister),

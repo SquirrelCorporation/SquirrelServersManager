@@ -4,7 +4,7 @@ import { vi } from 'vitest';
 export const ExecutionMode = {
   CHECK: 'check',
   CHECK_AND_DIFF: 'check_and_diff',
-  APPLY: 'apply'
+  APPLY: 'apply',
 };
 
 // Mock common modules
@@ -15,7 +15,7 @@ vi.mock('@nestjs/event-emitter', () => {
       on = vi.fn();
       once = vi.fn();
       removeListener = vi.fn();
-    }
+    },
   };
 });
 
@@ -31,7 +31,7 @@ vi.mock('@nestjs/common', async () => {
       warn = vi.fn();
       debug = vi.fn();
       verbose = vi.fn();
-    }
+    },
   };
 });
 
@@ -43,10 +43,10 @@ vi.mock('fs', () => {
       writeFile: vi.fn().mockResolvedValue(undefined),
       mkdir: vi.fn().mockResolvedValue(undefined),
       readdir: vi.fn().mockResolvedValue(['file1.yml', 'file2.yml']),
-      stat: vi.fn().mockResolvedValue({ isDirectory: () => true })
+      stat: vi.fn().mockResolvedValue({ isDirectory: () => true }),
     },
     existsSync: vi.fn().mockReturnValue(true),
-    readFileSync: vi.fn().mockReturnValue('{"test": "data"}')
+    readFileSync: vi.fn().mockReturnValue('{"test": "data"}'),
   };
 });
 
@@ -55,7 +55,7 @@ vi.mock('@modules/ansible/application/services/inventory-transformer.service', (
   return {
     InventoryTransformerService: class MockInventoryTransformerService {
       transformInventory = vi.fn().mockReturnValue({});
-    }
+    },
   };
 });
 
@@ -65,7 +65,7 @@ vi.mock('@modules/ansible/application/services/extra-vars-transformer.service', 
     ExtraVarsTransformerService: class MockExtraVarsTransformerService {
       transformExtraVars = vi.fn().mockReturnValue({ foo: 'bar' });
       mapExtraVarToPair = vi.fn().mockReturnValue({ key: 'foo', value: 'bar' });
-    }
+    },
   };
 });
 
@@ -77,7 +77,7 @@ vi.mock('@modules/ansible/application/services/ansible-command.service', () => {
       executeAnsibleCommand = vi.fn().mockResolvedValue('ansible command executed');
       executePlaybookCommand = vi.fn().mockResolvedValue('playbook executed');
       getAnsibleVersion = vi.fn().mockResolvedValue('2.9.0');
-    }
+    },
   };
 });
 
@@ -90,7 +90,7 @@ vi.mock('@modules/ansible/infrastructure/repositories/ansible-task.repository', 
       findOne = vi.fn().mockResolvedValue({ id: 'test-task-id' });
       updateOne = vi.fn().mockResolvedValue({ id: 'test-task-id' });
       deleteOne = vi.fn().mockResolvedValue({ deleted: true });
-    }
+    },
   };
 });
 
@@ -99,7 +99,7 @@ vi.mock('@modules/shell/application/services/shell-wrapper.service', () => {
   return {
     ShellWrapperService: class MockShellWrapperService {
       execute = vi.fn().mockResolvedValue({ code: 0, stdout: 'success', stderr: '' });
-    }
+    },
   };
 });
 
@@ -114,6 +114,6 @@ vi.mock('@modules/ansible/application/services/ansible-command-builder.service',
       getDryRun = vi.fn().mockReturnValue('--check');
       getVaults = vi.fn().mockReturnValue('--vault-id test@client');
       buildAnsibleCmd = vi.fn().mockReturnValue('ansible-playbook mock-command');
-    }
+    },
   };
 });

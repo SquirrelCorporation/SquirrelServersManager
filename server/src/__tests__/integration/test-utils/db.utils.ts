@@ -16,12 +16,12 @@ export async function setupTestDatabase(): Promise<string> {
   if (!mongoMemoryServer) {
     mongoMemoryServer = await MongoMemoryServer.create();
   }
-  
+
   const uri = mongoMemoryServer.getUri();
-  
+
   // Connect to the in-memory database
   await mongoose.connect(uri);
-  
+
   return uri;
 }
 
@@ -32,9 +32,9 @@ export async function clearDatabase(): Promise<void> {
   if (mongoose.connection.readyState === 0) {
     throw new Error('Database connection is not established');
   }
-  
+
   const collections = mongoose.connection.collections;
-  
+
   for (const key in collections) {
     const collection = collections[key];
     await collection.deleteMany({});
@@ -49,7 +49,7 @@ export async function closeDatabase(): Promise<void> {
     await mongoose.connection.dropDatabase();
     await mongoose.connection.close();
   }
-  
+
   if (mongoMemoryServer) {
     await mongoMemoryServer.stop();
     mongoMemoryServer = null;
@@ -63,7 +63,7 @@ export async function closeDatabase(): Promise<void> {
 export async function seedDatabase(models: Record<string, any>): Promise<void> {
   for (const [modelName, modelData] of Object.entries(models)) {
     const model = mongoose.model(modelName);
-    
+
     if (Array.isArray(modelData)) {
       await model.insertMany(modelData);
     } else {

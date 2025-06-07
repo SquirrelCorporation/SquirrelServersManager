@@ -1,4 +1,8 @@
-import { MetricDefinition, METRICS_DEFINITIONS, MetricType } from '@infrastructure/prometheus/prometheus.service';
+import {
+  METRICS_DEFINITIONS,
+  MetricDefinition,
+  MetricType,
+} from '@infrastructure/prometheus/prometheus.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { Registry } from 'prom-client';
 import { IMetricsService } from '../../domain/interfaces/metrics-service.interface';
