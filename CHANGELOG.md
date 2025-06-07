@@ -4,6 +4,10 @@
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-rc.1...HEAD)
 
+**Fixed bugs:**
+
+- \[BUG\] Bugfix/auth with db [\#983](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/983) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
 **Merged pull requests:**
 
 - \[CHORE\] RELEASE V0.5.0 [\#974](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/974) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
