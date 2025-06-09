@@ -2,7 +2,70 @@
 
 ## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.8...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-rc.1...HEAD)
+
+**Fixed bugs:**
+
+- \[BUG\] Bugfix/auth with db [\#983](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/983) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Merged pull requests:**
+
+- \[CHORE\] RELEASE V0.5.0 [\#974](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/974) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+## [v0.5.0-rc.1](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-rc.1) (2025-05-31)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-beta.3...v0.5.0-rc.1)
+
+**Fixed bugs:**
+
+- \[BUG\] MongoDB authentication not used [\#972](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/972)
+- \[BUG\] Bugfix/use auth db when provided [\#973](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/973) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Closed issues:**
+
+- \[BUG\] Fresh container install doesn't result in a usable setup [\#958](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/958)
+
+**Merged pull requests:**
+
+- Bump swiper from 11.2.6 to 11.2.8 in /site [\#971](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/971) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @vue-flow/core from 1.43.2 to 1.44.0 in /site [\#970](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/970) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vuetify from 3.8.5 to 3.8.6 in /site [\#969](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/969) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v0.5.0-beta.3](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-beta.3) (2025-05-25)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-beta.2...v0.5.0-beta.3)
+
+**Fixed bugs:**
+
+- \[BUGFIX\] Fix potential permission issues for /data in prometheus container [\#960](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/960) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUGFIX\] Bugfix/fix potential telemetry crash [\#959](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/959) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+## [v0.5.0-beta.2](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-beta.2) (2025-05-20)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-beta.1...v0.5.0-beta.2)
+
+**Fixed bugs:**
+
+- \[BUG\] Set cookie 'secure' flag to false [\#957](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/957) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+**Merged pull requests:**
+
+- \[CHORE\] Update dashboard styles with refined color palette [\#956](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/956) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump @nestjs/common from 11.1.0 to 11.1.1 in /server [\#953](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/953) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @aws-sdk/client-ecr from 3.800.0 to 3.812.0 in /server [\#952](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/952) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @nestjs/testing from 11.1.0 to 11.1.1 in /server [\#951](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/951) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump pino from 9.6.0 to 9.7.0 in /server [\#950](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/950) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vuetify from 3.8.4 to 3.8.5 in /site [\#948](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/948) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @vue-flow/core from 1.43.1 to 1.43.2 in /site [\#947](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/947) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @babel/preset-react from 7.26.3 to 7.27.1 in /client [\#946](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/946) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @umijs/max from 4.4.10 to 4.4.11 in /client [\#944](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/944) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump ts-jest from 29.3.2 to 29.3.4 in /client [\#943](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/943) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @babel/core from 7.26.10 to 7.27.1 in /client [\#942](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/942) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vite from 6.2.6 to 6.3.5 in /server in the npm\_and\_yarn group [\#937](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/937) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [v0.5.0-beta.1](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-beta.1) (2025-05-17)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-alpha.8...v0.5.0-beta.1)
 
 **Implemented enhancements:**
 

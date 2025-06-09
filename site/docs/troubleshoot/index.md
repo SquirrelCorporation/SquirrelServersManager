@@ -261,6 +261,18 @@ db.users.updateOne(
 
 This will reset the password to `Password123!`. Be sure to change it immediately after logging in.
 
+##  MongoDB Authentication
+If your MongoDB instance is configured with authentication, you may need to authenticate first:
+
+```bash
+# For authenticated MongoDB
+docker exec -it mongo-ssm mongosh -u $DB_USER -p $DB_USER_PWD --authenticationDatabase $DB_AUTH_SOURCE
+
+# Then switch to SSM database and reset password as shown above
+```
+
+For more details on MongoDB authentication configuration, see the [MongoDB Authentication Guide](/docs/reference/mongodb-authentication).
+
 ## Related Resources
 
 <FeatureGrid>

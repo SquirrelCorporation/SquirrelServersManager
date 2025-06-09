@@ -13,6 +13,13 @@ import asyncHandler from "../utils/AsyncHandler";
 const router = express.Router();
 
 router.get(
+  "/playbooks/repositories",
+  asyncHandler(async (req, res) => {
+    new SuccessResponse("Got playbooks repo", playbooksRepo).send(res);
+  }),
+);
+
+router.get(
   "/playbooks",
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got playbooks", playbooks).send(res);
@@ -131,15 +138,9 @@ router
     }),
   );
 
-router.get(
-  "/playbooks-repository",
-  asyncHandler(async (req, res) => {
-    new SuccessResponse("Got playbooks repo", playbooksRepo).send(res);
-  }),
-);
 
 router.get(
-  "/playbooks-repository/local/",
+  "/playbooks/repositories/local/",
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got playbooks repo local", playbooksRepoLocal).send(
       res,
@@ -148,7 +149,7 @@ router.get(
 );
 
 router.get(
-  "/playbooks-repository/git/",
+  "/playbooks/repositories/git/",
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got playbooks repo git", playbooksRepoGit).send(res);
   }),

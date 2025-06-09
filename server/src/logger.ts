@@ -2,6 +2,24 @@ import pino from 'pino';
 import { Options } from 'pino-http';
 import { db } from './config';
 
+// Build pino-mongodb options conditionally
+const pinoMongoOptions: any = {
+  uri: `mongodb://${db.host}:${db.port}/`,
+  database: `${db.name}`,
+  collection: 'logs',
+};
+
+// Only add mongoOptions if we have actual credentials (not empty strings)
+if (db.user && db.user.trim() !== '' && db.password && db.password.trim() !== '') {
+  pinoMongoOptions.mongoOptions = {
+    auth: {
+      username: db.user,
+      password: db.password,
+    },
+    authSource: db.authSource,
+  };
+}
+
 const transport = pino.transport({
   targets: [
     {
@@ -12,11 +30,7 @@ const transport = pino.transport({
     },
     {
       target: 'pino-mongodb',
-      options: {
-        uri: `mongodb://${db.host}:${db.port}/`,
-        database: `${db.name}`,
-        collection: 'logs',
-      },
+      options: pinoMongoOptions,
     },
   ],
 });

@@ -69,6 +69,14 @@ let connectionReady = false;
                 uri: `mongodb://${db.host}:${db.port}/`,
                 database: `${db.name}`,
                 collection: 'logs',
+                ...(db.user && db.password && {
+                  mongoOptions: {
+                    auth: {
+                      username: db.user,
+                      password: db.password,
+                    },
+                  },
+                }),
               },
             },
           ],
@@ -96,7 +104,9 @@ let connectionReady = false;
     MongooseModule.forRootAsync({
       useFactory: async () => {
         // Create a direct mongoose connection first
-        const uri = `mongodb://${db.host}:${db.port}/${db.name}`;
+        const uri = db.user && db.password
+    ? `mongodb://${db.user}:${db.password}@${db.host}:${db.port}/${db.name}?authSource=${db.authSource}`
+    : `mongodb://${db.host}:${db.port}/${db.name}`;
         logger.debug(`Connecting to MongoDB: ${uri}`);
 
         // If mongoose is already connected, use that connection
@@ -115,6 +125,7 @@ let connectionReady = false;
             retryReads: true,
             serverSelectionTimeoutMS: 30000,
             heartbeatFrequencyMS: 10000,
+            ...(db.user && db.password && { authSource: db.authSource }),
           };
         }
 
@@ -130,6 +141,7 @@ let connectionReady = false;
             retryReads: true,
             serverSelectionTimeoutMS: 30000,
             heartbeatFrequencyMS: 10000,
+            ...(db.user && db.password && { authSource: db.authSource }),
           });
 
           sharedConnection = mongoose.connection;
@@ -188,6 +200,7 @@ let connectionReady = false;
           retryReads: true,
           serverSelectionTimeoutMS: 30000,
           heartbeatFrequencyMS: 10000,
+          ...(db.user && db.password && { authSource: 'admin' }),
           // Use the existing mongoose connection
           connectionFactory: () => {
             logger.info('NestJS using the same mongoose connection');
