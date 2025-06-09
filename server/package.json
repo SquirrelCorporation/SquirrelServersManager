@@ -113,7 +113,7 @@
     "@types/cookie-parser": "^1.4.8",
     "@types/dockerode": "^3.3.38",
     "@types/dockerode-compose": "^1.4.1",
-    "@types/express": "^5.0.1",
+    "@types/express": "^5.0.3",
     "@types/fs-extra": "^11.0.4",
     "@types/jest": "^29.5.14",
     "@types/js-yaml": "^4.0.9",
