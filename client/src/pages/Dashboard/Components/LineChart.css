@@ -1,0 +1,35 @@
+/* Enhanced glow effect for the line chart with gradient simulation */
+.line-chart-container {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Create the gradient glow effect using pseudo-elements for green line */
+.line-chart-container path[stroke="#52c41a"] {
+  filter: drop-shadow(0 0 8px #52c41a) 
+          drop-shadow(0 0 16px rgba(82, 196, 26, 0.5))
+          drop-shadow(0 2px 20px rgba(82, 196, 26, 0.3))
+          drop-shadow(0 4px 30px rgba(82, 196, 26, 0.2));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Create the gradient glow effect using pseudo-elements for orange line */
+.line-chart-container path[stroke="#faad14"] {
+  filter: drop-shadow(0 0 8px #faad14) 
+          drop-shadow(0 0 16px rgba(250, 173, 20, 0.5))
+          drop-shadow(0 2px 20px rgba(250, 173, 20, 0.3))
+          drop-shadow(0 4px 30px rgba(250, 173, 20, 0.2));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Additional glow for all line paths */
+.line-chart-container .g2-line path {
+  filter: inherit;
+}
+
+/* Smooth transitions */
+.line-chart-container path {
+  transition: all 0.3s ease;
+}

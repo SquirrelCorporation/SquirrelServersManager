@@ -33,7 +33,7 @@ import { useSlot } from '@/plugins/contexts/plugin-context';
 
 // New Demo Components
 import SummaryStatCard from '@/pages/Dashboard/Components/SummaryStatCard';
-import TotalIncomesCard from '@/pages/Dashboard/Components/TotalIncomesCard';
+import LineChart from '@/pages/Dashboard/Components/LineChart';
 import MiniDonutStatCard from '@/pages/Dashboard/Components/MiniDonutStatCard';
 import BookingStatusCard from '@/pages/Dashboard/Components/BookingStatusCard';
 import ToursAvailableDonutCard from '@/pages/Dashboard/Components/ToursAvailableDonutCard';
@@ -242,12 +242,20 @@ const Index: React.FC = () => {
           <Row gutter={[24, 24]}>
             <Col xs={24} lg={16}>
               {/* Note: TotalIncomesCard may have rendering issues due to AreaConfig problems */}
-              <TotalIncomesCard
+              <LineChart
                 title="Total incomes"
-                amount="$18,765"
-                trendPercentage={2.6}
-                trendDescription="last month"
-                chartData={totalIncomesData}
+                subtitle="(+2.6%) than last month"
+                incomeValue="$18,765"
+                incomeLabel="Total income"
+                expensesValue="$12,543"
+                expensesLabel="Total expenses"
+                chartData={totalIncomesData.flatMap((d, i) => [
+                  { month: d.date, type: 'Total income', value: d.value },
+                  { month: d.date, type: 'Total expenses', value: Math.floor(d.value * 0.7) }
+                ])}
+                currentYear={2023}
+                availableYears={[2023, 2022, 2021]}
+                onYearChange={(year) => console.log('Year changed:', year)}
               />
             </Col>
             <Col xs={24} lg={8}>

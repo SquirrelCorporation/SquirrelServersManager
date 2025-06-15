@@ -32,6 +32,7 @@ import { ShellModule } from './modules/shell/shell.module';
 import { SmartFailureModule } from './modules/smart-failure/smart-failure.module';
 import { UpdateModule } from './modules/update/update.module';
 import { UsersModule } from './modules/users/users.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { SshInfrastructureModule } from './infrastructure/ssh/ssh-infrastructure.module';
 import { HealthModule } from './modules/health/health.module';
 import { StatisticsModule } from './modules/statistics/statistics.module';
@@ -240,6 +241,7 @@ let connectionReady = false;
     ContainerStacksModule,
     ContainersModule,
     DevicesModule,
+    DashboardModule,
     UpdateModule,
     DiagnosticModule,
     ShellModule,

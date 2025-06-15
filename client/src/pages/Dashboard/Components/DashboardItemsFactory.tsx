@@ -1,5 +1,5 @@
 import React from 'react';
-import { DashboardItem } from './DashboardLayoutEngine';
+import { DashboardItem, WidgetSettings } from './DashboardLayoutEngine';
 import {
   DashboardOutlined,
   ShoppingCartOutlined,
@@ -15,7 +15,7 @@ import {
 
 // Import all the dashboard components
 import SummaryStatCard from './SummaryStatCard';
-import TotalIncomesCard from './TotalIncomesCard';
+import LineChart from './LineChart';
 import MiniDonutStatCard from './MiniDonutStatCard';
 import BookingStatusCard from './BookingStatusCard';
 import ToursAvailableDonutCard from './ToursAvailableDonutCard';
@@ -28,26 +28,43 @@ import AreaInstalledBarChartCard from './AreaInstalledBarChartCard';
 import WelcomeHeaderSection from './WelcomeHeaderSection';
 import FeaturedAppCard from './FeaturedAppCard';
 
-// Sample data
-const totalIncomesData = Array.from({ length: 20 }, (_, i) => ({
-  date: `Day ${i + 1}`,
-  value: Math.floor(Math.random() * 500 + 100),
-}));
+// Sample data for line chart - smoother curves
+const yearlyData = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+].flatMap((month, index) => {
+  // Create smoother data with sine waves for better visualization
+  const baseIncome = 70 + Math.sin(index * 0.5) * 30 + (index === 7 ? 40 : 0);
+  const baseExpenses = 60 + Math.cos(index * 0.4) * 25;
+  
+  return [
+    {
+      month,
+      type: 'Total income',
+      value: Math.floor(baseIncome)
+    },
+    {
+      month,
+      type: 'Total expenses',
+      value: Math.floor(baseExpenses)
+    }
+  ];
+});
 
 const bookingStatuses = [
-  { name: 'PENDING', count: '9.91k', percentage: 60, color: '#faad14' },
-  { name: 'CANCELED', count: '1.95k', percentage: 15, color: '#ff4d4f' },
-  { name: 'SOLD', count: '9.12k', percentage: 85, color: '#52c41a' },
+  { name: 'IN PROGRESS', count: '9.91k', percentage: 60, color: '#faad14' },
+  { name: 'FAILED', count: '1.95k', percentage: 15, color: '#ff4d4f' },
+  { name: 'COMPLETED', count: '9.12k', percentage: 85, color: '#52c41a' },
 ];
 
 const toursAvailableData = [
-  { type: 'Sold out', value: 120, color: '#52c41a' },
+  { type: 'Used', value: 120, color: '#52c41a' },
   { type: 'Available', value: 66, color: '#3a3a3e' },
 ];
 
 const toursLegend = [
-  { name: 'Sold out', value: '120 tours', color: '#52c41a' },
-  { name: 'Available', value: '66 tours', color: '#3a3a3e' },
+  { name: 'Used', value: '120 items', color: '#52c41a' },
+  { name: 'Available', value: '66 items', color: '#3a3a3e' },
 ];
 
 const gradientChartData = Array.from({ length: 10 }, () =>
@@ -55,10 +72,10 @@ const gradientChartData = Array.from({ length: 10 }, () =>
 );
 
 const visitsPieData = [
-  { type: 'America', value: 43.8, color: '#52c41a' },
-  { type: 'Asia', value: 31.3, color: '#faad14' },
-  { type: 'Europe', value: 18.8, color: '#1890ff' },
-  { type: 'Africa', value: 6.3, color: '#ff4d4f' },
+  { type: 'Category A', value: 43.8, color: '#52c41a' },
+  { type: 'Category B', value: 31.3, color: '#faad14' },
+  { type: 'Category C', value: 18.8, color: '#1890ff' },
+  { type: 'Category D', value: 6.3, color: '#ff4d4f' },
 ];
 
 const websiteVisitsData = [
@@ -75,23 +92,23 @@ const websiteVisitsData = [
   (acc, month) => {
     acc.push({
       month,
-      team: 'Team A',
+      team: 'Group A',
       visits: Math.floor(Math.random() * 60 + 10),
     });
     acc.push({
       month,
-      team: 'Team B',
+      team: 'Group B',
       visits: Math.floor(Math.random() * 60 + 10),
     });
     return acc;
   },
-  [] as Array<{ month: string; team: 'Team A' | 'Team B'; visits: number }>,
+  [] as Array<{ month: string; team: 'Group A' | 'Group B'; visits: number }>,
 );
 
 const osDownloadsData = [
-  { type: 'Windows', value: 105345, color: '#1890ff' },
-  { type: 'macOS', value: 55123, color: '#52c41a' },
-  { type: 'Linux', value: 27777, color: '#faad14' },
+  { type: 'Type 1', value: 105345, color: '#1890ff' },
+  { type: 'Type 2', value: 55123, color: '#52c41a' },
+  { type: 'Type 3', value: 27777, color: '#faad14' },
 ];
 
 const areaInstallData = [
@@ -108,17 +125,17 @@ const areaInstallData = [
   (acc, month) => {
     acc.push({
       month,
-      region: 'Asia',
+      region: 'Region A',
       installs: Math.floor(Math.random() * 800 + 100),
     });
     acc.push({
       month,
-      region: 'Europe',
+      region: 'Region B',
       installs: Math.floor(Math.random() * 800 + 100),
     });
     acc.push({
       month,
-      region: 'Americas',
+      region: 'Region C',
       installs: Math.floor(Math.random() * 800 + 100),
     });
     return acc;
@@ -132,37 +149,61 @@ export const createDashboardItems = (): DashboardItem[] => {
     {
       id: 'welcome-header',
       title: 'Welcome Header',
-      size: 'wide',
+      size: 'large',
+      settings: undefined, // No settings for welcome header
       component: (
         <WelcomeHeaderSection
           userName="Jaydon Frankie"
-          subtitle="Welcome to your customizable dashboard. Add and arrange widgets as you prefer."
-          buttonText="Get Started"
+          greeting="Congratulations"
+          subtitle="Best seller of the month you have done 57.6% more sales today."
+          buttonText="Go now"
           onButtonClick={() => console.log('Button clicked')}
-          illustrationUrl="/assets/images/dashboard/welcome-illustration.png"
+          illustrationUrl="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Woman%20Running.png"
         />
       ),
     },
     {
-      id: 'featured-app',
-      title: 'Featured App',
-      size: 'medium',
+      id: 'tips-of-the-day',
+      title: 'Tips of the day',
+      size: 'small',
+      settings: undefined, // No custom settings for tips carousel
       component: (
         <FeaturedAppCard
-          tagText="FEATURED APP"
-          title="Mental Health in the Digital Age"
-          description="Learn about the latest digital wellness tools and strategies for mental health."
-          imageUrl="/assets/images/dashboard/featured-app-image.png"
+          tips={[
+            {
+              tagText: "FEATURED APP",
+              title: "The Rise of Remote Work: Benefits, Challenges, and Best Practices",
+              description: "The aroma of freshly brewed coffee filled the air, awakening my senses and preparing me for the day ahead.",
+              imageUrl: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&q=80"
+            },
+            {
+              tagText: "PRODUCTIVITY TIP",
+              title: "Mastering Time Management in the Digital Age",
+              description: "Discover proven techniques to boost your productivity and achieve work-life balance in today's fast-paced world.",
+              imageUrl: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&q=80"
+            },
+            {
+              tagText: "TECH INSIGHT",
+              title: "AI Revolution: How Machine Learning is Transforming Industries",
+              description: "Explore the latest advancements in artificial intelligence and their impact on businesses worldwide.",
+              imageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80"
+            }
+          ]}
         />
       ),
     },
     {
-      id: 'total-booking',
-      title: 'Total Booking',
+      id: 'single-number-variation',
+      title: 'Metric Card with Trend',
       size: 'small',
+      settings: [
+        { type: 'statistics', label: 'Data Source' },
+        { type: 'title', label: 'Widget Title', defaultValue: 'Total Count' },
+        { type: 'icon', label: 'Icon' }
+      ],
       component: (
         <SummaryStatCard
-          title="Total booking"
+          title="Total Count"
           value="714k"
           trendValue="+2.6"
           trendDirection="up"
@@ -172,107 +213,92 @@ export const createDashboardItems = (): DashboardItem[] => {
       ),
     },
     {
-      id: 'sold-summary',
-      title: 'Sold Summary',
-      size: 'small',
-      component: (
-        <SummaryStatCard
-          title="Sold"
-          value="311k"
-          trendValue="+0.2"
-          trendDirection="up"
-          icon={<ShoppingCartOutlined />}
-          illustrationUrl="/assets/images/dashboard/sold-illustration.png"
-        />
-      ),
-    },
-    {
-      id: 'canceled-summary',
-      title: 'Canceled Summary',
-      size: 'small',
-      component: (
-        <SummaryStatCard
-          title="Canceled"
-          value="124k"
-          trendValue="-0.1"
-          trendDirection="down"
-          icon={<CloseCircleOutlined />}
-          illustrationUrl="/assets/images/dashboard/canceled-illustration.png"
-        />
-      ),
-    },
-    {
-      id: 'total-incomes',
-      title: 'Total Incomes',
+      id: 'medium-graph',
+      title: 'Line Chart',
       size: 'large',
+      settings: [
+        { type: 'statistics', label: 'Data Source' },
+        { type: 'title', label: 'Graph Title', defaultValue: 'Yearly sales' }
+      ],
       component: (
-        <TotalIncomesCard
-          title="Total incomes"
-          amount="$18,765"
-          trendPercentage={2.6}
-          trendDescription="last month"
-          chartData={totalIncomesData}
+        <LineChart
+          title="Yearly sales"
+          subtitle="(+43%) than last year"
+          incomeValue="1.23k"
+          incomeLabel="Total income"
+          expensesValue="6.79k"
+          expensesLabel="Total expenses"
+          chartData={yearlyData}
+          currentYear={2023}
+          availableYears={[2023, 2022, 2021]}
+          onYearChange={(year) => console.log('Year changed:', year)}
         />
       ),
     },
     {
-      id: 'booking-status',
-      title: 'Booking Status',
+      id: 'progress-lines-graph',
+      title: 'Progress Bars',
       size: 'medium',
+      settings: [
+        { type: 'statistics', label: 'Data Source' },
+        { type: 'title', label: 'Title', defaultValue: 'Status Overview' }
+      ],
       component: (
         <BookingStatusCard 
-          title="Booked" 
+          title="Status Overview" 
           statuses={bookingStatuses} 
         />
       ),
     },
     {
-      id: 'sold-donut',
-      title: 'Sold Percentage',
+      id: 'percentage',
+      title: 'Mini Donut Chart',
       size: 'small',
+      settings: [
+        { type: 'statistics', label: 'Data Source' },
+        { type: 'title', label: 'Label', defaultValue: 'Completed' },
+        { type: 'backgroundColor', label: 'Color', defaultValue: '#52c41a' }
+      ],
       component: (
         <MiniDonutStatCard
           percentage={73.9}
           value="38,566"
-          label="Sold"
+          label="Completed"
           color="#52c41a"
         />
       ),
     },
     {
-      id: 'pending-payment',
-      title: 'Pending Payment',
-      size: 'small',
-      component: (
-        <MiniDonutStatCard
-          percentage={45.6}
-          value="18,472"
-          label="Pending for payment"
-          color="#faad14"
-        />
-      ),
-    },
-    {
-      id: 'tours-available',
-      title: 'Tours Available',
+      id: 'ring-progress',
+      title: 'Donut Chart with Legend',
       size: 'medium',
+      settings: [
+        { type: 'statistics', label: 'Data Source' },
+        { type: 'title', label: 'Title', defaultValue: 'Resource Distribution' }
+      ],
       component: (
         <ToursAvailableDonutCard
-          title="Tours available"
+          title="Resource Distribution"
           totalTours={186}
-          mainLabel="Tours"
+          mainLabel="Items"
           chartData={toursAvailableData}
           legendItems={toursLegend}
         />
       ),
     },
     {
-      id: 'weekly-sales',
-      title: 'Weekly Sales',
+      id: 'single-number-card-variation',
+      title: 'Sparkline Card',
       size: 'small',
+      settings: [
+        { type: 'statistics', label: 'Data Source' },
+        { type: 'title', label: 'Title', defaultValue: 'Weekly Activity' },
+        { type: 'icon', label: 'Icon' },
+        { type: 'backgroundColor', label: 'Background Color', defaultValue: '#8A2BE2' }
+      ],
       component: (
         <GradientStatCardWithChart
-          title="Weekly sales"
+          title="Weekly Activity"
           value="714k"
           trendValue="+2.6"
           trendDirection="up"
@@ -284,87 +310,48 @@ export const createDashboardItems = (): DashboardItem[] => {
       ),
     },
     {
-      id: 'new-users',
-      title: 'New Users',
-      size: 'small',
-      component: (
-        <GradientStatCardWithChart
-          title="New users"
-          value="1.35m"
-          trendValue="-0.1"
-          trendDirection="down"
-          icon={<UserAddOutlined />}
-          gradientColors={['#1E90FF', '#00008B']}
-          lineColor="rgba(255,255,255,0.7)"
-          chartData={gradientChartData}
-        />
-      ),
-    },
-    {
-      id: 'purchase-orders',
-      title: 'Purchase Orders',
-      size: 'small',
-      component: (
-        <GradientStatCardWithChart
-          title="Purchase orders"
-          value="1.72m"
-          trendValue="+2.8"
-          trendDirection="up"
-          icon={<ShoppingCartOutlined />}
-          gradientColors={['#FF8C00', '#B8860B']}
-          lineColor="rgba(255,255,255,0.7)"
-          chartData={gradientChartData}
-        />
-      ),
-    },
-    {
-      id: 'messages',
-      title: 'Messages',
-      size: 'small',
-      component: (
-        <GradientStatCardWithChart
-          title="Messages"
-          value="234"
-          trendValue="+3.6"
-          trendDirection="up"
-          icon={<MessageOutlined />}
-          gradientColors={['#DC143C', '#8B0000']}
-          lineColor="rgba(255,255,255,0.7)"
-          chartData={gradientChartData}
-        />
-      ),
-    },
-    {
-      id: 'current-visits',
-      title: 'Current Visits',
+      id: 'pie-chart',
+      title: 'Pie Chart',
       size: 'medium',
+      settings: [
+        { type: 'statistics', label: 'Data Source' },
+        { type: 'title', label: 'Chart Title', defaultValue: 'Category Distribution' }
+      ],
       component: (
         <VisitsPieChartCard
-          title="Current visits"
+          title="Category Distribution"
           chartData={visitsPieData}
         />
       ),
     },
     {
       id: 'website-visits',
-      title: 'Website Visits',
+      title: 'Grouped Bar Chart',
       size: 'large',
+      settings: [
+        { type: 'statistics', label: 'Data Source' },
+        { type: 'title', label: 'Chart Title', defaultValue: 'Monthly Comparison' }
+      ],
       component: (
         <WebsiteVisitsBarChartCard
-          title="Website visits"
+          title="Monthly Comparison"
           subtitle="(+43%) than last year"
           chartData={websiteVisitsData}
-          categoryColors={{ 'Team A': '#40a9ff', 'Team B': '#ffc53d' }}
+          categoryColors={{ 'Group A': '#40a9ff', 'Group B': '#ffc53d' }}
         />
       ),
     },
     {
-      id: 'active-users',
-      title: 'Active Users',
+      id: 'single-number-variation-popover',
+      title: 'Compact Metric Card',
       size: 'small',
+      settings: [
+        { type: 'statistics', label: 'Data Source' },
+        { type: 'title', label: 'Title', defaultValue: 'Active Items' }
+      ],
       component: (
         <CompactStatCard
-          title="Total active users"
+          title="Active Items"
           value="18,765"
           trendValue="+2.6"
           trendDirection="up"
@@ -374,27 +361,16 @@ export const createDashboardItems = (): DashboardItem[] => {
       ),
     },
     {
-      id: 'total-installed',
-      title: 'Total Installed',
-      size: 'small',
-      component: (
-        <CompactStatCard
-          title="Total installed"
-          value="4,876"
-          trendValue="+0.2"
-          trendDirection="up"
-          trendDescription="last 7 days"
-          trendColor="#40a9ff"
-        />
-      ),
-    },
-    {
       id: 'total-downloads',
-      title: 'Total Downloads',
+      title: 'Metric Card with Negative Trend',
       size: 'small',
+      settings: [
+        { type: 'statistics', label: 'Data Source' },
+        { type: 'title', label: 'Title', defaultValue: 'Total Operations' }
+      ],
       component: (
         <CompactStatCard
-          title="Total downloads"
+          title="Total Operations"
           value="678"
           trendValue="-0.1"
           trendDirection="down"
@@ -404,35 +380,25 @@ export const createDashboardItems = (): DashboardItem[] => {
       ),
     },
     {
-      id: 'os-downloads',
-      title: 'Downloads by OS',
-      size: 'medium',
-      component: (
-        <DownloadsByOSDonutCard
-          title="Current download"
-          subtitle="Downloaded by operating system"
-          totalDownloadsLabel="Total"
-          totalDownloadsValue="188,245"
-          chartData={osDownloadsData}
-        />
-      ),
-    },
-    {
-      id: 'area-installed',
-      title: 'Area Installed',
+      id: 'area-chart',
+      title: 'Stacked Area Chart',
       size: 'large',
+      settings: [
+        { type: 'statistics', label: 'Data Source' },
+        { type: 'title', label: 'Chart Title', defaultValue: 'Regional Metrics' }
+      ],
       component: (
         <AreaInstalledBarChartCard
-          title="Area installed"
+          title="Regional Metrics"
           subtitle="(+43%) than last year"
           currentYear={2023}
           availableYears={[2023, 2022, 2021]}
           onYearChange={(year) => console.log('Year changed:', year)}
           chartData={areaInstallData}
           regionColors={{
-            Asia: '#ffc53d',
-            Europe: '#40a9ff',
-            Americas: '#52c41a',
+            'Region A': '#ffc53d',
+            'Region B': '#40a9ff',
+            'Region C': '#52c41a',
           }}
         />
       ),
