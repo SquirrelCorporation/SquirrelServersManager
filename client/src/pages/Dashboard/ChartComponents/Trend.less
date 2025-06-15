@@ -2,7 +2,7 @@
 .trendItem {
   display: inline-block;
   line-height: 22px;
-  color: rgba(17, 17, 17, 0.85);
+  color: rgba(255, 255, 255, 0.85);
   .up,
   .down {
     position: relative;
@@ -15,11 +15,11 @@
     }
   }
   .up {
-    color: @red-6;
+    color: #a93226; /* dark red from our color palette */
   }
   .down {
     top: -1px;
-    color: @green-6;
+    color: #229954; /* dark green from our color palette */
   }
 
   &.trendItemGrey .up,
@@ -29,9 +29,9 @@
 
   &.reverseColor .up,
   &.reverseColor .eq {
-    color: @green-6;
+    color: #229954; /* dark green from our color palette */
   }
   &.reverseColor .down {
-    color: @red-6;
+    color: #a93226; /* dark red from our color palette */
   }
 }

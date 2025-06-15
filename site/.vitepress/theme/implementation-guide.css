@@ -1,0 +1,39 @@
+.step-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 24px 0;
+}
+
+.step {
+  display: flex;
+  gap: 16px;
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--vp-c-brand);
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-content h4 {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.code-block {
+  margin: 12px 0;
+  border-radius: 8px;
+  overflow: hidden;
+} 

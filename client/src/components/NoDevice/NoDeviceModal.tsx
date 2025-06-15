@@ -3,17 +3,13 @@ import CarouselNoDevice from '@/components/NoDevice/CarouselNoDevice';
 import TerminalModal, {
   TerminalStateProps,
 } from '@/components/PlaybookExecutionModal';
-import { Image, Button, Carousel, Modal, Typography } from 'antd';
-import React, { useState } from 'react';
-import { API, SsmAnsible, SsmAgent } from 'ssm-shared-lib';
+import { Button, Modal, Typography } from 'antd';
+import { useState } from 'react';
+import { API, SsmAgent, SsmAnsible } from 'ssm-shared-lib';
+import { history } from '@umijs/max';
 
-const contentStyle: React.CSSProperties = {
-  margin: 0,
-  height: '160px',
-  color: '#fff',
-  lineHeight: '160px',
-  textAlign: 'center',
-};
+const MODAL_WIDTH = 800;
+const MANAGE_DEVICES_PATH = '/manage/devices';
 
 const NoDeviceModal = () => {
   const [addNewDeviceModalIsOpen, setAddNewDeviceModalIsOpen] = useState(false);
@@ -40,6 +36,8 @@ const NoDeviceModal = () => {
         quickRef: 'installAgent',
         extraVars: [{ extraVar: '_ssm_installMethod', value: installMethod }],
       });
+    } else {
+      history.push(MANAGE_DEVICES_PATH);
     }
   };
 
@@ -59,7 +57,7 @@ const NoDeviceModal = () => {
         onAddNewDevice={onAddNewDevice}
       />
       <Modal
-        width={800}
+        width={MODAL_WIDTH}
         title={'You made it!'}
         open={isOpen}
         footer={[

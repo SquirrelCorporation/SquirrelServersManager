@@ -1,5 +1,5 @@
 import { BackupSolid } from '@/components/Icons/CustomIcons';
-import { getVolumes } from '@/services/rest/services';
+import { getVolumes } from '@/services/rest/containers/container-volumes';
 import { CheckCircleFilled } from '@ant-design/icons';
 import { ProFormSelect } from '@ant-design/pro-components';
 import { Space } from 'antd';

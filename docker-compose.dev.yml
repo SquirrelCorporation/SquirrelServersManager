@@ -80,6 +80,8 @@ services:
     environment:
       NODE_ENV: development
       DEBUG: nodejs-docker-express:*
+    ports:
+      - "3000:3000"  # Main API port
     labels:
       wud.display.name: "SSM - Server"
       wud.watch.digest: false

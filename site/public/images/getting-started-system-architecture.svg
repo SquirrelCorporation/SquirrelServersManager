@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="500" viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg">
+  <rect width="900" height="500" fill="#1e1e1e" rx="10" ry="10" />
+  
+  <!-- Title -->
+  <text x="450" y="50" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="24" font-weight="bold" text-anchor="middle" fill="#dfdfd6">SSM System Architecture</text>
+  <text x="450" y="80" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="16" text-anchor="middle" fill="#dfdfd6">Agentless architecture for secure device management</text>
+  
+  <!-- SSM Core -->
+  <rect x="330" y="200" width="240" height="120" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="330" y="200" width="4" height="120" fill="#1abc9c" rx="0" ry="0" />
+  <text x="450" y="250" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="16" font-weight="bold" text-anchor="middle" fill="#dfdfd6">SSM Core</text>
+  <text x="450" y="275" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="13" text-anchor="middle" fill="#98989f">Server, API, Authentication</text>
+  
+  <!-- Web Client -->
+  <rect x="370" y="100" width="160" height="80" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="370" y="100" width="4" height="80" fill="#3498db" rx="0" ry="0" />
+  <text x="450" y="135" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="16" font-weight="bold" text-anchor="middle" fill="#dfdfd6">Web Client</text>
+  <text x="450" y="155" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="13" text-anchor="middle" fill="#98989f">React, Ant Design</text>
+  
+  <!-- Device 1 -->
+  <rect x="160" y="400" width="160" height="80" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="160" y="400" width="4" height="80" fill="#4caf50" rx="0" ry="0" />
+  <text x="240" y="430" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="16" font-weight="bold" text-anchor="middle" fill="#dfdfd6">Target Device</text>
+  <text x="240" y="450" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="13" text-anchor="middle" fill="#98989f">SSH + Docker</text>
+  
+  <!-- Device 2 -->
+  <rect x="370" y="400" width="160" height="80" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="370" y="400" width="4" height="80" fill="#4caf50" rx="0" ry="0" />
+  <text x="450" y="430" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="16" font-weight="bold" text-anchor="middle" fill="#dfdfd6">Target Device</text>
+  <text x="450" y="450" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="13" text-anchor="middle" fill="#98989f">SSH + Proxmox</text>
+  
+  <!-- Device 3 -->
+  <rect x="580" y="400" width="160" height="80" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="580" y="400" width="4" height="80" fill="#4caf50" rx="0" ry="0" />
+  <text x="660" y="430" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="16" font-weight="bold" text-anchor="middle" fill="#dfdfd6">Target Device</text>
+  <text x="660" y="450" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="13" text-anchor="middle" fill="#98989f">SSH Only</text>
+  
+  <!-- Connections -->
+  <line x1="450" y1="180" x2="450" y2="200" stroke="#666666" stroke-width="2" />
+  <line x1="450" y1="320" x2="240" y2="400" stroke="#666666" stroke-width="2" />
+  <text x="335" y="350" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="12" text-anchor="middle" fill="#c0c0c0">SSH</text>
+  <line x1="450" y1="320" x2="450" y2="400" stroke="#666666" stroke-width="2" />
+  <text x="465" y="360" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="12" text-anchor="middle" fill="#c0c0c0">SSH</text>
+  <line x1="450" y1="320" x2="660" y2="400" stroke="#666666" stroke-width="2" />
+  <text x="565" y="350" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="12" text-anchor="middle" fill="#c0c0c0">SSH</text>
+</svg>

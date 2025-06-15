@@ -1,10 +1,7 @@
-import TerminalCoreModal, {
-  PlaybookExecutionTerminalModalHandles,
-} from '@/components/PlaybookExecutionModal/PlaybookExecutionTerminalModal';
 import TerminalCore, {
   TerminalCoreHandles,
 } from '@/components/Terminal/TerminalCore';
-import { getTaskEventsLogs } from '@/services/rest/logs';
+import { getTaskEventsLogs } from '@/services/rest/ansible/ansible.logs';
 import { Modal } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { API } from 'ssm-shared-lib';

@@ -9,13 +9,12 @@ import {
 } from '@ant-design/icons';
 import { ProForm, ProFormText } from '@ant-design/pro-components';
 import { Button, Popconfirm, PopconfirmProps, Space, Tag, Tooltip } from 'antd';
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 
 type ExtraVarViewProps = {
   extraVar: API.ExtraVar;
-  setOverrideExtraVars: any;
-  overrideExtraVars: any;
+  setOverrideExtraVars: Dispatch<SetStateAction<any>>;
   smallView?: boolean;
 };
 
@@ -32,7 +31,6 @@ const isButtonDisabled = (
 const ExtraVarView: React.FC<ExtraVarViewProps> = ({
   extraVar,
   setOverrideExtraVars,
-  overrideExtraVars,
   smallView = false,
 }) => {
   const [currentValue, setCurrentValue] = React.useState(

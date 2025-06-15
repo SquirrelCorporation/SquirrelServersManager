@@ -2,6 +2,7 @@ import SystemInformationView from '@/components/DeviceComponents/DeviceInformati
 import { FlatPlatform, WhhRam } from '@/components/Icons/CustomIcons';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
+import { ACCENT_COLORS } from '../../../../styles/colors';
 
 type MemoryTabProps = {
   device: API.DeviceItem;
@@ -18,20 +19,24 @@ const MemoryTab: React.FC<MemoryTabProps> = ({ device }) => {
   }
 
   // Detailed info with associated icons
-  const detailedInfo = [];
+  const rawDetailedInfo = [];
   if (device?.systemInformation?.mem?.swaptotal) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Swap Total',
       value: `~${device.systemInformation.mem.swaptotal ? Math.ceil(device.systemInformation.mem.swaptotal / (1024 * 1024 * 1024)) : ''} Gb`,
       icon: <FlatPlatform />,
-      color: 'rgba(12,23,232,0.5)',
     });
   }
+  const detailedInfo = rawDetailedInfo.map((item, idx) => ({
+    ...item,
+    color: ACCENT_COLORS[idx % ACCENT_COLORS.length],
+  }));
   return (
     <SystemInformationView
       name={'Memory'}
       importantInfo={importantInfo}
       detailedInfo={detailedInfo}
+      lastUpdatedAt={device.systemInformation.mem?.lastUpdatedAt}
     />
   );
 };

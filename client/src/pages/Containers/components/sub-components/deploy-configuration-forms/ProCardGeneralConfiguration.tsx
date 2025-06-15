@@ -9,9 +9,13 @@ import {
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
-const ProCardGeneralConfiguration: React.FC<{ template: API.Template }> = (
-  props,
-) => {
+type ProCardGeneralConfigurationProps = {
+  template: API.Template;
+};
+
+const ProCardGeneralConfiguration: React.FC<
+  ProCardGeneralConfigurationProps
+> = ({ template }) => {
   return (
     <ProCard
       title={
@@ -28,13 +32,13 @@ const ProCardGeneralConfiguration: React.FC<{ template: API.Template }> = (
         <ProFormText
           name="name"
           label="Name"
-          initialValue={props.template.name}
+          initialValue={template.name}
           rules={[{ required: true }]}
         />
         <ProFormSelect
           name="restart_policy"
           label="Restart Policy"
-          initialValue={props.template.restart_policy}
+          initialValue={template.restart_policy}
           options={[
             { label: 'unless-stopped', value: 'unless-stopped' },
             { label: 'on-failure', value: 'on-failure' },
@@ -48,7 +52,7 @@ const ProCardGeneralConfiguration: React.FC<{ template: API.Template }> = (
         label="Network Mode"
         style={{ height: '100%' }}
       >
-        <NetworkTypes network={props.template.network} />
+        <NetworkTypes network={template.network} />
       </ProForm.Item>
     </ProCard>
   );

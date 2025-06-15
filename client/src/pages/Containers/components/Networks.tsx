@@ -1,7 +1,7 @@
 import { Bridge, GrommetIconsHost } from '@/components/Icons/CustomIcons';
 import CreateNetworkModal from '@/pages/Containers/components/sub-components/CreateNetworkModal';
-import { getAllDevices } from '@/services/rest/device';
-import { getNetworks } from '@/services/rest/services';
+import { getAllDevices } from '@/services/rest/devices/devices';
+import { getNetworks } from '@/services/rest/containers/container-networks';
 import {
   ProColumns,
   ProFormSelect,
@@ -11,6 +11,7 @@ import {
 import { Avatar, Tag, Tooltip } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 const Networks: React.FC = () => {
   const columns: ProColumns<API.ContainerNetwork>[] = [
@@ -118,7 +119,13 @@ const Networks: React.FC = () => {
         defaultPageSize: 20,
         showSizeChanger: true,
       }}
-      toolBarRender={() => [<CreateNetworkModal key={'create-network'} />]}
+      toolBarRender={() => [
+        <CreateNetworkModal key={'create-network'} />,
+        <InfoLinkWidget
+          tooltipTitle="Help for containers."
+          documentationLink="https://squirrelserversmanager.io/docs/user-guides/containers/management"
+        />,
+      ]}
     />
   );
 };

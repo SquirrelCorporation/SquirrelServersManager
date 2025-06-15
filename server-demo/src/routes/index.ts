@@ -20,4 +20,9 @@ router.use("/", playbooks);
 router.use("/", logs);
 router.use("/", ansible);
 
+// @ts-ignore
+router.get("/plugins", () => {
+  return [];
+})
+
 export default router;

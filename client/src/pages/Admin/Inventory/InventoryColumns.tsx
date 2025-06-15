@@ -1,17 +1,20 @@
 import DeviceQuickActionDropDown from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionDropDown';
 import { Proxmox, Remote, UserSecret } from '@/components/Icons/CustomIcons';
+import { TerminalStateProps } from '@/components/PlaybookExecutionModal';
 import { DockerOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-components';
 import { Tag, Tooltip } from 'antd';
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { API, SsmAgent } from 'ssm-shared-lib';
 
 const InventoryColumns = (
-  setCurrentRow: any,
-  setShowDetail: any,
-  handleUpdateModalOpen: any,
+  setCurrentRow: React.Dispatch<
+    React.SetStateAction<API.DeviceItem | undefined>
+  >,
+  setShowDetail: React.Dispatch<React.SetStateAction<boolean>>,
+  handleUpdateModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
   onDropDownClicked: any,
-  setTerminal: any,
+  setTerminal: Dispatch<SetStateAction<TerminalStateProps>>,
 ) => {
   const columns: ProColumns<API.DeviceItem>[] = [
     {

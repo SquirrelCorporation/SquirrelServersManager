@@ -1,12 +1,15 @@
 import taskStatusTimeline from '@/components/PlaybookExecutionModal/TaskStatusTimeline';
-import { getExecLogs, getTaskStatuses } from '@/services/rest/playbooks';
-import { StepsProps } from 'antd';
-import React, { ReactNode } from 'react';
+import {
+  getExecLogs,
+  getTaskStatuses,
+} from '@/services/rest/playbooks/playbooks';
+import React from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';
+import { playbookExecutionEvents } from '@/components/HeaderComponents/PlaybookExecutionWidget';
+import { getAnsibleSmartFailure } from '@/services/rest/smart-failure/smart-failure';
 
-export type TaskStatusTimelineType = StepsProps & {
-  _status: string;
-  icon: ReactNode;
+export type TaskStatusTimelineType = {
+  status: string;
   title: string;
 };
 
@@ -84,6 +87,20 @@ export default class PlaybookExecutionHandler {
                 if (this.setHasReachedFinalStatus) {
                   this.setHasReachedFinalStatus(true);
                 }
+                // Show smart failure notification if failed
+                if (status.status === SsmAnsible.AnsibleTaskStatus.FAILED) {
+                  getAnsibleSmartFailure({ execId }).then((res) => {
+                    if (res.data) {
+                      playbookExecutionEvents.emit(
+                        'playbook:execution:smart-failure',
+                        {
+                          cause: res.data.cause,
+                          resolution: res.data.resolution,
+                        },
+                      );
+                    }
+                  });
+                }
                 setTimeout(() => {
                   this.setIsPollingEnabled(false);
                 }, 5000);
@@ -121,4 +138,18 @@ export default class PlaybookExecutionHandler {
       }
     }
   };
+
+  showExecutionNotification(displayName: string) {
+    playbookExecutionEvents.emit('playbook:execution:notification', {
+      type: 'info',
+      message: `Executing playbook: ${displayName}`,
+      status: 'in-progress',
+      displayName,
+    });
+  }
+
+  updateExecutionNotification(status: string, isFinal: boolean) {
+    // No notification on success or failure anymore
+    // Only keep logic here if needed for other side effects
+  }
 }

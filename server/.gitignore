@@ -5,9 +5,12 @@
 /yarn.lock
 /src/ansible/artifacts
 /src/ansible/inventory/hosts.json
-
+/coverage
 # production
 /dist
 
 # misc
 .DS_Store
+./node_modules/*
+/node_modules/*
+/documentation/SECURITY_SCANNER_PLUGIN_PLAN.md

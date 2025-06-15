@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="580" viewBox="0 0 900 580" xmlns="http://www.w3.org/2000/svg">
+  <rect width="900" height="580" fill="#1e1e1e" rx="10" ry="10" />
+  <style>
+    .main-title {
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-size: 24px;
+      font-weight: bold;
+      fill: #dfdfd6;
+      text-anchor: middle;
+    }
+    .subtitle {
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-size: 16px;
+      fill: #dfdfd6;
+      text-anchor: middle;
+    }
+    .node-box {
+      fill: #1b1b1f;
+      rx: 8;
+      ry: 8;
+    }
+    .left-border-device { fill: #3498db; }
+    .left-border-automation { fill: #ff9800; }
+    .left-border-container { fill: #4caf50; }
+    .left-border-playbook { fill: #9b59b6; }
+    .left-border-core { fill: #1abc9c; }
+    .node-title {
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-size: 16px;
+      font-weight: bold;
+      fill: #dfdfd6;
+      text-anchor: middle;
+    }
+    .node-subtext {
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-size: 12px;
+      fill: #98989f;
+      text-anchor: middle;
+    }
+    .connection { stroke: #666666; stroke-width: 2; fill: none; }
+  </style>
+  <text x="450" y="50" class="main-title">SSM Core Features</text>
+  <text x="450" y="75" class="subtitle">The four pillars of Squirrel Servers Manager</text>
+  
+  <!-- Central Core -->
+  <rect x="410" y="220" width="80" height="80" class="node-box" rx="8" ry="8"/>
+  <rect x="410" y="220" width="4" height="80" class="left-border-core"/>
+  <text x="450" y="255" class="node-title">SSM</text>
+  <text x="450" y="275" class="node-subtext">Core</text>
+  
+  <!-- Device Management Pillar -->
+  <rect x="100" y="100" width="200" height="80" class="node-box" rx="8" ry="8"/>
+  <rect x="100" y="100" width="4" height="80" class="left-border-device"/>
+  <text x="200" y="145" class="node-title">Device Mgt.</text>
+  
+  <!-- Device Features -->
+  <rect x="140" y="200" width="120" height="30" class="node-box" rx="8" ry="8"/>
+  <rect x="140" y="200" width="4" height="30" class="left-border-device"/>
+  <text x="200" y="220" class="node-subtext">Monitoring</text>
+  
+  <rect x="140" y="240" width="120" height="30" class="node-box" rx="8" ry="8"/>
+  <rect x="140" y="240" width="4" height="30" class="left-border-device"/>
+  <text x="200" y="260" class="node-subtext">Diagnostics</text>
+
+  <rect x="140" y="280" width="120" height="30" class="node-box" rx="8" ry="8"/>
+  <rect x="140" y="280" width="4" height="30" class="left-border-device"/>
+  <text x="200" y="300" class="node-subtext">SSH Mgt.</text>
+
+  <!-- Automations Pillar -->
+  <rect x="100" y="350" width="200" height="80" class="node-box" rx="8" ry="8"/>
+  <rect x="100" y="350" width="4" height="80" class="left-border-automation"/>
+  <text x="200" y="395" class="node-title">Automations</text>
+  
+  <!-- Automation Features -->
+  <rect x="140" y="450" width="120" height="30" class="node-box" rx="8" ry="8"/>
+  <rect x="140" y="450" width="4" height="30" class="left-border-automation"/>
+  <text x="200" y="470" class="node-subtext">Triggers</text>
+  
+  <rect x="140" y="490" width="120" height="30" class="node-box" rx="8" ry="8"/>
+  <rect x="140" y="490" width="4" height="30" class="left-border-automation"/>
+  <text x="200" y="510" class="node-subtext">Actions</text>
+
+  <rect x="140" y="530" width="120" height="30" class="node-box" rx="8" ry="8"/>
+  <rect x="140" y="530" width="4" height="30" class="left-border-automation"/>
+  <text x="200" y="550" class="node-subtext">Cron Schedules</text>
+  
+  <!-- Container Management Pillar -->
+  <rect x="600" y="100" width="200" height="80" class="node-box" rx="8" ry="8"/>
+  <rect x="600" y="100" width="4" height="80" class="left-border-container"/>
+  <text x="700" y="145" class="node-title">Container Mgt.</text>
+  
+  <!-- Container Features -->
+  <rect x="640" y="200" width="120" height="30" class="node-box" rx="8" ry="8"/>
+  <rect x="640" y="200" width="4" height="30" class="left-border-container"/>
+  <text x="700" y="220" class="node-subtext">Template Library</text>
+  
+  <rect x="640" y="240" width="120" height="30" class="node-box" rx="8" ry="8"/>
+  <rect x="640" y="240" width="4" height="30" class="left-border-container"/>
+  <text x="700" y="260" class="node-subtext">Volume Mgt.</text>
+
+  <rect x="640" y="280" width="120" height="30" class="node-box" rx="8" ry="8"/>
+  <rect x="640" y="280" width="4" height="30" class="left-border-container"/>
+  <text x="700" y="300" class="node-subtext">Stack Mgt.</text>
+  
+  <!-- Playbooks Pillar -->
+  <rect x="600" y="350" width="200" height="80" class="node-box" rx="8" ry="8"/>
+  <rect x="600" y="350" width="4" height="80" class="left-border-playbook"/>
+  <text x="700" y="395" class="node-title">Playbooks</text>
+  
+  <!-- Playbook Features -->
+  <rect x="640" y="450" width="120" height="30" class="node-box" rx="8" ry="8"/>
+  <rect x="640" y="450" width="4" height="30" class="left-border-playbook"/>
+  <text x="700" y="470" class="node-subtext">Git Repositories</text>
+  
+  <rect x="640" y="490" width="120" height="30" class="node-box" rx="8" ry="8"/>
+  <rect x="640" y="490" width="4" height="30" class="left-border-playbook"/>
+  <text x="700" y="510" class="node-subtext">Variable Mgt.</text>
+
+  <rect x="640" y="530" width="120" height="30" class="node-box" rx="8" ry="8"/>
+  <rect x="640" y="530" width="4" height="30" class="left-border-playbook"/>
+  <text x="700" y="550" class="node-subtext">Ansible Integration</text>
+  
+  <!-- Connections -->
+  <line x1="300" y1="140" x2="410" y2="255" class="connection" />
+  <line x1="600" y1="140" x2="490" y2="255" class="connection" />
+  <line x1="300" y1="390" x2="410" y2="265" class="connection" />
+  <line x1="600" y1="390" x2="490" y2="265" class="connection" />
+</svg>

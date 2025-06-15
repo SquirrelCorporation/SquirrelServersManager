@@ -21,7 +21,7 @@ router.route("/devices/:uuid/docker").post(
 );
 
 router.get(
-  "/devices/:uuid/auth",
+  "/device-credentials/:uuid",
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got Device Auth", deviceAuth).send(res);
   }),
@@ -34,21 +34,21 @@ router.route("/devices/:uuid/configuration/containers/docker").post(
 );
 
 router.get(
-  "/devices/dashboard/stats/performances",
+  "/statistics/dashboard/performances",
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got performance", performance).send(res);
   }),
 );
 
 router.get(
-  "/devices/dashboard/stats/availability",
+  "/statistics/dashboard/availability",
   asyncHandler(async (req, res) => {
     new SuccessResponse("Got availability", availability).send(res);
   }),
 );
 
 router.post(
-  `/devices/dashboard/stats/averaged/:type`,
+  `/statistics/dashboard/averaged/:type`,
   asyncHandler(async (req, res) => {
     const stats: any = [];
     let j = 0;
@@ -69,7 +69,7 @@ router.post(
 );
 
 router.post(
-  `/devices/dashboard/stats/:type`,
+  `/statistics/dashboard/stats/:type`,
   asyncHandler(async (req, res) => {
     const stats: any = [];
     for (let i = 0; i < 24 * 30; i++) {
@@ -99,14 +99,14 @@ router.delete(
 );
 
 router.get(
-  `/devices/:uuid/stats/:type/`,
+  `/statistics/devices/:type`,
   asyncHandler(async (req, res) => {
     new SuccessResponse("Stats Device").send(res);
   }),
 );
 
 router.get(
-  `/devices/:uuid/stat/:type/`,
+  `/statistics/devices/:uuid/stat/:type/`,
   asyncHandler(async (req, res) => {
     const { type } = req.params;
     new SuccessResponse("Stat Device", {

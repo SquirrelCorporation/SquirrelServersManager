@@ -1,7 +1,7 @@
 import { SFTPDataNode } from '@/components/DeviceComponents/SFTPDrawer/SFTPDrawer';
-import { socket } from '@/socket';
+import { sftpSocket as socket } from '@/socket';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
-import { message } from 'antd';
+import message from '@/components/Message/DynamicMessage';
 import React, { useImperativeHandle, useState } from 'react';
 import { SsmEvents } from 'ssm-shared-lib';
 
@@ -30,12 +30,15 @@ const MkdirModal = React.forwardRef<MkdirModalHandles, MkdirModalProps>(
           .emitWithAck(SsmEvents.SFTP.MKDIR, {
             path: newDirectory,
           }); // Wait for the response
-        if (response.status === 'OK') {
-          message.success('Directory created successfully!');
+        if (response.success) {
+          message.success({
+            content: 'Directory created successfully!',
+            duration: 6,
+          });
           return true; // Indicate success
         } else {
           throw new Error(
-            `Failed to create directory: ${response.error || 'Unknown error'}`,
+            `Failed to create directory: ${response.message || 'Unknown error'}`,
           );
         }
       } catch (error: any) {
@@ -63,9 +66,11 @@ const MkdirModal = React.forwardRef<MkdirModalHandles, MkdirModalProps>(
           onCancel: () => onClose(),
         }}
         onFinish={async (values) => {
-          const success = await createDir(
-            `${node?.key?.replace('//', '/')}/${values.path}`,
-          ); // Wait for createDir execution
+          // Ensure proper path formatting
+          const basePath = node?.key?.replace('//', '/') || '/';
+          const newPath = `${basePath}/${values.path}`.replace('//', '/');
+
+          const success = await createDir(newPath); // Wait for createDir execution
           if (success) {
             onSuccess(node?.key as string, values.path);
             onClose(); // Close the modal on success

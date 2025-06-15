@@ -19,7 +19,10 @@ const ContainerBackUpVolumeModal: React.FC<ContainerBackUpVolumeModalProps> = ({
 }) => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
-  const [inProgressModal, setInProgressModal] = React.useState({
+  const [inProgressModal, setInProgressModal] = React.useState<{
+    visible: boolean;
+    mode: SsmContainer.VolumeBackupMode | undefined;
+  }>({
     visible: false,
     mode: SsmContainer.VolumeBackupMode.FILE_SYSTEM,
   });
