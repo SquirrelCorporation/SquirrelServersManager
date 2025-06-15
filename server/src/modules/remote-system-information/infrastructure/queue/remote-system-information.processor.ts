@@ -38,7 +38,7 @@ export class RemoteSystemInformationProcessor {
     try {
       const device = await this.devicesService.findOneByUuid(deviceUuid);
       if (!device) {
-        throw new Error('Device not found');
+        throw new Error(`Device not found (${deviceUuid})`);
       }
 
       if (!device.systemInformation) {

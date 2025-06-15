@@ -18,6 +18,8 @@ export class ContainerMapper {
    */
   toDocument(entity: Partial<IContainer>): any {
     const document: any = { ...entity };
+    // Remove _id field to prevent MongoDB immutable field update error
+    delete document._id;
     return document;
   }
 }

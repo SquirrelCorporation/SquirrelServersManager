@@ -264,6 +264,35 @@ export class RemoteSystemInformationEngineService implements IRemoteSystemInform
   }
 
   /**
+   * Update watcher configuration when device configuration is updated
+   */
+  @OnEvent(Events.DEVICE_CONFIGURATION_UPDATED)
+  async onDeviceConfigurationUpdated(payload: { device: IDevice }): Promise<void> {
+    try {
+      this.logger.log(`Device ${payload.device.uuid} configuration updated`);
+      if (payload.device.agentType === SsmAgent.InstallMethods.LESS) {
+        // Find and deregister the existing watcher
+        const watcherKey = Object.keys(this.state.watchers).find(
+          (key) => this.state.watchers[key].configuration.deviceUuid === payload.device.uuid,
+        );
+        
+        if (watcherKey) {
+          this.logger.log(`Deregistering existing watcher for device ${payload.device.uuid}`);
+          await this.deregisterComponent(this.state.watchers[watcherKey]);
+        }
+        
+        // Register a new watcher with the updated configuration
+        this.logger.log(`Registering new watcher for device ${payload.device.uuid} with updated configuration`);
+        await this.registerWatcher(payload.device);
+      }
+    } catch (error: any) {
+      this.logger.error(
+        `Error when updating watcher for device ${payload.device.uuid}: ${error.message}`,
+      );
+    }
+  }
+
+  /**
    * Execute a specific component in debug mode
    * @param deviceUuid Device UUID
    * @param componentName Component name (e.g., 'cpu', 'mem')

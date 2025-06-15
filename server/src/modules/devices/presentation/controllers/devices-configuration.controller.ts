@@ -1,5 +1,7 @@
 import { Body, Controller, Param, Patch } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import Events from 'src/core/events/events';
 import { DevicesService } from '../../application/services/devices.service';
 import {
   DockerConfigurationDto,
@@ -20,6 +22,7 @@ export class DevicesConfigurationController {
   constructor(
     private readonly devicesService: DevicesService,
     private readonly deviceMapper: DeviceMapper,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   @Patch(':uuid/configuration/containers/docker')
@@ -101,6 +104,13 @@ export class DevicesConfigurationController {
 
     // Update and return the device
     const updatedDevice = this.deviceMapper.updateEntity(device, updateData);
-    return this.devicesService.update(updatedDevice);
+    const result = await this.devicesService.update(updatedDevice);
+    
+    // Emit event to restart watchers with new configuration
+    if (result) {
+      this.eventEmitter.emit(Events.DEVICE_CONFIGURATION_UPDATED, { device: result });
+    }
+    
+    return result;
   }
 }
