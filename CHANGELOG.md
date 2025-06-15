@@ -2,7 +2,23 @@
 
 ## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-rc.2...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-rc.4...HEAD)
+
+**Fixed bugs:**
+
+- \[BUG\] Docker stack configurations cannot be updated [\#993](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/993)
+
+## [v0.5.0-rc.4](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-rc.4) (2025-06-15)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-rc.3...v0.5.0-rc.4)
+
+**Fixed bugs:**
+
+- \[BUGFIX\] Add event-driven updates for device watcher configurations on devic… [\#994](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/994) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+## [v0.5.0-rc.3](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-rc.3) (2025-06-07)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-rc.2...v0.5.0-rc.3)
 
 **Merged pull requests:**
 
