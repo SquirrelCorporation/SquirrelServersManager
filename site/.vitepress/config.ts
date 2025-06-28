@@ -1,4 +1,5 @@
 import { defineConfig } from "vitepress";
+import llmstxt from "vitepress-plugin-llms";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -8,10 +9,14 @@ export default defineConfig({
   appearance: "force-dark",
   lastUpdated: true,
   cleanUrls: true,
+  sitemap: {
+    hostname: 'https://squirrelserversmanager.io'
+  },
   vite: {
     ssr: {
       noExternal: [/^vuetify/],
     },
+    plugins: [llmstxt()]
   },
   srcExclude: ["**/docs/_obsolete/**"],
   /* prettier-ignore */
