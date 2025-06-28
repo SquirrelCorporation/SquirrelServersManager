@@ -12,7 +12,7 @@ import {
 } from '@infrastructure/exceptions';
 import { IDevice } from '@modules/devices';
 import { DeviceMapper } from '../mappers/device.mapper';
-import { CreateDeviceDto, UpdateDeviceDto } from '../dtos/device.dto';
+import { CreateDeviceDto, DeviceFilterDto, UpdateDeviceDto } from '../dtos/device.dto';
 import { DevicesService } from '../../application/services/devices.service';
 import {
   CreateDeviceDoc,
@@ -89,7 +89,7 @@ export class DevicesController {
 
   @Get('filter')
   @GetDevicesWithFilterDoc()
-  async findDevicesWithFilter(@Query() filter: any) {
+  async findDevicesWithFilter(@Query() filter: DeviceFilterDto) {
     return this.devicesService.findWithFilter(filter);
   }
 

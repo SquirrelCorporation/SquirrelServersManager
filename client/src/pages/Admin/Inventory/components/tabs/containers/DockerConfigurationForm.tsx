@@ -5,7 +5,7 @@ import {
 } from '@/services/rest/devices/device-credentials';
 import { ProFormInstance } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
-import message from '@/components/Message/DynamicMessage';
+import { message } from '@shared/ui/feedback/DynamicMessage';
 import { Space } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';

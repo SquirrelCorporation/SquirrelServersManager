@@ -13,3 +13,9 @@ export class CreateAutomationDto {
   @IsOptional()
   enabled: boolean = true;
 }
+
+export class CreateAutomationBodyDto {
+  @IsObject()
+  @IsNotEmpty()
+  rawChain: any;
+}

@@ -1,4 +1,5 @@
-import { ContainerVolumeSolid, Target } from '@/components/Icons/CustomIcons';
+import { ContainerVolumeSolid } from '@shared/ui/icons/categories/containers';
+import { Target } from '@shared/ui/icons/categories/ui';
 import DockerOpsModal from '@/pages/Containers/components/sub-components/DockerOpsModal';
 import { getAllDevices } from '@/services/rest/devices/devices';
 import { postVolume } from '@/services/rest/containers/container-volumes';

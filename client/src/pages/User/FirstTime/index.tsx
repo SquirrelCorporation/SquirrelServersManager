@@ -1,4 +1,4 @@
-import { GameIconsAcorn } from '@/components/Icons/CustomIcons';
+import { GameIconsAcorn } from '@shared/ui/icons/categories/automation';
 import CreateUserForm from '@/pages/User/FirstTime/CreateUserForm';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { PageContainer, ProConfigProvider } from '@ant-design/pro-components';

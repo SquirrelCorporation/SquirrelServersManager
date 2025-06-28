@@ -1,6 +1,10 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Automation } from '../../domain/entities/automation.entity';
+
+export const AUTOMATIONS_TAG = 'Automations';
+
+export const AutomationsControllerDocs = () => applyDecorators(ApiTags(AUTOMATIONS_TAG));
 
 export const GetAllAutomationsDoc = () =>
   applyDecorators(

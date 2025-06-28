@@ -6,8 +6,8 @@ import {
   StackIconSelector,
 } from '@/components/ComposeEditor/StackIconSelector';
 import { MenuElementType } from '@/components/ComposeEditor/types';
-import { Validate } from '@/components/Icons/CustomIcons';
-import Title, { TitleColors } from '@/components/Template/Title';
+import { Validate } from '@shared/ui/icons/categories/application';
+import Title, { TitleColors } from '@shared/ui/templates/PageTitle';
 import {
   deleteContainerCustomStack,
   getCustomStacks,
@@ -31,7 +31,7 @@ import { ProFormSelect } from '@ant-design/pro-form';
 import Editor, { Monaco } from '@monaco-editor/react';
 import { useSearchParams } from '@umijs/max';
 import { InputRef, Tag } from 'antd';
-import message from '@/components/Message/DynamicMessage';
+import message from '@shared/ui/feedback/DynamicMessage';
 import { Alert, Button, Col, notification, Row, Space } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
 import { editor } from 'monaco-editor';

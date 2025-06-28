@@ -1,4 +1,4 @@
-import Title, { TitleColors } from '@/components/Template/Title';
+import Title, { TitleColors } from '@shared/ui/templates/PageTitle';
 import { usePlugins } from '@/plugins/contexts/plugin-context';
 import {
   AppstoreAddOutlined,
@@ -11,7 +11,7 @@ import PluginStoreTab from './components/PluginStoreTab';
 import StyledTabContainer, {
   TabLabel,
   IconWrapper,
-} from '@/components/Layout/StyledTabContainer';
+} from '@shared/ui/layouts/StyledTabContainer';
 
 const PluginsPage: React.FC = () => {
   const { pluginMetadata, loading, error, refreshPlugins } = usePlugins();

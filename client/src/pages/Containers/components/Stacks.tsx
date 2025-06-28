@@ -12,7 +12,7 @@ import {
   TableDropdown,
 } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
-import message from '@/components/Message/DynamicMessage';
+import { message } from '@shared/ui/feedback/DynamicMessage';
 import { Button, Tag } from 'antd';
 import React, { useRef } from 'react';
 import { API } from 'ssm-shared-lib';

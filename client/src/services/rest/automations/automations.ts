@@ -14,6 +14,20 @@ export async function getAutomations(
   });
 }
 
+export async function getAutomation(
+  uuid: string,
+  params?: any,
+  options?: Record<string, any>,
+) {
+  return request<API.Response<API.Automation>>(`/api/automations/${uuid}`, {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 export async function putAutomation(
   name: string,
   rawChain: any,

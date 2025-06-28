@@ -275,14 +275,16 @@ export class RemoteSystemInformationEngineService implements IRemoteSystemInform
         const watcherKey = Object.keys(this.state.watchers).find(
           (key) => this.state.watchers[key].configuration.deviceUuid === payload.device.uuid,
         );
-        
+
         if (watcherKey) {
           this.logger.log(`Deregistering existing watcher for device ${payload.device.uuid}`);
           await this.deregisterComponent(this.state.watchers[watcherKey]);
         }
-        
+
         // Register a new watcher with the updated configuration
-        this.logger.log(`Registering new watcher for device ${payload.device.uuid} with updated configuration`);
+        this.logger.log(
+          `Registering new watcher for device ${payload.device.uuid} with updated configuration`,
+        );
         await this.registerWatcher(payload.device);
       }
     } catch (error: any) {

@@ -2,7 +2,7 @@ import {
   Bridge,
   ContainerSolid,
   GrommetIconsHost,
-} from '@/components/Icons/CustomIcons';
+} from '@shared/ui/icons/categories/containers';
 import { CheckCard } from '@ant-design/pro-components';
 import { Avatar, Typography } from 'antd';
 import React from 'react';

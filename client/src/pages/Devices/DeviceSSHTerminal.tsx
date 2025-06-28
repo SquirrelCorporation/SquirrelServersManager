@@ -1,12 +1,12 @@
-import { Live24Filled } from '@/components/Icons/CustomIcons';
-import Title, { TitleColors } from '@/components/Template/Title';
+import { Live24Filled } from '@shared/ui/icons/categories/application';
+import Title, { TitleColors } from '@shared/ui/templates/PageTitle';
 import TerminalCore, {
   TerminalCoreHandles,
 } from '@/components/Terminal/TerminalCore';
 import { sshSocket as socket } from '@/socket';
 import { useParams } from '@@/exports';
 import { PageContainer } from '@ant-design/pro-components';
-import message from '@/components/Message/DynamicMessage';
+import message from '@shared/ui/feedback/DynamicMessage';
 import React, { RefObject, useEffect } from 'react';
 import { SsmEvents } from 'ssm-shared-lib';
 

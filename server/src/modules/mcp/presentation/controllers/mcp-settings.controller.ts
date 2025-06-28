@@ -18,7 +18,12 @@ import { ClientProxy } from '@nestjs/microservices';
 import { RestartServerEvent } from '../../../../core/events/restart-server.event';
 import Events from '../../../../core/events/events';
 import { ACTIONS, RESOURCES, ResourceAction } from '../../../../infrastructure/security';
-import { AllowedPlaybooksDto, McpSettingDto, UpdateMcpSettingDto } from '../dtos/mcp-settings.dto';
+import {
+  AllowedPlaybooksDto,
+  McpSettingDto,
+  UpdateAllowedPlaybooksDto,
+  UpdateMcpSettingDto,
+} from '../dtos/mcp-settings.dto';
 import {
   GetAllowedPlaybooksDocs,
   GetMcpStatusDocs,
@@ -30,26 +35,6 @@ import {
   MCP_ALLOWED_PLAYBOOKS_CACHE_KEY,
   MCP_ENABLED_CACHE_KEY,
 } from '../../application/constants/mcp.constants';
-
-// Manual validation function for AllowedPlaybooksDto payload
-function validateAllowedPlaybooks(allowed: unknown): { isValid: boolean; message?: string } {
-  if (allowed === 'all') {
-    return { isValid: true };
-  }
-  // Check if it's an array of non-empty strings
-  if (
-    Array.isArray(allowed) &&
-    allowed.every((item) => typeof item === 'string' && item.length > 0)
-  ) {
-    return { isValid: true };
-  }
-  return {
-    isValid: false,
-    message: "Payload must be the literal string 'all' or an array of non-empty strings.",
-  };
-}
-
-// --- Controller ---
 
 @McpSettingsControllerDocs()
 @Controller('settings/mcp')
@@ -107,22 +92,13 @@ export class McpSettingsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @UpdateAllowedPlaybooksDocs()
   @ResourceAction(RESOURCES.SETTING, ACTIONS.UPDATE)
-  async updateAllowedPlaybooks(@Body() rawBody: any): Promise<void> {
-    // Access the property directly from the raw body
-    const allowedValue = rawBody.allowed;
-
-    const validation = validateAllowedPlaybooks(allowedValue);
-
-    if (!validation.isValid) {
-      this.logger.warn(`Validation failed for payload: ${JSON.stringify(allowedValue)}`);
-      throw new HttpException(validation.message ?? 'Invalid payload', HttpStatus.BAD_REQUEST);
-    }
+  async updateAllowedPlaybooks(
+    @Body() updateAllowedPlaybooksDto: UpdateAllowedPlaybooksDto,
+  ): Promise<void> {
+    const allowedValue = updateAllowedPlaybooksDto.allowed;
 
     try {
-      await this.cacheManager.set(
-        MCP_ALLOWED_PLAYBOOKS_CACHE_KEY,
-        allowedValue as string[] | 'all',
-      );
+      await this.cacheManager.set(MCP_ALLOWED_PLAYBOOKS_CACHE_KEY, allowedValue);
       this.logger.log(`Updated mcp.allowed_playbooks setting to: ${JSON.stringify(allowedValue)}`);
     } catch (error) {
       this.logger.error('Failed to update allowed playbooks setting:', error);

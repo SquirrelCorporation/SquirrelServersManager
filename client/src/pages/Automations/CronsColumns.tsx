@@ -1,4 +1,4 @@
-import { GrommetIconsSystem } from '@/components/Icons/CustomIcons';
+import { GrommetIconsSystem } from '@shared/ui/icons/categories/system';
 import { LockFilled } from '@ant-design/icons';
 import { ProColumns } from '@ant-design/pro-components';
 import { Avatar } from 'antd';

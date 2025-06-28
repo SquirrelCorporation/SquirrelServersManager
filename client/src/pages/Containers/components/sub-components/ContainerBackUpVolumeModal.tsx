@@ -1,8 +1,5 @@
-import {
-  BackupSolid,
-  BrowserLtr,
-  FileSystem,
-} from '@/components/Icons/CustomIcons';
+import { BackupSolid, FileSystem } from '@shared/ui/icons/categories/system';
+import { BrowserLtr } from '@shared/ui/icons/categories/ui';
 import ContainerBackUpVolumeInProgressModal from '@/pages/Containers/components/sub-components/ContainerBackUpVolumeInProgressModal';
 import { CheckCard, ModalForm, ProForm } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';

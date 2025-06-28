@@ -1,7 +1,7 @@
 import { OsLogo as OriginalOsLogo } from '@/components/DeviceComponents/OsLogo/OsLogo';
-import { CarbonBatchJob } from '@/components/Icons/CustomIcons';
+import { CarbonBatchJob } from '@shared/ui/icons/categories/automation';
 import { TerminalStateProps } from '@/components/PlaybookExecutionModal';
-import Title, { TitleColors } from '@/components/Template/Title';
+import Title, { TitleColors } from '@shared/ui/templates/PageTitle';
 import { getDevices } from '@/services/rest/devices/devices';
 import { executePlaybook } from '@/services/rest/playbooks/playbooks';
 import {

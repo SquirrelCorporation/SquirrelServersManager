@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LoginDto } from '../dtos/login.dto';
 import {
   ApiErrorResponse,
@@ -13,6 +13,8 @@ import {
 } from '../../../../infrastructure/security/roles/resource-action.decorator';
 
 export const USERS_TAG = 'Users';
+
+export const UsersControllerDocs = () => applyDecorators(ApiTags(USERS_TAG));
 
 export function CheckUsersExistenceDoc() {
   return applyDecorators(

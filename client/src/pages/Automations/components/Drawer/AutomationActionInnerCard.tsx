@@ -1,7 +1,5 @@
-import {
-  ContainerVolumeSolid,
-  TablerSquareNumber2Filled,
-} from '@/components/Icons/CustomIcons';
+import { ContainerVolumeSolid } from '@shared/ui/icons/categories/containers';
+import { TablerSquareNumber2Filled } from '@shared/ui/icons/categories/ui';
 import AutomationActionTitle from '@/pages/Automations/components/Drawer/AutomationActionTitle';
 import DockerActionSubForm from '@/pages/Automations/components/Drawer/DockerActionSubForm';
 import DockerVolumeActionSubForm from '@/pages/Automations/components/Drawer/DockerVolumeActionSubForm';

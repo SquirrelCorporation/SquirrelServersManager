@@ -154,7 +154,7 @@ describe('DeviceDownTimeEventRepository', () => {
           },
           expect.any(Object), // $group
           expect.any(Object), // $project
-        ])
+        ]),
       );
 
       // Verify result matches expected output

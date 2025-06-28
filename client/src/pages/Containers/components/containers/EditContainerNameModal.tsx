@@ -1,6 +1,6 @@
 import { updateContainerCustomName } from '@/services/rest/containers/containers';
 import { ActionType, ModalForm, ProFormText } from '@ant-design/pro-components';
-import message from '@/components/Message/DynamicMessage';
+import { message } from '@shared/ui/feedback/DynamicMessage';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 

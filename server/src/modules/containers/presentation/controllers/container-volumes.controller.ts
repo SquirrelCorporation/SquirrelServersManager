@@ -1,5 +1,4 @@
 import * as os from 'os';
-import { parse } from 'url';
 import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
 import { paginate } from '@infrastructure/common/query/pagination.util';
 import { sortByFields } from '@infrastructure/common/query/sorter.util';
@@ -16,11 +15,9 @@ import {
   Param,
   Post,
   Query,
-  Req,
   Res,
 } from '@nestjs/common';
 import { User } from 'src/decorators/user.decorator';
-import { SsmContainer } from 'ssm-shared-lib';
 import { Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import {
@@ -28,6 +25,8 @@ import {
   IContainerVolumesService,
 } from '../../domain/interfaces/container-volumes-service.interface';
 import { CreateVolumeDto } from '../dtos/create-volume.dto';
+import { VolumeQueryDto } from '../dtos/volume-query.dto';
+import { BackupVolumeDto, BackupVolumeResponseDto } from '../dtos/volume-backup.dto';
 import {
   BackupVolumeDoc,
   CONTAINER_VOLUMES_TAG,
@@ -59,31 +58,27 @@ export class ContainerVolumesController {
    */
   @Get()
   @GetVolumesDoc()
-  async getVolumes(@Req() req) {
-    const realUrl = req.url;
-    const { current, pageSize } = req.query;
-    const params = parse(realUrl, true).query as any;
+  async getVolumes(@Query() query: VolumeQueryDto) {
+    const { current = 1, pageSize = 10, ...filterParams } = query;
 
     const volumes = await this.volumesService.getAllVolumes();
 
     // Apply sorting, filtering, and pagination
-    let dataSource = sortByFields(volumes, params);
-    dataSource = filterByFields(dataSource, params);
+    let dataSource = sortByFields(volumes, filterParams);
+    dataSource = filterByFields(dataSource, filterParams);
     dataSource = filterByQueryParams(
       dataSource.map((e) => ({ ...e, deviceUuid: e.deviceUuid })),
-      params,
+      filterParams,
       ['name', 'scope', 'driver', 'deviceUuid'],
     );
 
     const totalBeforePaginate = dataSource?.length || 0;
-    if (current && pageSize) {
-      dataSource = paginate(dataSource, current as number, pageSize as number);
-    }
+    dataSource = paginate(dataSource, current, pageSize);
 
     return new PaginatedResponseDto(dataSource, {
       total: totalBeforePaginate,
       pageSize,
-      current: parseInt(`${current}`, 10) || 1,
+      current: current,
     });
   }
 
@@ -117,19 +112,18 @@ export class ContainerVolumesController {
    */
   @Post('backup/:uuid')
   @BackupVolumeDoc()
-  async postBackupVolume(@Param('uuid') uuid: string, @Body() body: { mode: string }) {
-    const { mode } = body;
+  async postBackupVolume(
+    @Param('uuid') uuid: string,
+    @Body() backupDto: BackupVolumeDto,
+  ): Promise<BackupVolumeResponseDto> {
+    const { mode } = backupDto;
 
     const volume = await this.volumesService.getVolumeByUuid(uuid);
     if (!volume) {
       throw new HttpException('Volume not found', HttpStatus.NOT_FOUND);
     }
 
-    const { filePath, fileName } = await this.volumesService.backupVolume(
-      volume,
-      mode as SsmContainer.VolumeBackupMode,
-      true,
-    );
+    const { filePath, fileName } = await this.volumesService.backupVolume(volume, mode, true);
 
     return {
       filePath: `${filePath}${fileName}`,

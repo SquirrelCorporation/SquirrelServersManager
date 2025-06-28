@@ -30,7 +30,7 @@ import React, {
 } from 'react';
 import PluginDetailModal from './PluginDetailModal';
 import RepositoryManagementModal from './RepositoryManagementModal';
-import message from '@/components/Message/DynamicMessage'; // Restore custom message import
+import { message } from '@shared/ui/feedback/DynamicMessage'; // Restore custom message import
 import FullScreenLoader from '@/components/FullScreenLoader/FullScreenLoader'; // Updated import path
 import ReactDOM from 'react-dom'; // Add ReactDOM import
 

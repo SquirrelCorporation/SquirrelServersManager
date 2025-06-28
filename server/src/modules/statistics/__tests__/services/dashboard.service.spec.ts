@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { StatsType } from 'ssm-shared-lib';
+import { IDevice } from '@modules/devices';
 import { DashboardService } from '../../application/services/dashboard.service';
 import { DeviceDownTimeService } from '../../application/services/device-downtime.service';
 import { DeviceStatsService } from '../../application/services/device-stats.service';
-import { IDevice } from '@modules/devices';
 
 // Mock dependencies
 vi.mock('../../../../logger', () => ({

@@ -10,7 +10,7 @@ import {
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-form';
-import message from '@/components/Message/DynamicMessage';
+import { message } from '@shared/ui/feedback/DynamicMessage';
 import { Button, Col, Row, Select, Space, Tooltip } from 'antd';
 import React, { useEffect } from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';

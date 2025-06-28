@@ -1,6 +1,10 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiErrorResponse } from '@infrastructure/models/api-response.model';
+
+export const ANSIBLE_HOOKS_TAG = 'AnsibleHooks';
+
+export const AnsibleHooksControllerDocs = () => applyDecorators(ApiTags(ANSIBLE_HOOKS_TAG));
 
 export function UpdateTaskStatusDoc() {
   return applyDecorators(

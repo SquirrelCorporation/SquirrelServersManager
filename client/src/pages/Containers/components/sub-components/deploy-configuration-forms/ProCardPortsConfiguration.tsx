@@ -1,4 +1,4 @@
-import { PortInput } from '@/components/Icons/CustomIcons';
+import { PortInput } from '@shared/ui/icons/categories/containers';
 import {
   ProCard,
   ProForm,

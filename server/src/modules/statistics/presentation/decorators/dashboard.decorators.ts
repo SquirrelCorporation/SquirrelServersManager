@@ -1,8 +1,10 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiErrorResponse } from '@infrastructure/models/api-response.model';
 
 export const DASHBOARD_TAG = 'DashboardStats';
+
+export const DashboardControllerDocs = () => applyDecorators(ApiTags(DASHBOARD_TAG));
 
 export function GetDashboardPerformanceStatsDoc() {
   return applyDecorators(

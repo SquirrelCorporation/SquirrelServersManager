@@ -1,9 +1,9 @@
 import AgentInstallMethod from '@/components/DeviceConfiguration/AgentInstallMethod';
-import { GrommetIconsInstall } from '@/components/Icons/CustomIcons';
+import { GrommetIconsInstall } from '@shared/ui/icons/categories/actions';
 import { updateAgentInstallMethod } from '@/services/rest/devices/devices';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { ProForm, ProFormDependency } from '@ant-design/pro-components';
-import message from '@/components/Message/DynamicMessage';
+import { message } from '@shared/ui/feedback/DynamicMessage';
 import { Alert, Avatar, Card, Col, Row, Space, Tag } from 'antd';
 import React from 'react';
 import { API, SsmAgent } from 'ssm-shared-lib';

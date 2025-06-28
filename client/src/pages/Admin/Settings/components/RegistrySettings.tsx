@@ -12,7 +12,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
-import message from '@/components/Message/DynamicMessage';
+import { message } from '@shared/ui/feedback/DynamicMessage';
 import { Avatar, Button, Card, Popconfirm, Tag, Tooltip } from 'antd';
 import { AddCircleOutline, DeleteOutline } from 'antd-mobile-icons';
 import React, { useEffect, useState } from 'react';

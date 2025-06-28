@@ -1,4 +1,4 @@
-import { Proxmox } from '@/components/Icons/CustomIcons';
+import { Proxmox } from '@shared/ui/icons/categories/services';
 import { DockerOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
 import React from 'react';

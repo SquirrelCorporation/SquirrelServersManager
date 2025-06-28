@@ -1,7 +1,7 @@
 import {
   SimpleIconsGit,
   StreamlineLocalStorageFolderSolid,
-} from '@/components/Icons/CustomIcons';
+} from '@shared/ui/icons/categories/services';
 import React, { ReactNode } from 'react';
 import {
   API,

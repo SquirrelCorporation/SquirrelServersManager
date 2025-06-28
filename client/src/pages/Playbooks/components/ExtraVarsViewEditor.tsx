@@ -1,7 +1,7 @@
 import {
   CheckmarkUnderlineCircle24Regular,
   SelectiveTool,
-} from '@/components/Icons/CustomIcons';
+} from '@shared/ui/icons/categories/ui';
 import ExtraVarIcon, {
   getExtraVarTooltipTitle,
 } from '@/components/PlaybookSelection/ExtraVarIcon';
@@ -26,7 +26,7 @@ import {
 } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';
-import message from '@/components/Message/DynamicMessage';
+import message from '@shared/ui/feedback/DynamicMessage';
 
 export type ExtraVarsViewEditionProps = {
   playbook: API.PlaybookFile;

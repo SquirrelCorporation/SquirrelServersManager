@@ -15,3 +15,13 @@ export class UpdateAutomationDto {
   @IsOptional()
   enabled?: boolean;
 }
+
+export class UpdateAutomationBodyDto {
+  @IsString()
+  @IsNotEmpty()
+  name!: string;
+
+  @IsObject()
+  @IsNotEmpty()
+  rawChain: any;
+}

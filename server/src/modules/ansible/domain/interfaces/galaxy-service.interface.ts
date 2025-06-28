@@ -1,3 +1,8 @@
+import {
+  CollectionDetailsResponseDto,
+  CollectionsPaginatedResponseDto,
+} from '../../presentation/dtos/galaxy-response.dto';
+
 export const GALAXY_SERVICE = 'GALAXY_SERVICE';
 
 /**
@@ -22,5 +27,18 @@ export interface IGalaxyService {
     current: number,
     namespace?: string,
     content?: string,
-  ): Promise<any[]>;
+  ): Promise<CollectionsPaginatedResponseDto>;
+
+  /**
+   * Get collection details
+   * @param namespace - The collection namespace
+   * @param name - The collection name
+   * @param version - The collection version (optional)
+   * @returns Collection details
+   */
+  getAnsibleGalaxyCollection(
+    namespace?: string,
+    name?: string,
+    version?: string,
+  ): Promise<CollectionDetailsResponseDto>;
 }

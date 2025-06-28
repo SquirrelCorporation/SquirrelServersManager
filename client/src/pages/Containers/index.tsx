@@ -1,22 +1,16 @@
-import {
-  ContainerImage,
-  ContainerVolumeSolid,
-  ElNetwork,
-  Templatetoolkit,
-} from '@/components/Icons/CustomIcons';
-import Title, { TitleColors } from '@/components/Template/Title';
+import { ContainerImage, ContainerVolumeSolid } from '@shared/ui/icons/categories/containers';
+import { ElNetwork } from '@shared/ui/icons/categories/system';
+import { Templatetoolkit } from '@shared/ui/icons/categories/automation';
+import { PageTitle, TitleColors } from '@shared/ui/templates/PageTitle';
 import Containers from '@/pages/Containers/components/Containers';
-import Images from '@/pages/Containers/components/Images';
+import ImagesWrapper from '@/pages/Containers/components/ImagesWrapper';
 import Networks from '@/pages/Containers/components/Networks';
 import Stacks from '@/pages/Containers/components/Stacks';
 import Templates from '@/pages/Containers/components/Templates';
-import Volumes from '@/pages/Containers/components/Volumes';
+import VolumesWrapper from '@/pages/Containers/components/VolumesWrapper';
 import { ApartmentOutlined, AppstoreOutlined } from '@ant-design/icons';
 import React from 'react';
-import StyledTabContainer, {
-  TabLabel,
-  IconWrapper,
-} from '@/components/Layout/StyledTabContainer';
+import { StyledTabContainer, TabLabel, IconWrapper } from '@shared/ui/layouts/StyledTabContainer';
 
 const Index: React.FC = () => {
   const items = [
@@ -66,7 +60,7 @@ const Index: React.FC = () => {
         </TabLabel>
       ),
       key: 'images',
-      children: <Images />,
+      children: <ImagesWrapper />,
     },
     {
       label: (
@@ -78,7 +72,7 @@ const Index: React.FC = () => {
         </TabLabel>
       ),
       key: 'volumes',
-      children: <Volumes />,
+      children: <VolumesWrapper />,
     },
     {
       label: (
@@ -98,10 +92,11 @@ const Index: React.FC = () => {
     <StyledTabContainer
       header={{
         title: (
-          <Title.MainTitle
+          <PageTitle
             title={'Containers'}
             backgroundColor={TitleColors.PLAYBOOKS}
             icon={<AppstoreOutlined />}
+            isMain={true}
           />
         ),
       }}

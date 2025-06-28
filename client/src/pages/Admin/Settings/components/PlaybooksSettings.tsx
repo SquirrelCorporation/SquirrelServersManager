@@ -3,8 +3,8 @@ import {
   SimpleIconsGit,
   StreamlineLocalStorageFolderSolid,
   UserSecret,
-} from '@/components/Icons/CustomIcons';
-import Title, { TitleColors } from '@/components/Template/Title';
+} from '@shared/ui/icons/categories/services';
+import { PageTitle, TitleColors } from '@shared/ui/templates/PageTitle';
 import CustomVaultModal from '@/pages/Admin/Settings/components/subcomponents/CustomVaultModal';
 import PlaybooksGitRepositoryModal from '@/pages/Admin/Settings/components/subcomponents/PlaybooksGitRepositoryModal';
 import PlaybooksLocalRepositoryModal from '@/pages/Admin/Settings/components/subcomponents/PlaybooksLocalRepositoryModal';
@@ -40,7 +40,7 @@ import {
 import { AddCircleOutline } from 'antd-mobile-icons';
 import React, { useEffect, useState } from 'react';
 import { API } from 'ssm-shared-lib';
-import message from '@/components/Message/DynamicMessage';
+import { message } from '@shared/ui/feedback/DynamicMessage';
 import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 const PlaybookSettings: React.FC = () => {
@@ -127,10 +127,11 @@ const PlaybookSettings: React.FC = () => {
       <Card
         type="inner"
         title={
-          <Title.SubTitle
+          <PageTitle
             title={'User Level Logs'}
             backgroundColor={TitleColors.USER_LOGS}
             icon={<UnorderedListOutlined />}
+            level={2}
           />
         }
       >
@@ -185,10 +186,11 @@ const PlaybookSettings: React.FC = () => {
       <Card
         type="inner"
         title={
-          <Title.SubTitle
+          <PageTitle
             title={'Local Playbook Repositories'}
             backgroundColor={TitleColors.LOCAL}
             icon={<StreamlineLocalStorageFolderSolid />}
+            level={2}
           />
         }
         style={{ marginTop: 16 }}
@@ -273,10 +275,11 @@ const PlaybookSettings: React.FC = () => {
       <Card
         type="inner"
         title={
-          <Title.SubTitle
+          <PageTitle
             title={'Remote Playbook Repositories (GIT)'}
             backgroundColor={TitleColors.GIT}
             icon={<SimpleIconsGit />}
+            level={2}
           />
         }
         style={{ marginTop: 16 }}
@@ -397,10 +400,11 @@ const PlaybookSettings: React.FC = () => {
       <Card
         type="inner"
         title={
-          <Title.SubTitle
+          <PageTitle
             title={'Vaults'}
             backgroundColor={TitleColors.SECRET}
             icon={<UserSecret />}
+            level={2}
           />
         }
         style={{ marginTop: 16 }}

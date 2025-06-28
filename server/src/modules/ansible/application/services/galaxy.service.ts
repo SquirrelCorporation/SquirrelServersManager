@@ -1,4 +1,4 @@
-import { IGalaxyService } from '@modules/ansible/doma../../domain/interfaces/galaxy-service.interface';
+import { IGalaxyService } from '@modules/ansible/domain/interfaces/galaxy-service.interface';
 import { HttpService } from '@nestjs/axios';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
@@ -6,6 +6,10 @@ import {
   ANSIBLE_COMMAND_SERVICE,
   IAnsibleCommandService,
 } from '../../domain/interfaces/ansible-command-service.interface';
+import {
+  CollectionDetailsResponseDto,
+  CollectionsPaginatedResponseDto,
+} from '../../presentation/dtos/galaxy-response.dto';
 
 /**
  * Service for managing Ansible Galaxy collections and roles
@@ -31,7 +35,7 @@ export class GalaxyService implements IGalaxyService {
     current: number,
     namespace?: string,
     content?: string,
-  ): Promise<any> {
+  ): Promise<CollectionsPaginatedResponseDto> {
     try {
       const response = await lastValueFrom(
         this.httpService.get(
@@ -40,14 +44,15 @@ export class GalaxyService implements IGalaxyService {
       );
       return {
         data: response.data?.data || [],
-        metadata: {
-          total: response.data?.meta?.count,
-          pageSize,
-          current,
-        },
+        success: true,
+        total: response.data?.meta?.count || 0,
+        pageSize,
+        current,
       };
-    } catch (error: any) {
-      this.logger.error(`Error searching Galaxy collections: ${error.message}`);
+    } catch (error) {
+      this.logger.error(
+        `Error searching Galaxy collections: ${error instanceof Error ? error.message : String(error)}`,
+      );
       throw error;
     }
   }
@@ -56,7 +61,7 @@ export class GalaxyService implements IGalaxyService {
     namespace?: string,
     name?: string,
     version?: string,
-  ): Promise<any> {
+  ): Promise<CollectionDetailsResponseDto> {
     if (!namespace || !name) {
       throw new Error('Namespace and name are required');
     }
@@ -66,7 +71,10 @@ export class GalaxyService implements IGalaxyService {
         `${this.GALAXY_API_URL}/pulp/api/v3/content/ansible/collection_versions/?namespace=${encodeURIComponent(namespace)}&name=${encodeURIComponent(name)}${version ? '&version=' + encodeURIComponent(version) : ''}&offset=0&limit=10`,
       ),
     );
-    return response.data?.results ? response.data.results[0] : undefined;
+    if (!response.data?.results || response.data.results.length === 0) {
+      throw new Error(`Collection ${namespace}.${name} not found`);
+    }
+    return response.data.results[0];
   }
   /**
    * Install a collection from Ansible Galaxy
@@ -77,8 +85,10 @@ export class GalaxyService implements IGalaxyService {
   async installCollection(namespace: string, name: string): Promise<void> {
     try {
       await this.ansibleCommandService.installAnsibleGalaxyCollection(name, namespace);
-    } catch (error: any) {
-      this.logger.error(`Error installing Galaxy collection: ${error.message}`);
+    } catch (error) {
+      this.logger.error(
+        `Error installing Galaxy collection: ${error instanceof Error ? error.message : String(error)}`,
+      );
       throw error;
     }
   }

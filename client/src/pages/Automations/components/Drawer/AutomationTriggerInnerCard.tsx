@@ -1,4 +1,4 @@
-import { TablerSquareNumber1Filled } from '@/components/Icons/CustomIcons';
+import { TablerSquareNumber1Filled } from '@shared/ui/icons/categories/ui';
 import AutomationActionTitle from '@/pages/Automations/components/Drawer/AutomationActionTitle';
 import { CheckCircleFilled, ClockCircleFilled } from '@ant-design/icons';
 import {

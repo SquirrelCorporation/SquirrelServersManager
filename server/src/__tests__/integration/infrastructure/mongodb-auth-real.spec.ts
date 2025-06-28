@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach } from 'vitest';
+import { spawn } from 'child_process';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongoClient } from 'mongodb';
 import mongoose from 'mongoose';
 import * as pino from 'pino';
-import { spawn } from 'child_process';
 
 describe('MongoDB Authentication Real Tests', () => {
   let mongoServer: MongoMemoryServer;
@@ -27,10 +27,10 @@ describe('MongoDB Authentication Real Tests', () => {
     // Create users in the authenticated instance
     const authUri = mongoServerAuth.getUri();
     const adminClient = new MongoClient(authUri);
-    
+
     try {
       await adminClient.connect();
-      
+
       // Create admin user
       await adminClient.db('admin').command({
         createUser: 'admin',
@@ -82,19 +82,19 @@ describe('MongoDB Authentication Real Tests', () => {
   describe('Real MongoDB Authentication Tests', () => {
     it('should connect to MongoDB without authentication', async () => {
       const uri = mongoServer.getUri();
-      
+
       // Test direct connection
       const client = new MongoClient(uri);
       await client.connect();
-      
+
       const db = client.db('testdb');
       const collection = db.collection('test');
-      
+
       await collection.insertOne({ test: 'noauth' });
       const result = await collection.findOne({ test: 'noauth' });
-      
+
       expect(result).toMatchObject({ test: 'noauth' });
-      
+
       await client.close();
 
       // Test mongoose connection
@@ -106,72 +106,72 @@ describe('MongoDB Authentication Real Tests', () => {
     it('should fail to connect with wrong credentials', async () => {
       const baseUri = mongoServerAuth.getUri();
       const uri = baseUri.replace('mongodb://', 'mongodb://wronguser:wrongpass@');
-      
+
       const client = new MongoClient(uri);
-      
+
       await expect(client.connect()).rejects.toThrow(/Authentication failed/);
     });
 
     it('should connect with correct authSource', async () => {
       const baseUri = mongoServerAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
-      
+
       // Connect with user from testdb (authSource=testdb)
       const uri = `mongodb://testuser:testpass@${host}/appdb?authSource=testdb`;
-      
+
       const client = new MongoClient(uri);
       await client.connect();
-      
+
       const db = client.db('appdb');
       const collection = db.collection('test');
-      
+
       await collection.insertOne({ test: 'authenticated' });
       const result = await collection.findOne({ test: 'authenticated' });
-      
+
       expect(result).toMatchObject({ test: 'authenticated' });
-      
+
       await client.close();
     });
 
     it('should fail with wrong authSource', async () => {
       const baseUri = mongoServerAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
-      
+
       // Try to authenticate testuser against admin database (wrong authSource)
       const uri = `mongodb://testuser:testpass@${host}/appdb?authSource=admin`;
-      
+
       const client = new MongoClient(uri);
-      
+
       await expect(client.connect()).rejects.toThrow(/Authentication failed/);
     });
 
     it('should connect with mongoose using authSource in connection string', async () => {
       const baseUri = mongoServerAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
-      
+
       const uri = `mongodb://customuser:custompass@${host}/appdb?authSource=customauth`;
-      
+
       await mongoose.connect(uri);
       expect(mongoose.connection.readyState).toBe(1);
-      
+
       // Test database operation
       const TestModel = mongoose.model('Test', new mongoose.Schema({ name: String }));
       const doc = await TestModel.create({ name: 'test' });
       expect(doc.name).toBe('test');
-      
+
       await mongoose.disconnect();
     });
 
     it('should connect with mongoose using authSource in options', async () => {
       const baseUri = mongoServerAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
-      
+
       const uri = `mongodb://customuser:custompass@${host}/appdb`;
-      
+
       await mongoose.connect(uri, {
         authSource: 'customauth',
       });
-      
+
       expect(mongoose.connection.readyState).toBe(1);
       await mongoose.disconnect();
     });
@@ -182,7 +182,7 @@ describe('MongoDB Authentication Real Tests', () => {
       const baseUri = mongoServerAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
       const [hostname, port] = host.split(':');
-      
+
       const transport = pino.transport({
         target: 'pino-mongodb',
         options: {
@@ -200,26 +200,24 @@ describe('MongoDB Authentication Real Tests', () => {
       });
 
       const logger = pino.default(transport);
-      
+
       // Log some messages
       logger.info({ action: 'test' }, 'Test log with auth');
       logger.error({ error: 'test error' }, 'Error log with auth');
-      
+
       // Wait for logs to be written
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       // Verify logs were written by connecting with same auth
-      const client = new MongoClient(
-        `mongodb://testuser:testpass@${host}/logs?authSource=testdb`
-      );
-      
+      const client = new MongoClient(`mongodb://testuser:testpass@${host}/logs?authSource=testdb`);
+
       await client.connect();
       const logs = await client.db('logs').collection('app-logs').find({}).toArray();
-      
+
       expect(logs.length).toBeGreaterThanOrEqual(2);
-      expect(logs.some(log => log.msg === 'Test log with auth')).toBe(true);
-      expect(logs.some(log => log.msg === 'Error log with auth')).toBe(true);
-      
+      expect(logs.some((log) => log.msg === 'Test log with auth')).toBe(true);
+      expect(logs.some((log) => log.msg === 'Error log with auth')).toBe(true);
+
       await client.close();
       transport.end();
     });
@@ -228,9 +226,9 @@ describe('MongoDB Authentication Real Tests', () => {
       const baseUri = mongoServerAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
       const [hostname, port] = host.split(':');
-      
+
       let errorOccurred = false;
-      
+
       const transport = pino.transport({
         target: 'pino-mongodb',
         options: {
@@ -252,10 +250,10 @@ describe('MongoDB Authentication Real Tests', () => {
       });
 
       // Give time for connection to fail
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       transport.end();
-      
+
       // The transport should have encountered an error
       expect(errorOccurred).toBe(true);
     });
@@ -266,7 +264,7 @@ describe('MongoDB Authentication Real Tests', () => {
       const baseUri = mongoServerAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
       const [hostname, port] = host.split(':');
-      
+
       // Simulate environment variables
       const db = {
         host: hostname,
@@ -294,23 +292,24 @@ describe('MongoDB Authentication Real Tests', () => {
           uri: `mongodb://${db.host}:${db.port}/`,
           database: db.name,
           collection: 'logs',
-          ...(db.user && db.password && {
-            mongoOptions: {
-              auth: {
-                username: db.user,
-                password: db.password,
+          ...(db.user &&
+            db.password && {
+              mongoOptions: {
+                auth: {
+                  username: db.user,
+                  password: db.password,
+                },
+                authSource: db.authSource,
               },
-              authSource: db.authSource,
-            },
-          }),
+            }),
         },
       });
 
       const logger = pino.default(pinoTransport);
       logger.info('App pattern test');
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       pinoTransport.end();
     });
   });
@@ -320,14 +319,14 @@ describe('MongoDB Authentication Real Tests', () => {
       const baseUri = mongoServerAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
       const [hostname, port] = host.split(':');
-      
+
       // Create mash-ssm user in mash-ssm database
       const adminClient = new MongoClient(
-        `mongodb://admin:adminpass@${host}/admin?authSource=admin`
+        `mongodb://admin:adminpass@${host}/admin?authSource=admin`,
       );
-      
+
       await adminClient.connect();
-      
+
       try {
         await adminClient.db('mash-ssm').command({
           createUser: 'mash-ssm',
@@ -340,7 +339,7 @@ describe('MongoDB Authentication Real Tests', () => {
       } catch (error) {
         // User might already exist from previous test run
       }
-      
+
       await adminClient.close();
 
       // Simulate the exact user configuration
@@ -355,27 +354,27 @@ describe('MongoDB Authentication Real Tests', () => {
 
       // Test connection with authSource
       const uri = `mongodb://${config.DB_USER}:${config.DB_USER_PWD}@${config.DB_HOST}:${config.DB_PORT}/${config.DB_NAME}?authSource=${config.DB_AUTH_SOURCE}`;
-      
+
       const client = new MongoClient(uri);
       await client.connect();
-      
+
       // Should be able to perform operations
       const result = await client.db().collection('test').insertOne({ test: 'mash-ssm' });
       expect(result.acknowledged).toBe(true);
-      
+
       await client.close();
 
       // Test what happens without authSource (defaults to the database name, so it works!)
       const uriDefault = `mongodb://${config.DB_USER}:${config.DB_USER_PWD}@${config.DB_HOST}:${config.DB_PORT}/${config.DB_NAME}`;
       const clientDefault = new MongoClient(uriDefault);
-      
+
       await clientDefault.connect();
       await clientDefault.close();
-      
+
       // Test with wrong authSource (should fail)
       const uriBad = `mongodb://${config.DB_USER}:${config.DB_USER_PWD}@${config.DB_HOST}:${config.DB_PORT}/${config.DB_NAME}?authSource=admin`;
       const clientBad = new MongoClient(uriBad);
-      
+
       await expect(clientBad.connect()).rejects.toThrow(/Authentication failed/);
     });
   });

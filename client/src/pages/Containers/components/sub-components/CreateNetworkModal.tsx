@@ -1,12 +1,18 @@
 import {
   Bridge,
   ElNetwork,
+} from '@shared/ui/icons/categories/system';
+import {
   Labels,
   NetworkOverlay,
-  OuiMlCreateAdvancedJob,
-  Target,
   Vlan,
-} from '@/components/Icons/CustomIcons';
+} from '@shared/ui/icons/categories/containers';
+import {
+  OuiMlCreateAdvancedJob,
+} from '@shared/ui/icons/categories/automation';
+import {
+  Target,
+} from '@shared/ui/icons/categories/ui';
 import DockerOpsModal from '@/pages/Containers/components/sub-components/DockerOpsModal';
 import { getAllDevices } from '@/services/rest/devices/devices';
 import { postNetwork } from '@/services/rest/containers/container-networks';

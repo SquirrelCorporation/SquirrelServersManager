@@ -23,3 +23,27 @@ export class InstalledCollectionResponseDto {
   version?: string;
   path?: string;
 }
+
+export class CollectionDetailsResponseDto {
+  id?: string;
+  namespace!: string;
+  name!: string;
+  version!: string;
+  description?: string;
+  downloadCount?: number;
+  created?: string;
+  updated?: string;
+  repository?: string;
+  authors?: string[];
+  tags?: string[];
+  dependencies?: Record<string, string>;
+  contents?: {
+    name?: string;
+    description?: string;
+  }[];
+  documentation?: string;
+  homepage?: string;
+  issues?: string;
+  license?: string[];
+  repositoryUrl?: string;
+}

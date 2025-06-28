@@ -2,9 +2,20 @@ import { PlaybookRepository, PlaybookService } from '@modules/playbooks';
 import { PlaybookFileService } from '@modules/shell';
 import { Body, Controller, Delete, Get, Logger, Param, Patch, Post } from '@nestjs/common';
 import { User } from 'src/decorators/user.decorator';
-import { Playbooks } from 'src/types/typings';
-import { API, SsmAnsible } from 'ssm-shared-lib';
+import { SsmAnsible } from 'ssm-shared-lib';
 import { ApiTags } from '@nestjs/swagger';
+import {
+  AddExtraVarDto,
+  EditPlaybookDto,
+  ExecutePlaybookDto,
+  ExecutePlaybookOnInventoryDto,
+  PlaybookActionResponseDto,
+  PlaybookExecutionResponseDto,
+  PlaybookLogsResponseDto,
+  PlaybookStatusResponseDto,
+} from '../dtos/playbook-operations.dto';
+import { UserDto } from '../../../users/presentation/dtos/user.dto';
+import { IUser, Role } from '../../../users/domain/entities/user.entity';
 import {
   AddExtraVarToPlaybookDoc,
   DeleteExtraVarFromPlaybookDoc,
@@ -31,6 +42,17 @@ export class PlaybooksController {
     private readonly playbookFileService: PlaybookFileService,
   ) {}
 
+  private mapUserDtoToUser(userDto: UserDto): IUser {
+    return {
+      _id: userDto.id,
+      email: userDto.email,
+      role: userDto.role as Role,
+      name: userDto.email, // Using email as name since UserDto doesn't have name
+      avatar: '', // Default empty avatar
+      password: '', // Password not available in UserDto
+    };
+  }
+
   @GetPlaybooksDoc()
   @Get()
   async getPlaybooks() {
@@ -50,18 +72,18 @@ export class PlaybooksController {
 
   @EditPlaybookDoc()
   @Patch(':uuid')
-  async editPlaybook(@Param('uuid') uuid: string, @Body() updateData: { content: string }) {
+  async editPlaybook(@Param('uuid') uuid: string, @Body() editDto: EditPlaybookDto) {
     const playbook = await this.playbookRepository.findOneByUuid(uuid);
     if (!playbook) {
       throw new Error('Playbook not found');
     }
 
-    return this.playbookFileService.editPlaybook(playbook.path, updateData.content);
+    return this.playbookFileService.editPlaybook(playbook.path, editDto.content);
   }
 
   @DeletePlaybookDoc()
   @Delete(':uuid')
-  async deletePlaybook(@Param('uuid') uuid: string) {
+  async deletePlaybook(@Param('uuid') uuid: string): Promise<PlaybookActionResponseDto> {
     await this.playbookRepository.deleteByUuid(uuid);
     return { success: true };
   }
@@ -70,22 +92,25 @@ export class PlaybooksController {
   @Post(':uuid/extravars')
   async addExtraVarToPlaybook(
     @Param('uuid') uuid: string,
-    @Body() body: { extraVar: API.ExtraVar },
-  ) {
+    @Body() addExtraVarDto: AddExtraVarDto,
+  ): Promise<PlaybookActionResponseDto> {
     const playbook = await this.playbookRepository.findOneByUuid(uuid);
     if (!playbook) {
       throw new Error('Playbook not found');
     }
     this.logger.log(
-      `Adding extra var to playbook ${playbook.path} (extraVar: ${JSON.stringify(body.extraVar)})`,
+      `Adding extra var to playbook ${playbook.path} (extraVar: ${JSON.stringify(addExtraVarDto.extraVar)})`,
     );
-    await this.playbookService.addExtraVarToPlaybook(playbook, body.extraVar);
+    await this.playbookService.addExtraVarToPlaybook(playbook, addExtraVarDto.extraVar);
     return { success: true };
   }
 
   @DeleteExtraVarFromPlaybookDoc()
   @Delete(':uuid/extravars/:varname')
-  async deleteExtraVarFromPlaybook(@Param('uuid') uuid: string, @Param('varname') varname: string) {
+  async deleteExtraVarFromPlaybook(
+    @Param('uuid') uuid: string,
+    @Param('varname') varname: string,
+  ): Promise<PlaybookActionResponseDto> {
     const playbook = await this.playbookRepository.findOneByUuid(uuid);
     if (!playbook) {
       throw new Error('Playbook not found');
@@ -99,10 +124,9 @@ export class PlaybooksController {
   @Post('exec/:uuid')
   async execPlaybook(
     @Param('uuid') uuid: string,
-    @Body()
-    execData: { target?: string[]; extraVars?: API.ExtraVars; mode?: SsmAnsible.ExecutionMode },
-    @User() user: any,
-  ) {
+    @Body() execDto: ExecutePlaybookDto,
+    @User() user: UserDto,
+  ): Promise<PlaybookExecutionResponseDto> {
     const playbook = await this.playbookRepository.findOneByUuid(uuid);
     if (!playbook) {
       throw new Error('Playbook not found');
@@ -110,10 +134,10 @@ export class PlaybooksController {
 
     const result = await this.playbookService.executePlaybook(
       playbook,
-      user,
-      execData.target,
-      execData.extraVars,
-      execData.mode || SsmAnsible.ExecutionMode.APPLY,
+      this.mapUserDtoToUser(user),
+      execDto.target,
+      execDto.extraVars,
+      execDto.mode || SsmAnsible.ExecutionMode.APPLY,
     );
     return { execId: result };
   }
@@ -122,10 +146,9 @@ export class PlaybooksController {
   @Post('exec/quick-ref/:quickRef')
   async execPlaybookByQuickRef(
     @Param('quickRef') quickRef: string,
-    @Body()
-    execData: { target?: string[]; extraVars?: API.ExtraVars; mode?: SsmAnsible.ExecutionMode },
-    @User() user: any,
-  ) {
+    @Body() execDto: ExecutePlaybookDto,
+    @User() user: UserDto,
+  ): Promise<PlaybookExecutionResponseDto> {
     const playbook = await this.playbookRepository.findOneByUniqueQuickReference(quickRef);
     if (!playbook) {
       throw new Error('Playbook not found');
@@ -133,10 +156,10 @@ export class PlaybooksController {
 
     const result = await this.playbookService.executePlaybook(
       playbook,
-      user,
-      execData.target,
-      execData.extraVars,
-      execData.mode || SsmAnsible.ExecutionMode.APPLY,
+      this.mapUserDtoToUser(user),
+      execDto.target,
+      execDto.extraVars,
+      execDto.mode || SsmAnsible.ExecutionMode.APPLY,
     );
     return { execId: result };
   }
@@ -145,13 +168,8 @@ export class PlaybooksController {
   @Post('exec/inventory/:uuid')
   async execPlaybookOnInventory(
     @Param('uuid') uuid: string,
-    @Body()
-    execData: {
-      inventoryTargets?: Playbooks.All & Playbooks.HostGroups;
-      extraVars?: API.ExtraVars;
-      execUuid?: string;
-    },
-    @User() user: any,
+    @Body() execDto: ExecutePlaybookOnInventoryDto,
+    @User() user: UserDto,
   ) {
     const playbook = await this.playbookRepository.findOneByUuid(uuid);
     if (!playbook) {
@@ -160,16 +178,16 @@ export class PlaybooksController {
 
     return await this.playbookService.executePlaybookOnInventory(
       playbook,
-      user,
-      execData.inventoryTargets,
-      execData.extraVars,
-      execData.execUuid,
+      this.mapUserDtoToUser(user),
+      execDto.inventoryTargets,
+      execDto.extraVars,
+      execDto.execUuid,
     );
   }
 
   @GetExecLogsDoc()
   @Get('exec/:uuid/logs')
-  async getExecLogs(@Param('uuid') uuid: string) {
+  async getExecLogs(@Param('uuid') uuid: string): Promise<PlaybookLogsResponseDto> {
     const execLogs = await this.playbookService.getExecLogs(uuid);
     return {
       execId: uuid,
@@ -179,7 +197,7 @@ export class PlaybooksController {
 
   @GetExecStatusDoc()
   @Get('exec/:uuid/status')
-  async getExecStatus(@Param('uuid') uuid: string) {
+  async getExecStatus(@Param('uuid') uuid: string): Promise<PlaybookStatusResponseDto> {
     const taskStatuses = await this.playbookService.getExecStatus(uuid);
     return {
       execId: uuid,

@@ -2,8 +2,8 @@ import {
   MaterialSymbolsDashboard,
   MynauiDangerTriangle,
   PajamasLog,
-} from '@/components/Icons/CustomIcons';
-import Title, { TitleColors } from '@/components/Template/Title';
+} from '@shared/ui/icons/categories/application';
+import Title, { TitleColors } from '@shared/ui/templates/PageTitle';
 import SystemPerformanceCard from '@/pages/Dashboard/Components/SystemPerformanceCard';
 import {
   postDashboardSetting,
@@ -32,7 +32,7 @@ import {
 } from 'antd';
 import React, { useState } from 'react';
 import { SettingsKeys } from 'ssm-shared-lib';
-import message from '@/components/Message/DynamicMessage';
+import message from '@shared/ui/feedback/DynamicMessage';
 const GeneralSettings: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};

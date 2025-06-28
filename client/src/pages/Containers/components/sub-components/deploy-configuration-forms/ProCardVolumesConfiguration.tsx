@@ -1,4 +1,4 @@
-import { VolumeBinding } from '@/components/Icons/CustomIcons';
+import { VolumeBinding } from '@shared/ui/icons/categories/containers';
 import {
   ProCard,
   ProForm,

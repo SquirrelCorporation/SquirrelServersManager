@@ -1,5 +1,5 @@
-import { CarbonIbmEventAutomation } from '@/components/Icons/CustomIcons';
-import Title, { TitleColors } from '@/components/Template/Title';
+import { CarbonIbmEventAutomation } from '@shared/ui/icons/categories/application';
+import Title, { TitleColors } from '@shared/ui/templates/PageTitle';
 import AutomationsColumns from '@/pages/Automations/AutomationsColumns';
 import AutomationEditionDrawer from '@/pages/Automations/components/Drawer/AutomationEditionDrawer';
 import CronColumns from '@/pages/Automations/CronsColumns';
@@ -20,7 +20,7 @@ import styled from 'styled-components';
 import StyledTabContainer, {
   TabLabel,
   IconWrapper,
-} from '@/components/Layout/StyledTabContainer';
+} from '@shared/ui/layouts/StyledTabContainer';
 import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 const Automations: React.FC = () => {

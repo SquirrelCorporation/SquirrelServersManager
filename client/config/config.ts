@@ -12,6 +12,16 @@ export default defineConfig({
    */
   hash: true,
   /**
+   * @doc https://umijs.org/docs/api/config#alias
+   */
+  alias: {
+    '@app': '@/app',
+    '@features': '@/features',
+    '@shared': '@/shared',
+    '@pages': '@/pages',
+    '@legacy': '@/legacy',
+  },
+  /**
    * @doc https://umijs.org/docs/guides/routes
    */
   // umi routes: https://umijs.org/docs/routing

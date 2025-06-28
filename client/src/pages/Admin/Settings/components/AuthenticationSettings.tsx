@@ -1,5 +1,5 @@
-import { LinkAlt, MynauiApi } from '@/components/Icons/CustomIcons';
-import Title, { TitleColors } from '@/components/Template/Title';
+import { LinkAlt, MynauiApi } from '@shared/ui/icons/categories/ui';
+import { PageTitle, TitleColors } from '@shared/ui/templates/PageTitle';
 import { postMasterNodeUrlValue } from '@/services/rest/settings/settings';
 import { postResetApiKey } from '@/services/rest/users/users';
 import { useModel } from '@@/exports';
@@ -17,7 +17,7 @@ import {
   Typography,
 } from 'antd';
 import React, { useState } from 'react';
-import message from '@/components/Message/DynamicMessage';
+import { message } from '@shared/ui/feedback/DynamicMessage';
 
 const AuthenticationSettings: React.FC = () => {
   const { initialState } = useModel('@@initialState');
@@ -49,10 +49,11 @@ const AuthenticationSettings: React.FC = () => {
       <Card
         type="inner"
         title={
-          <Title.SubTitle
+          <PageTitle
             title={'SSM URL'}
             backgroundColor={TitleColors.HOST_URL}
             icon={<LinkAlt />}
+            level={2}
           />
         }
         style={{ marginTop: 16 }}
@@ -94,10 +95,11 @@ const AuthenticationSettings: React.FC = () => {
       <Card
         type="inner"
         title={
-          <Title.SubTitle
+          <PageTitle
             title={'API'}
             backgroundColor={TitleColors.API}
             icon={<MynauiApi />}
+            level={2}
           />
         }
         style={{ marginTop: 16 }}

@@ -15,7 +15,7 @@ import {
   ProFormInstance,
   ProFormText,
 } from '@ant-design/pro-components';
-import message from '@/components/Message/DynamicMessage';
+import { message } from '@shared/ui/feedback/DynamicMessage';
 import { Button, Dropdown, Flex, MenuProps, Space } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { API, Automations } from 'ssm-shared-lib';

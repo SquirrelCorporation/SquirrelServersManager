@@ -2,15 +2,17 @@ import {
   ElNetwork,
   FileSystem,
   GrommetIconsSystem,
+  WhhCpu,
+  WhhRam,
+} from '@shared/ui/icons/categories/system';
+import {
   HardwareCircuit,
   Usb,
   Version,
-  WhhCpu,
-  WhhRam,
   Wifi,
-} from '@/components/Icons/CustomIcons';
+} from '@shared/ui/icons/categories/ui';
 import RemoteSystemInformationTerminal from '@/components/Terminal/RemoteSystemInformationTerminal';
-import { CardHeader } from '@/components/Template/CardHeader';
+import { CardHeader } from '@shared/ui/templates/CardHeader';
 import { updateDeviceSystemInformationConfiguration } from '@/services/rest/devices/devices';
 import { capitalizeFirstLetter } from '@/utils/strings';
 import {
@@ -25,7 +27,7 @@ import {
   ProFormSelect,
   ProFormSwitch,
 } from '@ant-design/pro-components';
-import message from '@/components/Message/DynamicMessage';
+import { message } from '@shared/ui/feedback/DynamicMessage';
 import { Avatar, Button, Card, Divider, Space, Tag, Tooltip } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Cron from 'react-js-cron';

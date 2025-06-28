@@ -1,4 +1,4 @@
-import { Deploy } from '@/components/Icons/CustomIcons';
+import { Deploy } from '@shared/ui/icons/categories/actions';
 import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 import DeployModal from '@/pages/Containers/components/sub-components/DeployModal';
 import { getTemplates } from '@/services/rest/containers/container-templates';

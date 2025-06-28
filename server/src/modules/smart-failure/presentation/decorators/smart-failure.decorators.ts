@@ -1,6 +1,10 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiErrorResponse } from '@infrastructure/models/api-response.model';
+
+export const SMART_FAILURE_TAG = 'SmartFailure';
+
+export const SmartFailureControllerDocs = () => applyDecorators(ApiTags(SMART_FAILURE_TAG));
 
 export function GetSmartFailureDoc() {
   return applyDecorators(

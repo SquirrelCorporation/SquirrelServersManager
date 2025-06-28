@@ -1,4 +1,4 @@
-import { More } from '@/components/Icons/CustomIcons';
+import { More } from '@shared/ui/icons/categories/ui';
 import {
   ProCard,
   ProForm,

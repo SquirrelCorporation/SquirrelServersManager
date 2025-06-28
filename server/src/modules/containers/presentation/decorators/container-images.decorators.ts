@@ -1,6 +1,10 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiErrorResponse } from '@infrastructure/models/api-response.model';
+
+export const CONTAINER_IMAGES_TAG = 'ContainerImages';
+
+export const ContainerImagesControllerDocs = () => applyDecorators(ApiTags(CONTAINER_IMAGES_TAG));
 
 export function GetImagesDoc() {
   return applyDecorators(

@@ -44,8 +44,9 @@ export class DiagnosticController {
     try {
       const report = await this.diagnosticService.run(device, deviceAuth);
       return this.diagnosticMapper.toDto(report);
-    } catch (error: any) {
-      throw new InternalServerException(error.message);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      throw new InternalServerException(errorMessage);
     }
   }
 }

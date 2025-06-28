@@ -9,7 +9,7 @@ import {
   UnorderedListOutlined,
 } from '@ant-design/icons';
 import { history } from '@umijs/max';
-import message from '@/components/Message/DynamicMessage';
+import { message } from '@shared/ui/feedback/DynamicMessage';
 import { Dropdown, MenuProps, Space } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';

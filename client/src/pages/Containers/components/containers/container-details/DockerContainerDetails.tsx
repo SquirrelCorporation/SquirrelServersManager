@@ -1,9 +1,13 @@
 import {
   ContainerImage,
-  ElNetwork,
-  ExternalLink,
   PortInput,
-} from '@/components/Icons/CustomIcons';
+} from '@shared/ui/icons/categories/containers';
+import {
+  ElNetwork,
+} from '@shared/ui/icons/categories/system';
+import {
+  ExternalLink,
+} from '@shared/ui/icons/categories/ui';
 import RegistryLogo from '@/components/RegistryComponents/RegistryLogo';
 import ContainerTypeIcon from '@/pages/Containers/components/containers/container-details/ContainerTypeIcon';
 import ContainerAvatar from '@/pages/Containers/components/containers/ContainerAvatar';

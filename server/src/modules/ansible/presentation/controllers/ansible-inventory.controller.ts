@@ -1,13 +1,15 @@
 import { Body, Controller, Get, Inject, Logger, Query, ValidationPipe } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { DEVICE_AUTH_SERVICE, IDeviceAuth, IDeviceAuthService } from '@modules/devices';
 import { EntityNotFoundException } from '@infrastructure/exceptions/app-exceptions';
 import { IInventoryTransformerService, INVENTORY_TRANSFORMER_SERVICE } from '@modules/ansible';
-import { GetInventoryDoc } from '../decorators/ansible-inventory.decorator';
+import {
+  AnsibleInventoryControllerDocs,
+  GetInventoryDoc,
+} from '../decorators/ansible-inventory.decorator';
 import { GetInventoryQueryDto } from '../dtos/get-inventory-query.dto';
 import { GetInventoryBodyDto } from '../dtos/get-inventory-body.dto';
 
-@ApiTags('AnsibleInventory')
+@AnsibleInventoryControllerDocs()
 @Controller('ansible/inventory')
 export class AnsibleInventoryController {
   private readonly logger = new Logger(AnsibleInventoryController.name);

@@ -6,14 +6,18 @@ import SystemInformationConfigurationTab from '@/pages/Admin/Inventory/component
 import { Modal, TabsProps } from 'antd';
 import React, { Dispatch, SetStateAction } from 'react';
 import { API, SsmStatus } from 'ssm-shared-lib';
-import ModalStyledTabs from '@/components/Layout/ModalStyledTabs';
+import { ModalStyledTabs } from '@shared/ui/layouts/StyledTabContainer';
 import {
   StreamlineComputerConnection,
   GrommetIconsSystem,
+} from '@shared/ui/icons/categories/system';
+import {
   VaadinCubes,
+} from '@shared/ui/icons/categories/containers';
+import {
   MedicalSearchDiagnosisSolid,
   TablerPlugConnected,
-} from '@/components/Icons/CustomIcons';
+} from '@shared/ui/icons/categories/actions';
 
 export type ConfigurationModalProps = {
   updateModalOpen: boolean;

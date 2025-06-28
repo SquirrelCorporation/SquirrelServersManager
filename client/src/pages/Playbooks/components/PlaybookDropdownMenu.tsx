@@ -10,7 +10,7 @@ import {
   FolderOpenOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
-import message from '@/components/Message/DynamicMessage';
+import { message } from '@shared/ui/feedback/DynamicMessage';
 import { Dropdown, MenuProps, Popconfirm } from 'antd';
 import React from 'react';
 import { DirectoryTree } from 'ssm-shared-lib';

@@ -1,4 +1,4 @@
-import { ContainerImage } from '@/components/Icons/CustomIcons';
+import { ContainerImage } from '@shared/ui/icons/categories/containers';
 import ContainerTypeIcon from '@/pages/Containers/components/containers/container-details/ContainerTypeIcon';
 import ContainerAvatar from '@/pages/Containers/components/containers/ContainerAvatar';
 import StatusTag from '@/pages/Containers/components/containers/StatusTag';

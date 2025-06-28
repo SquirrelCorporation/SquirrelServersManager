@@ -69,9 +69,20 @@ describe('ContainerStacksController', () => {
     });
 
     it('should create a stack', async () => {
-      const result = await controller.createStack(mockStack);
+      const createDto = {
+        name: 'Test Stack',
+        content: {},
+        description: 'Test Description',
+      };
+      const result = await controller.createStack(createDto);
       expect(result).toEqual(mockStack);
-      expect(mockContainerStacksService.createStack).toHaveBeenCalledWith(mockStack);
+      expect(mockContainerStacksService.createStack).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: createDto.name,
+          description: createDto.description,
+          uuid: expect.any(String),
+        }),
+      );
     });
 
     it('should update a stack', async () => {

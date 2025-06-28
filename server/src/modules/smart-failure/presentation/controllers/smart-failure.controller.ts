@@ -1,16 +1,18 @@
 import { Controller, Get, Inject, Query } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import {
   ISmartFailureService,
   SMART_FAILURE_SERVICE,
 } from '../../domain/interfaces/smart-failure.service.interface';
 import { SmartFailureRequestDto } from '../dtos/smart-failure.dto';
-import { GetSmartFailureDoc } from '../decorators/smart-failure.decorators';
+import {
+  GetSmartFailureDoc,
+  SmartFailureControllerDocs,
+} from '../decorators/smart-failure.decorators';
 
 /**
  * Controller for handling smart failure analysis requests
  */
-@ApiTags('SmartFailure')
+@SmartFailureControllerDocs()
 @Controller('smart-failure')
 export class SmartFailureController {
   constructor(

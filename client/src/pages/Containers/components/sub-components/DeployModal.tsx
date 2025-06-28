@@ -1,4 +1,5 @@
-import { Deploy, Target } from '@/components/Icons/CustomIcons';
+import { Deploy } from '@shared/ui/icons/categories/actions';
+import { Target } from '@shared/ui/icons/categories/ui';
 import ProCardEnvironmentConfiguration from '@/pages/Containers/components/sub-components/deploy-configuration-forms/ProCardEnvironmentConfiguration';
 import ProCardExtrasConfiguration from '@/pages/Containers/components/sub-components/deploy-configuration-forms/ProCardExtrasConfiguration';
 import ProCardGeneralConfiguration from '@/pages/Containers/components/sub-components/deploy-configuration-forms/ProCardGeneralConfiguration';

@@ -1,9 +1,11 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiParam } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ApiStandardResponse } from '@infrastructure/decorators/api-standard-response.decorator';
 import { MongoDBStatsDto, PrometheusStatsDto, RedisStatsDto } from '../dtos/stats.dto';
 
 export const SETTINGS_TAG = 'Settings';
+
+export const SettingsControllerDocs = () => applyDecorators(ApiTags(SETTINGS_TAG));
 
 export function UpdateDashboardSettingDoc() {
   return applyDecorators(

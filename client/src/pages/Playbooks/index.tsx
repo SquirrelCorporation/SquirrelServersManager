@@ -1,4 +1,4 @@
-import Title, { TitleColors } from '@/components/Template/Title';
+import Title, { TitleColors } from '@shared/ui/templates/PageTitle';
 import DirectoryTreeView from '@/pages/Playbooks/components/DirectoryTreeView';
 import ExtraVarsViewEditor from '@/pages/Playbooks/components/ExtraVarsViewEditor';
 import FloatingButtonsBar from '@/pages/Playbooks/components/FloatingButtonsBar';
@@ -20,7 +20,7 @@ import {
 import { PlaySquareOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-components';
 import Editor, { Monaco } from '@monaco-editor/react';
-import message from '@/components/Message/DynamicMessage';
+import message from '@shared/ui/feedback/DynamicMessage';
 import { Col, Result, Row, Spin, Typography } from 'antd';
 import type { DirectoryTreeProps } from 'antd/es/tree';
 import { editor } from 'monaco-editor';

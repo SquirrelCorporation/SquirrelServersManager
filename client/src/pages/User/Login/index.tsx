@@ -9,7 +9,7 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { history, useModel } from '@umijs/max';
-import message from '@/components/Message/DynamicMessage';
+import { message } from '@shared/ui/feedback/DynamicMessage';
 import { Divider } from 'antd';
 import React from 'react';
 import { flushSync } from 'react-dom';

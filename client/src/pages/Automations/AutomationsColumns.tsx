@@ -1,4 +1,4 @@
-import { CarbonIbmEventAutomation } from '@/components/Icons/CustomIcons';
+import { CarbonIbmEventAutomation } from '@shared/ui/icons/categories/automation';
 import AutomationQuickAction from '@/pages/Automations/components/AutomationQuickAction';
 import {
   ClockCircleFilled,

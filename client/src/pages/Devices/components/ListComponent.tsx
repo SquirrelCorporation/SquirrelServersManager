@@ -2,7 +2,7 @@ import TinyLineDeviceGraph from '@/components/Charts/TinyLineDeviceGraph';
 import TinyRingProgressDeviceGraph from '@/components/Charts/TinyRingProgressDeviceGraph';
 import TinyRingProgressDeviceIndicator from '@/components/Charts/TinyRingProgressDeviceIndicator';
 import DeviceStatusTag from '@/components/DeviceComponents/DeviceStatusTag';
-import { WhhCpu, WhhRam } from '@/components/Icons/CustomIcons';
+import { WhhCpu, WhhRam } from '@shared/ui/icons/categories/system';
 import styles from '@/pages/Devices/Devices.less';
 import DeviceStatus from '@/utils/devicestatus';
 import { Carousel, Col, Row, Typography } from 'antd';

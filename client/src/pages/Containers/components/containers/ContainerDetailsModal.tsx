@@ -1,4 +1,4 @@
-import { Details, Live24Filled } from '@/components/Icons/CustomIcons';
+import { Details, Live24Filled } from '@shared/ui/icons/categories/ui';
 import DockerContainerDetails from '@/pages/Containers/components/containers/container-details/DockerContainerDetails';
 import ProxmoxContainerDetails from '@/pages/Containers/components/containers/container-details/ProxmoxContainerDetails';
 import {
@@ -13,7 +13,7 @@ import {
   SwapOutlined,
 } from '@ant-design/icons';
 import { history } from '@umijs/max';
-import message from '@/components/Message/DynamicMessage';
+import message from '@shared/ui/feedback/DynamicMessage';
 import { Button, Divider, Modal, Space } from 'antd';
 import React from 'react';
 import { API, SsmContainer } from 'ssm-shared-lib';

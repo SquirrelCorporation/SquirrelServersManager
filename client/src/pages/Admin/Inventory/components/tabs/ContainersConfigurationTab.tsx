@@ -1,4 +1,4 @@
-import { Linuxcontainers, Proxmox } from '@/components/Icons/CustomIcons';
+import { Linuxcontainers, Proxmox } from '@shared/ui/icons/categories/services';
 import DockerConfigurationForm from '@/pages/Admin/Inventory/components/tabs/containers/DockerConfigurationForm';
 import ProxmoxConfigurationForm from '@/pages/Admin/Inventory/components/tabs/containers/ProxmoxConfigurationForm';
 import { DockerOutlined } from '@ant-design/icons';

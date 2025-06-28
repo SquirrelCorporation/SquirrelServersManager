@@ -1,6 +1,10 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiQuery } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ApiOperation } from '@nestjs/swagger';
+
+export const ANSIBLE_INVENTORY_TAG = 'AnsibleInventory';
+
+export const AnsibleInventoryControllerDocs = () => applyDecorators(ApiTags(ANSIBLE_INVENTORY_TAG));
 
 export function GetInventoryDoc() {
   return applyDecorators(

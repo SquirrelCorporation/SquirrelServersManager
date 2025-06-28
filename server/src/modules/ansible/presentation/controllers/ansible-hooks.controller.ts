@@ -1,11 +1,14 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { TaskHookDto } from '../dtos/task-hook.dto';
 import { TaskEventDto } from '../dtos/task-event.dto';
 import { AnsibleHooksService } from '../../application/services/ansible-hooks.service';
-import { CreateTaskEventDoc, UpdateTaskStatusDoc } from '../decorators/ansible-hooks.decorators';
+import {
+  AnsibleHooksControllerDocs,
+  CreateTaskEventDoc,
+  UpdateTaskStatusDoc,
+} from '../decorators/ansible-hooks.decorators';
 
-@ApiTags('AnsibleHooks')
+@AnsibleHooksControllerDocs()
 @Controller('ansible/hooks/tasks')
 export class AnsibleHooksController {
   constructor(private readonly playbookHooksService: AnsibleHooksService) {}

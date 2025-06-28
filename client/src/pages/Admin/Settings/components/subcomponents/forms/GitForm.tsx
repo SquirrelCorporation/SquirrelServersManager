@@ -5,7 +5,7 @@ import {
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
-import message from '@/components/Message/DynamicMessage';
+import { message } from '@shared/ui/feedback/DynamicMessage';
 import React from 'react';
 import { API, SsmGit } from 'ssm-shared-lib';
 

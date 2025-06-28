@@ -54,7 +54,7 @@ import {
   GetPrometheusStatsDoc,
   GetRedisStatsDoc,
   RestartServerDoc,
-  SETTINGS_TAG,
+  SettingsControllerDocs,
   UpdateDashboardSettingDoc,
   UpdateDeviceStatsSettingDoc,
   UpdateDevicesSettingDoc,
@@ -68,7 +68,7 @@ import {
  * This controller handles operations related to system settings, including
  * updating various settings and performing advanced operations.
  */
-@ApiTags(SETTINGS_TAG)
+@SettingsControllerDocs()
 @Controller('settings')
 export class SettingsController {
   constructor(

@@ -6,7 +6,10 @@ import {
   CollectionsQueryDto,
   InstallCollectionDto,
 } from '../dtos/galaxy-collection.dto';
-import { CollectionsPaginatedResponseDto } from '../dtos/galaxy-response.dto';
+import {
+  CollectionDetailsResponseDto,
+  CollectionsPaginatedResponseDto,
+} from '../dtos/galaxy-response.dto';
 import {
   GALAXY_TAG,
   GetCollectionDetailsDoc,
@@ -38,7 +41,9 @@ export class GalaxyController {
 
   @Get('collections/details')
   @GetCollectionDetailsDoc()
-  async getCollectionDetails(@Query() queryDto: CollectionQueryDto): Promise<any> {
+  async getCollectionDetails(
+    @Query() queryDto: CollectionQueryDto,
+  ): Promise<CollectionDetailsResponseDto> {
     const { namespace, name, version } = queryDto;
     return this.galaxyService.getAnsibleGalaxyCollection(namespace, name, version);
   }

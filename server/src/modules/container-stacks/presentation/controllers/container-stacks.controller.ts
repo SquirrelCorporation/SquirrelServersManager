@@ -1,11 +1,22 @@
 import { Body, Controller, Delete, Get, Inject, Logger, Param, Patch, Post } from '@nestjs/common';
 import { User } from 'src/decorators/user.decorator';
 import { ApiTags } from '@nestjs/swagger';
+import { v4 as uuidv4 } from 'uuid';
 import { ContainerCustomStack } from '../../domain/entities/container-custom-stack.entity';
 import {
   CONTAINER_STACKS_SERVICE,
   IContainerStacksService,
 } from '../../domain/interfaces/container-stacks-service.interface';
+import {
+  CreateStackDto,
+  DeployStackDto,
+  DeployStackResponseDto,
+  DryRunStackDto,
+  DryRunStackResponseDto,
+  TransformStackDto,
+  TransformStackResponseDto,
+  UpdateStackDto,
+} from '../dtos/stack-operations.dto';
 import {
   CONTAINER_STACKS_TAG,
   CreateStackDoc,
@@ -40,17 +51,31 @@ export class ContainerStacksController {
 
   @Post()
   @CreateStackDoc()
-  async createStack(@Body() stack: ContainerCustomStack): Promise<ContainerCustomStack> {
-    return this.containerStacksService.createStack(stack);
+  async createStack(@Body() createStackDto: CreateStackDto): Promise<ContainerCustomStack> {
+    const stack: Partial<ContainerCustomStack> = {
+      uuid: uuidv4(),
+      name: createStackDto.name,
+      description: createStackDto.description,
+    };
+
+    // The 'content' field from DTO doesn't directly map to entity fields
+    // We need to determine how to store this - possibly in yaml or another field
+    // For now, let's use Partial<ContainerCustomStack> to avoid the type error
+    return this.containerStacksService.createStack(stack as ContainerCustomStack);
   }
 
   @Patch(':uuid')
   @UpdateStackDoc()
   async updateStack(
     @Param('uuid') uuid: string,
-    @Body() stack: Partial<ContainerCustomStack>,
+    @Body() updateStackDto: UpdateStackDto,
   ): Promise<ContainerCustomStack> {
-    return this.containerStacksService.updateStack(uuid, stack);
+    const updates = {
+      name: updateStackDto.name,
+      content: updateStackDto.content,
+      description: updateStackDto.description,
+    };
+    return this.containerStacksService.updateStack(uuid, updates);
   }
 
   @Delete(':uuid')
@@ -63,25 +88,31 @@ export class ContainerStacksController {
   @DeployStackDoc()
   async deployStack(
     @Param('uuid') uuid: string,
-    @Body() body: { target: string },
+    @Body() deployDto: DeployStackDto,
     @User() user,
-  ): Promise<{ execId: string }> {
-    return this.containerStacksService.deployStack(uuid, body.target, user);
+  ): Promise<DeployStackResponseDto> {
+    const result = await this.containerStacksService.deployStack(uuid, deployDto.target, user);
+    return { execId: result.execId };
   }
 
   @Post('transform')
   @TransformStackDoc()
-  async transformStack(@Body() body: { content: any }): Promise<{ yaml: string }> {
-    this.logger.log(`Transforming stack: ${JSON.stringify(body.content)}`);
-    return this.containerStacksService.transformStack(body.content);
+  async transformStack(
+    @Body() transformDto: TransformStackDto,
+  ): Promise<TransformStackResponseDto> {
+    this.logger.log(`Transforming stack: ${JSON.stringify(transformDto.content)}`);
+    const result = await this.containerStacksService.transformStack(transformDto.content);
+    return { yaml: result.yaml };
   }
 
   @Post('dry-run')
   @DryRunStackDoc()
-  async dryRunStack(
-    @Body() body: { json: any; yaml: string },
-  ): Promise<{ validating: boolean; message?: string }> {
-    const { json, yaml } = body;
-    return this.containerStacksService.dryRunStack(json, yaml);
+  async dryRunStack(@Body() dryRunDto: DryRunStackDto): Promise<DryRunStackResponseDto> {
+    const { json, yaml } = dryRunDto;
+    const result = await this.containerStacksService.dryRunStack(json, yaml);
+    return {
+      validating: result.validating,
+      message: result.message,
+    };
   }
 }

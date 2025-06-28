@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { AutomationsService } from '../../application/services/automations.service';
 import { Automation } from '../../domain/entities/automation.entity';
-import { CreateAutomationDto } from '../dtos/create-automation.dto';
-import { UpdateAutomationDto } from '../dtos/update-automation.dto';
+import { CreateAutomationBodyDto, CreateAutomationDto } from '../dtos/create-automation.dto';
+import { UpdateAutomationBodyDto, UpdateAutomationDto } from '../dtos/update-automation.dto';
 import {
+  AutomationsControllerDocs,
   CreateAutomationDoc,
   DeleteAutomationDoc,
   ExecuteAutomationDoc,
@@ -14,7 +14,7 @@ import {
   UpdateAutomationDoc,
 } from '../decorators/automations.decorators';
 
-@ApiTags('Automations')
+@AutomationsControllerDocs()
 @Controller('automations')
 export class AutomationsController {
   constructor(private readonly automationsService: AutomationsService) {}
@@ -45,10 +45,13 @@ export class AutomationsController {
 
   @Put(':name')
   @CreateAutomationDoc()
-  async create(@Param('name') name: string, @Body('rawChain') rawChain: any): Promise<Automation> {
+  async create(
+    @Param('name') name: string,
+    @Body() body: CreateAutomationBodyDto,
+  ): Promise<Automation> {
     const createDto: CreateAutomationDto = {
       name,
-      automationChains: rawChain,
+      automationChains: body.rawChain,
       enabled: true,
     };
     return this.automationsService.create(createDto);
@@ -56,14 +59,10 @@ export class AutomationsController {
 
   @Post(':uuid')
   @UpdateAutomationDoc()
-  async update(
-    @Param('uuid') uuid: string,
-    @Body('name') name: string,
-    @Body('rawChain') rawChain: any,
-  ): Promise<void> {
+  async update(@Param('uuid') uuid: string, @Body() body: UpdateAutomationBodyDto): Promise<void> {
     const updateDto: UpdateAutomationDto = {
-      name,
-      automationChains: rawChain,
+      name: body.name,
+      automationChains: body.rawChain,
     };
 
     const automation = await this.automationsService.findByUuid(uuid);

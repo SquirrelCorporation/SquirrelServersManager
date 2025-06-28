@@ -1,4 +1,4 @@
-import { Env } from '@/components/Icons/CustomIcons';
+import { Env } from '@shared/ui/icons/categories/containers';
 import {
   ProCard,
   ProForm,

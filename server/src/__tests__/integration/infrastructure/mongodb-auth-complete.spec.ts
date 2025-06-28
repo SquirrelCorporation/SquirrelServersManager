@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongoClient } from 'mongodb';
 import mongoose from 'mongoose';
@@ -57,23 +57,23 @@ describe('MongoDB Complete Authentication Tests - Both Auth and No-Auth', () => 
   describe('Unauthenticated MongoDB Tests', () => {
     it('should connect to MongoDB without any credentials', async () => {
       const uri = mongoServerNoAuth.getUri();
-      
+
       // Test direct connection
       const client = new MongoClient(uri);
       await client.connect();
-      
+
       const result = await client.db('testdb').collection('test').insertOne({ test: 'no-auth' });
       expect(result.acknowledged).toBe(true);
-      
+
       await client.close();
     });
 
     it('should work with mongoose without credentials', async () => {
       const uri = mongoServerNoAuth.getUri();
-      
+
       await mongoose.connect(uri);
       expect(mongoose.connection.readyState).toBe(1);
-      
+
       const TestModel = mongoose.model('NoAuthTest', new mongoose.Schema({ name: String }));
       const doc = await TestModel.create({ name: 'no-auth-test' });
       expect(doc.name).toBe('no-auth-test');
@@ -82,7 +82,7 @@ describe('MongoDB Complete Authentication Tests - Both Auth and No-Auth', () => 
     it('should work with pino-mongodb without authentication', async () => {
       const uri = mongoServerNoAuth.getUri();
       const [host, port] = uri.replace('mongodb://', '').split('/')[0].split(':');
-      
+
       const transport = pino.transport({
         target: 'pino-mongodb',
         options: {
@@ -95,15 +95,15 @@ describe('MongoDB Complete Authentication Tests - Both Auth and No-Auth', () => 
 
       const logger = pino.default(transport);
       logger.info({ test: 'no-auth' }, 'Unauthenticated log');
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       // Verify log was written
       const client = new MongoClient(uri);
       await client.connect();
       const logs = await client.db('logs').collection('app-logs').find({}).toArray();
-      expect(logs.some(log => log.msg === 'Unauthenticated log')).toBe(true);
-      
+      expect(logs.some((log) => log.msg === 'Unauthenticated log')).toBe(true);
+
       await client.close();
       transport.end();
     });
@@ -111,7 +111,7 @@ describe('MongoDB Complete Authentication Tests - Both Auth and No-Auth', () => 
     it('should simulate app.module.ts pattern without authentication', async () => {
       const uri = mongoServerNoAuth.getUri();
       const [host, port] = uri.replace('mongodb://', '').split('/')[0].split(':');
-      
+
       // Simulate environment without auth
       const db = {
         host,
@@ -128,9 +128,9 @@ describe('MongoDB Complete Authentication Tests - Both Auth and No-Auth', () => 
         maxPoolSize: 10,
         ...(db.user && db.password && { authSource: db.authSource }),
       };
-      
+
       expect(mongooseOptions.authSource).toBeUndefined(); // No authSource when no auth
-      
+
       // Connection string without credentials
       const connectionUri = `mongodb://${db.host}:${db.port}/${db.name}`;
       await mongoose.connect(connectionUri, mongooseOptions);
@@ -142,17 +142,18 @@ describe('MongoDB Complete Authentication Tests - Both Auth and No-Auth', () => 
         uri: `mongodb://${db.host}:${db.port}/`,
         database: db.name,
         collection: 'logs',
-        ...(db.user && db.password && {
-          mongoOptions: {
-            auth: {
-              username: db.user,
-              password: db.password,
+        ...(db.user &&
+          db.password && {
+            mongoOptions: {
+              auth: {
+                username: db.user,
+                password: db.password,
+              },
+              authSource: db.authSource,
             },
-            authSource: db.authSource,
-          },
-        }),
+          }),
       };
-      
+
       expect(pinoOptions.mongoOptions).toBeUndefined(); // No mongoOptions when no auth
     });
   });
@@ -161,25 +162,25 @@ describe('MongoDB Complete Authentication Tests - Both Auth and No-Auth', () => 
     it('should connect with credentials and correct authSource', async () => {
       const baseUri = mongoServerWithAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
-      
+
       const uri = `mongodb://customuser:custompass@${host}/customdb?authSource=customdb`;
-      
+
       const client = new MongoClient(uri);
       await client.connect();
-      
+
       const result = await client.db().collection('test').insertOne({ test: 'with-auth' });
       expect(result.acknowledged).toBe(true);
-      
+
       await client.close();
     });
 
     it('should fail with wrong authSource', async () => {
       const baseUri = mongoServerWithAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
-      
+
       // Wrong authSource (user is in customdb, not admin)
       const uri = `mongodb://customuser:custompass@${host}/customdb?authSource=admin`;
-      
+
       const client = new MongoClient(uri);
       await expect(client.connect()).rejects.toThrow(/Authentication failed/);
     });
@@ -187,12 +188,12 @@ describe('MongoDB Complete Authentication Tests - Both Auth and No-Auth', () => 
     it('should work with mongoose using correct authSource', async () => {
       const baseUri = mongoServerWithAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
-      
+
       const uri = `mongodb://customuser:custompass@${host}/customdb`;
-      
+
       await mongoose.connect(uri, { authSource: 'customdb' });
       expect(mongoose.connection.readyState).toBe(1);
-      
+
       const TestModel = mongoose.model('AuthTest', new mongoose.Schema({ name: String }));
       const doc = await TestModel.create({ name: 'auth-test' });
       expect(doc.name).toBe('auth-test');
@@ -202,7 +203,7 @@ describe('MongoDB Complete Authentication Tests - Both Auth and No-Auth', () => 
       const baseUri = mongoServerWithAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
       const [hostname, port] = host.split(':');
-      
+
       const transport = pino.transport({
         target: 'pino-mongodb',
         options: {
@@ -221,17 +222,17 @@ describe('MongoDB Complete Authentication Tests - Both Auth and No-Auth', () => 
 
       const logger = pino.default(transport);
       logger.info({ test: 'with-auth' }, 'Authenticated log');
-      
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       // Verify log was written
       const client = new MongoClient(
-        `mongodb://customuser:custompass@${host}/logs?authSource=customdb`
+        `mongodb://customuser:custompass@${host}/logs?authSource=customdb`,
       );
       await client.connect();
       const logs = await client.db('logs').collection('app-logs').find({}).toArray();
-      expect(logs.some(log => log.msg === 'Authenticated log')).toBe(true);
-      
+      expect(logs.some((log) => log.msg === 'Authenticated log')).toBe(true);
+
       await client.close();
       transport.end();
     });
@@ -240,7 +241,7 @@ describe('MongoDB Complete Authentication Tests - Both Auth and No-Auth', () => 
       const baseUri = mongoServerWithAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
       const [hostname, port] = host.split(':');
-      
+
       // Simulate environment with auth
       const db = {
         host: hostname,
@@ -257,9 +258,9 @@ describe('MongoDB Complete Authentication Tests - Both Auth and No-Auth', () => 
         maxPoolSize: 10,
         ...(db.user && db.password && { authSource: db.authSource }),
       };
-      
+
       expect(mongooseOptions.authSource).toBe('customdb'); // authSource present
-      
+
       // Connection string with credentials
       const connectionUri = `mongodb://${db.user}:${db.password}@${db.host}:${db.port}/${db.name}?authSource=${db.authSource}`;
       await mongoose.connect(connectionUri.split('?')[0], mongooseOptions);
@@ -271,17 +272,18 @@ describe('MongoDB Complete Authentication Tests - Both Auth and No-Auth', () => 
         uri: `mongodb://${db.host}:${db.port}/`,
         database: db.name,
         collection: 'logs',
-        ...(db.user && db.password && {
-          mongoOptions: {
-            auth: {
-              username: db.user,
-              password: db.password,
+        ...(db.user &&
+          db.password && {
+            mongoOptions: {
+              auth: {
+                username: db.user,
+                password: db.password,
+              },
+              authSource: db.authSource,
             },
-            authSource: db.authSource,
-          },
-        }),
+          }),
       };
-      
+
       expect(pinoOptions.mongoOptions).toBeDefined();
       expect(pinoOptions.mongoOptions.authSource).toBe('customdb');
     });
@@ -299,16 +301,17 @@ describe('MongoDB Complete Authentication Tests - Both Auth and No-Auth', () => 
       const mongooseOptions = {
         ...(db.user && db.password && { authSource: db.authSource }),
       };
-      
+
       const pinoOptions = {
-        ...(db.user && db.password && {
-          mongoOptions: {
-            auth: { username: db.user, password: db.password },
-            authSource: db.authSource,
-          },
-        }),
+        ...(db.user &&
+          db.password && {
+            mongoOptions: {
+              auth: { username: db.user, password: db.password },
+              authSource: db.authSource,
+            },
+          }),
       };
-      
+
       expect(mongooseOptions.authSource).toBeUndefined();
       expect(pinoOptions.mongoOptions).toBeUndefined();
     });
@@ -324,7 +327,7 @@ describe('MongoDB Complete Authentication Tests - Both Auth and No-Auth', () => 
       const mongooseOptions = {
         ...(db.user.trim() && db.password.trim() && { authSource: db.authSource }),
       };
-      
+
       expect(mongooseOptions.authSource).toBeUndefined();
     });
   });

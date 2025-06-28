@@ -235,13 +235,11 @@ export class GitPlaybooksRepositoryController {
     try {
       const component = this.getGitComponent(uuid);
       await component.syncFromRepository();
-    } catch (error: any) {
-      this.logger.error(
-        error,
-        `Error force pulling Git repository ${uuid}: ${error?.message || 'Unknown error'}`,
-      );
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error(error, `Error force pulling Git repository ${uuid}: ${errorMessage}`);
       throw new InternalServerErrorException(
-        `Error force pulling Git repository ${uuid}: ${error?.message || 'Unknown error'}`,
+        `Error force pulling Git repository ${uuid}: ${errorMessage}`,
       );
     }
   }

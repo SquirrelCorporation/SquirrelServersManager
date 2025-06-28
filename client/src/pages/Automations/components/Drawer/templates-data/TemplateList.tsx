@@ -1,5 +1,5 @@
 import { Types } from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionReference';
-import { FluentMdl2FileTemplate } from '@/components/Icons/CustomIcons';
+import { FluentMdl2FileTemplate } from '@shared/ui/icons/categories/automation';
 import { ItemType } from 'rc-menu/es/interface';
 import React from 'react';
 

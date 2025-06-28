@@ -10,7 +10,7 @@ import {
   ProColumns,
   RequestData,
 } from '@ant-design/pro-components';
-import message from '@/components/Message/DynamicMessage';
+import { message } from '@shared/ui/feedback/DynamicMessage';
 import { Button, Popconfirm, Spin, Switch } from 'antd';
 import React, { useRef, useState } from 'react';
 

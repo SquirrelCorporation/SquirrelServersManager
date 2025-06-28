@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongoClient } from 'mongodb';
 import mongoose from 'mongoose';
@@ -24,7 +24,7 @@ describe('MongoDB Authentication Behavior Tests', () => {
         password: 'adminpass',
       },
     });
-    
+
     await adminClient.connect();
 
     // Create test scenario: user exists in 'mash-ssm' database but NOT in 'admin'
@@ -41,9 +41,7 @@ describe('MongoDB Authentication Behavior Tests', () => {
     await adminClient.db('admin').command({
       createUser: 'adminuser',
       pwd: 'adminpass',
-      roles: [
-        { role: 'readWrite', db: 'testdb' },
-      ],
+      roles: [{ role: 'readWrite', db: 'testdb' }],
     });
   }, 30000);
 
@@ -60,33 +58,33 @@ describe('MongoDB Authentication Behavior Tests', () => {
     it('should default authSource to the database name when not specified', async () => {
       const baseUri = mongoServerAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
-      
+
       // Connect WITHOUT specifying authSource
       // MongoDB will use 'mash-ssm' (the database name) as authSource
       const uri = `mongodb://mash-ssm:password@${host}/mash-ssm`;
-      
+
       const client = new MongoClient(uri);
       await client.connect();
-      
+
       // This works because user 'mash-ssm' exists in database 'mash-ssm'
       const result = await client.db().collection('test').insertOne({ test: 'default-auth' });
       expect(result.acknowledged).toBe(true);
-      
+
       await client.close();
     });
 
     it('should fail when user exists in custom db but authSource defaults to admin', async () => {
       const baseUri = mongoServerAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
-      
+
       // This is what happens in the user's broken scenario:
       // - User 'mash-ssm' exists in database 'mash-ssm'
       // - But the code hardcodes authSource to 'admin'
       // - User 'mash-ssm' does NOT exist in 'admin' database
       const uri = `mongodb://mash-ssm:password@${host}/mash-ssm?authSource=admin`;
-      
+
       const client = new MongoClient(uri);
-      
+
       // This fails because we're looking for user in wrong database
       await expect(client.connect()).rejects.toThrow(/Authentication failed/);
     });
@@ -94,23 +92,23 @@ describe('MongoDB Authentication Behavior Tests', () => {
     it('should work when explicitly setting correct authSource', async () => {
       const baseUri = mongoServerAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
-      
+
       // Correctly specify authSource as 'mash-ssm'
       const uri = `mongodb://mash-ssm:password@${host}/mash-ssm?authSource=mash-ssm`;
-      
+
       const client = new MongoClient(uri);
       await client.connect();
-      
+
       const result = await client.db().collection('test').insertOne({ test: 'explicit-auth' });
       expect(result.acknowledged).toBe(true);
-      
+
       await client.close();
     });
 
     it('should demonstrate the difference between connection string and options authSource', async () => {
       const baseUri = mongoServerAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
-      
+
       // Method 1: authSource in connection string
       const uri1 = `mongodb://mash-ssm:password@${host}/mash-ssm?authSource=mash-ssm`;
       await mongoose.connect(uri1);
@@ -125,9 +123,9 @@ describe('MongoDB Authentication Behavior Tests', () => {
 
       // Method 3: Wrong authSource in options (simulates the bug)
       const uri3 = `mongodb://mash-ssm:password@${host}/mash-ssm`;
-      await expect(
-        mongoose.connect(uri3, { authSource: 'admin' })
-      ).rejects.toThrow(/Authentication failed/);
+      await expect(mongoose.connect(uri3, { authSource: 'admin' })).rejects.toThrow(
+        /Authentication failed/,
+      );
     });
   });
 
@@ -136,12 +134,12 @@ describe('MongoDB Authentication Behavior Tests', () => {
       const baseUri = mongoServerAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
       const [hostname, port] = host.split(':');
-      
+
       // Import pino dynamically to avoid module loading issues
       const pino = await import('pino');
-      
+
       let connectionFailed = false;
-      
+
       const transport = pino.transport({
         target: 'pino-mongodb',
         options: {
@@ -166,15 +164,15 @@ describe('MongoDB Authentication Behavior Tests', () => {
       });
 
       const logger = pino.default(transport);
-      
+
       // Try to log something
       logger.info('This should not work');
-      
+
       // Wait for connection attempt
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       transport.end();
-      
+
       expect(connectionFailed).toBe(true);
     });
 
@@ -182,9 +180,9 @@ describe('MongoDB Authentication Behavior Tests', () => {
       const baseUri = mongoServerAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
       const [hostname, port] = host.split(':');
-      
+
       const pino = await import('pino');
-      
+
       const transport = pino.transport({
         target: 'pino-mongodb',
         options: {
@@ -202,24 +200,24 @@ describe('MongoDB Authentication Behavior Tests', () => {
       });
 
       const logger = pino.default(transport);
-      
+
       // Log a test message
       logger.info({ test: true }, 'Correct authSource test');
-      
+
       // Wait for log to be written
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       // Verify log was written
       const client = new MongoClient(
-        `mongodb://mash-ssm:password@${host}/logs?authSource=mash-ssm`
+        `mongodb://mash-ssm:password@${host}/logs?authSource=mash-ssm`,
       );
-      
+
       await client.connect();
       const logs = await client.db('logs').collection('app-logs').find({}).toArray();
-      
+
       expect(logs.length).toBeGreaterThan(0);
-      expect(logs.some(log => log.msg === 'Correct authSource test')).toBe(true);
-      
+      expect(logs.some((log) => log.msg === 'Correct authSource test')).toBe(true);
+
       await client.close();
       transport.end();
     });
@@ -230,7 +228,7 @@ describe('MongoDB Authentication Behavior Tests', () => {
       const baseUri = mongoServerAuth.getUri();
       const host = baseUri.replace('mongodb://', '').replace(/\/.*$/, '');
       const [hostname, port] = host.split(':');
-      
+
       // Simulate the configuration from environment
       const db = {
         host: hostname,
@@ -253,9 +251,9 @@ describe('MongoDB Authentication Behavior Tests', () => {
 
       // Test bad configuration
       const uriBad = `mongodb://${db.user}:${db.password}@${db.host}:${db.port}/${db.name}`;
-      await expect(
-        mongoose.connect(uriBad, badMongooseOptions)
-      ).rejects.toThrow(/Authentication failed/);
+      await expect(mongoose.connect(uriBad, badMongooseOptions)).rejects.toThrow(
+        /Authentication failed/,
+      );
 
       // Test good configuration
       const uriGood = `mongodb://${db.user}:${db.password}@${db.host}:${db.port}/${db.name}`;

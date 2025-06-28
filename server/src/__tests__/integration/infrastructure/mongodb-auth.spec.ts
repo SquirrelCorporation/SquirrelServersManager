@@ -233,7 +233,9 @@ describe('MongoDB Authentication Tests', () => {
       const uri = getMongoUri();
 
       // Verify the URI is constructed correctly with authSource
-      expect(uri).toBe('mongodb://nest-user:nest-pass@localhost:27017/test-db?authSource=nest-auth');
+      expect(uri).toBe(
+        'mongodb://nest-user:nest-pass@localhost:27017/test-db?authSource=nest-auth',
+      );
 
       // Verify that the app.module.ts pattern would work correctly
       // The actual MongooseModule.forRootAsync would use this URI

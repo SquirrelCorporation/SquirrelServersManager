@@ -7,16 +7,21 @@ import {
   EntityNotFoundException,
 } from '../../../../infrastructure/exceptions';
 import { DashboardService } from '../../application/services/dashboard.service';
-import { DashboardStatQueryDto } from '../dto/dashboard-stats.dto';
 import {
-  DASHBOARD_TAG,
+  DashboardAvailabilityStatsResponseDto,
+  DashboardPerformanceStatsResponseDto,
+  DashboardStatQueryDto,
+  GetStatsByDevicesDto,
+} from '../dto/dashboard-stats.dto';
+import {
+  DashboardControllerDocs,
   GetDashboardAvailabilityStatsDoc,
   GetDashboardPerformanceStatsDoc,
   GetSingleAveragedStatsByDevicesAndTypeDoc,
   GetStatsByDevicesAndTypeDoc,
 } from '../decorators/dashboard.decorators';
 
-@ApiTags(DASHBOARD_TAG)
+@DashboardControllerDocs()
 @Controller('statistics/dashboard')
 export class DashboardController {
   constructor(
@@ -26,14 +31,14 @@ export class DashboardController {
 
   @Get('performances')
   @GetDashboardPerformanceStatsDoc()
-  async getDashboardPerformanceStats() {
+  async getDashboardPerformanceStats(): Promise<DashboardPerformanceStatsResponseDto> {
     const result = await this.dashboardService.getSystemPerformance();
     return result;
   }
 
   @Get('availability')
   @GetDashboardAvailabilityStatsDoc()
-  async getDashboardAvailabilityStats() {
+  async getDashboardAvailabilityStats(): Promise<DashboardAvailabilityStatsResponseDto> {
     const result = await this.dashboardService.getDevicesAvailability();
     return {
       availability: result.availability,
@@ -47,7 +52,7 @@ export class DashboardController {
   async getSingleAveragedStatsByDevicesAndType(
     @Param('type') type: string,
     @Query() query: DashboardStatQueryDto,
-    @Body() body: { devices: string[] },
+    @Body() body: GetStatsByDevicesDto,
   ) {
     const { from, to } = query;
     const { devices } = body;
@@ -95,7 +100,7 @@ export class DashboardController {
   @GetStatsByDevicesAndTypeDoc()
   async getStatsByDevicesAndType(
     @Param('type') type: string,
-    @Body() body: { devices: string[] },
+    @Body() body: GetStatsByDevicesDto,
     @Query() query: DashboardStatQueryDto,
   ) {
     const { from, to } = query;

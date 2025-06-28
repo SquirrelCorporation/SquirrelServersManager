@@ -1,4 +1,4 @@
-import Title, { TitleColors } from '@/components/Template/Title';
+import Title, { TitleColors } from '@shared/ui/templates/PageTitle';
 import AdvancedSettings from '@/pages/Admin/Settings/components/AdvancedSettings';
 import AuthenticationSettings from '@/pages/Admin/Settings/components/AuthenticationSettings';
 import ContainerStacksSettings from '@/pages/Admin/Settings/components/ContainerStacksSettings';
@@ -23,11 +23,11 @@ import MCPSettings from './components/MCPSettings';
 import StyledTabContainer, {
   TabLabel,
   IconWrapper,
-} from '@/components/Layout/StyledTabContainer';
+} from '@shared/ui/layouts/StyledTabContainer';
 import {
   AiBusinessImpactAssessment,
   SkillLevelAdvanced,
-} from '@/components/Icons/CustomIcons';
+} from '@shared/ui/icons/categories/application';
 
 const Settings: React.FC = () => {
   const SettingsPanelsSlot = useSlot('settings-panels');

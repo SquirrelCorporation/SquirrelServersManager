@@ -1,4 +1,4 @@
-import { Label } from '@/components/Icons/CustomIcons';
+import { Label } from '@shared/ui/icons/categories/containers';
 import {
   ProCard,
   ProForm,

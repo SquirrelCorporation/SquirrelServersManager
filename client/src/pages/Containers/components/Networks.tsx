@@ -1,4 +1,4 @@
-import { Bridge, GrommetIconsHost } from '@/components/Icons/CustomIcons';
+import { Bridge, GrommetIconsHost } from '@shared/ui/icons/categories/system';
 import CreateNetworkModal from '@/pages/Containers/components/sub-components/CreateNetworkModal';
 import { getAllDevices } from '@/services/rest/devices/devices';
 import { getNetworks } from '@/services/rest/containers/container-networks';

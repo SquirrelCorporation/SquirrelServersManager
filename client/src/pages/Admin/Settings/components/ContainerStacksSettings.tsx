@@ -1,9 +1,9 @@
 import {
   ErrorCircleSettings20Regular,
   SimpleIconsGit,
-} from '@/components/Icons/CustomIcons';
+} from '@shared/ui/icons/categories/services';
 import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
-import Title, { TitleColors } from '@/components/Template/Title';
+import { PageTitle, TitleColors } from '@shared/ui/templates/PageTitle';
 import ContainerStacksGitRepositoryModal from '@/pages/Admin/Settings/components/subcomponents/ContainerStacksGitRepositoryModal';
 import { getGitContainerStacksRepositories } from '@/services/rest/container-stacks/repositories';
 import { InfoCircleFilled } from '@ant-design/icons';
@@ -54,10 +54,11 @@ const ContainerStacksSettings: React.FC = () => {
       <Card
         type="inner"
         title={
-          <Title.SubTitle
+          <PageTitle
             title={'Remote Container Stacks Repositories (GIT)'}
             backgroundColor={TitleColors.GIT}
             icon={<SimpleIconsGit />}
+            level={2}
           />
         }
         extra={

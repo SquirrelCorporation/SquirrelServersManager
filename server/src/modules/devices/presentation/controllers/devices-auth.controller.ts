@@ -376,9 +376,11 @@ export class DevicesAuthController {
       await this.deviceAuthService.updateDeviceAuth(deviceAuth);
 
       return;
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Error uploading docker certificate';
       throw new HttpException(
-        error.message || 'Error uploading docker certificate',
+        errorMessage,
         error instanceof HttpException ? error.getStatus() : HttpStatus.BAD_REQUEST,
       );
     }
@@ -420,9 +422,11 @@ export class DevicesAuthController {
       }
 
       return;
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Error deleting docker certificate';
       throw new HttpException(
-        error.message || 'Error deleting docker certificate',
+        errorMessage,
         error instanceof HttpException ? error.getStatus() : HttpStatus.BAD_REQUEST,
       );
     }

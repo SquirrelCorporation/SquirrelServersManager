@@ -4,14 +4,16 @@ import { paginate } from '@infrastructure/common/query/pagination.util';
 import { sortByFields } from '@infrastructure/common/query/sorter.util';
 import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
 import { Controller, Get, Inject, Logger, Req } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import {
   CONTAINER_IMAGES_SERVICE,
   IContainerImagesService,
 } from '../../domain/interfaces/container-images-service.interface';
-import { GetImagesDoc } from '../decorators/container-images.decorators';
+import {
+  ContainerImagesControllerDocs,
+  GetImagesDoc,
+} from '../decorators/container-images.decorators';
 
-@ApiTags('ContainerImages')
+@ContainerImagesControllerDocs()
 @Controller('container-images')
 export class ContainerImagesController {
   private readonly logger = new Logger(ContainerImagesController.name);

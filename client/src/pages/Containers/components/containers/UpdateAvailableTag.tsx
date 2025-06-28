@@ -1,4 +1,4 @@
-import { Update } from '@/components/Icons/CustomIcons';
+import { Update } from '@shared/ui/icons/categories/actions';
 import { Badge, Tag, Tooltip } from 'antd';
 import React from 'react';
 

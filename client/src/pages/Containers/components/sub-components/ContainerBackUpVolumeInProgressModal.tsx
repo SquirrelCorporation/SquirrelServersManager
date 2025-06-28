@@ -1,10 +1,10 @@
-import { BackupSolid } from '@/components/Icons/CustomIcons';
+import { BackupSolid } from '@shared/ui/icons/categories/system';
 import {
   getBackUpVolume,
   postBackUpVolume,
 } from '@/services/rest/containers/container-volumes';
 import { containerVolumesSocket as socket } from '@/socket';
-import message from '@/components/Message/DynamicMessage';
+import message from '@shared/ui/feedback/DynamicMessage';
 import { Button, Flex, Modal, Result, Spin } from 'antd';
 import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import { SsmContainer, SsmEvents } from 'ssm-shared-lib';

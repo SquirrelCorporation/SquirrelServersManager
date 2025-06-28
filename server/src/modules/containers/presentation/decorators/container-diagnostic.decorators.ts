@@ -1,7 +1,12 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiErrorResponse } from '@infrastructure/models/api-response.model';
 import { PreCheckDockerConnectionDto } from '../dtos/pre-check-docker-connection.dto';
+
+export const CONTAINER_DIAGNOSTIC_TAG = 'ContainerDiagnostic';
+
+export const ContainerDiagnosticControllerDocs = () =>
+  applyDecorators(ApiTags(CONTAINER_DIAGNOSTIC_TAG));
 
 export function CheckDockerConnectionDoc() {
   return applyDecorators(

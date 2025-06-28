@@ -2,8 +2,8 @@ import {
   ConfigurationSolid,
   IonServer,
   PajamasLog,
-} from '@/components/Icons/CustomIcons';
-import Title, { TitleColors } from '@/components/Template/Title';
+} from '@shared/ui/icons/categories/system';
+import { PageTitle, TitleColors } from '@shared/ui/templates/PageTitle';
 import AnsibleConfiguration from '@/pages/Admin/Settings/components/subcomponents/AnsibleConfiguration';
 import {
   deleteAnsibleLogs,

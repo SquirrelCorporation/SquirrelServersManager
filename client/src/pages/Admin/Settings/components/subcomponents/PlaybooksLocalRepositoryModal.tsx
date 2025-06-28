@@ -1,4 +1,4 @@
-import { SimpleIconsGit } from '@/components/Icons/CustomIcons';
+import { SimpleIconsGit } from '@shared/ui/icons/categories/services';
 import CustomVault from '@/pages/Admin/Settings/components/subcomponents/forms/CustomVault';
 import DirectoryExclusionForm from '@/pages/Admin/Settings/components/subcomponents/forms/DirectoryExclusionForm';
 import {
@@ -14,7 +14,7 @@ import {
 } from '@ant-design/icons';
 import { ModalForm, ProForm, ProFormText } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
-import message from '@/components/Message/DynamicMessage';
+import message from '@shared/ui/feedback/DynamicMessage';
 import { Avatar, Button, Dropdown, MenuProps, Popconfirm } from 'antd';
 import React, { FC, useState } from 'react';
 import { API } from 'ssm-shared-lib';

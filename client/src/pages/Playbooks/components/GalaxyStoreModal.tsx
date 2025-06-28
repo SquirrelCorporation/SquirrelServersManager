@@ -1,11 +1,11 @@
-import { GrommetIconsInstall } from '@/components/Icons/CustomIcons';
+import { GrommetIconsInstall } from '@shared/ui/icons/categories/actions';
 import {
   getCollection,
   getCollections,
   postInstallCollection,
 } from '@/services/rest/ansible/ansible.galaxy';
 import { ProDescriptions, ProList, ProTable } from '@ant-design/pro-components';
-import message from '@/components/Message/DynamicMessage';
+import { message } from '@shared/ui/feedback/DynamicMessage';
 import { Avatar, Button, Modal, Tag, Typography } from 'antd';
 import React, { Dispatch, SetStateAction } from 'react';
 import { AnsibleAPI } from 'ssm-shared-lib';

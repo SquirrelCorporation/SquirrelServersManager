@@ -3,7 +3,7 @@ import ServiceQuickActionReference, {
   ServiceQuickActionReferenceActions,
   ServiceQuickActionReferenceTypes,
 } from '@/components/ContainerComponents/ContainerQuickAction/ContainerQuickActionReference';
-import { ExternalLink } from '@/components/Icons/CustomIcons';
+import { ExternalLink } from '@shared/ui/icons/categories/ui';
 import ContainerTypeIcon from '@/pages/Containers/components/containers/container-details/ContainerTypeIcon';
 import ContainerAvatar from '@/pages/Containers/components/containers/ContainerAvatar';
 import ContainerStatProgress from '@/pages/Containers/components/containers/ContainerStatProgress';
@@ -21,7 +21,7 @@ import {
   RequestOptionsType,
 } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
-import message from '@/components/Message/DynamicMessage';
+import message from '@shared/ui/feedback/DynamicMessage';
 import { Flex, Popover, Tag, Tooltip, Typography } from 'antd';
 import React from 'react';
 import { API, SsmContainer } from 'ssm-shared-lib';

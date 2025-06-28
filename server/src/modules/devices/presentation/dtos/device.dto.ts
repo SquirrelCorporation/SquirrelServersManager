@@ -246,3 +246,43 @@ export class UpdateDeviceDto {
   @IsEnum(SsmAgent.InstallMethods)
   agentType?: SsmAgent.InstallMethods;
 }
+
+export class DeviceFilterDto implements Record<string, unknown> {
+  @IsOptional()
+  @IsString()
+  ip?: string;
+
+  @IsOptional()
+  @IsString()
+  uuid?: string;
+
+  @IsOptional()
+  @IsEnum(SsmStatus.DeviceStatus)
+  status?: SsmStatus.DeviceStatus;
+
+  @IsOptional()
+  @IsString()
+  hostname?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  disabled?: boolean;
+
+  @IsOptional()
+  @IsString()
+  fqdn?: string;
+
+  @IsOptional()
+  @IsString()
+  dockerVersion?: string;
+
+  @IsOptional()
+  @IsString()
+  agentVersion?: string;
+
+  @IsOptional()
+  @IsEnum(SsmAgent.InstallMethods)
+  agentType?: SsmAgent.InstallMethods;
+
+  [key: string]: unknown;
+}

@@ -17,6 +17,14 @@ import { UsersService } from '../../application/services/users.service';
 import { IUser } from '../../domain/entities/user.entity';
 import { LoginResponseDto } from '../dtos/login-response.dto';
 import { LoginDto } from '../dtos/login.dto';
+import {
+  CreateUserDto,
+  RegenerateApiKeyResponseDto,
+  UpdateLogsLevelDto,
+  UpdateLogsLevelResponseDto,
+  UserDto,
+  UserExistenceResponseDto,
+} from '../dtos/user.dto';
 import { UserMapper } from '../mappers/user.mapper';
 import {
   CheckUsersExistenceDoc,
@@ -25,11 +33,11 @@ import {
   LoginDoc,
   LogoutDoc,
   RegenerateApiKeyDoc,
-  USERS_TAG,
   UpdateLogsLevelDoc,
+  UsersControllerDocs,
 } from '../decorators/users.decorators';
 
-@ApiTags(USERS_TAG)
+@UsersControllerDocs()
 @ApiBearerAuth()
 @Controller('users')
 export class UsersController {
@@ -43,9 +51,9 @@ export class UsersController {
   @Public()
   @Get()
   @CheckUsersExistenceDoc()
-  async getAllUsers() {
+  async getAllUsers(): Promise<UserExistenceResponseDto> {
     const users = await this.usersService.getAllUsers();
-    return { hasUsers: users?.length && users.length > 0 };
+    return { hasUsers: !!(users?.length && users.length > 0) };
   }
 
   @Public()
@@ -100,7 +108,7 @@ export class UsersController {
   @Post()
   @ResourceAction(RESOURCES.USER, ACTIONS.CREATE)
   @CreateUserDoc()
-  async createUser(@Body() userData: Partial<IUser>) {
+  async createUser(@Body() userData: CreateUserDto): Promise<UserDto> {
     try {
       const users = await this.usersService.getAllUsers();
       if ((users?.length || 0) >= 1) {
@@ -128,7 +136,7 @@ export class UsersController {
   @Put('api-key')
   @ResourceAction(RESOURCES.USER, ACTIONS.UPDATE)
   @RegenerateApiKeyDoc()
-  async regenerateApiKey(@User() user) {
+  async regenerateApiKey(@User() user: IUser): Promise<RegenerateApiKeyResponseDto> {
     const newApiKey = await this.usersService.regenerateApiKey(user.email);
     if (!newApiKey) {
       throw new HttpException(
@@ -146,7 +154,10 @@ export class UsersController {
   @Post('logs-level')
   @ResourceAction(RESOURCES.USER, ACTIONS.UPDATE)
   @UpdateLogsLevelDoc()
-  async updateLogsLevel(@Body() logsLevelData: { terminal: any }, @User() user) {
+  async updateLogsLevel(
+    @Body() logsLevelData: UpdateLogsLevelDto,
+    @User() user: IUser,
+  ): Promise<UpdateLogsLevelResponseDto> {
     if (user.role !== 'admin') {
       throw new HttpException(
         {
@@ -176,7 +187,7 @@ export class UsersController {
   @Get('current')
   @ResourceAction(RESOURCES.USER, ACTIONS.READ)
   @GetCurrentUserDoc()
-  async getCurrentUser(@User() user) {
+  async getCurrentUser(@User() user: IUser) {
     return this.usersService.getCurrentUser(user);
   }
 

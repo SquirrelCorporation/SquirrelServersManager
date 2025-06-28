@@ -1,5 +1,5 @@
 import { StackIcon } from '@/components/ComposeEditor/StackIconSelector';
-import { Target } from '@/components/Icons/CustomIcons';
+import { Target } from '@shared/ui/icons/categories/ui';
 import DockerOpsModal from '@/pages/Containers/components/sub-components/DockerOpsModal';
 import { postDeployContainerCustomStack } from '@/services/rest/container-stacks/container-stacks';
 import { getAllDevices } from '@/services/rest/devices/devices';

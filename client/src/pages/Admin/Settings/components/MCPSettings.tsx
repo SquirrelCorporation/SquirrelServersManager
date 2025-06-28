@@ -23,7 +23,7 @@ import {
   WarningFilled,
   SaveOutlined,
 } from '@ant-design/icons';
-import Title, { TitleColors } from '@/components/Template/Title';
+import { PageTitle, TitleColors } from '@shared/ui/templates/PageTitle';
 import FullScreenLoader from '@/components/FullScreenLoader/FullScreenLoader';
 import {
   getMcpSetting,
@@ -33,8 +33,8 @@ import {
 } from '@/services/rest/mcp/mcp-settings.service';
 import { getPlaybooks } from '@/services/rest/playbooks/playbooks';
 import { API } from 'ssm-shared-lib';
-import message from '@/components/Message/DynamicMessage';
-import { AiBusinessImpactAssessment } from '@/components/Icons/CustomIcons';
+import { message } from '@shared/ui/feedback/DynamicMessage';
+import { AiBusinessImpactAssessment } from '@shared/ui/icons/categories/ui';
 import ReactDOM from 'react-dom';
 import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
@@ -188,10 +188,11 @@ const MCPSettings: React.FC = () => {
         <Card
           type="inner"
           title={
-            <Title.SubTitle
+            <PageTitle
               title="MCP Server Settings"
               backgroundColor={TitleColors.SETTINGS}
               icon={<AiBusinessImpactAssessment />}
+              level={2}
             />
           }
           extra={

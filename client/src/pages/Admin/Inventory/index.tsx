@@ -4,13 +4,13 @@ import DeviceQuickActionReference, {
   Types,
 } from '@/components/DeviceComponents/DeviceQuickAction/DeviceQuickActionReference';
 import OsSoftwareVersions from '@/components/DeviceComponents/OSSoftwaresVersions/OsSoftwareVersions';
-import { GrommetIconsInstall } from '@/components/Icons/CustomIcons';
+import { GrommetIconsInstall } from '@shared/ui/icons/categories/actions';
 import NewDeviceModal from '@/components/NewDeviceModal/NewDeviceModal';
 import TerminalModal, {
   TerminalStateProps,
 } from '@/components/PlaybookExecutionModal';
 import PlaybookSelectionModal from '@/components/PlaybookSelection/PlaybookSelectionModal';
-import Title, { TitleColors } from '@/components/Template/Title';
+import { PageTitle, TitleColors } from '@shared/ui/templates/PageTitle';
 import InventoryColumns from '@/pages/Admin/Inventory/InventoryColumns';
 import { deleteDevice, getDevices } from '@/services/rest/devices/devices';
 import { useParams } from '@@/exports';
@@ -25,7 +25,7 @@ import {
   ProDescriptions,
   ProTable,
 } from '@ant-design/pro-components';
-import message from '@/components/Message/DynamicMessage';
+import { message } from '@shared/ui/feedback/DynamicMessage';
 import { Button, Drawer, Popconfirm } from 'antd';
 import React, { useRef, useState } from 'react';
 import { API, SsmAnsible, SsmAgent } from 'ssm-shared-lib';
@@ -118,10 +118,11 @@ const Inventory: React.FC = () => {
     <PageContainer
       header={{
         title: (
-          <Title.MainTitle
+          <PageTitle
             title={'Inventory'}
             backgroundColor={TitleColors.INVENTORY}
             icon={<DatabaseOutlined />}
+            isMain={true}
           />
         ),
       }}

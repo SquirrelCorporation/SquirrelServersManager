@@ -1,4 +1,4 @@
-import { UserSecret } from '@/components/Icons/CustomIcons';
+import { UserSecret } from '@shared/ui/icons/categories/services';
 import {
   deleteAnsibleVault,
   postAnsibleVault,
@@ -6,7 +6,7 @@ import {
 } from '@/services/rest/ansible-vaults/ansible-vault';
 import { DeleteOutlined } from '@ant-design/icons';
 import { ModalForm, ProForm, ProFormText } from '@ant-design/pro-components';
-import message from '@/components/Message/DynamicMessage';
+import message from '@shared/ui/feedback/DynamicMessage';
 import { Avatar, Button, Popconfirm } from 'antd';
 import React, { FC, useState } from 'react';
 import { API } from 'ssm-shared-lib';

@@ -15,6 +15,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ContainersQueryDto } from '@modules/containers/presentation/dtos/container-query.dto';
 import { ContainerResponseDto } from '@modules/containers/presentation/dtos/container-response.dto';
 import { PaginatedResponseDto } from '@modules/containers/presentation/dtos/paginated-response.dto';
+import { UpdateContainerNameDto } from '@modules/containers/presentation/dtos/update-container.dto';
 import { filterByFields, filterByQueryParams } from '@infrastructure/common/query/filter.util';
 import { paginate } from '@infrastructure/common/query/pagination.util';
 import { sortByFields } from '@infrastructure/common/query/sorter.util';
@@ -108,9 +109,9 @@ export class ContainersController {
   @UpdateContainerNameDoc()
   async updateContainerCustomName(
     @Param('id') id: string,
-    @Body('name') name: string,
+    @Body() updateContainerNameDto: UpdateContainerNameDto,
   ): Promise<void> {
-    await this.containerService.updateContainerName(id, name);
+    await this.containerService.updateContainerName(id, updateContainerNameDto.name);
   }
 
   @Delete(':id')

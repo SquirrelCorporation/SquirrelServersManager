@@ -1,14 +1,14 @@
 import { CONTAINER_SERVICE } from '@modules/containers';
 import { IContainerService } from '@modules/containers/domain/interfaces/container-service.interface';
 import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import {
   CheckDockerConnectionDoc,
+  ContainerDiagnosticControllerDocs,
   PreCheckDockerConnectionDoc,
 } from '../decorators/container-diagnostic.decorators';
 import { PreCheckDockerConnectionDto } from '../dtos/pre-check-docker-connection.dto';
 
-@ApiTags('ContainerDiagnostic')
+@ContainerDiagnosticControllerDocs()
 @Controller('containers/diagnostic')
 export class ContainerDiagnosticController {
   constructor(

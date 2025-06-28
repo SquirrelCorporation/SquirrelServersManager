@@ -105,12 +105,12 @@ export class DevicesConfigurationController {
     // Update and return the device
     const updatedDevice = this.deviceMapper.updateEntity(device, updateData);
     const result = await this.devicesService.update(updatedDevice);
-    
+
     // Emit event to restart watchers with new configuration
     if (result) {
       this.eventEmitter.emit(Events.DEVICE_CONFIGURATION_UPDATED, { device: result });
     }
-    
+
     return result;
   }
 }

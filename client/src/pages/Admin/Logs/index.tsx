@@ -1,4 +1,4 @@
-import Title, { TitleColors } from '@/components/Template/Title';
+import { PageTitle, TitleColors } from '@shared/ui/templates/PageTitle';
 import ServerLogsColumns from '@/pages/Admin/Logs/ServerLogsColums';
 import TaskLogsColumns from '@/pages/Admin/Logs/TaskLogsColumns';
 import { getServerLogs } from '@/services/rest/logs/logs';
@@ -14,10 +14,7 @@ import { useSearchParams } from '@umijs/max';
 import { TabsProps } from 'antd';
 import React, { useState } from 'react';
 import { API } from 'ssm-shared-lib';
-import StyledTabContainer, {
-  TabLabel,
-  IconWrapper,
-} from '@/components/Layout/StyledTabContainer';
+import { StyledTabContainer, TabLabel, IconWrapper } from '@shared/ui/layouts/StyledTabContainer';
 
 const Index: React.FC = () => {
   const [form] = ProForm.useForm<any>();
@@ -105,10 +102,11 @@ const Index: React.FC = () => {
     <StyledTabContainer
       header={{
         title: (
-          <Title.MainTitle
+          <PageTitle
             title={'Logs'}
             backgroundColor={TitleColors.LOGS}
             icon={<UnorderedListOutlined />}
+            isMain={true}
           />
         ),
       }}

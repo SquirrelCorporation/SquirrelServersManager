@@ -1,0 +1,51 @@
+{
+  "elements": [
+    {
+      "type": "app",
+      "pattern": "app/*",
+      "mode": "folder"
+    },
+    {
+      "type": "features",
+      "pattern": "features/*",
+      "mode": "folder"
+    },
+    {
+      "type": "shared",
+      "pattern": "shared/*",
+      "mode": "folder"
+    },
+    {
+      "type": "pages",
+      "pattern": "pages/*",
+      "mode": "folder"
+    },
+    {
+      "type": "legacy",
+      "pattern": "legacy/*",
+      "mode": "folder"
+    }
+  ],
+  "rules": [
+    {
+      "from": "features",
+      "allow": ["shared", "app"],
+      "disallow": ["features", "pages", "legacy"]
+    },
+    {
+      "from": "shared",
+      "allow": ["shared"],
+      "disallow": ["features", "app", "pages", "legacy"]
+    },
+    {
+      "from": "pages",
+      "allow": ["features", "shared", "app"],
+      "disallow": ["pages", "legacy"]
+    },
+    {
+      "from": "app",
+      "allow": ["shared"],
+      "disallow": ["features", "pages", "legacy"]
+    }
+  ]
+}

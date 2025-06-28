@@ -70,8 +70,9 @@ export class ContainerStatsController {
     try {
       const stat = await this.containerStatsService.getStatByDeviceAndType(container, params.type);
       return stat ? stat[0] : null;
-    } catch (error: any) {
-      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      throw new HttpException(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -102,8 +103,9 @@ export class ContainerStatsController {
         params.type,
       );
       return stats;
-    } catch (error: any) {
-      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      throw new HttpException(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -125,8 +127,9 @@ export class ContainerStatsController {
       }
 
       return nbContainers;
-    } catch (error: any) {
-      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      throw new HttpException(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -140,8 +143,9 @@ export class ContainerStatsController {
     try {
       const stats = await this.containerStatsService.getCpuAndMemAveragedStats();
       return stats;
-    } catch (error: any) {
-      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      throw new HttpException(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

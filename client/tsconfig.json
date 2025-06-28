@@ -12,7 +12,12 @@
     "strict": true,
     "paths": {
       "@/*": ["src/*"],
-      "@@/*": ["src/.umi/*"]
+      "@@/*": ["src/.umi/*"],
+      "@app/*": ["src/app/*"],
+      "@features/*": ["src/features/*"],
+      "@shared/*": ["src/shared/*"],
+      "@pages/*": ["src/pages/*"],
+      "@legacy/*": ["src/legacy/*"]
     },
     "allowSyntheticDefaultImports": true
   },
