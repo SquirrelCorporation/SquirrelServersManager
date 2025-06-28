@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import './test-setup';
-import { NotFoundError, InternalError } from '../../../../../middlewares/api/ApiError';
+import { InternalError, NotFoundError } from '../../../../../middlewares/api/ApiError';
 
 // Import directly for the interface types but not the actual implementation
 import type { DiagnosticService } from '../../../application/services/diagnostic.service';
@@ -23,7 +23,7 @@ describe('DiagnosticController', () => {
         if (!device || !deviceAuth) {
           throw new Error('Invalid device or auth');
         }
-        
+
         return {
           success: true,
           message: 'Diagnostic checks initiated',
@@ -59,8 +59,8 @@ describe('DiagnosticController', () => {
 
     // Create mock DiagnosticMapper
     diagnosticMapper = {
-      toDto: vi.fn(entity => entity),
-      toEntity: vi.fn(dto => dto),
+      toDto: vi.fn((entity) => entity),
+      toEntity: vi.fn((dto) => dto),
     };
 
     // Create controller implementation
@@ -70,12 +70,12 @@ describe('DiagnosticController', () => {
         if (!device) {
           throw new NotFoundError('Device ID not found');
         }
-        
+
         const deviceAuth = await diagnosticRepository.getDeviceAuthByDevice(device);
         if (!deviceAuth) {
           throw new NotFoundError('Device Auth not found');
         }
-        
+
         try {
           return await diagnosticService.run(device, deviceAuth);
         } catch (error) {
@@ -98,10 +98,10 @@ describe('DiagnosticController', () => {
 
       // Verify that the repository methods were called with correct parameters
       expect(diagnosticRepository.getDeviceById).toHaveBeenCalledWith('test-uuid');
-      
+
       // Verify that the device auth was fetched
       expect(diagnosticRepository.getDeviceAuthByDevice).toHaveBeenCalled();
-      
+
       // Verify the service was called
       expect(diagnosticService.run).toHaveBeenCalled();
     });
@@ -111,11 +111,13 @@ describe('DiagnosticController', () => {
       diagnosticRepository.getDeviceById.mockResolvedValueOnce(null);
 
       // Call the controller method and expect it to throw
-      await expect(controller.runDiagnostic({ uuid: 'non-existent-uuid' })).rejects.toThrow(NotFoundError);
-      
+      await expect(controller.runDiagnostic({ uuid: 'non-existent-uuid' })).rejects.toThrow(
+        NotFoundError,
+      );
+
       // Verify that the device repository was called
       expect(diagnosticRepository.getDeviceById).toHaveBeenCalled();
-      
+
       // Verify that the service was not called
       expect(diagnosticService.run).not.toHaveBeenCalled();
     });
@@ -126,16 +128,16 @@ describe('DiagnosticController', () => {
         uuid: 'test-uuid',
         name: 'test-device',
       });
-      
+
       diagnosticRepository.getDeviceAuthByDevice.mockResolvedValueOnce(null);
 
       // Call the controller method and expect it to throw
       await expect(controller.runDiagnostic({ uuid: 'test-uuid' })).rejects.toThrow(NotFoundError);
-      
+
       // Verify that the repository methods were called
       expect(diagnosticRepository.getDeviceById).toHaveBeenCalled();
       expect(diagnosticRepository.getDeviceAuthByDevice).toHaveBeenCalled();
-      
+
       // Verify that the service was not called
       expect(diagnosticService.run).not.toHaveBeenCalled();
     });
@@ -146,11 +148,11 @@ describe('DiagnosticController', () => {
 
       // Call the controller method and expect it to throw
       await expect(controller.runDiagnostic({ uuid: 'test-uuid' })).rejects.toThrow(InternalError);
-      
+
       // Verify that the repository methods were called
       expect(diagnosticRepository.getDeviceById).toHaveBeenCalled();
       expect(diagnosticRepository.getDeviceAuthByDevice).toHaveBeenCalled();
-      
+
       // Verify that the service was called
       expect(diagnosticService.run).toHaveBeenCalled();
     });

@@ -100,7 +100,10 @@ export class EntityNotFoundException extends NotFoundException {
  * Validation exception - used for validation errors with field-specific details
  */
 export class ValidationException extends BadRequestException {
-  constructor(message = 'Validation failed', public readonly validationErrors?: Record<string, string[]>) {
+  constructor(
+    message = 'Validation failed',
+    public readonly validationErrors?: Record<string, string[]>,
+  ) {
     super(message, { validationErrors });
   }
 }

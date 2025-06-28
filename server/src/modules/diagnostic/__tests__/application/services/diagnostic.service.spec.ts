@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SsmDeviceDiagnostic, SsmEvents } from 'ssm-shared-lib';
+import { Client } from 'ssh2';
+import DockerModem from 'docker-modem';
 import { DiagnosticService } from '../../../application/services/diagnostic.service';
 import { EventEmitterService } from '../../../../../core/events/event-emitter.service';
 import { DiagnosticGateway } from '../../../presentation/gateways/diagnostic.gateway';
-import { Client } from 'ssh2';
-import DockerModem from 'docker-modem';
 import './test-setup';
 import { DIAGNOSTIC_SEQUENCE } from './test-setup';
 
@@ -17,26 +17,26 @@ describe('DiagnosticService', () => {
     // Create mocks
     eventEmitterService = new EventEmitterService({} as any);
     diagnosticGateway = { emit: vi.fn() } as unknown as DiagnosticGateway;
-    
+
     // Create a mock service with direct implementation
     service = {
       run: vi.fn().mockImplementation(async (device, deviceAuth) => {
         // Emit progress events for each check in the sequence
-        DIAGNOSTIC_SEQUENCE.forEach(check => {
+        DIAGNOSTIC_SEQUENCE.forEach((check) => {
           diagnosticGateway.emit(SsmEvents.Diagnostic.PROGRESS, {
             success: true,
-            module: 'DeviceDiagnostic', 
-            data: { check }
+            module: 'DeviceDiagnostic',
+            data: { check },
           });
         });
-        
+
         return {
           deviceId: device.uuid,
           timestamp: new Date(),
           results: {},
         };
       }),
-      
+
       // Mock private methods that we'll spy on
       checkSSHConnectivity: vi.fn().mockResolvedValue(true),
       checkDockerSocket: vi.fn().mockResolvedValue('OK'),
@@ -81,7 +81,7 @@ describe('DiagnosticService', () => {
           SsmEvents.Diagnostic.PROGRESS,
           expect.objectContaining({
             module: 'DeviceDiagnostic',
-          })
+          }),
         );
       });
     });
@@ -112,14 +112,14 @@ describe('DiagnosticService', () => {
           data: { check: SsmDeviceDiagnostic.Checks.SSH_CONNECT },
           message: '❌ SSH connection failed',
         });
-        
+
         return {
           deviceId: device.uuid,
           timestamp: new Date(),
           results: {},
         };
       });
-      
+
       // Replace the run implementation for this test
       const originalRun = service.run;
       service.run = customRun;
@@ -133,17 +133,14 @@ describe('DiagnosticService', () => {
       expect(result).toHaveProperty('results');
 
       // Verify that error events were emitted
-      expect(diagnosticGateway.emit).toHaveBeenCalledWith(
-        SsmEvents.Diagnostic.PROGRESS,
-        {
-          success: false,
-          severity: 'error',
-          module: 'DeviceDiagnostic',
-          data: { check: SsmDeviceDiagnostic.Checks.SSH_CONNECT },
-          message: '❌ SSH connection failed',
-        }
-      );
-      
+      expect(diagnosticGateway.emit).toHaveBeenCalledWith(SsmEvents.Diagnostic.PROGRESS, {
+        success: false,
+        severity: 'error',
+        module: 'DeviceDiagnostic',
+        data: { check: SsmDeviceDiagnostic.Checks.SSH_CONNECT },
+        message: '❌ SSH connection failed',
+      });
+
       // Restore the original implementation after this test
       service.run = originalRun;
     });
@@ -153,7 +150,7 @@ describe('DiagnosticService', () => {
     it('should resolve when SSH connection is successful', async () => {
       // Setup successful connectivity test
       service.checkSSHConnectivity.mockResolvedValueOnce(true);
-      
+
       // Call the method
       const result = await service.checkSSHConnectivity({
         host: 'test-host',
@@ -195,7 +192,7 @@ describe('DiagnosticService', () => {
     it('should resolve when Docker socket connection is successful', async () => {
       // Setup successful connectivity test
       service.checkDockerSocket.mockResolvedValueOnce('OK');
-      
+
       // Call the method
       const result = await service.checkDockerSocket({
         host: 'test-host',

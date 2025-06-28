@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { version } from '../package.json';
 import app from './App';
 import logger from './logger';
 
@@ -14,7 +15,7 @@ const start = async () => {
    ';;:;  =./)_
      \`"=\\_  )_"\`
           \`\`'"\`
-Starting Squirrel Servers Manager server...`);
+Starting Squirrel Servers Manager server ($${version})...`);
 
   try {
     // Initialize NestJS (this will also set up Express routes)

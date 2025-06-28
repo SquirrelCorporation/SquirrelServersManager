@@ -1,6 +1,7 @@
 // Import vitest functions first
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 // Now import real modules after mocks
+import { VAULT_CRYPTO_SERVICE } from '@modules/ansible-vaults';
 import { ContainerStacksService } from '../../../application/services/container-stacks.service';
 import {
   ContainerCustomStack,
@@ -8,7 +9,6 @@ import {
 } from '../../../domain/entities/container-custom-stack.entity';
 import { IContainerCustomStackRepositoryRepository } from '../../../domain/repositories/container-custom-stack-repository-repository.interface';
 import { IContainerCustomStackRepository } from '../../../domain/repositories/container-custom-stack-repository.interface';
-import { VAULT_CRYPTO_SERVICE } from '@modules/ansible-vaults';
 
 // Mock ContainerCustomStacksRepositoryEngineService before importing actual service
 vi.mock('../../../application/services/container-stacks-repository-engine-service', () => {

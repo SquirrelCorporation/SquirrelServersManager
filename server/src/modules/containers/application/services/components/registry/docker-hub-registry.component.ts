@@ -6,7 +6,10 @@ import { Image, RequestOptionsType } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
 import { AbstractRegistryComponent } from './abstract-registry.component';
 
-const logger = PinoLogger.child({ module: 'DockerHubRegistryComponent' }, { msgPrefix: '[DOCKER_HUB_REGISTRY] - ' });
+const logger = PinoLogger.child(
+  { module: 'DockerHubRegistryComponent' },
+  { msgPrefix: '[DOCKER_HUB_REGISTRY] - ' },
+);
 const URL = 'https://registry-1.docker.io';
 
 /**
@@ -14,7 +17,6 @@ const URL = 'https://registry-1.docker.io';
  */
 @Injectable()
 export class DockerHubRegistryComponent extends CustomRegistryComponent {
-
   /**
    * Set up Docker Hub-specific configuration
    */

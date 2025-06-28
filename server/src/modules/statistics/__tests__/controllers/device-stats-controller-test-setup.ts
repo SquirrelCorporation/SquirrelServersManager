@@ -2,8 +2,9 @@ import { vi } from 'vitest';
 
 // Mock the devices module specifically for this controller test
 vi.mock('../../presentation/controllers/device-stats.controller', async () => {
-  const actual = await vi.importActual<any>('../../presentation/controllers/device-stats.controller');
-  
+  const actual = await vi.importActual<any>(
+    '../../presentation/controllers/device-stats.controller',
+
   // Create a modified version of the controller that doesn't rely on @modules/devices
   const DeviceStatsController = class {
     constructor(

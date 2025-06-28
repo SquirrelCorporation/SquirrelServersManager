@@ -1,6 +1,12 @@
-import { describe, it, expect, vi } from 'vitest';
-import { CONTAINER_CUSTOM_STACK_REPOSITORY, IContainerCustomStackRepository } from '../../../domain/repositories/container-custom-stack-repository.interface';
-import { ContainerCustomStack, IContainerCustomStackRepositoryEntity } from '../../../domain/entities/container-custom-stack.entity';
+import { describe, expect, it, vi } from 'vitest';
+import {
+  CONTAINER_CUSTOM_STACK_REPOSITORY,
+  IContainerCustomStackRepository,
+} from '../../../domain/repositories/container-custom-stack-repository.interface';
+import {
+  ContainerCustomStack,
+  IContainerCustomStackRepositoryEntity,
+} from '../../../domain/entities/container-custom-stack.entity';
 
 describe('IContainerCustomStackRepository Interface', () => {
   it('should have the correct constant value', () => {
@@ -55,4 +61,4 @@ describe('IContainerCustomStackRepository Interface', () => {
     expect(await mockRepository.deleteByUuid('123')).toBe(true);
     expect(await mockRepository.listAllByRepository(mockRepo)).toEqual([mockStack]);
   });
-}); 
+});

@@ -35,7 +35,9 @@ describe('ContainerRepositoryComponentService', () => {
     });
 
     it('should handle component not found', async () => {
-      vi.spyOn(service, 'getComponentDetails').mockRejectedValue(new Error('No such file or directory'));
+      vi.spyOn(service, 'getComponentDetails').mockRejectedValue(
+        new Error('No such file or directory'),
+      );
 
       await expect(service.getComponentDetails('/path/to/repo', 'non-existent')).rejects.toThrow();
     });
@@ -53,7 +55,11 @@ describe('ContainerRepositoryComponentService', () => {
       const result = await service.deployComponent('/path/to/repo', 'test-component', config);
 
       expect(result).toBe(true);
-      expect(service.deployComponent).toHaveBeenCalledWith('/path/to/repo', 'test-component', config);
+      expect(service.deployComponent).toHaveBeenCalledWith(
+        '/path/to/repo',
+        'test-component',
+        config,
+      );
     });
 
     it('should handle deployment failure', async () => {
@@ -67,7 +73,11 @@ describe('ContainerRepositoryComponentService', () => {
       const result = await service.deployComponent('/path/to/repo', 'test-component', config);
 
       expect(result).toBe(false);
-      expect(service.deployComponent).toHaveBeenCalledWith('/path/to/repo', 'test-component', config);
+      expect(service.deployComponent).toHaveBeenCalledWith(
+        '/path/to/repo',
+        'test-component',
+        config,
+      );
     });
   });
 

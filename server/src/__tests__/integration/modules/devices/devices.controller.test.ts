@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import '../test-setup';
 
 describe('DevicesController (Integration)', () => {
@@ -23,14 +23,14 @@ describe('DevicesController (Integration)', () => {
                     hostname: 'test-device-2',
                     ip: '192.168.1.101',
                     status: 'offline',
-                  }
+                  },
                 ],
                 metadata: {
                   total: 2,
                   current: 1,
-                  pageSize: 10
-                }
-              }
+                  pageSize: 10,
+                },
+              },
             };
           } else if (path === '/devices/all') {
             return {
@@ -47,8 +47,8 @@ describe('DevicesController (Integration)', () => {
                   hostname: 'test-device-2',
                   ip: '192.168.1.101',
                   status: 'offline',
-                }
-              ]
+                },
+              ],
             };
           } else if (path.includes('/devices/12345678-1234-1234-1234-123456789012')) {
             return {
@@ -58,15 +58,15 @@ describe('DevicesController (Integration)', () => {
                 hostname: 'test-device-1',
                 ip: '192.168.1.100',
                 status: 'online',
-              }
+              },
             };
           } else if (path.includes('/devices/non-existent-uuid')) {
             return {
               status: 200,
-              body: null
+              body: null,
             };
           }
-        })
+        }),
       };
     }),
     post: vi.fn().mockImplementation((path) => {
@@ -79,13 +79,13 @@ describe('DevicesController (Integration)', () => {
                   status: 201,
                   body: {
                     ...data,
-                    uuid: data.uuid || '12345678-1234-1234-1234-123456789012'
-                  }
+                    uuid: data.uuid || '12345678-1234-1234-1234-123456789012',
+                  },
                 };
               }
-            })
+            }),
           };
-        })
+        }),
       };
     }),
     patch: vi.fn().mockImplementation((path) => {
@@ -101,17 +101,17 @@ describe('DevicesController (Integration)', () => {
                     hostname: data.hostname || 'test-device-1',
                     ip: '192.168.1.100',
                     status: data.status || 'online',
-                  }
+                  },
                 };
               } else if (path.includes('/devices/non-existent-uuid')) {
                 return {
                   status: 500,
-                  body: { message: 'Device not found' }
+                  body: { message: 'Device not found' },
                 };
               }
-            })
+            }),
           };
-        })
+        }),
       };
     }),
     delete: vi.fn().mockImplementation((path) => {
@@ -120,12 +120,12 @@ describe('DevicesController (Integration)', () => {
           if (path.includes('/devices/12345678-1234-1234-1234-123456789012')) {
             return {
               status: 200,
-              body: { deleted: true }
+              body: { deleted: true },
             };
           }
-        })
+        }),
       };
-    })
+    }),
   };
 
   beforeEach(() => {
@@ -134,10 +134,8 @@ describe('DevicesController (Integration)', () => {
 
   describe('GET /devices', () => {
     it('should return a paginated list of devices', async () => {
-      const response = await app
-        .get('/devices')
-        .set('content-type', 'application/json');
-      
+      const response = await app.get('/devices').set('content-type', 'application/json');
+
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('data');
       expect(response.body).toHaveProperty('metadata');
@@ -151,10 +149,8 @@ describe('DevicesController (Integration)', () => {
 
   describe('GET /devices/all', () => {
     it('should return all devices without pagination', async () => {
-      const response = await app
-        .get('/devices/all')
-        .set('content-type', 'application/json');
-      
+      const response = await app.get('/devices/all').set('content-type', 'application/json');
+
       expect(response.status).toBe(200);
       expect(response.body).toBeInstanceOf(Array);
       expect(response.body.length).toBeGreaterThan(0);
@@ -166,7 +162,7 @@ describe('DevicesController (Integration)', () => {
       const response = await app
         .get('/devices/12345678-1234-1234-1234-123456789012')
         .set('content-type', 'application/json');
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('uuid', '12345678-1234-1234-1234-123456789012');
       expect(response.body).toHaveProperty('hostname', 'test-device-1');
@@ -176,7 +172,7 @@ describe('DevicesController (Integration)', () => {
       const response = await app
         .get('/devices/non-existent-uuid')
         .set('content-type', 'application/json');
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toBeNull();
     });
@@ -195,7 +191,7 @@ describe('DevicesController (Integration)', () => {
         .post('/devices')
         .send(newDevice)
         .set('content-type', 'application/json');
-      
+
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty('uuid', '98765432-5678-5678-5678-987654321098');
       expect(response.body).toHaveProperty('hostname', 'new-test-device');
@@ -213,7 +209,7 @@ describe('DevicesController (Integration)', () => {
         .patch('/devices/12345678-1234-1234-1234-123456789012')
         .send(updateData)
         .set('content-type', 'application/json');
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('uuid', '12345678-1234-1234-1234-123456789012');
       expect(response.body).toHaveProperty('hostname', 'updated-test-device');
@@ -229,7 +225,7 @@ describe('DevicesController (Integration)', () => {
         .patch('/devices/non-existent-uuid')
         .send(updateData)
         .set('content-type', 'application/json');
-      
+
       expect(response.status).toBe(500);
     });
   });
@@ -239,7 +235,7 @@ describe('DevicesController (Integration)', () => {
       const response = await app
         .delete('/devices/12345678-1234-1234-1234-123456789012')
         .set('content-type', 'application/json');
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('deleted', true);
     });

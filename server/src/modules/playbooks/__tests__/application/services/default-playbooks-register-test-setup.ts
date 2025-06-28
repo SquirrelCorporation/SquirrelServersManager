@@ -2,7 +2,7 @@ import { vi } from 'vitest';
 import { Repositories } from 'ssm-shared-lib';
 import { Logger } from '@nestjs/common';
 
-// Mock config values 
+// Mock config values
 vi.mock('src/config', () => ({
   SSM_DATA_PATH: '/data',
   SSM_INSTALL_PATH: '/install',

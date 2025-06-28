@@ -4,14 +4,16 @@ import { AbstractRegistryComponent } from '@modules/containers/application/servi
 import { Image, RequestOptionsType } from '@modules/containers/types';
 import PinoLogger from '../../../../../../logger';
 
-const logger = PinoLogger.child({ module: 'GitLabRegistryComponent' }, { msgPrefix: '[GITLAB_REGISTRY] - ' });
+const logger = PinoLogger.child(
+  { module: 'GitLabRegistryComponent' },
+  { msgPrefix: '[GITLAB_REGISTRY] - ' },
+);
 
 /**
  * Docker Gitlab integration.
  */
 @Injectable()
 export class GitLabRegistryComponent extends AbstractRegistryComponent {
-
   /**
    * Initialize the component
    */

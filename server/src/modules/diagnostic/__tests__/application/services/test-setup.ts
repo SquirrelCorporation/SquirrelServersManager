@@ -118,7 +118,7 @@ vi.mock('../../../application/services/diagnostic.service', () => {
           results: {},
         };
       }),
-      
+
       // Private methods that we'll mock but should be available on the instance
       checkSSHConnectivity: vi.fn().mockImplementation(() => Promise.resolve(true)),
       checkDockerSocket: vi.fn().mockImplementation(() => Promise.resolve('OK')),
@@ -126,7 +126,7 @@ vi.mock('../../../application/services/diagnostic.service', () => {
       checkCPUAndMemory: vi.fn().mockImplementation(() => Promise.resolve('CPU and Memory info')),
     };
   });
-  
+
   return {
     DiagnosticService: originalImplementation,
   };

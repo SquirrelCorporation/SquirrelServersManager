@@ -44,19 +44,19 @@ class DiagnosticController {
   async runDiagnostic(params: { uuid: string }) {
     try {
       const { uuid } = params;
-      
+
       // Find the device
       const device = await DeviceRepo.findOneByUuid(uuid);
       if (!device) {
         throw new NotFoundException('Device ID not found');
       }
-      
+
       // Find the device auth
       const deviceAuth = await DeviceAuthRepo.findOneByDevice(device);
       if (!deviceAuth) {
         throw new NotFoundException('Device Auth not found');
       }
-      
+
       // Run the diagnostic
       return await this.diagnosticService.run(device, deviceAuth);
     } catch (error) {

@@ -16,7 +16,7 @@ class MockEventEmitter {
 
   emit(event: string, payload: any) {
     if (this.handlers[event]) {
-      this.handlers[event].forEach(handler => handler(payload));
+      this.handlers[event].forEach((handler) => handler(payload));
     }
     return true;
   }
@@ -49,7 +49,7 @@ class MockTelemetryService {
 
     this.client = undefined; // Start with undefined client
     this.eventEmitter = new MockEventEmitter();
-    
+
     // Register event handler
     this.eventEmitter.on(Events.TELEMETRY_EVENT, (payload) => this.capture(payload));
   }
@@ -85,7 +85,7 @@ class MockTelemetryService {
 
   capture(payload: { eventName: string; properties?: Record<string, any> }) {
     const telemetryEnabled = this.configService.get('TELEMETRY_ENABLED');
-    
+
     if (telemetryEnabled && this.client && this._id) {
       this.client.capture({
         distinctId: this._id,
@@ -93,7 +93,9 @@ class MockTelemetryService {
         properties: payload.properties,
       });
     } else if (!this.client) {
-      this.logger.warn(`Telemetry client not initialized, cannot capture event: ${payload.eventName}`);
+      this.logger.warn(
+        `Telemetry client not initialized, cannot capture event: ${payload.eventName}`,
+      );
     }
   }
 
@@ -117,7 +119,7 @@ describe('TelemetryService with Mocks', () => {
 
   beforeEach(async () => {
     vi.clearAllMocks();
-    
+
     // Create service
     service = new MockTelemetryService();
     eventEmitter = service.getEventEmitter();
@@ -135,7 +137,7 @@ describe('TelemetryService with Mocks', () => {
       // Verify configuration check
       expect(service['configService'].get).toHaveBeenCalledWith('TELEMETRY_ENABLED');
       expect(service['logger'].log).toHaveBeenCalledWith('Telemetry enabled: true');
-      
+
       // Verify client initialization
       expect(service['client'].identify).toHaveBeenCalledWith({
         distinctId: 'existing-install-id',
@@ -164,9 +166,11 @@ describe('TelemetryService with Mocks', () => {
       await service.onModuleInit();
 
       // Verify ID retrieval
-      expect(service['cacheManager'].get).toHaveBeenCalledWith(SettingsKeys.GeneralSettingsKeys.INSTALL_ID);
+      expect(service['cacheManager'].get).toHaveBeenCalledWith(
+        SettingsKeys.GeneralSettingsKeys.INSTALL_ID,
+      );
       expect(service['cacheManager'].set).not.toHaveBeenCalled(); // Should not generate new ID
-      
+
       // Verify client identification
       expect(service['client'].identify).toHaveBeenCalledWith({
         distinctId: 'existing-install-id',
@@ -182,13 +186,17 @@ describe('TelemetryService with Mocks', () => {
       await service.onModuleInit();
 
       // Verify ID generation
-      expect(service['cacheManager'].get).toHaveBeenCalledWith(SettingsKeys.GeneralSettingsKeys.INSTALL_ID);
-      expect(service['logger'].log).toHaveBeenCalledWith('Install ID not found in cache, generating a new one.');
-      expect(service['cacheManager'].set).toHaveBeenCalledWith(
-        SettingsKeys.GeneralSettingsKeys.INSTALL_ID, 
-        'test-uuid-v4'
+      expect(service['cacheManager'].get).toHaveBeenCalledWith(
+        SettingsKeys.GeneralSettingsKeys.INSTALL_ID,
       );
-      
+      expect(service['logger'].log).toHaveBeenCalledWith(
+        'Install ID not found in cache, generating a new one.',
+      );
+      expect(service['cacheManager'].set).toHaveBeenCalledWith(
+        SettingsKeys.GeneralSettingsKeys.INSTALL_ID,
+        'test-uuid-v4',
+      );
+
       // Verify client identification
       expect(service['client'].identify).toHaveBeenCalledWith({
         distinctId: 'test-uuid-v4',
@@ -202,15 +210,15 @@ describe('TelemetryService with Mocks', () => {
       service['configService'].get.mockReturnValue(true);
       service['cacheManager'].get.mockResolvedValue('existing-install-id');
       await service.onModuleInit();
-      
+
       // Reset mocks
       vi.clearAllMocks();
       service['configService'].get.mockReturnValue(true);
-      
+
       // Call capture
       const payload = { eventName: 'test_event', properties: { test: true } };
       service.capture(payload);
-      
+
       // Verify capture
       expect(service['client'].capture).toHaveBeenCalledWith({
         distinctId: 'existing-install-id',
@@ -224,15 +232,15 @@ describe('TelemetryService with Mocks', () => {
       service['configService'].get.mockReturnValue(true);
       service['cacheManager'].get.mockResolvedValue('existing-install-id');
       await service.onModuleInit();
-      
+
       // Reset mocks and disable telemetry
       vi.clearAllMocks();
       service['configService'].get.mockReturnValue(false);
-      
+
       // Call capture
       const payload = { eventName: 'test_event', properties: { test: true } };
       service.capture(payload);
-      
+
       // Verify no capture
       expect(service['client'].capture).not.toHaveBeenCalled();
     });
@@ -244,13 +252,13 @@ describe('TelemetryService with Mocks', () => {
       service['configService'].get.mockReturnValue(true);
       service['cacheManager'].get.mockResolvedValue('existing-install-id');
       await service.onModuleInit();
-      
+
       // Reset mocks
       vi.clearAllMocks();
-      
+
       // Call shutdown
       await service.onApplicationShutdown('SIGTERM');
-      
+
       // Verify shutdown
       expect(service['logger'].log).toHaveBeenCalledWith(expect.stringContaining('Shutting down'));
       expect(service['client'].shutdown).toHaveBeenCalled();
@@ -260,10 +268,10 @@ describe('TelemetryService with Mocks', () => {
     it('should handle shutdown gracefully when client is not initialized', async () => {
       // Reset client to simulate uninitialized state
       service['client'] = undefined;
-      
+
       // Call shutdown
       await service.onApplicationShutdown('SIGTERM');
-      
+
       // Verify only log is called
       expect(service['logger'].log).toHaveBeenCalledWith(expect.stringContaining('Shutting down'));
     });
@@ -275,14 +283,14 @@ describe('TelemetryService with Mocks', () => {
       service['configService'].get.mockReturnValue(true);
       service['cacheManager'].get.mockResolvedValue('existing-install-id');
       await service.onModuleInit();
-      
+
       // Create spy on capture method
       const captureSpy = vi.spyOn(service, 'capture');
-      
+
       // Emit event
       const payload = { eventName: 'test_event', properties: { source: 'test' } };
       eventEmitter.emit(Events.TELEMETRY_EVENT, payload);
-      
+
       // Verify capture called
       expect(captureSpy).toHaveBeenCalledWith(payload);
     });

@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { Socket } from 'socket.io';
 import { SsmEvents } from 'ssm-shared-lib';
 import {

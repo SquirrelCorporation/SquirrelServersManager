@@ -1,3 +1,3 @@
 export class LoginResponseDto {
-    currentAuthority?: string;
+  currentAuthority?: string;
 }

@@ -13,7 +13,6 @@ import {
  * Factory class for creating standardized exceptions throughout the application
  */
 export class ExceptionFactory {
-
   /**
    * Create an entity not found exception
    */

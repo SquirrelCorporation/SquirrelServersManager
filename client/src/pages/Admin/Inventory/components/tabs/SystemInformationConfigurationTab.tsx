@@ -222,11 +222,60 @@ const SystemInformationConfigurationTab: React.FC<
           />
 
           <ProForm.Item labelAlign={'right'} label={`Cron (${cron})`}>
-            <Cron
-              clearButton={false}
-              value={cron}
-              setValue={(value: string) => handleOnChangeCron(value)}
-            />
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <Cron
+                clearButton={false}
+                value={cron}
+                setValue={(value: string) => handleOnChangeCron(value)}
+              />
+              <div style={{ marginBottom: 8 }}>
+                <small style={{ color: '#8c8c8c' }}>Quick suggestions:</small>
+              </div>
+              <Space wrap>
+                <Button
+                  size="small"
+                  onClick={() => handleOnChangeCron('* * * * *')}
+                >
+                  Every minute
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => handleOnChangeCron('*/5 * * * *')}
+                >
+                  Every 5 minutes
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => handleOnChangeCron('*/10 * * * *')}
+                >
+                  Every 10 minutes
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => handleOnChangeCron('0 * * * *')}
+                >
+                  Every hour
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => handleOnChangeCron('0 0 * * *')}
+                >
+                  Daily
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => handleOnChangeCron('0 0 * * 0')}
+                >
+                  Weekly
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => handleOnChangeCron('0 0 1 * *')}
+                >
+                  Monthly
+                </Button>
+              </Space>
+            </Space>
           </ProForm.Item>
         </ProForm.Group>
       </Card>

@@ -8,8 +8,12 @@ vi.mock('mongoose', () => {
     },
     Model: class {
       constructor() {}
-      static find() { return { exec: vi.fn() }; }
-      static findOne() { return { exec: vi.fn() }; }
+      static find() {
+        return { exec: vi.fn() };
+      }
+      static findOne() {
+        return { exec: vi.fn() };
+      }
     },
     model: vi.fn().mockImplementation((name, schema) => {
       return {
@@ -30,8 +34,10 @@ vi.mock('mongoose', () => {
       };
     }),
     Types: {
-      ObjectId: function(id) { return id; }
-    }
+      ObjectId: function (id) {
+        return id;
+      },
+    },
   };
   return mockMongoose;
 });
@@ -53,16 +59,16 @@ vi.mock('@nestjs/mongoose', () => {
       createForClass: (documentClass: any) => {
         return {
           // Return a mock schema
-          schema: {}
+          schema: {},
         };
-      }
+      },
     },
     InjectModel: () => {
       return (target: any, key: string) => {
         // Do nothing, just a mock decorator
       };
     },
-    getModelToken: (name: string) => `${name}Model`
+    getModelToken: (name: string) => `${name}Model`,
   };
 });
 
@@ -84,8 +90,8 @@ vi.mock('../../../infrastructure/mappers/ansible-task.mapper', () => {
   return {
     AnsibleTaskMapper: vi.fn().mockImplementation(() => {
       return {
-        toDomain: vi.fn().mockImplementation(entity => entity),
-        toPersistence: vi.fn().mockImplementation(domain => domain),
+        toDomain: vi.fn().mockImplementation((entity) => entity),
+        toPersistence: vi.fn().mockImplementation((domain) => domain),
       };
     }),
   };

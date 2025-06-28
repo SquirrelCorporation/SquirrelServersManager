@@ -18,7 +18,12 @@ class DeviceStatsController {
       throw new Error('Device not found');
     }
 
-    const stats = await this.deviceStatsService.getStatsByDeviceAndType(device, new Date(), new Date(), type);
+    const stats = await this.deviceStatsService.getStatsByDeviceAndType(
+      device,
+      new Date(),
+      new Date(),
+      type,
+    );
     return stats;
   }
 
@@ -73,10 +78,7 @@ describe('DeviceStatsController', () => {
       }),
     };
 
-    controller = new DeviceStatsController(
-      mockDeviceStatsService,
-      mockDevicesService,
-    );
+    controller = new DeviceStatsController(mockDeviceStatsService, mockDevicesService);
   });
 
   describe('getDeviceStatsByDeviceUuid', () => {

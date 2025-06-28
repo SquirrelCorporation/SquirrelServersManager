@@ -1,6 +1,6 @@
-import { vi } from 'vitest';
 import * as crypto from 'crypto';
 import * as fs from 'fs';
+import { vi } from 'vitest';
 
 // Mock the module aliases first to prevent resolution errors
 vi.mock('@modules/ansible-vaults/domain/interfaces/ansible-vault-service.interface', () => ({

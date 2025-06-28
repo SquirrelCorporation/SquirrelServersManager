@@ -22,4 +22,4 @@ export interface LocalComponentOptions {
   uuid: string;
   name: string;
   directory: string;
-} 
+}

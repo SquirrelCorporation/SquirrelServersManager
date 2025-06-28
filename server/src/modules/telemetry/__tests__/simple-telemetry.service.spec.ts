@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TelemetryService } from '../telemetry.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { ConfigService } from '@nestjs/config';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { TelemetryService } from '../telemetry.service';
 
 // Simple test suite to test basic telemetry service functionality
 describe('TelemetryService Simple Tests', () => {
@@ -26,7 +26,9 @@ describe('TelemetryService Simple Tests', () => {
           provide: ConfigService,
           useValue: {
             get: vi.fn().mockImplementation((key) => {
-              if (key === 'TELEMETRY_ENABLED') return true;
+              if (key === 'TELEMETRY_ENABLED') {
+                return true;
+              }
               return undefined;
             }),
           },

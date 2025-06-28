@@ -22,9 +22,9 @@ export interface ISshConnectionService {
    * @param deviceUuid The device UUID
    * @returns Device details, authentication info, and host
    */
-  fetchDeviceAndAuth(deviceUuid: string): Promise<{ 
-    device: any; 
-    deviceAuth: any; 
-    host: string 
+  fetchDeviceAndAuth(deviceUuid: string): Promise<{
+    device: any;
+    deviceAuth: any;
+    host: string;
   }>;
 }

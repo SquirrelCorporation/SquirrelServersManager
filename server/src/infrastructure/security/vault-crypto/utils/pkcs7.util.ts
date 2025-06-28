@@ -33,10 +33,7 @@ function unpad(padded: Buffer, blocksize: number): Buffer {
   return padded.slice(0, len - byte);
 }
 
-export {
-  pad,
-  unpad
-};
+export { pad, unpad };
 
 export default {
   pad,

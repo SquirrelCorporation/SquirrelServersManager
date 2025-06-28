@@ -27,9 +27,9 @@ vi.mock('@nestjs/testing', () => {
           compile: vi.fn().mockImplementation(() => {
             const providers = options.providers || [];
             const controllers = options.controllers || [];
-            
+
             const providerInstances = {};
-            
+
             // Create instances for all providers
             providers.forEach((provider) => {
               if (typeof provider === 'function') {
@@ -38,7 +38,7 @@ vi.mock('@nestjs/testing', () => {
                 providerInstances[provider.provide.name || provider.provide] = provider.useValue;
               }
             });
-            
+
             // Create controller instances
             const controllerInstances = {};
             controllers.forEach((controller) => {
@@ -46,19 +46,19 @@ vi.mock('@nestjs/testing', () => {
                 controllerInstances[controller.name] = new controller();
               }
             });
-            
+
             return {
               get: vi.fn().mockImplementation((target) => {
                 // Return the controller instance
                 if (target.name && controllerInstances[target.name]) {
                   return controllerInstances[target.name];
                 }
-                
+
                 // If target is a string token, try to find it in providers
                 if (typeof target === 'string' && providerInstances[target]) {
                   return providerInstances[target];
                 }
-                
+
                 // Otherwise, return the provider instance
                 return providerInstances[target.name || target];
               }),

@@ -18,6 +18,6 @@ export interface IExtraVarsService {
     extraVars: API.ExtraVars,
     forcedValues?: API.ExtraVars,
     emptySubstitute?: boolean,
-    targets?: string[]
+    targets?: string[],
   ): Promise<API.ExtraVars>;
 }

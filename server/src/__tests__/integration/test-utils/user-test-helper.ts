@@ -24,9 +24,8 @@ export async function setupUserTests(helper: TestHelper) {
  * @returns Current user data
  */
 export async function getCurrentUser(helper: TestHelper): Promise<TestUser> {
-  const response = await helper.request()
-    .get('/users/me');
-  
+  const response = await helper.request().get('/users/me');
+
   return response.body;
 }
 
@@ -38,13 +37,11 @@ export async function getCurrentUser(helper: TestHelper): Promise<TestUser> {
  * @returns Authentication token and user data
  */
 export async function loginUser(
-  helper: TestHelper, 
-  username: string, 
-  password: string
-): Promise<{ token: string, user: TestUser }> {
-  const response = await helper.request()
-    .post('/users/login')
-    .withJson({ username, password });
-  
+  helper: TestHelper,
+  username: string,
+  password: string,
+): Promise<{ token: string; user: TestUser }> {
+  const response = await helper.request().post('/users/login').withJson({ username, password });
+
   return response.body;
 }

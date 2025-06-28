@@ -1,15 +1,15 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test } from '@nestjs/testing';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CronRepository } from '../../../infrastructure/repositories/cron.repository';
 import { CronRepositoryMapper } from '../../../infrastructure/mappers/cron-repository.mapper';
 import { CRON } from '../../../infrastructure/schemas/cron.schema';
 import { ICron } from '../../../domain/entities/cron.entity';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Helper to create a mock document with toObject method
 const createMockDocument = (data: any) => ({
   ...data,
-  toObject: () => data
+  toObject: () => data,
 });
 
 describe('CronRepository', () => {
@@ -22,13 +22,13 @@ describe('CronRepository', () => {
     const modelMock = {
       findOneAndUpdate: vi.fn(),
       find: vi.fn(),
-      findOne: vi.fn()
+      findOne: vi.fn(),
     };
 
     // Mock the mapper with vi.fn() implementations
     const mapperMock = {
       toDomain: vi.fn(),
-      toDomainList: vi.fn()
+      toDomainList: vi.fn(),
     };
 
     // Set up testing module
@@ -36,19 +36,19 @@ describe('CronRepository', () => {
       providers: [
         {
           provide: CronRepositoryMapper,
-          useValue: mapperMock
+          useValue: mapperMock,
         },
         {
           provide: getModelToken(CRON),
-          useValue: modelMock
+          useValue: modelMock,
         },
         {
           provide: CronRepository,
           useFactory: () => {
             return new CronRepository(modelMock as any, mapperMock);
-          }
-        }
-      ]
+          },
+        },
+      ],
     }).compile();
 
     repository = moduleRef.get<CronRepository>(CronRepository);
@@ -61,19 +61,19 @@ describe('CronRepository', () => {
       // Arrange
       const cronData: ICron = {
         name: 'test-cron',
-        expression: '* * * * *'
+        expression: '* * * * *',
       };
-      
+
       const mockDocument = createMockDocument({
         _id: '123',
         name: 'test-cron',
-        expression: '* * * * *'
+        expression: '* * * * *',
       });
 
       const expectedDomainCron: ICron = {
         _id: '123',
         name: 'test-cron',
-        expression: '* * * * *'
+        expression: '* * * * *',
       };
 
       cronModel.findOneAndUpdate.mockResolvedValue(mockDocument);
@@ -83,11 +83,10 @@ describe('CronRepository', () => {
       const result = await repository.updateOrCreateIfNotExist(cronData);
 
       // Assert
-      expect(cronModel.findOneAndUpdate).toHaveBeenCalledWith(
-        { name: cronData.name },
-        cronData,
-        { upsert: true, new: true }
-      );
+      expect(cronModel.findOneAndUpdate).toHaveBeenCalledWith({ name: cronData.name }, cronData, {
+        upsert: true,
+        new: true,
+      });
       expect(mapper.toDomain).toHaveBeenCalledWith(mockDocument.toObject());
       expect(result).toEqual(expectedDomainCron);
     });
@@ -99,24 +98,21 @@ describe('CronRepository', () => {
       const cronData: ICron = {
         name: 'test-cron',
         expression: '* * * * *',
-        disabled: true
+        disabled: true,
       };
 
       // Setup the chain for findOneAndUpdate
       cronModel.findOneAndUpdate.mockReturnValue({
         lean: vi.fn().mockReturnValue({
-          exec: vi.fn().mockResolvedValue({})
-        })
+          exec: vi.fn().mockResolvedValue({}),
+        }),
       });
 
       // Act
       await repository.updateCron(cronData);
 
       // Assert
-      expect(cronModel.findOneAndUpdate).toHaveBeenCalledWith(
-        { name: cronData.name },
-        cronData
-      );
+      expect(cronModel.findOneAndUpdate).toHaveBeenCalledWith({ name: cronData.name }, cronData);
     });
   });
 
@@ -125,21 +121,21 @@ describe('CronRepository', () => {
       // Arrange
       const cronDocuments = [
         { _id: '1', name: 'cron1', expression: '* * * * *' },
-        { _id: '2', name: 'cron2', expression: '0 0 * * *' }
+        { _id: '2', name: 'cron2', expression: '0 0 * * *' },
       ];
 
       const expectedDomainCrons = [
         { _id: '1', name: 'cron1', expression: '* * * * *' },
-        { _id: '2', name: 'cron2', expression: '0 0 * * *' }
+        { _id: '2', name: 'cron2', expression: '0 0 * * *' },
       ];
 
       // Setup the chain for find
       cronModel.find.mockReturnValue({
         lean: vi.fn().mockReturnValue({
-          exec: vi.fn().mockResolvedValue(cronDocuments)
-        })
+          exec: vi.fn().mockResolvedValue(cronDocuments),
+        }),
       });
-      
+
       mapper.toDomainList.mockReturnValue(expectedDomainCrons);
 
       // Act
@@ -156,26 +152,26 @@ describe('CronRepository', () => {
     it('should return a cron job with the specified name', async () => {
       // Arrange
       const cronName = 'test-cron';
-      
+
       const cronDocument = {
         _id: '1',
         name: cronName,
-        expression: '* * * * *'
+        expression: '* * * * *',
       };
 
       const expectedDomainCron = {
         _id: '1',
         name: cronName,
-        expression: '* * * * *'
+        expression: '* * * * *',
       };
 
       // Setup the chain for findOne
       cronModel.findOne.mockReturnValue({
         lean: vi.fn().mockReturnValue({
-          exec: vi.fn().mockResolvedValue(cronDocument)
-        })
+          exec: vi.fn().mockResolvedValue(cronDocument),
+        }),
       });
-      
+
       mapper.toDomain.mockReturnValue(expectedDomainCron);
 
       // Act
@@ -194,10 +190,10 @@ describe('CronRepository', () => {
       // Setup the chain for findOne
       cronModel.findOne.mockReturnValue({
         lean: vi.fn().mockReturnValue({
-          exec: vi.fn().mockResolvedValue(null)
-        })
+          exec: vi.fn().mockResolvedValue(null),
+        }),
       });
-      
+
       mapper.toDomain.mockReturnValue(null);
 
       // Act

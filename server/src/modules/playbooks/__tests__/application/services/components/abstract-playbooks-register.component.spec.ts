@@ -4,13 +4,13 @@ import {
   IPlaybook,
   IPlaybooksRegister,
   ITreeNodeService,
+  NotFoundError,
   mockEventEmitter,
   mockFileSystemService,
   mockPlaybookFileService,
   mockPlaybookRepository,
   mockPlaybooksRegisterRepository,
   mockTreeNodeService,
-  NotFoundError,
 } from './abstract-playbooks-register-test-setup';
 
 // Import the test-setup which contains all mocks

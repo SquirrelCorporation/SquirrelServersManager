@@ -9,15 +9,15 @@ const findIpAddress = vi.fn().mockImplementation((req) => {
       const ips = req.headers['x-forwarded-for'].split(',');
       return ips[0].trim();
     }
-    
+
     if (req.connection && req.connection.remoteAddress) {
       return req.connection.remoteAddress;
     }
-    
+
     if (req.ip) {
       return req.ip;
     }
-    
+
     return undefined;
   } catch (error) {
     return undefined;

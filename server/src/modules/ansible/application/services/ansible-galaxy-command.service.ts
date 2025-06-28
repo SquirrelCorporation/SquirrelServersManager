@@ -1,6 +1,4 @@
-import {
-  IAnsibleGalaxyCommandService
-} from '@modules/ansible/doma../../domain/interfaces/ansible-galaxy-command-service.interface';
+import { IAnsibleGalaxyCommandService } from '@modules/ansible/doma../../domain/interfaces/ansible-galaxy-command-service.interface';
 import { Injectable } from '@nestjs/common';
 
 /**

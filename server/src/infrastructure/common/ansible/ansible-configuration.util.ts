@@ -44,17 +44,17 @@ function parseConfig(content: string): Config {
   const config: Config = {};
   let currentSection = '';
   let currentDescription = '';
-  
+
   const lines = content.split('\n');
-  
+
   for (const line of lines) {
     const trimmedLine = line.trim();
-    
+
     // Skip empty lines
     if (!trimmedLine) {
       continue;
     }
-    
+
     // Check if it's a section header
     const sectionMatch = trimmedLine.match(/^\[(.*?)\]$/);
     if (sectionMatch) {
@@ -64,17 +64,17 @@ function parseConfig(content: string): Config {
       }
       continue;
     }
-    
+
     // Check if it's a comment that might be a description
     if (trimmedLine.startsWith('#')) {
       currentDescription = trimmedLine.substring(1).trim();
       continue;
     }
-    
+
     // Check if it's a key-value pair
     let keyValueMatch;
     let deactivated = false;
-    
+
     if (trimmedLine.startsWith(';')) {
       // Deactivated key
       keyValueMatch = trimmedLine.substring(1).match(/^(.*?)=(.*?)$/);
@@ -82,22 +82,22 @@ function parseConfig(content: string): Config {
     } else {
       keyValueMatch = trimmedLine.match(/^(.*?)=(.*?)$/);
     }
-    
+
     if (keyValueMatch && currentSection) {
       const key = keyValueMatch[1].trim();
       const value = keyValueMatch[2].trim();
-      
+
       config[currentSection][key] = {
         value,
         deactivated,
-        description: currentDescription
+        description: currentDescription,
       };
-      
+
       // Reset description after using it
       currentDescription = '';
     }
   }
-  
+
   return config;
 }
 
@@ -105,28 +105,28 @@ function generateConfigContent(config: Config): string {
   if (Object.keys(config).length === 0) {
     return '';
   }
-  
+
   let content = '';
-  
+
   for (const section of Object.keys(config)) {
     content += `[${section}]\n`;
-    
+
     for (const key of Object.keys(config[section])) {
       const { value, deactivated, description } = config[section][key];
-      
+
       if (description) {
         content += `# ${description}\n`;
       }
-      
+
       if (deactivated) {
         content += `;${key}=${value}\n`;
       } else {
         content += `${key}=${value}\n`;
       }
     }
-    
+
     content += '\n';
   }
-  
+
   return content;
 }

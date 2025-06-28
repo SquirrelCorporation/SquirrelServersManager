@@ -129,6 +129,7 @@ export class GitPlaybooksRepositoryController {
       vaults,
       ignoreSSLErrors,
     });
+    await component.init();
   }
 
   /**

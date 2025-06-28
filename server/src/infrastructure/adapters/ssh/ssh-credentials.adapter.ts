@@ -3,8 +3,8 @@ import { ConnectConfig } from 'ssh2';
 import { SsmAnsible, SsmProxmox } from 'ssm-shared-lib';
 import { VAULT_PWD } from 'src/config';
 import { VaultService } from 'src/infrastructure/security/vault-crypto/services/vault.service';
-import { ProxmoxEngineOptions } from '../proxmox/services/proxmox-engine.service';
 import { IDevice, IDeviceAuth } from 'src/modules/devices';
+import { ProxmoxEngineOptions } from '../proxmox/services/proxmox-engine.service';
 
 const DEFAULT_VAULT_ID = 'ssm';
 // TODO: Import from ansible-vault module????

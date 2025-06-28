@@ -26,7 +26,7 @@ export class ContainerImage {
     type: String,
     required: true,
     index: true,
-    ref: 'Device'
+    ref: 'Device',
   })
   deviceUuid!: string;
 
@@ -65,5 +65,5 @@ ContainerImageSchema.virtual('device', {
   ref: 'Device',
   localField: 'deviceUuid',
   foreignField: 'uuid',
-  justOne: true
+  justOne: true,
 });

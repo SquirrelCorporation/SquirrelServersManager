@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CronService } from '../../../application/services/cron.service';
 import { ICron } from '../../../domain/entities/cron.entity';
 import { CRON_REPOSITORY } from '../../../domain/repositories/cron-repository.interface';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('CronService', () => {
   let service: CronService;
@@ -19,7 +19,7 @@ describe('CronService', () => {
       updateOrCreateIfNotExist: vi.fn(),
       updateCron: vi.fn(),
       findAll: vi.fn(),
-      findByName: vi.fn()
+      findByName: vi.fn(),
     };
 
     // Set up testing module
@@ -28,9 +28,9 @@ describe('CronService', () => {
         CronService,
         {
           provide: CRON_REPOSITORY,
-          useValue: cronRepositoryMock
-        }
-      ]
+          useValue: cronRepositoryMock,
+        },
+      ],
     }).compile();
 
     service = module.get<CronService>(CronService);
@@ -41,13 +41,13 @@ describe('CronService', () => {
       // Arrange
       const cronData: ICron = {
         name: 'test-cron',
-        expression: '* * * * *'
+        expression: '* * * * *',
       };
       const expectedCron: ICron = {
         _id: '123',
         name: 'test-cron',
         expression: '* * * * *',
-        createdAt: new Date()
+        createdAt: new Date(),
       };
       cronRepositoryMock.updateOrCreateIfNotExist.mockResolvedValue(expectedCron);
 
@@ -66,7 +66,7 @@ describe('CronService', () => {
       const cronData: ICron = {
         name: 'test-cron',
         expression: '* * * * *',
-        disabled: true
+        disabled: true,
       };
       cronRepositoryMock.updateCron.mockResolvedValue(undefined);
 
@@ -105,7 +105,7 @@ describe('CronService', () => {
       // Arrange
       const cronJobs: ICron[] = [
         { _id: '1', name: 'cron1', expression: '* * * * *' },
-        { _id: '2', name: 'cron2', expression: '0 0 * * *' }
+        { _id: '2', name: 'cron2', expression: '0 0 * * *' },
       ];
       cronRepositoryMock.findAll.mockResolvedValue(cronJobs);
 
@@ -137,7 +137,7 @@ describe('CronService', () => {
       const cronJob: ICron = {
         _id: '1',
         name: cronName,
-        expression: '* * * * *'
+        expression: '* * * * *',
       };
       cronRepositoryMock.findByName.mockResolvedValue(cronJob);
 

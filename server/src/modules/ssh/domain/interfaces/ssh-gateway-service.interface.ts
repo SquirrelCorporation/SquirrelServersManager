@@ -32,8 +32,8 @@ export interface ISshGatewayService {
    * @returns Session details or error message
    */
   startSession(
-    client: Socket, 
-    payload: SshSessionDto
+    client: Socket,
+    payload: SshSessionDto,
   ): Promise<{ sessionId: string; success: boolean } | { success: false; message: string }>;
 
   /**

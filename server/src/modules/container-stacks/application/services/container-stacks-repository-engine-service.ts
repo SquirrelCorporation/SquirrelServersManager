@@ -1,6 +1,6 @@
 import { DEFAULT_VAULT_ID, VaultCryptoService } from '@modules/ansible-vaults';
 import { IContainerCustomStacksRepositoryEngineService } from '@modules/container-stacks/doma../../domain/interfaces/container-stacks-repository-engine-service.interface';
-import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { EventEmitterService } from '../../../../core/events/event-emitter.service';
 import { ShellWrapperService } from '../../../shell';
 import { IContainerCustomStackRepositoryEntity } from '../../domain/entities/container-custom-stack.entity';

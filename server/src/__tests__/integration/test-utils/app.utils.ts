@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppModule } from '../../../app.module';
 import * as request from 'supertest';
+import { AppModule } from '../../../app.module';
 
 /**
  * Creates and initializes a NestJS application for testing
@@ -12,11 +12,11 @@ export async function createTestingApp() {
   const moduleRef: TestingModule = await Test.createTestingModule({
     imports: [AppModule],
   }).compile();
-  
+
   // Create and initialize the application
   const app: INestApplication = moduleRef.createNestApplication();
   await app.init();
-  
+
   return { app, moduleRef };
 }
 

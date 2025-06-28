@@ -32,7 +32,7 @@ vi.mock('@infrastructure/exceptions/app-exceptions', () => {
         super(message);
         this.name = 'NotFoundError';
       }
-    }
+    },
   };
 });
 
@@ -46,7 +46,7 @@ vi.mock('@modules/shell', () => {
     PlaybookFileService: vi.fn().mockImplementation(() => ({
       newPlaybook: vi.fn().mockResolvedValue({}),
       deletePlaybook: vi.fn().mockResolvedValue({}),
-    }))
+    })),
   };
 });
 

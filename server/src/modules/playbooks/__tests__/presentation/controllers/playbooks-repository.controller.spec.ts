@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  createMockPlaybooksRepositoryController,
   EntityNotFoundException,
+  createMockPlaybooksRepositoryController,
   mockPlaybooksRegisterRepository,
   mockPlaybooksRegisterService,
   mockRepository,

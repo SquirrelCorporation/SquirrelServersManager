@@ -9,8 +9,8 @@ vi.mock('../../../logger', () => ({
     debug: vi.fn(),
     info: vi.fn(),
     warn: vi.fn(),
-    error: vi.fn()
-  }
+    error: vi.fn(),
+  },
 }));
 
 vi.mock('../../utils/tag', () => ({
@@ -18,21 +18,21 @@ vi.mock('../../utils/tag', () => ({
     parseSemver: vi.fn((v) => v),
     isGreaterSemver: vi.fn((v1, v2) => true),
     transformTag: vi.fn((transform, tag) => tag),
-    diff: vi.fn(() => 'patch')
-  }
+    diff: vi.fn(() => 'patch'),
+  },
 }));
 
 vi.mock('../../../data/database/repository/ContainerRepo', () => ({
   default: {
-    deleteContainerById: vi.fn()
-  }
+    deleteContainerById: vi.fn(),
+  },
 }));
 
 // Mock Registry classes
 const mockRegistry = {
   match: vi.fn(() => true),
   normalizeImage: vi.fn((image) => image),
-  getId: vi.fn(() => 'registry-id')
+  getId: vi.fn(() => 'registry-id'),
 };
 
 // Create mock registries
@@ -76,10 +76,11 @@ const mockRegistries = {
   hub: {
     ...mockRegistry,
     name: 'hub',
-    match: vi.fn((image) => 
-      !image?.registry?.url || 
-      image.registry.url === 'docker.io' ||
-      image.registry.url.includes('docker')
+    match: vi.fn(
+      (image) =>
+        !image?.registry?.url ||
+        image.registry.url === 'docker.io' ||
+        image.registry.url.includes('docker'),
     ),
     normalizeImage: vi.fn((image) => ({
       ...image,
@@ -88,7 +89,7 @@ const mockRegistries = {
         url: 'https://registry-1.docker.io/v2',
       },
     })),
-  }
+  },
 };
 
 describe('Utils Tests', () => {
@@ -199,7 +200,7 @@ describe('Utils Tests', () => {
   test('pruneOldContainers should prune old containers', () => {
     const oldContainers = [{ id: '1' }, { id: '2' }];
     const newContainers = [{ id: '1' }];
-    
+
     const result = utils.getOldContainers(newContainers, oldContainers);
     expect(result).toEqual([{ id: '2' }]);
   });

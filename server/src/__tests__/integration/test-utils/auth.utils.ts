@@ -26,7 +26,7 @@ export function getAuthHeaders(jwtService: JwtService, user: TestUser) {
     email: user.email,
     roles: user.roles,
   });
-  
+
   return { Authorization: `Bearer ${token}` };
 }
 
@@ -37,20 +37,24 @@ export function getAuthHeaders(jwtService: JwtService, user: TestUser) {
  * @param password User's password
  * @returns The JWT token if login is successful
  */
-export async function loginUser(app: INestApplication, username: string, password: string): Promise<string> {
+export async function loginUser(
+  app: INestApplication,
+  username: string,
+  password: string,
+): Promise<string> {
   const response = await request(app.getHttpServer())
     .post('/users/login')
     .send({ username, password })
     .expect(200);
-  
+
   // Extract JWT token from response (assuming it's in the response body or headers)
   // The actual location may vary based on your authentication implementation
   const token = response.body.token || response.headers['authorization']?.replace('Bearer ', '');
-  
+
   if (!token) {
     throw new Error('Failed to retrieve authentication token');
   }
-  
+
   return token;
 }
 
@@ -63,7 +67,7 @@ export function createTestAdminUser(): TestUser {
     id: '00000000-0000-0000-0000-000000000001',
     username: 'admin',
     email: 'admin@example.com',
-    roles: ['admin']
+    roles: ['admin'],
   };
 }
 
@@ -76,6 +80,6 @@ export function createTestRegularUser(): TestUser {
     id: '00000000-0000-0000-0000-000000000002',
     username: 'user',
     email: 'user@example.com',
-    roles: ['user']
+    roles: ['user'],
   };
 }

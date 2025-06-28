@@ -8,7 +8,8 @@ import { IAnsibleTaskStatusRepository } from '../../domain/repositories/ansible-
 @Injectable()
 export class AnsibleTaskStatusRepository implements IAnsibleTaskStatusRepository {
   constructor(
-    @InjectModel(AnsibleTaskStatus.name) private readonly ansibleTaskStatusModel: Model<AnsibleTaskStatus>,
+    @InjectModel(AnsibleTaskStatus.name)
+    private readonly ansibleTaskStatusModel: Model<AnsibleTaskStatus>,
   ) {}
 
   async create(taskStatus: Partial<IAnsibleTaskStatus>): Promise<IAnsibleTaskStatus> {
@@ -24,7 +25,7 @@ export class AnsibleTaskStatusRepository implements IAnsibleTaskStatusRepository
 
   async findByTaskIdent(taskIdent: string): Promise<IAnsibleTaskStatus[]> {
     const taskStatuses = await this.ansibleTaskStatusModel.find({ taskIdent }).exec();
-    return taskStatuses.map(status => this.mapToIAnsibleTaskStatus(status));
+    return taskStatuses.map((status) => this.mapToIAnsibleTaskStatus(status));
   }
 
   private mapToIAnsibleTaskStatus(doc: any): IAnsibleTaskStatus {

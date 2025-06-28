@@ -3,14 +3,14 @@ import { vi } from 'vitest';
 // Define constants
 export const DIRECTORY_ROOT = '/playbooks';
 export const EVENTS = {
-  ALERT: 'alert'
+  ALERT: 'alert',
 };
 
 // Create a mock abstract component
 export class AbstractPlaybooksRegisterComponent {
   protected directory: string;
   protected childLogger: any;
-  
+
   // Make some properties public for test access
   public name: string;
   public uuid: string;
@@ -24,7 +24,7 @@ export class AbstractPlaybooksRegisterComponent {
     protected readonly treeNodeService: any,
     uuid: string,
     name: string,
-    directoryRoot: string
+    directoryRoot: string,
   ) {
     this.directory = `${directoryRoot}/${uuid}`;
     this.name = name;
@@ -48,19 +48,21 @@ export class MockLocalPlaybooksRegisterComponent extends AbstractPlaybooksRegist
     uuid: string,
     logger: any,
     name: string,
-    directoryRoot: string
+    directoryRoot: string,
   ) {
     super(
       fileSystemService,
       playbookFileService,
       playbookRepository,
       playbooksRegisterRepository,
-      { /* treeNodeService mock */ },
+      {
+        /* treeNodeService mock */
+      },
       uuid,
       name,
-      directoryRoot
+      directoryRoot,
     );
-    
+
     this.childLogger = logger;
   }
 
@@ -74,13 +76,16 @@ export class MockLocalPlaybooksRegisterComponent extends AbstractPlaybooksRegist
 }
 
 // Mock all imported modules
-vi.mock('@modules/playbooks/application/services/components/abstract-playbooks-register.component', () => ({
-  default: AbstractPlaybooksRegisterComponent,
-  DIRECTORY_ROOT: DIRECTORY_ROOT
-}));
+vi.mock(
+  '@modules/playbooks/application/services/components/abstract-playbooks-register.component',
+  () => ({
+    default: AbstractPlaybooksRegisterComponent,
+    DIRECTORY_ROOT: DIRECTORY_ROOT,
+  }),
+);
 
 vi.mock('@modules/playbooks', () => ({
   IPlaybookRepository: vi.fn(),
   IPlaybooksRegisterRepository: vi.fn(),
-  ITreeNodeService: vi.fn()
+  ITreeNodeService: vi.fn(),
 }));
