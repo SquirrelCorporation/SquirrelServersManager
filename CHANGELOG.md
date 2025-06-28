@@ -10,6 +10,7 @@
 
 **Merged pull requests:**
 
+- Revert "Bump node from 23.11.0-alpine to 24.2.0-alpine in /client" [\#1010](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1010) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump vuetify from 3.8.7 to 3.8.10 in /site [\#1006](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1006) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump axios from 1.9.0 to 1.10.0 in /site [\#1002](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1002) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @vue-flow/core from 1.44.0 to 1.45.0 in /site [\#1001](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1001) ([dependabot[bot]](https://github.com/apps/dependabot))
