@@ -13,6 +13,7 @@
 - Bump vuetify from 3.8.7 to 3.8.10 in /site [\#1006](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1006) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump axios from 1.9.0 to 1.10.0 in /site [\#1002](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1002) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump @vue-flow/core from 1.44.0 to 1.45.0 in /site [\#1001](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1001) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node from 23.11.0-alpine to 24.2.0-alpine in /client [\#996](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/996) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 24.0.1-alpine to 24.2.0-alpine in /server [\#995](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/995) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump brace-expansion from 1.1.11 to 1.1.12 in /client in the npm\_and\_yarn group [\#992](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/992) ([dependabot[bot]](https://github.com/apps/dependabot))
 
