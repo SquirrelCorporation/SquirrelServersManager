@@ -7,6 +7,7 @@
 **Fixed bugs:**
 
 - \[BUG\] Docker stack configurations cannot be updated [\#993](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/993)
+- \[BUG\] Fix device.systemInformation stats update logic in processor [\#1013](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1013) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Merged pull requests:**
 
