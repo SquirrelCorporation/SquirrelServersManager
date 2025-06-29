@@ -140,6 +140,8 @@ export class RemoteSystemInformationProcessor {
             device.systemInformation.cpuStats = {
               lastUpdatedAt: new Date().toISOString(),
             };
+          } else {
+            device.systemInformation.cpuStats.lastUpdatedAt = new Date().toISOString();
           }
           break;
         case UpdateStatsType.MEM_STATS:
@@ -148,6 +150,8 @@ export class RemoteSystemInformationProcessor {
             device.systemInformation.memStats = {
               lastUpdatedAt: new Date().toISOString(),
             };
+          } else {
+            device.systemInformation.memStats.lastUpdatedAt = new Date().toISOString();
           }
           break;
         case UpdateStatsType.FILE_SYSTEM_STATS:
@@ -156,16 +160,15 @@ export class RemoteSystemInformationProcessor {
             device.systemInformation.fileSystemsStats = {
               lastUpdatedAt: new Date().toISOString(),
             };
+          } else {
+            device.systemInformation.fileSystemsStats.lastUpdatedAt = new Date().toISOString();
           }
           break;
         default:
           throw new Error(`Unknown update type: ${updateType}`);
       }
 
-      if (!Object.values(UpdateStatsType).includes(updateType as UpdateStatsType)) {
-        // Save the updated device back to the database for non-stats updates
-        await this.devicesService.update(device);
-      }
+      await this.devicesService.update(device);
 
       this.logger.log(`Successfully updated ${updateType} for device ${deviceUuid} (${device.ip})`);
     } catch (error: any) {
