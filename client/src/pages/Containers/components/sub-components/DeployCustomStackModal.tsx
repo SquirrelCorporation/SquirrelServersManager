@@ -1,8 +1,8 @@
 import { StackIcon } from '@/components/ComposeEditor/StackIconSelector';
 import { Target } from '@/components/Icons/CustomIcons';
 import DockerOpsModal from '@/pages/Containers/components/sub-components/DockerOpsModal';
-import { postDeployContainerCustomStack } from '@/services/rest/containers';
-import { getAllDevices } from '@/services/rest/device';
+import { postDeployContainerCustomStack } from '@/services/rest/container-stacks/container-stacks';
+import { getAllDevices } from '@/services/rest/devices/devices';
 import { CheckCircleFilled, RocketOutlined } from '@ant-design/icons';
 import {
   ModalForm,
@@ -38,9 +38,7 @@ const DeployCustomStackModal: React.FC<DeployCustomStackModalProps> = ({
         data={data}
         setIsOpen={setCreateModuleModalOpened}
         isOpen={createModuleModalOpened}
-        call={async (data) =>
-          await postDeployContainerCustomStack(stackUuid, data)
-        }
+        call={async (e) => await postDeployContainerCustomStack(stackUuid, e)}
         displayName={'Deploy Custom Stack'}
       />
       <ModalForm

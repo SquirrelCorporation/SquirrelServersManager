@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Canvas Background -->
+  <rect width="800" height="400" fill="#1e1e1e" rx="10" ry="10" />
+  
+  <!-- Title -->
+  <text x="400" y="50" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif' font-size="24" font-weight="bold" text-anchor="middle" fill="#dfdfd6">SSM Roadmap Process</text>
+  
+  <!-- Backlog Box -->
+  <rect x="50" y="100" width="150" height="100" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="50" y="100" width="4" height="100" fill="#ff9800" rx="0" ry="0" />
+  <text x="125" y="140" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="16" font-weight="bold" text-anchor="middle" fill="#dfdfd6">Backlog</text>
+  <text x="125" y="165" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" font-weight="400" text-anchor="middle" fill="#98989f">Feature requests</text>
+  
+  <!-- Next Release Box -->
+  <rect x="250" y="100" width="150" height="100" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="250" y="100" width="4" height="100" fill="#4caf50" rx="0" ry="0" />
+  <text x="325" y="140" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="16" font-weight="bold" text-anchor="middle" fill="#dfdfd6">Next Release</text>
+  <text x="325" y="165" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" font-weight="400" text-anchor="middle" fill="#98989f">Planned work</text>
+  
+  <!-- In Progress Box -->
+  <rect x="450" y="100" width="150" height="100" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="450" y="100" width="4" height="100" fill="#3498db" rx="0" ry="0" />
+  <text x="525" y="140" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="16" font-weight="bold" text-anchor="middle" fill="#dfdfd6">In Progress</text>
+  <text x="525" y="165" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" font-weight="400" text-anchor="middle" fill="#98989f">In development</text>
+  
+  <!-- Done Box -->
+  <rect x="650" y="100" width="150" height="100" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="650" y="100" width="4" height="100" fill="#9b59b6" rx="0" ry="0" />
+  <text x="725" y="140" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="16" font-weight="bold" text-anchor="middle" fill="#dfdfd6">Done</text>
+  <text x="725" y="165" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" font-weight="400" text-anchor="middle" fill="#98989f">Released</text>
+  
+  <!-- Arrows -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666666" />
+    </marker>
+  </defs>
+  <path d="M200,150 L250,150" stroke="#666666" stroke-width="2" fill="none" marker-end="url(#arrowhead)" />
+  <path d="M400,150 L450,150" stroke="#666666" stroke-width="2" fill="none" marker-end="url(#arrowhead)" />
+  <path d="M600,150 L650,150" stroke="#666666" stroke-width="2" fill="none" marker-end="url(#arrowhead)" />
+  
+  <!-- Priority Classification Box -->
+  <rect x="100" y="250" width="600" height="100" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="100" y="250" width="4" height="100" fill="#1abc9c" rx="0" ry="0" />
+  <text x="400" y="280" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="16" font-weight="bold" text-anchor="middle" fill="#dfdfd6">Priority Classification</text>
+  
+  <!-- Priority P0 -->
+  <rect x="120" y="300" width="150" height="30" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="120" y="300" width="4" height="30" fill="#e74c3c" rx="0" ry="0" />
+  <text x="195" y="320" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" font-weight="bold" text-anchor="middle" fill="#dfdfd6">P0: Critical</text>
+  
+  <!-- Priority P1 -->
+  <rect x="290" y="300" width="150" height="30" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="290" y="300" width="4" height="30" fill="#ff9800" rx="0" ry="0" />
+  <text x="365" y="320" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" font-weight="bold" text-anchor="middle" fill="#dfdfd6">P1: Important</text>
+  
+  <!-- Priority P2 -->
+  <rect x="460" y="300" width="150" height="30" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="460" y="300" width="4" height="30" fill="#3498db" rx="0" ry="0" />
+  <text x="535" y="320" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" font-weight="bold" text-anchor="middle" fill="#dfdfd6">P2: Normal</text>
+  
+  <!-- Priority P3 -->
+  <rect x="630" y="300" width="50" height="30" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="630" y="300" width="4" height="30" fill="#95a5a6" rx="0" ry="0" />
+  <text x="655" y="320" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" font-weight="bold" text-anchor="middle" fill="#dfdfd6">P3</text>
+</svg>

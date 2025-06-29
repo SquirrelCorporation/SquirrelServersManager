@@ -1,13 +1,12 @@
 import CheckDeviceConnection from '@/components/DeviceConfiguration/CheckDeviceConnection';
 import { StreamlineComputerConnection } from '@/components/Icons/CustomIcons';
-import {
-  getCheckDeviceAnsibleConnection,
-  getCheckDeviceDockerConnection,
-  getCheckDeviceRemoteSystemInformationConnection,
-} from '@/services/rest/device';
+import { getCheckDeviceDockerConnection } from '@/services/rest/containers/containers-diagnostic';
+import { getCheckDeviceRemoteSystemInformationConnection } from '@/services/rest/remote-system-information/diagnostic';
+import { getCheckDeviceAnsibleConnection } from '@/services/rest/playbooks/diagnostic';
 import { Avatar, Button, Card, Col, Row } from 'antd';
 import React, { useState } from 'react';
 import { API, SsmAgent } from 'ssm-shared-lib';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 type ConnectionTestTabProps = {
   device: Partial<API.DeviceItem>;
@@ -83,6 +82,12 @@ const ExistingDeviceConnectionTest: React.FC<ConnectionTestTabProps> = ({
         header: { height: 55, minHeight: 55, paddingLeft: 15 },
         body: { paddingBottom: 0 },
       }}
+      extra={
+        <InfoLinkWidget
+          tooltipTitle="Help for connection tests."
+          documentationLink="https://squirrelserversmanager.io/docs/user-guides/devices/configuration/diagnostic"
+        />
+      }
     >
       {testStarted && (
         <CheckDeviceConnection

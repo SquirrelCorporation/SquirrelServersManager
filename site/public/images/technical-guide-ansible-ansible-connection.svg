@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Canvas Background -->
+  <rect width="100%" height="100%" fill="#1e1e1e"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="24" fill="#dfdfd6" text-anchor="middle" font-weight="bold">SSM Ansible Connection Flow</text>
+  
+  <!-- SSM Server Container Node -->
+  <rect x="50" y="70" width="300" height="380" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="50" y="70" width="4" height="380" fill="#3498db" />
+  <text x="200" y="100" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="16" fill="#dfdfd6" text-anchor="middle" font-weight="bold">SSM Server</text>
+  
+  <!-- Target Device Container Node -->
+  <rect x="450" y="70" width="300" height="380" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="450" y="70" width="4" height="380" fill="#4caf50" />
+  <text x="600" y="100" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="16" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Target Device</text>
+  
+  <!-- SSM Components -->
+  <rect x="80" y="130" width="240" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="80" y="130" width="4" height="60" fill="#ff9800" />
+  <text x="200" y="165" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">NestJS Service Layer</text>
+  <text x="200" y="183" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">(AnsibleCommandService)</text>
+  
+  <rect x="80" y="210" width="240" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="80" y="210" width="4" height="60" fill="#9b59b6" />
+  <text x="200" y="245" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Inventory Transformation</text>
+  <text x="200" y="263" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">(InventoryTransformerService)</text>
+  
+  <rect x="80" y="290" width="240" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="80" y="290" width="4" height="60" fill="#1abc9c" />
+  <text x="200" y="325" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Ansible Runner</text>
+  <text x="200" y="343" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">(ssm-ansible-run.py)</text>
+  
+  <rect x="80" y="370" width="240" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="80" y="370" width="4" height="60" fill="#ff9800" />
+  <text x="200" y="405" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">SSH Connection</text>
+  <text x="200" y="423" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">(paramiko/ssh)</text>
+  
+  <!-- Target Components -->
+  <rect x="480" y="130" width="240" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="480" y="130" width="4" height="60" fill="#ff9800" />
+  <text x="600" y="165" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">SSH Server</text>
+  <text x="600" y="183" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">(sshd)</text>
+  
+  <rect x="480" y="210" width="240" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="480" y="210" width="4" height="60" fill="#9b59b6" />
+  <text x="600" y="245" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Authentication</text>
+  <text x="600" y="263" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">(password/key/passwordless)</text>
+  
+  <rect x="480" y="290" width="240" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="480" y="290" width="4" height="60" fill="#1abc9c" />
+  <text x="600" y="325" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Privilege Escalation</text>
+  <text x="600" y="343" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">(sudo/su/etc)</text>
+  
+  <rect x="480" y="370" width="240" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="480" y="370" width="4" height="60" fill="#ff9800" />
+  <text x="600" y="405" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Command Execution</text>
+  <text x="600" y="423" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">(ansible modules/playbooks)</text>
+  
+  <!-- Arrows -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666666"/>
+    </marker>
+  </defs>
+  
+  <!-- Flow arrows -->
+  <line x1="320" y1="160" x2="480" y2="160" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="320" y1="240" x2="480" y2="240" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="320" y1="320" x2="480" y2="320" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="320" y1="400" x2="480" y2="400" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Internal flow arrows -->
+  <line x1="200" y1="190" x2="200" y2="210" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="200" y1="270" x2="200" y2="290" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="200" y1="350" x2="200" y2="370" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <line x1="600" y1="190" x2="600" y2="210" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="600" y1="270" x2="600" y2="290" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="600" y1="350" x2="600" y2="370" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Flow descriptions -->
+  <text x="400" y="150" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="10" text-anchor="middle" font-style="italic" fill="#98989f">1. Command Request</text>
+  <text x="400" y="230" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="10" text-anchor="middle" font-style="italic" fill="#98989f">2. Inventory Data</text>
+  <text x="400" y="310" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="10" text-anchor="middle" font-style="italic" fill="#98989f">3. Authentication</text>
+  <text x="400" y="390" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="10" text-anchor="middle" font-style="italic" fill="#98989f">4. Command Execution</text>
+  
+  <!-- Legend Node -->
+  <rect x="300" y="460" width="200" height="30" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="300" y="460" width="4" height="30" fill="#3498db" />
+  <text x="400" y="480" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#dfdfd6" text-anchor="middle">Secure SSH Connection Flow</text>
+</svg>

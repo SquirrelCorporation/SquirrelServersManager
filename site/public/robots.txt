@@ -1,0 +1,8 @@
+# Robots.txt for Squirrel Servers Manager
+# https://squirrelserversmanager.io
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://squirrelserversmanager.io/sitemap.xml

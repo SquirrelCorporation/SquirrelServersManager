@@ -1,18 +1,19 @@
 import {
+  CloudOutlined,
+  ContainerOutlined,
+  DatabaseOutlined,
+  GlobalOutlined,
+  LockOutlined,
   PlayCircleOutlined,
   SettingOutlined,
-  ToolOutlined,
   SyncOutlined,
-  LockOutlined,
-  CloudOutlined,
-  DatabaseOutlined,
-  WarningOutlined,
-  GlobalOutlined,
+  ToolOutlined,
   UserOutlined,
-  ContainerOutlined,
+  WarningOutlined,
 } from '@ant-design/icons';
-import { Modal, Tabs, TabsProps, Button, List, Avatar } from 'antd';
+import { Avatar, Button, List, Modal, Tabs, TabsProps } from 'antd';
 import React, { useImperativeHandle, useState } from 'react';
+import { API } from 'ssm-shared-lib';
 
 export interface DeviceManagementModalHandles {
   open: () => void;
@@ -20,6 +21,7 @@ export interface DeviceManagementModalHandles {
 
 type DeviceManagementModalProps = {
   onRunPlaybook: (playbook: string) => void;
+  device: API.DeviceItem;
 };
 
 const DeviceManagementModal = React.forwardRef<

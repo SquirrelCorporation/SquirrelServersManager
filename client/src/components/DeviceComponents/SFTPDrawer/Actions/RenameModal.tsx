@@ -1,6 +1,6 @@
-import { socket } from '@/socket';
+import { sftpSocket as socket } from '@/socket';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
-import { message } from 'antd';
+import message from '@/components/Message/DynamicMessage';
 import React, { useImperativeHandle, useState } from 'react';
 import { SsmEvents } from 'ssm-shared-lib';
 import { SFTPDataNode } from '../SFTPDrawer';
@@ -25,18 +25,23 @@ const RenameModal = React.forwardRef<RenameModalHandles, RenameModalProps>(
     const rename = async (newName: string): Promise<boolean> => {
       try {
         socket.connect(); // Ensure the socket is connected
+
+        // Construct new path using parent path
+        const { parentPath } = splitPath(node?.key);
+        const newPath = `${parentPath}/${newName}`.replace('//', '/');
+
         const response = await socket
           .timeout(5000)
           .emitWithAck(SsmEvents.SFTP.RENAME, {
-            path: node?.key,
-            newName,
+            oldPath: node?.key,
+            newPath: newPath,
           }); // Wait for the response
-        if (response.status === 'OK') {
+        if (response.success) {
           message.success('Renamed successfully!');
           return true; // Indicate success
         } else {
           throw new Error(
-            `Failed to rename: ${response.error || 'Unknown error'}`,
+            `Failed to rename: ${response.message || 'Unknown error'}`,
           );
         }
       } catch (error: any) {
@@ -83,7 +88,7 @@ const RenameModal = React.forwardRef<RenameModalHandles, RenameModalProps>(
         onFinish={async (values) => {
           const success = await rename(values.newName); // Wait for createDir execution
           if (success) {
-            onSuccess(node?.key?.replace('//', '/') as string, values.newName);
+            onSuccess(node?.key as string, values.newName);
             onClose(); // Close the modal on success
           }
         }}
@@ -91,7 +96,7 @@ const RenameModal = React.forwardRef<RenameModalHandles, RenameModalProps>(
         <ProFormText
           name="newName"
           label="New name"
-          fieldProps={{ prefix: `${parentPath}/`?.replace('//', '/') }}
+          fieldProps={{ prefix: `${parentPath}/`.replace('//', '/') }}
           initialValue={baseName}
         />
       </ModalForm>

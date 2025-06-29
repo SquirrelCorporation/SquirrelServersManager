@@ -6,7 +6,11 @@ const SwitchConnexionMethod = () => {
 
   return (
     <Alert
-      style={{ marginTop: 15 }}
+      style={{
+        marginTop: 15,
+        backgroundColor: '#292929',
+        border: '1px solid #333',
+      }}
       message={'Encountering problems?'}
       description={
         showDetails ? (
@@ -19,9 +23,7 @@ const SwitchConnexionMethod = () => {
               SSH &rarr; Show advanced &rarr; Connection Method &rarr; *SSH*
             </Typography.Text>
             <Typography.Link
-              href={
-                'https://squirrelserversmanager.io/docs/technical-guide/troubleshoot'
-              }
+              href={'https://squirrelserversmanager.io/docs/troubleshoot/'}
               target={'_blank'}
             >
               [More details]

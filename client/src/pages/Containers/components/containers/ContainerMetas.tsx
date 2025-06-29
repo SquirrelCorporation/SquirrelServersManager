@@ -10,8 +10,8 @@ import ContainerStatProgress from '@/pages/Containers/components/containers/Cont
 import InfoToolTipCard from '@/pages/Containers/components/containers/InfoToolTipCard';
 import StatusTag from '@/pages/Containers/components/containers/StatusTag';
 import UpdateAvailableTag from '@/pages/Containers/components/containers/UpdateAvailableTag';
-import { postDockerContainerAction } from '@/services/rest/containers';
-import { getAllDevices } from '@/services/rest/device';
+import { postDockerContainerAction } from '@/services/rest/containers/containers';
+import { getAllDevices } from '@/services/rest/devices/devices';
 import { capitalizeFirstLetter } from '@/utils/strings';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import {
@@ -21,7 +21,8 @@ import {
   RequestOptionsType,
 } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
-import { Flex, message, Popover, Tag, Tooltip, Typography } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Flex, Popover, Tag, Tooltip, Typography } from 'antd';
 import React from 'react';
 import { API, SsmContainer } from 'ssm-shared-lib';
 
@@ -35,7 +36,18 @@ type ContainerMetasProps = {
   >;
   reload: () => void;
 };
-const ContainerMetas = (props: ContainerMetasProps) => {
+
+const tagStyle: React.CSSProperties = {
+  color: '#FFFFFF',
+  fontWeight: 500,
+};
+
+const ContainerMetas = ({
+  selectedRecord,
+  setSelectedRecord,
+  setIsEditContainerCustomNameModalOpened,
+  reload,
+}: ContainerMetasProps) => {
   const handleQuickAction = async (idx: number) => {
     if (
       ServiceQuickActionReference[idx].type ===
@@ -45,14 +57,14 @@ const ContainerMetas = (props: ContainerMetasProps) => {
         ServiceQuickActionReference[idx].action ===
         ServiceQuickActionReferenceActions.RENAME
       ) {
-        props.setIsEditContainerCustomNameModalOpened(true);
+        setIsEditContainerCustomNameModalOpened(true);
       }
       if (
         ServiceQuickActionReference[idx].action ===
         ServiceQuickActionReferenceActions.LIVE_LOGS
       ) {
         history.push({
-          pathname: `/manage/containers/logs/${props.selectedRecord?.id}`,
+          pathname: `/manage/containers/logs/${selectedRecord?.id}`,
         });
       }
       if (
@@ -65,14 +77,14 @@ const ContainerMetas = (props: ContainerMetasProps) => {
           duration: 6,
         });
         await postDockerContainerAction(
-          props.selectedRecord?.id as string,
+          selectedRecord?.id as string,
           ServiceQuickActionReference[idx].action as SsmContainer.Actions,
         ).then(() => {
           message.success({
             content: `Container: ${ServiceQuickActionReference[idx].action}`,
             duration: 6,
           });
-          return props.reload();
+          return reload();
         });
       }
     }
@@ -169,36 +181,26 @@ const ContainerMetas = (props: ContainerMetasProps) => {
       search: false,
       render: (_, row) => {
         return (
-          <div
-            style={{
-              flex: 1,
-            }}
-          >
-            <div
-              style={{
-                width: 300,
-              }}
-            >
-              <>
-                <Popover content={capitalizeFirstLetter(row.displayType)}>
-                  <ContainerTypeIcon displayType={row.displayType} />
-                </Popover>
-                <Popover
-                  content={
-                    <>{row.device?.fqdn} (click to filter on this device)</>
-                  }
-                >
-                  <a href={`?deviceUuid=${row.device?.uuid}`}>
-                    <Tag color="black">{row.device?.ip}</Tag>
-                  </a>
-                </Popover>
-                {row.displayType === SsmContainer.ContainerTypes.DOCKER && (
-                  <Flex gap="middle">
-                    <ContainerStatProgress containerId={row.id} />
-                  </Flex>
-                )}
-              </>
-            </div>
+          <div style={{ flex: 1 }}>
+            <>
+              <Popover content={capitalizeFirstLetter(row.displayType)}>
+                <ContainerTypeIcon displayType={row.displayType} />
+              </Popover>
+              <Popover
+                content={
+                  <>{row.device?.fqdn} (click to filter on this device)</>
+                }
+              >
+                <a href={`?deviceUuid=${row.device?.uuid}`}>
+                  <Tag color="black" style={tagStyle}>
+                    {row.device?.ip}
+                  </Tag>
+                </a>
+              </Popover>
+              {row.displayType === SsmContainer.ContainerTypes.DOCKER && (
+                <ContainerStatProgress containerId={row.id} />
+              )}
+            </>
           </div>
         );
       },
@@ -229,19 +231,18 @@ const ContainerMetas = (props: ContainerMetasProps) => {
               </>
             ),
             (
-              <Tooltip
+              <Popover
                 key={`info-${row.id}`}
-                color={'transparent'}
-                title={<InfoToolTipCard item={row} />}
+                content={<InfoToolTipCard item={row} />}
               >
                 <InfoCircleOutlined style={{ color: 'rgb(22, 104, 220)' }} />
-              </Tooltip>
+              </Popover>
             ))
           : [],
         <a
           key={`quickAction-${row.id}`}
           onClick={() => {
-            props.setSelectedRecord(row);
+            setSelectedRecord(row);
           }}
         >
           <ContainerQuickActionDropDown

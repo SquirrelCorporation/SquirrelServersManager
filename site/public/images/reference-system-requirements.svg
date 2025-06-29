@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="650" viewBox="0 0 900 650" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient Definitions -->
+  <defs>
+    <linearGradient id="hostGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3498db" />
+      <stop offset="100%" stop-color="#2980b9" />
+    </linearGradient>
+    <linearGradient id="deviceGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2ecc71" />
+      <stop offset="100%" stop-color="#27ae60" />
+    </linearGradient>
+    <linearGradient id="networkGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#e74c3c" />
+      <stop offset="100%" stop-color="#c0392b" />
+    </linearGradient>
+    <linearGradient id="browserGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#9b59b6" />
+      <stop offset="100%" stop-color="#8e44ad" />
+    </linearGradient>
+    <linearGradient id="optionalGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f1c40f" />
+      <stop offset="100%" stop-color="#f39c12" />
+    </linearGradient>
+    <filter id="shadowFilter" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="650" fill="#f9f9f9" rx="10" ry="10" />
+  
+  <!-- Title -->
+  <text x="450" y="50" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#333">SSM System Requirements</text>
+  
+  <!-- Host System Requirements -->
+  <rect x="100" y="100" width="300" height="220" rx="10" ry="10" fill="url(#hostGradient)" filter="url(#shadowFilter)" />
+  <text x="250" y="130" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#fff">Host System Requirements</text>
+  
+  <rect x="120" y="150" width="260" height="150" rx="5" ry="5" fill="#fff" />
+  <text x="140" y="180" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" font-weight="bold" fill="#333">• Docker 20.10+ or Docker Engine</text>
+  <text x="140" y="210" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" font-weight="bold" fill="#333">• Docker Compose V2</text>
+  <text x="140" y="240" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="#333">• 2GB RAM minimum</text>
+  <text x="140" y="270" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="#333">• 10GB free disk space</text>
+  <text x="140" y="300" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="#333">• CPU with AVX support (MongoDB)*</text>
+  
+  <!-- Target Device Requirements -->
+  <rect x="500" y="100" width="300" height="220" rx="10" ry="10" fill="url(#deviceGradient)" filter="url(#shadowFilter)" />
+  <text x="650" y="130" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#fff">Target Device Requirements</text>
+  
+  <rect x="520" y="150" width="260" height="150" rx="5" ry="5" fill="#fff" />
+  <text x="540" y="180" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" font-weight="bold" fill="#333">• SSH access (password or key-based)</text>
+  <text x="540" y="210" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="#333">• Sudo/root privileges</text>
+  <text x="540" y="240" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="#333">• Python 3.8+ (for Ansible features)</text>
+  <text x="540" y="270" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="#333">• Docker (for container management)</text>
+  <text x="540" y="300" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="#333">• Proxmox API access (for Proxmox hosts)</text>
+  
+  <!-- Network Requirements -->
+  <rect x="100" y="350" width="300" height="200" rx="10" ry="10" fill="url(#networkGradient)" filter="url(#shadowFilter)" />
+  <text x="250" y="380" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#fff">Network Requirements</text>
+  
+  <rect x="120" y="400" width="260" height="130" rx="5" ry="5" fill="#fff" />
+  <text x="140" y="430" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" font-weight="bold" fill="#333">• Port 8000 open for web interface</text>
+  <text x="140" y="460" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="#333">• SSH connectivity to managed devices</text>
+  <text x="140" y="490" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="#333">• Internet access for updates (optional)</text>
+  <text x="140" y="520" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="#333">• Access to container registries</text>
+  
+  <!-- Browser Requirements -->
+  <rect x="500" y="350" width="300" height="200" rx="10" ry="10" fill="url(#browserGradient)" filter="url(#shadowFilter)" />
+  <text x="650" y="380" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#fff">Browser Requirements</text>
+  
+  <rect x="520" y="400" width="260" height="130" rx="5" ry="5" fill="#fff" />
+  <text x="540" y="430" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" font-weight="bold" fill="#333">• Chrome 90+</text>
+  <text x="540" y="460" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" font-weight="bold" fill="#333">• Firefox 90+</text>
+  <text x="540" y="490" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="#333">• Safari 15+</text>
+  <text x="540" y="520" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="#333">• Edge 90+</text>
+  
+  <!-- Optional Components -->
+  <rect x="100" y="580" width="700" height="50" rx="10" ry="10" fill="url(#optionalGradient)" filter="url(#shadowFilter)" />
+  <text x="450" y="610" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">* MongoDB AVX requirement can be disabled - See troubleshooting guide for details</text>
+</svg>

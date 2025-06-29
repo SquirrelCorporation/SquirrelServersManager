@@ -1,6 +1,6 @@
-import { updateContainerCustomName } from '@/services/rest/containers';
+import { updateContainerCustomName } from '@/services/rest/containers/containers';
 import { ActionType, ModalForm, ProFormText } from '@ant-design/pro-components';
-import { message } from 'antd';
+import message from '@/components/Message/DynamicMessage';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -13,31 +13,31 @@ type EditContainerNameModalProps = {
   actionRef: React.MutableRefObject<ActionType | undefined>;
 };
 
-const EditContainerNameModal: React.FC<EditContainerNameModalProps> = (
-  props,
-) => {
+const EditContainerNameModal: React.FC<EditContainerNameModalProps> = ({
+  isEditContainerCustomNameModalOpened,
+  setIsEditContainerCustomNameModalOpened,
+  selectedRecord,
+  actionRef,
+}) => {
   return (
     <ModalForm<{ customName: string }>
       title={`Edit container name`}
-      open={props.isEditContainerCustomNameModalOpened}
+      open={isEditContainerCustomNameModalOpened}
       autoFocusFirstInput
       clearOnDestroy
       modalProps={{
         destroyOnClose: true,
-        onCancel: () => props.setIsEditContainerCustomNameModalOpened(false),
+        onCancel: () => setIsEditContainerCustomNameModalOpened(false),
       }}
       onFinish={async (values) => {
-        if (!props.selectedRecord) {
+        if (!selectedRecord) {
           message.error({ content: 'Internal error, no selected record' });
           return;
         }
-        if (props.selectedRecord?.id) {
-          await updateContainerCustomName(
-            values.customName,
-            props.selectedRecord.id,
-          );
-          props.actionRef?.current?.reload();
-          props.setIsEditContainerCustomNameModalOpened(false);
+        if (selectedRecord?.id) {
+          await updateContainerCustomName(values.customName, selectedRecord.id);
+          actionRef?.current?.reload();
+          setIsEditContainerCustomNameModalOpened(false);
           message.success({ content: 'Container properties updated' });
         }
         return true;
@@ -46,9 +46,7 @@ const EditContainerNameModal: React.FC<EditContainerNameModalProps> = (
       <ProFormText
         name={'customName'}
         label={'Name'}
-        initialValue={
-          props.selectedRecord?.customName || props.selectedRecord?.name
-        }
+        initialValue={selectedRecord?.customName || selectedRecord?.name}
       />
     </ModalForm>
   );

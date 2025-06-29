@@ -1,12 +1,12 @@
-import React, { Key, useState, useEffect } from 'react';
-import { AppstoreOutlined } from '@ant-design/icons';
-import { Button, Card, Tree, Typography } from 'antd';
-import { motion } from 'framer-motion';
-import GalaxyStoreModal from '@/pages/Playbooks/components/GalaxyStoreModal';
 import CreateFileInRepositoryModalForm from '@/pages/Playbooks/components/CreateFileInRepositoryModalForm';
+import GalaxyStoreModal from '@/pages/Playbooks/components/GalaxyStoreModal';
 import NewFileDrawerForm from '@/pages/Playbooks/components/NewFileDrawerForm';
 import PlaybookDropdownMenu from '@/pages/Playbooks/components/PlaybookDropdownMenu';
 import { ClientPlaybooksTrees } from '@/pages/Playbooks/components/TreeComponent';
+import { AppstoreOutlined } from '@ant-design/icons';
+import { Button, Card, Tree, Typography } from 'antd';
+import { motion } from 'framer-motion';
+import React, { Key, useEffect, useState } from 'react';
 import { API, DirectoryTree as SSMDirectoryTree } from 'ssm-shared-lib';
 
 const { DirectoryTree } = Tree;
@@ -58,18 +58,17 @@ type DirectoryTreeViewProps = {
   callbacks: Callbacks;
 };
 
-const DirectoryTreeView: React.FC<DirectoryTreeViewProps> = (props) => {
+const DirectoryTreeView: React.FC<DirectoryTreeViewProps> = ({
+  onSelect,
+  selectedFile,
+  newRepositoryFileModal,
+  createNewFile,
+  playbookRepositories,
+  setNewRepositoryFileModal,
+  callbacks,
+}) => {
   const [storeModal, setStoreModal] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-
-  const {
-    onSelect,
-    selectedFile,
-    newRepositoryFileModal,
-    createNewFile,
-    playbookRepositories,
-    setNewRepositoryFileModal,
-  } = props;
 
   // Define animation variants
   const variants = {
@@ -122,7 +121,7 @@ const DirectoryTreeView: React.FC<DirectoryTreeViewProps> = (props) => {
                     name: node.playbookRepository.name,
                     basePath: node.playbookRepository.basePath,
                   }}
-                  callbacks={props.callbacks}
+                  callbacks={callbacks}
                   remoteRootNode={node.remoteRootNode}
                   cannotDelete={!node.custom || node.rootNode}
                 >
@@ -144,7 +143,7 @@ const DirectoryTreeView: React.FC<DirectoryTreeViewProps> = (props) => {
                     name: node.playbookRepository.name,
                     basePath: node.playbookRepository.basePath,
                   }}
-                  callbacks={props.callbacks}
+                  callbacks={callbacks}
                   cannotDelete={!node.custom}
                 >
                   <Typography.Text

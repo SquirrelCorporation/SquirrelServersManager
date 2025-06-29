@@ -45,7 +45,7 @@ const PageContainerTitleRow: React.FC<PageContainerTitleProps> = ({
 }) => (
   <Row>
     <Col>
-      <Avatar style={avatarStyle(backgroundColor)} shape="square" icon={icon} />
+      <Avatar style={avatarStyle(backgroundColor)} shape="circle" icon={icon} />
     </Col>
     <Col style={colStyle}>
       {isMain ? (

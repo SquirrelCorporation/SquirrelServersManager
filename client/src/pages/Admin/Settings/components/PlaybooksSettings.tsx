@@ -8,12 +8,12 @@ import Title, { TitleColors } from '@/components/Template/Title';
 import CustomVaultModal from '@/pages/Admin/Settings/components/subcomponents/CustomVaultModal';
 import PlaybooksGitRepositoryModal from '@/pages/Admin/Settings/components/subcomponents/PlaybooksGitRepositoryModal';
 import PlaybooksLocalRepositoryModal from '@/pages/Admin/Settings/components/subcomponents/PlaybooksLocalRepositoryModal';
-import { getAnsibleVaults } from '@/services/rest/ansible';
+import { getAnsibleVaults } from '@/services/rest/ansible-vaults/ansible-vault';
 import {
   getGitPlaybooksRepositories,
   getPlaybooksLocalRepositories,
-} from '@/services/rest/playbooks-repositories';
-import { postUserLogs } from '@/services/rest/usersettings';
+} from '@/services/rest/playbooks/repositories';
+import { postUserLogs } from '@/services/rest/users/users';
 import { useModel } from '@@/exports';
 import {
   InfoCircleFilled,
@@ -29,7 +29,6 @@ import {
   Col,
   Flex,
   InputNumber,
-  message,
   Popover,
   Row,
   Slider,
@@ -41,6 +40,8 @@ import {
 import { AddCircleOutline } from 'antd-mobile-icons';
 import React, { useEffect, useState } from 'react';
 import { API } from 'ssm-shared-lib';
+import message from '@/components/Message/DynamicMessage';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 const PlaybookSettings: React.FC = () => {
   const { initialState } = useModel('@@initialState');
@@ -203,9 +204,10 @@ const PlaybookSettings: React.FC = () => {
             >
               Add a new local repository
             </Button>
-            <Tooltip title={'Add a local repository'}>
-              <InfoCircleFilled />
-            </Tooltip>
+            <InfoLinkWidget
+              tooltipTitle="Help for local playbook repositories."
+              documentationLink="https://squirrelserversmanager.io/docs/user-guides/repositories/local-playbooks"
+            />
           </Space>
         }
       >
@@ -290,11 +292,10 @@ const PlaybookSettings: React.FC = () => {
             >
               Add a new remote repository
             </Button>
-            <Tooltip
-              title={'Add & update your Git repositories for synchronization'}
-            >
-              <InfoCircleFilled />
-            </Tooltip>
+            <InfoLinkWidget
+              tooltipTitle="Help for remote playbook repositories."
+              documentationLink="https://squirrelserversmanager.io/docs/user-guides/repositories/remote-playbooks"
+            />
           </Space>
         }
       >

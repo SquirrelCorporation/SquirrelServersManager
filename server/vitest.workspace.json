@@ -1,3 +1,13 @@
 [
-  "src/tests/*"
+  {
+    "extends": "./vitest.config.ts",
+    "name": "integration",
+    "include": "src/__tests__/*"
+  },
+  {
+    "extends": "./vitest.config.ts",
+    "name": "modules",
+    "include": "src/modules/*",
+    "exclude": ["**/*.md"]
+  }
 ]

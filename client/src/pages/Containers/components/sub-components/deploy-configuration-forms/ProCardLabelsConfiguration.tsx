@@ -9,9 +9,13 @@ import { Space } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
-const ProCardLabelsConfiguration: React.FC<{ template: API.Template }> = (
-  props,
-) => {
+type ProCardLabelsConfigurationProps = {
+  template: API.Template;
+};
+
+const ProCardLabelsConfiguration: React.FC<ProCardLabelsConfigurationProps> = ({
+  template,
+}) => {
   return (
     <ProCard
       title={
@@ -31,7 +35,7 @@ const ProCardLabelsConfiguration: React.FC<{ template: API.Template }> = (
             creatorButtonText: 'Add a new label',
           }}
           copyIconProps={false}
-          initialValue={props.template?.labels?.map((e) => {
+          initialValue={template?.labels?.map((e) => {
             return {
               name: e.name,
               value: e.value,

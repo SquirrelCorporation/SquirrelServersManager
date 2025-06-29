@@ -1,6 +1,6 @@
 // @ts-ignore
-import loginBackground from '@/pages/User/Login/assets/login-background.mp4';
-import { hasUser, user } from '@/services/rest/user';
+import loginBackground from '@/pages/User/Login/assets/background.png';
+import { hasUser, user } from '@/services/rest/users/users';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import {
   LoginFormPage,
@@ -9,7 +9,8 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { history, useModel } from '@umijs/max';
-import { Divider, message } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Divider } from 'antd';
 import React from 'react';
 import { flushSync } from 'react-dom';
 import { API } from 'ssm-shared-lib';
@@ -42,7 +43,7 @@ const Login: React.FC = () => {
       const res = await user({ ...values });
       if (res.success) {
         const defaultLoginSuccessMessage = 'Success！';
-        message.success(defaultLoginSuccessMessage);
+        message.success({ content: defaultLoginSuccessMessage, duration: 6 });
         await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
@@ -50,7 +51,7 @@ const Login: React.FC = () => {
       }
     } catch (error) {
       const defaultLoginFailureMessage = 'Login failed！';
-      message.error(defaultLoginFailureMessage);
+      message.error({ content: defaultLoginFailureMessage, duration: 6 });
     }
   };
 
@@ -63,8 +64,7 @@ const Login: React.FC = () => {
         }}
       >
         <LoginFormPage
-          backgroundImageUrl="https://mdn.alipayobjects.com/huamei_gcee1x/afts/img/A*y0ZTS6WLwvgAAAAAAAAAAAAADml6AQ/fmt.webp"
-          backgroundVideoUrl={loginBackground}
+          backgroundImageUrl={loginBackground}
           logo={<img alt="logo" src="/logo.svg" />}
           containerStyle={{
             backgroundColor: 'rgba(0, 0, 0,0.65)',

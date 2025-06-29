@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="500" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="headerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3498db;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2980b9;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="majorGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#e74c3c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c0392b;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="minorGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f39c12;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e67e22;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="patchGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2ecc71;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#27ae60;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="40" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="24" text-anchor="middle" font-weight="bold">SSM Version Compatibility Matrix</text>
+  
+  <!-- Table header -->
+  <rect x="100" y="70" width="600" height="50" rx="5" ry="5" fill="url(#headerGradient)" filter="url(#shadow)"/>
+  <text x="170" y="100" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" fill="white" text-anchor="middle">Version Type</text>
+  <text x="350" y="100" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" fill="white" text-anchor="middle">Changes</text>
+  <text x="550" y="100" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" fill="white" text-anchor="middle">Upgrade Strategy</text>
+  <text x="675" y="100" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" fill="white" text-anchor="middle">Risk</text>
+  
+  <!-- Major Version Row (e.g., 1.x.x → 2.x.x) -->
+  <rect x="100" y="120" width="140" height="100" rx="5" ry="5" fill="url(#majorGradient)" filter="url(#shadow)"/>
+  <rect x="240" y="120" width="220" height="100" rx="0" ry="0" fill="#ecf0f1" filter="url(#shadow)"/>
+  <rect x="460" y="120" width="180" height="100" rx="0" ry="0" fill="#ecf0f1" filter="url(#shadow)"/>
+  <rect x="640" y="120" width="60" height="100" rx="5" ry="5" fill="#e74c3c" filter="url(#shadow)"/>
+  
+  <text x="170" y="150" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" fill="white" text-anchor="middle" font-weight="bold">Major Version</text>
+  <text x="170" y="170" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="white" text-anchor="middle">1.x.x → 2.x.x</text>
+  
+  <text x="350" y="140" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Breaking API changes</text>
+  <text x="350" y="160" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Database schema changes</text>
+  <text x="350" y="180" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Feature additions/removals</text>
+  <text x="350" y="200" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• UI paradigm shifts</text>
+  
+  <text x="550" y="140" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Backup all data first</text>
+  <text x="550" y="160" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Check release notes</text>
+  <text x="550" y="180" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Consider testing in staging</text>
+  <text x="550" y="200" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Follow migration guide</text>
+  
+  <text x="670" y="170" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="white" text-anchor="middle">High</text>
+  
+  <!-- Minor Version Row (e.g., 1.1.x → 1.2.x) -->
+  <rect x="100" y="220" width="140" height="100" rx="5" ry="5" fill="url(#minorGradient)" filter="url(#shadow)"/>
+  <rect x="240" y="220" width="220" height="100" rx="0" ry="0" fill="#ecf0f1" filter="url(#shadow)"/>
+  <rect x="460" y="220" width="180" height="100" rx="0" ry="0" fill="#ecf0f1" filter="url(#shadow)"/>
+  <rect x="640" y="220" width="60" height="100" rx="5" ry="5" fill="#f39c12" filter="url(#shadow)"/>
+  
+  <text x="170" y="250" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" fill="white" text-anchor="middle" font-weight="bold">Minor Version</text>
+  <text x="170" y="270" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="white" text-anchor="middle">1.1.x → 1.2.x</text>
+  
+  <text x="350" y="240" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• New features</text>
+  <text x="350" y="260" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Non-breaking API additions</text>
+  <text x="350" y="280" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Minor UI enhancements</text>
+  <text x="350" y="300" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Performance improvements</text>
+  
+  <text x="550" y="240" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Backup data recommended</text>
+  <text x="550" y="260" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Follow standard update</text>
+  <text x="550" y="280" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Check release notes</text>
+  <text x="550" y="300" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Test new features</text>
+  
+  <text x="670" y="270" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="white" text-anchor="middle">Medium</text>
+  
+  <!-- Patch Version Row (e.g., 1.1.1 → 1.1.2) -->
+  <rect x="100" y="320" width="140" height="100" rx="5" ry="5" fill="url(#patchGradient)" filter="url(#shadow)"/>
+  <rect x="240" y="320" width="220" height="100" rx="0" ry="0" fill="#ecf0f1" filter="url(#shadow)"/>
+  <rect x="460" y="320" width="180" height="100" rx="0" ry="0" fill="#ecf0f1" filter="url(#shadow)"/>
+  <rect x="640" y="320" width="60" height="100" rx="5" ry="5" fill="#2ecc71" filter="url(#shadow)"/>
+  
+  <text x="170" y="350" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" fill="white" text-anchor="middle" font-weight="bold">Patch Version</text>
+  <text x="170" y="370" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="white" text-anchor="middle">1.1.1 → 1.1.2</text>
+  
+  <text x="350" y="340" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Bug fixes</text>
+  <text x="350" y="360" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Security updates</text>
+  <text x="350" y="380" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Minor enhancements</text>
+  <text x="350" y="400" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• No breaking changes</text>
+  
+  <text x="550" y="340" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Follow standard update</text>
+  <text x="550" y="360" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• No special considerations</text>
+  <text x="550" y="380" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Apply ASAP if security</text>
+  <text x="550" y="400" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">• Minimal downtime</text>
+  
+  <text x="670" y="370" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" fill="white" text-anchor="middle">Low</text>
+  
+  <!-- Legend -->
+  <text x="400" y="450" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="16" text-anchor="middle" font-weight="bold">Best Practices</text>
+  <text x="400" y="475" font-family="Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif" font-size="14" text-anchor="middle">Always check the CHANGELOG.md before any update and backup your data</text>
+</svg>

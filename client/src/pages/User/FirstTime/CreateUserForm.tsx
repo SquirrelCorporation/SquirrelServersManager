@@ -1,8 +1,8 @@
-import { createUser } from '@/services/rest/user';
+import { createUser } from '@/services/rest/users/users';
 import { ProFormDependency, ProFormText } from '@ant-design/pro-components';
 import { ProForm } from '@ant-design/pro-form/lib';
 import { history } from '@umijs/max';
-import { message } from 'antd';
+import message from '@/components/Message/DynamicMessage';
 import React from 'react';
 
 const loginPath = '/user/login';
