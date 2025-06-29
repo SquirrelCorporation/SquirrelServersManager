@@ -8,6 +8,9 @@ export interface WidgetSettings {
   backgroundColor?: string;
   title?: string;
   customText?: string;
+  dateRangePreset?: string;
+  customDateRange?: any;
+  aggregationType?: string;
   customSettings?: Record<string, any>;
 }
 

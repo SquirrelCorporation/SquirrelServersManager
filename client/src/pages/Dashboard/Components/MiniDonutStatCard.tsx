@@ -19,43 +19,68 @@ const MiniDonutStatCard: React.FC<MiniDonutStatCardProps> = ({
   return (
     <Card
       style={{
-        backgroundColor: '#222225',
+        backgroundColor: '#4a8b6f',
         borderRadius: '16px',
         color: 'white',
+        minWidth: '280px',
+        border: 'none',
+        position: 'relative',
+        overflow: 'hidden',
         ...cardStyle,
       }}
-      bodyStyle={{ padding: '16px' }}
+      bodyStyle={{ padding: '24px 28px' }}
     >
-      <Space direction="horizontal" align="center" size={12}>
+      {/* Background decorative circles */}
+      <div style={{
+        position: 'absolute',
+        right: -30,
+        top: -30,
+        width: 120,
+        height: 120,
+        borderRadius: '50%',
+        background: 'rgba(255, 255, 255, 0.08)',
+      }} />
+      <div style={{
+        position: 'absolute',
+        right: 40,
+        bottom: -40,
+        width: 100,
+        height: 100,
+        borderRadius: '50%',
+        background: 'rgba(255, 255, 255, 0.05)',
+      }} />
+      
+      <Space direction="horizontal" align="center" size={20} style={{ position: 'relative' }}>
         <Progress
           type="circle"
           percent={percentage}
-          width={70}
-          strokeWidth={8}
+          width={90}
+          strokeWidth={10}
           format={() => (
             <Typography.Text
-              style={{ color: '#f0f0f0', fontSize: '16px', fontWeight: '600' }}
+              style={{ color: '#ffffff', fontSize: '20px', fontWeight: '600' }}
             >
-              {percentage}%
+              {Math.round(percentage)}%
             </Typography.Text>
           )}
-          strokeColor={color}
-          trailColor="#3a3a3e"
+          strokeColor="#6dd89e"
+          trailColor="rgba(255, 255, 255, 0.2)"
           strokeLinecap="round"
         />
-        <Space direction="vertical" align="start" size={0}>
+        <Space direction="vertical" align="start" size={4}>
           <Typography.Title
-            level={5}
+            level={3}
             style={{
-              color: '#f0f0f0',
+              color: '#ffffff',
               margin: 0,
-              fontSize: '18px',
+              fontSize: '32px',
               fontWeight: '600',
+              lineHeight: 1,
             }}
           >
             {value}
           </Typography.Title>
-          <Typography.Text style={{ color: '#8c8c8c', fontSize: '12px' }}>
+          <Typography.Text style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '16px' }}>
             {label}
           </Typography.Text>
         </Space>

@@ -2,15 +2,19 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { Layout, Card, Button, Drawer, Space, Row, Col, Tooltip, Switch, Form, Select, Input, ColorPicker, Popconfirm, message, Spin } from 'antd';
 import { PlusOutlined, DragOutlined, EditOutlined, EyeOutlined, SettingOutlined, DashboardOutlined, BarChartOutlined, UserOutlined, SettingOutlined as SettingIcon, DeleteOutlined } from '@ant-design/icons';
-import { ProForm, ProFormText, ProFormTextArea, ProFormSelect } from '@ant-design/pro-components';
+import { ProForm, ProFormText, ProFormTextArea, ProFormSelect, ProFormDependency, ProFormDateRangePicker } from '@ant-design/pro-components';
+import moment from 'moment';
 import DndProvider from './DndProvider';
 import dashboardService from '@/services/rest/dashboard.service';
 import type { Dashboard, DashboardWidget } from '@/services/rest/dashboard.service';
+import { getAllDevices } from '@/services/rest/devices/devices';
+import { getContainers } from '@/services/rest/containers/containers';
+import type { API } from 'ssm-shared-lib';
 
 // Types
 export type DashboardItemSize = 'small' | 'medium' | 'large' | 'wide' | 'full';
 
-export type SettingType = 'statistics' | 'icon' | 'backgroundColor' | 'title' | 'customText';
+export type SettingType = 'statistics' | 'icon' | 'backgroundColor' | 'title' | 'customText' | 'dateRange';
 
 export interface WidgetSettings {
   type: SettingType;
@@ -24,6 +28,8 @@ export interface DashboardItem {
   size: DashboardItemSize;
   title: string;
   settings?: WidgetSettings[];
+  componentFactory?: (widgetSettings?: any) => React.ReactNode;
+  widgetSettings?: any; // Store the configured settings
 }
 
 // Size configuration
@@ -181,6 +187,10 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
   const [saving, setSaving] = useState(false);
   const [currentDashboard, setCurrentDashboard] = useState<Dashboard | null>(null);
   const [currentPageId, setCurrentPageId] = useState<string>('default-page');
+  const [devices, setDevices] = useState<API.Device[]>([]);
+  const [containers, setContainers] = useState<API.Container[]>([]);
+  const [loadingDevices, setLoadingDevices] = useState(false);
+  const [loadingContainers, setLoadingContainers] = useState(false);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-save function with debouncing
@@ -210,7 +220,22 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
             title: item.title,
             size: item.size,
             position: index,
-            settings: item.settings ? {
+            settings: item.widgetSettings ? {
+              // Map our internal format to the backend format
+              statistics_type: item.widgetSettings.dataType,
+              statistics_source: item.widgetSettings.source,
+              statistics_metric: item.widgetSettings.metric,
+              title: item.title,
+              dateRangePreset: item.widgetSettings.dateRangePreset,
+              customDateRange: item.widgetSettings.customDateRange,
+              // Include any other settings
+              ...Object.keys(item.widgetSettings).reduce((acc, key) => {
+                if (!['dataType', 'source', 'metric', 'title', 'dateRangePreset', 'customDateRange'].includes(key)) {
+                  acc[key] = item.widgetSettings[key];
+                }
+                return acc;
+              }, {} as any),
+            } : item.settings ? {
               // Map settings from form values
               title: item.title,
               // Add other settings as needed
@@ -258,10 +283,42 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
     setDrawerVisible(false);
   }, [autoSave]);
 
+  const fetchDevicesAndContainers = useCallback(async () => {
+    try {
+      // Fetch devices
+      setLoadingDevices(true);
+      const devicesResponse = await getAllDevices();
+      if (devicesResponse.data) {
+        setDevices(devicesResponse.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch devices:', error);
+      message.error('Failed to load devices');
+    } finally {
+      setLoadingDevices(false);
+    }
+
+    try {
+      // Fetch containers
+      setLoadingContainers(true);
+      const containersResponse = await getContainers();
+      if (containersResponse.data) {
+        setContainers(containersResponse.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch containers:', error);
+      message.error('Failed to load containers');
+    } finally {
+      setLoadingContainers(false);
+    }
+  }, []);
+
   const handleWidgetSettings = useCallback((widgetId: string) => {
     setSelectedWidgetId(widgetId);
     setSettingsDrawerVisible(true);
-  }, []);
+    // Fetch devices and containers when opening settings
+    fetchDevicesAndContainers();
+  }, [fetchDevicesAndContainers]);
 
   const removeItem = useCallback((itemId: string) => {
     setItems((prevItems) => {
@@ -287,10 +344,34 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
         const loadedItems = defaultPage.widgets.map(widget => {
           const availableItem = availableItems.find(item => item.id === widget.widgetType);
           if (availableItem) {
+            // Convert backend settings format to our internal format
+            const widgetSettings = widget.settings ? {
+              dataType: widget.settings.statistics_type || 'device',
+              source: widget.settings.statistics_source || ['all'],
+              metric: widget.settings.statistics_metric || 'cpu_usage',
+              title: widget.settings.title,
+              dateRangePreset: widget.settings.dateRangePreset || 'last7days',
+              customDateRange: widget.settings.customDateRange,
+              // Include any other settings
+              ...Object.keys(widget.settings).reduce((acc, key) => {
+                if (!['statistics_type', 'statistics_source', 'statistics_metric', 'title', 'dateRangePreset', 'customDateRange'].includes(key)) {
+                  acc[key] = widget.settings![key];
+                }
+                return acc;
+              }, {} as any),
+            } : undefined;
+            
+            // If the widget has settings and a componentFactory, recreate the component
+            const component = availableItem.componentFactory && widgetSettings
+              ? availableItem.componentFactory(widgetSettings)
+              : availableItem.component;
+            
             return {
               ...availableItem,
               id: widget.id,
               title: widget.settings?.title || widget.title || availableItem.title,
+              widgetSettings: widgetSettings,
+              component: component,
             };
           }
           return null;
@@ -551,28 +632,51 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
             return (
               <ProForm
                 onFinish={async (values) => {
+                  // Process the form values to extract widget settings
+                  const widgetSettings: any = {};
+                  
+                  // Extract statistics settings
+                  Object.keys(values).forEach(key => {
+                    if (key.includes('statistics_type_')) {
+                      widgetSettings.dataType = values[key];
+                    } else if (key.includes('statistics_source_')) {
+                      widgetSettings.source = values[key];
+                    } else if (key.includes('statistics_metric_')) {
+                      widgetSettings.metric = values[key];
+                    } else if (key.includes('title_')) {
+                      widgetSettings.title = values[key];
+                    } else if (key.includes('dateRangePreset_')) {
+                      widgetSettings.dateRangePreset = values[key];
+                    } else if (key.includes('customDateRange_')) {
+                      widgetSettings.customDateRange = values[key];
+                    } else if (key.includes('aggregationType_')) {
+                      widgetSettings.aggregationType = values[key];
+                    }
+                  });
+                  
                   // Update the widget settings in items
                   setItems((prevItems) => {
                     const newItems = prevItems.map(item => {
                       if (item.id === selectedWidgetId) {
-                        // Update widget settings based on form values
-                        const updatedSettings: any = {};
+                        // Find the original item in availableItems to get componentFactory
+                        const originalItem = availableItems.find(avItem => 
+                          item.id.startsWith(avItem.id.split('-')[0])
+                        );
                         
-                        // Process each setting value
-                        Object.keys(values).forEach(key => {
-                          const [settingType, index] = key.split('_');
-                          if (!updatedSettings[settingType]) {
-                            updatedSettings[settingType] = values[key];
-                          }
-                        });
+                        // If the item has a componentFactory, use it to create a new component
+                        if (originalItem?.componentFactory) {
+                          return {
+                            ...item,
+                            widgetSettings,
+                            component: originalItem.componentFactory(widgetSettings),
+                            title: widgetSettings.title || item.title,
+                          };
+                        }
                         
                         return {
                           ...item,
-                          settings: item.settings?.map((setting, idx) => ({
-                            ...setting,
-                            value: values[`${setting.type}_${idx}`],
-                          })),
-                          title: values.title_0 || item.title, // Update title if provided
+                          widgetSettings,
+                          title: widgetSettings.title || item.title,
                         };
                       }
                       return item;
@@ -604,6 +708,7 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
                         <ProFormSelect
                           name={`statistics_type_${index}`}
                           label="Data Type"
+                          initialValue={selectedWidget?.widgetSettings?.dataType || 'device'}
                           options={[
                             { label: 'Device', value: 'device' },
                             { label: 'Container', value: 'container' },
@@ -611,32 +716,77 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
                           placeholder="Select data type"
                           rules={[{ required: true, message: 'Please select a data type' }]}
                         />
-                        <ProFormSelect
-                          name={`statistics_source_${index}`}
-                          label="Source"
-                          options={[
-                            { label: 'All', value: 'all' },
-                            { label: 'Device 1', value: 'device1' },
-                            { label: 'Device 2', value: 'device2' },
-                            { label: 'Container 1', value: 'container1' },
-                            { label: 'Container 2', value: 'container2' },
-                          ]}
-                          placeholder="Select source"
-                          mode="multiple"
-                          rules={[{ required: true, message: 'Please select at least one source' }]}
-                        />
-                        <ProFormSelect
-                          name={`statistics_metric_${index}`}
-                          label="Metric"
-                          options={[
-                            { label: 'CPU Usage', value: 'cpu' },
-                            { label: 'Memory Usage', value: 'memory' },
-                            { label: 'Disk Usage', value: 'disk' },
-                            { label: 'Network I/O', value: 'network' },
-                          ]}
-                          placeholder="Select metric"
-                          rules={[{ required: true, message: 'Please select a metric' }]}
-                        />
+                        <ProFormDependency name={[`statistics_type_${index}`]}>
+                          {({ [`statistics_type_${index}`]: dataType }) => {
+                            let options = [{ label: 'All', value: 'all' }];
+                            
+                            if (dataType === 'device') {
+                              options = [
+                                { label: 'All Devices', value: 'all' },
+                                ...devices.map(device => ({
+                                  label: device.fqdn || device.ip || device.uuid,
+                                  value: device.uuid,
+                                }))
+                              ];
+                            } else if (dataType === 'container') {
+                              options = [
+                                { label: 'All Containers', value: 'all' },
+                                ...containers.map(container => ({
+                                  label: container.customName || container.name || container.id,
+                                  value: container.id,
+                                }))
+                              ];
+                            }
+                            
+                            return (
+                              <ProFormSelect
+                                name={`statistics_source_${index}`}
+                                label="Source"
+                                initialValue={selectedWidget?.widgetSettings?.source || ['all']}
+                                options={options}
+                                placeholder={dataType === 'device' ? 'Select devices' : dataType === 'container' ? 'Select containers' : 'Select source'}
+                                mode="multiple"
+                                rules={[{ required: true, message: 'Please select at least one source' }]}
+                                fieldProps={{
+                                  loading: dataType === 'device' ? loadingDevices : dataType === 'container' ? loadingContainers : false,
+                                }}
+                              />
+                            );
+                          }}
+                        </ProFormDependency>
+                        <ProFormDependency name={[`statistics_type_${index}`]}>
+                          {({ [`statistics_type_${index}`]: dataType }) => {
+                            // Define metrics based on data type - using actual backend metric values
+                            const deviceMetrics = [
+                              { label: 'CPU Usage', value: 'cpu_usage' },
+                              { label: 'Memory Usage', value: 'memory_usage' },
+                              { label: 'Memory Free', value: 'memory_free' },
+                              { label: 'Storage Usage', value: 'storage_usage' },
+                              { label: 'Storage Free', value: 'storage_free' },
+                              { label: 'Containers', value: 'containers' },
+                            ];
+                            
+                            const containerMetrics = [
+                              { label: 'CPU Usage', value: 'container_cpu_usage' },
+                              { label: 'Memory Usage', value: 'container_memory_usage' },
+                            ];
+                            
+                            const metrics = dataType === 'device' ? deviceMetrics : 
+                                          dataType === 'container' ? containerMetrics : 
+                                          [...deviceMetrics, ...containerMetrics];
+                            
+                            return (
+                              <ProFormSelect
+                                name={`statistics_metric_${index}`}
+                                label="Metric"
+                                initialValue={selectedWidget?.widgetSettings?.metric || 'cpu_usage'}
+                                options={metrics}
+                                placeholder="Select metric"
+                                rules={[{ required: true, message: 'Please select a metric' }]}
+                              />
+                            );
+                          }}
+                        </ProFormDependency>
                       </>
                     )}
                     
@@ -694,7 +844,7 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
                         name={`title_${index}`}
                         label={setting.label}
                         placeholder="Enter widget title"
-                        initialValue={setting.defaultValue || ''}
+                        initialValue={selectedWidget?.title || setting.defaultValue || ''}
                         rules={[{ required: true, message: 'Please enter a title' }]}
                       />
                     )}
@@ -708,6 +858,61 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
                         fieldProps={{
                           rows: 4,
                         }}
+                      />
+                    )}
+                    
+                    {setting.type === 'dateRange' && (
+                      <>
+                        <ProFormSelect
+                          name={`dateRangePreset_${index}`}
+                          label="Date Range"
+                          initialValue={selectedWidget?.widgetSettings?.dateRangePreset || 'last7days'}
+                          options={[
+                            { label: 'Last 24 Hours', value: 'last24hours' },
+                            { label: 'Last 7 Days', value: 'last7days' },
+                            { label: 'Last 30 Days', value: 'last30days' },
+                            { label: 'Last 3 Months', value: 'last3months' },
+                            { label: 'Last 6 Months', value: 'last6months' },
+                            { label: 'Last Year', value: 'lastyear' },
+                            { label: 'Custom Range', value: 'custom' },
+                          ]}
+                          placeholder="Select date range"
+                        />
+                        <ProFormDependency name={[`dateRangePreset_${index}`]}>
+                          {({ [`dateRangePreset_${index}`]: preset }) => {
+                            if (preset === 'custom') {
+                              return (
+                                <ProFormDateRangePicker
+                                  name={`customDateRange_${index}`}
+                                  label="Custom Date Range"
+                                  initialValue={selectedWidget?.widgetSettings?.customDateRange || [
+                                    moment().subtract(7, 'days'),
+                                    moment()
+                                  ]}
+                                  fieldProps={{
+                                    format: 'YYYY-MM-DD',
+                                  }}
+                                />
+                              );
+                            }
+                            return null;
+                          }}
+                        </ProFormDependency>
+                      </>
+                    )}
+                    
+                    {setting.type === 'aggregationType' && (
+                      <ProFormSelect
+                        name={`aggregationType_${index}`}
+                        label={setting.label}
+                        initialValue={selectedWidget?.widgetSettings?.aggregationType || 'average'}
+                        options={[
+                          { label: 'Average', value: 'average' },
+                          { label: 'Sum', value: 'sum' },
+                          { label: 'Minimum', value: 'min' },
+                          { label: 'Maximum', value: 'max' },
+                        ]}
+                        placeholder="Select aggregation type"
                       />
                     )}
                   </div>

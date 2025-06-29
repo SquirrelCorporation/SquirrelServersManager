@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Typography } from 'antd';
+import { useModel } from '@umijs/max';
 
 interface WelcomeHeaderSectionProps {
-  userName: string;
+  userName?: string;
   greeting?: string;
-  subtitle: string;
+  subtitle?: string;
   buttonText: string;
   onButtonClick: () => void;
   illustrationUrl: string;
@@ -12,14 +13,44 @@ interface WelcomeHeaderSectionProps {
 }
 
 const WelcomeHeaderSection: React.FC<WelcomeHeaderSectionProps> = ({
-  userName,
-  greeting = 'Congratulations',
-  subtitle,
+  userName: propUserName,
+  greeting = 'Welcome',
+  subtitle: propSubtitle,
   buttonText,
   onButtonClick,
   illustrationUrl,
   style,
 }) => {
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState || {};
+
+  // Get user name from the model, fallback to prop
+  const userName = useMemo(() => currentUser?.name || propUserName || 'User', [currentUser?.name, propUserName]);
+
+  // Squirrel-themed quotes about SSM
+  const squirrelQuotes = useMemo(() => [
+    "Going nuts over server management? We've got you covered! 🥜",
+    "No more squirreling away from complex server tasks - SSM makes it simple! 🐿️",
+    "Storing your server configurations safely in our digital tree! 🌳",
+    "Busy as a squirrel? Let SSM handle your servers while you focus on what matters! ⚡",
+    "From acorn-sized servers to mighty oak infrastructures - we scale with you! 🌰➡️🌳",
+    "Don't let server management drive you nuts - SSM is here to help! 🔧",
+    "Hoarding server resources efficiently, one container at a time! 📦",
+    "Winter-proof your infrastructure with SSM's reliable management! ❄️",
+    "Cracking the code on server management - no more nutty configurations! 💻",
+    "Scurrying through your to-do list? Let SSM automate your servers! 🏃‍♂️",
+    "Building a nest egg of perfectly managed servers! 🏠",
+    "Going out on a limb to make server management fun and easy! 🌿",
+    "SSM: Because life's too short for manual server management! ⏰"
+  ], []);
+
+  // Get random quote
+  const randomQuote = useMemo(() => {
+    const randomIndex = Math.floor(Math.random() * squirrelQuotes.length);
+    return squirrelQuotes[randomIndex];
+  }, [squirrelQuotes]);
+
+  const subtitle = propSubtitle || randomQuote;
   return (
     <div
       style={{
@@ -70,26 +101,17 @@ const WelcomeHeaderSection: React.FC<WelcomeHeaderSectionProps> = ({
           level={2}
           style={{
             color: '#ffffff',
-            margin: 0,
+            margin: '0 0 16px 0',
             fontWeight: 600,
             fontSize: '28px',
             lineHeight: '1.2',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
           }}
         >
-          {greeting} 🎉
-        </Typography.Title>
-        
-        <Typography.Title
-          level={2}
-          style={{
-            color: '#ffffff',
-            margin: '2px 0 12px 0',
-            fontWeight: 600,
-            fontSize: '28px',
-            lineHeight: '1.2',
-          }}
-        >
-          {userName}
+          {greeting} {userName}
+          <span style={{ fontSize: '24px' }}>🎉</span>
         </Typography.Title>
 
         <Typography.Text

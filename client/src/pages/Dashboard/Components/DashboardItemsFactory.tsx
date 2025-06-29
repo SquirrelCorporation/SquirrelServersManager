@@ -52,9 +52,9 @@ const yearlyData = [
 });
 
 const bookingStatuses = [
-  { name: 'IN PROGRESS', count: '9.91k', percentage: 60, color: '#faad14' },
-  { name: 'FAILED', count: '1.95k', percentage: 15, color: '#ff4d4f' },
-  { name: 'COMPLETED', count: '9.12k', percentage: 85, color: '#52c41a' },
+  { name: 'Total profit', count: '$8,374', percentage: 10.1, color: '#52c41a' },
+  { name: 'Total income', count: '$9,714', percentage: 13.6, color: '#1890ff' },
+  { name: 'Total expenses', count: '$6,871', percentage: 28.2, color: '#faad14' },
 ];
 
 const toursAvailableData = [
@@ -121,22 +121,43 @@ const areaInstallData = [
   'Jul',
   'Aug',
   'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
 ].reduce(
   (acc, month) => {
+    // Generate more realistic stacked data
+    const baseValues = {
+      'Jan': [5, 7, 10],
+      'Feb': [18, 18, 16],
+      'Mar': [13, 15, 14],
+      'Apr': [7, 11, 9],
+      'May': [20, 20, 20],
+      'Jun': [5, 8, 5],
+      'Jul': [22, 22, 25],
+      'Aug': [18, 19, 18],
+      'Sep': [8, 12, 8],
+      'Oct': [22, 22, 26],
+      'Nov': [8, 12, 8],
+      'Dec': [16, 18, 14],
+    };
+    
+    const values = baseValues[month as keyof typeof baseValues] || [10, 15, 10];
+    
     acc.push({
       month,
-      region: 'Region A',
-      installs: Math.floor(Math.random() * 800 + 100),
+      region: 'Asia',
+      installs: values[0],
     });
     acc.push({
       month,
-      region: 'Region B',
-      installs: Math.floor(Math.random() * 800 + 100),
+      region: 'Europe',
+      installs: values[1],
     });
     acc.push({
       month,
-      region: 'Region C',
-      installs: Math.floor(Math.random() * 800 + 100),
+      region: 'Americas',
+      installs: values[2],
     });
     return acc;
   },
@@ -153,9 +174,6 @@ export const createDashboardItems = (): DashboardItem[] => {
       settings: undefined, // No settings for welcome header
       component: (
         <WelcomeHeaderSection
-          userName="Jaydon Frankie"
-          greeting="Congratulations"
-          subtitle="Best seller of the month you have done 57.6% more sales today."
           buttonText="Go now"
           onButtonClick={() => console.log('Button clicked')}
           illustrationUrl="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Woman%20Running.png"
@@ -198,17 +216,28 @@ export const createDashboardItems = (): DashboardItem[] => {
       size: 'small',
       settings: [
         { type: 'statistics', label: 'Data Source' },
-        { type: 'title', label: 'Widget Title', defaultValue: 'Total Count' },
+        { type: 'title', label: 'Widget Title', defaultValue: 'Total balance' },
         { type: 'icon', label: 'Icon' }
       ],
+      // This will be replaced by DashboardLayoutEngine with configured component
       component: (
         <SummaryStatCard
-          title="Total Count"
-          value="714k"
-          trendValue="+2.6"
-          trendDirection="up"
+          title="Total balance"
+          defaultValue="18,765"
+          defaultTrend="-0.1"
           icon={<DashboardOutlined />}
-          illustrationUrl="/assets/images/dashboard/booking-illustration.png"
+        />
+      ),
+      // Component factory for dynamic configuration
+      componentFactory: (widgetSettings?: any) => (
+        <SummaryStatCard
+          title={widgetSettings?.title || "Total balance"}
+          dataType={widgetSettings?.dataType || 'device'}
+          source={widgetSettings?.source || 'all'}
+          metric={widgetSettings?.metric || 'cpu_usage'}
+          defaultValue="0"
+          defaultTrend="0"
+          icon={<DashboardOutlined />}
         />
       ),
     },
@@ -218,7 +247,8 @@ export const createDashboardItems = (): DashboardItem[] => {
       size: 'large',
       settings: [
         { type: 'statistics', label: 'Data Source' },
-        { type: 'title', label: 'Graph Title', defaultValue: 'Yearly sales' }
+        { type: 'title', label: 'Graph Title', defaultValue: 'Metric Trends' },
+        { type: 'dateRange', label: 'Date Range' }
       ],
       component: (
         <LineChart
@@ -234,6 +264,17 @@ export const createDashboardItems = (): DashboardItem[] => {
           onYearChange={(year) => console.log('Year changed:', year)}
         />
       ),
+      // Component factory for dynamic API configuration
+      componentFactory: (widgetSettings?: any) => (
+        <LineChart
+          title={widgetSettings?.title || "Metric Trends"}
+          dataType={widgetSettings?.dataType || 'device'}
+          source={widgetSettings?.source || 'all'}
+          metrics={widgetSettings?.metric ? [widgetSettings.metric] : ['cpu_usage', 'memory_usage']}
+          dateRangePreset={widgetSettings?.dateRangePreset || 'last7days'}
+          customDateRange={widgetSettings?.customDateRange}
+        />
+      ),
     },
     {
       id: 'progress-lines-graph',
@@ -245,7 +286,7 @@ export const createDashboardItems = (): DashboardItem[] => {
       ],
       component: (
         <BookingStatusCard 
-          title="Status Overview" 
+          title="Sales overview" 
           statuses={bookingStatuses} 
         />
       ),
@@ -261,9 +302,9 @@ export const createDashboardItems = (): DashboardItem[] => {
       ],
       component: (
         <MiniDonutStatCard
-          percentage={73.9}
+          percentage={48}
           value="38,566"
-          label="Completed"
+          label="Conversion"
           color="#52c41a"
         />
       ),
@@ -389,16 +430,16 @@ export const createDashboardItems = (): DashboardItem[] => {
       ],
       component: (
         <AreaInstalledBarChartCard
-          title="Regional Metrics"
+          title="Area installed"
           subtitle="(+43%) than last year"
           currentYear={2023}
           availableYears={[2023, 2022, 2021]}
           onYearChange={(year) => console.log('Year changed:', year)}
           chartData={areaInstallData}
           regionColors={{
-            'Region A': '#ffc53d',
-            'Region B': '#40a9ff',
-            'Region C': '#52c41a',
+            'Asia': '#52c41a',
+            'Europe': '#faad14',
+            'Americas': '#1890ff',
           }}
         />
       ),

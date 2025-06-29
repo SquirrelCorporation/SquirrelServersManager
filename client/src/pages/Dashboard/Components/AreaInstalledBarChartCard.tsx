@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Typography, Space, Select, Row, Col } from 'antd';
-import { Column, ColumnConfig, Datum } from '@ant-design/plots';
+import { Column } from '@ant-design/charts';
+import type { ColumnConfig } from '@ant-design/plots';
 
 interface InstallData {
   month: string; // Or other time unit
@@ -31,79 +32,79 @@ const AreaInstalledBarChartCard: React.FC<AreaInstalledBarChartCardProps> = ({
 }) => {
   const columnConfig: ColumnConfig = {
     data: chartData,
-    isGroup: true,
+    isStack: true,
     xField: 'month',
     yField: 'installs',
     seriesField: 'region',
-    dodgePadding: 4,
-    marginRatio: 0.1,
-    height: 250, // Adjusted height slightly from 260 to fit typical card proportions
-    color: ({ region }: any) => regionColors[region] || '#8c8c8c',
+    colorField: 'region',
+    height: 300,
+    color: ['#52c41a', '#faad14', '#1890ff'],
     xAxis: {
-      label: { style: { fill: '#8c8c8c', fontSize: 11 } },
-      line: { style: { stroke: '#3a3a3e' } },
-    },
-    yAxis: {
-      label: { style: { fill: '#8c8c8c', fontSize: 11 } },
-      grid: { line: { style: { stroke: '#3a3a3e', lineDash: [3, 3] } } },
-      splitNumber: 4, // Adjusted for cleaner look based on screenshot density
-    },
-    legend: {
-      position: 'top-right',
-      itemName: { style: { fill: '#d9d9d9', fontSize: 12 } },
-      marker: (name: string, index: number, item: Datum) => {
-        return {
-          symbol: 'square',
-          style: {
-            fill: regionColors[item.name as string] || '#8c8c8c',
-            r: 5,
-          },
-        };
+      label: { 
+        style: { 
+          fill: '#8c8c8c', 
+          fontSize: 12 
+        } 
+      },
+      line: { 
+        style: { 
+          stroke: '#3a3a3e' 
+        } 
       },
     },
+    yAxis: {
+      label: { 
+        style: { 
+          fill: '#8c8c8c', 
+          fontSize: 11 
+        } 
+      },
+      grid: { 
+        line: { 
+          style: { 
+            stroke: '#3a3a3e', 
+            lineDash: [4, 4], 
+            opacity: 0.3 
+          } 
+        } 
+      },
+      max: 80,
+    },
+    legend: false,
     tooltip: {
       shared: true,
       showMarkers: false,
-      domStyles: {
-        'g2-tooltip': {
-          background: 'rgba(0,0,0,0.75)',
-          color: 'white',
-          boxShadow: '0px 0px 10px rgba(0,0,0,0.5)',
-          borderRadius: '4px',
-          padding: '8px 12px',
-        },
-      },
     },
     columnStyle: {
-      radius: [3, 3, 0, 0],
+      radius: [4, 4, 0, 0],
     },
   };
 
   return (
     <Card
       style={{
-        backgroundColor: '#222225', // Matched background
+        backgroundColor: '#1a1a1a',
         borderRadius: '16px',
         color: 'white',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.1)', // Consistent shadow
+        border: 'none',
         ...cardStyle,
       }}
-      bodyStyle={{ padding: '20px 24px 24px 24px' }} // Standardized padding
+      bodyStyle={{ padding: '28px 32px' }}
     >
       <Row
         justify="space-between"
-        align="top" // Align items to the top for title/subtitle and select
-        style={{ marginBottom: '16px' }} // Spacing below header
+        align="top"
+        style={{ marginBottom: '24px' }}
       >
         <Col>
-          <Space direction="vertical" size={2}>
+          <Space direction="vertical" size={4}>
             <Typography.Title
               level={4}
-              style={{ color: '#f0f0f0', margin: 0, fontWeight: 500 }}
+              style={{ color: '#ffffff', margin: 0, fontSize: '20px', fontWeight: 600 }}
             >
               {title}
             </Typography.Title>
-            <Typography.Text style={{ color: '#8c8c8c', fontSize: 13 }}>
+            <Typography.Text style={{ color: '#52c41a', fontSize: '14px', opacity: 0.8 }}>
               {subtitle}
             </Typography.Text>
           </Space>
@@ -116,12 +117,28 @@ const AreaInstalledBarChartCard: React.FC<AreaInstalledBarChartCardProps> = ({
               label: y.toString(),
               value: y,
             }))}
-            style={{ width: 90 }} // Slightly reduced width for dropdown
-            size="small" // Smaller dropdown to match screenshot context
-            // ConfigProvider should be used for global dark theme for dropdown panels
+            style={{ width: 100 }}
           />
         </Col>
       </Row>
+      
+      {/* Legend */}
+      <Space size={24} style={{ marginBottom: '24px' }}>
+        <Space size={8} align="center">
+          <div style={{ width: 12, height: 12, borderRadius: '50%', backgroundColor: '#52c41a' }} />
+          <Typography.Text style={{ color: '#d9d9d9', fontSize: 13 }}>Asia</Typography.Text>
+        </Space>
+        <Space size={8} align="center">
+          <div style={{ width: 12, height: 12, borderRadius: '50%', backgroundColor: '#faad14' }} />
+          <Typography.Text style={{ color: '#d9d9d9', fontSize: 13 }}>Europe</Typography.Text>
+        </Space>
+        <Space size={8} align="center">
+          <div style={{ width: 12, height: 12, borderRadius: '50%', backgroundColor: '#1890ff' }} />
+          <Typography.Text style={{ color: '#d9d9d9', fontSize: 13 }}>Americas</Typography.Text>
+        </Space>
+      </Space>
+      
+      
       <Column {...columnConfig} />
     </Card>
   );
