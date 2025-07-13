@@ -68,6 +68,7 @@ const SystemInformationConfigurationTab: React.FC<
         device.systemInformation?.[
           selectedFeature as keyof typeof device.systemInformation
         ];
+
       let updatedAt: string | undefined = undefined;
       if (Array.isArray(info)) {
         const firstWithLastUpdated = info.find(

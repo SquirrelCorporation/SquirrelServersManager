@@ -1,15 +1,35 @@
 # Changelog
 
-## [Unreleased](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/HEAD)
+## [v0.5.0](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0) (2025-06-29)
 
-[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-rc.4...HEAD)
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-rc.4...v0.5.0)
+
+**Implemented enhancements:**
+
+- \[FEATURE\] In-Context Documentation Links  🔥 [\#781](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/781)
+- \[FEAT\] Add InfoLinkWidget for contextual documentation links [\#939](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/939) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[FEAT\] Feat new execution playbook design [\#902](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/902) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Fixed bugs:**
 
 - \[BUG\] Docker stack configurations cannot be updated [\#993](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/993)
+- \[BUG\] MongoDB authentication not used [\#972](https://github.com/SquirrelCorporation/SquirrelServersManager/issues/972)
+- \[BUG\] Fix device.systemInformation stats update logic in processor [\#1013](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1013) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUGFIX\] Add event-driven updates for device watcher configurations on devic… [\#994](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/994) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\] Bugfix/auth with db [\#983](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/983) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\] Bugfix/use auth db when provided [\#973](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/973) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUGFIX\] Fix potential permission issues for /data in prometheus container [\#960](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/960) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUGFIX\] Bugfix/fix potential telemetry crash [\#959](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/959) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\] Set cookie 'secure' flag to false [\#957](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/957) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\] Fix potential null coalescing issue in FilesystemsTab [\#929](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/929) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\] Bugfix/potential fix to ssh crash [\#928](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/928) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG\] Revert npm v [\#927](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/927) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE/BUG\] Chore/improve logging rsi [\#919](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/919) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[BUG/CHORE\] Update UI styles, enhance tab functionality, and streamline data [\#912](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/912) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 
 **Merged pull requests:**
 
+- \[CHORE\] Update package-lock.json with dependency version upgrades [\#1011](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1011) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Revert "Bump node from 23.11.0-alpine to 24.2.0-alpine in /client" [\#1010](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1010) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
 - Bump vuetify from 3.8.7 to 3.8.10 in /site [\#1006](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1006) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump axios from 1.9.0 to 1.10.0 in /site [\#1002](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1002) ([dependabot[bot]](https://github.com/apps/dependabot))
@@ -17,6 +37,21 @@
 - Bump node from 23.11.0-alpine to 24.2.0-alpine in /client [\#996](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/996) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node from 24.0.1-alpine to 24.2.0-alpine in /server [\#995](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/995) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump brace-expansion from 1.1.11 to 1.1.12 in /client in the npm\_and\_yarn group [\#992](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/992) ([dependabot[bot]](https://github.com/apps/dependabot))
+- \[CHORE\] RELEASE V0.5.0 [\#974](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/974) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Redirect to Manage Devices page if no device is available [\#936](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/936) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[DOC\] Doc/put adopt me issues [\#934](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/934) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Add support for CPU, Memory, and File System stats monitoring. [\#925](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/925) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Refactor Dockerfiles for optimized multi-stage builds. [\#923](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/923) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Chore/add debug mode for rsi [\#922](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/922) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Add Discord notification job to Docker publish workflow and remove de… [\#921](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/921) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Add last updated timestamps to system information tabs [\#920](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/920) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Chore/remove entry point [\#916](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/916) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Chore/improve testing [\#913](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/913) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Doc/fix documentation v2 [\#911](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/911) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Doc new doc [\#905](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/905) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] Chore fix v050 [\#889](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/889) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- \[CHORE\] V0.5.0 - Alpha [\#886](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/886) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+- Bump formidable from 3.5.2 to 3.5.4 in /server in the npm\_and\_yarn group [\#882](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/882) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [v0.5.0-rc.4](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0-rc.4) (2025-06-15)
 
