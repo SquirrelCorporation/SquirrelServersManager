@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import { Layout, Card, Button, Drawer, Space, Row, Col, Tooltip, Switch, Form, Select, Input, ColorPicker, Popconfirm, message, Spin } from 'antd';
-import { PlusOutlined, DragOutlined, EditOutlined, EyeOutlined, SettingOutlined, DashboardOutlined, BarChartOutlined, UserOutlined, SettingOutlined as SettingIcon, DeleteOutlined } from '@ant-design/icons';
+import { Layout, Card, Button, Drawer, Space, Row, Col, Tooltip, Switch, Form, Select, Input, ColorPicker, Popconfirm, message, Spin, Tabs } from 'antd';
+import { PlusOutlined, DragOutlined, EditOutlined, EyeOutlined, SettingOutlined, DashboardOutlined, BarChartOutlined, UserOutlined, SettingOutlined as SettingIcon, DeleteOutlined, LineChartOutlined, ToolOutlined } from '@ant-design/icons';
 import { ProForm, ProFormText, ProFormTextArea, ProFormSelect, ProFormDependency, ProFormDateRangePicker } from '@ant-design/pro-components';
 import moment from 'moment';
 import DndProvider from './DndProvider';
@@ -27,6 +27,7 @@ export interface DashboardItem {
   component: React.ReactNode;
   size: DashboardItemSize;
   title: string;
+  category?: 'monitoring' | 'charts' | 'tools';
   settings?: WidgetSettings[];
   componentFactory?: (widgetSettings?: any) => React.ReactNode;
   widgetSettings?: any; // Store the configured settings
@@ -314,10 +315,15 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
   }, []);
 
   const handleWidgetSettings = useCallback((widgetId: string) => {
+    // Close and reopen to ensure clean state
+    setSettingsDrawerVisible(false);
     setSelectedWidgetId(widgetId);
-    setSettingsDrawerVisible(true);
-    // Fetch devices and containers when opening settings
-    fetchDevicesAndContainers();
+    // Use setTimeout to ensure state updates are processed
+    setTimeout(() => {
+      setSettingsDrawerVisible(true);
+      // Fetch devices and containers when opening settings
+      fetchDevicesAndContainers();
+    }, 0);
   }, [fetchDevicesAndContainers]);
 
   const removeItem = useCallback((itemId: string) => {
@@ -566,60 +572,239 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
           onClose={() => setDrawerVisible(false)}
           open={drawerVisible}
         >
-          <Space direction="vertical" style={{ width: '100%' }}>
-            {availableItems.map((item) => (
-              <Card 
-                key={item.id}
-                hoverable
-                size="small"
-                title={item.title}
-                onClick={() => addItem({...item, id: `${item.id}-${Date.now()}`})}
-                style={{ marginBottom: 16, cursor: 'pointer' }}
-                extra={
-                  <Tooltip title={`Size: ${item.size}`}>
-                    <span style={{ 
-                      fontSize: 10, 
-                      padding: '2px 6px', 
-                      background: '#f0f0f0', 
-                      borderRadius: 2,
-                      color: '#666'
-                    }}>
-                      {item.size.toUpperCase()}
-                    </span>
-                  </Tooltip>
-                }
-                bodyStyle={{ padding: 12 }}
-              >
-                <div style={{ 
-                  height: '100px', 
-                  overflow: 'hidden',
-                  position: 'relative',
-                  borderRadius: 4
-                }}>
-                  <div style={{
-                    transform: 'scale(0.25)',
-                    transformOrigin: 'top left',
-                    width: '400%',
-                    pointerEvents: 'none'
-                  }}>
-                    {item.component}
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </Space>
+          <Tabs
+            defaultActiveKey="monitoring"
+            items={[
+              {
+                key: 'monitoring',
+                label: (
+                  <span>
+                    <DashboardOutlined style={{ marginRight: 8 }} />
+                    Monitoring
+                  </span>
+                ),
+                children: (
+                  <Space direction="vertical" style={{ width: '100%' }}>
+                    {availableItems
+                      .filter(item => {
+                        // Monitoring category includes system status widgets
+                        const monitoringIds = ['SystemPerformanceCard', 'AvailabilityCard', 'ContainersCard', 'CombinedPowerCard', 'MainChartCard'];
+                        return item.category === 'monitoring' || monitoringIds.includes(item.id);
+                      })
+                      .map((item) => (
+                        <Card 
+                          key={item.id}
+                          hoverable
+                          size="small"
+                          title={item.title}
+                          onClick={() => addItem({...item, id: `${item.id}-${Date.now()}`})}
+                          style={{ marginBottom: 16, cursor: 'pointer' }}
+                          extra={
+                            <Tooltip title={`Size: ${item.size}`}>
+                              <span style={{ 
+                                fontSize: 10, 
+                                padding: '2px 6px', 
+                                background: '#f0f0f0', 
+                                borderRadius: 2,
+                                color: '#666'
+                              }}>
+                                {item.size.toUpperCase()}
+                              </span>
+                            </Tooltip>
+                          }
+                          bodyStyle={{ padding: 12 }}
+                        >
+                          <div style={{ 
+                            height: '100px', 
+                            overflow: 'hidden',
+                            position: 'relative',
+                            borderRadius: 4
+                          }}>
+                            <div style={{
+                              transform: 'scale(0.25)',
+                              transformOrigin: 'top left',
+                              width: '400%',
+                              pointerEvents: 'none'
+                            }}>
+                              {/* For preview mode, if the item has a componentFactory, use it with isPreview flag */}
+                              {(() => {
+                                if (item.componentFactory) {
+                                  return item.componentFactory({ ...item.widgetSettings, isPreview: true });
+                                }
+                                return item.component;
+                              })()}
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                  </Space>
+                ),
+              },
+              {
+                key: 'charts',
+                label: (
+                  <span>
+                    <LineChartOutlined style={{ marginRight: 8 }} />
+                    Charts & Analytics
+                  </span>
+                ),
+                children: (
+                  <Space direction="vertical" style={{ width: '100%' }}>
+                    {availableItems
+                      .filter(item => {
+                        // Chart category includes all visualization widgets
+                        const chartIds = [
+                          'single-number-variation', 'medium-graph', 'progress-lines-graph', 
+                          'percentage', 'ring-progress', 'single-number-card-variation',
+                          'pie-chart', 'website-visits', 'single-number-variation-popover',
+                          'total-downloads', 'area-chart'
+                        ];
+                        return item.category === 'charts' || chartIds.includes(item.id);
+                      })
+                      .map((item) => (
+                        <Card 
+                          key={item.id}
+                          hoverable
+                          size="small"
+                          title={item.title}
+                          onClick={() => addItem({...item, id: `${item.id}-${Date.now()}`})}
+                          style={{ marginBottom: 16, cursor: 'pointer' }}
+                          extra={
+                            <Tooltip title={`Size: ${item.size}`}>
+                              <span style={{ 
+                                fontSize: 10, 
+                                padding: '2px 6px', 
+                                background: '#f0f0f0', 
+                                borderRadius: 2,
+                                color: '#666'
+                              }}>
+                                {item.size.toUpperCase()}
+                              </span>
+                            </Tooltip>
+                          }
+                          bodyStyle={{ padding: 12 }}
+                        >
+                          <div style={{ 
+                            height: '100px', 
+                            overflow: 'hidden',
+                            position: 'relative',
+                            borderRadius: 4
+                          }}>
+                            <div style={{
+                              transform: 'scale(0.25)',
+                              transformOrigin: 'top left',
+                              width: '400%',
+                              pointerEvents: 'none'
+                            }}>
+                              {/* For preview mode, if the item has a componentFactory, use it with isPreview flag */}
+                              {(() => {
+                                if (item.componentFactory) {
+                                  return item.componentFactory({ ...item.widgetSettings, isPreview: true });
+                                }
+                                return item.component;
+                              })()}
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                  </Space>
+                ),
+              },
+              {
+                key: 'tools',
+                label: (
+                  <span>
+                    <ToolOutlined style={{ marginRight: 8 }} />
+                    Tools & Utilities
+                  </span>
+                ),
+                children: (
+                  <Space direction="vertical" style={{ width: '100%' }}>
+                    {availableItems
+                      .filter(item => {
+                        // Tools category includes productivity and management widgets
+                        const toolIds = [
+                          'welcome-header', 'tips-of-the-day', 'AnsiblePlaybookRunner',
+                          'ContainerUpdateCenter', 'MaintenanceCalendar', 'QuickActionsWidget',
+                          'NotebookWidget', 'RSSFeedWidget', 'IFrameWidget'
+                        ];
+                        return item.category === 'tools' || toolIds.includes(item.id);
+                      })
+                      .map((item) => (
+                        <Card 
+                          key={item.id}
+                          hoverable
+                          size="small"
+                          title={item.title}
+                          onClick={() => addItem({...item, id: `${item.id}-${Date.now()}`})}
+                          style={{ marginBottom: 16, cursor: 'pointer' }}
+                          extra={
+                            <Tooltip title={`Size: ${item.size}`}>
+                              <span style={{ 
+                                fontSize: 10, 
+                                padding: '2px 6px', 
+                                background: '#f0f0f0', 
+                                borderRadius: 2,
+                                color: '#666'
+                              }}>
+                                {item.size.toUpperCase()}
+                              </span>
+                            </Tooltip>
+                          }
+                          bodyStyle={{ padding: 12 }}
+                        >
+                          <div style={{ 
+                            height: '100px', 
+                            overflow: 'hidden',
+                            position: 'relative',
+                            borderRadius: 4
+                          }}>
+                            <div style={{
+                              transform: 'scale(0.25)',
+                              transformOrigin: 'top left',
+                              width: '400%',
+                              pointerEvents: 'none'
+                            }}>
+                              {/* For preview mode, if the item has a componentFactory, use it with isPreview flag */}
+                              {(() => {
+                                if (item.componentFactory) {
+                                  return item.componentFactory({ ...item.widgetSettings, isPreview: true });
+                                }
+                                return item.component;
+                              })()}
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                  </Space>
+                ),
+              },
+            ]}
+          />
         </Drawer>
 
         <Drawer
           title="Widget Settings"
           placement="right"
           width={480}
-          onClose={() => setSettingsDrawerVisible(false)}
+          onClose={() => {
+            setSettingsDrawerVisible(false);
+            setSelectedWidgetId(null); // Clear selected widget on close
+          }}
           open={settingsDrawerVisible}
+          destroyOnClose={true} // Ensure drawer content is destroyed when closed
         >
           {(() => {
+            if (!selectedWidgetId) {
+              return null; // Don't render anything if no widget is selected
+            }
+            
             const selectedWidget = items.find(item => item.id === selectedWidgetId);
-            const widgetSettings = selectedWidget?.settings || [];
+            if (!selectedWidget) {
+              return null; // Widget not found
+            }
+            
+            const widgetSettings = selectedWidget.settings || [];
             
             if (widgetSettings.length === 0) {
               return (
@@ -631,6 +816,7 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
             
             return (
               <ProForm
+                key={`${selectedWidgetId}-${Date.now()}`} // Force form to remount when widget changes with timestamp
                 onFinish={async (values) => {
                   // Process the form values to extract widget settings
                   const widgetSettings: any = {};
@@ -651,6 +837,8 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
                       widgetSettings.customDateRange = values[key];
                     } else if (key.includes('aggregationType_')) {
                       widgetSettings.aggregationType = values[key];
+                    } else if (key.includes('customText_')) {
+                      widgetSettings.customText = values[key];
                     }
                   });
                   
@@ -803,10 +991,10 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
                         placeholder="Select an icon"
                         fieldProps={{
                           optionRender: (option) => (
-                            <Space>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                               {option.data.icon}
                               {option.data.label}
-                            </Space>
+                            </div>
                           ),
                         }}
                       />
@@ -854,7 +1042,7 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
                         name={`customText_${index}`}
                         label={setting.label}
                         placeholder="Enter custom text"
-                        initialValue={setting.defaultValue || ''}
+                        initialValue={selectedWidget?.widgetSettings?.customText || setting.defaultValue || ''}
                         fieldProps={{
                           rows: 4,
                         }}

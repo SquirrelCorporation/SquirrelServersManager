@@ -26,6 +26,7 @@ interface LineChartProps {
   metrics?: string[];
   dateRangePreset?: string;
   customDateRange?: [moment.Moment, moment.Moment];
+  isPreview?: boolean; // Add flag to prevent data fetching in preview mode
 }
 
 const LineChart: React.FC<LineChartProps> = ({
@@ -37,6 +38,7 @@ const LineChart: React.FC<LineChartProps> = ({
   metrics = ['cpu_usage', 'memory_usage'],
   dateRangePreset = 'last7days',
   customDateRange,
+  isPreview = false,
 }) => {
   const [loading, setLoading] = useState(false);
   const [graphData, setGraphData] = useState<any[] | undefined>([]);
@@ -76,7 +78,7 @@ const LineChart: React.FC<LineChartProps> = ({
       const initialRange = getDateRangeFromPreset(dateRangePreset, customDateRange);
       setRangePickerValue(initialRange);
     }
-  }, [rangePickerValue, dateRangePreset, customDateRange, getDateRangeFromPreset]);
+  }, [dateRangePreset, customDateRange, getDateRangeFromPreset]);
 
   // Convert metric names to StatsType enum values (stable function)
   const getStatsType = useCallback((metric: string): StatsType.DeviceStatsType => {
@@ -201,9 +203,20 @@ const LineChart: React.FC<LineChartProps> = ({
   // Fetch data when dependencies change
   useEffect(() => {
     if (rangePickerValue) {
-      fetchData();
+      if (isPreview) {
+        // Use mock data in preview mode
+        const mockData = Array.from({ length: 20 }, (_, i) => ({
+          name: `device-${i % 2 + 1}`,
+          value: Math.floor(Math.random() * 40) + 30,
+          date: moment().subtract(20 - i, 'hours').toISOString(),
+        }));
+        setGraphData(mockData);
+        setLoading(false);
+      } else {
+        fetchData();
+      }
     }
-  }, [fetchData, rangePickerValue]);
+  }, [fetchData, rangePickerValue, isPreview]);
 
   const getMetricLabel = useCallback((metric: string): string => {
     const labels: Record<string, string> = {

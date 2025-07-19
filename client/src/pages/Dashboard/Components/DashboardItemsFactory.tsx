@@ -27,29 +27,21 @@ import DownloadsByOSDonutCard from './DownloadsByOSDonutCard';
 import AreaInstalledBarChartCard from './AreaInstalledBarChartCard';
 import WelcomeHeaderSection from './WelcomeHeaderSection';
 import FeaturedAppCard from './FeaturedAppCard';
+// New imports for missing widgets
+import SystemPerformanceCard from './SystemPerformanceCard';
+import AvailabilityCard from './AvailabilityCard';
+import ContainersCard from './ContainersCard';
+import CombinedPowerCard from './CombinedPowerCard';
+import MainChartCard from './MainChartCard';
+import AnsiblePlaybookRunner from './AnsiblePlaybookRunner';
+import ContainerUpdateCenter from './ContainerUpdateCenter';
+import MaintenanceCalendar from './MaintenanceCalendar';
+import QuickActionsWidget from './QuickActionsWidget';
+import NotebookWidget from './NotebookWidget';
+import RSSFeedWidget from './RSSFeedWidget';
+import IFrameWidget from './IFrameWidget';
 
-// Sample data for line chart - smoother curves
-const yearlyData = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-].flatMap((month, index) => {
-  // Create smoother data with sine waves for better visualization
-  const baseIncome = 70 + Math.sin(index * 0.5) * 30 + (index === 7 ? 40 : 0);
-  const baseExpenses = 60 + Math.cos(index * 0.4) * 25;
-  
-  return [
-    {
-      month,
-      type: 'Total income',
-      value: Math.floor(baseIncome)
-    },
-    {
-      month,
-      type: 'Total expenses',
-      value: Math.floor(baseExpenses)
-    }
-  ];
-});
+// Sample data for demo widgets
 
 const bookingStatuses = [
   { name: 'Total profit', count: '$8,374', percentage: 10.1, color: '#52c41a' },
@@ -111,58 +103,6 @@ const osDownloadsData = [
   { type: 'Type 3', value: 27777, color: '#faad14' },
 ];
 
-const areaInstallData = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-].reduce(
-  (acc, month) => {
-    // Generate more realistic stacked data
-    const baseValues = {
-      'Jan': [5, 7, 10],
-      'Feb': [18, 18, 16],
-      'Mar': [13, 15, 14],
-      'Apr': [7, 11, 9],
-      'May': [20, 20, 20],
-      'Jun': [5, 8, 5],
-      'Jul': [22, 22, 25],
-      'Aug': [18, 19, 18],
-      'Sep': [8, 12, 8],
-      'Oct': [22, 22, 26],
-      'Nov': [8, 12, 8],
-      'Dec': [16, 18, 14],
-    };
-    
-    const values = baseValues[month as keyof typeof baseValues] || [10, 15, 10];
-    
-    acc.push({
-      month,
-      region: 'Asia',
-      installs: values[0],
-    });
-    acc.push({
-      month,
-      region: 'Europe',
-      installs: values[1],
-    });
-    acc.push({
-      month,
-      region: 'Americas',
-      installs: values[2],
-    });
-    return acc;
-  },
-  [] as Array<{ month: string; region: string; installs: number }>,
-);
 
 // Factory function to create dashboard items
 export const createDashboardItems = (): DashboardItem[] => {
@@ -238,6 +178,7 @@ export const createDashboardItems = (): DashboardItem[] => {
           defaultValue="0"
           defaultTrend="0"
           icon={<DashboardOutlined />}
+          isPreview={widgetSettings?.isPreview}
         />
       ),
     },
@@ -252,16 +193,7 @@ export const createDashboardItems = (): DashboardItem[] => {
       ],
       component: (
         <LineChart
-          title="Yearly sales"
-          subtitle="(+43%) than last year"
-          incomeValue="1.23k"
-          incomeLabel="Total income"
-          expensesValue="6.79k"
-          expensesLabel="Total expenses"
-          chartData={yearlyData}
-          currentYear={2023}
-          availableYears={[2023, 2022, 2021]}
-          onYearChange={(year) => console.log('Year changed:', year)}
+          title="Metric Trends"
         />
       ),
       // Component factory for dynamic API configuration
@@ -273,6 +205,7 @@ export const createDashboardItems = (): DashboardItem[] => {
           metrics={widgetSettings?.metric ? [widgetSettings.metric] : ['cpu_usage', 'memory_usage']}
           dateRangePreset={widgetSettings?.dateRangePreset || 'last7days'}
           customDateRange={widgetSettings?.customDateRange}
+          isPreview={widgetSettings?.isPreview}
         />
       ),
     },
@@ -403,7 +336,7 @@ export const createDashboardItems = (): DashboardItem[] => {
     },
     {
       id: 'total-downloads',
-      title: 'Metric Card with Negative Trend',
+      title: 'Metric Card with Trend',
       size: 'small',
       settings: [
         { type: 'statistics', label: 'Data Source' },
@@ -426,21 +359,120 @@ export const createDashboardItems = (): DashboardItem[] => {
       size: 'large',
       settings: [
         { type: 'statistics', label: 'Data Source' },
-        { type: 'title', label: 'Chart Title', defaultValue: 'Regional Metrics' }
+        { type: 'title', label: 'Chart Title', defaultValue: 'Regional Metrics' },
+        { type: 'dateRange', label: 'Date Range' }
       ],
       component: (
         <AreaInstalledBarChartCard
-          title="Area installed"
-          subtitle="(+43%) than last year"
-          currentYear={2023}
-          availableYears={[2023, 2022, 2021]}
-          onYearChange={(year) => console.log('Year changed:', year)}
-          chartData={areaInstallData}
-          regionColors={{
-            'Asia': '#52c41a',
-            'Europe': '#faad14',
-            'Americas': '#1890ff',
-          }}
+          title="Regional Metrics"
+        />
+      ),
+      // Component factory for dynamic API configuration
+      componentFactory: (widgetSettings?: any) => (
+        <AreaInstalledBarChartCard
+          title={widgetSettings?.title || "Regional Metrics"}
+          dataType={widgetSettings?.dataType || 'device'}
+          source={widgetSettings?.source || 'all'}
+          metric={widgetSettings?.metric || 'cpu_usage'}
+          dateRangePreset={widgetSettings?.dateRangePreset || 'last7days'}
+          customDateRange={widgetSettings?.customDateRange}
+          isPreview={widgetSettings?.isPreview}
+        />
+      ),
+    },
+    // Monitoring & System Performance Widgets
+    {
+      id: 'SystemPerformanceCard',
+      title: 'System Performance',
+      size: 'medium',
+      settings: undefined,
+      component: <SystemPerformanceCard />,
+    },
+    {
+      id: 'AvailabilityCard',
+      title: 'System Availability',
+      size: 'medium',
+      settings: undefined,
+      component: <AvailabilityCard />,
+    },
+    {
+      id: 'ContainersCard',
+      title: 'Containers Status',
+      size: 'medium',
+      settings: undefined,
+      component: <ContainersCard />,
+    },
+    {
+      id: 'CombinedPowerCard',
+      title: 'Combined Power',
+      size: 'medium',
+      settings: undefined,
+      component: <CombinedPowerCard />,
+    },
+    {
+      id: 'MainChartCard',
+      title: 'Historical Analytics',
+      size: 'full',
+      settings: undefined,
+      component: <MainChartCard />,
+    },
+    // Operations & Management Widgets
+    {
+      id: 'AnsiblePlaybookRunner',
+      title: 'Ansible Playbook Runner',
+      size: 'large',
+      settings: undefined,
+      component: <AnsiblePlaybookRunner />,
+    },
+    {
+      id: 'ContainerUpdateCenter',
+      title: 'Container Update Center',
+      size: 'large',
+      settings: undefined,
+      component: <ContainerUpdateCenter />,
+    },
+    {
+      id: 'MaintenanceCalendar',
+      title: 'Maintenance Calendar',
+      size: 'large',
+      settings: undefined,
+      component: <MaintenanceCalendar />,
+    },
+    {
+      id: 'QuickActionsWidget',
+      title: 'Quick Actions',
+      size: 'medium',
+      settings: undefined,
+      component: <QuickActionsWidget />,
+    },
+    // Productivity & Integration Widgets
+    {
+      id: 'NotebookWidget',
+      title: 'Notebook/Notes',
+      size: 'large',
+      settings: undefined,
+      component: <NotebookWidget />,
+    },
+    {
+      id: 'RSSFeedWidget',
+      title: 'RSS/News Feed',
+      size: 'large',
+      settings: undefined,
+      component: <RSSFeedWidget />,
+    },
+    {
+      id: 'IFrameWidget',
+      title: 'iFrame Embed',
+      size: 'large',
+      settings: [
+        { type: 'title', label: 'Widget Title', defaultValue: 'External Service' },
+        { type: 'customText', label: 'URL', defaultValue: 'https://example.com' }
+      ],
+      component: <IFrameWidget />,
+      componentFactory: (widgetSettings?: any) => (
+        <IFrameWidget 
+          title={widgetSettings?.title || 'External Service'}
+          defaultUrl={widgetSettings?.customText || ''}
         />
       ),
     },

@@ -28,6 +28,7 @@ interface SummaryStatCardProps {
   cardStyle?: React.CSSProperties;
   defaultValue?: string;
   defaultTrend?: string;
+  isPreview?: boolean;
 }
 
 const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
@@ -40,6 +41,7 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
   cardStyle,
   defaultValue = '0',
   defaultTrend = '0',
+  isPreview = false,
 }) => {
   const [loading, setLoading] = useState(false);
   const [currentValue, setCurrentValue] = useState<number>(0);
@@ -55,6 +57,18 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
     const fetchData = async () => {
       setLoading(true);
       try {
+        // Use mock data in preview mode
+        if (isPreview) {
+          setCurrentValue(65.5);
+          setTrendValue(12.4);
+          const mockSparklineData = Array.from({ length: 7 }, (_, i) => ({
+            value: Math.floor(Math.random() * 30) + 50,
+            index: i,
+          }));
+          setWeeklyData(mockSparklineData);
+          setLoading(false);
+          return;
+        }
         const now = moment();
         const weekAgo = moment().subtract(7, 'days');
         
@@ -212,7 +226,7 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
     // Refresh every 30 seconds
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
-  }, [dataType, source, metric]);
+  }, [dataType, source, metric, isPreview, defaultValue, defaultTrend]);
 
   const processHistoricalData = (data: API.DeviceStat[]) => {
     // Group data by time intervals (hourly)
