@@ -11,6 +11,7 @@ import dashboardService from '@/services/rest/dashboard.service';
 import type { Dashboard, DashboardWidget } from '@/services/rest/dashboard.service';
 import { DashboardItem } from './types';
 import { WidgetConfiguration } from '../../Core/WidgetSettings.types';
+import { dashboardLogger } from '@/utils/logger';
 import DraggableItem from './DraggableItem';
 import WidgetGallery from './WidgetGallery';
 import SettingsDrawer from './SettingsDrawer';
@@ -68,15 +69,25 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
               settings = item.widgetSettings;
             } else {
               // Map our internal format to the backend format for standard widgets
-              console.log('🔄 Converting widget settings for:', item.id);
-              console.log('  - source:', item.widgetSettings.source);
-              console.log('  - dataType:', item.widgetSettings.dataType);
+              dashboardLogger.debug('Widget save conversion', {
+                widgetId: item.id,
+                source: item.widgetSettings.source,
+                dataType: item.widgetSettings.dataType,
+                allSettings: item.widgetSettings
+              });
+              
+              // Log the source mapping for debugging
+              dashboardLogger.debug('Mapping source to statistics_source', {
+                widgetId: item.id,
+                source: item.widgetSettings.source,
+                sourceLength: item.widgetSettings.source?.length
+              });
               
               settings = {
                 statistics_type: item.widgetSettings.dataType,
-                statistics_source: item.widgetSettings.source,
+                statistics_source: item.widgetSettings.source || [],
                 statistics_metric: item.widgetSettings.metric,
-                title: item.title,
+                title: item.widgetSettings.title || item.title,
                 dateRangePreset: item.widgetSettings.dateRangePreset,
                 customDateRange: item.widgetSettings.customDateRange,
                 colorPalette: item.widgetSettings.colorPalette,
@@ -108,17 +119,33 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
           };
         });
         
-        console.log('💾 Saving widgets to backend:', widgets);
+        dashboardLogger.info('Saving widgets to backend', {
+          count: widgets.length,
+          widgets: widgets.map(w => ({
+            id: w.id,
+            widgetType: w.widgetType,
+            settings: w.settings
+          }))
+        });
+        
+        // Debug log the exact payload being sent
+        dashboardLogger.debug('Sending widgets payload to backend', {
+          dashboardId: currentDashboard._id,
+          pageId: currentPageId,
+          widgetsJson: JSON.stringify(widgets, null, 2)
+        });
+        
         await dashboardService.updateWidgets(
           currentDashboard._id!,
           currentPageId,
           widgets
         );
-        console.log('✅ Widgets saved successfully');
+        
+        dashboardLogger.success('Widgets saved successfully');
         
         // Silent save - no success message for auto-save
       } catch (error) {
-        console.error('Auto-save failed:', error);
+        dashboardLogger.error('Auto-save failed', error);
         message.error('Failed to save dashboard changes');
       } finally {
         setSaving(false);
@@ -183,11 +210,15 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
             avItem.id === widgetType
           );
           
-          console.log('🔧 Settings save - Widget:', item.id, '→ Type:', widgetType, '→ Found:', !!originalItem);
+          dashboardLogger.debug('Settings save', {
+            widgetId: item.id,
+            widgetType: widgetType,
+            found: !!originalItem
+          });
           
           // If the item has a componentFactory, use it to create a new component
           if (originalItem?.componentFactory) {
-            console.log('🔧 Creating new component with settings:', widgetSettings);
+            dashboardLogger.debug('Creating new component with settings', widgetSettings);
             return {
               ...item,
               widgetSettings,
@@ -224,11 +255,15 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
         setCurrentPageId(defaultPage.id);
         
         // Convert saved widgets to DashboardItems
-        console.log('📥 Loading widgets from backend:', defaultPage.widgets);
-        console.log('📥 Raw widget settings:', defaultPage.widgets.map(w => ({ 
-          id: w.id, 
-          settings: w.settings 
-        })));
+        dashboardLogger.info('Loading widgets from backend', {
+          pageId: defaultPage.id,
+          count: defaultPage.widgets.length,
+          widgets: defaultPage.widgets.map(w => ({ 
+            id: w.id, 
+            widgetType: w.widgetType,
+            settings: w.settings 
+          }))
+        });
         const loadedItems = defaultPage.widgets.map(widget => {
           const availableItem = availableItems.find(item => item.id === widget.widgetType);
           if (availableItem) {
@@ -281,7 +316,7 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
         setItems(loadedItems);
       }
     } catch (error) {
-      console.error('Failed to load dashboard:', error);
+      dashboardLogger.error('Failed to load dashboard', error);
       message.error('Failed to load dashboard');
     } finally {
       setLoading(false);

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ConflictException, Logger } from '@nestjs/common';
 import { DashboardRepository } from './repository/dashboard.repository';
-import { CreateDashboardDto, UpdateDashboardDto } from './dto';
+import { CreateDashboardDto, UpdateDashboardDto, DashboardWidgetDto } from './dto';
 import { Dashboard } from './entities/dashboard.entity';
 
 @Injectable()
@@ -84,7 +84,7 @@ export class DashboardService {
   async updateWidgets(
     dashboardId: string, 
     pageId: string, 
-    widgets: any[]
+    widgets: DashboardWidgetDto[]
   ): Promise<Dashboard> {
     const dashboard = await this.findOne(dashboardId);
     

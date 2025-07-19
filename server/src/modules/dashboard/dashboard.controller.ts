@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Request,
+  Logger,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { DashboardService } from './dashboard.service';
@@ -16,6 +17,8 @@ import { CreateDashboardDto, UpdateDashboardDto, DashboardWidgetDto } from './dt
 @Controller('dashboards')
 @ApiBearerAuth()
 export class DashboardController {
+  private readonly logger = new Logger(DashboardController.name);
+
   constructor(private readonly dashboardService: DashboardService) {}
 
   @Post()
@@ -68,6 +71,18 @@ export class DashboardController {
     @Param('pageId') pageId: string,
     @Body() widgets: DashboardWidgetDto[],
   ) {
+    // Debug log the received widgets
+    this.logger.debug('=== Received widgets for update ===');
+    this.logger.debug(`Total widgets: ${widgets.length}`);
+    widgets.forEach((widget, index) => {
+      this.logger.debug(`Widget ${index} (${widget.id}):`, {
+        widgetType: widget.widgetType,
+        hasSettings: !!widget.settings,
+        settings: widget.settings ? JSON.stringify(widget.settings) : 'null'
+      });
+    });
+    this.logger.debug('=== End widgets debug ===');
+    
     return this.dashboardService.updateWidgets(dashboardId, pageId, widgets);
   }
 }

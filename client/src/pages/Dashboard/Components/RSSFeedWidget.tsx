@@ -2,30 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { Card, Typography, List, Button, Spin, Badge, Input, message } from 'antd';
 import { ReloadOutlined, LinkOutlined, PlusOutlined, DeleteOutlined, SettingOutlined } from '@ant-design/icons';
 import DebugOverlay from './DebugOverlay';
+import { fetchRSSFeeds, RSSFeedItem, FeedConfig } from '@/services/rest/rss.service';
 
-interface RSSItem {
-  title: string;
-  link: string;
-  description: string;
-  pubDate: string;
-  source: string;
-}
-
-interface RSSFeed {
-  id: string;
-  name: string;
-  url: string;
-  enabled: boolean;
-}
+// Use types from the service
+type RSSItem = RSSFeedItem;
+type RSSFeed = FeedConfig;
 
 interface RSSFeedWidgetProps {
   title?: string;
   cardStyle?: React.CSSProperties;
+  widgetSettings?: {
+    feeds?: FeedConfig[];
+    refreshInterval?: number;
+    maxItems?: number;
+  };
 }
 
 const RSSFeedWidget: React.FC<RSSFeedWidgetProps> = ({
   title = 'News Feed',
   cardStyle,
+  widgetSettings,
 }) => {
   const [items, setItems] = useState<RSSItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -34,6 +30,8 @@ const RSSFeedWidget: React.FC<RSSFeedWidgetProps> = ({
   const [newFeedName, setNewFeedName] = useState('');
   const [newFeedUrl, setNewFeedUrl] = useState('');
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const refreshInterval = widgetSettings?.refreshInterval || 30;
+  const maxItems = widgetSettings?.maxItems || 20;
 
   // Default feeds
   const defaultFeeds: RSSFeed[] = [
@@ -50,12 +48,6 @@ const RSSFeedWidget: React.FC<RSSFeedWidgetProps> = ({
       enabled: true,
     },
     {
-      id: 'security-advisories',
-      name: 'Security Advisories',
-      url: 'https://feeds.feedburner.com/oreilly/radar',
-      enabled: true,
-    },
-    {
       id: 'ansible-blog',
       name: 'Ansible Blog',
       url: 'https://www.ansible.com/blog/rss.xml',
@@ -63,89 +55,75 @@ const RSSFeedWidget: React.FC<RSSFeedWidgetProps> = ({
     },
   ];
 
-  // Load feeds from localStorage or use defaults
+  // Load feeds from widget settings or localStorage as fallback
   useEffect(() => {
-    const savedFeeds = localStorage.getItem('ssm-rss-feeds');
-    if (savedFeeds) {
-      try {
-        setFeeds(JSON.parse(savedFeeds));
-      } catch (error) {
-        console.error('Failed to load RSS feeds:', error);
+    if (widgetSettings?.feeds && widgetSettings.feeds.length > 0) {
+      setFeeds(widgetSettings.feeds);
+    } else {
+      const savedFeeds = localStorage.getItem('ssm-rss-feeds');
+      if (savedFeeds) {
+        try {
+          setFeeds(JSON.parse(savedFeeds));
+        } catch (error) {
+          console.error('Failed to load RSS feeds:', error);
+          setFeeds(defaultFeeds);
+        }
+      } else {
         setFeeds(defaultFeeds);
       }
-    } else {
-      setFeeds(defaultFeeds);
     }
-  }, []);
+  }, [widgetSettings?.feeds]);
 
-  // Mock RSS fetching function (in real implementation, this would use a backend service)
-  const fetchRSSFeeds = async () => {
+  // Fetch RSS feeds from the backend API
+  const fetchFeeds = async () => {
     setLoading(true);
     try {
-      // Mock data since we can't directly fetch RSS feeds from frontend due to CORS
-      const mockItems: RSSItem[] = [
-        {
-          title: "Docker Desktop 4.28 Release: New Features for Enhanced Development",
-          link: "https://www.docker.com/blog/docker-desktop-4-28-release/",
-          description: "Explore the latest Docker Desktop features including improved container management and security enhancements.",
-          pubDate: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2 hours ago
-          source: "Docker Blog",
-        },
-        {
-          title: "Kubernetes 1.29 Security Update Available",
-          link: "https://kubernetes.io/blog/2024/01/security-update/",
-          description: "Critical security patches for Kubernetes clusters. Update recommended for all production environments.",
-          pubDate: new Date(Date.now() - 1000 * 60 * 60 * 6).toISOString(), // 6 hours ago
-          source: "Kubernetes Blog",
-        },
-        {
-          title: "Ansible Automation Platform: Best Practices for Server Management",
-          link: "https://www.ansible.com/blog/automation-best-practices/",
-          description: "Learn how to optimize your server management workflows with Ansible automation patterns.",
-          pubDate: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(), // 12 hours ago
-          source: "Ansible Blog",
-        },
-        {
-          title: "SSH Security Advisory: Update Your Keys",
-          link: "https://security.example.com/ssh-advisory",
-          description: "Important security recommendations for SSH key management and server access controls.",
-          pubDate: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // 1 day ago
-          source: "Security Advisories",
-        },
-        {
-          title: "Container Image Vulnerability Scanning: New Tools Available",
-          link: "https://security.example.com/container-scanning",
-          description: "Updated container scanning tools help identify vulnerabilities in Docker images before deployment.",
-          pubDate: new Date(Date.now() - 1000 * 60 * 60 * 36).toISOString(), // 1.5 days ago
-          source: "Security Advisories",
-        },
-      ];
+      // Only fetch if there are enabled feeds
+      const enabledFeeds = feeds.filter(feed => feed.enabled);
+      if (enabledFeeds.length === 0) {
+        setItems([]);
+        setLastUpdate(new Date());
+        return;
+      }
 
-      // Filter items based on enabled feeds
-      const enabledFeedNames = feeds.filter(feed => feed.enabled).map(feed => feed.name);
-      const filteredItems = mockItems.filter(item => enabledFeedNames.includes(item.source));
-
-      setItems(filteredItems.slice(0, 10)); // Limit to 10 items
-      setLastUpdate(new Date());
+      const response = await fetchRSSFeeds(enabledFeeds);
+      
+      if (response.data) {
+        // Sort by date and limit items
+        const sortedItems = response.data
+          .sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime())
+          .slice(0, maxItems);
+        
+        setItems(sortedItems);
+        setLastUpdate(new Date());
+      } else {
+        setItems([]);
+        message.warning('No RSS items found');
+      }
     } catch (error) {
       console.error('Failed to fetch RSS feeds:', error);
-      message.error('Failed to fetch news feeds');
+      message.error('Failed to fetch news feeds. Please check your feed URLs.');
+      setItems([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Initial load and refresh every 30 minutes
+  // Initial load and refresh based on settings
   useEffect(() => {
     if (feeds.length > 0) {
-      fetchRSSFeeds();
-      const interval = setInterval(fetchRSSFeeds, 30 * 60 * 1000); // 30 minutes
+      fetchFeeds();
+      // Refresh based on settings
+      const interval = setInterval(fetchFeeds, refreshInterval * 60 * 1000);
       return () => clearInterval(interval);
     }
-  }, [feeds]);
+  }, [feeds, refreshInterval]);
 
   const saveFeeds = (updatedFeeds: RSSFeed[]) => {
-    localStorage.setItem('ssm-rss-feeds', JSON.stringify(updatedFeeds));
+    // Only save to localStorage if not using widget settings
+    if (!widgetSettings?.feeds) {
+      localStorage.setItem('ssm-rss-feeds', JSON.stringify(updatedFeeds));
+    }
     setFeeds(updatedFeeds);
   };
 
@@ -228,7 +206,7 @@ const RSSFeedWidget: React.FC<RSSFeedWidgetProps> = ({
             type="text"
             icon={<ReloadOutlined />}
             size="small"
-            onClick={fetchRSSFeeds}
+            onClick={fetchFeeds}
             loading={loading}
             style={{ color: '#8c8c8c' }}
           />

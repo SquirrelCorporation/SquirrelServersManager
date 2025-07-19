@@ -63,6 +63,7 @@
     "apexcharts": "^5.2.0",
     "buffer": "^6.0.3",
     "classnames": "^2.5.1",
+    "consola": "^3.4.2",
     "dayjs": "^1.11.13",
     "express": "^5.1.0",
     "framer-motion": "^12.19.2",

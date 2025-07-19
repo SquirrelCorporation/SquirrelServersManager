@@ -9,6 +9,7 @@ import MaintenanceCalendar from '../MaintenanceCalendar';
 import QuickActionsWidget from '../QuickActionsWidget';
 import NotebookWidget from '../NotebookWidget';
 import RSSFeedWidget from '../RSSFeedWidget';
+import RSSFeedSettings from '../RSSFeedSettings';
 import IFrameWidget from '../IFrameWidget';
 import { DashboardItem } from '../../Core/DashboardWidget.types';
 import { WidgetConfiguration } from '../../Core/WidgetSettings.types';
@@ -62,8 +63,15 @@ export const toolWidgets: DashboardItem[] = [
     id: 'RSSFeedWidget',
     title: 'RSS/News Feed',
     size: 'large',
-    settings: undefined,
     component: <RSSFeedWidget />,
+    componentFactory: (configuration: WidgetConfiguration) => (
+      <RSSFeedWidget 
+        title={configuration?.title as string || 'RSS/News Feed'}
+        widgetSettings={configuration?.customSettings as any}
+      />
+    ),
+    settingsComponent: RSSFeedSettings,
+    hasSettings: true,
   },
   {
     id: 'IFrameWidget',

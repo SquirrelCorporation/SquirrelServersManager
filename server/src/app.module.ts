@@ -46,6 +46,7 @@ import { BootstrapModule } from './core/bootstrap/bootstrap.module';
 import { DatabaseConnectionException } from './infrastructure/exceptions/app-exceptions';
 import { SystemService } from './infrastructure/system/system.service';
 import { McpModule } from './modules/mcp/mcp.module';
+import { RSSModule } from './core/rss/rss.module';
 
 // Store the connection for legacy code to access
 let sharedConnection: mongoose.Connection | null = null;
@@ -267,6 +268,7 @@ let connectionReady = false;
     RemoteSystemInformationModule,
     McpModule.registerAsync(),
     BootstrapModule,
+    RSSModule,
   ],
   providers: [SystemService],
 })

@@ -8,6 +8,7 @@ import { Drawer, Form, Space, Spin, Card, Switch } from 'antd';
 import { ProForm, ProFormText, ProFormTextArea, ProFormSelect, ProFormDependency, ProFormDateRangePicker, ProFormSwitch } from '@ant-design/pro-components';
 import { FontSizeOutlined, CalendarOutlined, BgColorsOutlined, BarChartOutlined, DatabaseOutlined, LineChartOutlined, SettingOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import { widgetLogger } from '@/utils/logger';
 import { getAllDevices } from '@/services/rest/devices/devices';
 import { getContainers } from '@/services/rest/containers/containers';
 import { API } from 'ssm-shared-lib';
@@ -47,7 +48,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
         setDevices(devicesResponse.data);
       }
     } catch (error) {
-      console.error('Failed to fetch devices:', error);
+      widgetLogger.error('Failed to fetch devices', error);
     } finally {
       setLoadingDevices(false);
     }
@@ -59,7 +60,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
         setContainers(containersResponse.data);
       }
     } catch (error) {
-      console.error('Failed to fetch containers:', error);
+      widgetLogger.error('Failed to fetch containers', error);
     } finally {
       setLoadingContainers(false);
     }
@@ -147,8 +148,12 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
       <ProForm
         key={`${selectedWidget.id}-${Date.now()}`}
         onFinish={async (values) => {
-          console.log('📝 Raw form values:', values);
           const processedSettings = processFormValues(values, widgetSettings);
+          widgetLogger.info('Form submission', {
+            widgetId: selectedWidget.id,
+            formValues: values,
+            processedSettings
+          });
           alert('Widget Settings Being Saved:\n' + JSON.stringify(processedSettings, null, 2));
           onSave(selectedWidget.id, processedSettings);
           onClose();
@@ -255,8 +260,11 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
           // Check both 'source' and 'statistics_source' as the data might be in different formats
           const currentSource = selectedWidget?.widgetSettings?.source || 
                               selectedWidget?.widgetSettings?.statistics_source;
-          console.log('🔍 Settings Drawer - Current source:', currentSource, 'Widget:', selectedWidget?.id);
-          console.log('🔍 Full widgetSettings:', selectedWidget?.widgetSettings);
+          widgetLogger.debug('Widget settings source check', {
+            widgetId: selectedWidget?.id,
+            currentSource,
+            widgetSettings: selectedWidget?.widgetSettings
+          });
           const isAllSelected = Array.isArray(currentSource) 
             ? currentSource.includes('all')
             : currentSource === 'all' || !currentSource;
@@ -508,7 +516,6 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
     });
     
     // Don't set a default source - let the widget handle it
-    console.log('🔧 Settings Drawer - Processed settings:', processed);
     
     return processed;
   };
