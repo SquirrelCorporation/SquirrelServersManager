@@ -31,11 +31,11 @@ const CompactStatCard: React.FC<CompactStatCardProps> = ({
   return (
     <Card
       style={{
-        backgroundColor: '#222225', // Matched background
+        backgroundColor: '#1a1a1a', // Consistent with other dashboard components
         borderRadius: '16px',
         color: 'white',
         minWidth: '260px', // Adjusted min width
-        boxShadow: '0 4px 12px rgba(0,0,0,0.1)', // Consistent shadow
+        border: 'none',
         ...cardStyle,
       }}
       bodyStyle={{ padding: '20px 24px' }} // Standardized padding

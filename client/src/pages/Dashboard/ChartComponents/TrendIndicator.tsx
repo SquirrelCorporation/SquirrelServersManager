@@ -5,9 +5,9 @@ import {
 } from '@ant-design/icons';
 import classNames from 'classnames';
 import React from 'react';
-import styles from './Trend.less';
+import styles from './TrendIndicator.less';
 
-interface TrendProps extends React.HTMLAttributes<HTMLDivElement> {
+interface TrendIndicatorProps extends React.HTMLAttributes<HTMLDivElement> {
   colorful?: boolean;
   reverseColor?: boolean;
   flag?: 'up' | 'down' | 'eq';
@@ -15,7 +15,7 @@ interface TrendProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-const Trend: React.FC<TrendProps> = ({
+const TrendIndicator: React.FC<TrendIndicatorProps> = ({
   colorful = true,
   reverseColor = true,
   flag,
@@ -50,4 +50,4 @@ const Trend: React.FC<TrendProps> = ({
   );
 };
 
-export default React.memo(Trend);
+export default React.memo(TrendIndicator);

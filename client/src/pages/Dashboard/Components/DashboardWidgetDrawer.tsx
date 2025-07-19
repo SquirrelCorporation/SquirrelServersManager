@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Drawer, Tabs, Card, Row, Col, Typography, Button, Space } from 'antd';
-import { PlusOutlined, BarChartOutlined, SettingOutlined, AppstoreOutlined } from '@ant-design/icons';
+import React, { useState, useMemo } from 'react';
+import { Drawer, Tabs, Card, Row, Col, Typography, Button, Space, Input } from 'antd';
+import { PlusOutlined, BarChartOutlined, SettingOutlined, AppstoreOutlined, SearchOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
 
@@ -24,6 +24,7 @@ const DashboardWidgetDrawer: React.FC<DashboardWidgetDrawerProps> = ({
   onWidgetAdd,
 }) => {
   const [activeTab, setActiveTab] = useState('monitoring');
+  const [searchText, setSearchText] = useState('');
 
   const widgetCategories = {
     monitoring: {
@@ -133,8 +134,28 @@ const DashboardWidgetDrawer: React.FC<DashboardWidgetDrawerProps> = ({
     }
   };
 
+  // Filter widgets based on search text
+  const getFilteredWidgets = (widgets: WidgetItem[]) => {
+    if (!searchText.trim()) {
+      return widgets;
+    }
+    
+    const searchLower = searchText.toLowerCase();
+    return widgets.filter(widget => 
+      widget.title.toLowerCase().includes(searchLower) ||
+      widget.description.toLowerCase().includes(searchLower) ||
+      (widget.preview && widget.preview.toLowerCase().includes(searchLower))
+    );
+  };
+
   const handleWidgetAdd = (widgetKey: string) => {
     onWidgetAdd(widgetKey, activeTab);
+    setSearchText(''); // Clear search on widget add
+    onClose();
+  };
+
+  const handleClose = () => {
+    setSearchText(''); // Clear search on drawer close
     onClose();
   };
 
@@ -186,30 +207,58 @@ const DashboardWidgetDrawer: React.FC<DashboardWidgetDrawerProps> = ({
     </Col>
   );
 
-  const tabItems = Object.entries(widgetCategories).map(([key, category]) => ({
-    key,
-    label: (
-      <Space>
-        {category.icon}
-        <span>{category.title}</span>
-      </Space>
-    ),
-    children: (
-      <div style={{ padding: '16px 0' }}>
-        <div style={{ marginBottom: '24px' }}>
-          <Title level={4} style={{ color: '#fff', margin: 0, fontSize: '16px' }}>
-            {category.title}
-          </Title>
-          <Text type="secondary" style={{ fontSize: '13px' }}>
-            {category.description}
-          </Text>
+  // Calculate total matches across all categories
+  const totalMatches = useMemo(() => {
+    if (!searchText.trim()) return null;
+    
+    return Object.values(widgetCategories).reduce((total, category) => {
+      return total + getFilteredWidgets(category.widgets).length;
+    }, 0);
+  }, [searchText]);
+
+  const tabItems = Object.entries(widgetCategories).map(([key, category]) => {
+    const filteredWidgets = getFilteredWidgets(category.widgets);
+    
+    return {
+      key,
+      label: (
+        <Space>
+          {category.icon}
+          <span>{category.title}</span>
+          {searchText && (
+            <span style={{ color: '#888', fontSize: '12px' }}>
+              ({filteredWidgets.length})
+            </span>
+          )}
+        </Space>
+      ),
+      children: (
+        <div style={{ padding: '16px 0' }}>
+          <div style={{ marginBottom: '24px' }}>
+            <Title level={4} style={{ color: '#fff', margin: 0, fontSize: '16px' }}>
+              {category.title}
+            </Title>
+            <Text type="secondary" style={{ fontSize: '13px' }}>
+              {category.description}
+            </Text>
+          </div>
+          <Row gutter={[16, 16]}>
+            {filteredWidgets.length > 0 ? (
+              filteredWidgets.map(renderWidgetCard)
+            ) : (
+              <Col span={24}>
+                <div style={{ textAlign: 'center', padding: '40px 0' }}>
+                  <Text type="secondary">
+                    No widgets found matching "{searchText}"
+                  </Text>
+                </div>
+              </Col>
+            )}
+          </Row>
         </div>
-        <Row gutter={[16, 16]}>
-          {category.widgets.map(renderWidgetCard)}
-        </Row>
-      </div>
-    )
-  }));
+      )
+    };
+  });
 
   return (
     <Drawer
@@ -221,13 +270,37 @@ const DashboardWidgetDrawer: React.FC<DashboardWidgetDrawerProps> = ({
       }
       placement="right"
       width={720}
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       styles={{
         body: { backgroundColor: '#0a0a0a', padding: 0 },
         header: { backgroundColor: '#1a1a1a', borderBottom: '1px solid #333' }
       }}
     >
+      <div style={{ padding: '16px 24px 0', borderBottom: '1px solid #333' }}>
+        <Input
+          prefix={<SearchOutlined />}
+          placeholder="Search widgets by name or description..."
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          style={{
+            backgroundColor: '#1a1a1a',
+            borderColor: '#333'
+          }}
+          allowClear
+          size="large"
+        />
+        {searchText && totalMatches !== null && (
+          <div style={{ marginTop: '8px', marginBottom: '16px' }}>
+            <Text type="secondary" style={{ fontSize: '13px' }}>
+              Found {totalMatches} widget{totalMatches !== 1 ? 's' : ''} matching "{searchText}"
+            </Text>
+          </div>
+        )}
+        {!searchText && (
+          <div style={{ marginBottom: '16px' }} />
+        )}
+      </div>
       <Tabs
         activeKey={activeTab}
         onChange={setActiveTab}

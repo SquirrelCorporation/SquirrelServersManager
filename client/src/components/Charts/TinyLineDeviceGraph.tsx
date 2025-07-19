@@ -1,5 +1,6 @@
 import { getDeviceStats } from '@/services/rest/statistics/stastistics';
-import { Tiny } from '@ant-design/charts';
+import ReactApexChart from 'react-apexcharts';
+import type { ApexOptions } from 'apexcharts';
 import message from '@/components/Message/DynamicMessage';
 import moment from 'moment';
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
@@ -49,27 +50,99 @@ const TinyLineDeviceGraph: React.FC<TinyLineProps> = ({
     void asyncFetch();
   }, [asyncFetch]);
 
-  const config = useMemo(
-    () => ({
-      title: 'CPU',
-      data,
-      autoFit: false,
-      width: 280,
-      height: 55,
-      shapeField: 'smooth',
-      xField: 'date',
-      yField: 'value',
-      padding: 10,
-      tooltip: { channel: 'y', valueFormatter: '.2%' },
-      interaction: { tooltip: { mount: 'body' } },
-      style: {
-        lineWidth: 4,
-      },
-    }),
-    [data],
-  );
+  // Prepare data for ApexCharts
+  const chartData = useMemo(() => {
+    return data.map(item => item.value * 100); // Convert back to percentage
+  }, [data]);
 
-  return <Tiny.Line {...config} />;
+  const categories = useMemo(() => {
+    return data.map(item => item.date);
+  }, [data]);
+
+  const chartOptions: ApexOptions = {
+    chart: {
+      type: 'line',
+      sparkline: {
+        enabled: true
+      },
+      toolbar: {
+        show: false
+      },
+      animations: {
+        enabled: false
+      }
+    },
+    stroke: {
+      curve: 'smooth',
+      width: 4
+    },
+    colors: ['#52c41a'],
+    xaxis: {
+      categories: categories,
+      labels: {
+        show: false
+      },
+      axisBorder: {
+        show: false
+      },
+      axisTicks: {
+        show: false
+      }
+    },
+    yaxis: {
+      show: false,
+      min: 0,
+      max: 100
+    },
+    grid: {
+      show: false,
+      padding: {
+        top: 10,
+        right: 0,
+        bottom: 10,
+        left: 0
+      }
+    },
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
+      x: {
+        show: false
+      },
+      y: {
+        title: {
+          formatter: () => 'CPU'
+        },
+        formatter: (value) => `${value.toFixed(2)}%`
+      },
+      marker: {
+        show: false
+      },
+      fixed: {
+        enabled: true,
+        position: 'topRight',
+        offsetX: 0,
+        offsetY: 0
+      }
+    }
+  };
+
+  const series = [{
+    name: 'CPU',
+    data: chartData
+  }];
+
+  return (
+    <div style={{ width: '280px', height: '55px' }}>
+      <ReactApexChart
+        options={chartOptions}
+        series={series}
+        type="line"
+        height={55}
+        width={280}
+      />
+    </div>
+  );
 };
 
 export default React.memo(TinyLineDeviceGraph);

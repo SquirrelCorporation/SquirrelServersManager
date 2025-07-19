@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Typography, List, Button, Spin, Badge, Input, message } from 'antd';
-import { ReloadOutlined, ExternalLinkOutlined, PlusOutlined, DeleteOutlined, SettingOutlined } from '@ant-design/icons';
+import { ReloadOutlined, LinkOutlined, PlusOutlined, DeleteOutlined, SettingOutlined } from '@ant-design/icons';
 
 interface RSSItem {
   title: string;
@@ -328,7 +328,7 @@ const RSSFeedWidget: React.FC<RSSFeedWidgetProps> = ({
                     >
                       {item.title}
                     </Typography.Text>
-                    <ExternalLinkOutlined
+                    <LinkOutlined
                       style={{ color: '#8c8c8c', fontSize: '12px', cursor: 'pointer' }}
                       onClick={() => window.open(item.link, '_blank')}
                     />

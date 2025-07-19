@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Typography, Space, Progress } from 'antd';
 
-interface MiniDonutStatCardProps {
+interface CircularProgressChartProps {
   percentage: number; // 0 to 100
   value: string;
   label: string;
@@ -9,7 +9,7 @@ interface MiniDonutStatCardProps {
   cardStyle?: React.CSSProperties;
 }
 
-const MiniDonutStatCard: React.FC<MiniDonutStatCardProps> = ({
+const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
   percentage,
   value,
   label,
@@ -89,4 +89,4 @@ const MiniDonutStatCard: React.FC<MiniDonutStatCardProps> = ({
   );
 };
 
-export default MiniDonutStatCard;
+export default CircularProgressChart;

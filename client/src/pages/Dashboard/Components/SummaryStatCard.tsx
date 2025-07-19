@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Card, Typography, Space } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
-import { Tiny } from '@ant-design/charts';
+import ReactApexChart from 'react-apexcharts';
+import type { ApexOptions } from 'apexcharts';
+import DebugPanel from './DebugPanel';
 import { 
   getDashboardDevicesStats, 
   getDeviceStat,
@@ -48,6 +50,7 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
   const [weeklyData, setWeeklyData] = useState<any[]>([]);
   const [trendValue, setTrendValue] = useState<number>(0);
   const [trendDirection, setTrendDirection] = useState<'up' | 'down'>('up');
+  const [rawApiData, setRawApiData] = useState<any>({});
 
   // Determine if we're looking at all items or specific ones
   const isAllSelected = Array.isArray(source) ? source.includes('all') : source === 'all';
@@ -96,6 +99,15 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
                 to: now.toDate(),
               }),
             ]);
+            
+            // Store raw API data for debugging
+            setRawApiData({
+              currentStats: currentStats.data,
+              historicalStats: historicalStats.data,
+              metric,
+              dataType,
+              source: 'all'
+            });
             
             // Set current value (latest average)
             if (currentStats.data && currentStats.data.length > 0) {
@@ -286,23 +298,48 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
     return `${value.toFixed(1)}%`;
   };
 
-  const lineConfig = {
-    data: weeklyData,
-    xField: 'index',
-    yField: 'value',
-    height: 50,
-    autoFit: false,
-    width: 90,
-    padding: 0,
-    shapeField: 'smooth',
-    tooltip: false,
-    animation: false,
-    axis: false,
-    style: {
-      lineWidth: 2.5,
-      stroke: '#faad14', // Golden color as shown in the image
+  const chartOptions: ApexOptions = {
+    chart: {
+      type: 'line',
+      sparkline: {
+        enabled: true
+      },
+      animations: {
+        enabled: false
+      }
     },
+    stroke: {
+      curve: 'smooth',
+      width: 2.5,
+      colors: ['#faad14'] // Golden color as shown in the image
+    },
+    fill: {
+      opacity: 1
+    },
+    tooltip: {
+      enabled: false
+    },
+    yaxis: {
+      show: false
+    },
+    xaxis: {
+      show: false
+    },
+    grid: {
+      show: false,
+      padding: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0
+      }
+    }
   };
+
+  const chartSeries = [{
+    name: title,
+    data: weeklyData.map(item => item.value)
+  }];
 
   const trendIcon = trendDirection === 'up' ? <ArrowUpOutlined /> : <ArrowDownOutlined />;
   const trendColor = trendDirection === 'up' ? '#52c41a' : '#ff4d4f';
@@ -368,10 +405,37 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-            {weeklyData.length > 0 && <Tiny.Line {...lineConfig} />}
+            {weeklyData.length > 0 && (
+              <ReactApexChart
+                options={chartOptions}
+                series={chartSeries}
+                type="line"
+                height={50}
+                width={100}
+              />
+            )}
           </div>
         </Space>
       </Space>
+      
+      <DebugPanel 
+        componentName="SummaryStatCard"
+        data={{
+          rawApiData,
+          processedData: {
+            currentValue,
+            weeklyData,
+            trendValue,
+            trendDirection
+          },
+          config: {
+            dataType,
+            source,
+            metric
+          }
+        }}
+        maxHeight={200}
+      />
     </Card>
   );
 };

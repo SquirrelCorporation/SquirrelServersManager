@@ -13,7 +13,7 @@ import SystemPerformanceCard from './SystemPerformanceCard';
 import AvailabilityCard from './AvailabilityCard';
 import ContainersCard from './ContainersCard';
 import CombinedPowerCard from './CombinedPowerCard';
-import MainChartCard from './MainChartCard';
+import TimeSeriesLineChart from './TimeSeriesLineChart';
 import DashboardWidgetDrawer from './DashboardWidgetDrawer';
 
 const widgetColProps = {
@@ -76,7 +76,7 @@ const DashboardWidgets: React.FC = () => {
       AvailabilityCard: <AvailabilityCard key={widgetKey} />,
       ContainersCard: <ContainersCard key={widgetKey} />,
       CombinedPowerCard: <CombinedPowerCard key={widgetKey} />,
-      MainChartCard: <MainChartCard key={widgetKey} />,
+      MainChartCard: <TimeSeriesLineChart key={widgetKey} />,
       
       // Operations & Management
       QuickActionsWidget: <QuickActionsWidget key={widgetKey} />,

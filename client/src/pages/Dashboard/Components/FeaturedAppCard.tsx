@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Card, Typography, Tag } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Card, Typography, Tag, Tooltip } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 interface Tip {
@@ -7,6 +7,7 @@ interface Tip {
   title: string;
   description: string;
   imageUrl: string;
+  docLink?: string;
 }
 
 interface FeaturedAppCardProps {
@@ -28,14 +29,42 @@ const FeaturedAppCard: React.FC<FeaturedAppCardProps> = ({
   cardStyle,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedTips, setSelectedTips] = useState<Tip[]>([]);
 
   // For backward compatibility, create tips array from individual props if tips not provided
-  const tipsData = tips || [{
+  const allTips = tips || [{
     tagText: tagText || 'FEATURED APP',
     title: title || 'Default Title',
     description: description || 'Default description',
     imageUrl: imageUrl || '/assets/images/dashboard/featured-app-image.png',
   }];
+
+  // Function to get a random background image (bck1 to bck5)
+  const getRandomBackground = () => {
+    const randomNum = Math.floor(Math.random() * 5) + 1;
+    return `/assets/images/dashboard/tips/bck${randomNum}.png`;
+  };
+
+  // Initialize with 3 random tips from the 100
+  useEffect(() => {
+    if (allTips.length > 3) {
+      // Get 3 random tips with random backgrounds
+      const shuffled = [...allTips].sort(() => 0.5 - Math.random());
+      const tipsWithRandomBg = shuffled.slice(0, 3).map(tip => ({
+        ...tip,
+        imageUrl: getRandomBackground()
+      }));
+      setSelectedTips(tipsWithRandomBg);
+    } else {
+      const tipsWithRandomBg = allTips.map(tip => ({
+        ...tip,
+        imageUrl: getRandomBackground()
+      }));
+      setSelectedTips(tipsWithRandomBg);
+    }
+  }, []);
+
+  const tipsData = selectedTips.length > 0 ? selectedTips : allTips;
 
   const handlePrevious = () => {
     setCurrentIndex((prev) => (prev === 0 ? tipsData.length - 1 : prev - 1));
@@ -46,6 +75,15 @@ const FeaturedAppCard: React.FC<FeaturedAppCardProps> = ({
   };
 
   const currentTip = tipsData[currentIndex];
+
+  const handleTipClick = () => {
+    if (currentTip.docLink) {
+      const event = new CustomEvent('openDocumentation', {
+        detail: { link: currentTip.docLink },
+      });
+      window.dispatchEvent(event);
+    }
+  };
 
   return (
     <Card
@@ -89,10 +127,11 @@ const FeaturedAppCard: React.FC<FeaturedAppCardProps> = ({
             bottom: 0,
             background: `linear-gradient(to bottom, 
               transparent 0%, 
-              transparent 40%, 
-              rgba(26,26,26,0.4) 70%, 
-              rgba(26,26,26,0.8) 85%, 
-              rgba(26,26,26,1) 95%,
+              transparent 60%, 
+              rgba(26,26,26,0.2) 70%, 
+              rgba(26,26,26,0.5) 80%, 
+              rgba(26,26,26,0.8) 90%, 
+              rgba(26,26,26,0.95) 95%,
               #1a1a1a 100%)`,
           }}
         />
@@ -191,7 +230,9 @@ const FeaturedAppCard: React.FC<FeaturedAppCardProps> = ({
           right: 0,
           padding: '20px 24px 24px 24px',
           zIndex: 5,
+          cursor: currentTip.docLink ? 'pointer' : 'default',
         }}
+        onClick={handleTipClick}
       >
         <Tag
           style={{
@@ -221,17 +262,20 @@ const FeaturedAppCard: React.FC<FeaturedAppCardProps> = ({
           {currentTip.title}
         </Typography.Title>
         
-        <Typography.Paragraph
-          style={{ 
-            color: 'rgba(255,255,255,0.85)', 
-            fontSize: '14px', 
-            lineHeight: '1.6',
-            margin: 0,
-          }}
-          ellipsis={{ rows: 2 }}
-        >
-          {currentTip.description}
-        </Typography.Paragraph>
+        <Tooltip title={currentTip.description} placement="top">
+          <Typography.Paragraph
+            style={{ 
+              color: 'rgba(255,255,255,0.85)', 
+              fontSize: '14px', 
+              lineHeight: '1.6',
+              margin: 0,
+              cursor: 'pointer',
+            }}
+            ellipsis={{ rows: 2 }}
+          >
+            {currentTip.description}
+          </Typography.Paragraph>
+        </Tooltip>
       </div>
     </Card>
   );

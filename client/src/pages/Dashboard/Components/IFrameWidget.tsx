@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Card, Typography, Button, Input, message, Spin, Alert } from 'antd';
-import { ReloadOutlined, ExpandOutlined, SettingOutlined, ExternalLinkOutlined } from '@ant-design/icons';
+import { ReloadOutlined, ExpandOutlined, SettingOutlined, LinkOutlined } from '@ant-design/icons';
 
 interface IFrameWidgetProps {
   title?: string;
@@ -155,7 +155,7 @@ const IFrameWidget: React.FC<IFrameWidgetProps> = ({
           />
           <Button
             type="text"
-            icon={<ExternalLinkOutlined />}
+            icon={<LinkOutlined />}
             size="small"
             onClick={openInNewTab}
             disabled={!url}

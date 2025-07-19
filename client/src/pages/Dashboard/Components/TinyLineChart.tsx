@@ -3,7 +3,7 @@ import { Card, Typography, Statistic, Space } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 // import { TinyLine, TinyLineConfig } from '@ant-design/plots'; // Still commented out
 
-interface GradientStatCardWithChartProps {
+interface TinyLineChartProps {
   title: string;
   value: string;
   trendValue: string; // e.g., "+2.6"
@@ -15,7 +15,7 @@ interface GradientStatCardWithChartProps {
   cardStyle?: React.CSSProperties;
 }
 
-const GradientStatCardWithChart: React.FC<GradientStatCardWithChartProps> = ({
+const TinyLineChart: React.FC<TinyLineChartProps> = ({
   title,
   value,
   trendValue,
@@ -100,4 +100,4 @@ const GradientStatCardWithChart: React.FC<GradientStatCardWithChartProps> = ({
   );
 };
 
-export default GradientStatCardWithChart;
+export default TinyLineChart;

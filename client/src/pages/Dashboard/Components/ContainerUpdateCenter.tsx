@@ -5,7 +5,7 @@ import {
   DownloadOutlined, 
   ReloadOutlined, 
   InfoCircleOutlined,
-  ExclamationTriangleOutlined,
+  WarningOutlined,
   CheckCircleOutlined,
   ClockCircleOutlined,
   RollbackOutlined,
@@ -218,7 +218,7 @@ const ContainerUpdateCenter: React.FC<ContainerUpdateCenterProps> = ({
       case 'available': return <UpOutlined style={{ color: '#1890ff' }} />;
       case 'updating': return <ClockCircleOutlined style={{ color: '#faad14' }} />;
       case 'updated': return <CheckCircleOutlined style={{ color: '#52c41a' }} />;
-      case 'failed': return <ExclamationTriangleOutlined style={{ color: '#ff4d4f' }} />;
+      case 'failed': return <WarningOutlined style={{ color: '#ff4d4f' }} />;
       case 'rollback': return <RollbackOutlined style={{ color: '#722ed1' }} />;
       default: return <InfoCircleOutlined />;
     }

@@ -1,11 +1,11 @@
 import { Progress } from 'antd';
 import React from 'react';
 
-interface MiniProgressProps {
+interface ProgressBarProps {
   percent: number;
 }
 
-const MiniProgress: React.FC<MiniProgressProps> = ({ percent }) => {
+const ProgressBar: React.FC<ProgressBarProps> = ({ percent }) => {
   return (
     <Progress
       percent={percent}
@@ -15,4 +15,4 @@ const MiniProgress: React.FC<MiniProgressProps> = ({ percent }) => {
   );
 };
 
-export default React.memo(MiniProgress);
+export default React.memo(ProgressBar);

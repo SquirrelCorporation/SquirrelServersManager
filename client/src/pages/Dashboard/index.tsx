@@ -11,7 +11,7 @@ import StyledTabContainer, {
 } from '@/components/Layout/StyledTabContainer';
 
 // Existing Dashboard Components
-import MainChartCard from '@/pages/Dashboard/Components/MainChartCard';
+import TimeSeriesLineChart from '@/pages/Dashboard/Components/TimeSeriesLineChart';
 import DashboardTop from '@/pages/Dashboard/Components/DashboardTop';
 import { useSlot } from '@/plugins/contexts/plugin-context';
 
@@ -41,7 +41,7 @@ const Index: React.FC = () => {
       children: (
         <>
           <DashboardTop />
-          <MainChartCard />
+          <TimeSeriesLineChart />
           {/* Render plugin dashboard widgets */}
           <div style={{ marginTop: '24px' }}>
             <DashboardWidgetsSlot />

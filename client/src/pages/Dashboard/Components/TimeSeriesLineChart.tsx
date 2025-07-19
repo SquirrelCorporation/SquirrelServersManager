@@ -5,7 +5,8 @@ import {
 import Devicestatus from '@/utils/devicestatus';
 import { getTimeDistance } from '@/utils/time';
 import { LoadingOutlined } from '@ant-design/icons';
-import { Line, LineConfig } from '@ant-design/charts';
+import ReactApexChart from 'react-apexcharts';
+import type { ApexOptions } from 'apexcharts';
 import { useModel } from '@umijs/max';
 import {
   Card,
@@ -24,7 +25,7 @@ import styles from '../Analysis.less';
 
 const { RangePicker } = DatePicker;
 
-const MainChartCard: React.FC = () => {
+const TimeSeriesLineChart: React.FC = () => {
   const { initialState } = useModel('@@initialState');
   const { currentUser }: { currentUser?: API.CurrentUser } = initialState || {};
 
@@ -122,75 +123,128 @@ const MainChartCard: React.FC = () => {
     void fetchData();
   }, [fetchData]);
 
-  const cpuConfig: LineConfig = useMemo(
-    () => ({
-      data: graphData,
-      loading,
-      animate: { enter: { type: 'waveIn' } },
-      theme: {
-        view: {
-          viewFill: 'rgba(255,255,255,0.00)',
-        },
-      },
-      loadingTemplate: (
-        <Flex
-          justify={'center'}
-          style={{ backgroundColor: '#0a0a0a', width: '100%', height: '100%' }}
-        >
-          <LoadingOutlined style={{ fontSize: '32px' }} />
-        </Flex>
-      ),
-      xField: 'date',
-      yField: 'value',
-      colorField: 'name',
-      seriesField: 'name',
-      xAxis: {
-        type: 'time',
-      },
-      legend: {
-        color: {
-          itemLabelFill: '#fff',
-        },
-      },
-      axis: {
-        x: {
-          labelFill: '#fff',
-        },
-        y: {
-          labelFill: '#fff',
-          labelFormatter: (v: any) => `${parseFloat(v)?.toFixed(2)}%`,
-        },
-      },
-      tooltip: {
-        channel: 'y',
-        valueFormatter: (d: string) => `${parseFloat(d)?.toFixed(2)}%`,
-      },
-      yAxis: {
-        label: {
-          formatter: (v: number) => `${v?.toFixed(2)}%`,
-        },
-      },
-    }),
-    [graphData, loading],
-  );
+  // Prepare data for ApexCharts
+  const prepareChartData = useCallback((data: API.DeviceStat[] | undefined) => {
+    if (!data || data.length === 0) return { series: [], categories: [] };
+    
+    // Group data by device name
+    const deviceMap = new Map<string, { x: string; y: number }[]>();
+    
+    data.forEach((item) => {
+      const deviceName = item.name || 'Unknown';
+      if (!deviceMap.has(deviceName)) {
+        deviceMap.set(deviceName, []);
+      }
+      
+      // Parse the date string
+      let dateStr = item.date;
+      if (typeof dateStr === 'string' && dateStr.includes('-') && dateStr.split('-').length > 3) {
+        const parts = dateStr.split('-');
+        dateStr = `${parts[0]}-${parts[1]}-${parts[2]}T${parts[3]}`;
+      }
+      
+      deviceMap.get(deviceName)!.push({
+        x: new Date(dateStr).getTime(),
+        y: parseFloat(item.value.toFixed(2))
+      });
+    });
+    
+    // Convert to ApexCharts series format
+    const series = Array.from(deviceMap.entries()).map(([name, data]) => ({
+      name,
+      data: data.sort((a, b) => a.x - b.x)
+    }));
+    
+    return { series };
+  }, []);
 
-  const memConfig = useMemo(
-    () => ({
-      ...cpuConfig,
-      data: graphMemData,
-      // Customize further if needed
-    }),
-    [graphMemData, loading],
-  );
+  const getChartOptions = useCallback((): ApexOptions => ({
+    chart: {
+      type: 'line',
+      height: 400,
+      toolbar: {
+        show: false
+      },
+      background: 'transparent',
+      animations: {
+        enabled: false
+      }
+    },
+    stroke: {
+      curve: 'smooth',
+      width: 2
+    },
+    xaxis: {
+      type: 'datetime',
+      labels: {
+        style: {
+          colors: '#fff',
+          fontSize: '12px'
+        },
+        datetimeFormatter: {
+          year: 'yyyy',
+          month: "MMM 'yy",
+          day: 'dd MMM',
+          hour: 'HH:mm'
+        }
+      },
+      axisBorder: {
+        color: '#3a3a3e'
+      },
+      axisTicks: {
+        color: '#3a3a3e'
+      }
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: '#fff',
+          fontSize: '12px'
+        },
+        formatter: (value: number) => `${value.toFixed(2)}%`
+      }
+    },
+    grid: {
+      borderColor: '#3a3a3e',
+      strokeDashArray: 4,
+      yaxis: {
+        lines: {
+          show: true,
+          opacity: 0.3
+        }
+      },
+      xaxis: {
+        lines: {
+          show: false
+        }
+      }
+    },
+    legend: {
+      show: true,
+      position: 'top',
+      horizontalAlign: 'right',
+      labels: {
+        colors: '#fff'
+      }
+    },
+    tooltip: {
+      theme: 'dark',
+      shared: true,
+      intersect: false,
+      x: {
+        format: 'dd MMM yyyy HH:mm'
+      },
+      y: {
+        formatter: (value: number) => `${value.toFixed(2)}%`
+      }
+    },
+    colors: ['#1890ff', '#52c41a', '#faad14', '#f5222d', '#722ed1', '#13c2c2']
+  }), []);
 
-  const storageConfig = useMemo(
-    () => ({
-      ...cpuConfig,
-      data: graphStorageData,
-      // Customize further if needed
-    }),
-    [graphStorageData, loading],
-  );
+  const cpuChartData = useMemo(() => prepareChartData(graphData), [graphData, prepareChartData]);
+  const memChartData = useMemo(() => prepareChartData(graphMemData), [graphMemData, prepareChartData]);
+  const storageChartData = useMemo(() => prepareChartData(graphStorageData), [graphStorageData, prepareChartData]);
+
 
   const handleTabChange = (key: string) => {
     setType(key as StatsType.DeviceStatsType);
@@ -205,7 +259,22 @@ const MainChartCard: React.FC = () => {
           <Row>
             <Col xl={16} lg={12} md={12} sm={24} xs={24}>
               <div className={styles.salesBar}>
-                <Line {...cpuConfig} />
+                {loading ? (
+                  <Flex
+                    justify={'center'}
+                    align={'center'}
+                    style={{ height: 400 }}
+                  >
+                    <LoadingOutlined style={{ fontSize: '32px' }} />
+                  </Flex>
+                ) : (
+                  <ReactApexChart
+                    options={getChartOptions()}
+                    series={cpuChartData.series}
+                    type="line"
+                    height={400}
+                  />
+                )}
               </div>
             </Col>
             <Col xl={8} lg={12} md={12} sm={24} xs={24}>
@@ -248,7 +317,22 @@ const MainChartCard: React.FC = () => {
           <Row>
             <Col xl={16} lg={12} md={12} sm={24} xs={24}>
               <div className={styles.salesBar}>
-                <Line {...memConfig} />
+                {loading ? (
+                  <Flex
+                    justify={'center'}
+                    align={'center'}
+                    style={{ height: 400 }}
+                  >
+                    <LoadingOutlined style={{ fontSize: '32px' }} />
+                  </Flex>
+                ) : (
+                  <ReactApexChart
+                    options={getChartOptions()}
+                    series={memChartData.series}
+                    type="line"
+                    height={400}
+                  />
+                )}
               </div>
             </Col>
             <Col xl={8} lg={12} md={12} sm={24} xs={24}>
@@ -288,7 +372,22 @@ const MainChartCard: React.FC = () => {
           <Row>
             <Col xl={16} lg={12} md={12} sm={24} xs={24}>
               <div className={styles.salesBar}>
-                <Line {...storageConfig} />
+                {loading ? (
+                  <Flex
+                    justify={'center'}
+                    align={'center'}
+                    style={{ height: 400 }}
+                  >
+                    <LoadingOutlined style={{ fontSize: '32px' }} />
+                  </Flex>
+                ) : (
+                  <ReactApexChart
+                    options={getChartOptions()}
+                    series={storageChartData.series}
+                    type="line"
+                    height={400}
+                  />
+                )}
               </div>
             </Col>
             <Col xl={8} lg={12} md={12} sm={24} xs={24}>
@@ -325,7 +424,7 @@ const MainChartCard: React.FC = () => {
         ),
       },
     ],
-    [cpuConfig, memConfig, storageConfig, topTenData],
+    [cpuChartData, memChartData, storageChartData, topTenData, loading, getChartOptions],
   );
 
   const tabBarExtra = useMemo(
@@ -377,7 +476,17 @@ const MainChartCard: React.FC = () => {
   );
 
   return (
-    <Card bordered={false} bodyStyle={{ padding: 0 }}>
+    <Card 
+      bordered={false} 
+      bodyStyle={{ padding: 0 }}
+      style={{
+        backgroundColor: '#1a1a1a',
+        borderRadius: '16px',
+        color: 'white',
+        border: 'none',
+        height: '100%',
+      }}
+    >
       <div className={styles.salesCard}>
         <Tabs
           onChange={handleTabChange}
@@ -385,11 +494,15 @@ const MainChartCard: React.FC = () => {
           animated
           tabBarExtraContent={tabBarExtra}
           size="large"
-          tabBarStyle={{ marginBottom: 24, marginLeft: 25 }}
+          tabBarStyle={{ 
+            marginBottom: 24, 
+            marginLeft: 25,
+            borderBottom: '1px solid #3a3a3e'
+          }}
         />
       </div>
     </Card>
   );
 };
 
-export default React.memo(MainChartCard);
+export default React.memo(TimeSeriesLineChart);

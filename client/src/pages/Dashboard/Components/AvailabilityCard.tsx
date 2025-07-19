@@ -1,10 +1,6 @@
-import styles from '@/pages/Dashboard/Analysis.less';
-import ChartCard from '@/pages/Dashboard/ChartComponents/ChartCard';
-import MiniProgress from '@/pages/Dashboard/ChartComponents/MiniProgress';
-import Trend from '@/pages/Dashboard/ChartComponents/Trend';
 import { getDashboardAvailabilityStat } from '@/services/rest/statistics/stastistics';
-import { InfoCircleFilled } from '@ant-design/icons';
-import { Tooltip, Typography } from 'antd';
+import { InfoCircleFilled, ArrowUpOutlined, ArrowDownOutlined, MinusOutlined } from '@ant-design/icons';
+import { Tooltip, Typography, Card, Skeleton, Progress } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { API } from 'ssm-shared-lib';
 
@@ -28,77 +24,98 @@ const AvailabilityCard: React.FC = () => {
     asyncFetch();
   }, [asyncFetch]);
 
-  const title = useMemo(
-    () => <Typography.Title level={5}>System Availability</Typography.Title>,
-    [],
-  );
-
-  const action = useMemo(
-    () => (
-      <Tooltip title="The percentage of uptime of your combined devices">
-        <InfoCircleFilled style={{ color: 'white' }} />
-      </Tooltip>
-    ),
-    [],
-  );
-
-  const total = useMemo(
-    () =>
-      `${availabilityStat ? (availabilityStat.availability < 1 ? (availabilityStat.availability * 100).toFixed(5) : 100) : 'NaN'}%`,
-    [availabilityStat],
-  );
-
-  const footer = useMemo(
-    () => (
-      <div style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>
-        <Trend
-          flag={
-            availabilityStat &&
-            availabilityStat.availability &&
-            availabilityStat.lastMonth
-              ? availabilityStat.availability >= availabilityStat.lastMonth
-                ? availabilityStat.availability === availabilityStat.lastMonth
-                  ? 'eq'
-                  : 'up'
-                : 'down'
-              : undefined
-          }
-          style={{ marginRight: 16 }}
-        >
-          <Typography.Text>Last Month</Typography.Text>
-          <span className={styles.trendText}>
-            <Typography.Text>
-              {availabilityStat
-                ? availabilityStat.lastMonth < 1
-                  ? (availabilityStat.lastMonth * 100).toFixed(5)
-                  : 100
-                : 'None'}
-              %
-            </Typography.Text>
-          </span>
-        </Trend>
-      </div>
-    ),
-    [availabilityStat],
-  );
-
   const percent = useMemo(
     () =>
       availabilityStat ? (availabilityStat.availability * 100).toFixed(0) : 0,
     [availabilityStat],
   );
 
+  const trendFlag = useMemo(() => {
+    if (!availabilityStat?.availability || !availabilityStat?.lastMonth) {
+      return undefined;
+    }
+    if (availabilityStat.availability > availabilityStat.lastMonth) return 'up';
+    if (availabilityStat.availability < availabilityStat.lastMonth) return 'down';
+    return 'eq';
+  }, [availabilityStat]);
+
+  if (loading) {
+    return (
+      <Card
+        style={{
+          backgroundColor: '#1a1a1a',
+          borderRadius: '16px',
+          border: 'none',
+          minHeight: '180px',
+        }}
+        bodyStyle={{ padding: '20px' }}
+      >
+        <Skeleton active paragraph={{ rows: 2 }} />
+      </Card>
+    );
+  }
+
   return (
-    <ChartCard
-      loading={loading}
-      title={title}
-      action={action}
-      total={total}
-      footer={footer}
-      contentHeight={60}
+    <Card
+      style={{
+        backgroundColor: '#1a1a1a',
+        borderRadius: '16px',
+        color: 'white',
+        border: 'none',
+        minHeight: '180px',
+      }}
+      bodyStyle={{ padding: '20px' }}
     >
-      <MiniProgress percent={percent as number} />
-    </ChartCard>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <Typography.Title level={5} style={{ color: '#ffffff', margin: 0, fontSize: '16px', fontWeight: 600 }}>
+          System Availability
+        </Typography.Title>
+        <Tooltip title="The percentage of uptime of your combined devices">
+          <InfoCircleFilled style={{ color: '#8c8c8c', fontSize: '14px' }} />
+        </Tooltip>
+      </div>
+
+      {/* Availability Percentage */}
+      <div style={{ marginBottom: '12px' }}>
+        <Typography.Text style={{ color: '#52c41a', fontSize: '28px', fontWeight: 600 }}>
+          {availabilityStat ? (availabilityStat.availability < 1 ? (availabilityStat.availability * 100).toFixed(3) : 100) : '0'}%
+        </Typography.Text>
+      </div>
+
+      {/* Progress Bar */}
+      <div style={{ marginBottom: '12px' }}>
+        <Progress 
+          percent={Number(percent)} 
+          strokeColor="#52c41a"
+          trailColor="#303030"
+          showInfo={false}
+          strokeWidth={6}
+          style={{ marginBottom: '0' }}
+        />
+      </div>
+
+      {/* Last Month Trend - Compact */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <Typography.Text style={{ color: '#8c8c8c', fontSize: '12px' }}>
+          Last Month:
+        </Typography.Text>
+        <Typography.Text style={{ color: '#ffffff', fontSize: '14px', fontWeight: 500 }}>
+          {availabilityStat
+            ? availabilityStat.lastMonth < 1
+              ? (availabilityStat.lastMonth * 100).toFixed(3)
+              : 100
+            : '0'}%
+        </Typography.Text>
+        {trendFlag && (
+          <>
+            {trendFlag === 'up' && <ArrowUpOutlined style={{ color: '#52c41a', fontSize: '12px' }} />}
+            {trendFlag === 'down' && <ArrowDownOutlined style={{ color: '#ff4d4f', fontSize: '12px' }} />}
+            {trendFlag === 'eq' && <MinusOutlined style={{ color: '#8c8c8c', fontSize: '12px' }} />}
+          </>
+        )}
+      </div>
+    </Card>
   );
 };
 
