@@ -20,16 +20,16 @@ interface DonutChartProps {
 
 const DonutChart: React.FC<DonutChartProps> = ({
   title,
-  totalTours,
-  mainLabel,
-  chartData,
-  legendItems,
+  totalTours = 0,
+  mainLabel = 'Tours',
+  chartData = [],
+  legendItems = [],
   cardStyle,
 }) => {
-  // Prepare data for ApexCharts
-  const chartSeries = chartData.map(item => item.value);
-  const chartLabels = chartData.map(item => item.type);
-  const chartColors = chartData.map(item => item.color);
+  // Prepare data for ApexCharts - handle undefined chartData
+  const chartSeries = chartData?.map(item => item.value) || [];
+  const chartLabels = chartData?.map(item => item.type) || [];
+  const chartColors = chartData?.map(item => item.color) || [];
 
   const chartOptions: ApexOptions = {
     chart: {
@@ -152,7 +152,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
         size={8}
         style={{ marginTop: '24px', width: '100%' }}
       >
-        {legendItems.map((item) => (
+        {legendItems?.map((item) => (
           <Row
             key={item.name}
             justify="space-between"

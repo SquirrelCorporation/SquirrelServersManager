@@ -68,6 +68,10 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
               settings = item.widgetSettings;
             } else {
               // Map our internal format to the backend format for standard widgets
+              console.log('🔄 Converting widget settings for:', item.id);
+              console.log('  - source:', item.widgetSettings.source);
+              console.log('  - dataType:', item.widgetSettings.dataType);
+              
               settings = {
                 statistics_type: item.widgetSettings.dataType,
                 statistics_source: item.widgetSettings.source,
@@ -221,6 +225,10 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
         
         // Convert saved widgets to DashboardItems
         console.log('📥 Loading widgets from backend:', defaultPage.widgets);
+        console.log('📥 Raw widget settings:', defaultPage.widgets.map(w => ({ 
+          id: w.id, 
+          settings: w.settings 
+        })));
         const loadedItems = defaultPage.widgets.map(widget => {
           const availableItem = availableItems.find(item => item.id === widget.widgetType);
           if (availableItem) {
@@ -236,7 +244,7 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
                 // Convert standard widget settings
                 widgetSettings = {
                   dataType: widget.settings.statistics_type || 'device',
-                  source: widget.settings.statistics_source || ['all'],
+                  source: widget.settings.statistics_source,
                   metric: widget.settings.statistics_metric || 'cpu_usage',
                   title: widget.settings.title,
                   dateRangePreset: widget.settings.dateRangePreset || 'last7days',

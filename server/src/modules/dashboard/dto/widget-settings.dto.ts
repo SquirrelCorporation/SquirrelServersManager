@@ -40,6 +40,27 @@ export class WidgetSettingsDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsString()
+  dateRangePreset?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsObject()
+  customDateRange?: any;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  colorPalette?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  customColors?: string[];
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsObject()
   customSettings?: Record<string, any>;
 }

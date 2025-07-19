@@ -18,13 +18,13 @@ interface PieChartProps {
 
 const PieChart: React.FC<PieChartProps> = ({
   title,
-  chartData,
+  chartData = [],
   cardStyle,
 }) => {
-  // Prepare data for ApexCharts
-  const chartSeries = chartData.map(item => item.value);
-  const chartLabels = chartData.map(item => item.type);
-  const chartColors = chartData.map(item => item.color);
+  // Prepare data for ApexCharts - handle undefined chartData
+  const chartSeries = chartData?.map(item => item.value) || [];
+  const chartLabels = chartData?.map(item => item.type) || [];
+  const chartColors = chartData?.map(item => item.color) || [];
 
   const chartOptions: ApexOptions = {
     chart: {
@@ -136,7 +136,7 @@ const PieChart: React.FC<PieChartProps> = ({
         gutter={[16, 10]} // Adjusted gutter for legend items
         style={{ marginTop: '20px', justifyContent: 'center' }}
       >
-        {chartData.map((item) => (
+        {chartData?.map((item) => (
           <Col key={item.type}>
             <Space align="center" size={6}>
               <div // Circular marker

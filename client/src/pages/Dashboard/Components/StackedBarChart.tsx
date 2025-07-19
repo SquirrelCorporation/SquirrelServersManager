@@ -18,6 +18,7 @@ import { getTimeDistance } from '@/utils/time';
 import { LoadingOutlined } from '@ant-design/icons';
 import { API, StatsType } from 'ssm-shared-lib';
 import moment from 'moment';
+import { getPaletteColors } from './utils/colorPalettes';
 
 // Static mapping outside component to avoid useCallback dependency issues
 const STATS_TYPE_MAPPING: Record<string, StatsType.DeviceStatsType> = {
@@ -377,9 +378,9 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
     if (customColors && customColors.length > 0) {
       return customColors[index % customColors.length];
     }
-    // Default color palette
-    const colors = ['#52c41a', '#faad14', '#1890ff', '#722ed1', '#fa8c16', '#13c2c2'];
-    return colors[index % colors.length];
+    // Use color palette if provided, otherwise use default
+    const paletteColors = getPaletteColors(colorPalette || 'default');
+    return paletteColors[index % paletteColors.length];
   };
 
   // Prepare data for ApexCharts

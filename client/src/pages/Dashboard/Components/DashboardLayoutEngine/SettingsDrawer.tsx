@@ -4,9 +4,9 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Drawer, Form, Space, Spin } from 'antd';
-import { ProForm, ProFormText, ProFormTextArea, ProFormSelect, ProFormDependency, ProFormDateRangePicker } from '@ant-design/pro-components';
-import { Type, Calendar, Palette, BarChart3, Database, TrendingUp } from 'lucide-react';
+import { Drawer, Form, Space, Spin, Card, Switch } from 'antd';
+import { ProForm, ProFormText, ProFormTextArea, ProFormSelect, ProFormDependency, ProFormDateRangePicker, ProFormSwitch } from '@ant-design/pro-components';
+import { FontSizeOutlined, CalendarOutlined, BgColorsOutlined, BarChartOutlined, DatabaseOutlined, LineChartOutlined, SettingOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { getAllDevices } from '@/services/rest/devices/devices';
 import { getContainers } from '@/services/rest/containers/containers';
@@ -108,17 +108,48 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
     
     if (widgetSettings.length === 0) {
       return (
-        <div style={{ textAlign: 'center', color: 'rgba(0, 0, 0, 0.45)', padding: '40px 0' }}>
-          No settings available for this widget
+        <div style={{ 
+          textAlign: 'center', 
+          padding: '60px 40px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '16px'
+        }}>
+          <SettingOutlined style={{ 
+            fontSize: '48px',
+            opacity: 0.3
+          }} />
+          <div style={{
+            fontSize: '16px',
+            fontWeight: 500
+          }}>
+            No settings available
+          </div>
+          <div style={{
+            fontSize: '14px',
+            opacity: 0.6
+          }}>
+            This widget doesn't have any configurable options
+          </div>
         </div>
       );
     }
 
+    // Organize settings by type for better layout
+    const titleSettings = widgetSettings.filter(s => s.type === 'title' || s.type === 'customText');
+    const statisticsSettings = widgetSettings.filter(s => s.type === 'statistics');
+    const dateRangeSettings = widgetSettings.filter(s => s.type === 'dateRange');
+    const colorSettings = widgetSettings.filter(s => s.type === 'colorPalette');
+    const backgroundColorSettings = widgetSettings.filter(s => s.type === 'backgroundColor');
+    
     return (
       <ProForm
         key={`${selectedWidget.id}-${Date.now()}`}
         onFinish={async (values) => {
+          console.log('📝 Raw form values:', values);
           const processedSettings = processFormValues(values, widgetSettings);
+          alert('Widget Settings Being Saved:\n' + JSON.stringify(processedSettings, null, 2));
           onSave(selectedWidget.id, processedSettings);
           onClose();
           return true;
@@ -138,7 +169,30 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
           },
         }}
       >
-        {widgetSettings.map((setting, index) => renderSettingField(setting, index))}
+        <Space direction="vertical" style={{ width: '100%' }} size="middle">
+          {/* Title Settings - Always first when present */}
+          {titleSettings.length > 0 && (
+            <Card size="small" style={{ marginBottom: 16 }}>
+              {titleSettings.map((setting, index) => renderSettingField(setting, widgetSettings.indexOf(setting)))}
+            </Card>
+          )}
+          
+          {/* Metrics Settings */}
+          {(statisticsSettings.length > 0 || dateRangeSettings.length > 0) && (
+            <Card size="small" style={{ marginBottom: 16 }}>
+              {statisticsSettings.map((setting, index) => renderSettingField(setting, widgetSettings.indexOf(setting)))}
+              {dateRangeSettings.map((setting, index) => renderSettingField(setting, widgetSettings.indexOf(setting)))}
+            </Card>
+          )}
+          
+          {/* Color Theme */}
+          {(colorSettings.length > 0 || backgroundColorSettings.length > 0) && (
+            <Card size="small" style={{ marginBottom: 16 }}>
+              {colorSettings.map((setting, index) => renderSettingField(setting, widgetSettings.indexOf(setting)))}
+              {backgroundColorSettings.map((setting, index) => renderSettingField(setting, widgetSettings.indexOf(setting)))}
+            </Card>
+          )}
+        </Space>
       </ProForm>
     );
   };
@@ -152,7 +206,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
           <ProFormText
             key={index}
             name={`title_${index}`}
-            label={<><Type size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />{setting.label}</>}
+            label={<><FontSizeOutlined style={{ marginRight: 6 }} />{setting.label}</>}
             placeholder="Enter widget title"
             initialValue={selectedWidget?.title || setting.defaultValue || ''}
             rules={[{ required: true, message: 'Please enter a title' }]}
@@ -163,7 +217,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
           <ProFormTextArea
             key={index}
             name={`customText_${index}`}
-            label={<><Type size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />{setting.label}</>}
+            label={<><FontSizeOutlined style={{ marginRight: 6 }} />{setting.label}</>}
             placeholder="Enter custom text"
             initialValue={selectedWidget?.widgetSettings?.customText || setting.defaultValue || ''}
             fieldProps={{
@@ -175,6 +229,8 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
         return renderDateRangeField(setting, index);
       case 'colorPalette':
         return renderColorPaletteField(setting, index);
+      case 'backgroundColor':
+        return renderBackgroundColorField(setting, index);
       default:
         return null;
     }
@@ -184,7 +240,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
     <div key={index} style={{ marginBottom: 24 }}>
       <ProFormSelect
         name={`statistics_type_${index}`}
-        label={<><Database size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />Data Type</>}
+        label={<><DatabaseOutlined style={{ marginRight: 6 }} />Data Type</>}
         initialValue={selectedWidget?.widgetSettings?.dataType || 'device'}
         options={[
           { label: 'Device', value: 'device' },
@@ -195,20 +251,63 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
       />
       <ProFormDependency name={[`statistics_type_${index}`]}>
         {({ [`statistics_type_${index}`]: dataType }) => {
-          const sourceOptions = getSourceOptions(dataType);
+          const sourceOptions = getSourceOptions(dataType, false); // Don't include 'all' option
+          // Check both 'source' and 'statistics_source' as the data might be in different formats
+          const currentSource = selectedWidget?.widgetSettings?.source || 
+                              selectedWidget?.widgetSettings?.statistics_source;
+          console.log('🔍 Settings Drawer - Current source:', currentSource, 'Widget:', selectedWidget?.id);
+          console.log('🔍 Full widgetSettings:', selectedWidget?.widgetSettings);
+          const isAllSelected = Array.isArray(currentSource) 
+            ? currentSource.includes('all')
+            : currentSource === 'all' || !currentSource;
+          
           return (
-            <ProFormSelect
-              name={`statistics_source_${index}`}
-              label={<><BarChart3 size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />Source</>}
-              initialValue={selectedWidget?.widgetSettings?.source || ['all']}
-              options={sourceOptions}
-              placeholder={dataType === 'device' ? 'Select devices' : 'Select containers'}
-              mode="multiple"
-              rules={[{ required: true, message: 'Please select at least one source' }]}
-              fieldProps={{
-                loading: dataType === 'device' ? loadingDevices : loadingContainers,
-              }}
-            />
+            <div>
+              <ProFormSwitch
+                name={`statistics_all_${index}`}
+                label={<><BarChartOutlined style={{ marginRight: 6 }} />{dataType === 'device' ? 'All Devices' : 'All Containers'}</>}
+                initialValue={isAllSelected}
+                fieldProps={{
+                  onChange: (checked, form = arguments[1]) => {
+                    if (checked) {
+                      // When toggled on, clear specific selections
+                      form?.setFieldsValue?.({
+                        [`statistics_source_${index}`]: []
+                      });
+                    }
+                  }
+                }}
+              />
+              <ProFormDependency name={[`statistics_all_${index}`]}>
+                {({ [`statistics_all_${index}`]: allSelected }) => {
+                  if (!allSelected) {
+                    return (
+                      <ProFormSelect
+                        name={`statistics_source_${index}`}
+                        label={<><BarChartOutlined style={{ marginRight: 6 }} />Specific Sources</>}
+                        initialValue={
+                          isAllSelected 
+                            ? [] 
+                            : Array.isArray(currentSource) 
+                              ? currentSource.filter(s => s !== 'all')
+                              : currentSource && currentSource !== 'all' 
+                                ? [currentSource] 
+                                : []
+                        }
+                        options={sourceOptions}
+                        placeholder={dataType === 'device' ? 'Select specific devices' : 'Select specific containers'}
+                        mode="multiple"
+                        rules={[{ required: true, message: 'Please select at least one source' }]}
+                        fieldProps={{
+                          loading: dataType === 'device' ? loadingDevices : loadingContainers,
+                        }}
+                      />
+                    );
+                  }
+                  return null;
+                }}
+              </ProFormDependency>
+            </div>
           );
         }}
       </ProFormDependency>
@@ -218,7 +317,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
           return (
             <ProFormSelect
               name={`statistics_metric_${index}`}
-              label={<><TrendingUp size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />Metric</>}
+              label={<><LineChartOutlined style={{ marginRight: 6 }} />Metric</>}
               initialValue={selectedWidget?.widgetSettings?.metric || 'cpu_usage'}
               options={metrics}
               placeholder="Select metric"
@@ -234,7 +333,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
     <React.Fragment key={index}>
       <ProFormSelect
         name={`dateRangePreset_${index}`}
-        label={<><Calendar size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />Date Range</>}
+        label={<><CalendarOutlined style={{ marginRight: 6 }} />Date Range</>}
         initialValue={selectedWidget?.widgetSettings?.dateRangePreset || 'last7days'}
         options={[
           { label: 'Last 24 Hours', value: 'last24hours' },
@@ -253,7 +352,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
             return (
               <ProFormDateRangePicker
                 name={`customDateRange_${index}`}
-                label={<><Calendar size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />Custom Date Range</>}
+                label={<><CalendarOutlined style={{ marginRight: 6 }} />Custom Date Range</>}
                 initialValue={selectedWidget?.widgetSettings?.customDateRange || [
                   moment().subtract(7, 'days'),
                   moment()
@@ -274,12 +373,6 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
     <ProFormDependency key={index} name={[]}>
       {(_, form) => (
         <div style={{ marginBottom: 20 }}>
-          <div style={{ marginBottom: 12 }}>
-            <span style={{ color: 'rgba(0, 0, 0, 0.85)', fontSize: 14, fontWeight: 500 }}>
-              <Palette size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />
-              Colors
-            </span>
-          </div>
           <ColorPaletteSelector
             value={selectedWidget?.widgetSettings?.colorPalette || 'default'}
             onChange={(paletteId, customColors) => {
@@ -304,25 +397,49 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
     </ProFormDependency>
   );
 
-  const getSourceOptions = (dataType: string) => {
-    let options = [{ label: 'All', value: 'all' }];
+  const renderBackgroundColorField = (setting: WidgetSettings, index: number) => (
+    <ProFormSelect
+      key={index}
+      name={`backgroundColor_${index}`}
+      label={<><BgColorsOutlined style={{ marginRight: 6 }} />{setting.label}</>}
+      initialValue={selectedWidget?.widgetSettings?.backgroundColorPalette || setting.defaultValue || 'default'}
+      options={[
+        { label: 'Default Theme', value: 'default' },
+        { label: 'Primary Blue', value: 'primary' },
+        { label: 'Success Green', value: 'success' },
+        { label: 'Warning Orange', value: 'warning' },
+        { label: 'Error Red', value: 'error' },
+        { label: 'Light Gray', value: 'light' },
+        { label: 'Dark Theme', value: 'dark' },
+        { label: 'Purple Gradient', value: 'purple' },
+        { label: 'Ocean Blue', value: 'ocean' },
+        { label: 'Sunset Orange', value: 'sunset' },
+      ]}
+      placeholder="Select background color theme"
+    />
+  );
+
+  const getSourceOptions = (dataType: string, includeAll: boolean = true) => {
+    let options: Array<{ label: string; value: string }> = [];
     
     if (dataType === 'device') {
-      options = [
-        { label: 'All Devices', value: 'all' },
-        ...devices.map(device => ({
-          label: device.fqdn || device.ip || device.uuid,
-          value: device.uuid,
-        }))
-      ];
+      options = devices.map(device => ({
+        label: device.fqdn || device.ip || device.uuid,
+        value: device.uuid,
+      }));
+      if (includeAll) {
+        options.unshift({ label: 'All Devices', value: 'all' });
+      }
     } else if (dataType === 'container') {
-      options = [
-        { label: 'All Containers', value: 'all' },
-        ...containers.map(container => ({
-          label: container.customName || container.name || container.id,
-          value: container.id,
-        }))
-      ];
+      options = containers.map(container => ({
+        label: container.customName || container.name || container.id,
+        value: container.id,
+      }));
+      if (includeAll) {
+        options.unshift({ label: 'All Containers', value: 'all' });
+      }
+    } else if (includeAll) {
+      options = [{ label: 'All', value: 'all' }];
     }
     
     return options;
@@ -354,8 +471,19 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
     Object.keys(values).forEach(key => {
       if (key.includes('statistics_type_')) {
         processed.dataType = values[key];
+      } else if (key.includes('statistics_all_')) {
+        // Handle the "all" toggle
+        const isAllSelected = values[key];
+        if (isAllSelected) {
+          processed.source = ['all'];
+        }
       } else if (key.includes('statistics_source_')) {
-        processed.source = values[key];
+        // Only use specific sources if "all" is not selected
+        const allKey = key.replace('statistics_source_', 'statistics_all_');
+        const isAllSelected = values[allKey];
+        if (!isAllSelected && values[key]?.length > 0) {
+          processed.source = values[key];
+        }
       } else if (key.includes('statistics_metric_')) {
         processed.metric = values[key];
       } else if (key.includes('title_')) {
@@ -374,8 +502,13 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
         } catch {
           processed.customColors = [];
         }
+      } else if (key.includes('backgroundColor_')) {
+        processed.backgroundColorPalette = values[key];
       }
     });
+    
+    // Don't set a default source - let the widget handle it
+    console.log('🔧 Settings Drawer - Processed settings:', processed);
     
     return processed;
   };
@@ -389,6 +522,29 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
       open={visible}
       destroyOnClose={true}
     >
+      {/* Debug Overlay */}
+      {selectedWidget && (
+        <div style={{
+          background: '#1f1f1f',
+          border: '1px solid #ff0000',
+          borderRadius: 4,
+          padding: 12,
+          marginBottom: 16,
+          fontSize: 11,
+          fontFamily: 'monospace',
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-all',
+          maxHeight: 200,
+          overflow: 'auto'
+        }}>
+          <div style={{ color: '#ff6b6b', marginBottom: 8, fontWeight: 'bold' }}>
+            🐛 DEBUG: Raw Widget Settings
+          </div>
+          <div style={{ color: '#40a9ff' }}>
+            {JSON.stringify(selectedWidget.widgetSettings, null, 2)}
+          </div>
+        </div>
+      )}
       {renderSettingsForm()}
     </Drawer>
   );

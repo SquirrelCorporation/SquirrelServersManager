@@ -71,14 +71,35 @@ export const chartWidgets: DashboardItem[] = [
     id: 'percentage',
     title: 'Tours Available',
     size: 'small',
-    settings: undefined,
+    settings: [
+      { type: 'statistics', label: 'Statistics Configuration', defaultValue: {} },
+      { type: 'title', label: 'Widget Title', defaultValue: 'Tours Available' },
+      { type: 'colorPalette', label: 'Progress Color Theme', defaultValue: 'default' },
+      { type: 'backgroundColor', label: 'Background Color Theme', defaultValue: 'default' },
+      { type: 'icon', label: 'Icon' }
+    ],
     component: (
       <CircularProgressChart
         title="Tours Available"
-        percentage={66}
-        subtitle="186 Total"
+        isPreview={true}
       />
     ),
+    componentFactory: (configuration: WidgetConfiguration) => (
+      <CircularProgressChart
+        title={configuration?.title as string || "Tours Available"}
+        dataType={configuration?.dataType as string || 'device'}
+        source={configuration?.source as string[] || 'all'}
+        metric={configuration?.metric as string || 'cpu_usage'}
+        icon={configuration?.icon as React.ReactNode}
+        illustrationUrl={configuration?.illustrationUrl as string}
+        defaultValue={configuration?.defaultValue as string || '0'}
+        isPreview={configuration?.isPreview as boolean}
+        colorPalette={configuration?.colorPalette as string || 'default'}
+        backgroundColorPalette={configuration?.backgroundColorPalette as string || 'default'}
+        customColors={configuration?.customColors as string[]}
+      />
+    ),
+    hasSettings: true,
   },
   {
     id: 'ring-progress',

@@ -48,6 +48,12 @@ export const COLOR_PALETTES: Record<string, ColorPalette> = {
     name: 'Professional',
     colors: ['#2E86AB', '#A23B72', '#F18F01', '#C73E1D', '#6A994E', '#BC4B51', '#5B8C85'],
     description: 'Business appropriate'
+  },
+  system: {
+    id: 'system',
+    name: 'System Status',
+    colors: ['#38A169', '#3182CE', '#ECC94B', '#E53E3E', '#5e9a35', '#DD6B20', '#A0AEC0'],
+    description: 'System monitoring colors'
   }
 };
 

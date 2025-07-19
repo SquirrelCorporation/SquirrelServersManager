@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { DashboardService } from './dashboard.service';
-import { CreateDashboardDto, UpdateDashboardDto } from './dto';
+import { CreateDashboardDto, UpdateDashboardDto, DashboardWidgetDto } from './dto';
 
 @ApiTags('dashboards')
 @Controller('dashboards')
@@ -66,7 +66,7 @@ export class DashboardController {
   async updateWidgets(
     @Param('dashboardId') dashboardId: string,
     @Param('pageId') pageId: string,
-    @Body() widgets: any[],
+    @Body() widgets: DashboardWidgetDto[],
   ) {
     return this.dashboardService.updateWidgets(dashboardId, pageId, widgets);
   }

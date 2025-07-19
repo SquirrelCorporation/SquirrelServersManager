@@ -22,10 +22,14 @@ interface CircularProgressChartProps {
   dataType?: 'device' | 'container';
   source?: string | string[];
   metric?: string;
+  icon?: React.ReactNode;
+  illustrationUrl?: string;
   defaultValue?: string;
+  defaultTrend?: string;
   isPreview?: boolean;
   customColors?: string[];
   colorPalette?: string;
+  backgroundColorPalette?: string;
   cardStyle?: React.CSSProperties;
 }
 
@@ -44,21 +48,28 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
   dataType = 'device',
   source = 'all',
   metric = 'cpu_usage',
+  icon,
+  illustrationUrl,
   defaultValue = '0',
+  defaultTrend = '0',
   isPreview = false,
   customColors = [],
   colorPalette = 'default',
+  backgroundColorPalette = 'default',
   cardStyle,
 }) => {
   const [loading, setLoading] = useState(false);
   const [currentValue, setCurrentValue] = useState<number>(0);
   const [displayValue, setDisplayValue] = useState<string>('0');
 
-  // Determine if we're looking at all items or specific ones
-  const isAllSelected = Array.isArray(source) ? source.includes('all') : source === 'all';
-  const sourceIds = Array.isArray(source) ? source.filter(s => s !== 'all') : [source];
+  // Determine if we're looking at all items or specific ones (memoized to prevent infinite loops)
+  const { isAllSelected, sourceIds } = useMemo(() => {
+    const isAll = Array.isArray(source) ? source.includes('all') : source === 'all';
+    const ids = Array.isArray(source) ? source.filter(s => s !== 'all') : [source];
+    return { isAllSelected: isAll, sourceIds: ids };
+  }, [source]);
 
-  // Color palette logic
+  // Progress color palette logic
   const getProgressColor = useMemo(() => {
     if (customColors && customColors.length > 0) {
       return customColors[0];
@@ -74,6 +85,24 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
     
     return colorPalettes[colorPalette] || colorPalettes.default;
   }, [customColors, colorPalette]);
+
+  // Background color palette logic
+  const getBackgroundColor = useMemo(() => {
+    const backgroundPalettes = {
+      default: '#4a8b6f',
+      vibrant: '#ff4757',
+      cool: '#3742fa',
+      warm: '#ff3838',
+      nature: '#009432',
+      dark: '#1a1a1a',
+      blue: '#2980b9',
+      purple: '#8e44ad',
+      orange: '#e67e22',
+      teal: '#16a085',
+    };
+    
+    return backgroundPalettes[backgroundColorPalette] || backgroundPalettes.default;
+  }, [backgroundColorPalette]);
 
   // Fetch data
   useEffect(() => {
@@ -180,7 +209,7 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
     // Set up auto-refresh every 30 seconds (like SummaryStatCard)
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
-  }, [dataType, source, metric, isAllSelected, sourceIds, isPreview, title, defaultValue]);
+  }, [dataType, metric, isAllSelected, sourceIds, isPreview, title, defaultValue]);
 
   const getMetricLabel = (metric: string): string => {
     const labels: Record<string, string> = {
@@ -197,7 +226,7 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
   return (
     <Card
       style={{
-        backgroundColor: '#4a8b6f',
+        backgroundColor: getBackgroundColor,
         borderRadius: '16px',
         color: 'white',
         minWidth: '280px',
@@ -209,25 +238,42 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
       bodyStyle={{ padding: '24px 28px' }}
       loading={loading}
     >
-      {/* Background decorative circles */}
-      <div style={{
-        position: 'absolute',
-        right: -30,
-        top: -30,
-        width: 120,
-        height: 120,
-        borderRadius: '50%',
-        background: 'rgba(255, 255, 255, 0.08)',
-      }} />
-      <div style={{
-        position: 'absolute',
-        right: 40,
-        bottom: -40,
-        width: 100,
-        height: 100,
-        borderRadius: '50%',
-        background: 'rgba(255, 255, 255, 0.05)',
-      }} />
+      {/* Background illustration or decorative circles */}
+      {illustrationUrl ? (
+        <div style={{
+          position: 'absolute',
+          right: -20,
+          top: -20,
+          width: 140,
+          height: 140,
+          backgroundImage: `url(${illustrationUrl})`,
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          opacity: 0.15,
+        }} />
+      ) : (
+        <>
+          <div style={{
+            position: 'absolute',
+            right: -30,
+            top: -30,
+            width: 120,
+            height: 120,
+            borderRadius: '50%',
+            background: 'rgba(255, 255, 255, 0.08)',
+          }} />
+          <div style={{
+            position: 'absolute',
+            right: 40,
+            bottom: -40,
+            width: 100,
+            height: 100,
+            borderRadius: '50%',
+            background: 'rgba(255, 255, 255, 0.05)',
+          }} />
+        </>
+      )}
       
       <Space direction="horizontal" align="center" size={20} style={{ position: 'relative' }}>
         <Progress
@@ -247,18 +293,30 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
           strokeLinecap="round"
         />
         <Space direction="vertical" align="start" size={4}>
-          <Typography.Title
-            level={3}
-            style={{
-              color: '#ffffff',
-              margin: 0,
-              fontSize: '32px',
-              fontWeight: '600',
-              lineHeight: 1,
-            }}
-          >
-            {displayValue || defaultValue}
-          </Typography.Title>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <Typography.Title
+              level={3}
+              style={{
+                color: '#ffffff',
+                margin: 0,
+                fontSize: '32px',
+                fontWeight: '600',
+                lineHeight: 1,
+              }}
+            >
+              {displayValue || defaultValue}
+            </Typography.Title>
+            {icon && (
+              <div style={{ 
+                fontSize: '24px', 
+                color: 'rgba(255, 255, 255, 0.8)',
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                {icon}
+              </div>
+            )}
+          </div>
           <Typography.Text style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '16px' }}>
             {title}
           </Typography.Text>
