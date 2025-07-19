@@ -20,7 +20,7 @@ export async function postRefreshAll(
   params?: any,
   options?: Record<string, any>,
 ) {
-  return request<API.ContainersResponse>(`${BASE_URL}/refresh-all`, {
+  return request<API.ContainersResponse>(`${BASE_URL}/refresh`, {
     method: 'POST',
     params: {
       ...params,
