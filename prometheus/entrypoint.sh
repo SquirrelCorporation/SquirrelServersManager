@@ -23,4 +23,4 @@ else
 fi
 
 # Start Prometheus
-exec su -s /bin/sh nobody -c "/bin/prometheus --config.file=\"$DYNAMIC_CONFIG\""
+exec su -s /bin/sh nobody -c "/bin/prometheus --config.file=\"$DYNAMIC_CONFIG\" --storage.tsdb.path=/prometheus"
