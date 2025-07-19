@@ -13,13 +13,13 @@
   "devDependencies": {
     "@vue-flow/core": "^1.45.0",
     "vitepress": "^1.6.3",
-    "vitepress-plugin-llms": "^1.5.1"
+    "vitepress-plugin-llms": "^1.7.0"
   },
   "dependencies": {
     "@vue-flow/background": "^1.3.2",
     "@vue-flow/minimap": "^1.5.3",
     "axios": "^1.10.0",
     "swiper": "^11.2.8",
-    "vuetify": "^3.8.10"
+    "vuetify": "^3.9.0"
   }
 }
