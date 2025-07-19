@@ -9,6 +9,7 @@ import CompactStatCard from '../CompactStatCard';
 import BookingStatusCard from '../BookingStatusCard';
 import { DashboardItem } from '../../Core/DashboardWidget.types';
 import { WidgetConfiguration } from '../../Core/WidgetSettings.types';
+import { WIDGET_FIELDS, WIDGET_DEFAULTS } from '../../constants/widgetConstants';
 import { bookingStatuses } from './widgetData';
 
 export const statisticsWidgets: DashboardItem[] = [
@@ -30,14 +31,14 @@ export const statisticsWidgets: DashboardItem[] = [
     ),
     componentFactory: (configuration: WidgetConfiguration) => (
       <SummaryStatCard
-        title={configuration?.title as string || "Total balance"}
-        dataType={configuration?.statistics?.dataType || 'device'}
-        source={configuration?.statistics?.source || 'all'}
-        metric={configuration?.statistics?.metric || 'cpu_usage'}
+        title={configuration?.[WIDGET_FIELDS.TITLE] as string || "Total balance"}
+        dataType={configuration?.[WIDGET_FIELDS.STATISTICS_TYPE] as string || WIDGET_DEFAULTS.DATA_TYPE}
+        source={configuration?.[WIDGET_FIELDS.STATISTICS_SOURCE] || WIDGET_DEFAULTS.EMPTY_ARRAY}
+        metric={configuration?.[WIDGET_FIELDS.STATISTICS_METRIC] as string || WIDGET_DEFAULTS.METRIC}
         defaultValue="0"
         defaultTrend="0"
         icon={<DashboardOutlined />}
-        isPreview={configuration?.isPreview as boolean}
+        isPreview={configuration?.[WIDGET_FIELDS.IS_PREVIEW] as boolean}
       />
     ),
     hasSettings: true,

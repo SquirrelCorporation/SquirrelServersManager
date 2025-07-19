@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Typography, List, Button, Spin, Badge, Input, message } from 'antd';
-import { ReloadOutlined, LinkOutlined, PlusOutlined, DeleteOutlined, SettingOutlined } from '@ant-design/icons';
+import { Card, Typography, List, Button, Spin, Badge, message } from 'antd';
+import { ReloadOutlined, LinkOutlined } from '@ant-design/icons';
 import DebugOverlay from './DebugOverlay';
 import { fetchRSSFeeds, RSSFeedItem, FeedConfig } from '@/services/rest/rss.service';
 
@@ -26,9 +26,6 @@ const RSSFeedWidget: React.FC<RSSFeedWidgetProps> = ({
   const [items, setItems] = useState<RSSItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [feeds, setFeeds] = useState<RSSFeed[]>([]);
-  const [showSettings, setShowSettings] = useState(false);
-  const [newFeedName, setNewFeedName] = useState('');
-  const [newFeedUrl, setNewFeedUrl] = useState('');
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const refreshInterval = widgetSettings?.refreshInterval || 30;
   const maxItems = widgetSettings?.maxItems || 20;
@@ -55,22 +52,12 @@ const RSSFeedWidget: React.FC<RSSFeedWidgetProps> = ({
     },
   ];
 
-  // Load feeds from widget settings or localStorage as fallback
+  // Load feeds from widget settings
   useEffect(() => {
     if (widgetSettings?.feeds && widgetSettings.feeds.length > 0) {
       setFeeds(widgetSettings.feeds);
     } else {
-      const savedFeeds = localStorage.getItem('ssm-rss-feeds');
-      if (savedFeeds) {
-        try {
-          setFeeds(JSON.parse(savedFeeds));
-        } catch (error) {
-          console.error('Failed to load RSS feeds:', error);
-          setFeeds(defaultFeeds);
-        }
-      } else {
-        setFeeds(defaultFeeds);
-      }
+      setFeeds(defaultFeeds);
     }
   }, [widgetSettings?.feeds]);
 
@@ -119,43 +106,6 @@ const RSSFeedWidget: React.FC<RSSFeedWidgetProps> = ({
     }
   }, [feeds, refreshInterval]);
 
-  const saveFeeds = (updatedFeeds: RSSFeed[]) => {
-    // Only save to localStorage if not using widget settings
-    if (!widgetSettings?.feeds) {
-      localStorage.setItem('ssm-rss-feeds', JSON.stringify(updatedFeeds));
-    }
-    setFeeds(updatedFeeds);
-  };
-
-  const addFeed = () => {
-    if (!newFeedName.trim() || !newFeedUrl.trim()) {
-      message.warning('Please enter both name and URL');
-      return;
-    }
-
-    const newFeed: RSSFeed = {
-      id: Date.now().toString(),
-      name: newFeedName.trim(),
-      url: newFeedUrl.trim(),
-      enabled: true,
-    };
-
-    saveFeeds([...feeds, newFeed]);
-    setNewFeedName('');
-    setNewFeedUrl('');
-    message.success('RSS feed added');
-  };
-
-  const removeFeed = (id: string) => {
-    saveFeeds(feeds.filter(feed => feed.id !== id));
-    message.success('RSS feed removed');
-  };
-
-  const toggleFeed = (id: string) => {
-    saveFeeds(feeds.map(feed => 
-      feed.id === id ? { ...feed, enabled: !feed.enabled } : feed
-    ));
-  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -194,92 +144,15 @@ const RSSFeedWidget: React.FC<RSSFeedWidgetProps> = ({
         >
           {title}
         </Typography.Title>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <Button
-            type="text"
-            icon={<SettingOutlined />}
-            size="small"
-            onClick={() => setShowSettings(!showSettings)}
-            style={{ color: '#8c8c8c' }}
-          />
-          <Button
-            type="text"
-            icon={<ReloadOutlined />}
-            size="small"
-            onClick={fetchFeeds}
-            loading={loading}
-            style={{ color: '#8c8c8c' }}
-          />
-        </div>
+        <Button
+          type="text"
+          icon={<ReloadOutlined />}
+          size="small"
+          onClick={fetchFeeds}
+          loading={loading}
+          style={{ color: '#8c8c8c' }}
+        />
       </div>
-
-      {showSettings && (
-        <div style={{ marginBottom: '16px', padding: '12px', backgroundColor: '#2a2a2a', borderRadius: '8px' }}>
-          <Typography.Text style={{ color: '#d9d9d9', fontSize: '12px', marginBottom: '8px', display: 'block' }}>
-            Manage RSS Feeds
-          </Typography.Text>
-          
-          <div style={{ marginBottom: '12px' }}>
-            <Input
-              placeholder="Feed name"
-              value={newFeedName}
-              onChange={(e) => setNewFeedName(e.target.value)}
-              style={{ 
-                marginBottom: '4px',
-                backgroundColor: '#1a1a1a',
-                borderColor: '#3a3a3a',
-                color: 'white'
-              }}
-              size="small"
-            />
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <Input
-                placeholder="RSS feed URL"
-                value={newFeedUrl}
-                onChange={(e) => setNewFeedUrl(e.target.value)}
-                style={{ 
-                  backgroundColor: '#1a1a1a',
-                  borderColor: '#3a3a3a',
-                  color: 'white',
-                  flex: 1
-                }}
-                onPressEnter={addFeed}
-                size="small"
-              />
-              <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={addFeed}
-                size="small"
-                style={{ backgroundColor: '#4ecb71', borderColor: '#4ecb71' }}
-              />
-            </div>
-          </div>
-
-          {feeds.map((feed) => (
-            <div key={feed.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <input
-                  type="checkbox"
-                  checked={feed.enabled}
-                  onChange={() => toggleFeed(feed.id)}
-                  style={{ margin: 0 }}
-                />
-                <Typography.Text style={{ color: '#d9d9d9', fontSize: '12px' }}>
-                  {feed.name}
-                </Typography.Text>
-              </div>
-              <Button
-                type="text"
-                icon={<DeleteOutlined />}
-                size="small"
-                onClick={() => removeFeed(feed.id)}
-                style={{ color: '#ff4d4f' }}
-              />
-            </div>
-          ))}
-        </div>
-      )}
 
       <div style={{ flex: 1, overflowY: 'auto' }}>
         {loading && items.length === 0 ? (
@@ -312,29 +185,29 @@ const RSSFeedWidget: React.FC<RSSFeedWidgetProps> = ({
                       onClick={() => window.open(item.link, '_blank')}
                     />
                   </div>
-                  <Typography.Text
+                  <Typography.Paragraph
                     style={{
                       color: '#8c8c8c',
                       fontSize: '11px',
                       lineHeight: '1.3',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
                       marginBottom: '4px',
+                      marginTop: 0,
                     }}
+                    ellipsis={{ rows: 3, expandable: false }}
                   >
                     {item.description}
-                  </Typography.Text>
+                  </Typography.Paragraph>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Badge
                       count={item.source}
                       style={{
-                        backgroundColor: '#4ecb71',
+                        backgroundColor: '#52c41a',
+                        color: '#000',
                         fontSize: '10px',
                         height: '16px',
                         lineHeight: '16px',
                         borderRadius: '8px',
+                        fontWeight: 500,
                       }}
                     />
                     <Typography.Text style={{ color: '#666', fontSize: '10px' }}>

@@ -4,8 +4,8 @@
  */
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Layout, Card, Button, Drawer, Space, Switch, message, Spin } from 'antd';
-import { PlusOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { Layout, Card, Button, Drawer, Space, Switch, message, Spin, Modal } from 'antd';
+import { PlusOutlined, EditOutlined, EyeOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import DndProvider from '../DndProvider';
 import dashboardService from '@/services/rest/dashboard.service';
 import type { Dashboard, DashboardWidget } from '@/services/rest/dashboard.service';
@@ -20,9 +20,15 @@ import '../DashboardLayoutEngine.css';
 
 interface DashboardLayoutEngineProps {
   availableItems: DashboardItem[];
+  pageId?: string;
+  onDeletePage?: () => void;
 }
 
-const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ availableItems }) => {
+const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ 
+  availableItems, 
+  pageId: propPageId,
+  onDeletePage 
+}) => {
   const [items, setItems] = useState<DashboardItem[]>([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -31,7 +37,7 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [currentDashboard, setCurrentDashboard] = useState<Dashboard | null>(null);
-  const [currentPageId, setCurrentPageId] = useState<string>('default-page');
+  const [currentPageId, setCurrentPageId] = useState<string>(propPageId || 'default-page');
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-save function with debouncing
@@ -60,53 +66,14 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
             widgetType === avItem.id
           );
           
-          let settings: WidgetConfiguration | undefined = undefined;
+          // Just use widgetSettings as-is - no conversion needed
+          const settings = item.widgetSettings || (item.settings ? { title: item.title } : undefined);
           
-          if (item.widgetSettings) {
-            // Check if widget has custom settings component
-            if (originalItem?.settingsComponent || originalItem?.hasSettings) {
-              // Store custom settings as-is
-              settings = item.widgetSettings;
-            } else {
-              // Map our internal format to the backend format for standard widgets
-              dashboardLogger.debug('Widget save conversion', {
-                widgetId: item.id,
-                source: item.widgetSettings.source,
-                dataType: item.widgetSettings.dataType,
-                allSettings: item.widgetSettings
-              });
-              
-              // Log the source mapping for debugging
-              dashboardLogger.debug('Mapping source to statistics_source', {
-                widgetId: item.id,
-                source: item.widgetSettings.source,
-                sourceLength: item.widgetSettings.source?.length
-              });
-              
-              settings = {
-                statistics_type: item.widgetSettings.dataType,
-                statistics_source: item.widgetSettings.source || [],
-                statistics_metric: item.widgetSettings.metric,
-                title: item.widgetSettings.title || item.title,
-                dateRangePreset: item.widgetSettings.dateRangePreset,
-                customDateRange: item.widgetSettings.customDateRange,
-                colorPalette: item.widgetSettings.colorPalette,
-                customColors: item.widgetSettings.customColors,
-                // Include any other settings
-                ...Object.keys(item.widgetSettings).reduce((acc, key) => {
-                  if (!['dataType', 'source', 'metric', 'title', 'dateRangePreset', 'customDateRange', 'colorPalette', 'customColors'].includes(key)) {
-                    acc[key] = item.widgetSettings[key];
-                  }
-                  return acc;
-                }, {} as any),
-              } as WidgetConfiguration;
-            }
-          } else if (item.settings) {
-            // Map settings from form values
-            settings = {
-              title: item.title,
-              // Add other settings as needed
-            };
+          if (settings) {
+            dashboardLogger.debug('Widget settings for save:', {
+              widgetId: item.id,
+              settings: JSON.stringify(settings)
+            });
           }
           
           return {
@@ -126,13 +93,6 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
             widgetType: w.widgetType,
             settings: w.settings
           }))
-        });
-        
-        // Debug log the exact payload being sent
-        dashboardLogger.debug('Sending widgets payload to backend', {
-          dashboardId: currentDashboard._id,
-          pageId: currentPageId,
-          widgetsJson: JSON.stringify(widgets, null, 2)
         });
         
         await dashboardService.updateWidgets(
@@ -213,7 +173,8 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
           dashboardLogger.debug('Settings save', {
             widgetId: item.id,
             widgetType: widgetType,
-            found: !!originalItem
+            found: !!originalItem,
+            incomingSettings: widgetSettings
           });
           
           // If the item has a componentFactory, use it to create a new component
@@ -249,53 +210,30 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
       const dashboard = await dashboardService.getCurrentDashboard();
       setCurrentDashboard(dashboard);
       
-      // Find the default page or first page
-      const defaultPage = dashboard.pages.find(p => p.isDefault) || dashboard.pages[0];
-      if (defaultPage) {
-        setCurrentPageId(defaultPage.id);
+      // Use propPageId if provided, otherwise find the default page or first page
+      const targetPageId = propPageId || currentPageId;
+      const targetPage = dashboard.pages.find(p => p.id === targetPageId) || 
+                        dashboard.pages.find(p => p.isDefault) || 
+                        dashboard.pages[0];
+      
+      if (targetPage) {
+        setCurrentPageId(targetPage.id);
         
         // Convert saved widgets to DashboardItems
         dashboardLogger.info('Loading widgets from backend', {
-          pageId: defaultPage.id,
-          count: defaultPage.widgets.length,
-          widgets: defaultPage.widgets.map(w => ({ 
+          pageId: targetPage.id,
+          count: targetPage.widgets.length,
+          widgets: targetPage.widgets.map(w => ({ 
             id: w.id, 
             widgetType: w.widgetType,
             settings: w.settings 
           }))
         });
-        const loadedItems = defaultPage.widgets.map(widget => {
+        const loadedItems = targetPage.widgets.map(widget => {
           const availableItem = availableItems.find(item => item.id === widget.widgetType);
           if (availableItem) {
-            // Convert backend settings format to our internal format
-            let widgetSettings: WidgetConfiguration | undefined = undefined;
-            
-            if (widget.settings) {
-              // Check if widget has custom settings component
-              if (availableItem.settingsComponent || availableItem.hasSettings) {
-                // Load custom settings as-is
-                widgetSettings = widget.settings;
-              } else {
-                // Convert standard widget settings
-                widgetSettings = {
-                  dataType: widget.settings.statistics_type || 'device',
-                  source: widget.settings.statistics_source,
-                  metric: widget.settings.statistics_metric || 'cpu_usage',
-                  title: widget.settings.title,
-                  dateRangePreset: widget.settings.dateRangePreset || 'last7days',
-                  customDateRange: widget.settings.customDateRange,
-                  colorPalette: widget.settings.colorPalette || 'default',
-                  customColors: widget.settings.customColors,
-                  // Include any other settings
-                  ...Object.keys(widget.settings).reduce((acc, key) => {
-                    if (!['statistics_type', 'statistics_source', 'statistics_metric', 'title', 'dateRangePreset', 'customDateRange', 'colorPalette', 'customColors'].includes(key)) {
-                      acc[key] = widget.settings![key];
-                    }
-                    return acc;
-                  }, {} as any),
-                } as WidgetConfiguration;
-              }
-            }
+            // Just use settings as-is from backend
+            const widgetSettings = widget.settings;
             
             // If the widget has settings and a componentFactory, recreate the component
             const component = availableItem.componentFactory && widgetSettings
@@ -321,7 +259,47 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
     } finally {
       setLoading(false);
     }
-  }, [availableItems]);
+  }, [availableItems, propPageId, currentPageId]);
+
+  const handleDeletePage = useCallback(async () => {
+    if (!currentDashboard || !currentPageId) return;
+    
+    Modal.confirm({
+      title: 'Delete Dashboard Page',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Are you sure you want to delete this dashboard page? This action cannot be undone.',
+      okText: 'Yes, Delete',
+      okType: 'danger',
+      cancelText: 'Cancel',
+      onOk: async () => {
+        try {
+          // Filter out the current page
+          const updatedPages = currentDashboard.pages.filter(p => p.id !== currentPageId);
+          
+          // Ensure we have at least one page
+          if (updatedPages.length === 0) {
+            message.error('Cannot delete the last dashboard page');
+            return;
+          }
+          
+          // Update the dashboard
+          await dashboardService.update(currentDashboard._id!, {
+            pages: updatedPages,
+          });
+          
+          message.success('Dashboard page deleted successfully');
+          
+          // Trigger parent refresh
+          if (onDeletePage) {
+            onDeletePage();
+          }
+        } catch (error) {
+          dashboardLogger.error('Failed to delete page', error);
+          message.error('Failed to delete dashboard page');
+        }
+      },
+    });
+  }, [currentDashboard, currentPageId, onDeletePage]);
 
   // Load dashboard on mount
   useEffect(() => {
@@ -393,14 +371,24 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
             </Card>
           ) : (
             <>
-              <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'flex-end' }}>
-                <Switch
-                  checkedChildren={<EditOutlined />}
-                  unCheckedChildren={<EyeOutlined />}
-                  checked={isEditMode}
-                  onChange={setIsEditMode}
-                />
-                <span style={{ marginLeft: 8 }}>View Mode</span>
+              <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Button 
+                  danger 
+                  icon={<DeleteOutlined />}
+                  onClick={handleDeletePage}
+                  disabled={!propPageId} // Disable delete for default dashboard
+                >
+                  Delete Page
+                </Button>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Switch
+                    checkedChildren={<EditOutlined />}
+                    unCheckedChildren={<EyeOutlined />}
+                    checked={isEditMode}
+                    onChange={setIsEditMode}
+                  />
+                  <span style={{ marginLeft: 8 }}>View Mode</span>
+                </div>
               </div>
               <DashboardGrid
                 items={items}

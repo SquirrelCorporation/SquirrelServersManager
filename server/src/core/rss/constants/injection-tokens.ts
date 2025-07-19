@@ -1,0 +1,1 @@
+export const RSS_REPOSITORY = Symbol('RSS_REPOSITORY');

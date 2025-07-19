@@ -15,6 +15,7 @@ import { API } from 'ssm-shared-lib';
 import ColorPaletteSelector from '../ColorPaletteSelector';
 import { DashboardItem, WidgetSettings } from './types';
 import { WidgetConfiguration } from '../../Core/WidgetSettings.types';
+import { WIDGET_FIELDS, WIDGET_DEFAULTS, DATA_TYPES, METRICS, DATE_RANGE_PRESETS, BACKGROUND_THEMES } from '../../constants/widgetConstants';
 
 interface SettingsDrawerProps {
   visible: boolean;
@@ -246,10 +247,10 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
       <ProFormSelect
         name={`statistics_type_${index}`}
         label={<><DatabaseOutlined style={{ marginRight: 6 }} />Data Type</>}
-        initialValue={selectedWidget?.widgetSettings?.dataType || 'device'}
+        initialValue={selectedWidget?.widgetSettings?.[WIDGET_FIELDS.STATISTICS_TYPE] || WIDGET_DEFAULTS.DATA_TYPE}
         options={[
-          { label: 'Device', value: 'device' },
-          { label: 'Container', value: 'container' },
+          { label: 'Device', value: DATA_TYPES.DEVICE },
+          { label: 'Container', value: DATA_TYPES.CONTAINER },
         ]}
         placeholder="Select data type"
         rules={[{ required: true, message: 'Please select a data type' }]}
@@ -257,9 +258,8 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
       <ProFormDependency name={[`statistics_type_${index}`]}>
         {({ [`statistics_type_${index}`]: dataType }) => {
           const sourceOptions = getSourceOptions(dataType, false); // Don't include 'all' option
-          // Check both 'source' and 'statistics_source' as the data might be in different formats
-          const currentSource = selectedWidget?.widgetSettings?.source || 
-                              selectedWidget?.widgetSettings?.statistics_source;
+          // Use only statistics_source field
+          const currentSource = selectedWidget?.widgetSettings?.[WIDGET_FIELDS.STATISTICS_SOURCE];
           widgetLogger.debug('Widget settings source check', {
             widgetId: selectedWidget?.id,
             currentSource,
@@ -326,7 +326,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
             <ProFormSelect
               name={`statistics_metric_${index}`}
               label={<><LineChartOutlined style={{ marginRight: 6 }} />Metric</>}
-              initialValue={selectedWidget?.widgetSettings?.metric || 'cpu_usage'}
+              initialValue={selectedWidget?.widgetSettings?.[WIDGET_FIELDS.STATISTICS_METRIC] || WIDGET_DEFAULTS.METRIC}
               options={metrics}
               placeholder="Select metric"
               rules={[{ required: true, message: 'Please select a metric' }]}
@@ -342,15 +342,15 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
       <ProFormSelect
         name={`dateRangePreset_${index}`}
         label={<><CalendarOutlined style={{ marginRight: 6 }} />Date Range</>}
-        initialValue={selectedWidget?.widgetSettings?.dateRangePreset || 'last7days'}
+        initialValue={selectedWidget?.widgetSettings?.[WIDGET_FIELDS.DATE_RANGE_PRESET] || WIDGET_DEFAULTS.DATE_RANGE}
         options={[
-          { label: 'Last 24 Hours', value: 'last24hours' },
-          { label: 'Last 7 Days', value: 'last7days' },
-          { label: 'Last 30 Days', value: 'last30days' },
-          { label: 'Last 3 Months', value: 'last3months' },
-          { label: 'Last 6 Months', value: 'last6months' },
-          { label: 'Last Year', value: 'lastyear' },
-          { label: 'Custom Range', value: 'custom' },
+          { label: 'Last 24 Hours', value: DATE_RANGE_PRESETS.LAST_24_HOURS },
+          { label: 'Last 7 Days', value: DATE_RANGE_PRESETS.LAST_7_DAYS },
+          { label: 'Last 30 Days', value: DATE_RANGE_PRESETS.LAST_30_DAYS },
+          { label: 'Last 3 Months', value: DATE_RANGE_PRESETS.LAST_3_MONTHS },
+          { label: 'Last 6 Months', value: DATE_RANGE_PRESETS.LAST_6_MONTHS },
+          { label: 'Last Year', value: DATE_RANGE_PRESETS.LAST_YEAR },
+          { label: 'Custom Range', value: DATE_RANGE_PRESETS.CUSTOM },
         ]}
         placeholder="Select date range"
       />
@@ -410,18 +410,18 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
       key={index}
       name={`backgroundColor_${index}`}
       label={<><BgColorsOutlined style={{ marginRight: 6 }} />{setting.label}</>}
-      initialValue={selectedWidget?.widgetSettings?.backgroundColorPalette || setting.defaultValue || 'default'}
+      initialValue={selectedWidget?.widgetSettings?.[WIDGET_FIELDS.BACKGROUND_COLOR_PALETTE] || setting.defaultValue || WIDGET_DEFAULTS.COLOR_PALETTE}
       options={[
-        { label: 'Default Theme', value: 'default' },
-        { label: 'Primary Blue', value: 'primary' },
-        { label: 'Success Green', value: 'success' },
-        { label: 'Warning Orange', value: 'warning' },
-        { label: 'Error Red', value: 'error' },
-        { label: 'Light Gray', value: 'light' },
-        { label: 'Dark Theme', value: 'dark' },
-        { label: 'Purple Gradient', value: 'purple' },
-        { label: 'Ocean Blue', value: 'ocean' },
-        { label: 'Sunset Orange', value: 'sunset' },
+        { label: 'Default Theme', value: BACKGROUND_THEMES.DEFAULT },
+        { label: 'Primary Blue', value: BACKGROUND_THEMES.PRIMARY },
+        { label: 'Success Green', value: BACKGROUND_THEMES.SUCCESS },
+        { label: 'Warning Orange', value: BACKGROUND_THEMES.WARNING },
+        { label: 'Error Red', value: BACKGROUND_THEMES.ERROR },
+        { label: 'Light Gray', value: BACKGROUND_THEMES.LIGHT },
+        { label: 'Dark Theme', value: BACKGROUND_THEMES.DARK },
+        { label: 'Purple Gradient', value: BACKGROUND_THEMES.PURPLE },
+        { label: 'Ocean Blue', value: BACKGROUND_THEMES.OCEAN },
+        { label: 'Sunset Orange', value: BACKGROUND_THEMES.SUNSET },
       ]}
       placeholder="Select background color theme"
     />
@@ -455,21 +455,21 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
 
   const getMetricOptions = (dataType: string) => {
     const deviceMetrics = [
-      { label: 'CPU Usage', value: 'cpu_usage' },
-      { label: 'Memory Usage', value: 'memory_usage' },
-      { label: 'Memory Free', value: 'memory_free' },
-      { label: 'Storage Usage', value: 'storage_usage' },
-      { label: 'Storage Free', value: 'storage_free' },
-      { label: 'Containers', value: 'containers' },
+      { label: 'CPU Usage', value: METRICS.CPU_USAGE },
+      { label: 'Memory Usage', value: METRICS.MEMORY_USAGE },
+      { label: 'Memory Free', value: METRICS.MEMORY_FREE },
+      { label: 'Storage Usage', value: METRICS.STORAGE_USAGE },
+      { label: 'Storage Free', value: METRICS.STORAGE_FREE },
+      { label: 'Containers', value: METRICS.CONTAINERS },
     ];
     
     const containerMetrics = [
-      { label: 'CPU Usage', value: 'container_cpu_usage' },
-      { label: 'Memory Usage', value: 'container_memory_usage' },
+      { label: 'CPU Usage', value: METRICS.CONTAINER_CPU_USAGE },
+      { label: 'Memory Usage', value: METRICS.CONTAINER_MEMORY_USAGE },
     ];
     
-    return dataType === 'device' ? deviceMetrics : 
-           dataType === 'container' ? containerMetrics : 
+    return dataType === DATA_TYPES.DEVICE ? deviceMetrics : 
+           dataType === DATA_TYPES.CONTAINER ? containerMetrics : 
            [...deviceMetrics, ...containerMetrics];
   };
 
@@ -478,40 +478,40 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
     
     Object.keys(values).forEach(key => {
       if (key.includes('statistics_type_')) {
-        processed.dataType = values[key];
+        processed[WIDGET_FIELDS.STATISTICS_TYPE] = values[key];
       } else if (key.includes('statistics_all_')) {
         // Handle the "all" toggle
         const isAllSelected = values[key];
         if (isAllSelected) {
-          processed.source = ['all'];
+          processed[WIDGET_FIELDS.STATISTICS_SOURCE] = WIDGET_DEFAULTS.ALL_SOURCES;
         }
       } else if (key.includes('statistics_source_')) {
         // Only use specific sources if "all" is not selected
         const allKey = key.replace('statistics_source_', 'statistics_all_');
         const isAllSelected = values[allKey];
         if (!isAllSelected && values[key]?.length > 0) {
-          processed.source = values[key];
+          processed[WIDGET_FIELDS.STATISTICS_SOURCE] = values[key];
         }
       } else if (key.includes('statistics_metric_')) {
-        processed.metric = values[key];
+        processed[WIDGET_FIELDS.STATISTICS_METRIC] = values[key];
       } else if (key.includes('title_')) {
-        processed.title = values[key];
+        processed[WIDGET_FIELDS.TITLE] = values[key];
       } else if (key.includes('dateRangePreset_')) {
-        processed.dateRangePreset = values[key];
+        processed[WIDGET_FIELDS.DATE_RANGE_PRESET] = values[key];
       } else if (key.includes('customDateRange_')) {
-        processed.customDateRange = values[key];
+        processed[WIDGET_FIELDS.CUSTOM_DATE_RANGE] = values[key];
       } else if (key.includes('customText_')) {
-        processed.customText = values[key];
+        processed[WIDGET_FIELDS.CUSTOM_TEXT] = values[key];
       } else if (key.includes('colorPalette_')) {
-        processed.colorPalette = values[key];
+        processed[WIDGET_FIELDS.COLOR_PALETTE] = values[key];
       } else if (key.includes('customColors_')) {
         try {
-          processed.customColors = JSON.parse(values[key]);
+          processed[WIDGET_FIELDS.CUSTOM_COLORS] = JSON.parse(values[key]);
         } catch {
-          processed.customColors = [];
+          processed[WIDGET_FIELDS.CUSTOM_COLORS] = WIDGET_DEFAULTS.EMPTY_ARRAY;
         }
       } else if (key.includes('backgroundColor_')) {
-        processed.backgroundColorPalette = values[key];
+        processed[WIDGET_FIELDS.BACKGROUND_COLOR_PALETTE] = values[key];
       }
     });
     

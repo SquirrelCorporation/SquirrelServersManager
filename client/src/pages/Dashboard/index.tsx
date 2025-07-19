@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   DashboardOutlined,
   LayoutOutlined,
+  PlusOutlined,
 } from '@ant-design/icons';
+import { message } from 'antd';
+import dashboardService from '@/services/rest/dashboard.service';
+import type { Dashboard, DashboardPage } from '@/services/rest/dashboard.service';
 
 // Layout Components
 import StyledTabContainer, {
@@ -26,6 +30,53 @@ const Index: React.FC = () => {
   const DashboardWidgetsSlot = useSlot('dashboard-widgets');
   // Create available dashboard items for the customizable dashboard
   const availableDashboardItems = createDashboardItems();
+  
+  const [dashboard, setDashboard] = useState<Dashboard | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Load dashboard on mount
+  useEffect(() => {
+    loadDashboard();
+  }, [refreshKey]);
+
+  const loadDashboard = async () => {
+    try {
+      setLoading(true);
+      const currentDashboard = await dashboardService.getCurrentDashboard();
+      setDashboard(currentDashboard);
+    } catch (error) {
+      console.error('Failed to load dashboard:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddPage = useCallback(async () => {
+    if (!dashboard) return;
+    
+    try {
+      const newPageName = `Dashboard ${dashboard.pages.length + 1}`;
+      const newPage: DashboardPage = {
+        id: `page-${Date.now()}`,
+        name: newPageName,
+        order: dashboard.pages.length,
+        widgets: [],
+      };
+      
+      const updatedDashboard = await dashboardService.update(dashboard._id!, {
+        pages: [...dashboard.pages, newPage],
+      });
+      
+      setDashboard(updatedDashboard);
+      message.success(`Created new page: ${newPageName}`);
+      // Force refresh to update tabs
+      setRefreshKey(prev => prev + 1);
+    } catch (error) {
+      console.error('Failed to add page:', error);
+      message.error('Failed to create new page');
+    }
+  }, [dashboard]);
 
   const tabItems = [
     {
@@ -49,19 +100,38 @@ const Index: React.FC = () => {
         </>
       ),
     },
-    {
-      key: 'customizable',
+    // Add customizable dashboard pages
+    ...(dashboard?.pages || []).map((page) => ({
+      key: page.id,
       label: (
         <TabLabel>
           <IconWrapper $bgColor="#722ed1">
             <LayoutOutlined />
           </IconWrapper>
-          <span>Customizable Dashboard</span>
+          <span>{page.name}</span>
         </TabLabel>
       ),
       children: (
-        <DashboardLayoutEngine availableItems={availableDashboardItems} />
+        <DashboardLayoutEngine 
+          key={page.id}
+          availableItems={availableDashboardItems}
+          pageId={page.id}
+          onDeletePage={() => setRefreshKey(prev => prev + 1)}
+        />
       ),
+    })),
+    // Add Page button
+    {
+      key: 'add-page',
+      label: (
+        <TabLabel>
+          <IconWrapper $bgColor="#52c41a">
+            <PlusOutlined />
+          </IconWrapper>
+          <span>Add Page</span>
+        </TabLabel>
+      ),
+      children: null,
     },
   ];
 
@@ -72,6 +142,11 @@ const Index: React.FC = () => {
       }}
       tabItems={tabItems}
       defaultActiveKey="main"
+      onTabClick={(key) => {
+        if (key === 'add-page') {
+          handleAddPage();
+        }
+      }}
     />
   );
 };

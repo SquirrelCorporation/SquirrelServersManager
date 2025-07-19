@@ -256,12 +256,14 @@ interface StyledTabContainerProps {
   };
   tabItems: TabsProps['items'];
   defaultActiveKey?: string;
+  onTabClick?: (key: string) => void;
 }
 
 const StyledTabContainer: React.FC<StyledTabContainerProps> = ({
   header,
   tabItems,
   defaultActiveKey,
+  onTabClick,
 }) => {
   const location = useLocation();
   const { darkAlgorithm } = theme;
@@ -317,8 +319,14 @@ const StyledTabContainer: React.FC<StyledTabContainerProps> = ({
   }) || [];
 
   const handleTabChange = (key: string) => {
-    setActiveKey(key);
-    history.replace(`#${key}`);
+    if (onTabClick) {
+      onTabClick(key);
+    }
+    // Don't change active tab for special tabs like 'add-page'
+    if (key !== 'add-page') {
+      setActiveKey(key);
+      history.replace(`#${key}`);
+    }
   };
 
   // Initialize active key from URL hash or default

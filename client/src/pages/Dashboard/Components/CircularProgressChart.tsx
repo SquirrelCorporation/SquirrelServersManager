@@ -65,7 +65,14 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
   // Determine if we're looking at all items or specific ones (memoized to prevent infinite loops)
   const { isAllSelected, sourceIds } = useMemo(() => {
     const isAll = Array.isArray(source) ? source.includes('all') : source === 'all';
-    const ids = Array.isArray(source) ? source.filter(s => s !== 'all') : [source];
+    let ids: string[] = [];
+    
+    if (Array.isArray(source)) {
+      ids = source.filter(s => s && s !== 'all');
+    } else if (source && source !== 'all') {
+      ids = [source];
+    }
+    
     return { isAllSelected: isAll, sourceIds: ids };
   }, [source]);
 

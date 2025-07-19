@@ -14,6 +14,7 @@ import DonutChartWithTable from '../DonutChartWithTable';
 import StackedBarChart from '../StackedBarChart';
 import { DashboardItem } from '../../Core/DashboardWidget.types';
 import { WidgetConfiguration } from '../../Core/WidgetSettings.types';
+import { WIDGET_FIELDS, WIDGET_DEFAULTS, DATA_TYPES, METRICS, DATE_RANGE_PRESETS, COLOR_PALETTES } from '../../constants/widgetConstants';
 import { 
   gradientChartData,
   toursAvailableData,
@@ -43,15 +44,15 @@ export const chartWidgets: DashboardItem[] = [
     ),
     componentFactory: (configuration: WidgetConfiguration) => (
       <LineChart
-        title={configuration?.title as string || "Metric Trends"}
-        dataType={configuration?.dataType as string || 'device'}
-        source={configuration?.source as string[] || 'all'}
-        metrics={configuration?.metric ? [configuration.metric as string] : ['cpu_usage', 'memory_usage']}
-        dateRangePreset={configuration?.dateRangePreset as string || 'last7days'}
-        customDateRange={configuration?.customDateRange}
-        isPreview={configuration?.isPreview as boolean}
-        colorPalette={configuration?.colorPalette as string || 'default'}
-        customColors={configuration?.customColors as string[]}
+        title={configuration?.[WIDGET_FIELDS.TITLE] as string || "Metric Trends"}
+        dataType={configuration?.[WIDGET_FIELDS.STATISTICS_TYPE] as string || WIDGET_DEFAULTS.DATA_TYPE}
+        source={configuration?.[WIDGET_FIELDS.STATISTICS_SOURCE] || WIDGET_DEFAULTS.EMPTY_ARRAY}
+        metrics={configuration?.[WIDGET_FIELDS.STATISTICS_METRIC] ? [configuration[WIDGET_FIELDS.STATISTICS_METRIC] as string] : [WIDGET_DEFAULTS.METRIC]}
+        dateRangePreset={configuration?.[WIDGET_FIELDS.DATE_RANGE_PRESET] as string || WIDGET_DEFAULTS.DATE_RANGE}
+        customDateRange={configuration?.[WIDGET_FIELDS.CUSTOM_DATE_RANGE]}
+        isPreview={configuration?.[WIDGET_FIELDS.IS_PREVIEW] as boolean}
+        colorPalette={configuration?.[WIDGET_FIELDS.COLOR_PALETTE] as string || WIDGET_DEFAULTS.COLOR_PALETTE}
+        customColors={configuration?.[WIDGET_FIELDS.CUSTOM_COLORS] as string[]}
       />
     ),
     hasSettings: true,
@@ -86,17 +87,17 @@ export const chartWidgets: DashboardItem[] = [
     ),
     componentFactory: (configuration: WidgetConfiguration) => (
       <CircularProgressChart
-        title={configuration?.title as string || "Tours Available"}
-        dataType={configuration?.dataType as string || 'device'}
-        source={configuration?.source as string[] || 'all'}
-        metric={configuration?.metric as string || 'cpu_usage'}
-        icon={configuration?.icon as React.ReactNode}
-        illustrationUrl={configuration?.illustrationUrl as string}
-        defaultValue={configuration?.defaultValue as string || '0'}
-        isPreview={configuration?.isPreview as boolean}
-        colorPalette={configuration?.colorPalette as string || 'default'}
-        backgroundColorPalette={configuration?.backgroundColorPalette as string || 'default'}
-        customColors={configuration?.customColors as string[]}
+        title={configuration?.[WIDGET_FIELDS.TITLE] as string || "Tours Available"}
+        dataType={configuration?.[WIDGET_FIELDS.STATISTICS_TYPE] as string || WIDGET_DEFAULTS.DATA_TYPE}
+        source={configuration?.[WIDGET_FIELDS.STATISTICS_SOURCE] || WIDGET_DEFAULTS.EMPTY_ARRAY}
+        metric={configuration?.[WIDGET_FIELDS.STATISTICS_METRIC] as string || WIDGET_DEFAULTS.METRIC}
+        icon={configuration?.[WIDGET_FIELDS.ICON] as React.ReactNode}
+        illustrationUrl={configuration?.[WIDGET_FIELDS.ILLUSTRATION_URL] as string}
+        defaultValue={configuration?.[WIDGET_FIELDS.DEFAULT_VALUE] as string || '0'}
+        isPreview={configuration?.[WIDGET_FIELDS.IS_PREVIEW] as boolean}
+        colorPalette={configuration?.[WIDGET_FIELDS.COLOR_PALETTE] as string || WIDGET_DEFAULTS.COLOR_PALETTE}
+        backgroundColorPalette={configuration?.[WIDGET_FIELDS.BACKGROUND_COLOR_PALETTE] as string || WIDGET_DEFAULTS.COLOR_PALETTE}
+        customColors={configuration?.[WIDGET_FIELDS.CUSTOM_COLORS] as string[]}
       />
     ),
     hasSettings: true,
@@ -163,16 +164,16 @@ export const chartWidgets: DashboardItem[] = [
     ),
     componentFactory: (configuration: WidgetConfiguration) => (
       <GroupedBarChart
-        title={configuration?.title as string || "Monthly Comparison"}
+        title={configuration?.[WIDGET_FIELDS.TITLE] as string || "Monthly Comparison"}
         subtitle="Device metrics comparison"
-        dataType={configuration?.dataType as string || 'device'}
-        source={configuration?.source as string[] || 'all'}
-        metrics={configuration?.metric ? [configuration.metric as string] : ['cpu_usage', 'memory_usage']}
-        dateRangePreset={configuration?.dateRangePreset as string || 'last6months'}
-        customDateRange={configuration?.customDateRange}
-        isPreview={configuration?.isPreview as boolean}
-        colorPalette={configuration?.colorPalette as string || 'default'}
-        customColors={configuration?.customColors as string[]}
+        dataType={configuration?.[WIDGET_FIELDS.STATISTICS_TYPE] as string || WIDGET_DEFAULTS.DATA_TYPE}
+        source={configuration?.[WIDGET_FIELDS.STATISTICS_SOURCE] || WIDGET_DEFAULTS.EMPTY_ARRAY}
+        metrics={configuration?.[WIDGET_FIELDS.STATISTICS_METRIC] ? [configuration[WIDGET_FIELDS.STATISTICS_METRIC] as string] : [METRICS.CPU_USAGE, METRICS.MEMORY_USAGE]}
+        dateRangePreset={configuration?.[WIDGET_FIELDS.DATE_RANGE_PRESET] as string || DATE_RANGE_PRESETS.LAST_6_MONTHS}
+        customDateRange={configuration?.[WIDGET_FIELDS.CUSTOM_DATE_RANGE]}
+        isPreview={configuration?.[WIDGET_FIELDS.IS_PREVIEW] as boolean}
+        colorPalette={configuration?.[WIDGET_FIELDS.COLOR_PALETTE] as string || WIDGET_DEFAULTS.COLOR_PALETTE}
+        customColors={configuration?.[WIDGET_FIELDS.CUSTOM_COLORS] as string[]}
       />
     ),
     hasSettings: true,
@@ -209,15 +210,15 @@ export const chartWidgets: DashboardItem[] = [
     ),
     componentFactory: (configuration: WidgetConfiguration) => (
       <StackedBarChart
-        title={configuration?.title as string || "Regional Metrics"}
-        dataType={configuration?.dataType as string || 'device'}
-        source={configuration?.source as string[] || 'all'}
-        metric={configuration?.metric as string || 'cpu_usage'}
-        dateRangePreset={configuration?.dateRangePreset as string || 'last7days'}
-        customDateRange={configuration?.customDateRange}
-        isPreview={configuration?.isPreview as boolean}
-        colorPalette={configuration?.colorPalette as string || 'default'}
-        customColors={configuration?.customColors as string[]}
+        title={configuration?.[WIDGET_FIELDS.TITLE] as string || "Regional Metrics"}
+        dataType={configuration?.[WIDGET_FIELDS.STATISTICS_TYPE] as string || WIDGET_DEFAULTS.DATA_TYPE}
+        source={configuration?.[WIDGET_FIELDS.STATISTICS_SOURCE] || WIDGET_DEFAULTS.EMPTY_ARRAY}
+        metric={configuration?.[WIDGET_FIELDS.STATISTICS_METRIC] as string || WIDGET_DEFAULTS.METRIC}
+        dateRangePreset={configuration?.[WIDGET_FIELDS.DATE_RANGE_PRESET] as string || WIDGET_DEFAULTS.DATE_RANGE}
+        customDateRange={configuration?.[WIDGET_FIELDS.CUSTOM_DATE_RANGE]}
+        isPreview={configuration?.[WIDGET_FIELDS.IS_PREVIEW] as boolean}
+        colorPalette={configuration?.[WIDGET_FIELDS.COLOR_PALETTE] as string || WIDGET_DEFAULTS.COLOR_PALETTE}
+        customColors={configuration?.[WIDGET_FIELDS.CUSTOM_COLORS] as string[]}
       />
     ),
     hasSettings: true,

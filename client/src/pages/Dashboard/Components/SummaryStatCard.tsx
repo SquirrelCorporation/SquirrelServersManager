@@ -53,9 +53,19 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
   const [trendDirection, setTrendDirection] = useState<'up' | 'down'>('up');
   const [rawApiData, setRawApiData] = useState<any>({});
 
-  // Determine if we're looking at all items or specific ones
-  const isAllSelected = Array.isArray(source) ? source.includes('all') : source === 'all';
-  const sourceIds = Array.isArray(source) ? source.filter(s => s !== 'all') : [source];
+  // Determine if we're looking at all items or specific ones (memoized)
+  const { isAllSelected, sourceIds } = useMemo(() => {
+    const isAll = Array.isArray(source) ? source.includes('all') : source === 'all';
+    let ids: string[] = [];
+    
+    if (Array.isArray(source)) {
+      ids = source.filter(s => s && s !== 'all');
+    } else if (source && source !== 'all') {
+      ids = [source];
+    }
+    
+    return { isAllSelected: isAll, sourceIds: ids };
+  }, [source]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -160,6 +170,13 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
             }
           } else {
             // Fetch stats for specific devices
+            if (sourceIds.length === 0) {
+              // No specific devices selected
+              setCurrentValue(0);
+              setWeeklyData([]);
+              return;
+            }
+            
             console.log('📊 SummaryStatCard API Call: getDeviceStat (multiple)', { 
               component: 'SummaryStatCard',
               title,
@@ -274,6 +291,13 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
             }
           } else {
             // Fetch stats for specific containers
+            if (sourceIds.length === 0) {
+              // No specific containers selected
+              setCurrentValue(0);
+              setWeeklyData([]);
+              return;
+            }
+            
             const containerPromises = sourceIds.map(containerId => 
               getContainerStat(containerId, metric)
             );
