@@ -4,6 +4,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import ReactApexChart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
 import DebugPanel from './DebugPanel';
+import DebugOverlay from './DebugOverlay';
 import { 
   getDashboardDevicesStats, 
   getDeviceStat,
@@ -78,8 +79,20 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
         if (dataType === 'device' && metric) {
           if (isAllSelected) {
             // Fetch all device IDs first
+            console.log('📊 SummaryStatCard API Call: getAllDevices', { 
+              component: 'SummaryStatCard',
+              title,
+              timestamp: new Date().toISOString()
+            });
             const devicesResponse = await getAllDevices();
             const allDeviceIds = devicesResponse.data?.map(device => device.uuid) || [];
+            console.log('📊 SummaryStatCard API Response: getAllDevices', { 
+              component: 'SummaryStatCard',
+              title,
+              deviceCount: allDeviceIds.length,
+              deviceIds: allDeviceIds,
+              timestamp: new Date().toISOString()
+            });
             
             if (allDeviceIds.length === 0) {
               // No devices available
@@ -89,6 +102,21 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
             }
             
             // Fetch averaged stats for all devices
+            console.log('📊 SummaryStatCard API Call: getDashboardAveragedDevicesStats & getDashboardDevicesStats', { 
+              component: 'SummaryStatCard',
+              title,
+              deviceIds: allDeviceIds,
+              metric,
+              currentRange: {
+                from: now.subtract(1, 'hour').toDate(),
+                to: now.toDate()
+              },
+              historicalRange: {
+                from: weekAgo.toDate(),
+                to: now.toDate()
+              },
+              timestamp: new Date().toISOString()
+            });
             const [currentStats, historicalStats] = await Promise.all([
               getDashboardAveragedDevicesStats(allDeviceIds, metric, {
                 from: now.subtract(1, 'hour').toDate(),
@@ -99,6 +127,15 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
                 to: now.toDate(),
               }),
             ]);
+            console.log('📊 SummaryStatCard API Response: getDashboardAveragedDevicesStats & getDashboardDevicesStats', { 
+              component: 'SummaryStatCard',
+              title,
+              currentStatsLength: currentStats.data?.length || 0,
+              historicalStatsLength: historicalStats.data?.length || 0,
+              currentData: currentStats.data,
+              historicalData: historicalStats.data,
+              timestamp: new Date().toISOString()
+            });
             
             // Store raw API data for debugging
             setRawApiData({
@@ -123,10 +160,24 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
             }
           } else {
             // Fetch stats for specific devices
+            console.log('📊 SummaryStatCard API Call: getDeviceStat (multiple)', { 
+              component: 'SummaryStatCard',
+              title,
+              deviceIds: sourceIds,
+              metric,
+              timestamp: new Date().toISOString()
+            });
             const devicePromises = sourceIds.map(deviceId => 
               getDeviceStat(deviceId, metric)
             );
             const deviceStats = await Promise.all(devicePromises);
+            console.log('📊 SummaryStatCard API Response: getDeviceStat (multiple)', { 
+              component: 'SummaryStatCard',
+              title,
+              deviceIds: sourceIds,
+              deviceStats: deviceStats.map(stat => ({ deviceId: stat.data?.name, value: stat.data?.value })),
+              timestamp: new Date().toISOString()
+            });
             
             // Calculate average of current values
             const validStats = deviceStats.filter(stat => stat.data);
@@ -136,9 +187,27 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
             }
             
             // Fetch historical data
+            console.log('📊 SummaryStatCard API Call: getDashboardDevicesStats (specific devices)', { 
+              component: 'SummaryStatCard',
+              title,
+              deviceIds: sourceIds,
+              metric,
+              dateRange: {
+                from: weekAgo.toDate(),
+                to: now.toDate()
+              },
+              timestamp: new Date().toISOString()
+            });
             const historicalStats = await getDashboardDevicesStats(sourceIds, metric, {
               from: weekAgo.toDate(),
               to: now.toDate(),
+            });
+            console.log('📊 SummaryStatCard API Response: getDashboardDevicesStats (specific devices)', { 
+              component: 'SummaryStatCard',
+              title,
+              historicalStatsLength: historicalStats.data?.length || 0,
+              historicalData: historicalStats.data,
+              timestamp: new Date().toISOString()
             });
             
             if (historicalStats.data) {
@@ -436,6 +505,7 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
         }}
         maxHeight={200}
       />
+      <DebugOverlay fileName="SummaryStatCard.tsx" componentName="SummaryStatCard" />
     </Card>
   );
 };

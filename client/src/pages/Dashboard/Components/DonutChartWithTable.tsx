@@ -27,9 +27,9 @@ const DonutChartWithTable: React.FC<DonutChartWithTableProps> = ({
   cardStyle,
 }) => {
   // Prepare data for ApexCharts
-  const chartSeries = chartData.map(item => item.value);
-  const chartLabels = chartData.map(item => item.type);
-  const chartColors = chartData.map(item => item.color);
+  const chartSeries = chartData?.map(item => item.value) || [];
+  const chartLabels = chartData?.map(item => item.type) || [];
+  const chartColors = chartData?.map(item => item.color) || [];
 
   const chartOptions: ApexOptions = {
     chart: {

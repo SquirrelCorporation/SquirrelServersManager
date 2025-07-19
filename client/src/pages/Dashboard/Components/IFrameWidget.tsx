@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Card, Typography, Button, Input, message, Spin, Alert } from 'antd';
 import { ReloadOutlined, ExpandOutlined, SettingOutlined, LinkOutlined } from '@ant-design/icons';
+import DebugOverlay from './DebugOverlay';
 
 interface IFrameWidgetProps {
   title?: string;
@@ -301,6 +302,7 @@ const IFrameWidget: React.FC<IFrameWidgetProps> = ({
           {url}
         </div>
       )}
+      <DebugOverlay fileName="IFrameWidget.tsx" componentName="IFrameWidget" />
     </Card>
   );
 };

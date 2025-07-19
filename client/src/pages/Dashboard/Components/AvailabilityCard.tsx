@@ -10,19 +10,19 @@ const AvailabilityCard: React.FC = () => {
     API.AvailabilityStat | undefined
   >(undefined);
 
-  const asyncFetch = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await getDashboardAvailabilityStat();
-      setAvailabilityStat(response.data);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
-    asyncFetch();
-  }, [asyncFetch]);
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await getDashboardAvailabilityStat();
+        setAvailabilityStat(response.data);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []); // Runs once on mount
 
   const percent = useMemo(
     () =>

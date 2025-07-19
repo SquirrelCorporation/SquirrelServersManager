@@ -104,11 +104,13 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
           };
         });
         
+        console.log('💾 Saving widgets to backend:', widgets);
         await dashboardService.updateWidgets(
           currentDashboard._id!,
           currentPageId,
           widgets
         );
+        console.log('✅ Widgets saved successfully');
         
         // Silent save - no success message for auto-save
       } catch (error) {
@@ -168,12 +170,20 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
       const newItems = prevItems.map(item => {
         if (item.id === widgetId) {
           // Find the original item in availableItems to get componentFactory
+          // Extract widget type from timestamped ID (e.g., "medium-graph-1234567890" -> "medium-graph")
+          const parts = item.id.split('-');
+          const timestamp = parts[parts.length - 1];
+          const widgetType = item.id.replace(`-${timestamp}`, '');
+          
           const originalItem = availableItems.find(avItem => 
-            item.id.startsWith(avItem.id.split('-')[0])
+            avItem.id === widgetType
           );
+          
+          console.log('🔧 Settings save - Widget:', item.id, '→ Type:', widgetType, '→ Found:', !!originalItem);
           
           // If the item has a componentFactory, use it to create a new component
           if (originalItem?.componentFactory) {
+            console.log('🔧 Creating new component with settings:', widgetSettings);
             return {
               ...item,
               widgetSettings,
@@ -210,6 +220,7 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ available
         setCurrentPageId(defaultPage.id);
         
         // Convert saved widgets to DashboardItems
+        console.log('📥 Loading widgets from backend:', defaultPage.widgets);
         const loadedItems = defaultPage.widgets.map(widget => {
           const availableItem = availableItems.find(item => item.id === widget.widgetType);
           if (availableItem) {

@@ -17,19 +17,28 @@ const SystemPerformanceCard: React.FC = () => {
     },
   );
 
-  const asyncFetch = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await getDashboardSystemPerformance();
-      setPerformancesStat(response.data);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
-    void asyncFetch();
-  }, [asyncFetch]);
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        console.log('📊 SystemPerformanceCard API Call: getDashboardSystemPerformance', { 
+          component: 'SystemPerformanceCard',
+          timestamp: new Date().toISOString()
+        });
+        const response = await getDashboardSystemPerformance();
+        console.log('📊 SystemPerformanceCard API Response: getDashboardSystemPerformance', { 
+          component: 'SystemPerformanceCard',
+          performanceData: response.data,
+          timestamp: new Date().toISOString()
+        });
+        setPerformancesStat(response.data);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []); // Runs once on mount
 
   const cpuTrendFlag = useMemo(
     () =>

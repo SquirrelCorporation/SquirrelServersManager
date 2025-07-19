@@ -16,46 +16,46 @@ const ContainersCard: React.FC = () => {
   const [nbTotal, setNbTotal] = useState<number>(0);
   const [stats, setStats] = useState<{ date: string; value: string; type: string }[]>([]);
 
-  const asyncFetch = useCallback(async () => {
-    setLoading(true);
-    try {
-      const [runningResponse, totalResponse, statsResponse] = await Promise.all(
-        [
-          getNbContainersByStatus(SsmStatus.ContainerStatus.RUNNING),
-          getNbContainersByStatus('all'),
-          getAveragedStats(),
-        ],
-      );
-
-      setNbRunning(runningResponse.data);
-      setNbTotal(totalResponse.data);
-      const formattedStats = [
-        ...(statsResponse.data?.cpuStats ?? []).map((e: API.ContainerStat) => ({
-          type: 'cpu',
-          value: `${e.value}`,
-          date: moment(e.date, 'YYYY-MM-DD-HH-mm-ss').format(
-            'YYYY-MM-DD, HH:mm',
-          ),
-        })),
-        ...(statsResponse.data?.memStats ?? []).map((e: API.ContainerStat) => ({
-          type: 'mem',
-          value: `${e.value}`,
-          date: moment(e.date, 'YYYY-MM-DD-HH-mm-ss').format(
-            'YYYY-MM-DD, HH:mm',
-          ),
-        })),
-      ];
-      setStats(formattedStats);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
-    void asyncFetch();
-  }, [asyncFetch]);
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [runningResponse, totalResponse, statsResponse] = await Promise.all(
+          [
+            getNbContainersByStatus(SsmStatus.ContainerStatus.RUNNING),
+            getNbContainersByStatus('all'),
+            getAveragedStats(),
+          ],
+        );
+
+        setNbRunning(runningResponse.data);
+        setNbTotal(totalResponse.data);
+        const formattedStats = [
+          ...(statsResponse.data?.cpuStats ?? []).map((e: API.ContainerStat) => ({
+            type: 'cpu',
+            value: `${e.value}`,
+            date: moment(e.date, 'YYYY-MM-DD-HH-mm-ss').format(
+              'YYYY-MM-DD, HH:mm',
+            ),
+          })),
+          ...(statsResponse.data?.memStats ?? []).map((e: API.ContainerStat) => ({
+            type: 'mem',
+            value: `${e.value}`,
+            date: moment(e.date, 'YYYY-MM-DD-HH-mm-ss').format(
+              'YYYY-MM-DD, HH:mm',
+            ),
+          })),
+        ];
+        setStats(formattedStats);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []); // Empty dependency array - runs once on mount
 
   // Prepare data for ApexCharts
   const chartData = useMemo(() => {

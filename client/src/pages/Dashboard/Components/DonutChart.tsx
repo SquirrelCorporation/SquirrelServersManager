@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, Typography, Space, Row, Col } from 'antd';
 import ReactApexChart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
+import DebugOverlay from './DebugOverlay';
 
 interface LegendItem {
   name: string;
@@ -187,6 +188,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
           </Row>
         ))}
       </Space>
+      <DebugOverlay fileName="DonutChart.tsx" componentName="DonutChart" />
     </Card>
   );
 };

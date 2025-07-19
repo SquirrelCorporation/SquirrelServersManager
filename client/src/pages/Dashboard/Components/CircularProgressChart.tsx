@@ -1,21 +1,199 @@
-import React from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Card, Typography, Space, Progress } from 'antd';
+import DebugOverlay from './DebugOverlay';
+import { 
+  getDashboardDevicesStats, 
+  getDeviceStat,
+  getDashboardAveragedDevicesStats,
+  getDashboardSystemPerformance
+} from '@/services/rest/statistics/stastistics';
+import { 
+  getContainerStat,
+  getContainerStats,
+  getAveragedStats
+} from '@/services/rest/containers/container-statistics';
+import { getAllDevices } from '@/services/rest/devices/devices';
+import { getContainers as getAllContainers } from '@/services/rest/containers/containers';
+import { API, StatsType } from 'ssm-shared-lib';
+import moment from 'moment';
 
 interface CircularProgressChartProps {
-  percentage: number; // 0 to 100
-  value: string;
-  label: string;
-  color: string; // e.g., '#52c41a' for green
+  title: string;
+  dataType?: 'device' | 'container';
+  source?: string | string[];
+  metric?: string;
+  defaultValue?: string;
+  isPreview?: boolean;
+  customColors?: string[];
+  colorPalette?: string;
   cardStyle?: React.CSSProperties;
 }
 
+// Static mapping for metric types
+const STATS_TYPE_MAPPING: Record<string, StatsType.DeviceStatsType> = {
+  cpu_usage: StatsType.DeviceStatsType.CPU,
+  memory_usage: StatsType.DeviceStatsType.MEM_USED,
+  memory_free: StatsType.DeviceStatsType.MEM_FREE,
+  storage_usage: StatsType.DeviceStatsType.DISK_USED,
+  storage_free: StatsType.DeviceStatsType.DISK_FREE,
+  containers: StatsType.DeviceStatsType.CONTAINERS,
+};
+
 const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
-  percentage,
-  value,
-  label,
-  color,
+  title,
+  dataType = 'device',
+  source = 'all',
+  metric = 'cpu_usage',
+  defaultValue = '0',
+  isPreview = false,
+  customColors = [],
+  colorPalette = 'default',
   cardStyle,
 }) => {
+  const [loading, setLoading] = useState(false);
+  const [currentValue, setCurrentValue] = useState<number>(0);
+  const [displayValue, setDisplayValue] = useState<string>('0');
+
+  // Determine if we're looking at all items or specific ones
+  const isAllSelected = Array.isArray(source) ? source.includes('all') : source === 'all';
+  const sourceIds = Array.isArray(source) ? source.filter(s => s !== 'all') : [source];
+
+  // Color palette logic
+  const getProgressColor = useMemo(() => {
+    if (customColors && customColors.length > 0) {
+      return customColors[0];
+    }
+    
+    const colorPalettes = {
+      default: '#52c41a',
+      vibrant: '#ff6b6b',
+      cool: '#74b9ff',
+      warm: '#fd79a8',
+      nature: '#00b894',
+    };
+    
+    return colorPalettes[colorPalette] || colorPalettes.default;
+  }, [customColors, colorPalette]);
+
+  // Fetch data
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // Use mock data in preview mode
+        if (isPreview) {
+          setCurrentValue(65.5);
+          setDisplayValue('65.5%');
+          setLoading(false);
+          return;
+        }
+
+        const now = moment();
+        
+        if (dataType === 'device' && metric) {
+          if (isAllSelected) {
+            // Fetch all device IDs first
+            console.log('📊 CircularProgressChart API Call: getAllDevices', { 
+              component: 'CircularProgressChart',
+              title,
+              timestamp: new Date().toISOString()
+            });
+            const devicesResponse = await getAllDevices();
+            const allDeviceIds = devicesResponse.data?.map(device => device.uuid) || [];
+            console.log('📊 CircularProgressChart API Response: getAllDevices', { 
+              component: 'CircularProgressChart',
+              title,
+              deviceCount: allDeviceIds.length,
+              deviceIds: allDeviceIds,
+              timestamp: new Date().toISOString()
+            });
+            
+            if (allDeviceIds.length === 0) {
+              setCurrentValue(0);
+              setDisplayValue(defaultValue);
+              return;
+            }
+            
+            const statsType = STATS_TYPE_MAPPING[metric] || StatsType.DeviceStatsType.CPU;
+            
+            // Fetch current averaged stats
+            const fromDate = moment().subtract(1, 'hour').toDate();
+            const toDate = moment().toDate();
+            console.log('📊 CircularProgressChart API Call: getDashboardAveragedDevicesStats', { 
+              component: 'CircularProgressChart',
+              title,
+              deviceIds: allDeviceIds,
+              statsType,
+              metric,
+              dateRange: {
+                from: fromDate,
+                to: toDate
+              },
+              timestamp: new Date().toISOString()
+            });
+            const currentStats = await getDashboardAveragedDevicesStats(allDeviceIds, statsType, {
+              from: fromDate,
+              to: toDate,
+            });
+            console.log('📊 CircularProgressChart API Response: getDashboardAveragedDevicesStats', { 
+              component: 'CircularProgressChart',
+              title,
+              dataLength: currentStats.data?.length || 0,
+              rawData: currentStats.data,
+              timestamp: new Date().toISOString()
+            });
+            
+            if (currentStats.data && currentStats.data.length > 0) {
+              const latestStat = currentStats.data[currentStats.data.length - 1];
+              const val = latestStat.value || 0;
+              setCurrentValue(val);
+              
+              // Format display value based on metric type
+              if (metric.includes('containers')) {
+                setDisplayValue(Math.round(val).toLocaleString());
+              } else {
+                setDisplayValue(`${val.toFixed(1)}%`);
+              }
+            }
+          } else {
+            // Handle specific device selection (similar logic for single device)
+            // This can be expanded based on specific requirements
+            setCurrentValue(0);
+            setDisplayValue(defaultValue);
+          }
+        } else if (dataType === 'container') {
+          // Container logic can be implemented similarly
+          setCurrentValue(0);
+          setDisplayValue(defaultValue);
+        }
+      } catch (error) {
+        console.error('Failed to fetch circular progress data:', error);
+        setCurrentValue(0);
+        setDisplayValue(defaultValue);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+    
+    // Set up auto-refresh every 30 seconds (like SummaryStatCard)
+    const interval = setInterval(fetchData, 30000);
+    return () => clearInterval(interval);
+  }, [dataType, source, metric, isAllSelected, sourceIds, isPreview, title, defaultValue]);
+
+  const getMetricLabel = (metric: string): string => {
+    const labels: Record<string, string> = {
+      cpu_usage: 'CPU Usage',
+      memory_usage: 'Memory Usage', 
+      memory_free: 'Memory Free',
+      storage_usage: 'Storage Usage',
+      storage_free: 'Storage Free',
+      containers: 'Containers',
+    };
+    return labels[metric] || metric;
+  };
+
   return (
     <Card
       style={{
@@ -29,6 +207,7 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
         ...cardStyle,
       }}
       bodyStyle={{ padding: '24px 28px' }}
+      loading={loading}
     >
       {/* Background decorative circles */}
       <div style={{
@@ -53,17 +232,17 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
       <Space direction="horizontal" align="center" size={20} style={{ position: 'relative' }}>
         <Progress
           type="circle"
-          percent={percentage}
+          percent={currentValue || 0}
           width={90}
           strokeWidth={10}
           format={() => (
             <Typography.Text
               style={{ color: '#ffffff', fontSize: '20px', fontWeight: '600' }}
             >
-              {Math.round(percentage)}%
+              {Math.round(currentValue || 0)}%
             </Typography.Text>
           )}
-          strokeColor="#6dd89e"
+          strokeColor={getProgressColor}
           trailColor="rgba(255, 255, 255, 0.2)"
           strokeLinecap="round"
         />
@@ -78,13 +257,14 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
               lineHeight: 1,
             }}
           >
-            {value}
+            {displayValue || defaultValue}
           </Typography.Title>
           <Typography.Text style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '16px' }}>
-            {label}
+            {title}
           </Typography.Text>
         </Space>
       </Space>
+      <DebugOverlay fileName="CircularProgressChart.tsx" componentName="CircularProgressChart" />
     </Card>
   );
 };

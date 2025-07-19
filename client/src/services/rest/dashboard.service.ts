@@ -11,6 +11,8 @@ export interface WidgetSettings {
   dateRangePreset?: string;
   customDateRange?: any;
   aggregationType?: string;
+  colorPalette?: string;
+  customColors?: string[];
   customSettings?: Record<string, any>;
 }
 

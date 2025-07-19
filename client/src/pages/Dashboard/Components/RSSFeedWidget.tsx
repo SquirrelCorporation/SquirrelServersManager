@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Typography, List, Button, Spin, Badge, Input, message } from 'antd';
 import { ReloadOutlined, LinkOutlined, PlusOutlined, DeleteOutlined, SettingOutlined } from '@ant-design/icons';
+import DebugOverlay from './DebugOverlay';
 
 interface RSSItem {
   title: string;
@@ -385,6 +386,7 @@ const RSSFeedWidget: React.FC<RSSFeedWidgetProps> = ({
           Last updated: {lastUpdate.toLocaleTimeString()}
         </div>
       )}
+      <DebugOverlay fileName="RSSFeedWidget.tsx" componentName="RSSFeedWidget" />
     </Card>
   );
 };

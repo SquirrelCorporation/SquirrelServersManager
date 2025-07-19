@@ -28,6 +28,18 @@ export class WidgetSettings {
   @Prop({ required: false })
   customText?: string;
 
+  @Prop({ required: false })
+  dateRangePreset?: string;
+
+  @Prop({ required: false, type: Object })
+  customDateRange?: any;
+
+  @Prop({ required: false })
+  colorPalette?: string;
+
+  @Prop({ required: false, type: [String] })
+  customColors?: string[];
+
   @Prop({ required: false, type: Object })
   customSettings?: Record<string, any>;
 }

@@ -4,7 +4,7 @@
  */
 
 import React, { useCallback, useEffect } from 'react';
-import { Drawer, Form, Button, Space, message } from 'antd';
+import { Drawer, Form, Button, Space, message, Typography, Divider } from 'antd';
 import { ProForm } from '@ant-design/pro-components';
 import { WidgetSettingsRenderer } from './WidgetSettingsRenderer';
 import { useWidgetConfiguration, useWidgetSettings } from './WidgetSettingsProvider';
@@ -97,6 +97,17 @@ export const WidgetSettingsDrawer: React.FC<WidgetSettingsDrawerProps> = ({
         </Space>
       }
     >
+      {/* Component Name Header */}
+      <div style={{ marginBottom: '24px' }}>
+        <Typography.Title level={4} style={{ margin: 0, color: '#1890ff' }}>
+          {widget.title}
+        </Typography.Title>
+        <Typography.Text type="secondary" style={{ fontSize: '14px' }}>
+          Component Type: {widgetType}
+        </Typography.Text>
+        <Divider style={{ margin: '16px 0' }} />
+      </div>
+
       <Form form={form} layout="vertical">
         <Form.Item name="settings">
           <WidgetSettingsRenderer

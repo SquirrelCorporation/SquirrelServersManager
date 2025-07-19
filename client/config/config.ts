@@ -188,14 +188,7 @@ export default defineConfig({
   /**
    * @doc https://pro.ant.design/zh-cn/docs/openapi/
    */
-  mfsu: {
-    strategy: 'normal',
-    shared: {
-      react: { singleton: true, eager: true, requiredVersion: false },
-      'react-dom': { singleton: true, eager: true, requiredVersion: false },
-      antd: { singleton: true, eager: true, requiredVersion: false },
-    },
-  },
+  mfsu: false, // Temporarily disabled due to module federation errors
   esbuildMinifyIIFE: true,
   requestRecord: {}, // Re-enabled
   clientLoader: {}, // Re-enabled

@@ -36,9 +36,31 @@ const TinyLineDeviceGraph: React.FC<TinyLineProps> = ({
 
   const asyncFetch = useCallback(async () => {
     try {
+      console.log('📊 TinyLineDeviceGraph API Call: getDeviceStats', { 
+        component: 'TinyLineDeviceGraph',
+        deviceId: deviceUuid,
+        statsType: type,
+        from,
+        timestamp: new Date().toISOString()
+      });
       const list = await getDeviceStats(deviceUuid, type, { from });
+      console.log('📊 TinyLineDeviceGraph API Response: getDeviceStats', { 
+        component: 'TinyLineDeviceGraph',
+        deviceId: deviceUuid,
+        statsType: type,
+        dataLength: list?.data?.length || 0,
+        rawData: list?.data,
+        timestamp: new Date().toISOString()
+      });
       setData(formatData(list));
     } catch (error: any) {
+      console.error('📊 TinyLineDeviceGraph API Error: getDeviceStats', { 
+        component: 'TinyLineDeviceGraph',
+        deviceId: deviceUuid,
+        statsType: type,
+        error: error?.message,
+        timestamp: new Date().toISOString()
+      });
       message.error({
         content: error?.message || 'Unknown error',
         duration: 6,

@@ -99,7 +99,6 @@ services:
       - ./client/src:/opt/squirrelserversmanager/client/src
       - ./client/config:/opt/squirrelserversmanager/client/config
       - ./client/public:/opt/squirrelserversmanager/client/public
-      - client_node_modules:/opt/squirrelserversmanager/client/node_modules
     labels:
       wud.display.name: "SSM - Client"
       wud.watch.digest: false

@@ -64,60 +64,60 @@ const AnsiblePlaybookRunner: React.FC<AnsiblePlaybookRunnerProps> = ({
   });
 
   // Fetch real playbooks and devices
-  const fetchData = useCallback(async () => {
-    if (isPreview) {
-      // Use mock data in preview mode
-      setPlaybooks([
-        {
-          uuid: '1',
-          name: 'System Update',
-          path: '/playbooks/system-update.yml',
-          extraVars: [],
-          quickRef: 'system-update',
-        },
-        {
-          uuid: '2',
-          name: 'Docker Cleanup',
-          path: '/playbooks/docker-cleanup.yml',
-          extraVars: [],
-          quickRef: 'docker-cleanup',
-        },
-        {
-          uuid: '3',
-          name: 'Security Hardening',
-          path: '/playbooks/security-hardening.yml',
-          extraVars: [],
-          quickRef: 'security-hardening',
-        },
-      ] as API.PlaybookFile[]);
-      setDevices([
-        { uuid: 'device-1', fqdn: 'server1.local', ip: '192.168.1.10' },
-        { uuid: 'device-2', fqdn: 'server2.local', ip: '192.168.1.11' },
-      ] as API.DeviceItem[]);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      // Fetch real data in parallel
-      const [playbooksRes, devicesRes] = await Promise.all([
-        getPlaybooks(),
-        getAllDevices(),
-      ]);
-      
-      setPlaybooks(playbooksRes.data || []);
-      setDevices(devicesRes.data || []);
-    } catch (error) {
-      console.error('Failed to fetch data:', error);
-      message.error('Failed to load playbooks or devices');
-    } finally {
-      setLoading(false);
-    }
-  }, [isPreview]);
-
   useEffect(() => {
+    const fetchData = async () => {
+      if (isPreview) {
+        // Use mock data in preview mode
+        setPlaybooks([
+          {
+            uuid: '1',
+            name: 'System Update',
+            path: '/playbooks/system-update.yml',
+            extraVars: [],
+            quickRef: 'system-update',
+          },
+          {
+            uuid: '2',
+            name: 'Docker Cleanup',
+            path: '/playbooks/docker-cleanup.yml',
+            extraVars: [],
+            quickRef: 'docker-cleanup',
+          },
+          {
+            uuid: '3',
+            name: 'Security Hardening',
+            path: '/playbooks/security-hardening.yml',
+            extraVars: [],
+            quickRef: 'security-hardening',
+          },
+        ] as API.PlaybookFile[]);
+        setDevices([
+          { uuid: 'device-1', fqdn: 'server1.local', ip: '192.168.1.10' },
+          { uuid: 'device-2', fqdn: 'server2.local', ip: '192.168.1.11' },
+        ] as API.DeviceItem[]);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        // Fetch real data in parallel
+        const [playbooksRes, devicesRes] = await Promise.all([
+          getPlaybooks(),
+          getAllDevices(),
+        ]);
+        
+        setPlaybooks(playbooksRes.data || []);
+        setDevices(devicesRes.data || []);
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+        message.error('Failed to load playbooks or devices');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchData();
-  }, [fetchData]);
+  }, [isPreview]); // Runs when isPreview changes
 
   // Filter playbooks based on settings
   const filteredPlaybooks = useMemo(() => {

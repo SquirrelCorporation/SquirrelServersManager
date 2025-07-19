@@ -78,50 +78,50 @@ const TimeSeriesLineChart: React.FC = () => {
     setRangePickerValue(getTimeDistance(dateType));
   }, []);
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    try {
-      if (devices.length > 0) {
-        setGraphData(undefined);
-        setGraphMemData(undefined);
-        setGraphStorageData(undefined);
-        setTopTenData(undefined);
-        const [deviceStats, averagedDeviceStats] = await Promise.all([
-          getDashboardDevicesStats(devices as string[], type, {
-            from: rangePickerValue[0].toDate(),
-            to: rangePickerValue[1].toDate(),
-          }),
-          getDashboardAveragedDevicesStats(devices as string[], type, {
-            from: rangePickerValue[0].toDate(),
-            to: rangePickerValue[1].toDate(),
-          }),
-        ]);
-        console.log(deviceStats.data);
-        switch (type) {
-          case StatsType.DeviceStatsType.CPU:
-            setGraphData(deviceStats.data);
-            setTopTenData(averagedDeviceStats.data);
-            break;
-          case StatsType.DeviceStatsType.MEM_USED:
-            setGraphMemData(deviceStats.data);
-            setTopTenData(averagedDeviceStats.data);
-            break;
-          case StatsType.DeviceStatsType.DISK_USED:
-            setGraphStorageData(deviceStats.data);
-            setTopTenData(averagedDeviceStats.data);
-            break;
-        }
-      }
-    } catch (error) {
-      console.error('Failed to fetch data:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [devices, type, rangePickerValue]);
-
   useEffect(() => {
-    void fetchData();
-  }, [fetchData]);
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        if (devices.length > 0) {
+          setGraphData(undefined);
+          setGraphMemData(undefined);
+          setGraphStorageData(undefined);
+          setTopTenData(undefined);
+          const [deviceStats, averagedDeviceStats] = await Promise.all([
+            getDashboardDevicesStats(devices as string[], type, {
+              from: rangePickerValue[0].toDate(),
+              to: rangePickerValue[1].toDate(),
+            }),
+            getDashboardAveragedDevicesStats(devices as string[], type, {
+              from: rangePickerValue[0].toDate(),
+              to: rangePickerValue[1].toDate(),
+            }),
+          ]);
+          console.log(deviceStats.data);
+          switch (type) {
+            case StatsType.DeviceStatsType.CPU:
+              setGraphData(deviceStats.data);
+              setTopTenData(averagedDeviceStats.data);
+              break;
+            case StatsType.DeviceStatsType.MEM_USED:
+              setGraphMemData(deviceStats.data);
+              setTopTenData(averagedDeviceStats.data);
+              break;
+            case StatsType.DeviceStatsType.DISK_USED:
+              setGraphStorageData(deviceStats.data);
+              setTopTenData(averagedDeviceStats.data);
+              break;
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [devices, type, rangePickerValue]); // Direct dependencies in useEffect
 
   // Prepare data for ApexCharts
   const prepareChartData = useCallback((data: API.DeviceStat[] | undefined) => {

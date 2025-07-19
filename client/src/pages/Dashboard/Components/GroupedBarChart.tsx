@@ -3,6 +3,7 @@ import { Card, Typography, Space, Select, Spin, Empty } from 'antd';
 import ReactApexChart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
 import DebugPanel from './DebugPanel';
+import DebugOverlay from './DebugOverlay';
 import { 
   getDashboardDevicesStats,
   getDashboardAveragedDevicesStats 
@@ -16,6 +17,16 @@ import { getContainers as getAllContainers } from '@/services/rest/containers/co
 import { getTimeDistance } from '@/utils/time';
 import { API, StatsType } from 'ssm-shared-lib';
 import moment from 'moment';
+
+// Static mapping outside component to avoid useCallback dependency issues
+const STATS_TYPE_MAPPING: Record<string, StatsType.DeviceStatsType> = {
+  cpu_usage: StatsType.DeviceStatsType.CPU,
+  memory_usage: StatsType.DeviceStatsType.MEM_USED,
+  memory_free: StatsType.DeviceStatsType.MEM_FREE,
+  storage_usage: StatsType.DeviceStatsType.DISK_USED,
+  storage_free: StatsType.DeviceStatsType.DISK_FREE,
+  containers: StatsType.DeviceStatsType.CONTAINERS,
+};
 
 interface VisitEntry {
   month: string;
@@ -97,18 +108,6 @@ const GroupedBarChart: React.FC<GroupedBarChartProps> = ({
     }
   }, [dateRangePreset, customDateRange, getDateRangeFromPreset, isLegacyMode]);
 
-  // Convert metric names to StatsType enum values (stable function)
-  const getStatsType = useCallback((metric: string): StatsType.DeviceStatsType => {
-    const mapping: Record<string, StatsType.DeviceStatsType> = {
-      cpu_usage: StatsType.DeviceStatsType.CPU,
-      memory_usage: StatsType.DeviceStatsType.MEM_USED,
-      memory_free: StatsType.DeviceStatsType.MEM_FREE,
-      storage_usage: StatsType.DeviceStatsType.DISK_USED,
-      storage_free: StatsType.DeviceStatsType.DISK_FREE,
-      containers: StatsType.DeviceStatsType.CONTAINERS,
-    };
-    return mapping[metric] || StatsType.DeviceStatsType.CPU;
-  }, []);
 
   // Determine if we're looking at all items or specific ones (memoized)
   const { isAllSelected, sourceIds } = useMemo(() => {
@@ -116,73 +115,6 @@ const GroupedBarChart: React.FC<GroupedBarChartProps> = ({
     const ids = Array.isArray(source) ? source.filter(s => s !== 'all') : [source];
     return { isAllSelected: isAll, sourceIds: ids };
   }, [source]);
-
-  const fetchData = useCallback(async () => {
-    if (!rangePickerValue || isLegacyMode) return;
-    
-    setLoading(true);
-    try {
-      if (dataType === 'device') {
-        let deviceIds = sourceIds;
-        
-        // If "all" is selected, fetch all device IDs
-        if (isAllSelected) {
-          const devicesResponse = await getAllDevices();
-          const devices = devicesResponse.data || [];
-          deviceIds = devices.map(device => device.uuid);
-          
-          // Build device name mapping
-          const nameMap: Record<string, string> = {};
-          devices.forEach(device => {
-            nameMap[device.uuid] = device.fqdn || device.ip || device.uuid;
-          });
-          setDeviceNameMap(nameMap);
-        } else {
-          // For specific devices, fetch their details to get names
-          const devicesResponse = await getAllDevices();
-          const devices = devicesResponse.data || [];
-          const nameMap: Record<string, string> = {};
-          devices.forEach(device => {
-            if (sourceIds.includes(device.uuid)) {
-              nameMap[device.uuid] = device.fqdn || device.ip || device.uuid;
-            }
-          });
-          setDeviceNameMap(nameMap);
-        }
-
-        if (deviceIds.length === 0) {
-          setGraphData([]);
-          return;
-        }
-
-        // Use the primary metric for the chart
-        const primaryMetric = metrics[0] || 'cpu_usage';
-        const statsType = getStatsType(primaryMetric);
-        
-        // Fetch data using the same pattern as MainChartCard
-        const deviceStats = await getDashboardDevicesStats(
-          deviceIds as string[], 
-          statsType, 
-          {
-            from: rangePickerValue[0].toDate(),
-            to: rangePickerValue[1].toDate(),
-          }
-        );
-        
-        // Store raw API data for debugging
-        setRawApiData(deviceStats.data || []);
-        
-        // Process the data - keep the original structure
-        const processedData = deviceStats.data || [];
-        setGraphData(processedData);
-      }
-    } catch (error) {
-      console.error('Failed to fetch chart data:', error);
-      setGraphData([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [dataType, sourceIds, isAllSelected, metrics, rangePickerValue, getStatsType, isLegacyMode]);
 
   // Fetch data when dependencies change
   useEffect(() => {
@@ -197,10 +129,75 @@ const GroupedBarChart: React.FC<GroupedBarChartProps> = ({
         setGraphData(mockData);
         setLoading(false);
       } else {
+        const fetchData = async () => {
+          setLoading(true);
+          try {
+            if (dataType === 'device') {
+              let deviceIds = sourceIds;
+              
+              // If "all" is selected, fetch all device IDs
+              if (isAllSelected) {
+                const devicesResponse = await getAllDevices();
+                const devices = devicesResponse.data || [];
+                deviceIds = devices.map(device => device.uuid);
+                
+                // Build device name mapping
+                const nameMap: Record<string, string> = {};
+                devices.forEach(device => {
+                  nameMap[device.uuid] = device.fqdn || device.ip || device.uuid;
+                });
+                setDeviceNameMap(nameMap);
+              } else {
+                // For specific devices, fetch their details to get names
+                const devicesResponse = await getAllDevices();
+                const devices = devicesResponse.data || [];
+                const nameMap: Record<string, string> = {};
+                devices.forEach(device => {
+                  if (sourceIds.includes(device.uuid)) {
+                    nameMap[device.uuid] = device.fqdn || device.ip || device.uuid;
+                  }
+                });
+                setDeviceNameMap(nameMap);
+              }
+
+              if (deviceIds.length === 0) {
+                setGraphData([]);
+                return;
+              }
+
+              // Use the primary metric for the chart
+              const primaryMetric = metrics[0] || 'cpu_usage';
+              const statsType = STATS_TYPE_MAPPING[primaryMetric] || StatsType.DeviceStatsType.CPU;
+              
+              // Fetch data using the same pattern as MainChartCard
+              const deviceStats = await getDashboardDevicesStats(
+                deviceIds as string[], 
+                statsType, 
+                {
+                  from: rangePickerValue[0].toDate(),
+                  to: rangePickerValue[1].toDate(),
+                }
+              );
+              
+              // Store raw API data for debugging
+              setRawApiData(deviceStats.data || []);
+              
+              // Process the data - keep the original structure
+              const processedData = deviceStats.data || [];
+              setGraphData(processedData);
+            }
+          } catch (error) {
+            console.error('Failed to fetch chart data:', error);
+            setGraphData([]);
+          } finally {
+            setLoading(false);
+          }
+        };
+
         fetchData();
       }
     }
-  }, [fetchData, rangePickerValue, isPreview, isLegacyMode]);
+  }, [dataType, sourceIds, isAllSelected, metrics, rangePickerValue, isLegacyMode, isPreview]);
 
   // Legacy data processing for static chartData
   const legacyProcessedData = useMemo(() => {
@@ -530,6 +527,7 @@ const GroupedBarChart: React.FC<GroupedBarChartProps> = ({
           }}
         />
       )}
+      <DebugOverlay fileName="GroupedBarChart.tsx" componentName="GroupedBarChart" />
     </Card>
   );
 };

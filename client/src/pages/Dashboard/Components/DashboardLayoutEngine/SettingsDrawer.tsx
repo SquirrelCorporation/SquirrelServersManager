@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { Drawer, Form, Space, Spin } from 'antd';
 import { ProForm, ProFormText, ProFormTextArea, ProFormSelect, ProFormDependency, ProFormDateRangePicker } from '@ant-design/pro-components';
+import { Type, Calendar, Palette, BarChart3, Database, TrendingUp } from 'lucide-react';
 import moment from 'moment';
 import { getAllDevices } from '@/services/rest/devices/devices';
 import { getContainers } from '@/services/rest/containers/containers';
@@ -86,6 +87,12 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
             resetButtonProps: {
               style: { display: 'none' },
             },
+            submitButtonProps: {
+              style: { 
+                marginTop: 20,
+                width: '100%',
+              },
+            },
           }}
         >
           <Form.Item name="customSettings">
@@ -123,6 +130,12 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
           resetButtonProps: {
             style: { display: 'none' },
           },
+          submitButtonProps: {
+            style: { 
+              marginTop: 20,
+              width: '100%',
+            },
+          },
         }}
       >
         {widgetSettings.map((setting, index) => renderSettingField(setting, index))}
@@ -139,7 +152,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
           <ProFormText
             key={index}
             name={`title_${index}`}
-            label={setting.label}
+            label={<><Type size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />{setting.label}</>}
             placeholder="Enter widget title"
             initialValue={selectedWidget?.title || setting.defaultValue || ''}
             rules={[{ required: true, message: 'Please enter a title' }]}
@@ -150,7 +163,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
           <ProFormTextArea
             key={index}
             name={`customText_${index}`}
-            label={setting.label}
+            label={<><Type size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />{setting.label}</>}
             placeholder="Enter custom text"
             initialValue={selectedWidget?.widgetSettings?.customText || setting.defaultValue || ''}
             fieldProps={{
@@ -169,10 +182,9 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
 
   const renderStatisticsField = (setting: WidgetSettings, index: number) => (
     <div key={index} style={{ marginBottom: 24 }}>
-      <h4 style={{ marginBottom: 16 }}>{setting.label}</h4>
       <ProFormSelect
         name={`statistics_type_${index}`}
-        label="Data Type"
+        label={<><Database size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />Data Type</>}
         initialValue={selectedWidget?.widgetSettings?.dataType || 'device'}
         options={[
           { label: 'Device', value: 'device' },
@@ -187,7 +199,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
           return (
             <ProFormSelect
               name={`statistics_source_${index}`}
-              label="Source"
+              label={<><BarChart3 size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />Source</>}
               initialValue={selectedWidget?.widgetSettings?.source || ['all']}
               options={sourceOptions}
               placeholder={dataType === 'device' ? 'Select devices' : 'Select containers'}
@@ -206,7 +218,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
           return (
             <ProFormSelect
               name={`statistics_metric_${index}`}
-              label="Metric"
+              label={<><TrendingUp size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />Metric</>}
               initialValue={selectedWidget?.widgetSettings?.metric || 'cpu_usage'}
               options={metrics}
               placeholder="Select metric"
@@ -222,7 +234,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
     <React.Fragment key={index}>
       <ProFormSelect
         name={`dateRangePreset_${index}`}
-        label="Date Range"
+        label={<><Calendar size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />Date Range</>}
         initialValue={selectedWidget?.widgetSettings?.dateRangePreset || 'last7days'}
         options={[
           { label: 'Last 24 Hours', value: 'last24hours' },
@@ -241,7 +253,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
             return (
               <ProFormDateRangePicker
                 name={`customDateRange_${index}`}
-                label="Custom Date Range"
+                label={<><Calendar size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />Custom Date Range</>}
                 initialValue={selectedWidget?.widgetSettings?.customDateRange || [
                   moment().subtract(7, 'days'),
                   moment()
@@ -261,9 +273,12 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
   const renderColorPaletteField = (setting: WidgetSettings, index: number) => (
     <ProFormDependency key={index} name={[]}>
       {(_, form) => (
-        <div>
-          <div style={{ marginBottom: 8 }}>
-            <span style={{ color: 'rgba(0, 0, 0, 0.85)' }}>{setting.label}</span>
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ marginBottom: 12 }}>
+            <span style={{ color: 'rgba(0, 0, 0, 0.85)', fontSize: 14, fontWeight: 500 }}>
+              <Palette size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+              Colors
+            </span>
           </div>
           <ColorPaletteSelector
             value={selectedWidget?.widgetSettings?.colorPalette || 'default'}

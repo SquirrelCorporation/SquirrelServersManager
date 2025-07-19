@@ -34,7 +34,16 @@ export const HealthWidget: React.FC = React.memo(() => {
 
   const fetchSystemPerformance = async () => {
     setLoading(true);
+    console.log('📊 HealthWidget API Call: getDashboardSystemPerformance', { 
+      component: 'HealthWidget',
+      timestamp: new Date().toISOString()
+    });
     const response = await getDashboardSystemPerformance();
+    console.log('📊 HealthWidget API Response: getDashboardSystemPerformance', { 
+      component: 'HealthWidget',
+      performanceData: response.data,
+      timestamp: new Date().toISOString()
+    });
     setSystemPerformance(response.data);
     setLoading(false);
   };

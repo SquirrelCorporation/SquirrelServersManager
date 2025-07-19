@@ -125,7 +125,7 @@ export const chartWidgets: DashboardItem[] = [
   {
     id: 'website-visits',
     title: 'Monthly Comparison',
-    size: 'large',
+    size: 'medium',
     settings: [
       { type: 'statistics', label: 'Statistics Configuration', defaultValue: {} },
       { type: 'title', label: 'Chart Title', defaultValue: 'Monthly Comparison' },
@@ -164,16 +164,17 @@ export const chartWidgets: DashboardItem[] = [
     component: (
       <DonutChartWithTable
         title="OS Downloads"
-        icon={<DownloadOutlined />}
-        data={osDownloadsData}
-        centerContent={{ label: '415', sublabel: 'Total' }}
+        subtitle="Platform distribution"
+        totalDownloadsLabel="Total"
+        totalDownloadsValue="415"
+        chartData={osDownloadsData}
       />
     ),
   },
   {
     id: 'area-chart',
     title: 'Regional Metrics',
-    size: 'wide',
+    size: 'medium',
     settings: [
       { type: 'statistics', label: 'Statistics Configuration', defaultValue: {} },
       { type: 'title', label: 'Chart Title', defaultValue: 'Regional Metrics' },

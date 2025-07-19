@@ -18,7 +18,7 @@ export const specialWidgets: DashboardItem[] = [
       <WelcomeHeaderSection
         buttonText="Go now"
         onButtonClick={() => console.log('Button clicked')}
-        illustrationUrl="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Woman%20Running.png"
+        illustrationUrl="/assets/images/dashboard/welcome/welcome.png"
       />
     ),
   },

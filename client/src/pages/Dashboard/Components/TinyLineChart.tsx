@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, Typography, Statistic, Space } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 // import { TinyLine, TinyLineConfig } from '@ant-design/plots'; // Still commented out
+import DebugOverlay from './DebugOverlay';
 
 interface TinyLineChartProps {
   title: string;
@@ -96,6 +97,7 @@ const TinyLineChart: React.FC<TinyLineChartProps> = ({
           </div>
         </Space>
       </Space>
+      <DebugOverlay fileName="TinyLineChart.tsx" componentName="TinyLineChart" />
     </Card>
   );
 };

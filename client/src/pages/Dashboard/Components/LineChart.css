@@ -1,35 +1,32 @@
-/* Enhanced glow effect for the line chart with gradient simulation */
+/* Line chart container - proper width constraints */
 .line-chart-container {
   position: relative;
+  width: 100% !important;
+  max-width: 100% !important;
   overflow: hidden;
 }
 
-/* Create the gradient glow effect using pseudo-elements for green line */
-.line-chart-container path[stroke="#52c41a"] {
-  filter: drop-shadow(0 0 8px #52c41a) 
-          drop-shadow(0 0 16px rgba(82, 196, 26, 0.5))
-          drop-shadow(0 2px 20px rgba(82, 196, 26, 0.3))
-          drop-shadow(0 4px 30px rgba(82, 196, 26, 0.2));
-  stroke-linecap: round;
-  stroke-linejoin: round;
+/* Ensure ApexCharts respects container width */
+.line-chart-container .apexcharts-canvas {
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
-/* Create the gradient glow effect using pseudo-elements for orange line */
-.line-chart-container path[stroke="#faad14"] {
-  filter: drop-shadow(0 0 8px #faad14) 
-          drop-shadow(0 0 16px rgba(250, 173, 20, 0.5))
-          drop-shadow(0 2px 20px rgba(250, 173, 20, 0.3))
-          drop-shadow(0 4px 30px rgba(250, 173, 20, 0.2));
-  stroke-linecap: round;
-  stroke-linejoin: round;
+/* Add gradient shadow effect below lines */
+.line-chart-container .apexcharts-line-series path {
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
-/* Additional glow for all line paths */
-.line-chart-container .g2-line path {
-  filter: inherit;
+/* Enhanced shadow for better visibility */
+.line-chart-container .apexcharts-series[seriesName] path {
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
 }
 
-/* Smooth transitions */
-.line-chart-container path {
-  transition: all 0.3s ease;
+/* Specific shadow for green and orange lines */
+.line-chart-container .apexcharts-series path[stroke*="#52c41a"] {
+  filter: drop-shadow(0 8px 16px rgba(82, 196, 26, 0.3));
+}
+
+.line-chart-container .apexcharts-series path[stroke*="#faad14"] {
+  filter: drop-shadow(0 8px 16px rgba(250, 173, 20, 0.3));
 }

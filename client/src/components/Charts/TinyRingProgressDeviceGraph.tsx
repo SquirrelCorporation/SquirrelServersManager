@@ -25,7 +25,21 @@ const TinyRingProgressDeviceGraph: React.FC<TinyRingProps> = ({
   const asyncFetch = useCallback(async () => {
     setIsLoading(true);
     try {
+      console.log('📊 TinyRingProgressDeviceGraph API Call: getDeviceStat', { 
+        component: 'TinyRingProgressDeviceGraph',
+        deviceId: deviceUuid,
+        statsType: type,
+        timestamp: new Date().toISOString()
+      });
       const res = await getDeviceStat(deviceUuid, type, {});
+      console.log('📊 TinyRingProgressDeviceGraph API Response: getDeviceStat', { 
+        component: 'TinyRingProgressDeviceGraph',
+        deviceId: deviceUuid,
+        statsType: type,
+        value: res.data?.value,
+        date: res.data?.date,
+        timestamp: new Date().toISOString()
+      });
 
       if (res.data && typeof res.data.value === 'number') {
         const percentValue = res.data.value;
@@ -43,7 +57,13 @@ const TinyRingProgressDeviceGraph: React.FC<TinyRingProps> = ({
         setDate('invalid data');
       }
     } catch (error: any) {
-      console.error(`Error fetching ${type} for ${deviceUuid}:`, error);
+      console.error('📊 TinyRingProgressDeviceGraph API Error: getDeviceStat', { 
+        component: 'TinyRingProgressDeviceGraph',
+        deviceId: deviceUuid,
+        statsType: type,
+        error: error?.message,
+        timestamp: new Date().toISOString()
+      });
       message.error({ content: `Failed to fetch ${type} stats`, duration: 5 });
       setValue(NaN);
       setDate('error');
