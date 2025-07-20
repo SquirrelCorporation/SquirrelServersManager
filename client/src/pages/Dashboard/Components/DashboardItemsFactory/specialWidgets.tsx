@@ -12,7 +12,7 @@ export const specialWidgets: DashboardItem[] = [
   {
     id: 'welcome-header',
     title: 'Welcome Header',
-    size: 'large',
+    size: 'medium-large',
     settings: undefined,
     component: (
       <WelcomeHeaderSection
@@ -25,7 +25,7 @@ export const specialWidgets: DashboardItem[] = [
   {
     id: 'tips-of-the-day',
     title: 'Tips of the day',
-    size: 'small',
+    size: 'small-medium',
     settings: undefined,
     component: (
       <FeaturedAppCard

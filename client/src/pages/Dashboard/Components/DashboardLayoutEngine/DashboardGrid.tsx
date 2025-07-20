@@ -7,6 +7,8 @@ import React from 'react';
 import { Row, Col, Card, Space } from 'antd';
 import DraggableItem from './DraggableItem';
 import { DashboardItem, sizeToColSpan } from './types';
+import { useDebugData } from './DebugDataProvider';
+import { WidgetProvider } from './WidgetContext';
 
 interface DashboardGridProps {
   items: DashboardItem[];
@@ -23,6 +25,26 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
   handleWidgetSettings,
   removeItem,
 }) => {
+  const { getDebugData } = useDebugData();
+  
+  // Helper to extract debug data from widget props
+  const getWidgetDebugData = (item: DashboardItem): Record<string, unknown> => {
+    // Extract widget type from ID
+    const parts = item.id.split('-');
+    const timestamp = parts[parts.length - 1];
+    const widgetType = item.id.replace(`-${timestamp}`, '');
+    
+    return {
+      componentName: widgetType,
+      widgetId: item.id,
+      widgetType: widgetType,
+      title: item.title,
+      size: item.size,
+      settings: item.widgetSettings || {},
+      hasSettings: item.hasSettings,
+      category: item.category
+    };
+  };
   if (items.length === 0) {
     return (
       <div style={{ 
@@ -41,104 +63,44 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
     );
   }
 
-  if (isEditMode) {
-    return (
-      <Row gutter={[24, 24]}>
-        {items.map((item, index) => (
-          <Col 
-            key={item.id} 
-            xs={24} 
-            lg={sizeToColSpan[item.size]}
-          >
-            <DraggableItem
-              id={item.id}
-              index={index}
-              moveItem={moveItem}
-              isEditMode={isEditMode}
-              onSettings={() => handleWidgetSettings(item.id)}
-              onRemove={() => removeItem(item.id)}
-            >
-              <Card 
-                title={item.title}
-                style={{
-                  minHeight: 200,
-                  height: '100%'
-                }}
-              >
-                {item.component}
-              </Card>
-            </DraggableItem>
-          </Col>
-        ))}
-      </Row>
-    );
-  }
-
-  // View mode layout
-  const welcomeHeader = items.find(item => item.id.includes('welcome-header'));
-  const tipsOfDay = items.find(item => item.id.includes('tips-of-the-day'));
-  const otherWidgets = items.filter(item => 
-    !item.id.includes('welcome-header') && !item.id.includes('tips-of-the-day')
-  );
-  
+  // Use the same layout for both edit and view modes
   return (
-    <Space direction="vertical" size="large" style={{ width: '100%' }}>
-      {/* First row: Welcome Header and Tips */}
-      {(welcomeHeader || tipsOfDay) && (
-        <Row gutter={[24, 24]}>
-          {welcomeHeader && (
-            <Col xs={24} lg={16}>
-              <DraggableItem
-                id={welcomeHeader.id}
-                index={0}
-                moveItem={moveItem}
-                isEditMode={false}
-                onSettings={() => handleWidgetSettings(welcomeHeader.id)}
-                onRemove={() => removeItem(welcomeHeader.id)}
-              >
-                {welcomeHeader.component}
-              </DraggableItem>
-            </Col>
-          )}
-          {tipsOfDay && (
-            <Col xs={24} lg={8}>
-              <DraggableItem
-                id={tipsOfDay.id}
-                index={1}
-                moveItem={moveItem}
-                isEditMode={false}
-                onSettings={() => handleWidgetSettings(tipsOfDay.id)}
-                onRemove={() => removeItem(tipsOfDay.id)}
-              >
-                {tipsOfDay.component}
-              </DraggableItem>
-            </Col>
-          )}
-        </Row>
-      )}
-      
-      {/* Other widgets in their normal layout */}
-      <Row gutter={[24, 24]}>
-        {otherWidgets.map((item, index) => (
-          <Col 
-            key={item.id} 
-            xs={24} 
-            lg={sizeToColSpan[item.size]}
+    <Row gutter={[24, 24]}>
+      {items.map((item, index) => (
+        <Col 
+          key={item.id} 
+          xs={24} 
+          lg={sizeToColSpan[item.size]}
+        >
+          <DraggableItem
+            id={item.id}
+            index={index}
+            moveItem={moveItem}
+            isEditMode={isEditMode}
+            onSettings={() => handleWidgetSettings(item.id)}
+            onRemove={() => removeItem(item.id)}
+            widgetTitle={item.title}
+            debugData={getDebugData(item.id) || getWidgetDebugData(item)}
           >
-            <DraggableItem
-              id={item.id}
-              index={index}
-              moveItem={moveItem}
-              isEditMode={false}
-              onSettings={() => handleWidgetSettings(item.id)}
-              onRemove={() => removeItem(item.id)}
-            >
-              {item.component}
-            </DraggableItem>
-          </Col>
-        ))}
-      </Row>
-    </Space>
+            <WidgetProvider widgetId={item.id}>
+              {isEditMode ? (
+                <Card 
+                  title={item.title}
+                  style={{
+                    minHeight: 200,
+                    height: '100%'
+                  }}
+                >
+                  {item.component}
+                </Card>
+              ) : (
+                item.component
+              )}
+            </WidgetProvider>
+          </DraggableItem>
+        </Col>
+      ))}
+    </Row>
   );
 };
 

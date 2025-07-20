@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Card, Typography, Space, Progress } from 'antd';
-import DebugOverlay from './DebugOverlay';
 import { 
   getDashboardDevicesStats, 
   getDeviceStat,
@@ -236,7 +235,6 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
         backgroundColor: getBackgroundColor,
         borderRadius: '16px',
         color: 'white',
-        minWidth: '280px',
         border: 'none',
         position: 'relative',
         overflow: 'hidden',
@@ -329,7 +327,6 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
           </Typography.Text>
         </Space>
       </Space>
-      <DebugOverlay fileName="CircularProgressChart.tsx" componentName="CircularProgressChart" />
     </Card>
   );
 };

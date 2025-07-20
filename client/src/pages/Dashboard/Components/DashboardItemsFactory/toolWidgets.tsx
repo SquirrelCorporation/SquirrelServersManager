@@ -63,10 +63,16 @@ export const toolWidgets: DashboardItem[] = [
     id: 'RSSFeedWidget',
     title: 'RSS/News Feed',
     size: 'large',
+    settings: [
+      { type: 'title', label: 'Widget Title', defaultValue: 'RSS/News Feed' },
+      { type: 'colorPalette', label: 'Badge Color Theme', defaultValue: 'default' }
+    ],
     component: <RSSFeedWidget />,
     componentFactory: (configuration: WidgetConfiguration) => (
       <RSSFeedWidget 
         title={configuration?.title as string || 'RSS/News Feed'}
+        colorPalette={configuration?.colorPalette as string || 'default'}
+        customColors={configuration?.customColors as string[]}
         widgetSettings={configuration?.customSettings as any}
       />
     ),

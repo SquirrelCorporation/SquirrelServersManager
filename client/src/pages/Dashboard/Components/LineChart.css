@@ -3,11 +3,27 @@
   position: relative;
   width: 100% !important;
   max-width: 100% !important;
+  min-width: 100% !important;
   overflow: hidden;
+  display: block;
 }
 
 /* Ensure ApexCharts respects container width */
 .line-chart-container .apexcharts-canvas {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 100% !important;
+}
+
+/* Force SVG to fill container */
+.line-chart-container svg {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block;
+}
+
+/* Ensure the chart wrapper also respects width */
+.line-chart-container > div {
   width: 100% !important;
   max-width: 100% !important;
 }

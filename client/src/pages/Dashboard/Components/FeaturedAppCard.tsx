@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, Typography, Tag, Tooltip } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import DebugOverlay from './DebugOverlay';
 
 interface Tip {
   tagText: string;
@@ -370,7 +369,6 @@ const FeaturedAppCard: React.FC<FeaturedAppCardProps> = ({
           </div>
         </div>
       )}
-      <DebugOverlay fileName="FeaturedAppCard.tsx" componentName="FeaturedAppCard" />
     </Card>
   );
 };

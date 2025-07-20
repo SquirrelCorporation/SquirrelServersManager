@@ -2,8 +2,6 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Card, Typography, Space, Select, Spin, Empty } from 'antd';
 import ReactApexChart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
-import DebugPanel from './DebugPanel';
-import DebugOverlay from './DebugOverlay';
 import { 
   getDashboardDevicesStats,
   getDashboardAveragedDevicesStats 
@@ -519,22 +517,6 @@ const GroupedBarChart: React.FC<GroupedBarChartProps> = ({
         )}
       </div>
 
-      {!isLegacyMode && (
-        <DebugPanel 
-          componentName="GroupedBarChartCard"
-          data={{
-            rawApiData: rawApiData,
-            processedGraphData: graphData,
-            processedChartData: { categories, series },
-            dataType,
-            source,
-            metrics,
-            dateRange: currentPeriod,
-            isLegacyMode,
-          }}
-        />
-      )}
-      <DebugOverlay fileName="GroupedBarChart.tsx" componentName="GroupedBarChart" />
     </Card>
   );
 };

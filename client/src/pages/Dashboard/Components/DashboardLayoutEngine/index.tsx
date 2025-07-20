@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Layout, Card, Button, Drawer, Space, Switch, message, Spin, Modal } from 'antd';
+import { Layout, Card, Button, Drawer, Space, Switch, message, Spin, Modal, Input, Typography } from 'antd';
 import { PlusOutlined, EditOutlined, EyeOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import DndProvider from '../DndProvider';
 import dashboardService from '@/services/rest/dashboard.service';
@@ -16,18 +16,22 @@ import DraggableItem from './DraggableItem';
 import WidgetGallery from './WidgetGallery';
 import SettingsDrawer from './SettingsDrawer';
 import DashboardGrid from './DashboardGrid';
+import WidgetDebugWrapper from './WidgetDebugWrapper';
+import { DebugDataProvider } from './DebugDataProvider';
 import '../DashboardLayoutEngine.css';
 
 interface DashboardLayoutEngineProps {
   availableItems: DashboardItem[];
   pageId?: string;
   onDeletePage?: () => void;
+  onDashboardUpdate?: (dashboard: Dashboard) => void;
 }
 
 const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ 
   availableItems, 
   pageId: propPageId,
-  onDeletePage 
+  onDeletePage,
+  onDashboardUpdate 
 }) => {
   const [items, setItems] = useState<DashboardItem[]>([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -38,6 +42,9 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({
   const [saving, setSaving] = useState(false);
   const [currentDashboard, setCurrentDashboard] = useState<Dashboard | null>(null);
   const [currentPageId, setCurrentPageId] = useState<string>(propPageId || 'default-page');
+  const [pageTitle, setPageTitle] = useState<string>('Dashboard Overview');
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [tempTitle, setTempTitle] = useState<string>('');
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-save function with debouncing
@@ -218,6 +225,7 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({
       
       if (targetPage) {
         setCurrentPageId(targetPage.id);
+        setPageTitle(targetPage.name || 'Dashboard Page');
         
         // Convert saved widgets to DashboardItems
         dashboardLogger.info('Loading widgets from backend', {
@@ -226,6 +234,7 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({
           widgets: targetPage.widgets.map(w => ({ 
             id: w.id, 
             widgetType: w.widgetType,
+            size: w.size,
             settings: w.settings 
           }))
         });
@@ -240,13 +249,24 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({
               ? availableItem.componentFactory(widgetSettings)
               : availableItem.component;
             
-            return {
+            const loadedWidget = {
               ...availableItem,
               id: widget.id,
               title: widget.settings?.title as string || widget.title || availableItem.title,
+              size: widget.size || availableItem.size, // Use saved size from database
               widgetSettings: widgetSettings,
               component: component,
             };
+            
+            dashboardLogger.debug('Loaded widget with size', {
+              widgetId: widget.id,
+              widgetType: widget.widgetType,
+              savedSize: widget.size,
+              defaultSize: availableItem.size,
+              finalSize: loadedWidget.size
+            });
+            
+            return loadedWidget;
           }
           return null;
         }).filter(Boolean) as DashboardItem[];
@@ -301,6 +321,49 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({
     });
   }, [currentDashboard, currentPageId, onDeletePage]);
 
+  const handleStartEditTitle = useCallback(() => {
+    setTempTitle(pageTitle);
+    setIsEditingTitle(true);
+  }, [pageTitle]);
+
+  const handleCancelEditTitle = useCallback(() => {
+    setIsEditingTitle(false);
+    setTempTitle('');
+  }, []);
+
+  const handleSaveTitle = useCallback(async () => {
+    if (!currentDashboard || !currentPageId || !tempTitle.trim()) {
+      handleCancelEditTitle();
+      return;
+    }
+
+    try {
+      // Update the page name in the dashboard
+      const updatedPages = currentDashboard.pages.map(page => 
+        page.id === currentPageId 
+          ? { ...page, name: tempTitle.trim() }
+          : page
+      );
+      
+      const updatedDashboard = await dashboardService.update(currentDashboard._id!, {
+        pages: updatedPages,
+      });
+      
+      setPageTitle(tempTitle.trim());
+      setCurrentDashboard(updatedDashboard);
+      setIsEditingTitle(false);
+      message.success('Page title updated');
+      
+      // Notify parent component of dashboard update
+      if (onDashboardUpdate) {
+        onDashboardUpdate(updatedDashboard);
+      }
+    } catch (error) {
+      dashboardLogger.error('Failed to update page title', error);
+      message.error('Failed to update page title');
+    }
+  }, [currentDashboard, currentPageId, tempTitle, onDashboardUpdate]);
+
   // Load dashboard on mount
   useEffect(() => {
     loadDashboard();
@@ -324,24 +387,48 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({
   const selectedWidget = selectedWidgetId ? items.find(item => item.id === selectedWidgetId) : null;
 
   return (
-    <DndProvider>
-      <Layout>
+    <DebugDataProvider>
+      <DndProvider>
+        <Layout>
         <Layout.Content style={{ padding: isEditMode ? '24px' : '0', minHeight: '600px' }}>
           {isEditMode ? (
             <Card 
               title={
-                <Space>
-                  <span>Customizable Dashboard</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                  {isEditingTitle ? (
+                    <Input
+                      value={tempTitle}
+                      onChange={(e) => setTempTitle(e.target.value)}
+                      onPressEnter={handleSaveTitle}
+                      onBlur={handleSaveTitle}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Escape') {
+                          handleCancelEditTitle();
+                        }
+                      }}
+                      style={{ fontSize: 18, fontWeight: 500, maxWidth: 300 }}
+                      autoFocus
+                    />
+                  ) : (
+                    <Typography.Title 
+                      level={4} 
+                      style={{ 
+                        margin: 0, 
+                        cursor: 'pointer'
+                      }}
+                      onClick={handleStartEditTitle}
+                      title="Click to edit"
+                    >
+                      {pageTitle}
+                    </Typography.Title>
+                  )}
                   <Switch
                     checkedChildren={<EditOutlined />}
                     unCheckedChildren={<EyeOutlined />}
                     checked={isEditMode}
                     onChange={setIsEditMode}
                   />
-                  <span style={{ fontSize: 14, fontWeight: 'normal', marginLeft: 8 }}>
-                    Edit Mode
-                  </span>
-                </Space>
+                </div>
               }
               extra={
                 <Space>
@@ -351,6 +438,14 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({
                     onClick={() => setDrawerVisible(true)}
                   >
                     Add Widget
+                  </Button>
+                  <Button 
+                    danger 
+                    icon={<DeleteOutlined />}
+                    onClick={handleDeletePage}
+                    disabled={!propPageId} // Disable delete for default dashboard
+                  >
+                    Delete Page
                   </Button>
                   {saving && (
                     <span style={{ color: '#1890ff', fontSize: 12 }}>
@@ -372,23 +467,15 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({
           ) : (
             <>
               <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Button 
-                  danger 
-                  icon={<DeleteOutlined />}
-                  onClick={handleDeletePage}
-                  disabled={!propPageId} // Disable delete for default dashboard
-                >
-                  Delete Page
-                </Button>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Switch
-                    checkedChildren={<EditOutlined />}
-                    unCheckedChildren={<EyeOutlined />}
-                    checked={isEditMode}
-                    onChange={setIsEditMode}
-                  />
-                  <span style={{ marginLeft: 8 }}>View Mode</span>
-                </div>
+                <Typography.Title level={4} style={{ margin: 0 }}>
+                  {pageTitle}
+                </Typography.Title>
+                <Switch
+                  checkedChildren={<EditOutlined />}
+                  unCheckedChildren={<EyeOutlined />}
+                  checked={isEditMode}
+                  onChange={setIsEditMode}
+                />
               </div>
               <DashboardGrid
                 items={items}
@@ -425,6 +512,7 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({
         />
       </Layout>
     </DndProvider>
+    </DebugDataProvider>
   );
 };
 

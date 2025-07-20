@@ -18,6 +18,7 @@ interface StatisticsSelectorProps {
   supportedDataTypes?: Array<'device' | 'container'>;
   supportedMetrics?: Record<string, string[]>;
   disabled?: boolean;
+  selectionMode?: 'single' | 'multiple';
 }
 
 const defaultMetrics: Record<string, Array<{ label: string; value: string }>> = {
@@ -41,6 +42,7 @@ const StatisticsSelector: React.FC<StatisticsSelectorProps> = ({
   supportedDataTypes = ['device', 'container'],
   supportedMetrics,
   disabled = false,
+  selectionMode = 'multiple',
 }) => {
   const [devices, setDevices] = useState<API.DeviceItem[]>([]);
   const [containers, setContainers] = useState<API.Container[]>([]);
@@ -98,10 +100,19 @@ const StatisticsSelector: React.FC<StatisticsSelectorProps> = ({
     });
   };
 
-  const handleSourceChange = (source: string[]) => {
+  const handleSourceChange = (source: string | string[]) => {
+    // For single selection mode, convert single string to array format for consistency
+    const sourceArray = Array.isArray(source) ? source : [source];
+    
+    // If in single selection mode and multiple items selected, only keep the last one
+    let finalSource = sourceArray;
+    if (selectionMode === 'single' && sourceArray.length > 1) {
+      finalSource = [sourceArray[sourceArray.length - 1]];
+    }
+    
     onChange({
       ...currentValue,
-      source,
+      source: finalSource,
     });
   };
 
@@ -165,8 +176,8 @@ const StatisticsSelector: React.FC<StatisticsSelectorProps> = ({
       <div>
         <Text type="secondary" style={{ fontSize: 12 }}>Source</Text>
         <Select
-          mode="multiple"
-          value={currentValue.source}
+          mode={selectionMode === 'multiple' ? 'multiple' : undefined}
+          value={selectionMode === 'single' ? currentValue.source[0] : currentValue.source}
           onChange={handleSourceChange}
           options={getSourceOptions()}
           placeholder={`Select ${currentValue.dataType}s`}
@@ -174,6 +185,7 @@ const StatisticsSelector: React.FC<StatisticsSelectorProps> = ({
           loading={isLoading}
           disabled={disabled || isLoading}
           notFoundContent={isLoading ? <Spin size="small" /> : 'No data'}
+          maxTagCount={selectionMode === 'single' ? 1 : undefined}
         />
       </div>
 

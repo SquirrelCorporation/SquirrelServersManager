@@ -57,7 +57,7 @@ export class DashboardRepository {
       name: 'Default Dashboard',
       description: 'System default dashboard',
       isActive: true,
-      isSystem: true,
+      isSystem: false,
       pages: [
         {
           id: 'default-page',

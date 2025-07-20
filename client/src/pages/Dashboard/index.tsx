@@ -117,6 +117,7 @@ const Index: React.FC = () => {
           availableItems={availableDashboardItems}
           pageId={page.id}
           onDeletePage={() => setRefreshKey(prev => prev + 1)}
+          onDashboardUpdate={(updatedDashboard) => setDashboard(updatedDashboard)}
         />
       ),
     })),
@@ -137,9 +138,6 @@ const Index: React.FC = () => {
 
   return (
     <StyledTabContainer
-      header={{
-        title: 'Dashboard Overview',
-      }}
       tabItems={tabItems}
       defaultActiveKey="main"
       onTabClick={(key) => {

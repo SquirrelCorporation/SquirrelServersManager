@@ -282,8 +282,6 @@ const AnsiblePlaybookRunner: React.FC<AnsiblePlaybookRunnerProps> = ({
                             size="small"
                             onClick={() => runPlaybook(playbook)}
                             style={{
-                              backgroundColor: '#4ecb71',
-                              borderColor: '#4ecb71',
                               marginLeft: '8px',
                             }}
                           >

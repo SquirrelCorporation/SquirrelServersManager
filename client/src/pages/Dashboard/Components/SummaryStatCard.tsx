@@ -3,8 +3,6 @@ import { Card, Typography, Space } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import ReactApexChart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
-import DebugPanel from './DebugPanel';
-import DebugOverlay from './DebugOverlay';
 import { 
   getDashboardDevicesStats, 
   getDeviceStat,
@@ -16,10 +14,12 @@ import {
   getContainerStats,
   getAveragedStats
 } from '@/services/rest/containers/container-statistics';
-import { getAllDevices } from '@/services/rest/devices/devices';
-import { getContainers as getAllContainers } from '@/services/rest/containers/containers';
+import { entityCacheService } from '@/services/cache/entityCache.service';
 import { API } from 'ssm-shared-lib';
 import moment from 'moment';
+import { useWidgetContext } from './DashboardLayoutEngine/WidgetContext';
+import { useRegisterDebugData } from './DashboardLayoutEngine/DebugDataProvider';
+import DemoOverlay from './DemoOverlay';
 
 interface SummaryStatCardProps {
   title: string;
@@ -52,6 +52,11 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
   const [trendValue, setTrendValue] = useState<number>(0);
   const [trendDirection, setTrendDirection] = useState<'up' | 'down'>('up');
   const [rawApiData, setRawApiData] = useState<any>({});
+  const [isUsingMockData, setIsUsingMockData] = useState<boolean>(false);
+  
+  // Get widget context and debug registration
+  const widgetContext = useWidgetContext();
+  const updateDebugData = useRegisterDebugData(widgetContext?.widgetId);
 
   // Determine if we're looking at all items or specific ones (memoized)
   const { isAllSelected, sourceIds } = useMemo(() => {
@@ -80,22 +85,54 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
             index: i,
           }));
           setWeeklyData(mockSparklineData);
+          setIsUsingMockData(true);
           setLoading(false);
+          
+          // Update debug data for preview mode
+          if (updateDebugData) {
+            updateDebugData({
+              componentName: 'SummaryStatCard',
+              fileName: 'SummaryStatCard.tsx',
+              rawApiData: {
+                apiCalls: {
+                  mode: 'preview',
+                  mockData: true
+                },
+                responses: {
+                  mockData: mockSparklineData
+                }
+              } as Record<string, unknown>,
+              processedData: {
+                currentValue: 65.5,
+                trendValue: 12.4,
+                weeklyData: mockSparklineData
+              } as Record<string, unknown>,
+              config: {
+                dataType,
+                source,
+                metric,
+                isPreview: true
+              } as Record<string, unknown>
+            });
+          }
           return;
         }
         const now = moment();
         const weekAgo = moment().subtract(7, 'days');
         
+        // Reset mock data flag when fetching real data
+        setIsUsingMockData(false);
+        
         if (dataType === 'device' && metric) {
           if (isAllSelected) {
-            // Fetch all device IDs first
-            console.log('📊 SummaryStatCard API Call: getAllDevices', { 
+            // Get all device IDs from cache
+            console.log('📊 SummaryStatCard: Getting all devices', { 
               component: 'SummaryStatCard',
               title,
               timestamp: new Date().toISOString()
             });
-            const devicesResponse = await getAllDevices();
-            const allDeviceIds = devicesResponse.data?.map(device => device.uuid) || [];
+            const devices = await entityCacheService.getDevices();
+            const allDeviceIds = devices.map(device => device.uuid);
             console.log('📊 SummaryStatCard API Response: getAllDevices', { 
               component: 'SummaryStatCard',
               title,
@@ -118,25 +155,26 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
               deviceIds: allDeviceIds,
               metric,
               currentRange: {
-                from: now.subtract(1, 'hour').toDate(),
-                to: now.toDate()
+                from: moment().subtract(1, 'hour').toDate(),
+                to: moment().toDate()
               },
               historicalRange: {
                 from: weekAgo.toDate(),
-                to: now.toDate()
+                to: moment().toDate()
               },
               timestamp: new Date().toISOString()
             });
             const [currentStats, historicalStats] = await Promise.all([
               getDashboardAveragedDevicesStats(allDeviceIds, metric, {
-                from: now.subtract(1, 'hour').toDate(),
-                to: now.toDate(),
+                from: moment().subtract(1, 'hour').toDate(),
+                to: moment().toDate(),
               }),
               getDashboardDevicesStats(allDeviceIds, metric, {
                 from: weekAgo.toDate(),
-                to: now.toDate(),
+                to: moment().toDate(),
               }),
             ]);
+            
             console.log('📊 SummaryStatCard API Response: getDashboardAveragedDevicesStats & getDashboardDevicesStats', { 
               component: 'SummaryStatCard',
               title,
@@ -144,29 +182,129 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
               historicalStatsLength: historicalStats.data?.length || 0,
               currentData: currentStats.data,
               historicalData: historicalStats.data,
+              usingFallback: !currentStats.data || currentStats.data.length === 0,
               timestamp: new Date().toISOString()
             });
             
             // Store raw API data for debugging
-            setRawApiData({
+            const apiDebugData = {
               currentStats: currentStats.data,
               historicalStats: historicalStats.data,
               metric,
               dataType,
               source: 'all'
-            });
+            };
+            setRawApiData(apiDebugData);
             
             // Set current value (latest average)
+            let finalCurrentValue = 0;
             if (currentStats.data && currentStats.data.length > 0) {
               const avgValue = currentStats.data.reduce((sum, item) => sum + item.value, 0) / currentStats.data.length;
               setCurrentValue(avgValue); // Already in percentage (0-100)
+              finalCurrentValue = avgValue;
+            } else if (historicalStats.data && historicalStats.data.length > 0) {
+              // Fallback: use latest values from historical data if current stats are empty
+              const deviceLatestValues = new Map<string, number>();
+              
+              // Get the most recent value for each device
+              historicalStats.data.forEach((stat: API.DeviceStat) => {
+                const deviceId = stat.name;
+                const existingValue = deviceLatestValues.get(deviceId);
+                if (!existingValue || stat.date > (existingValue as any)?.date) {
+                  deviceLatestValues.set(deviceId, stat.value);
+                }
+              });
+              
+              // Calculate average of latest values
+              if (deviceLatestValues.size > 0) {
+                const values = Array.from(deviceLatestValues.values());
+                finalCurrentValue = values.reduce((sum, val) => sum + val, 0) / values.length;
+                setCurrentValue(finalCurrentValue);
+              }
             }
             
+            console.log('📊 SummaryStatCard FINAL VALUE CALCULATED:', { 
+              component: 'SummaryStatCard',
+              title,
+              finalCurrentValue,
+              timestamp: new Date().toISOString()
+            });
+            
             // Process historical data for the sparkline
+            let processedData: any[] = [];
             if (historicalStats.data) {
-              const processedData = processHistoricalData(historicalStats.data);
+              processedData = processHistoricalData(historicalStats.data);
+              console.log('📊 SummaryStatCard: Processed sparkline data', {
+                component: 'SummaryStatCard',
+                title,
+                rawDataLength: historicalStats.data.length,
+                processedDataLength: processedData.length,
+                processedData: processedData
+              });
               setWeeklyData(processedData);
               calculateTrend(processedData);
+            }
+            
+            // Update debug data
+            if (updateDebugData) {
+              updateDebugData({
+                componentName: 'SummaryStatCard',
+                fileName: 'SummaryStatCard.tsx',
+                rawApiData: {
+                  apiCalls: {
+                    source: 'all',
+                    isAllSelected: true,
+                    sourceIds: [],
+                    getAllDevices: {
+                      method: 'GET',
+                      endpoint: '/api/devices',
+                      description: 'Get all devices from cache'
+                    },
+                    getDashboardAveragedDevicesStats: {
+                      method: 'POST',
+                      endpoint: `/api/statistics/dashboard/averaged/${metric}`,
+                      params: {
+                        from: moment().subtract(1, 'hour').toDate(),
+                        to: moment().toDate()
+                      },
+                      body: {
+                        devices: allDeviceIds
+                      }
+                    },
+                    getDashboardDevicesStats: {
+                      method: 'POST',
+                      endpoint: `/api/statistics/dashboard/stats/${metric}`,
+                      params: {
+                        from: weekAgo.toDate(),
+                        to: moment().toDate()
+                      },
+                      body: {
+                        devices: allDeviceIds
+                      }
+                    }
+                  },
+                  responses: {
+                    devices: { data: devices },
+                    currentStats: currentStats,
+                    historicalStats: historicalStats
+                  }
+                } as Record<string, unknown>,
+                processedData: {
+                  currentValue: finalCurrentValue,
+                  weeklyData: processedData,
+                  deviceCount: allDeviceIds.length,
+                  dateRange: {
+                    from: weekAgo.toISOString(),
+                    to: moment().toISOString()
+                  }
+                } as Record<string, unknown>,
+                config: {
+                  dataType,
+                  source,
+                  metric,
+                  isAllSelected: true
+                } as Record<string, unknown>
+              });
             }
           } else {
             // Fetch stats for specific devices
@@ -227,10 +365,83 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
               timestamp: new Date().toISOString()
             });
             
+            let processedData: any[] = [];
+            let finalCurrentValue = 0;
             if (historicalStats.data) {
-              const processedData = processHistoricalData(historicalStats.data);
+              processedData = processHistoricalData(historicalStats.data);
+              console.log('📊 SummaryStatCard: Processed sparkline data (specific devices)', {
+                component: 'SummaryStatCard',
+                title,
+                rawDataLength: historicalStats.data.length,
+                processedDataLength: processedData.length,
+                processedData: processedData
+              });
               setWeeklyData(processedData);
               calculateTrend(processedData);
+            } else {
+              console.log('📊 SummaryStatCard: No historical data for sparkline', {
+                component: 'SummaryStatCard',
+                title,
+                historicalStats
+              });
+            }
+            
+            // Get current value from earlier calculation
+            const validDeviceStats = deviceStats.filter(stat => stat.data);
+            if (validDeviceStats.length > 0) {
+              finalCurrentValue = validDeviceStats.reduce((sum, stat) => sum + (stat.data?.value || 0), 0) / validDeviceStats.length;
+            }
+            
+            // Update debug data for specific devices
+            if (updateDebugData) {
+              updateDebugData({
+                componentName: 'SummaryStatCard',
+                fileName: 'SummaryStatCard.tsx',
+                rawApiData: {
+                  apiCalls: {
+                    source: sourceIds,
+                    isAllSelected: false,
+                    sourceIds: sourceIds,
+                    getDeviceStat: {
+                      method: 'GET',
+                      endpoint: `/api/statistics/device/{deviceId}/${metric}`,
+                      description: 'Get current stats for specific devices',
+                      deviceIds: sourceIds
+                    },
+                    getDashboardDevicesStats: {
+                      method: 'POST',
+                      endpoint: `/api/statistics/dashboard/stats/${metric}`,
+                      params: {
+                        from: weekAgo.toDate(),
+                        to: moment().toDate()
+                      },
+                      body: {
+                        devices: sourceIds
+                      }
+                    }
+                  },
+                  responses: {
+                    deviceStats: deviceStats,
+                    historicalStats: historicalStats
+                  }
+                } as Record<string, unknown>,
+                processedData: {
+                  currentValue: finalCurrentValue,
+                  weeklyData: processedData,
+                  deviceCount: sourceIds.length,
+                  dateRange: {
+                    from: weekAgo.toISOString(),
+                    to: moment().toISOString()
+                  }
+                } as Record<string, unknown>,
+                config: {
+                  dataType,
+                  source,
+                  metric,
+                  isAllSelected: false,
+                  sourceIds
+                } as Record<string, unknown>
+              });
             }
           }
         } else if (dataType === 'container' && metric) {
@@ -244,9 +455,9 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
               setCurrentValue(avgStats.data.memStats); // Already in percentage
             }
             
-            // Fetch all containers for historical data
-            const containersResponse = await getAllContainers();
-            const allContainerIds = containersResponse.data?.map(container => container.id) || [];
+            // Get all containers from cache for historical data
+            const containers = await entityCacheService.getContainers();
+            const allContainerIds = containers.map(container => container.id);
             
             if (allContainerIds.length > 0 && metric) {
               // Fetch historical data for sparkline
@@ -267,27 +478,75 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
                   }
                 });
                 
+                let processedData: any[] = [];
                 if (combinedData.length > 0) {
-                  const processedData = processHistoricalData(combinedData);
+                  processedData = processHistoricalData(combinedData);
                   setWeeklyData(processedData);
                   calculateTrend(processedData);
                 } else {
                   // Use mock data if no historical data
-                  const mockData = generateMockSparklineData();
-                  setWeeklyData(mockData);
-                  calculateTrend(mockData);
+                  processedData = generateMockSparklineData();
+                  setWeeklyData(processedData);
+                  calculateTrend(processedData);
+                  setIsUsingMockData(true);
+                }
+                
+                // Update debug data for containers (all)
+                if (updateDebugData) {
+                  updateDebugData({
+                    componentName: 'SummaryStatCard',
+                    fileName: 'SummaryStatCard.tsx',
+                    rawApiData: {
+                      apiCalls: {
+                        source: 'all',
+                        isAllSelected: true,
+                        sourceIds: [],
+                        getAveragedStats: {
+                          method: 'GET',
+                          endpoint: '/api/containers/stats/averaged',
+                          description: 'Get averaged container stats'
+                        },
+                        getContainerStats: {
+                          method: 'GET',
+                          endpoint: `/api/containers/{containerId}/stats/${metric}`,
+                          description: 'Get historical stats for containers',
+                          containerIds: allContainerIds.slice(0, 10)
+                        }
+                      },
+                      responses: {
+                        avgStats: avgStats,
+                        containers: { data: containers },
+                        historicalResults: historicalResults
+                      }
+                    } as Record<string, unknown>,
+                    processedData: {
+                      currentValue: currentValue,
+                      weeklyData: processedData,
+                      containerCount: allContainerIds.length,
+                      metric,
+                      dataType
+                    } as Record<string, unknown>,
+                    config: {
+                      dataType,
+                      source,
+                      metric,
+                      isAllSelected: true
+                    } as Record<string, unknown>
+                  });
                 }
               } catch (error) {
                 console.error('Failed to fetch container historical data:', error);
                 const mockData = generateMockSparklineData();
                 setWeeklyData(mockData);
                 calculateTrend(mockData);
+                setIsUsingMockData(true);
               }
             } else {
               // Use mock data for sparkline
               const mockData = generateMockSparklineData();
               setWeeklyData(mockData);
               calculateTrend(mockData);
+              setIsUsingMockData(true);
             }
           } else {
             // Fetch stats for specific containers
@@ -304,24 +563,106 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
             const containerStats = await Promise.all(containerPromises);
             
             // Calculate average of current values
-            const validStats = containerStats.filter(stat => stat.data);
-            if (validStats.length > 0) {
-              const avgValue = validStats.reduce((sum, stat) => sum + (stat.data?.value || 0), 0) / validStats.length;
+            const validContainerStats = containerStats.filter(stat => stat.data);
+            let finalCurrentValue = 0;
+            if (validContainerStats.length > 0) {
+              const avgValue = validContainerStats.reduce((sum, stat) => sum + (stat.data?.value || 0), 0) / validContainerStats.length;
               setCurrentValue(avgValue); // Value is already in percentage (0-100)
+              finalCurrentValue = avgValue;
+            }
+            
+            // For now, use mock data for container sparklines
+            // TODO: Implement historical container stats when available
+            const mockData = generateMockSparklineData();
+            setWeeklyData(mockData);
+            calculateTrend(mockData);
+            setIsUsingMockData(true);
+            
+            // Update debug data for specific containers
+            if (updateDebugData) {
+              updateDebugData({
+                componentName: 'SummaryStatCard',
+                fileName: 'SummaryStatCard.tsx',
+                rawApiData: {
+                  apiCalls: {
+                    source: sourceIds,
+                    isAllSelected: false,
+                    sourceIds: sourceIds,
+                    getContainerStat: {
+                      method: 'GET',
+                      endpoint: `/api/containers/{containerId}/stat/${metric}`,
+                      description: 'Get current stats for specific containers',
+                      containerIds: sourceIds
+                    }
+                  },
+                  responses: {
+                    containerStats: containerStats,
+                    mockSparklineData: mockData
+                  }
+                } as Record<string, unknown>,
+                processedData: {
+                  currentValue: finalCurrentValue,
+                  weeklyData: mockData,
+                  containerCount: sourceIds.length,
+                  metric,
+                  dataType
+                } as Record<string, unknown>,
+                config: {
+                  dataType,
+                  source,
+                  metric,
+                  isAllSelected: false,
+                  sourceIds
+                } as Record<string, unknown>
+              });
             }
           }
           
-          // For now, use mock data for container sparklines
-          // TODO: Implement historical container stats when available
-          const mockData = generateMockSparklineData();
-          setWeeklyData(mockData);
-          calculateTrend(mockData);
+          // For containers without debug data, still add basic debug info
+          if (!updateDebugData && dataType === 'container') {
+            const mockData = generateMockSparklineData();
+            setWeeklyData(mockData);
+            calculateTrend(mockData);
+            setIsUsingMockData(true);
+          }
         }
       } catch (error) {
         console.error('Failed to fetch stats:', error);
         // Use default values on error
         setCurrentValue(parseFloat(defaultValue));
         setTrendValue(parseFloat(defaultTrend));
+        
+        // Update debug data for error case
+        if (updateDebugData) {
+          updateDebugData({
+            componentName: 'SummaryStatCard',
+            fileName: 'SummaryStatCard.tsx',
+            rawApiData: {
+              error: {
+                message: error instanceof Error ? error.message : 'Unknown error',
+                stack: error instanceof Error ? error.stack : undefined,
+                timestamp: new Date().toISOString()
+              },
+              fallbackData: {
+                defaultValue: parseFloat(defaultValue),
+                defaultTrend: parseFloat(defaultTrend)
+              }
+            } as Record<string, unknown>,
+            processedData: {
+              currentValue: parseFloat(defaultValue),
+              trendValue: parseFloat(defaultTrend),
+              weeklyData: [],
+              errorOccurred: true
+            } as Record<string, unknown>,
+            config: {
+              dataType,
+              source,
+              metric,
+              defaultValue,
+              defaultTrend
+            } as Record<string, unknown>
+          });
+        }
       } finally {
         setLoading(false);
       }
@@ -334,6 +675,16 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
   }, [dataType, source, metric, isPreview, defaultValue, defaultTrend]);
 
   const processHistoricalData = (data: API.DeviceStat[]) => {
+    console.log('📊 SummaryStatCard: Processing historical data', {
+      dataLength: data.length,
+      sampleData: data.slice(0, 3)
+    });
+    
+    // Ensure we have valid data
+    if (!data || data.length === 0) {
+      return [];
+    }
+    
     // Group data by time intervals (hourly)
     const grouped = data.reduce((acc: any, item) => {
       const hour = moment(item.date).format('YYYY-MM-DD-HH');
@@ -345,15 +696,33 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
     }, {});
 
     // Calculate averages for each hour
-    return Object.keys(grouped)
+    const processed = Object.keys(grouped)
       .sort()
       .map((hour, index) => ({
         index,
         value: grouped[hour].reduce((sum: number, val: number) => sum + val, 0) / grouped[hour].length
       }));
+      
+    console.log('📊 SummaryStatCard: Grouped data', {
+      groupedKeys: Object.keys(grouped).length,
+      processedLength: processed.length
+    });
+    
+    // Ensure we have at least 2 points for the sparkline to render
+    if (processed.length === 1) {
+      // Duplicate the single point with slight variation
+      const singleValue = processed[0].value;
+      return [
+        { index: 0, value: singleValue * 0.98 },
+        { index: 1, value: singleValue }
+      ];
+    }
+    
+    return processed;
   };
 
   const calculateTrend = (data: any[]) => {
+    console.log('📊 SummaryStatCard calculateTrend input:', { data, dataType: typeof data[0] });
     if (data.length < 2) return;
     
     // Compare last week's average with this week's average
@@ -365,6 +734,11 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
     const thisWeekAvg = thisWeekData.reduce((sum, item) => sum + item.value, 0) / thisWeekData.length;
     
     const percentChange = ((thisWeekAvg - lastWeekAvg) / lastWeekAvg) * 100;
+    console.log('📊 SummaryStatCard calculateTrend result:', { 
+      lastWeekAvg, thisWeekAvg, percentChange, 
+      trendValue: Math.abs(percentChange), 
+      direction: percentChange >= 0 ? 'up' : 'down' 
+    });
     setTrendValue(Math.abs(percentChange));
     setTrendDirection(percentChange >= 0 ? 'up' : 'down');
   };
@@ -410,7 +784,22 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
       opacity: 1
     },
     tooltip: {
-      enabled: false
+      enabled: true,
+      theme: 'dark',
+      style: {
+        fontSize: '12px'
+      },
+      custom: function({ series, seriesIndex, dataPointIndex, w }) {
+        const value = series[seriesIndex][dataPointIndex];
+        const dataPoint = weeklyData[dataPointIndex];
+        const timestamp = dataPoint ? new Date(Date.now() - (weeklyData.length - dataPointIndex - 1) * 3600000).toLocaleString() : 'Unknown';
+        
+        return `
+          <div style="padding: 8px 12px; background: rgba(0,0,0,0.75); color: white; box-shadow: 0px 0px 10px rgba(0,0,0,0.5); border-radius: 4px;">
+            <div>${value.toFixed(1)}%</div>
+            <div style="color: #8c8c8c; font-size: 11px; margin-top: 2px;">${timestamp}</div>
+          </div>`;
+      }
     },
     yaxis: {
       show: false
@@ -434,6 +823,15 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
     data: weeklyData.map(item => item.value)
   }];
 
+  // Debug log for sparkline rendering
+  console.log('📊 SummaryStatCard: Sparkline render data', {
+    component: 'SummaryStatCard',
+    title,
+    weeklyDataLength: weeklyData.length,
+    weeklyData: weeklyData,
+    chartSeries: chartSeries
+  });
+
   const trendIcon = trendDirection === 'up' ? <ArrowUpOutlined /> : <ArrowDownOutlined />;
   const trendColor = trendDirection === 'up' ? '#52c41a' : '#ff4d4f';
 
@@ -443,13 +841,15 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
         backgroundColor: '#1a1a1a',
         borderRadius: '16px',
         color: 'white',
-        minWidth: '320px',
         border: 'none',
+        position: 'relative',
         ...cardStyle,
       }}
       bodyStyle={{ padding: '24px' }}
       loading={loading}
     >
+      <DemoOverlay show={isUsingMockData} />
+    
       <Space direction="vertical" size={16} style={{ width: '100%' }}>
         <Typography.Text style={{ color: '#b8bac3', fontSize: '14px', fontWeight: 400 }}>
           {title}
@@ -496,9 +896,11 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
             height: '50px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            backgroundColor: weeklyData.length === 0 ? '#2a2a2a' : 'transparent',
+            borderRadius: '4px'
           }}>
-            {weeklyData.length > 0 && (
+            {weeklyData.length > 0 ? (
               <ReactApexChart
                 options={chartOptions}
                 series={chartSeries}
@@ -506,30 +908,15 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
                 height={50}
                 width={100}
               />
+            ) : (
+              <div style={{ color: '#8c8c8c', fontSize: '12px' }}>
+                No data
+              </div>
             )}
           </div>
         </Space>
       </Space>
       
-      <DebugPanel 
-        componentName="SummaryStatCard"
-        data={{
-          rawApiData,
-          processedData: {
-            currentValue,
-            weeklyData,
-            trendValue,
-            trendDirection
-          },
-          config: {
-            dataType,
-            source,
-            metric
-          }
-        }}
-        maxHeight={200}
-      />
-      <DebugOverlay fileName="SummaryStatCard.tsx" componentName="SummaryStatCard" />
     </Card>
   );
 };

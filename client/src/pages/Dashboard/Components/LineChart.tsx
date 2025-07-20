@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { Card, Typography, Space, Select, Spin, Empty } from 'antd';
 import ReactApexChart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
@@ -17,7 +17,9 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { API, StatsType } from 'ssm-shared-lib';
 import moment from 'moment';
 import './LineChart.css';
-import DebugOverlay from './DebugOverlay';
+import { useWidgetContext } from './DashboardLayoutEngine/WidgetContext';
+import { useRegisterDebugData } from './DashboardLayoutEngine/DebugDataProvider';
+import DemoOverlay from './DemoOverlay';
 
 // Static mapping outside component to avoid useCallback dependency issues
 const STATS_TYPE_MAPPING: Record<string, StatsType.DeviceStatsType> = {
@@ -63,6 +65,15 @@ const LineChart: React.FC<LineChartProps> = ({
   const [rangePickerValue, setRangePickerValue] = useState<any>(null);
   const [deviceNameMap, setDeviceNameMap] = useState<Record<string, string>>({});
   const [containerNameMap, setContainerNameMap] = useState<Record<string, string>>({});
+  const [chartDimensions, setChartDimensions] = useState({ width: '100%', height: 300 });
+  const [forceRerender, setForceRerender] = useState(0);
+  const [isUsingMockData, setIsUsingMockData] = useState<boolean>(false);
+  const chartContainerRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<any>(null);
+  
+  // Get widget context and debug registration
+  const widgetContext = useWidgetContext();
+  const updateDebugData = useRegisterDebugData(widgetContext?.widgetId);
 
 
   // Convert date range preset to actual dates (stable function)
@@ -96,6 +107,123 @@ const LineChart: React.FC<LineChartProps> = ({
       setRangePickerValue(initialRange);
     }
   }, [dateRangePreset, customDateRange, getDateRangeFromPreset]);
+
+  // Set up resize observer to handle container size changes
+  useEffect(() => {
+    if (!chartContainerRef.current) return;
+    
+    const container = chartContainerRef.current;
+    
+    // ResizeObserver for size changes
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width } = entry.contentRect;
+        if (width > 0 && chartRef.current) {
+          console.log('📐 LineChart: Container resized to width:', width);
+          // Update ApexCharts dimensions
+          chartRef.current.updateOptions({
+            chart: {
+              width: width,
+              height: 300
+            }
+          }, false, false);
+        }
+      }
+    });
+    
+    // MutationObserver to detect when chart is added to DOM
+    const mutationObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList' && chartRef.current) {
+          const containerWidth = container.offsetWidth;
+          if (containerWidth > 0) {
+            console.log('📐 LineChart: DOM mutation detected, resizing to:', containerWidth);
+            chartRef.current.updateOptions({
+              chart: {
+                width: containerWidth,
+                height: 300
+              }
+            }, false, true);
+          }
+        }
+      });
+    });
+    
+    resizeObserver.observe(container);
+    mutationObserver.observe(container, { childList: true, subtree: true });
+    
+    return () => {
+      resizeObserver.disconnect();
+      mutationObserver.disconnect();
+    };
+  }, []);
+
+  // Force chart resize on mount and data changes
+  useEffect(() => {
+    if (chartRef.current && chartContainerRef.current && chartSeries.length > 0) {
+      // Multiple resize attempts to ensure proper width
+      const resizeChart = () => {
+        const containerWidth = chartContainerRef.current?.offsetWidth;
+        if (containerWidth && containerWidth > 0 && chartRef.current) {
+          console.log('📐 LineChart: Forcing resize to width:', containerWidth);
+          // Force complete chart re-render with new dimensions
+          chartRef.current.updateOptions({
+            chart: {
+              width: containerWidth,
+              height: 300
+            }
+          }, false, true);
+          
+          // Also trigger window resize event as a fallback
+          window.dispatchEvent(new Event('resize'));
+        }
+      };
+      
+      // Try multiple times to ensure the container has settled
+      const timers = [
+        setTimeout(resizeChart, 0),
+        setTimeout(resizeChart, 100),
+        setTimeout(resizeChart, 300),
+        setTimeout(resizeChart, 500),
+      ];
+      
+      return () => {
+        timers.forEach(timer => clearTimeout(timer));
+      };
+    }
+  }, [chartSeries]);
+
+  // Handle page visibility changes (fixes reload width issues)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && chartRef.current && chartContainerRef.current) {
+        // Page became visible, force chart resize
+        setTimeout(() => {
+          const containerWidth = chartContainerRef.current?.offsetWidth;
+          if (containerWidth && containerWidth > 0) {
+            console.log('📐 LineChart: Page visibility change, resizing to:', containerWidth);
+            chartRef.current.updateOptions({
+              chart: {
+                width: containerWidth,
+                height: 300
+              }
+            }, false, true);
+            
+            // Force rerender as last resort
+            setForceRerender(prev => prev + 1);
+          }
+        }, 200);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleVisibilityChange);
+    };
+  }, []);
 
 
   // Determine if we're looking at all items or specific ones (memoized)
@@ -142,12 +270,18 @@ const LineChart: React.FC<LineChartProps> = ({
           date: moment().subtract(20 - i, 'hours').toISOString(),
         }));
         setGraphData(mockData);
+        setIsUsingMockData(true);
         setLoading(false);
       } else {
         console.log('🌐 Starting data fetch for LineChart');
         const fetchData = async () => {
           console.log('⏳ Setting loading to true');
           setLoading(true);
+          
+          // Reset mock data flag when fetching real data
+          setIsUsingMockData(false);
+          
+          const apiResponses: Record<string, unknown> = {};
           try {
             if (dataType === 'device') {
               console.log('🖥️ Processing device data type');
@@ -161,6 +295,7 @@ const LineChart: React.FC<LineChartProps> = ({
                   timestamp: new Date().toISOString()
                 });
                 const devicesResponse = await getAllDevices();
+                apiResponses.devices = devicesResponse;
                 const devices = devicesResponse.data || [];
                 deviceIds = devices.map(device => device.uuid);
                 console.log('📊 LineChart API Response: getAllDevices', { 
@@ -224,6 +359,8 @@ const LineChart: React.FC<LineChartProps> = ({
                 }
               );
               
+              apiResponses.deviceStats = deviceStats;
+              
               console.log('📊 LineChart API Response: getDashboardDevicesStats', {
                 component: 'LineChart',
                 title,
@@ -235,6 +372,53 @@ const LineChart: React.FC<LineChartProps> = ({
               const processedData = deviceStats.data || [];
               console.log('💾 Setting graph data:', processedData);
               setGraphData(processedData);
+              
+              // Update debug data
+              if (updateDebugData) {
+                updateDebugData({
+                  componentName: 'LineChart',
+                  fileName: 'LineChart.tsx',
+                  rawApiData: {
+                    apiCalls: {
+                      source,
+                      isAllSelected,
+                      sourceIds,
+                      getAllDevices: isAllSelected ? {
+                        method: 'GET',
+                        endpoint: '/api/devices'
+                      } : null,
+                      getDashboardDevicesStats: {
+                        method: 'POST',
+                        endpoint: `/api/statistics/dashboard/stats/${primaryMetric}`,
+                        params: {
+                          from: rangePickerValue[0].toDate(),
+                          to: rangePickerValue[1].toDate()
+                        },
+                        body: {
+                          devices: deviceIds,
+                          statsType
+                        }
+                      }
+                    },
+                    responses: apiResponses
+                  } as Record<string, unknown>,
+                  processedData: {
+                    graphData: processedData,
+                    deviceCount: deviceIds.length,
+                    dateRange: {
+                      from: rangePickerValue[0].toISOString(),
+                      to: rangePickerValue[1].toISOString()
+                    }
+                  } as Record<string, unknown>,
+                  config: {
+                    dataType,
+                    source,
+                    metrics: memoizedMetrics,
+                    dateRangePreset,
+                    colorPalette
+                  } as Record<string, unknown>
+                });
+              }
             } else if (dataType === 'container') {
               // For containers, we'll need to adapt the data format to match API.DeviceStat
               let containerIds = sourceIds;
@@ -435,12 +619,13 @@ const LineChart: React.FC<LineChartProps> = ({
       chart: {
         type: 'area',
         height: 300,
-        width: '100%',
         toolbar: { show: false },
         background: 'transparent',
         dropShadow: {
           enabled: false
-        }
+        },
+        redrawOnParentResize: true,
+        redrawOnWindowResize: true
       },
       stroke: {
         width: 2.5,
@@ -506,15 +691,7 @@ const LineChart: React.FC<LineChartProps> = ({
           opacityTo: 0,
           stops: [0, 100]
         }
-      },
-      responsive: [{
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: '100%'
-          }
-        }
-      }]
+      }
     };
     
     console.log('⚙️ Final chart options:', options);
@@ -530,10 +707,13 @@ const LineChart: React.FC<LineChartProps> = ({
           border: 'none',
           height: '100%',
           width: '100%',
+          position: 'relative',
           ...cardStyle,
         }}
         bodyStyle={{ padding: '28px 32px', width: '100%' }}
       >
+        <DemoOverlay show={isUsingMockData} />
+      
         {/* Header with title and period selector */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
           <div>
@@ -591,18 +771,23 @@ const LineChart: React.FC<LineChartProps> = ({
           </Space>
           
           {/* Charts */}
-          <div className="line-chart-container" style={{ position: 'relative', height: '300px', width: '100%', maxWidth: '100%' }}>
+          <div 
+            ref={chartContainerRef}
+            className="line-chart-container" 
+            style={{ position: 'relative', height: '300px', width: '100%', maxWidth: '100%' }}
+          >
             {loading ? (
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px' }}>
                 <Spin size="large" />
               </div>
             ) : chartSeries.length > 0 ? (
               <ReactApexChart
+                key={`chart-${forceRerender}`}
+                ref={chartRef}
                 options={chartOptions}
                 series={chartSeries}
                 type="area"
-                height="100%"
-                width="100%"
+                height={300}
               />
             ) : (
               <Empty
@@ -612,7 +797,6 @@ const LineChart: React.FC<LineChartProps> = ({
             )}
           </div>
         </Space>
-        <DebugOverlay fileName="LineChart.tsx" componentName="LineChart" />
       </Card>
     );
 };

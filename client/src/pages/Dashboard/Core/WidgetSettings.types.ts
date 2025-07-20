@@ -103,6 +103,7 @@ export interface StatisticsSettingField extends BaseSettingField<StatisticsConfi
   type: 'statistics';
   supportedDataTypes?: Array<'device' | 'container'>;
   supportedMetrics?: Record<string, string[]>;
+  selectionMode?: 'single' | 'multiple';
 }
 
 export interface PlaybookSettingField extends BaseSettingField<PlaybookConfig> {

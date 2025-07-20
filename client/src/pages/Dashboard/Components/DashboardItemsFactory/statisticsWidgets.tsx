@@ -6,7 +6,7 @@ import React from 'react';
 import { DashboardOutlined, ShoppingCartOutlined, CloseCircleOutlined, UserAddOutlined, ShoppingOutlined } from '@ant-design/icons';
 import SummaryStatCard from '../SummaryStatCard';
 import CompactStatCard from '../CompactStatCard';
-import BookingStatusCard from '../BookingStatusCard';
+import ProgressBarsCard from '../ProgressBarsCard';
 import { DashboardItem } from '../../Core/DashboardWidget.types';
 import { WidgetConfiguration } from '../../Core/WidgetSettings.types';
 import { WIDGET_FIELDS, WIDGET_DEFAULTS } from '../../constants/widgetConstants';
@@ -15,23 +15,23 @@ import { bookingStatuses } from './widgetData';
 export const statisticsWidgets: DashboardItem[] = [
   {
     id: 'single-number-variation',
-    title: 'Total balance',
+    title: 'Summary Stat',
     size: 'small',
     settings: [
       { type: 'statistics', label: 'Statistics Configuration', defaultValue: {} },
-      { type: 'title', label: 'Widget Title', defaultValue: 'Total balance' },
+      { type: 'title', label: 'Widget Title', defaultValue: 'Summary Stat' },
     ],
     component: (
       <SummaryStatCard
-        title="Total balance"
-        defaultValue="18,765"
-        defaultTrend="-0.1"
+        title="Summary Stat"
+        defaultValue="0"
+        defaultTrend="0"
         icon={<DashboardOutlined />}
       />
     ),
     componentFactory: (configuration: WidgetConfiguration) => (
       <SummaryStatCard
-        title={configuration?.[WIDGET_FIELDS.TITLE] as string || "Total balance"}
+        title={configuration?.[WIDGET_FIELDS.TITLE] as string || "Summary Stat"}
         dataType={configuration?.[WIDGET_FIELDS.STATISTICS_TYPE] as string || WIDGET_DEFAULTS.DATA_TYPE}
         source={configuration?.[WIDGET_FIELDS.STATISTICS_SOURCE] || WIDGET_DEFAULTS.EMPTY_ARRAY}
         metric={configuration?.[WIDGET_FIELDS.STATISTICS_METRIC] as string || WIDGET_DEFAULTS.METRIC}
@@ -42,34 +42,6 @@ export const statisticsWidgets: DashboardItem[] = [
       />
     ),
     hasSettings: true,
-  },
-  {
-    id: 'single-number-card-variation',
-    title: 'Total orders',
-    size: 'small',
-    settings: undefined,
-    component: (
-      <SummaryStatCard
-        title="Total orders"
-        defaultValue="6,584"
-        defaultTrend="+15.03"
-        icon={<ShoppingCartOutlined />}
-      />
-    ),
-  },
-  {
-    id: 'single-number-variation-popover',
-    title: 'Total revenue',
-    size: 'small',
-    settings: undefined,
-    component: (
-      <SummaryStatCard
-        title="Total revenue"
-        defaultValue="3,458"
-        defaultTrend="+3.1"
-        icon={<CloseCircleOutlined />}
-      />
-    ),
   },
   {
     id: 'compact-stat-card',
@@ -83,50 +55,32 @@ export const statisticsWidgets: DashboardItem[] = [
       <CompactStatCard
         title="Average CPU Usage"
         value="65%"
-        trend={5.2}
-        subtitle="Last 24 hours"
-        icon={<DashboardOutlined />}
-        backgroundColor="#1a1a1a"
+        trendValue="5.2"
+        trendDirection="up"
+        trendDescription="last 24 hours"
+        trendColor="#52c41a"
       />
     ),
+    componentFactory: (configuration: WidgetConfiguration) => (
+      <CompactStatCard
+        title={configuration?.[WIDGET_FIELDS.TITLE] as string || "Metric Card"}
+        dataType={configuration?.[WIDGET_FIELDS.STATISTICS_TYPE] as string || WIDGET_DEFAULTS.DATA_TYPE}
+        source={configuration?.[WIDGET_FIELDS.STATISTICS_SOURCE] || WIDGET_DEFAULTS.EMPTY_ARRAY}
+        metric={configuration?.[WIDGET_FIELDS.STATISTICS_METRIC] as string || WIDGET_DEFAULTS.METRIC}
+        isPreview={configuration?.[WIDGET_FIELDS.IS_PREVIEW] as boolean}
+      />
+    ),
+    hasSettings: true,
   },
   {
-    id: 'booking-status',
-    title: 'Booking Status',
+    id: 'progress-bars',
+    title: 'Progress Bars',
     size: 'small',
     settings: undefined,
     component: (
-      <BookingStatusCard
-        title="Booking Status"
-        items={bookingStatuses}
-      />
-    ),
-  },
-  {
-    id: 'single-number-new-customers',
-    title: 'New customers',
-    size: 'small',
-    settings: undefined,
-    component: (
-      <SummaryStatCard
-        title="New customers"
-        defaultValue="+89"
-        defaultTrend="+0.0"
-        icon={<UserAddOutlined />}
-      />
-    ),
-  },
-  {
-    id: 'single-number-orders-pending',
-    title: 'Orders pending',
-    size: 'small',
-    settings: undefined,
-    component: (
-      <SummaryStatCard
-        title="Orders pending"
-        defaultValue="128"
-        defaultTrend="-25"
-        icon={<ShoppingOutlined />}
+      <ProgressBarsCard
+        title="Progress Bars"
+        statuses={bookingStatuses}
       />
     ),
   },

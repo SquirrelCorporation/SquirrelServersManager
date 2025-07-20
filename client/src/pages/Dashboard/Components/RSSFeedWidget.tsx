@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card, Typography, List, Button, Spin, Badge, message } from 'antd';
 import { ReloadOutlined, LinkOutlined } from '@ant-design/icons';
-import DebugOverlay from './DebugOverlay';
 import { fetchRSSFeeds, RSSFeedItem, FeedConfig } from '@/services/rest/rss.service';
+import { getColorForItem } from './utils/colorPalettes';
 
 // Use types from the service
 type RSSItem = RSSFeedItem;
@@ -11,16 +11,22 @@ type RSSFeed = FeedConfig;
 interface RSSFeedWidgetProps {
   title?: string;
   cardStyle?: React.CSSProperties;
+  colorPalette?: string;
+  customColors?: string[];
   widgetSettings?: {
     feeds?: FeedConfig[];
     refreshInterval?: number;
     maxItems?: number;
+    colorPalette?: string;
+    customColors?: string[];
   };
 }
 
 const RSSFeedWidget: React.FC<RSSFeedWidgetProps> = ({
   title = 'News Feed',
   cardStyle,
+  colorPalette = 'default',
+  customColors,
   widgetSettings,
 }) => {
   const [items, setItems] = useState<RSSItem[]>([]);
@@ -29,6 +35,10 @@ const RSSFeedWidget: React.FC<RSSFeedWidgetProps> = ({
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const refreshInterval = widgetSettings?.refreshInterval || 30;
   const maxItems = widgetSettings?.maxItems || 20;
+  
+  // Get effective color palette - priority: widgetSettings > props > default
+  const effectiveColorPalette = widgetSettings?.colorPalette || colorPalette || 'default';
+  const effectiveCustomColors = widgetSettings?.customColors || customColors;
 
   // Default feeds
   const defaultFeeds: RSSFeed[] = [
@@ -120,6 +130,21 @@ const RSSFeedWidget: React.FC<RSSFeedWidgetProps> = ({
     return date.toLocaleDateString();
   };
 
+  // Get badge color based on source name using color palette
+  const getBadgeColor = (sourceName: string) => {
+    if (effectiveCustomColors && effectiveCustomColors.length > 0) {
+      // Use custom colors with hash-based assignment
+      const hash = sourceName.split('').reduce((acc, char) => {
+        return char.charCodeAt(0) + ((acc << 5) - acc);
+      }, 0);
+      const colorIndex = Math.abs(hash) % effectiveCustomColors.length;
+      return effectiveCustomColors[colorIndex];
+    }
+    
+    // Use palette colors
+    return getColorForItem(sourceName, effectiveColorPalette);
+  };
+
   return (
     <Card
       style={{
@@ -201,7 +226,7 @@ const RSSFeedWidget: React.FC<RSSFeedWidgetProps> = ({
                     <Badge
                       count={item.source}
                       style={{
-                        backgroundColor: '#52c41a',
+                        backgroundColor: getBadgeColor(item.source),
                         color: '#000',
                         fontSize: '10px',
                         height: '16px',
@@ -237,7 +262,6 @@ const RSSFeedWidget: React.FC<RSSFeedWidgetProps> = ({
           Last updated: {lastUpdate.toLocaleTimeString()}
         </div>
       )}
-      <DebugOverlay fileName="RSSFeedWidget.tsx" componentName="RSSFeedWidget" />
     </Card>
   );
 };

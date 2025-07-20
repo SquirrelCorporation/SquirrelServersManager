@@ -8,15 +8,15 @@ interface StatusItem {
   color: string;
 }
 
-interface BookingStatusCardProps {
+interface ProgressBarsCardProps {
   title: string;
-  statuses: StatusItem[];
+  statuses?: StatusItem[];
   cardStyle?: React.CSSProperties;
 }
 
-const BookingStatusCard: React.FC<BookingStatusCardProps> = ({
+const ProgressBarsCard: React.FC<ProgressBarsCardProps> = ({
   title,
-  statuses,
+  statuses = [],
   cardStyle,
 }) => {
   return (
@@ -94,4 +94,4 @@ const BookingStatusCard: React.FC<BookingStatusCardProps> = ({
   );
 };
 
-export default BookingStatusCard;
+export default ProgressBarsCard;

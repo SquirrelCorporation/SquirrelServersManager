@@ -5,21 +5,13 @@ module.exports = {
     page: true,
     REACT_APP_ENV: true,
   },
-  parser: '@babel/eslint-parser',
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     tsconfigRootDir: __dirname,
+    project: './tsconfig.json',
     sourceType: 'module',
-    requireConfigFile: false,
-    babelOptions: {
-      presets: ['@babel/preset-env'],
-      plugins: [
-        ['@babel/plugin-proposal-decorators', { legacy: true }],
-        ['@babel/plugin-transform-class-properties', { loose: true }]
-      ]
-    },
     ecmaFeatures: {
       jsx: true,
-      legacyDecorators: true
     }
   },
   // ...

@@ -251,7 +251,7 @@ const Header = styled.div`
 `;
 
 interface StyledTabContainerProps {
-  header: {
+  header?: {
     title: React.ReactNode;
   };
   tabItems: TabsProps['items'];

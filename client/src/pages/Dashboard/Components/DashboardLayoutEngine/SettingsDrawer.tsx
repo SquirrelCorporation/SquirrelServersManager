@@ -304,7 +304,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
                         }
                         options={sourceOptions}
                         placeholder={dataType === 'device' ? 'Select specific devices' : 'Select specific containers'}
-                        mode="multiple"
+                        mode={setting.selectionMode === 'single' ? undefined : "multiple"}
                         rules={[{ required: true, message: 'Please select at least one source' }]}
                         fieldProps={{
                           loading: dataType === 'device' ? loadingDevices : loadingContainers,

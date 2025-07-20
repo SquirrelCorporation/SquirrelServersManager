@@ -210,6 +210,7 @@ export const WidgetSettingsRenderer: React.FC<WidgetSettingsRendererProps> = ({
               onChange={val => onChange({ [fieldName]: val })}
               supportedDataTypes={statsField.supportedDataTypes}
               supportedMetrics={statsField.supportedMetrics}
+              selectionMode={statsField.selectionMode}
             />
           </Form.Item>
         );

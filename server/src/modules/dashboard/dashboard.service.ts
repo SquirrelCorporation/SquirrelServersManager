@@ -33,11 +33,6 @@ export class DashboardService {
 
   async update(id: string, updateDashboardDto: UpdateDashboardDto): Promise<Dashboard> {
     const existing = await this.findOne(id);
-    
-    // Prevent updating system dashboards name
-    if (existing.isSystem && updateDashboardDto.name) {
-      throw new ConflictException('Cannot update name of system dashboard');
-    }
 
     // Check for name conflicts if updating name
     if (updateDashboardDto.name && updateDashboardDto.name !== existing.name) {
@@ -57,11 +52,6 @@ export class DashboardService {
 
   async remove(id: string): Promise<void> {
     const dashboard = await this.findOne(id);
-    
-    // Prevent deleting system dashboards
-    if (dashboard.isSystem) {
-      throw new ConflictException('Cannot delete system dashboard');
-    }
 
     const result = await this.dashboardRepository.remove(id);
     if (!result) {

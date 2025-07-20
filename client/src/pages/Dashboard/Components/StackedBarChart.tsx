@@ -2,8 +2,6 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Card, Typography, Space, Select, Row, Col, Spin, Empty } from 'antd';
 import ReactApexChart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
-import DebugPanel from './DebugPanel';
-import DebugOverlay from './DebugOverlay';
 import { 
   getDashboardDevicesStats,
   getDashboardAveragedDevicesStats 
@@ -116,12 +114,18 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
   }, []);
 
 
-  // Determine if we're looking at all items or specific ones
-  const { sourceArray, isAllSelected, sourceIds } = useMemo(() => {
-    const array = Array.isArray(source) ? source : [source];
-    const isAll = array.includes('all');
-    const ids = isAll ? [] : array;
-    return { sourceArray: array, isAllSelected: isAll, sourceIds: ids };
+  // Determine if we're looking at all items or specific ones (memoized)
+  const { isAllSelected, sourceIds } = useMemo(() => {
+    const isAll = Array.isArray(source) ? source.includes('all') : source === 'all';
+    let ids: string[] = [];
+    
+    if (Array.isArray(source)) {
+      ids = source.filter(s => s && s !== 'all');
+    } else if (source && source !== 'all') {
+      ids = [source];
+    }
+    
+    return { isAllSelected: isAll, sourceIds: ids };
   }, [source]);
 
   // Fetch device/container names
@@ -268,6 +272,12 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
             );
             data = response.data || [];
           } else {
+            if (sourceIds.length === 0) {
+              // No specific devices selected
+              setApiChartData([]);
+              return;
+            }
+            
             const promises = sourceIds.map(deviceId =>
               getDashboardDevicesStats(
                 [deviceId],
@@ -298,6 +308,12 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
             );
             data = response.data || [];
           } else {
+            if (sourceIds.length === 0) {
+              // No specific containers selected
+              setApiChartData([]);
+              return;
+            }
+            
             const promises = sourceIds.map(containerId =>
               getContainerStats(
                 containerId,
@@ -603,18 +619,6 @@ const StackedBarChart: React.FC<StackedBarChartProps> = ({
         />
       )}
       
-      <DebugPanel 
-        componentName="StackedBarChart"
-        data={{
-          rawApiData: rawApiData,
-          transformedChartData: chartData,
-          dataType,
-          source,
-          metric,
-          dateRange: dateRangePreset
-        }}
-      />
-      <DebugOverlay fileName="StackedBarChart.tsx" componentName="StackedBarChart" />
     </Card>
   );
 };

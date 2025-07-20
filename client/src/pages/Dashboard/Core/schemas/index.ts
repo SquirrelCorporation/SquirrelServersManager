@@ -187,6 +187,64 @@ const ansiblePlaybookRunnerSchema: WidgetSettingsSchema = {
   },
 };
 
+// Donut Chart schema - restricts to single device/container selection
+const donutChartSchema: WidgetSettingsSchema = {
+  version: '1.0',
+  fields: {
+    title: {
+      type: 'text',
+      label: 'Chart Title',
+      required: true,
+      defaultValue: 'Donut Chart',
+    },
+    statistics: {
+      type: 'statistics',
+      label: 'Data Configuration',
+      required: true,
+      defaultValue: {
+        dataType: 'device',
+        source: ['all'],
+        metric: 'cpu_usage',
+      },
+      selectionMode: 'single',
+      supportedMetrics: {
+        device: ['cpu_usage', 'memory_usage', 'storage_usage'],
+        container: ['container_cpu_usage', 'container_memory_usage'],
+      },
+    },
+    colorPalette: {
+      type: 'colorPalette',
+      label: 'Color Theme',
+      defaultValue: {
+        id: 'default',
+      },
+    },
+  },
+  layout: {
+    type: 'sections',
+    groups: [
+      {
+        id: 'basic',
+        label: 'Basic Settings',
+        fields: ['title'],
+        defaultExpanded: true,
+      },
+      {
+        id: 'data',
+        label: 'Data Configuration',
+        fields: ['statistics'],
+        defaultExpanded: true,
+      },
+      {
+        id: 'appearance',
+        label: 'Appearance',
+        fields: ['colorPalette'],
+        defaultExpanded: false,
+      },
+    ],
+  },
+};
+
 // IFrame Widget schema
 const iframeWidgetSchema: WidgetSettingsSchema = {
   version: '1.0',
@@ -256,6 +314,9 @@ export function registerWidgetSchemas(): void {
       },
     },
   });
+  
+  // Donut chart with single selection restriction
+  widgetSettingsManager.registerSchema('ring-progress', donutChartSchema);
   
   // Playbook widget
   widgetSettingsManager.registerSchema('AnsiblePlaybookRunner', ansiblePlaybookRunnerSchema);

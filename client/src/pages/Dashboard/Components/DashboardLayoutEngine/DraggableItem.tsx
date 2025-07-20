@@ -6,8 +6,9 @@
 import React, { useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { Button, Tooltip, Modal, Dropdown } from 'antd';
-import { DragOutlined, SettingOutlined, DeleteOutlined } from '@ant-design/icons';
+import { DragOutlined, SettingOutlined, DeleteOutlined, BugOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
+import DebugDialog from './DebugDialog';
 
 interface DraggableItemProps {
   id: string;
@@ -17,6 +18,8 @@ interface DraggableItemProps {
   isEditMode: boolean;
   onSettings?: () => void;
   onRemove?: () => void;
+  widgetTitle?: string;
+  debugData?: Record<string, unknown>;
 }
 
 const DraggableItem: React.FC<DraggableItemProps> = ({ 
@@ -26,10 +29,13 @@ const DraggableItem: React.FC<DraggableItemProps> = ({
   moveItem, 
   isEditMode, 
   onSettings, 
-  onRemove 
+  onRemove,
+  widgetTitle = 'Widget',
+  debugData 
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [debugDialogVisible, setDebugDialogVisible] = useState(false);
   
   const [{ isDragging }, drag] = useDrag({
     type: 'DASHBOARD_ITEM',
@@ -105,6 +111,14 @@ const DraggableItem: React.FC<DraggableItemProps> = ({
       }
     },
     {
+      key: 'debug',
+      icon: <BugOutlined />,
+      label: 'Debug Info',
+      onClick: () => {
+        setDebugDialogVisible(true);
+      }
+    },
+    {
       key: 'delete',
       icon: <DeleteOutlined />,
       label: 'Delete Widget',
@@ -123,73 +137,82 @@ const DraggableItem: React.FC<DraggableItemProps> = ({
   ];
 
   return (
-    <Dropdown
-      menu={{ 
-        items: contextMenuItems,
-        className: 'dashboard-widget-context-menu'
-      }}
-      trigger={['contextMenu']}
-      destroyPopupOnHide
-      placement="bottomRight"
-    >
-      <div 
-        ref={ref} 
-        style={{ 
-          opacity: isDragging ? 0.5 : 1,
-          cursor: isEditMode ? 'move' : 'default',
-          position: 'relative',
-          transition: 'box-shadow 0.2s',
-          boxShadow: isHovered && !isEditMode ? '0 0 0 1px rgba(24, 144, 255, 0.2)' : undefined,
-          borderRadius: '8px'
+    <>
+      <Dropdown
+        menu={{ 
+          items: contextMenuItems,
+          className: 'dashboard-widget-context-menu'
         }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        trigger={['contextMenu']}
+        destroyPopupOnHide
+        placement="bottomRight"
       >
-        {isEditMode && (
-          <div style={{ position: 'absolute', right: 10, top: 10, zIndex: 10, display: 'flex', gap: 8 }}>
-            <Tooltip title="Widget settings">
-              <Button 
-                size="small" 
-                icon={<SettingOutlined />} 
-                onClick={onSettings}
-                style={{ opacity: 0.7 }}
-              />
-            </Tooltip>
-            <Tooltip title="Remove widget">
-              <Button 
-                size="small" 
-                icon={<DeleteOutlined />} 
-                danger
-                onClick={() => {
-                  Modal.confirm({
-                    title: 'Remove widget',
-                    content: 'Are you sure you want to remove this widget?',
-                    onOk: () => onRemove?.(),
-                    okText: 'Yes',
-                    cancelText: 'No',
-                  });
-                }}
-                style={{ opacity: 0.7 }}
-              />
-            </Tooltip>
-            <Tooltip title="Drag to rearrange">
-              <DragOutlined style={{ color: 'rgba(0,0,0,0.45)', fontSize: 20 }} />
-            </Tooltip>
-          </div>
-        )}
-        {!isEditMode && isHovered && (
-          <Tooltip 
-            title="Right-click for options" 
-            placement="top"
-          >
-            <div style={{ position: 'absolute', top: 8, right: 8, opacity: 0.5 }}>
-              <SettingOutlined style={{ fontSize: 12 }} />
+        <div 
+          ref={ref} 
+          style={{ 
+            opacity: isDragging ? 0.5 : 1,
+            cursor: isEditMode ? 'move' : 'default',
+            position: 'relative',
+            transition: 'box-shadow 0.2s',
+            boxShadow: isHovered && !isEditMode ? '0 0 0 1px rgba(24, 144, 255, 0.2)' : undefined,
+            borderRadius: '8px'
+          }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          {isEditMode && (
+            <div style={{ position: 'absolute', right: 10, top: 10, zIndex: 10, display: 'flex', gap: 8 }}>
+              <Tooltip title="Widget settings">
+                <Button 
+                  size="small" 
+                  icon={<SettingOutlined />} 
+                  onClick={onSettings}
+                  style={{ opacity: 0.7 }}
+                />
+              </Tooltip>
+              <Tooltip title="Remove widget">
+                <Button 
+                  size="small" 
+                  icon={<DeleteOutlined />} 
+                  danger
+                  onClick={() => {
+                    Modal.confirm({
+                      title: 'Remove widget',
+                      content: 'Are you sure you want to remove this widget?',
+                      onOk: () => onRemove?.(),
+                      okText: 'Yes',
+                      cancelText: 'No',
+                    });
+                  }}
+                  style={{ opacity: 0.7 }}
+                />
+              </Tooltip>
+              <Tooltip title="Drag to rearrange">
+                <DragOutlined style={{ color: 'rgba(0,0,0,0.45)', fontSize: 20 }} />
+              </Tooltip>
             </div>
-          </Tooltip>
-        )}
-        {children}
-      </div>
-    </Dropdown>
+          )}
+          {!isEditMode && isHovered && (
+            <Tooltip 
+              title="Right-click for options" 
+              placement="top"
+            >
+              <div style={{ position: 'absolute', top: 8, right: 8, opacity: 0.5 }}>
+                <SettingOutlined style={{ fontSize: 12 }} />
+              </div>
+            </Tooltip>
+          )}
+          {children}
+        </div>
+      </Dropdown>
+      <DebugDialog
+        visible={debugDialogVisible}
+        onClose={() => setDebugDialogVisible(false)}
+        widgetId={id}
+        widgetTitle={widgetTitle}
+        debugData={debugData}
+      />
+    </>
   );
 };
 

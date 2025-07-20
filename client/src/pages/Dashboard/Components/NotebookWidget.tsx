@@ -153,10 +153,6 @@ const NotebookWidget: React.FC<NotebookWidgetProps> = ({
           icon={<PlusOutlined />}
           size="small"
           onClick={() => setIsCreating(true)}
-          style={{
-            backgroundColor: '#4ecb71',
-            borderColor: '#4ecb71',
-          }}
         >
           Add Note
         </Button>

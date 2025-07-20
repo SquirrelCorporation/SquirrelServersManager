@@ -15,6 +15,7 @@ import StackedBarChart from '../StackedBarChart';
 import { DashboardItem } from '../../Core/DashboardWidget.types';
 import { WidgetConfiguration } from '../../Core/WidgetSettings.types';
 import { WIDGET_FIELDS, WIDGET_DEFAULTS, DATA_TYPES, METRICS, DATE_RANGE_PRESETS, COLOR_PALETTES } from '../../constants/widgetConstants';
+import { createWidgetDebugData } from '../useWidgetDebugData';
 import { 
   gradientChartData,
   toursAvailableData,
@@ -58,36 +59,25 @@ export const chartWidgets: DashboardItem[] = [
     hasSettings: true,
   },
   {
-    id: 'progress-lines-graph',
-    title: 'Line Chart',
-    size: 'medium',
-    settings: undefined,
-    component: (
-      <LineChart
-        title="Performance Metrics"
-      />
-    ),
-  },
-  {
     id: 'percentage',
-    title: 'Tours Available',
+    title: 'Circular Progress Chart',
     size: 'small',
     settings: [
       { type: 'statistics', label: 'Statistics Configuration', defaultValue: {} },
-      { type: 'title', label: 'Widget Title', defaultValue: 'Tours Available' },
+      { type: 'title', label: 'Widget Title', defaultValue: 'Circular Progress' },
       { type: 'colorPalette', label: 'Progress Color Theme', defaultValue: 'default' },
       { type: 'backgroundColor', label: 'Background Color Theme', defaultValue: 'default' },
       { type: 'icon', label: 'Icon' }
     ],
     component: (
       <CircularProgressChart
-        title="Tours Available"
+        title="Circular Progress"
         isPreview={true}
       />
     ),
     componentFactory: (configuration: WidgetConfiguration) => (
       <CircularProgressChart
-        title={configuration?.[WIDGET_FIELDS.TITLE] as string || "Tours Available"}
+        title={configuration?.[WIDGET_FIELDS.TITLE] as string || "Circular Progress"}
         dataType={configuration?.[WIDGET_FIELDS.STATISTICS_TYPE] as string || WIDGET_DEFAULTS.DATA_TYPE}
         source={configuration?.[WIDGET_FIELDS.STATISTICS_SOURCE] || WIDGET_DEFAULTS.EMPTY_ARRAY}
         metric={configuration?.[WIDGET_FIELDS.STATISTICS_METRIC] as string || WIDGET_DEFAULTS.METRIC}
@@ -104,17 +94,36 @@ export const chartWidgets: DashboardItem[] = [
   },
   {
     id: 'ring-progress',
-    title: 'Tours Available',
-    size: 'medium',
-    settings: undefined,
+    title: 'Donut Chart',
+    size: 'small',
+    settings: [
+      { type: 'statistics', label: 'Statistics Configuration', defaultValue: {}, selectionMode: 'single' },
+      { type: 'title', label: 'Widget Title', defaultValue: 'Donut Chart' },
+      { type: 'colorPalette', label: 'Color Theme' }
+    ],
     component: (
       <DonutChart
-        title="Tours Available"
-        data={toursAvailableData}
-        legend={toursLegend}
-        centerContent={{ label: '186', sublabel: 'Total' }}
+        title="Donut Chart"
+        isPreview={true}
+        totalTours={186}
+        mainLabel="Total"
+        chartData={toursAvailableData}
+        legendItems={toursLegend}
       />
     ),
+    componentFactory: (configuration: WidgetConfiguration) => (
+      <DonutChart
+        title={configuration?.[WIDGET_FIELDS.TITLE] as string || "Donut Chart"}
+        dataType={configuration?.[WIDGET_FIELDS.STATISTICS_TYPE] as string || WIDGET_DEFAULTS.DATA_TYPE}
+        source={configuration?.[WIDGET_FIELDS.STATISTICS_SOURCE] || WIDGET_DEFAULTS.EMPTY_ARRAY}
+        metric={configuration?.[WIDGET_FIELDS.STATISTICS_METRIC] as string || WIDGET_DEFAULTS.METRIC}
+        isPreview={configuration?.[WIDGET_FIELDS.IS_PREVIEW] as boolean}
+        colorPalette={configuration?.[WIDGET_FIELDS.COLOR_PALETTE] as string || WIDGET_DEFAULTS.COLOR_PALETTE}
+        customColors={configuration?.[WIDGET_FIELDS.CUSTOM_COLORS] as string[]}
+        mainLabel={configuration?.[WIDGET_FIELDS.STATISTICS_METRIC] as string || "Total"}
+      />
+    ),
+    hasSettings: true,
   },
   {
     id: 'line-gradient',
@@ -124,9 +133,11 @@ export const chartWidgets: DashboardItem[] = [
     component: (
       <TinyLineChart
         title="New Messages"
-        subtitle="(+25%)"
         value="3,052"
-        data={gradientChartData}
+        trendValue="+25%"
+        trendDirection="up"
+        chartData={gradientChartData}
+        gradientColors={['#722ed1', '#9254de']}
         icon={<MessageOutlined />}
       />
     ),

@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { Typography } from 'antd';
 import { useModel } from '@umijs/max';
-import DebugOverlay from './DebugOverlay';
 
 interface WelcomeHeaderSectionProps {
   userName?: string;
@@ -158,7 +157,6 @@ const WelcomeHeaderSection: React.FC<WelcomeHeaderSectionProps> = ({
           zIndex: 3,
         }}
       />
-      <DebugOverlay fileName="WelcomeHeaderSection.tsx" componentName="WelcomeHeaderSection" />
     </div>
   );
 };

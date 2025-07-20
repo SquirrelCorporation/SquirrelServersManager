@@ -2,7 +2,6 @@ import React from 'react';
 import { Card, Typography, Statistic, Space } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 // import { TinyLine, TinyLineConfig } from '@ant-design/plots'; // Still commented out
-import DebugOverlay from './DebugOverlay';
 
 interface TinyLineChartProps {
   title: string;
@@ -47,7 +46,6 @@ const TinyLineChart: React.FC<TinyLineChartProps> = ({
         background: `linear-gradient(135deg, ${gradientColors[0]} 0%, ${gradientColors[1]} 100%)`,
         borderRadius: '16px',
         color: 'white',
-        minWidth: '240px',
         boxShadow: '0 4px 12px rgba(0,0,0,0.1)', // Consistent shadow
         ...cardStyle,
       }}
@@ -97,7 +95,6 @@ const TinyLineChart: React.FC<TinyLineChartProps> = ({
           </div>
         </Space>
       </Space>
-      <DebugOverlay fileName="TinyLineChart.tsx" componentName="TinyLineChart" />
     </Card>
   );
 };
