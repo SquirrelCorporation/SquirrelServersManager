@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import { history } from '@umijs/max';
 import WelcomeHeaderSection from '../WelcomeHeaderSection';
 import FeaturedAppCard from '../FeaturedAppCard';
 import { DashboardItem } from '../../Core/DashboardWidget.types';
@@ -17,7 +18,7 @@ export const specialWidgets: DashboardItem[] = [
     component: (
       <WelcomeHeaderSection
         buttonText="Go now"
-        onButtonClick={() => console.log('Button clicked')}
+        onButtonClick={() => history.push('/manage/devices')}
         illustrationUrl="/assets/images/dashboard/welcome/welcome.png"
       />
     ),

@@ -4,7 +4,8 @@
  */
 
 import React from 'react';
-import { Row, Col, Card, Space } from 'antd';
+import { Row, Col, Card, Space, Empty, Button } from 'antd';
+import { PlusOutlined, EditOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 import DraggableItem from './DraggableItem';
 import { DashboardItem, sizeToColSpan } from './types';
 import { useDebugData } from './DebugDataProvider';
@@ -16,6 +17,7 @@ interface DashboardGridProps {
   moveItem: (dragIndex: number, hoverIndex: number) => void;
   handleWidgetSettings: (widgetId: string) => void;
   removeItem: (itemId: string) => void;
+  onAddWidget?: () => void;
 }
 
 const DashboardGrid: React.FC<DashboardGridProps> = ({
@@ -24,6 +26,7 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
   moveItem,
   handleWidgetSettings,
   removeItem,
+  onAddWidget,
 }) => {
   const { getDebugData } = useDebugData();
   
@@ -48,17 +51,52 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
   if (items.length === 0) {
     return (
       <div style={{ 
-        textAlign: 'center', 
-        padding: '100px 0', 
-        color: 'rgba(0, 0, 0, 0.45)',
-        background: isEditMode ? 'rgba(0, 0, 0, 0.02)' : 'transparent',
-        borderRadius: '4px'
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '400px',
+        padding: '60px 0'
       }}>
-        <p>
-          {isEditMode 
-            ? 'No widgets added yet. Click "Add Widget" to customize your dashboard.'
-            : 'No widgets added yet. Switch to Edit Mode to customize your dashboard.'}
-        </p>
+        <Empty
+          image={<AppstoreAddOutlined style={{ fontSize: 72, color: 'rgba(255, 255, 255, 0.25)' }} />}
+          imageStyle={{
+            height: 80,
+            marginBottom: 16
+          }}
+          description={
+            <div style={{ color: 'rgba(255, 255, 255, 0.65)' }}>
+              <h3 style={{ 
+                color: 'rgba(255, 255, 255, 0.85)', 
+                fontWeight: 500,
+                fontSize: '18px',
+                marginBottom: '8px'
+              }}>
+                No widgets added yet
+              </h3>
+              <p style={{ marginBottom: '24px', fontSize: '14px' }}>
+                {isEditMode 
+                  ? 'Start customizing your dashboard by adding widgets'
+                  : 'Switch to Edit Mode to customize your dashboard'}
+              </p>
+            </div>
+          }
+        >
+          {isEditMode && (
+            <Button 
+              type="primary" 
+              icon={<PlusOutlined />}
+              size="large"
+              onClick={onAddWidget}
+              style={{
+                height: '40px',
+                paddingLeft: '24px',
+                paddingRight: '24px'
+              }}
+            >
+              Add Widget
+            </Button>
+          )}
+        </Empty>
       </div>
     );
   }

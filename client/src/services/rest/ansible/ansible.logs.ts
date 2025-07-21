@@ -7,7 +7,7 @@ export async function getTasksLogs(
   params?: API.PageParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.Tasks>(`${API_URL}/tasks`, {
+  return request<API.Response<API.Task[]>>(`${API_URL}/tasks`, {
     method: 'GET',
     params: {
       ...params,
@@ -21,7 +21,7 @@ export async function getTaskEventsLogs(
   params?: API.PageParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.Tasks>(`${API_URL}/tasks/${id}/logs`, {
+  return request<API.Response<API.TaskEvent[]>>(`${API_URL}/tasks/${id}/logs`, {
     method: 'GET',
     params: {
       ...params,

@@ -4,7 +4,6 @@ import TaskLogsColumns from '@/pages/Admin/Logs/TaskLogsColumns';
 import { getServerLogs } from '@/services/rest/logs/logs';
 import { getTasksLogs } from '@/services/rest/ansible/ansible.logs';
 import {
-  UnorderedListOutlined,
   FileTextOutlined,
   RobotOutlined,
 } from '@ant-design/icons';
@@ -103,15 +102,6 @@ const Index: React.FC = () => {
 
   return (
     <StyledTabContainer
-      header={{
-        title: (
-          <Title.MainTitle
-            title={'Logs'}
-            backgroundColor={TitleColors.LOGS}
-            icon={<UnorderedListOutlined />}
-          />
-        ),
-      }}
       tabItems={logsTabItems}
     />
   );

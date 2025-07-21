@@ -396,7 +396,7 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({
           {isEditMode ? (
             <Card 
               title={
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                   {isEditingTitle ? (
                     <Input
                       value={tempTitle}
@@ -424,12 +424,14 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({
                       {pageTitle}
                     </Typography.Title>
                   )}
-                  <Switch
-                    checkedChildren={<EditOutlined />}
-                    unCheckedChildren={<EyeOutlined />}
-                    checked={isEditMode}
-                    onChange={setIsEditMode}
-                  />
+                  <div style={{ marginLeft: 'auto', marginRight: 24 }}>
+                    <Switch
+                      checkedChildren={<EditOutlined />}
+                      unCheckedChildren={<EyeOutlined />}
+                      checked={isEditMode}
+                      onChange={setIsEditMode}
+                    />
+                  </div>
                 </div>
               }
               extra={
@@ -464,6 +466,7 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({
                 moveItem={moveItem}
                 handleWidgetSettings={handleWidgetSettings}
                 removeItem={removeItem}
+                onAddWidget={() => setDrawerVisible(true)}
               />
             </Card>
           ) : (
@@ -485,6 +488,7 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({
                 moveItem={moveItem}
                 handleWidgetSettings={handleWidgetSettings}
                 removeItem={removeItem}
+                onAddWidget={() => setDrawerVisible(true)}
               />
             </>
           )}

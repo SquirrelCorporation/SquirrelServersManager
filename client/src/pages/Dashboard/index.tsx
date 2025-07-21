@@ -4,7 +4,7 @@ import {
   LayoutOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
-import { message } from 'antd';
+import { message, Spin } from 'antd';
 import dashboardService from '@/services/rest/dashboard.service';
 import type { Dashboard, DashboardPage } from '@/services/rest/dashboard.service';
 
@@ -83,6 +83,13 @@ const Index: React.FC = () => {
     }
   }, [dashboard]);
 
+  // If dashboard has no pages, create one
+  useEffect(() => {
+    if (dashboard && dashboard.pages.length === 0) {
+      handleAddPage();
+    }
+  }, [dashboard, handleAddPage]);
+
   const tabItems = [
     // Add customizable dashboard pages
     ...(dashboard?.pages || []).map((page, index) => ({
@@ -121,10 +128,27 @@ const Index: React.FC = () => {
     },
   ];
 
+  // Don't render until dashboard is loaded
+  if (loading || !dashboard) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh' 
+      }}>
+        <Spin size="large" tip="Loading dashboard..." />
+      </div>
+    );
+  }
+
+  // Determine the active key
+  const activeKey = initialActiveKey || dashboard?.pages?.[0]?.id || '';
+
   return (
     <StyledTabContainer
       tabItems={tabItems}
-      defaultActiveKey={initialActiveKey || (dashboard?.pages?.[0]?.id || '')}
+      defaultActiveKey={activeKey}
       onTabClick={(key) => {
         if (key === 'add-page') {
           handleAddPage();

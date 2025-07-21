@@ -292,6 +292,7 @@ const StyledTabContainer: React.FC<StyledTabContainerProps> = ({
   });
   const [activeKey, setActiveKey] = useState<string>('');
   const [hasInitialized, setHasInitialized] = useState(false);
+  const [visitedTabs, setVisitedTabs] = useState<Set<string>>(new Set());
 
   const effectiveTabPosition = screens.md ? 'left' : 'top';
   
@@ -352,6 +353,7 @@ const StyledTabContainer: React.FC<StyledTabContainerProps> = ({
     // Don't change active tab for special tabs like 'add-page'
     if (key !== 'add-page') {
       setActiveKey(key);
+      setVisitedTabs(prev => new Set([...prev, key]));
       history.replace(`#${key}`);
     }
   };
@@ -370,6 +372,7 @@ const StyledTabContainer: React.FC<StyledTabContainerProps> = ({
     if (hash && isValidTab) {
       // Hash exists and is valid - use it
       setActiveKey(hash);
+      setVisitedTabs(prev => new Set([...prev, hash]));
       setHasInitialized(true);
     } else if (hash && !isValidTab && !hasInitialized) {
       // Hash exists but tab not found yet - could be loading
@@ -379,10 +382,16 @@ const StyledTabContainer: React.FC<StyledTabContainerProps> = ({
       // No hash or invalid hash on first load
       if (defaultActiveKey && tabItems.some((item) => item.key === defaultActiveKey)) {
         setActiveKey(defaultActiveKey);
+        setVisitedTabs(prev => new Set([...prev, defaultActiveKey]));
         history.replace(`#${defaultActiveKey}`);
-      } else if (tabItems[0]?.key) {
-        setActiveKey(tabItems[0].key as string);
-        history.replace(`#${tabItems[0].key}`);
+      } else {
+        // Find the first non-special tab (not 'add-page')
+        const firstValidTab = tabItems.find(item => item.key !== 'add-page');
+        if (firstValidTab?.key) {
+          setActiveKey(firstValidTab.key as string);
+          setVisitedTabs(prev => new Set([...prev, firstValidTab.key as string]));
+          history.replace(`#${firstValidTab.key}`);
+        }
       }
       setHasInitialized(true);
     }
@@ -429,7 +438,21 @@ const StyledTabContainer: React.FC<StyledTabContainerProps> = ({
         
         <ContentPanel>
           {header && <Header><h2>{header.title}</h2></Header>}
-          {activeTabContent}
+          {processedTabItems.map((item) => {
+            // Only render if it's the active tab or has been visited before
+            const shouldRender = activeKey === item.key || visitedTabs.has(item.key);
+            
+            if (!shouldRender) return null;
+            
+            return (
+              <div
+                key={item.key}
+                style={{ display: activeKey === item.key ? 'block' : 'none' }}
+              >
+                {item.content}
+              </div>
+            );
+          })}
         </ContentPanel>
       </TabsContainer>
     </ConfigProvider>

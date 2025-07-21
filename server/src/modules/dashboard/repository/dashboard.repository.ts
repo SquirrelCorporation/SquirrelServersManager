@@ -61,10 +61,67 @@ export class DashboardRepository {
       pages: [
         {
           id: 'default-page',
-          name: 'Main',
+          name: 'Dashboard Overview',
           order: 0,
           isDefault: true,
-          widgets: []
+          widgets: [
+            {
+              id: 'welcome-header-widget',
+              widgetType: 'welcome-header',
+              title: 'Welcome Header',
+              size: 'medium-large',
+              position: 0,
+              settings: {}
+            },
+            {
+              id: 'tips-widget',
+              widgetType: 'tips-of-the-day',
+              title: 'Tips of the day',
+              size: 'small-medium',
+              position: 1,
+              settings: {}
+            },
+            {
+              id: 'performance-widget',
+              widgetType: 'SystemPerformanceCard',
+              title: 'System Performance',
+              size: 'small',
+              position: 2,
+              settings: {}
+            },
+            {
+              id: 'availability-widget',
+              widgetType: 'AvailabilityCard',
+              title: 'System Availability',
+              size: 'small',
+              position: 3,
+              settings: {}
+            },
+            {
+              id: 'containers-widget',
+              widgetType: 'ContainersCard',
+              title: 'Containers Status',
+              size: 'small',
+              position: 4,
+              settings: {}
+            },
+            {
+              id: 'power-widget',
+              widgetType: 'CombinedPowerCard',
+              title: 'Combined Power',
+              size: 'small',
+              position: 5,
+              settings: {}
+            },
+            {
+              id: 'main-chart-widget',
+              widgetType: 'MainChartCard',
+              title: 'Historical Analytics',
+              size: 'large',
+              position: 6,
+              settings: {}
+            }
+          ]
         }
       ]
     };
