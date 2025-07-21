@@ -1,23 +1,160 @@
-import MainChartCard from '@/pages/Dashboard/Components/MainChartCard';
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  DashboardOutlined,
+  LayoutOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
+import { message, Spin } from 'antd';
+import dashboardService from '@/services/rest/dashboard.service';
+import type { Dashboard, DashboardPage } from '@/services/rest/dashboard.service';
+
+// Layout Components
+import StyledTabContainer, {
+  IconWrapper,
+  TabLabel,
+} from '@/components/Layout/StyledTabContainer';
+
+// Existing Dashboard Components
+import TimeSeriesLineChart from '@/pages/Dashboard/Components/TimeSeriesLineChart';
 import DashboardTop from '@/pages/Dashboard/Components/DashboardTop';
-import { PageContainer } from '@ant-design/pro-components';
-import React from 'react';
 import { useSlot } from '@/plugins/contexts/plugin-context';
+
+
+// Customizable Dashboard Engine
+import DashboardLayoutEngine from '@/pages/Dashboard/Components/DashboardLayoutEngine';
+import { createDashboardItems } from '@/pages/Dashboard/Components/DashboardItemsFactory';
+
 
 const Index: React.FC = () => {
   // Get the dashboard widgets slot renderer
   const DashboardWidgetsSlot = useSlot('dashboard-widgets');
+  // Create available dashboard items for the customizable dashboard
+  const availableDashboardItems = createDashboardItems();
+  
+  const [dashboard, setDashboard] = useState<Dashboard | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+  // Capture the initial hash immediately
+  const [initialActiveKey] = useState<string>(() => {
+    const hash = window.location.hash.replace('#', '');
+    return hash || '';
+  });
+
+  // Load dashboard on mount
+  useEffect(() => {
+    loadDashboard();
+  }, [refreshKey]);
+
+  const loadDashboard = async () => {
+    try {
+      setLoading(true);
+      const currentDashboard = await dashboardService.getCurrentDashboard();
+      setDashboard(currentDashboard);
+    } catch (error) {
+      console.error('Failed to load dashboard:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddPage = useCallback(async () => {
+    if (!dashboard) return;
+    
+    try {
+      const newPageName = `Dashboard ${dashboard.pages.length + 1}`;
+      const newPage: DashboardPage = {
+        id: `page-${Date.now()}`,
+        name: newPageName,
+        order: dashboard.pages.length,
+        widgets: [],
+      };
+      
+      const updatedDashboard = await dashboardService.update(dashboard._id!, {
+        pages: [...dashboard.pages, newPage],
+      });
+      
+      setDashboard(updatedDashboard);
+      message.success(`Created new page: ${newPageName}`);
+      // Force refresh to update tabs
+      setRefreshKey(prev => prev + 1);
+    } catch (error) {
+      console.error('Failed to add page:', error);
+      message.error('Failed to create new page');
+    }
+  }, [dashboard]);
+
+  // If dashboard has no pages, create one
+  useEffect(() => {
+    if (dashboard && dashboard.pages.length === 0) {
+      handleAddPage();
+    }
+  }, [dashboard, handleAddPage]);
+
+  const tabItems = [
+    // Add customizable dashboard pages
+    ...(dashboard?.pages || []).map((page, index) => ({
+      key: page.id,
+      label: (
+        <TabLabel>
+          <IconWrapper $bgColor="#722ed1">
+            <LayoutOutlined />
+          </IconWrapper>
+          <span>{page.name}</span>
+        </TabLabel>
+      ),
+      children: (
+        <DashboardLayoutEngine 
+          key={page.id}
+          availableItems={availableDashboardItems}
+          pageId={page.id}
+          onDeletePage={() => setRefreshKey(prev => prev + 1)}
+          onDashboardUpdate={(updatedDashboard) => setDashboard(updatedDashboard)}
+          isFirstPage={index === 0}
+        />
+      ),
+    })),
+    // Add Page button
+    {
+      key: 'add-page',
+      label: (
+        <TabLabel>
+          <IconWrapper $bgColor="#52c41a">
+            <PlusOutlined />
+          </IconWrapper>
+          <span>Add Page</span>
+        </TabLabel>
+      ),
+      children: null,
+    },
+  ];
+
+  // Don't render until dashboard is loaded
+  if (loading || !dashboard) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh' 
+      }}>
+        <Spin size="large" tip="Loading dashboard..." />
+      </div>
+    );
+  }
+
+  // Determine the active key
+  const activeKey = initialActiveKey || dashboard?.pages?.[0]?.id || '';
 
   return (
-    <PageContainer header={{ title: undefined }}>
-      <DashboardTop />
-      <MainChartCard />
-
-      {/* Render plugin dashboard widgets */}
-      <div style={{ marginTop: '24px' }}>
-        <DashboardWidgetsSlot />
-      </div>
-    </PageContainer>
+    <StyledTabContainer
+      tabItems={tabItems}
+      defaultActiveKey={activeKey}
+      onTabClick={(key) => {
+        if (key === 'add-page') {
+          handleAddPage();
+        }
+      }}
+    />
   );
 };
 

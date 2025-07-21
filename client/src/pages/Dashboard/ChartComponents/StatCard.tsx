@@ -1,9 +1,9 @@
 import { Skeleton, Typography } from 'antd';
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
-import styles from './ChartCard.less';
+import styles from './StatCard.less';
 
-type ChartCardProps = {
+type StatCardProps = {
   title: string | React.ReactNode;
   avatar?: React.ReactNode;
   action: React.ReactNode;
@@ -27,7 +27,7 @@ const renderTotal = (total: any) => {
   );
 };
 
-const ChartCard: React.FC<ChartCardProps> = ({
+const StatCard: React.FC<StatCardProps> = ({
   contentHeight,
   title,
   avatar,
@@ -82,4 +82,4 @@ const ChartCard: React.FC<ChartCardProps> = ({
   );
 };
 
-export default React.memo(ChartCard);
+export default React.memo(StatCard);

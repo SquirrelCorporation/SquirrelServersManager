@@ -139,30 +139,12 @@ const Settings: React.FC = () => {
           Plugins
         </TabLabel>
       ),
-      children: (
-        <div>
-          <Title.MainTitle
-            title="Plugins"
-            backgroundColor={TitleColors.SETTINGS}
-            icon={<AppstoreOutlined />}
-          />
-          <SettingsPanelsSlot />
-        </div>
-      ),
+      children: <SettingsPanelsSlot />,
     },
   ];
 
   return (
     <StyledTabContainer
-      header={{
-        title: (
-          <Title.MainTitle
-            title={'Settings'}
-            backgroundColor={TitleColors.SETTINGS}
-            icon={<SettingOutlined />}
-          />
-        ),
-      }}
       tabItems={settingsTabItems}
     />
   );

@@ -1,5 +1,6 @@
 import { getContainerStats } from '@/services/rest/containers/container-statistics';
-import { Line } from '@ant-design/charts';
+import ReactApexChart from 'react-apexcharts';
+import type { ApexOptions } from 'apexcharts';
 import moment from 'moment';
 import React, { useEffect } from 'react';
 import { API } from 'ssm-shared-lib';
@@ -48,43 +49,120 @@ const ContainerStatsDetail: React.FC<ContainerStatsDetailProps> = ({
     asyncFetch();
   }, []);
 
-  const config = {
-    animate: { enter: { type: 'waveIn' } },
-    legend: {
-      color: {
-        itemLabelFill: '#fff',
+  // Prepare data for ApexCharts
+  const chartData = data ? data.map(item => item.value).filter(v => !isNaN(v)) : [];
+  const categories = data ? data.map(item => item.date) : [];
+
+  const chartOptions: ApexOptions = {
+    chart: {
+      type: 'line',
+      toolbar: {
+        show: false
       },
+      zoom: {
+        enabled: false
+      },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800,
+        animateGradually: {
+          enabled: true,
+          delay: 150
+        },
+        dynamicAnimation: {
+          enabled: true,
+          speed: 350
+        }
+      },
+      background: 'transparent'
     },
-    axis: {
+    stroke: {
+      curve: 'smooth',
+      width: 3
+    },
+    colors: ['#52c41a'],
+    xaxis: {
+      categories: categories,
+      labels: {
+        show: false,
+        style: {
+          colors: '#fff'
+        }
+      },
+      axisBorder: {
+        show: false
+      },
+      axisTicks: {
+        show: false
+      }
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: '#fff',
+          fontSize: '11px'
+        },
+        formatter: (value) => `${value}%`
+      },
+      min: 0,
+      max: (max) => {
+        return Math.ceil(max / 10) * 10; // Round up to nearest 10
+      }
+    },
+    grid: {
+      borderColor: 'rgba(255, 255, 255, 0.1)',
+      strokeDashArray: 3,
+      xaxis: {
+        lines: {
+          show: false
+        }
+      },
+      yaxis: {
+        lines: {
+          show: true
+        }
+      },
+      padding: {
+        left: 20,
+        right: 10,
+        top: 10,
+        bottom: 10
+      }
+    },
+    tooltip: {
+      theme: 'dark',
       x: {
-        labelFill: '#fff',
-        label: false,
+        show: true
       },
       y: {
-        labelFill: '#fff',
-        labelFormatter: (v: string) => `${v}%`,
-      },
+        formatter: (value) => `${value}%`
+      }
     },
-    data: data,
-    autoFit: false,
-    theme: {
-      view: {
-        viewFill: 'transparent',
-      },
+    legend: {
+      show: false
     },
-    width: 280,
-    height: 150,
-    shapeField: 'smooth',
-    xField: 'date',
-    yField: 'value',
-    scale: {
-      y: { nice: true },
-    },
-    tooltip: { channel: 'y', valueFormatter: (d: string) => `${d}%` },
-    paddingLeft: 20,
+    dataLabels: {
+      enabled: false
+    }
   };
-  // @ts-ignore
-  return <Line {...config} />;
+
+  const series = [{
+    name: type === 'cpu' ? 'CPU Usage' : 'Memory Usage',
+    data: chartData
+  }];
+
+  return (
+    <div style={{ width: '280px', height: '150px' }}>
+      <ReactApexChart
+        options={chartOptions}
+        series={series}
+        type="line"
+        height={150}
+        width={280}
+      />
+    </div>
+  );
 };
 
 export default ContainerStatsDetail;

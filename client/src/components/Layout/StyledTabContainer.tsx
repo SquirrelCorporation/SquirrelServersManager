@@ -1,137 +1,138 @@
 import { PageContainer } from '@ant-design/pro-components';
-import { ConfigProvider, TabsProps, theme, Tooltip, Grid } from 'antd';
-import React, { useEffect } from 'react';
+import { ConfigProvider, TabsProps, theme, Tooltip, Grid, Button, Tabs } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { history, useLocation } from '@umijs/max';
 import styled from 'styled-components';
 
-const StyledPageContainer = styled(PageContainer)<{
-  $tabPosition: 'left' | 'top';
-}>`
-  .ant-pro-page-container-tabs {
-    background: rgba(30, 30, 30, 0.7);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
-    margin: 16px;
-    padding: ${(props) => (props.$tabPosition === 'left' ? '16px 0' : '0')};
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    min-height: 80vh;
-    display: flex;
-    flex-direction: ${(props) =>
-      props.$tabPosition === 'left' ? 'row' : 'column'};
+// Main container for the tabs and content
+const TabsContainer = styled.div`
+  background: rgba(30, 30, 30, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  margin: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-height: 80vh;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
 
-    @media (max-width: 768px) {
-      margin: 8px;
-      min-height: calc(100vh - 16px);
-      border-radius: 12px;
-      flex-direction: column;
-      padding: 16px 0 0 0;
-    }
-  }
-
-  .ant-tabs-nav {
-    background: rgba(45, 45, 45, 0.5);
+  @media (max-width: 768px) {
+    margin: 8px;
+    min-height: calc(100vh - 16px);
     border-radius: 12px;
-    margin: 0 16px !important;
-    padding: 8px;
-    min-width: 220px !important;
-
-    @media (max-width: 1200px) {
-      min-width: 200px !important;
-    }
-    @media (max-width: 992px) {
-      min-width: 180px !important;
-    }
-
-    @media (max-width: 768px) {
-      min-width: 140px !important;
-      margin: 0 8px !important;
-      padding: 4px;
-    }
-
-    @media (max-width: 480px) {
-      min-width: 50px !important;
-
-      .ant-tabs-tab-btn {
-        padding: 0;
-      }
-    }
-  }
-
-  .ant-tabs-tab {
-    margin: 2px 0 !important;
-    padding: 8px 12px !important;
-    border-radius: 8px !important;
-    transition: all 0.3s ease;
-    color: rgba(255, 255, 255, 0.85);
-    width: calc(100% - 16px) !important;
-    margin-left: 8px !important;
-    margin-right: 8px !important;
-
-    &:hover {
-      background: rgba(60, 60, 60, 0.5);
-    }
-
-    @media (max-width: 768px) {
-      padding: 6px 10px !important;
-    }
-
-    @media (max-width: 480px) {
-      padding: 6px !important;
-      width: calc(100% - 8px) !important;
-      margin-left: 4px !important;
-      margin-right: 4px !important;
-    }
-  }
-
-  .ant-tabs-tab-active {
-    background: rgba(60, 60, 60, 0.8) !important;
-  }
-
-  .ant-tabs-content-holder {
-    padding: 24px;
-    flex-grow: 1;
-
-    @media (max-width: 768px) {
-      padding: 16px;
-    }
-
-    @media (max-width: 480px) {
-      padding: 8px;
-    }
-  }
-
-  .ant-pro-page-container-tabs .ant-tabs-nav::before {
-    display: none;
-  }
-
-  @media (max-width: 480px) {
-    .ant-pro-table {
-      .ant-table {
-        font-size: 12px;
-      }
-
-      .ant-pro-table-search {
-        padding: 16px 8px !important;
-
-        .ant-form-item {
-          margin-bottom: 12px;
-        }
-      }
-    }
+    flex-direction: column;
   }
 `;
 
-export const TabLabel = styled.div`
+// Left navigation panel that can be collapsed
+const NavPanel = styled.div<{ $isCompact: boolean }>`
+  background: rgba(45, 45, 45, 0.5);
+  border-radius: 12px;
+  margin: 16px;
+  padding: 8px;
+  width: ${props => props.$isCompact ? '60px' : '220px'};
+  min-width: ${props => props.$isCompact ? '60px' : '220px'};
+  position: relative;
+  transition: width 0.3s ease, min-width 0.3s ease;
+
+  @media (max-width: 1200px) {
+    width: ${props => props.$isCompact ? '60px' : '200px'};
+    min-width: ${props => props.$isCompact ? '60px' : '200px'};
+  }
+  
+  @media (max-width: 992px) {
+    width: ${props => props.$isCompact ? '60px' : '180px'};
+    min-width: ${props => props.$isCompact ? '60px' : '180px'};
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    min-width: auto;
+    margin: 8px 8px 0;
+    padding: 4px;
+    display: flex;
+    justify-content: center;
+  }
+`;
+
+// Content area that expands to fill available space
+const ContentPanel = styled.div`
+  flex: 1;
+  padding: 24px;
+  overflow: auto;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 8px;
+  }
+`;
+
+// Styled tab
+const StyledTab = styled.div<{ $active: boolean; $isCompact: boolean }>`
+  margin: 2px 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  color: rgba(255, 255, 255, 0.85);
+  width: calc(100% - 16px);
+  margin-left: 8px;
+  margin-right: 8px;
+  cursor: pointer;
+  background: ${props => props.$active ? 'rgba(60, 60, 60, 0.8)' : 'transparent'};
+  
+  &:hover {
+    background: ${props => props.$active ? 'rgba(60, 60, 60, 0.8)' : 'rgba(60, 60, 60, 0.5)'};
+  }
+
+  ${props => props.$isCompact && `
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    padding: 8px 0;
+    margin: 4px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `}
+
+  @media (max-width: 768px) {
+    padding: 6px 10px;
+    margin: 2px 4px;
+    display: inline-block;
+    width: auto;
+  }
+`;
+
+export const TabLabel = styled.div<{ $isCompact: boolean }>`
   display: flex;
   align-items: center;
   font-size: 14px;
   font-weight: 500;
   gap: 8px;
   width: 100%;
-  transition: gap 0.3s ease;
+  transition: all 0.3s ease;
+  
+  ${props => props.$isCompact && `
+    justify-content: center;
+    
+    span {
+      display: none;
+      width: 0;
+      overflow: hidden;
+    }
+    
+    div[class*="IconWrapper"] {
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+  `}
+  
   @media (max-width: 1200px) {
     font-size: 13px;
-    gap: 8px;
   }
   @media (max-width: 992px) {
     font-size: 12px;
@@ -148,9 +149,12 @@ export const IconWrapper = styled.div<{ $bgColor: string }>`
   height: 28px;
   border-radius: 6px;
   background: ${(props) => props.$bgColor};
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  visibility: visible !important;
+  opacity: 1 !important;
 
   .anticon,
   svg {
@@ -159,6 +163,9 @@ export const IconWrapper = styled.div<{ $bgColor: string }>`
     height: 16px;
     color: white;
     fill: white;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
   @media (max-width: 1200px) {
@@ -193,26 +200,109 @@ export const IconWrapper = styled.div<{ $bgColor: string }>`
   }
 `;
 
+const ExpandCollapseBar = styled.div<{ $isCompact: boolean }>`
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: max(10%, 50px);
+    max-height: 80px;
+    background: transparent;
+    transition: background 0.3s ease;
+    border-radius: 2px;
+  }
+  
+  &::after {
+    content: '${props => props.$isCompact ? '>' : '<'}';
+    color: rgba(255, 255, 255, 0);
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+  
+  &:hover {
+    &::before {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    &::after {
+      color: rgba(255, 255, 255, 0.85);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const Header = styled.div`
+  padding: 16px 16px 0;
+  
+  h2 {
+    margin: 0;
+    color: #fff;
+    font-size: 18px;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 12px 12px 0;
+    
+    h2 {
+      font-size: 16px;
+    }
+  }
+`;
+
 interface StyledTabContainerProps {
-  header: {
+  header?: {
     title: React.ReactNode;
   };
   tabItems: TabsProps['items'];
   defaultActiveKey?: string;
+  onTabClick?: (key: string) => void;
 }
 
 const StyledTabContainer: React.FC<StyledTabContainerProps> = ({
   header,
   tabItems,
   defaultActiveKey,
+  onTabClick,
 }) => {
   const location = useLocation();
   const { darkAlgorithm } = theme;
   const screens = Grid.useBreakpoint();
+  const [isCompact, setIsCompact] = useState(() => {
+    // Initialize from localStorage if available
+    const savedState = localStorage.getItem('dashboardNavCompact');
+    return savedState === 'true';
+  });
+  const [activeKey, setActiveKey] = useState<string>('');
+  const [hasInitialized, setHasInitialized] = useState(false);
+  const [visitedTabs, setVisitedTabs] = useState<Set<string>>(new Set());
 
   const effectiveTabPosition = screens.md ? 'left' : 'top';
+  
+  // Save compact state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('dashboardNavCompact', isCompact.toString());
+  }, [isCompact]);
 
-  const wrappedTabItems = tabItems?.map((item) => {
+  // Extract icons and text from tab items
+  const processedTabItems = tabItems?.map((item) => {
     let tooltipTitle = '';
     let originalIcon: React.ReactNode = null;
     let originalText: string | null = null;
@@ -248,69 +338,123 @@ const StyledTabContainer: React.FC<StyledTabContainerProps> = ({
       originalText = item.label;
     }
 
-    if (effectiveTabPosition === 'top') {
-      tooltipTitle = originalText || item.key || '';
-    }
-
-    const newLabel = (
-      <TabLabel>
-        {originalIcon}
-        {screens.md && originalText && <span>{originalText}</span>}
-      </TabLabel>
-    );
-
     return {
-      ...item,
-      label: (
-        <Tooltip title={tooltipTitle} placement="bottom">
-          {newLabel}
-        </Tooltip>
-      ),
+      key: item.key || '',
+      icon: originalIcon,
+      text: originalText || '',
+      content: item.children
     };
-  });
+  }) || [];
 
   const handleTabChange = (key: string) => {
-    history.replace(`#${key}`);
+    if (onTabClick) {
+      onTabClick(key);
+    }
+    // Don't change active tab for special tabs like 'add-page'
+    if (key !== 'add-page') {
+      setActiveKey(key);
+      setVisitedTabs(prev => new Set([...prev, key]));
+      history.replace(`#${key}`);
+    }
   };
 
+  // Initialize active key from URL hash or default
   useEffect(() => {
-    const hash = location.hash.replace('#', '');
-    const isValidTab = tabItems?.some((item) => item.key === hash);
+    // Skip if we haven't received any tabs yet
+    if (!tabItems || tabItems.length === 0) return;
 
-    if (hash && !isValidTab) {
-      history.replace(location.pathname);
+    const hash = location.hash.replace('#', '');
+    const isValidTab = tabItems.some((item) => item.key === hash);
+
+    // If we already initialized and the hash matches current active key, do nothing
+    if (hasInitialized && hash === activeKey) return;
+
+    if (hash && isValidTab) {
+      // Hash exists and is valid - use it
+      setActiveKey(hash);
+      setVisitedTabs(prev => new Set([...prev, hash]));
+      setHasInitialized(true);
+    } else if (hash && !isValidTab && !hasInitialized) {
+      // Hash exists but tab not found yet - could be loading
+      // Wait for the tab to appear, don't redirect yet
       return;
+    } else if (!hasInitialized) {
+      // No hash or invalid hash on first load
+      if (defaultActiveKey && tabItems.some((item) => item.key === defaultActiveKey)) {
+        setActiveKey(defaultActiveKey);
+        setVisitedTabs(prev => new Set([...prev, defaultActiveKey]));
+        history.replace(`#${defaultActiveKey}`);
+      } else {
+        // Find the first non-special tab (not 'add-page')
+        const firstValidTab = tabItems.find(item => item.key !== 'add-page');
+        if (firstValidTab?.key) {
+          setActiveKey(firstValidTab.key as string);
+          setVisitedTabs(prev => new Set([...prev, firstValidTab.key as string]));
+          history.replace(`#${firstValidTab.key}`);
+        }
+      }
+      setHasInitialized(true);
     }
-  }, [location.pathname, location.hash, tabItems]);
+  }, [location.hash, defaultActiveKey, tabItems, hasInitialized, activeKey]);
+
+  // Find the active tab content
+  const activeTabContent = processedTabItems.find(
+    (item) => item.key === activeKey
+  )?.content || null;
 
   return (
     <ConfigProvider
       theme={{
         algorithm: darkAlgorithm,
-        components: {
-          Tabs: {
-            itemSelectedColor: '#fff',
-            itemHoverColor: 'rgba(255, 255, 255, 0.85)',
-            inkBarColor: 'transparent',
-          },
-        },
       }}
     >
-      <StyledPageContainer
-        $tabPosition={effectiveTabPosition}
-        header={header}
-        tabList={wrappedTabItems}
-        tabProps={{
-          tabPosition: effectiveTabPosition,
-        }}
-        onTabChange={handleTabChange}
-        tabActiveKey={
-          location.hash.replace('#', '') ||
-          defaultActiveKey ||
-          tabItems?.[0]?.key ||
-          ''
-        }
-      />
+      <TabsContainer>
+        <NavPanel $isCompact={isCompact && !!screens.md}>
+          <ExpandCollapseBar 
+            $isCompact={isCompact && !!screens.md}
+            onClick={() => setIsCompact(!isCompact)}
+            title={isCompact ? 'Expand menu' : 'Collapse menu'}
+          />
+          
+          {processedTabItems.map((item) => (
+            <Tooltip
+              title={effectiveTabPosition === 'top' || (isCompact && screens.md) ? item.text : ''}
+              placement="right"
+              key={item.key}
+            >
+              <StyledTab
+                $active={activeKey === item.key}
+                $isCompact={isCompact && !!screens.md}
+                onClick={() => handleTabChange(item.key)}
+              >
+                <TabLabel $isCompact={isCompact && !!screens.md}>
+                  {item.icon}
+                  {<span>{item.text}</span>}
+                </TabLabel>
+              </StyledTab>
+            </Tooltip>
+          ))}
+        </NavPanel>
+        
+        <ContentPanel>
+          {header && <Header><h2>{header.title}</h2></Header>}
+          {processedTabItems.map((item) => {
+            // Only render if it's the active tab or has been visited before
+            const shouldRender = activeKey === item.key || visitedTabs.has(item.key);
+            
+            if (!shouldRender) return null;
+            
+            return (
+              <div
+                key={item.key}
+                style={{ display: activeKey === item.key ? 'block' : 'none' }}
+              >
+                {item.content}
+              </div>
+            );
+          })}
+        </ContentPanel>
+      </TabsContainer>
     </ConfigProvider>
   );
 };

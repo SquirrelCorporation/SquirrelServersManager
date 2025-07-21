@@ -1,0 +1,37 @@
+/* Dashboard Layout Engine Styles */
+
+/* Context Menu Styling */
+.dashboard-widget-context-menu {
+  background-color: #1a1a1a !important;
+  border: 1px solid #333 !important;
+}
+
+.dashboard-widget-context-menu .ant-dropdown-menu-item {
+  color: #ffffff !important;
+}
+
+.dashboard-widget-context-menu .ant-dropdown-menu-item:hover {
+  background-color: #2a2a2a !important;
+}
+
+.dashboard-widget-context-menu .ant-dropdown-menu-item-danger {
+  color: #ff4d4f !important;
+}
+
+.dashboard-widget-context-menu .ant-dropdown-menu-item-danger:hover {
+  background-color: rgba(255, 77, 79, 0.1) !important;
+}
+
+/* Widget hover effects */
+.dashboard-widget-wrapper {
+  transition: all 0.2s ease;
+}
+
+.dashboard-widget-wrapper:hover {
+  box-shadow: 0 0 0 1px rgba(24, 144, 255, 0.2);
+}
+
+/* Settings drawer styles */
+.ant-drawer-content-wrapper .ant-form-item-label > label {
+  font-weight: 500;
+}

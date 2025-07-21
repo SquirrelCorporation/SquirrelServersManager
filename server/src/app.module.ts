@@ -32,6 +32,7 @@ import { ShellModule } from './modules/shell/shell.module';
 import { SmartFailureModule } from './modules/smart-failure/smart-failure.module';
 import { UpdateModule } from './modules/update/update.module';
 import { UsersModule } from './modules/users/users.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { SshInfrastructureModule } from './infrastructure/ssh/ssh-infrastructure.module';
 import { HealthModule } from './modules/health/health.module';
 import { StatisticsModule } from './modules/statistics/statistics.module';
@@ -45,6 +46,7 @@ import { BootstrapModule } from './core/bootstrap/bootstrap.module';
 import { DatabaseConnectionException } from './infrastructure/exceptions/app-exceptions';
 import { SystemService } from './infrastructure/system/system.service';
 import { McpModule } from './modules/mcp/mcp.module';
+import { RSSModule } from './core/rss/rss.module';
 
 // Store the connection for legacy code to access
 let sharedConnection: mongoose.Connection | null = null;
@@ -243,6 +245,7 @@ let connectionReady = false;
     ContainerStacksModule,
     ContainersModule,
     DevicesModule,
+    DashboardModule,
     UpdateModule,
     DiagnosticModule,
     ShellModule,
@@ -265,6 +268,7 @@ let connectionReady = false;
     RemoteSystemInformationModule,
     McpModule.registerAsync(),
     BootstrapModule,
+    RSSModule,
   ],
   providers: [SystemService],
 })

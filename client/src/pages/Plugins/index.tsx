@@ -59,15 +59,6 @@ const PluginsPage: React.FC = () => {
 
   return (
     <StyledTabContainer
-      header={{
-        title: (
-          <Title.MainTitle
-            title="Plugins"
-            backgroundColor={TitleColors.SETTINGS}
-            icon={<AppstoreAddOutlined />}
-          />
-        ),
-      }}
       tabItems={tabItems}
       defaultActiveKey="installed"
     />

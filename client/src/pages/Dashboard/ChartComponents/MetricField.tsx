@@ -1,12 +1,12 @@
 import React from 'react';
-import styles from './Field.less';
+import styles from './MetricField.less';
 
-interface FieldProps extends React.HTMLAttributes<HTMLDivElement> {
+interface MetricFieldProps extends React.HTMLAttributes<HTMLDivElement> {
   label: React.ReactNode;
   value: React.ReactNode;
 }
 
-const Field: React.FC<FieldProps> = ({ label, value, ...rest }) => {
+const MetricField: React.FC<MetricFieldProps> = ({ label, value, ...rest }) => {
   return (
     <div className={styles.field} {...rest}>
       <span className={styles.label}>{label}</span>
@@ -15,4 +15,4 @@ const Field: React.FC<FieldProps> = ({ label, value, ...rest }) => {
   );
 };
 
-export default React.memo(Field);
+export default React.memo(MetricField);
