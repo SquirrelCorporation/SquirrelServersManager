@@ -18,9 +18,6 @@ export const toursLegend = [
   { name: 'Available', value: '66 items', color: '#3a3a3e' },
 ];
 
-export const gradientChartData = Array.from({ length: 10 }, () =>
-  Math.floor(Math.random() * 50 + 10),
-);
 
 export const visitsPieData = [
   { type: 'Category A', value: 43.8, color: '#52c41a' },

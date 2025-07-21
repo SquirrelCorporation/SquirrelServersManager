@@ -34,6 +34,11 @@ const Index: React.FC = () => {
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
   const [loading, setLoading] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  // Capture the initial hash immediately
+  const [initialActiveKey] = useState<string>(() => {
+    const hash = window.location.hash.replace('#', '');
+    return hash || '';
+  });
 
   // Load dashboard on mount
   useEffect(() => {
@@ -79,29 +84,8 @@ const Index: React.FC = () => {
   }, [dashboard]);
 
   const tabItems = [
-    {
-      key: 'main',
-      label: (
-        <TabLabel>
-          <IconWrapper $bgColor="#1890ff">
-            <DashboardOutlined />
-          </IconWrapper>
-          <span>Main Dashboard</span>
-        </TabLabel>
-      ),
-      children: (
-        <>
-          <DashboardTop />
-          <TimeSeriesLineChart />
-          {/* Render plugin dashboard widgets */}
-          <div style={{ marginTop: '24px' }}>
-            <DashboardWidgetsSlot />
-          </div>
-        </>
-      ),
-    },
     // Add customizable dashboard pages
-    ...(dashboard?.pages || []).map((page) => ({
+    ...(dashboard?.pages || []).map((page, index) => ({
       key: page.id,
       label: (
         <TabLabel>
@@ -118,6 +102,7 @@ const Index: React.FC = () => {
           pageId={page.id}
           onDeletePage={() => setRefreshKey(prev => prev + 1)}
           onDashboardUpdate={(updatedDashboard) => setDashboard(updatedDashboard)}
+          isFirstPage={index === 0}
         />
       ),
     })),
@@ -139,7 +124,7 @@ const Index: React.FC = () => {
   return (
     <StyledTabContainer
       tabItems={tabItems}
-      defaultActiveKey="main"
+      defaultActiveKey={initialActiveKey || (dashboard?.pages?.[0]?.id || '')}
       onTabClick={(key) => {
         if (key === 'add-page') {
           handleAddPage();

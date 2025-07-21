@@ -6,6 +6,7 @@ import {
 } from '@ant-design/icons';
 import ReactApexChart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
+import { WIDGET_TYPOGRAPHY, WIDGET_CARD, WIDGET_COLORS } from '../constants/widgetStyles';
 import { 
   getDashboardDevicesStats, 
   getDeviceStat,
@@ -373,7 +374,7 @@ const CompactStatCard: React.FC<CompactStatCardProps> = ({
   const displayTrendValue = legacyTrendValue ? parseFloat(legacyTrendValue) : apiTrendValue;
   const displayTrendDirection = legacyTrendDirection || apiTrendDirection;
   const displayTrendDescription = legacyTrendDescription || 'last week';
-  const displayTrendColor = legacyTrendColor || (displayTrendDirection === 'up' ? '#52c41a' : '#ff4d4f');
+  const displayTrendColor = legacyTrendColor || (displayTrendDirection === 'up' ? WIDGET_COLORS.trend.up : WIDGET_COLORS.trend.down);
 
   const formatValue = (value: number) => {
     if (metric === 'containers') {
@@ -457,20 +458,16 @@ const CompactStatCard: React.FC<CompactStatCardProps> = ({
   return (
     <Card
       style={{
-        backgroundColor: '#1a1a1a',
-        borderRadius: '16px',
-        color: 'white',
-        border: 'none',
-        position: 'relative',
+        ...WIDGET_CARD.base,
         ...cardStyle,
       }}
-      bodyStyle={{ padding: '20px 24px' }}
+      bodyStyle={WIDGET_CARD.compactBodyStyle}
       loading={loading}
     >
       <DemoOverlay show={isUsingMockData} />
     
       <Space direction="vertical" size={10} style={{ width: '100%' }}>
-        <Typography.Text style={{ color: '#8c8c8c', fontSize: '13px' }}>
+        <Typography.Text style={WIDGET_TYPOGRAPHY.title}>
           {title}
         </Typography.Text>
         <Space
@@ -480,12 +477,7 @@ const CompactStatCard: React.FC<CompactStatCardProps> = ({
         >
           <Typography.Title
             level={2}
-            style={{
-              color: '#f0f0f0',
-              margin: 0,
-              fontSize: '30px',
-              fontWeight: '600',
-            }}
+            style={WIDGET_TYPOGRAPHY.compactValue}
           >
             {formatValue(displayValue)}
           </Typography.Title>
@@ -526,7 +518,7 @@ const CompactStatCard: React.FC<CompactStatCardProps> = ({
             suffix="%"
           />
           <Typography.Text
-            style={{ color: '#8c8c8c', fontSize: '13px', marginLeft: '4px' }}
+            style={{ ...WIDGET_TYPOGRAPHY.muted, marginLeft: '4px' }}
           >
             {displayTrendDescription}
           </Typography.Text>

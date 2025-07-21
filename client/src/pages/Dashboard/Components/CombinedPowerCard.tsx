@@ -1,164 +1,127 @@
-import Devicestatus from '@/utils/devicestatus';
 import { InfoCircleFilled } from '@ant-design/icons';
+import { useModel } from '@umijs/max';
+import { Tooltip, Typography, Card, Skeleton, Space } from 'antd';
+import React, { useState, useMemo } from 'react';
+import { API } from 'ssm-shared-lib';
 import ReactApexChart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
-import { useModel } from '@umijs/max';
-import { Tooltip, Typography, Card, Skeleton } from 'antd';
-import React, { useMemo, useState } from 'react';
-import { API } from 'ssm-shared-lib';
+import Devicestatus from '@/utils/devicestatus';
+import { getPaletteColors, getSemanticColors } from './utils/colorPalettes';
 
-const CombinedPowerCard: React.FC = () => {
+interface CombinedPowerCardProps {
+  colorPalette?: string;
+  customColors?: string[];
+}
+
+const CombinedPowerCard: React.FC<CombinedPowerCardProps> = ({
+  colorPalette = 'default',
+  customColors = [],
+}) => {
   const [loading] = useState(false);
   const { initialState } = useModel('@@initialState');
   const { currentUser }: { currentUser: API.CurrentUser } = initialState || {};
 
-  // Prepare data for ApexCharts
-  const chartData = useMemo(() => {
+  const totalCpu = currentUser?.devices?.totalCpu || 0;
+  const totalMem = currentUser?.devices?.totalMem || 0;
+  const totalMemGB = totalMem / (1024 * 1024 * 1024);
+
+  // Calculate CPU and Memory distribution for pie charts
+  const { cpuSeries, cpuLabels, memSeries, memLabels } = useMemo(() => {
     const devices = currentUser?.devices?.overview?.filter((e) => e.status !== Devicestatus.UNMANAGED) || [];
     
-    // Calculate percentages for each device
-    const cpuData = devices.map((device, index) => {
-      const percentage = ((device.cpu || 0) / (currentUser?.devices?.totalCpu || 1)) * 100;
-      return percentage;
-    });
-    
-    const memData = devices.map((device, index) => {
-      const memGb = (device.mem || 0) / (1024 * 1024 * 1024);
-      const totalMemGb = (currentUser?.devices?.totalMem || 0) / (1024 * 1024 * 1024);
-      const percentage = (memGb / (totalMemGb || 1)) * 100;
-      return percentage;
-    });
-    
-    // Create series for each device
-    const series = devices.map((device, index) => ({
-      name: device.name || `Device ${index + 1}`,
-      data: [cpuData[index], memData[index]]
-    }));
-    
-    return series;
+    const cpuData = devices.map(device => ({
+      name: device.name || 'Unknown',
+      value: device.cpu || 0
+    })).filter(d => d.value > 0);
+
+    const memData = devices.map(device => ({
+      name: device.name || 'Unknown',
+      value: (device.mem || 0) / (1024 * 1024 * 1024) // Convert to GB
+    })).filter(d => d.value > 0);
+
+    return {
+      cpuSeries: cpuData.map(d => d.value),
+      cpuLabels: cpuData.map(d => d.name),
+      memSeries: memData.map(d => d.value),
+      memLabels: memData.map(d => d.name)
+    };
   }, [currentUser]);
 
-  const chartOptions: ApexOptions = useMemo(() => ({
+  // Get colors from palette
+  const colors = useMemo(() => {
+    return customColors && customColors.length > 0 ? customColors : getPaletteColors(colorPalette);
+  }, [colorPalette, customColors]);
+
+  // Get semantic colors from palette
+  const semanticColors = useMemo(() => {
+    return getSemanticColors(colorPalette);
+  }, [colorPalette]);
+
+  const pieChartOptions = (labels: string[], chartId: string): ApexOptions => ({
     chart: {
-      type: 'bar',
+      id: chartId,
+      type: 'donut',
+      width: 60,
       height: 60,
-      stacked: true,
-      stackType: '100%',
-      toolbar: {
-        show: false
-      },
-      background: 'transparent',
-      animations: {
-        enabled: false
-      },
       sparkline: {
         enabled: true
-      }
-    },
-    plotOptions: {
-      bar: {
-        horizontal: true,
-        barHeight: '100%',
-        distributed: false
-      }
-    },
-    colors: [
-      '#52c41a',
-      '#faad14',
-      '#1890ff',
-      '#722ed1',
-      '#fa8c16',
-      '#13c2c2',
-      '#eb2f96',
-      '#a0d911',
-      '#fa541c',
-      '#2f54eb'
-    ],
-    xaxis: {
-      categories: ['CPU', 'Memory'],
-      labels: {
-        show: false
       },
-      axisBorder: {
-        show: false
-      },
-      axisTicks: {
-        show: false
+      animations: {
+        enabled: false
       }
     },
-    yaxis: {
-      show: false
-    },
-    grid: {
-      show: false,
-      padding: {
-        top: -10,
-        right: 0,
-        bottom: -10,
-        left: 0
-      }
-    },
+    colors: colors,
+    labels: labels,
     legend: {
       show: false
     },
     dataLabels: {
       enabled: false
     },
-    tooltip: {
-      theme: 'dark',
-      shared: true,
-      intersect: false,
-      y: {
-        formatter: (value: number) => `${value.toFixed(2)}%`
-      },
-      custom: function({ series, seriesIndex, dataPointIndex, w }) {
-        const category = w.globals.labels[dataPointIndex];
-        let tooltipHtml = `
-          <div style="padding: 12px; background: #1a1a1a; border: 1px solid #3a3a3e; border-radius: 4px;">
-            <div style="color: #d9d9d9; font-size: 14px; margin-bottom: 8px;">${category}</div>`;
-        
-        series.forEach((s: number[], sIndex: number) => {
-          const value = s[dataPointIndex];
-          const seriesName = w.globals.seriesNames[sIndex];
-          const color = w.globals.colors[sIndex];
-          
-          if (value > 0) {
-            tooltipHtml += `
-              <div style="display: flex; align-items: center; margin-bottom: 4px;">
-                <div style="width: 8px; height: 8px; background: ${color}; border-radius: 50%; margin-right: 8px;"></div>
-                <span style="color: #8c8c8c; margin-right: 8px;">${seriesName}:</span>
-                <span style="color: #d9d9d9;">${value.toFixed(2)}%</span>
-              </div>`;
-          }
-        });
-        
-        tooltipHtml += '</div>';
-        return tooltipHtml;
-      }
-    },
-    fill: {
-      opacity: 0.8,
-      type: 'gradient',
-      gradient: {
-        shade: 'dark',
-        type: 'vertical',
-        shadeIntensity: 0.5,
-        gradientToColors: undefined,
-        inverseColors: false,
-        opacityFrom: 0.4,
-        opacityTo: 0.2,
-        stops: [0, 100]
-      }
-    },
-    states: {
-      hover: {
-        filter: {
-          type: 'lighten',
-          value: 0.05
+    plotOptions: {
+      pie: {
+        donut: {
+          size: '70%',
+          background: 'transparent'
         }
       }
+    },
+    stroke: {
+      width: 1,
+      colors: ['#1a1a1a']
+    },
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
+      fillSeriesColor: false,
+      y: {
+        formatter: (value: number) => {
+          return value.toFixed(1);
+        }
+      },
+      style: {
+        fontSize: '12px'
+      },
+      custom: function({ series, seriesIndex, w }) {
+        const value = series[seriesIndex];
+        const label = w.config.labels[seriesIndex];
+        const color = w.config.colors[seriesIndex];
+        const total = series.reduce((a: number, b: number) => a + b, 0);
+        const percentage = ((value / total) * 100).toFixed(1);
+        
+        return `
+          <div style="padding: 8px; background: #1a1a1a; border: 1px solid #3a3a3e; border-radius: 4px;">
+            <div style="display: flex; align-items: center; margin-bottom: 4px;">
+              <div style="width: 10px; height: 10px; background: ${color}; border-radius: 2px; margin-right: 6px;"></div>
+              <span style="color: #d9d9d9; font-size: 12px;">${label}</span>
+            </div>
+            <div style="color: #ffffff; font-size: 12px; font-weight: 500;">
+              ${value.toFixed(1)} ${w.config.chart?.id === 'cpu-chart' ? 'GHz' : 'GB'} (${percentage}%)
+            </div>
+          </div>`;
+      }
     }
-  }), []);
+  });
 
   if (loading) {
     return (
@@ -167,7 +130,7 @@ const CombinedPowerCard: React.FC = () => {
           backgroundColor: '#1a1a1a',
           borderRadius: '16px',
           border: 'none',
-          minHeight: '180px',
+          height: '180px',
         }}
         bodyStyle={{ padding: '20px' }}
       >
@@ -183,53 +146,73 @@ const CombinedPowerCard: React.FC = () => {
         borderRadius: '16px',
         color: 'white',
         border: 'none',
-        minHeight: '180px',
+        height: '180px',
       }}
       bodyStyle={{ padding: '20px' }}
     >
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <Typography.Title level={5} style={{ color: '#ffffff', margin: 0, fontSize: '16px', fontWeight: 600 }}>
           Combined Power
         </Typography.Title>
-        <Tooltip title="Sum of all your devices">
+        <Tooltip title="Distribution of resources across your devices">
           <InfoCircleFilled style={{ color: '#8c8c8c', fontSize: '14px' }} />
         </Tooltip>
       </div>
 
-      {/* Total Resources - Compact */}
-      <div style={{ marginBottom: '12px' }}>
-        <div>
-          <Typography.Text style={{ color: '#52c41a', fontSize: '20px', fontWeight: 600 }}>
-            {currentUser?.devices?.totalCpu?.toFixed(1)} GHz
-          </Typography.Text>
-          <Typography.Text style={{ color: '#8c8c8c', fontSize: '14px', margin: '0 6px' }}>
-            /
-          </Typography.Text>
-          <Typography.Text style={{ color: '#52c41a', fontSize: '20px', fontWeight: 600 }}>
-            {(currentUser?.devices?.totalMem ? currentUser?.devices?.totalMem / (1024 * 1024 * 1024) : 0)?.toFixed(0)} GB
-          </Typography.Text>
+      {/* Combined Stats with Pie Charts */}
+      <div>
+        {/* Values Row */}
+        <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'baseline', marginBottom: '12px' }}>
+          {/* CPU */}
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+            <Typography.Text style={{ color: semanticColors.primary, fontSize: '24px', fontWeight: 600 }}>
+              {totalCpu.toFixed(1)}
+            </Typography.Text>
+            <Typography.Text style={{ color: semanticColors.primary, fontSize: '14px' }}>
+              GHz
+            </Typography.Text>
+          </div>
+
+          {/* Memory */}
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+            <Typography.Text style={{ color: semanticColors.secondary, fontSize: '24px', fontWeight: 600 }}>
+              {totalMemGB.toFixed(0)}
+            </Typography.Text>
+            <Typography.Text style={{ color: semanticColors.secondary, fontSize: '14px' }}>
+              GB
+            </Typography.Text>
+          </div>
         </div>
-      </div>
 
-      {/* Device Count */}
-      <div style={{ marginBottom: '12px' }}>
-        <Typography.Text style={{ color: '#8c8c8c', fontSize: '12px' }}>
-          Of
-        </Typography.Text>
-        <Typography.Text style={{ color: '#ffffff', fontSize: '14px', fontWeight: 500, marginLeft: '6px' }}>
-          {currentUser?.devices?.overview?.length} devices
-        </Typography.Text>
-      </div>
+        {/* Pie Charts Row */}
+        <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+          {/* CPU Pie */}
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            {cpuSeries.length > 0 && (
+              <ReactApexChart
+                options={pieChartOptions(cpuLabels, 'cpu-chart')}
+                series={cpuSeries}
+                type="donut"
+                width={60}
+                height={60}
+              />
+            )}
+          </div>
 
-      {/* Bar Chart - Smaller */}
-      <div style={{ marginTop: '12px' }}>
-        <ReactApexChart
-          options={chartOptions}
-          series={chartData}
-          type="bar"
-          height={60}
-        />
+          {/* Memory Pie */}
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            {memSeries.length > 0 && (
+              <ReactApexChart
+                options={pieChartOptions(memLabels, 'mem-chart')}
+                series={memSeries}
+                type="donut"
+                width={60}
+                height={60}
+              />
+            )}
+          </div>
+        </div>
       </div>
     </Card>
   );

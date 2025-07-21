@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { DashboardOutlined, ShoppingCartOutlined, CloseCircleOutlined, UserAddOutlined, ShoppingOutlined } from '@ant-design/icons';
-import SummaryStatCard from '../SummaryStatCard';
+import MetricCardWithMiniLineChart from '../MetricCardWithMiniLineChart';
 import CompactStatCard from '../CompactStatCard';
 import ProgressBarsCard from '../ProgressBarsCard';
 import { DashboardItem } from '../../Core/DashboardWidget.types';
@@ -15,23 +15,23 @@ import { bookingStatuses } from './widgetData';
 export const statisticsWidgets: DashboardItem[] = [
   {
     id: 'single-number-variation',
-    title: 'Summary Stat',
+    title: 'Metric Card With Mini Line Chart',
     size: 'small',
     settings: [
       { type: 'statistics', label: 'Statistics Configuration', defaultValue: {} },
-      { type: 'title', label: 'Widget Title', defaultValue: 'Summary Stat' },
+      { type: 'title', label: 'Widget Title', defaultValue: 'Metric Card With Mini Line Chart' },
     ],
     component: (
-      <SummaryStatCard
-        title="Summary Stat"
+      <MetricCardWithMiniLineChart
+        title="Metric Card With Mini Line Chart"
         defaultValue="0"
         defaultTrend="0"
         icon={<DashboardOutlined />}
       />
     ),
     componentFactory: (configuration: WidgetConfiguration) => (
-      <SummaryStatCard
-        title={configuration?.[WIDGET_FIELDS.TITLE] as string || "Summary Stat"}
+      <MetricCardWithMiniLineChart
+        title={configuration?.[WIDGET_FIELDS.TITLE] as string || "Metric Card With Mini Line Chart"}
         dataType={configuration?.[WIDGET_FIELDS.STATISTICS_TYPE] as string || WIDGET_DEFAULTS.DATA_TYPE}
         source={configuration?.[WIDGET_FIELDS.STATISTICS_SOURCE] || WIDGET_DEFAULTS.EMPTY_ARRAY}
         metric={configuration?.[WIDGET_FIELDS.STATISTICS_METRIC] as string || WIDGET_DEFAULTS.METRIC}
@@ -45,7 +45,7 @@ export const statisticsWidgets: DashboardItem[] = [
   },
   {
     id: 'compact-stat-card',
-    title: 'Metric Card With Trend',
+    title: 'Metric Card with Mini Histogram Chart',
     size: 'small',
     settings: [
       { type: 'statistics', label: 'Statistics Configuration', defaultValue: {} },

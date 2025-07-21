@@ -60,7 +60,8 @@ const WelcomeHeaderSection: React.FC<WelcomeHeaderSectionProps> = ({
         borderRadius: '16px',
         color: 'white',
         overflow: 'hidden',
-        minHeight: '200px',
+        height: '280px',
+        minHeight: '280px',
         ...style,
       }}
     >
@@ -77,19 +78,19 @@ const WelcomeHeaderSection: React.FC<WelcomeHeaderSectionProps> = ({
       >
         <div style={{ 
           width: '36px', 
-          height: '100px', 
+          height: '140px', 
           backgroundColor: 'rgba(126, 211, 170, 0.3)', 
           borderRadius: '6px 6px 0 0' 
         }} />
         <div style={{ 
           width: '36px', 
-          height: '70px', 
+          height: '100px', 
           backgroundColor: 'rgba(126, 211, 170, 0.4)', 
           borderRadius: '6px 6px 0 0' 
         }} />
         <div style={{ 
           width: '36px', 
-          height: '85px', 
+          height: '120px', 
           backgroundColor: 'rgba(126, 211, 170, 0.35)', 
           borderRadius: '6px 6px 0 0' 
         }} />
@@ -152,7 +153,7 @@ const WelcomeHeaderSection: React.FC<WelcomeHeaderSectionProps> = ({
           position: 'absolute',
           right: '20px',
           bottom: '0',
-          height: '180px',
+          height: '240px',
           objectFit: 'contain',
           zIndex: 3,
         }}

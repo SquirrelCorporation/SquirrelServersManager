@@ -27,9 +27,6 @@ const WidgetGallery: React.FC<WidgetGalleryProps> = ({ availableItems, onAddWidg
     
     // Charts that can be medium or large
     'medium-graph': ['medium', 'two-thirds', 'large'],  // LineChart can be 2, 3, or 4 columns
-    'pie-chart': ['medium', 'large'],
-    'area-chart': ['medium', 'large'],
-    'line-gradient': ['medium', 'large'],
     'website-visits': ['medium', 'large'],
     'progress-bars': ['medium', 'large'],
     
@@ -146,8 +143,8 @@ const WidgetGallery: React.FC<WidgetGalleryProps> = ({ availableItems, onAddWidg
     const chartIds = [
       'single-number-variation', 'medium-graph', 
       'percentage', 'ring-progress', 'compact-stat-card',
-      'pie-chart', 'website-visits', 'progress-bars',
-      'total-downloads', 'area-chart', 'line-gradient'
+      'website-visits', 'progress-bars',
+      'total-downloads'
     ];
     // Exclude preset IDs from monitoring category
     const presetIds = ['SystemPerformanceCard', 'AvailabilityCard', 'ContainersCard', 'CombinedPowerCard', 'MainChartCard'];

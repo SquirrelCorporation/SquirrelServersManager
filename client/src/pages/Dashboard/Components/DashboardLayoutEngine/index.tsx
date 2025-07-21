@@ -25,13 +25,15 @@ interface DashboardLayoutEngineProps {
   pageId?: string;
   onDeletePage?: () => void;
   onDashboardUpdate?: (dashboard: Dashboard) => void;
+  isFirstPage?: boolean;
 }
 
 const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({ 
   availableItems, 
   pageId: propPageId,
   onDeletePage,
-  onDashboardUpdate 
+  onDashboardUpdate,
+  isFirstPage = false
 }) => {
   const [items, setItems] = useState<DashboardItem[]>([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -443,7 +445,7 @@ const DashboardLayoutEngine: React.FC<DashboardLayoutEngineProps> = ({
                     danger 
                     icon={<DeleteOutlined />}
                     onClick={handleDeletePage}
-                    disabled={!propPageId} // Disable delete for default dashboard
+                    disabled={isFirstPage} // Disable delete for first page
                   >
                     Delete Page
                   </Button>

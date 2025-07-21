@@ -9,8 +9,17 @@ import { Tooltip, Typography, Card, Skeleton } from 'antd';
 import moment from 'moment';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { API, SsmStatus } from 'ssm-shared-lib';
+import { getSemanticColors } from './utils/colorPalettes';
 
-const ContainersCard: React.FC = () => {
+interface ContainersCardProps {
+  colorPalette?: string;
+  customColors?: string[];
+}
+
+const ContainersCard: React.FC<ContainersCardProps> = ({
+  colorPalette = 'default',
+  customColors = [],
+}) => {
   const [loading, setLoading] = useState(false);
   const [nbRunning, setNbRunning] = useState<number>(0);
   const [nbTotal, setNbTotal] = useState<number>(0);
@@ -80,6 +89,11 @@ const ContainersCard: React.FC = () => {
     ];
   }, [stats]);
 
+  // Get semantic colors from palette
+  const semanticColors = useMemo(() => {
+    return getSemanticColors(colorPalette);
+  }, [colorPalette]);
+
   const chartOptions: ApexOptions = useMemo(() => ({
     chart: {
       type: 'area',
@@ -108,7 +122,7 @@ const ContainersCard: React.FC = () => {
         stops: [0, 100]
       }
     },
-    colors: ['#52c41a', '#faad14'],
+    colors: [semanticColors.primary, semanticColors.secondary],
     xaxis: {
       type: 'datetime',
       labels: {
@@ -148,7 +162,7 @@ const ContainersCard: React.FC = () => {
     dataLabels: {
       enabled: false
     }
-  }), []);
+  }), [semanticColors]);
 
   if (loading) {
     return (
@@ -157,7 +171,7 @@ const ContainersCard: React.FC = () => {
           backgroundColor: '#1a1a1a',
           borderRadius: '16px',
           border: 'none',
-          minHeight: '180px',
+          height: '180px',
         }}
         bodyStyle={{ padding: '20px' }}
       >
@@ -173,7 +187,7 @@ const ContainersCard: React.FC = () => {
         borderRadius: '16px',
         color: 'white',
         border: 'none',
-        minHeight: '180px',
+        height: '180px',
       }}
       bodyStyle={{ padding: '20px' }}
     >
@@ -188,21 +202,17 @@ const ContainersCard: React.FC = () => {
       </div>
 
       {/* Container Stats */}
-      <div style={{ marginBottom: '12px' }}>
-        <Typography.Text style={{ color: '#52c41a', fontSize: '28px', fontWeight: 600 }}>
+      <div style={{ marginBottom: '12px', display: 'flex', alignItems: 'baseline', flexWrap: 'wrap', gap: '4px' }}>
+        <Typography.Text style={{ color: semanticColors.positive, fontSize: '28px', fontWeight: 600 }}>
           {nbRunning}
         </Typography.Text>
-        <Typography.Text style={{ color: '#52c41a', fontSize: '14px', marginLeft: '8px' }}>
+        <Typography.Text style={{ color: semanticColors.positive, fontSize: '14px' }}>
           Running
         </Typography.Text>
-      </div>
-
-      {/* Total Containers */}
-      <div style={{ marginBottom: '12px' }}>
-        <Typography.Text style={{ color: '#8c8c8c', fontSize: '12px' }}>
-          Out of
+        <Typography.Text style={{ color: '#8c8c8c', fontSize: '12px', marginLeft: '8px' }}>
+          out of
         </Typography.Text>
-        <Typography.Text style={{ color: '#ffffff', fontSize: '14px', fontWeight: 500, marginLeft: '6px' }}>
+        <Typography.Text style={{ color: '#ffffff', fontSize: '14px', fontWeight: 500 }}>
           {nbTotal} total
         </Typography.Text>
       </div>

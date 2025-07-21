@@ -12,6 +12,7 @@ import { widgetLogger } from '@/utils/logger';
 import { getAllDevices } from '@/services/rest/devices/devices';
 import { getContainers } from '@/services/rest/containers/containers';
 import { API } from 'ssm-shared-lib';
+import message from '@/components/Message/DynamicMessage';
 import ColorPaletteSelector from '../ColorPaletteSelector';
 import { DashboardItem, WidgetSettings } from './types';
 import { WidgetConfiguration } from '../../Core/WidgetSettings.types';
@@ -79,6 +80,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
           onFinish={async (values) => {
             const widgetSettings = values.customSettings || {};
             onSave(selectedWidget.id, widgetSettings);
+            message.success({ content: 'Widget settings saved successfully' });
             onClose();
             return true;
           }}
@@ -155,8 +157,8 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
             formValues: values,
             processedSettings
           });
-          alert('Widget Settings Being Saved:\n' + JSON.stringify(processedSettings, null, 2));
           onSave(selectedWidget.id, processedSettings);
+          message.success({ content: 'Widget settings saved successfully' });
           onClose();
           return true;
         }}
@@ -529,29 +531,6 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
       open={visible}
       destroyOnClose={true}
     >
-      {/* Debug Overlay */}
-      {selectedWidget && (
-        <div style={{
-          background: '#1f1f1f',
-          border: '1px solid #ff0000',
-          borderRadius: 4,
-          padding: 12,
-          marginBottom: 16,
-          fontSize: 11,
-          fontFamily: 'monospace',
-          whiteSpace: 'pre-wrap',
-          wordBreak: 'break-all',
-          maxHeight: 200,
-          overflow: 'auto'
-        }}>
-          <div style={{ color: '#ff6b6b', marginBottom: 8, fontWeight: 'bold' }}>
-            🐛 DEBUG: Raw Widget Settings
-          </div>
-          <div style={{ color: '#40a9ff' }}>
-            {JSON.stringify(selectedWidget.widgetSettings, null, 2)}
-          </div>
-        </div>
-      )}
       {renderSettingsForm()}
     </Drawer>
   );

@@ -3,8 +3,17 @@ import { InfoCircleFilled, ArrowUpOutlined, ArrowDownOutlined } from '@ant-desig
 import { Tooltip, Typography, Card, Skeleton } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { API } from 'ssm-shared-lib';
+import { getSemanticColors } from './utils/colorPalettes';
 
-const SystemPerformanceCard: React.FC = () => {
+interface SystemPerformanceCardProps {
+  colorPalette?: string;
+  customColors?: string[];
+}
+
+const SystemPerformanceCard: React.FC<SystemPerformanceCardProps> = ({
+  colorPalette = 'default',
+  customColors = [],
+}) => {
   const [loading, setLoading] = useState(false);
   const [performancesStat, setPerformancesStat] = useState<API.PerformanceStat>(
     {
@@ -56,6 +65,11 @@ const SystemPerformanceCard: React.FC = () => {
     [performancesStat],
   );
 
+  // Get semantic colors from palette
+  const semanticColors = useMemo(() => {
+    return getSemanticColors(colorPalette);
+  }, [colorPalette]);
+
   if (loading) {
     return (
       <Card
@@ -63,7 +77,7 @@ const SystemPerformanceCard: React.FC = () => {
           backgroundColor: '#1a1a1a',
           borderRadius: '16px',
           border: 'none',
-          minHeight: '180px',
+          height: '180px',
         }}
         bodyStyle={{ padding: '20px' }}
       >
@@ -79,7 +93,7 @@ const SystemPerformanceCard: React.FC = () => {
         borderRadius: '16px',
         color: 'white',
         border: 'none',
-        minHeight: '180px',
+        height: '180px',
       }}
       bodyStyle={{ padding: '20px' }}
     >
@@ -95,7 +109,7 @@ const SystemPerformanceCard: React.FC = () => {
 
       {/* Performance Status */}
       <div style={{ marginBottom: '12px' }}>
-        <Typography.Text style={{ color: performancesStat?.danger ? '#ff4d4f' : '#52c41a', fontSize: '20px', fontWeight: 600 }}>
+        <Typography.Text style={{ color: performancesStat?.danger ? semanticColors.negative : semanticColors.positive, fontSize: '20px', fontWeight: 600 }}>
           {performancesStat?.message}
         </Typography.Text>
       </div>
@@ -117,9 +131,9 @@ const SystemPerformanceCard: React.FC = () => {
             CPU
           </Typography.Text>
           {cpuTrendFlag === 'up' ? (
-            <ArrowUpOutlined style={{ color: '#52c41a', fontSize: '12px' }} />
+            <ArrowUpOutlined style={{ color: semanticColors.positive, fontSize: '12px' }} />
           ) : (
-            <ArrowDownOutlined style={{ color: '#ff4d4f', fontSize: '12px' }} />
+            <ArrowDownOutlined style={{ color: semanticColors.negative, fontSize: '12px' }} />
           )}
           <Typography.Text style={{ color: '#ffffff', fontSize: '14px', fontWeight: 500 }}>
             {Math.abs(performancesStat?.previousCpu - performancesStat?.currentCpu).toFixed(1)}%
@@ -131,9 +145,9 @@ const SystemPerformanceCard: React.FC = () => {
             MEM
           </Typography.Text>
           {memTrendFlag === 'up' ? (
-            <ArrowUpOutlined style={{ color: '#52c41a', fontSize: '12px' }} />
+            <ArrowUpOutlined style={{ color: semanticColors.positive, fontSize: '12px' }} />
           ) : (
-            <ArrowDownOutlined style={{ color: '#ff4d4f', fontSize: '12px' }} />
+            <ArrowDownOutlined style={{ color: semanticColors.negative, fontSize: '12px' }} />
           )}
           <Typography.Text style={{ color: '#ffffff', fontSize: '14px', fontWeight: 500 }}>
             {Math.abs(performancesStat?.previousMem - performancesStat?.currentMem).toFixed(1)}%

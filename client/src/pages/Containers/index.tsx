@@ -96,15 +96,6 @@ const Index: React.FC = () => {
 
   return (
     <StyledTabContainer
-      header={{
-        title: (
-          <Title.MainTitle
-            title={'Containers'}
-            backgroundColor={TitleColors.PLAYBOOKS}
-            icon={<AppstoreOutlined />}
-          />
-        ),
-      }}
       tabItems={items}
     />
   );

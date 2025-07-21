@@ -22,10 +22,19 @@ import {
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { API, StatsType } from 'ssm-shared-lib';
 import styles from '../Analysis.less';
+import { getPaletteColors } from './utils/colorPalettes';
 
 const { RangePicker } = DatePicker;
 
-const TimeSeriesLineChart: React.FC = () => {
+interface TimeSeriesLineChartProps {
+  colorPalette?: string;
+  customColors?: string[];
+}
+
+const TimeSeriesLineChart: React.FC<TimeSeriesLineChartProps> = ({
+  colorPalette = 'default',
+  customColors = [],
+}) => {
   const { initialState } = useModel('@@initialState');
   const { currentUser }: { currentUser?: API.CurrentUser } = initialState || {};
 
@@ -46,6 +55,15 @@ const TimeSeriesLineChart: React.FC = () => {
       ?.filter((e) => e.status !== Devicestatus.UNMANAGED)
       .map((e) => e.uuid) || [],
   );
+  
+  // Create a mapping of UUID to device name for display purposes
+  const deviceNameMap = useMemo(() => {
+    const map = new Map<string, string>();
+    currentUser?.devices?.overview?.forEach((device) => {
+      map.set(device.uuid, device.name || device.uuid);
+    });
+    return map;
+  }, [currentUser?.devices?.overview]);
   const [type, setType] = useState<StatsType.DeviceStatsType>(
     StatsType.DeviceStatsType.CPU,
   );
@@ -98,18 +116,31 @@ const TimeSeriesLineChart: React.FC = () => {
             }),
           ]);
           console.log(deviceStats.data);
+          // Transform averaged data to use device names instead of UUIDs
+          const transformedAveragedData = averagedDeviceStats.data?.map(item => {
+            let deviceName = item.name || 'Unknown';
+            // If the name looks like a UUID, try to get the actual name from our mapping
+            if (deviceName.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+              deviceName = deviceNameMap.get(deviceName) || deviceName;
+            }
+            return {
+              ...item,
+              name: deviceName
+            };
+          });
+          
           switch (type) {
             case StatsType.DeviceStatsType.CPU:
               setGraphData(deviceStats.data);
-              setTopTenData(averagedDeviceStats.data);
+              setTopTenData(transformedAveragedData);
               break;
             case StatsType.DeviceStatsType.MEM_USED:
               setGraphMemData(deviceStats.data);
-              setTopTenData(averagedDeviceStats.data);
+              setTopTenData(transformedAveragedData);
               break;
             case StatsType.DeviceStatsType.DISK_USED:
               setGraphStorageData(deviceStats.data);
-              setTopTenData(averagedDeviceStats.data);
+              setTopTenData(transformedAveragedData);
               break;
           }
         }
@@ -121,19 +152,27 @@ const TimeSeriesLineChart: React.FC = () => {
     };
 
     fetchData();
-  }, [devices, type, rangePickerValue]); // Direct dependencies in useEffect
+  }, [devices, type, rangePickerValue, deviceNameMap]); // Direct dependencies in useEffect
 
   // Prepare data for ApexCharts
   const prepareChartData = useCallback((data: API.DeviceStat[] | undefined) => {
     if (!data || data.length === 0) return { series: [], categories: [] };
     
-    // Group data by device name
-    const deviceMap = new Map<string, { x: string; y: number }[]>();
+    // Group data by device name and collect all unique timestamps
+    const deviceMap = new Map<string, Map<number, number>>();
+    const allTimestamps = new Set<number>();
     
     data.forEach((item) => {
-      const deviceName = item.name || 'Unknown';
+      // Use the device name from the item, or try to map from UUID if needed
+      let deviceName = item.name || 'Unknown';
+      
+      // If the name looks like a UUID, try to get the actual name from our mapping
+      if (deviceName.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+        deviceName = deviceNameMap.get(deviceName) || deviceName;
+      }
+      
       if (!deviceMap.has(deviceName)) {
-        deviceMap.set(deviceName, []);
+        deviceMap.set(deviceName, new Map());
       }
       
       // Parse the date string
@@ -143,20 +182,31 @@ const TimeSeriesLineChart: React.FC = () => {
         dateStr = `${parts[0]}-${parts[1]}-${parts[2]}T${parts[3]}`;
       }
       
-      deviceMap.get(deviceName)!.push({
-        x: new Date(dateStr).getTime(),
-        y: parseFloat(item.value.toFixed(2))
-      });
+      const timestamp = new Date(dateStr).getTime();
+      allTimestamps.add(timestamp);
+      
+      deviceMap.get(deviceName)!.set(timestamp, parseFloat(item.value.toFixed(2)));
     });
     
-    // Convert to ApexCharts series format
-    const series = Array.from(deviceMap.entries()).map(([name, data]) => ({
+    // Sort timestamps
+    const sortedTimestamps = Array.from(allTimestamps).sort((a, b) => a - b);
+    
+    // Convert to ApexCharts series format with aligned data points
+    const series = Array.from(deviceMap.entries()).map(([name, dataMap]) => ({
       name,
-      data: data.sort((a, b) => a.x - b.x)
+      data: sortedTimestamps.map(timestamp => ({
+        x: timestamp,
+        y: dataMap.get(timestamp) ?? null
+      }))
     }));
     
     return { series };
-  }, []);
+  }, [deviceNameMap]);
+
+  // Get colors from palette
+  const colors = useMemo(() => {
+    return customColors && customColors.length > 0 ? customColors : getPaletteColors(colorPalette);
+  }, [colorPalette, customColors]);
 
   const getChartOptions = useCallback((): ApexOptions => ({
     chart: {
@@ -172,7 +222,17 @@ const TimeSeriesLineChart: React.FC = () => {
     },
     stroke: {
       curve: 'smooth',
-      width: 2
+      width: 2,
+      lineCap: 'round'
+    },
+    fill: {
+      opacity: 1
+    },
+    markers: {
+      size: 0,
+      hover: {
+        size: 5
+      }
     },
     xaxis: {
       type: 'datetime',
@@ -229,17 +289,26 @@ const TimeSeriesLineChart: React.FC = () => {
     },
     tooltip: {
       theme: 'dark',
+      enabled: true,
       shared: true,
       intersect: false,
+      followCursor: true,
       x: {
+        show: true,
         format: 'dd MMM yyyy HH:mm'
       },
       y: {
-        formatter: (value: number) => `${value.toFixed(2)}%`
+        formatter: (value: number) => value ? `${value.toFixed(2)}%` : '0%'
+      },
+      marker: {
+        show: true
+      },
+      fixed: {
+        enabled: false
       }
     },
-    colors: ['#1890ff', '#52c41a', '#faad14', '#f5222d', '#722ed1', '#13c2c2']
-  }), []);
+    colors: colors
+  }), [colors]);
 
   const cpuChartData = useMemo(() => prepareChartData(graphData), [graphData, prepareChartData]);
   const memChartData = useMemo(() => prepareChartData(graphMemData), [graphMemData, prepareChartData]);

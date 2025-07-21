@@ -119,15 +119,6 @@ const Automations: React.FC = () => {
       }}
     >
       <StyledTabContainer
-        header={{
-          title: (
-            <Title.MainTitle
-              title={'Automations'}
-              backgroundColor={TitleColors.CRONS}
-              icon={<InteractionOutlined />}
-            />
-          ),
-        }}
         tabItems={automationsTabItems}
       />
     </ConfigProvider>

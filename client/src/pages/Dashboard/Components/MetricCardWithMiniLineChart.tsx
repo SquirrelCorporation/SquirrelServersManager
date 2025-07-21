@@ -3,6 +3,7 @@ import { Card, Typography, Space } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import ReactApexChart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
+import { WIDGET_TYPOGRAPHY, WIDGET_CARD, WIDGET_COLORS } from '../constants/widgetStyles';
 import { 
   getDashboardDevicesStats, 
   getDeviceStat,
@@ -833,25 +834,21 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
   });
 
   const trendIcon = trendDirection === 'up' ? <ArrowUpOutlined /> : <ArrowDownOutlined />;
-  const trendColor = trendDirection === 'up' ? '#52c41a' : '#ff4d4f';
+  const trendColor = trendDirection === 'up' ? WIDGET_COLORS.trend.up : WIDGET_COLORS.trend.down;
 
   return (
     <Card
       style={{
-        backgroundColor: '#1a1a1a',
-        borderRadius: '16px',
-        color: 'white',
-        border: 'none',
-        position: 'relative',
+        ...WIDGET_CARD.base,
         ...cardStyle,
       }}
-      bodyStyle={{ padding: '24px' }}
+      bodyStyle={WIDGET_CARD.bodyStyle}
       loading={loading}
     >
       <DemoOverlay show={isUsingMockData} />
     
       <Space direction="vertical" size={16} style={{ width: '100%' }}>
-        <Typography.Text style={{ color: '#b8bac3', fontSize: '14px', fontWeight: 400 }}>
+        <Typography.Text style={WIDGET_TYPOGRAPHY.title}>
           {title}
         </Typography.Text>
         
@@ -862,13 +859,7 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
           <Space direction="vertical" size={8}>
             <Typography.Title
               level={2}
-              style={{
-                color: '#ffffff',
-                margin: 0,
-                fontSize: '36px',
-                fontWeight: '500',
-                lineHeight: 1,
-              }}
+              style={WIDGET_TYPOGRAPHY.mainValue}
             >
               {formatValue(currentValue)}
             </Typography.Title>
@@ -876,15 +867,14 @@ const SummaryStatCard: React.FC<SummaryStatCardProps> = ({
               {trendIcon}
               <Typography.Text
                 style={{ 
-                  color: trendColor, 
-                  fontSize: '14px',
-                  fontWeight: 500,
+                  ...WIDGET_TYPOGRAPHY.trendValue,
+                  color: trendColor,
                 }}
               >
                 {trendValue.toFixed(1)}%
               </Typography.Text>
               <Typography.Text
-                style={{ color: '#7a7d87', fontSize: '14px' }}
+                style={WIDGET_TYPOGRAPHY.description}
               >
                 last week
               </Typography.Text>

@@ -15,6 +15,7 @@ import { getAllDevices } from '@/services/rest/devices/devices';
 import { getContainers as getAllContainers } from '@/services/rest/containers/containers';
 import { API, StatsType } from 'ssm-shared-lib';
 import moment from 'moment';
+import { getPaletteColors, getSemanticColors } from './utils/colorPalettes';
 
 interface CircularProgressChartProps {
   title: string;
@@ -63,7 +64,17 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
 
   // Determine if we're looking at all items or specific ones (memoized to prevent infinite loops)
   const { isAllSelected, sourceIds } = useMemo(() => {
-    const isAll = Array.isArray(source) ? source.includes('all') : source === 'all';
+    console.log('📊 CircularProgressChart source prop:', { 
+      component: 'CircularProgressChart',
+      title,
+      source,
+      sourceType: Array.isArray(source) ? 'array' : typeof source,
+      sourceValue: source,
+      timestamp: new Date().toISOString()
+    });
+    
+    // Handle empty array as 'all'
+    const isAll = Array.isArray(source) ? (source.length === 0 || source.includes('all')) : source === 'all';
     let ids: string[] = [];
     
     if (Array.isArray(source)) {
@@ -72,47 +83,70 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
       ids = [source];
     }
     
+    console.log('📊 CircularProgressChart parsed source:', { 
+      component: 'CircularProgressChart',
+      title,
+      isAllSelected: isAll,
+      sourceIds: ids,
+      sourceIdsLength: ids.length,
+      timestamp: new Date().toISOString()
+    });
+    
     return { isAllSelected: isAll, sourceIds: ids };
-  }, [source]);
+  }, [source, title]);
 
-  // Progress color palette logic
+  // Get semantic colors from palette
+  const semanticColors = useMemo(() => {
+    return getSemanticColors(colorPalette);
+  }, [colorPalette]);
+
+  // Get palette colors for chart
+  const paletteColors = useMemo(() => {
+    return customColors && customColors.length > 0 ? customColors : getPaletteColors(colorPalette);
+  }, [colorPalette, customColors]);
+
+  // Progress color - use primary color from semantic palette
   const getProgressColor = useMemo(() => {
     if (customColors && customColors.length > 0) {
       return customColors[0];
     }
-    
-    const colorPalettes = {
-      default: '#52c41a',
-      vibrant: '#ff6b6b',
-      cool: '#74b9ff',
-      warm: '#fd79a8',
-      nature: '#00b894',
-    };
-    
-    return colorPalettes[colorPalette] || colorPalettes.default;
-  }, [customColors, colorPalette]);
+    return semanticColors.primary;
+  }, [customColors, semanticColors]);
 
   // Background color palette logic
   const getBackgroundColor = useMemo(() => {
     const backgroundPalettes = {
-      default: '#4a8b6f',
-      vibrant: '#ff4757',
-      cool: '#3742fa',
-      warm: '#ff3838',
-      nature: '#009432',
-      dark: '#1a1a1a',
-      blue: '#2980b9',
-      purple: '#8e44ad',
-      orange: '#e67e22',
-      teal: '#16a085',
+      default: '#4a8b6f',    // Default green
+      primary: '#2980b9',    // Primary blue
+      success: '#009432',    // Success green
+      warning: '#e67e22',    // Warning orange
+      error: '#e74c3c',      // Error red
+      light: '#95a5a6',      // Light gray
+      dark: '#1a1a1a',       // Dark theme
+      purple: '#8e44ad',     // Purple gradient
+      ocean: '#3498db',      // Ocean blue
+      sunset: '#e67e22',     // Sunset orange
     };
     
     return backgroundPalettes[backgroundColorPalette] || backgroundPalettes.default;
   }, [backgroundColorPalette]);
 
+
   // Fetch data
   useEffect(() => {
     const fetchData = async () => {
+      console.log('📊 CircularProgressChart fetchData called:', { 
+        component: 'CircularProgressChart',
+        title,
+        dataType,
+        metric,
+        isAllSelected,
+        sourceIds,
+        sourceIdsLength: sourceIds.length,
+        isPreview,
+        timestamp: new Date().toISOString()
+      });
+      
       setLoading(true);
       try {
         // Use mock data in preview mode
@@ -126,6 +160,14 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
         const now = moment();
         
         if (dataType === 'device' && metric) {
+          console.log('📊 CircularProgressChart entering device data fetch:', { 
+            component: 'CircularProgressChart',
+            title,
+            isAllSelected,
+            sourceIds,
+            timestamp: new Date().toISOString()
+          });
+          
           if (isAllSelected) {
             // Fetch all device IDs first
             console.log('📊 CircularProgressChart API Call: getAllDevices', { 
@@ -179,8 +221,9 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
             });
             
             if (currentStats.data && currentStats.data.length > 0) {
-              const latestStat = currentStats.data[currentStats.data.length - 1];
-              const val = latestStat.value || 0;
+              // Calculate average value like MetricCardWithMiniLineChart does
+              const avgValue = currentStats.data.reduce((sum, item) => sum + item.value, 0) / currentStats.data.length;
+              const val = avgValue;
               setCurrentValue(val);
               
               // Format display value based on metric type
@@ -191,10 +234,65 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
               }
             }
           } else {
-            // Handle specific device selection (similar logic for single device)
-            // This can be expanded based on specific requirements
-            setCurrentValue(0);
-            setDisplayValue(defaultValue);
+            // Handle specific device selection - using same approach as MetricCardWithMiniLineChart
+            if (sourceIds.length === 0) {
+              setCurrentValue(0);
+              setDisplayValue(defaultValue);
+              return;
+            }
+            
+            // Fetch current stats for each device individually
+            console.log('📊 CircularProgressChart API Call: getDeviceStat (specific devices)', { 
+              component: 'CircularProgressChart',
+              title,
+              deviceIds: sourceIds,
+              metric,
+              timestamp: new Date().toISOString()
+            });
+            
+            const devicePromises = sourceIds.map(deviceId => 
+              getDeviceStat(deviceId, metric)
+            );
+            const deviceStats = await Promise.all(devicePromises);
+            
+            console.log('📊 CircularProgressChart API Response: getDeviceStat (multiple)', { 
+              component: 'CircularProgressChart',
+              title,
+              deviceIds: sourceIds,
+              deviceStats: deviceStats.map(stat => ({ deviceId: stat.data?.name, value: stat.data?.value })),
+              timestamp: new Date().toISOString()
+            });
+            
+            // Calculate average of current values
+            const validStats = deviceStats.filter(stat => stat.data);
+            if (validStats.length > 0) {
+              const avgValue = validStats.reduce((sum, stat) => sum + (stat.data?.value || 0), 0) / validStats.length;
+              console.log('📊 CircularProgressChart setting value (specific devices):', { 
+                component: 'CircularProgressChart',
+                title,
+                avgValue,
+                metric,
+                validStats: validStats.length,
+                timestamp: new Date().toISOString()
+              });
+              setCurrentValue(avgValue);
+              
+              // Format display value based on metric type
+              if (metric.includes('containers')) {
+                setDisplayValue(Math.round(avgValue).toLocaleString());
+              } else {
+                setDisplayValue(`${avgValue.toFixed(1)}%`);
+              }
+            } else {
+              console.log('📊 CircularProgressChart NO DATA for specific devices:', { 
+                component: 'CircularProgressChart',
+                title,
+                deviceStats,
+                timestamp: new Date().toISOString()
+              });
+              setCurrentValue(0);
+              setDisplayValue(defaultValue);
+            }
           }
         } else if (dataType === 'container') {
           // Container logic can be implemented similarly
@@ -212,10 +310,10 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
 
     fetchData();
     
-    // Set up auto-refresh every 30 seconds (like SummaryStatCard)
+    // Set up auto-refresh every 30 seconds (like MetricCardWithMiniLineChart)
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
-  }, [dataType, metric, isAllSelected, sourceIds, isPreview, title, defaultValue]);
+  }, [dataType, metric, isAllSelected, sourceIds.join(','), isPreview, title, defaultValue]);
 
   const getMetricLabel = (metric: string): string => {
     const labels: Record<string, string> = {
@@ -298,33 +396,28 @@ const CircularProgressChart: React.FC<CircularProgressChartProps> = ({
           strokeLinecap="round"
         />
         <Space direction="vertical" align="start" size={4}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <Typography.Title
-              level={3}
-              style={{
-                color: '#ffffff',
-                margin: 0,
-                fontSize: '32px',
-                fontWeight: '600',
-                lineHeight: 1,
-              }}
-            >
-              {displayValue || defaultValue}
-            </Typography.Title>
-            {icon && (
-              <div style={{ 
-                fontSize: '24px', 
-                color: 'rgba(255, 255, 255, 0.8)',
-                display: 'flex',
-                alignItems: 'center'
-              }}>
-                {icon}
-              </div>
-            )}
-          </div>
-          <Typography.Text style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '16px' }}>
+          <Typography.Title
+            level={4}
+            style={{
+              color: '#ffffff',
+              margin: 0,
+              fontSize: '20px',
+              fontWeight: '600',
+              lineHeight: 1,
+            }}
+          >
             {title}
-          </Typography.Text>
+          </Typography.Title>
+          {icon && (
+            <div style={{ 
+              fontSize: '24px', 
+              color: 'rgba(255, 255, 255, 0.8)',
+              display: 'flex',
+              alignItems: 'center'
+            }}>
+              {icon}
+            </div>
+          )}
         </Space>
       </Space>
     </Card>

@@ -3,7 +3,6 @@ import { ConfigProvider, TabsProps, theme, Tooltip, Grid, Button, Tabs } from 'a
 import React, { useEffect, useState } from 'react';
 import { history, useLocation } from '@umijs/max';
 import styled from 'styled-components';
-import { CompressOutlined, ExpandOutlined } from '@ant-design/icons';
 
 // Main container for the tabs and content
 const TabsContainer = styled.div`
@@ -201,30 +200,48 @@ export const IconWrapper = styled.div<{ $bgColor: string }>`
   }
 `;
 
-const CompactModeButton = styled(Button)`
+const ExpandCollapseBar = styled.div<{ $isCompact: boolean }>`
   position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 10;
-  background: rgba(30, 30, 30, 0.4);
-  border: none;
-  width: 24px;
-  height: 24px;
-  padding: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
-  opacity: 0.5;
-  transition: opacity 0.3s ease;
+  z-index: 10;
   
-  &:hover {
-    opacity: 1;
-    background: rgba(50, 50, 50, 0.7);
+  &::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: max(10%, 50px);
+    max-height: 80px;
+    background: transparent;
+    transition: background 0.3s ease;
+    border-radius: 2px;
   }
   
-  .anticon {
+  &::after {
+    content: '${props => props.$isCompact ? '>' : '<'}';
+    color: rgba(255, 255, 255, 0);
     font-size: 14px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+  
+  &:hover {
+    &::before {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    &::after {
+      color: rgba(255, 255, 255, 0.85);
+    }
   }
   
   @media (max-width: 768px) {
@@ -268,10 +285,20 @@ const StyledTabContainer: React.FC<StyledTabContainerProps> = ({
   const location = useLocation();
   const { darkAlgorithm } = theme;
   const screens = Grid.useBreakpoint();
-  const [isCompact, setIsCompact] = useState(false);
+  const [isCompact, setIsCompact] = useState(() => {
+    // Initialize from localStorage if available
+    const savedState = localStorage.getItem('dashboardNavCompact');
+    return savedState === 'true';
+  });
   const [activeKey, setActiveKey] = useState<string>('');
+  const [hasInitialized, setHasInitialized] = useState(false);
 
   const effectiveTabPosition = screens.md ? 'left' : 'top';
+  
+  // Save compact state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('dashboardNavCompact', isCompact.toString());
+  }, [isCompact]);
 
   // Extract icons and text from tab items
   const processedTabItems = tabItems?.map((item) => {
@@ -331,19 +358,35 @@ const StyledTabContainer: React.FC<StyledTabContainerProps> = ({
 
   // Initialize active key from URL hash or default
   useEffect(() => {
+    // Skip if we haven't received any tabs yet
+    if (!tabItems || tabItems.length === 0) return;
+
     const hash = location.hash.replace('#', '');
-    const isValidTab = tabItems?.some((item) => item.key === hash);
+    const isValidTab = tabItems.some((item) => item.key === hash);
+
+    // If we already initialized and the hash matches current active key, do nothing
+    if (hasInitialized && hash === activeKey) return;
 
     if (hash && isValidTab) {
+      // Hash exists and is valid - use it
       setActiveKey(hash);
-    } else if (defaultActiveKey) {
-      setActiveKey(defaultActiveKey);
-      history.replace(`#${defaultActiveKey}`);
-    } else if (tabItems && tabItems.length > 0 && tabItems[0].key) {
-      setActiveKey(tabItems[0].key as string);
-      history.replace(`#${tabItems[0].key}`);
+      setHasInitialized(true);
+    } else if (hash && !isValidTab && !hasInitialized) {
+      // Hash exists but tab not found yet - could be loading
+      // Wait for the tab to appear, don't redirect yet
+      return;
+    } else if (!hasInitialized) {
+      // No hash or invalid hash on first load
+      if (defaultActiveKey && tabItems.some((item) => item.key === defaultActiveKey)) {
+        setActiveKey(defaultActiveKey);
+        history.replace(`#${defaultActiveKey}`);
+      } else if (tabItems[0]?.key) {
+        setActiveKey(tabItems[0].key as string);
+        history.replace(`#${tabItems[0].key}`);
+      }
+      setHasInitialized(true);
     }
-  }, [location.pathname, defaultActiveKey, tabItems]);
+  }, [location.hash, defaultActiveKey, tabItems, hasInitialized, activeKey]);
 
   // Find the active tab content
   const activeTabContent = processedTabItems.find(
@@ -358,10 +401,10 @@ const StyledTabContainer: React.FC<StyledTabContainerProps> = ({
     >
       <TabsContainer>
         <NavPanel $isCompact={isCompact && !!screens.md}>
-          <CompactModeButton
-            icon={isCompact ? <ExpandOutlined /> : <CompressOutlined />}
+          <ExpandCollapseBar 
+            $isCompact={isCompact && !!screens.md}
             onClick={() => setIsCompact(!isCompact)}
-            title={isCompact ? 'Show labels' : 'Hide labels'}
+            title={isCompact ? 'Expand menu' : 'Collapse menu'}
           />
           
           {processedTabItems.map((item) => (

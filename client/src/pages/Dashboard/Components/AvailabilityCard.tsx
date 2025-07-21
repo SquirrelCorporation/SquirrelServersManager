@@ -3,8 +3,17 @@ import { InfoCircleFilled, ArrowUpOutlined, ArrowDownOutlined, MinusOutlined } f
 import { Tooltip, Typography, Card, Skeleton, Progress } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { API } from 'ssm-shared-lib';
+import { getSemanticColors } from './utils/colorPalettes';
 
-const AvailabilityCard: React.FC = () => {
+interface AvailabilityCardProps {
+  colorPalette?: string;
+  customColors?: string[];
+}
+
+const AvailabilityCard: React.FC<AvailabilityCardProps> = ({
+  colorPalette = 'default',
+  customColors = [],
+}) => {
   const [loading, setLoading] = useState(false);
   const [availabilityStat, setAvailabilityStat] = useState<
     API.AvailabilityStat | undefined
@@ -39,6 +48,11 @@ const AvailabilityCard: React.FC = () => {
     return 'eq';
   }, [availabilityStat]);
 
+  // Get semantic colors from palette
+  const semanticColors = useMemo(() => {
+    return getSemanticColors(colorPalette);
+  }, [colorPalette]);
+
   if (loading) {
     return (
       <Card
@@ -46,7 +60,7 @@ const AvailabilityCard: React.FC = () => {
           backgroundColor: '#1a1a1a',
           borderRadius: '16px',
           border: 'none',
-          minHeight: '180px',
+          height: '180px',
         }}
         bodyStyle={{ padding: '20px' }}
       >
@@ -62,7 +76,7 @@ const AvailabilityCard: React.FC = () => {
         borderRadius: '16px',
         color: 'white',
         border: 'none',
-        minHeight: '180px',
+        height: '180px',
       }}
       bodyStyle={{ padding: '20px' }}
     >
@@ -78,7 +92,7 @@ const AvailabilityCard: React.FC = () => {
 
       {/* Availability Percentage */}
       <div style={{ marginBottom: '12px' }}>
-        <Typography.Text style={{ color: '#52c41a', fontSize: '28px', fontWeight: 600 }}>
+        <Typography.Text style={{ color: semanticColors.positive, fontSize: '28px', fontWeight: 600 }}>
           {availabilityStat ? (availabilityStat.availability < 1 ? (availabilityStat.availability * 100).toFixed(3) : 100) : '0'}%
         </Typography.Text>
       </div>
@@ -87,7 +101,7 @@ const AvailabilityCard: React.FC = () => {
       <div style={{ marginBottom: '12px' }}>
         <Progress 
           percent={Number(percent)} 
-          strokeColor="#52c41a"
+          strokeColor={semanticColors.positive}
           trailColor="#303030"
           showInfo={false}
           strokeWidth={6}
@@ -109,8 +123,8 @@ const AvailabilityCard: React.FC = () => {
         </Typography.Text>
         {trendFlag && (
           <>
-            {trendFlag === 'up' && <ArrowUpOutlined style={{ color: '#52c41a', fontSize: '12px' }} />}
-            {trendFlag === 'down' && <ArrowDownOutlined style={{ color: '#ff4d4f', fontSize: '12px' }} />}
+            {trendFlag === 'up' && <ArrowUpOutlined style={{ color: semanticColors.positive, fontSize: '12px' }} />}
+            {trendFlag === 'down' && <ArrowDownOutlined style={{ color: semanticColors.negative, fontSize: '12px' }} />}
             {trendFlag === 'eq' && <MinusOutlined style={{ color: '#8c8c8c', fontSize: '12px' }} />}
           </>
         )}
