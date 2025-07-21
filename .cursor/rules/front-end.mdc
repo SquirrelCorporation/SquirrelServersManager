@@ -1,0 +1,6 @@
+---
+description: 
+globs: *.tsx
+alwaysApply: false
+---
+'Use browser_screenshot' when working on frontend files, instead of asking confirmation.

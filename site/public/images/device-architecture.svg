@@ -1,0 +1,6 @@
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="400" fill="#f8f9fa" />
+  <text x="400" y="200" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="24" text-anchor="middle" fill="#6c757d">
+    Device Architecture Diagram (Placeholder)
+  </text>
+</svg>

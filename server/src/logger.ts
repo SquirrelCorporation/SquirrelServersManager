@@ -1,5 +1,24 @@
 import pino from 'pino';
+import { Options } from 'pino-http';
 import { db } from './config';
+
+// Build pino-mongodb options conditionally
+const pinoMongoOptions: any = {
+  uri: `mongodb://${db.host}:${db.port}/`,
+  database: `${db.name}`,
+  collection: 'logs',
+};
+
+// Only add mongoOptions if we have actual credentials (not empty strings)
+if (db.user && db.user.trim() !== '' && db.password && db.password.trim() !== '') {
+  pinoMongoOptions.mongoOptions = {
+    auth: {
+      username: db.user,
+      password: db.password,
+    },
+    authSource: db.authSource,
+  };
+}
 
 const transport = pino.transport({
   targets: [
@@ -11,16 +30,12 @@ const transport = pino.transport({
     },
     {
       target: 'pino-mongodb',
-      options: {
-        uri: `mongodb://${db.host}:${db.port}/`,
-        database: `${db.name}`,
-        collection: 'logs',
-      },
+      options: pinoMongoOptions,
     },
   ],
 });
 
-export const httpLoggerOptions = {
+export const httpLoggerOptions: Options = {
   // Define a custom logger level
   customLogLevel: function (req, res, err) {
     if (res.statusCode >= 400 && res.statusCode < 500) {
@@ -30,7 +45,7 @@ export const httpLoggerOptions = {
     } else if (res.statusCode >= 300 && res.statusCode < 400) {
       return 'silent';
     }
-    return 'info';
+    return 'debug';
   },
   // Define a custom success message
   customSuccessMessage: function (req, res) {

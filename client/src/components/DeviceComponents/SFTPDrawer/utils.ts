@@ -10,7 +10,9 @@ export const updateTreeData = (
   list
     .map((node) => {
       if (node.key === key) {
+        console.log('updating node', node.key, isDelete);
         if (isDelete) {
+          console.log('deleting node', node.key);
           // If it's marked for deletion, exclude this node
           return null;
         }
@@ -26,7 +28,7 @@ export const updateTreeData = (
       if (node.children) {
         return {
           ...node,
-          children: updateTreeData(node.children, key, newChildren).filter(
+          children: updateTreeData(node.children, key, newChildren, isDelete).filter(
             Boolean,
           ),
         };
@@ -43,6 +45,7 @@ export const updateNodeKeyAndTitle = (
 ): SFTPDataNode[] =>
   nodes.map((node) => {
     if (node.key === oldKey) {
+      console.log('updating node', node.key, newKey, updatedTitle);
       // Update the node with the new key and title
       return { ...node, key: newKey, title: updatedTitle };
     }

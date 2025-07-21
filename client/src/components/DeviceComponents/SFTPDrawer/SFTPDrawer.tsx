@@ -14,22 +14,12 @@ import SFTPDropdownMenu, {
   SFTPAction,
 } from '@/components/DeviceComponents/SFTPDrawer/SFTPDropdownMenu';
 import { Restart } from '@/components/Icons/CustomIcons';
-import { socket } from '@/socket';
-import {
-  Button,
-  Col,
-  Drawer,
-  message,
-  Popconfirm,
-  Row,
-  Space,
-  Spin,
-  Tree,
-} from 'antd';
+import { sftpSocket as socket } from '@/socket';
+import { Button, Col, Drawer, Popconfirm, Row, Space, Spin, Tree } from 'antd';
 import React, { useEffect, useImperativeHandle, useState } from 'react';
 import { API, SsmEvents } from 'ssm-shared-lib';
 import { updateNodeKeyAndTitle, updateNodeMode, updateTreeData } from './utils';
-
+import message from '@/components/Message/DynamicMessage';
 export interface SFTPDrawerHandles {
   showDrawer: () => void;
 }
@@ -88,7 +78,7 @@ const SFTPDrawer = React.forwardRef<SFTPDrawerHandles, SFTPDrawerProps>(
       const pathParts = fullPathWithName.split('/');
       const newPath = [...pathParts.slice(0, -1), newName].join('/'); // Construct new full path
       const newTitle = newName; // The title is based on the newName
-
+      console.log('onSuccessRename', fullPathWithName, newPath, newTitle);
       // Update the tree
       setTreeData((prevTreeData) =>
         updateNodeKeyAndTitle(
@@ -98,6 +88,7 @@ const SFTPDrawer = React.forwardRef<SFTPDrawerHandles, SFTPDrawerProps>(
           newTitle,
         ),
       );
+      console.log('updatedTreeData', treeData);
     };
 
     const onSuccessUpdateMode = (
@@ -111,6 +102,7 @@ const SFTPDrawer = React.forwardRef<SFTPDrawerHandles, SFTPDrawerProps>(
     };
 
     const onSuccessDelete = (pathToDelete: string): void => {
+      console.log('onSuccessDelete, pathToDelete:', pathToDelete);
       setTreeData((prevTreeData) =>
         updateTreeData(prevTreeData, pathToDelete, undefined, true),
       );
@@ -186,17 +178,34 @@ const SFTPDrawer = React.forwardRef<SFTPDrawerHandles, SFTPDrawerProps>(
     };
 
     const startSFTPSession = () => {
+      console.log('Starting SFTP session, connecting socket...');
       socket.connect(); // Ensure the socket is connected
+
+      // Add connection event listeners for debugging
+      socket.on('connect', () => {
+        console.log('SFTP socket connected successfully!');
+        console.log('Socket ID:', socket.id);
+      });
+
+      socket.on('connect_error', (error) => {
+        console.error('SFTP socket connection error:', error);
+      });
+
       socket.removeAllListeners(SsmEvents.SFTP.STATUS);
       socket.removeAllListeners(SsmEvents.SFTP.READ_DIR);
 
       setTreeData([{ title: '/', key: '/' }]);
+      console.log(
+        'Emitting START_SESSION event with device UUID:',
+        device.uuid,
+      );
       socket
         .emitWithAck(SsmEvents.SFTP.START_SESSION, {
           deviceUuid: device.uuid,
         })
         .then((response) => {
-          if (response.status !== 'OK') {
+          console.log('Received START_SESSION response:', response);
+          if (!response.success) {
             void message.error({
               content: `Socket failed to connect (${response.status} - ${response.error})`,
               duration: 6,
@@ -209,6 +218,13 @@ const SFTPDrawer = React.forwardRef<SFTPDrawerHandles, SFTPDrawerProps>(
               socket.off(SsmEvents.SFTP.STATUS, handleStatus);
             };
           }
+        })
+        .catch((error) => {
+          console.error('Error in START_SESSION emitWithAck:', error);
+          void message.error({
+            content: `Socket failed to connect: ${error.message}`,
+            duration: 6,
+          });
         });
     };
 
@@ -278,17 +294,19 @@ const SFTPDrawer = React.forwardRef<SFTPDrawerHandles, SFTPDrawerProps>(
                   path: node.key,
                   isDir: !node?.isLeaf,
                 });
-              if (response.status === 'OK') {
-                message.success(
-                  !node?.isLeaf ? 'Directory deleted' : 'File deleted',
-                );
+              if (response.success) {
+                message.success({
+                  content: !node?.isLeaf ? 'Directory deleted' : 'File deleted',
+                  duration: 6,
+                });
                 if (node?.key) {
                   onSuccessDelete(node.key);
                 }
               } else {
-                message.error(
-                  `Failed to create directory: ${response.error || 'Unknown error'}`,
-                );
+                message.error({
+                  content: `Failed to delete: ${response.message || 'Unknown error'}`,
+                  duration: 6,
+                });
               }
             },
           });

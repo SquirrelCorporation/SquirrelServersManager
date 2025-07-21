@@ -1,23 +1,23 @@
 import { LinkAlt, MynauiApi } from '@/components/Icons/CustomIcons';
 import Title, { TitleColors } from '@/components/Template/Title';
-import { postMasterNodeUrlValue } from '@/services/rest/settings';
-import { postResetApiKey } from '@/services/rest/usersettings';
+import { postMasterNodeUrlValue } from '@/services/rest/settings/settings';
+import { postResetApiKey } from '@/services/rest/users/users';
 import { useModel } from '@@/exports';
 import { InfoCircleFilled, WarningOutlined } from '@ant-design/icons';
 import {
   Button,
   Card,
-  Input,
-  message,
-  Popconfirm,
-  Popover,
-  Typography,
-  Row,
   Col,
   Flex,
+  Input,
   InputRef,
+  Popconfirm,
+  Popover,
+  Row,
+  Typography,
 } from 'antd';
 import React, { useState } from 'react';
+import message from '@/components/Message/DynamicMessage';
 
 const AuthenticationSettings: React.FC = () => {
   const { initialState } = useModel('@@initialState');
@@ -30,7 +30,7 @@ const AuthenticationSettings: React.FC = () => {
 
   const onClickResetApiKey = async () => {
     await postResetApiKey().then((res) => {
-      setApiKey(res.data.uuid);
+      setApiKey(res.data.apiKey);
       message.success({ content: 'API Key successfully reset', duration: 6 });
     });
   };

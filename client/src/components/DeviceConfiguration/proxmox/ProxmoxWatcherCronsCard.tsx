@@ -1,7 +1,8 @@
 import { CardHeader } from '@/components/Template/CardHeader';
-import { updateDeviceProxmoxConfiguration } from '@/services/rest/device';
+import { updateDeviceProxmoxConfiguration } from '@/services/rest/devices/devices';
 import { FieldTimeOutlined } from '@ant-design/icons';
-import { Card, message, Space } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Card, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Cron from 'react-js-cron';
 import { API } from 'ssm-shared-lib';
@@ -20,7 +21,7 @@ const ProxmoxWatcherCronsCard: React.FC<ProxmoxWatcherCronsCardProps> = ({
   const handleOnChangeEventsWatcher = async () => {
     if (device.uuid) {
       await updateDeviceProxmoxConfiguration(device.uuid, {
-        watcherCron,
+        watchContainersCron: watcherCron,
       }).then(() => {
         message.success({ content: 'Setting updated' });
       });

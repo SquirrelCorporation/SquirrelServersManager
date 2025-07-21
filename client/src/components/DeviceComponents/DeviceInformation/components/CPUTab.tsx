@@ -14,6 +14,7 @@ import { capitalizeFirstLetter } from '@/utils/strings';
 import { Typography } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
+import { ACCENT_COLORS } from '../../../../styles/colors';
 
 type CPUTabProps = {
   device: API.DeviceItem;
@@ -38,53 +39,53 @@ const CPUTab: React.FC<CPUTabProps> = ({ device }) => {
       icon: <WhhCpu style={{ fontSize: '24px', color: '#faad14' }} />,
       secondaryIcon: CPULogoSrc(device.systemInformation.cpu.vendor),
     });
+  } else {
+    importantInfo.push({
+      title: 'CPU',
+      value: '',
+      icon: <WhhCpu style={{ fontSize: '24px', color: '#faad14' }} />,
+    });
   }
 
   // Detailed info with associated icons
-  const detailedInfo = [];
-
+  const rawDetailedInfo = [];
   if (device?.systemInformation?.cpu?.vendor) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Vendor',
       value: `${capitalizeFirstLetter(device.systemInformation.cpu.vendor)}`,
       icon: <FlatPlatform />,
-      color: 'rgba(19,19,19,0.5)',
     });
   }
   if (device?.systemInformation?.cpu?.family) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Family',
       value: `${capitalizeFirstLetter(device.systemInformation.cpu.family)}`,
       icon: <Family />,
-      color: '#774797',
     });
   }
   if (device?.systemInformation?.cpu?.model) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Model',
       value: `${capitalizeFirstLetter(device.systemInformation.cpu.model)}`,
       icon: <FlatPlatform />,
-      color: '#979347',
     });
   }
   if (device?.systemInformation?.cpu?.speedMax) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Max Speed',
       value: `${device.systemInformation.cpu.speedMax}`,
       icon: <Speedometer />,
-      color: '#c81519',
     });
   }
   if (device?.systemInformation?.cpu?.speedMin) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Min Speed',
       value: `${device.systemInformation.cpu.speedMin}`,
       icon: <SpeedometerSlow />,
-      color: '#6bb157',
     });
   }
   if (device?.systemInformation?.cpu?.flags) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Flags',
       value: (
         <Typography.Text
@@ -95,15 +96,13 @@ const CPUTab: React.FC<CPUTabProps> = ({ device }) => {
         </Typography.Text>
       ),
       icon: <FlagOutline />,
-      color: '#5a21aa',
     });
   }
   if (device?.systemInformation?.cpu?.virtualization !== undefined) {
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Virtualization',
       value: `${device.systemInformation.cpu.virtualization}`,
       icon: <VmOutline />,
-      color: '#47977b',
     });
   }
   if (device?.systemInformation?.cpu?.cache) {
@@ -111,18 +110,22 @@ const CPUTab: React.FC<CPUTabProps> = ({ device }) => {
       .filter(([, value]) => value)
       .map(([key, value]) => `${key}:${value}`)
       .join(', ');
-    detailedInfo.push({
+    rawDetailedInfo.push({
       key: 'Cache',
       value: `${cacheInfo}`,
       icon: <Cached />,
-      color: '#884b08',
     });
   }
+  const detailedInfo = rawDetailedInfo.map((item, idx) => ({
+    ...item,
+    color: ACCENT_COLORS[idx % ACCENT_COLORS.length],
+  }));
   return (
     <SystemInformationView
       name={'CPU'}
       importantInfo={importantInfo}
       detailedInfo={detailedInfo}
+      lastUpdatedAt={device.systemInformation.cpu?.lastUpdatedAt}
     />
   );
 };

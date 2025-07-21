@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/obsolete/**",
+    "**/__tests__/**",
+    "src/modules/common-test-helpers.ts"
+  ]
+}

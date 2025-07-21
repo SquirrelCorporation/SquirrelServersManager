@@ -1,6 +1,7 @@
 import { Deploy } from '@/components/Icons/CustomIcons';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 import DeployModal from '@/pages/Containers/components/sub-components/DeployModal';
-import { getTemplates } from '@/services/rest/services';
+import { getTemplates } from '@/services/rest/containers/container-templates';
 import { ProList } from '@ant-design/pro-components';
 import { Avatar, Tag, Typography } from 'antd';
 import React from 'react';
@@ -86,6 +87,7 @@ const Templates: React.FC = () => {
                 style={{
                   marginRight: 4,
                   backgroundColor: 'rgba(41,70,147,0.51)',
+                  flexShrink: 0,
                 }}
                 src={row.logo}
               />
@@ -122,6 +124,12 @@ const Templates: React.FC = () => {
           },
         }}
         request={getTemplates}
+        toolBarRender={() => [
+          <InfoLinkWidget
+            tooltipTitle="Help for containers."
+            documentationLink="https://squirrelserversmanager.io/docs/user-guides/containers/management"
+          />,
+        ]}
       />
     </>
   );

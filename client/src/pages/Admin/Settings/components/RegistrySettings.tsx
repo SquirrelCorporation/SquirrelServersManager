@@ -4,7 +4,7 @@ import {
   getRegistries,
   removeRegistry,
   resetRegistry,
-} from '@/services/rest/containers';
+} from '@/services/rest/containers/container-registries';
 import {
   CheckCircleOutlined,
   MinusCircleOutlined,
@@ -12,10 +12,12 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { ProList } from '@ant-design/pro-components';
-import { Avatar, Button, Card, message, Popconfirm, Tag, Tooltip } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Avatar, Button, Card, Popconfirm, Tag, Tooltip } from 'antd';
 import { AddCircleOutline, DeleteOutline } from 'antd-mobile-icons';
 import React, { useEffect, useState } from 'react';
 import { API } from 'ssm-shared-lib';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 const addRecord = {
   name: 'custom',
@@ -114,6 +116,10 @@ const RegistrySettings: React.FC = () => {
           >
             Add a custom registry
           </Button>,
+          <InfoLinkWidget
+            tooltipTitle="Help for registries."
+            documentationLink="https://squirrelserversmanager.io/docs/user-guides/settings/registry"
+          />,
         ]}
         showActions="hover"
         rowSelection={false}
@@ -199,6 +205,7 @@ const RegistrySettings: React.FC = () => {
               style={{
                 marginRight: 4,
                 backgroundColor: 'rgba(41,70,147,0.51)',
+                flexShrink: 0,
               }}
               src={<RegistryLogo provider={item.provider} />}
             />

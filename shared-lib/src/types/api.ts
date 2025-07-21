@@ -11,7 +11,7 @@ import { ExtendedTreeNode } from './tree';
 export type Response<T> = {
   success: boolean;
   message: string;
-  data: T
+  data: T;
 };
 
 export type HasUsers = {
@@ -33,7 +33,6 @@ export type CurrentUser = {
   avatar?: string;
   email?: string;
   access?: string;
-  systemPerformance: UserSystemPerformance;
   devices?: {
     online?: number;
     offline?: number;
@@ -46,7 +45,7 @@ export type CurrentUser = {
         uuid?: string;
         mem?: number;
         cpu?: number;
-      },
+      }
     ];
   };
   settings?: Settings;
@@ -76,7 +75,7 @@ export type Settings = {
     processes: any;
   };
   logs: LogsSettings;
-  stats: StatsSettings,
+  stats: StatsSettings;
   userSpecific: {
     userLogsLevel: UserLogsLevel;
   };
@@ -159,35 +158,35 @@ export type NewDevice = {
 
 export type CheckAnsibleConnection = {
   taskId: string;
-}
+};
 
 export type CheckDockerConnection = {
   connectionStatus: string;
   errorMessage?: string;
-}
+};
 
 export type CheckRemoteSystemInformationConnection = {
   connectionStatus: string;
   errorMessage?: string;
-}
+};
 
 export type DeviceCapabilities = {
   containers: {
     docker: {
-      enabled : boolean;
-    },
+      enabled: boolean;
+    };
     proxmox: {
-      enabled : boolean;
-    },
+      enabled: boolean;
+    };
     lxd: {
-      enabled : boolean;
-    }
-  }
+      enabled: boolean;
+    };
+  };
 };
 
 export type ProxmoxConfiguration = {
   watchContainersCron?: string;
-}
+};
 
 export type SystemInformationConfiguration = {
   system?: {
@@ -248,21 +247,22 @@ export type SystemInformationConfiguration = {
   };
 };
 
-export type DeviceConfiguration = {containers: {
-      proxmox?: {
-        watchContainersCron?: string;
-      };
-      docker?: {
-        watchContainers?: boolean;
-        watchContainersCron?: string;
-        watchContainersStats?: boolean;
-        watchContainersStatsCron?: string;
-        watchEvents?: boolean;
-        watchAll?: boolean;
-      };
+export type DeviceConfiguration = {
+  containers: {
+    proxmox?: {
+      watchContainersCron?: string;
     };
-    systemInformation?:SystemInformationConfiguration;
+    docker?: {
+      watchContainers?: boolean;
+      watchContainersCron?: string;
+      watchContainersStats?: boolean;
+      watchContainersStatsCron?: string;
+      watchEvents?: boolean;
+      watchAll?: boolean;
+    };
   };
+  systemInformation?: SystemInformationConfiguration;
+};
 
 export type DeviceSystemInformation = {
   system?: Systeminformation.SystemData;
@@ -276,6 +276,7 @@ export type DeviceSystemInformation = {
   bluetooth?: Systeminformation.BluetoothDeviceData[];
   graphics?: Systeminformation.GraphicsData;
   fileSystems?: Systeminformation.DiskLayoutData[];
+  memLayout?: Systeminformation.MemLayoutData[];
 };
 
 export type DeviceItem = {
@@ -288,7 +289,7 @@ export type DeviceItem = {
   ip?: string;
   status: number;
   uptime?: number;
-  systemInformation:DeviceSystemInformation;
+  systemInformation: DeviceSystemInformation;
   agentType?: string;
   agentVersion?: string;
   updatedAt?: string;
@@ -309,7 +310,7 @@ export type Exec = {
 
 export type ExecId = {
   execId: string;
-}
+};
 
 export type ExecLog = {
   content: string;
@@ -322,7 +323,7 @@ export type ExecLog = {
 export type ExecLogs = {
   execId: string;
   execLogs?: ExecLog[];
-}
+};
 
 export type ExecLogsResponse = {
   data: ExecLogs;
@@ -337,7 +338,7 @@ export type ExecStatus = {
 export type ExecStatuses = {
   execId: string;
   execStatuses?: ExecStatus[];
-}
+};
 export type ExecStatusesResponse = {
   data: ExecStatuses;
   success?: boolean;
@@ -375,19 +376,10 @@ export type DeviceStat = {
   value: number;
 };
 
-export type ContainerStats = {
-  data?: ContainerStat[];
-  success?: boolean;
-};
-
 export type ContainerAveragedStats = {
-  data?: {
-    cpuStats: ContainerStat[];
-    memStats: ContainerStat[];
-  };
-  success?: boolean;
+  cpuStats: ContainerStat[];
+  memStats: ContainerStat[];
 };
-
 
 export type ContainerStat = {
   date: string;
@@ -411,11 +403,6 @@ export type PlaybookFile = {
   extraVars?: ExtraVars;
   playableInBatch?: boolean;
 };
-
-export type CustomVault = {
-  vaultId: string;
-  password: string;
-}
 
 export type PlaybooksRepository = {
   name: string;
@@ -454,7 +441,7 @@ export type ProxmoxAuth = {
     tokenId?: string;
     tokenSecret?: string;
   };
-}
+};
 
 export type DeviceAuth = {
   authType: string;
@@ -478,6 +465,35 @@ export type DeviceAuth = {
 };
 
 export type DeviceAuthParams = {
+  authType: string;
+  sshPort: number;
+  sshKey?: string;
+  sshPwd?: string;
+  sshUser?: string;
+  sshKeyPass?: string;
+  sshConnection?: SSHConnection;
+  becomeMethod?: string;
+  becomePass?: string;
+  becomeUser?: string;
+  becomeExe?: string;
+  becomeFlags?: string;
+  strictHostChecking?: boolean;
+  sshCommonArgs?: string;
+  sshExecutable?: string;
+  customDockerSSH?: boolean;
+  dockerCustomAuthType?: SSHType;
+  dockerCustomSshUser?: string;
+  dockerCustomSshPwd?: string;
+  dockerCustomSshKeyPass?: string;
+  dockerCustomSshKey?: string;
+  customDockerForcev6?: boolean;
+  customDockerForcev4?: boolean;
+  customDockerAgentForward?: boolean;
+  customDockerTryKeyboard?: boolean;
+  customDockerSocket?: string;
+};
+
+export type DeviceAuthParams_v2 = {
   authType: string;
   sshPort: number;
   sshKey?: string;
@@ -546,11 +562,8 @@ export type DeviceStatAvailability = {
 export type AvailabilityStat = {
   availability: number;
   lastMonth: number;
-  byDevice: [
-    { uuid: string; uptime: number; downtime: number; availability: number },
-  ];
+  byDevice: [{ uuid: string; uptime: number; downtime: number; availability: number }];
 };
-
 
 export type ExtraVar = {
   extraVar: string;
@@ -587,18 +600,21 @@ export type ContainerUpdate = {
   localValue?: string;
   remoteValue?: string;
   semverDiff?: 'major' | 'minor' | 'patch' | 'prerelease' | 'unknown';
-}
+};
 
 export type ContainerInspectResult = {
   tag?: string;
   digest?: string;
   created?: string;
   link?: string;
-}
+};
 
 export type ContainerPort = {
-  IP: string; PrivatePort: number; PublicPort: number; Type: string;
-}
+  IP: string;
+  PrivatePort: number;
+  PublicPort: number;
+  Type: string;
+};
 
 export type NetworkInfo = {
   IPAMConfig?: any;
@@ -612,8 +628,8 @@ export type NetworkInfo = {
   IPv6Gateway: string;
   GlobalIPv6Address: string;
   GlobalIPv6PrefixLen: number;
-  MacAddress: string
-}
+  MacAddress: string;
+};
 
 export type Mounts = {
   Name?: string | undefined;
@@ -623,8 +639,8 @@ export type Mounts = {
   Driver?: string | undefined;
   Mode: string;
   RW: boolean;
-  Propagation: string
-}
+  Propagation: string;
+};
 
 export type DockerContainer = {
   updateAvailable?: boolean;
@@ -634,7 +650,7 @@ export type DockerContainer = {
   networkSettings?: { [p: string]: NetworkInfo };
   mounts?: Mounts[];
   ports?: ContainerPort[];
-}
+};
 
 export type ProxmoxContainer = {
   uuid?: string;
@@ -642,7 +658,7 @@ export type ProxmoxContainer = {
   type?: SsmProxmox.ContainerType;
   config?: ProxmoxModel.nodesLxcConfigVmConfig | ProxmoxModel.nodesQemuConfigVmConfig;
   interfaces?: ProxmoxModel.nodesLxcInterfacesIp[];
-}
+};
 
 type CommonContainerFields = {
   device?: DeviceItem;
@@ -659,22 +675,21 @@ export type Container =
   | (DockerContainer & { displayType: ContainerTypes.DOCKER } & CommonContainerFields)
   | (ProxmoxContainer & { displayType: ContainerTypes.PROXMOX } & CommonContainerFields);
 
-
 export type ContainerResult = {
   container?: any;
-}
+};
 
 export type ContainersResponse = SimpleResult & {
   data?: Container[];
-}
+};
 
 export type ContainerRegistries = {
   registries?: ContainerRegistry[];
-}
+};
 
 export type ContainerRegistryResponse = SimpleResult & {
   data?: ContainerRegistries;
-}
+};
 
 export type ContainerRegistry = {
   name: string;
@@ -684,7 +699,7 @@ export type ContainerRegistry = {
   authSet: boolean;
   canAuth: boolean;
   canAnonymous: boolean;
-}
+};
 
 export type GitPlaybooksRepository = PlaybooksRepository & {
   email: string;
@@ -697,13 +712,13 @@ export type GitPlaybooksRepository = PlaybooksRepository & {
   onError?: boolean;
   onErrorMessage?: string;
   ignoreSSLErrors?: boolean;
-}
+};
 
 export type LocalPlaybooksRepository = PlaybooksRepository & {
   directory: string;
   enabled: boolean;
   default: boolean;
-}
+};
 
 export type GitContainerStacksRepository = {
   email: string;
@@ -719,7 +734,7 @@ export type GitContainerStacksRepository = {
   gitService: Services;
   accessToken?: string;
   ignoreSSLErrors?: boolean;
-}
+};
 
 export type ExtraVars = ExtraVar[];
 
@@ -730,7 +745,7 @@ export type Automation = {
   lastExecutionStatus: 'failed' | 'success';
   lastExecutionTime: Date;
   enabled: boolean;
-}
+};
 
 export type InAppNotification = {
   message: string;
@@ -741,7 +756,7 @@ export type InAppNotification = {
   createdAt?: Date;
   updatedAt?: Date;
   seen: boolean;
-}
+};
 
 export type Template = {
   logo: string;
@@ -765,7 +780,7 @@ export type Template = {
       container: string;
       mode?: string;
       readonly?: boolean;
-    },
+    }
   ];
   env?: [
     {
@@ -773,17 +788,17 @@ export type Template = {
       label: string;
       default: string;
       preset?: boolean;
-    },
+    }
   ];
   labels?: [
     {
       name: string;
       value: string;
-    },
+    }
   ];
 };
 
-export type Targets = { targets: string[]; }
+export type Targets = { targets: string[] };
 
 export type ContainerNetwork = {
   _id?: any;
@@ -805,7 +820,7 @@ export type ContainerNetwork = {
   containers?: { [id: string]: any } | undefined;
   options?: { [key: string]: string } | undefined;
   labels?: { [key: string]: string } | undefined;
-}
+};
 
 export type ContainerVolume = {
   uuid: string;
@@ -819,7 +834,7 @@ export type ContainerVolume = {
   scope: 'local' | 'global';
   options: { [p: string]: string } | null;
   usageData?: { Size: number; RefCount: number } | null | undefined;
-}
+};
 
 export type ContainerImage = {
   id: string;
@@ -834,7 +849,7 @@ export type ContainerImage = {
   sharedSize: number;
   labels: { [p: string]: string };
   containers: number;
-}
+};
 
 export type AnsibleConfig = {
   [key: string]: {
@@ -843,49 +858,48 @@ export type AnsibleConfig = {
 };
 
 export type SmartFailure = {
-  id: string,
-  message: string,
-  cause: string,
-  resolution: string,
-}
+  id: string;
+  message: string;
+  cause: string;
+  resolution: string;
+};
 
 export type CreateNetworkConfig = {
-  name: string,
-  network: string,
-  v4_subnet: string,
-  v4_gateway: string,
-  v4_range: string,
+  name: string;
+  network: string;
+  v4_subnet: string;
+  v4_gateway: string;
+  v4_range: string;
   v6_subnet?: string;
   v6_gateway?: string;
   v6_range?: string;
-  v4_excludedIps?: string[],
-  v6_excludedIps?: string[],
-  labels?: [{ name: string, value: string }]
-}
+  v4_excludedIps?: string[];
+  v6_excludedIps?: string[];
+  labels?: [{ name: string; value: string }];
+};
 
 export type CreateNetwork = {
-  target: string,
-  config: CreateNetworkConfig
-}
+  target: string;
+  config: CreateNetworkConfig;
+};
 
 export type BackupVolumeConfig = {
   volumeUuid: string;
-}
+};
 
 export type BackupVolume = {
-  target: string,
-  config: BackupVolumeConfig
-}
+  target: string;
+  config: BackupVolumeConfig;
+};
 
 export type CreateNetworkVolumeConfig = {
-  name: string,
-}
-
+  name: string;
+};
 
 export type CreateVolume = {
-  target: string,
-  config: CreateNetworkVolumeConfig
-}
+  target: string;
+  config: CreateNetworkVolumeConfig;
+};
 
 export type ContainerCustomStack = {
   uuid: string;
@@ -898,20 +912,20 @@ export type ContainerCustomStack = {
   icon: string;
   iconColor: string;
   iconBackgroundColor: string;
-}
+};
 
 export type ContainerTransformCustomStack = {
   yaml: string;
-}
+};
 
 export type ContainerCustomStackValidation = {
   validating: boolean;
   message?: string;
-}
+};
 
 export type DeployContainerCustomStacks = {
   targets: string;
-}
+};
 
 export type BackupVolumeResponse = {
   filePath: string;
@@ -939,7 +953,7 @@ export type AnsibleVault = {
   _id: string;
   vaultId: string;
   password: string;
-}
+};
 /*
  const data = {
     // Memory metrics
@@ -987,7 +1001,7 @@ export type MongoDBServerStats = {
     query: number;
     update: number;
   };
-}
+};
 
 /*
  const data = {
@@ -1018,7 +1032,7 @@ export type RedisServerStats = {
     total_commands_processed: number;
   };
   server: any;
-}
+};
 
 export type PrometheusServerStats = {
   totalScrapes: number;
@@ -1027,4 +1041,4 @@ export type PrometheusServerStats = {
   timeSeriesCount: number;
   storageRetention: string;
   [key: string]: any;
-}
+};

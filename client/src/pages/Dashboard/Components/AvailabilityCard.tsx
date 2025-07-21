@@ -2,10 +2,10 @@ import styles from '@/pages/Dashboard/Analysis.less';
 import ChartCard from '@/pages/Dashboard/ChartComponents/ChartCard';
 import MiniProgress from '@/pages/Dashboard/ChartComponents/MiniProgress';
 import Trend from '@/pages/Dashboard/ChartComponents/Trend';
-import { getDashboardAvailabilityStat } from '@/services/rest/devicestat';
+import { getDashboardAvailabilityStat } from '@/services/rest/statistics/stastistics';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { Tooltip, Typography } from 'antd';
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { API } from 'ssm-shared-lib';
 
 const AvailabilityCard: React.FC = () => {
@@ -91,7 +91,6 @@ const AvailabilityCard: React.FC = () => {
   return (
     <ChartCard
       loading={loading}
-      bordered={false}
       title={title}
       action={action}
       total={total}

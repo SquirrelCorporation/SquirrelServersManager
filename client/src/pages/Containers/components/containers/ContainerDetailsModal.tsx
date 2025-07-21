@@ -4,7 +4,7 @@ import ProxmoxContainerDetails from '@/pages/Containers/components/containers/co
 import {
   postDockerContainerAction,
   postProxmoxContainerAction,
-} from '@/services/rest/containers';
+} from '@/services/rest/containers/containers';
 import {
   CloseCircleOutlined,
   PauseOutlined,
@@ -13,7 +13,8 @@ import {
   SwapOutlined,
 } from '@ant-design/icons';
 import { history } from '@umijs/max';
-import { Button, Divider, message, Modal, Space } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Button, Divider, Modal, Space } from 'antd';
 import React from 'react';
 import { API, SsmContainer } from 'ssm-shared-lib';
 
@@ -22,6 +23,8 @@ type ContainerDetailsModalProps = {
   setOpenModal: (open: boolean) => void;
   isOpen: boolean;
 };
+
+const MODAL_WIDTH = 800;
 
 const ContainerDetailsModal: React.FC<ContainerDetailsModalProps> = ({
   setOpenModal,
@@ -65,7 +68,7 @@ const ContainerDetailsModal: React.FC<ContainerDetailsModalProps> = ({
         </>
       }
       destroyOnClose
-      width={800}
+      width={MODAL_WIDTH}
       footer={(_, extra) => (
         <>
           <Space.Compact style={{ marginRight: 15 }}>

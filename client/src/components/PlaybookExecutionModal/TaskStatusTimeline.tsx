@@ -14,15 +14,12 @@ const transformToTaskStatusTimeline = (
   execStatus: API.ExecStatus,
 ): TaskStatusTimelineType => {
   //  status?: 'wait' | 'process' | 'finish' | 'error';
-  let status: StepsProps['status'] = undefined;
-  let icon: ReactNode = <QuestionOutlined />;
+  let status: string = 'created';
   if (execStatus.status === SsmAnsible.AnsibleTaskStatus.STARTING) {
     status = 'finish';
-    icon = <VerticalAlignBottomOutlined />;
   }
   if (execStatus.status === SsmAnsible.AnsibleTaskStatus.RUNNING) {
     status = 'process';
-    icon = <LoadingOutlined />;
   }
   if (
     execStatus.status === SsmAnsible.AnsibleTaskStatus.FAILED ||
@@ -30,17 +27,13 @@ const transformToTaskStatusTimeline = (
     execStatus.status === SsmAnsible.AnsibleTaskStatus.TIMEOUT
   ) {
     status = 'error';
-    icon = <CloseCircleOutlined />;
   }
   if (execStatus.status === SsmAnsible.AnsibleTaskStatus.SUCCESS) {
     status = 'finish';
-    icon = <CheckCircleOutlined />;
   }
 
   return {
-    status: status,
-    _status: execStatus.status,
-    icon: icon,
+    status: execStatus.status,
     title: execStatus.status,
   };
 };

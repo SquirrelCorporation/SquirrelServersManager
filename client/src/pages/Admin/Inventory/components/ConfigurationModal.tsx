@@ -3,50 +3,65 @@ import ContainersConfigurationTab from '@/pages/Admin/Inventory/components/tabs/
 import DiagnosticTab from '@/pages/Admin/Inventory/components/tabs/DiagnosticTab';
 import SSHConfigurationFormTab from '@/pages/Admin/Inventory/components/tabs/SSHConfigurationFormTab';
 import SystemInformationConfigurationTab from '@/pages/Admin/Inventory/components/tabs/SystemInformationConfigurationTab';
-import { Modal, Tabs, TabsProps } from 'antd';
-import React from 'react';
-import { API } from 'ssm-shared-lib';
-import { SsmStatus } from 'ssm-shared-lib';
+import { Modal, TabsProps } from 'antd';
+import React, { Dispatch, SetStateAction } from 'react';
+import { API, SsmStatus } from 'ssm-shared-lib';
+import ModalStyledTabs from '@/components/Layout/ModalStyledTabs';
+import {
+  StreamlineComputerConnection,
+  GrommetIconsSystem,
+  VaadinCubes,
+  MedicalSearchDiagnosisSolid,
+  TablerPlugConnected,
+} from '@/components/Icons/CustomIcons';
 
 export type ConfigurationModalProps = {
   updateModalOpen: boolean;
-  handleUpdateModalOpen: any;
+  handleUpdateModalOpen: Dispatch<SetStateAction<boolean>>;
   device: Partial<API.DeviceItem>;
 };
 
-const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
-  const { updateModalOpen, handleUpdateModalOpen, device } = props;
-  const items: TabsProps['items'] = [
+const ConfigurationModal: React.FC<ConfigurationModalProps> = ({
+  updateModalOpen,
+  handleUpdateModalOpen,
+  device,
+}) => {
+  const items: NonNullable<TabsProps['items']> = [
     {
       key: 'ssh',
       label: 'SSH',
-      children: <SSHConfigurationFormTab values={device} />,
+      icon: <StreamlineComputerConnection />,
+      children: <SSHConfigurationFormTab device={device} />,
     },
     {
       key: 'system-information',
       label: 'System Information',
+      icon: <GrommetIconsSystem />,
       children: <SystemInformationConfigurationTab device={device} />,
     },
     {
       key: 'containers',
       label: 'Containers',
+      icon: <VaadinCubes />,
       children: <ContainersConfigurationTab device={device} />,
     },
     {
       key: 'diagnostic',
       label: 'Diagnostic',
+      icon: <MedicalSearchDiagnosisSolid />,
       children: <DiagnosticTab device={device} />,
     },
     {
       key: 'agent',
       label: 'Agent',
+      icon: <TablerPlugConnected />,
       children: <AgentConfigurationTab device={device} />,
     },
   ];
 
   return (
     <Modal
-      style={{ padding: '32px 40px 48px' }}
+      style={{ padding: '0px' }}
       width={1000}
       destroyOnClose
       title={`${device.hostname || 'Unknown device'} (${device.ip})`}
@@ -56,12 +71,11 @@ const ConfigurationModal: React.FC<ConfigurationModalProps> = (props) => {
       }}
       footer={() => <div />}
     >
-      <Tabs
+      <ModalStyledTabs
         onChange={(key: string) => {
           console.log(key);
         }}
-        type="card"
-        items={
+        tabItems={
           device.status === SsmStatus.DeviceStatus.UNMANAGED
             ? items.filter((e) => e.key !== 'agent')
             : items

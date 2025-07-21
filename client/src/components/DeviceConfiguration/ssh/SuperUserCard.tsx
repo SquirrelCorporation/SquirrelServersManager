@@ -1,4 +1,5 @@
 import { EosIconsAdmin } from '@/components/Icons/CustomIcons';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 import {
   EyeInvisibleOutlined,
   EyeTwoTone,
@@ -39,13 +40,10 @@ const SuperUserCard: React.FC<SuperUserCardProps> = ({ formRef }) => (
     }
     style={{ marginBottom: 10 }}
     extra={
-      <Tooltip
-        title={
-          'SSM will need to elevate privileges for some operations, fill the sudo method and sudo user & password. Passwords are saved using Vault.'
-        }
-      >
-        <InfoCircleFilled />
-      </Tooltip>
+      <InfoLinkWidget
+        tooltipTitle="SSM will need to elevate privileges for some operations, fill the sudo method and sudo user & password. Passwords are saved using Vault."
+        documentationLink="https://squirrelserversmanager.io/docs/user-guides/devices/configuration/ssh#super-user-configuration"
+      />
     }
   >
     <ProForm.Group>

@@ -3,25 +3,26 @@ import FileMatchesForm from '@/pages/Admin/Settings/components/subcomponents/for
 import GitForm from '@/pages/Admin/Settings/components/subcomponents/forms/GitForm';
 import {
   commitAndSyncContainerStacksGitRepository,
+  createContainerStacksGitRepository,
   deleteContainerStacksGitRepository,
   forceCloneContainerStacksGitRepository,
   forcePullContainerStacksGitRepository,
   forceRegisterContainerStacksGitRepository,
-  postContainerStacksGitRepository,
-  putContainerStacksGitRepository,
+  updateContainerStacksGitRepository,
   syncToDatabaseContainerStacksGitRepository,
-} from '@/services/rest/container-stacks-repositories';
+} from '@/services/rest/container-stacks/repositories';
 import { DeleteOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { ModalForm, ProForm } from '@ant-design/pro-components';
 import { history } from '@umijs/max';
-import { Avatar, Button, Dropdown, MenuProps, message, Popconfirm } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Avatar, Button, Dropdown, MenuProps, Popconfirm } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
 type ContainerStacksGitRepositoryModalProps = {
   selectedRecord: Partial<API.GitContainerStacksRepository>;
   modalOpened: boolean;
-  setModalOpened: any;
+  setModalOpened: React.Dispatch<React.SetStateAction<boolean>>;
   asyncFetch: () => Promise<void>;
   repositories: API.GitContainerStacksRepository[];
 };
@@ -51,9 +52,15 @@ const items = [
 
 const ContainerStacksGitRepositoryModal: React.FC<
   ContainerStacksGitRepositoryModalProps
-> = (props) => {
+> = ({
+  selectedRecord,
+  modalOpened,
+  setModalOpened,
+  repositories,
+  asyncFetch,
+}) => {
   const onMenuClick: MenuProps['onClick'] = async (e) => {
-    if (!props.selectedRecord.uuid) {
+    if (!selectedRecord.uuid) {
       message.error({
         content: 'Internal error - no uuid',
         duration: 6,
@@ -62,18 +69,18 @@ const ContainerStacksGitRepositoryModal: React.FC<
     }
     switch (e.key) {
       case '1':
-        await forcePullContainerStacksGitRepository(
-          props.selectedRecord.uuid,
-        ).then(() => {
-          message.loading({
-            content: 'Force pull command launched',
-            duration: 6,
-          });
-        });
+        await forcePullContainerStacksGitRepository(selectedRecord.uuid).then(
+          () => {
+            message.loading({
+              content: 'Force pull command launched',
+              duration: 6,
+            });
+          },
+        );
         return;
       case '2':
         await commitAndSyncContainerStacksGitRepository(
-          props.selectedRecord.uuid,
+          selectedRecord.uuid,
         ).then(() => {
           message.loading({
             content: 'Commit and sync command launched',
@@ -82,18 +89,18 @@ const ContainerStacksGitRepositoryModal: React.FC<
         });
         return;
       case '3':
-        await forceCloneContainerStacksGitRepository(
-          props.selectedRecord.uuid,
-        ).then(() => {
-          message.loading({
-            content: 'Force clone command launched',
-            duration: 6,
-          });
-        });
+        await forceCloneContainerStacksGitRepository(selectedRecord.uuid).then(
+          () => {
+            message.loading({
+              content: 'Force clone command launched',
+              duration: 6,
+            });
+          },
+        );
         return;
       case '4':
         await syncToDatabaseContainerStacksGitRepository(
-          props.selectedRecord.uuid,
+          selectedRecord.uuid,
         ).then(() => {
           message.loading({
             content: 'Sync to database command launched',
@@ -103,7 +110,7 @@ const ContainerStacksGitRepositoryModal: React.FC<
         return;
       case '5':
         await forceRegisterContainerStacksGitRepository(
-          props.selectedRecord.uuid,
+          selectedRecord.uuid,
         ).then(() => {
           message.loading({
             content: 'Force register command launched',
@@ -114,7 +121,7 @@ const ContainerStacksGitRepositoryModal: React.FC<
     }
   };
 
-  const editionMode = props.selectedRecord
+  const editionMode = selectedRecord
     ? [
         <Button
           key={'show-logs'}
@@ -123,7 +130,7 @@ const ContainerStacksGitRepositoryModal: React.FC<
             history.push({
               pathname: '/admin/logs',
               // @ts-expect-error lib missing type
-              search: `?moduleId=${props.selectedRecord.uuid}`,
+              search: `?moduleId=${selectedRecord.uuid}`,
             })
           }
         >
@@ -140,10 +147,8 @@ const ContainerStacksGitRepositoryModal: React.FC<
           title="Are you sure to delete this repository?"
           key="delete"
           onConfirm={async () => {
-            if (props.selectedRecord && props.selectedRecord.uuid) {
-              await deleteContainerStacksGitRepository(
-                props.selectedRecord.uuid,
-              )
+            if (selectedRecord && selectedRecord.uuid) {
+              await deleteContainerStacksGitRepository(selectedRecord.uuid)
                 .then(() =>
                   message.warning({
                     content: 'Repository deleted',
@@ -151,9 +156,9 @@ const ContainerStacksGitRepositoryModal: React.FC<
                   }),
                 )
                 .finally(() => {
-                  props.setModalOpened(false);
+                  setModalOpened(false);
                 });
-              await props.asyncFetch();
+              await asyncFetch();
             }
           }}
         >
@@ -177,34 +182,34 @@ const ContainerStacksGitRepositoryModal: React.FC<
             }}
             src={<SimpleIconsGit />}
           />
-          {(props.selectedRecord && (
-            <>Edit repository {props.selectedRecord?.name}</>
-          )) || <>Add & sync a new repository</>}
+          {(selectedRecord && <>Edit repository {selectedRecord?.name}</>) || (
+            <>Add & sync a new repository</>
+          )}
         </>
       }
       clearOnDestroy
-      open={props.modalOpened}
+      open={modalOpened}
       autoFocusFirstInput
       modalProps={{
         destroyOnClose: true,
-        onCancel: () => props.setModalOpened(false),
+        onCancel: () => setModalOpened(false),
       }}
       onFinish={async (values) => {
-        if (props.selectedRecord) {
-          await postContainerStacksGitRepository(
-            props.selectedRecord.uuid as string,
+        if (selectedRecord) {
+          await updateContainerStacksGitRepository(
+            selectedRecord.uuid as string,
             values,
           );
-          props.setModalOpened(false);
-          await props.asyncFetch();
+          setModalOpened(false);
+          await asyncFetch();
         } else {
-          await putContainerStacksGitRepository(values);
+          await createContainerStacksGitRepository(values);
           message.loading({
             content: 'Repository cloning & processing in process...',
             duration: 6,
           });
-          props.setModalOpened(false);
-          await props.asyncFetch();
+          setModalOpened(false);
+          await asyncFetch();
         }
       }}
       submitter={{
@@ -216,12 +221,9 @@ const ContainerStacksGitRepositoryModal: React.FC<
         },
       }}
     >
-      <GitForm
-        selectedRecord={props.selectedRecord}
-        repositories={props.repositories}
-      />
+      <GitForm selectedRecord={selectedRecord} repositories={repositories} />
       <ProForm.Group>
-        <FileMatchesForm selectedRecord={props.selectedRecord} />
+        <FileMatchesForm selectedRecord={selectedRecord} />
       </ProForm.Group>
     </ModalForm>
   );

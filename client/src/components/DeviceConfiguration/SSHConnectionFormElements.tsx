@@ -10,17 +10,18 @@ export type SSHConnectionFormElementsProps = {
   formRef: React.MutableRefObject<ProFormInstance | undefined>;
 };
 
-const SSHConnectionFormElements: React.FC<SSHConnectionFormElementsProps> = (
-  props,
-) => {
+const SSHConnectionFormElements: React.FC<SSHConnectionFormElementsProps> = ({
+  deviceIp,
+  formRef,
+}) => {
   const [showAdvanced, setShowAdvanced] = React.useState(false);
   const toggleShowAdvanced = () => setShowAdvanced(!showAdvanced);
 
   return (
     <>
-      <HostCard deviceIp={props.deviceIp} showAdvanced={showAdvanced} />
-      <SuperUserCard formRef={props.formRef} />
-      <AuthenticationCard formRef={props.formRef} />
+      <HostCard deviceIp={deviceIp} showAdvanced={showAdvanced} />
+      <SuperUserCard formRef={formRef} />
+      <AuthenticationCard formRef={formRef} />
       <AdvancedSwitch
         showAdvanced={showAdvanced}
         toggleShowAdvanced={toggleShowAdvanced}

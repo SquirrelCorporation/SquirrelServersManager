@@ -18,16 +18,19 @@
     - name: Test Connection
       ping:
       timeout: 600
+
 - name: Test Sudo Working
   hosts: all
   tasks:
-    - become: true
-      command: id -u
-      register: id_output
-    - assert:
-        that: id_output.stdout == '0'
+    - name: Attempt a privileged action (write to /root)
+      become: true # Attempt escalation
+      command: bash -c "touch /root/.ssm_privilege_test && rm -f /root/.ssm_privilege_test" # Try to create and delete a file in /root
+      register: privilege_test_result
+      changed_when: false # We don't care if the file state changed, only if the command succeeded
+      failed_when: privilege_test_result.rc != 0 # Explicitly fail if the command returns non-zero
+
 - name: Task completion summary
   hosts: all
   tasks:
     - debug:
-        msg: "Become completed with {{ id_output.stdout }}"
+        msg: "Become completed with {{ privilege_test_result.rc }}"

@@ -4,8 +4,8 @@ import TerminalCoreModal, {
 import {
   executePlaybook,
   executePlaybookByQuickRef,
-} from '@/services/rest/playbooks';
-import { message } from 'antd';
+} from '@/services/rest/playbooks/playbooks';
+import message from '@/components/Message/DynamicMessage';
 import React, { RefObject, useEffect, useState } from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';
 

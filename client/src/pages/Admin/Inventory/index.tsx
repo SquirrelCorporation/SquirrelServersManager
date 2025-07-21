@@ -12,7 +12,7 @@ import TerminalModal, {
 import PlaybookSelectionModal from '@/components/PlaybookSelection/PlaybookSelectionModal';
 import Title, { TitleColors } from '@/components/Template/Title';
 import InventoryColumns from '@/pages/Admin/Inventory/InventoryColumns';
-import { deleteDevice, getDevices } from '@/services/rest/device';
+import { deleteDevice, getDevices } from '@/services/rest/devices/devices';
 import { useParams } from '@@/exports';
 import { DatabaseOutlined, WarningOutlined } from '@ant-design/icons';
 import type {
@@ -25,10 +25,12 @@ import {
   ProDescriptions,
   ProTable,
 } from '@ant-design/pro-components';
-import { Button, Drawer, message, Popconfirm } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Button, Drawer, Popconfirm } from 'antd';
 import React, { useRef, useState } from 'react';
 import { API, SsmAnsible, SsmAgent } from 'ssm-shared-lib';
 import ConfigurationModal from './components/ConfigurationModal';
+import InfoLinkWidget from '@/components/Shared/InfoLinkWidget';
 
 const Inventory: React.FC = () => {
   const { id } = useParams();
@@ -177,6 +179,10 @@ const Inventory: React.FC = () => {
             >
               Add a new device
             </Button>,
+            <InfoLinkWidget
+              tooltipTitle="Help for devices."
+              documentationLink="https://squirrelserversmanager.io/docs/user-guides/devices/management"
+            />,
           ];
         }}
       />

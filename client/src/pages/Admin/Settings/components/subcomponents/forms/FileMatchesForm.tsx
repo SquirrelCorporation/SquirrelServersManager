@@ -1,5 +1,5 @@
 import { ProFormSelect } from '@ant-design/pro-form';
-import { message } from 'antd';
+import message from '@/components/Message/DynamicMessage';
 import React, { useState } from 'react';
 import { API } from 'ssm-shared-lib';
 

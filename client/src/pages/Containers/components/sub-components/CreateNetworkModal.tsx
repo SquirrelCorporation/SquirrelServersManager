@@ -8,9 +8,13 @@ import {
   Vlan,
 } from '@/components/Icons/CustomIcons';
 import DockerOpsModal from '@/pages/Containers/components/sub-components/DockerOpsModal';
-import { getAllDevices } from '@/services/rest/device';
-import { postNetwork } from '@/services/rest/services';
-import { cidrContains, isCidr, isIp, isNetworkBaseAddress } from '@/utils/ip';
+import { getAllDevices } from '@/services/rest/devices/devices';
+import { postNetwork } from '@/services/rest/containers/container-networks';
+import {
+  validateIpInSubnet,
+  validateIpRangeInSubnet,
+  validateSubnet,
+} from '@/utils/ip';
 import {
   CheckCircleFilled,
   MinusCircleOutlined,
@@ -39,82 +43,6 @@ import {
 } from 'antd';
 import React from 'react';
 import { API } from 'ssm-shared-lib';
-
-export const validateSubnet = () => (rule: any, value: string) => {
-  return new Promise<void>((resolve, reject) => {
-    if (!value) {
-      return resolve();
-    }
-    // Ensure IP/CIDR value is valid
-    if (!isCidr(value)) {
-      return reject('CIDR format invalid');
-    }
-    if (!isNetworkBaseAddress(value)) {
-      return reject(
-        'CIDR ${value} is incorrectly formed. It should start with the base like 192.168.0.0/24',
-      );
-    }
-    return resolve();
-  });
-};
-
-export const validateIpRangeInSubnet =
-  (getFieldValue: (name: string) => any) => (rule: any, value: string) => {
-    return new Promise<void>((resolve, reject) => {
-      const subnet = getFieldValue('v4_subnet');
-      if (!value) {
-        return resolve();
-      }
-      // Ensure IP/CIDR value is valid
-      if (!isCidr(value)) {
-        return reject('CIDR format invalid');
-      }
-
-      if (!isNetworkBaseAddress(value)) {
-        return reject(
-          `CIDR ${value} is incorrectly formed. It should start with the base like 192.168.0.0/24`,
-        );
-      }
-
-      // Validate CIDR containment for a single IP or base IP of CIDR
-      const valueBaseIp = value.split('/')[0];
-      if (!cidrContains(subnet, valueBaseIp)) {
-        return reject('CIDR not within the subnet');
-      }
-
-      // Additional check if value is CIDR: prefix lengths comparison
-      if (isCidr(value)) {
-        const valuePrefixLength = parseInt(value.split('/')[1], 10);
-        const subnetPrefixLength = parseInt(subnet.split('/')[1], 10);
-        if (valuePrefixLength < subnetPrefixLength) {
-          return reject('IP range is less than the subnet prefix');
-        }
-      }
-
-      return resolve();
-    });
-  };
-
-export const validateIpInSubnet =
-  (getFieldValue: (name: string) => any) => (rule: any, value: string) => {
-    return new Promise<void>((resolve, reject) => {
-      const subnet = getFieldValue('v4_subnet');
-      if (!value) {
-        return resolve();
-      }
-
-      // Ensure IP/CIDR value is valid
-      if (!isIp(value)) {
-        return reject('Invalid IP format');
-      }
-
-      if (!cidrContains(subnet, value)) {
-        return reject('IP not within the subnet');
-      }
-
-      return resolve();
-    });
-  };
 
 const CreateNetworkModal = () => {
   const [form] = ProForm.useForm();

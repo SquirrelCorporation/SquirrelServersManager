@@ -8,7 +8,7 @@ const CarouselNoDevice = () => (
       <div className={styles.imageContainer}>
         <div className={styles.blurWrapper}>
           <Image
-            src={'https://squirrelserversmanager.io/home/devices.png'}
+            src={'/images/home-devices.png'}
             preview={false}
             className={styles.blurredImage}
           />
@@ -19,7 +19,7 @@ const CarouselNoDevice = () => (
       <div className={styles.imageContainer}>
         <div className={styles.blurWrapper}>
           <Image
-            src={'https://squirrelserversmanager.io/home/dashboard.png'}
+            src={'/images/home-dashboard.png'}
             preview={false}
             className={styles.blurredImage}
           />
@@ -30,7 +30,7 @@ const CarouselNoDevice = () => (
       <div className={styles.imageContainer}>
         <div className={styles.blurWrapper}>
           <Image
-            src={'https://squirrelserversmanager.io/home/services.png'}
+            src={'/images/home-services.png'}
             preview={false}
             className={styles.blurredImage}
           />
@@ -41,7 +41,7 @@ const CarouselNoDevice = () => (
       <div className={styles.imageContainer}>
         <div className={styles.blurWrapper}>
           <Image
-            src={'https://squirrelserversmanager.io/home/store.png'}
+            src={'/images/home-store.png'}
             preview={false}
             className={styles.blurredImage}
           />

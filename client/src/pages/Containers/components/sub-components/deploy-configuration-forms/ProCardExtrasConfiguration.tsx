@@ -8,9 +8,13 @@ import {
 import React from 'react';
 import { API } from 'ssm-shared-lib';
 
-const ProCardExtrasConfiguration: React.FC<{ template: API.Template }> = (
-  props,
-) => {
+type ProCardExtrasConfigurationProps = {
+  template: API.Template;
+};
+
+const ProCardExtrasConfiguration: React.FC<ProCardExtrasConfigurationProps> = ({
+  template,
+}) => {
   return (
     <ProCard
       title={
@@ -28,12 +32,12 @@ const ProCardExtrasConfiguration: React.FC<{ template: API.Template }> = (
           width={'lg'}
           name="command"
           label="Command"
-          initialValue={props.template.command}
+          initialValue={template.command}
         />
         <ProFormSwitch
           name="privileged"
           label="Privileged Mode"
-          initialValue={props.template.privileged}
+          initialValue={template.privileged}
         />
       </ProForm.Group>
     </ProCard>

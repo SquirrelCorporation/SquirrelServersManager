@@ -10,9 +10,8 @@
     "src/**/*.{spec,test}.ts",
     "src/**/ansible/artifacts/*",
     "src/**/ansible/inventory/*.json",
-    "src/tests/helpers/directory-tree/test_data/*"
+    "src/tests/helpers/directory-tree/test_data/*",
+    "src/**/test-setup.ts"
   ],
-  "exec": "ts-node --transpile-only src/index.ts"
-
+  "exec": "ts-node --transpile-only -r tsconfig-paths/register src/main.ts"
 }
-

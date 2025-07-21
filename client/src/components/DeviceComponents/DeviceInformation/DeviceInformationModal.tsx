@@ -19,9 +19,10 @@ import {
   WhhRam,
   Wifi,
 } from '@/components/Icons/CustomIcons';
-import { Modal, Tabs, TabsProps } from 'antd';
+import { Modal } from 'antd';
 import React, { useImperativeHandle, useState } from 'react';
 import { API } from 'ssm-shared-lib';
+import ModalStyledTabs from '@/components/Layout/ModalStyledTabs';
 
 export interface DeviceInformationModalHandles {
   open: () => void;
@@ -30,6 +31,8 @@ export interface DeviceInformationModalHandles {
 type DeviceModalProps = {
   device: API.DeviceItem;
 };
+
+const MODAL_WIDTH = 1200;
 
 const DeviceInformationModal = React.forwardRef<
   DeviceInformationModalHandles,
@@ -43,7 +46,7 @@ const DeviceInformationModal = React.forwardRef<
 
   useImperativeHandle(ref, () => ({ open }));
 
-  const items: TabsProps['items'] = [
+  const items = [
     {
       key: 'summary',
       label: 'Summary',
@@ -111,16 +114,17 @@ const DeviceInformationModal = React.forwardRef<
       open={visible}
       onCancel={() => setVisible(false)}
       style={{ padding: '32px 40px 48px' }}
-      width={1000}
+      width={MODAL_WIDTH}
       destroyOnClose
       okText={'Close'}
+      onOk={() => setVisible(false)}
       cancelButtonProps={{ style: { display: 'none' } }}
     >
-      <Tabs
+      <ModalStyledTabs
+        tabItems={items}
         onChange={(key: string) => {
           console.log(key);
         }}
-        items={items}
       />
     </Modal>
   );

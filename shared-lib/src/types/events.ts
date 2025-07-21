@@ -57,3 +57,9 @@ export enum VolumeBackup {
 export enum Diagnostic {
   PROGRESS = 'diagnostic:progress'
 }
+
+export enum RemoteSystemInfoDebug {
+  DEBUG_COMPONENT = 'rsi-debug:component',
+  DEBUG_COMMAND = 'rsi-debug:command',
+  DEBUG_ERROR = 'rsi-debug:error'
+}

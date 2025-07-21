@@ -11,13 +11,20 @@ const EllipsisMiddle: React.FC<{ suffixCount: number; children: string }> = ({
   suffixCount,
   children,
 }) => {
-  const start = children.slice(0, children.length - suffixCount);
-  const suffix = children.slice(-suffixCount).trim();
-  return (
-    <Text style={{ maxWidth: '100%' }} ellipsis={{ suffix }} code>
-      {start}
+  try {
+    const start = children.slice(0, children.length - suffixCount);
+    const suffix = children.slice(-suffixCount).trim();
+    return (
+      <Text style={{ maxWidth: '100%' }} ellipsis={{ suffix }} code>
+        {start}
+      </Text>
+    );
+  } catch (error) {
+    return (<Text style={{ maxWidth: '100%' }} ellipsis={{ suffix: children }} code>
+      {children}
     </Text>
-  );
+    );
+  }
 };
 
 const TaskLogsColumns: ProColumns<API.Task>[] = [

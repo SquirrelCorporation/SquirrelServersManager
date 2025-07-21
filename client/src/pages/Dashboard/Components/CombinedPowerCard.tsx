@@ -5,7 +5,7 @@ import { InfoCircleFilled } from '@ant-design/icons';
 import { Bar } from '@ant-design/plots';
 import { useModel } from '@umijs/max';
 import { Tooltip, Typography } from 'antd';
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { API } from 'ssm-shared-lib';
 
 const CombinedPowerCard: React.FC = () => {
@@ -84,7 +84,6 @@ const CombinedPowerCard: React.FC = () => {
 
   return (
     <ChartCard
-      bordered={false}
       loading={loading}
       title={
         <Typography.Title style={{ fontSize: '14px' }}>

@@ -1,7 +1,7 @@
 import {
   getDashboardAveragedDevicesStats,
   getDashboardDevicesStats,
-} from '@/services/rest/devicestat';
+} from '@/services/rest/statistics/stastistics';
 import Devicestatus from '@/utils/devicestatus';
 import { getTimeDistance } from '@/utils/time';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -81,6 +81,10 @@ const MainChartCard: React.FC = () => {
     setLoading(true);
     try {
       if (devices.length > 0) {
+        setGraphData(undefined);
+        setGraphMemData(undefined);
+        setGraphStorageData(undefined);
+        setTopTenData(undefined);
         const [deviceStats, averagedDeviceStats] = await Promise.all([
           getDashboardDevicesStats(devices as string[], type, {
             from: rangePickerValue[0].toDate(),
@@ -125,13 +129,13 @@ const MainChartCard: React.FC = () => {
       animate: { enter: { type: 'waveIn' } },
       theme: {
         view: {
-          viewFill: '#151921',
+          viewFill: 'rgba(255,255,255,0.00)',
         },
       },
       loadingTemplate: (
         <Flex
           justify={'center'}
-          style={{ backgroundColor: '#151921', width: '100%', height: '100%' }}
+          style={{ backgroundColor: '#0a0a0a', width: '100%', height: '100%' }}
         >
           <LoadingOutlined style={{ fontSize: '32px' }} />
         </Flex>

@@ -10,31 +10,31 @@
     "test": "vitest --disable-console-intercept --reporter=basic ",
     "coverage": "vitest run --coverage"
   },
-  "version": "0.1.17",
+  "version": "0.5.0",
   "author": "Squirrel Team",
   "dependencies": {
-    "express": "^4.21.2"
+    "express": "^5.1.0"
   },
   "overrides": {
     "minimatch": "5.1.2",
     "glob": "8.1.0"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.1.1",
-    "@eslint/eslintrc": "^3.1.0",
-    "@eslint/js": "^9.9.1",
-    "@types/express": "^4.17.21",
+    "@eslint/compat": "^1.2.9",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.28.0",
+    "@types/express": "^5.0.2",
     "@types/fs-extra": "^11.0.4",
-    "eslint": "^9.9.1",
-    "@typescript-eslint/eslint-plugin": "^8.4.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "eslint-plugin-import-x": "^4.2.1",
-    "@stylistic/eslint-plugin": "^2.7.2",
-    "@typescript-eslint/parser": "^8.4.0",
-    "globals": "^15.9.0",
-    "prettier": "^3.3.3",
+    "eslint": "^9.28.0",
+    "@typescript-eslint/eslint-plugin": "^8.33.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.1",
+    "eslint-plugin-import-x": "^4.15.0",
+    "@stylistic/eslint-plugin": "^4.4.0",
+    "@typescript-eslint/parser": "^8.33.0",
+    "globals": "^16.2.0",
+    "prettier": "^3.5.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.8.3"
   }
 }

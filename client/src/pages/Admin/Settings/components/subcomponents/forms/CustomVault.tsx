@@ -1,4 +1,4 @@
-import { getAnsibleVaults } from '@/services/rest/ansible';
+import { getAnsibleVaults } from '@/services/rest/ansible-vaults/ansible-vault';
 import { ProFormSelect } from '@ant-design/pro-form';
 import React from 'react';
 import { API } from 'ssm-shared-lib';

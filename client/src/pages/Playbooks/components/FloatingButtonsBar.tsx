@@ -11,42 +11,39 @@ type FloatingButtonsBarProps = {
   selectedFile?: API.PlaybookFile;
 };
 
-const FloatingButtonsBar: React.FC<FloatingButtonsBarProps> = (props) => {
-  const {
-    onClickSavePlaybook,
-    onClickDeletePlaybook,
-    onClickUndoPlaybook,
-    selectedFile,
-  } = props;
-  return (
-    <FloatButton.Group shape="square" style={{ right: 94 }}>
-      <FloatButton
-        onClick={onClickSavePlaybook}
-        tooltip={'Save file'}
-        icon={<SaveOutlined style={{ color: 'blueviolet' }} />}
-      />
-      <FloatButton.BackTop tooltip={'Scroll to top'} visibilityHeight={0} />
-      <FloatButton
-        tooltip={'Reset changes'}
-        icon={<RedoOutlined />}
-        onClick={onClickUndoPlaybook}
-      />
-      {selectedFile?.custom && (
-        <Popconfirm
-          title="Delete the playbook"
-          description="Are you sure to delete this playbook?"
-          onConfirm={onClickDeletePlaybook}
-          okText="Yes"
-          cancelText="No"
-        >
-          <FloatButton
-            tooltip={'Delete file'}
-            icon={<DeleteOutline style={{ color: 'red' }} />}
-          />
-        </Popconfirm>
-      )}
-    </FloatButton.Group>
-  );
-};
+const FloatingButtonsBar: React.FC<FloatingButtonsBarProps> = ({
+  onClickSavePlaybook,
+  onClickDeletePlaybook,
+  onClickUndoPlaybook,
+  selectedFile,
+}) => (
+  <FloatButton.Group shape="square" style={{ right: 94 }}>
+    <FloatButton
+      onClick={onClickSavePlaybook}
+      tooltip={'Save file'}
+      icon={<SaveOutlined style={{ color: 'blueviolet' }} />}
+    />
+    <FloatButton.BackTop tooltip={'Scroll to top'} visibilityHeight={0} />
+    <FloatButton
+      tooltip={'Reset changes'}
+      icon={<RedoOutlined />}
+      onClick={onClickUndoPlaybook}
+    />
+    {selectedFile?.custom && (
+      <Popconfirm
+        title="Delete the playbook"
+        description="Are you sure to delete this playbook?"
+        onConfirm={onClickDeletePlaybook}
+        okText="Yes"
+        cancelText="No"
+      >
+        <FloatButton
+          tooltip={'Delete file'}
+          icon={<DeleteOutline style={{ color: 'red' }} />}
+        />
+      </Popconfirm>
+    )}
+  </FloatButton.Group>
+);
 
 export default FloatingButtonsBar;

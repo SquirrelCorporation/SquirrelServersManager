@@ -4,7 +4,7 @@ import {
   TriangleFlag,
 } from '@/components/Icons/CustomIcons';
 import ExtraVarView from '@/components/PlaybookSelection/ExtraVarView';
-import { getPlaybooks } from '@/services/rest/playbooks';
+import { getPlaybooks } from '@/services/rest/playbooks/playbooks';
 import { RightSquareOutlined } from '@ant-design/icons';
 import {
   ModalForm,
@@ -19,17 +19,17 @@ import {
   Dropdown,
   Form,
   MenuProps,
-  message,
   Tag,
   Tooltip,
   Typography,
 } from 'antd';
-import React, { useEffect } from 'react';
+import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import { API, SsmAnsible } from 'ssm-shared-lib';
+import message from '@/components/Message/DynamicMessage';
 
 export type PlaybookSelectionModalProps = {
   isModalOpen: boolean;
-  setIsModalOpen: any;
+  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
   itemSelected?: API.DeviceItem[];
   callback: (
     playbook: string,
@@ -40,9 +40,12 @@ export type PlaybookSelectionModalProps = {
   ) => void;
 };
 
-const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
-  props,
-) => {
+const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = ({
+  isModalOpen,
+  setIsModalOpen,
+  itemSelected,
+  callback,
+}) => {
   const [listOfPlaybooks, setListOfPlaybooks] = React.useState<
     API.PlaybookFile[] | undefined
   >();
@@ -77,7 +80,6 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
                 <ExtraVarView
                   extraVar={e}
                   setOverrideExtraVars={setOverrideExtraVars}
-                  overrideExtraVars={overrideExtraVars}
                 />
               </Form.Item>
             ))) || (
@@ -126,7 +128,7 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
   return (
     <ModalForm
       title="Playbook"
-      open={props.isModalOpen}
+      open={isModalOpen}
       autoFocusFirstInput
       clearOnDestroy
       modalProps={{
@@ -135,7 +137,7 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
           setSelectedPlaybookExtraVars(undefined);
           setOverrideExtraVars(undefined);
           setSelectedPlaybook(undefined);
-          props.setIsModalOpen(false);
+          setIsModalOpen(false);
         },
       }}
       grid={true}
@@ -147,11 +149,11 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
         playbook: { value: string };
         extraVars: Record<string, any>;
       }) => {
-        props.callback(
+        callback(
           values.playbook.value,
           listOfPlaybooks?.find((e) => values.playbook.value === e.uuid)
             ?.name as string,
-          props.itemSelected,
+          itemSelected,
           values.extraVars
             ? Object.keys(values.extraVars).map((key) => ({
                 extraVar: key,
@@ -160,7 +162,7 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
             : undefined,
           mode,
         );
-        props.setIsModalOpen(false);
+        setIsModalOpen(false);
         return true;
       }}
       submitter={{
@@ -232,7 +234,7 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
                 return e.data
                   ?.filter(
                     ({ playableInBatch }) =>
-                      playableInBatch || props.itemSelected?.length === 1,
+                      playableInBatch || itemSelected?.length === 1,
                   )
                   ?.filter(({ name, path }: { name: string; path: string }) => {
                     return name.includes(keyWords) || path.includes(keyWords);
@@ -275,7 +277,7 @@ const PlaybookSelectionModal: React.FC<PlaybookSelectionModalProps> = (
             <span style={{ marginTop: 10 }}>
               <RightSquareOutlined /> SSM will apply &quot;
               {playbook ? playbook.label : '?'}&quot; on{' '}
-              {props.itemSelected?.map((e) => `[${e.ip}] `) || '"All"'}
+              {itemSelected?.map((e) => `[${e.ip}] `) || '"All"'}
             </span>
           )}
         </ProFormDependency>

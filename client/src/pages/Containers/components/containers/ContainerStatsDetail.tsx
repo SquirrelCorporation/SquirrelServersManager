@@ -1,4 +1,4 @@
-import { getContainerStats } from '@/services/rest/containersstats';
+import { getContainerStats } from '@/services/rest/containers/container-statistics';
 import { Line } from '@ant-design/charts';
 import moment from 'moment';
 import React, { useEffect } from 'react';
@@ -9,10 +9,10 @@ export type ContainerStatsDetailProps = {
   type: string;
 };
 
-const ContainerStatsDetail: React.FC<ContainerStatsDetailProps> = (
-  props: ContainerStatsDetailProps,
-) => {
-  const { containerId, type } = props;
+const ContainerStatsDetail: React.FC<ContainerStatsDetailProps> = ({
+  containerId,
+  type,
+}) => {
   const [data, setData] = React.useState<API.ContainerStat[] | undefined>();
 
   const formatData = (list: API.ContainerStats) => {
@@ -69,7 +69,7 @@ const ContainerStatsDetail: React.FC<ContainerStatsDetailProps> = (
     autoFit: false,
     theme: {
       view: {
-        viewFill: '#1d222e',
+        viewFill: 'transparent',
       },
     },
     width: 280,

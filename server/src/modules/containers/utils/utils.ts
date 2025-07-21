@@ -1,9 +1,6 @@
 import Dockerode from 'dockerode';
-import ContainerRepo from '../../../data/database/repository/ContainerRepo';
+import { IContainer } from '@modules/containers/domain/entities/container.entity';
 import logger from '../../../logger';
-import { getRegistries } from '../core/WatcherEngine';
-import Registry from '../registries/Registry';
-import Container from '../../../data/database/model/Container';
 import Tag from './tag';
 import tagUtil from './tag';
 
@@ -13,7 +10,7 @@ import tagUtil from './tag';
  * @param tags
  * @returns {*}
  */
-export function getTagCandidates(container: Container, tags: string[]) {
+export function getTagCandidates(container: IContainer, tags: string[]) {
   logger.debug(`[UTILS] - getTagCandidates ${tags?.join(', ')}`);
   let filteredTags = tags;
 
@@ -59,38 +56,8 @@ export function getTagCandidates(container: Container, tags: string[]) {
   return filteredTags;
 }
 
-export function normalizeContainer(container: Container) {
-  const containerWithNormalizedImage = container;
-  logger.info(`[UTILS] - normalizeContainer - for name: ${container.image?.name}`);
-  const registryProvider = Object.values(getRegistries()).find((provider) =>
-    provider.match(container.image),
-  ) as Registry;
-  if (!registryProvider) {
-    logger.warn(`${fullName(container)} - No Registry Provider found`);
-    containerWithNormalizedImage.image.registry.name = 'unknown';
-  } else {
-    logger.info('Registry found! ' + registryProvider.getId());
-    containerWithNormalizedImage.image = registryProvider.normalizeImage(container.image);
-  }
-  return containerWithNormalizedImage;
-}
-
-export function fullName(container: Container) {
+export function fullName(container: IContainer) {
   return `${container.watcher}_${container.name}`;
-}
-
-/**
- * Get the Docker Registry by name.
- * @param registryName
- */
-export function getRegistry(registryName: string): Registry {
-  const registryToReturn = Object.values(getRegistries()).find((e) => e.name === registryName);
-  if (!registryToReturn) {
-    throw new Error(
-      `Unsupported Registry ${registryName} - (${JSON.stringify(Object.values(getRegistries()))}`,
-    );
-  }
-  return registryToReturn;
 }
 
 /**
@@ -100,8 +67,8 @@ export function getRegistry(registryName: string): Registry {
  * @returns {*[]|*}
  */
 export function getOldContainers(
-  newContainers: (Container | undefined)[] | undefined,
-  containersFromTheStore?: Container[] | null,
+  newContainers: (IContainer | undefined)[] | undefined,
+  containersFromTheStore?: IContainer[] | null,
 ) {
   if (!containersFromTheStore || !newContainers) {
     return [];
@@ -111,21 +78,6 @@ export function getOldContainers(
       (newContainer) => newContainer?.id === containerFromStore.id,
     );
     return isContainerStillToWatch === undefined;
-  });
-}
-
-/**
- * Prune old containers from the store.
- * @param newContainers
- * @param containersFromTheStore
- */
-export function pruneOldContainers(
-  newContainers: (Container | undefined)[] | undefined,
-  containersFromTheStore: Container[] | null,
-) {
-  const containersToRemove = getOldContainers(newContainers, containersFromTheStore);
-  containersToRemove.forEach((containerToRemove) => {
-    void ContainerRepo.deleteContainerById(containerToRemove.id);
   });
 }
 
@@ -199,7 +151,7 @@ export function hasResultChanged(container, otherContainer) {
   );
 }
 
-export function isUpdateAvailable(container: Container) {
+export function isUpdateAvailable(container: IContainer) {
   if (container.image === undefined || container.result === undefined) {
     return false;
   }
@@ -262,7 +214,7 @@ function getLink(linkTemplate: string | undefined, tagValue: string, isSemver: b
  * @returns {undefined|*}
  */
 //TODO that is not correct
-export function addLinkProperty(container: Container) {
+export function addLinkProperty(container: IContainer) {
   if (container.linkTemplate) {
     return getLink(
       container.linkTemplate,
@@ -279,7 +231,7 @@ export function addLinkProperty(container: Container) {
   }
 }
 
-export function getKindProperty(container: Container) {
+export function getKindProperty(container: IContainer) {
   const updateKind: {
     kind: 'unknown' | 'tag' | 'digest';
     localValue?: string;

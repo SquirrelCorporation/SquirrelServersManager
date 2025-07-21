@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666666" />
+    </marker>
+  </defs>
+  
+  <!-- Canvas Background -->
+  <rect width="800" height="600" fill="#1e1e1e" />
+  
+  <!-- Title -->
+  <text x="400" y="40" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="24" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Container Labelling System</text>
+  
+  <!-- Container Node -->
+  <rect x="250" y="80" width="300" height="160" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="250" y="80" width="4" height="160" fill="#3498db" />
+  <text x="400" y="110" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="20" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Docker Container</text>
+  
+  <!-- Container Labels Node -->
+  <rect x="270" y="130" width="260" height="90" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="270" y="130" width="4" height="90" fill="#4caf50" />
+  <text x="400" y="150" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="16" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Container Labels</text>
+  
+  <text x="290" y="175" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#98989f">wud.watch=true</text>
+  <text x="290" y="195" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#98989f">wud.display.name=MyApp</text>
+  <text x="290" y="215" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#98989f">wud.tag.include=^v[0-9]+\.[0-9]+$</text>
+  
+  <!-- SSM Container Watcher Node -->
+  <rect x="100" y="300" width="600" height="200" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="100" y="300" width="4" height="200" fill="#ff9800" />
+  <text x="400" y="330" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="20" fill="#dfdfd6" text-anchor="middle" font-weight="bold">SSM Container Watcher</text>
+  
+  <!-- Filtering by Labels Node -->
+  <rect x="120" y="350" width="240" height="120" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="120" y="350" width="4" height="120" fill="#9b59b6" />
+  <text x="240" y="370" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="16" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Label-Based Filtering</text>
+  
+  <text x="140" y="395" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" fill="#98989f">1. Filter containers to watch</text>
+  <text x="140" y="415" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" fill="#98989f">2. Apply tag include/exclude rules</text>
+  <text x="140" y="435" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" fill="#98989f">3. Apply tag transformations</text>
+  <text x="140" y="455" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" fill="#98989f">4. Store display name/icon</text>
+  
+  <!-- Display and Monitoring Node -->
+  <rect x="440" y="350" width="240" height="120" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="440" y="350" width="4" height="120" fill="#1abc9c" />
+  <text x="560" y="370" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="16" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Enhanced Monitoring</text>
+  
+  <text x="460" y="395" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" fill="#98989f">1. Watch for tag updates</text>
+  <text x="460" y="415" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" fill="#98989f">2. Track digest changes</text>
+  <text x="460" y="435" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" fill="#98989f">3. Generate documentation links</text>
+  <text x="460" y="455" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" fill="#98989f">4. Display with custom name/icon</text>
+  
+  <!-- User Interface Node -->
+  <rect x="250" y="530" width="300" height="50" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="250" y="530" width="4" height="50" fill="#4caf50" />
+  <text x="400" y="560" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="16" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Enhanced UI with Label Information</text>
+  
+  <!-- Arrows -->
+  <line x1="400" y1="220" x2="400" y2="300" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)" />
+  <text x="415" y="275" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="13" fill="#666666">Read Labels</text>
+  
+  <line x1="240" y1="470" x2="350" y2="530" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)" />
+  <line x1="560" y1="470" x2="450" y2="530" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)" />
+  
+  <!-- Label Examples Node -->
+  <g transform="translate(30, 100)">
+    <rect x="0" y="0" width="180" height="180" rx="8" ry="8" fill="#1b1b1f" />
+    <rect x="0" y="0" width="4" height="180" fill="#9b59b6" />
+    <text x="80" y="20" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Label Examples</text>
+    
+    <text x="10" y="45" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#98989f">wud.watch=true</text>
+    <text x="10" y="70" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#98989f">wud.tag.include=^v2\.*</text>
+    <text x="10" y="95" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#98989f">wud.tag.exclude=alpha|beta</text>
+    <text x="10" y="120" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#98989f">wud.tag.transform=s/^v//</text>
+    <text x="10" y="145" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#98989f">wud.display.name=Web App</text>
+    <text x="10" y="170" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#98989f">wud.display.icon=🌐</text>
+  </g>
+  
+  <!-- Semver Tracking Node -->
+  <g transform="translate(610, 100)">
+    <rect x="0" y="0" width="180" height="180" rx="8" ry="8" fill="#1b1b1f" />
+    <rect x="0" y="0" width="4" height="180" fill="#ff9800" />
+    <text x="80" y="20" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Update Detection</text>
+    
+    <text x="10" y="45" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" fill="#98989f">Current: v1.2.3</text>
+    <text x="10" y="65" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" fill="#98989f">Available: v1.3.0</text>
+    <rect x="10" y="75" width="140" height="20" rx="3" ry="3" fill="#1b1b1f" />
+    <rect x="10" y="75" width="4" height="20" fill="#4caf50" />
+    <text x="95" y="89" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" fill="#4caf50" text-anchor="middle">Update Available (minor)</text>
+    
+    <text x="10" y="115" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" fill="#98989f">Current: Latest</text>
+    <text x="10" y="135" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" fill="#98989f">Digest: Changed</text>
+    <rect x="10" y="145" width="140" height="20" rx="3" ry="3" fill="#1b1b1f" />
+    <rect x="10" y="145" width="4" height="20" fill="#4caf50" />
+    <text x="95" y="159" font-family='Inter, ui-sans-serif, system-ui, sans-serif' font-size="13" fill="#4caf50" text-anchor="middle">Update Available (digest)</text>
+  </g>
+</svg>

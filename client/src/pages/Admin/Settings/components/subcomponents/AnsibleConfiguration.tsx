@@ -3,14 +3,15 @@ import {
   getAnsibleConfig,
   postAnsibleConfig,
   putAnsibleConfig,
-} from '@/services/rest/ansible';
+} from '@/services/rest/ansible-config/ansible-config';
 import {
   ActionType,
   EditableProTable,
   ProColumns,
   RequestData,
 } from '@ant-design/pro-components';
-import { Button, message, Popconfirm, Spin, Switch } from 'antd';
+import message from '@/components/Message/DynamicMessage';
+import { Button, Popconfirm, Spin, Switch } from 'antd';
 import React, { useRef, useState } from 'react';
 
 interface ConfigEntry {
@@ -77,7 +78,7 @@ const saveConfig = async (record: ConfigEntry, existingEntry: boolean) => {
       message.success({ content: 'Configuration added successfully' });
     }
     return true;
-  } catch (error) {
+  } catch {
     message.error({ content: 'Error saving configuration' });
     return false;
   }
@@ -88,13 +89,13 @@ const deleteConfig = async (record: ConfigEntry) => {
     await deleteAnsibleConfig({ ...record, key: record.name });
     message.success({ content: 'Configuration deleted successfully' });
     return true;
-  } catch (error) {
+  } catch {
     message.error({ content: 'Error deleting configuration' });
     return false;
   }
 };
 
-const toggleDeactivated = async (record: ConfigEntry) => {
+const switchToggle = async (record: ConfigEntry) => {
   try {
     const toggleDeactivated = !record.deactivated;
     await putAnsibleConfig({
@@ -106,7 +107,7 @@ const toggleDeactivated = async (record: ConfigEntry) => {
     });
     message.success({ content: 'Configuration updated successfully' });
     return true;
-  } catch (error) {
+  } catch {
     message.error({ content: 'Error updating configuration' });
     return false;
   }
@@ -161,7 +162,7 @@ const AnsibleConfiguration: React.FC = () => {
       prev.map((item) => (item.key === record.key ? updatedRecord : item)),
     );
     setLoading(true);
-    const success = await toggleDeactivated(record);
+    const success = await switchToggle(record);
     setLoading(false);
     if (!success) {
       actionRef.current?.reload?.();

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Canvas Background -->
+  <rect width="100%" height="100%" fill="#1e1e1e"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="24" fill="#dfdfd6" text-anchor="middle" font-weight="bold">SSM Ansible Configuration Architecture</text>
+  
+  <!-- Main Components Outline -->
+  <rect x="100" y="80" width="600" height="380" rx="8" ry="8" fill="none" stroke="#666666" stroke-width="2" stroke-dasharray="5,5"/>
+  
+  <!-- Ansible Config Module Node -->
+  <rect x="150" y="120" width="200" height="280" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="150" y="120" width="4" height="280" fill="#3498db" />
+  <text x="250" y="145" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="16" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Ansible Config Module</text>
+  
+  <!-- Ansible Module Node -->
+  <rect x="450" y="120" width="200" height="280" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="450" y="120" width="4" height="280" fill="#4caf50" />
+  <text x="550" y="145" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="16" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Ansible Module</text>
+  
+  <!-- Config Components -->
+  <rect x="170" y="170" width="160" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="170" y="170" width="4" height="60" fill="#ff9800" />
+  <text x="250" y="195" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Config Controller</text>
+  <text x="250" y="215" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">REST API</text>
+  
+  <rect x="170" y="250" width="160" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="170" y="250" width="4" height="60" fill="#9b59b6" />
+  <text x="250" y="275" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Config Service</text>
+  <text x="250" y="295" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">Business Logic</text>
+  
+  <rect x="170" y="330" width="160" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="170" y="330" width="4" height="60" fill="#1abc9c" />
+  <text x="250" y="355" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">File System Access</text>
+  <text x="250" y="375" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">ansible.cfg File</text>
+  
+  <!-- Ansible Components -->
+  <rect x="470" y="170" width="160" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="470" y="170" width="4" height="60" fill="#ff9800" />
+  <text x="550" y="195" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Command Builder</text>
+  <text x="550" y="215" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">Command Generation</text>
+  
+  <rect x="470" y="250" width="160" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="470" y="250" width="4" height="60" fill="#9b59b6" />
+  <text x="550" y="275" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Ansible Runner</text>
+  <text x="550" y="295" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">Python Interface</text>
+  
+  <rect x="470" y="330" width="160" height="60" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="470" y="330" width="4" height="60" fill="#1abc9c" />
+  <text x="550" y="355" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">Execution</text>
+  <text x="550" y="375" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" fill="#98989f" text-anchor="middle">Command Execution</text>
+  
+  <!-- Config File Node -->
+  <rect x="250" y="420" width="300" height="30" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="250" y="420" width="4" height="30" fill="#ff9800" />
+  <text x="400" y="440" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle" font-weight="bold">ansible.cfg Configuration File</text>
+  
+  <!-- Arrows -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666666"/>
+    </marker>
+  </defs>
+  
+  <!-- Config Flow -->
+  <line x1="250" y1="230" x2="250" y2="250" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="250" y1="310" x2="250" y2="330" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="250" y1="390" x2="280" y2="420" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Ansible Flow -->
+  <line x1="550" y1="230" x2="550" y2="250" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="550" y1="310" x2="550" y2="330" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="550" y1="390" x2="520" y2="420" stroke="#666666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Cross-Module Integration -->
+  <line x1="330" y1="280" x2="470" y2="200" stroke="#666666" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+  <text x="380" y="220" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="12" text-anchor="middle" font-style="italic" fill="#98989f">Uses</text>
+  
+  <!-- Legend Node -->
+  <rect x="150" y="460" width="500" height="30" rx="8" ry="8" fill="#1b1b1f" />
+  <rect x="150" y="460" width="4" height="30" fill="#3498db" />
+  <text x="400" y="480" font-family='Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' font-size="14" fill="#dfdfd6" text-anchor="middle">Configuration Management Flow</text>
+</svg>

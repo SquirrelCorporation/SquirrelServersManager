@@ -7,7 +7,7 @@ type OsSoftwareVersionsType = {
   versions: Systeminformation.VersionData;
 };
 
-const OsSoftwareVersions: React.FC<OsSoftwareVersionsType> = (props) => {
+const OsSoftwareVersions: React.FC<OsSoftwareVersionsType> = ({ versions }) => {
   interface DataType {
     key: React.Key;
     name: string;
@@ -15,14 +15,14 @@ const OsSoftwareVersions: React.FC<OsSoftwareVersionsType> = (props) => {
   }
   const data: DataType[] = [];
 
-  const keys = Object.keys(props.versions);
+  const keys = Object.keys(versions);
 
   keys.forEach((key) => {
-    if (props.versions[key as keyof typeof props.versions]) {
+    if (versions[key as keyof typeof versions]) {
       data.push({
         key: key,
         name: key,
-        version: props.versions[key as keyof typeof props.versions],
+        version: versions[key as keyof typeof versions],
       });
     }
   });
