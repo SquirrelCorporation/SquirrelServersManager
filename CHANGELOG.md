@@ -1,5 +1,33 @@
 # Changelog
 
+## [v0.5.2](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.2) (2025-07-19)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.1...v0.5.2)
+
+**Merged pull requests:**
+
+- \[CHORE\] Add storage path flag to Prometheus entrypoint script [\#1035](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1035) ([SquirrelDeveloper](https://github.com/SquirrelDeveloper))
+
+## [v0.5.1](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.1) (2025-07-19)
+
+[Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0...v0.5.1)
+
+**Fixed bugs:**
+
+- Correct client container refresh call endpoint [\#1033](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1033) ([xcalibur839](https://github.com/xcalibur839))
+
+**Merged pull requests:**
+
+- Bump node from 24.2.0-alpine to 24.4.0-alpine in /server [\#1032](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1032) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump redis from 5.0.0 to 5.6.0 in /server [\#1031](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1031) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vuetify from 3.8.10 to 3.9.0 in /site [\#1028](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1028) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump vitepress-plugin-llms from 1.5.1 to 1.7.0 in /site [\#1025](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1025) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump swiper from 11.2.8 to 11.2.10 in /site [\#1020](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1020) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump nginx from 1.27.5 to 1.29.0 in /proxy [\#1017](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1017) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump pbkdf2 from 3.1.2 to 3.1.3 in /client in the npm\_and\_yarn group [\#1012](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/1012) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump @types/express from 5.0.1 to 5.0.3 in /server [\#991](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/991) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump monaco-yaml from 5.3.1 to 5.4.0 in /client [\#967](https://github.com/SquirrelCorporation/SquirrelServersManager/pull/967) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v0.5.0](https://github.com/SquirrelCorporation/SquirrelServersManager/tree/v0.5.0) (2025-06-29)
 
 [Full Changelog](https://github.com/SquirrelCorporation/SquirrelServersManager/compare/v0.5.0-rc.4...v0.5.0)
