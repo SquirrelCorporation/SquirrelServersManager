@@ -13,7 +13,7 @@
   "devDependencies": {
     "@vue-flow/core": "^1.45.0",
     "vitepress": "^1.6.3",
-    "vitepress-plugin-llms": "^1.7.0"
+    "vitepress-plugin-llms": "^1.7.4"
   },
   "dependencies": {
     "@vue-flow/background": "^1.3.2",
