@@ -110,7 +110,7 @@
     "@nestjs/testing": "^11.1.6",
     "@stylistic/eslint-plugin": "^4.2.0",
     "@types/bcrypt": "^5.0.2",
-    "@types/cookie-parser": "^1.4.8",
+    "@types/cookie-parser": "^1.4.9",
     "@types/dockerode": "^3.3.38",
     "@types/dockerode-compose": "^1.4.1",
     "@types/express": "^5.0.3",
