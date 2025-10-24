@@ -20,6 +20,6 @@
     "@vue-flow/minimap": "^1.5.4",
     "axios": "^1.10.0",
     "swiper": "^11.2.10",
-    "vuetify": "^3.9.0"
+    "vuetify": "^3.10.7"
   }
 }
